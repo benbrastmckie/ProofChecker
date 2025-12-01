@@ -1,12 +1,12 @@
 # Proof-Checker Architecture Guide
 
-_[Return to Package Overview](../README.md) | [Proof-Checker Documentation](../../docs/packages/proof-checker.md) | [Model-Checker](../model-checker/architecture.md)_
+_[Return to Project Overview](../README.md)_
 
 ## Overview
 
 This guide provides a comprehensive roadmap for developing an axiomatic proof system in LEAN, complete with model-theoretic semantics, metalogic, and axiom minimization utilities. The architecture is designed to support the full lifecycle from proof system definition to soundness verification and axiom optimization. Throughout this development, we integrate a domain-specific language (DSL) to enhance usability and provide intuitive interfaces for natural deduction theorem proving, semantic analysis, and axiom management.
 
-For a high-level overview of the proof-checker's capabilities and its role in the project framework, see the [Proof-Checker Overview](../../docs/proof-checker.md).
+For a quick start guide and usage examples, see the [Tutorial](TUTORIAL.md) and [Examples](EXAMPLES.md).
 
 ## 1. Proof System Construction in LEAN
 
@@ -21,7 +21,7 @@ This proof-checker implements a **layered operator architecture** aligned with t
 
 The focus of this architecture guide is **Layer 0 (Core Layer)**, which provides the essential foundation for all subsequent extensions. Each extension layer can be added to the Core Layer independently or in combination before integrating into a complete system supporting all operator types. This layered approach provides conceptual clarity, enables parallel development, and allows delivery of verified reasoning capabilities incrementally while maintaining a clear path to the full Logos vision. These three extensions provide a basic methodology; future extensions may be added as needed.
 
-For a comprehensive discussion of the extension architecture and integration strategies, see [Expressive Power: Layered Extension Architecture](../../docs/foundations/expressive_power.md).
+The layered approach provides conceptual clarity, enables parallel development, and allows delivery of verified reasoning capabilities incrementally.
 
 #### Layer 0 Language Definition (Core System TM)
 
@@ -866,65 +866,66 @@ structure ProofStatistics :=
 
 ### 6.1 Project Structure
 
-The project structure reflects the layered operator architecture with separate modules for Layer 1 (core TM) and Layer 2 (extended system):
+The project structure reflects the layered operator architecture following LEAN 4 community standards with PascalCase directories:
 
 ```
-proof-checker/
-├── src/
-│   ├── syntax/
-│   │   ├── formula_layer1.lean           # Layer 1 formula type (TM)
-│   │   ├── formula_layer2.lean           # Layer 2 extended formula type
-│   │   ├── context.lean                  # Proof context management
-│   │   ├── parsing_layer1.lean           # Layer 1 formula parsing
-│   │   ├── printing_layer1.lean          # Layer 1 formula pretty-printing
-│   │   └── dsl.lean                      # Domain-specific language
-│   ├── proof_system/
-│   │   ├── axioms_layer1.lean            # Layer 1 TM axioms
-│   │   ├── axioms_layer2.lean            # Layer 2 extended axioms
-│   │   ├── rules_layer1.lean             # Layer 1 inference rules
-│   │   ├── derivation.lean               # Derivability relation
-│   │   └── tactics.lean                  # Proof automation
-│   ├── semantics/
-│   │   ├── task_frame.lean               # Task frame structure
-│   │   ├── world_history.lean            # World history definition
-│   │   ├── task_model.lean               # Layer 1 task model
-│   │   ├── extended_task_model.lean      # Layer 2 extended model
-│   │   ├── truth_layer1.lean             # Layer 1 truth evaluation
-│   │   ├── truth_layer2.lean             # Layer 2 truth evaluation
-│   │   ├── validity.lean                 # Validity and consequence
-│   │   └── canonical.lean                # Canonical model construction
-│   ├── metalogic/
-│   │   ├── soundness_layer1.lean         # Layer 1 soundness theorem
-│   │   ├── completeness_layer1.lean      # Layer 1 completeness theorem
-│   │   ├── decidability.lean             # Decision procedures
-│   │   └── interpolation.lean            # Interpolation theorems
-│   ├── theorems/
-│   │   └── perpetuity_principles.lean    # P1-P6 derivations
-│   ├── minimization/
-│   │   ├── algorithms.lean               # Minimization algorithms
-│   │   ├── validation.lean               # Axiom set validation
-│   │   └── analysis.lean                 # Dependency analysis
-│   └── automation/
-│       ├── proof_search.lean             # Automated proof search
-│       ├── theorem_db.lean               # Theorem database
-│       └── templates.lean                # Proof templates
-├── examples/
-│   ├── layer1_proofs.lean                # Perpetuity principle examples
-│   ├── temporal_reasoning.lean           # Temporal logic examples
-│   ├── modal_reasoning.lean              # S5 modal logic examples
-│   └── bimodal_interaction.lean          # MF and TF interaction examples
-├── tests/
-│   ├── syntax_layer1_tests.lean          # Layer 1 syntax tests
-│   ├── proof_system_layer1_tests.lean    # Layer 1 proof system tests
-│   ├── semantics_layer1_tests.lean       # Layer 1 semantic tests
-│   ├── metalogic_soundness_tests.lean    # Soundness tests
-│   ├── metalogic_completeness_tests.lean # Completeness tests
-│   └── perpetuity_tests.lean             # Perpetuity principle tests
-└── docs/
-    ├── user_guide.md                     # User documentation
-    ├── layer1_tutorial.md                # Layer 1 temporal/modal reasoning
-    ├── api_reference.md                  # API documentation
-    └── examples.md                       # Example usage
+ProofChecker/
+├── ProofChecker.lean                     # Library root (re-exports public API)
+├── ProofChecker/                         # Main source directory
+│   ├── Syntax/
+│   │   ├── Formula.lean                  # Core formula inductive type
+│   │   ├── Context.lean                  # Proof context management
+│   │   └── DSL.lean                      # Domain-specific language
+│   ├── ProofSystem/
+│   │   ├── Axioms.lean                   # TM axiom schemata
+│   │   ├── Rules.lean                    # Inference rules (MP, MK, TK, TD)
+│   │   └── Derivation.lean               # Derivability relation
+│   ├── Semantics/
+│   │   ├── TaskFrame.lean                # Task frame structure
+│   │   ├── WorldHistory.lean             # World history definition
+│   │   ├── TaskModel.lean                # Task model with valuation
+│   │   ├── Truth.lean                    # Truth evaluation
+│   │   └── Validity.lean                 # Validity and consequence
+│   ├── Metalogic/
+│   │   ├── Soundness.lean                # Soundness theorem
+│   │   ├── Completeness.lean             # Completeness theorem
+│   │   └── Decidability.lean             # Decision procedures
+│   ├── Theorems/
+│   │   └── Perpetuity.lean               # P1-P6 perpetuity principles
+│   └── Automation/
+│       ├── Tactics.lean                  # Custom tactics (modal_k, temporal_k, etc.)
+│       └── ProofSearch.lean              # Automated proof search
+├── ProofCheckerTest/                     # Test suite
+│   ├── ProofCheckerTest.lean             # Test library root
+│   ├── Syntax/                           # Syntax tests
+│   │   └── FormulaTest.lean
+│   ├── ProofSystem/                      # Proof system tests
+│   │   ├── AxiomsTest.lean
+│   │   └── RulesTest.lean
+│   ├── Semantics/                        # Semantic tests
+│   │   ├── TaskFrameTest.lean
+│   │   └── ValidityTest.lean
+│   ├── Integration/                      # Integration tests
+│   │   ├── SoundnessTest.lean
+│   │   └── CompletenessTest.lean
+│   └── Metalogic/                        # Metalogic tests
+│       └── ConsistencyTest.lean
+├── Archive/                              # Pedagogical examples
+│   ├── Archive.lean                      # Archive library root
+│   ├── ModalProofs.lean                  # S5 modal logic examples
+│   ├── TemporalProofs.lean               # Temporal reasoning examples
+│   └── BimodalProofs.lean                # Combined modal-temporal examples
+├── Counterexamples/                      # Invalidity demonstrations
+│   └── Counterexamples.lean              # Counterexamples library root
+├── docs/                                 # User documentation
+│   ├── ARCHITECTURE.md                   # System design and TM logic specification
+│   ├── TUTORIAL.md                       # Getting started guide
+│   ├── EXAMPLES.md                       # Usage examples
+│   ├── CONTRIBUTING.md                   # Contribution guidelines
+│   ├── INTEGRATION.md                    # Model-Checker integration
+│   └── VERSIONING.md                     # Versioning policy
+├── lakefile.toml                         # LEAN 4 build configuration
+└── lean-toolchain                        # LEAN version pinning
 ```
 
 ### 6.2 Integration Points
@@ -1282,11 +1283,11 @@ This architecture provides a comprehensive foundation for developing a sophistic
 ---
 
 **Related Documentation:**
-- [Proof-Checker Theory](../../docs/packages/proof-checker.md)
-- [Model-Builder Architecture](../model-builder/architecture.md)
-- [Model-Checker Architecture](../model-checker/architecture.md)
-- [Logos Glossary: Logical Operators](../../docs/glossary/logical-operators.md)
-- [Task Semantics Research Report](../../.claude/specs/011_proof_checker_operators_revision/reports/001-task-semantics-proof-system-analysis.md)
-- [Specs Overview](../README.md)
+- [Tutorial](TUTORIAL.md) - Getting started guide
+- [Examples](EXAMPLES.md) - Modal, temporal, and bimodal examples
+- [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Module Organization](development/MODULE_ORGANIZATION.md) - Project structure
+- [Integration Guide](INTEGRATION.md) - Model-Checker integration
+- [Contributing](CONTRIBUTING.md) - How to contribute
 
-_Last updated: November 2025_
+_Last updated: December 2025_

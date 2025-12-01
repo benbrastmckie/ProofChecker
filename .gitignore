@@ -1,0 +1,35 @@
+# LEAN 4 build artifacts
+.lake/
+build/
+*.olean
+*.ilean
+*.trace
+
+# Lake lock file (optional - remove if you want reproducible builds)
+# lake-manifest.json
+
+# Editor files
+.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+
+# Temporary files
+*.tmp
+*.bak
+
+# Documentation build output
+doc/
+_site/
+
+# Test output
+test-results/
+coverage/

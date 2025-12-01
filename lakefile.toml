@@ -1,0 +1,20 @@
+name = "ProofChecker"
+version = "0.1.0"
+keywords = ["logic", "modal-logic", "temporal-logic", "proof-system", "lean4"]
+license = "MIT"
+
+[[lean_lib]]
+name = "ProofChecker"
+
+[[lean_lib]]
+name = "ProofCheckerTest"
+
+[[lean_lib]]
+name = "Archive"
+
+[[lean_lib]]
+name = "Counterexamples"
+
+[[lean_exe]]
+name = "test"
+root = "ProofCheckerTest"
