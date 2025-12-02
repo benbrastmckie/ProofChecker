@@ -371,4 +371,4 @@ Solutions are available in the `Archive/` directory:
 
 - [Tutorial](TUTORIAL.md) - Getting started guide
 - [Architecture](ARCHITECTURE.md) - Full TM logic specification
-- [Tactic Development](development/TACTIC_DEVELOPMENT.md) - Custom tactics
+- [Tactic Development](../Development/TACTIC_DEVELOPMENT.md) - Custom tactics

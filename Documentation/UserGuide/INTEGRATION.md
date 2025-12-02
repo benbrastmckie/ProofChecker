@@ -360,4 +360,4 @@ def mock_model_checker (query : String) : IO ModelCheckResult := do
 - [Architecture Guide](ARCHITECTURE.md) - Full system design
 - [Tutorial](TUTORIAL.md) - Getting started
 - [Examples](EXAMPLES.md) - Usage examples
-- [Versioning](VERSIONING.md) - Version policy
+- [Versioning](../ProjectInfo/VERSIONING.md) - Version policy

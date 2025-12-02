@@ -314,4 +314,4 @@ When a version reaches end of support:
 - [Semantic Versioning 2.0.0](https://semver.org/)
 - [Keep a Changelog](https://keepachangelog.com/)
 - [Contributing Guide](CONTRIBUTING.md)
-- [Integration Guide](INTEGRATION.md)
+- [Integration Guide](../UserGuide/INTEGRATION.md)

@@ -761,11 +761,11 @@ This section outlines the path to completing all ProofChecker features.
 ## References
 
 - [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) - Detailed module status
-- [ARCHITECTURE.md](ARCHITECTURE.md) - TM logic specification
-- [README.md](../README.md) - Project overview
-- [CLAUDE.md](../CLAUDE.md) - Developer configuration
-- [TUTORIAL.md](TUTORIAL.md) - Getting started guide
-- [EXAMPLES.md](EXAMPLES.md) - Usage examples
+- [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - TM logic specification
+- [README.md](../../README.md) - Project overview
+- [CLAUDE.md](../../CLAUDE.md) - Developer configuration
+- [TUTORIAL.md](../UserGuide/TUTORIAL.md) - Getting started guide
+- [EXAMPLES.md](../UserGuide/EXAMPLES.md) - Usage examples
 
 ---
 

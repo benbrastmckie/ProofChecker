@@ -364,15 +364,15 @@ ProofChecker supports future extensions:
 
 - [Architecture Guide](ARCHITECTURE.md) - Full TM logic specification
 - [Examples](EXAMPLES.md) - More example proofs
-- [Contributing](CONTRIBUTING.md) - How to contribute
+- [Contributing](../ProjectInfo/CONTRIBUTING.md) - How to contribute
 - [Integration](INTEGRATION.md) - Model-Checker integration
 
 ### Developer Resources
 
-- [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md)
-- [Module Organization](development/MODULE_ORGANIZATION.md)
-- [Testing Standards](development/TESTING_STANDARDS.md)
-- [Tactic Development](development/TACTIC_DEVELOPMENT.md)
+- [LEAN Style Guide](../Development/LEAN_STYLE_GUIDE.md)
+- [Module Organization](../Development/MODULE_ORGANIZATION.md)
+- [Testing Standards](../Development/TESTING_STANDARDS.md)
+- [Tactic Development](../Development/TACTIC_DEVELOPMENT.md)
 
 ### External Resources
 

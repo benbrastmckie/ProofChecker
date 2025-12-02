@@ -14,8 +14,8 @@ ProofChecker is a LEAN 4 implementation of an axiomatic proof system for the bim
 
 **MVP Completion**: Layer 0 (Core TM) MVP complete with partial metalogic
 
-**For detailed status**: See [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
-**For limitations**: See [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)
+**For detailed status**: See [Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
+**For limitations**: See [Documentation/ProjectInfo/KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
 
 ## 2. Essential Commands
 
@@ -87,19 +87,25 @@ ProofChecker/
 │   └── BimodalProofs.lean      # Combined modal-temporal examples
 ├── Counterexamples/            # Invalidity demonstrations
 │   └── Counterexamples.lean    # Counterexamples library root
-├── docs/                       # User documentation
-│   ├── ARCHITECTURE.md         # System design and TM logic specification
-│   ├── TUTORIAL.md             # Getting started guide
-│   ├── EXAMPLES.md             # Usage examples
-│   ├── CONTRIBUTING.md         # Contribution guidelines
-│   ├── INTEGRATION.md          # Model-Checker integration
-│   ├── VERSIONING.md           # Versioning policy
-│   └── development/            # Developer standards
-│       ├── LEAN_STYLE_GUIDE.md     # Coding conventions
-│       ├── MODULE_ORGANIZATION.md  # Directory structure
-│       ├── TESTING_STANDARDS.md    # Test requirements
-│       ├── TACTIC_DEVELOPMENT.md   # Custom tactic patterns
-│       └── QUALITY_METRICS.md      # Quality targets
+├── Documentation/              # User documentation
+│   ├── UserGuide/              # User-facing documentation
+│   │   ├── ARCHITECTURE.md         # System design and TM logic specification
+│   │   ├── TUTORIAL.md             # Getting started guide
+│   │   ├── EXAMPLES.md             # Usage examples
+│   │   └── INTEGRATION.md          # Model-Checker integration
+│   ├── ProjectInfo/            # Project status and contribution info
+│   │   ├── IMPLEMENTATION_STATUS.md  # Module-by-module status tracking
+│   │   ├── KNOWN_LIMITATIONS.md      # Gaps, explanations, workarounds
+│   │   ├── CONTRIBUTING.md           # Contribution guidelines
+│   │   └── VERSIONING.md             # Semantic versioning policy
+│   ├── Development/            # Developer standards
+│   │   ├── LEAN_STYLE_GUIDE.md     # Coding conventions
+│   │   ├── MODULE_ORGANIZATION.md  # Directory structure
+│   │   ├── TESTING_STANDARDS.md    # Test requirements
+│   │   ├── TACTIC_DEVELOPMENT.md   # Custom tactic patterns
+│   │   └── QUALITY_METRICS.md      # Quality targets
+│   └── Reference/              # Reference materials
+│       └── OPERATORS.md              # Formal symbols reference
 ├── lakefile.toml               # LEAN 4 build configuration
 ├── lean-toolchain              # LEAN version pinning
 ├── .gitignore                  # Git exclusions
@@ -108,27 +114,27 @@ ProofChecker/
 
 ## 4. Documentation Index
 
-### Developer Standards (docs/development/)
-- [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - Naming, formatting, documentation
-- [Module Organization](docs/development/MODULE_ORGANIZATION.md) - Directory structure, namespaces
-- [Testing Standards](docs/development/TESTING_STANDARDS.md) - Test types, coverage requirements
-- [Tactic Development](docs/development/TACTIC_DEVELOPMENT.md) - Custom tactic patterns
-- [Quality Metrics](docs/development/QUALITY_METRICS.md) - Coverage, lint, performance targets
+### Developer Standards (Documentation/Development/)
+- [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - Naming, formatting, documentation
+- [Module Organization](Documentation/Development/MODULE_ORGANIZATION.md) - Directory structure, namespaces
+- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test types, coverage requirements
+- [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactic patterns
+- [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Coverage, lint, performance targets
 
-### User Documentation (docs/)
-- [Architecture Guide](docs/ARCHITECTURE.md) - System design and TM logic specification
-- [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
-- [Known Limitations](docs/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
-- [Logical Operators Glossary](docs/glossary/logical-operators.md) - Formal symbols reference
-- [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
-- [Examples](docs/EXAMPLES.md) - Modal, temporal, bimodal examples
-- [Contributing](docs/CONTRIBUTING.md) - How to contribute
-- [Integration](docs/INTEGRATION.md) - Model-Checker integration
-- [Versioning](docs/VERSIONING.md) - Semantic versioning policy
+### User Documentation (Documentation/UserGuide/ and Documentation/ProjectInfo/)
+- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
+- [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
+- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
+- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
+- [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker
+- [Examples](Documentation/UserGuide/EXAMPLES.md) - Modal, temporal, bimodal examples
+- [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
+- [Integration](Documentation/UserGuide/INTEGRATION.md) - Model-Checker integration
+- [Versioning](Documentation/ProjectInfo/VERSIONING.md) - Semantic versioning policy
 
 ### Symbol Formatting Standards
 - [Documentation Standards - Formal Symbol Backtick Standard](.claude/docs/reference/standards/documentation-standards.md#formal-symbol-backtick-standard) - Backtick requirements for Unicode symbols in Markdown
-- [LEAN Style Guide - Code Comments with Formal Symbols](docs/development/LEAN_STYLE_GUIDE.md#code-comments-with-formal-symbols) - Backtick usage in LEAN code comments
+- [LEAN Style Guide - Code Comments with Formal Symbols](Documentation/Development/LEAN_STYLE_GUIDE.md#code-comments-with-formal-symbols) - Backtick usage in LEAN code comments
 
 ### Claude Code Framework Documentation
 
@@ -231,7 +237,7 @@ ProofChecker test suite is organized in ProofCheckerTest/ directory with unit te
 1. Define tactic in `Automation/Tactics.lean`
 2. Write unit tests in `ProofCheckerTest/Automation/`
 3. Add example usage to `Archive/`
-4. Document in `docs/development/TACTIC_DEVELOPMENT.md`
+4. Document in `Documentation/Development/TACTIC_DEVELOPMENT.md`
 
 ### Add a New Theorem
 1. Write failing test in appropriate `ProofCheckerTest/` directory
@@ -253,7 +259,7 @@ ProofChecker test suite is organized in ProofCheckerTest/ directory with unit te
 
 **For complete LEAN 4 patterns, error handling, and TDD guidance**, see:
 - [Code Standards](.claude/docs/reference/standards/code-standards.md) - LEAN 4 syntax requirements, common patterns, TDD enforcement, common errors
-- [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - 100-char line limit, 2-space indentation, flush-left declarations
+- [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - 100-char line limit, 2-space indentation, flush-left declarations
 
 **TDD Enforcement**: Every new feature requires tests first. Run `lake test` before committing. CI rejects PRs with failing tests.
 
@@ -262,5 +268,5 @@ ProofChecker test suite is organized in ProofCheckerTest/ directory with unit te
 - **Avoid incomplete axioms**: TL, MF, TF have incomplete soundness proofs
 - **Perpetuity P3 is safe**: Only P3 is fully proven (zero sorry)
 - **No automation available**: All tactics are stubs, use manual proof construction
-- See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) for workarounds and alternatives
-- See [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for verification commands
+- See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) for workarounds and alternatives
+- See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) for verification commands

@@ -51,7 +51,7 @@ ProofChecker/
 │   │   └── CompletenessTests.lean # Completeness tests
 │   └── Metalogic/                 # Property tests
 │       └── ConsistencyTests.lean  # Consistency tests
-└── docs/                          # Documentation
+└── Documentation/                 # Documentation
     ├── ARCHITECTURE.md            # User documentation
     ├── TUTORIAL.md
     ├── EXAMPLES.md
@@ -418,4 +418,4 @@ Summary:
 
 - [LEAN Style Guide](LEAN_STYLE_GUIDE.md)
 - [Testing Standards](TESTING_STANDARDS.md)
-- [Architecture Guide](../../docs/ARCHITECTURE.md)
+- [Architecture Guide](../UserGuide/ARCHITECTURE.md)

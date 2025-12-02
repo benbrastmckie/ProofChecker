@@ -412,5 +412,5 @@ throwError "tactic failed"
 - [LEAN 4 Metaprogramming Book](https://leanprover-community.github.io/lean4-metaprogramming-book/)
 - [Aesop Documentation](https://github.com/leanprover-community/aesop)
 - [Mathlib4 Tactics](https://leanprover-community.github.io/mathlib4_docs/)
-- [ProofChecker Architecture](../../docs/ARCHITECTURE.md)
+- [ProofChecker Architecture](../UserGuide/ARCHITECTURE.md)
 - [Testing Standards](TESTING_STANDARDS.md)

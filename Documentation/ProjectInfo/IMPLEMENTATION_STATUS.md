@@ -602,9 +602,9 @@ lake test ProofCheckerTest.Integration
 
 ## References
 
-- [README.md](../README.md) - Project overview and features
-- [CLAUDE.md](../CLAUDE.md) - Developer configuration and standards
-- [ARCHITECTURE.md](ARCHITECTURE.md) - TM logic specification and design
+- [README.md](../../README.md) - Project overview and features
+- [CLAUDE.md](../../CLAUDE.md) - Developer configuration and standards
+- [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - TM logic specification and design
 - [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md) - Detailed gap analysis and workarounds
-- [TUTORIAL.md](TUTORIAL.md) - Getting started guide
-- [EXAMPLES.md](EXAMPLES.md) - Usage examples
+- [TUTORIAL.md](../UserGuide/TUTORIAL.md) - Getting started guide
+- [EXAMPLES.md](../UserGuide/EXAMPLES.md) - Usage examples

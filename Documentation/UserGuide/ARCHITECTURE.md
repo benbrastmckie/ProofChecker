@@ -1,6 +1,6 @@
 # Proof-Checker Architecture Guide
 
-_[Return to Project Overview](../README.md)_
+_[Return to Project Overview](../../README.md)_
 
 ## Overview
 
@@ -921,7 +921,7 @@ ProofChecker/
 │   └── BimodalProofs.lean                # Combined modal-temporal examples
 ├── Counterexamples/                      # Invalidity demonstrations
 │   └── Counterexamples.lean              # Counterexamples library root
-├── docs/                                 # User documentation
+├── Documentation/                        # User documentation
 │   ├── ARCHITECTURE.md                   # System design and TM logic specification
 │   ├── TUTORIAL.md                       # Getting started guide
 │   ├── EXAMPLES.md                       # Usage examples
@@ -1289,9 +1289,9 @@ This architecture provides a comprehensive foundation for developing a sophistic
 **Related Documentation:**
 - [Tutorial](TUTORIAL.md) - Getting started guide
 - [Examples](EXAMPLES.md) - Modal, temporal, and bimodal examples
-- [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md) - Coding conventions
-- [Module Organization](development/MODULE_ORGANIZATION.md) - Project structure
+- [LEAN Style Guide](../Development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Module Organization](../Development/MODULE_ORGANIZATION.md) - Project structure
 - [Integration Guide](INTEGRATION.md) - Model-Checker integration
-- [Contributing](CONTRIBUTING.md) - How to contribute
+- [Contributing](../ProjectInfo/CONTRIBUTING.md) - How to contribute
 
 _Last updated: December 2025_

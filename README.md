@@ -1,6 +1,43 @@
 # ProofChecker
 
-A LEAN 4 implementation of an axiomatic proof system for the bimodal logic **TM** (Tense and Modality) with task semantics.
+ProofChecker provides the proof theory and metalogic for **Logos**, an interpreted formal language of thought for auto-verified AI reasoning. The project begins by implementing **Layer 0** (Core Layer) of the Logos architecture, which includes three types of operators:
+
+### Extensional Operators
+
+Boolean/propositional operators forming the foundation of logical reasoning:
+
+- Primitives: `⊥` (falsity), `→` (implication)
+- Derived: `¬` (negation), `∧` (conjunction), `∨` (disjunction)
+
+### Modal Operators
+
+S5 modal logic for metaphysical necessity and possibility:
+
+- `□` (box, necessity): "necessarily φ"
+- `◇` (diamond, possibility): "possibly φ"
+
+### Temporal Operators
+
+Linear temporal logic (LTL) for reasoning about time:
+
+- `Past` (universal past): "φ has always been the case"
+- `Future` (universal future): "φ will always be the case"
+- `past` (sometime past): "φ was the case at some past time"
+- `future` (sometime future): "φ will be the case at some future time"
+- `△` (always/henceforth): "φ at all times"
+- `▽` (sometimes/eventually): "φ at some time"
+
+### Logos Integration
+
+ProofChecker is the third package in the Logos architecture:
+
+1. **Model-Builder**: Constructs formal models for philosophical theories
+2. **Model-Checker**: Verifies properties of models using temporal and modal logic
+3. **Proof-Checker**: Provides axiomatic proof system and metalogic for TM (this package)
+
+Future layers (Layer 1-3) will add explanatory (counterfactual), epistemic (belief), and normative (deontic) operators.
+
+**For complete TM logic specification**: See [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md)
 
 ## Features
 
@@ -15,16 +52,18 @@ A LEAN 4 implementation of an axiomatic proof system for the bimodal logic **TM*
 The logic TM is a bimodal system combining:
 
 ### Operators
+
 - **Modal**: `□` (necessity), `◇` (possibility) - S5 modal logic
-- **Temporal**: `Past` (universal past), `Future` (universal future), `past` (sometime past), `future` (sometime future)
-- **Combined**: `always`/`△` (henceforth), `sometimes`/`▽` (eventually)
+- **Temporal**: `Past` (universal past), `Future` (universal future), `past` (sometime past), `future` (sometime future), `always`/`△` (at all times), `sometimes`/`▽` (at a time)
 
 ### Axioms
+
 - **S5 Modal**: MT (`□φ → φ`), M4 (`□φ → □□φ`), MB (`φ → □◇φ`)
-- **Temporal**: T4 (`Future φ → Future Future φ`), TA (`φ → Future past φ`), TL (`always φ → Future Past φ`)
+- **Temporal**: T4 (`Future φ → Future Future φ`), TA (`φ → Future past φ`), TL (`△ φ → Future Past φ`)
 - **Bimodal Interaction**: MF (`□φ → □Future φ`), TF (`□φ → Future □φ`)
 
 ### Perpetuity Principles (Key Theorems)
+
 - **P1**: `□φ → △φ` (what is necessary is always the case)
 - **P2**: `▽φ → ◇φ` (what is sometimes the case is possible)
 - **P3**: `□φ → □△φ` (necessity of perpetuity)
@@ -36,29 +75,34 @@ The logic TM is a bimodal system combining:
 
 **MVP Status**: Layer 0 (Core TM) MVP complete with partial metalogic implementation
 
-### Completed Modules ✓
+### Completed Modules
+
 - **Syntax**: Formula types, contexts, DSL (100% complete)
 - **ProofSystem**: All 8 axioms and 7 inference rules defined (100% complete)
 - **Semantics**: Task frames, models, truth evaluation, validity (100% complete)
 - **Perpetuity**: P1-P3 proven (P1-P2 use propositional helpers with sorry)
 
-### Partial Modules ⚠️
+### Partial Modules
+
 - **Metalogic/Soundness**: 5/8 axiom validity proofs (MT, M4, MB, T4, TA proven; TL, MF, TF incomplete)
 - **Metalogic/Soundness**: 4/7 rule cases proven (axiom, assumption, modus_ponens, weakening; modal_k, temporal_k, temporal_duality incomplete)
 - **Perpetuity**: P4-P6 use sorry (require complex modal-temporal reasoning)
 
-### Infrastructure Only 🏗️
+### Infrastructure Only
+
 - **Metalogic/Completeness**: Type signatures defined, no proofs (uses `axiom` keyword)
 - **Automation/Tactics**: Function declarations only, no implementations
 
-### Planned 📋
+### Planned
+
 - **Decidability**: Not yet started
 - **Layer 1/2/3**: Counterfactual, epistemic, normative operators
 
-**For detailed status**: See [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
-**For limitations and workarounds**: See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)
+**For detailed status**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
+**For limitations and workarounds**: See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
 
 **Sorry Count**:
+
 - Soundness: 15 placeholders (3 axioms incomplete, 3 rules incomplete)
 - Perpetuity: 14 placeholders (propositional reasoning + complex modal-temporal)
 - Tactics: 12 stubs (all tactics are declarations only)
@@ -68,6 +112,7 @@ The logic TM is a bimodal system combining:
 ## Installation
 
 ### Requirements
+
 - LEAN 4 v4.14.0 or later
 - Lake (included with LEAN 4)
 - VS Code with lean4 extension (recommended)
@@ -105,26 +150,28 @@ example : ⊢ (□"p" → "p") := by
   apply Axiom.modal_t
 
 -- Prove perpetuity principle P1
-example (φ : Formula) : ⊢ (φ.box.imp (always φ)) := perpetuity_1 φ
+example (φ : Formula) : ⊢ (φ.box.imp (△ φ)) := perpetuity_1 φ
 ```
 
 ## Documentation
 
 ### User Documentation
-- [Architecture Guide](docs/ARCHITECTURE.md) - System design and TM logic specification
-- [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
-- [Known Limitations](docs/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
-- [Logical Operators Glossary](docs/glossary/logical-operators.md) - Formal symbols reference
-- [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
-- [Examples](docs/EXAMPLES.md) - Modal, temporal, and bimodal examples
-- [Contributing](docs/CONTRIBUTING.md) - How to contribute
+
+- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
+- [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
+- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
+- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
+- [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker
+- [Examples](Documentation/UserGuide/EXAMPLES.md) - Modal, temporal, and bimodal examples
+- [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
 - [API Reference](.lake/build/doc/) - Generated API documentation (run `lake build :docs` to generate)
 
 ### Developer Standards
-- [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - Coding conventions
-- [Module Organization](docs/development/MODULE_ORGANIZATION.md) - Project structure
-- [Testing Standards](docs/development/TESTING_STANDARDS.md) - Test requirements
-- [Tactic Development](docs/development/TACTIC_DEVELOPMENT.md) - Custom tactics
+
+- [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Module Organization](Documentation/Development/MODULE_ORGANIZATION.md) - Project structure
+- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test requirements
+- [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactics
 
 ## Project Structure
 
@@ -169,21 +216,25 @@ ProofChecker/
 │   └── BimodalProofs.lean      # Combined examples
 ├── Counterexamples/            # Invalidity demonstrations
 │   └── Counterexamples.lean    # Counterexamples library root
-├── docs/                       # User documentation
-│   ├── ARCHITECTURE.md         # System design and TM spec
-│   ├── TUTORIAL.md             # Getting started guide
-│   ├── EXAMPLES.md             # Usage examples
-│   ├── CONTRIBUTING.md         # Contribution guidelines
-│   ├── INTEGRATION.md          # Model-Checker integration
-│   ├── VERSIONING.md           # Semantic versioning policy
-│   ├── glossary/               # Formal symbols glossary
-│   │   └── logical-operators.md # Modal, temporal, meta-logical symbols
-│   └── development/            # Developer standards
-│       ├── LEAN_STYLE_GUIDE.md     # Coding conventions
-│       ├── MODULE_ORGANIZATION.md  # Directory structure
-│       ├── TESTING_STANDARDS.md    # Test requirements
-│       ├── TACTIC_DEVELOPMENT.md   # Custom tactic patterns
-│       └── QUALITY_METRICS.md      # Quality targets
+├── Documentation/              # User documentation
+│   ├── UserGuide/              # User-facing documentation
+│   │   ├── ARCHITECTURE.md         # System design and TM logic specification
+│   │   ├── TUTORIAL.md             # Getting started guide
+│   │   ├── EXAMPLES.md             # Usage examples
+│   │   └── INTEGRATION.md          # Model-Checker integration
+│   ├── ProjectInfo/            # Project status and contribution info
+│   │   ├── IMPLEMENTATION_STATUS.md  # Module-by-module status tracking
+│   │   ├── KNOWN_LIMITATIONS.md      # Gaps, explanations, workarounds
+│   │   ├── CONTRIBUTING.md           # Contribution guidelines
+│   │   └── VERSIONING.md             # Semantic versioning policy
+│   ├── Development/            # Developer standards
+│   │   ├── LEAN_STYLE_GUIDE.md     # Coding conventions
+│   │   ├── MODULE_ORGANIZATION.md  # Directory structure
+│   │   ├── TESTING_STANDARDS.md    # Test requirements
+│   │   ├── TACTIC_DEVELOPMENT.md   # Custom tactic patterns
+│   │   └── QUALITY_METRICS.md      # Quality targets
+│   └── Reference/              # Reference materials
+│       └── OPERATORS.md              # Formal symbols reference
 ├── lakefile.toml               # LEAN 4 build configuration
 ├── lean-toolchain              # LEAN version pinning
 ├── .gitignore                  # Git exclusions
@@ -215,7 +266,7 @@ If you use ProofChecker in your research, please cite:
 
 ## Contributing
 
-Contributions are welcome! Please read [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please read [CONTRIBUTING.md](Documentation/ProjectInfo/CONTRIBUTING.md) for guidelines.
 
 ### Development Setup
 
@@ -235,9 +286,9 @@ lake lint
 
 ## Status
 
-- **Layer 0 (Core TM)**: MVP Complete (partial soundness/completeness, see [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md))
+- **Layer 0 (Core TM)**: MVP Complete (partial soundness/completeness, see [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md))
 - **Layer 1 (Explanatory)**: Planned
 - **Layer 2 (Epistemic)**: Planned
 - **Layer 3 (Normative)**: Planned
 
-**Note**: ProofChecker MVP is functional for core TM reasoning despite partial metalogic implementation. See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) for workarounds and [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for detailed module status.
+**Note**: ProofChecker MVP is functional for core TM reasoning despite partial metalogic implementation. See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) for workarounds and [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) for detailed module status.

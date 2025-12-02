@@ -76,7 +76,7 @@ theorem my_new_theorem : ⊢ ... := by
 
 ### Code Style Compliance
 
-All code must follow the [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md):
+All code must follow the [LEAN Style Guide](../Development/LEAN_STYLE_GUIDE.md):
 
 ```lean
 -- Good: follows style guide
@@ -205,7 +205,7 @@ Reviewers will check:
 - [ ] Edge cases handled
 
 ### Style
-- [ ] Follows [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md)
+- [ ] Follows [LEAN Style Guide](../Development/LEAN_STYLE_GUIDE.md)
 - [ ] 100-char line limit
 - [ ] 2-space indentation
 - [ ] Proper naming conventions
@@ -336,8 +336,8 @@ Contributors are recognized in:
 
 ## References
 
-- [LEAN Style Guide](development/LEAN_STYLE_GUIDE.md)
-- [Testing Standards](development/TESTING_STANDARDS.md)
-- [Module Organization](development/MODULE_ORGANIZATION.md)
-- [Quality Metrics](development/QUALITY_METRICS.md)
-- [Tactic Development](development/TACTIC_DEVELOPMENT.md)
+- [LEAN Style Guide](../Development/LEAN_STYLE_GUIDE.md)
+- [Testing Standards](../Development/TESTING_STANDARDS.md)
+- [Module Organization](../Development/MODULE_ORGANIZATION.md)
+- [Quality Metrics](../Development/QUALITY_METRICS.md)
+- [Tactic Development](../Development/TACTIC_DEVELOPMENT.md)

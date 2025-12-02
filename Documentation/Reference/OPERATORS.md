@@ -1,6 +1,6 @@
 # Logical Operators Glossary
 
-**Navigation**: [Documentation](../) > [Architecture](../ARCHITECTURE.md) > Glossary
+**Navigation**: [Documentation](../) > [Architecture](../../UserGuide/ARCHITECTURE.md) > Glossary
 
 ## Purpose
 
@@ -305,7 +305,7 @@ The perpetuity principles (P1-P6) are key derived theorems in TM logic connectin
 
 ## Variable Conventions
 
-ProofChecker follows consistent naming conventions for variables across documentation and code. These conventions are established in the [LEAN Style Guide](../development/LEAN_STYLE_GUIDE.md).
+ProofChecker follows consistent naming conventions for variables across documentation and code. These conventions are established in the [LEAN Style Guide](../../Development/LEAN_STYLE_GUIDE.md).
 
 ### Formulas
 - **φ** (phi) - Primary formula variable
@@ -352,10 +352,10 @@ ProofChecker follows consistent naming conventions for variables across document
 
 ## Related Documentation
 
-- [Architecture Guide](../ARCHITECTURE.md) - Complete TM logic specification with formal semantics
-- [LEAN Style Guide](../development/LEAN_STYLE_GUIDE.md) - Coding conventions and variable naming
-- [Tutorial](../TUTORIAL.md) - Practical examples using these operators
-- [Examples](../EXAMPLES.md) - Modal, temporal, and bimodal proof examples
+- [Architecture Guide](../../UserGuide/ARCHITECTURE.md) - Complete TM logic specification with formal semantics
+- [LEAN Style Guide](../../Development/LEAN_STYLE_GUIDE.md) - Coding conventions and variable naming
+- [Tutorial](../../UserGuide/TUTORIAL.md) - Practical examples using these operators
+- [Examples](../../UserGuide/EXAMPLES.md) - Modal, temporal, and bimodal proof examples
 
 ---
 

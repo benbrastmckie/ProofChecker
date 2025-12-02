@@ -316,7 +316,7 @@ constrained by a task relation that captures transitions between states.
 ## References
 
 * "Possible Worlds" paper - TM logic specification
-* ProofChecker Architecture Guide - docs/ARCHITECTURE.md
+* ProofChecker Architecture Guide - Documentation/UserGuide/ARCHITECTURE.md
 -/
 ```
 
@@ -480,4 +480,4 @@ def very_complex := (fun x => (fun y => x + y + (if x > 0 then 1 else 0)) 3) 2  
 
 - [Mathlib4 Style Guide](https://leanprover-community.github.io/contribute/style.html)
 - [LEAN 4 Documentation](https://lean-lang.org/documentation/)
-- [ProofChecker Architecture](../../docs/ARCHITECTURE.md)
+- [ProofChecker Architecture](../UserGuide/ARCHITECTURE.md)
