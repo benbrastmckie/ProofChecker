@@ -9,9 +9,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/test-helpers.sh"
 
 # Source library under test
-CLAUDE_PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+CLAUDE_PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 export CLAUDE_PROJECT_DIR
-source "$CLAUDE_PROJECT_DIR/lib/todo/todo-functions.sh"
+source "$CLAUDE_PROJECT_DIR/.claude/lib/todo/todo-functions.sh"
 
 # Test suite
 test_suite="todo_functions_cleanup"

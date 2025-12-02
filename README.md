@@ -77,7 +77,7 @@ The logic TM is a bimodal system combining:
 
 ### Completed Modules
 
-- **Syntax**: Formula types, contexts, DSL (100% complete)
+- **Syntax**: Formula types, contexts (100% complete; DSL planned)
 - **ProofSystem**: All 8 axioms and 7 inference rules defined (100% complete)
 - **Semantics**: Task frames, models, truth evaluation, validity (100% complete)
 - **Perpetuity**: P1-P3 proven (P1-P2 use propositional helpers with sorry)
@@ -95,7 +95,9 @@ The logic TM is a bimodal system combining:
 
 ### Planned
 
-- **Decidability**: Not yet started
+- **Decidability**: Not yet started (Metalogic/Decidability.lean)
+- **DSL**: Domain-specific syntax for formulas (Syntax/DSL.lean)
+- **Archive Examples**: ModalProofs.lean and TemporalProofs.lean (imports commented in Archive.lean)
 - **Layer 1/2/3**: Counterfactual, epistemic, normative operators
 
 **For detailed status**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
@@ -144,8 +146,9 @@ example : ⊢ mt_instance := by
   apply Derivable.axiom
   apply Axiom.modal_t
 
--- Use DSL syntax for readable formulas
-example : ⊢ (□"p" → "p") := by
+-- DSL syntax planned for future (not yet implemented)
+-- For now, use direct formula construction
+example : ⊢ ((Formula.atom "p").box.imp (Formula.atom "p")) := by
   apply Derivable.axiom
   apply Axiom.modal_t
 
@@ -158,35 +161,40 @@ example (φ : Formula) : ⊢ (φ.box.imp (△ φ)) := perpetuity_1 φ
 ### User Documentation
 
 - [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
-- [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
-- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
-- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
 - [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](Documentation/UserGuide/EXAMPLES.md) - Modal, temporal, and bimodal examples
+- [Integration Guide](Documentation/UserGuide/INTEGRATION.md) - Model-Checker integration
+- [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
+- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
 - [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
+- [Versioning Policy](Documentation/ProjectInfo/VERSIONING.md) - Semantic versioning policy
+- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
 - [API Reference](.lake/build/doc/) - Generated API documentation (run `lake build :docs` to generate)
 
 ### Developer Standards
 
+- [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation requirements
+- [Documentation Quality Checklist](Documentation/Development/DOC_QUALITY_CHECKLIST.md) - Quality assurance checklist
 - [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Metaprogramming Guide](Documentation/Development/METAPROGRAMMING_GUIDE.md) - LEAN 4 metaprogramming and tactic development
 - [Module Organization](Documentation/Development/MODULE_ORGANIZATION.md) - Project structure
-- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test requirements
+- [Phased Implementation](Documentation/Development/PHASED_IMPLEMENTATION.md) - Wave-based implementation roadmap
+- [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Quality targets and standards
 - [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactics
+- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test requirements
 
 ## Project Structure
 
 ```
 ProofChecker/
 ├── ProofChecker.lean           # Library root (re-exports all public modules)
-├── ProofChecker/               # Main source directory
+├── ProofChecker/               # Main source directory (see ProofChecker/README.md)
 │   ├── Syntax/                 # Formula types, parsing, DSL
 │   │   ├── Formula.lean        # Core formula inductive type
-│   │   ├── Context.lean        # Proof context (premise lists)
-│   │   └── DSL.lean            # Domain-specific syntax
+│   │   └── Context.lean        # Proof context (premise lists)
 │   ├── ProofSystem/            # Axioms and inference rules
 │   │   ├── Axioms.lean         # TM axiom schemata
-│   │   ├── Rules.lean          # Inference rules (MP, MK, TK, TD)
-│   │   └── Derivation.lean     # Derivability relation
+│   │   └── Derivation.lean     # Derivability relation and inference rules
 │   ├── Semantics/              # Task frame semantics
 │   │   ├── TaskFrame.lean      # Task frame structure
 │   │   ├── WorldHistory.lean   # World history definition
@@ -195,28 +203,23 @@ ProofChecker/
 │   │   └── Validity.lean       # Validity and consequence
 │   ├── Metalogic/              # Soundness and completeness
 │   │   ├── Soundness.lean      # Soundness theorem
-│   │   ├── Completeness.lean   # Completeness theorem
-│   │   └── Decidability.lean   # Decision procedures
+│   │   └── Completeness.lean   # Completeness theorem (canonical model)
 │   ├── Theorems/               # Key theorems
 │   │   └── Perpetuity.lean     # P1-P6 perpetuity principles
 │   └── Automation/             # Proof automation
 │       ├── Tactics.lean        # Custom tactics
 │       └── ProofSearch.lean    # Automated proof search
-├── ProofCheckerTest/           # Test suite
+├── ProofCheckerTest/           # Test suite (see ProofCheckerTest/README.md)
 │   ├── ProofCheckerTest.lean   # Test library root
 │   ├── Syntax/                 # Tests for formula construction
 │   ├── ProofSystem/            # Tests for axioms and rules
 │   ├── Semantics/              # Tests for semantics
 │   ├── Integration/            # Cross-module tests
 │   └── Metalogic/              # Soundness/completeness tests
-├── Archive/                    # Pedagogical examples
+├── Archive/                    # Pedagogical examples (see Archive/README.md)
 │   ├── Archive.lean            # Archive library root
-│   ├── ModalProofs.lean        # S5 modal logic examples
-│   ├── TemporalProofs.lean     # Temporal reasoning examples
-│   └── BimodalProofs.lean      # Combined examples
-├── Counterexamples/            # Invalidity demonstrations
-│   └── Counterexamples.lean    # Counterexamples library root
-├── Documentation/              # User documentation
+│   └── BimodalProofs.lean      # Combined modal-temporal examples
+├── Documentation/              # User documentation (see Documentation/README.md)
 │   ├── UserGuide/              # User-facing documentation
 │   │   ├── ARCHITECTURE.md         # System design and TM logic specification
 │   │   ├── TUTORIAL.md             # Getting started guide
@@ -228,11 +231,15 @@ ProofChecker/
 │   │   ├── CONTRIBUTING.md           # Contribution guidelines
 │   │   └── VERSIONING.md             # Semantic versioning policy
 │   ├── Development/            # Developer standards
-│   │   ├── LEAN_STYLE_GUIDE.md     # Coding conventions
-│   │   ├── MODULE_ORGANIZATION.md  # Directory structure
-│   │   ├── TESTING_STANDARDS.md    # Test requirements
-│   │   ├── TACTIC_DEVELOPMENT.md   # Custom tactic patterns
-│   │   └── QUALITY_METRICS.md      # Quality targets
+│   │   ├── DIRECTORY_README_STANDARD.md # Directory-level documentation requirements
+│   │   ├── DOC_QUALITY_CHECKLIST.md     # Quality assurance checklist
+│   │   ├── LEAN_STYLE_GUIDE.md          # Coding conventions
+│   │   ├── METAPROGRAMMING_GUIDE.md     # LEAN 4 metaprogramming and tactics
+│   │   ├── MODULE_ORGANIZATION.md       # Directory structure
+│   │   ├── PHASED_IMPLEMENTATION.md     # Wave-based implementation roadmap
+│   │   ├── QUALITY_METRICS.md           # Quality targets
+│   │   ├── TACTIC_DEVELOPMENT.md        # Custom tactic patterns
+│   │   └── TESTING_STANDARDS.md         # Test requirements
 │   └── Reference/              # Reference materials
 │       └── OPERATORS.md              # Formal symbols reference
 ├── lakefile.toml               # LEAN 4 build configuration

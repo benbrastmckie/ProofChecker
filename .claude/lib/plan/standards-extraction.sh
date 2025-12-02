@@ -29,6 +29,7 @@
 #   - error_logging: Ensures error handling integration in phases
 #   - clean_break_development: Influences refactoring approach
 #   - directory_organization: Validates file placement in tasks
+#   - plan_metadata_standard: Ensures uniform plan metadata structure
 #
 # DEPENDENCIES:
 #   - awk (standard Unix utility)
@@ -137,6 +138,7 @@ extract_claude_section() {
 #   4. error_logging
 #   5. clean_break_development
 #   6. directory_organization
+#   7. plan_metadata_standard
 #
 # OUTPUT FORMAT:
 #   SECTION: code_standards
@@ -153,6 +155,7 @@ extract_planning_standards() {
     "error_logging"
     "clean_break_development"
     "directory_organization"
+    "plan_metadata_standard"
   )
 
   local output=""

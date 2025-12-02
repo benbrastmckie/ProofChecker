@@ -187,6 +187,7 @@ After creating plan with Write tool, YOU MUST verify the file was created succes
 2. **Verify Structure**: Check required sections present
 3. **Verify Research Links**: Confirm research reports referenced (if provided) **[Revision 3]**
 4. **Verify Cross-References**: Check metadata includes all report paths **[Revision 3]**
+5. **Verify Metadata Compliance**: Run metadata validation to ensure standards compliance
 
 **Verification Approach**:
 ```markdown
@@ -204,12 +205,47 @@ If research reports were provided:
 - This enables bidirectional linking (plan → reports)
 ```
 
+**Metadata Validation** (Step 5):
+After creating the plan, validate metadata compliance using the validation script:
+
+```bash
+bash .claude/scripts/lint/validate-plan-metadata.sh "$PLAN_PATH" 2>&1
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+  echo "ERROR: Plan metadata validation failed"
+  echo "See validation output above for specific issues"
+  exit 1
+fi
+
+echo "✓ Metadata validation passed"
+```
+
+**Required Metadata Fields** (see [Plan Metadata Standard](.claude/docs/reference/standards/plan-metadata-standard.md)):
+- **Date**: `YYYY-MM-DD` or `YYYY-MM-DD (Revised)`
+- **Feature**: One-line description (50-100 chars)
+- **Status**: `[NOT STARTED]`, `[IN PROGRESS]`, `[COMPLETE]`, or `[BLOCKED]`
+- **Estimated Hours**: `{low}-{high} hours` (numeric range with "hours" suffix)
+- **Standards File**: Absolute path (provided in prompt)
+- **Research Reports**: Markdown links with relative paths or `none`
+
+**Optional Recommended Fields**:
+- **Scope**: Multi-line description (recommended for complex plans)
+- **Complexity Score**: Numeric value from complexity calculation
+- **Structure Level**: `0`, `1`, or `2`
+- **Estimated Phases**: Phase count from initial analysis
+
+**Workflow-Specific Fields**:
+- /repair plans: **Error Log Query**, **Errors Addressed**
+- /revise plans: **Original Plan**, **Revision Reason**
+
 **Self-Verification Checklist**:
 - [ ] Plan file created at exact PLAN_PATH provided in prompt
 - [ ] File contains all required sections
 - [ ] Research reports listed in metadata (if provided)
 - [ ] All report paths match those provided in prompt
 - [ ] Plan structure is parseable by /implement
+- [ ] Metadata validation passes (exit 0)
 
 **CHECKPOINT**: All verifications must pass before Step 4.
 
@@ -734,6 +770,8 @@ PROGRESS: Plan complete (4 phases, 16 hours estimated).
 ### From /plan Command (With Research)
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the plan-architect.
+
 Task {
   subagent_type: "general-purpose"
   description: "Create implementation plan for auth feature using plan-architect protocol"
@@ -779,6 +817,8 @@ Task {
 ### From /orchestrate Command (Planning Phase)
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the plan-architect.
+
 Task {
   subagent_type: "general-purpose"
   description: "Generate structured implementation plan using plan-architect protocol"
@@ -836,6 +876,8 @@ Task {
 Example showing actual Block 5b Task invocation format:
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the plan-architect.
+
 Task {
   subagent_type: "general-purpose"
   description: "Revise implementation plan based on user feedback with mandatory file modification"

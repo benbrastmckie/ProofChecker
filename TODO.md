@@ -252,6 +252,44 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ---
 
+### 12. Create Comprehensive Tactic Test Suite
+**Effort**: 10-15 hours
+**Status**: Not Started
+**Priority**: Medium (concurrent with Task 7, follows TDD approach)
+
+**Description**: Develop comprehensive test suite for automation package following test
+patterns from LEAN 4 best practices. Includes unit tests for individual tactics,
+integration tests for tactic combinations, and property-based tests for correctness.
+
+**Files**:
+- `ProofCheckerTest/Automation/TacticsTest.lean` (to be created)
+- `ProofCheckerTest/Automation/ProofSearchTest.lean` (to be created)
+
+**Action Items**:
+1. Create `TacticsTest.lean` with test structure following LEAN 4 test patterns
+2. Write unit tests for each tactic (apply_axiom, modal_t, tm_auto, assumption_search)
+3. Write integration tests for tactic combinations and common proof patterns
+4. Write property-based tests verifying tactic correctness properties
+5. Test error handling (invalid goals, failed applications, edge cases)
+6. Test performance on realistic proof scenarios (benchmarking)
+7. Document test patterns in test file comments
+8. Update IMPLEMENTATION_STATUS.md Automation test coverage
+
+**Blocking**: None (tests can be written before implementation using `sorry` placeholders)
+
+**Dependencies**:
+- **CONCURRENT WITH**: Task 7 (Implement Core Automation) - follows TDD approach
+- **BENEFITS FROM**: Documentation/Development/TACTIC_DEVELOPMENT.md for test patterns
+
+**Test Patterns Reference**: Best practices report (.claude/specs/
+021_lean4_bimodal_logic_best_practices/reports/001-lean-4-modal-logic-
+implementation-best.md) lines 619-648
+
+**Notes**: Following TDD, tests should be written before or alongside implementation,
+not after. Test file can use `sorry` for unimplemented tactics initially.
+
+---
+
 ## Low Priority Tasks
 
 ### 9. Begin Completeness Proofs
@@ -372,6 +410,45 @@ This file serves as the central task tracking system for ProofChecker developmen
 - **REQUIRES**: Tasks 1-8 complete (high and medium priority)
 
 **Notes**: This is strategic planning for post-MVP development. Should not begin until Layer 0 is complete and tested.
+
+---
+
+### 13. Create Proof Strategy Documentation
+**Effort**: 5-10 hours
+**Status**: Not Started
+**Priority**: Low (pedagogical, not blocking)
+
+**Description**: Create Archive/ examples demonstrating common proof strategies and
+patterns for TM derivations. Provides pedagogical value for new users, students, and
+researchers learning TM logic and ProofChecker usage.
+
+**Files**:
+- `Archive/ModalProofStrategies.lean` (to be created)
+- `Archive/TemporalProofStrategies.lean` (to be created)
+- `Archive/BimodalProofStrategies.lean` (to be created)
+
+**Action Items**:
+1. Create `ModalProofStrategies.lean` with S5 modal proof patterns (necessity chains,
+   possibility proofs, modal modus ponens)
+2. Create `TemporalProofStrategies.lean` with temporal reasoning patterns (always/
+   eventually proofs, induction over time, temporal duality)
+3. Create `BimodalProofStrategies.lean` with modal-temporal interaction patterns
+   (perpetuity principles, frame reasoning, task relation proofs)
+4. Document common proof techniques in extensive comments
+5. Update `Archive/Archive.lean` to re-export new modules
+
+**Blocking**: None (independent documentation task)
+
+**Dependencies**: None (can be created anytime, benefits from completed proofs)
+
+**Audience**: New users, students, researchers learning TM logic
+
+**Reference**: Best practices report (.claude/specs/
+021_lean4_bimodal_logic_best_practices/reports/001-lean-4-modal-logic-
+implementation-best.md) lines 649-675
+
+**Notes**: These are pedagogical examples, not required for project functionality.
+Can be deferred until after core implementation is stable.
 
 ---
 
@@ -745,9 +822,16 @@ Task 7 (Implement Core Automation)
 Task 8 (Fix WorldHistory Universal Helper)
   → Independent, can run anytime
   → No blockers
+
+Task 12 (Create Tactic Test Suite)
+  → CONCURRENT WITH: Task 7 (Implement Core Automation)
+  → Independent, can start anytime
+  → Follows TDD approach (tests written before/alongside implementation)
+  → Benefits from: Documentation/Development/TACTIC_DEVELOPMENT.md
 ```
 
-**Parallel Opportunities**: Tasks 5, 7, 8 can run in parallel. Task 6 must wait for Task 2.
+**Parallel Opportunities**: Tasks 5, 7, 8, 12 can run in parallel. Task 6 must wait
+for Task 2. Task 12 should be concurrent with Task 7 per TDD methodology.
 
 ### Low Priority Dependencies
 
@@ -765,9 +849,16 @@ Task 10 (Create Decidability Module)
 Task 11 (Plan Layer 1/2/3 Extensions)
   → REQUIRES: Layer 0 completion (Tasks 1-8 complete)
   → Strategic planning, not implementation
+
+Task 13 (Create Proof Strategy Documentation)
+  → Independent, can run anytime
+  → No blockers
+  → Benefits from: Completed proofs (more examples to document)
+  → Pedagogical value for new users, students, researchers
 ```
 
-**Parallel Opportunities**: None until prerequisites met.
+**Parallel Opportunities**: Tasks 9 and 13 can run in parallel. Task 10 requires
+Task 9 complete. Task 11 requires Layer 0 completion.
 
 ### Execution Waves (Optimal Ordering)
 
@@ -777,14 +868,16 @@ Task 11 (Plan Layer 1/2/3 Extensions)
 - Task 3: Complete Archive Examples (5-10 hours)
 
 **Wave 2** (Medium Priority, After Wave 1):
-- Task 5: Complete Soundness Proofs (15-20 hours) - Can run parallel with 6, 7, 8
-- Task 6: Complete Perpetuity Proofs (20-30 hours) - AFTER Task 2, can run parallel with 5, 7, 8
-- Task 7: Implement Core Automation (40-60 hours, phased) - Can run parallel with 5, 6, 8
-- Task 8: Fix WorldHistory (1-2 hours) - Can run parallel with 5, 6, 7
+- Task 5: Complete Soundness Proofs (15-20 hours) - Can run parallel with 6, 7, 8, 12
+- Task 6: Complete Perpetuity Proofs (20-30 hours) - AFTER Task 2, parallel with 5, 7, 8, 12
+- Task 7: Implement Core Automation (40-60 hours, phased) - Can run parallel with 5, 6, 8, 12
+- Task 8: Fix WorldHistory (1-2 hours) - Can run parallel with 5, 6, 7, 12
+- Task 12: Create Tactic Test Suite (10-15 hours) - CONCURRENT with Task 7, parallel with 5, 6, 8
 
 **Wave 3** (Low Priority, After Wave 2):
-- Task 9: Begin Completeness Proofs (70-90 hours, phased) - Can start anytime, long-term
+- Task 9: Begin Completeness Proofs (70-90 hours, phased) - Can start anytime, parallel with 13
 - Task 10: Create Decidability Module (40-60 hours) - AFTER Task 9
+- Task 13: Create Proof Strategy Documentation (5-10 hours) - Can run anytime, parallel with 9
 
 **Wave 4** (Future Planning, After Layer 0 Complete):
 - Task 11: Plan Layer 1/2/3 Extensions (20-40 hours research)
@@ -898,9 +991,9 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 
 **Layer 0 Completion Progress**:
 - High Priority: 1/4 tasks complete (25%)
-- Medium Priority: 0/4 tasks complete (0%)
-- Low Priority: 0/3 tasks complete (0%)
-- **Overall**: 1/11 tasks complete (9%)
+- Medium Priority: 0/5 tasks complete (0%)
+- Low Priority: 0/4 tasks complete (0%)
+- **Overall**: 1/13 tasks complete (8%)
 
 **Sorry Placeholder Resolution**:
 - Total: 41 placeholders identified
@@ -914,12 +1007,12 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 
 **Estimated Effort to Layer 0 Completion**:
 - High Priority Tasks: 16-30 hours remaining (Task 4 complete)
-- Medium Priority Tasks: 77-113 hours
-- **Total**: 93-143 hours
+- Medium Priority Tasks: 87-128 hours (includes new Task 12: 10-15 hours)
+- **Total**: 103-158 hours
 
 **Estimated Effort to Full Completion (including Low Priority)**:
-- Low Priority Tasks: 130-190 hours
-- **Grand Total**: 223-333 hours
+- Low Priority Tasks: 135-200 hours (includes new Task 13: 5-10 hours)
+- **Grand Total**: 238-358 hours
 
 ---
 

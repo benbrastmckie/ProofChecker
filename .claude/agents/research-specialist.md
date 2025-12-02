@@ -561,6 +561,8 @@ Recommendation: Follow this pattern for new session-based features.
 ### From /orchestrate Command (Research Phase)
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist.
+
 Task {
   subagent_type: "general-purpose"
   description: "Research authentication patterns and create report file"
@@ -602,6 +604,8 @@ Task {
 ### From /report Command
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist.
+
 Task {
   subagent_type: "general-purpose"
   description: "Research async/await patterns in Lua ecosystem using research-specialist protocol"
@@ -625,6 +629,8 @@ Task {
 ### From /plan Command
 
 ```
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist.
+
 Task {
   subagent_type: "general-purpose"
   description: "Analyze existing test infrastructure using research-specialist protocol"

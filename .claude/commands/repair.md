@@ -460,7 +460,9 @@ fi
 REPORT_PATH="${RESEARCH_DIR}/${REPORT_NUMBER}-${REPORT_SLUG}.md"
 
 # Validate path is absolute
-if [[ ! "$REPORT_PATH" =~ ^/ ]]; then
+if [[ "$REPORT_PATH" =~ ^/ ]]; then
+  : # Path is absolute, continue
+else
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
@@ -1092,7 +1094,9 @@ PLAN_FILENAME="${PLAN_NUMBER}-$(echo "$TOPIC_NAME" | tr '_' '-' | cut -c1-40)-pl
 PLAN_PATH="${PLANS_DIR}/${PLAN_FILENAME}"
 
 # Validate path is absolute
-if [[ ! "$PLAN_PATH" =~ ^/ ]]; then
+if [[ "$PLAN_PATH" =~ ^/ ]]; then
+  : # Path is absolute, continue
+else
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
@@ -1107,7 +1111,15 @@ fi
 
 # Collect research report paths for plan creation
 REPORT_PATHS=$(find "$RESEARCH_DIR" -name '*.md' -type f | sort)
-REPORT_PATHS_JSON=$(echo "$REPORT_PATHS" | jq -R . | jq -s .)
+# Convert to space-separated format matching /plan command
+REPORT_PATHS_LIST=$(echo "$REPORT_PATHS" | tr '\n' ' ')
+
+# Build error filters context for plan metadata
+ERROR_FILTERS=""
+[ -n "$ERROR_SINCE" ] && ERROR_FILTERS+="--since $ERROR_SINCE "
+[ -n "$ERROR_TYPE" ] && ERROR_FILTERS+="--type $ERROR_TYPE "
+[ -n "$ERROR_COMMAND" ] && ERROR_FILTERS+="--command $ERROR_COMMAND "
+ERROR_FILTERS=$(echo "$ERROR_FILTERS" | sed 's/ $//')  # Trim trailing space
 
 # Ensure parent directory exists
 mkdir -p "$(dirname "$PLAN_PATH")" 2>/dev/null || true
@@ -1116,7 +1128,8 @@ mkdir -p "$(dirname "$PLAN_PATH")" 2>/dev/null || true
 append_workflow_state "PLAN_PATH" "$PLAN_PATH"
 append_workflow_state "PLAN_NUMBER" "$PLAN_NUMBER"
 append_workflow_state "PLAN_FILENAME" "$PLAN_FILENAME"
-append_workflow_state "REPORT_PATHS_JSON" "$REPORT_PATHS_JSON"
+append_workflow_state "REPORT_PATHS_LIST" "$REPORT_PATHS_LIST"
+append_workflow_state "ERROR_FILTERS" "$ERROR_FILTERS"
 
 # Persist state transitions
 save_completed_states_to_state
@@ -1164,9 +1177,11 @@ Task {
     **Input Contract (Hard Barrier Pattern)**:
     - Plan Path: ${PLAN_PATH}
     - Feature Description: ${ERROR_DESCRIPTION}
-    - Research Reports: ${REPORT_PATHS_JSON}
+    - Research Reports: ${REPORT_PATHS_LIST}
+    - Command Context: repair
     - Workflow Type: research-and-plan
     - Operation Mode: new plan creation
+    - Error Log Query: ${ERROR_FILTERS}
 
     **Project Standards**:
     ${FORMATTED_STANDARDS}
@@ -1570,5 +1585,10 @@ fi
 
 # === UPDATE TODO.md ===
 # Trigger TODO.md regeneration via delegation pattern
-trigger_todo_update "repair plan created"
+# Source todo-functions.sh for trigger_todo_update()
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || true
+
+if type trigger_todo_update &>/dev/null; then
+  trigger_todo_update "repair plan created"
+fi
 ```

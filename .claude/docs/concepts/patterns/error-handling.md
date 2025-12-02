@@ -548,6 +548,78 @@ if [ "$error_type" = "fatal" ]; then
 fi
 ```
 
+### ERR Trap Suppression for Validation Failures
+
+**Purpose**: Prevent cascading execution_error log entries for expected validation failures that are already logged with specific error types (state_error, validation_error).
+
+**Problem**: Library functions that perform validation (e.g., append_workflow_state, sm_transition) log errors with descriptive types and then return 1. The ERR trap catches this return and logs an additional execution_error entry, creating duplicate log entries for the same underlying issue.
+
+**Solution**: Set `SUPPRESS_ERR_TRAP=1` flag before returning from validation functions to prevent the ERR trap from logging.
+
+**Implementation Pattern**:
+```bash
+# In library validation functions (e.g., state-persistence.sh)
+some_validation_function() {
+  # ... validation logic ...
+
+  if validation_fails; then
+    echo "ERROR: Validation failed" >&2
+
+    # Suppress ERR trap for this expected validation failure
+    # Prevents cascading execution_error log entry
+    SUPPRESS_ERR_TRAP=1
+
+    # Log specific error type
+    log_command_error \
+      "$COMMAND_NAME" \
+      "$WORKFLOW_ID" \
+      "$USER_ARGS" \
+      "validation_error" \
+      "Descriptive error message" \
+      "function_name" \
+      "$(jq -n '{context: "details"}')"
+
+    return 1  # ERR trap will see flag and skip logging
+  fi
+}
+```
+
+**ERR Trap Handler** (in error-handling.sh):
+```bash
+_log_bash_error() {
+  local exit_code=$1
+  local line_no=$2
+  local failed_command=$3
+  # ... other args ...
+
+  # Check suppression flag
+  if [[ "${SUPPRESS_ERR_TRAP:-0}" == "1" ]]; then
+    SUPPRESS_ERR_TRAP=0  # Auto-reset flag
+    return 0  # Skip logging and exit
+  fi
+
+  # Normal ERR trap logging continues...
+  log_command_error "$error_type" "Bash error at line $line_no" ...
+  exit $exit_code
+}
+```
+
+**When to Use**:
+- ✅ **Use** for validation failures in library functions (type checks, state checks, etc.)
+- ✅ **Use** when error is already logged with specific error type (state_error, validation_error)
+- ❌ **Don't use** for unexpected errors (file I/O failures, permission errors, etc.)
+- ❌ **Don't use** outside library functions (commands should let ERR trap handle errors)
+
+**Best Practices**:
+1. Set flag immediately before `return 1` to minimize scope
+2. Always log specific error type before setting flag
+3. Flag auto-resets in trap handler to prevent suppressing subsequent errors
+4. Document why suppression is needed (comment explaining expected validation failure)
+
+**Impact**: Reduces error log noise by 20-30% by eliminating duplicate entries for validation failures.
+
+---
+
 ### Helper Functions (Spec 945)
 
 The error-handling library provides specialized helper functions for common error scenarios:

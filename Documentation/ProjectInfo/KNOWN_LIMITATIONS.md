@@ -14,6 +14,7 @@ This document provides comprehensive documentation of all implementation gaps in
 4. [Automation Stubs](#4-automation-stubs)
 5. [Workarounds and Alternatives](#5-workarounds-and-alternatives)
 6. [Roadmap for Completion](#6-roadmap-for-completion)
+7. [Missing Features and Planned Extensions](#7-missing-features-and-planned-extensions)
 
 ---
 
@@ -755,6 +756,60 @@ This section outlines the path to completing all ProofChecker features.
 - ✗ Relying on completeness for unprovability arguments
 - ✗ Using unproven perpetuity principles (P4-P6) without caveats
 - ✗ Expecting tactic automation
+
+---
+
+## 7. Missing Features and Planned Extensions
+
+### 7.1 Counterexamples Module
+
+**Status**: Not yet implemented
+
+**Context**: The Counterexamples/ directory was removed from the codebase as it contained only stub implementations with no actual counterexample construction. This violated TDD principles (no tests, no implementation).
+
+**Planned functionality**:
+- Invalid formula detection using task semantics
+- Countermodel construction for non-theorems
+- Automated counterexample search
+- Pedagogical counterexamples for common mistakes
+
+**Current workarounds**:
+- Manually construct TaskModels to demonstrate invalidity
+- Use semantic validity checking with specific models
+- Consult ARCHITECTURE.md for semantic definitions
+
+**Implementation timeline**: Post-MVP, requires completion of:
+- Decidability module (Metalogic/Decidability.lean)
+- Model construction tactics
+- Semantic validity checker
+
+**Restoration**: When implemented, Counterexamples/ will be restored with full test coverage and TDD compliance.
+
+### 7.2 DSL Module
+
+**Status**: Documented but not yet implemented (Syntax/DSL.lean)
+
+**Planned functionality**:
+- Readable syntax for formula construction (e.g., `□"p" → "p"`)
+- Custom operators and notation
+- Type-safe formula DSL
+
+**Current workarounds**:
+- Use direct formula construction: `(Formula.atom "p").box.imp (Formula.atom "p")`
+- Leverage dot notation for formula combinators
+
+### 7.3 Decidability Module
+
+**Status**: Not yet started (Metalogic/Decidability.lean)
+
+**Planned functionality**:
+- Decision procedures for TM logic
+- Automated theorem proving
+- Complexity analysis
+
+**Current workarounds**:
+- Manual proof construction using Derivable relation
+- Semantic validity checking with specific models
 
 ---
 

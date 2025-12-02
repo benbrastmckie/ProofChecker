@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # Error handling and recovery utilities
 # Provides functions for error classification, recovery, retry logic, and escalation
+#
+# Test Context Detection:
+#   - ERR trap automatically detects test execution contexts to prevent false positives
+#   - Test context patterns: WORKFLOW_ID=test_*, /tmp/test_*.sh scripts, SUPPRESS_ERR_LOGGING=1
+#   - Usage: export SUPPRESS_ERR_LOGGING=1 before running test scripts to skip error logging
+#   - Effect: Intentional test failures won't be logged as real errors in errors.jsonl
 
 # Source guard: Prevent multiple sourcing
 if [ -n "${ERROR_HANDLING_SOURCED:-}" ]; then
@@ -196,6 +202,36 @@ readonly ERROR_TYPE_LLM_API_ERROR="llm_api_error"
 readonly ERROR_TYPE_LLM_LOW_CONFIDENCE="llm_low_confidence"
 readonly ERROR_TYPE_LLM_PARSE_ERROR="llm_parse_error"
 readonly ERROR_TYPE_INVALID_MODE="invalid_mode"
+
+# is_test_context: Detect if current execution context is a test framework
+# Usage: is_test_context
+# Returns: 0 if test context detected, 1 otherwise
+# Effect: Used to suppress error logging for intentional test framework errors
+# Test Detection Methods:
+#   1. Workflow ID pattern: WORKFLOW_ID matches ^test_
+#   2. Script path pattern: Calling script matches /tmp/test_.*\.sh$
+#   3. Environment variable: SUPPRESS_ERR_LOGGING=1
+# Example: if is_test_context; then skip_logging; fi
+is_test_context() {
+  # Check 1: Workflow ID pattern (test_*)
+  if [[ "${WORKFLOW_ID:-}" =~ ^test_ ]]; then
+    return 0
+  fi
+
+  # Check 2: Calling script in /tmp/test_*.sh
+  # BASH_SOURCE[2] is the script that called the error trap function
+  local caller_script="${BASH_SOURCE[2]:-}"
+  if [[ "$caller_script" =~ /tmp/test_.*\.sh$ ]]; then
+    return 0
+  fi
+
+  # Check 3: Environment variable override
+  if [ "${SUPPRESS_ERR_LOGGING:-0}" = "1" ]; then
+    return 0
+  fi
+
+  return 1
+}
 
 # classify_error: Classify error based on error message
 # Usage: classify_error <error-message>
@@ -1811,6 +1847,7 @@ handle_state_error() {
 
 # Export functions for use in other scripts
 if [ "${BASH_SOURCE[0]}" != "${0}" ]; then
+  export -f is_test_context
   export -f classify_error
   export -f suggest_recovery
   export -f detect_error_type
@@ -1918,6 +1955,21 @@ _log_bash_error() {
   local workflow_id=$5
   local user_args=$6
 
+  # Check suppression flag for expected validation failures
+  # This prevents cascading ERR trap logging for legitimate validation errors
+  # that are already logged by library functions (e.g., state_error, validation_error)
+  if [[ "${SUPPRESS_ERR_TRAP:-0}" == "1" ]]; then
+    SUPPRESS_ERR_TRAP=0  # Auto-reset flag to prevent suppressing subsequent real errors
+    return 0  # Return without logging or exiting
+  fi
+
+  # Skip error logging for test framework contexts
+  # Prevents false positive errors from intentional test failures
+  if is_test_context; then
+    [ "${DEBUG:-0}" = "1" ] && echo "DEBUG: Skipping error log (test context detected)" >&2
+    exit $exit_code
+  fi
+
   # Mark that we've logged this error to prevent duplicate logging from EXIT trap
   _BASH_ERROR_LOGGED=1
 
@@ -1962,6 +2014,13 @@ _log_bash_exit() {
 
   # Only log if error occurred AND not already logged by ERR trap
   if [ $exit_code -ne 0 ] && [ -z "${_BASH_ERROR_LOGGED:-}" ]; then
+    # Skip error logging for test framework contexts
+    # Prevents false positive errors from intentional test failures
+    if is_test_context; then
+      [ "${DEBUG:-0}" = "1" ] && echo "DEBUG: Skipping error log (test context detected)" >&2
+      return
+    fi
+
     # Filter benign errors (system initialization failures that aren't actionable)
     if _is_benign_bash_error "$failed_command" "$exit_code"; then
       return  # Skip logging for benign errors
@@ -2060,6 +2119,9 @@ validate_agent_output_with_retry() {
   local timeout_seconds="${4:-5}"
   local max_retries="${5:-3}"
 
+  # Track total execution time for diagnostics
+  local start_time=$(date +%s)
+
   for retry in $(seq 1 $max_retries); do
     local elapsed=0
     while [ $elapsed -lt $timeout_seconds ]; do
@@ -2069,6 +2131,10 @@ validate_agent_output_with_retry() {
           if $format_validator "$expected_file"; then
             return 0  # Success: file exists and passes validation
           else
+            # Get file size for diagnostics
+            local file_size=$(stat -c%s "$expected_file" 2>/dev/null || stat -f%z "$expected_file" 2>/dev/null || echo 0)
+            local execution_time=$(($(date +%s) - start_time))
+
             log_command_error \
               "${COMMAND_NAME:-/unknown}" \
               "${WORKFLOW_ID:-unknown}" \
@@ -2076,7 +2142,9 @@ validate_agent_output_with_retry() {
               "validation_error" \
               "Agent $agent_name output file failed format validation (retry $retry/$max_retries)" \
               "validate_agent_output_with_retry" \
-              "$(jq -n --arg agent "$agent_name" --arg file "$expected_file" --argjson retry "$retry" '{agent: $agent, output_file: $file, retry: $retry}')"
+              "$(jq -n --arg agent "$agent_name" --arg file "$expected_file" --argjson retry "$retry" \
+                --argjson file_size "$file_size" --argjson exec_time "$execution_time" \
+                '{agent: $agent, output_file: $file, retry: $retry, file_size_bytes: $file_size, execution_time_seconds: $exec_time}')"
 
             # Remove invalid file before retry
             rm -f "$expected_file" 2>/dev/null
@@ -2097,6 +2165,15 @@ validate_agent_output_with_retry() {
   done
 
   # All retries exhausted: file not created or validation failed
+  local execution_time=$(($(date +%s) - start_time))
+  local file_exists="false"
+  local file_size=0
+
+  if [ -f "$expected_file" ]; then
+    file_exists="true"
+    file_size=$(stat -c%s "$expected_file" 2>/dev/null || stat -f%z "$expected_file" 2>/dev/null || echo 0)
+  fi
+
   log_command_error \
     "${COMMAND_NAME:-/unknown}" \
     "${WORKFLOW_ID:-unknown}" \
@@ -2104,7 +2181,9 @@ validate_agent_output_with_retry() {
     "agent_error" \
     "Agent $agent_name did not create valid output file after $max_retries attempts" \
     "validate_agent_output_with_retry" \
-    "$(jq -n --arg agent "$agent_name" --arg file "$expected_file" --argjson retries "$max_retries" '{agent: $agent, expected_file: $file, retries: $retries}')"
+    "$(jq -n --arg agent "$agent_name" --arg file "$expected_file" --argjson retries "$max_retries" \
+      --arg file_exists "$file_exists" --argjson file_size "$file_size" --argjson exec_time "$execution_time" \
+      '{agent: $agent, expected_file: $file, retries: $retries, file_exists: $file_exists, file_size_bytes: $file_size, execution_time_seconds: $exec_time}')"
 
   return 1
 }

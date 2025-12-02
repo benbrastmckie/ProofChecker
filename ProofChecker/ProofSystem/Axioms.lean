@@ -3,16 +3,20 @@ import ProofChecker.Syntax.Formula
 /-!
 # Axioms - TM Axiom Schemata
 
-This module defines the 8 axiom schemata for bimodal logic TM (Tense and Modality).
+This module defines the 10 axiom schemata for bimodal logic TM (Tense and Modality).
 
 ## Main Definitions
 
 - `Axiom`: Inductive type characterizing valid axiom instances
-- 8 axiom constructors: `modal_t`, `modal_4`, `modal_b`, `temp_4`, `temp_a`, `temp_l`, `modal_future`, `temp_future`
+- 10 axiom constructors: `prop_k`, `prop_s`, `modal_t`, `modal_4`, `modal_b`, `temp_4`, `temp_a`, `temp_l`, `modal_future`, `temp_future`
 
 ## Axiom Schemata
 
 The TM logic includes:
+
+### Propositional Axioms
+- **K** (Propositional K): `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))` - distribution axiom
+- **S** (Propositional S): `φ → (ψ → φ)` - weakening axiom
 
 ### S5 Modal Axioms (metaphysical necessity □)
 - **MT** (Modal T): `□φ → φ` - what is necessary is true (reflexivity)
@@ -47,10 +51,29 @@ open ProofChecker.Syntax
 /--
 Axiom schemata for bimodal logic TM.
 
-A formula `φ` is an axiom if it matches one of the 8 axiom schema patterns.
-Each constructor takes a formula parameter representing the schema instantiation.
+A formula `φ` is an axiom if it matches one of the 10 axiom schema patterns.
+Each constructor takes formula parameters representing the schema instantiation.
 -/
 inductive Axiom : Formula → Prop where
+  /--
+  Propositional K axiom: `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))` (distribution).
+
+  The distribution axiom for implication. If we have a way to derive χ from ψ
+  assuming φ, and we have a way to derive ψ from φ, then we can derive χ from φ.
+  This is a fundamental propositional tautology used in many proofs.
+  -/
+  | prop_k (φ ψ χ : Formula) :
+      Axiom ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ)))
+
+  /--
+  Propositional S axiom: `φ → (ψ → φ)` (weakening).
+
+  The weakening axiom for implication. A true formula remains true regardless
+  of additional assumptions. This allows us to add hypotheses that are not used.
+  This is a fundamental propositional tautology used in many proofs.
+  -/
+  | prop_s (φ ψ : Formula) : Axiom (φ.imp (ψ.imp φ))
+
   /--
   Modal T axiom: `□φ → φ` (reflexivity).
 

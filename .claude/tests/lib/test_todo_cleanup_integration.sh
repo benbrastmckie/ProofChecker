@@ -12,9 +12,9 @@ if [ -f "$SCRIPT_DIR/test-helpers.sh" ]; then
 fi
 
 # Source library under test
-CLAUDE_PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+CLAUDE_PROJECT_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 export CLAUDE_PROJECT_DIR
-source "$CLAUDE_PROJECT_DIR/lib/todo/todo-functions.sh" 2>/dev/null || {
+source "$CLAUDE_PROJECT_DIR/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
   echo "ERROR: Cannot load todo-functions.sh"
   exit 1
 }

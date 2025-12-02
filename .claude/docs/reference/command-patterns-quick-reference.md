@@ -241,6 +241,187 @@ Task {
 
 **Reference**: [Hard Barrier Subagent Delegation Pattern](../concepts/patterns/hard-barrier-subagent-delegation.md)
 
+### Agent Delegation - Task Invocation Templates
+
+#### Standard Task Invocation
+
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the [AGENT_NAME] agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "[Brief description] with mandatory file creation"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/[agent-file].md
+
+    **Workflow-Specific Context**:
+    - [Context Variable 1]: ${VAR1}
+    - [Context Variable 2]: ${VAR2}
+    - Output Path: ${OUTPUT_PATH}
+
+    Execute [action] per behavioral guidelines.
+    Return: [SIGNAL_NAME]: ${OUTPUT_PATH}
+  "
+}
+```
+
+#### Iteration Loop Invocation
+
+For commands that re-invoke agents in iteration loops (e.g., `/implement`):
+
+```markdown
+## Block 5: Initial Invocation
+
+**EXECUTE NOW**: USE the Task tool to invoke implementer-coordinator.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Implement phase ${STARTING_PHASE}"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/implementer-coordinator.md
+
+    **Input Contract**:
+    - plan_path: ${PLAN_PATH}
+    - topic_path: ${TOPIC_PATH}
+    - iteration: ${ITERATION}
+
+    Execute implementation per behavioral guidelines.
+    Return: IMPLEMENTATION_COMPLETE: ${SUMMARY_PATH}
+  "
+}
+
+## Block 7: Iteration Loop Re-Invocation
+
+```bash
+if [ "$WORK_REMAINING" != "0" ]; then
+  ITERATION=$((ITERATION + 1))
+  echo "Iteration $ITERATION required"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to re-invoke implementer-coordinator for iteration ${ITERATION}.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Continue implementation (iteration ${ITERATION})"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/implementer-coordinator.md
+
+    **Input Contract**:
+    - plan_path: ${PLAN_PATH}
+    - topic_path: ${TOPIC_PATH}
+    - iteration: ${ITERATION}
+    - continuation_context: ${CONTINUATION_SUMMARY}
+
+    Execute implementation per behavioral guidelines.
+    Return: IMPLEMENTATION_COMPLETE: ${SUMMARY_PATH}
+  "
+}
+```
+
+**Key Points**:
+- Both invocation points (initial and loop) require separate imperative directives
+- Iteration number and continuation context passed to agent
+
+#### Conditional Invocation
+
+For commands that conditionally invoke agents based on runtime state:
+
+```markdown
+```bash
+COVERAGE=$(get_coverage_percentage)
+THRESHOLD=80
+
+if [ "$COVERAGE" -lt "$THRESHOLD" ]; then
+  echo "Coverage ${COVERAGE}% below threshold ${THRESHOLD}% - re-running tests"
+fi
+```
+
+**EXECUTE IF** coverage below threshold: USE the Task tool to invoke test-executor.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Run test suite (iteration ${TEST_ITERATION})"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/test-executor.md
+
+    **Workflow-Specific Context**:
+    - Plan Path: ${PLAN_PATH}
+    - Coverage Target: ${THRESHOLD}%
+    - Current Coverage: ${COVERAGE}%
+    - Test Iteration: ${TEST_ITERATION}
+
+    Execute test suite per behavioral guidelines.
+    Return: TESTS_COMPLETE: ${TEST_SUMMARY_PATH}
+  "
+}
+```
+
+**Alternative Pattern** (explicit conditional):
+
+```bash
+if [ "$COVERAGE" -lt "$THRESHOLD" ]; then
+  echo "Coverage insufficient - invoking test-executor"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to invoke test-executor.
+
+Task { ... }
+```
+
+#### Multiple Sequential Agents
+
+For commands that invoke multiple agents in sequence:
+
+```markdown
+## Block 3a: Research Phase
+
+**EXECUTE NOW**: USE the Task tool to invoke research-specialist.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Research ${TOPIC}"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/research-specialist.md
+
+    **Workflow-Specific Context**:
+    - Research Topic: ${TOPIC}
+    - Output Path: ${REPORT_PATH}
+
+    Execute research per behavioral guidelines.
+    Return: REPORT_CREATED: ${REPORT_PATH}
+  "
+}
+
+## Block 3b: Planning Phase
+
+**EXECUTE NOW**: USE the Task tool to invoke plan-architect.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Create implementation plan from research"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/plan-architect.md
+
+    **Workflow-Specific Context**:
+    - Research Report: ${REPORT_PATH}
+    - Plan Output Path: ${PLAN_PATH}
+
+    Execute planning per behavioral guidelines.
+    Return: PLAN_CREATED: ${PLAN_PATH}
+  "
+}
+```
+
+**Key Point**: Each agent invocation requires its own imperative directive - don't use single directive for multiple Task blocks
+
 ---
 
 ## Checkpoint Reporting Pattern

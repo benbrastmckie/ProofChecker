@@ -12,9 +12,6 @@ name = "ProofCheckerTest"
 [[lean_lib]]
 name = "Archive"
 
-[[lean_lib]]
-name = "Counterexamples"
-
 [[lean_exe]]
 name = "test"
 root = "ProofCheckerTest.Main"

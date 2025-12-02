@@ -7,6 +7,7 @@ Tests for the TM axiom schemata.
 
 ## Test Categories
 
+- Propositional axioms (K, S)
 - Modal axioms (MT, M4, MB)
 - Temporal axioms (T4, TA, TL)
 - Modal-temporal interaction axioms (MF, TF)
@@ -17,6 +18,42 @@ namespace ProofCheckerTest.ProofSystem
 
 open ProofChecker.Syntax
 open ProofChecker.ProofSystem
+
+-- ============================================================
+-- Propositional K Axiom Tests: (φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))
+-- ============================================================
+
+-- Test: Propositional K on atoms
+example : Axiom (((Formula.atom "p").imp ((Formula.atom "q").imp (Formula.atom "r"))).imp
+                  (((Formula.atom "p").imp (Formula.atom "q")).imp ((Formula.atom "p").imp (Formula.atom "r")))) :=
+  Axiom.prop_k (Formula.atom "p") (Formula.atom "q") (Formula.atom "r")
+
+-- Test: Propositional K with complex formulas
+example : Axiom ((((Formula.atom "p").box).imp (((Formula.atom "q").future).imp (Formula.atom "r"))).imp
+                  ((((Formula.atom "p").box).imp ((Formula.atom "q").future)).imp (((Formula.atom "p").box).imp (Formula.atom "r")))) :=
+  Axiom.prop_k ((Formula.atom "p").box) ((Formula.atom "q").future) (Formula.atom "r")
+
+-- Test: Propositional K with nested implications
+example : Axiom (((Formula.atom "p").imp (((Formula.atom "q").imp (Formula.atom "r")).imp (Formula.atom "s"))).imp
+                  (((Formula.atom "p").imp ((Formula.atom "q").imp (Formula.atom "r"))).imp ((Formula.atom "p").imp (Formula.atom "s")))) :=
+  Axiom.prop_k (Formula.atom "p") ((Formula.atom "q").imp (Formula.atom "r")) (Formula.atom "s")
+
+-- ============================================================
+-- Propositional S Axiom Tests: φ → (ψ → φ)
+-- ============================================================
+
+-- Test: Propositional S on atoms
+example : Axiom ((Formula.atom "p").imp ((Formula.atom "q").imp (Formula.atom "p"))) :=
+  Axiom.prop_s (Formula.atom "p") (Formula.atom "q")
+
+-- Test: Propositional S with box formula
+example : Axiom (((Formula.atom "p").box).imp ((Formula.atom "q").imp ((Formula.atom "p").box))) :=
+  Axiom.prop_s ((Formula.atom "p").box) (Formula.atom "q")
+
+-- Test: Propositional S with complex formulas
+example : Axiom ((((Formula.atom "p").imp (Formula.atom "q"))).imp
+                  (((Formula.atom "r").future).imp ((Formula.atom "p").imp (Formula.atom "q")))) :=
+  Axiom.prop_s ((Formula.atom "p").imp (Formula.atom "q")) ((Formula.atom "r").future)
 
 -- ============================================================
 -- Modal T Axiom Tests: □φ → φ

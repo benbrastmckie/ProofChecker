@@ -78,14 +78,25 @@ Transitivity of implication: if `⊢ A → B` and `⊢ B → C` then `⊢ A → 
 This is the hypothetical syllogism rule. In standard propositional calculus,
 it's derived from K and S axioms via modus ponens.
 
-For MVP: Using sorry, as full propositional calculus is not implemented.
+Proof:
+1. From `⊢ B → C`, derive `⊢ A → (B → C)` by S axiom and modus ponens
+2. Use K axiom: `(A → (B → C)) → ((A → B) → (A → C))`
+3. Apply modus ponens twice to get `⊢ A → C`
 -/
 theorem imp_trans {A B C : Formula}
     (h1 : ⊢ A.imp B) (h2 : ⊢ B.imp C) : ⊢ A.imp C := by
-  -- Would require propositional axioms K and S to derive
-  -- K: (A → (B → C)) → ((A → B) → (A → C))
-  -- We need: ⊢ A → C from ⊢ A → B and ⊢ B → C
-  sorry
+  -- Step 1: Get S axiom: (B → C) → (A → (B → C))
+  have s_axiom : ⊢ (B.imp C).imp (A.imp (B.imp C)) :=
+    Derivable.axiom [] _ (Axiom.prop_s (B.imp C) A)
+  -- Step 2: Apply MP to get A → (B → C)
+  have h3 : ⊢ A.imp (B.imp C) := Derivable.modus_ponens [] (B.imp C) (A.imp (B.imp C)) s_axiom h2
+  -- Step 3: Get K axiom: (A → (B → C)) → ((A → B) → (A → C))
+  have k_axiom : ⊢ (A.imp (B.imp C)).imp ((A.imp B).imp (A.imp C)) :=
+    Derivable.axiom [] _ (Axiom.prop_k A B C)
+  -- Step 4: Apply MP to get (A → B) → (A → C)
+  have h4 : ⊢ (A.imp B).imp (A.imp C) := Derivable.modus_ponens [] (A.imp (B.imp C)) ((A.imp B).imp (A.imp C)) k_axiom h3
+  -- Step 5: Apply MP with h1 : ⊢ A → B to get A → C
+  exact Derivable.modus_ponens [] (A.imp B) (A.imp C) h4 h1
 
 /--
 From `⊢ A` and `⊢ A → B`, derive `⊢ B` (this is just modus ponens restated).
@@ -132,10 +143,24 @@ If φ happens at some future time, then φ is possible.
 /--
 Contraposition helper: if `⊢ A → B` then `⊢ ¬B → ¬A`.
 
-For MVP: Using sorry for propositional reasoning.
+Proof sketch (using classical propositional axioms K and S):
+1. ¬B → (A → ¬B) by S axiom
+2. (A → ¬B) → (B → ¬A) by classical reasoning (¬B is ⊥ → B, use K axiom)
+3. ¬B → (B → ¬A) by transitivity
+4. Need to derive ¬B → ¬A from ¬B → (B → ¬A)
+
+This requires additional propositional axioms beyond K and S (e.g., law of excluded
+middle or Pierce's law). For now we use sorry as the full classical propositional
+calculus infrastructure is not yet implemented.
 -/
 theorem contraposition {A B : Formula}
     (h : ⊢ A.imp B) : ⊢ B.neg.imp A.neg := by
+  -- Full proof requires classical logic axioms (excluded middle, etc.)
+  -- K and S alone are not sufficient for contraposition in general
+  -- This requires either:
+  --   1. Additional axioms (e.g., ((A → B) → A) → A for Pierce's law)
+  --   2. Semantic reasoning (soundness + completeness)
+  --   3. Natural deduction rules with negation elimination
   sorry
 
 /--

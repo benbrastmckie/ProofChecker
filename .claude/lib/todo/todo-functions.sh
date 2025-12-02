@@ -763,6 +763,10 @@ generate_completed_date_header() {
 #   $3 - Dry run flag (true/false)
 # Returns: 0 on success, 1 on failure
 #
+# NOTE: This function does NOT create backups. Callers are responsible for
+# creating git commits before calling this function if backup is needed.
+# See /todo command for git-based backup pattern.
+#
 update_todo_file() {
   local todo_path="$1"
   local plans_json="$2"
@@ -955,12 +959,7 @@ update_todo_file() {
     echo -e "$content"
     echo "=== END PREVIEW ==="
   else
-    # Backup existing file
-    if [ -f "$todo_path" ]; then
-      cp "$todo_path" "${todo_path}.backup"
-    fi
-
-    # Write new content
+    # Write new content (caller responsible for git backup)
     echo -e "$content" > "$todo_path"
     echo "TODO.md updated: $todo_path"
   fi

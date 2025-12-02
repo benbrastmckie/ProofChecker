@@ -559,6 +559,130 @@ fi
 
 ---
 
+## Enhanced Diagnostics
+
+### Overview
+
+When verification blocks detect missing artifacts, enhanced diagnostics help distinguish between:
+1. **File at wrong location** - Agent created artifact but in unexpected directory
+2. **File not created** - Agent failed to create artifact at all
+3. **Silent failure** - Agent executed but produced no output
+
+This diagnostic approach significantly reduces debugging time by providing actionable error context.
+
+### Diagnostic Strategy
+
+**Search Pattern**:
+```bash
+# Enhanced hard barrier verification with diagnostics
+if [[ ! -f "$expected_artifact_path" ]]; then
+  echo "❌ Hard barrier verification failed: Artifact file not found"
+  echo "Expected: $expected_artifact_path"
+
+  # Search for file in parent and topic directories
+  local artifact_name=$(basename "$expected_artifact_path")
+  local topic_dir=$(dirname "$(dirname "$expected_artifact_path")")
+  local found_files=$(find "$topic_dir" -name "$artifact_name" 2>/dev/null || true)
+
+  if [[ -n "$found_files" ]]; then
+    echo "📍 Found at alternate location(s):"
+    echo "$found_files" | while read -r file; do
+      echo "  - $file"
+    done
+    log_command_error "agent_error" "Agent created file at wrong location" \
+      "expected=$expected_artifact_path, found=$found_files"
+  else
+    echo "❌ Not found anywhere in topic directory: $topic_dir"
+    log_command_error "agent_error" "Agent failed to create artifact file" \
+      "expected=$expected_artifact_path, topic_dir=$topic_dir"
+  fi
+
+  exit 1
+fi
+```
+
+### Diagnostic Output Examples
+
+**Case 1: File at Wrong Location**
+```
+❌ Hard barrier verification failed: Artifact file not found
+Expected: /specs/123_feature/summaries/implement-summary.md
+
+📍 Found at alternate location(s):
+  - /specs/123_feature/implement-summary.md
+  - /specs/123_feature/outputs/implement-summary.md
+
+⚠️  This indicates the agent created the file but not in the expected directory.
+```
+
+**Case 2: File Not Created**
+```
+❌ Hard barrier verification failed: Artifact file not found
+Expected: /specs/123_feature/summaries/implement-summary.md
+
+❌ Not found anywhere in topic directory: /specs/123_feature
+
+⚠️  This indicates the agent failed to create the artifact file.
+```
+
+**Case 3: Silent Failure (Agent Tool Use Count)**
+```
+❌ Hard barrier verification failed: Artifact file not found
+Expected: /specs/123_feature/summaries/implement-summary.md
+
+❌ Not found anywhere in topic directory: /specs/123_feature
+
+Agent tool uses: 0
+⚠️  Warning: Agent may have failed silently (no tool uses recorded)
+```
+
+### Error Log Integration
+
+Enhanced diagnostics create distinct error log entries for different failure modes:
+
+**Location Mismatch**:
+```json
+{
+  "error_type": "agent_error",
+  "message": "Agent created file at wrong location",
+  "context": {
+    "expected": "/specs/123/summaries/summary.md",
+    "found": "/specs/123/summary.md"
+  }
+}
+```
+
+**File Not Created**:
+```json
+{
+  "error_type": "agent_error",
+  "message": "Agent failed to create artifact file",
+  "context": {
+    "expected": "/specs/123/summaries/summary.md",
+    "topic_dir": "/specs/123",
+    "searched_pattern": "*summary*.md"
+  }
+}
+```
+
+### Troubleshooting Workflow
+
+Based on diagnostic output:
+
+1. **File at wrong location** → Check agent prompt for directory path ambiguity
+2. **File not created** → Review agent output for errors, check permissions
+3. **Silent failure (0 tool uses)** → Agent may have refused task or hit context limit
+
+### Validation
+
+Commands using enhanced diagnostics:
+- `/implement` (implementer-coordinator summary verification)
+- `/research` (research-specialist report verification)
+- `/plan` (plan-architect plan verification)
+- `/revise` (plan-architect revised plan verification)
+
+---
+
 ## Compliance Checklist
 
 Use this checklist when implementing or auditing hard barrier pattern compliance:
@@ -606,6 +730,229 @@ See [Enforcement Mechanisms](../../reference/standards/enforcement-mechanisms.md
 
 ---
 
+## Task Invocation Requirements
+
+### Mandatory Imperative Directives
+
+All Task tool invocations MUST be preceded by an explicit imperative directive. Pseudo-code syntax or instructional text patterns are PROHIBITED.
+
+**Required Pattern**:
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the [AGENT_NAME] agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Brief description"
+  prompt: "..."
+}
+```
+
+**Key Requirements**:
+1. **Imperative instruction**: "**EXECUTE NOW**: USE the Task tool..." (explicit command to Claude)
+2. **No code block wrapper**: Remove ` ```yaml ` fences around Task block
+3. **No instructional text**: Don't use "# Use the Task tool to invoke..." comments without actual Task invocation
+4. **Completion signal**: Agent must return explicit signal (e.g., `REPORT_CREATED: ${PATH}`)
+
+### Anti-Pattern: Pseudo-Code Syntax
+
+**❌ PROHIBITED** (pseudo-code - will be skipped):
+```markdown
+Task {
+  subagent_type: "general-purpose"
+  description: "Research topic"
+  prompt: |
+    Read and follow ALL instructions in: agent.md
+}
+```
+
+**Problem**: No imperative directive tells Claude to USE the Task tool. Claude interprets this as documentation, not executable code.
+
+**✅ CORRECT** (imperative directive):
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Research topic with mandatory file creation"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/research-specialist.md
+
+    **Workflow-Specific Context**:
+    - Research Topic: ${TOPIC}
+    - Output Path: ${REPORT_PATH}
+
+    Execute research per behavioral guidelines.
+    Return: REPORT_CREATED: ${REPORT_PATH}
+  "
+}
+```
+
+### Anti-Pattern: Instructional Text Without Task Invocation
+
+**❌ PROHIBITED** (instructional text without actual invocation):
+```markdown
+## Phase 3: Agent Delegation
+
+This phase invokes the research-specialist agent.
+Use the Task tool to invoke the agent with the calculated paths.
+```
+
+**Problem**: Instructional text describes what SHOULD happen but doesn't actually invoke the Task tool. Claude reads the instruction but performs no action.
+
+**✅ CORRECT** (actual Task invocation):
+```markdown
+## Phase 3: Agent Delegation
+
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Research topic"
+  prompt: "..."
+}
+```
+
+### Edge Case Patterns
+
+#### Iteration Loop Invocations
+
+When Task invocations occur inside iteration loops, the SAME invocation must have an imperative directive EACH time it appears in the control flow.
+
+**Example** (from `/implement` command):
+```markdown
+## Block 5: Initial Implementation Attempt
+
+**EXECUTE NOW**: USE the Task tool to invoke implementer-coordinator.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Implement phase ${STARTING_PHASE}"
+  prompt: "..."
+}
+
+## Block 7: Iteration Loop (if work remains)
+
+```bash
+if [ "$WORK_REMAINING" != "0" ]; then
+  ITERATION=$((ITERATION + 1))
+  echo "Iteration $ITERATION required"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to re-invoke implementer-coordinator for next iteration.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Continue implementation (iteration ${ITERATION})"
+  prompt: "..."
+}
+```
+
+**Key Point**: Both Task blocks (initial and loop) require imperative directives, even though they invoke the same agent.
+
+#### Conditional Invocations
+
+When Task invocations occur conditionally (based on flags or workflow state), use conditional imperative directives.
+
+**Pattern**:
+```markdown
+**EXECUTE IF** coverage below threshold: USE the Task tool to invoke test-executor.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Run test suite"
+  prompt: "..."
+}
+```
+
+**Alternative** (explicit conditional in bash):
+```bash
+if [ "$COVERAGE" -lt "$THRESHOLD" ]; then
+  echo "Coverage insufficient - re-running tests"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to invoke test-executor.
+
+Task { ... }
+```
+
+#### Multiple Agents in Sequence
+
+When multiple agents are invoked sequentially, each requires its own imperative directive.
+
+**Example**:
+```markdown
+## Block 3a: Research Phase
+
+**EXECUTE NOW**: USE the Task tool to invoke research-specialist.
+
+Task { ... }
+
+## Block 3b: Planning Phase
+
+**EXECUTE NOW**: USE the Task tool to invoke plan-architect.
+
+Task { ... }
+```
+
+**Don't**: Use single directive for multiple Task blocks ("Execute the following agents...").
+
+### Canonical Example
+
+The `/supervise` command fix (commit 0b710aff) demonstrates correct Task invocation pattern:
+
+**Before** (pseudo-code):
+```markdown
+Task {
+  subagent_type: "general-purpose"
+  description: "Supervise implementation"
+  prompt: |
+    Read instructions from: supervise-agent.md
+}
+```
+
+**After** (imperative):
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the supervise-agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Supervise implementation with monitoring"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/supervise-agent.md
+
+    **Workflow-Specific Context**:
+    - Plan Path: ${PLAN_PATH}
+    - Topic Path: ${TOPIC_PATH}
+    - Iteration: ${ITERATION}
+
+    Execute supervision per behavioral guidelines.
+    Return: SUPERVISION_COMPLETE: ${SUMMARY_PATH}
+  "
+}
+```
+
+### Validation
+
+The lint-task-invocation-pattern.sh linter enforces these requirements:
+
+```bash
+# Detect naked Task blocks
+bash .claude/scripts/lint-task-invocation-pattern.sh <command-file>
+
+# Errors reported:
+# - "Task { without EXECUTE NOW directive"
+# - "Instructional text without actual Task invocation"
+# - "Incomplete EXECUTE NOW directive (missing 'Task tool')"
+```
+
+See [Command Authoring Standards](../../reference/standards/command-authoring.md#task-tool-invocation-patterns) for complete Task invocation patterns.
+
+---
+
 ## Related Documentation
 
 - [Hierarchical Agents Overview](../hierarchical-agents-overview.md)
@@ -613,3 +960,4 @@ See [Enforcement Mechanisms](../../reference/standards/enforcement-mechanisms.md
 - [Error Handling Pattern](./error-handling.md)
 - [State-Based Orchestration](../../architecture/state-based-orchestration-overview.md)
 - [/revise Command Guide](../../guides/commands/revise-command-guide.md)
+- [Command Authoring Standards](../../reference/standards/command-authoring.md#task-tool-invocation-patterns)

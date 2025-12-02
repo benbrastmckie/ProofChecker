@@ -1,3 +1,8 @@
+-- Re-export archive modules
+import Archive.ModalProofs
+import Archive.TemporalProofs
+import Archive.BimodalProofs
+
 /-!
 # ProofChecker Archive
 
@@ -48,11 +53,6 @@ Or import the entire archive:
 import Archive
 ```
 -/
-
--- Re-export archive modules when implemented
--- import Archive.ModalProofs
--- import Archive.TemporalProofs
--- import Archive.BimodalProofs
 
 namespace Archive
 

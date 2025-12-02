@@ -1,6 +1,7 @@
 # Tactic Development Guide for ProofChecker
 
-This document provides guidelines for developing custom tactics for the ProofChecker proof automation system.
+This document provides guidelines for developing custom tactics for the ProofChecker
+proof automation system.
 
 ## 1. Custom Tactics Roadmap
 
@@ -100,6 +101,104 @@ elab "modal_t" : tactic => do
     throwError "modal_t: goal must be an implication □φ → φ"
 ```
 
+### 2.5 Complete Modal_t Tactic Example
+
+This section provides a complete working implementation of the `modal_t` tactic using
+`elab_rules`, demonstrating goal pattern matching, proof term construction, and error
+handling for the modal axiom MT (`□φ → φ`).
+
+```lean
+import Lean.Elab.Tactic
+import ProofChecker.ProofSystem.Axioms
+import ProofChecker.ProofSystem.Derivation
+
+open Lean Elab Tactic Meta
+
+/-- Apply modal axiom MT: `□φ → φ` (reflexivity of necessity)
+
+This tactic succeeds when the goal has form `Γ ⊢ □φ → φ` for some formula φ.
+It constructs a proof using `Derivable.axiom` and `Axiom.modal_t`.
+
+**Usage:**
+```lean
+example (P : Formula) : [] ⊢ (Formula.box P).imp P := by
+  modal_t
+```
+
+**Errors:**
+- "modal_t: goal must be derivability relation" - Goal not of form `Derivable Γ φ`
+- "modal_t: expected implication" - Formula not an implication
+- "modal_t: expected `□φ → φ` pattern" - Implication not of form `□φ → φ`
+-/
+elab_rules : tactic
+  | `(tactic| modal_t) => do
+    -- STEP 1: Get the main goal and its type
+    let goal ← getMainGoal
+    let goalType ← goal.getType
+
+    -- STEP 2: Pattern match on Derivable Γ φ
+    -- goalType should have form: Derivable context formula
+    match goalType with
+    | .app (.app (.const ``Derivable _) context) formula =>
+
+      -- STEP 3: Destructure formula to check for □φ → φ pattern
+      match formula with
+      | .app (.app (.const ``Formula.imp _) lhs) rhs =>
+
+        -- STEP 4: Check lhs is Formula.box
+        match lhs with
+        | .app (.const ``Formula.box _) innerFormula =>
+
+          -- STEP 5: Verify innerFormula == rhs (must be same formula)
+          if ← isDefEq innerFormula rhs then
+            -- STEP 6: Construct proof term
+            -- Build: Derivable.axiom (Axiom.modal_t innerFormula)
+            let axiomProof ← mkAppM ``Axiom.modal_t #[innerFormula]
+            let proof ← mkAppM ``Derivable.axiom #[axiomProof]
+
+            -- STEP 7: Assign proof to goal (closes goal)
+            goal.assign proof
+          else
+            throwError "modal_t: expected `□φ → φ` pattern, but got `□{innerFormula} →
+              {rhs}`"
+
+        | _ =>
+          throwError "modal_t: expected implication with `□_` on left, got `{lhs} →
+            {rhs}`"
+
+      | _ =>
+        throwError "modal_t: expected implication, got `{formula}`"
+
+    | _ =>
+      throwError "modal_t: goal must be derivability relation `Γ ⊢ φ`, got `{goalType}`"
+
+```
+
+**Implementation Notes:**
+
+1. **Goal Pattern Matching**: Uses nested pattern matching on `Expr` to destructure
+   goal type from `Derivable Γ (Formula.box φ).imp φ` down to inner formula `φ`.
+
+2. **Expression Destructuring**:
+   - `.app f x` matches function applications
+   - `.const name levels` matches constant references
+   - Use `` ``Name `` (double backtick) for fully qualified names
+
+3. **Proof Term Construction**:
+   - `mkAppM` applies function to arguments with implicit inference
+   - Build axiom proof first: `Axiom.modal_t φ`
+   - Wrap in derivability: `Derivable.axiom axiomProof`
+
+4. **Definitional Equality**: `isDefEq` checks if `innerFormula` and `rhs` are
+   definitionally equal (handles α-equivalence, β-reduction, etc.).
+
+5. **Error Handling**: Provide specific error messages showing expected vs actual
+   patterns for easier debugging.
+
+**Reference**: See [METAPROGRAMMING_GUIDE.md](METAPROGRAMMING_GUIDE.md) for detailed
+explanation of `Lean.Elab.Tactic` API, expression manipulation, and proof term
+construction.
+
 ### Pattern 2: Apply Inference Rule
 
 Apply an inference rule that creates subgoals:
@@ -180,7 +279,264 @@ elab "modal_search" depth:num : tactic => do
   modalSearch goal depth.getNat
 ```
 
-## 4. Syntax Macros
+## 4. Aesop Integration for TM Logic
+
+Aesop is LEAN 4's general-purpose proof search automation tool. This section explains
+how to integrate ProofChecker's TM logic axioms and lemmas with Aesop for automated
+proof construction.
+
+### Aesop Rule Attribution
+
+Aesop uses attributes to mark theorems and lemmas as automation rules:
+
+- `@[aesop safe]` - Safe rules that preserve correctness (always apply)
+- `@[aesop norm simp]` - Normalization rules for simplification
+- `@[aesop unsafe]` - Unsafe rules that may diverge (apply with caution)
+
+**Example: Marking modal_t axiom as safe:**
+
+```lean
+/-- Modal axiom MT is always valid, safe to apply -/
+@[aesop safe [TMLogic]]
+theorem modal_t_valid (φ : Formula) : valid (Formula.box φ).imp φ := by
+  intro M h t
+  exact Semantics.modal_t_sound M h t φ
+```
+
+### Custom Rule Sets
+
+Create a TM-specific rule set to group modal/temporal automation:
+
+```lean
+-- Declare custom rule set for TM logic
+declare_aesop_rule_sets [TMLogic]
+
+-- Mark perpetuity principles for TM rule set
+@[aesop safe [TMLogic]]
+theorem perpetuity_1 (φ : Formula) : Derivable [] (Formula.box φ).imp (always φ) := by
+  sorry  -- P1 implementation
+
+@[aesop safe [TMLogic]]
+theorem perpetuity_2 (φ : Formula) : Derivable [] (eventually φ).imp (diamond φ) := by
+  sorry  -- P2 implementation
+
+-- Mark axioms as safe rules
+@[aesop safe [TMLogic]]
+theorem modal_4_derivable (φ : Formula) : Derivable [] (Formula.box φ).imp
+  (Formula.box (Formula.box φ)) := by
+  apply Derivable.axiom
+  exact Axiom.modal_4 φ
+
+@[aesop safe [TMLogic]]
+theorem modal_b_derivable (φ : Formula) : Derivable [] φ.imp (Formula.box (diamond φ)) :=
+  by
+  apply Derivable.axiom
+  exact Axiom.modal_b φ
+```
+
+### Implementing tm_auto Tactic
+
+The `tm_auto` tactic invokes Aesop with the TMLogic rule set:
+
+```lean
+/-- Comprehensive TM automation using Aesop
+
+Attempts to prove goal using all TM axioms, perpetuity principles, and modal/temporal
+simplifications registered in the TMLogic rule set.
+
+**Usage:**
+```lean
+example (P : Formula) : [] ⊢ (Formula.box P).imp P := by
+  tm_auto
+
+example (P Q : Formula) : [Formula.box P, P.imp Q] ⊢ Formula.box Q := by
+  tm_auto
+```
+
+**Limitations:**
+- May not find proof if requires deep search
+- Does not handle counterfactual or epistemic operators (Layer 1+)
+- Performance degrades on deeply nested formulas (>10 operators)
+-/
+macro "tm_auto" : tactic =>
+  `(tactic| aesop (rule_sets [TMLogic]))
+
+-- Alternative: tm_auto with custom simp set
+macro "tm_auto_simp" : tactic =>
+  `(tactic| aesop (rule_sets [TMLogic]) (simp_options := {decide := true}))
+```
+
+### Normalization Rules
+
+Mark simplifications as normalization rules for preprocessing:
+
+```lean
+-- Modal simplifications (require S5 frame properties)
+@[aesop norm simp [TMLogic]]
+theorem box_box_eq_box (φ : Formula) : Formula.box (Formula.box φ) = Formula.box φ := by
+  sorry  -- Requires proving M4 gives syntactic equality via normalization
+
+@[aesop norm simp [TMLogic]]
+theorem diamond_diamond_eq_diamond (φ : Formula) :
+  diamond (diamond φ) = diamond φ := by
+  sorry  -- Requires proving S5 axiom B gives syntactic equality
+
+-- Temporal simplifications (linear time structure)
+@[aesop norm simp [TMLogic]]
+theorem future_future_eq_future (φ : Formula) :
+  Formula.future (Formula.future φ) = Formula.future φ := by
+  sorry  -- Requires proving T4 temporal axiom
+
+-- Bimodal interactions (MF/TF axioms)
+@[aesop norm simp [TMLogic]]
+theorem box_future_comm (φ : Formula) :
+  Formula.box (Formula.future φ) = Formula.future (Formula.box φ) := by
+  sorry  -- Requires proving MF/TF axioms establish commutativity
+```
+
+**IMPORTANT**: These simplification lemmas must be proven as theorems in TM, not
+merely asserted as axioms, to maintain soundness. They reduce formulas toward normal
+form (fewer nested operators).
+
+### Forward Reasoning
+
+Mark safe implications for forward chaining:
+
+```lean
+@[aesop safe forward [TMLogic]]
+theorem modal_k_forward (φ ψ : Formula) (h1 : Derivable Γ (Formula.box (φ.imp ψ)))
+    (h2 : Derivable Γ (Formula.box φ)) : Derivable Γ (Formula.box ψ) := by
+  exact Derivable.modal_k h1 h2
+
+@[aesop safe forward [TMLogic]]
+theorem temporal_k_forward (φ ψ : Formula) (h1 : Derivable Γ (Formula.future (φ.imp ψ)))
+    (h2 : Derivable Γ (Formula.future φ)) : Derivable Γ (Formula.future ψ) := by
+  exact Derivable.temporal_k h1 h2
+```
+
+### References
+
+- [Aesop Documentation](https://github.com/leanprover-community/aesop)
+- [Aesop Rule Sets](https://github.com/leanprover-community/aesop#rule-sets)
+- [LEAN 4 Metaprogramming - Aesop Chapter]
+  (https://leanprover-community.github.io/lean4-metaprogramming-book/main/
+  11_aesop.html)
+
+## 5. Simp Lemma Design for Modal Logic
+
+The `simp` tactic performs formula simplification using rewrite lemmas. This section
+explains convergence requirements and key simplifications for TM logic.
+
+### Convergence Requirements
+
+Simp lemmas must reduce formulas toward a normal form to guarantee termination:
+
+1. **Directionality**: Rewrite from complex to simple (never increase operator count)
+2. **Termination**: No cycles (A → B, B → A would loop)
+3. **Confluence**: Order-independent (different rewrite orders reach same normal form)
+
+**Example of BAD simp lemma (non-terminating):**
+
+```lean
+-- DON'T DO THIS: Creates rewrite cycle
+@[simp] theorem bad_box_equiv (φ : Formula) : Formula.box φ = diamond (neg φ) := ...
+@[simp] theorem bad_diamond_equiv (φ : Formula) : diamond φ = neg (Formula.box (neg φ))
+  := ...
+-- These create cycle: `□φ` → `◇¬φ` → `¬□¬¬φ` → ...
+```
+
+### Modal Simplifications
+
+**S5 Modal Simplifications** (require M4, MB axioms proven):
+
+```lean
+-- Idempotence: `□□φ = □φ` (from M4: `□φ → □□φ`)
+@[simp] theorem box_box_eq_box (φ : Formula) : Formula.box (Formula.box φ) =
+  Formula.box φ := by
+  sorry  -- Prove using M4 axiom bidirectionality
+
+-- Idempotence: `◇◇φ = ◇φ` (from S5 axiom system)
+@[simp] theorem diamond_diamond_eq_diamond (φ : Formula) :
+  diamond (diamond φ) = diamond φ := by
+  sorry  -- Prove using diamond definition and M4
+
+-- Duality: Define `◇φ` as `¬□¬φ`
+@[simp] theorem diamond_def (φ : Formula) :
+  diamond φ = neg (Formula.box (neg φ)) := rfl
+```
+
+### Temporal Simplifications
+
+**Linear Temporal Logic Simplifications** (require T4 axiom proven):
+
+```lean
+-- Idempotence: `FFφ = Fφ` (future-future collapse)
+@[simp] theorem future_future_eq_future (φ : Formula) :
+  Formula.future (Formula.future φ) = Formula.future φ := by
+  sorry  -- Prove using T4 temporal axiom
+
+-- Idempotence: `PPφ = Pφ` (past-past collapse)
+@[simp] theorem past_past_eq_past (φ : Formula) :
+  Formula.past (Formula.past φ) = Formula.past φ := by
+  sorry  -- Prove using temporal duality and T4
+```
+
+### Bimodal Interaction Simplifications
+
+**Modal-Temporal Commutativity** (require MF, TF axioms proven):
+
+```lean
+-- Commutativity: `□Fφ = F□φ` (necessity distributes over future)
+@[simp] theorem box_future_eq_future_box (φ : Formula) :
+  Formula.box (Formula.future φ) = Formula.future (Formula.box φ) := by
+  sorry  -- Prove using MF/TF axioms
+
+-- Commutativity: `□Pφ = P□φ` (necessity distributes over past)
+@[simp] theorem box_past_eq_past_box (φ : Formula) :
+  Formula.box (Formula.past φ) = Formula.past (Formula.box φ) := by
+  sorry  -- Prove using temporal duality of MF/TF
+```
+
+### Propositional Simplifications
+
+Standard propositional simplifications (always safe):
+
+```lean
+-- Double negation elimination
+@[simp] theorem neg_neg (φ : Formula) : neg (neg φ) = φ := by
+  sorry
+
+-- Implication to disjunction
+@[simp] theorem imp_eq_or (φ ψ : Formula) : φ.imp ψ = (neg φ).or ψ := by
+  sorry
+
+-- Conjunction commutativity
+@[simp] theorem and_comm (φ ψ : Formula) : φ.and ψ = ψ.and φ := by
+  sorry
+```
+
+### Important Notes
+
+1. **Prove as Theorems**: All simp lemmas must be proven as theorems in TM, not
+   asserted as axioms. Unproven simp lemmas compromise soundness.
+
+2. **S5 Requirements**: Modal simplifications like `box_box_eq_box` require S5 frame
+   properties (reflexivity, transitivity, symmetry). Verify frame constraints before
+   using.
+
+3. **Performance**: Excessive simp lemmas slow proof search. Mark only essential
+   simplifications.
+
+### References
+
+- [How does Lean simp tactic work?]
+  (https://proofassistants.stackexchange.com/questions/2455/
+  how-does-lean-simp-tactic-work)
+- [Mathlib4 Simp Lemmas]
+  (https://leanprover-community.github.io/mathlib4_docs/Mathlib/Tactic/Simp/)
+- Report 021 (LEAN 4 Modal Logic Best Practices), lines 350-377
+
+## 6. Syntax Macros
 
 ### Defining Custom Syntax
 
@@ -218,42 +574,7 @@ macro "modal_reasoning" : tactic =>
       | apply Derivable.modus_ponens <;> assumption))
 ```
 
-## 5. Aesop Integration
-
-### Using @[aesop] Attributes
-
-```lean
-/-- Mark lemma for automatic use by Aesop -/
-@[aesop safe [constructors, cases]]
-theorem modal_t_valid (φ : Formula) : valid (φ.box.imp φ) := by
-  sorry
-
-/-- Mark as normalization rule -/
-@[aesop norm simp]
-theorem diamond_def (φ : Formula) : diamond φ = neg (Formula.box (neg φ)) := rfl
-
-/-- Mark as safe forward reasoning -/
-@[aesop safe forward]
-theorem modal_4_chain (φ : Formula) (h : ⊢ φ.box) : ⊢ φ.box.box := by
-  sorry
-```
-
-### Custom Aesop Rule Sets
-
-```lean
-/-- Create TM-specific rule set -/
-declare_aesop_rule_sets [TMLogic]
-
-@[aesop safe [TMLogic]]
-theorem perpetuity_1_forward (φ : Formula) (h : ⊢ φ.box) : ⊢ (always φ) := by
-  sorry
-
-/-- Use TM rule set in proofs -/
-example (P : Formula) : [P.box] ⊢ (always P) := by
-  aesop (rule_sets [TMLogic])
-```
-
-## 6. Testing Tactics
+## 7. Testing Tactics
 
 ### Unit Tests for Tactics
 
@@ -297,7 +618,7 @@ def deeply_nested (n : Nat) : Formula :=
 #guard (deeply_nested 10).complexity = 11
 ```
 
-## 7. Documentation Requirements
+## 8. Documentation Requirements
 
 ### Tactic Documentation Format
 
@@ -369,7 +690,7 @@ Complete for propositional S5 within the depth limit.
 elab "modal_search" depth:num : tactic => ...
 ```
 
-## 8. Best Practices
+## 9. Best Practices
 
 ### Do
 

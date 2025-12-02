@@ -136,7 +136,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/unified-location-detection.sh" 2>
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/workflow-initialization.sh" 2>/dev/null || true
 
 # Tier 3: Helper utilities (graceful degradation)
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || {
+  echo "ERROR: Cannot load validation-utils.sh - required for workflow validation" >&2
+  exit 1
+}
 
 # Verify library versions
 check_library_requirements "$(cat <<'EOF'
@@ -308,7 +311,9 @@ setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 TOPIC_NAME_FILE="${CLAUDE_PROJECT_DIR}/.claude/tmp/topic_name_${WORKFLOW_ID}.txt"
 
 # Validate path is absolute
-if [[ ! "$TOPIC_NAME_FILE" =~ ^/ ]]; then
+if [[ "$TOPIC_NAME_FILE" =~ ^/ ]]; then
+  : # Path is absolute, continue
+else
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
@@ -358,7 +363,7 @@ echo "Ready for topic-naming-agent invocation"
 
 ## Block 1b-exec: Topic Name Generation (Hard Barrier Invocation)
 
-**EXECUTE NOW**: Invoke the topic-naming-agent with explicit output path contract.
+**EXECUTE NOW**: USE the Task tool to invoke the topic-naming-agent for semantic topic directory naming.
 
 Task {
   subagent_type: "general-purpose"
@@ -448,7 +453,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
 }
 
 # Source validation utilities for agent artifact validation
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || {
+  echo "ERROR: Cannot load validation-utils.sh - required for workflow validation" >&2
+  exit 1
+}
 
 # Setup bash error trap
 setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
@@ -772,7 +780,12 @@ if [ -z "${RESEARCH_DIR:-}" ]; then
 fi
 
 # Calculate report number (001, 002, 003...)
-EXISTING_REPORTS=$(find "$RESEARCH_DIR" -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')
+# Validate directory exists before find command
+if ! validate_directory_var "RESEARCH_DIR" "research reports"; then
+  EXISTING_REPORTS=0
+else
+  EXISTING_REPORTS=$(find "$RESEARCH_DIR" -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')
+fi
 REPORT_NUMBER=$(printf "%03d" $((EXISTING_REPORTS + 1)))
 
 # Generate report slug from workflow description (max 40 chars, kebab-case)
@@ -787,7 +800,9 @@ fi
 REPORT_PATH="${RESEARCH_DIR}/${REPORT_NUMBER}-${REPORT_SLUG}.md"
 
 # Validate path is absolute
-if [[ ! "$REPORT_PATH" =~ ^/ ]]; then
+if [[ "$REPORT_PATH" =~ ^/ ]]; then
+  : # Path is absolute, continue
+else
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \

@@ -137,7 +137,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/unified-location-detection.sh" 2>
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/workflow-initialization.sh" 2>/dev/null || true
 
 # Tier 3: Helper utilities (graceful degradation)
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || {
+  echo "ERROR: Cannot load validation-utils.sh - required for workflow validation" >&2
+  exit 1
+}
 
 # Verify library versions
 check_library_requirements "$(cat <<'EOF'
@@ -337,7 +340,9 @@ setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 TOPIC_NAME_FILE="${CLAUDE_PROJECT_DIR}/.claude/tmp/topic_name_${WORKFLOW_ID}.txt"
 
 # Validate path is absolute
-if [[ ! "$TOPIC_NAME_FILE" =~ ^/ ]]; then
+if [[ "$TOPIC_NAME_FILE" =~ ^/ ]]; then
+  : # Path is absolute, continue
+else
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
@@ -355,7 +360,12 @@ mkdir -p "$(dirname "$TOPIC_NAME_FILE")" 2>/dev/null || true
 
 # === PATH MISMATCH DIAGNOSTIC ===
 # Verify STATE_FILE uses CLAUDE_PROJECT_DIR (not HOME) to prevent exit 127 errors
-if [[ "$STATE_FILE" =~ ^${HOME}/ ]]; then
+# Skip PATH MISMATCH check when PROJECT_DIR is subdirectory of HOME (valid configuration)
+if [[ "$CLAUDE_PROJECT_DIR" =~ ^${HOME}/ ]]; then
+  # PROJECT_DIR legitimately under HOME - skip PATH MISMATCH validation
+  :
+elif [[ "$STATE_FILE" =~ ^${HOME}/ ]]; then
+  # Only flag as error if PROJECT_DIR is NOT under HOME but STATE_FILE uses HOME
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
@@ -387,7 +397,7 @@ echo "Ready for topic-naming-agent invocation"
 
 ## Block 1b-exec: Topic Name Generation (Hard Barrier Invocation)
 
-**EXECUTE NOW**: Invoke the topic-naming-agent with explicit output path contract.
+**EXECUTE NOW**: USE the Task tool to invoke the topic-naming-agent for semantic topic directory naming.
 
 Task {
   subagent_type: "general-purpose"
@@ -477,7 +487,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
 }
 
 # Source validation utilities for agent artifact validation
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || {
+  echo "ERROR: Cannot load validation-utils.sh - required for workflow validation" >&2
+  exit 1
+}
 
 # Setup bash error trap
 setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
@@ -945,6 +958,12 @@ mkdir -p "$(dirname "$DEBUG_LOG")" 2>/dev/null
 
 load_workflow_state "$WORKFLOW_ID" false
 
+# Validate critical variables restored from state
+validate_state_restoration "COMMAND_NAME" "USER_ARGS" "STATE_FILE" "PLAN_FILE" "TOPIC_PATH" "RESEARCH_DIR" || {
+  echo "ERROR: State restoration failed - critical variables missing" >&2
+  exit 1
+}
+
 # === RESTORE ERROR LOGGING CONTEXT ===
 if [ -z "${COMMAND_NAME:-}" ]; then
   COMMAND_NAME=$(grep "^COMMAND_NAME=" "$STATE_FILE" 2>/dev/null | cut -d'=' -f2- || echo "/plan")
@@ -1120,13 +1139,14 @@ PLAN_PATH="${PLANS_DIR}/${PLAN_FILENAME}"
 
 # Collect research report paths
 REPORT_PATHS=$(find "$RESEARCH_DIR" -name '*.md' -type f | sort)
-REPORT_PATHS_JSON=$(echo "$REPORT_PATHS" | jq -R . | jq -s .)
+# Convert to space-separated format for state persistence (append_workflow_state_bulk expects KEY=value format)
+REPORT_PATHS_LIST=$(echo "$REPORT_PATHS" | tr '\n' ' ')
 
 # === PERSIST FOR BLOCK 3 (BULK OPERATION) ===
 # Use bulk append to reduce I/O overhead from 2 writes to 1 write
 append_workflow_state_bulk <<EOF
 PLAN_PATH=$PLAN_PATH
-REPORT_PATHS_JSON=$REPORT_PATHS_JSON
+REPORT_PATHS_LIST=$REPORT_PATHS_LIST
 EOF
 
 save_completed_states_to_state
@@ -1192,7 +1212,7 @@ Task {
     **Workflow-Specific Context**:
     - Feature Description: ${FEATURE_DESCRIPTION}
     - Output Path: ${PLAN_PATH}
-    - Research Reports: ${REPORT_PATHS_JSON}
+    - Research Reports: ${REPORT_PATHS_LIST}
     - Workflow Type: research-and-plan
     - Operation Mode: new plan creation
     - Original Prompt File: ${ORIGINAL_PROMPT_FILE_PATH:-none}
@@ -1287,6 +1307,12 @@ DEBUG_LOG="${DEBUG_LOG:-${CLAUDE_PROJECT_DIR}/.claude/tmp/workflow_debug.log}"
 mkdir -p "$(dirname "$DEBUG_LOG")" 2>/dev/null
 
 load_workflow_state "$WORKFLOW_ID" false
+
+# Validate critical variables restored from state
+validate_state_restoration "COMMAND_NAME" "USER_ARGS" "STATE_FILE" "PLAN_FILE" "TOPIC_PATH" "RESEARCH_DIR" || {
+  echo "ERROR: State restoration failed - critical variables missing" >&2
+  exit 1
+}
 
 # === RESTORE ERROR LOGGING CONTEXT ===
 if [ -z "${COMMAND_NAME:-}" ]; then

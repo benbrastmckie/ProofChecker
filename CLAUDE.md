@@ -2,7 +2,8 @@
 
 ## 1. Project Overview
 
-ProofChecker is a LEAN 4 implementation of an axiomatic proof system for the bimodal logic TM (Tense and Modality) with task semantics. It provides:
+ProofChecker is a LEAN 4 implementation of an axiomatic proof system for the bimodal
+logic TM (Tense and Modality) with task semantics. It provides:
 
 - **Bimodal Logic TM**: Combining S5 modal logic (metaphysical necessity/possibility) with linear temporal logic (past/future operators)
 - **Task Semantics**: Possible worlds as functions from times to world states constrained by task relations
@@ -49,15 +50,13 @@ lake env lean <path/to/file.lean>
 ```
 ProofChecker/
 ├── ProofChecker.lean           # Library root (re-exports all public modules)
-├── ProofChecker/               # Main source directory
+├── ProofChecker/               # Main source directory (see ProofChecker/README.md)
 │   ├── Syntax/                 # Formula types, parsing, DSL
 │   │   ├── Formula.lean        # Core formula inductive type
-│   │   ├── Context.lean        # Proof context (premise lists)
-│   │   └── DSL.lean            # Domain-specific syntax
+│   │   └── Context.lean        # Proof context (premise lists)
 │   ├── ProofSystem/            # Axioms and inference rules
 │   │   ├── Axioms.lean         # TM axiom schemata (MT, M4, MB, T4, TA, TL, MF, TF)
-│   │   ├── Rules.lean          # Inference rules (MP, MK, TK, TD)
-│   │   └── Derivation.lean     # Derivability relation
+│   │   └── Derivation.lean     # Derivability relation and inference rules (MP, MK, TK, TD)
 │   ├── Semantics/              # Task frame semantics
 │   │   ├── TaskFrame.lean      # Task frame structure
 │   │   ├── WorldHistory.lean   # World history definition
@@ -66,28 +65,23 @@ ProofChecker/
 │   │   └── Validity.lean       # Validity and consequence
 │   ├── Metalogic/              # Soundness and completeness
 │   │   ├── Soundness.lean      # Soundness theorem
-│   │   ├── Completeness.lean   # Completeness theorem (canonical model)
-│   │   └── Decidability.lean   # Decision procedures
+│   │   └── Completeness.lean   # Completeness theorem (canonical model)
 │   ├── Theorems/               # Key theorems
 │   │   └── Perpetuity.lean     # P1-P6 perpetuity principles
 │   └── Automation/             # Proof automation
 │       ├── Tactics.lean        # Custom tactics (modal_k, temporal_k, etc.)
 │       └── ProofSearch.lean    # Automated proof search
-├── ProofCheckerTest/           # Test suite
+├── ProofCheckerTest/           # Test suite (see ProofCheckerTest/README.md)
 │   ├── ProofCheckerTest.lean   # Test library root
 │   ├── Syntax/                 # Tests for formula construction and parsing
 │   ├── ProofSystem/            # Tests for axioms and inference rules
 │   ├── Semantics/              # Tests for task semantics and validity
 │   ├── Integration/            # Cross-module integration tests
 │   └── Metalogic/              # Soundness/completeness tests
-├── Archive/                    # Pedagogical examples
+├── Archive/                    # Pedagogical examples (see Archive/README.md)
 │   ├── Archive.lean            # Archive library root
-│   ├── ModalProofs.lean        # S5 modal logic examples
-│   ├── TemporalProofs.lean     # Temporal reasoning examples
 │   └── BimodalProofs.lean      # Combined modal-temporal examples
-├── Counterexamples/            # Invalidity demonstrations
-│   └── Counterexamples.lean    # Counterexamples library root
-├── Documentation/              # User documentation
+├── Documentation/              # User documentation (see Documentation/README.md)
 │   ├── UserGuide/              # User-facing documentation
 │   │   ├── ARCHITECTURE.md         # System design and TM logic specification
 │   │   ├── TUTORIAL.md             # Getting started guide
@@ -120,6 +114,7 @@ ProofChecker/
 - [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test types, coverage requirements
 - [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactic patterns
 - [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Coverage, lint, performance targets
+- [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation standard
 
 ### User Documentation (Documentation/UserGuide/ and Documentation/ProjectInfo/)
 - [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
@@ -165,7 +160,7 @@ ProofChecker follows rigorous development standards including Test-Driven Develo
 ### Syntax Package
 - `Formula`: Inductive type for TM formulas (atom, bot, imp, box, past, future)
 - `Context`: Proof contexts (premise lists)
-- DSL macros for readable formula construction
+- DSL macros for readable formula construction **(planned)**
 
 ### ProofSystem Package
 - `Axiom`: TM axiom schemata (MT, M4, MB, T4, TA, TL, MF, TF)
@@ -269,4 +264,75 @@ ProofChecker test suite is organized in ProofCheckerTest/ directory with unit te
 - **Perpetuity P3 is safe**: Only P3 is fully proven (zero sorry)
 - **No automation available**: All tactics are stubs, use manual proof construction
 - See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) for workarounds and alternatives
-- See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) for verification commands
+- See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
+  for verification commands
+
+### LEAN 4 Metaprogramming and Automation Quick Reference
+
+This section provides quick reference for implementing custom tactics and automation
+for ProofChecker's TM logic.
+
+**Tactic Development Approach**:
+- Use `elab_rules` for pattern-matched tactics (recommended for most tactics)
+- Use macro-based approach for simple tactic sequences
+- Use direct TacticM for complex iteration/search (e.g., `assumption_search`)
+- See [METAPROGRAMMING_GUIDE.md](Documentation/Development/METAPROGRAMMING_GUIDE.md)
+  for complete API reference
+
+**Automation Strategy**:
+- Integrate with Aesop for proof search automation
+- Create TMLogic rule set: `declare_aesop_rule_sets [TMLogic]`
+- Mark axioms as safe rules: `@[aesop safe [TMLogic]]`
+- Implement `tm_auto` tactic: `macro "tm_auto" : tactic => `(tactic| aesop
+  (rule_sets [TMLogic]))`
+- See [TACTIC_DEVELOPMENT.md](Documentation/Development/TACTIC_DEVELOPMENT.md)
+  Section 4 for Aesop integration
+
+**Priority Tactics** (from TODO.md Task 7, 40-60 hours):
+1. `apply_axiom` - Apply specific TM axiom (8-10 hours, macro-based)
+2. `modal_t` - Apply modal axiom MT (`□φ → φ`) (4-6 hours, elab_rules)
+3. `tm_auto` - Comprehensive TM automation with Aesop (15-20 hours, macro + Aesop)
+4. `assumption_search` - Search context for matching assumptions (8-12 hours,
+   TacticM)
+
+**Key Metaprogramming Modules**:
+- `Lean.Elab.Tactic` - High-level tactic monad (TacticM)
+- `Lean.Meta.Basic` - Meta-level operations (mkAppM, mkConst)
+- `Lean.Expr` - Expression representation and pattern matching
+- `Lean.MVarId` - Goal identifier and operations (getMainGoal, assign)
+
+**Aesop Integration Pattern**:
+
+```lean
+-- Declare custom rule set
+declare_aesop_rule_sets [TMLogic]
+
+-- Mark axiom as safe rule
+@[aesop safe [TMLogic]]
+theorem modal_t_derivable (φ : Formula) :
+  Derivable [] (Formula.box φ).imp φ := by
+  apply Derivable.axiom
+  exact Axiom.modal_t φ
+
+-- Implement tm_auto tactic
+macro "tm_auto" : tactic =>
+  `(tactic| aesop (rule_sets [TMLogic]))
+```
+
+**Simp Lemma Design** (for modal/temporal simplifications):
+- Modal simplifications: `box_box_eq_box` (`□□φ = □φ`), `diamond_diamond_eq_diamond`
+  (`◇◇φ = ◇φ`)
+- Temporal simplifications: `future_future_eq_future` (FFφ = Fφ),
+  `past_past_eq_past` (PPφ = Pφ)
+- Bimodal interactions: `box_future_eq_future_box` (`□Fφ = F□φ`),
+  `box_past_eq_past_box` (`□Pφ = P□φ`)
+- **Important**: Must be proven as theorems in TM, not asserted as axioms
+- See [TACTIC_DEVELOPMENT.md](Documentation/Development/TACTIC_DEVELOPMENT.md)
+  Section 5 for simp lemma design
+
+**Implementation Roadmap**:
+- See [PHASED_IMPLEMENTATION.md](Documentation/Development/PHASED_IMPLEMENTATION.md)
+  for Wave 1-4 execution strategy
+- Task 7 (Implement Core Automation): 40-60 hours, phased approach
+- Wave 2 execution: Task 7 can run in parallel with Tasks 5, 6, 8
+- Time savings: 25-32% with proper parallelization

@@ -8,7 +8,7 @@ set -euo pipefail
 
 # Detect project directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+CLAUDE_PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/../../.." && pwd)}"
 export CLAUDE_PROJECT_DIR
 
 # Test counters
@@ -75,7 +75,7 @@ setup_test_env() {
   export USER_ARGS="--test"
 
   # Ensure error log exists
-  source "${CLAUDE_PROJECT_DIR}/lib/core/error-handling.sh" 2>/dev/null || true
+  source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null || true
   ensure_error_log_exists 2>/dev/null || true
 }
 
@@ -85,7 +85,7 @@ cleanup_test_env() {
 }
 
 # Source the library under test
-source "${CLAUDE_PROJECT_DIR}/lib/workflow/validation-utils.sh" || {
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" || {
   echo "ERROR: Failed to source validation-utils.sh"
   exit 1
 }
@@ -243,7 +243,7 @@ echo ""
 
 # Test 15: Should prevent multiple sourcing
 TESTS_RUN=$((TESTS_RUN + 1))
-source "${CLAUDE_PROJECT_DIR}/lib/workflow/validation-utils.sh" || true
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" || true
 if [ "$VALIDATION_UTILS_VERSION" = "1.0.0" ]; then
   echo -e "${GREEN}✓${NC} Library version exported correctly"
   TESTS_PASSED=$((TESTS_PASSED + 1))

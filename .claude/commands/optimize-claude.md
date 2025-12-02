@@ -163,7 +163,9 @@ done
 DESCRIPTION=$(echo "$DESCRIPTION" | xargs)
 
 # Validate threshold
-if [[ ! "$THRESHOLD" =~ ^(aggressive|balanced|conservative)$ ]]; then
+if [[ "$THRESHOLD" =~ ^(aggressive|balanced|conservative)$ ]]; then
+  : # Valid threshold, continue
+else
   log_command_error "$COMMAND_NAME" "$WORKFLOW_ID" "$DESCRIPTION" "validation_error" \
     "Invalid threshold profile: $THRESHOLD" "argument_validation" \
     "{\"threshold\": \"$THRESHOLD\", \"valid_values\": [\"aggressive\", \"balanced\", \"conservative\"]}"
@@ -195,7 +197,7 @@ echo "Ready for: Topic naming agent invocation"
 
 ## Block 1c: Invoke Topic Naming Agent
 
-**EXECUTE NOW**: Invoke topic naming agent and initialize workflow paths:
+**EXECUTE NOW**: USE the Task tool to invoke topic naming agent and initialize workflow paths:
 
 ```bash
 set +H
@@ -266,7 +268,7 @@ echo "=== /optimize-claude: CLAUDE.md Optimization Workflow ==="
 
 ## Block 1b: Topic Name Generation
 
-**EXECUTE NOW**: Invoke the topic-naming-agent to generate a semantic directory name.
+**EXECUTE NOW**: USE the Task tool to invoke the topic-naming-agent for generate a semantic directory name.
 
 Task {
   subagent_type: "general-purpose"
@@ -457,6 +459,8 @@ echo "Ready for: Stage 1 research agents"
 
 **Stage 1: Parallel Research** - Invoke research agents and verify
 
+**EXECUTE NOW**: USE the Task tool to invoke the claude-md-analyzer agent for CLAUDE.md structure analysis.
+
 ```
 Task {
   subagent_type: "general-purpose"
@@ -477,6 +481,8 @@ Task {
     - Completion signal: REPORT_CREATED: [exact absolute path]
   "
 }
+
+**EXECUTE NOW**: USE the Task tool to invoke the docs-structure-analyzer agent for documentation structure analysis (second parallel task).
 
 Task {
   subagent_type: "general-purpose"
@@ -540,6 +546,8 @@ echo "Ready for: Analysis phase (bloat + accuracy)"
 
 **Stage 2: Parallel Analysis** - Invoke analysis agents and verify
 
+**EXECUTE NOW**: USE the Task tool to invoke the docs-bloat-analyzer agent for documentation bloat analysis.
+
 ```
 Task {
   subagent_type: "general-purpose"
@@ -566,6 +574,8 @@ Task {
     - Completion signal: REPORT_CREATED: [exact absolute path]
   "
 }
+
+**EXECUTE NOW**: USE the Task tool to invoke the docs-accuracy-analyzer agent for documentation accuracy analysis.
 
 Task {
   subagent_type: "general-purpose"
@@ -624,6 +634,8 @@ echo "Ready for: Planning phase (cleanup-plan-architect)"
 ---
 
 **Stage 3: Sequential Planning** - Invoke planning agent and verify
+
+**EXECUTE NOW**: USE the Task tool to invoke the cleanup-plan-architect agent for documentation cleanup planning.
 
 ```
 Task {

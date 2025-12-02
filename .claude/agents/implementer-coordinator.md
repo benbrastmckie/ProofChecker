@@ -264,6 +264,8 @@ Example for Wave 2 with 2 phases:
 ```markdown
 I'm now invoking implementation-executor for Phase 2 and Phase 3 in parallel (Wave 2).
 
+**EXECUTE NOW**: USE the Task tool to invoke the implementation-executor.
+
 Task {
   subagent_type: "general-purpose"
   description: "Execute Phase 2 implementation"
@@ -293,6 +295,8 @@ Task {
     - work_remaining: 0 or list of incomplete tasks
     - summary_path: path if summary generated
 }
+
+**EXECUTE NOW**: USE the Task tool to invoke the implementation-executor.
 
 Task {
   subagent_type: "general-purpose"

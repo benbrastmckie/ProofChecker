@@ -373,13 +373,14 @@ export COMMAND_NAME USER_ARGS WORKFLOW_ID
 # Pre-calculate ALL paths before agent invocation (hard barrier pattern)
 TODO_PATH="${CLAUDE_PROJECT_DIR}/.claude/TODO.md"
 NEW_TODO_PATH="${CLAUDE_PROJECT_DIR}/.claude/tmp/TODO_new_${WORKFLOW_ID}.md"
-BACKUP_TODO_PATH="${TODO_PATH}.backup_${WORKFLOW_ID}"
 
 # Create tmp directory
 mkdir -p "$(dirname "$NEW_TODO_PATH")"
 
 # Validate paths are absolute
-if [[ ! "$TODO_PATH" =~ ^/ ]] || [[ ! "$NEW_TODO_PATH" =~ ^/ ]]; then
+if [[ "$TODO_PATH" =~ ^/ ]] && [[ "$NEW_TODO_PATH" =~ ^/ ]]; then
+  : # Paths are absolute, continue
+else
   log_command_error "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS" \
     "validation_error" "Paths must be absolute" \
     "Block2a:PathValidation" \
@@ -398,14 +399,12 @@ append_workflow_state "DISCOVERED_PROJECTS" "$DISCOVERED_PROJECTS"
 append_workflow_state "SPECS_ROOT" "$SPECS_ROOT"
 append_workflow_state "TODO_PATH" "$TODO_PATH"
 append_workflow_state "NEW_TODO_PATH" "$NEW_TODO_PATH"
-append_workflow_state "BACKUP_TODO_PATH" "$BACKUP_TODO_PATH"
 append_workflow_state "WORKFLOW_ID" "$WORKFLOW_ID"
 
 echo ""
 echo "=== Pre-Calculate Output Paths ==="
 echo "Current TODO.md: $TODO_PATH"
 echo "New TODO.md (temp): $NEW_TODO_PATH"
-echo "Backup path: $BACKUP_TODO_PATH"
 echo "Discovered projects: $DISCOVERED_PROJECTS"
 echo "Specs root: $SPECS_ROOT"
 echo ""
@@ -417,7 +416,7 @@ echo "[CHECKPOINT] Path pre-calculation complete - ready for todo-analyzer invoc
 **CRITICAL BARRIER**: This block MUST invoke todo-analyzer via Task tool.
 Verification block (2c) will FAIL if TODO.md not created at NEW_TODO_PATH.
 
-**EXECUTE NOW**: Invoke todo-analyzer subagent to generate complete TODO.md file.
+**EXECUTE NOW**: USE the Task tool to invoke the todo-analyzer agent to generate complete TODO.md file.
 
 The todo-analyzer must generate complete TODO.md with 7-section structure, preserve Backlog/Saved sections, auto-detect research directories, and write to pre-calculated output path.
 
@@ -675,7 +674,7 @@ echo ""
 # === DRY-RUN MODE ===
 if [ "$DRY_RUN" = "true" ]; then
   echo "[DRY RUN] Would perform:"
-  echo "  1. Backup: $TODO_PATH -> $BACKUP_TODO_PATH"
+  echo "  1. Create git snapshot of TODO.md (if uncommitted changes exist)"
   echo "  2. Replace: $NEW_TODO_PATH -> $TODO_PATH"
   echo ""
   echo "Preview location: $NEW_TODO_PATH"
@@ -696,20 +695,42 @@ if [ ! -f "$NEW_TODO_PATH" ]; then
   exit 1
 fi
 
-# === BACKUP CURRENT TODO.md ===
+# === CREATE GIT SNAPSHOT OF TODO.md ===
+# Only commit if there are uncommitted changes to TODO.md
 if [ -f "$TODO_PATH" ]; then
-  echo "Creating backup: $BACKUP_TODO_PATH"
-  cp "$TODO_PATH" "$BACKUP_TODO_PATH"
+  if ! git diff --quiet "$TODO_PATH" 2>/dev/null; then
+    echo "Creating git snapshot of TODO.md before update"
 
-  # Keep only 5 most recent backups
-  BACKUP_DIR=$(dirname "$BACKUP_TODO_PATH")
-  BACKUP_COUNT=$(ls -1 "${BACKUP_DIR}/TODO.md.backup_"* 2>/dev/null | wc -l)
-  if [ "$BACKUP_COUNT" -gt 5 ]; then
-    echo "Cleaning old backups (keeping 5 most recent)"
-    ls -1t "${BACKUP_DIR}/TODO.md.backup_"* | tail -n +6 | xargs rm -f
+    # Stage TODO.md
+    if ! git add "$TODO_PATH" 2>/dev/null; then
+      log_command_error "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS" \
+        "state_error" "Failed to stage TODO.md for git commit" \
+        "Block3:GitSnapshot" \
+        '{"path":"'"$TODO_PATH"'"}'
+      echo "WARNING: Could not create git snapshot, proceeding without backup" >&2
+    else
+      # Create commit with workflow context
+      COMMIT_MSG="chore: snapshot TODO.md before /todo update
+
+Preserving current state for recovery if needed.
+
+Workflow ID: ${WORKFLOW_ID}
+Command: /todo ${USER_ARGS:-<no args>}"
+
+      if git commit -m "$COMMIT_MSG" 2>/dev/null; then
+        COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null)
+        echo "Created snapshot commit: $COMMIT_HASH"
+        echo "Recovery command: git checkout $COMMIT_HASH -- .claude/TODO.md"
+      else
+        # Commit failed - might be no changes after staging
+        echo "No snapshot needed (TODO.md unchanged)"
+      fi
+    fi
+  else
+    echo "TODO.md already committed, no snapshot needed"
   fi
 else
-  echo "No existing TODO.md to backup (first run)"
+  echo "No existing TODO.md to snapshot (first run)"
 fi
 
 # === ATOMIC REPLACE ===
@@ -723,14 +744,13 @@ if [ ! -f "$TODO_PATH" ]; then
     "Block3:AtomicReplace" \
     '{"expected":"'"$TODO_PATH"'","source":"'"$NEW_TODO_PATH"'"}'
   echo "ERROR: Atomic replace failed" >&2
-  echo "Recovery: Restore from backup: cp $BACKUP_TODO_PATH $TODO_PATH" >&2
+  echo "Recovery: Restore from git: git log --oneline .claude/TODO.md" >&2
   exit 1
 fi
 
 echo ""
 echo "TODO.md updated successfully"
 echo "  Path: $TODO_PATH"
-echo "  Backup: $BACKUP_TODO_PATH"
 echo ""
 echo "[CHECKPOINT] Atomic replace complete"
 ```
@@ -1033,7 +1053,7 @@ echo "<!-- checkpoint: todo_rescan_complete -->"
 ### Block 4c-2: Classify Remaining Projects (Clean Mode)
 
 **CRITICAL BARRIER**: This block MUST invoke todo-analyzer via Task tool if cleanup removed projects.
-**EXECUTE IF REMOVED_COUNT > 0**: Invoke todo-analyzer to classify remaining projects after cleanup.
+**EXECUTE IF REMOVED_COUNT > 0**: USE the Task tool to invoke the todo-analyzer agent to classify remaining projects after cleanup.
 
 Task {
   subagent_type: "general-purpose"

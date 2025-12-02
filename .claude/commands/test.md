@@ -185,7 +185,9 @@ fi
 
 # === PLAN FILE VALIDATION ===
 # Make plan file absolute if relative
-if [[ ! "$PLAN_FILE" =~ ^/ ]]; then
+if [[ "$PLAN_FILE" =~ ^/ ]]; then
+  : # Already absolute, continue
+else
   PLAN_FILE="$(pwd)/$PLAN_FILE"
 fi
 
@@ -385,41 +387,45 @@ echo "Test iteration $ITERATION/$MAX_TEST_ITERATIONS: $TEST_OUTPUT_PATH"
 
 ## Block 3: Test Execution [CRITICAL BARRIER]
 
-**EXECUTE NOW**: CRITICAL BARRIER - Invoke test-executor agent to run test suite. This is a hard barrier: the agent MUST create the test output file at the pre-calculated path.
+**EXECUTE NOW**: USE the Task tool to invoke the test-executor agent for test suite execution. This is a CRITICAL BARRIER: the agent MUST create the test output file at the pre-calculated path.
 
-Use the Task tool to invoke the test-executor agent with the following behavioral injection:
+Task {
+  subagent_type: "general-purpose"
+  description: "Execute test suite with framework detection and structured reporting"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/test-executor.md
 
-Read and follow ALL behavioral guidelines from:
-/home/benjamin/.config/.claude/agents/test-executor.md
+    You are executing the test execution phase for: test workflow
 
-You are executing the test execution phase for: {plan description from plan file}
+    **Input Contract (Hard Barrier Pattern)**:
+    - plan_path: ${PLAN_FILE}
+    - topic_path: ${TOPIC_PATH}
+    - summary_file: ${SUMMARY_FILE:-none}
+    - artifact_paths:
+      - outputs: ${OUTPUTS_DIR}
+      - debug: ${DEBUG_DIR}
+    - test_config:
+      - coverage_threshold: ${COVERAGE_THRESHOLD}
+      - iteration: ${ITERATION}
+      - max_iterations: ${MAX_TEST_ITERATIONS}
+    - output_path: ${TEST_OUTPUT_PATH}
 
-**Input Contract (Hard Barrier Pattern)**:
-- plan_path: {$PLAN_FILE}
-- topic_path: {$TOPIC_PATH}
-- summary_file: {$SUMMARY_FILE or "none"}
-- artifact_paths:
-  - outputs: {$OUTPUTS_DIR}
-  - debug: {$DEBUG_DIR}
-- test_config:
-  - coverage_threshold: {$COVERAGE_THRESHOLD}
-  - iteration: {$ITERATION}
-  - max_iterations: {$MAX_TEST_ITERATIONS}
-- output_path: {$TEST_OUTPUT_PATH}
+    **CRITICAL**: You MUST create test results file at: ${TEST_OUTPUT_PATH}
 
-**CRITICAL**: You MUST create test results file at: {$TEST_OUTPUT_PATH}
+    Execute test suite, measure coverage, and analyze results.
 
-Execute test suite, measure coverage, and analyze results.
-
-Return: TEST_COMPLETE: {STATUS}
-status: "passed" | "failed" | "error"
-framework: "bash" | "pytest" | etc
-test_command: "bash test.sh"
-tests_passed: N
-tests_failed: M
-coverage: N% (or "N/A")
-next_state: "complete" | "debug" | "continue"
-output_path: {$TEST_OUTPUT_PATH}
+    Return: TEST_COMPLETE: {STATUS}
+    status: \"passed\" | \"failed\" | \"error\"
+    framework: \"bash\" | \"pytest\" | etc
+    test_command: \"bash test.sh\"
+    tests_passed: N
+    tests_failed: M
+    coverage: N% (or \"N/A\")
+    next_state: \"complete\" | \"debug\" | \"continue\"
+    output_path: ${TEST_OUTPUT_PATH}
+  "
+}
 
 **Note**: While Block 3 appears as instructional text, the actual test-executor agent invocation happens via Claude's Task tool during command execution. The test-executor agent will parse this contract and execute the test suite accordingly.
 
@@ -471,7 +477,11 @@ TESTS_FAILED=$(grep "^tests_failed:" "$TEST_OUTPUT_PATH" 2>/dev/null | cut -d: -
 COVERAGE=$(grep "^coverage:" "$TEST_OUTPUT_PATH" 2>/dev/null | cut -d: -f2 | tr -d ' %' || echo "0")
 
 # Handle N/A coverage
-if [[ "$COVERAGE" == "N/A" ]] || [[ ! "$COVERAGE" =~ ^[0-9]+$ ]]; then
+if [[ "$COVERAGE" == "N/A" ]]; then
+  COVERAGE=0
+elif [[ "$COVERAGE" =~ ^[0-9]+$ ]]; then
+  : # Valid numeric coverage, continue
+else
   COVERAGE=0
 fi
 
@@ -610,28 +620,34 @@ DEBUG_OUTPUT_PATH="${DEBUG_DIR}/debug_report_$(date +%s).md"
 append_workflow_state "DEBUG_REPORT_PATH" "$DEBUG_OUTPUT_PATH"
 
 echo "Invoking debug-analyst for test failure analysis..."
+```
 
-# Task tool invocation happens during execution:
-# Use the Task tool to invoke debug-analyst with:
-#
-# Read and follow ALL behavioral guidelines from:
-# /home/benjamin/.config/.claude/agents/debug-analyst.md
-#
-# You are debugging: {plan description}
-#
-# **Input Contract**:
-# - issue_description: {$ISSUE_DESCRIPTION}
-# - failed_phase: "test"
-# - test_command: {extracted from test results}
-# - exit_code: {extracted from test results}
-# - debug_directory: {$DEBUG_DIR}
-# - output_path: {$DEBUG_OUTPUT_PATH}
-#
-# Analyze test failures, coverage gaps, and provide actionable debugging guidance.
-#
-# Return: DEBUG_COMPLETE: {PATH}
-# debug_report_path: {$DEBUG_OUTPUT_PATH}
+**EXECUTE NOW**: USE the Task tool to invoke the debug-analyst agent for test failure analysis.
 
+Task {
+  subagent_type: "general-purpose"
+  description: "Analyze test failures and provide debugging guidance"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/debug-analyst.md
+
+    You are debugging: test workflow failures
+
+    **Input Contract**:
+    - issue_description: ${ISSUE_DESCRIPTION}
+    - failed_phase: \"test\"
+    - test_output_path: ${TEST_OUTPUT_PATH}
+    - debug_directory: ${DEBUG_DIR}
+    - output_path: ${DEBUG_OUTPUT_PATH}
+
+    Analyze test failures, coverage gaps, and provide actionable debugging guidance.
+
+    Return: DEBUG_COMPLETE: {PATH}
+    debug_report_path: ${DEBUG_OUTPUT_PATH}
+  "
+}
+
+```bash
 # Checkpoint: Debug phase complete (or skipped)
 echo "Debug phase: ${NEXT_STATE}"
 ```

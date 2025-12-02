@@ -27,7 +27,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../core/detect-project-dir.sh"
 
 # Source error handling library for error logging integration
-source "${CLAUDE_PROJECT_DIR}/lib/core/error-handling.sh" 2>/dev/null || {
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null || {
   echo "ERROR: Failed to source error-handling.sh" >&2
   return 1
 }
@@ -182,6 +182,154 @@ validate_agent_artifact() {
 
     echo "ERROR: Agent artifact too small: $artifact_path" >&2
     echo "Expected minimum $min_size_bytes bytes, got $actual_size bytes" >&2
+    return 1
+  fi
+
+  return 0
+}
+
+# ==============================================================================
+# State Restoration Validation
+# ==============================================================================
+
+# validate_state_restoration: Validate critical variables after state restoration
+#
+# Checks that critical workflow variables are non-empty after load_workflow_state.
+# This detects state restoration failures early before they cause cascading errors.
+#
+# Usage:
+#   load_workflow_state
+#   validate_state_restoration "RESEARCH_DIR" "TOPIC_PATH" || exit 1
+#
+# Parameters:
+#   $@ - var_names: List of variable names to validate
+#
+# Returns:
+#   0 on success (all variables are non-empty)
+#   1 on failure (one or more variables are empty or undefined)
+#
+# Logs:
+#   state_error to centralized error log on failure
+validate_state_restoration() {
+  local var_names=("$@")
+  local missing_vars=()
+
+  # Validate at least one variable name provided
+  if [ ${#var_names[@]} -eq 0 ]; then
+    echo "ERROR: validate_state_restoration requires at least one variable name" >&2
+    return 1
+  fi
+
+  # Check each variable
+  for var_name in "${var_names[@]}"; do
+    local var_value="${!var_name:-}"
+    if [ -z "$var_value" ]; then
+      missing_vars+=("$var_name")
+    fi
+  done
+
+  # Report missing variables
+  if [ ${#missing_vars[@]} -gt 0 ]; then
+    local missing_list
+    missing_list=$(printf "%s, " "${missing_vars[@]}")
+    missing_list="${missing_list%, }"  # Remove trailing comma
+
+    # Log error if error logging context is available
+    if declare -F log_command_error >/dev/null 2>&1; then
+      if [ -n "${COMMAND_NAME:-}" ] && [ -n "${WORKFLOW_ID:-}" ]; then
+        log_command_error \
+          "$COMMAND_NAME" \
+          "$WORKFLOW_ID" \
+          "${USER_ARGS:-}" \
+          "state_error" \
+          "State restoration failed: missing variables: $missing_list" \
+          "validate_state_restoration" \
+          "$(jq -n --arg vars "$missing_list" '{missing_variables: $vars}')"
+      fi
+    fi
+
+    echo "ERROR: State restoration failed - missing variables: $missing_list" >&2
+    echo "Variables were not restored from state file" >&2
+    return 1
+  fi
+
+  return 0
+}
+
+# ==============================================================================
+# Directory Variable Validation
+# ==============================================================================
+
+# validate_directory_var: Validate directory variable before use in find commands
+#
+# Checks that a directory variable is non-empty and the directory exists.
+# This prevents find command failures from undefined or invalid directory paths.
+#
+# Usage:
+#   validate_directory_var "RESEARCH_DIR" "research reports" || EXISTING_REPORTS=0
+#
+# Parameters:
+#   $1 - var_name: Name of the directory variable to validate
+#   $2 - purpose: Human-readable description of directory purpose
+#
+# Returns:
+#   0 on success (variable is non-empty and directory exists)
+#   1 on failure (variable is empty or directory doesn't exist)
+#
+# Logs:
+#   file_error to centralized error log on failure
+validate_directory_var() {
+  local var_name="${1:-}"
+  local purpose="${2:-directory}"
+
+  # Validate parameters
+  if [ -z "$var_name" ]; then
+    echo "ERROR: var_name parameter required" >&2
+    return 1
+  fi
+
+  # Get variable value
+  local var_value="${!var_name:-}"
+
+  # Check variable is non-empty
+  if [ -z "$var_value" ]; then
+    # Log error if error logging context is available
+    if declare -F log_command_error >/dev/null 2>&1; then
+      if [ -n "${COMMAND_NAME:-}" ] && [ -n "${WORKFLOW_ID:-}" ]; then
+        log_command_error \
+          "$COMMAND_NAME" \
+          "$WORKFLOW_ID" \
+          "${USER_ARGS:-}" \
+          "file_error" \
+          "Directory variable is empty: $var_name" \
+          "validate_directory_var" \
+          "$(jq -n --arg var "$var_name" --arg desc "$purpose" \
+            '{variable_name: $var, purpose: $desc, error: "variable_empty"}')"
+      fi
+    fi
+
+    echo "ERROR: Directory variable is empty: $var_name (needed for $purpose)" >&2
+    return 1
+  fi
+
+  # Check directory exists
+  if [ ! -d "$var_value" ]; then
+    # Log error if error logging context is available
+    if declare -F log_command_error >/dev/null 2>&1; then
+      if [ -n "${COMMAND_NAME:-}" ] && [ -n "${WORKFLOW_ID:-}" ]; then
+        log_command_error \
+          "$COMMAND_NAME" \
+          "$WORKFLOW_ID" \
+          "${USER_ARGS:-}" \
+          "file_error" \
+          "Directory does not exist: $var_value" \
+          "validate_directory_var" \
+          "$(jq -n --arg var "$var_name" --arg path "$var_value" --arg desc "$purpose" \
+            '{variable_name: $var, directory_path: $path, purpose: $desc, error: "directory_not_found"}')"
+      fi
+    fi
+
+    echo "ERROR: Directory does not exist: $var_value (from $var_name, needed for $purpose)" >&2
     return 1
   fi
 

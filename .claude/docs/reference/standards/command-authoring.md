@@ -165,6 +165,68 @@ Task {
 }
 ```
 
+### Edge Case Patterns
+
+#### Iteration Loop Invocations
+
+When Task invocations occur inside iteration loops, each invocation point requires its own imperative directive:
+
+```markdown
+## Block 5: Initial Invocation
+
+**EXECUTE NOW**: USE the Task tool to invoke implementer-coordinator.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Implement phase ${STARTING_PHASE}"
+  prompt: "..."
+}
+
+## Block 7: Iteration Loop Re-Invocation
+
+```bash
+if [ "$WORK_REMAINING" != "0" ]; then
+  ITERATION=$((ITERATION + 1))
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to re-invoke implementer-coordinator for iteration ${ITERATION}.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Continue implementation (iteration ${ITERATION})"
+  prompt: "..."
+}
+```
+
+**Key Point**: Both invocation points (initial and loop) require separate imperative directives.
+
+#### Conditional Invocations
+
+When Task invocations depend on runtime conditions, use conditional imperative directives:
+
+```markdown
+**EXECUTE IF** coverage below threshold: USE the Task tool to invoke test-executor.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Run test suite"
+  prompt: "..."
+}
+```
+
+**Alternative** (explicit bash conditional):
+```bash
+if [ "$COVERAGE" -lt "$THRESHOLD" ]; then
+  echo "Coverage insufficient - invoking test-executor"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to invoke test-executor.
+
+Task { ... }
+```
+
 ---
 
 ## Subprocess Isolation Requirements
@@ -1098,6 +1160,92 @@ See [Implement-Test Workflow Guide](./../../guides/workflows/implement-test-work
 ---
 
 ## Prohibited Patterns
+
+### Naked Task Blocks Without Imperative Directives
+
+Commands MUST NOT use Task blocks without explicit imperative instructions. Pseudo-code syntax or instructional text patterns are PROHIBITED and will be detected by lint-task-invocation-pattern.sh.
+
+**❌ PROHIBITED Pattern 1: Naked Task Block**
+
+```markdown
+Task {
+  subagent_type: "general-purpose"
+  description: "Research topic"
+  prompt: "..."
+}
+```
+
+**Problem**: No imperative directive tells Claude to USE the Task tool. Claude interprets this as documentation.
+
+**❌ PROHIBITED Pattern 2: Instructional Text Without Task Invocation**
+
+```markdown
+## Phase 3: Agent Delegation
+
+Use the Task tool to invoke the research-specialist agent with the calculated paths.
+The agent will create the report at ${REPORT_PATH}.
+```
+
+**Problem**: Instructional text describes what SHOULD happen but doesn't invoke the Task tool. No action occurs.
+
+**❌ PROHIBITED Pattern 3: Incomplete EXECUTE NOW Directive**
+
+```markdown
+**EXECUTE NOW**: Invoke the research-specialist agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Research topic"
+  prompt: "..."
+}
+```
+
+**Problem**: Missing "USE the Task tool" phrase. Directive is not explicit enough.
+
+**✅ REQUIRED Pattern: Imperative Task Directive**
+
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the research-specialist agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Research ${TOPIC} with mandatory file creation"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/research-specialist.md
+
+    **Workflow-Specific Context**:
+    - Research Topic: ${TOPIC}
+    - Output Path: ${REPORT_PATH}
+
+    Execute research per behavioral guidelines.
+    Return: REPORT_CREATED: ${REPORT_PATH}
+  "
+}
+```
+
+**Required Elements**:
+1. Imperative instruction: "**EXECUTE NOW**: USE the Task tool..."
+2. Agent name specified: "...to invoke the [AGENT_NAME] agent"
+3. No code block wrapper around Task block
+4. Inline prompt with variable interpolation
+5. Completion signal in prompt
+
+**Validation**:
+
+All command files are validated by the automated linter:
+
+```bash
+# Run Task invocation pattern linter
+bash .claude/scripts/lint-task-invocation-pattern.sh <command-file>
+
+# Linter detects:
+# - ERROR: Task { without EXECUTE NOW directive
+# - ERROR: Instructional text without actual Task invocation
+# - ERROR: Incomplete EXECUTE NOW directive (missing 'Task tool')
+```
+
+See [Hard Barrier Subagent Delegation Pattern](../../concepts/patterns/hard-barrier-subagent-delegation.md#task-invocation-requirements) for complete Task invocation requirements and edge case patterns.
 
 ### Negation in Conditional Tests (if ! and elif !)
 

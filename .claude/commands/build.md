@@ -1240,7 +1240,7 @@ echo "TOPIC_PATH=$TOPIC_PATH"
 echo "TEST_OUTPUT_PATH=$TEST_OUTPUT_PATH"
 ```
 
-Now invoke test-executor subagent via Task tool:
+**EXECUTE NOW**: USE the Task tool to invoke the test-executor agent for test suite execution.
 
 Task {
   subagent_type: "general-purpose"
