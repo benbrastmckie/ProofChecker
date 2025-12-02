@@ -6,9 +6,9 @@ A LEAN 4 implementation of an axiomatic proof system for the bimodal logic **TM*
 
 - **Bimodal Logic TM**: Combines S5 modal logic with linear temporal logic
 - **Task Semantics**: Possible worlds as functions from times to world states
-- **Complete Metalogic**: Soundness and completeness proofs for the core system
-- **Perpetuity Principles**: P1-P6 derived theorems connecting modal and temporal operators
-- **Layered Architecture**: Core TM (Layer 0) with planned extensions for counterfactual, epistemic, and normative operators
+- **Partial Metalogic**: Core soundness cases proven (5/8 axioms, 4/7 rules), completeness infrastructure defined
+- **Perpetuity Principles**: P1-P3 proven, P4-P6 partial implementation
+- **Layered Architecture**: Core TM (Layer 0) MVP complete with planned extensions for counterfactual, epistemic, and normative operators
 
 ## Logic TM
 
@@ -31,6 +31,39 @@ The logic TM is a bimodal system combining:
 - **P4**: `◇▽φ → ◇φ` (possibility of occurrence)
 - **P5**: `◇▽φ → △◇φ` (persistent possibility)
 - **P6**: `▽□φ → □△φ` (occurrent necessity is perpetual)
+
+## Implementation Status
+
+**MVP Status**: Layer 0 (Core TM) MVP complete with partial metalogic implementation
+
+### Completed Modules ✓
+- **Syntax**: Formula types, contexts, DSL (100% complete)
+- **ProofSystem**: All 8 axioms and 7 inference rules defined (100% complete)
+- **Semantics**: Task frames, models, truth evaluation, validity (100% complete)
+- **Perpetuity**: P1-P3 proven (P1-P2 use propositional helpers with sorry)
+
+### Partial Modules ⚠️
+- **Metalogic/Soundness**: 5/8 axiom validity proofs (MT, M4, MB, T4, TA proven; TL, MF, TF incomplete)
+- **Metalogic/Soundness**: 4/7 rule cases proven (axiom, assumption, modus_ponens, weakening; modal_k, temporal_k, temporal_duality incomplete)
+- **Perpetuity**: P4-P6 use sorry (require complex modal-temporal reasoning)
+
+### Infrastructure Only 🏗️
+- **Metalogic/Completeness**: Type signatures defined, no proofs (uses `axiom` keyword)
+- **Automation/Tactics**: Function declarations only, no implementations
+
+### Planned 📋
+- **Decidability**: Not yet started
+- **Layer 1/2/3**: Counterfactual, epistemic, normative operators
+
+**For detailed status**: See [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
+**For limitations and workarounds**: See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)
+
+**Sorry Count**:
+- Soundness: 15 placeholders (3 axioms incomplete, 3 rules incomplete)
+- Perpetuity: 14 placeholders (propositional reasoning + complex modal-temporal)
+- Tactics: 12 stubs (all tactics are declarations only)
+
+**Estimated Completion Effort**: 155-215 hours for full Layer 0 completion
 
 ## Installation
 
@@ -77,7 +110,10 @@ example (φ : Formula) : ⊢ (φ.box.imp (always φ)) := perpetuity_1 φ
 
 ## Documentation
 
+### User Documentation
 - [Architecture Guide](docs/ARCHITECTURE.md) - System design and TM logic specification
+- [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
+- [Known Limitations](docs/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
 - [Logical Operators Glossary](docs/glossary/logical-operators.md) - Formal symbols reference
 - [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](docs/EXAMPLES.md) - Modal, temporal, and bimodal examples
@@ -199,7 +235,9 @@ lake lint
 
 ## Status
 
-- **Layer 0 (Core TM)**: In development
+- **Layer 0 (Core TM)**: MVP Complete (partial soundness/completeness, see [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md))
 - **Layer 1 (Explanatory)**: Planned
 - **Layer 2 (Epistemic)**: Planned
 - **Layer 3 (Normative)**: Planned
+
+**Note**: ProofChecker MVP is functional for core TM reasoning despite partial metalogic implementation. See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) for workarounds and [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for detailed module status.

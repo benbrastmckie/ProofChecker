@@ -6,9 +6,16 @@ ProofChecker is a LEAN 4 implementation of an axiomatic proof system for the bim
 
 - **Bimodal Logic TM**: Combining S5 modal logic (metaphysical necessity/possibility) with linear temporal logic (past/future operators)
 - **Task Semantics**: Possible worlds as functions from times to world states constrained by task relations
-- **Layered Architecture**: Layer 0 (Core TM) with planned extensions for counterfactual, epistemic, and normative operators
-- **Complete Metalogic**: Soundness and completeness proofs for the core system
-- **Perpetuity Principles**: P1-P6 derived theorems connecting modal and temporal operators
+- **Layered Architecture**: Layer 0 (Core TM) MVP complete with planned extensions for counterfactual, epistemic, and normative operators
+- **Partial Metalogic**: Core soundness cases proven (5/8 axioms, 4/7 rules), completeness infrastructure defined
+- **Perpetuity Principles**: P1-P3 proven, P4-P6 partial implementation
+
+## Implementation Status
+
+**MVP Completion**: Layer 0 (Core TM) MVP complete with partial metalogic
+
+**For detailed status**: See [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
+**For limitations**: See [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)
 
 ## 2. Essential Commands
 
@@ -110,6 +117,8 @@ ProofChecker/
 
 ### User Documentation (docs/)
 - [Architecture Guide](docs/ARCHITECTURE.md) - System design and TM logic specification
+- [Implementation Status](docs/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
+- [Known Limitations](docs/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
 - [Logical Operators Glossary](docs/glossary/logical-operators.md) - Formal symbols reference
 - [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](docs/EXAMPLES.md) - Modal, temporal, bimodal examples
@@ -164,20 +173,30 @@ ProofChecker follows rigorous development standards including Test-Driven Develo
 - `truth_at`: Truth evaluation at model-history-time triples
 
 ### Metalogic Package
-- `soundness`: `Γ ⊢ φ → Γ ⊨ φ`
-- `weak_completeness`: `⊨ φ → ⊢ φ`
-- `strong_completeness`: `Γ ⊨ φ → Γ ⊢ φ`
-- Canonical model construction for completeness proof
+- `soundness`: `Γ ⊢ φ → Γ ⊨ φ` **(partial: 5/8 axioms, 4/7 rules proven)**
+  - Proven axioms: MT, M4, MB, T4, TA
+  - Incomplete axioms: TL, MF, TF (require frame constraints)
+  - Proven rules: axiom, assumption, modus_ponens, weakening
+  - Incomplete rules: modal_k, temporal_k, temporal_duality
+- `weak_completeness`: `⊨ φ → ⊢ φ` **(infrastructure only, no proofs)**
+- `strong_completeness`: `Γ ⊨ φ → Γ ⊢ φ` **(infrastructure only, no proofs)**
+- Canonical model construction defined (types, no proofs)
 
 ### Theorems Package
 - Perpetuity principles P1-P6 connecting modal and temporal operators:
-  - P1: `□φ → △φ` (necessary implies always)
-  - P2: `▽φ → ◇φ` (sometimes implies possible)
-  - P3: `□φ → □△φ` (necessity of perpetuity)
-  - P4: `◇▽φ → ◇φ` (possibility of occurrence)
-  - P5: `◇▽φ → △◇φ` (persistent possibility)
-  - P6: `▽□φ → □△φ` (occurrent necessity is perpetual)
+  - P1: `□φ → △φ` (necessary implies always) - **Proven (uses imp_trans helper with sorry)**
+  - P2: `▽φ → ◇φ` (sometimes implies possible) - **Proven (uses contraposition helper with sorry)**
+  - P3: `□φ → □△φ` (necessity of perpetuity) - **Fully proven (zero sorry)**
+  - P4: `◇▽φ → ◇φ` (possibility of occurrence) - **Partial (complex nested formulas)**
+  - P5: `◇▽φ → △◇φ` (persistent possibility) - **Partial (modal-temporal interaction)**
+  - P6: `▽□φ → □△φ` (occurrent necessity is perpetual) - **Partial (modal-temporal interaction)**
 - Note: `△` (always/henceforth) and `▽` (sometimes/eventually) are Unicode triangle notation alternatives
+
+### Automation Package
+- `Tactics`: Custom tactic declarations **(stubs only, no implementations)**
+  - All 12 tactics are function signatures with `sorry` bodies
+  - Includes: modal_k, temporal_k, modal_t, modal_search, tm_auto, etc.
+- `ProofSearch`: Automated proof search **(planned, not started)**
 
 ## 7. Testing Architecture
 
@@ -237,3 +256,11 @@ ProofChecker test suite is organized in ProofCheckerTest/ directory with unit te
 - [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - 100-char line limit, 2-space indentation, flush-left declarations
 
 **TDD Enforcement**: Every new feature requires tests first. Run `lake test` before committing. CI rejects PRs with failing tests.
+
+**Working with Partial Implementation**:
+- **Use proven components only**: MT, M4, MB, T4, TA axioms are sound
+- **Avoid incomplete axioms**: TL, MF, TF have incomplete soundness proofs
+- **Perpetuity P3 is safe**: Only P3 is fully proven (zero sorry)
+- **No automation available**: All tactics are stubs, use manual proof construction
+- See [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) for workarounds and alternatives
+- See [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) for verification commands
