@@ -88,6 +88,8 @@ def possible_p : Formula := diamond p           -- `◇p` (defined as `¬□¬p`
 -- Temporal operators
 def always_past : Formula := Formula.past p     -- Past p (always in past)
 def always_future : Formula := Formula.future p -- Future p (always in future)
+def henceforth_p : Formula := p.always          -- △p (henceforth/always from now)
+def eventually_p : Formula := p.sometimes       -- ▽p (eventually/sometimes from now)
 def sometime_past_p : Formula := sometime_past p   -- ∃ time in past where p
 def sometime_future_p : Formula := sometime_future p -- ∃ time in future where p
 ```
@@ -104,11 +106,13 @@ def p_and_q : Formula := and p q
 -- Disjunction: `φ ∨ ψ ≡ ¬φ → ψ`
 def p_or_q : Formula := or p q
 
--- Always (all times): `Past φ ∧ φ ∧ Future φ`
+-- Always/henceforth (from now onwards): `△φ ≡ Future φ`
 def always_p : Formula := always p
+def triangle_always : Formula := △p  -- Unicode triangle notation
 
--- Sometimes (some time): `past φ ∨ φ ∨ future φ`
+-- Sometimes/eventually (at some future time): `▽φ ≡ ¬△¬φ`
 def sometimes_p : Formula := sometimes p
+def triangle_sometimes : Formula := ▽p  -- Unicode triangle notation
 ```
 
 ### Using DSL Syntax
@@ -117,11 +121,13 @@ With DSL macros enabled:
 
 ```lean
 -- More readable formula construction
-example : Formula := □"p"           -- `□p`
-example : Formula := ◇"p"           -- `◇p`
-example : Formula := "p" → "q"      -- `p → q`
-example : Formula := Past "p"       -- Past p
-example : Formula := Future "p"     -- Future p
+example : Formula := □"p"           -- `□p` (necessary p)
+example : Formula := ◇"p"           -- `◇p` (possible p)
+example : Formula := "p" → "q"      -- `p → q` (p implies q)
+example : Formula := Past "p"       -- Past p (always in past)
+example : Formula := Future "p"     -- Future p (always in future)
+example : Formula := △"p"           -- `△p` (henceforth p)
+example : Formula := ▽"p"           -- `▽p` (eventually p)
 ```
 
 ## 3. Proof Basics
@@ -332,15 +338,16 @@ theorem strong_completeness (Γ : Context) (φ : Formula) :
 The perpetuity principles P1-P6 connect modal and temporal operators:
 
 ```lean
--- P1: `□φ → always φ` (necessary implies always)
-theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
+-- P1: `□φ → △φ` (necessary implies always)
+theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (△φ)) := by
   sorry
 
--- P2: `sometimes φ → ◇φ` (sometimes implies possible)
-theorem perpetuity_2 (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := by
+-- P2: `▽φ → ◇φ` (sometimes implies possible)
+theorem perpetuity_2 (φ : Formula) : ⊢ ((▽φ).imp (diamond φ)) := by
   sorry
 
--- See Theorems/Perpetuity.lean for P3-P6
+-- P3-P6: See Theorems/Perpetuity.lean
+-- P3: `□φ → □△φ`, P4: `◇▽φ → ◇φ`, P5: `◇▽φ → △◇φ`, P6: `▽□φ → □△φ`
 ```
 
 ### Extension Layers

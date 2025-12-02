@@ -214,11 +214,11 @@ example (P : Formula) : [P.box] ⊢ always P := by
 
 ## 4. Perpetuity Principles
 
-### P1: `□φ → always φ`
+### P1: `□φ → △φ`
 
 ```lean
 /-- What is necessary is always the case -/
-theorem perpetuity_1_example (P : Formula) : ⊢ (P.box.imp (always P)) := by
+theorem perpetuity_1_example (P : Formula) : ⊢ (P.box.imp (△P)) := by
   -- Proof sketch:
   -- 1. `□P → □Future P` (MF)
   -- 2. `□Future P → Future P` (MT)
@@ -235,22 +235,22 @@ example (P : Formula) : [P.box] ⊢ always P := by
   · apply Derivable.assumption; simp
 ```
 
-### P2: `sometimes φ → ◇φ`
+### P2: `▽φ → ◇φ`
 
 ```lean
 /-- What is sometimes the case is possible -/
-theorem perpetuity_2_example (P : Formula) : ⊢ ((sometimes P).imp (diamond P)) := by
+theorem perpetuity_2_example (P : Formula) : ⊢ ((▽P).imp (diamond P)) := by
   -- Proof by contraposition of P1
   -- If `¬◇P` (= `□¬P`), then `always ¬P`
   -- Contrapositive: `sometimes P → ◇P`
   sorry
 ```
 
-### P3: `□φ → □always φ`
+### P3: `□φ → □△φ`
 
 ```lean
 /-- Necessity of perpetuity: necessary implies necessarily always -/
-theorem perpetuity_3_example (P : Formula) : ⊢ (P.box.imp ((always P).box)) := by
+theorem perpetuity_3_example (P : Formula) : ⊢ (P.box.imp ((△P).box)) := by
   -- Proof sketch:
   -- 1. □P → always P (P1)
   -- 2. Need to show □P → □always P
@@ -258,29 +258,29 @@ theorem perpetuity_3_example (P : Formula) : ⊢ (P.box.imp ((always P).box)) :=
   sorry
 ```
 
-### P4: ◇sometimes φ → ◇φ
+### P4: `◇▽φ → ◇φ`
 
 ```lean
 /-- Possibility of occurrence -/
-theorem perpetuity_4_example (P : Formula) : ⊢ ((diamond (sometimes P)).imp (diamond P)) := by
+theorem perpetuity_4_example (P : Formula) : ⊢ ((diamond (▽P)).imp (diamond P)) := by
   -- Contrapositive of P3 applied to ¬P
   sorry
 ```
 
-### P5: ◇sometimes φ → always ◇φ
+### P5: `◇▽φ → △◇φ`
 
 ```lean
 /-- Persistent possibility: if possibly sometimes, then always possible -/
-theorem perpetuity_5_example (P : Formula) : ⊢ ((diamond (sometimes P)).imp (always (diamond P))) := by
+theorem perpetuity_5_example (P : Formula) : ⊢ ((diamond (▽P)).imp (△(diamond P))) := by
   -- Key theorem showing modal-temporal interaction
   sorry
 ```
 
-### P6: sometimes □φ → □always φ
+### P6: `▽□φ → □△φ`
 
 ```lean
 /-- Occurrent necessity is perpetual -/
-theorem perpetuity_6_example (P : Formula) : ⊢ ((sometimes P.box).imp ((always P).box)) := by
+theorem perpetuity_6_example (P : Formula) : ⊢ ((▽P.box).imp ((△P).box)) := by
   -- If necessity holds at some time, it holds always necessarily
   sorry
 ```

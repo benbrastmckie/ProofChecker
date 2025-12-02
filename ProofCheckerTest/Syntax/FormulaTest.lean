@@ -86,13 +86,48 @@ example (p : Formula) : p.diamond = p.neg.box.neg := rfl
 example (p : Formula) : p.always = p.future := rfl
 
 -- Test: Derived 'sometimes' temporal operator (∃ future time)
-example (p : Formula) : p.sometimes = p.always.neg.neg := rfl
+-- Correctly defined as ¬G¬φ = (φ.neg).always.neg
+example (p : Formula) : p.sometimes = p.neg.always.neg := rfl
 
 -- Test: Derived 'sometime_past' operator
-example (p : Formula) : p.sometime_past = p.past.neg.neg := rfl
+-- Correctly defined as ¬H¬φ = (φ.neg).past.neg
+example (p : Formula) : p.sometime_past = p.neg.past.neg := rfl
 
 -- Test: Derived 'sometime_future' operator
 example (p : Formula) : p.sometime_future = p.sometimes := rfl
+
+-- Test: Triangle notation parsing - always (△)
+example (p : Formula) : △p = p.always := rfl
+
+-- Test: Triangle notation parsing - sometimes (▽)
+example (p : Formula) : ▽p = p.sometimes := rfl
+
+-- Test: Triangle notation equivalence - always is future
+example (p : Formula) : △p = p.future := rfl
+
+-- Test: Triangle notation equivalence - sometimes is dual
+example (p : Formula) : ▽p = p.neg.always.neg := rfl
+
+-- Test: Triangle notation composition - implication
+example (p q : Formula) : △(p.imp q) = (p.imp q).always := rfl
+
+-- Test: Triangle notation composition - negation
+example (p : Formula) : ▽p.neg = p.neg.sometimes := rfl
+
+-- Test: Triangle notation with modal operators - box
+example (p : Formula) : △(p.box) = p.box.always := rfl
+
+-- Test: Triangle notation with modal operators - diamond
+example (p : Formula) : ▽(p.diamond) = p.diamond.sometimes := rfl
+
+-- Test: Mixed temporal-modal notation
+example (p : Formula) : △(p.box) = p.box.future := rfl
+
+-- Test: Backward compatibility - dot notation still works
+example (p : Formula) : p.always = p.future := rfl
+
+-- Test: Backward compatibility - sometimes dot notation
+example (p : Formula) : p.sometimes = p.neg.always.neg := rfl
 
 -- Test: swap_past_future on atom (unchanged)
 example : (Formula.atom "p").swap_past_future = Formula.atom "p" := rfl

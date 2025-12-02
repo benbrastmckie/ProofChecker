@@ -1232,9 +1232,15 @@ if [ -n "$LATEST_REPORT" ] && [ -f "$LATEST_REPORT" ]; then
 fi
 
 # === UPDATE TODO.md ===
-# Pattern D: /research command (after REPORT_CREATED signal)
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# Source todo-functions.sh for trigger_todo_update()
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+}
+
+# Trigger TODO.md update (non-blocking)
+if type trigger_todo_update &>/dev/null; then
+  trigger_todo_update "research report created"
+fi
 
 exit 0
 ```

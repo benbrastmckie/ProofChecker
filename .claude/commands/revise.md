@@ -1378,9 +1378,15 @@ echo "PLAN_REVISED: $EXISTING_PLAN_PATH"
 echo ""
 
 # === UPDATE TODO.md ===
-# Pattern G: /revise command (after PLAN_REVISED signal)
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# Source todo-functions.sh for trigger_todo_update()
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+}
+
+# Trigger TODO.md update (non-blocking)
+if type trigger_todo_update &>/dev/null; then
+  trigger_todo_update "plan revised"
+fi
 
 exit 0
 ```

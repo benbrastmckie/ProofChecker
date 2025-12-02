@@ -89,6 +89,25 @@ export STATE_PERSISTENCE_VERSION="1.6.0"
 # - Recalculation is expensive (>30ms) or impossible
 # - Phase dependencies require prior phase outputs
 #
+# Common Pitfall: Agent Output Serialization
+# ==========================================
+# When persisting data from agent outputs, ensure values are scalar strings:
+#
+#   ✓ Correct: append_workflow_state "WORK_REMAINING" "Phase_4 Phase_5 Phase_6"
+#   ✗ Wrong:   append_workflow_state "WORK_REMAINING" "[Phase 4, Phase 5, Phase 6]"
+#
+# The append_workflow_state() function enforces scalar-only values because state files
+# use bash export statements. JSON arrays in export statements cause parsing issues
+# when the state file is sourced.
+#
+# For array-like data, use space-separated strings:
+#   PHASES="Phase_4 Phase_5 Phase_6"
+#   append_workflow_state "PHASES" "$PHASES"
+#
+# Or use the array helper function:
+#   append_workflow_state_array "PHASES" "Phase_4" "Phase_5" "Phase_6"
+#   # Results in: export PHASES="Phase_4 Phase_5 Phase_6"
+#
 # State File Locations (Spec 752 Phase 9):
 # - STANDARD: .claude/tmp/workflow_*.sh (temporary workflow state, auto-cleanup)
 # - STANDARD: .claude/tmp/*.json (JSON checkpoints, atomic writes)
@@ -469,24 +488,31 @@ validate_state_file_path() {
 # Appends a new key-value pair to the workflow state file.
 # This follows the GitHub Actions pattern where outputs accumulate across steps.
 #
+# IMPORTANT: Only scalar values are supported. JSON arrays/objects will be rejected
+# with a type validation error. Use space-separated strings or append_workflow_state_array()
+# for multi-value data.
+#
 # Performance:
 # - Append operation: <1ms (simple echo >> redirect)
 # - No file locks needed (single writer per workflow)
 #
 # Args:
 #   $1 - key: Variable name to export
-#   $2 - value: Variable value
+#   $2 - value: Scalar string value (NO JSON arrays/objects)
+#
+# Returns:
+#   0 on success, 1 on validation failure (JSON detected)
 #
 # Side Effects:
 #   - Appends export statement to state file
 #   - Exported in subsequent load_workflow_state calls
+#   - Logs state_error if JSON array/object detected
 #
-# Example:
+# Examples:
 #   append_workflow_state "RESEARCH_COMPLETE" "true"
 #   append_workflow_state "REPORTS_CREATED" "4"
-#   # State file now contains:
-#   # export RESEARCH_COMPLETE="true"
-#   # export REPORTS_CREATED="4"
+#   append_workflow_state "PHASES" "Phase_1 Phase_2 Phase_3"  # Space-separated OK
+#   # WRONG: append_workflow_state "PHASES" "[Phase 1, Phase 2]"  # JSON array fails
 append_workflow_state() {
   local key="$1"
   local value="$2"

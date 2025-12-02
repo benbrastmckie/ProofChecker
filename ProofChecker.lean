@@ -1,3 +1,11 @@
+-- Re-export public API
+import ProofChecker.Syntax
+import ProofChecker.ProofSystem
+import ProofChecker.Semantics
+import ProofChecker.Metalogic
+import ProofChecker.Theorems
+import ProofChecker.Automation
+
 /-!
 # ProofChecker Library Root
 
@@ -40,14 +48,6 @@ import ProofChecker.Syntax.Formula
 import ProofChecker.ProofSystem.Axioms
 ```
 -/
-
--- Re-export public API when modules are implemented
-import ProofChecker.Syntax
--- import ProofChecker.ProofSystem
--- import ProofChecker.Semantics
--- import ProofChecker.Metalogic
--- import ProofChecker.Theorems
--- import ProofChecker.Automation
 
 namespace ProofChecker
 

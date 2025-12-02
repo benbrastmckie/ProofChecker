@@ -171,12 +171,13 @@ ProofChecker follows rigorous development standards including Test-Driven Develo
 
 ### Theorems Package
 - Perpetuity principles P1-P6 connecting modal and temporal operators:
-  - P1: `□φ → always φ` (necessary implies always)
-  - P2: `sometimes φ → ◇φ` (sometimes implies possible)
-  - P3: `□φ → □always φ` (necessity of perpetuity)
-  - P4: `◇sometimes φ → ◇φ` (possibility of occurrence)
-  - P5: `◇sometimes φ → always ◇φ` (persistent possibility)
-  - P6: `sometimes □φ → □always φ` (occurrent necessity is perpetual)
+  - P1: `□φ → △φ` (necessary implies always)
+  - P2: `▽φ → ◇φ` (sometimes implies possible)
+  - P3: `□φ → □△φ` (necessity of perpetuity)
+  - P4: `◇▽φ → ◇φ` (possibility of occurrence)
+  - P5: `◇▽φ → △◇φ` (persistent possibility)
+  - P6: `▽□φ → □△φ` (occurrent necessity is perpetual)
+- Note: `△` (always/henceforth) and `▽` (sometimes/eventually) are Unicode triangle notation alternatives
 
 ## 7. Testing Architecture
 

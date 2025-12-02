@@ -140,6 +140,146 @@ IMPLEMENTATION_COMPLETE:
   next_command: "/test /path/to/plan.md"
 ```
 
+## Iteration Behavior
+
+### Multi-Iteration Execution
+
+The `/implement` command automatically loops through multiple iterations when large plans exceed context limits. This ensures complete plan execution without manual intervention.
+
+**Iteration Decision Logic**:
+
+After each implementer-coordinator invocation (Block 1b), the verification block (Block 1c) checks the agent's return signal:
+
+```yaml
+requires_continuation: true|false
+work_remaining: "Phase 4 Phase 5 Phase 6" or "0"
+context_usage_percent: 85
+```
+
+Based on this signal, the command determines the `IMPLEMENTATION_STATUS`:
+
+- **continuing**: Work remains and context available → Loop back to Block 1b
+- **complete**: All phases done → Proceed to Block 1d
+- **stuck**: Work remaining unchanged across iterations → Halt and report
+- **max_iterations**: Iteration limit reached → Halt and report
+
+### IMPLEMENTATION_STATUS States
+
+| Status | Condition | Action |
+|--------|-----------|--------|
+| `continuing` | `requires_continuation=true` AND work remaining | Execute next iteration |
+| `complete` | `work_remaining=0` or `requires_continuation=false` | Proceed to completion |
+| `stuck` | Same `work_remaining` for 2+ iterations | Halt with stuck detection |
+| `max_iterations` | `ITERATION > MAX_ITERATIONS` | Halt at iteration limit |
+
+### Iteration Loop Flow
+
+When `IMPLEMENTATION_STATUS=continuing`, the command:
+
+1. **Increments iteration counter**: `NEXT_ITERATION = ITERATION + 1`
+2. **Saves continuation context**: Copies current summary to `iteration_${ITERATION}_summary.md`
+3. **Updates state variables**: Persists `ITERATION`, `CONTINUATION_CONTEXT`, `WORK_REMAINING`
+4. **Loads updated state**: Bash block loads state file to get new `ITERATION` value
+5. **Validates iteration limit**: Ensures `ITERATION ≤ MAX_ITERATIONS`
+6. **Re-invokes coordinator**: Repeats Task invocation with updated iteration parameters
+7. **Verifies completion**: Returns to Block 1c to check for further continuation
+
+**Example Multi-Iteration Execution**:
+
+```
+Iteration 1/5: Implement Phases 1-3 (context usage: 85%)
+  → Status: continuing, work_remaining: "Phase 4 Phase 5 Phase 6"
+
+Iteration 2/5: Implement Phases 4-5 (context usage: 80%)
+  → Status: continuing, work_remaining: "Phase 6"
+
+Iteration 3/5: Implement Phase 6 (context usage: 40%)
+  → Status: complete, work_remaining: "0"
+```
+
+### Continuation Context Mechanism
+
+Each iteration receives the previous iteration's summary as continuation context:
+
+```yaml
+continuation_context: ${IMPLEMENT_WORKSPACE}/iteration_${PREV_ITERATION}_summary.md
+```
+
+This enables the coordinator to:
+- Resume from the exact completion point
+- Maintain awareness of prior work
+- Avoid re-implementing completed phases
+- Track cumulative progress
+
+**Context Handoff**:
+1. Iteration 1 completes → Summary saved as `iteration_1_summary.md`
+2. Iteration 2 starts → Receives `iteration_1_summary.md` as continuation context
+3. Iteration 2 completes → Summary saved as `iteration_2_summary.md`
+4. Iteration 3 starts → Receives `iteration_2_summary.md` as continuation context
+
+### Max Iterations Configuration
+
+Default: `MAX_ITERATIONS=5`
+
+Override via command argument:
+```bash
+/implement plan.md --max-iterations=10
+```
+
+**When Max Iterations Reached**:
+- Command halts with `IMPLEMENTATION_STATUS=max_iterations`
+- Console shows: `"Max iterations (5) reached. Work remaining: Phase 7 Phase 8"`
+- User can resume with `/implement plan.md 7` to continue from Phase 7
+- Or increase limit: `/implement plan.md --max-iterations=10`
+
+### Stuck Detection
+
+The coordinator tracks `LAST_WORK_REMAINING` across iterations. If `WORK_REMAINING` is unchanged for 2+ consecutive iterations:
+
+```
+Iteration 3: work_remaining="Phase 7 Phase 8"
+Iteration 4: work_remaining="Phase 7 Phase 8" (unchanged)
+  → STUCK_DETECTED=true
+  → IMPLEMENTATION_STATUS=stuck
+```
+
+**Stuck Handling**:
+- Command halts with stuck detection message
+- User investigates why phases aren't progressing
+- Common causes: Missing dependencies, invalid phase structure, insufficient instructions
+
+### Checkpoint Format for Iterations
+
+During iteration loops, checkpoints follow the standard 3-line format:
+
+```
+[CHECKPOINT] Iteration 2 of 5
+Context: ITERATION=2, CONTINUATION_CONTEXT=/path/to/iteration_1_summary.md, WORK_REMAINING=Phase 4 Phase 5
+Ready for: Next iteration (Block 1b Task invocation)
+```
+
+**Line 1**: Checkpoint marker with current iteration count
+**Line 2**: Context line includes `ITERATION`, `CONTINUATION_CONTEXT`, and `WORK_REMAINING` variables
+**Line 3**: Ready for line specifies next step (either "Next iteration" or "Phase update")
+
+### Single-Iteration Backward Compatibility
+
+Small plans that complete in one iteration flow unchanged:
+
+```
+Block 1a (Setup) → Block 1b (Execute) → Block 1c (Verify) → Block 1d (Update) → Block 2 (Complete)
+```
+
+No iteration loop occurs because Block 1c sets `IMPLEMENTATION_STATUS=complete` on first check.
+
+**Example Single-Iteration Flow**:
+```
+Plan: 3 phases, estimated 2 hours
+Iteration 1: All phases complete (context usage: 40%)
+  → Status: complete, work_remaining: "0"
+  → Skip iteration loop, proceed to Block 1d
+```
+
 ## Test Writing Responsibility
 
 ### Tests Written, Not Executed

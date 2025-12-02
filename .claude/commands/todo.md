@@ -181,6 +181,20 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/state-persistence.sh" 2>/dev/null
   exit 1
 }
 
+# Early trap setup: Capture errors during initialization before WORKFLOW_ID is available.
+# This follows the dual trap pattern used by /build, /plan, and /repair commands.
+# The trap will be updated later with actual workflow context (see late trap setup below).
+setup_bash_error_trap "/todo" "todo_early_$(date +%s)" "early_init"
+
+# Flush any errors that occurred before error-handling.sh was sourced.
+_flush_early_errors
+
+# Validate trap is active - fail fast if error logging is broken.
+if ! trap -p ERR | grep -q "_log_bash_error"; then
+  echo "ERROR: ERR trap not active - error logging will fail" >&2
+  exit 1
+fi
+
 # Tier 2: Command-Specific (graceful degradation)
 # NOTE: /todo is a utility command - does NOT require workflow-state-machine.sh
 # Research state machine (sm_init/sm_transition) is only for research workflows
@@ -198,7 +212,9 @@ COMMAND_NAME="/todo"
 USER_ARGS="$([ "$CLEAN_MODE" = "true" ] && echo "--clean")$([ "$DRY_RUN" = "true" ] && echo " --dry-run")"
 export COMMAND_NAME USER_ARGS WORKFLOW_ID
 
-# === SETUP BASH ERROR TRAP ===
+# === SETUP BASH ERROR TRAP (Late Trap Update) ===
+# Update trap with actual workflow context now that WORKFLOW_ID is available.
+# This replaces the early trap setup from initialization (see above).
 setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 
 # === INITIALIZE WORKFLOW STATE ===

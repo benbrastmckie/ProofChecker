@@ -1,3 +1,6 @@
+import ProofChecker.Syntax.Formula
+import ProofChecker.Syntax.Context
+
 /-!
 # Syntax Module
 
@@ -26,9 +29,6 @@ def modal_t := p.box.imp p
 def assumptions : Context := [p, q]
 ```
 -/
-
-import ProofChecker.Syntax.Formula
-import ProofChecker.Syntax.Context
 
 namespace ProofChecker
 

@@ -154,26 +154,30 @@ Existential future operator - expresses that a formula will hold at some future 
 **Duality**: `future φ ↔ ¬Future¬φ`
 **Examples**: `future ◇p` means "at some future time, p will be possible"
 
-### always (eternal truth)
-Combined modal-temporal operator - expresses that a formula holds at all times.
+### always (henceforth operator)
+Temporal operator - expresses that a formula holds at all future times (including now).
 
-**Formal Definition**: `always φ := Past φ ∧ φ ∧ Future φ`
-**LEAN Code**: Defined from conjunction of Past, present, and Future
-**Semantics**: `M,h,t ⊨ always φ` iff for all times t' in domain(h), `M,h,t' ⊨ φ`
-**See also**: [sometimes](#sometimes-eventual-truth)
+**Formal Definition**: `always φ := Future φ` (henceforth operator)
+**Alternative Notation**: `△φ` (U+25B3 WHITE UP-POINTING TRIANGLE)
+**LEAN Code**: Defined as alias to `Formula.future`, notation `prefix:80 "△" => Formula.always`
+**Semantics**: `M,h,t ⊨ always φ` iff for all times t' ≥ t in domain(h), `M,h,t' ⊨ φ`
+**Note**: This is "henceforth" (from now onwards), not "eternal truth" (all past, present, and future times)
+**See also**: [sometimes](#sometimes-eventual-occurrence), [Future](#future-universal-future)
 **Perpetuity**: Used in P1-P6 to connect necessity and temporal truth
-**Examples**: `always □p` means "at all times, p is necessary"
+**Examples**: `always □p` or `△□p` means "from now on, p is necessary"
 
-### sometimes (eventual truth)
-Combined modal-temporal operator - expresses that a formula holds at some time.
+### sometimes (eventual occurrence)
+Temporal operator - expresses that a formula holds at some future time (including now).
 
-**Formal Definition**: `sometimes φ := past φ ∨ φ ∨ future φ`
-**LEAN Code**: Defined from disjunction of past, present, and future
-**Semantics**: `M,h,t ⊨ sometimes φ` iff there exists time t' in domain(h) such that `M,h,t' ⊨ φ`
-**See also**: [always](#always-eternal-truth)
+**Formal Definition**: `sometimes φ := ¬always¬φ` (dual of always)
+**Alternative Notation**: `▽φ` (U+25BD WHITE DOWN-POINTING TRIANGLE)
+**LEAN Code**: Defined as `φ.neg.always.neg`, notation `prefix:80 "▽" => Formula.sometimes`
+**Semantics**: `M,h,t ⊨ sometimes φ` iff there exists time t' ≥ t in domain(h) such that `M,h,t' ⊨ φ`
+**Note**: This is "eventually" (at some point from now onwards), dual to "henceforth"
+**See also**: [always](#always-henceforth-operator), [future](#future-existential-future)
 **Perpetuity**: Used in P2, P4, P5, P6 perpetuity principles
-**Duality**: `sometimes φ ↔ ¬always¬φ`
-**Examples**: `sometimes □p` means "at some time, p is necessary"
+**Duality**: `sometimes φ ↔ ¬always¬φ` or equivalently `▽φ ↔ ¬△¬φ`
+**Examples**: `sometimes □p` or `▽□p` means "at some future time, p will be necessary"
 
 ---
 

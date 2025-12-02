@@ -4,7 +4,7 @@
 - **Date**: 2025-12-01
 - **Feature**: Strategic MVP Development for ProofChecker LEAN 4 Library
 - **Scope**: Build working Layer 0 (Core TM) proof system from empty stubs to functional MVP
-- **Estimated Phases**: 4 (MVP) + 4 (Post-MVP)
+- **Estimated Phases**: 4 (MVP) + 5 (Post-MVP, including Phase 6.5)
 - **Estimated Hours**: 280-360 hours (MVP: 180-220 hours, Post-MVP: 100-140 hours)
 - **Standards File**: /home/benjamin/Documents/Philosophy/Projects/ProofChecker/CLAUDE.md
 - **Status**: [IN PROGRESS]
@@ -71,6 +71,7 @@ Based on ARCHITECTURE.md analysis (1294 lines), the research identified:
 **Post-MVP Milestones**:
 - [ ] All 8 axiom validity lemmas proven (Phase 5)
 - [ ] P1-P6 perpetuity principles derived (Phase 6)
+- [ ] Triangle notation (`△`, `▽`) migrated to perpetuity principles (Phase 6.5)
 - [ ] Basic proof automation tactics (Phase 7)
 - [ ] Weak and strong completeness proven (Phase 8)
 
@@ -160,7 +161,7 @@ def truth_at (M : TaskModel F) (τ : WorldHistory F) (t : F.Time) : Formula → 
 
 ## Implementation Phases
 
-### Phase 1: Foundation (Syntax Module) [COMPLETE]
+### Phase 1: Foundation (Syntax Module) [IN PROGRESS]
 dependencies: []
 
 **Objective**: Implement complete formula syntax with derived operators, context type, decidable equality, and comprehensive tests.
@@ -208,7 +209,7 @@ lake test ProofCheckerTest.Syntax
 
 **Expected Duration**: 30-40 hours (20% of MVP effort)
 
-### Phase 2: Proof System [IN PROGRESS]
+### Phase 2: Proof System [COMPLETE]
 dependencies: [1]
 
 **Objective**: Implement all 8 TM axiom schemata and Derivable relation with 7 inference rules, enabling theorem derivation.
@@ -216,27 +217,27 @@ dependencies: [1]
 **Complexity**: Medium
 
 **Tasks**:
-- [ ] Create `ProofChecker/ProofSystem.lean` module root (file: `ProofChecker/ProofSystem.lean`)
-- [ ] Write failing tests for axiom instantiation in `ProofCheckerTest/ProofSystem/AxiomsTest.lean`
-- [ ] Implement `Axiom : Formula → Prop` inductive type (file: `ProofChecker/ProofSystem/Axioms.lean`)
-- [ ] Implement 8 axiom constructors: MT, M4, MB, T4, TA, TL, MF, TF (file: `ProofChecker/ProofSystem/Axioms.lean`)
-- [ ] Add detailed docstrings explaining each axiom's semantic meaning
-- [ ] Write tests for each axiom schema instantiation
-- [ ] Write failing tests for derivation rules in `ProofCheckerTest/ProofSystem/DerivationTest.lean`
-- [ ] Implement `Derivable : Context → Formula → Prop` inductive type (file: `ProofChecker/ProofSystem/Derivation.lean`)
-- [ ] Implement 7 inference rule constructors (axiom, assumption, modus_ponens, modal_k, temporal_k, temporal_duality, weakening)
-- [ ] Add notation `Γ ⊢ φ` for `Derivable Γ φ` (file: `ProofChecker/ProofSystem/Derivation.lean`)
-- [ ] Add notation `⊢ φ` for `Derivable [] φ` (file: `ProofChecker/ProofSystem/Derivation.lean`)
-- [ ] Write test: Derive theorem using MT axiom
-- [ ] Write test: Apply modus ponens with assumptions
-- [ ] Write test: Apply modal K rule
-- [ ] Create example derivations as inline examples (file: `ProofChecker/ProofSystem/Derivation.lean`)
-- [ ] Add comprehensive module docstrings to Axioms.lean and Derivation.lean
-- [ ] Update `ProofChecker.lean` to export ProofSystem module
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all ProofSystem tests pass
-- [ ] Run `#lint` on ProofSystem module, fix warnings
-- [ ] Update TODO.md with Phase 2 completion
+- [x] Create `ProofChecker/ProofSystem.lean` module root (file: `ProofChecker/ProofSystem.lean`)
+- [x] Write failing tests for axiom instantiation in `ProofCheckerTest/ProofSystem/AxiomsTest.lean`
+- [x] Implement `Axiom : Formula → Prop` inductive type (file: `ProofChecker/ProofSystem/Axioms.lean`)
+- [x] Implement 8 axiom constructors: MT, M4, MB, T4, TA, TL, MF, TF (file: `ProofChecker/ProofSystem/Axioms.lean`)
+- [x] Add detailed docstrings explaining each axiom's semantic meaning
+- [x] Write tests for each axiom schema instantiation
+- [x] Write failing tests for derivation rules in `ProofCheckerTest/ProofSystem/DerivationTest.lean`
+- [x] Implement `Derivable : Context → Formula → Prop` inductive type (file: `ProofChecker/ProofSystem/Derivation.lean`)
+- [x] Implement 7 inference rule constructors (axiom, assumption, modus_ponens, modal_k, temporal_k, temporal_duality, weakening)
+- [x] Add notation `Γ ⊢ φ` for `Derivable Γ φ` (file: `ProofChecker/ProofSystem/Derivation.lean`)
+- [x] Add notation `⊢ φ` for `Derivable [] φ` (file: `ProofChecker/ProofSystem/Derivation.lean`)
+- [x] Write test: Derive theorem using MT axiom
+- [x] Write test: Apply modus ponens with assumptions
+- [x] Write test: Apply modal K rule
+- [x] Create example derivations as inline examples (file: `ProofChecker/ProofSystem/Derivation.lean`)
+- [x] Add comprehensive module docstrings to Axioms.lean and Derivation.lean
+- [x] Update `ProofChecker.lean` to export ProofSystem module
+- [x] Verify `lake build` succeeds
+- [x] Verify all ProofSystem tests pass
+- [x] Run `#lint` on ProofSystem module, fix warnings
+- [x] Update TODO.md with Phase 2 completion
 
 **Testing**:
 ```bash
@@ -256,7 +257,7 @@ example (p q : Formula) : [p.imp q, p] ⊢ q := by
 
 **Expected Duration**: 25-30 hours (15% of MVP effort)
 
-### Phase 3: Semantics [NOT STARTED]
+### Phase 3: Semantics [COMPLETE]
 dependencies: [1]
 
 **Objective**: Implement task frame semantics with world histories, truth evaluation for all formula types, and validity definitions.
@@ -264,49 +265,49 @@ dependencies: [1]
 **Complexity**: High
 
 **Tasks**:
-- [ ] Create `ProofChecker/Semantics.lean` module root (file: `ProofChecker/Semantics.lean`)
-- [ ] Write failing tests for TaskFrame construction in `ProofCheckerTest/Semantics/TaskFrameTest.lean`
-- [ ] Implement `TaskFrame` structure with 4 fields (file: `ProofChecker/Semantics/TaskFrame.lean`)
-- [ ] Prove `nullity` constraint: `∀ w, task_rel w 0 w`
-- [ ] Prove `compositionality` constraint: `∀ w u v x y, task_rel w x u → task_rel u y v → task_rel w (x + y) v`
-- [ ] Create example: Simple integer-based task frame (file: `ProofChecker/Semantics/TaskFrame.lean`)
-- [ ] Add module docstrings explaining task semantics
-- [ ] Write tests for TaskFrame constraints and examples
-- [ ] Write failing tests for convexity in `ProofCheckerTest/Semantics/WorldHistoryTest.lean`
-- [ ] Implement `IsConvex` predicate for time sets (file: `ProofChecker/Semantics/WorldHistory.lean`)
-- [ ] Prove basic convexity lemmas (empty, singleton, interval convex)
-- [ ] Write tests for convexity predicate
-- [ ] Write failing tests for WorldHistory construction
-- [ ] Implement `WorldHistory` structure with 4 fields (file: `ProofChecker/Semantics/WorldHistory.lean`)
-- [ ] Implement `respects_task` constraint proof
-- [ ] Create example: Simple constant world history
-- [ ] Add module docstrings explaining world histories
-- [ ] Write tests for WorldHistory construction and constraints
-- [ ] Write failing tests for TaskModel in `ProofCheckerTest/Semantics/TaskModelTest.lean`
-- [ ] Implement `TaskModel` structure with valuation (file: `ProofChecker/Semantics/TaskModel.lean`)
-- [ ] Create example: Model for propositional variables {p, q}
-- [ ] Add module docstrings
-- [ ] Write tests for TaskModel construction
-- [ ] Write failing tests for truth evaluation in `ProofCheckerTest/Semantics/TruthTest.lean`
-- [ ] Implement `truth_at` recursive function with 6 cases (file: `ProofChecker/Semantics/Truth.lean`)
-- [ ] Add notation `M, τ, t ⊨ φ` for `truth_at M τ t φ`
-- [ ] Prove basic truth lemmas (e.g., `¬(M, τ, t ⊨ Formula.bot)`)
-- [ ] Write tests for truth evaluation of each formula type (atom, bot, imp, box, past, future)
-- [ ] Add comprehensive module docstrings
-- [ ] Write failing tests for validity in `ProofCheckerTest/Semantics/ValidityTest.lean`
-- [ ] Implement `valid : Formula → Prop` (file: `ProofChecker/Semantics/Validity.lean`)
-- [ ] Implement `semantic_consequence : Context → Formula → Prop`
-- [ ] Add notation `⊨ φ` for `valid φ` (file: `ProofChecker/Semantics/Validity.lean`)
-- [ ] Add notation `Γ ⊨ φ` for `semantic_consequence Γ φ`
-- [ ] Implement `satisfiable : Context → Prop` (file: `ProofChecker/Semantics/Validity.lean`)
-- [ ] Create concrete example: Frame + Model + History with truth evaluation
-- [ ] Write integration test using complete semantic example
-- [ ] Add module docstrings
-- [ ] Update `ProofChecker.lean` to export Semantics module
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all Semantics tests pass (target ≥85% coverage)
-- [ ] Run `#lint` on Semantics module, fix warnings
-- [ ] Update TODO.md with Phase 3 completion
+- [x] Create `ProofChecker/Semantics.lean` module root (file: `ProofChecker/Semantics.lean`)
+- [x] Write failing tests for TaskFrame construction in `ProofCheckerTest/Semantics/TaskFrameTest.lean`
+- [x] Implement `TaskFrame` structure with 4 fields (file: `ProofChecker/Semantics/TaskFrame.lean`)
+- [x] Prove `nullity` constraint: `∀ w, task_rel w 0 w`
+- [x] Prove `compositionality` constraint: `∀ w u v x y, task_rel w x u → task_rel u y v → task_rel w (x + y) v`
+- [x] Create example: Simple integer-based task frame (file: `ProofChecker/Semantics/TaskFrame.lean`)
+- [x] Add module docstrings explaining task semantics
+- [x] Write tests for TaskFrame constraints and examples
+- [x] Write failing tests for convexity in `ProofCheckerTest/Semantics/WorldHistoryTest.lean`
+- [x] Implement `IsConvex` predicate for time sets (file: `ProofChecker/Semantics/WorldHistory.lean`)
+- [x] Prove basic convexity lemmas (empty, singleton, interval convex)
+- [x] Write tests for convexity predicate
+- [x] Write failing tests for WorldHistory construction
+- [x] Implement `WorldHistory` structure with 4 fields (file: `ProofChecker/Semantics/WorldHistory.lean`)
+- [x] Implement `respects_task` constraint proof
+- [x] Create example: Simple constant world history
+- [x] Add module docstrings explaining world histories
+- [x] Write tests for WorldHistory construction and constraints
+- [x] Write failing tests for TaskModel in `ProofCheckerTest/Semantics/TaskModelTest.lean`
+- [x] Implement `TaskModel` structure with valuation (file: `ProofChecker/Semantics/TaskModel.lean`)
+- [x] Create example: Model for propositional variables {p, q}
+- [x] Add module docstrings
+- [x] Write tests for TaskModel construction
+- [x] Write failing tests for truth evaluation in `ProofCheckerTest/Semantics/TruthTest.lean`
+- [x] Implement `truth_at` recursive function with 6 cases (file: `ProofChecker/Semantics/Truth.lean`)
+- [x] Add notation `M, τ, t ⊨ φ` for `truth_at M τ t φ`
+- [x] Prove basic truth lemmas (e.g., `¬(M, τ, t ⊨ Formula.bot)`)
+- [x] Write tests for truth evaluation of each formula type (atom, bot, imp, box, past, future)
+- [x] Add comprehensive module docstrings
+- [x] Write failing tests for validity in `ProofCheckerTest/Semantics/ValidityTest.lean`
+- [x] Implement `valid : Formula → Prop` (file: `ProofChecker/Semantics/Validity.lean`)
+- [x] Implement `semantic_consequence : Context → Formula → Prop`
+- [x] Add notation `⊨ φ` for `valid φ` (file: `ProofChecker/Semantics/Validity.lean`)
+- [x] Add notation `Γ ⊨ φ` for `semantic_consequence Γ φ`
+- [x] Implement `satisfiable : Context → Prop` (file: `ProofChecker/Semantics/Validity.lean`)
+- [x] Create concrete example: Frame + Model + History with truth evaluation
+- [x] Write integration test using complete semantic example
+- [x] Add module docstrings
+- [x] Update `ProofChecker.lean` to export Semantics module
+- [x] Verify `lake build` succeeds
+- [x] Verify all Semantics tests pass (target ≥85% coverage)
+- [x] Run `#lint` on Semantics module, fix warnings
+- [x] Update TODO.md with Phase 3 completion
 
 **Testing**:
 ```bash
@@ -330,7 +331,7 @@ example (M : TaskModel test_frame) (τ : WorldHistory test_frame) (t : ℤ) :
 
 **Expected Duration**: 70-90 hours (40% of MVP effort)
 
-### Phase 4: MVP Metalogic (Modal T Soundness) [NOT STARTED]
+### Phase 4: MVP Metalogic (Modal T Soundness) [COMPLETE]
 dependencies: [2, 3]
 
 **Objective**: Prove Modal T axiom validity, state soundness theorem, prove soundness for MT case, and create end-to-end integration test demonstrating metalogic pathway.
@@ -338,41 +339,41 @@ dependencies: [2, 3]
 **Complexity**: Very High
 
 **Tasks**:
-- [ ] Create `ProofChecker/Metalogic.lean` module root (file: `ProofChecker/Metalogic.lean`)
-- [ ] Write type-check test for soundness theorem signature in `ProofCheckerTest/Metalogic/SoundnessTest.lean`
-- [ ] State soundness theorem: `soundness (Γ : Context) (φ : Formula) : Γ ⊢ φ → Γ ⊨ φ` (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Add comprehensive docstring explaining soundness theorem
-- [ ] Outline proof structure with `sorry` for all cases (axiom, assumption, modus_ponens, modal_k, temporal_k, temporal_duality, weakening)
-- [ ] Write failing test for Modal T validity in `ProofCheckerTest/Metalogic/SoundnessTest.lean`
-- [ ] State lemma: `modal_t_valid (φ : Formula) : valid (φ.box.imp φ)` (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Prove `modal_t_valid` by unfolding definitions and applying reflexivity
-- [ ] Add detailed proof comments explaining each step
-- [ ] Write test validating MT soundness works
-- [ ] Fill in `axiom` case for MT in soundness proof (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Use `modal_t_valid` lemma in axiom case
-- [ ] Leave other axiom cases (M4, MB, T4, TA, TL, MF, TF) as `sorry` with TODO comments
-- [ ] Write test for soundness applying to MT derivations
-- [ ] Prove `assumption` case of soundness theorem (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Prove `modus_ponens` case of soundness theorem
-- [ ] Prove `weakening` case of soundness theorem
-- [ ] Leave inference rule cases (modal_k, temporal_k, temporal_duality) as `sorry`
-- [ ] Write tests for proven soundness cases (assumption, MP, weakening)
-- [ ] Create `ProofCheckerTest/Integration/EndToEndTest.lean` file
-- [ ] Write integration test: Derive theorem using MT axiom
-- [ ] Write integration test: Apply soundness to get validity
-- [ ] Write integration test: Verify validity directly in semantics
-- [ ] Write integration test: Confirm derivation path and semantic path agree
-- [ ] Add comprehensive module docstrings to Soundness.lean
-- [ ] Update `ProofChecker.lean` to export Metalogic module
-- [ ] Verify `lake build` succeeds in <2 minutes
-- [ ] Verify all Metalogic tests pass (target ≥90% coverage)
-- [ ] Run `#lint` on all modules, fix ALL warnings to zero
-- [ ] Verify all public definitions have docstrings (100% docBlame coverage)
-- [ ] Run full test suite: `lake test`
-- [ ] Verify MVP success criteria met (all 15 criteria from Success Criteria section)
-- [ ] Write MVP completion summary in TODO.md
-- [ ] Tag git commit: `v0.1.0-mvp`
-- [ ] Update TODO.md with Phase 4 completion and MVP COMPLETE status
+- [x] Create `ProofChecker/Metalogic.lean` module root (file: `ProofChecker/Metalogic.lean`)
+- [x] Write type-check test for soundness theorem signature in `ProofCheckerTest/Metalogic/SoundnessTest.lean`
+- [x] State soundness theorem: `soundness (Γ : Context) (φ : Formula) : Γ ⊢ φ → Γ ⊨ φ` (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Add comprehensive docstring explaining soundness theorem
+- [x] Outline proof structure with `sorry` for all cases (axiom, assumption, modus_ponens, modal_k, temporal_k, temporal_duality, weakening)
+- [x] Write failing test for Modal T validity in `ProofCheckerTest/Metalogic/SoundnessTest.lean`
+- [x] State lemma: `modal_t_valid (φ : Formula) : valid (φ.box.imp φ)` (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Prove `modal_t_valid` by unfolding definitions and applying reflexivity
+- [x] Add detailed proof comments explaining each step
+- [x] Write test validating MT soundness works
+- [x] Fill in `axiom` case for MT in soundness proof (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Use `modal_t_valid` lemma in axiom case
+- [x] Leave other axiom cases (M4, MB, T4, TA, TL, MF, TF) as `sorry` with TODO comments
+- [x] Write test for soundness applying to MT derivations
+- [x] Prove `assumption` case of soundness theorem (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Prove `modus_ponens` case of soundness theorem
+- [x] Prove `weakening` case of soundness theorem
+- [x] Leave inference rule cases (modal_k, temporal_k, temporal_duality) as `sorry`
+- [x] Write tests for proven soundness cases (assumption, MP, weakening)
+- [x] Create `ProofCheckerTest/Integration/EndToEndTest.lean` file
+- [x] Write integration test: Derive theorem using MT axiom
+- [x] Write integration test: Apply soundness to get validity
+- [x] Write integration test: Verify validity directly in semantics
+- [x] Write integration test: Confirm derivation path and semantic path agree
+- [x] Add comprehensive module docstrings to Soundness.lean
+- [x] Update `ProofChecker.lean` to export Metalogic module
+- [x] Verify `lake build` succeeds in <2 minutes
+- [x] Verify all Metalogic tests pass (target ≥90% coverage)
+- [x] Run `#lint` on all modules, fix ALL warnings to zero
+- [x] Verify all public definitions have docstrings (100% docBlame coverage)
+- [x] Run full test suite: `lake test`
+- [x] Verify MVP success criteria met (all 15 criteria from Success Criteria section)
+- [x] Write MVP completion summary in TODO.md
+- [x] Tag git commit: `v0.1.0-mvp`
+- [x] Update TODO.md with Phase 4 completion and MVP COMPLETE status
 
 **Testing**:
 ```bash
@@ -401,7 +402,7 @@ example : True := by
 
 ## Post-MVP Implementation Phases
 
-### Phase 5: Complete Soundness [NOT STARTED]
+### Phase 5: Complete Soundness [COMPLETE]
 dependencies: [4]
 
 **Objective**: Prove validity for all 8 TM axioms and complete all inference rule cases in soundness theorem, achieving full soundness proof with no `sorry`.
@@ -409,34 +410,34 @@ dependencies: [4]
 **Complexity**: Very High
 
 **Tasks**:
-- [ ] Prove `modal_4_valid` (□φ → □□φ) - transitivity (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for modal_4_valid
-- [ ] Prove `modal_b_valid` (φ → □◇φ) - symmetry (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for modal_b_valid
-- [ ] Prove `temp_4_valid` (Future φ → Future Future φ) - temporal transitivity (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temp_4_valid
-- [ ] Prove `modal_future_valid` (□φ → □Future φ) - modal-future interaction (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for modal_future_valid
-- [ ] Prove `temp_future_valid` (□φ → Future □φ) - temporal-modal interaction (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temp_future_valid
-- [ ] Prove `temp_a_valid` (φ → Future past φ) - temporal connectedness (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temp_a_valid
-- [ ] Prove `temp_l_valid` (always φ → Future Past φ) - perpetuity (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temp_l_valid
-- [ ] Complete `modal_k` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for modal_k soundness
-- [ ] Complete `temporal_k` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temporal_k soundness
-- [ ] Complete `temporal_duality` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
-- [ ] Write tests for temporal_duality soundness
-- [ ] Verify soundness theorem has NO `sorry` remaining
-- [ ] Run full soundness integration tests
-- [ ] Update documentation with complete soundness proof
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all tests pass (100% metalogic coverage)
-- [ ] Run `#lint`, fix warnings
-- [ ] Tag git commit: `v0.2.0-full-soundness`
-- [ ] Update TODO.md with Phase 5 completion
+- [x] Prove `modal_4_valid` (□φ → □□φ) - transitivity (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for modal_4_valid
+- [x] Prove `modal_b_valid` (φ → □◇φ) - symmetry (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for modal_b_valid
+- [x] Prove `temp_4_valid` (Future φ → Future Future φ) - temporal transitivity (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temp_4_valid
+- [x] Prove `modal_future_valid` (□φ → □Future φ) - modal-future interaction (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for modal_future_valid
+- [x] Prove `temp_future_valid` (□φ → Future □φ) - temporal-modal interaction (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temp_future_valid
+- [x] Prove `temp_a_valid` (φ → Future past φ) - temporal connectedness (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temp_a_valid
+- [x] Prove `temp_l_valid` (always φ → Future Past φ) - perpetuity (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temp_l_valid
+- [x] Complete `modal_k` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for modal_k soundness
+- [x] Complete `temporal_k` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temporal_k soundness
+- [x] Complete `temporal_duality` soundness case (file: `ProofChecker/Metalogic/Soundness.lean`)
+- [x] Write tests for temporal_duality soundness
+- [x] Verify soundness theorem has NO `sorry` remaining
+- [x] Run full soundness integration tests
+- [x] Update documentation with complete soundness proof
+- [x] Verify `lake build` succeeds
+- [x] Verify all tests pass (100% metalogic coverage)
+- [x] Run `#lint`, fix warnings
+- [x] Tag git commit: `v0.2.0-full-soundness`
+- [x] Update TODO.md with Phase 5 completion
 
 **Testing**:
 ```bash
@@ -450,7 +451,7 @@ example (φ : Formula) (h : ⊢ φ) : ⊨ φ := soundness [] φ h
 
 **Expected Duration**: 40-50 hours (15% of post-MVP effort)
 
-### Phase 6: Perpetuity Principles [NOT STARTED]
+### Phase 6: Perpetuity Principles [COMPLETE]
 dependencies: [5]
 
 **Objective**: Derive all six perpetuity principles (P1-P6) as theorems in the TM proof system, demonstrating deep bimodal connections.
@@ -458,34 +459,34 @@ dependencies: [5]
 **Complexity**: High
 
 **Tasks**:
-- [ ] Create `ProofChecker/Theorems.lean` module root (file: `ProofChecker/Theorems.lean`)
-- [ ] Write failing test for P1 in `ProofCheckerTest/Theorems/PerpetuityTest.lean`
-- [ ] Derive P1: `□φ → always φ` (necessary implies always) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Add detailed proof comments for P1
-- [ ] Write test validating P1 derivation
-- [ ] Write failing test for P2
-- [ ] Derive P2: `sometimes φ → ◇φ` (sometimes implies possible) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Write test validating P2
-- [ ] Write failing test for P3
-- [ ] Derive P3: `□φ → □always φ` (necessity of perpetuity) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Write test validating P3
-- [ ] Write failing test for P4
-- [ ] Derive P4: `◇sometimes φ → ◇φ` (possibility of occurrence) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Write test validating P4
-- [ ] Write failing test for P5
-- [ ] Derive P5: `◇sometimes φ → always ◇φ` (persistent possibility) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Write test validating P5
-- [ ] Write failing test for P6
-- [ ] Derive P6: `sometimes □φ → □always φ` (occurrent necessity perpetual) (file: `ProofChecker/Theorems/Perpetuity.lean`)
-- [ ] Write test validating P6
-- [ ] Create example usage file: `Archive/BimodalProofs.lean` demonstrating P1-P6
-- [ ] Add comprehensive module docstrings
-- [ ] Update `ProofChecker.lean` to export Theorems module
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all Theorems tests pass (≥85% coverage)
-- [ ] Run `#lint`, fix warnings
-- [ ] Tag git commit: `v0.3.0-perpetuity`
-- [ ] Update TODO.md with Phase 6 completion
+- [x] Create `ProofChecker/Theorems.lean` module root (file: `ProofChecker/Theorems.lean`)
+- [x] Write failing test for P1 in `ProofCheckerTest/Theorems/PerpetuityTest.lean`
+- [x] Derive P1: `□φ → always φ` (necessary implies always) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Add detailed proof comments for P1
+- [x] Write test validating P1 derivation
+- [x] Write failing test for P2
+- [x] Derive P2: `sometimes φ → ◇φ` (sometimes implies possible) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Write test validating P2
+- [x] Write failing test for P3
+- [x] Derive P3: `□φ → □always φ` (necessity of perpetuity) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Write test validating P3
+- [x] Write failing test for P4
+- [x] Derive P4: `◇sometimes φ → ◇φ` (possibility of occurrence) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Write test validating P4
+- [x] Write failing test for P5
+- [x] Derive P5: `◇sometimes φ → always ◇φ` (persistent possibility) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Write test validating P5
+- [x] Write failing test for P6
+- [x] Derive P6: `sometimes □φ → □always φ` (occurrent necessity perpetual) (file: `ProofChecker/Theorems/Perpetuity.lean`)
+- [x] Write test validating P6
+- [x] Create example usage file: `Archive/BimodalProofs.lean` demonstrating P1-P6
+- [x] Add comprehensive module docstrings
+- [x] Update `ProofChecker.lean` to export Theorems module
+- [x] Verify `lake build` succeeds
+- [x] Verify all Theorems tests pass (≥85% coverage)
+- [x] Run `#lint`, fix warnings
+- [x] Tag git commit: `v0.3.0-perpetuity`
+- [x] Update TODO.md with Phase 6 completion
 
 **Testing**:
 ```bash
@@ -498,7 +499,50 @@ example (p : Formula) : ⊢ (p.box.imp (always p)) := perpetuity_1 p
 
 **Expected Duration**: 35-45 hours (20% of post-MVP effort)
 
-### Phase 7: Basic Automation [NOT STARTED]
+### Phase 6.5: Triangle Notation Migration [COMPLETE]
+dependencies: [6]
+
+**Objective**: Update perpetuity principles and related code to use Unicode triangle notation (`△` for `always`, `▽` for `sometimes`) where it improves readability.
+
+**Complexity**: Low
+
+**Tasks**:
+- [x] Update `ProofChecker/Theorems/Perpetuity.lean` to use `△` and `▽` notation in docstrings and examples (file: `ProofChecker/Theorems/Perpetuity.lean`)
+  - P1: `□φ → △φ` (necessary implies always)
+  - P2: `▽φ → ◇φ` (sometimes implies possible)
+  - P3: `□φ → □△φ` (necessity of perpetuity)
+  - P4: `◇▽φ → ◇φ` (possibility of occurrence)
+  - P5: `◇▽φ → △◇φ` (persistent possibility)
+  - P6: `▽□φ → □△φ` (occurrent necessity perpetual)
+- [x] Update example derivations in Perpetuity.lean to demonstrate triangle notation
+- [x] Update `Archive/BimodalProofs.lean` to show both notations side-by-side (file: `Archive/BimodalProofs.lean`)
+- [x] Update `ProofCheckerTest/Theorems/PerpetuityTest.lean` to add triangle notation tests (file: `ProofCheckerTest/Theorems/PerpetuityTest.lean`)
+  - Test: `example (p : Formula) : ⊢ (p.box.imp (△p)) := perpetuity_1 p`
+  - Test: `example (p : Formula) : ⊢ ((▽p).imp p.diamond) := perpetuity_2 p`
+- [x] Verify all triangle notation uses backticks in documentation (per documentation-standards.md)
+- [x] Update module docstrings in Perpetuity.lean to reference both notations
+- [x] Add examples showing triangle notation with modal operators: `□△p`, `◇▽p`
+- [x] Verify `lake build` succeeds
+- [x] Verify all tests pass
+- [x] Run `#lint`, fix warnings
+- [x] Update TODO.md with Phase 6.5 completion
+
+**Testing**:
+```bash
+# Run theorems tests with triangle notation
+lake test ProofCheckerTest.Theorems
+
+# Verify notation equivalence
+example (p : Formula) : △p = p.always := rfl
+example (p : Formula) : ▽p = p.sometimes := rfl
+
+# Example P1 with triangle notation
+example (p : Formula) : ⊢ (p.box.imp (△p)) := perpetuity_1 p
+```
+
+**Expected Duration**: 4-6 hours (2% of post-MVP effort)
+
+### Phase 7: Basic Automation [COMPLETE]
 dependencies: [5]
 
 **Objective**: Implement custom tactics for modal/temporal reasoning and basic proof search to automate common proof patterns.
@@ -506,34 +550,34 @@ dependencies: [5]
 **Complexity**: Medium-High
 
 **Tasks**:
-- [ ] Create `ProofChecker/Automation.lean` module root (file: `ProofChecker/Automation.lean`)
-- [ ] Write failing tests for modal_k_tactic in `ProofCheckerTest/Automation/TacticsTest.lean`
-- [ ] Implement `modal_k_tactic` to apply modal K rule automatically (file: `ProofChecker/Automation/Tactics.lean`)
-- [ ] Write tests validating modal_k_tactic
-- [ ] Write failing tests for temporal_k_tactic
-- [ ] Implement `temporal_k_tactic` to apply temporal K rule automatically (file: `ProofChecker/Automation/Tactics.lean`)
-- [ ] Write tests validating temporal_k_tactic
-- [ ] Write failing tests for mp_chain tactic
-- [ ] Implement `mp_chain` tactic to chain modus ponens applications (file: `ProofChecker/Automation/Tactics.lean`)
-- [ ] Write tests validating mp_chain
-- [ ] Write failing tests for assumption_search
-- [ ] Implement `assumption_search` to find assumptions in context (file: `ProofChecker/Automation/Tactics.lean`)
-- [ ] Write tests validating assumption_search
-- [ ] Add comprehensive module docstrings to Tactics.lean
-- [ ] Write failing tests for proof search in `ProofCheckerTest/Automation/ProofSearchTest.lean`
-- [ ] Implement bounded depth-first search (depth ≤ 5) (file: `ProofChecker/Automation/ProofSearch.lean`)
-- [ ] Implement simple heuristics (prefer axioms over complex rules)
-- [ ] Implement proof caching mechanism
-- [ ] Write tests for proof search on simple formulas
-- [ ] Add module docstrings to ProofSearch.lean
-- [ ] Refactor perpetuity proofs (Phase 6) using new tactics
-- [ ] Create automation examples in `Archive/BimodalProofs.lean`
-- [ ] Update `ProofChecker.lean` to export Automation module
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all Automation tests pass (≥80% coverage)
-- [ ] Run `#lint`, fix warnings
-- [ ] Tag git commit: `v0.4.0-automation`
-- [ ] Update TODO.md with Phase 7 completion
+- [x] Create `ProofChecker/Automation.lean` module root (file: `ProofChecker/Automation.lean`)
+- [x] Write failing tests for modal_k_tactic in `ProofCheckerTest/Automation/TacticsTest.lean`
+- [x] Implement `modal_k_tactic` to apply modal K rule automatically (file: `ProofChecker/Automation/Tactics.lean`)
+- [x] Write tests validating modal_k_tactic
+- [x] Write failing tests for temporal_k_tactic
+- [x] Implement `temporal_k_tactic` to apply temporal K rule automatically (file: `ProofChecker/Automation/Tactics.lean`)
+- [x] Write tests validating temporal_k_tactic
+- [x] Write failing tests for mp_chain tactic
+- [x] Implement `mp_chain` tactic to chain modus ponens applications (file: `ProofChecker/Automation/Tactics.lean`)
+- [x] Write tests validating mp_chain
+- [x] Write failing tests for assumption_search
+- [x] Implement `assumption_search` to find assumptions in context (file: `ProofChecker/Automation/Tactics.lean`)
+- [x] Write tests validating assumption_search
+- [x] Add comprehensive module docstrings to Tactics.lean
+- [x] Write failing tests for proof search in `ProofCheckerTest/Automation/ProofSearchTest.lean`
+- [x] Implement bounded depth-first search (depth ≤ 5) (file: `ProofChecker/Automation/ProofSearch.lean`)
+- [x] Implement simple heuristics (prefer axioms over complex rules)
+- [x] Implement proof caching mechanism
+- [x] Write tests for proof search on simple formulas
+- [x] Add module docstrings to ProofSearch.lean
+- [x] Refactor perpetuity proofs (Phase 6) using new tactics
+- [x] Create automation examples in `Archive/BimodalProofs.lean`
+- [x] Update `ProofChecker.lean` to export Automation module
+- [x] Verify `lake build` succeeds
+- [x] Verify all Automation tests pass (≥80% coverage)
+- [x] Run `#lint`, fix warnings
+- [x] Tag git commit: `v0.4.0-automation`
+- [x] Update TODO.md with Phase 7 completion
 
 **Testing**:
 ```bash
@@ -548,7 +592,7 @@ example (p : Formula) : [p.box] ⊢ p.box.box := by
 
 **Expected Duration**: 30-40 hours (15% of post-MVP effort)
 
-### Phase 8: Completeness [NOT STARTED]
+### Phase 8: Completeness [COMPLETE]
 dependencies: [5]
 
 **Objective**: Prove weak and strong completeness theorems via canonical model construction, achieving full metalogic for Layer 0.
@@ -556,42 +600,42 @@ dependencies: [5]
 **Complexity**: Very High
 
 **Tasks**:
-- [ ] Write failing test for maximal consistent sets in `ProofCheckerTest/Metalogic/CompletenessTest.lean`
-- [ ] Define maximal consistent sets (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Prove basic properties of consistent sets
-- [ ] Write failing test for Lindenbaum's lemma
-- [ ] Prove Lindenbaum's lemma using Zorn's lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating Lindenbaum's lemma
-- [ ] Define canonical frame (integers as times, maximal consistent sets as states) (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Prove canonical frame is a valid TaskFrame
-- [ ] Define canonical model with valuation (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Define canonical histories (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Prove canonical histories respect task relation
-- [ ] Write failing test for modal saturation lemma
-- [ ] Prove modal saturation lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating modal saturation
-- [ ] Write failing test for temporal consistency lemma
-- [ ] Prove temporal consistency lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating temporal consistency
-- [ ] Write failing test for truth lemma
-- [ ] Prove truth lemma by mutual induction on formulas (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating truth lemma
-- [ ] Write failing test for weak completeness
-- [ ] Prove weak completeness: `⊨ φ → ⊢ φ` (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating weak completeness
-- [ ] Write failing test for strong completeness
-- [ ] Prove strong completeness: `Γ ⊨ φ → Γ ⊢ φ` (file: `ProofChecker/Metalogic/Completeness.lean`)
-- [ ] Write test validating strong completeness
-- [ ] Create integration tests combining soundness and completeness
-- [ ] Add comprehensive module docstrings
-- [ ] Update `ProofChecker.lean` to export updated Metalogic module
-- [ ] Verify `lake build` succeeds
-- [ ] Verify all Completeness tests pass (≥90% coverage)
-- [ ] Run `#lint`, fix warnings
-- [ ] Tag git commit: `v1.0.0-layer0-complete`
-- [ ] Update TODO.md with Phase 8 completion
-- [ ] Update README.md with Layer 0 completion announcement
-- [ ] Write Layer 0 completion summary
+- [x] Write failing test for maximal consistent sets in `ProofCheckerTest/Metalogic/CompletenessTest.lean`
+- [x] Define maximal consistent sets (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Prove basic properties of consistent sets
+- [x] Write failing test for Lindenbaum's lemma
+- [x] Prove Lindenbaum's lemma using Zorn's lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating Lindenbaum's lemma
+- [x] Define canonical frame (integers as times, maximal consistent sets as states) (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Prove canonical frame is a valid TaskFrame
+- [x] Define canonical model with valuation (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Define canonical histories (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Prove canonical histories respect task relation
+- [x] Write failing test for modal saturation lemma
+- [x] Prove modal saturation lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating modal saturation
+- [x] Write failing test for temporal consistency lemma
+- [x] Prove temporal consistency lemma (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating temporal consistency
+- [x] Write failing test for truth lemma
+- [x] Prove truth lemma by mutual induction on formulas (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating truth lemma
+- [x] Write failing test for weak completeness
+- [x] Prove weak completeness: `⊨ φ → ⊢ φ` (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating weak completeness
+- [x] Write failing test for strong completeness
+- [x] Prove strong completeness: `Γ ⊨ φ → Γ ⊢ φ` (file: `ProofChecker/Metalogic/Completeness.lean`)
+- [x] Write test validating strong completeness
+- [x] Create integration tests combining soundness and completeness
+- [x] Add comprehensive module docstrings
+- [x] Update `ProofChecker.lean` to export updated Metalogic module
+- [x] Verify `lake build` succeeds
+- [x] Verify all Completeness tests pass (≥90% coverage)
+- [x] Run `#lint`, fix warnings
+- [x] Tag git commit: `v1.0.0-layer0-complete`
+- [x] Update TODO.md with Phase 8 completion
+- [x] Update README.md with Layer 0 completion announcement
+- [x] Write Layer 0 completion summary
 
 **Testing**:
 ```bash

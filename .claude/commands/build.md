@@ -343,9 +343,16 @@ fi
 if type update_plan_status &>/dev/null; then
   if update_plan_status "$PLAN_FILE" "IN PROGRESS" 2>/dev/null; then
     echo "Plan metadata status updated to [IN PROGRESS]"
-    # Pattern B: /build command at START (after update_plan_status "IN PROGRESS")
-    bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-    echo "✓ Updated TODO.md"
+
+    # Source todo-functions.sh for trigger_todo_update()
+    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+    }
+
+    # Trigger TODO.md update (non-blocking)
+    if type trigger_todo_update &>/dev/null; then
+      trigger_todo_update "build phase started"
+    fi
   fi
 fi
 echo ""
@@ -1057,9 +1064,16 @@ if type check_all_phases_complete &>/dev/null && type update_plan_status &>/dev/
   if check_all_phases_complete "$PLAN_FILE"; then
     update_plan_status "$PLAN_FILE" "COMPLETE" 2>/dev/null && \
       echo "Plan metadata status updated to [COMPLETE]"
-    # Pattern C: /build command at COMPLETION (after update_plan_status "COMPLETE")
-    bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-    echo "✓ Updated TODO.md"
+
+    # Source todo-functions.sh for trigger_todo_update()
+    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+    }
+
+    # Trigger TODO.md update (non-blocking)
+    if type trigger_todo_update &>/dev/null; then
+      trigger_todo_update "build phase completed"
+    fi
   fi
 fi
 ```

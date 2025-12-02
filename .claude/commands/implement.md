@@ -342,9 +342,16 @@ fi
 if type update_plan_status &>/dev/null; then
   if update_plan_status "$PLAN_FILE" "IN PROGRESS" 2>/dev/null; then
     echo "Plan metadata status updated to [IN PROGRESS]"
-    # Pattern B: /implement command at START (after update_plan_status "IN PROGRESS")
-    bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-    echo "✓ Updated TODO.md"
+
+    # Source todo-functions.sh for trigger_todo_update()
+    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+    }
+
+    # Trigger TODO.md update (non-blocking)
+    if type trigger_todo_update &>/dev/null; then
+      trigger_todo_update "implementation phase started"
+    fi
   fi
 fi
 echo ""
@@ -804,6 +811,22 @@ if [ -z "$WORK_REMAINING" ] && [ -n "$SUMMARY_PATH" ] && [ -f "$SUMMARY_PATH" ];
   WORK_REMAINING=$(grep -oP 'work_remaining:\s*\K.*' "$SUMMARY_PATH" 2>/dev/null | head -1 || echo "")
 fi
 
+# === DEFENSIVE WORK_REMAINING FORMAT CONVERSION ===
+# Convert JSON-style array to space-separated scalar if needed
+# This handles legacy agent outputs and prevents state_error
+# See: .claude/specs/998_repair_implement_20251201_154205/plans/001-repair-implement-20251201-154205-plan.md
+if [ -n "$WORK_REMAINING" ] && [[ "$WORK_REMAINING" =~ ^[[:space:]]*\[ ]]; then
+  echo "INFO: Converting WORK_REMAINING from JSON array to space-separated string" >&2
+
+  # Strip brackets and commas, normalize spaces
+  # Example: "[Phase 4, Phase 5, Phase 6]" -> "Phase 4 Phase 5 Phase 6"
+  WORK_REMAINING_CLEAN="${WORK_REMAINING#[}"    # Remove leading [
+  WORK_REMAINING_CLEAN="${WORK_REMAINING_CLEAN%]}"  # Remove trailing ]
+  WORK_REMAINING_CLEAN="${WORK_REMAINING_CLEAN//,/}"  # Remove commas
+  WORK_REMAINING_CLEAN=$(echo "$WORK_REMAINING_CLEAN" | tr -s ' ')  # Normalize spaces
+  WORK_REMAINING="$WORK_REMAINING_CLEAN"
+fi
+
 # === COMPLETION CHECK ===
 # Trust the implementer-coordinator's requires_continuation signal
 if [ "$REQUIRES_CONTINUATION" = "true" ]; then
@@ -850,8 +873,145 @@ echo "Iteration check complete"
 ```
 
 **ITERATION DECISION**:
-- If IMPLEMENTATION_STATUS is "continuing", repeat the Task invocation above with updated ITERATION
-- If IMPLEMENTATION_STATUS is "complete", "stuck", or "max_iterations", proceed to phase update block (Block 1d)
+
+Check the IMPLEMENTATION_STATUS from Block 1c iteration check:
+
+**If IMPLEMENTATION_STATUS is "continuing"**: Work remains and context available. Loop back to Block 1b.
+
+**EXECUTE NOW**: The implementer-coordinator reported work remaining and sufficient context. Repeat the Task invocation from Block 1b with updated iteration variables:
+
+- ITERATION = ${ITERATION} (updated by Block 1c)
+- CONTINUATION_CONTEXT = ${CONTINUATION_CONTEXT}
+- WORK_REMAINING = ${WORK_REMAINING}
+
+Before proceeding, load state and verify iteration variables:
+
+```bash
+set +H 2>/dev/null || true
+set +o histexpand 2>/dev/null || true
+set -e
+
+# Load state to get updated ITERATION value (Block 1c saved NEXT_ITERATION as ITERATION)
+STATE_ID_FILE="${HOME}/.claude/tmp/implement_state_id.txt"
+if [ -f "$STATE_ID_FILE" ]; then
+  WORKFLOW_ID=$(cat "$STATE_ID_FILE" 2>/dev/null)
+else
+  echo "ERROR: State ID file not found" >&2
+  exit 1
+fi
+
+source "${HOME}/.config/.claude/lib/core/state-persistence.sh" 2>/dev/null || exit 1
+source "${HOME}/.config/.claude/lib/core/error-handling.sh" 2>/dev/null || exit 1
+ensure_error_log_exists
+
+COMMAND_NAME="/implement"
+load_workflow_state "$WORKFLOW_ID" false
+
+# Validate iteration counter was restored
+if [ -z "$ITERATION" ]; then
+  log_command_error \
+    "$COMMAND_NAME" \
+    "$WORKFLOW_ID" \
+    "" \
+    "state_error" \
+    "ITERATION variable not restored from state during continuation" \
+    "bash_block_iteration_decision" \
+    "$(jq -n '{status: "state_restoration_failed", variable: "ITERATION"}')"
+
+  echo "ERROR: Iteration state restoration failed" >&2
+  exit 1
+fi
+
+# Check if max iterations exceeded
+if [ "$ITERATION" -gt "$MAX_ITERATIONS" ]; then
+  log_command_error \
+    "$COMMAND_NAME" \
+    "$WORKFLOW_ID" \
+    "" \
+    "execution_error" \
+    "Max iterations exceeded during continuation" \
+    "bash_block_iteration_decision" \
+    "$(jq -n --argjson iter "$ITERATION" --argjson max "$MAX_ITERATIONS" \
+       '{iteration: $iter, max_iterations: $max, status: "exceeded"}')"
+
+  echo "ERROR: Max iterations ($MAX_ITERATIONS) exceeded" >&2
+  exit 1
+fi
+
+echo "Continuing to iteration $ITERATION/$MAX_ITERATIONS..."
+```
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Execute implementation plan with wave-based parallelization (iteration ${ITERATION}/${MAX_ITERATIONS})"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/implementer-coordinator.md
+
+    You are executing the implementation phase for: implement workflow
+
+    **Input Contract (Hard Barrier Pattern)**:
+    - plan_path: $PLAN_FILE
+    - topic_path: $TOPIC_PATH
+    - summaries_dir: ${TOPIC_PATH}/summaries/
+    - artifact_paths:
+      - reports: ${TOPIC_PATH}/reports/
+      - plans: ${TOPIC_PATH}/plans/
+      - summaries: ${TOPIC_PATH}/summaries/
+      - debug: ${TOPIC_PATH}/debug/
+      - outputs: ${TOPIC_PATH}/outputs/
+      - checkpoints: ${HOME}/.claude/data/checkpoints/
+    - continuation_context: ${CONTINUATION_CONTEXT}
+    - iteration: ${ITERATION}
+
+    **CRITICAL**: You MUST create implementation summary at ${TOPIC_PATH}/summaries/
+    The orchestrator will validate the summary exists after you return.
+
+    Workflow-Specific Context:
+    - Starting Phase: ${STARTING_PHASE}
+    - Workflow Type: implement-only
+    - Execution Mode: wave-based (parallel where possible)
+    - Current Iteration: ${ITERATION}/${MAX_ITERATIONS}
+    - Max Iterations: ${MAX_ITERATIONS}
+    - Context Threshold: ${CONTEXT_THRESHOLD}%
+    - Continuation Context: ${CONTINUATION_CONTEXT}
+    - Work Remaining: ${WORK_REMAINING}
+
+    Progress Tracking Instructions:
+    - Source checkbox utilities: source ${CLAUDE_PROJECT_DIR}/.claude/lib/plan/checkbox-utils.sh
+    - Before starting each phase: add_in_progress_marker '$PLAN_FILE' <phase_num>
+    - After completing each phase: mark_phase_complete '$PLAN_FILE' <phase_num> && add_complete_marker '$PLAN_FILE' <phase_num>
+    - This creates visible progress: [NOT STARTED] -> [IN PROGRESS] -> [COMPLETE]
+
+    Execute remaining implementation phases according to the plan.
+
+    IMPORTANT: After completing phases or if context exhaustion detected:
+    - Create a summary in summaries/ directory
+    - Summary must have Work Status at TOP showing completion percentage
+    - Summary MUST include Testing Strategy section with:
+      - Test Files Created (list of test files written during Testing phases)
+      - Test Execution Requirements (how to run tests, framework used)
+      - Coverage Target (expected coverage percentage)
+    - Return summary path in completion signal
+
+    Return: IMPLEMENTATION_COMPLETE: {PHASE_COUNT}
+    plan_file: $PLAN_FILE
+    topic_path: $TOPIC_PATH
+    summary_path: /path/to/summary
+    work_remaining: 0 or list of incomplete phases
+    context_exhausted: true|false
+    context_usage_percent: N%
+    checkpoint_path: /path/to/checkpoint (if created)
+    requires_continuation: true|false
+    stuck_detected: true|false
+  "
+}
+
+After the Task returns, **proceed to Block 1c verification** to check for further continuation needs or completion.
+
+---
+
+**If IMPLEMENTATION_STATUS is "complete", "stuck", or "max_iterations"**: Proceed to Block 1d.
 
 ## Block 1d: Phase Update
 
@@ -1054,9 +1214,16 @@ if type check_all_phases_complete &>/dev/null && type update_plan_status &>/dev/
   if check_all_phases_complete "$PLAN_FILE"; then
     update_plan_status "$PLAN_FILE" "COMPLETE" 2>/dev/null && \
       echo "Plan metadata status updated to [COMPLETE]"
-    # Pattern C: /implement command at COMPLETION (after update_plan_status "COMPLETE")
-    bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-    echo "✓ Updated TODO.md"
+
+    # Source todo-functions.sh for trigger_todo_update()
+    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+    }
+
+    # Trigger TODO.md update (non-blocking)
+    if type trigger_todo_update &>/dev/null; then
+      trigger_todo_update "implementation phase completed"
+    fi
   fi
 fi
 ```

@@ -144,6 +144,70 @@ The error logging system automatically detects test vs production environments a
 - **Easy Cleanup**: Clear test logs without affecting production history
 - **Environment Tracking**: Every log entry tagged with environment for auditing
 
+**Dual Trap Setup Pattern**
+
+Commands use a **dual trap setup pattern** to ensure continuous error coverage from initialization through execution:
+
+1. **Early Trap**: Set immediately after sourcing error-handling.sh with placeholder values
+2. **Late Trap**: Update trap with actual workflow context once WORKFLOW_ID is available
+
+This pattern eliminates coverage gaps during initialization and ensures all errors are logged.
+
+```bash
+#!/usr/bin/env bash
+# Source error handling library
+source "${CLAUDE_CONFIG}/.claude/lib/core/error-handling.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source error-handling.sh" >&2
+  exit 1
+}
+
+# EARLY TRAP: Capture errors during initialization before WORKFLOW_ID is available
+setup_bash_error_trap "/build" "build_early_$(date +%s)" "early_init"
+
+# Flush any errors that occurred before error-handling.sh was sourced
+_flush_early_errors
+
+# Validate trap is active - fail fast if error logging is broken
+if ! trap -p ERR | grep -q "_log_bash_error"; then
+  echo "ERROR: ERR trap not active - error logging will fail" >&2
+  exit 1
+fi
+
+# ... initialization code with full error coverage ...
+
+# Ensure error log exists
+ensure_error_log_exists
+
+# Generate actual workflow context
+COMMAND_NAME="/build"
+WORKFLOW_ID="build_$(date +%Y%m%d_%H%M%S)"
+USER_ARGS="$*"
+
+# LATE TRAP: Update trap with actual workflow context
+setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
+```
+
+**Why Dual Trap Setup?**
+
+Without dual trap setup, errors during initialization (between sourcing error-handling.sh and setting the trap) are not captured. This creates coverage gaps of 50-80 lines where critical errors like:
+- Library sourcing failures
+- Path validation errors
+- Argument parsing issues
+- State file initialization problems
+
+...go unlogged and are lost when the script exits.
+
+The dual trap pattern solves this by:
+1. Establishing error capture immediately after error-handling.sh is available
+2. Using placeholder values (e.g., `"command_early_$(date +%s)"`) for early trap context
+3. Flushing pre-trap buffered errors with `_flush_early_errors`
+4. Validating trap is active before continuing (fail-fast on broken setup)
+5. Updating trap with actual workflow context once WORKFLOW_ID is generated
+
+**Pattern Compliance**:
+- `/build`, `/plan`, `/repair`, `/todo` - Full dual trap implementation
+- All new commands MUST implement dual trap setup for 100% coverage
+
 **Logging Integration in Commands**
 
 Every command must integrate error logging in three places:
@@ -153,18 +217,6 @@ Every command must integrate error logging in three places:
 3. **Subagent Errors**: Parse TASK_ERROR signals and log to centralized log
 
 ```bash
-#!/usr/bin/env bash
-# Source error handling library
-source "${CLAUDE_CONFIG}/.claude/lib/core/error-handling.sh" 2>/dev/null
-
-# Command metadata
-COMMAND_NAME="/build"
-WORKFLOW_ID="build_$(date +%Y%m%d_%H%M%S)"
-USER_ARGS="$*"
-
-# Ensure error log exists
-ensure_error_log_exists
-
 # Example: Log validation error
 if [ -z "$PLAN_FILE" ]; then
   log_command_error \

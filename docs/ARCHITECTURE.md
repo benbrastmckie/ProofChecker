@@ -45,8 +45,10 @@ def or (φ ψ : Formula) : Formula := (neg φ).imp ψ
 def diamond (φ : Formula) : Formula := neg (Formula.box (neg φ))
 def sometime_past (φ : Formula) : Formula := neg (Formula.past (neg φ))
 def sometime_future (φ : Formula) : Formula := neg (Formula.future (neg φ))
-def always (φ : Formula) : Formula := and (and (Formula.past φ) φ) (Formula.future φ)
-def sometimes (φ : Formula) : Formula := or (or (sometime_past φ) φ) (sometime_future φ)
+-- Note: 'always' is alias for 'future' (henceforth operator, not eternal truth)
+def always (φ : Formula) : Formula := Formula.future φ
+-- Note: 'sometimes' is dual of 'always' (eventually operator)
+def sometimes (φ : Formula) : Formula := neg (always (neg φ))
 
 -- Temporal duality: swap Past and Future operators
 def swap_past_future : Formula → Formula
@@ -70,8 +72,10 @@ syntax "Past" term : term                     -- Universal past
 syntax "Future" term : term                   -- Universal future
 syntax "past" term : term                     -- Sometime past
 syntax "future" term : term                   -- Sometime future
-syntax "always" term : term                   -- Always
-syntax "sometimes" term : term                -- Sometimes
+syntax "always" term : term                   -- Always (henceforth)
+syntax "sometimes" term : term                -- Sometimes (eventually)
+prefix:80 "△" => Formula.always               -- Triangle notation for always
+prefix:80 "▽" => Formula.sometimes            -- Triangle notation for sometimes
 
 -- Decidable equality for formulas
 instance : DecidableEq Formula := by sorry

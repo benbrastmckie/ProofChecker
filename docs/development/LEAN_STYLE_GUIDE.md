@@ -217,6 +217,47 @@ theorem soundness (Γ : Context) (φ : Formula) : Γ ⊢ φ → Γ ⊨ φ := by
    -/
    ```
 
+### Unicode Operator Notation
+
+ProofChecker uses Unicode symbols for logical operators with prefix notation declarations. When using or defining notation, follow these guidelines:
+
+**Available Notations**:
+```lean
+-- Modal operators
+□φ    -- Necessity (box)
+◇φ    -- Possibility (diamond)
+
+-- Temporal operators
+△φ    -- Always/henceforth (upward triangle, U+25B3)
+▽φ    -- Sometimes/eventually (downward triangle, U+25BD)
+```
+
+**Usage Guidelines**:
+1. **Prefer prefix notation**: Use `△p` rather than `p.always` for conciseness when appropriate
+2. **Mixed usage acceptable**: Both `△p` and `p.always` are valid; choose based on context clarity
+3. **Documentation**: Always show both notations in tutorials: "always/`△`" and "sometimes/`▽`"
+4. **Precedence**: Triangle operators have precedence 80 (same as modal operators)
+
+**Good Examples**:
+```lean
+-- Using triangle notation for perpetuity principles
+theorem perpetuity_1 (φ : Formula) : ⊢ (□φ → △φ) := by sorry
+theorem perpetuity_2 (φ : Formula) : ⊢ (▽φ → ◇φ) := by sorry
+
+-- Mixed notation is acceptable
+example (p : Formula) : △p = p.always := rfl
+example (p : Formula) : ▽(p.imp q) = (p.imp q).sometimes := rfl
+```
+
+**Avoid**:
+```lean
+-- Don't mix inconsistent styles unnecessarily
+theorem perpetuity_1 (φ : Formula) : ⊢ (□φ → always φ) := by sorry  -- inconsistent
+theorem perpetuity_2 (φ : Formula) : ⊢ (sometimes φ → ◇φ) := by sorry  -- inconsistent
+
+-- Prefer: Use either all Unicode or all text consistently per theorem
+```
+
 ## 3. Import Organization
 
 ### Import Order

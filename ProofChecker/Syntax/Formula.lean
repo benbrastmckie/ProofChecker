@@ -91,25 +91,49 @@ Modal diamond/possibility (◇φ) as derived operator: ¬□¬φ
 def diamond (φ : Formula) : Formula := φ.neg.box.neg
 
 /--
-Temporal 'always' operator (Gφ, "for all future times φ").
+Temporal 'always' operator (Gφ, "henceforth" - for all future times φ).
 
-In our system, this is the same as the future operator F.
+This is an alias for the `future` operator (universal future quantification).
+It means "from now onwards, φ holds at all times."
+
+Note: This is NOT "eternal truth" (Past φ ∧ φ ∧ Future φ), but rather
+"henceforth" (Future φ only). See glossary for semantic clarification.
 -/
 def always (φ : Formula) : Formula := φ.future
 
 /--
-Temporal 'sometimes' operator (Fφ, "exists a future time where φ").
+Temporal 'sometimes' operator (Fφ, "eventually" - exists a future time where φ).
 
-Derived as: ¬G¬φ (not always not φ)
+Derived as the dual of `always`: ¬(always ¬φ) = ¬G¬φ.
+This means: there exists a future time (including now) where φ is true.
+
+This is the existential dual of the henceforth operator, expressing
+eventual occurrence rather than perpetual truth.
 -/
-def sometimes (φ : Formula) : Formula := φ.always.neg.neg
+def sometimes (φ : Formula) : Formula := φ.neg.always.neg
+
+/-- Notation for temporal 'always' operator using upward triangle.
+    Represents universal temporal quantification: φ holds at all future times.
+    Unicode: U+25B3 WHITE UP-POINTING TRIANGLE
+-/
+prefix:80 "△" => Formula.always
+
+/-- Notation for temporal 'sometimes' operator using downward triangle.
+    Represents existential temporal quantification: φ holds at some future time.
+    Defined as dual: ¬△¬φ
+    Unicode: U+25BD WHITE DOWN-POINTING TRIANGLE
+-/
+prefix:80 "▽" => Formula.sometimes
 
 /--
-Temporal 'sometime in the past' operator (Hφ).
+Temporal 'sometime in the past' operator (Pφ in classical notation).
 
-Derived as: ¬P¬φ (not for-all-past not φ)
+Derived as: ¬H¬φ = ¬(past (¬φ)) (not for-all-past not φ).
+This means: there exists a past time where φ is true.
+
+Note: H (always in past) is our `past`, and P (sometime past) is this operator.
 -/
-def sometime_past (φ : Formula) : Formula := φ.past.neg.neg
+def sometime_past (φ : Formula) : Formula := φ.neg.past.neg
 
 /--
 Temporal 'sometime in the future' operator.

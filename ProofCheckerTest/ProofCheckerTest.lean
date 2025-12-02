@@ -1,8 +1,9 @@
 import ProofCheckerTest.Syntax
--- import ProofCheckerTest.ProofSystem
--- import ProofCheckerTest.Semantics
--- import ProofCheckerTest.Integration
--- import ProofCheckerTest.Metalogic
+import ProofCheckerTest.ProofSystem
+import ProofCheckerTest.Semantics
+import ProofCheckerTest.Metalogic
+import ProofCheckerTest.Integration
+import ProofCheckerTest.Theorems
 
 /-!
 # ProofChecker Test Suite Root

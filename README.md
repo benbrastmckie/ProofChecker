@@ -17,7 +17,7 @@ The logic TM is a bimodal system combining:
 ### Operators
 - **Modal**: `□` (necessity), `◇` (possibility) - S5 modal logic
 - **Temporal**: `Past` (universal past), `Future` (universal future), `past` (sometime past), `future` (sometime future)
-- **Combined**: `always` (always true), `sometimes` (sometimes true)
+- **Combined**: `always`/`△` (henceforth), `sometimes`/`▽` (eventually)
 
 ### Axioms
 - **S5 Modal**: MT (`□φ → φ`), M4 (`□φ → □□φ`), MB (`φ → □◇φ`)
@@ -25,12 +25,12 @@ The logic TM is a bimodal system combining:
 - **Bimodal Interaction**: MF (`□φ → □Future φ`), TF (`□φ → Future □φ`)
 
 ### Perpetuity Principles (Key Theorems)
-- **P1**: `□φ → always φ` (what is necessary is always the case)
-- **P2**: `sometimes φ → ◇φ` (what is sometimes the case is possible)
-- **P3**: `□φ → □always φ` (necessity of perpetuity)
-- **P4**: `◇sometimes φ → ◇φ` (possibility of occurrence)
-- **P5**: `◇sometimes φ → always ◇φ` (persistent possibility)
-- **P6**: `sometimes □φ → □always φ` (occurrent necessity is perpetual)
+- **P1**: `□φ → △φ` (what is necessary is always the case)
+- **P2**: `▽φ → ◇φ` (what is sometimes the case is possible)
+- **P3**: `□φ → □△φ` (necessity of perpetuity)
+- **P4**: `◇▽φ → ◇φ` (possibility of occurrence)
+- **P5**: `◇▽φ → △◇φ` (persistent possibility)
+- **P6**: `▽□φ → □△φ` (occurrent necessity is perpetual)
 
 ## Installation
 
@@ -82,13 +82,13 @@ example (φ : Formula) : ⊢ (φ.box.imp (always φ)) := perpetuity_1 φ
 - [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](docs/EXAMPLES.md) - Modal, temporal, and bimodal examples
 - [Contributing](docs/CONTRIBUTING.md) - How to contribute
-- [API Reference](doc/) - Generated API documentation (run `lake build :docs`)
+- [API Reference](.lake/build/doc/) - Generated API documentation (run `lake build :docs` to generate)
 
 ### Developer Standards
-- [LEAN Style Guide](src/docs/LEAN_STYLE_GUIDE.md) - Coding conventions
-- [Module Organization](src/docs/MODULE_ORGANIZATION.md) - Project structure
-- [Testing Standards](src/docs/TESTING_STANDARDS.md) - Test requirements
-- [Tactic Development](src/docs/TACTIC_DEVELOPMENT.md) - Custom tactics
+- [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Module Organization](docs/development/MODULE_ORGANIZATION.md) - Project structure
+- [Testing Standards](docs/development/TESTING_STANDARDS.md) - Test requirements
+- [Tactic Development](docs/development/TACTIC_DEVELOPMENT.md) - Custom tactics
 
 ## Project Structure
 
