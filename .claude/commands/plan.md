@@ -136,6 +136,9 @@ _source_with_diagnostics "${CLAUDE_PROJECT_DIR}/.claude/lib/core/library-version
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/unified-location-detection.sh" 2>/dev/null || true
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/workflow-initialization.sh" 2>/dev/null || true
 
+# Tier 3: Helper utilities (graceful degradation)
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+
 # Verify library versions
 check_library_requirements "$(cat <<'EOF'
 workflow-state-machine.sh: ">=2.0.0"
@@ -473,6 +476,9 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
   exit 1
 }
 
+# Source validation utilities for agent artifact validation
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+
 # Setup bash error trap
 setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 
@@ -497,28 +503,23 @@ fi
 
 echo "Expected topic name file: $TOPIC_NAME_FILE"
 
-# HARD BARRIER: Topic name file MUST exist
-if [ ! -f "$TOPIC_NAME_FILE" ]; then
-  log_command_error \
-    "$COMMAND_NAME" \
-    "$WORKFLOW_ID" \
-    "$USER_ARGS" \
-    "agent_error" \
-    "topic-naming-agent failed to create output file" \
-    "bash_block_1c" \
-    "$(jq -n --arg path "$TOPIC_NAME_FILE" '{expected_path: $path}')"
-
-  echo "ERROR: HARD BARRIER FAILED - Topic name file not found at: $TOPIC_NAME_FILE" >&2
+# HARD BARRIER: Validate agent artifact using validation-utils.sh
+# validate_agent_artifact checks file existence and minimum size (10 bytes)
+if ! validate_agent_artifact "$TOPIC_NAME_FILE" 10 "topic name"; then
+  # Error already logged by validate_agent_artifact
+  echo "ERROR: HARD BARRIER FAILED - Topic naming agent validation failed" >&2
   echo "" >&2
-  echo "This indicates the topic-naming-agent did not create the expected output." >&2
+  echo "This indicates the topic-naming-agent did not create valid output." >&2
   echo "The workflow will fall back to 'no_name_error' directory." >&2
+  echo "" >&2
+  echo "To retry: Re-run the /plan command with the same arguments" >&2
   echo "" >&2
 
   # Unlike research reports, topic naming failure is non-fatal
   # Continue with fallback but log the error
   echo "Falling back to no_name_error directory..." >&2
 else
-  echo "✓ Hard barrier passed - topic name file exists"
+  echo "✓ Hard barrier passed - topic name file validated"
 fi
 
 echo ""
@@ -710,7 +711,11 @@ setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 # === READ TOPIC NAME FROM AGENT OUTPUT FILE ===
 # CRITICAL: Use CLAUDE_PROJECT_DIR for consistent path
 TOPIC_NAME_FILE="${CLAUDE_PROJECT_DIR}/.claude/tmp/topic_name_${WORKFLOW_ID}.txt"
-TOPIC_NAME="no_name_error"
+
+# Improved fallback naming: timestamp + sanitized prompt prefix (max 30 chars)
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+SANITIZED_PROMPT=$(echo "$FEATURE_DESCRIPTION" | head -c 30 | tr -cs '[:alnum:]_' '_' | sed 's/_*$//')
+TOPIC_NAME="${TIMESTAMP}_${SANITIZED_PROMPT}"
 NAMING_STRATEGY="fallback"
 
 # Check if agent wrote output file
@@ -719,9 +724,9 @@ if [ -f "$TOPIC_NAME_FILE" ]; then
   TOPIC_NAME=$(cat "$TOPIC_NAME_FILE" 2>/dev/null | tr -d '\n' | tr -d ' ')
 
   if [ -z "$TOPIC_NAME" ]; then
-    # File exists but is empty - agent failed
+    # File exists but is empty - agent failed, use fallback
     NAMING_STRATEGY="agent_empty_output"
-    TOPIC_NAME="no_name_error"
+    TOPIC_NAME="${TIMESTAMP}_${SANITIZED_PROMPT}"
   else
     # Validate topic name format (exit code capture pattern)
     echo "$TOPIC_NAME" | grep -Eq '^[a-z0-9_]{5,40}$'
@@ -738,7 +743,7 @@ if [ -f "$TOPIC_NAME_FILE" ]; then
         "$(jq -n --arg name "$TOPIC_NAME" '{invalid_name: $name}')"
 
       NAMING_STRATEGY="validation_failed"
-      TOPIC_NAME="no_name_error"
+      TOPIC_NAME="${TIMESTAMP}_${SANITIZED_PROMPT}"
     else
       # Valid topic name from LLM
       NAMING_STRATEGY="llm_generated"
@@ -749,20 +754,20 @@ else
   NAMING_STRATEGY="agent_no_output_file"
 fi
 
-# Log naming failure if we fell back to no_name
-if [ "$TOPIC_NAME" = "no_name_error" ]; then
+# Log naming failure if we used fallback (not LLM-generated)
+if [ "$NAMING_STRATEGY" != "llm_generated" ]; then
   log_command_error \
     "$COMMAND_NAME" \
     "$WORKFLOW_ID" \
     "$USER_ARGS" \
     "agent_error" \
-    "Topic naming agent failed or returned invalid name" \
+    "Topic naming agent failed, using fallback naming: $TOPIC_NAME" \
     "bash_block_1c" \
-    "$(jq -n --arg desc "$FEATURE_DESCRIPTION" --arg strategy "$NAMING_STRATEGY" \
-       '{feature: $desc, fallback_reason: $strategy}')"
+    "$(jq -n --arg desc "$FEATURE_DESCRIPTION" --arg strategy "$NAMING_STRATEGY" --arg fallback "$TOPIC_NAME" \
+       '{feature: $desc, fallback_reason: $strategy, fallback_name: $fallback}')"
 
   # Diagnostic output for troubleshooting
-  echo "DEBUG: Topic naming agent fallback reason: $NAMING_STRATEGY" >&2
+  echo "DEBUG: Topic naming agent fallback reason: $NAMING_STRATEGY (using: $TOPIC_NAME)" >&2
   echo "DEBUG: Expected file: $TOPIC_NAME_FILE" >&2
   ls -la "${CLAUDE_PROJECT_DIR}/.claude/tmp/topic_name_"* 2>/dev/null || echo "DEBUG: No topic name files found" >&2
 fi
@@ -1161,7 +1166,9 @@ append_workflow_state "FORMATTED_STANDARDS<<STANDARDS_EOF
 $FORMATTED_STANDARDS
 STANDARDS_EOF"
 
-save_completed_states_to_state 2>/dev/null
+if ! save_completed_states_to_state; then
+  echo "WARNING: Failed to persist COMPLETED_STATES to state file" >&2
+fi
 
 if [ -n "$FORMATTED_STANDARDS" ]; then
   STANDARDS_COUNT=$(echo "$FORMATTED_STANDARDS" | grep -c "^###" || echo 0)
@@ -1427,7 +1434,9 @@ if grep -q "^### Phase 0: Standards Revision" "$PLAN_PATH" 2>/dev/null; then
   # Persist divergence flag for summary
   append_workflow_state "PHASE_0_DETECTED=true"
   append_workflow_state "DIVERGENCE_JUSTIFICATION=$DIVERGENCE_JUSTIFICATION"
-  save_completed_states_to_state 2>/dev/null
+  if ! save_completed_states_to_state; then
+    echo "WARNING: Failed to persist COMPLETED_STATES to state file" >&2
+  fi
 fi
 
 echo ""

@@ -147,23 +147,23 @@ inductive Axiom : Formula → Prop
   -- Note: Propositional tautologies assumed as base (classical propositional logic)
 
   -- S5 Modal Axioms
-  | modal_t (φ : Formula) : Axiom (φ.box.imp φ)                    -- MT: □φ → φ (reflexivity)
-  | modal_4 (φ : Formula) : Axiom (φ.box.imp φ.box.box)            -- M4: □φ → □□φ (transitivity)
-  | modal_b (φ : Formula) : Axiom (φ.imp (diamond φ).box)          -- MB: φ → □◇φ (symmetry)
+  | modal_t (φ : Formula) : Axiom (φ.box.imp φ)                    -- MT: `□φ → φ` (reflexivity)
+  | modal_4 (φ : Formula) : Axiom (φ.box.imp φ.box.box)            -- M4: `□φ → □□φ` (transitivity)
+  | modal_b (φ : Formula) : Axiom (φ.imp (diamond φ).box)          -- MB: `φ → □◇φ` (symmetry)
 
   -- Temporal Axioms
   | temp_4 (φ : Formula) :
-      Axiom ((Formula.future φ).imp (Formula.future (Formula.future φ)))  -- T4: Future φ → Future Future φ
+      Axiom ((Formula.future φ).imp (Formula.future (Formula.future φ)))  -- T4: `Future φ → Future Future φ`
   | temp_a (φ : Formula) :
-      Axiom (φ.imp (Formula.future (sometime_past φ)))                    -- TA: φ → Future past φ
+      Axiom (φ.imp (Formula.future (sometime_past φ)))                    -- TA: `φ → Future past φ`
   | temp_l (φ : Formula) :
-      Axiom ((always φ).imp (Formula.future (Formula.past φ)))            -- TL: always φ → Future Past φ
+      Axiom ((always φ).imp (Formula.future (Formula.past φ)))            -- TL: `always φ → Future Past φ`
 
   -- Bimodal Interaction Axioms
   | modal_future (φ : Formula) :
-      Axiom (φ.box.imp (Formula.box (Formula.future φ)))                  -- MF: □φ → □Future φ
+      Axiom (φ.box.imp (Formula.box (Formula.future φ)))                  -- MF: `□φ → □Future φ`
   | temp_future (φ : Formula) :
-      Axiom (φ.box.imp (Formula.future φ.box))                            -- TF: □φ → Future □φ
+      Axiom (φ.box.imp (Formula.future φ.box))                            -- TF: `□φ → Future □φ`
 
 -- Layer 1 Inference rules for system TM
 inductive Derivable : Context → Formula → Prop
@@ -172,12 +172,12 @@ inductive Derivable : Context → Formula → Prop
   | modus_ponens (Γ : Context) (φ ψ : Formula)
       (h1 : Derivable Γ (φ.imp ψ)) (h2 : Derivable Γ φ) : Derivable Γ ψ   -- MP
   | modal_k (Γ : Context) (φ : Formula)
-      (h : Derivable (Γ.map Formula.box) φ) : Derivable Γ (φ.box)         -- MK: If □Γ ⊢ φ then Γ ⊢ □φ
+      (h : Derivable (Γ.map Formula.box) φ) : Derivable Γ (φ.box)         -- MK: If `□Γ ⊢ φ` then `Γ ⊢ □φ`
   | temporal_k (Γ : Context) (φ : Formula)
       (h : Derivable (Γ.map Formula.future) φ) :
-      Derivable Γ (Formula.future φ)                                       -- TK: If Future Γ ⊢ φ then Γ ⊢ Future φ
+      Derivable Γ (Formula.future φ)                                       -- TK: If `Future Γ ⊢ φ` then `Γ ⊢ Future φ`
   | temporal_duality (φ : Formula)
-      (h : Derivable [] φ) : Derivable [] (swap_past_future φ)            -- TD: If ⊢ φ then ⊢ φ_{⟨P|F⟩}
+      (h : Derivable [] φ) : Derivable [] (swap_past_future φ)            -- TD: If `⊢ φ` then `⊢ φ_{⟨P|F⟩}`
   | weakening (Γ Δ : Context) (φ : Formula)
       (h1 : Derivable Γ φ) (h2 : Γ ⊆ Δ) : Derivable Δ φ
 
@@ -186,22 +186,22 @@ notation Γ " ⊢ " φ => Derivable Γ φ
 notation " ⊢ " φ => Derivable [] φ
 
 -- Perpetuity Principles (derived theorems in TM)
--- P1: □φ → always φ (what is necessary is always the case)
+-- P1: `□φ → always φ` (what is necessary is always the case)
 theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by sorry
 
--- P2: sometimes φ → ◇φ (what is sometimes the case is possible)
+-- P2: `sometimes φ → ◇φ` (what is sometimes the case is possible)
 theorem perpetuity_2 (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := by sorry
 
--- P3: □φ → □always φ (necessity of perpetuity)
+-- P3: `□φ → □always φ` (necessity of perpetuity)
 theorem perpetuity_3 (φ : Formula) : ⊢ (φ.box.imp ((always φ).box)) := by sorry
 
--- P4: ◇sometimes φ → ◇φ (possibility of occurrence)
+-- P4: `◇sometimes φ → ◇φ` (possibility of occurrence)
 theorem perpetuity_4 (φ : Formula) : ⊢ ((diamond (sometimes φ)).imp (diamond φ)) := by sorry
 
--- P5: ◇sometimes φ → always ◇φ (persistent possibility)
+-- P5: `◇sometimes φ → always ◇φ` (persistent possibility)
 theorem perpetuity_5 (φ : Formula) : ⊢ ((diamond (sometimes φ)).imp (always (diamond φ))) := by sorry
 
--- P6: sometimes □φ → □always φ (occurrent necessity is perpetual)
+-- P6: `sometimes □φ → □always φ` (occurrent necessity is perpetual)
 theorem perpetuity_6 (φ : Formula) : ⊢ ((sometimes φ.box).imp ((always φ).box)) := by sorry
 ```
 
@@ -564,14 +564,14 @@ theorem soundness (Γ : Context) (φ : Formula) :
   | axiom Γ φ hax =>
     intro F M τ t hΓ
     cases hax with
-    | modal_t φ => sorry -- Prove MT valid: □φ → φ
-    | modal_4 φ => sorry -- Prove M4 valid: □φ → □□φ
-    | modal_b φ => sorry -- Prove MB valid: φ → □◇φ
-    | temp_4 φ => sorry -- Prove T4 valid: Future φ → Future Future φ
-    | temp_a φ => sorry -- Prove TA valid: φ → Future past φ
-    | temp_l φ => sorry -- Prove TL valid: always φ → Future Past φ
-    | modal_future φ => sorry -- Prove MF valid: □φ → □Future φ
-    | temp_future φ => sorry -- Prove TF valid: □φ → Future □φ
+    | modal_t φ => sorry -- Prove MT valid: `□φ → φ`
+    | modal_4 φ => sorry -- Prove M4 valid: `□φ → □□φ`
+    | modal_b φ => sorry -- Prove MB valid: `φ → □◇φ`
+    | temp_4 φ => sorry -- Prove T4 valid: `Future φ → Future Future φ`
+    | temp_a φ => sorry -- Prove TA valid: `φ → Future past φ`
+    | temp_l φ => sorry -- Prove TL valid: `always φ → Future Past φ`
+    | modal_future φ => sorry -- Prove MF valid: `□φ → □Future φ`
+    | temp_future φ => sorry -- Prove TF valid: `□φ → Future □φ`
   | assumption Γ φ h_in =>
     intro F M τ t hΓ
     exact hΓ φ h_in

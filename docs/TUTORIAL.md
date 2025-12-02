@@ -79,11 +79,11 @@ def q : Formula := Formula.atom "q"
 def falsum : Formula := Formula.bot
 
 -- Implication
-def impl : Formula := p.imp q  -- p → q
+def impl : Formula := p.imp q  -- `p → q`
 
 -- Modal operators
-def necessary_p : Formula := Formula.box p      -- □p
-def possible_p : Formula := diamond p           -- ◇p (defined as ¬□¬p)
+def necessary_p : Formula := Formula.box p      -- `□p`
+def possible_p : Formula := diamond p           -- `◇p` (defined as `¬□¬p`)
 
 -- Temporal operators
 def always_past : Formula := Formula.past p     -- Past p (always in past)
@@ -95,19 +95,19 @@ def sometime_future_p : Formula := sometime_future p -- ∃ time in future where
 ### Derived Operators
 
 ```lean
--- Negation: ¬φ ≡ φ → ⊥
+-- Negation: `¬φ ≡ φ → ⊥`
 def not_p : Formula := neg p
 
--- Conjunction: φ ∧ ψ ≡ ¬(φ → ¬ψ)
+-- Conjunction: `φ ∧ ψ ≡ ¬(φ → ¬ψ)`
 def p_and_q : Formula := and p q
 
--- Disjunction: φ ∨ ψ ≡ ¬φ → ψ
+-- Disjunction: `φ ∨ ψ ≡ ¬φ → ψ`
 def p_or_q : Formula := or p q
 
--- Always (all times): Past φ ∧ φ ∧ Future φ
+-- Always (all times): `Past φ ∧ φ ∧ Future φ`
 def always_p : Formula := always p
 
--- Sometimes (some time): past φ ∨ φ ∨ future φ
+-- Sometimes (some time): `past φ ∨ φ ∨ future φ`
 def sometimes_p : Formula := sometimes p
 ```
 
@@ -117,9 +117,9 @@ With DSL macros enabled:
 
 ```lean
 -- More readable formula construction
-example : Formula := □"p"           -- □p
-example : Formula := ◇"p"           -- ◇p
-example : Formula := "p" → "q"      -- p → q
+example : Formula := □"p"           -- `□p`
+example : Formula := ◇"p"           -- `◇p`
+example : Formula := "p" → "q"      -- `p → q`
 example : Formula := Past "p"       -- Past p
 example : Formula := Future "p"     -- Future p
 ```
@@ -140,7 +140,7 @@ def with_premises : Context := [p, p.imp q]
 
 ### Derivability
 
-The notation `Γ ⊢ φ` means "φ is derivable from premises Γ":
+The notation `Γ ⊢ φ` means "`φ` is derivable from premises `Γ`":
 
 ```lean
 -- Derive from axioms (empty context)
@@ -166,17 +166,17 @@ TM logic axioms can be applied directly:
 
 ```lean
 -- S5 Modal Axioms
--- MT: □φ → φ (reflexivity)
+-- MT: `□φ → φ` (reflexivity)
 example (φ : Formula) : ⊢ (φ.box.imp φ) := by
   apply Derivable.axiom
   apply Axiom.modal_t
 
--- M4: □φ → □□φ (transitivity)
+-- M4: `□φ → □□φ` (transitivity)
 example (φ : Formula) : ⊢ (φ.box.imp φ.box.box) := by
   apply Derivable.axiom
   apply Axiom.modal_4
 
--- MB: φ → □◇φ (symmetry)
+-- MB: `φ → □◇φ` (symmetry)
 example (φ : Formula) : ⊢ (φ.imp (diamond φ).box) := by
   apply Derivable.axiom
   apply Axiom.modal_b
@@ -185,19 +185,19 @@ example (φ : Formula) : ⊢ (φ.imp (diamond φ).box) := by
 ### Inference Rules
 
 ```lean
--- Modus Ponens: If Γ ⊢ φ → ψ and Γ ⊢ φ, then Γ ⊢ ψ
+-- Modus Ponens: If `Γ ⊢ φ → ψ` and `Γ ⊢ φ`, then `Γ ⊢ ψ`
 example (Γ : Context) (φ ψ : Formula)
   (h1 : Γ ⊢ φ.imp ψ) (h2 : Γ ⊢ φ) : Γ ⊢ ψ := by
   apply Derivable.modus_ponens
   · exact h1
   · exact h2
 
--- Modal K (MK): If □Γ ⊢ φ then Γ ⊢ □φ
+-- Modal K (MK): If `□Γ ⊢ φ` then `Γ ⊢ □φ`
 example (φ : Formula) (h : [Formula.box (Formula.atom "p")] ⊢ φ) :
   [Formula.atom "p"] ⊢ Formula.box φ := by
   sorry -- Requires MK rule application
 
--- Temporal K (TK): If Future Γ ⊢ φ then Γ ⊢ Future φ
+-- Temporal K (TK): If `Future Γ ⊢ φ` then `Γ ⊢ Future φ`
 example (φ : Formula) (h : [Formula.future (Formula.atom "p")] ⊢ φ) :
   [Formula.atom "p"] ⊢ Formula.future φ := by
   sorry -- Requires TK rule application
@@ -332,11 +332,11 @@ theorem strong_completeness (Γ : Context) (φ : Formula) :
 The perpetuity principles P1-P6 connect modal and temporal operators:
 
 ```lean
--- P1: □φ → always φ (necessary implies always)
+-- P1: `□φ → always φ` (necessary implies always)
 theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
   sorry
 
--- P2: sometimes φ → ◇φ (sometimes implies possible)
+-- P2: `sometimes φ → ◇φ` (sometimes implies possible)
 theorem perpetuity_2 (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := by
   sorry
 

@@ -1,3 +1,9 @@
+import ProofCheckerTest.Syntax
+-- import ProofCheckerTest.ProofSystem
+-- import ProofCheckerTest.Semantics
+-- import ProofCheckerTest.Integration
+-- import ProofCheckerTest.Metalogic
+
 /-!
 # ProofChecker Test Suite Root
 
@@ -39,13 +45,6 @@ Run specific test module:
 lake env lean ProofCheckerTest/Syntax/FormulaTest.lean
 ```
 -/
-
--- Re-export test modules when implemented
--- import ProofCheckerTest.Syntax
--- import ProofCheckerTest.ProofSystem
--- import ProofCheckerTest.Semantics
--- import ProofCheckerTest.Integration
--- import ProofCheckerTest.Metalogic
 
 namespace ProofCheckerTest
 

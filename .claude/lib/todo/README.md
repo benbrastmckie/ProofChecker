@@ -28,6 +28,9 @@ Core library providing all TODO command functionality.
 | `generate_completed_date_header` | Generate date header for Completed section | None |
 | `update_todo_file` | Update TODO.md with classified plans | todo_path, plans_json, dry_run |
 | `validate_todo_structure` | Validate TODO.md file structure | todo_path |
+| `plan_exists_in_todo` | Check if plan appears in TODO.md | plan_path |
+| `get_plan_current_section` | Find which section contains a plan | plan_path |
+| `trigger_todo_update` | Delegate to /todo for regeneration | reason |
 
 **Dependencies**:
 - `unified-location-detection.sh` - For specs root detection
@@ -107,6 +110,48 @@ echo "Completed: $(get_checkbox_for_section "Completed")"        # [x]
 echo "Superseded: $(get_checkbox_for_section "Superseded")"      # [~]
 echo "Abandoned: $(get_checkbox_for_section "Abandoned")"        # [x]
 ```
+
+### Query Functions
+
+```bash
+source .claude/lib/todo/todo-functions.sh
+
+# Check if plan exists in TODO.md
+if plan_exists_in_todo "$PLAN_PATH"; then
+  echo "Plan is tracked in TODO.md"
+fi
+
+# Get current section for a plan
+SECTION=$(get_plan_current_section "$PLAN_PATH")
+if [ -n "$SECTION" ]; then
+  echo "Plan is in section: $SECTION"
+fi
+```
+
+### Delegation Pattern (TODO.md Update)
+
+The delegation pattern is the standard way for commands to trigger TODO.md updates.
+Rather than modifying TODO.md directly, commands delegate to the `/todo` command
+which performs full regeneration while preserving manually curated sections.
+
+```bash
+source .claude/lib/todo/todo-functions.sh
+
+# After creating/modifying a plan
+trigger_todo_update "repair plan created"
+
+# After completing implementation
+trigger_todo_update "build workflow complete"
+```
+
+**Commands using delegation pattern**:
+- /plan - After plan creation
+- /build - At start and completion
+- /research - After research report
+- /revise - After plan revision
+- /repair - After repair plan creation
+- /errors - After error analysis report (report mode only)
+- /debug - After debug report creation
 
 ## Test Isolation
 

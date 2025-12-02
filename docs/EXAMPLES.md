@@ -6,7 +6,7 @@ This document provides comprehensive examples of modal, temporal, and bimodal re
 
 ### S5 Axiom Proofs
 
-#### Axiom MT: □φ → φ (Reflexivity)
+#### Axiom MT: `□φ → φ` (Reflexivity)
 
 ```lean
 /-- Prove the reflexivity axiom MT: what is necessary is actual -/
@@ -20,7 +20,7 @@ example : ⊢ (□"p" → "p") := by
   apply Axiom.modal_t
 ```
 
-#### Axiom M4: □φ → □□φ (Transitivity)
+#### Axiom M4: `□φ → □□φ` (Transitivity)
 
 ```lean
 /-- Prove the transitivity axiom M4: necessity iterates -/
@@ -37,7 +37,7 @@ example (P : Formula) : [P.box] ⊢ P.box.box.box := by
     · apply Derivable.assumption; simp
 ```
 
-#### Axiom MB: φ → □◇φ (Symmetry)
+#### Axiom MB: `φ → □◇φ` (Symmetry)
 
 ```lean
 /-- Prove the symmetry axiom MB: actuality implies necessary possibility -/
@@ -55,40 +55,40 @@ example (P : Formula) : [P] ⊢ (diamond P).box := by
 ### Diamond as Derived Operator
 
 ```lean
-/-- Diamond is defined as ¬□¬ -/
+/-- Diamond is defined as `¬□¬` -/
 example (P : Formula) : diamond P = neg (Formula.box (neg P)) := rfl
 
-/-- Prove ◇p from p using MB -/
+/-- Prove `◇p` from `p` using MB -/
 example (P : Formula) : [P] ⊢ diamond P := by
-  -- From P, we can derive □◇P (by MB)
-  -- From □◇P, we get ◇P (by MT on ◇P)
+  -- From P, we can derive `□◇P` (by MB)
+  -- From `□◇P`, we get `◇P` (by MT on `◇P`)
   sorry -- Full proof requires intermediate steps
 ```
 
 ### Key S5 Theorems
 
 ```lean
-/-- In S5, □φ ↔ □□φ -/
+/-- In S5, `□φ ↔ □□φ` -/
 theorem box_idempotent (P : Formula) :
   (⊢ P.box.imp P.box.box) ∧ (⊢ P.box.box.imp P.box) := by
   constructor
   · apply Derivable.axiom; apply Axiom.modal_4
-  · -- □□φ → □φ is derivable using MT on □φ
+  · -- `□□φ → □φ` is derivable using MT on `□φ`
     sorry
 
-/-- In S5, ◇φ ↔ ◇◇φ -/
+/-- In S5, `◇φ ↔ ◇◇φ` -/
 theorem diamond_idempotent (P : Formula) :
   (⊢ (diamond P).imp (diamond (diamond P))) ∧
   (⊢ (diamond (diamond P)).imp (diamond P)) := by
   sorry
 
-/-- In S5, □◇φ ↔ ◇φ -/
+/-- In S5, `□◇φ ↔ ◇φ` -/
 theorem box_diamond_collapse (P : Formula) :
   ⊢ ((diamond P).box.imp (diamond P)) := by
   apply Derivable.axiom
   apply Axiom.modal_t
 
-/-- In S5, ◇□φ ↔ □φ -/
+/-- In S5, `◇□φ ↔ □φ` -/
 theorem diamond_box_collapse (P : Formula) :
   ⊢ ((diamond P.box).imp P.box) := by
   sorry
@@ -200,32 +200,32 @@ example (P : Formula) : [P.box] ⊢ Formula.future P.box := by
 ### Combined Modal-Temporal Reasoning
 
 ```lean
-/-- From □p, derive both □Future p and Future □p -/
+/-- From `□p`, derive both `□Future p` and `Future □p` -/
 example (P : Formula) : [P.box] ⊢ and (Formula.box (Formula.future P)) (Formula.future P.box) := by
   -- Use MF for first conjunct, TF for second
   sorry
 
 /-- Modal necessity implies temporal persistence -/
 example (P : Formula) : [P.box] ⊢ always P := by
-  -- This is essentially P1: □φ → always φ
+  -- This is essentially P1: `□φ → always φ`
   -- Requires proving from MF, TF, MT, and temporal duality
   sorry
 ```
 
 ## 4. Perpetuity Principles
 
-### P1: □φ → always φ
+### P1: `□φ → always φ`
 
 ```lean
 /-- What is necessary is always the case -/
 theorem perpetuity_1_example (P : Formula) : ⊢ (P.box.imp (always P)) := by
   -- Proof sketch:
-  -- 1. □P → □Future P (MF)
-  -- 2. □Future P → Future P (MT)
-  -- 3. □P → Future P (transitivity)
-  -- 4. By TD (temporal duality), □P → Past P
-  -- 5. □P → P (MT)
-  -- 6. Combine: □P → Past P ∧ P ∧ Future P = always P
+  -- 1. `□P → □Future P` (MF)
+  -- 2. `□Future P → Future P` (MT)
+  -- 3. `□P → Future P` (transitivity)
+  -- 4. By TD (temporal duality), `□P → Past P`
+  -- 5. `□P → P` (MT)
+  -- 6. Combine: `□P → Past P ∧ P ∧ Future P = always P`
   sorry
 
 /-- Using P1 -/
@@ -235,18 +235,18 @@ example (P : Formula) : [P.box] ⊢ always P := by
   · apply Derivable.assumption; simp
 ```
 
-### P2: sometimes φ → ◇φ
+### P2: `sometimes φ → ◇φ`
 
 ```lean
 /-- What is sometimes the case is possible -/
 theorem perpetuity_2_example (P : Formula) : ⊢ ((sometimes P).imp (diamond P)) := by
   -- Proof by contraposition of P1
-  -- If ¬◇P (= □¬P), then always ¬P
-  -- Contrapositive: sometimes P → ◇P
+  -- If `¬◇P` (= `□¬P`), then `always ¬P`
+  -- Contrapositive: `sometimes P → ◇P`
   sorry
 ```
 
-### P3: □φ → □always φ
+### P3: `□φ → □always φ`
 
 ```lean
 /-- Necessity of perpetuity: necessary implies necessarily always -/

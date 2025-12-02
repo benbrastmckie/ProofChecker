@@ -31,9 +31,20 @@ your own path. The orchestrator will validate this file exists after you return.
 - Use the Write tool to create the file at this exact path
 - Write ONLY the topic name (one line, no prefix)
 
+**CRITICAL COMPLETION REQUIREMENT**:
+You MUST create the output file at the exact path specified in the contract.
+The orchestrator will verify this file using validate_agent_artifact().
+
+Verification checks performed:
+1. File exists and is readable
+2. File has minimum content (10+ bytes)
+3. Content matches expected format: single line, no whitespace padding
+
 **Validation After Return**:
 - The orchestrator will check that the file exists at the pre-calculated path
-- If the file is missing, the workflow will fall back to `no_name_error` directory
+- The orchestrator validates file size meets minimum requirement (10 bytes)
+- If the file is missing or too small, the workflow will retry (max 2 retries)
+- After retry exhaustion, workflow falls back to `no_name_error` directory
 - This ensures path synchronization and prevents WORKFLOW_ID mismatches
 
 **Completion Signal**:

@@ -110,35 +110,40 @@ ProofChecker/
 
 ### User Documentation (docs/)
 - [Architecture Guide](docs/ARCHITECTURE.md) - System design and TM logic specification
+- [Logical Operators Glossary](docs/glossary/logical-operators.md) - Formal symbols reference
 - [Tutorial](docs/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](docs/EXAMPLES.md) - Modal, temporal, bimodal examples
 - [Contributing](docs/CONTRIBUTING.md) - How to contribute
 - [Integration](docs/INTEGRATION.md) - Model-Checker integration
 - [Versioning](docs/VERSIONING.md) - Semantic versioning policy
 
+### Symbol Formatting Standards
+- [Documentation Standards - Formal Symbol Backtick Standard](.claude/docs/reference/standards/documentation-standards.md#formal-symbol-backtick-standard) - Backtick requirements for Unicode symbols in Markdown
+- [LEAN Style Guide - Code Comments with Formal Symbols](docs/development/LEAN_STYLE_GUIDE.md#code-comments-with-formal-symbols) - Backtick usage in LEAN code comments
+
+### Claude Code Framework Documentation
+
+For comprehensive Claude Code development standards and patterns, see:
+- [Code Standards](.claude/docs/reference/standards/code-standards.md) - Coding conventions, error handling, bash patterns, LEAN 4 standards
+- [Testing Protocols](.claude/docs/reference/standards/testing-protocols.md) - Test organization, coverage requirements, performance benchmarks
+- [Documentation Standards](.claude/docs/reference/standards/documentation-standards.md) - README requirements, format standards, LEAN 4 docstrings
+- [Command Development](.claude/docs/guides/development/command-development/command-development-fundamentals.md) - Creating slash commands
+- [Agent Development](.claude/docs/guides/development/agent-development/agent-development-fundamentals.md) - Creating specialized agents
+
 ## 5. Development Principles
 
-### Test-Driven Development (TDD) - MANDATORY
-1. **RED**: Write a failing test that describes expected behavior
-2. **GREEN**: Write minimal code to make the test pass
-3. **REFACTOR**: Improve code quality while keeping tests green
+ProofChecker follows rigorous development standards including Test-Driven Development (TDD), fail-fast error handling, comprehensive documentation requirements, and lint compliance.
 
-Every new theorem, definition, or tactic requires tests before implementation.
+**For complete guidelines**, see:
+- [Code Standards](.claude/docs/reference/standards/code-standards.md) - TDD principles, fail-fast philosophy, LEAN 4 syntax patterns, common errors
+- [Testing Protocols](.claude/docs/reference/standards/testing-protocols.md) - Test organization, coverage requirements, performance benchmarks
+- [Documentation Standards](.claude/docs/reference/standards/documentation-standards.md) - Docstring requirements, module documentation format
 
-### Fail-Fast Philosophy
-- Functions should fail immediately on invalid input rather than propagating errors
-- Use `Option` for recoverable failures, explicit error handling for others
-- No silent failures or implicit defaults for invalid states
-
-### Documentation Required
-- Every public `def`, `theorem`, `lemma`, `structure`, `inductive` requires a docstring
-- Module docstrings (`/-! ... -/`) at the top of every file
-- Examples in docstrings where helpful
-
-### Lint Compliance
-- Zero `#lint` warnings allowed
-- All definitions must pass `docBlame` (documentation check)
-- All theorems must pass `docBlameThm`
+**Quick Reference**:
+- **TDD**: Write failing test → minimal implementation → refactor
+- **Fail-Fast**: Functions fail immediately on invalid input
+- **Documentation**: Every public definition requires docstring
+- **Lint**: Zero #lint warnings required
 
 ## 6. Key Packages
 
@@ -159,68 +164,39 @@ Every new theorem, definition, or tactic requires tests before implementation.
 - `truth_at`: Truth evaluation at model-history-time triples
 
 ### Metalogic Package
-- `soundness`: Γ ⊢ φ → Γ ⊨ φ
-- `weak_completeness`: ⊨ φ → ⊢ φ
-- `strong_completeness`: Γ ⊨ φ → Γ ⊢ φ
+- `soundness`: `Γ ⊢ φ → Γ ⊨ φ`
+- `weak_completeness`: `⊨ φ → ⊢ φ`
+- `strong_completeness`: `Γ ⊨ φ → Γ ⊢ φ`
 - Canonical model construction for completeness proof
 
 ### Theorems Package
 - Perpetuity principles P1-P6 connecting modal and temporal operators:
-  - P1: □φ → always φ (necessary implies always)
-  - P2: sometimes φ → ◇φ (sometimes implies possible)
-  - P3: □φ → □always φ (necessity of perpetuity)
-  - P4: ◇sometimes φ → ◇φ (possibility of occurrence)
-  - P5: ◇sometimes φ → always ◇φ (persistent possibility)
-  - P6: sometimes □φ → □always φ (occurrent necessity is perpetual)
+  - P1: `□φ → always φ` (necessary implies always)
+  - P2: `sometimes φ → ◇φ` (sometimes implies possible)
+  - P3: `□φ → □always φ` (necessity of perpetuity)
+  - P4: `◇sometimes φ → ◇φ` (possibility of occurrence)
+  - P5: `◇sometimes φ → always ◇φ` (persistent possibility)
+  - P6: `sometimes □φ → □always φ` (occurrent necessity is perpetual)
 
 ## 7. Testing Architecture
 
-```
-ProofCheckerTest/
-├── ProofCheckerTest.lean       # Test library root
-├── Syntax/                     # Unit tests for formula construction, parsing
-│   └── FormulaTest.lean
-├── ProofSystem/                # Unit tests for axiom application, rule correctness
-│   ├── AxiomsTest.lean
-│   └── RulesTest.lean
-├── Semantics/                  # Unit tests for truth evaluation, validity
-│   ├── TaskFrameTest.lean
-│   └── ValidityTest.lean
-├── Integration/                # Cross-module integration tests
-│   ├── SoundnessTest.lean      # End-to-end soundness verification
-│   └── CompletenessTest.lean   # Completeness with canonical model
-└── Metalogic/                  # Property tests
-    └── ConsistencyTest.lean    # TM-consistency preservation
-```
+ProofChecker test suite is organized in ProofCheckerTest/ directory with unit tests (Syntax/, ProofSystem/, Semantics/), integration tests (Integration/), and metalogic property tests (Metalogic/).
 
-### Test Naming Convention
+**Test Naming Convention**:
 - Files: `<Module>Test.lean` (e.g., `FormulaTest.lean`)
 - Tests: `test_<feature>_<expected_behavior>` (e.g., `test_modal_t_valid`)
 
+**For complete testing standards and quality metrics**, see [Testing Protocols](.claude/docs/reference/standards/testing-protocols.md).
+
 ## 8. Quality Standards
 
-### Coverage Targets
-- Overall: ≥85%
-- Metalogic/: ≥90% (soundness, completeness critical)
-- Automation/: ≥80%
-- Error handling: ≥75%
+**Coverage Targets**: Overall ≥85%, Metalogic ≥90%, Automation ≥80%, Error handling ≥75%
 
-### Lint Requirements
-- `#lint`: Zero warnings
-- `docBlame`: 100% documented definitions
-- `docBlameThm`: 100% documented theorems
+**Lint Requirements**: Zero #lint warnings, 100% docBlame/docBlameThm coverage
 
-### Performance Benchmarks
-- Build time: <2 minutes
-- Test execution: <30 seconds
-- Proof search: <1 second per query
-- Documentation generation: <1 minute
+**Performance Benchmarks**: Build <2min, Test <30sec, Proof search <1sec, Docs <1min
 
-### Complexity Limits
-- Function complexity: <50 lines
-- Module size: <1000 lines
-- Max nesting depth: 4 levels
-- Proof tactic count: <20 tactics per proof
+**For complete quality metrics and complexity limits**, see [Testing Protocols](.claude/docs/reference/standards/testing-protocols.md).
 
 ## 9. Common Tasks
 
@@ -251,29 +227,12 @@ ProofCheckerTest/
 
 ## 10. Notes for Claude Code
 
-### LEAN 4 Syntax Requirements
-- LEAN 4 syntax is strict; use `#check` and `#eval` to verify expressions
-- Always check for implicit arguments when applying theorems
-- Use `sorry` temporarily, but never commit unproven theorems
+**LEAN 4 Syntax**: LEAN 4 syntax is strict. Use `#check`, `#eval` to verify expressions. Never commit unproven theorems (`sorry`).
 
-### Common Patterns
-- Use `by` blocks for tactic proofs
-- Use `where` for local definitions
-- Use `have` for intermediate steps with named hypotheses
-- Use `calc` for equational reasoning
+**Common Patterns**: Use `by` for tactic proofs, `where` for local definitions, `have` for intermediate steps, `calc` for equational reasoning.
 
-### Refer to Style Guide
-- Follow `docs/development/LEAN_STYLE_GUIDE.md` for all code
-- 100-character line limit, 2-space indentation
-- Flush-left declarations (no indentation after `def`/`theorem`)
+**For complete LEAN 4 patterns, error handling, and TDD guidance**, see:
+- [Code Standards](.claude/docs/reference/standards/code-standards.md) - LEAN 4 syntax requirements, common patterns, TDD enforcement, common errors
+- [LEAN Style Guide](docs/development/LEAN_STYLE_GUIDE.md) - 100-char line limit, 2-space indentation, flush-left declarations
 
-### TDD Enforcement
-- Every new feature requires tests first
-- Run `lake test` before committing
-- CI will reject PRs with failing tests or missing coverage
-
-### Common Errors
-- Missing implicit arguments: Use `@function` for explicit application
-- Universe issues: Check `Type u` annotations
-- Dependent type errors: Ensure propositions are `Prop`, not `Bool`
-- Tactic failures: Use `trace` or `sorry` to debug incrementally
+**TDD Enforcement**: Every new feature requires tests first. Run `lake test` before committing. CI rejects PRs with failing tests.

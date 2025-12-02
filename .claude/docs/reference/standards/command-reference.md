@@ -26,6 +26,7 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 - [/example-with-agent](#example-with-agent)
 - [/expand](#expand)
 - [/list](#list)
+- [/optimize-claude](#optimize-claude)
 - [/plan](#plan)
 - [/plan-from-template](#plan-from-template)
 - [/plan-wizard](#plan-wizard)
@@ -307,6 +308,39 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 **Output**: Formatted list with metadata
 
 **See**: [list.md](../../commands/list.md)
+
+---
+
+### /optimize-claude
+**Purpose**: Analyze CLAUDE.md and .claude/docs/ structure to generate optimization plan for documentation bloat reduction and quality improvement
+
+**Usage**: `/optimize-claude "[description] [--threshold <profile>] [--dry-run] [--file <report>]"`
+
+**Type**: orchestrator
+
+**Arguments**:
+- `description` (optional): Custom description of optimization focus (default: "Optimize CLAUDE.md structure and documentation")
+- `--threshold <profile>` (optional): Bloat detection threshold profile - aggressive (50/30 lines), balanced (80/50 lines), conservative (120/80 lines) (default: balanced)
+- `--aggressive`: Shorthand for --threshold aggressive
+- `--balanced`: Shorthand for --threshold balanced (default)
+- `--conservative`: Shorthand for --threshold conservative
+- `--dry-run` (optional): Preview workflow stages without executing agents
+- `--file <path>` (optional, repeatable): Additional report file for context-aware analysis
+
+**Agents Used**:
+- `claude-md-analyzer` (Haiku 4.5): Analyze CLAUDE.md structure and identify bloated sections
+- `docs-structure-analyzer` (Haiku 4.5): Analyze .claude/docs/ organization and identify integration opportunities
+- `docs-bloat-analyzer` (Opus 4.5): Perform semantic bloat analysis and assess extraction risks using soft guidance model
+- `docs-accuracy-analyzer` (Opus 4.5): Evaluate documentation quality across 6 dimensions (accuracy, completeness, consistency, timeliness, usability, clarity)
+- `cleanup-plan-architect` (Sonnet 4.5): Synthesize research reports and generate implementation plan with advisory size guidance
+
+**Output**: Optimization plan with CLAUDE.md extraction phases, bloat prevention tasks (soft guidance, not hard blockers), accuracy fixes, and quality improvements
+
+**Workflow**: `setup → research (parallel: claude-md + docs-structure) → analysis (parallel: bloat + accuracy) → planning (cleanup-plan-architect) → display`
+
+**Automatically updates TODO.md**: No (manual plan tracking via /build)
+
+**See**: [optimize-claude.md](../../commands/optimize-claude.md)
 
 ---
 

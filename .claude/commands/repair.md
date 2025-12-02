@@ -161,6 +161,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/workflow-initialization.sh" 2
   echo "ERROR: Failed to source workflow-initialization.sh" >&2
   exit 1
 }
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source todo-functions.sh" >&2
+  exit 1
+}
 
 # Verify library versions
 check_library_requirements "$(cat <<'EOF'
@@ -875,6 +879,116 @@ echo ""
 echo "[CHECKPOINT] Block 2a planning setup complete"
 ```
 
+## Block 2a-standards: Extract Project Standards
+
+**EXECUTE NOW**: Extract project standards for plan-architect agent.
+
+```bash
+set +H  # CRITICAL: Disable history expansion
+
+# === DETECT PROJECT DIRECTORY ===
+if command -v git &>/dev/null && git rev-parse --git-dir >/dev/null 2>&1; then
+  CLAUDE_PROJECT_DIR="$(git rev-parse --show-toplevel)"
+else
+  current_dir="$(pwd)"
+  while [ "$current_dir" != "/" ]; do
+    if [ -d "$current_dir/.claude" ]; then
+      CLAUDE_PROJECT_DIR="$current_dir"
+      break
+    fi
+    current_dir="$(dirname "$current_dir")"
+  done
+fi
+
+if [ -z "$CLAUDE_PROJECT_DIR" ] || [ ! -d "$CLAUDE_PROJECT_DIR/.claude" ]; then
+  echo "ERROR: Failed to detect project directory" >&2
+  exit 1
+fi
+
+export CLAUDE_PROJECT_DIR
+
+# === RESTORE STATE FROM BLOCK 2A ===
+STATE_ID_FILE="${CLAUDE_PROJECT_DIR}/.claude/tmp/repair_state_id.txt"
+WORKFLOW_ID=$(cat "$STATE_ID_FILE" 2>/dev/null)
+
+if [ -z "$WORKFLOW_ID" ]; then
+  echo "ERROR: Failed to restore WORKFLOW_ID from Block 2a" >&2
+  exit 1
+fi
+
+# Restore workflow state
+STATE_FILE="${CLAUDE_PROJECT_DIR}/.claude/tmp/workflow_${WORKFLOW_ID}.sh"
+if [ -f "$STATE_FILE" ]; then
+  source "$STATE_FILE"
+else
+  echo "ERROR: State file not found: $STATE_FILE" >&2
+  exit 1
+fi
+
+COMMAND_NAME="/repair"
+USER_ARGS="${ERROR_DESCRIPTION:-}"
+export COMMAND_NAME USER_ARGS WORKFLOW_ID
+
+# Source libraries
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source error-handling.sh" >&2
+  exit 1
+}
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/state-persistence.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source state-persistence.sh" >&2
+  exit 1
+}
+
+# Setup bash error trap
+setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
+
+# === EXTRACT PROJECT STANDARDS ===
+# Source standards extraction library
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/plan/standards-extraction.sh" 2>/dev/null || {
+  log_command_error \
+    "$COMMAND_NAME" \
+    "$WORKFLOW_ID" \
+    "$USER_ARGS" \
+    "file_error" \
+    "Failed to source standards-extraction library" \
+    "bash_block_2a_standards" \
+    "$(jq -n --arg path "${CLAUDE_PROJECT_DIR}/.claude/lib/plan/standards-extraction.sh" '{library_path: $path}')"
+  echo "WARNING: Standards extraction unavailable, proceeding without standards" >&2
+  FORMATTED_STANDARDS=""
+}
+
+# Extract and format standards for prompt injection
+if [ -z "${FORMATTED_STANDARDS:-}" ]; then
+  FORMATTED_STANDARDS=$(format_standards_for_prompt 2>/dev/null) || {
+    log_command_error \
+      "$COMMAND_NAME" \
+      "$WORKFLOW_ID" \
+      "$USER_ARGS" \
+      "execution_error" \
+      "Standards extraction failed" \
+      "bash_block_2a_standards" \
+      "{}"
+    echo "WARNING: Standards extraction failed, proceeding without standards" >&2
+    FORMATTED_STANDARDS=""
+  }
+fi
+
+# Persist standards for Block 2b-exec
+append_workflow_state "FORMATTED_STANDARDS<<STANDARDS_EOF
+$FORMATTED_STANDARDS
+STANDARDS_EOF"
+
+if [ -n "$FORMATTED_STANDARDS" ]; then
+  STANDARDS_COUNT=$(echo "$FORMATTED_STANDARDS" | grep -c "^###" || echo 0)
+  echo "Extracted $STANDARDS_COUNT standards sections for plan-architect"
+else
+  echo "No standards extracted (graceful degradation)"
+fi
+
+echo ""
+echo "[CHECKPOINT] Standards extraction complete"
+```
+
 ## Block 2b: Plan Path Pre-Calculation
 
 **EXECUTE NOW**: Pre-calculate the absolute plan path before invoking plan-architect.
@@ -1053,6 +1167,9 @@ Task {
     - Research Reports: ${REPORT_PATHS_JSON}
     - Workflow Type: research-and-plan
     - Operation Mode: new plan creation
+
+    **Project Standards**:
+    ${FORMATTED_STANDARDS}
 
     **CRITICAL**: You MUST create the plan file at the EXACT path specified above.
     The orchestrator has pre-calculated this path and will validate it exists after you return.
@@ -1452,7 +1569,6 @@ if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
 fi
 
 # === UPDATE TODO.md ===
-# Pattern F: /repair command (after PLAN_CREATED signal)
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# Trigger TODO.md regeneration via delegation pattern
+trigger_todo_update "repair plan created"
 ```

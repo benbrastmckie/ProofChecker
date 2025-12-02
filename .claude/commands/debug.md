@@ -196,6 +196,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
   echo "ERROR: Failed to source error-handling.sh" >&2
   exit 1
 }
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source todo-functions.sh" >&2
+  exit 1
+}
 
 # Source remaining libraries with diagnostics
 _source_with_diagnostics "${CLAUDE_PROJECT_DIR}/.claude/lib/core/state-persistence.sh" || exit 1
@@ -1471,9 +1475,18 @@ if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
 fi
 
 # === UPDATE TODO.md ===
-# Pattern E: /debug command (after DEBUG_REPORT_CREATED signal)
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# Trigger TODO.md regeneration via delegation pattern
+# Handle standalone debug (no plan) case with context-aware message
+TOPIC_PATH=$(dirname "$(dirname "$PLAN_PATH")")
+PLAN_FILE=$(find "$TOPIC_PATH/plans" -name '*.md' -type f 2>/dev/null | head -1)
+
+if [ -n "$PLAN_FILE" ] && [ -f "$PLAN_FILE" ]; then
+  echo "Debug report linked to plan: $(basename "$PLAN_FILE")"
+  trigger_todo_update "debug report added to plan"
+else
+  echo "Debug report is standalone (no plan in topic)"
+  trigger_todo_update "standalone debug report"
+fi
 
 # Cleanup temp state file
 # CRITICAL: Use CLAUDE_PROJECT_DIR for consistent path

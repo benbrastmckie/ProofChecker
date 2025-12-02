@@ -178,6 +178,10 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
   echo "ERROR: Failed to source error-handling.sh" >&2
   exit 1
 }
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "ERROR: Failed to source todo-functions.sh" >&2
+  exit 1
+}
 
 # === INITIALIZE ERROR LOGGING ===
 ensure_error_log_exists
@@ -708,6 +712,16 @@ if [ -n "$REPORT_PATH" ] && [ -f "$REPORT_PATH" ]; then
   echo ""
   echo "REPORT_CREATED: $REPORT_PATH"
   echo ""
+fi
+
+# === UPDATE TODO.md ===
+# Trigger TODO.md regeneration via delegation pattern (report mode only)
+# Query mode doesn't create files so no TODO.md update needed
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
+}
+if command -v trigger_todo_update &>/dev/null; then
+  trigger_todo_update "error analysis report"
 fi
 
 # Cleanup temporary state file

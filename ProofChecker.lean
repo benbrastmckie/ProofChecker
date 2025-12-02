@@ -42,7 +42,7 @@ import ProofChecker.ProofSystem.Axioms
 -/
 
 -- Re-export public API when modules are implemented
--- import ProofChecker.Syntax
+import ProofChecker.Syntax
 -- import ProofChecker.ProofSystem
 -- import ProofChecker.Semantics
 -- import ProofChecker.Metalogic

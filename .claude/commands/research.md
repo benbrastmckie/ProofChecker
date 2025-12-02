@@ -135,6 +135,9 @@ _source_with_diagnostics "${CLAUDE_PROJECT_DIR}/.claude/lib/core/library-version
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/unified-location-detection.sh" 2>/dev/null || true
 source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/workflow-initialization.sh" 2>/dev/null || true
 
+# Tier 3: Helper utilities (graceful degradation)
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+
 # Verify library versions
 check_library_requirements "$(cat <<'EOF'
 workflow-state-machine.sh: ">=2.0.0"
@@ -444,6 +447,9 @@ source "${CLAUDE_PROJECT_DIR}/.claude/lib/core/error-handling.sh" 2>/dev/null ||
   exit 1
 }
 
+# Source validation utilities for agent artifact validation
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/workflow/validation-utils.sh" 2>/dev/null || true
+
 # Setup bash error trap
 setup_bash_error_trap "$COMMAND_NAME" "$WORKFLOW_ID" "$USER_ARGS"
 
@@ -468,28 +474,23 @@ fi
 
 echo "Expected topic name file: $TOPIC_NAME_FILE"
 
-# HARD BARRIER: Topic name file MUST exist
-if [ ! -f "$TOPIC_NAME_FILE" ]; then
-  log_command_error \
-    "$COMMAND_NAME" \
-    "$WORKFLOW_ID" \
-    "$USER_ARGS" \
-    "agent_error" \
-    "topic-naming-agent failed to create output file" \
-    "bash_block_1c" \
-    "$(jq -n --arg path "$TOPIC_NAME_FILE" '{expected_path: $path}')"
-
-  echo "ERROR: HARD BARRIER FAILED - Topic name file not found at: $TOPIC_NAME_FILE" >&2
+# HARD BARRIER: Validate agent artifact using validation-utils.sh
+# validate_agent_artifact checks file existence and minimum size (10 bytes)
+if ! validate_agent_artifact "$TOPIC_NAME_FILE" 10 "topic name"; then
+  # Error already logged by validate_agent_artifact
+  echo "ERROR: HARD BARRIER FAILED - Topic naming agent validation failed" >&2
   echo "" >&2
-  echo "This indicates the topic-naming-agent did not create the expected output." >&2
+  echo "This indicates the topic-naming-agent did not create valid output." >&2
   echo "The workflow will fall back to 'no_name_error' directory." >&2
+  echo "" >&2
+  echo "To retry: Re-run the /research command with the same arguments" >&2
   echo "" >&2
 
   # Unlike research reports, topic naming failure is non-fatal
   # Continue with fallback but log the error
   echo "Falling back to no_name_error directory..." >&2
 else
-  echo "✓ Hard barrier passed - topic name file exists"
+  echo "✓ Hard barrier passed - topic name file validated"
 fi
 
 echo ""

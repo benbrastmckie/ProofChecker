@@ -8,7 +8,7 @@ This guide documents the signal-triggered delegation pattern for automatic TODO.
 
 ## Scope
 
-Six commands implement automatic TODO.md updates:
+Seven commands implement automatic TODO.md updates:
 
 | Command | Trigger Points | Signal/Action | Section Transition |
 |---------|---------------|---------------|-------------------|
@@ -18,6 +18,7 @@ Six commands implement automatic TODO.md updates:
 | `/research` | After report creation | `REPORT_CREATED` signal | → Research Reports |
 | `/debug` | After debug report creation | `DEBUG_REPORT_CREATED` signal | → Debug Reports |
 | `/repair` | After repair plan creation | `PLAN_CREATED` signal | → Not Started |
+| `/errors` | After error analysis report (report mode) | `trigger_todo_update()` | → Research Reports |
 | `/revise` | After plan modification | `PLAN_REVISED` signal | Status unchanged |
 
 ## Signal-Triggered Delegation Pattern
@@ -495,4 +496,21 @@ The signal-triggered delegation pattern provides:
 - **Maintainability**: Single source of truth for TODO.md formatting
 - **Performance**: Full scan fast enough for all use cases (2-3 seconds)
 
-All six commands (`/build`, `/plan`, `/research`, `/debug`, `/repair`, `/revise`) use identical delegation patterns, ensuring uniform behavior and easy maintenance.
+All seven commands (`/build`, `/plan`, `/research`, `/debug`, `/repair`, `/errors`, `/revise`) use identical delegation patterns, ensuring uniform behavior and easy maintenance.
+
+## Helper Function: trigger_todo_update()
+
+For simpler integration, commands can use the `trigger_todo_update()` helper function from `todo-functions.sh`:
+
+```bash
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh"
+
+# After creating/modifying artifact
+trigger_todo_update "repair plan created"
+```
+
+This function:
+- Delegates to `/todo` command silently
+- Outputs "✓ Updated TODO.md (reason)" on success
+- Logs warning on failure but does not block the calling command (non-blocking)
+- Follows the same delegation pattern as direct `bash -c` calls

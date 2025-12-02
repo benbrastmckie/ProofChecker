@@ -11,7 +11,8 @@ Mandatory standards for creating and maintaining executable command files in `.c
 5. [Validation and Testing](#validation-and-testing)
 6. [Argument Capture Patterns](#argument-capture-patterns)
 7. [Output Suppression Requirements](#output-suppression-requirements)
-8. [Prohibited Patterns](#prohibited-patterns)
+8. [Command Integration Patterns](#command-integration-patterns)
+9. [Prohibited Patterns](#prohibited-patterns)
 
 ---
 
@@ -938,6 +939,161 @@ mkdir -p "${TOPIC_DIR}/debug"
 This ensures directories exist only when they contain files. Empty directories indicate a lazy creation violation and are detected by the integration test suite.
 
 See [Directory Creation Anti-Patterns](code-standards.md#directory-creation-anti-patterns) for complete guidance and examples.
+
+---
+
+## Command Integration Patterns
+
+Commands often need to integrate with other commands via file-based handoff. The summary-based handoff pattern enables decoupled state passing between commands.
+
+### Summary-Based Handoff Pattern
+
+When Command A produces artifacts that Command B consumes, use summary files as the integration point instead of direct state files.
+
+**Pattern Benefits**:
+- Decoupled state (commands don't share state files)
+- Human-readable integration (summaries are markdown)
+- Auditable workflow (summaries document what was done)
+- Flexible timing (Command B can run immediately or later)
+
+### --file Flag Pattern
+
+Commands that consume summaries from other commands should support a `--file` flag for explicit summary path specification.
+
+**Implementation**:
+
+```bash
+# In argument parsing block
+SUMMARY_FILE=""
+if [[ "$COMMAND_ARGS" =~ --file[[:space:]]+([^[:space:]]+) ]]; then
+  SUMMARY_FILE="${BASH_REMATCH[1]}"
+fi
+
+# Validate summary file exists
+if [ -n "$SUMMARY_FILE" ] && [ ! -f "$SUMMARY_FILE" ]; then
+  log_command_error "validation_error" \
+    "Summary file not found" \
+    "Path: $SUMMARY_FILE"
+  exit 1
+fi
+
+# Extract data from summary
+if [ -n "$SUMMARY_FILE" ]; then
+  # Example: Extract plan path from summary metadata
+  PLAN_FILE=$(grep "^- \*\*Plan\*\*:" "$SUMMARY_FILE" | sed 's/.*: //')
+  TEST_CONTEXT="summary"
+fi
+```
+
+**Usage Example**:
+```bash
+# Command A produces summary
+/implement plan.md
+# Creates: summaries/001-iteration-1-implementation-summary.md
+
+# Command B consumes summary via --file flag
+/test --file summaries/001-iteration-1-implementation-summary.md
+```
+
+### Auto-Discovery Pattern
+
+Commands should support auto-discovery of latest summary when --file flag not provided, with graceful fallback.
+
+**Implementation**:
+
+```bash
+# Auto-discovery if --file not provided but plan file given
+if [ -z "$SUMMARY_FILE" ] && [ -n "$PLAN_FILE" ]; then
+  # Derive topic path from plan file
+  TOPIC_PATH=$(dirname "$(dirname "$PLAN_FILE")")
+  SUMMARIES_DIR="${TOPIC_PATH}/summaries"
+
+  # Find latest summary by modification time
+  if [ -d "$SUMMARIES_DIR" ]; then
+    LATEST_SUMMARY=$(find "$SUMMARIES_DIR" -name "*.md" -type f -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
+
+    if [ -n "$LATEST_SUMMARY" ]; then
+      SUMMARY_FILE="$LATEST_SUMMARY"
+      TEST_CONTEXT="auto-discovered"
+    else
+      # Graceful fallback: no summary found
+      echo "WARNING: No summary found in $SUMMARIES_DIR (proceeding without summary context)"
+      TEST_CONTEXT="no-summary"
+    fi
+  fi
+fi
+```
+
+**Usage Example**:
+```bash
+# Auto-discovery from plan file
+/test plan.md
+# Automatically finds latest summary in plan's topic directory
+```
+
+### Required Summary Metadata
+
+Commands producing summaries for consumption by other commands must include metadata section for parsing.
+
+**Metadata Format**:
+```markdown
+## Metadata
+
+- **Date**: 2025-12-01
+- **Plan**: /absolute/path/to/plan.md
+- **Topic Path**: /absolute/path/to/topic
+- **Iteration**: 1
+```
+
+This enables downstream commands to extract paths without relying on state files.
+
+### Integration Examples
+
+#### /implement → /test Workflow
+
+```bash
+# /implement creates summary with Testing Strategy section
+/implement specs/042_auth/plans/001_auth_plan.md
+# Creates: specs/042_auth/summaries/001-iteration-1-implementation-summary.md
+# Summary includes: Testing Strategy section with test files, commands, coverage target
+
+# /test consumes summary (auto-discovery)
+/test specs/042_auth/plans/001_auth_plan.md
+# Reads Testing Strategy from auto-discovered summary
+# Executes tests with coverage loop
+```
+
+#### /research → /plan Workflow
+
+```bash
+# /research creates research report
+/research "authentication feature"
+# Creates: specs/042_auth/reports/001-auth-research.md
+
+# /plan consumes research report via --file flag
+/plan --file specs/042_auth/reports/001-auth-research.md
+# Reads research findings and creates implementation plan
+```
+
+### State File vs Summary File
+
+**State Files** (`.state/*.sh`):
+- Bash-sourceable variable assignments
+- Machine-readable only
+- Temporary (deleted on completion)
+- Command-specific (not for cross-command handoff)
+
+**Summary Files** (`summaries/*.md`):
+- Human-readable markdown
+- Auditable workflow documentation
+- Persistent (kept for history)
+- Cross-command handoff mechanism
+
+**When to Use Each**:
+- Use state files for intra-command state (between blocks in same command)
+- Use summary files for inter-command state (between different commands)
+
+See [Implement-Test Workflow Guide](./../../guides/workflows/implement-test-workflow.md) for complete summary-based handoff examples.
 
 ---
 

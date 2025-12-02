@@ -156,6 +156,67 @@ def or (φ ψ : Formula) : Formula := (neg φ).imp ψ
 theorem example_theorem (φ : Formula) : ⊢ (φ.imp φ) := by
 ```
 
+### Code Comments with Formal Symbols
+
+When writing inline comments that reference formal symbols (modal operators, propositional variables, meta-logical symbols), wrap these symbols in backticks for improved readability in editor tooltips and documentation generators.
+
+**Good Examples**:
+```lean
+-- MT axiom: `□φ → φ` (reflexivity of necessity)
+theorem modal_t (φ : Formula) : ⊢ (φ.box.imp φ) := by
+  apply Derivable.axiom
+  apply Axiom.modal_t
+
+-- Perpetuity principle P1: `□φ → always φ`
+theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
+  sorry
+
+-- Soundness: if `Γ ⊢ φ` then `Γ ⊨ φ`
+theorem soundness (Γ : Context) (φ : Formula) : Γ ⊢ φ → Γ ⊨ φ := by
+  sorry
+```
+
+**Avoid (but acceptable)**:
+```lean
+-- MT axiom: □φ → φ (reflexivity of necessity)
+-- Perpetuity principle P1: □φ → always φ
+-- Soundness: if Γ ⊢ φ then Γ ⊨ φ
+```
+
+**Rationale**:
+- Backticks improve visual clarity in VS Code hover tooltips
+- Consistent with markdown documentation standards (see `.claude/docs/reference/standards/documentation-standards.md`)
+- Monospace rendering distinguishes formal symbols from prose text
+
+**Special Cases**:
+
+1. **Multi-line docstrings** (`/-! ... -/`): Backticks are optional but encouraged
+   ```lean
+   /-!
+   The perpetuity principle P1 states that `□φ → always φ`.
+   Alternatively acceptable: □φ → always φ (in docstring context).
+   -/
+   ```
+
+2. **Single-line docstrings** (`/-- ... -/`): Use backticks for inline formula references
+   ```lean
+   /-- The soundness theorem: if `Γ ⊢ φ` then `Γ ⊨ φ`. -/
+   theorem soundness (Γ : Context) (φ : Formula) : Γ ⊢ φ → Γ ⊨ φ := by
+     sorry
+   ```
+
+3. **Code examples in docstrings**: Symbols in code blocks do NOT need additional backticks
+   ```lean
+   /-- Apply modus ponens.
+
+   Example:
+   ```lean
+   -- This is already a code block, no backticks needed
+   theorem mp_example : [P.imp Q, P] ⊢ Q := by ...
+   ```
+   -/
+   ```
+
 ## 3. Import Organization
 
 ### Import Order
