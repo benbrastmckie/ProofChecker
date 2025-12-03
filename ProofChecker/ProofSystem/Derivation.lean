@@ -21,8 +21,8 @@ The derivability relation includes 7 inference rules:
 1. **axiom**: Any axiom schema instance is derivable
 2. **assumption**: Formulas in context are derivable
 3. **modus_ponens**: If `Γ ⊢ φ → ψ` and `Γ ⊢ φ` then `Γ ⊢ ψ`
-4. **modal_k**: If `Γ.map box ⊢ φ` then `Γ ⊢ □φ`
-5. **temporal_k**: If `Γ.map future ⊢ φ` then `Γ ⊢ Fφ`
+4. **modal_k**: If `Γ ⊢ φ` then `□Γ ⊢ □φ` (JPL line 1030)
+5. **temporal_k**: If `Γ ⊢ φ` then `FΓ ⊢ Fφ` (JPL line 1037)
 6. **temporal_duality**: If `⊢ φ` then `⊢ swap_past_future φ`
 7. **weakening**: If `Γ ⊢ φ` and `Γ ⊆ Δ` then `Δ ⊢ φ`
 
@@ -82,24 +82,28 @@ inductive Derivable : Context → Formula → Prop where
   /--
   Modal K rule: Distribution of □ over derivation.
 
-  If `□Γ ⊢ φ` (where □Γ = Γ.map box), then `Γ ⊢ □φ`.
+  If `Γ ⊢ φ`, then `□Γ ⊢ □φ` (where □Γ = Γ.map box).
 
-  This rule expresses: if φ follows from necessary assumptions,
-  then □φ follows from the original assumptions.
+  This rule expresses: if φ follows from assumptions Γ,
+  then □φ follows from the necessary versions of those assumptions.
+
+  Paper reference: JPL §sec:Appendix, line 1030
   -/
   | modal_k (Γ : Context) (φ : Formula)
-      (h : Derivable (Context.map Formula.box Γ) φ) : Derivable Γ (Formula.box φ)
+      (h : Derivable Γ φ) : Derivable (Context.map Formula.box Γ) (Formula.box φ)
 
   /--
   Temporal K rule: Distribution of F over derivation.
 
-  If `FΓ ⊢ φ` (where FΓ = Γ.map future), then `Γ ⊢ Fφ`.
+  If `Γ ⊢ φ`, then `FΓ ⊢ Fφ` (where FΓ = Γ.map future).
 
-  This rule expresses: if φ follows from future assumptions,
-  then Fφ follows from the original assumptions.
+  This rule expresses: if φ follows from assumptions Γ,
+  then Fφ follows from the future versions of those assumptions.
+
+  Paper reference: JPL §sec:Appendix, line 1037
   -/
   | temporal_k (Γ : Context) (φ : Formula)
-      (h : Derivable (Context.map Formula.future Γ) φ) : Derivable Γ (Formula.future φ)
+      (h : Derivable Γ φ) : Derivable (Context.map Formula.future Γ) (Formula.future φ)
 
   /--
   Temporal duality rule: Swapping past and future in theorems.

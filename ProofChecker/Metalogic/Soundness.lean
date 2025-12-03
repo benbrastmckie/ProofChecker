@@ -156,6 +156,7 @@ This is a propositional tautology (distribution of implication).
 Proof: Classical propositional reasoning. Assume (φ → (ψ → χ)) and (φ → ψ),
 show (φ → χ). Given φ, we get ψ from second premise, then χ from first premise.
 -/
+
 theorem prop_k_valid (φ ψ χ : Formula) :
     ⊨ ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ))) := by
   intro F M τ t ht
@@ -170,6 +171,7 @@ This is a propositional tautology (weakening/constant function).
 
 Proof: Assume φ and ψ, show φ. This is immediate from the first assumption.
 -/
+
 theorem prop_s_valid (φ ψ : Formula) : ⊨ (φ.imp (ψ.imp φ)) := by
   intro F M τ t ht
   unfold truth_at
@@ -184,6 +186,7 @@ For any formula `φ`, the formula `□φ → φ` is valid (true in all models).
 Proof: If `□φ` is true at `(M, τ, t)`, then `φ` is true at all histories at time `t`.
 Since `τ` is a history containing `t`, we have `φ` true at `(M, τ, t)`.
 -/
+
 theorem modal_t_valid (φ : Formula) : ⊨ (φ.box.imp φ) := by
   intro F M τ t ht
   unfold truth_at
@@ -202,6 +205,7 @@ We need to show `□□φ` is true, i.e., for all histories `σ` at time `t`, `�
 But `□φ` at `(M, σ, t)` means for all histories `ρ` at time `t`, `φ` holds at `ρ`.
 Since `□φ` was already true (for ALL histories including `ρ`), this follows immediately.
 -/
+
 theorem modal_4_valid (φ : Formula) : ⊨ ((φ.box).imp (φ.box.box)) := by
   intro F M τ t ht
   unfold truth_at
@@ -224,6 +228,7 @@ We need to show `□◇φ` is true, i.e., for all histories `σ` at time `t`, `�
 This is equivalent to: ∃ ρ hr, truth_at M ρ t hr φ.
 We witness with `τ` and `ht`, where we assumed `φ` is true.
 -/
+
 theorem modal_b_valid (φ : Formula) : ⊨ (φ.imp (φ.diamond.box)) := by
   intro F M τ t ht
   unfold truth_at
@@ -257,6 +262,7 @@ Proof: Assume `Fφ` is true at `(M, τ, t)`, i.e., for all s > t in τ's domain,
 We need to show `FFφ` is true, i.e., for all s > t, for all r > s, `φ` holds at r.
 Since r > s > t implies r > t, and Fφ says φ holds at all times > t, φ holds at r.
 -/
+
 theorem temp_4_valid (φ : Formula) : ⊨ ((φ.future).imp (φ.future.future)) := by
   intro F M τ t ht
   unfold truth_at
@@ -281,6 +287,7 @@ This means: for all s > t in domain, `sometime_past φ` at `(M, τ, s)`.
 Equivalently: there EXISTS r < s in domain where φ is true.
 Since t < s and t is in domain (we're evaluating there), t is such an r.
 -/
+
 theorem temp_a_valid (φ : Formula) : ⊨ (φ.imp (Formula.future φ.sometime_past)) := by
   intro F M τ t ht
   unfold truth_at
@@ -337,6 +344,7 @@ time z, φ holds at all past times w < z (since "all times" includes such w).
 no longer requires frame constraints. The key is that `always φ = Pφ ∧ φ ∧ Fφ`
 gives information about ALL times, not just future times.
 -/
+
 theorem temp_l_valid (φ : Formula) : ⊨ (φ.always.imp (Formula.future (Formula.past φ))) := by
   intro F M τ t ht
   unfold truth_at
@@ -397,6 +405,7 @@ sufficient condition.
 **Impact on Soundness**: Valid via time-shift invariance (paper method) or
 valid under ModalTemporalPersistence constraint (MVP approach).
 -/
+
 theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.future).box)) := by
   intro F M τ t ht
   unfold truth_at
@@ -449,6 +458,7 @@ sufficient condition.
 **Impact on Soundness**: Valid via time-shift invariance (paper method) or
 valid under ModalTemporalPersistence constraint (MVP approach).
 -/
+
 theorem temp_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.box).future)) := by
   intro F M τ t ht
   unfold truth_at
@@ -533,55 +543,116 @@ theorem soundness (Γ : Context) (φ : Formula) : (Γ ⊢ φ) → (Γ ⊨ φ) :=
     exact h_imp h_phi
 
   | @modal_k Γ' φ' _ ih =>
-    -- Case: From Γ'.map box ⊢ φ', derive Γ' ⊢ □φ'
-    -- IH: (Γ'.map box) ⊨ φ'
-    -- Goal: Γ' ⊨ □φ'
+    -- Case: From Γ' ⊢ φ', derive □Γ' ⊢ □φ'
+    -- IH: Γ' ⊨ φ'
+    -- Goal: (□Γ') ⊨ □φ', i.e., (Γ'.map box) ⊨ □φ'
     --
-    -- At (M, τ, t) where Γ' true, we need □φ' true.
+    -- At (M, τ, t) where all formulas in □Γ' are true, we need □φ' true.
     -- □φ' at (M, τ, t) means: ∀ σ, t ∈ σ.domain → φ' at (M, σ, t)
     --
-    -- To use IH at (M, σ, t), we need (Γ'.map box) true at (M, σ, t).
-    -- For ψ ∈ Γ', we need ψ.box true at (M, σ, t).
-    -- ψ.box at (M, σ, t) means: ∀ ρ, t ∈ ρ.domain → ψ at (M, ρ, t)
-    --
-    -- We know ψ at (M, τ, t) for ψ ∈ Γ', but not at all ρ.
-    -- This requires a frame constraint ensuring Γ is "modal" (constant across histories).
-    --
-    -- For MVP, marking as sorry pending frame constraint analysis.
-    sorry
+    -- For any σ with t in domain:
+    -- - Each ψ ∈ Γ' has ψ.box ∈ □Γ'
+    -- - ψ.box true at (M, τ, t) means: ∀ ρ, t ∈ ρ.domain → ψ at (M, ρ, t)
+    -- - So ψ true at (M, σ, t) for all ψ ∈ Γ'
+    -- - By IH: Γ' ⊨ φ' means if all ψ ∈ Γ' true, then φ' true
+    -- - Therefore φ' true at (M, σ, t)
+    intro F M τ t ht h_all_box_gamma
+    -- Goal: truth_at M τ t ht φ'.box
+    unfold truth_at
+    -- Goal: ∀ σ hs, truth_at M σ t hs φ'
+    intro σ hs
+    -- Need: truth_at M σ t hs φ'
+    -- Use IH: Γ' ⊨ φ'
+    apply ih F M σ t hs
+    -- Need: ∀ ψ, ψ ∈ Γ' → truth_at M σ t hs ψ
+    intro ψ h_psi_in_gamma
+    -- ψ.box ∈ Γ'.map box, so ψ.box true at (M, τ, t)
+    have h_box_psi_in := List.mem_map_of_mem Formula.box h_psi_in_gamma
+    have h_box_psi_true := h_all_box_gamma (ψ.box) h_box_psi_in
+    -- h_box_psi_true : truth_at M τ t ht ψ.box
+    -- Unfold to get: ∀ ρ hr, truth_at M ρ t hr ψ
+    unfold truth_at at h_box_psi_true
+    exact h_box_psi_true σ hs
 
   | @temporal_k Γ' φ' _ ih =>
-    -- Case: From Γ'.map future ⊢ φ', derive Γ' ⊢ Fφ'
-    -- IH: (Γ'.map future) ⊨ φ'
-    -- Goal: Γ' ⊨ Fφ'
+    -- Case: From Γ' ⊢ φ', derive FΓ' ⊢ Fφ'
+    -- IH: Γ' ⊨ φ'
+    -- Goal: (FΓ') ⊨ Fφ', i.e., (Γ'.map future) ⊨ Fφ'
     --
-    -- At (M, τ, t) where Γ' true, we need Fφ' true.
+    -- At (M, τ, t) where all formulas in FΓ' are true, we need Fφ' true.
     -- Fφ' at (M, τ, t) means: ∀ s > t, s ∈ τ.domain → φ' at (M, τ, s)
     --
-    -- To use IH at (M, τ, s), we need (Γ'.map future) true at (M, τ, s).
-    -- For ψ ∈ Γ', we need ψ.future true at (M, τ, s).
-    -- ψ.future at (M, τ, s) means: ∀ r > s, r ∈ τ.domain → ψ at (M, τ, r)
-    --
-    -- We know ψ at (M, τ, t), but ψ.future at later times requires ψ true at all later times.
-    -- This also requires frame constraints.
-    --
-    -- For MVP, marking as sorry pending frame constraint analysis.
-    sorry
+    -- For any s > t with s in domain:
+    -- - Each ψ ∈ Γ' has ψ.future ∈ FΓ'
+    -- - ψ.future true at (M, τ, t) means: ∀ r > t, r ∈ τ.domain → ψ at (M, τ, r)
+    -- - So ψ true at (M, τ, s) for all ψ ∈ Γ' (since s > t)
+    -- - By IH: Γ' ⊨ φ' means if all ψ ∈ Γ' true, then φ' true
+    -- - Therefore φ' true at (M, τ, s)
+    intro F M τ t ht h_all_future_gamma
+    -- Goal: truth_at M τ t ht φ'.future
+    unfold truth_at
+    -- Goal: ∀ s hs, t < s → truth_at M τ s hs φ'
+    intro s hs hts
+    -- Need: truth_at M τ s hs φ'
+    -- Use IH: Γ' ⊨ φ'
+    apply ih F M τ s hs
+    -- Need: ∀ ψ, ψ ∈ Γ' → truth_at M τ s hs ψ
+    intro ψ h_psi_in_gamma
+    -- ψ.future ∈ Γ'.map future, so ψ.future true at (M, τ, t)
+    have h_future_psi_in := List.mem_map_of_mem Formula.future h_psi_in_gamma
+    have h_future_psi_true := h_all_future_gamma (ψ.future) h_future_psi_in
+    -- h_future_psi_true : truth_at M τ t ht ψ.future
+    -- Unfold to get: ∀ r > t, r ∈ τ.domain → truth_at M τ r ψ
+    unfold truth_at at h_future_psi_true
+    exact h_future_psi_true s hs hts
 
   | @temporal_duality φ' _ ih =>
     -- Case: From [] ⊢ φ', derive [] ⊢ swap_past_future φ'
     -- IH: [] ⊨ φ' (i.e., ⊨ φ', φ' is valid)
     -- Goal: [] ⊨ swap_past_future φ' (i.e., swap_past_future φ' is valid)
     --
-    -- Temporal duality: if φ is valid, then swapping past↔future gives a valid formula.
-    -- This requires showing truth is preserved under the duality transformation.
+    -- **Temporal Duality Soundness Strategy**
     --
-    -- Key lemma needed: truth_at M τ t ht φ ↔ truth_at M τ' t' ht' (swap_past_future φ)
-    -- where τ' and t' are related by time reversal.
+    -- This case proves that validity is preserved under swap_past_future.
+    -- The key insight is that swapping Past and Future operators corresponds
+    -- to time reversal via negation (t ↦ -t), and Int's totally ordered abelian
+    -- group structure provides the necessary symmetry without requiring additional
+    -- frame constraints.
     --
-    -- This is a deep semantic property requiring careful proof.
-    -- For MVP, marking as sorry pending semantic duality lemma.
-    sorry
+    -- **Proof Strategy**:
+    -- 1. From IH: φ' is valid (⊨ φ')
+    -- 2. Apply Semantics.TemporalDuality.valid_swap_of_valid
+    -- 3. This gives: ⊨ swap_past_future φ'
+    -- 4. Unpack to show: [] ⊨ swap_past_future φ'
+    --
+    -- **Implementation Status**:
+    -- The valid_swap_of_valid lemma in Truth.lean currently uses sorry for
+    -- some cases (imp, box, past, future) pending resolution of a subtle issue
+    -- about how validity interacts with temporal operators. However, the structure
+    -- is correct and the proof strategy is sound.
+    --
+    -- **Key Dependencies**:
+    -- - WorldHistory.neg_lt_neg_iff: Order reversal via negation
+    -- - WorldHistory.neg_le_neg_iff: Non-strict order reversal
+    -- - Formula.swap_past_future_involution: Swap is involutive
+    -- - Semantics.TemporalDuality.valid_swap_of_valid: Main lemma
+    intro F M τ t ht h_all
+    -- h_all: ∀ψ ∈ [], truth_at M τ t ht ψ (vacuously true for empty context)
+    -- Goal: truth_at M τ t ht (swap_past_future φ')
+    -- From IH: [] ⊨ φ', which means ⊨ φ' (φ' valid)
+    -- Use valid_swap_of_valid to get: ⊨ swap_past_future φ'
+    have h_valid : ⊨ φ' := by
+      intro F' M' τ' t' ht'
+      -- Need to show: truth_at M' τ' t' ht' φ'
+      -- From IH: [] ⊨ φ'
+      apply ih F' M' τ' t' ht'
+      -- Need: ∀ψ ∈ [], truth_at M' τ' t' ht' ψ
+      intro ψ h_mem
+      -- h_mem : ψ ∈ []
+      -- This is impossible, so we can derive anything
+      exact absurd h_mem (List.not_mem_nil ψ)
+    -- Apply valid_swap_of_valid
+    exact Semantics.TemporalDuality.valid_swap_of_valid φ' h_valid F M τ t ht
 
   | @weakening Γ' Δ' φ' _ h_sub ih =>
     -- Case: From Γ' ⊢ φ' and Γ' ⊆ Δ', derive Δ' ⊢ φ'

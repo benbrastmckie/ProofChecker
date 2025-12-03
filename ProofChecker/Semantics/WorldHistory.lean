@@ -259,6 +259,55 @@ theorem time_shift_time_shift_neg_states (σ : WorldHistory F) (Δ : Int) (t : I
   have h_eq : t + -Δ + Δ = t := by omega
   exact states_eq_of_time_eq σ (t + -Δ + Δ) t h_eq _ ht
 
+/-! ## Order Reversal Lemmas
+
+These lemmas establish that negation provides an order-reversing automorphism
+on Int. This is crucial for proving temporal duality soundness: swapping past
+and future corresponds to time reversal via negation.
+
+The key insight is that Int's totally ordered abelian group structure provides
+temporal symmetry without requiring additional frame constraints.
+-/
+
+/--
+Negation reverses strict order: s < t ↔ -t < -s
+
+This order reversal is the algebraic foundation for temporal duality.
+When we swap Past and Future operators, the time domain reverses under negation.
+-/
+theorem neg_lt_neg_iff (s t : Int) : s < t ↔ -t < -s := by
+  constructor
+  · intro h
+    omega
+  · intro h
+    omega
+
+/--
+Negation reverses non-strict order: s ≤ t ↔ -t ≤ -s
+-/
+theorem neg_le_neg_iff (s t : Int) : s ≤ t ↔ -t ≤ -s := by
+  constructor
+  · intro h
+    omega
+  · intro h
+    omega
+
+/--
+Double negation is identity: -(-t) = t
+-/
+theorem neg_neg_eq (t : Int) : -(-t) = t := by
+  omega
+
+/--
+Negation is injective: -s = -t ↔ s = t
+-/
+theorem neg_injective (s t : Int) : -s = -t ↔ s = t := by
+  constructor
+  · intro h
+    omega
+  · intro h
+    omega
+
 end WorldHistory
 
 end ProofChecker.Semantics

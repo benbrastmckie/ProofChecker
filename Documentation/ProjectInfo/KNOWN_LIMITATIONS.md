@@ -383,26 +383,72 @@ The current axiomatization is theoretically sound and pragmatically efficient. F
 
 ---
 
-## 4. Automation Stubs
+## 4. Automation Partial Implementation
 
-**Status**: All tactics are function declarations with `sorry` bodies
+**Status**: 4/12 tactics implemented, Aesop integration blocked
 
-### 4.1 Declared Tactics
+### 4.1 Implemented Tactics (2025-12-03)
 
-The `Tactics.lean` module declares 12 tactics (lines vary):
+The `Tactics.lean` module has 4 working tactics:
 
-1. `modal_k` - Apply modal K rule
-2. `temporal_k` - Apply temporal K rule
-3. `modal_t` - Apply modal T axiom
-4. `modal_4` - Apply modal 4 axiom
-5. `modal_b` - Apply modal B axiom
-6. `temp_4` - Apply temporal 4 axiom
-7. `temp_a` - Apply temporal A axiom
-8. `modal_search` - Modal proof search
-9. `temporal_search` - Temporal proof search
-10. `tm_auto` - Full TM automation
-11. `simplify_context` - Context simplification
-12. `apply_axiom` - Generic axiom application
+1. **`apply_axiom`** ✓ - Generic axiom application (macro-based)
+   - **Implementation**: Uses `apply Derivable.axiom; refine ?_`
+   - **Status**: Complete and tested
+
+2. **`modal_t`** ✓ - Apply modal T axiom convenience wrapper
+   - **Implementation**: Macro expanding to `apply_axiom`
+   - **Status**: Complete and tested
+
+3. **`tm_auto`** ✓ - Native TM automation (no Aesop)
+   - **Implementation**: Macro using `first` combinator to try `assumption` and 10 `apply_axiom` attempts
+   - **Status**: Complete (native MVP)
+   - **Limitation**: Single-step search only (no depth), no heuristic ordering
+
+4. **`assumption_search`** ✓ - Context-based assumption finding
+   - **Implementation**: `elab` using TacticM with `getLCtx`, `isDefEq`, `goal.assign`
+   - **Status**: Complete and tested
+
+### 4.2 Aesop Integration Blocker
+
+**Issue**: Adding Aesop/Batteries as dependencies breaks ProofChecker.Semantics.Truth
+
+**Affected File**: `ProofChecker/Semantics/Truth.lean` (lines 476-481)
+
+**Error**:
+```
+error: application type mismatch
+  (truth_proof_irrel M (σ.time_shift (y - x)) s' hs' hs'_cast ψ).mp h_ih
+argument
+  h_ih
+has type
+  truth_at M (σ.time_shift (s' + (y - x) - s')) s' hs'_ih ψ : Prop
+but is expected to have type
+  truth_at M (σ.time_shift (y - x)) s' hs' ψ : Prop
+```
+
+**Root Cause**: Batteries library changes integer simplification behavior. Expression `s' + (y - x) - s'` no longer simplifies to `y - x` automatically. Type-dependent proofs in Truth.lean rely on this simplification.
+
+**Impact**: Cannot add Aesop for advanced automation without fixing Truth.lean.
+
+**Workaround**: Implemented native `tm_auto` using Lean.Meta `first` combinator without external dependencies.
+
+**Resolution Options**:
+1. **Fix Truth.lean** (4-8 hours): Add explicit simplification lemmas or casting to handle `s' + (y - x) - s' = y - x`
+2. **Use native proof search** (current approach): Works for MVP, but less powerful than Aesop
+3. **Upgrade Lean/Batteries** (unknown effort): Use newer versions with better simplification
+
+### 4.3 Not Implemented Tactics
+
+The following 8 tactics are planned but not yet implemented:
+
+1. `modal_k_tactic` - Apply modal K rule
+2. `temporal_k_tactic` - Apply temporal K rule
+3. `modal_4_tactic` - Apply modal 4 axiom
+4. `modal_b_tactic` - Apply modal B axiom
+5. `temp_4_tactic` - Apply temporal 4 axiom
+6. `temp_a_tactic` - Apply temporal A axiom
+7. `modal_search` - Modal proof search
+8. `temporal_search` - Temporal proof search
 
 **All have type signatures but `sorry` implementations.**
 
