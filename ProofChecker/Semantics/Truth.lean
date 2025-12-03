@@ -162,6 +162,105 @@ This relates truth at (σ, y) to truth at (shifted_σ, x).
 namespace TimeShift
 
 /--
+Truth is independent of the domain membership proof (proof irrelevance for truth).
+
+This auxiliary lemma is crucial for transporting truth between different domain membership proofs.
+-/
+theorem truth_proof_irrel (M : TaskModel F) (τ : WorldHistory F) (t : Int)
+    (ht₁ ht₂ : τ.domain t) (φ : Formula) :
+    truth_at M τ t ht₁ φ ↔ truth_at M τ t ht₂ φ := by
+  -- Proof by structural induction on φ
+  induction φ generalizing t ht₁ ht₂ with
+  | atom p =>
+    simp only [truth_at]
+    have : τ.states t ht₁ = τ.states t ht₂ := rfl
+    rw [this]
+  | bot =>
+    simp only [truth_at]
+  | imp ψ χ ih_ψ ih_χ =>
+    simp only [truth_at]
+    constructor
+    · intro h h_ψ
+      have := (ih_ψ t ht₁ ht₂).mpr h_ψ
+      exact (ih_χ t ht₁ ht₂).mp (h this)
+    · intro h h_ψ
+      have := (ih_ψ t ht₁ ht₂).mp h_ψ
+      exact (ih_χ t ht₁ ht₂).mpr (h this)
+  | box ψ ih =>
+    simp only [truth_at]
+  | past ψ ih =>
+    simp only [truth_at]
+  | future ψ ih =>
+    simp only [truth_at]
+
+/--
+Truth transport across equal histories.
+
+When two histories are equal and both domain proofs are valid, truth is preserved.
+-/
+theorem truth_history_eq (M : TaskModel F) (τ₁ τ₂ : WorldHistory F) (t : Int)
+    (ht₁ : τ₁.domain t) (ht₂ : τ₂.domain t) (h_eq : τ₁ = τ₂) (φ : Formula) :
+    truth_at M τ₁ t ht₁ φ ↔ truth_at M τ₂ t ht₂ φ := by
+  subst h_eq
+  exact truth_proof_irrel M τ₂ t ht₁ ht₂ φ
+
+/--
+Truth at double time-shift with opposite amounts equals truth at original history.
+
+This is the key transport lemma for the box case of time_shift_preserves_truth.
+It allows us to transfer truth from (time_shift (time_shift σ Δ) (-Δ)) back to σ.
+-/
+theorem truth_double_shift_cancel (M : TaskModel F) (σ : WorldHistory F) (Δ : Int) (t : Int)
+    (ht : σ.domain t) (ht' : (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)).domain t)
+    (φ : Formula) :
+    truth_at M (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)) t ht' φ ↔
+    truth_at M σ t ht φ := by
+  induction φ generalizing t ht ht' with
+  | atom p =>
+    simp only [truth_at]
+    have h_eq := WorldHistory.time_shift_time_shift_neg_states σ Δ t ht ht'
+    rw [h_eq]
+  | bot =>
+    simp only [truth_at]
+  | imp ψ χ ih_ψ ih_χ =>
+    simp only [truth_at]
+    constructor
+    · intro h h_ψ
+      have h_ψ' := (ih_ψ t ht ht').mpr h_ψ
+      exact (ih_χ t ht ht').mp (h h_ψ')
+    · intro h h_ψ'
+      have h_ψ := (ih_ψ t ht ht').mp h_ψ'
+      exact (ih_χ t ht ht').mpr (h h_ψ)
+  | box ψ ih =>
+    simp only [truth_at]
+    -- Box quantifies over ALL histories at time t, independent of current history
+    -- Both sides quantify over the same set of histories
+  | past ψ ih =>
+    simp only [truth_at]
+    constructor
+    · intro h s hs h_lt
+      -- Need domain proof for s in double-shift
+      have hs' : (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)).domain s := by
+        exact (WorldHistory.time_shift_time_shift_neg_domain_iff σ Δ s).mpr hs
+      exact (ih s hs hs').mp (h s hs' h_lt)
+    · intro h s hs' h_lt
+      -- Need domain proof for s in original
+      have hs : σ.domain s := by
+        exact (WorldHistory.time_shift_time_shift_neg_domain_iff σ Δ s).mp hs'
+      exact (ih s hs hs').mpr (h s hs h_lt)
+  | future ψ ih =>
+    simp only [truth_at]
+    constructor
+    · intro h s hs h_lt
+      have hs' : (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)).domain s := by
+        exact (WorldHistory.time_shift_time_shift_neg_domain_iff σ Δ s).mpr hs
+      exact (ih s hs hs').mp (h s hs' h_lt)
+    · intro h s hs' h_lt
+      have hs : σ.domain s := by
+        exact (WorldHistory.time_shift_time_shift_neg_domain_iff σ Δ s).mp hs'
+      exact (ih s hs hs').mpr (h s hs h_lt)
+
+/--
 Time-shift preserves truth of formulas.
 
 If σ is a history and Δ = y - x, then truth at (σ, y) equals truth at (time_shift σ Δ, x).
@@ -184,16 +283,15 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
     (hx : (WorldHistory.time_shift σ (y - x)).domain x) (hy : σ.domain y) (φ : Formula) :
     truth_at M (WorldHistory.time_shift σ (y - x)) x hx φ ↔ truth_at M σ y hy φ := by
   -- Proof by structural induction on φ
-  induction φ generalizing x y hx hy with
+  induction φ generalizing x y hx hy σ with
   | atom p =>
     -- For atoms, states must match
     -- (time_shift σ Δ).states x = σ.states (x + Δ) = σ.states y
     simp only [truth_at, WorldHistory.time_shift]
     -- Need to show: M.valuation (σ.states (x + (y - x)) hx) p ↔ M.valuation (σ.states y hy) p
     have h_eq : x + (y - x) = y := by omega
-    congr 2
-    · rw [h_eq]
-    · rfl
+    -- Use states_eq_of_time_eq to transport states from (x + (y - x)) to y
+    rw [WorldHistory.states_eq_of_time_eq σ (x + (y - x)) y h_eq _ hy]
 
   | bot =>
     -- Both sides are False
@@ -204,11 +302,11 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
     simp only [truth_at]
     constructor
     · intro h h_psi
-      have h_psi' := (ih_ψ x y hx hy).mpr h_psi
-      exact (ih_χ x y hx hy).mp (h h_psi')
+      have h_psi' := (ih_ψ σ x y hx hy).mpr h_psi
+      exact (ih_χ σ x y hx hy).mp (h h_psi')
     · intro h h_psi'
-      have h_psi := (ih_ψ x y hx hy).mp h_psi'
-      exact (ih_χ x y hx hy).mpr (h h_psi)
+      have h_psi := (ih_ψ σ x y hx hy).mp h_psi'
+      exact (ih_χ σ x y hx hy).mpr (h h_psi)
 
   | box ψ ih =>
     -- For box, both quantify over ALL histories at their times
@@ -224,7 +322,8 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
         rw [h_eq]
         exact hρ_y
       have h1 := h_box_x (WorldHistory.time_shift ρ (y - x)) hρ_x
-      exact (ih x y hρ_x hρ_y).mp h1
+      -- Apply IH with ρ instead of σ
+      exact (ih ρ x y hρ_x hρ_y).mp h1
     · intro h_box_y ρ hρ_x
       -- ρ is a history at time x
       -- time_shift ρ (-(y - x)) = time_shift ρ (x - y) is a history at time y
@@ -235,56 +334,151 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
         exact hρ_x
       have h1 := h_box_y (WorldHistory.time_shift ρ (x - y)) hρ_y
       -- We need to relate back: time_shift (time_shift ρ (x-y)) (y-x) at x equals ρ at x
-      -- Actually we can use IH directly on the shifted history
-      -- ih gives: truth at (time_shift ρ' (y-x), x) ↔ truth at (ρ', y)
-      -- We have h1 : truth at (time_shift ρ (x-y), y)
-      -- We need: truth at (ρ, x)
-      -- Using IH with ρ' = time_shift ρ (x-y):
-      --   truth at (time_shift (time_shift ρ (x-y)) (y-x), x) ↔ truth at (time_shift ρ (x-y), y)
-      -- The LHS needs to equal truth at (ρ, x)
-      -- time_shift (time_shift ρ (x-y)) (y-x) domain at x iff (time_shift ρ (x-y)) domain at x + (y-x) = y
-      -- iff ρ domain at y + (x - y) = x ✓
+      -- The key insight: double shift cancels out
+      -- (time_shift (time_shift ρ (x-y)) (y-x)).states x = ρ.states (x + (y-x) + (x-y)) = ρ.states x
 
-      -- This requires showing the double shift equals the original
-      -- For now, we use a direct argument
+      -- First, apply IH to get truth at double-shifted history
       have hρ_x' : (WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (y - x)).domain x := by
         simp only [WorldHistory.time_shift]
         have h_eq : x + (y - x) + (x - y) = x := by omega
         rw [h_eq]
         exact hρ_x
-      have h2 := (ih x y hρ_x' hρ_y).mpr h1
+      -- Apply IH with time_shift ρ (x - y) instead of σ
+      have h2 := (ih (WorldHistory.time_shift ρ (x - y)) x y hρ_x' hρ_y).mpr h1
       -- h2 : truth_at M (time_shift (time_shift ρ (x-y)) (y-x)) x hρ_x' ψ
       -- Need: truth_at M ρ x hρ_x ψ
-      -- The shifted histories have the same states (up to proof irrelevance)
-      -- This requires a transport lemma
-      sorry
+
+      -- Key insight: (y-x) = -(x-y), so double shift cancels
+      have h_cancel : y - x = -(x - y) := by omega
+      -- Use history extensionality to rewrite the double shift
+      have h_hist_eq : WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (y - x) =
+                       WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (-(x - y)) := by
+        exact WorldHistory.time_shift_congr (WorldHistory.time_shift ρ (x - y)) (y - x) (-(x - y)) h_cancel
+      -- Transport domain proof using history equality
+      have hρ_x'' : (WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (-(x - y))).domain x := by
+        rw [← h_hist_eq]
+        exact hρ_x'
+      -- Transport truth using history equality
+      have h2' : truth_at M (WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (-(x - y))) x hρ_x'' ψ := by
+        exact (truth_history_eq M _ _ x hρ_x' hρ_x'' h_hist_eq ψ).mp h2
+      -- Use truth_double_shift_cancel to transport from double-shifted history to original
+      exact (truth_double_shift_cancel M ρ (x - y) x hρ_x hρ_x'' ψ).mp h2'
 
   | past ψ ih =>
     -- Past quantifies over earlier times in the same history
+    -- Times shift together: r < y in σ corresponds to r-(y-x) < x in shifted history
     simp only [truth_at]
     constructor
-    · intro h_past r hr hrt
-      -- We have truth at (time_shift σ Δ, x) for all r < x
-      -- Need truth at (σ, y) for all r < y
-      -- Under time shift: r in shifted domain iff r + Δ in original domain
-      have hr' : (WorldHistory.time_shift σ (y - x)).domain (r - (y - x)) := by
+    · intro h_past s hs h_s_lt_y
+      -- s < y in σ, need to show truth at s in σ
+      -- Use shifted time: s' = s - (y - x) < x
+      have hs_shifted : (WorldHistory.time_shift σ (y - x)).domain (s - (y - x)) := by
         simp only [WorldHistory.time_shift]
-        have h_eq : r - (y - x) + (y - x) = r := by omega
-        rw [h_eq]
-        exact hr
-      have hrt' : r - (y - x) < x := by omega
-      have h1 := h_past (r - (y - x)) hr' hrt'
-      -- h1 : truth_at M (time_shift σ (y-x)) (r - (y-x)) hr' ψ
-      -- Need: truth_at M σ r hr ψ
-      -- Using IH with shifted times
-      sorry
-    · intro h_past r hr hrt
-      sorry
+        have : (s - (y - x)) + (y - x) = s := by omega
+        rw [this]
+        exact hs
+      have h_s_shifted_lt_x : s - (y - x) < x := by omega
+      have h_truth_shifted := h_past (s - (y - x)) hs_shifted h_s_shifted_lt_x
+      -- Apply IH: need to show (time_shift σ (y - x), s - (y - x)) ↔ (σ, s)
+      -- The shift amount should be: s - (s - (y - x)) = y - x
+      have h_shift_eq : s - (s - (y - x)) = y - x := by omega
+      -- Use congruence to equate the histories
+      have h_hist_eq : WorldHistory.time_shift σ (s - (s - (y - x))) = WorldHistory.time_shift σ (y - x) := by
+        exact WorldHistory.time_shift_congr σ (s - (s - (y - x))) (y - x) h_shift_eq
+      -- Create domain proof for IH
+      have hs_ih : (WorldHistory.time_shift σ (s - (s - (y - x)))).domain (s - (y - x)) := by
+        rw [h_hist_eq]
+        exact hs_shifted
+      -- Transport truth using history equality and proof irrelevance
+      have h_truth_ih : truth_at M (WorldHistory.time_shift σ (s - (s - (y - x)))) (s - (y - x)) hs_ih ψ := by
+        -- Cast hs_shifted to the right history type
+        have hs_shifted' : (WorldHistory.time_shift σ (s - (s - (y - x)))).domain (s - (y - x)) := by
+          rw [h_hist_eq]
+          exact hs_shifted
+        exact (truth_proof_irrel M _ (s - (y - x)) hs_shifted' hs_ih ψ).mp h_truth_shifted
+      -- Apply IH
+      exact (ih σ (s - (y - x)) s hs_ih hs).mp h_truth_ih
+    · intro h_past s' hs' h_s'_lt_x
+      -- s' < x in shifted σ, need to show truth at s' in shifted σ
+      -- s' corresponds to time s = s' + (y - x) in σ
+      have hs : σ.domain (s' + (y - x)) := by
+        simp only [WorldHistory.time_shift] at hs'
+        exact hs'
+      have h_s_lt_y : s' + (y - x) < y := by omega
+      have h_truth_orig := h_past (s' + (y - x)) hs h_s_lt_y
+      -- Apply IH: need shift amount = (s' + (y - x)) - s' = y - x
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := by omega
+      -- Use congruence to equate histories
+      have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
+        exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
+      -- Create domain proof for IH
+      have hs'_ih : (WorldHistory.time_shift σ ((s' + (y - x)) - s')).domain s' := by
+        rw [h_hist_eq]
+        exact hs'
+      -- Apply IH and transport
+      have h_ih := (ih σ s' (s' + (y - x)) hs'_ih hs).mpr h_truth_orig
+      -- Transport using proof irrelevance
+      have hs'_cast : (WorldHistory.time_shift σ (y - x)).domain s' := by
+        rw [← h_hist_eq]
+        exact hs'_ih
+      exact (truth_proof_irrel M _ s' hs' hs'_cast ψ).mp h_ih
 
   | future ψ ih =>
-    -- Similar to past case
+    -- Similar to past case: r > y in σ corresponds to r-(y-x) > x in shifted history
     simp only [truth_at]
-    sorry
+    constructor
+    · intro h_future s hs h_y_lt_s
+      -- y < s in σ, need to show truth at s in σ
+      -- Use shifted time: s' = s - (y - x) > x
+      have hs_shifted : (WorldHistory.time_shift σ (y - x)).domain (s - (y - x)) := by
+        simp only [WorldHistory.time_shift]
+        have : (s - (y - x)) + (y - x) = s := by omega
+        rw [this]
+        exact hs
+      have h_x_lt_s_shifted : x < s - (y - x) := by omega
+      have h_truth_shifted := h_future (s - (y - x)) hs_shifted h_x_lt_s_shifted
+      -- Apply IH with shift amount s - (s - (y - x)) = y - x
+      have h_shift_eq : s - (s - (y - x)) = y - x := by omega
+      -- Use congruence to equate histories
+      have h_hist_eq : WorldHistory.time_shift σ (s - (s - (y - x))) = WorldHistory.time_shift σ (y - x) := by
+        exact WorldHistory.time_shift_congr σ (s - (s - (y - x))) (y - x) h_shift_eq
+      -- Create domain proof for IH
+      have hs_ih : (WorldHistory.time_shift σ (s - (s - (y - x)))).domain (s - (y - x)) := by
+        rw [h_hist_eq]
+        exact hs_shifted
+      -- Transport truth using history equality and proof irrelevance
+      have h_truth_ih : truth_at M (WorldHistory.time_shift σ (s - (s - (y - x)))) (s - (y - x)) hs_ih ψ := by
+        -- Cast hs_shifted to the right history type
+        have hs_shifted' : (WorldHistory.time_shift σ (s - (s - (y - x)))).domain (s - (y - x)) := by
+          rw [h_hist_eq]
+          exact hs_shifted
+        exact (truth_proof_irrel M _ (s - (y - x)) hs_shifted' hs_ih ψ).mp h_truth_shifted
+      -- Apply IH
+      exact (ih σ (s - (y - x)) s hs_ih hs).mp h_truth_ih
+    · intro h_future s' hs' h_x_lt_s'
+      -- x < s' in shifted σ, need to show truth at s' in shifted σ
+      -- s' corresponds to time s = s' + (y - x) in σ
+      have hs : σ.domain (s' + (y - x)) := by
+        simp only [WorldHistory.time_shift] at hs'
+        exact hs'
+      have h_y_lt_s : y < s' + (y - x) := by omega
+      have h_truth_orig := h_future (s' + (y - x)) hs h_y_lt_s
+      -- Apply IH with shift amount (s' + (y - x)) - s' = y - x
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := by omega
+      -- Use congruence to equate histories
+      have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
+        exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
+      -- Create domain proof for IH
+      have hs'_ih : (WorldHistory.time_shift σ ((s' + (y - x)) - s')).domain s' := by
+        rw [h_hist_eq]
+        exact hs'
+      -- Apply IH and transport
+      have h_ih := (ih σ s' (s' + (y - x)) hs'_ih hs).mpr h_truth_orig
+      -- Transport using proof irrelevance
+      have hs'_cast : (WorldHistory.time_shift σ (y - x)).domain s' := by
+        rw [← h_hist_eq]
+        exact hs'_ih
+      exact (truth_proof_irrel M _ s' hs' hs'_cast ψ).mp h_ih
 
 /--
 Corollary: For any history σ at time y, there exists a history at time x
@@ -296,8 +490,17 @@ theorem exists_shifted_history (M : TaskModel F) (σ : WorldHistory F) (x y : In
     (hy : σ.domain y) (φ : Formula) :
     truth_at M σ y hy φ ↔
     truth_at M (WorldHistory.time_shift σ (y - x)) x
-      (by simp only [WorldHistory.time_shift]; have h : x + (y - x) = y := by omega; rw [h]; exact hy) φ := by
-  exact (time_shift_preserves_truth M σ x y _ hy φ).symm
+      (by
+        simp only [WorldHistory.time_shift]
+        have h : x + (y - x) = y := by omega
+        rw [h]
+        exact hy) φ := by
+  have hx : (WorldHistory.time_shift σ (y - x)).domain x := by
+    simp only [WorldHistory.time_shift]
+    have h : x + (y - x) = y := by omega
+    rw [h]
+    exact hy
+  exact (time_shift_preserves_truth M σ x y hx hy φ).symm
 
 end TimeShift
 

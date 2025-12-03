@@ -197,6 +197,68 @@ theorem time_shift_inverse_domain (σ : WorldHistory F) (Δ : Int) (z : Int) :
     rw [this]
     exact h
 
+/--
+States are equal when times are provably equal (proof irrelevance).
+
+This lemma allows us to transport states from one time to another when the times
+are equal. This is essential for dependent type reasoning in time-shift proofs.
+-/
+theorem states_eq_of_time_eq (σ : WorldHistory F) (t₁ t₂ : Int)
+    (h : t₁ = t₂) (ht₁ : σ.domain t₁) (ht₂ : σ.domain t₂) :
+    σ.states t₁ ht₁ = σ.states t₂ ht₂ := by
+  subst h
+  rfl
+
+/--
+Double time-shift cancels: states at (time_shift (time_shift σ Δ) (-Δ)) equal states at σ.
+
+This is the key transport lemma for the box case of time_shift_preserves_truth.
+It shows that shifting by Δ and then by -Δ returns to the original states.
+-/
+theorem time_shift_time_shift_states (σ : WorldHistory F) (Δ : Int) (t : Int)
+    (ht : σ.domain t)
+    (ht' : (time_shift (time_shift σ Δ) (-Δ)).domain t) :
+    (time_shift (time_shift σ Δ) (-Δ)).states t ht' = σ.states t ht := by
+  simp only [time_shift]
+  have h_eq : t + -Δ + Δ = t := by omega
+  exact states_eq_of_time_eq σ (t + -Δ + Δ) t h_eq _ ht
+
+/--
+Extensionality lemma for time_shift: shifting by equal amounts gives equal histories.
+-/
+theorem time_shift_congr (σ : WorldHistory F) (Δ₁ Δ₂ : Int) (h : Δ₁ = Δ₂) :
+    time_shift σ Δ₁ = time_shift σ Δ₂ := by
+  subst h
+  rfl
+
+/--
+Domain membership for time_shift by zero is equivalent to original domain.
+-/
+theorem time_shift_zero_domain_iff (σ : WorldHistory F) (z : Int) :
+    (time_shift σ 0).domain z ↔ σ.domain z := by
+  simp only [time_shift, Int.add_zero]
+
+/--
+Domain membership for double time-shift with opposite amounts equals original.
+-/
+theorem time_shift_time_shift_neg_domain_iff (σ : WorldHistory F) (Δ : Int) (z : Int) :
+    (time_shift (time_shift σ Δ) (-Δ)).domain z ↔ σ.domain z := by
+  simp only [time_shift]
+  have h : z + -Δ + Δ = z := by omega
+  constructor
+  · intro hd; rw [h] at hd; exact hd
+  · intro hd; rw [h]; exact hd
+
+/--
+States at double time-shift with opposite amounts equals original states.
+-/
+theorem time_shift_time_shift_neg_states (σ : WorldHistory F) (Δ : Int) (t : Int)
+    (ht : σ.domain t) (ht' : (time_shift (time_shift σ Δ) (-Δ)).domain t) :
+    (time_shift (time_shift σ Δ) (-Δ)).states t ht' = σ.states t ht := by
+  simp only [time_shift]
+  have h_eq : t + -Δ + Δ = t := by omega
+  exact states_eq_of_time_eq σ (t + -Δ + Δ) t h_eq _ ht
+
 end WorldHistory
 
 end ProofChecker.Semantics

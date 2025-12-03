@@ -406,11 +406,21 @@ theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.future).box))
   intro σ hs s hs' hts
   -- We need: truth_at M σ s hs' φ
   -- From h_box_phi: φ at all histories at time t
-  -- But we need φ at history σ at time s ≠ t
 
-  -- This axiom requires modal-temporal persistence frame property.
-  -- For MVP, we document the requirement and use sorry.
-  sorry
+  -- Strategy: Use time-shift to relate (σ, s) to a history at time t
+  -- time_shift σ (s - t) gives a history at time t (where t + (s - t) = s)
+  have h_shifted_domain : (WorldHistory.time_shift σ (s - t)).domain t := by
+    simp only [WorldHistory.time_shift]
+    have : t + (s - t) = s := by omega
+    rw [this]
+    exact hs'
+
+  -- Apply h_box_phi to the time-shifted history
+  have h_phi_at_shifted := h_box_phi (WorldHistory.time_shift σ (s - t)) h_shifted_domain
+
+  -- Use time-shift preservation to relate truth at (shifted, t) to truth at (σ, s)
+  have h_preserve := TimeShift.time_shift_preserves_truth M σ t s h_shifted_domain hs' φ
+  exact h_preserve.mp h_phi_at_shifted
 
 /--
 TF axiom validity (provable via time-shift invariance).
@@ -448,11 +458,21 @@ theorem temp_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.box).future)) 
   intro s hs hts σ hs'
   -- We need: truth_at M σ s hs' φ
   -- From h_box_phi: φ at all histories at time t
-  -- But we need φ at history σ at time s ≠ t
 
-  -- This axiom requires modal-temporal persistence frame property.
-  -- For MVP, we document the requirement and use sorry.
-  sorry
+  -- Strategy: Use time-shift to relate (σ, s) to a history at time t
+  -- time_shift σ (s - t) gives a history at time t
+  have h_shifted_domain : (WorldHistory.time_shift σ (s - t)).domain t := by
+    simp only [WorldHistory.time_shift]
+    have : t + (s - t) = s := by omega
+    rw [this]
+    exact hs'
+
+  -- Apply h_box_phi to the time-shifted history
+  have h_phi_at_shifted := h_box_phi (WorldHistory.time_shift σ (s - t)) h_shifted_domain
+
+  -- Use time-shift preservation to relate truth at (shifted, t) to truth at (σ, s)
+  have h_preserve := TimeShift.time_shift_preserves_truth M σ t s h_shifted_domain hs' φ
+  exact h_preserve.mp h_phi_at_shifted
 
 /--
 All TM axioms are valid.

@@ -8,10 +8,38 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 **Organization**: Tasks are prioritized based on blocking status, dependency relationships, and estimated effort. High priority tasks should be completed within 1 month, medium priority within 3 months, and low priority represents future work.
 
+---
+
+## ⚠️ Keep Documentation in Sync
+
+**IMPORTANT**: As you complete tasks, update these files to maintain accurate project status:
+
+1. **[IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)** - Module-by-module completion tracking
+   - Update completion percentages as proofs are completed
+   - Update sorry counts as placeholders are resolved
+   - Mark modules as COMPLETE when fully proven
+
+2. **[KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)** - Gap documentation with workarounds
+   - Remove limitation entries when issues are resolved
+   - Update "What works well" and "What to avoid" sections
+   - Keep roadmap section current with actual priorities
+
+3. **This file (TODO.md)** - Task tracking and progress
+   - Mark tasks complete in Progress Tracking section
+   - Update Sorry Placeholder Registry as items are resolved
+   - Add completion dates to Completion Log
+
+---
+
 **Related Documentation**:
-- [IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md) - Detailed module-by-module completion tracking
-- [KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md) - Comprehensive gap documentation with workarounds
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - System design and TM logic specification
+- [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Detailed module-by-module completion tracking
+- [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Comprehensive gap documentation with workarounds
+- [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
+
+**Active Implementation Plan**:
+- [TODO Implementation Systematic Plan](.claude/specs/019_research_todo_implementation_plan/plans/001-research-todo-implementation-plan.md) - 8-phase execution plan for Layer 0 completion
+  - **Status**: Phases 1-4 COMPLETE, Phases 5-8 remaining (Wave 3-4: Completeness proofs and Future Work)
+  - **Estimated Remaining**: 120-190 hours
 
 **How to Use This File**:
 1. Review High Priority tasks first - these are blocking or urgent
@@ -24,149 +52,76 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ## High Priority Tasks
 
-### 1. Fix CI Continue-on-Error Flags
-**Effort**: 1-2 hours
-**Status**: Not Started
-**Priority**: High (CI quality, affects all development)
-
-**Description**: Remove `continue-on-error: true` flags from CI configuration that are masking test/lint/docs failures.
-
-**Files**:
-- `.github/workflows/ci.yml` (lines 45, 49, 77, 86)
-
-**Action Items**:
-1. Audit `lake test` command - if tests pass, remove flag at line 45
-2. Verify `lake lint` is configured - if working, remove flag at line 49
-3. Check `lake build :docs` target exists in lakefile.toml - if working, remove flag at line 77
-4. Test GitHub Pages deployment - if successful, remove flag at line 86
-5. Add build status badge to README.md
-
-**Blocking**: None (independent task)
-
-**Dependencies**: None
-
----
-
-### 2. Add Propositional Axioms
-**Effort**: 10-15 hours
-**Status**: Not Started
-**Priority**: High (unblocks P1-P2 in Perpetuity.lean)
-
-**Description**: Add propositional reasoning infrastructure (K and S axioms) to enable basic propositional theorem proving without meta-reasoning.
-
-**Files**:
-- `ProofChecker/ProofSystem/Axioms.lean` (add axioms)
-- `ProofChecker/Theorems/Perpetuity.lean` (lines 88, 139 - remove `sorry` from helpers)
-
-**Action Items**:
-1. Add K axiom: `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))`
-2. Add S axiom: `φ → (ψ → φ)`
-3. Prove `imp_trans` helper from K and S axioms (remove `sorry` at line 88)
-4. Prove `contraposition` helper from K and S axioms (remove `sorry` at line 139)
-5. Update ProofSystem/Derivation.lean to include new axioms
-6. Write tests in ProofCheckerTest/ProofSystem/AxiomsTest.lean
-7. Update IMPLEMENTATION_STATUS.md axiom count (8 → 10 axioms)
-
-**Blocking**: P1-P2 perpetuity proofs (lines 88, 139), P4-P6 perpetuity proofs
-
-**Dependencies**: None
-
-**Next After This**: Complete Perpetuity P1-P2 (remove `sorry` after helpers proven)
-
----
-
-### 3. Complete Archive Examples
-**Effort**: 5-10 hours
-**Status**: Not Started
-**Priority**: High (documentation accuracy, pedagogical value)
-
-**Description**: Create missing Archive example files (ModalProofs.lean, TemporalProofs.lean) to match documentation claims and provide pedagogical value.
-
-**Files**:
-- `Archive/ModalProofs.lean` (missing, referenced in CLAUDE.md line 494, README.md line 214)
-- `Archive/TemporalProofs.lean` (missing, referenced in CLAUDE.md line 499, README.md line 215)
-- `docs/IMPLEMENTATION_STATUS.md` (line 506 - update Archive status from "Complete" to accurate)
-
-**Action Items**:
-1. Create `Archive/ModalProofs.lean` with S5 modal logic examples:
-   - Modal T axiom application (necessity implies truth)
-   - Modal 4 axiom application (necessity of necessity)
-   - Modal B axiom application (truth implies possible necessity)
-   - Derived modal theorems
-2. Create `Archive/TemporalProofs.lean` with temporal reasoning examples:
-   - Temporal axiom applications (TA, TL, TF)
-   - Temporal duality examples (past/future)
-   - Interaction with modal operators
-3. Update `Archive/Archive.lean` to re-export new modules
-4. Write tests in `ProofCheckerTest/Archive/` (if needed)
-5. Update IMPLEMENTATION_STATUS.md Archive status to reflect 3/3 files complete
-
-**Blocking**: None (independent task)
-
-**Dependencies**: None
-
----
-
-### 4. Create TODO.md 
-**Effort**: 2-3 hours
-**Status**: COMPLETE (2025-12-01)
-**Priority**: High (task tracking infrastructure)
-
-**Description**: Create comprehensive TODO.md file at project root for systematic task tracking and priority management.
-
-**Files**:
-- `/home/benjamin/Documents/Philosophy/Projects/ProofChecker/TODO.md` (this file)
-
-**Action Items**:  All completed
-
-**Blocking**: None (this is the tracking file itself)
-
-**Dependencies**: None
-
----
-
-## Medium Priority Tasks
-
-### 5. Complete Soundness Proofs
+### 5. Fix Modal K and Temporal K Rule Implementations
 **Effort**: 15-20 hours
-**Status**: Not Started
-**Priority**: Medium (metalogic completeness, Layer 0 finalization)
+**Status**: CRITICAL - Code differs from paper definition
+**Priority**: HIGH (code-paper alignment, affects proof system correctness)
 
-**Description**: Complete missing soundness proofs for TL, MF, TF axioms and modal_k, temporal_k, temporal_duality rules. This requires analyzing frame constraints and either adding them to TaskFrame or documenting axioms as conditional.
+**Description**: The LEAN code implements Modal K and Temporal K rules in the **reverse direction** from the paper's §sec:Appendix definitions. This must be fixed for the proof system to match the intended semantics.
+
+**Paper Definitions** (§sec:Appendix):
+- **MK** (line 1030): If `Γ ⊢ φ`, then `□Γ ⊢ □φ`
+- **TK** (line 1037): If `Γ ⊢ φ`, then `FΓ ⊢ Fφ`
+
+**Current Code** (Derivation.lean):
+- **modal_k**: If `□Γ ⊢ φ`, then `Γ ⊢ □φ` ← WRONG DIRECTION
+- **temporal_k**: If `FΓ ⊢ φ`, then `Γ ⊢ Fφ` ← WRONG DIRECTION
 
 **Files**:
-- `ProofChecker/Metalogic/Soundness.lean`
-  - Line 252: TL axiom validity (backward temporal persistence constraint needed)
-  - Line 295: MF axiom validity (temporal persistence of necessity constraint needed)
-  - Line 324: TF axiom validity (necessity persistence across times constraint needed)
-  - Line 398: modal_k rule soundness (modal uniformity of contexts)
-  - Line 416: temporal_k rule soundness (temporal uniformity of contexts)
-  - Line 431: temporal_duality soundness (semantic duality lemma)
+- `ProofChecker/ProofSystem/Derivation.lean` (lines 90-102) - Rule definitions
+- `ProofChecker/Metalogic/Soundness.lean` - Soundness proofs for rules
 
 **Action Items**:
-1. Analyze frame constraints required for TL, MF, TF axioms
-2. Design frame constraint architecture:
-   - Option A: Add constraints to `ProofChecker/Semantics/TaskFrame.lean`
-   - Option B: Document axioms as conditional on frame properties
-3. Implement chosen approach
-4. Prove TL, MF, TF axiom validity with frame constraints
-5. Prove modal_k and temporal_k rule soundness
-6. Prove temporal_duality soundness with semantic duality lemma
-7. Remove all 15 `sorry` placeholders from Soundness.lean
-8. Write tests for new soundness proofs
-9. Update IMPLEMENTATION_STATUS.md Soundness status (60% → 100%)
+1. **Fix Modal K rule** in Derivation.lean:
+   - Change: `Derivable (Context.map Formula.box Γ) φ → Derivable Γ (Formula.box φ)`
+   - To: `Derivable Γ φ → Derivable (Context.map Formula.box Γ) (Formula.box φ)`
+2. **Fix Temporal K rule** in Derivation.lean:
+   - Change: `Derivable (Context.map Formula.future Γ) φ → Derivable Γ (Formula.future φ)`
+   - To: `Derivable Γ φ → Derivable (Context.map Formula.future Γ) (Formula.future φ)`
+3. Update docstrings to match paper's definitions
+4. **Prove soundness** for corrected rules (straightforward per paper lines 2282-2292, 2331-2332)
+5. Update all code that uses these rules (search for `modal_k` and `temporal_k`)
+6. Run full test suite to verify no regressions
+7. Update KNOWN_LIMITATIONS.md to remove code-paper alignment warnings
+8. Update IMPLEMENTATION_STATUS.md
 
-**Blocking**: None (soundness is metalogic property, doesn't block derivations)
+**Blocking**: Correctness of proof system
 
-**Dependencies**: None (but benefits from propositional axioms for proof techniques)
+**Dependencies**: None
 
-**Next After This**: Update documentation to reflect full soundness
+**Reference**: See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) §1.5-1.6 for detailed explanation
+
+---
+
+### 5b. Complete Temporal Duality Soundness
+**Effort**: 5-10 hours
+**Status**: Incomplete (semantic lemma needed)
+**Priority**: Medium (after Task 5 complete)
+
+**Description**: Prove soundness for the temporal duality rule (TD). Requires showing that validity is preserved when swapping Past and Future operators.
+
+**Paper Definition** (§sec:Appendix line 1036): If `⊢ φ`, then `⊢ φ_{⟨P|F⟩}`
+
+**Files**:
+- `ProofChecker/Metalogic/Soundness.lean` - temporal_duality soundness case
+
+**Action Items**:
+1. Prove semantic duality lemma: truth conditions for Past and Future are symmetric
+2. Complete temporal_duality soundness proof
+3. Update KNOWN_LIMITATIONS.md §1.7
+4. Update IMPLEMENTATION_STATUS.md
+
+**Blocking**: None (metalogic property)
+
+**Dependencies**: None
+
+**Reference**: Paper lines 2313-2319
 
 ---
 
 ### 6. Complete Perpetuity Proofs
 **Effort**: 20-30 hours
-**Status**: Not Started
+**Status**: COMPLETE (2025-12-02, Phase 2)
 **Priority**: Medium (theorem completeness)
 
 **Description**: Complete proofs for perpetuity principles P4-P6, which require complex modal-temporal interactions.
@@ -231,7 +186,7 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ### 8. Fix WorldHistory Universal Helper
 **Effort**: 1-2 hours
-**Status**: Not Started
+**Status**: DOCUMENTED AS LIMITATION (2025-12-03, Phase 3)
 **Priority**: Medium (completeness, minor gap)
 
 **Description**: Prove `respects_task` property for universal history helper function.
@@ -518,45 +473,34 @@ This section lists all 41 `sorry` placeholders in the codebase that require reso
   - **Effort**: 1 hour (after search implemented)
   - **See**: Task 7 (Implement Core Automation)
 
-### ProofChecker/Metalogic/Soundness.lean (15 sorry)
+### ProofChecker/Metalogic/Soundness.lean (3 sorry remaining)
 
-**Axiom Soundness** (3 sorry):
-- **Soundness.lean:252** - TL axiom validity
-  - **Context**: `△φ → ○φ` (always implies next) requires backward temporal persistence
-  - **Resolution**: Add frame constraint or document as conditional
-  - **Effort**: 5-7 hours (frame constraint architecture)
-  - **See**: Task 5 (Complete Soundness Proofs)
+**Axiom Soundness** - ✓ ALL COMPLETE (2025-12-03):
+- TL axiom (`△φ → F(Pφ)`): PROVEN
+- MF axiom (`□φ → □Fφ`): PROVEN
+- TF axiom (`□φ → F□φ`): PROVEN
 
-- **Soundness.lean:295** - MF axiom validity
-  - **Context**: `□○φ → ○□φ` (modal-future interaction) requires temporal persistence of necessity
-  - **Resolution**: Add frame constraint or document as conditional
-  - **Effort**: 5-7 hours (frame constraint architecture)
-  - **See**: Task 5 (Complete Soundness Proofs)
+**Rule Soundness** (3 sorry remaining):
+- **Soundness.lean:~398** - modal_k rule soundness
+  - **Context**: Code implements wrong direction: `□Γ ⊢ φ ⟹ Γ ⊢ □φ`
+  - **Paper**: `Γ ⊢ φ ⟹ □Γ ⊢ □φ` (line 1030)
+  - **Resolution**: Fix rule in Derivation.lean first, then prove soundness
+  - **Effort**: 8-10 hours (includes code fix)
+  - **See**: Task 5 (Fix Modal K and Temporal K Rule Implementations)
 
-- **Soundness.lean:324** - TF axiom validity
-  - **Context**: `○□φ → □○φ` (temporal-future-modal interaction) requires necessity persistence
-  - **Resolution**: Add frame constraint or document as conditional
-  - **Effort**: 5-7 hours (frame constraint architecture)
-  - **See**: Task 5 (Complete Soundness Proofs)
+- **Soundness.lean:~416** - temporal_k rule soundness
+  - **Context**: Code implements wrong direction: `FΓ ⊢ φ ⟹ Γ ⊢ Fφ`
+  - **Paper**: `Γ ⊢ φ ⟹ FΓ ⊢ Fφ` (line 1037)
+  - **Resolution**: Fix rule in Derivation.lean first, then prove soundness
+  - **Effort**: 8-10 hours (includes code fix)
+  - **See**: Task 5 (Fix Modal K and Temporal K Rule Implementations)
 
-**Rule Soundness** (3 sorry):
-- **Soundness.lean:398** - modal_k rule soundness
-  - **Context**: Modal K rule requires modal uniformity of contexts
-  - **Resolution**: Prove context preservation for modal operators
-  - **Effort**: 3-5 hours
-  - **See**: Task 5 (Complete Soundness Proofs)
-
-- **Soundness.lean:416** - temporal_k rule soundness
-  - **Context**: Temporal K rule requires temporal uniformity of contexts
-  - **Resolution**: Prove context preservation for temporal operators
-  - **Effort**: 3-5 hours
-  - **See**: Task 5 (Complete Soundness Proofs)
-
-- **Soundness.lean:431** - temporal_duality soundness
+- **Soundness.lean:~431** - temporal_duality soundness
   - **Context**: Temporal duality rule requires semantic duality lemma
-  - **Resolution**: Prove duality between past and future operators
-  - **Effort**: 3-5 hours
-  - **See**: Task 5 (Complete Soundness Proofs)
+  - **Paper**: If `⊢ φ`, then `⊢ φ_{⟨P|F⟩}` (line 1036)
+  - **Resolution**: Prove Past/Future truth conditions are symmetric
+  - **Effort**: 5-10 hours
+  - **See**: Task 5b (Complete Temporal Duality Soundness)
 
 ### ProofChecker/Metalogic/Completeness.lean (11 axiom declarations)
 
@@ -720,40 +664,19 @@ This section lists all 41 `sorry` placeholders in the codebase that require reso
 
 This section lists files that are referenced in documentation but do not exist in the repository.
 
-### 1. Archive/ModalProofs.lean
+### 1. Archive/ModalProofs.lean ✓ CREATED
 **Priority**: High
 **Effort**: 3-5 hours
-**Referenced In**: CLAUDE.md (line 494), README.md (line 214)
+**Status**: COMPLETE (2025-12-02, Phase 1)
 
 **Description**: Pedagogical examples for S5 modal logic proofs using ProofChecker.
 
-**Creation Plan**:
-1. Create file with module header and imports
-2. Add modal T axiom examples (necessity implies truth)
-3. Add modal 4 axiom examples (necessity of necessity)
-4. Add modal B axiom examples (truth implies possible necessity)
-5. Add derived modal theorem examples
-6. Document with explanatory comments
-7. Update Archive/Archive.lean to re-export module
-
-**See**: Task 3 (Complete Archive Examples)
-
-### 2. Archive/TemporalProofs.lean
+### 2. Archive/TemporalProofs.lean ✓ CREATED
 **Priority**: High
 **Effort**: 3-5 hours
-**Referenced In**: CLAUDE.md (line 499), README.md (line 215)
+**Status**: COMPLETE (2025-12-02, Phase 1)
 
 **Description**: Pedagogical examples for temporal logic proofs using ProofChecker.
-
-**Creation Plan**:
-1. Create file with module header and imports
-2. Add temporal axiom examples (TA, TL, TF)
-3. Add temporal duality examples (past/future)
-4. Add modal-temporal interaction examples
-5. Document with explanatory comments
-6. Update Archive/Archive.lean to re-export module
-
-**See**: Task 3 (Complete Archive Examples)
 
 ### 3. ProofChecker/Metalogic/Decidability.lean
 **Priority**: Low
@@ -899,66 +822,21 @@ Task 9 complete. Task 11 requires Layer 0 completion.
 
 ---
 
-## CI Technical Debt
+## CI Technical Debt ✓ RESOLVED
 
-This section documents `continue-on-error` flags in CI configuration that should be audited and removed as features complete.
+**Status**: COMPLETE (2025-12-02, Phase 1 - Task 1)
 
-### .github/workflows/ci.yml - Continue-on-Error Locations
+All `continue-on-error` flags have been removed from CI configuration per Task 1 completion.
 
-**1. Line 45: Lake Test Continue-on-Error**
-```yaml
-- name: Run tests
-  run: lake test
-  continue-on-error: true
-```
-**Issue**: Tests are implemented and passing for completed modules, but CI ignores failures.
-**Action**: Remove flag after verifying `lake test` passes on current codebase.
-**Audit Command**: `cd /home/benjamin/Documents/Philosophy/Projects/ProofChecker && lake test`
-**Priority**: High (masks test failures)
+### Audit Results
 
-**2. Line 49: Lake Lint Continue-on-Error**
-```yaml
-- name: Run lint
-  run: lake lint
-  continue-on-error: true
-```
-**Issue**: Unclear if lint is configured correctly.
-**Action**: Verify lint configuration, ensure zero warnings, then remove flag.
-**Audit Command**: `cd /home/benjamin/Documents/Philosophy/Projects/ProofChecker && lake lint`
-**Priority**: High (masks lint warnings)
+- [x] `lake test` flag removed - tests pass
+- [x] `lake lint` flag removed - lint configured
+- [x] `lake build :docs` flag removed - docs target works
+- [x] GitHub Pages deployment flag removed - deployment functional
+- [x] Build status badge added to README.md
 
-**3. Line 77: Lake Build Docs Continue-on-Error**
-```yaml
-- name: Build documentation
-  run: lake build :docs
-  continue-on-error: true
-```
-**Issue**: Unclear if docs target is configured in lakefile.toml.
-**Action**: Verify lakefile.toml has `:docs` target, test build, then remove flag.
-**Audit Command**: `cd /home/benjamin/Documents/Philosophy/Projects/ProofChecker && lake build :docs`
-**Priority**: Medium (docs generation, not critical for development)
-
-**4. Line 86: GitHub Pages Deploy Continue-on-Error**
-```yaml
-- name: Deploy to GitHub Pages
-  uses: peaceiris/actions-gh-pages@v3
-  continue-on-error: true
-```
-**Issue**: Prevents deployment errors from failing CI job.
-**Action**: Remove flag once docs are successfully generated and deployed to GitHub Pages.
-**Audit**: Check if GitHub Pages is configured for repository, verify deployment works.
-**Priority**: Medium (docs publishing, not critical for development)
-
-### Audit Checklist
-
-- [ ] Audit `lake test` (line 45) - Remove flag if tests pass
-- [ ] Audit `lake lint` (line 49) - Remove flag if lint is configured and passes
-- [ ] Audit `lake build :docs` (line 77) - Remove flag if docs target exists and builds
-- [ ] Audit GitHub Pages deployment (line 86) - Remove flag if deployment works
-- [ ] Add build status badge to README.md after flags removed
-- [ ] Document CI configuration decisions in CONTRIBUTING.md
-
-**See**: Task 1 (Fix CI Continue-on-Error Flags)
+**Note**: CI now fails fast on any test, lint, or build issues as intended.
 
 ---
 
@@ -969,50 +847,71 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 ### Completed Tasks
 
 **High Priority**:
+- [x] **Task 1**: Fix CI Continue-on-Error Flags - COMPLETE (2025-12-02, Phase 1)
+- [x] **Task 2**: Add Propositional Axioms - COMPLETE (2025-12-02, Phase 1)
+- [x] **Task 3**: Complete Archive Examples - COMPLETE (2025-12-02, Phase 1)
 - [x] **Task 4**: Create TODO.md - COMPLETE (2025-12-01)
 
 **Medium Priority**:
-- [ ] None yet
+- [x] **Task 5**: Complete Soundness Proofs - PARTIAL (2025-12-03, all 8 axioms proven, 3 inference rules remain)
+- [x] **Task 6**: Complete Perpetuity Proofs - COMPLETE (2025-12-02, Phase 2)
+- [x] **Task 8**: WorldHistory Universal Helper - DOCUMENTED AS LIMITATION (2025-12-03, Phase 3)
 
 **Low Priority**:
 - [ ] None yet
 
 ### In Progress
 
-- [ ] None currently
+- **Task 5**: Fix Modal K and Temporal K rule implementations (code-paper alignment) - CRITICAL
+- **Task 5b**: Complete Temporal Duality soundness - 1 sorry remaining
+- Task 7: Core Automation - deferred to future wave
 
 ### Completion Log
 
 | Date | Task | Notes |
 |------|------|-------|
 | 2025-12-01 | Task 4: Create TODO.md | Initial TODO.md creation complete with all sections |
+| 2025-12-02 | Task 1: Fix CI Flags (Phase 1) | All continue-on-error flags removed from CI configuration |
+| 2025-12-02 | Task 2: Add Propositional Axioms (Phase 1) | K and S propositional axioms added, imp_trans and contraposition helpers proven |
+| 2025-12-02 | Task 3: Archive Examples (Phase 1) | ModalProofs.lean and TemporalProofs.lean created |
+| 2025-12-02 | Task 6: Perpetuity Proofs (Phase 2) | P1-P6 perpetuity principles proven using paper-based strategies |
+| 2025-12-03 | Task 5: Soundness Axioms (Phase 3) | All 8 TM axioms proven sound (MT, M4, MB, T4, TA, TL, MF, TF). Transport lemmas in WorldHistory.lean and Truth.lean complete. 3 inference rules remain |
+| 2025-12-03 | Task 8: WorldHistory (Phase 3) | Universal constructor documented as accepted limitation |
+| 2025-12-03 | Phase 4: Documentation Sync | All documentation synchronized - TODO.md, IMPLEMENTATION_STATUS.md, KNOWN_LIMITATIONS.md updated |
+| 2025-12-03 | Paper Alignment Review | Aligned KNOWN_LIMITATIONS.md with paper §sec:Appendix. Discovered Modal K and Temporal K code-paper discrepancy. Created Task 5 and 5b. |
 
 ### Status Summary
 
 **Layer 0 Completion Progress**:
-- High Priority: 1/4 tasks complete (25%)
-- Medium Priority: 0/5 tasks complete (0%)
+- High Priority: 4/4 tasks complete (100%) ✓
+- Medium Priority: 3.5/5 tasks complete (70%) - Task 5 partial, Task 7 pending
 - Low Priority: 0/4 tasks complete (0%)
-- **Overall**: 1/13 tasks complete (8%)
+- **Overall**: 7.5/13 tasks complete (58%)
+
+**Implementation Plan Progress** ([Plan Link](.claude/specs/019_research_todo_implementation_plan/plans/001-research-todo-implementation-plan.md)):
+- Wave 1 (Phase 1): COMPLETE - High priority foundations
+- Wave 2 (Phases 2-4): COMPLETE - Perpetuity proofs, transport lemmas, documentation sync
+- Wave 3 (Phases 5-7): NOT STARTED - Completeness proofs (120-190 hours)
+- Wave 4 (Phase 8): NOT STARTED - Future work and layer planning
 
 **Sorry Placeholder Resolution**:
-- Total: 41 placeholders identified
-- Resolved: 0
-- Remaining: 41 (100%)
+- Total: 41 placeholders identified (original count)
+- Resolved: 32 (Truth.lean fully complete, all axiom proofs done, Perpetuity proofs done)
+- Remaining: 9 (3 Soundness rules, 1 Completeness, 1 WorldHistory, 4 Automation stubs)
 
 **Missing Files**:
 - Total: 3 files identified
-- Created: 0
-- Remaining: 3 (100%)
+- Created: 2 (ModalProofs.lean, TemporalProofs.lean)
+- Remaining: 1 (Decidability.lean - low priority)
 
 **Estimated Effort to Layer 0 Completion**:
-- High Priority Tasks: 16-30 hours remaining (Task 4 complete)
-- Medium Priority Tasks: 87-128 hours (includes new Task 12: 10-15 hours)
-- **Total**: 103-158 hours
+- High Priority Tasks: COMPLETE ✓
+- Medium Priority Tasks: 50-75 hours remaining (Task 5 rules + Task 7 automation)
+- **Total**: 50-75 hours
 
 **Estimated Effort to Full Completion (including Low Priority)**:
-- Low Priority Tasks: 135-200 hours (includes new Task 13: 5-10 hours)
-- **Grand Total**: 238-358 hours
+- Low Priority Tasks: 135-200 hours (Completeness 70-90h, Decidability 40-60h, Layer Planning 20-40h)
+- **Grand Total**: 185-275 hours
 
 ---
 
@@ -1046,4 +945,4 @@ When adding new tasks:
 - Dependencies are explicitly tracked; always check Dependency Graph before starting a task
 - CI technical debt should be resolved early to ensure reliable test feedback
 
-**Last Updated**: 2025-12-01
+**Last Updated**: 2025-12-03 (Paper alignment review complete - Modal K/Temporal K code-paper discrepancy identified)
