@@ -1517,10 +1517,16 @@ ARTIFACTS="  📊 Reports: $RESEARCH_DIR/ ($REPORT_COUNT files)
 # Build next steps
 NEXT_STEPS="  • Review plan: cat $PLAN_PATH
   • Begin implementation: /build $PLAN_PATH
-  • Review research: ls -lh $RESEARCH_DIR/"
+  • Review research: ls -lh $RESEARCH_DIR/
+  • Run /todo to update TODO.md (adds plan to tracking)"
 
 # Print standardized summary (no phases for plan command)
 print_artifact_summary "Plan" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this plan"
+echo ""
 
 # === RETURN PLAN_CREATED SIGNAL ===
 # Signal enables buffer-opener hook and orchestrator detection
@@ -1528,17 +1534,6 @@ if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
   echo ""
   echo "PLAN_CREATED: $PLAN_PATH"
   echo ""
-fi
-
-# === UPDATE TODO.md ===
-# Source todo-functions.sh for trigger_todo_update()
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-}
-
-# Trigger TODO.md update (non-blocking)
-if type trigger_todo_update &>/dev/null; then
-  trigger_todo_update "plan created"
 fi
 
 exit 0

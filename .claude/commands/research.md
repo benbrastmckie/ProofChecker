@@ -1231,10 +1231,16 @@ ARTIFACTS="  📊 Reports: $RESEARCH_DIR/ ($REPORT_COUNT files)"
 # Build next steps
 NEXT_STEPS="  • Review reports: ls -lh $RESEARCH_DIR/
   • Create implementation plan: /plan \"${WORKFLOW_DESCRIPTION}\"
-  • Run full workflow: /coordinate \"${WORKFLOW_DESCRIPTION}\""
+  • Run full workflow: /coordinate \"${WORKFLOW_DESCRIPTION}\"
+  • Run /todo to update TODO.md (adds research to tracking)"
 
 # Print standardized summary (no phases for research command)
 print_artifact_summary "Research" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this research"
+echo ""
 
 # === RETURN REPORT_CREATED SIGNAL ===
 # Signal enables buffer-opener hook and orchestrator detection
@@ -1244,17 +1250,6 @@ if [ -n "$LATEST_REPORT" ] && [ -f "$LATEST_REPORT" ]; then
   echo ""
   echo "REPORT_CREATED: $LATEST_REPORT"
   echo ""
-fi
-
-# === UPDATE TODO.md ===
-# Source todo-functions.sh for trigger_todo_update()
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-}
-
-# Trigger TODO.md update (non-blocking)
-if type trigger_todo_update &>/dev/null; then
-  trigger_todo_update "research report created"
 fi
 
 exit 0

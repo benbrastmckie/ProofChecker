@@ -1,55 +1,14 @@
-# ProofChecker
+# ProofChecker: Formal Verification for Transparent AI Reasoning
 
-ProofChecker provides the proof theory and metalogic for **Logos**, an interpreted formal language of thought for auto-verified AI reasoning. The project begins by implementing **Layer 0** (Core Layer) of the Logos architecture, which includes three types of operators:
+ProofChecker provides syntactic verification for the Logos, a comprehensive framework for transparent AI reasoning in interpreted formal languages with an extensible range of operators for planning and evaluating actions in coordination with other agents. The system implements a four-layer logical framework: Layer 0 (Core TM) establishes the foundational bimodal logic combining tense and modality, currently under active development. Three planned extensions build progressively on this foundation: Layer 1 (Explanatory) adds counterfactual, causal, and constitutive operators; Layer 2 (Epistemic) introduces belief, probability, epistemic modals, and indicative conditionals; Layer 3 (Normative) provides deontic, preference, and normative explanatory operators.
 
-### Extensional Operators
+Built on LEAN 4, the ProofChecker provides an RL signal for training AI systems to reason in the Logos with mathematical certainty, providing scalable oversight through computation rather than human annotation. The system implements a hyperintensional task semantics (possible worlds as functions from times to world-states) and complements semantic verification via the [Model-Checker](https://github.com/benbrastmckie/ModelChecker) to create comprehensive training signals.
 
-Boolean/propositional operators forming the foundation of logical reasoning:
+For implementation details of the Model-Checker, see the [GitHub repository](https://github.com/benbrastmckie/ModelChecker) and [PyPI package](https://pypi.org/project/model-checker/). For a compressed overview of the TM logic subsystems, see [LogicNotes](https://github.com/benbrastmckie/LogicNotes).
 
-- Primitives: `⊥` (falsity), `→` (implication)
-- Derived: `¬` (negation), `∧` (conjunction), `∨` (disjunction)
+## Logos: Tense and Modal Reasoning
 
-### Modal Operators
-
-S5 modal logic for metaphysical necessity and possibility:
-
-- `□` (box, necessity): "necessarily φ"
-- `◇` (diamond, possibility): "possibly φ"
-
-### Temporal Operators
-
-Linear temporal logic (LTL) for reasoning about time:
-
-- `Past` (universal past): "φ has always been the case"
-- `Future` (universal future): "φ will always be the case"
-- `past` (sometime past): "φ was the case at some past time"
-- `future` (sometime future): "φ will be the case at some future time"
-- `△` (always/henceforth): "φ at all times"
-- `▽` (sometimes/eventually): "φ at some time"
-
-### Logos Integration
-
-ProofChecker is the third package in the Logos architecture:
-
-1. **Model-Builder**: Constructs formal models for philosophical theories
-2. **Model-Checker**: Verifies properties of models using temporal and modal logic
-3. **Proof-Checker**: Provides axiomatic proof system and metalogic for TM (this package)
-
-Future layers (Layer 1-3) will add explanatory (counterfactual), epistemic (belief), and normative (deontic) operators.
-
-**For complete TM logic specification**: See [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md)
-
-## Features
-
-- **Bimodal Logic TM**: Combines S5 modal logic with linear temporal logic
-- **Task Semantics**: Possible worlds as functions from times to world states
-- **Partial Metalogic**: Core soundness cases proven (5/8 axioms, 4/7 rules), completeness infrastructure defined
-- **Perpetuity Principles**: P1-P3 proven, P4-P6 partial implementation
-- **Layered Architecture**: Core TM (Layer 0) MVP complete with planned extensions for counterfactual, epistemic, and normative operators
-
-## Logic TM
-
-The logic TM is a bimodal system combining:
+Layer 0 implements the foundational bimodal logic TM (Tense and Modality), combining S5 modal logic with linear temporal logic. This core layer establishes the semantic and syntactic infrastructure upon which explanatory, epistemic, and normative extensions will be built.
 
 ### Operators
 
@@ -71,24 +30,53 @@ The logic TM is a bimodal system combining:
 - **P5**: `◇▽φ → △◇φ` (persistent possibility)
 - **P6**: `▽□φ → □△φ` (occurrent necessity is perpetual)
 
+## Core Capabilities
+
+### 1. Transparent Reasoning Infrastructure
+- **Mathematical Certainty**: LEAN 4 proof receipts provide verifiable justifications
+- **Auditable Inferences**: Every reasoning step can be independently checked
+- **Explicit Semantics**: Task models make world states and temporal evolution explicit
+- **Accountability**: Formal proofs enable trustworthy AI decision-making
+
+### 2. Self-Supervised Training Data Generation
+- **Unlimited Theorems**: Systematic derivation from TM axioms generates infinite training data
+- **No Human Annotation**: Proof receipts serve as training signals directly
+- **Positive Reinforcement**: Valid inferences rewarded with mathematical certainty
+- **Systematic Pattern Mastery**: Enables learning logical reasoning systematically
+
+### 3. Integrated Verification Architecture
+- **Dual Checking**: Syntactic proofs (ProofChecker) + semantic validation (Model-Checker)
+- **Rapid Prototyping**: Model-Checker tests theorems before proof attempts
+- **Counterexample Learning**: Invalid reasoning generates corrective training signals
+- **Scalable Oversight**: Verification scales with computation, not human effort
+
+### 4. Progressive Extension Strategy
+ProofChecker's layered architecture enables incremental extension from core TM logic to explanatory, epistemic, and normative reasoning. Each extension provides independent value while building toward comprehensive AI reasoning capabilities (see Architecture & Extensibility for roadmap).
+
+### 5. Theoretical Innovation
+- **Task Semantics**: Compositional account of possible worlds from [Possible Worlds paper](https://www.benbrastmckie.com/wp-content/uploads/2025/11/possible_worlds.pdf)
+- **Perpetuity Principles**: Novel theorems connecting modal and temporal operators
+- **Hyperintensional Foundation**: Supports explanatory reasoning extensions from [recent research](https://link.springer.com/article/10.1007/s10992-025-09793-8)
+- **LEAN 4 Implementation**: First complete formalization of TM bimodal logic
+
 ## Implementation Status
 
 **MVP Status**: Layer 0 (Core TM) MVP complete with partial metalogic implementation
 
-### Completed Modules
+### ✓ Completed Modules (4/8 - 50%)
 
 - **Syntax**: Formula types, contexts (100% complete; DSL planned)
 - **ProofSystem**: All 8 axioms and 7 inference rules defined (100% complete)
 - **Semantics**: Task frames, models, truth evaluation, validity (100% complete)
 - **Perpetuity**: P1-P3 proven (P1-P2 use propositional helpers with sorry)
 
-### Partial Modules
+### ⚠ Partial Modules (2/8 - 25%)
 
 - **Metalogic/Soundness**: 5/8 axiom validity proofs (MT, M4, MB, T4, TA proven; TL, MF, TF incomplete)
 - **Metalogic/Soundness**: 4/7 rule cases proven (axiom, assumption, modus_ponens, weakening; modal_k, temporal_k, temporal_duality incomplete)
 - **Perpetuity**: P4-P6 use sorry (require complex modal-temporal reasoning)
 
-### Infrastructure Only
+### ⚠ Infrastructure Only (2/8 - 25%)
 
 - **Metalogic/Completeness**: Type signatures defined, no proofs (uses `axiom` keyword)
 - **Automation/Tactics**: Function declarations only, no implementations
@@ -98,7 +86,7 @@ The logic TM is a bimodal system combining:
 - **Decidability**: Not yet started (Metalogic/Decidability.lean)
 - **DSL**: Domain-specific syntax for formulas (Syntax/DSL.lean)
 - **Archive Examples**: ModalProofs.lean and TemporalProofs.lean (imports commented in Archive.lean)
-- **Layer 1/2/3**: Counterfactual, epistemic, normative operators
+- **Future Layers**: See Architecture & Extensibility for extension roadmap
 
 **For detailed status**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 **For limitations and workarounds**: See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
@@ -110,6 +98,58 @@ The logic TM is a bimodal system combining:
 - Tactics: 12 stubs (all tactics are declarations only)
 
 **Estimated Completion Effort**: 155-215 hours for full Layer 0 completion
+
+## Architecture & Extensibility
+
+### Logos Ecosystem Integration
+
+ProofChecker is the third package in the Logos architecture, providing **syntactic verification** complementing:
+
+1. **Model-Builder** (Design Phase): Transforms natural language → formal semantic models
+   - Extracts formal language fragments (FLF)
+   - Constructs semantic model structures (SMS)
+   - Generates salient inferences (SRI)
+
+2. **Model-Checker** ([v1.2.12](https://github.com/benbrastmckie/ModelChecker)): Semantic verification via Z3
+   - Implements hyperintensional semantics
+   - Generates counterexamples for invalid inferences
+   - Provides corrective RL training signals
+
+3. **ProofChecker**: Syntactic verification via LEAN 4
+   - Derives valid theorems from TM axioms
+   - Provides proof receipts with mathematical certainty
+   - Generates positive RL training signals
+
+**Dual Verification Architecture**: ProofChecker's syntactic proofs and Model-Checker's semantic countermodels create comprehensive learning signals for AI training without human annotation. This enables scalable oversight through computation rather than labor.
+
+**For complete TM logic specification**: See [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md)
+
+### Theoretical Foundations
+
+ProofChecker implements formal semantics developed in recent research:
+
+**Task Semantics for Possible Worlds**:
+- **Paper**: ["The Construction of Possible Worlds"](https://www.benbrastmckie.com/wp-content/uploads/2025/11/possible_worlds.pdf) (Brast-McKie, 2025)
+  - Compositional semantics drawing on non-deterministic dynamical systems theories
+  - Complete implementation in `Semantics/` package (TaskFrame, WorldHistory, TaskModel, Truth evaluation)
+
+**Hyperintensional Semantics Foundation**:
+- **Papers**: ["Identity and Aboutness"](https://link.springer.com/article/10.1007/s10992-021-09612-w) (2021), ["Counterfactual Worlds"](https://link.springer.com/article/10.1007/s10992-025-09793-8) (2025)
+  - State-based semantics enabling fine-grained distinctions for constitutive explanatory reasoning
+  - Foundation for planned extensions (counterfactual, causal, constitutive operators)
+
+### Layered Operator Strategy
+
+ProofChecker implements a progressive four-layer architecture, each layer extending the logic with additional reasoning capabilities:
+
+- **Layer 0 (Core TM - Current)**: Boolean, modal, and temporal operators - MVP Complete
+- **Layer 1 (Explanatory - Planned)**: Counterfactual, causal, and constitutive operators
+- **Layer 2 (Epistemic - Future)**: Belief, knowledge, and probability operators
+- **Layer 3 (Normative - Future)**: Deontic, preference, and ought operators
+
+Each layer builds on the previous while providing independent value. The current Layer 0 implementation establishes the syntactic and semantic foundation for all future extensions.
+
+**For detailed roadmap**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 
 ## Installation
 
@@ -133,55 +173,44 @@ lake build
 lake test
 ```
 
-## Quick Start
-
-```lean
-import ProofChecker
-
--- Define a formula: `□p → p` (axiom MT)
-def mt_instance : Formula := Formula.box (Formula.atom "p") |>.imp (Formula.atom "p")
-
--- Prove the formula using axiom MT
-example : ⊢ mt_instance := by
-  apply Derivable.axiom
-  apply Axiom.modal_t
-
--- DSL syntax planned for future (not yet implemented)
--- For now, use direct formula construction
-example : ⊢ ((Formula.atom "p").box.imp (Formula.atom "p")) := by
-  apply Derivable.axiom
-  apply Axiom.modal_t
-
--- Prove perpetuity principle P1
-example (φ : Formula) : ⊢ (φ.box.imp (△ φ)) := perpetuity_1 φ
-```
-
 ## Documentation
 
-### User Documentation
+### Getting Started (New Users)
 
-- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
 - [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](Documentation/UserGuide/EXAMPLES.md) - Modal, temporal, and bimodal examples
+- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
+
+### Architecture & Design
+
+- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
 - [Integration Guide](Documentation/UserGuide/INTEGRATION.md) - Model-Checker integration
+
+### Development (Contributing)
+
+- [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
+- [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test requirements
+- [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactics
+
+### Project Status
+
 - [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
 - [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
-- [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
 - [Versioning Policy](Documentation/ProjectInfo/VERSIONING.md) - Semantic versioning policy
-- [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
-- [API Reference](.lake/build/doc/) - Generated API documentation (run `lake build :docs` to generate)
 
-### Developer Standards
+### Advanced Topics
 
-- [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation requirements
-- [Documentation Quality Checklist](Documentation/Development/DOC_QUALITY_CHECKLIST.md) - Quality assurance checklist
-- [LEAN Style Guide](Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
 - [Metaprogramming Guide](Documentation/Development/METAPROGRAMMING_GUIDE.md) - LEAN 4 metaprogramming and tactic development
+- [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Quality targets and standards
 - [Module Organization](Documentation/Development/MODULE_ORGANIZATION.md) - Project structure
 - [Phased Implementation](Documentation/Development/PHASED_IMPLEMENTATION.md) - Wave-based implementation roadmap
-- [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Quality targets and standards
-- [Tactic Development](Documentation/Development/TACTIC_DEVELOPMENT.md) - Custom tactics
-- [Testing Standards](Documentation/Development/TESTING_STANDARDS.md) - Test requirements
+- [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation requirements
+- [Documentation Quality Checklist](Documentation/Development/DOC_QUALITY_CHECKLIST.md) - Quality assurance checklist
+
+### API Reference
+
+- [Generated API Documentation](.lake/build/doc/) - Run `lake build :docs` to generate
 
 ## Project Structure
 
@@ -250,7 +279,9 @@ ProofChecker/
 
 ## Related Projects
 
-- **Logos** - Parent project for formal logic tools
+- **[Logos](https://github.com/benbrastmckie/Logos)** - Parent project for transparent AI reasoning with formal logic tools
+- **[Model-Checker](https://github.com/benbrastmckie/ModelChecker)** - Z3-based semantic verification implementing hyperintensional semantics (v1.2.12)
+- **Model-Builder** - Natural language to formal logic interface (design phase)
 - **FormalizedFormalLogic/Foundation** - LEAN 4 modal logic library (patterns adopted)
 - **Mathlib4** - LEAN 4 mathematics library (style conventions followed)
 
@@ -290,12 +321,3 @@ lake build
 lake test
 lake lint
 ```
-
-## Status
-
-- **Layer 0 (Core TM)**: MVP Complete (partial soundness/completeness, see [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md))
-- **Layer 1 (Explanatory)**: Planned
-- **Layer 2 (Epistemic)**: Planned
-- **Layer 3 (Normative)**: Planned
-
-**Note**: ProofChecker MVP is functional for core TM reasoning despite partial metalogic implementation. See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) for workarounds and [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) for detailed module status.

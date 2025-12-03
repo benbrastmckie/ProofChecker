@@ -343,16 +343,6 @@ fi
 if type update_plan_status &>/dev/null; then
   if update_plan_status "$PLAN_FILE" "IN PROGRESS" 2>/dev/null; then
     echo "Plan metadata status updated to [IN PROGRESS]"
-
-    # Source todo-functions.sh for trigger_todo_update()
-    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-    }
-
-    # Trigger TODO.md update (non-blocking)
-    if type trigger_todo_update &>/dev/null; then
-      trigger_todo_update "build phase started"
-    fi
   fi
 fi
 echo ""
@@ -1064,16 +1054,6 @@ if type check_all_phases_complete &>/dev/null && type update_plan_status &>/dev/
   if check_all_phases_complete "$PLAN_FILE"; then
     update_plan_status "$PLAN_FILE" "COMPLETE" 2>/dev/null && \
       echo "Plan metadata status updated to [COMPLETE]"
-
-    # Source todo-functions.sh for trigger_todo_update()
-    source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-      echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-    }
-
-    # Trigger TODO.md update (non-blocking)
-    if type trigger_todo_update &>/dev/null; then
-      trigger_todo_update "build phase completed"
-    fi
   fi
 fi
 ```
@@ -1890,15 +1870,22 @@ fi
 if [ "$TESTS_PASSED" = "true" ]; then
   NEXT_STEPS="  • Review summary: cat $LATEST_SUMMARY
   • Check git commits: git log --oneline -5
-  • Review plan updates: cat $PLAN_FILE"
+  • Review plan updates: cat $PLAN_FILE
+  • Run /todo to update TODO.md (adds completed plan to tracking)"
 else
   NEXT_STEPS="  • Review debug output: cat $LATEST_SUMMARY
   • Fix remaining issues and re-run: /build $PLAN_FILE
-  • Check test failures: see summary for details"
+  • Check test failures: see summary for details
+  • Run /todo to update TODO.md when complete"
 fi
 
 # Print standardized summary
 print_artifact_summary "Build" "$SUMMARY_TEXT" "$PHASES" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this build"
+echo ""
 
 # === RETURN IMPLEMENTATION_COMPLETE SIGNAL ===
 # Signal enables buffer-opener hook to open summary

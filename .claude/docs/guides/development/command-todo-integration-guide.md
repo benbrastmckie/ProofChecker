@@ -2,515 +2,309 @@
 
 ## Overview
 
-This guide documents the signal-triggered delegation pattern for automatic TODO.md updates across commands that create or modify plans and reports. The pattern maintains separation of concerns by delegating all TODO.md generation logic to the `/todo` command while providing immediate visibility for newly created or modified artifacts.
+This guide documents the manual TODO.md update workflow used by commands that create or modify plans and reports. Commands display completion reminders to prompt users to manually run `/todo` for TODO.md updates.
 
-**Key Principle**: Commands emit standardized signals when creating/modifying artifacts, then delegate to `/todo` for consistent TODO.md updates.
+**Key Principle**: Commands do not automatically update TODO.md. Users manually run `/todo` after command completion based on clear reminder messages.
+
+## Architectural Constraint
+
+**Why No Automatic Updates**: Slash commands (like `/todo`) are markdown files processed by Claude Code's runtime environment. They cannot be invoked from bash blocks using `bash -c '/todo'` or similar mechanisms. This architectural constraint makes automatic TODO.md updates from bash blocks impossible without runtime changes to Claude Code itself.
+
+Previous attempts to work around this constraint (specs 991, 997, 015) failed because they addressed symptoms (error handling, documentation) rather than the root cause (architectural impossibility).
 
 ## Scope
 
-Seven commands implement automatic TODO.md updates:
+Nine commands implement the manual reminder pattern:
 
-| Command | Trigger Points | Signal/Action | Section Transition |
-|---------|---------------|---------------|-------------------|
-| `/build` | START (after marking IN PROGRESS) | `update_plan_status()` | Not Started → In Progress |
-| `/build` | COMPLETION (after marking COMPLETE) | `update_plan_status()` | In Progress → Completed |
-| `/plan` | After plan creation | `PLAN_CREATED` signal | → Not Started |
-| `/research` | After report creation | `REPORT_CREATED` signal | → Research Reports |
-| `/debug` | After debug report creation | `DEBUG_REPORT_CREATED` signal | → Debug Reports |
-| `/repair` | After repair plan creation | `PLAN_CREATED` signal | → Not Started |
-| `/errors` | After error analysis report (report mode) | `trigger_todo_update()` | → Research Reports |
-| `/revise` | After plan modification | `PLAN_REVISED` signal | Status unchanged |
+| Command | Artifact Type | Reminder Location |
+|---------|--------------|-------------------|
+| `/build` | Build completion | Completion summary |
+| `/plan` | New plan | Completion summary |
+| `/research` | Research report | Completion summary |
+| `/debug` | Debug report | Completion summary |
+| `/repair` | Repair plan | Completion summary |
+| `/errors` | Error analysis | Completion summary |
+| `/revise` | Revised plan | Completion summary |
+| `/test` | Test results | Completion summary |
+| `/implement` | Implementation summary | Completion summary |
 
-## Signal-Triggered Delegation Pattern
+## Manual Reminder Pattern
 
-All commands use the same standardized pattern for TODO.md updates:
+All commands use the same standardized reminder pattern:
 
-### Pattern A: /plan Command (New Plan Creation)
+### Pattern: Completion Reminder
+
+Commands display this reminder immediately before exit:
 
 ```bash
-# After plan file created and PLAN_CREATED signal emitted
-echo "PLAN_CREATED: $PLAN_PATH"
-
-# Delegate to /todo for TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this [artifact-type]"
+echo ""
 ```
 
-### Pattern B: /build Command at START (Status: → IN PROGRESS)
+### Integration with Next Steps
+
+Commands also include the manual step in their "Next Steps" section:
 
 ```bash
-# After update_plan_status marks plan as IN PROGRESS
-if update_plan_status "$PLAN_FILE" "IN PROGRESS" 2>/dev/null; then
-  echo "Marked plan as [IN PROGRESS]"
+NEXT_STEPS="  • Review [artifact]: cat $ARTIFACT_PATH
+  • [Command-specific action]
+  • Run /todo to update TODO.md (adds [artifact] to tracking)"
+```
 
-  # Delegate to /todo for TODO.md update
-  bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-  echo "✓ Updated TODO.md"
+## Implementation Examples
+
+### Example 1: /plan Command
+
+```bash
+# Build next steps
+NEXT_STEPS="  • Review plan: cat $PLAN_PATH
+  • Begin implementation: /build $PLAN_PATH
+  • Review research: ls -lh $RESEARCH_DIR/
+  • Run /todo to update TODO.md (adds plan to tracking)"
+
+# Print standardized summary (no phases for plan command)
+print_artifact_summary "Plan" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this plan"
+echo ""
+
+# === RETURN PLAN_CREATED SIGNAL ===
+if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
+  echo ""
+  echo "PLAN_CREATED: $PLAN_PATH"
+  echo ""
+fi
+
+exit 0
+```
+
+### Example 2: /build Command
+
+```bash
+# Build next steps
+if [ "$TESTS_PASSED" = "true" ]; then
+  NEXT_STEPS="  • Review summary: cat $LATEST_SUMMARY
+  • Check git commits: git log --oneline -5
+  • Review plan updates: cat $PLAN_FILE
+  • Run /todo to update TODO.md (adds completed plan to tracking)"
+else
+  NEXT_STEPS="  • Review debug output: cat $LATEST_SUMMARY
+  • Fix remaining issues and re-run: /build $PLAN_FILE
+  • Check test failures: see summary for details
+  • Run /todo to update TODO.md when complete"
+fi
+
+# Print standardized summary
+print_artifact_summary "Build" "$SUMMARY_TEXT" "$PHASES" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this build"
+echo ""
+
+# === RETURN IMPLEMENTATION_COMPLETE SIGNAL ===
+if [ -n "$LATEST_SUMMARY" ] && [ -f "$LATEST_SUMMARY" ]; then
+  echo ""
+  echo "IMPLEMENTATION_COMPLETE"
+  echo "  summary_path: $LATEST_SUMMARY"
+  echo "  plan_path: $PLAN_FILE"
+  echo ""
 fi
 ```
 
-### Pattern C: /build Command at COMPLETION (Status: → COMPLETE)
+### Example 3: /research Command
 
 ```bash
-# After all phases complete and update_plan_status marks plan as COMPLETE
-if check_all_phases_complete "$PLAN_FILE"; then
-  update_plan_status "$PLAN_FILE" "COMPLETE" 2>/dev/null && \
-    echo "Plan metadata status updated to [COMPLETE]"
+# Build next steps
+NEXT_STEPS="  • Review reports: ls -lh $RESEARCH_DIR/
+  • Create implementation plan: /plan \"${WORKFLOW_DESCRIPTION}\"
+  • Run full workflow: /coordinate \"${WORKFLOW_DESCRIPTION}\"
+  • Run /todo to update TODO.md (adds research to tracking)"
 
-  # Delegate to /todo for TODO.md update
-  bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-  echo "✓ Updated TODO.md"
+# Print standardized summary (no phases for research command)
+print_artifact_summary "Research" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this research"
+echo ""
+
+# === RETURN REPORT_CREATED SIGNAL ===
+LATEST_REPORT=$(ls -t "$RESEARCH_DIR"/*.md 2>/dev/null | head -1)
+if [ -n "$LATEST_REPORT" ] && [ -f "$LATEST_REPORT" ]; then
+  echo ""
+  echo "REPORT_CREATED: $LATEST_REPORT"
+  echo ""
+fi
+
+exit 0
+```
+
+## Anti-Patterns (Do NOT Use)
+
+### Anti-Pattern 1: Automatic Invocation (Broken)
+
+```bash
+# ❌ DOES NOT WORK - bash blocks cannot invoke slash commands
+if bash -c '/todo' >/dev/null 2>&1; then
+  echo "TODO.md updated"
 fi
 ```
 
-### Pattern D: /research Command (Report Creation)
+### Anti-Pattern 2: Function Call (Removed)
 
 ```bash
-# After research report created and REPORT_CREATED signal emitted
-echo "REPORT_CREATED: $REPORT_PATH"
-
-# Delegate to /todo for TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# ❌ REMOVED - trigger_todo_update() function no longer exists
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh"
+trigger_todo_update "plan created"
 ```
 
-### Pattern E: /debug Command (Debug Report Creation)
+### Anti-Pattern 3: Direct TODO.md Modification
 
 ```bash
-# After debug report created and DEBUG_REPORT_CREATED signal emitted
-echo "DEBUG_REPORT_CREATED: $DEBUG_REPORT_PATH"
-
-# Delegate to /todo for TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+# ❌ VIOLATES SINGLE SOURCE OF TRUTH
+# Never modify TODO.md directly - let /todo command handle regeneration
+echo "- [ ] My plan" >> .claude/TODO.md
 ```
 
-### Pattern F: /repair Command (Repair Plan Creation)
+## User Workflow
 
-```bash
-# After repair plan created and PLAN_CREATED signal emitted
-echo "PLAN_CREATED: $REPAIR_PLAN_PATH"
+When commands complete, users see clear guidance:
 
-# Delegate to /todo for TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+```
+═══════════════════════════════════════════════════════
+PLAN CREATION COMPLETE
+═══════════════════════════════════════════════════════
+
+## Summary
+Created implementation plan with 5 phases (estimated 4-6 hours).
+
+## Artifacts
+  📊 Reports: /path/to/reports/ (3 files)
+  📄 Plan: /path/to/plan.md
+
+## Next Steps
+  • Review plan: cat /path/to/plan.md
+  • Begin implementation: /build /path/to/plan.md
+  • Review research: ls -lh /path/to/reports/
+  • Run /todo to update TODO.md (adds plan to tracking)
+
+📋 Next Step: Run /todo to update TODO.md with this plan
+
+PLAN_CREATED: /path/to/plan.md
 ```
 
-### Pattern G: /revise Command (Plan Modification)
-
+Users then manually run:
 ```bash
-# After plan revision complete and PLAN_REVISED signal emitted
-echo "PLAN_REVISED: $EXISTING_PLAN_PATH"
-
-# Delegate to /todo for TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+/todo
 ```
 
-## Pattern Components
+This regenerates TODO.md to include the new artifact.
 
-### 1. Signal Emission (Already Exists)
+## Benefits of Manual Workflow
 
-Commands already emit standardized signals with absolute paths:
-- `PLAN_CREATED: /absolute/path/to/plan.md`
-- `REPORT_CREATED: /absolute/path/to/report.md`
-- `DEBUG_REPORT_CREATED: /absolute/path/to/debug_report.md`
-- `PLAN_REVISED: /absolute/path/to/plan.md`
+1. **Honest Implementation**: Respects architectural constraints rather than fighting them
+2. **Clear User Guidance**: Explicit reminders make the workflow obvious
+3. **No Silent Failures**: Eliminates broken automatic update attempts that fail silently
+4. **Fast Execution**: `/todo` runs quickly (1-2 seconds), minimal friction
+5. **Single Source of Truth**: All TODO.md logic remains in `/todo` command
+6. **Maintainable**: Simple pattern, easy to understand and modify
 
-### 2. Delegation Call
+## Migration from Automatic Pattern
 
-```bash
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-```
+If migrating a command from the old automatic pattern:
 
-**Components**:
-- `bash -c "..."` - Subshell for isolation
-- `cd "$CLAUDE_PROJECT_DIR"` - Change to project root (required for /todo command)
-- `.claude/commands/todo.md` - Invoke /todo command
-- `2>/dev/null` - Suppress output (Output Formatting Standards compliance)
-- `|| true` - Graceful degradation (non-critical operation)
-
-### 3. Checkpoint Output
+### Step 1: Remove trigger_todo_update() Call
 
 ```bash
-echo "✓ Updated TODO.md"
-```
-
-Single line checkpoint after TODO.md update completes.
-
-## Design Rationale
-
-### Why Delegation?
-
-**Separation of Concerns**:
-- `/todo` remains single source of truth for TODO.md generation logic
-- Commands only responsible for artifact creation, not TODO.md formatting
-- Changes to TODO.md format only require updating `/todo`, not all commands
-
-**Consistency**:
-- All TODO.md updates use same classification/formatting logic
-- Eliminates divergent implementations across commands
-- Ensures uniform section placement and entry format
-
-**Simplicity**:
-- No new `/todo` features needed (full scan is fast: 2-3 seconds)
-- No topic extraction or targeted update logic
-- No file locking (single-user, sequential execution)
-- Just 2-3 lines per integration point
-
-**Maintainability**:
-- Leverages existing, well-tested `todo-functions.sh` library
-- Reduces surface area for bugs (one implementation)
-- Easier to debug and extend
-
-### Why Full Scan?
-
-**Performance**:
-- Full scan takes 2-3 seconds for 50 topics
-- Acceptable overhead for signal-triggered updates
-- User sees single checkpoint (non-blocking)
-
-**Reliability**:
-- TODO.md always reflects complete project state
-- No risk of stale entries or missed artifacts
-- No complex targeted update logic to debug
-
-**Simplicity**:
-- No topic name extraction from paths
-- No incremental update logic
-- No state management for partial updates
-
-## Standards Compliance
-
-This integration pattern aligns with project standards:
-
-### Output Formatting Standards
-
-From [Output Formatting Standards](/home/benjamin/.config/.claude/docs/reference/standards/output-formatting.md):
-- Suppress `/todo` output with `2>/dev/null`
-- Single checkpoint after operation: `✓ Updated TODO.md`
-- No interim console output for background TODO update
-
-### Command Authoring Standards
-
-From [Command Authoring Standards](/home/benjamin/.config/.claude/docs/reference/standards/command-authoring.md):
-- Block consolidation: Integration adds 2-3 lines per trigger point
-- Checkpoint format: Single line summary per major operation
-- Error handling: Graceful degradation with `|| true`
-
-### TODO Organization Standards
-
-From [TODO Organization Standards](/home/benjamin/.config/.claude/docs/reference/standards/todo-organization-standards.md):
-- Delegates to `/todo` for section hierarchy and status classification
-- Preserves Backlog and Saved sections (manual curation)
-- Ensures consistent entry format and checkbox conventions
-
-## Testing Approach
-
-### Integration Tests
-
-Verify TODO.md contains expected entries after command execution:
-
-```bash
-# Test /plan updates TODO.md (Pattern A)
-rm .claude/TODO.md
-/plan "test feature for todo integration"
-grep -q "test feature for todo integration" .claude/TODO.md
-grep -q "Not Started" .claude/TODO.md
-
-# Test /build START updates TODO.md (Pattern B)
-/build .claude/specs/*/plans/001-*.md
-grep -q "In Progress" .claude/TODO.md
-
-# Test /build COMPLETION updates TODO.md (Pattern C)
-# After all phases complete
-grep -q "Completed" .claude/TODO.md
-
-# Test /research updates TODO.md (Pattern D)
-/research "test research topic"
-# Verify research reports reflected in TODO.md
-
-# Test /revise updates TODO.md (Pattern G)
-/revise "revise plan at .claude/specs/*/plans/001-*.md based on new insights"
-# Verify plan modifications reflected in TODO.md
-```
-
-### Graceful Degradation Tests
-
-Verify commands succeed even if `/todo` fails:
-
-```bash
-# Simulate /todo failure
-mv .claude/commands/todo.md .claude/commands/todo.md.bak
-/plan "test graceful degradation" || echo "FAIL: plan should succeed even if /todo fails"
-mv .claude/commands/todo.md.bak .claude/commands/todo.md
-```
-
-### Section Transition Tests
-
-Verify TODO.md section transitions during `/build` workflow:
-
-```bash
-# Verify transition: Not Started → In Progress → Completed
-grep -A5 "## Not Started" .claude/TODO.md | grep -q "test_plan"  # Initially Not Started
-/build .claude/specs/test_topic/plans/001-test_plan.md
-grep -A5 "## In Progress" .claude/TODO.md | grep -q "test_plan"  # Now In Progress
-# After completion
-grep -A20 "## Completed" .claude/TODO.md | grep -q "test_plan"  # Now Completed
-```
-
-## Anti-Patterns
-
-### Don't Implement Targeted/Incremental Updates
-
-**Wrong**:
-```bash
-# Don't extract topic name and update specific entry
-topic_name=$(extract_topic_from_path "$PLAN_PATH")
-update_todo_entry "$topic_name" "In Progress"
-```
-
-**Right**:
-```bash
-# Delegate full scan to /todo
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-```
-
-**Why**: Full scan is fast enough (2-3 seconds) and eliminates complex topic extraction logic.
-
-### Don't Add Complex Error Handling
-
-**Wrong**:
-```bash
-# Don't implement retry logic or error reporting
-if ! bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md"; then
-  echo "WARNING: TODO.md update failed, retrying..." >&2
-  sleep 1
-  bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" || log_error "TODO.md update failed"
-fi
-```
-
-**Right**:
-```bash
-# Simple graceful degradation
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
-```
-
-**Why**: TODO.md updates are non-critical. User can manually run `/todo` if needed.
-
-### Don't Modify todo-functions.sh
-
-**Wrong**:
-```bash
-# Don't add new functions to todo-functions.sh for targeted updates
-add_function_to_library() {
-  echo "update_single_entry() { ... }" >> .claude/lib/todo/todo-functions.sh
+# REMOVE THIS:
+source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
+  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
 }
-```
-
-**Right**:
-```bash
-# Reuse existing functions via /todo delegation
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-```
-
-**Why**: Existing infrastructure is complete and well-tested. No modifications needed.
-
-### Don't Add File Locking
-
-**Wrong**:
-```bash
-# Don't implement lock files for concurrent access
-flock /tmp/todo.lock bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md"
-```
-
-**Right**:
-```bash
-# Simple delegation without locking
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-```
-
-**Why**: Single-user workflows make race conditions negligible. Lock complexity not justified.
-
-## Implementation Checklist
-
-When adding TODO.md updates to a command:
-
-- [ ] Identify signal emission point or status transition action
-- [ ] Add delegation call immediately after signal/action
-- [ ] Use standardized pattern: `bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true`
-- [ ] Add checkpoint output: `echo "✓ Updated TODO.md"`
-- [ ] Suppress `/todo` output with `2>/dev/null`
-- [ ] Test integration: verify TODO.md contains expected entry
-- [ ] Test graceful degradation: verify command succeeds if `/todo` fails
-- [ ] Update command documentation to note automatic TODO.md updates
-
-## Performance Considerations
-
-**Overhead per Command**:
-- Delegation call: 2-3 seconds (full scan)
-- Total command impact: <5% for typical workflows
-
-**When to Optimize**:
-- Only if user reports noticeable delays (unlikely)
-- Profile first: measure actual impact before optimizing
-- Consider targeted updates only if full scan exceeds 5 seconds
-
-**Current Decision**:
-- Full scan sufficient for all commands (fast enough)
-- Premature optimization avoided (simplicity prioritized)
-
-## Related Documentation
-
-- [TODO Organization Standards](/home/benjamin/.config/.claude/docs/reference/standards/todo-organization-standards.md) - TODO.md structure, sections, status classification
-- [Command Authoring Standards](/home/benjamin/.config/.claude/docs/reference/standards/command-authoring.md) - Block consolidation, checkpoint format
-- [Output Formatting Standards](/home/benjamin/.config/.claude/docs/reference/standards/output-formatting.md) - Output suppression, console summaries
-- [Command Reference](/home/benjamin/.config/.claude/docs/reference/standards/command-reference.md) - All commands with automatic TODO.md updates
-
-## Examples
-
-### Full /plan Integration
-
-```bash
-# In .claude/commands/plan.md, after plan creation:
-
-# Create plan file
-cat > "$PLAN_FILE" <<EOF
-# Implementation Plan
-...
-EOF
-
-# Emit signal
-echo "PLAN_CREATED: $PLAN_FILE"
-
-# Delegate TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
-
-# Continue with rest of command workflow
-```
-
-### Full /build Integration (Two Points)
-
-```bash
-# In .claude/commands/build.md, at START:
-
-# Mark plan as IN PROGRESS
-if update_plan_status "$PLAN_FILE" "IN PROGRESS" 2>/dev/null; then
-  echo "Marked plan as [IN PROGRESS]"
-
-  # Delegate TODO.md update
-  bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-  echo "✓ Updated TODO.md"
-fi
-
-# Execute implementation phases...
-# ...
-
-# In .claude/commands/build.md, at COMPLETION:
-
-# Check if all phases complete
-if check_all_phases_complete "$PLAN_FILE"; then
-  # Mark plan as COMPLETE
-  update_plan_status "$PLAN_FILE" "COMPLETE" 2>/dev/null && \
-    echo "Plan metadata status updated to [COMPLETE]"
-
-  # Delegate TODO.md update
-  bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-  echo "✓ Updated TODO.md"
+if type trigger_todo_update &>/dev/null; then
+  trigger_todo_update "reason"
 fi
 ```
 
-### Full /research Integration
+### Step 2: Add Reminder to Next Steps
 
 ```bash
-# In .claude/commands/research.md, after report creation:
+# ADD THIS to NEXT_STEPS variable:
+NEXT_STEPS="  • [existing steps]
+  • Run /todo to update TODO.md (adds [artifact] to tracking)"
+```
 
-# Create research report
-cat > "$REPORT_FILE" <<EOF
-# Research Report
-...
-EOF
+### Step 3: Add Standalone Reminder
 
-# Emit signal
-echo "REPORT_CREATED: $REPORT_FILE"
-
-# Delegate TODO.md update
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md" 2>/dev/null || true
-echo "✓ Updated TODO.md"
+```bash
+# ADD THIS before exit or return signal:
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this [artifact]"
+echo ""
 ```
 
 ## Troubleshooting
 
-### TODO.md Not Updated After Command
+### TODO.md Not Updating
 
-**Symptoms**: Command completes successfully but TODO.md unchanged.
+**Problem**: User reports TODO.md doesn't show new plan/report.
 
-**Diagnosis**:
+**Solution**: User forgot to run `/todo` manually. Check command output for reminder message.
+
+### Stale TODO.md Content
+
+**Problem**: TODO.md shows outdated information.
+
+**Solution**: Run `/todo` to regenerate from current project state. The command scans all plan files and rebuilds TODO.md from scratch.
+
+### Users Want Automatic Updates
+
+**Problem**: Users request automatic TODO.md updates.
+
+**Solution**: Explain architectural constraint. Fast `/todo` execution (1-2 seconds) keeps manual step minimal. If Claude Code runtime adds callback/signal support in the future, automatic updates could be revisited.
+
+## Testing
+
+Commands should verify:
+
+1. **Reminder Present**: Check that completion output includes "📋 Next Step: Run /todo to update TODO.md"
+2. **Next Steps Includes /todo**: Verify NEXT_STEPS variable mentions running /todo
+3. **No trigger_todo_update Calls**: Ensure command doesn't call removed function
+4. **No Direct TODO.md Modification**: Confirm command never writes to .claude/TODO.md directly
+
+Example test:
 ```bash
-# Check if /todo command exists
-test -f .claude/commands/todo.md && echo "EXISTS" || echo "MISSING"
+# Test reminder message present
+OUTPUT=$(/plan "test feature" 2>&1)
+if echo "$OUTPUT" | grep -q "Run /todo to update TODO.md"; then
+  echo "✓ PASS: Reminder present"
+else
+  echo "✗ FAIL: Missing reminder"
+fi
 
-# Check if delegation call present in command
-grep -q "bash -c.*todo.md" .claude/commands/plan.md
+# Test no trigger_todo_update calls
+if ! grep -q "trigger_todo_update" .claude/commands/plan.md; then
+  echo "✓ PASS: No trigger_todo_update calls"
+else
+  echo "✗ FAIL: Found trigger_todo_update call"
+fi
 ```
 
-**Solution**: Add delegation call after signal emission using standardized pattern.
+## Standards Compliance
 
-### TODO.md Missing Entries
+This pattern complies with:
 
-**Symptoms**: Some artifacts not appearing in TODO.md.
+- **Clean-Break Development Standard**: Complete removal of broken pattern, no deprecation period
+- **Output Formatting Standards**: Reminder uses emoji marker and clear formatting
+- **Documentation Standards**: No historical commentary, reflects current implementation only
 
-**Diagnosis**:
-```bash
-# Run /todo manually to see full scan output
-.claude/commands/todo.md
+## See Also
 
-# Check if artifact paths match expected structure
-ls -la .claude/specs/*/plans/
-ls -la .claude/specs/*/reports/
-```
-
-**Solution**: Verify artifact paths follow Directory Protocols. Run `/todo` manually to refresh.
-
-### Command Fails After Adding Integration
-
-**Symptoms**: Command exits with error after adding delegation call.
-
-**Diagnosis**:
-```bash
-# Test delegation call in isolation
-bash -c "cd \"$CLAUDE_PROJECT_DIR\" && .claude/commands/todo.md"
-echo $?  # Should be 0 or ignored by || true
-```
-
-**Solution**: Ensure `|| true` appended for graceful degradation. Verify `CLAUDE_PROJECT_DIR` set.
-
-## Summary
-
-The signal-triggered delegation pattern provides:
-- **Consistency**: All commands use same TODO.md generation logic
-- **Simplicity**: 2-3 lines per integration point, no new infrastructure
-- **Reliability**: Leverages well-tested `/todo` command and `todo-functions.sh`
-- **Maintainability**: Single source of truth for TODO.md formatting
-- **Performance**: Full scan fast enough for all use cases (2-3 seconds)
-
-All seven commands (`/build`, `/plan`, `/research`, `/debug`, `/repair`, `/errors`, `/revise`) use identical delegation patterns, ensuring uniform behavior and easy maintenance.
-
-## Helper Function: trigger_todo_update()
-
-For simpler integration, commands can use the `trigger_todo_update()` helper function from `todo-functions.sh`:
-
-```bash
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh"
-
-# After creating/modifying artifact
-trigger_todo_update "repair plan created"
-```
-
-This function:
-- Delegates to `/todo` command silently
-- Outputs "✓ Updated TODO.md (reason)" on success
-- Logs warning on failure but does not block the calling command (non-blocking)
-- Follows the same delegation pattern as direct `bash -c` calls
+- [TODO Command Guide](../commands/todo-command-guide.md)
+- [TODO Library README](../../lib/todo/README.md)
+- [Clean-Break Development Standard](../../reference/standards/clean-break-development.md)
+- [Output Formatting Standards](../../reference/standards/output-formatting.md)

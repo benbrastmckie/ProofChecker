@@ -704,6 +704,8 @@ echo ""
 echo "View full report: cat $REPORT_PATH"
 echo "Use with /repair: /repair --file $REPORT_PATH"
 echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this error analysis"
+echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # === RETURN REPORT_CREATED SIGNAL ===
@@ -712,16 +714,6 @@ if [ -n "$REPORT_PATH" ] && [ -f "$REPORT_PATH" ]; then
   echo ""
   echo "REPORT_CREATED: $REPORT_PATH"
   echo ""
-fi
-
-# === UPDATE TODO.md ===
-# Trigger TODO.md regeneration via delegation pattern (report mode only)
-# Query mode doesn't create files so no TODO.md update needed
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-}
-if command -v trigger_todo_update &>/dev/null; then
-  trigger_todo_update "error analysis report"
 fi
 
 # Cleanup temporary state file

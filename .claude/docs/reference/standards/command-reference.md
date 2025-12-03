@@ -574,17 +574,25 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 ---
 
 ### /test
-**Purpose**: Run project-specific tests based on CLAUDE.md protocols
+**Purpose**: Test and debug workflow - Execute test suite with coverage loop until quality threshold met
 
-**Usage**: `/test <feature/module/file> [test-type]`
+**Usage**: `/test [plan-file] [--file <summary>] [--coverage-threshold=N] [--max-iterations=N]`
 
 **Type**: primary
 
 **Arguments**:
-- `feature/module/file`: Test target
-- `test-type` (optional): Type of test to run
+- `plan-file`: Path to implementation plan (optional if using --file)
+- `--file <summary>`: Explicit path to implementation summary (auto-discovery if omitted)
+- `--coverage-threshold=N`: Coverage percentage threshold (default: 80)
+- `--max-iterations=N`: Maximum test iterations for coverage loop (default: 5)
 
-**Output**: Test results and analysis
+**Agents Used**:
+- test-executor: Execute test suite with framework detection and structured reporting
+- debug-analyst: Analyze test failures and coverage gaps (conditional, on failure)
+
+**TODO.md Integration**: Automatically updates TODO.md after successful test completion (all tests passed AND coverage threshold met)
+
+**Output**: Test results with coverage metrics, optional debug reports in `.claude/specs/NNN_*/outputs/` and `.claude/specs/NNN_*/debug/`
 
 **See Also**:
 - [/test Command Guide](../guides/commands/test-command-guide.md) - Comprehensive usage, multi-framework testing, error analysis

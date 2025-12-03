@@ -3,6 +3,27 @@
 
 This module defines task frames, the fundamental semantic structures for bimodal logic TM.
 
+## Paper Specification Reference
+
+**Task Frames (app:TaskSemantics, def:frame, line 1835)**:
+The JPL paper "The Perpetuity Calculus of Agency" defines task frames as tuples
+`F = (W, G, ·)` where:
+- `W` is a set of world states
+- `G` is an abelian group of "time" elements (durations)
+- `·: W × G → P(W)` is the task relation
+
+**ProofChecker MVP Simplification**:
+This implementation uses `Int` (integers) for the time group `G`, which is a
+specific abelian group satisfying all required properties. The paper's general
+abelian group requirement allows for more abstract temporal structures, but `Int`
+is sufficient for MVP and matches standard temporal logic practice.
+
+**Alignment Verification**:
+- Paper's nullity: `w ∈ w · 0` corresponds to `nullity : ∀ w, task_rel w 0 w`
+- Paper's compositionality: If `u ∈ w · d` and `v ∈ u · e` then `v ∈ w · (d + e)`
+  corresponds to `compositionality : ∀ w u v x y, task_rel w x u → task_rel u y v → task_rel w (x + y) v`
+- Int with addition forms an abelian group (required by paper)
+
 ## Main Definitions
 
 - `TaskFrame`: Structure with world states, times, task relation, and constraints
@@ -15,14 +36,15 @@ This module defines task frames, the fundamental semantic structures for bimodal
 
 ## Implementation Notes
 
-- Times are integers (Int) for MVP simplicity
+- Times are integers (Int) for MVP simplicity (paper allows general abelian groups)
 - Task relation `task_rel w x u` means: world state `u` is reachable from `w` by task of duration `x`
 - Nullity: zero-duration task is identity (reflexivity)
 - Compositionality: sequential tasks compose (transitivity with addition)
 
 ## References
 
-* [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) - Task semantics specification
+* [ARCHITECTURE.md](../../../Documentation/UserGuide/ARCHITECTURE.md) - Task semantics specification
+* JPL Paper app:TaskSemantics (def:frame, line 1835) - Formal task frame definition
 -/
 
 namespace ProofChecker.Semantics

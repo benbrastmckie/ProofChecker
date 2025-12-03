@@ -1109,28 +1109,6 @@ get_plan_current_section() {
   [ -n "$section_name" ] && return 0 || return 1
 }
 
-# trigger_todo_update()
-# Purpose: Delegate to /todo command for full TODO.md regeneration
-# Arguments:
-#   $1 - Reason for update (for console output)
-# Returns: 0 on success (non-blocking - warnings only on failure)
-# Usage:
-#   trigger_todo_update "repair plan created"
-#
-trigger_todo_update() {
-  local reason="${1:-TODO.md update}"
-
-  # Delegate to /todo command silently (suppress output)
-  if bash -c "cd \"${CLAUDE_PROJECT_DIR}\" && /todo" >/dev/null 2>&1; then
-    echo "✓ Updated TODO.md ($reason)"
-    return 0
-  else
-    # Non-blocking: log warning but don't fail command
-    echo "WARNING: Failed to update TODO.md ($reason)" >&2
-    return 0  # Return success to avoid blocking parent command
-  fi
-}
-
 # ============================================================================
 # SECTION 8: Cleanup Direct Execution (--clean mode)
 # ============================================================================
@@ -1468,7 +1446,6 @@ export -f update_todo_file
 export -f validate_todo_structure
 export -f plan_exists_in_todo
 export -f get_plan_current_section
-export -f trigger_todo_update
 export -f parse_todo_sections
 export -f filter_completed_projects
 export -f has_uncommitted_changes

@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # test_todo_functions.sh - Unit tests for todo-functions.sh library
 #
-# Tests the query and delegation functions:
+# Tests the query functions:
 # - plan_exists_in_todo()
 # - get_plan_current_section()
-# - trigger_todo_update()
 
 set -e
 
@@ -190,18 +189,6 @@ test_get_plan_current_section_no_todomd() {
   setup
 }
 
-test_trigger_todo_update_non_blocking() {
-  echo "Test: trigger_todo_update - non-blocking on failure"
-
-  # The function should return success even if /todo fails
-  # (non-blocking behavior as specified)
-  trigger_todo_update "failure test" >/dev/null 2>&1
-  local exit_code=$?
-
-  # Should return 0 (success) regardless of /todo result
-  assert_eq "0" "$exit_code" "Returns success (non-blocking)"
-}
-
 # === RUN TESTS ===
 main() {
   echo "=== TODO Functions Unit Tests ==="
@@ -221,10 +208,6 @@ main() {
   test_get_plan_current_section_completed
   test_get_plan_current_section_not_found
   test_get_plan_current_section_no_todomd
-  echo ""
-
-  echo "--- trigger_todo_update tests ---"
-  test_trigger_todo_update_non_blocking
   echo ""
 
   # Summary

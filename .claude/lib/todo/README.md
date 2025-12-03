@@ -30,7 +30,6 @@ Core library providing all TODO command functionality.
 | `validate_todo_structure` | Validate TODO.md file structure | todo_path |
 | `plan_exists_in_todo` | Check if plan appears in TODO.md | plan_path |
 | `get_plan_current_section` | Find which section contains a plan | plan_path |
-| `trigger_todo_update` | Delegate to /todo for regeneration | reason |
 
 **Dependencies**:
 - `unified-location-detection.sh` - For specs root detection
@@ -128,30 +127,32 @@ if [ -n "$SECTION" ]; then
 fi
 ```
 
-### Delegation Pattern (TODO.md Update)
+### Manual TODO.md Update Workflow
 
-The delegation pattern is the standard way for commands to trigger TODO.md updates.
-Rather than modifying TODO.md directly, commands delegate to the `/todo` command
-which performs full regeneration while preserving manually curated sections.
+Commands do not automatically update TODO.md. Instead, users are prompted to manually run `/todo` after command completion. This manual workflow is required due to architectural constraints in Claude Code where bash blocks cannot invoke slash commands.
 
-```bash
-source .claude/lib/todo/todo-functions.sh
+**When to Run /todo**:
+- After creating a new plan (`/plan`, `/repair`, `/debug`)
+- After modifying a plan (`/revise`)
+- After completing implementation (`/build`, `/implement`)
+- After generating research reports (`/research`)
+- After running tests (`/test`)
+- After analyzing errors (`/errors`)
 
-# After creating/modifying a plan
-trigger_todo_update "repair plan created"
-
-# After completing implementation
-trigger_todo_update "build workflow complete"
+**User Experience**:
+All commands display a completion reminder:
+```
+📋 Next Step: Run /todo to update TODO.md with this [artifact]
 ```
 
-**Commands using delegation pattern**:
-- /plan - After plan creation
-- /build - At start and completion
-- /research - After research report
-- /revise - After plan revision
-- /repair - After repair plan creation
-- /errors - After error analysis report (report mode only)
-- /debug - After debug report creation
+**Why No Automatic Updates**:
+Slash commands are markdown files processed by Claude Code's runtime, not executable bash scripts. Bash blocks in commands cannot invoke other slash commands using `bash -c '/todo'` - this architectural constraint makes automatic updates impossible without runtime changes to Claude Code itself.
+
+**Troubleshooting Stale TODO.md**:
+If TODO.md doesn't reflect recent changes:
+1. Run `/todo` to regenerate from current project state
+2. Check command completion output for reminder message
+3. Verify plan files have correct metadata status fields
 
 ## Test Isolation
 

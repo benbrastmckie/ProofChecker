@@ -1,15 +1,16 @@
 # Phase 3: Wave 2 Parallel - Soundness, Automation, WorldHistory [NOT STARTED]
 
 ## Metadata
-- **Date**: 2025-12-02 (Revised: 2025-12-02 based on frame constraints research)
+- **Date**: 2025-12-02 (Revised: 2025-12-02 for spec 022 documentation improvements)
 - **Parent Plan**: TODO Implementation Systematic Plan
 - **Phase Number**: 3
 - **Dependencies**: Phase 1 (Wave 1 - High Priority Foundations)
-- **Estimated Hours**: 56-82 hours sequential, ~40-60 hours parallel (increased from 53-79 to add paper cross-references and temporal verification)
-- **Complexity**: High
+- **Estimated Hours**: 45-64 hours sequential (revised from 56-82 with spec 022 docs), ~29-42 hours parallel (revised from 40-60)
+- **Complexity**: High (Sub-Phase 3B downgraded to Medium with spec 022 documentation)
 - **Status**: [NOT STARTED]
 - **Sub-Phases**: 3 (parallel execution)
-- **Revision Notes**: Sub-Phase 3A updated based on frame_constraints_soundness_analysis.md and task_semantics_alignment_analysis.md research findings. Added Tasks 3A.6 (paper cross-references) and 3A.7 (temporal operator verification) per semantic alignment research recommendations.
+- **Stages Expanded**: Sub-Phase 3B → 3 stages (stage_1_apply_axiom_modal_t.md, stage_2_tm_auto_aesop.md, stage_3_assumption_search_helpers.md)
+- **Revision Notes**: Sub-Phase 3A updated based on frame_constraints_soundness_analysis.md and task_semantics_alignment_analysis.md research findings. Sub-Phase 3B updated with spec 022 documentation references (METAPROGRAMMING_GUIDE.md, TACTIC_DEVELOPMENT.md Sections 2.5 & 4, PHASED_IMPLEMENTATION.md) reducing Task 7 time from 40-60h to 29-42h (11-18h savings, 28-30% reduction). Sub-Phase 3B expanded into 3 detailed stage files for implementation execution.
 
 ## Overview
 
@@ -19,7 +20,7 @@ Phase 3 executes Tasks 5, 7, and 8 from the TODO Implementation Plan in parallel
 
 **Parallel Execution Strategy**:
 - Sub-Phase 3A (Task 5): Conditional soundness documentation + paper cross-references - 15-18 hours (revised from 12-15 based on task_semantics_alignment_analysis.md)
-- Sub-Phase 3B (Task 7): Automation tactics - 40-60 hours (phased)
+- Sub-Phase 3B (Task 7): Automation tactics - 29-42 hours (phased, revised from 40-60 with spec 022 documentation)
 - Sub-Phase 3C (Task 8): WorldHistory fix - 1-2 hours
 
 All three sub-phases can execute concurrently after Phase 1 completes. Sub-Phase 3C (WorldHistory) is expected to complete first, followed by Sub-Phase 3A (Soundness), with Sub-Phase 3B (Automation) taking the longest due to its phased nature.
@@ -761,10 +762,15 @@ grep "τ.domain" ProofChecker/Semantics/Truth.lean | grep -E "past|future"
 Implement core automation tactics in phased approach: apply_axiom, modal_t (Phase 1), tm_auto (Phase 2), assumption_search and helpers (Phase 3). Removes 8 sorry placeholders and provides 3-4 working tactics.
 
 ### Complexity
-High - Requires LEAN 4 meta-programming expertise, tactic API knowledge, and careful testing
+Medium (downgraded from High due to spec 022 documentation eliminating research overhead)
 
 ### Estimated Hours
-40-60 hours (phased: 15-20 + 15-20 + 10-20)
+29-42 hours (revised from 40-60 with spec 022 documentation)
+- Phase 1: 10-13 hours (revised from 15-20, METAPROGRAMMING_GUIDE.md + modal_t example reduce trial-and-error)
+- Phase 2: 12-15 hours (revised from 15-20, TACTIC_DEVELOPMENT.md Section 4 Aesop patterns)
+- Phase 3: 7-14 hours (revised from 10-20, METAPROGRAMMING_GUIDE.md assumption_search example)
+
+**Rationale**: Comprehensive LEAN 4 tactic API documentation in METAPROGRAMMING_GUIDE.md (730 lines, 8 sections) and working examples in TACTIC_DEVELOPMENT.md eliminate 11-18 hours of external research time previously embedded in estimates.
 
 ### Dependencies
 - Phase 1 complete (propositional axioms may be useful for tactic development)
@@ -772,9 +778,47 @@ High - Requires LEAN 4 meta-programming expertise, tactic API knowledge, and car
 
 ### Phased Approach
 Breaking automation into 3 phases allows:
-1. **Learning curve management**: Phase 1 provides foundation for LEAN 4 tactic development
+1. **Learning curve management**: Phase 1 provides foundation for LEAN 4 tactic development (now accelerated with METAPROGRAMMING_GUIDE.md)
 2. **Incremental value**: Each phase delivers working tactics
 3. **Risk mitigation**: Can pause after Phase 1 or 2 if time constraints emerge
+
+**Strategic Alignment** (from [PHASED_IMPLEMENTATION.md](../../../Documentation/Development/PHASED_IMPLEMENTATION.md#task-7-implement-core-automation-40-60-hours-phased---can-run-parallel)):
+- Task 7 phased approach matches Wave 2 execution strategy
+- Can run in parallel with Tasks 5, 6, 8 (all independent after Wave 1)
+- Longest Wave 2 task (bottleneck) - prioritize starting early
+- Spec 022 documentation reduces effort: 40-60 hours → 29-42 hours
+
+**Documentation Impact**: PHASED_IMPLEMENTATION.md confirms phased automation approach is optimal for Wave 2 parallelization. METAPROGRAMMING_GUIDE.md and TACTIC_DEVELOPMENT.md eliminate research overhead embedded in original estimates.
+
+---
+
+### Documentation Quick Start for Task 7 Implementation
+
+Before beginning tactic implementation, review the following documentation in order:
+
+**Step 1** (10 minutes): Read [CLAUDE.md Section 10.1](../../../CLAUDE.md#lean-4-metaprogramming-and-automation-quick-reference)
+- Priority tactics list with effort estimates
+- Key metaprogramming modules quick reference
+- Aesop integration pattern example
+- Implementation roadmap confirmation
+
+**Step 2** (30-45 minutes): Skim [METAPROGRAMMING_GUIDE.md](../../../Documentation/Development/METAPROGRAMMING_GUIDE.md)
+- Section 1: Introduction and prerequisites
+- Section 2: Core modules and imports (essential)
+- Section 7: Three tactic development approaches (architectural decisions)
+- Section 8: Complete working examples (apply_axiom, modal_t, assumption_search)
+
+**Step 3** (20-30 minutes): Study [TACTIC_DEVELOPMENT.md Section 2.5](../../../Documentation/Development/TACTIC_DEVELOPMENT.md#25-complete-modal_t-tactic-example)
+- Complete annotated modal_t implementation
+- Step-by-step explanation of pattern matching, proof construction, error handling
+
+**Step 4** (As Needed During Implementation): Deep-dive into METAPROGRAMMING_GUIDE.md specific sections
+- Section 3: Goal Management (getMainGoal, goal.assign)
+- Section 4: Expression Pattern Matching (formula destructuring)
+- Section 5: Proof Term Construction (mkAppM, mkConst)
+- Section 6: Error Handling (throwError patterns)
+
+**Time Investment**: 1-1.5 hours upfront reading saves 8-12 hours of scattered research during implementation.
 
 ---
 
@@ -784,7 +828,19 @@ Breaking automation into 3 phases allows:
 
 **Objective**: Replace apply_axiom and modal_t stubs with real implementations
 
-**Estimated Time**: 15-20 hours
+**Estimated Time**: 10-13 hours (revised from 15-20 with spec 022 documentation)
+
+**Implementation Resources**:
+- **Primary Reference**: [METAPROGRAMMING_GUIDE.md](../../../Documentation/Development/METAPROGRAMMING_GUIDE.md)
+  - Section 2: Core Modules and Imports (essential imports)
+  - Section 3: Goal Management (getMainGoal, goal.assign patterns)
+  - Section 5: Proof Term Construction (mkAppM, mkConst for axiom application)
+  - Section 7: Three Tactic Development Approaches (macro vs elab_rules decision)
+  - Section 8: Complete Working Examples (apply_axiom macro, modal_t elab_rules)
+- **Secondary Reference**: [TACTIC_DEVELOPMENT.md Section 2.5](../../../Documentation/Development/TACTIC_DEVELOPMENT.md#25-complete-modal_t-tactic-example)
+  - Complete annotated modal_t implementation with step-by-step explanation
+
+**Research Time Reduction**: METAPROGRAMMING_GUIDE.md eliminates 6-10 hours of external LEAN 4 documentation searches by providing consolidated API reference.
 
 **apply_axiom Tactic** (Lines 102-112):
 
@@ -1018,7 +1074,7 @@ grep -c "sorry" ProofChecker/Automation/Tactics.lean
 # Expected: 10 (12 - 2 from Phase 1)
 ```
 
-**Time Estimate**: 15-20 hours
+**Time Estimate**: 10-13 hours (revised from 15-20 with spec 022 documentation)
 
 ---
 
@@ -1028,7 +1084,19 @@ grep -c "sorry" ProofChecker/Automation/Tactics.lean
 
 **Objective**: Implement tm_auto tactic combining apply_axiom and modal_t for simple automation
 
-**Estimated Time**: 15-20 hours
+**Estimated Time**: 12-15 hours (revised from 15-20 with spec 022 documentation)
+
+**Implementation Resources**:
+- **Primary Reference**: [TACTIC_DEVELOPMENT.md Section 4](../../../Documentation/Development/TACTIC_DEVELOPMENT.md#4-aesop-integration-for-tm-logic)
+  - Aesop rule attribution patterns (`@[aesop safe]`)
+  - Custom rule set declaration (`declare_aesop_rule_sets [TMLogic]`)
+  - tm_auto macro implementation (lines 341-367)
+  - Forward reasoning patterns for modal_k/temporal_k
+- **Quick Reference**: [CLAUDE.md Section 10.1](../../../CLAUDE.md#lean-4-metaprogramming-and-automation-quick-reference)
+  - Aesop Integration Pattern (lines 304-320)
+  - Complete TMLogic rule set example
+
+**Research Time Reduction**: TACTIC_DEVELOPMENT.md Section 4 eliminates 2-3 hours of Aesop documentation reading by providing TM-specific integration patterns.
 
 **tm_auto Tactic** (Lines 195-205):
 
@@ -1187,7 +1255,7 @@ grep -c "sorry" ProofChecker/Automation/Tactics.lean
 # Expected: 9 (10 - 1 from Phase 2)
 ```
 
-**Time Estimate**: 15-20 hours
+**Time Estimate**: 12-15 hours (revised from 15-20 with spec 022 documentation)
 
 ---
 
@@ -1197,7 +1265,16 @@ grep -c "sorry" ProofChecker/Automation/Tactics.lean
 
 **Objective**: Implement assumption_search for premise searching and helper functions for formula inspection
 
-**Estimated Time**: 10-20 hours
+**Estimated Time**: 7-14 hours (revised from 10-20 with spec 022 documentation)
+
+**Implementation Resources**:
+- **Primary Reference**: [METAPROGRAMMING_GUIDE.md Section 8](../../../Documentation/Development/METAPROGRAMMING_GUIDE.md#8-complete-working-examples)
+  - Example 3: assumption_search with TacticM iteration (lines 647-699)
+  - Complete implementation with local context retrieval (`getLCtx`)
+  - Iteration over assumptions with `isDefEq` checking
+  - Early exit pattern for successful match
+
+**Research Time Reduction**: METAPROGRAMMING_GUIDE.md Example 3 provides ready-to-adapt assumption_search implementation, eliminating 3-6 hours of TacticM API exploration.
 
 **assumption_search Helper** (Lines 163-172):
 
@@ -1391,7 +1468,7 @@ grep -c "sorry" ProofChecker/Automation/Tactics.lean
 # Expected: 5 (9 - 4 from Phase 3)
 ```
 
-**Time Estimate**: 10-20 hours
+**Time Estimate**: 7-14 hours (revised from 10-20 with spec 022 documentation)
 
 ---
 
@@ -1539,7 +1616,11 @@ Check formula structure:
 ### Sub-Phase 3B Summary
 
 **Total Phases**: 3
-**Estimated Time**: 40-60 hours (15-20 + 15-20 + 10-20)
+**Estimated Time**: 29-42 hours (revised from 40-60 with spec 022 documentation)
+- Phase 1: 10-13 hours (revised from 15-20)
+- Phase 2: 12-15 hours (revised from 15-20)
+- Phase 3: 7-14 hours (revised from 10-20)
+**Time Savings**: 11-18 hours (28-30% reduction) through spec 022 documentation eliminating external research
 **Sorry Removed**: 7 (apply_axiom, modal_t, tm_auto, assumption_search, 3 helpers)
 **Tactics Implemented**: 3 (apply_axiom, modal_t, tm_auto)
 **Helpers Implemented**: 4 (assumption_search, is_box_formula, is_future_formula, is_past_formula)
@@ -1548,6 +1629,13 @@ Check formula structure:
 - `Documentation/Development/TACTIC_DEVELOPMENT.md` (documentation)
 **Files Created**:
 - Tests in `ProofCheckerTest/Automation/TacticsTest.lean`
+
+**Documentation Impact** (from spec 022):
+- METAPROGRAMMING_GUIDE.md (730 lines) provides complete LEAN 4 tactic API reference
+- TACTIC_DEVELOPMENT.md Section 2.5 provides working modal_t example
+- TACTIC_DEVELOPMENT.md Section 4 provides Aesop integration patterns
+- PHASED_IMPLEMENTATION.md validates Wave 2 parallelization strategy
+- External research time eliminated: 11-18 hours across 3 phases
 
 **Success Criteria**:
 - [ ] apply_axiom tactic works for all 8 axioms
@@ -2060,19 +2148,21 @@ grep -r "sorry" ProofChecker/ --include="*.lean" | wc -l
 **Optimal Parallel Execution** (3 developers):
 ```
 Sub-Phase 3A (Soundness + Paper): ████████████████░░░░░░░░░░░░░░░░░ (15-18 hours, revised)
-Sub-Phase 3B (Automation):        ████████████████████████████████████████░░░░░░░░░░ (40-60 hours)
+Sub-Phase 3B (Automation):        ████████████████████████████████░░░░░░░░░░░░░░░░ (29-42 hours, revised with spec 022 docs)
 Sub-Phase 3C (WorldHistory):      ██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ (1-2 hours)
 Documentation (3.12):              ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██ (1-2 hours)
 
-Total Parallel Time: ~40-60 hours (bottleneck is Sub-Phase 3B)
-Total Sequential Time: 56-82 hours (revised to include Tasks 3A.6 and 3A.7)
-Time Savings: 16-22 hours (24-27%)
+Total Parallel Time: ~29-42 hours (bottleneck is Sub-Phase 3B, revised)
+Total Sequential Time: 45-64 hours (revised from 56-82 with spec 022 documentation)
+Time Savings: 16-22 hours (25-34%, increased from 24-27%)
 ```
 
 **Single Developer Sequential Execution**:
 ```
-3A → 3B → 3C → Documentation: 56-82 hours total (revised to include paper cross-references)
+3A → 3B → 3C → Documentation: 45-64 hours total (revised from 56-82 with spec 022 documentation)
 ```
+
+**Documentation Impact**: Spec 022 reduces Sub-Phase 3B (Task 7) from 40-60 hours to 29-42 hours (11-18 hour savings, 28-30% reduction) through comprehensive LEAN 4 tactic API reference and working examples.
 
 ### Success Criteria
 
@@ -2174,9 +2264,11 @@ When Phase 3 is complete, return:
 PHASE_EXPANDED: /home/benjamin/Documents/Philosophy/Projects/ProofChecker/.claude/specs/019_research_todo_implementation_plan/plans/phase_3_wave2_parallel_soundness_automation_worldhistory.md
 
 Sub-Phases: 3
-Estimated Hours: 56-82 sequential, 40-60 parallel (includes paper cross-references and temporal verification)
+Estimated Hours: 45-64 sequential (revised from 56-82 with spec 022 docs), 29-42 parallel (revised from 40-60)
+Time Savings: 11-18 hours in Task 7 (28-30% reduction) through spec 022 documentation
 Sorry Removed: 8 (7 automation + 1 WorldHistory; 6 soundness sorry remain as conditional)
 Tactics Implemented: 3 (apply_axiom, modal_t, tm_auto)
 Helpers Implemented: 4 (assumption_search, is_box_formula, is_future_formula, is_past_formula)
 Paper Cross-References: 4 files (TaskFrame, WorldHistory, Truth, Soundness)
+Documentation Impact: METAPROGRAMMING_GUIDE.md, TACTIC_DEVELOPMENT.md Sections 2.5 & 4, PHASED_IMPLEMENTATION.md
 ```

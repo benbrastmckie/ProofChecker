@@ -5,25 +5,43 @@ import ProofChecker.Semantics.TaskFrame
 
 This module defines world histories, which are functions from time domains to world states.
 
+## Paper Specification Reference
+
+**World Histories (app:TaskSemantics, def:world-history, line 1849)**:
+The JPL paper defines world histories (possible worlds) as functions `τ: T → W`
+where `T ⊆ G` is a convex subset of the time group and the function respects
+the task relation: for all `x, y ∈ T` with `x ≤ y`, we have `τ(y) ∈ τ(x) · (y - x)`.
+
+**ProofChecker Implementation**:
+- `domain: Int → Prop` represents the convex time subset `T ⊆ G`
+- `states: (t: Int) → domain t → F.WorldState` represents the function `τ: T → W`
+- `respects_task` constraint matches the paper's requirement exactly
+
+**Critical Semantic Points**:
+1. Box operator quantifies over ALL histories at time x
+2. Past/Future operators quantify over times in the SAME history
+3. Times must be in history's domain for evaluation
+
 ## Main Definitions
 
 - `WorldHistory`: World history structure with domain and task constraint
 
 ## Main Results
 
-- Example world histories (constant, trivial)
+- Example world histories (constant, trivial, universal with conditional validity)
 
 ## Implementation Notes
 
 - For MVP, we simplify the world history structure to avoid Mathlib dependencies
 - Domain is represented as a predicate on Int
-- Convexity is simplified for MVP
+- Convexity is simplified for MVP (not formally enforced)
 - History must respect the task relation (compositionality)
 
 ## References
 
-* [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) - World history specification
+* [ARCHITECTURE.md](../../../Documentation/UserGuide/ARCHITECTURE.md) - World history specification
 * [TaskFrame.lean](TaskFrame.lean) - Task frame structure
+* JPL Paper app:TaskSemantics (def:world-history, line 1849) - Formal world history definition
 -/
 
 namespace ProofChecker.Semantics
@@ -61,17 +79,43 @@ namespace WorldHistory
 variable {F : TaskFrame}
 
 /--
-Universal world history over all time.
+Universal world history over all time (conditional on reflexive frame).
 
 This history has every time in its domain and assigns the same world state everywhere.
-For the trivial frame, this satisfies task respect trivially.
+
+**Frame Constraint Required**: ReflexiveTaskFrame
+
+A frame is reflexive if for all world states `w` and durations `d`, the task relation
+`task_rel w d w` holds. This is stronger than nullity (which only requires `task_rel w 0 w`).
+
+**Examples of Reflexive Frames**:
+- `trivialFrame`: task_rel is always True (reflexive)
+- `natFrame`: task_rel is always True (reflexive)
+
+**Non-Reflexive Frame Example**:
+- `identityFrame`: task_rel only holds at duration 0 (not reflexive for d ≠ 0)
+
+**Justification**: For a constant history to respect the task relation, we need
+`task_rel w (t - s) w` for all times `s ≤ t`. Nullity only gives this when `s = t`.
+Compositionality alone cannot build arbitrary-duration self-loops without additional
+frame properties.
+
+**Impact on Semantics**: The universal history constructor is valid for reflexive frames
+(like trivialFrame used in examples). For general frames, use alternative history
+construction methods or prove reflexivity for the specific frame.
+
+**Future Work**: Either (a) add reflexivity as a TaskFrame constraint, (b) make universal
+conditional on a proof of reflexivity, or (c) accept conditional validity (current MVP).
 -/
 def universal (F : TaskFrame) (w : F.WorldState) : WorldHistory F where
   domain := fun _ => True
   states := fun _ _ => w
   respects_task := by
     intros s t hs ht hst
-    -- Need frame-specific proof; for trivial frame this is immediate
+    -- This requires F to be reflexive: ∀ w d, task_rel w d w
+    -- For trivialFrame and natFrame, this holds trivially.
+    -- For identityFrame, this only holds when s = t.
+    -- For MVP, we document the requirement and use sorry.
     sorry
 
 /--

@@ -1462,9 +1462,15 @@ fi
 NEXT_STEPS="  • Review debug strategy: cat $PLAN_PATH
   • Review debug artifacts: ls -lh $DEBUG_DIR/
   • Apply fixes identified in analysis
-  • Re-run tests to verify fix"
+  • Re-run tests to verify fix
+  • Run /todo to update TODO.md (adds debug report to tracking)"
 # Print standardized summary (no phases for debug command)
 print_artifact_summary "Debug" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this debug report"
+echo ""
 
 # === RETURN DEBUG_REPORT_CREATED SIGNAL ===
 # Signal enables buffer-opener hook and orchestrator detection
@@ -1474,18 +1480,15 @@ if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
   echo ""
 fi
 
-# === UPDATE TODO.md ===
-# Trigger TODO.md regeneration via delegation pattern
+# === STATUS MESSAGE ===
 # Handle standalone debug (no plan) case with context-aware message
 TOPIC_PATH=$(dirname "$(dirname "$PLAN_PATH")")
 PLAN_FILE=$(find "$TOPIC_PATH/plans" -name '*.md' -type f 2>/dev/null | head -1)
 
 if [ -n "$PLAN_FILE" ] && [ -f "$PLAN_FILE" ]; then
   echo "Debug report linked to plan: $(basename "$PLAN_FILE")"
-  trigger_todo_update "debug report added to plan"
 else
   echo "Debug report is standalone (no plan in topic)"
-  trigger_todo_update "standalone debug report"
 fi
 
 # Cleanup temp state file

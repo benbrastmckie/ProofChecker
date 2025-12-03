@@ -728,12 +728,16 @@ echo ""
 if [ "$NEXT_STATE" = "complete" ]; then
   echo "• Review test results: cat $TEST_OUTPUT_PATH"
   echo "• Verify coverage meets project requirements"
+  echo "• Run /todo to update TODO.md (adds completed tests to tracking)"
 else
   echo "• Review debug report: cat ${DEBUG_REPORT_PATH:-no debug report}"
   echo "• Address failing tests or coverage gaps"
   echo "• Re-run /test after fixes"
+  echo "• Run /todo to update TODO.md when complete"
 fi
 
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with test results"
 echo ""
 echo "═══════════════════════════════════════════════════════"
 

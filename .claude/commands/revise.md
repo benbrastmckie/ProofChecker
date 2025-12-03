@@ -1349,10 +1349,15 @@ ARTIFACTS="  📊 Reports: $RESEARCH_DIR/ ($TOTAL_REPORT_COUNT files, $NEW_REPOR
 # Build next steps
 NEXT_STEPS="  • Review revised plan: cat $EXISTING_PLAN_PATH
   • Compare with backup: diff $BACKUP_PATH $EXISTING_PLAN_PATH
-  • Implement revised plan: /build $EXISTING_PLAN_PATH"
+  • Implement revised plan: /build $EXISTING_PLAN_PATH
+  • Run /todo to update TODO.md (adds revised plan to tracking)"
 
 # Print standardized summary (no phases for revise command)
 print_artifact_summary "Revise" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this revised plan"
 echo ""
 
 # === CLEANUP TEMP FILES ===
@@ -1376,17 +1381,6 @@ fi
 echo ""
 echo "PLAN_REVISED: $EXISTING_PLAN_PATH"
 echo ""
-
-# === UPDATE TODO.md ===
-# Source todo-functions.sh for trigger_todo_update()
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || {
-  echo "WARNING: Failed to source todo-functions.sh for TODO.md update" >&2
-}
-
-# Trigger TODO.md update (non-blocking)
-if type trigger_todo_update &>/dev/null; then
-  trigger_todo_update "plan revised"
-fi
 
 exit 0
 ```

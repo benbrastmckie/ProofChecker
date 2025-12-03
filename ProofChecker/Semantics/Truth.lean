@@ -7,10 +7,34 @@ import ProofChecker.Syntax.Formula
 
 This module defines truth evaluation for TM formulas in task models.
 
+## Paper Specification Reference
+
+**Bimodal Logic Semantics (app:TaskSemantics, def:BL-semantics, lines 1857-1866)**:
+The JPL paper defines truth evaluation for TM formulas as follows:
+- `M,τ,x ⊨ p` iff `τ(x) ∈ V(p)` (atom satisfaction)
+- `M,τ,x ⊨ ⊥` is false (bottom)
+- `M,τ,x ⊨ φ → ψ` iff `M,τ,x ⊨ φ` implies `M,τ,x ⊨ ψ` (implication)
+- `M,τ,x ⊨ □φ` iff `M,σ,x ⊨ φ` for all σ ∈ Ω (box: necessity)
+- `M,τ,x ⊨ Past φ` iff `M,τ,y ⊨ φ` for all y ∈ T where y < x (past)
+- `M,τ,x ⊨ Future φ` iff `M,τ,y ⊨ φ` for all y ∈ T where x < y (future)
+
+**ProofChecker Implementation Alignment**:
+✓ Atom: `M.valuation (τ.states t ht) p` matches paper's `τ(x) ∈ V(p)`
+✓ Bot: `False` matches paper's definition
+✓ Imp: Standard material conditional matches paper
+✓ Box: `∀ (σ : WorldHistory F) (hs : σ.domain t), truth_at M σ t hs φ` matches paper's quantification over all histories
+✓ Past: `∀ (s : Int) (hs : τ.domain s), s < t → truth_at M τ s hs φ` matches paper's quantification with domain restriction
+✓ Future: `∀ (s : Int) (hs : τ.domain s), t < s → truth_at M τ s hs φ` matches paper's quantification with domain restriction
+
+**Semantic Verification (Task 3A.7)**:
+Temporal operator implementations correctly restrict quantification to `s ∈ τ.domain`
+(history's time domain), matching the paper's specification exactly. This is critical
+for correct temporal semantics.
+
 ## Main Definitions
 
 - `truth_at`: Truth of a formula at a model-history-time triple
-- Notation: `M, τ, t, ht ⊨ φ` for `truth_at M τ t ht φ`
+- No notation defined (parsing conflicts with validity notation)
 
 ## Main Results
 
@@ -26,9 +50,10 @@ This module defines truth evaluation for TM formulas in task models.
 
 ## References
 
-* [ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) - Truth evaluation specification
+* [ARCHITECTURE.md](../../../Documentation/UserGuide/ARCHITECTURE.md) - Truth evaluation specification
 * [Formula.lean](../Syntax/Formula.lean) - Formula syntax
 * [TaskModel.lean](TaskModel.lean) - Task model structure
+* JPL Paper app:TaskSemantics (def:BL-semantics, lines 1857-1866) - Formal truth definition
 -/
 
 namespace ProofChecker.Semantics

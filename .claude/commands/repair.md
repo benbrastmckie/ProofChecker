@@ -102,13 +102,12 @@ if [ $COMPLEXITY_VALID -ne 0 ]; then
   exit 1
 fi
 
-# Create error filters JSON
-ERROR_FILTERS=$(jq -n \
-  --arg since "$ERROR_SINCE" \
-  --arg type "$ERROR_TYPE" \
-  --arg command "$ERROR_COMMAND" \
-  --arg severity "$ERROR_SEVERITY" \
-  '{since: $since, type: $type, command: $command, severity: $severity}')
+# Store error filters as flat keys for state persistence
+# (State persistence library rejects JSON; use individual keys instead)
+ERROR_FILTER_SINCE="$ERROR_SINCE"
+ERROR_FILTER_TYPE="$ERROR_TYPE"
+ERROR_FILTER_COMMAND="$ERROR_COMMAND"
+ERROR_FILTER_SEVERITY="$ERROR_SEVERITY"
 
 # Create description for workflow
 ERROR_DESCRIPTION="error analysis and repair"
@@ -336,7 +335,10 @@ append_workflow_state "TOPIC_PATH" "$TOPIC_PATH"
 append_workflow_state "TOPIC_NAME" "$TOPIC_NAME"
 append_workflow_state "TOPIC_NUM" "$TOPIC_NUM"
 append_workflow_state "ERROR_DESCRIPTION" "$ERROR_DESCRIPTION"
-append_workflow_state "ERROR_FILTERS" "$ERROR_FILTERS"
+append_workflow_state "ERROR_FILTER_SINCE" "$ERROR_FILTER_SINCE"
+append_workflow_state "ERROR_FILTER_TYPE" "$ERROR_FILTER_TYPE"
+append_workflow_state "ERROR_FILTER_COMMAND" "$ERROR_FILTER_COMMAND"
+append_workflow_state "ERROR_FILTER_SEVERITY" "$ERROR_FILTER_SEVERITY"
 append_workflow_state "RESEARCH_COMPLEXITY" "$RESEARCH_COMPLEXITY"
 append_workflow_state "WORKFLOW_OUTPUT_FILE" "$WORKFLOW_OUTPUT_FILE"
 
@@ -430,8 +432,25 @@ if [ -z "${RESEARCH_DIR:-}" ]; then
   exit 1
 fi
 
+# Defensive: Ensure RESEARCH_DIR exists before find command
+if [ ! -d "$RESEARCH_DIR" ]; then
+  mkdir -p "$RESEARCH_DIR" || {
+    log_command_error \
+      "$COMMAND_NAME" \
+      "$WORKFLOW_ID" \
+      "$USER_ARGS" \
+      "file_error" \
+      "Failed to create RESEARCH_DIR" \
+      "bash_block_1b" \
+      "$(jq -n --arg dir "$RESEARCH_DIR" '{research_dir: $dir}')"
+    echo "ERROR: Failed to create $RESEARCH_DIR" >&2
+    exit 1
+  }
+  echo "Created research directory: $RESEARCH_DIR"
+fi
+
 # Calculate report number (001, 002, 003...)
-EXISTING_REPORTS=$(find "$RESEARCH_DIR" -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ')
+EXISTING_REPORTS=$(find "$RESEARCH_DIR" -name '[0-9][0-9][0-9]-*.md' 2>/dev/null | wc -l | tr -d ' ' || echo "0")
 REPORT_NUMBER=$(printf "%03d" $((EXISTING_REPORTS + 1)))
 
 # Generate report slug from error description or filters (max 40 chars, kebab-case)
@@ -1495,21 +1514,14 @@ echo ""
 # === UPDATE ERROR LOG STATUS (Block 3.5) ===
 echo "Updating error log entries..."
 
-# Load error filters from persisted state
-ERROR_FILTERS_JSON=$(grep "^ERROR_FILTERS=" "$STATE_FILE" 2>/dev/null | cut -d'=' -f2- || echo '{}')
-if [ -z "$ERROR_FILTERS_JSON" ] || [ "$ERROR_FILTERS_JSON" = '{}' ]; then
-  ERROR_FILTERS_JSON='{"since":"","type":"","command":"","severity":""}'
-fi
+# Load error filters from persisted flat keys (restored from state file)
+# Variables restored: ERROR_FILTER_SINCE, ERROR_FILTER_TYPE, ERROR_FILTER_COMMAND, ERROR_FILTER_SEVERITY
 
-# Build filter arguments from JSON
+# Build filter arguments from flat keys
 FILTER_ARGS=""
-ERROR_COMMAND_FILTER=$(echo "$ERROR_FILTERS_JSON" | jq -r '.command // ""' 2>/dev/null || echo "")
-ERROR_TYPE_FILTER=$(echo "$ERROR_FILTERS_JSON" | jq -r '.type // ""' 2>/dev/null || echo "")
-ERROR_SINCE_FILTER=$(echo "$ERROR_FILTERS_JSON" | jq -r '.since // ""' 2>/dev/null || echo "")
-
-[ -n "$ERROR_COMMAND_FILTER" ] && FILTER_ARGS="$FILTER_ARGS --command $ERROR_COMMAND_FILTER"
-[ -n "$ERROR_TYPE_FILTER" ] && FILTER_ARGS="$FILTER_ARGS --type $ERROR_TYPE_FILTER"
-[ -n "$ERROR_SINCE_FILTER" ] && FILTER_ARGS="$FILTER_ARGS --since $ERROR_SINCE_FILTER"
+[ -n "$ERROR_FILTER_COMMAND" ] && FILTER_ARGS="$FILTER_ARGS --command $ERROR_FILTER_COMMAND"
+[ -n "$ERROR_FILTER_TYPE" ] && FILTER_ARGS="$FILTER_ARGS --type $ERROR_FILTER_TYPE"
+[ -n "$ERROR_FILTER_SINCE" ] && FILTER_ARGS="$FILTER_ARGS --since $ERROR_FILTER_SINCE"
 
 # Mark matching errors as FIX_PLANNED with plan path
 ERRORS_UPDATED=$(mark_errors_fix_planned "$PLAN_PATH" $FILTER_ARGS)
@@ -1570,10 +1582,16 @@ ARTIFACTS="  📊 Reports: $RESEARCH_DIR/ ($REPORT_COUNT files)
 NEXT_STEPS="  • Review fix plan: cat $PLAN_PATH
   • Review error analysis: ls -lh $RESEARCH_DIR/
   • Check updated errors: /errors --status FIX_PLANNED
-  • Implement fixes: /build $PLAN_PATH"
+  • Implement fixes: /build $PLAN_PATH
+  • Run /todo to update TODO.md (adds repair plan to tracking)"
 
 # Print standardized summary (no phases for repair command)
 print_artifact_summary "Repair" "$SUMMARY_TEXT" "" "$ARTIFACTS" "$NEXT_STEPS"
+
+# Emit completion reminder
+echo ""
+echo "📋 Next Step: Run /todo to update TODO.md with this repair plan"
+echo ""
 
 # === RETURN PLAN_CREATED SIGNAL ===
 # Signal enables buffer-opener hook and orchestrator detection
@@ -1581,14 +1599,5 @@ if [ -n "$PLAN_PATH" ] && [ -f "$PLAN_PATH" ]; then
   echo ""
   echo "PLAN_CREATED: $PLAN_PATH"
   echo ""
-fi
-
-# === UPDATE TODO.md ===
-# Trigger TODO.md regeneration via delegation pattern
-# Source todo-functions.sh for trigger_todo_update()
-source "${CLAUDE_PROJECT_DIR}/.claude/lib/todo/todo-functions.sh" 2>/dev/null || true
-
-if type trigger_todo_update &>/dev/null; then
-  trigger_todo_update "repair plan created"
 fi
 ```

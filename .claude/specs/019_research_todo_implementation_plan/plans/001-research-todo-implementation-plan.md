@@ -1,11 +1,11 @@
 # TODO Implementation Systematic Plan
 
 ## Metadata
-- **Date**: 2025-12-02
+- **Date**: 2025-12-02 (Revised: 2025-12-02 for Phase 3 expanded plan integration)
 - **Feature**: Systematic implementation of TODO.md tasks for Layer 0 (Core TM) completion
 - **Scope**: Complete all 11 tasks tracked in TODO.md, organized in 4 phased waves with parallel execution opportunities
 - **Estimated Phases**: 8
-- **Estimated Hours**: 130-180 (parallel execution) / 223-333 (sequential with all low priority)
+- **Estimated Hours**: 119-164 (parallel execution, revised from 130-180) / 212-317 (sequential with all low priority, revised from 223-333)
 - **Standards File**: /home/benjamin/Documents/Philosophy/Projects/ProofChecker/CLAUDE.md
 - **Status**: [IN PROGRESS]
 - **Complexity Score**: 285.5 (Base: 10 + Tasks: 55 + Files: 129 + Integrations: 25)
@@ -13,10 +13,11 @@
 - **Expanded Phases**: [2, 3, 5, 6, 7, 8]
 - **Research Reports**:
   - [TODO Implementation Systematic Plan](../reports/001-todo-implementation-systematic-plan.md)
+  - [Spec 022 Documentation Impact on Task 7 Automation](../reports/002-spec-022-documentation-impact-on-task-7-automation.md)
 
 ## Overview
 
-ProofChecker has 11 well-documented tasks in TODO.md with 1/11 complete (9% overall). This plan provides a systematic phased approach to implementing all remaining tasks using 4 execution waves with parallel opportunities to reduce sequential time from 223-333 hours to 130-180 hours (25-32% time savings).
+ProofChecker has 11 well-documented tasks in TODO.md with 1/11 complete (9% overall). This plan provides a systematic phased approach to implementing all remaining tasks using 4 execution waves with parallel opportunities to reduce sequential time from 212-317 hours to 119-164 hours (25-34% time savings, revised from 25-32% with spec 022 documentation improvements).
 
 **Key Objectives**:
 1. Complete high-priority blocking tasks (CI fixes, propositional axioms, archive examples)
@@ -67,11 +68,11 @@ The implementation follows a phased wave execution strategy optimized for parall
 
 **Wave 2 (Medium Priority Enhancements)**:
 - Task 5: Soundness proofs (independent, 15-20 hours)
-- Task 6: Perpetuity proofs (REQUIRES Task 2, 20-30 hours)
-- Task 7: Core automation (independent, phased 40-60 hours)
+- Task 6: Perpetuity proofs (REQUIRES Task 2, 13-20 hours revised)
+- Task 7: Core automation (independent, phased 29-42 hours, revised from 40-60 with spec 022 docs)
 - Task 8: WorldHistory fix (independent, 1-2 hours)
 - **Parallelization**: Tasks 5, 7, 8 concurrent with Task 6 after Task 2 complete
-- **Time**: 77-112 hours sequential, ~40-60 hours parallel
+- **Time**: 66-97 hours sequential (revised from 77-112), ~29-42 hours parallel (bottleneck is now Task 7, revised from 40-60)
 
 **Wave 3 (Low Priority Completeness)**:
 - Task 9: Completeness proofs (sequential 3 phases, 70-90 hours)
@@ -195,7 +196,7 @@ grep -r "sorry" ProofChecker/ --include="*.lean" | wc -l  # Expected: 39 (41 - 2
 
 ---
 
-### Phase 2: Wave 2 Task 6 - Complete Perpetuity Proofs [IN PROGRESS]
+### Phase 2: Wave 2 Task 6 - Complete Perpetuity Proofs [COMPLETE]
 dependencies: [1]
 
 **⚠️ PLAN SUPERSEDED**: Original plan replaced by research-based approach incorporating proof strategies from TM logic paper
@@ -226,13 +227,24 @@ dependencies: [1]
 
 **Objective**: Execute Tasks 5, 7, 8 in parallel (can run concurrently with Phase 2)
 
-**Complexity**: High
+**Complexity**: High (Task 7 downgraded to Medium with spec 022 documentation)
 
 **Summary**: Prove remaining soundness axioms (TL, MF, TF) and rules, implement core automation tactics using LEAN 4 metaprogramming, and fix WorldHistory universal helper. Expanded into 3 independent sub-phases (Soundness, Automation, WorldHistory) for parallel execution. Removes 16 sorry placeholders.
 
-**Expected Duration**: 56-82 hours sequential, ~40-60 hours parallel (Tasks 5, 7, 8 concurrent)
+**Expected Duration**: 45-64 hours sequential (revised from 56-82 with spec 022 docs), ~29-42 hours parallel (bottleneck is Task 7, revised from 40-60)
 
-**For detailed tasks and implementation**, see [Phase 3 Details](phase_3_wave2_parallel_soundness_automation_worldhistory.md)
+**Documentation Enhancement** (from spec 022):
+- **METAPROGRAMMING_GUIDE.md**: Complete LEAN 4 tactic API reference eliminates external research (saves 8-12 hours across Task 7 phases)
+- **TACTIC_DEVELOPMENT.md Section 2.5**: Working modal_t example reduces trial-and-error (saves 2-3 hours in Phase 1)
+- **TACTIC_DEVELOPMENT.md Section 4**: Aesop integration patterns eliminate Aesop doc reading (saves 2-3 hours in Phase 2)
+- **PHASED_IMPLEMENTATION.md**: Wave 2 parallelization strategy confirms Task 7 can run alongside Tasks 5, 6, 8
+- **CLAUDE.md Section 10.1**: Quick reference for rapid API lookup during implementation (saves 30-60 min cumulative)
+
+**Time Savings**: 11-18 hours reduction in Task 7 research overhead (28-30% of Task 7 effort) through comprehensive documentation from spec 022.
+
+**For detailed tasks and implementation**, see:
+- [Phase 3 Details](phase_3_wave2_parallel_soundness_automation_worldhistory/phase_3_wave2_parallel_soundness_automation_worldhistory.md) - Comprehensive task breakdown
+- [PHASED_IMPLEMENTATION.md Wave 2](../../Documentation/Development/PHASED_IMPLEMENTATION.md#3-wave-2---medium-priority-implementation-77-113-hours-partial-parallelization) - Strategic execution guidance
 
 ---
 
@@ -546,9 +558,10 @@ grep "Remaining.*sorry" Documentation/ProjectInfo/KNOWN_LIMITATIONS.md
 **Structure Level**: 0 (single file) chosen despite high complexity score because this is a meta-plan coordinating existing TODO.md tasks rather than implementing a single cohesive feature. Using `/expand` during implementation is recommended if individual phases become too large.
 
 **Time Estimates**:
-- **Sequential**: 223-333 hours (all tasks sequential)
-- **Parallel (2-3 developers)**: 130-180 hours (optimal parallelization)
-- **Layer 0 Only (High/Medium Priority)**: 93-143 hours
+- **Sequential**: 212-317 hours (all tasks sequential, revised from 223-333 with spec 022 docs)
+- **Parallel (2-3 developers)**: 119-164 hours (optimal parallelization, revised from 130-180 with spec 022 docs)
+- **Layer 0 Only (High/Medium Priority)**: 82-127 hours (revised from 93-143 with spec 022 docs)
+- **Spec 022 Impact**: 11-18 hours saved in Task 7 automation (28-30% reduction) through comprehensive LEAN 4 tactic documentation
 
 **Critical Success Factors**:
 1. Complete Task 2 (Propositional Axioms) early to unblock Task 6
