@@ -116,21 +116,22 @@ inductive Axiom : Formula → Prop where
   | temp_a (φ : Formula) : Axiom (φ.imp (Formula.future φ.sometime_past))
 
   /--
-  Temporal L axiom: `Gφ → GHφ` (perpetuity).
+  Temporal L axiom: `△φ → F(Pφ)` (temporal introspection).
 
-  If something is always true in the future, then in all future times
-  it was always true in the past.
+  Following JPL paper §sec:Appendix (line 1040, thm:temporal-axioms-valid line 2325):
+  If φ holds at ALL times (always φ = Past φ ∧ φ ∧ Future φ), then at all
+  future times, φ holds at all past times.
 
-  In our notation:
-  - `future φ` = Gφ (for all future times, φ)
-  - `past φ` = Hφ (for all past times, φ)
+  **Paper Proof** (line 2334):
+  Suppose M,τ,x ⊨ always φ. Then M,τ,y ⊨ φ for all y ∈ T.
+  To show M,τ,x ⊨ Future Past φ, consider any z > x.
+  We must show M,τ,z ⊨ Past φ, i.e., M,τ,w ⊨ φ for all w < z.
+  But this holds by our assumption that φ holds at all times in τ.
 
-  So this axiom is: `Gφ → G(Hφ)` = `future φ → future (past φ)`
-
-  Note: This axiom requires specific frame conditions related to task semantics
-  to be valid. The proof may rely on task compositionality constraints.
+  This axiom is trivially valid because the premise (φ at ALL times)
+  immediately implies the conclusion (φ at times w < z for any z).
   -/
-  | temp_l (φ : Formula) : Axiom ((Formula.future φ).imp (Formula.future (Formula.past φ)))
+  | temp_l (φ : Formula) : Axiom (φ.always.imp (Formula.future (Formula.past φ)))
 
   /--
   Modal-Future axiom: `□φ → □Fφ` (modal-future interaction).

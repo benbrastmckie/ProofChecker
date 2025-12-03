@@ -4,7 +4,7 @@ ProofChecker provides syntactic verification for the Logos, a comprehensive fram
 
 Built on LEAN 4, the ProofChecker provides an RL signal for training AI systems to reason in the Logos with mathematical certainty, providing scalable oversight through computation rather than human annotation. The system implements a hyperintensional task semantics (possible worlds as functions from times to world-states) and complements semantic verification via the [Model-Checker](https://github.com/benbrastmckie/ModelChecker) to create comprehensive training signals.
 
-For implementation details of the Model-Checker, see the [GitHub repository](https://github.com/benbrastmckie/ModelChecker) and [PyPI package](https://pypi.org/project/model-checker/). For a compressed overview of the TM logic subsystems, see [LogicNotes](https://github.com/benbrastmckie/LogicNotes).
+For implementation details of the Model-Checker, see the [GitHub repository](https://github.com/benbrastmckie/ModelChecker) and [PyPI package](https://pypi.org/project/model-checker/). For a compressed overview of the TM logic subsystems, see the [LogicNotes](https://github.com/benbrastmckie/LogicNotes).
 
 ## Logos: Tense and Modal Reasoning
 

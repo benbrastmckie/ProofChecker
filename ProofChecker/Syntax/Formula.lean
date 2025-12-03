@@ -91,24 +91,35 @@ Modal diamond/possibility (◇φ) as derived operator: ¬□¬φ
 def diamond (φ : Formula) : Formula := φ.neg.box.neg
 
 /--
-Temporal 'always' operator (Gφ, "henceforth" - for all future times φ).
+Temporal 'always' operator (△φ, "eternal truth" - φ holds at all times).
 
-This is an alias for the `future` operator (universal future quantification).
-It means "from now onwards, φ holds at all times."
+Following JPL paper §sec:Appendix definition:
+  `always φ := Past φ ∧ φ ∧ Future φ`
 
-Note: This is NOT "eternal truth" (Past φ ∧ φ ∧ Future φ), but rather
-"henceforth" (Future φ only). See glossary for semantic clarification.
+This means φ holds at all past times, at the present time, and at all future times.
+This is the "eternal truth" or "omnitemporality" operator.
+
+**Paper Reference**: Line 427 defines `△φ := Pφ ∧ φ ∧ Fφ`
+
+Note: The paper uses this definition for the TL axiom `△φ → F(Pφ)` which
+is trivially valid: if φ holds at ALL times, then at any future time z,
+φ holds at all times w < z (since "all times" includes all such w).
 -/
-def always (φ : Formula) : Formula := φ.future
+def always (φ : Formula) : Formula := φ.past.and (φ.and φ.future)
 
 /--
-Temporal 'sometimes' operator (Fφ, "eventually" - exists a future time where φ).
+Temporal 'sometimes' operator (▽φ, "at some time" - φ holds at some time).
 
-Derived as the dual of `always`: ¬(always ¬φ) = ¬G¬φ.
-This means: there exists a future time (including now) where φ is true.
+Following JPL paper §sec:Appendix definition:
+  `sometimes φ := past φ ∨ φ ∨ future φ`
 
-This is the existential dual of the henceforth operator, expressing
-eventual occurrence rather than perpetual truth.
+This means φ holds at some past time, or at the present time, or at some future time.
+This is the "sometime" or existential temporal operator, dual to `always`.
+
+**Paper Reference**: Line 427 defines `▽φ := pφ ∨ φ ∨ fφ`
+where p = sometime_past and f = sometime_future (existential duals).
+
+Equivalently, `sometimes φ = ¬(always ¬φ)` by De Morgan's laws.
 -/
 def sometimes (φ : Formula) : Formula := φ.neg.always.neg
 

@@ -1,6 +1,6 @@
 # Known Limitations - ProofChecker MVP
 
-**Last Updated**: 2025-12-02
+**Last Updated**: 2025-12-02 (Updated: Frame constraint formal definitions added)
 **Project Version**: 0.1.0-mvp
 
 ## Overview
@@ -20,7 +20,16 @@ This document provides comprehensive documentation of all implementation gaps in
 
 ## 1. Soundness Proof Gaps
 
-**Status**: 5/8 axioms proven, 4/7 inference rules proven
+**Status**: 7/10 axioms proven, 4/7 inference rules proven (prop_k, prop_s added)
+
+**Frame Constraint Approach**: Option B (Conditional Validity Documentation)
+
+The three conditional axiom validity lemmas (TL, MF, TF) and three inference rules (modal_k, temporal_k, temporal_duality) require semantic properties not derivable from the basic TaskFrame structure. These are now formally defined in `Soundness.lean`:
+
+- **`BackwardPersistence`** (line 107): Required for TL axiom validity
+- **`ModalTemporalPersistence`** (line 133): Required for MF and TF axiom validity
+
+All 6 conditional sorry markers have comprehensive docstrings explaining the frame constraints required for soundness
 
 ### 1.1 Temporal L Axiom (TL)
 

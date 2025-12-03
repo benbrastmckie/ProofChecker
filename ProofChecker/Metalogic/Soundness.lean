@@ -75,6 +75,18 @@ open ProofChecker.Syntax
 open ProofChecker.ProofSystem
 open ProofChecker.Semantics
 
+/-! ## Classical Logic Helper -/
+
+/-- Helper lemma for extracting conjunction from negated implication encoding.
+
+In our formula encoding, `φ ∧ ψ` is represented as `¬(φ → ¬ψ)`, which is
+`(φ → (ψ → False)) → False`. This lemma uses classical logic to extract the
+proper conjunction.
+-/
+private theorem and_of_not_imp_not {P Q : Prop} (h : (P → Q → False) → False) : P ∧ Q :=
+  ⟨Classical.byContradiction (fun hP => h (fun p _ => hP p)),
+   Classical.byContradiction (fun hQ => h (fun _ q => hQ q))⟩
+
 /-! ## Frame Properties for Conditional Soundness
 
 The following frame properties are required for certain axioms to be valid.
@@ -307,70 +319,83 @@ theorem temp_a_valid (φ : Formula) : ⊨ (φ.imp (Formula.future φ.sometime_pa
   exact h_neg_at_t h_phi
 
 /--
-TL axiom validity (conditional on backward persistence).
+TL axiom validity: `△φ → F(Pφ)` is valid in all task semantic models.
 
-**Frame Constraint Required**: BackwardPersistence
+Following JPL paper §sec:Appendix (thm:temporal-axioms-valid, line 2334):
 
-The TL axiom `Fφ → F(Pφ)` is valid in task semantic models whose underlying
-frames satisfy the backward persistence property.
+**Paper Proof**:
+Suppose M,τ,x ⊨ always φ. Then M,τ,y ⊨ φ for all y ∈ T (by definition of always).
+To show M,τ,x ⊨ Future Past φ, consider any z > x.
+We must show M,τ,z ⊨ Past φ, i.e., M,τ,w ⊨ φ for all w < z.
+But this holds by our assumption that φ holds at all times in τ.
 
-**Backward Persistence Property**:
-If φ holds at all times s ≥ t₂ in a history τ, then φ also holds at all
-times r in the interval [t₁, t₂) within τ (for any t₁ < t₂).
+This axiom is trivially valid because the premise `always φ` (φ at ALL times:
+past, present, and future) immediately implies the conclusion: at any future
+time z, φ holds at all past times w < z (since "all times" includes such w).
 
-**Justification**: The TL axiom relates future quantification to past
-quantification at future times. Without backward persistence, φ can hold
-from some future point onward without holding in the gap before that point.
-When we have Fφ (φ holds at all future times), and we want to show F(Pφ)
-(at all future times s, φ holds at all past times relative to s), we need
-φ to hold in the interval [t, s) for any future s. This is exactly backward
-persistence.
-
-**Impact on Soundness**: The soundness theorem holds for TL axiom derivations
-*provided* the semantic models satisfy backward persistence.
-
-**Future Work**: Option A (add to TaskFrame), Option C (weaken axiom), or
-accept conditional soundness (current MVP approach).
+**Note**: After aligning with the paper's definition of `always`, this axiom
+no longer requires frame constraints. The key is that `always φ = Pφ ∧ φ ∧ Fφ`
+gives information about ALL times, not just future times.
 -/
-theorem temp_l_valid (φ : Formula) : ⊨ ((Formula.future φ).imp (Formula.future (Formula.past φ))) := by
+theorem temp_l_valid (φ : Formula) : ⊨ (φ.always.imp (Formula.future (Formula.past φ))) := by
   intro F M τ t ht
   unfold truth_at
-  intro h_gfuture
-  -- h_gfuture : ∀ s hs, t < s → truth_at M τ s hs φ
-  -- Goal: for all s > t, for all r < s, φ at r
+  intro h_always
+  -- h_always : truth_at M τ t ht φ.always
+  -- Since always φ = past φ ∧ (φ ∧ future φ), we need to unfold
+  -- The premise gives us: φ at all past times, φ now, φ at all future times
+  -- Goal: ∀ s hs, t < s → ∀ r hr, r < s → truth_at M τ r hr φ
   intro s hs hts r hr hrs
   -- We need: truth_at M τ r hr φ
-  -- Case split on whether r > t or r ≤ t
-  -- If r > t: h_gfuture gives us φ at r
-  -- If r ≤ t: We don't have information from our premise
+  -- We know φ holds at ALL times from h_always
+  -- Case split: either r < t (use past), r = t (use present), or r > t (use future)
+  -- Since always φ = (past φ) ∧ φ ∧ (future φ), and h_always : truth_at for this conjunction
+  -- We need to extract the conjunction parts
 
-  -- This axiom requires backward persistence frame property.
-  -- For MVP, we document the requirement and use sorry.
-  sorry
+  -- Simplify h_always using conjunction encoding
+  -- always φ = φ.past ∧ (φ ∧ φ.future) encoded as negated implications
+  simp only [Formula.always, Formula.and, Formula.neg, truth_at] at h_always
+
+  -- Extract using classical logic (conjunction encoded as ¬(P → ¬Q))
+  have h1 : (∀ (u : Int) (hu : τ.domain u), u < t → truth_at M τ u hu φ) ∧
+            ((truth_at M τ t ht φ → (∀ (v : Int) (hv : τ.domain v), t < v → truth_at M τ v hv φ) → False) → False) :=
+    and_of_not_imp_not h_always
+  obtain ⟨h_past, h_middle⟩ := h1
+
+  have h2 : truth_at M τ t ht φ ∧ (∀ (v : Int) (hv : τ.domain v), t < v → truth_at M τ v hv φ) :=
+    and_of_not_imp_not h_middle
+  obtain ⟨h_now, h_future⟩ := h2
+
+  -- Case split on whether r is before, at, or after t
+  rcases Int.lt_trichotomy r t with h_lt | h_eq | h_gt
+  · -- r < t: use h_past
+    exact h_past r hr h_lt
+  · -- r = t: use h_now
+    subst h_eq; exact h_now
+  · -- t < r: use h_future
+    exact h_future r hr h_gt
 
 /--
 MF axiom validity (conditional on modal-temporal persistence).
 
-**Frame Constraint Required**: ModalTemporalPersistence
+**JPL Paper Proof (thm:bimodal-axioms-valid, line 2352)**:
+The paper proves MF is valid using the observation that □φ at time x means
+φ holds at ALL histories at time x. The key insight is that for any σ at
+any time y, we can use time-shift invariance to relate (σ, y) to some (ρ, x).
 
-The MF axiom `□φ → □(Fφ)` is valid in task semantic models whose underlying
-frames satisfy the modal-temporal persistence property.
+**Current Implementation Status**: Requires time-shift infrastructure.
+The proof would use:
+1. Time-shift automorphism existence (app:auto_existence)
+2. Truth preservation under time-shift (lem:history-time-shift-preservation)
 
-**Modal-Temporal Persistence Property**:
-If φ is necessarily true at time t (holds at all histories at t), then φ
-remains necessarily true at all future times s > t (holds at all histories at s).
+**Frame Constraint Required (MVP)**: ModalTemporalPersistence
 
-**Justification**: The MF axiom states that necessary truths remain necessary
-in the future. From □φ (φ holds at all histories at time t), we need to show
-□(Fφ) (for all histories σ, φ holds at all future times in σ). This requires
-that if φ is necessary at t, it remains true across all histories at future
-times s > t, which is exactly modal-temporal persistence.
+Until time-shift infrastructure is implemented, this axiom uses the conditional
+approach. The modal-temporal persistence property provides an alternative
+sufficient condition.
 
-**Impact on Soundness**: The soundness theorem holds for MF axiom derivations
-*provided* the semantic models satisfy modal-temporal persistence.
-
-**Future Work**: Option A (add to TaskFrame), Option C (weaken axiom), or
-accept conditional soundness (current MVP approach).
+**Impact on Soundness**: Valid via time-shift invariance (paper method) or
+valid under ModalTemporalPersistence constraint (MVP approach).
 -/
 theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.future).box)) := by
   intro F M τ t ht
@@ -388,27 +413,31 @@ theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.future).box))
   sorry
 
 /--
-TF axiom validity (conditional on modal-temporal persistence).
+TF axiom validity (provable via time-shift invariance).
 
-**Frame Constraint Required**: ModalTemporalPersistence
+**JPL Paper Proof (thm:bimodal-axioms-valid, lines 2354-2356)**:
+The paper proves TF is valid using time-shift invariance:
+1. Premise: □φ at time x (φ at all histories at x)
+2. Goal: F□φ at x (for all y > x, □φ at y)
+3. For any y > x and any σ at time y, need φ at (σ, y)
+4. By time-shift (app:auto_existence): ∃ρ where σ ≈_y^x ρ
+5. By time-shift preservation (lem:history-time-shift-preservation):
+   φ at (σ, y) ↔ φ at (ρ, x)
+6. Since □φ at x, φ at (ρ, x), hence φ at (σ, y)
 
-The TF axiom `□φ → F(□φ)` is valid in task semantic models whose underlying
-frames satisfy the modal-temporal persistence property.
+**Current Implementation Status**: Requires time-shift infrastructure.
+The proof would use:
+1. Time-shift automorphism existence (app:auto_existence)
+2. Truth preservation under time-shift (lem:history-time-shift-preservation)
 
-**Modal-Temporal Persistence Property**:
-If φ is necessarily true at time t (holds at all histories at t), then φ
-remains necessarily true at all future times s > t (holds at all histories at s).
+**Frame Constraint (MVP Alternative)**: ModalTemporalPersistence
 
-**Justification**: The TF axiom states that if φ is necessary at time t,
-then at all future times s > t, φ remains necessary (F(□φ) means for all
-future times s, □φ holds at s). This is a direct application of modal-temporal
-persistence: necessary truths at t remain necessary at all future times.
+Until time-shift infrastructure is implemented, this axiom uses the conditional
+approach. The modal-temporal persistence property provides an alternative
+sufficient condition.
 
-**Impact on Soundness**: The soundness theorem holds for TF axiom derivations
-*provided* the semantic models satisfy modal-temporal persistence.
-
-**Future Work**: Option A (add to TaskFrame), Option C (weaken axiom), or
-accept conditional soundness (current MVP approach).
+**Impact on Soundness**: Valid via time-shift invariance (paper method) or
+valid under ModalTemporalPersistence constraint (MVP approach).
 -/
 theorem temp_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.box).future)) := by
   intro F M τ t ht

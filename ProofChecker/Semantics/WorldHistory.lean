@@ -136,6 +136,67 @@ Get the state at a time (helper function that bundles membership proof).
 def stateAt (τ : WorldHistory F) (t : Int) (h : τ.domain t) : F.WorldState :=
   τ.states t h
 
+/-! ## Time-Shift Construction
+
+The time-shift construction is fundamental to proving MF and TF axioms.
+Given a history σ and times x, y, we construct a shifted history where
+σ'(z) = σ(z + (y - x)).
+
+This corresponds to "viewing σ from time x instead of time y".
+-/
+
+/--
+Time-shifted history construction.
+
+Given history `σ` and shift offset `Δ = y - x`, construct history `τ` where:
+- `τ.domain z ↔ σ.domain (z + Δ)`
+- `τ.states z = σ.states (z + Δ)`
+
+This allows us to relate truth at (σ, y) to truth at (τ, x).
+
+**Paper Reference**: app:auto_existence (line ~2330) defines time-shift automorphisms.
+
+**Key Property**: If σ respects the task relation, so does the shifted history,
+because the task relation only depends on duration (t - s), which is preserved
+under time translation.
+-/
+def time_shift (σ : WorldHistory F) (Δ : Int) : WorldHistory F where
+  domain := fun z => σ.domain (z + Δ)
+  states := fun z hz => σ.states (z + Δ) hz
+  respects_task := by
+    intros s t hs ht hst
+    -- Need: task_rel (σ.states (s + Δ)) (t - s) (σ.states (t + Δ))
+    -- We have: σ respects task, so task_rel (σ.states (s + Δ)) ((t + Δ) - (s + Δ)) (σ.states (t + Δ))
+    -- Since (t + Δ) - (s + Δ) = t - s, this is exactly what we need
+    have h_shifted : (s + Δ) ≤ (t + Δ) := Int.add_le_add_right hst Δ
+    have h_duration : (t + Δ) - (s + Δ) = t - s := by omega
+    rw [← h_duration]
+    exact σ.respects_task (s + Δ) (t + Δ) hs ht h_shifted
+
+/--
+Time-shift preserves domain membership (forward direction).
+If z is in the shifted domain, then z + Δ is in the original domain.
+-/
+theorem time_shift_domain_iff (σ : WorldHistory F) (Δ z : Int) :
+    (time_shift σ Δ).domain z ↔ σ.domain (z + Δ) := by
+  rfl
+
+/--
+Inverse time-shift: shifting by -Δ undoes shifting by Δ on the domain.
+-/
+theorem time_shift_inverse_domain (σ : WorldHistory F) (Δ : Int) (z : Int) :
+    (time_shift (time_shift σ Δ) (-Δ)).domain z ↔ σ.domain z := by
+  simp only [time_shift]
+  constructor
+  · intro h
+    have : z + -Δ + Δ = z := by omega
+    rw [this] at h
+    exact h
+  · intro h
+    have : z + -Δ + Δ = z := by omega
+    rw [this]
+    exact h
+
 end WorldHistory
 
 end ProofChecker.Semantics
