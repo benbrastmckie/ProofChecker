@@ -307,7 +307,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
     -- (time_shift σ Δ).states x = σ.states (x + Δ) = σ.states y
     simp only [truth_at, WorldHistory.time_shift]
     -- Need to show: M.valuation (σ.states (x + (y - x)) hx) p ↔ M.valuation (σ.states y hy) p
-    have h_eq : x + (y - x) = y := by omega
+    have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
     -- Use states_eq_of_time_eq to transport states from (x + (y - x)) to y
     rw [WorldHistory.states_eq_of_time_eq σ (x + (y - x)) y h_eq _ hy]
 
@@ -336,7 +336,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- time_shift ρ (y - x) is a history at time x (domain at x iff ρ domain at x + (y-x) = y)
       have hρ_x : (WorldHistory.time_shift ρ (y - x)).domain x := by
         simp only [WorldHistory.time_shift]
-        have h_eq : x + (y - x) = y := by omega
+        have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
         rw [h_eq]
         exact hρ_y
       have h1 := h_box_x (WorldHistory.time_shift ρ (y - x)) hρ_x
@@ -347,7 +347,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- time_shift ρ (-(y - x)) = time_shift ρ (x - y) is a history at time y
       have hρ_y : (WorldHistory.time_shift ρ (x - y)).domain y := by
         simp only [WorldHistory.time_shift]
-        have h_eq : y + (x - y) = x := by omega
+        have h_eq : y + (x - y) = x := by rw [add_sub, add_sub_cancel']
         rw [h_eq]
         exact hρ_x
       have h1 := h_box_y (WorldHistory.time_shift ρ (x - y)) hρ_y
@@ -358,7 +358,8 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- First, apply IH to get truth at double-shifted history
       have hρ_x' : (WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (y - x)).domain x := by
         simp only [WorldHistory.time_shift]
-        have h_eq : x + (y - x) + (x - y) = x := by omega
+        have h_eq : x + (y - x) + (x - y) = x := by
+          rw [add_sub, add_sub_cancel', add_sub, add_sub_cancel']
         rw [h_eq]
         exact hρ_x
       -- Apply IH with time_shift ρ (x - y) instead of σ
@@ -367,7 +368,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- Need: truth_at M ρ x hρ_x ψ
 
       -- Key insight: (y-x) = -(x-y), so double shift cancels
-      have h_cancel : y - x = -(x - y) := by omega
+      have h_cancel : y - x = -(x - y) := neg_sub x y
       -- Use history extensionality to rewrite the double shift
       have h_hist_eq : WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (y - x) =
                        WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (-(x - y)) := by
@@ -392,14 +393,17 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- Use shifted time: s' = s - (y - x) < x
       have hs_shifted : (WorldHistory.time_shift σ (y - x)).domain (s - (y - x)) := by
         simp only [WorldHistory.time_shift]
-        have : (s - (y - x)) + (y - x) = s := by omega
+        have : (s - (y - x)) + (y - x) = s := sub_add_cancel s (y - x)
         rw [this]
         exact hs
-      have h_s_shifted_lt_x : s - (y - x) < x := by omega
+      have h_s_shifted_lt_x : s - (y - x) < x := by
+        have h := sub_lt_sub_right h_s_lt_y (y - x)
+        simp only [sub_sub_cancel] at h
+        exact h
       have h_truth_shifted := h_past (s - (y - x)) hs_shifted h_s_shifted_lt_x
       -- Apply IH: need to show (time_shift σ (y - x), s - (y - x)) ↔ (σ, s)
       -- The shift amount should be: s - (s - (y - x)) = y - x
-      have h_shift_eq : s - (s - (y - x)) = y - x := by omega
+      have h_shift_eq : s - (s - (y - x)) = y - x := sub_sub_cancel s (y - x)
       -- Use congruence to equate the histories
       have h_hist_eq : WorldHistory.time_shift σ (s - (s - (y - x))) = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ (s - (s - (y - x))) (y - x) h_shift_eq
@@ -418,10 +422,13 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       have hs : σ.domain (s' + (y - x)) := by
         simp only [WorldHistory.time_shift] at hs'
         exact hs'
-      have h_s_lt_y : s' + (y - x) < y := by omega
+      have h_s_lt_y : s' + (y - x) < y := by
+        have h := add_lt_add_right h_s'_lt_x (y - x)
+        simp only [add_sub_cancel'] at h
+        exact h
       have h_truth_orig := h_past (s' + (y - x)) hs h_s_lt_y
       -- Apply IH: need shift amount = (s' + (y - x)) - s' = y - x
-      have h_shift_eq : (s' + (y - x)) - s' = y - x := by omega
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel s' (y - x)
       -- Use congruence to equate histories
       have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
@@ -443,13 +450,16 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- Use shifted time: s' = s - (y - x) > x
       have hs_shifted : (WorldHistory.time_shift σ (y - x)).domain (s - (y - x)) := by
         simp only [WorldHistory.time_shift]
-        have : (s - (y - x)) + (y - x) = s := by omega
+        have : (s - (y - x)) + (y - x) = s := sub_add_cancel s (y - x)
         rw [this]
         exact hs
-      have h_x_lt_s_shifted : x < s - (y - x) := by omega
+      have h_x_lt_s_shifted : x < s - (y - x) := by
+        have h := sub_lt_sub_right h_y_lt_s (y - x)
+        simp only [sub_sub_cancel] at h
+        exact h
       have h_truth_shifted := h_future (s - (y - x)) hs_shifted h_x_lt_s_shifted
       -- Apply IH with shift amount s - (s - (y - x)) = y - x
-      have h_shift_eq : s - (s - (y - x)) = y - x := by omega
+      have h_shift_eq : s - (s - (y - x)) = y - x := sub_sub_cancel s (y - x)
       -- Use congruence to equate histories
       have h_hist_eq : WorldHistory.time_shift σ (s - (s - (y - x))) = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ (s - (s - (y - x))) (y - x) h_shift_eq
@@ -468,10 +478,13 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       have hs : σ.domain (s' + (y - x)) := by
         simp only [WorldHistory.time_shift] at hs'
         exact hs'
-      have h_y_lt_s : y < s' + (y - x) := by omega
+      have h_y_lt_s : y < s' + (y - x) := by
+        have h := add_lt_add_right h_x_lt_s' (y - x)
+        simp only [add_sub_cancel'] at h
+        exact h
       have h_truth_orig := h_future (s' + (y - x)) hs h_y_lt_s
       -- Apply IH with shift amount (s' + (y - x)) - s' = y - x
-      have h_shift_eq : (s' + (y - x)) - s' = y - x := by omega
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel s' (y - x)
       -- Use congruence to equate histories
       have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
@@ -496,12 +509,12 @@ theorem exists_shifted_history (M : TaskModel F) (σ : WorldHistory F) (x y : T)
     truth_at M (WorldHistory.time_shift σ (y - x)) x
       (by
         simp only [WorldHistory.time_shift]
-        have h : x + (y - x) = y := by omega
+        have h : x + (y - x) = y := add_sub_cancel' x y
         rw [h]
         exact hy) φ := by
   have hx : (WorldHistory.time_shift σ (y - x)).domain x := by
     simp only [WorldHistory.time_shift]
-    have h : x + (y - x) = y := by omega
+    have h : x + (y - x) = y := add_sub_cancel' x y
     rw [h]
     exact hy
   exact (time_shift_preserves_truth M σ x y hx hy φ).symm
@@ -823,7 +836,7 @@ theorem swap_axiom_t4_valid (φ : Formula) :
   -- h_past_swap : ∀ (s : T) (hs : τ.domain s), s < t → truth_at M τ s hs φ.swap_past_future
   -- Need: truth_at M τ u hu φ.swap_past_future
   -- Since u < r < t, we have u < t, so apply h_past_swap
-  have h_u_lt_t : u < t := by omega
+  have h_u_lt_t : u < t := lt_trans h_u_lt_r h_r_lt_t
   exact h_past_swap u hu h_u_lt_t
 
 /--
@@ -917,7 +930,7 @@ theorem swap_axiom_tl_valid (φ : Formula) :
       have h_eq_proof : ht = hu := rfl  -- both are proofs of τ.domain t
       exact h_neg h_now
     · -- Case: u > t, use the "future" component
-      have h_gt : t < u := by omega
+      have h_gt : t < u := lt_of_le_of_ne (le_of_not_lt h_ut) (Ne.symm h_eq)
       apply Classical.byContradiction
       intro h_neg
       apply h_always
