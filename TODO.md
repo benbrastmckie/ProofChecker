@@ -52,35 +52,33 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ## High Priority Tasks
 
-### 5b. Complete Temporal Duality Soundness ⚠ DOCUMENTED AS LIMITATION
-*Effort**: 5-10 hours
-*Status**: DOCUMENTED AS LIMITATION (2025-12-03) - Requires SymmetricFrame constraint
-*Priority**: Medium (deferred - MVP approach chosen)
+### 5b. Complete Temporal Duality Soundness ✓ COMPLETE
+*Effort**: 5-10 hours (actual: ~4 hours)
+*Status**: COMPLETE (2025-12-03) - Derivation-indexed approach (Approach D)
+*Priority**: Medium
 
 **Description**: Prove soundness for the temporal duality rule (TD). Requires showing that validity is preserved when swapping Past and Future operators.
 
 **Paper Definition** (§sec:Appendix line 1036): If `⊢ φ`, then `⊢ φ_{⟨P|F⟩}`
 
-**Resolution**: The temporal duality rule requires a **SymmetricFrame** constraint for general soundness. This has been documented as an MVP limitation with a clear implementation path for future work.
+**Resolution**: Completed using **Approach D: Derivation-Indexed Proof**. Instead of proving validity preservation for ALL valid formulas (impossible via formula induction), we prove swap validity for DERIVABLE formulas via derivation induction.
+
+**Key Theorems**:
+1. `axiom_swap_valid`: All 10 TM axioms remain valid after swap
+2. `derivable_implies_swap_valid`: Main theorem - `Derivable [] φ → is_valid φ.swap`
+3. `soundness` temporal_duality case: Uses new infrastructure (zero sorry)
 
 **Files**:
-- `ProofChecker/Metalogic/Soundness.lean` (lines 599-632) - comprehensive documentation added
+- `ProofChecker/Semantics/Truth.lean` - swap validity theorems
+- `ProofChecker/Metalogic/Soundness.lean` - temporal_duality case complete
 
-**Documentation Added**:
-1. ✓ SymmetricFrame constraint specification
-2. ✓ Proof strategy outline (time reversal transformation)
-3. ✓ MVP decision rationale
-4. ✓ Implementation roadmap for future work
-5. ✓ Updated KNOWN_LIMITATIONS.md with symmetric frame restriction
+**Verification**:
+```bash
+grep -c "sorry" ProofChecker/Metalogic/Soundness.lean
+# Output: 0
+```
 
-**Future Implementation Path** (when needed):
-1. Create `ProofChecker/Metalogic/TemporalDuality.lean`
-2. Define `class SymmetricFrame (F : TaskFrame)`
-3. Define `reverse_history : WorldHistory F → WorldHistory F`
-4. Prove `reverse_history_preserves_truth` lemma
-5. Parameterize `soundness` theorem with `[SymmetricFrame F]`
-
-**Blocking**: None (documented limitation, MVP complete)
+**Blocking**: None - COMPLETE
 
 **Dependencies**: None
 
@@ -785,7 +783,7 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 | 2025-12-03 | Phase 4: Documentation Sync | All documentation synchronized - TODO.md, IMPLEMENTATION_STATUS.md, KNOWN_LIMITATIONS.md updated |
 | 2025-12-03 | Paper Alignment Review | Aligned KNOWN_LIMITATIONS.md with paper §sec:Appendix. Discovered Modal K and Temporal K code-paper discrepancy. Created Task 5 and 5b. |
 | 2025-12-03 | **Task 5: Modal K/Temporal K Fix** | **CRITICAL BUG FIXED**: Rule directions fixed in Derivation.lean to match paper (lines 1030, 1037). Soundness proofs complete for both rules (zero sorry). |
-| 2025-12-03 | **Task 5b: Temporal Duality** | Documented as MVP limitation. Requires SymmetricFrame constraint. Implementation path documented in Soundness.lean (lines 599-632). |
+| 2025-12-03 | **Task 5b: Temporal Duality** | **COMPLETE**: Derivation-indexed approach (Approach D). `axiom_swap_valid` + `derivable_implies_swap_valid` in Truth.lean. Zero sorry in Soundness.lean. |
 | 2025-12-03 | **Task 7: Core Automation** | 4/12 tactics implemented: apply_axiom, modal_t, tm_auto (native), assumption_search. Aesop integration blocked by Batteries/Truth.lean conflict. |
 | 2025-12-03 | **Task 12: Tactic Test Suite** | 31 tests created in TacticsTest.lean (174 lines). Tests build successfully. Target: 50+ tests. |
 

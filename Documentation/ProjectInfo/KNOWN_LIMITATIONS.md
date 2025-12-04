@@ -21,14 +21,16 @@ This document provides comprehensive documentation of all implementation gaps in
 
 ## 1. Soundness Proof Gaps
 
-**Status**: 8/8 axioms proven ✓, 4/7 inference rules proven
+**Status**: 8/8 axioms proven ✓, 5/7 inference rules proven ✓
 
-**Major Progress (2025-12-03)**: All 8 TM axiom soundness proofs now complete! The three previously incomplete axioms (TL, MF, TF) were proven using time-shift preservation infrastructure in Truth.lean.
+**Major Progress (2025-12-03)**: All 8 TM axiom soundness proofs now complete! The three previously incomplete axioms (TL, MF, TF) were proven using time-shift preservation infrastructure in Truth.lean. Additionally, Temporal Duality soundness is now complete using the derivation-indexed approach.
 
-**Remaining Gaps**: Three inference rule soundness cases remain incomplete:
+**Remaining Gaps**: Two inference rule soundness cases remain incomplete:
 - **Modal K** (§1.5): Code implements reverse direction from paper (§sec:Appendix line 1030)
 - **Temporal K** (§1.6): Code implements reverse direction from paper (§sec:Appendix line 1037)
-- **Temporal Duality** (§1.7): Soundness proof incomplete (semantic lemma needed)
+
+**Recently Completed**:
+- **Temporal Duality** (§1.7): ✓ Now proven via derivation induction (Approach D)
 
 ### 1.1 Temporal L Axiom (TL) - ✓ COMPLETE
 
@@ -133,7 +135,7 @@ grep -n "sorry" ProofChecker/Metalogic/Soundness.lean | grep -i temporal
 2. **Restrict to empty context**: The rule `⊢ φ ⟹ ⊢ Fφ` is always sound for theorems
 3. **Add constraint**: Require contexts to be "temporally persistent"
 
-### 1.7 Temporal Duality Soundness - INCOMPLETE
+### 1.7 Temporal Duality Soundness - ✓ COMPLETE
 
 **Paper's Rule (TD)**: If `⊢ φ`, then `⊢ φ_{⟨P|F⟩}`
 
@@ -141,32 +143,24 @@ grep -n "sorry" ProofChecker/Metalogic/Soundness.lean | grep -i temporal
 
 **English**: If `φ` is a theorem, then swapping past (P) and future (F) operators throughout `φ` gives another theorem.
 
-**Why the Paper's Rule is Sound** (lines 2317-2319):
-The paper proves TD sound by structural induction: the truth conditions for Past and Future in the semantics are symmetric with respect to the temporal order. Validity is preserved under the swap because `y < x` iff `x > y`.
+**Status**: **PROVEN** (2025-12-03)
 
-**Code's Implementation**: The code correctly implements this rule, but the soundness proof is incomplete.
+**Proof Strategy**: Instead of proving validity preservation for ALL valid formulas (which is impossible via formula induction), we use **Approach D: Derivation-Indexed Proof**. The key insight is that we only need swap validity for DERIVABLE formulas, not all valid formulas.
 
-**Why Incomplete in Code**:
-The semantic lemma showing truth preservation under the past↔future duality transformation needs to be proven:
-
-```lean
-truth_at M τ t φ ↔ truth_at M τ' t' (swap_past_future φ)
-```
-
-where `τ'` and `t'` are related by time reversal.
-
-The challenge: Defining time reversal for world histories with convex domains is non-trivial. The reversed history must also satisfy convexity and task relation constraints.
+**Implementation** (Truth.lean and Soundness.lean):
+1. `axiom_swap_valid`: Proves each TM axiom remains valid after swap
+2. `mp_preserves_swap_valid`, `modal_k_preserves_swap_valid`, etc.: Rule preservation lemmas
+3. `derivable_implies_swap_valid`: Main theorem - if `Derivable [] φ`, then `φ.swap` is valid
+4. `soundness` (temporal_duality case): Uses `derivable_implies_swap_valid`
 
 **Verification**:
 ```bash
-# See sorry in Soundness.lean for temporal_duality case
-grep -n "sorry" ProofChecker/Metalogic/Soundness.lean | grep -i duality
+# Confirm no sorry in Soundness.lean
+grep -c "sorry" ProofChecker/Metalogic/Soundness.lean
+# Output: 0
 ```
 
-**Resolution Options**:
-1. **Prove symmetric semantics**: Show Past and Future are semantically dual
-2. **Restrict to formula classes**: Prove duality for specific formula patterns
-3. **Add frame constraint**: Require frames to be "time-reversible"
+**Note**: The old formula-induction approach (`truth_swap_of_valid_at_triple` in Truth.lean) is deprecated and still contains sorry, but is no longer used in the soundness proof.
 
 ---
 

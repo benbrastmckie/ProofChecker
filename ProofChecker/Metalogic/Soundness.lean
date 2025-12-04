@@ -606,53 +606,33 @@ theorem soundness (Γ : Context) (φ : Formula) : (Γ ⊢ φ) → (Γ ⊨ φ) :=
     unfold truth_at at h_future_psi_true
     exact h_future_psi_true s hs hts
 
-  | @temporal_duality φ' _ ih =>
+  | @temporal_duality φ' h_deriv_phi _ =>
     -- Case: From [] ⊢ φ', derive [] ⊢ swap_past_future φ'
-    -- IH: [] ⊨ φ' (i.e., ⊨ φ', φ' is valid)
+    -- h_deriv_phi: Derivable [] φ' (we have a derivation of φ')
     -- Goal: [] ⊨ swap_past_future φ' (i.e., swap_past_future φ' is valid)
     --
-    -- **Temporal Duality Soundness Strategy**
+    -- **Temporal Duality Soundness Strategy (Approach D: Derivation-Indexed)**
     --
-    -- This case proves that validity is preserved under swap_past_future.
-    -- The key insight is that swapping Past and Future operators corresponds
-    -- to time reversal via negation (t ↦ -t), and Int's totally ordered abelian
-    -- group structure provides the necessary symmetry without requiring additional
-    -- frame constraints.
+    -- Instead of using formula induction (which fails on impossible cases),
+    -- we use the fact that we have a DERIVATION of φ'. The theorem
+    -- `derivable_implies_swap_valid` proves swap validity by induction on
+    -- derivations, avoiding the impossible formula-induction cases.
     --
     -- **Proof Strategy**:
-    -- 1. From IH: φ' is valid (⊨ φ')
-    -- 2. Apply Semantics.TemporalDuality.valid_swap_of_valid
-    -- 3. This gives: ⊨ swap_past_future φ'
-    -- 4. Unpack to show: [] ⊨ swap_past_future φ'
+    -- 1. We have: h_deriv_phi : Derivable [] φ'
+    -- 2. Apply derivable_implies_swap_valid to get: is_valid φ'.swap_past_future
+    -- 3. Unpack the local is_valid definition to get: ⊨ φ'.swap_past_future
     --
-    -- **Implementation Status**:
-    -- The valid_swap_of_valid lemma in Truth.lean currently uses sorry for
-    -- some cases (imp, box, past, future) pending resolution of a subtle issue
-    -- about how validity interacts with temporal operators. However, the structure
-    -- is correct and the proof strategy is sound.
-    --
-    -- **Key Dependencies**:
-    -- - WorldHistory.neg_lt_neg_iff: Order reversal via negation
-    -- - WorldHistory.neg_le_neg_iff: Non-strict order reversal
-    -- - Formula.swap_past_future_involution: Swap is involutive
-    -- - Semantics.TemporalDuality.valid_swap_of_valid: Main lemma
-    intro F M τ t ht h_all
-    -- h_all: ∀ψ ∈ [], truth_at M τ t ht ψ (vacuously true for empty context)
+    -- **Key Insight**: We don't need to prove "valid φ → valid φ.swap" for ALL
+    -- valid formulas. We only need it for DERIVABLE formulas, and derivation
+    -- induction avoids the impossible cases.
+    intro F M τ t ht _
     -- Goal: truth_at M τ t ht (swap_past_future φ')
-    -- From IH: [] ⊨ φ', which means ⊨ φ' (φ' valid)
-    -- Use valid_swap_of_valid to get: ⊨ swap_past_future φ'
-    have h_valid : ⊨ φ' := by
-      intro F' M' τ' t' ht'
-      -- Need to show: truth_at M' τ' t' ht' φ'
-      -- From IH: [] ⊨ φ'
-      apply ih F' M' τ' t' ht'
-      -- Need: ∀ψ ∈ [], truth_at M' τ' t' ht' ψ
-      intro ψ h_mem
-      -- h_mem : ψ ∈ []
-      -- This is impossible, so we can derive anything
-      exact absurd h_mem (List.not_mem_nil ψ)
-    -- Apply valid_swap_of_valid
-    exact Semantics.TemporalDuality.valid_swap_of_valid φ' h_valid F M τ t ht
+    -- Use derivable_implies_swap_valid which proves: Derivable [] φ' → is_valid φ'.swap
+    have h_swap_valid := Semantics.TemporalDuality.derivable_implies_swap_valid h_deriv_phi
+    -- h_swap_valid : is_valid φ'.swap_past_future
+    -- Unpack the local is_valid definition
+    exact h_swap_valid F M τ t ht
 
   | @weakening Γ' Δ' φ' _ h_sub ih =>
     -- Case: From Γ' ⊢ φ' and Γ' ⊆ Δ', derive Δ' ⊢ φ'

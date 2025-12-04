@@ -1225,6 +1225,40 @@ Task {
 
     IMPORTANT: If your planned approach conflicts with provided standards for well-motivated reasons, include Phase 0 to revise standards with clear justification and user warning. See Standards Divergence Protocol in plan-architect.md.
 
+    **CRITICAL FORMAT REQUIREMENTS FOR NEW PLANS**:
+    This is a NEW plan creation (not revision). You MUST follow these format rules:
+
+    1. Metadata Status Field:
+       - MUST be exactly: **Status**: [NOT STARTED]
+       - Do NOT use [IN PROGRESS], [COMPLETE], or [BLOCKED]
+
+    2. Phase Heading Format:
+       - ALL phases MUST include [NOT STARTED] marker
+       - Format: ### Phase N: Name [NOT STARTED]
+       - Do NOT use [COMPLETE], [PARTIAL], or [IN PROGRESS]
+
+    3. Checkbox Format:
+       - ALL Success Criteria MUST use: - [ ] (unchecked)
+       - ALL tasks MUST use: - [ ] (unchecked)
+       - Do NOT pre-mark checkboxes as [x] or [~]
+
+    4. Status vs Findings Distinction:
+       - Research findings describe WHAT EXISTS in the codebase
+       - Plan status describes WHAT NEEDS TO BE DONE
+       - Even if research shows partial implementation, the plan status is [NOT STARTED]
+       - The plan tracks future work, not past accomplishments
+
+    5. Metadata Field Restriction:
+       - Only use standard metadata fields from plan-architect.md template
+       - Do NOT add workflow-specific fields (e.g., **Lean File**)
+       - Required fields: Date, Feature, Status, Estimated Hours, Standards File, Research Reports
+
+    **WHY THIS MATTERS**:
+    - /implement depends on [NOT STARTED] markers to track progress
+    - Pre-completed checkboxes break automated task tracking
+    - Invalid status markers confuse progress detection
+    - This is a plan for FUTURE work, not a report of PAST work
+
     Execute planning according to behavioral guidelines and return completion signal:
     PLAN_CREATED: ${PLAN_PATH}
   "
@@ -1516,7 +1550,7 @@ ARTIFACTS="  📊 Reports: $RESEARCH_DIR/ ($REPORT_COUNT files)
 
 # Build next steps
 NEXT_STEPS="  • Review plan: cat $PLAN_PATH
-  • Begin implementation: /build $PLAN_PATH
+  • Begin implementation: /implement $PLAN_PATH
   • Review research: ls -lh $RESEARCH_DIR/
   • Run /todo to update TODO.md (adds plan to tracking)"
 

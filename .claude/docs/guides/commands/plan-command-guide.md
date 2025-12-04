@@ -35,7 +35,7 @@ The `/plan` command provides a research-and-plan workflow that creates comprehen
 - **Research-only tasks**: Use `/research` if you don't need a plan
 - **Existing plan revision**: Use `/revise` to update existing plans
 - **Debugging**: Use `/debug` for debug-focused workflows
-- **Direct implementation**: Use `/build` if you already have a plan
+- **Direct implementation**: Use `/implement` if you already have a plan
 
 ---
 
@@ -88,7 +88,7 @@ The `/plan` command provides a research-and-plan workflow that creates comprehen
 2. **State Initialization**: sm_init() with workflow_type="research-and-plan"
 3. **Research Phase**: research-specialist creates investigation reports
 4. **Planning Phase**: plan-architect creates implementation plan from research
-5. **Output**: Research reports + implementation plan ready for /build or /implement
+5. **Output**: Research reports + implementation plan ready for /implement
 
 ---
 
@@ -143,7 +143,7 @@ Implementation Plan: .claude/specs/752_implement_user_authentication/plans/001_i
 Next Steps:
 - Review plan: cat .claude/specs/752_implement_user_authentication/plans/001_implement_user_authentication_plan.md
 - Implement plan: /implement .claude/specs/752_implement_user_authentication/plans/001_implement_user_authentication_plan.md
-- Use /build to execute implementation phases
+- Use /implement to execute implementation phases
 ```
 
 **Explanation**:
@@ -248,19 +248,19 @@ Researches GraphQL migration approaches, patterns, and gotchas. Creates phased m
 
 ### Integration with Other Workflows
 
-**Research-Plan → Build Chain**:
+**Research-Plan → Implement Chain**:
 ```bash
 /plan"implement caching layer"
 # Review plan
-/build  # Auto-detects and executes plan
+/implement  # Auto-detects and executes plan
 ```
 
-**Research-Plan → Review → Build**:
+**Research-Plan → Review → Implement**:
 ```bash
 /plan"add rate limiting"
 # Manual review of plan
 # Adjust plan if needed with /revise
-/build
+/implement
 ```
 
 **Iterative Research-Plan**:
@@ -353,6 +353,34 @@ No standards extracted (graceful degradation)
 ```
 
 For more details on the standards integration pattern, see [Standards Integration Pattern](.claude/docs/guides/patterns/standards-integration.md).
+
+### Plan Format Enforcement
+
+The `/plan` command enforces critical format constraints to ensure generated plans are compatible with automated task tracking in `/implement`.
+
+**Why Format Matters**:
+- `/implement` uses `[NOT STARTED]` markers to detect which phases need execution
+- Pre-completed checkboxes (`[x]` or `[~]`) break automated progress tracking
+- Invalid status markers (`[IN PROGRESS]`, `[COMPLETE]`) confuse state detection
+- Plans represent FUTURE work, not PAST accomplishments
+
+**Enforced Rules** (as of 2025-12-03):
+1. **Metadata Status**: Must be exactly `**Status**: [NOT STARTED]`
+2. **Phase Markers**: All phases must include `[NOT STARTED]` marker
+3. **Checkbox Format**: All checkboxes must be unchecked `- [ ]`
+4. **Status vs Findings**: Plan status (what needs doing) is distinct from research findings (what exists)
+5. **Metadata Fields**: Only standard fields allowed (no workflow-specific extensions)
+
+**Implementation**:
+The format enforcement is implemented in the Task invocation prompt (`.claude/commands/plan.md` lines 1228-1260). The prompt explicitly instructs plan-architect to follow these rules when creating new plans, preventing the agent from conflating research findings with plan status.
+
+**Verification**:
+All plans should pass the plan metadata validator:
+```bash
+bash .claude/scripts/lint/validate-plan-metadata.sh <plan-file>
+```
+
+For troubleshooting format violations, see [Issue 5: Plan Format Violations](#issue-5-plan-format-violations).
 
 ---
 
@@ -447,6 +475,54 @@ Example:
 /plan"implement real-time push notifications using WebSocket for user activity alerts in multi-tenant application"
 ```
 
+#### Issue 5: Plan Format Violations
+
+**Symptoms**:
+- Plan metadata Status shows `[IN PROGRESS]` or `[COMPLETE]` instead of `[NOT STARTED]`
+- Phase headers show `[COMPLETE]` or `[PARTIAL]` markers
+- Success Criteria or tasks pre-marked with `[x]` or `[~]` checkboxes
+- Extra non-standard metadata fields in plan header
+
+**Cause**:
+Plan-architect agent conflated research findings (what exists in codebase) with plan status (what needs to be done). This typically occurs when research shows partial implementation.
+
+**Impact**:
+- `/implement` command cannot track progress correctly
+- Automated task tracking breaks
+- Checkboxes appear pre-completed incorrectly
+
+**Solution**:
+As of 2025-12-03, the `/plan` command includes explicit format enforcement in the Task invocation prompt. Plans generated after this date should conform to the correct format automatically.
+
+**Manual Verification**:
+```bash
+# Find recently created plan
+PLAN=$(find .claude/specs -name "*-plan.md" -mmin -60 | head -1)
+
+# Check Status field (must be [NOT STARTED])
+grep "**Status**:" "$PLAN"
+# Expected: **Status**: [NOT STARTED]
+
+# Count phases and [NOT STARTED] markers (should match)
+PHASE_COUNT=$(grep -c "^### Phase [0-9]" "$PLAN")
+NOT_STARTED_COUNT=$(grep -c "\[NOT STARTED\]" "$PLAN")
+echo "Phases: $PHASE_COUNT, NOT STARTED markers: $NOT_STARTED_COUNT"
+
+# Check for pre-marked checkboxes (should be none)
+grep -c "^- \[x\]" "$PLAN" || echo "No pre-completed checkboxes (correct)"
+grep -c "^- \[~\]" "$PLAN" || echo "No superseded checkboxes (correct)"
+```
+
+**Format Enforcement Details**:
+The `/plan` command enforces five critical format rules for new plans:
+1. Metadata Status must be exactly `[NOT STARTED]`
+2. All phase headings must include `[NOT STARTED]` marker
+3. All checkboxes must be unchecked `- [ ]` format
+4. Plan status (what needs to be done) is distinct from research findings (what exists)
+5. Only standard metadata fields are allowed (no workflow-specific extensions)
+
+These rules ensure compatibility with `/implement` command's automated progress tracking.
+
 ### Debug Mode
 
 Enable verbose output:
@@ -491,7 +567,7 @@ cat ~/.claude/data/state/workflow_state.json | jq '.completed_states'
 
 - Check [Command Reference](../reference/standards/command-reference.md) for quick syntax
 - Review [Plan-Architect Agent](../../agents/plan-architect.md) for planning patterns
-- See related commands: `/research`, `/revise`, `/plan`
+- See related commands: `/research`, `/revise`, `/implement`
 - Review [Adaptive Planning Guide](../workflows/adaptive-planning-guide.md) for plan structure
 
 ---
@@ -503,4 +579,4 @@ cat ~/.claude/data/state/workflow_state.json | jq '.completed_states'
 - [Adaptive Planning Guide](../workflows/adaptive-planning-guide.md)
 - [Directory Protocols](../concepts/directory-protocols.md)
 - [Command Reference](../reference/standards/command-reference.md)
-- Related Commands: `/research`, `/revise`, `/build`, `/implement`
+- Related Commands: `/research`, `/revise`, `/implement`
