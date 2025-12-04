@@ -36,8 +36,11 @@ A task model extends a task frame with a valuation function that determines
 which atomic propositions are true at each world state.
 
 This provides the complete semantic structure needed to evaluate formula truth.
+
+**Polymorphic Temporal Type**: TaskModel inherits temporal type parameter from TaskFrame,
+ensuring valuation is independent of the specific temporal order used.
 -/
-structure TaskModel (F : TaskFrame) where
+structure TaskModel {T : Type*} [LinearOrderedAddCommGroup T] (F : TaskFrame T) where
   /--
   Valuation function: assigns truth values to atomic propositions at world states.
 
@@ -47,7 +50,7 @@ structure TaskModel (F : TaskFrame) where
 
 namespace TaskModel
 
-variable {F : TaskFrame}
+variable {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T}
 
 /--
 Simple model where all atoms are false everywhere.

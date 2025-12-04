@@ -8,33 +8,40 @@ This module defines world histories, which are functions from time domains to wo
 ## Paper Specification Reference
 
 **World Histories (app:TaskSemantics, def:world-history, line 1849)**:
-The JPL paper defines world histories (possible worlds) as functions `τ: T → W`
-where `T ⊆ G` is a convex subset of the time group and the function respects
-the task relation: for all `x, y ∈ T` with `x ≤ y`, we have `τ(y) ∈ τ(x) · (y - x)`.
+The JPL paper defines world histories (possible worlds) as functions `τ: X → W`
+where `X ⊆ T` is a **convex** subset of the time group `T` and the function respects
+the task relation: for all `x, y ∈ X` with `x ≤ y`, we have `τ(y) ∈ τ(x) · (y - x)`.
 
 **ProofChecker Implementation**:
-- `domain: Int → Prop` represents the convex time subset `T ⊆ G`
-- `states: (t: Int) → domain t → F.WorldState` represents the function `τ: T → W`
+- `domain: T → Prop` represents the convex time subset `X ⊆ T`
+- `convex` field enforces the paper's convexity requirement explicitly
+- `states: (t: T) → domain t → F.WorldState` represents the function `τ: X → W`
 - `respects_task` constraint matches the paper's requirement exactly
+
+**Convexity Requirement**: A domain is convex if whenever `x, z ∈ domain` with `x ≤ z`,
+then all times `y` with `x ≤ y ≤ z` are also in the domain. This ensures histories
+have no "gaps" in time.
 
 **Critical Semantic Points**:
 1. Box operator quantifies over ALL histories at time x
 2. Past/Future operators quantify over times in the SAME history
 3. Times must be in history's domain for evaluation
+4. Domains must be convex (no temporal gaps)
 
 ## Main Definitions
 
-- `WorldHistory`: World history structure with domain and task constraint
+- `WorldHistory F`: World history structure with convex domain and task constraint
 
 ## Main Results
 
-- Example world histories (constant, trivial, universal with conditional validity)
+- Example world histories (constant, trivial, universal) with convexity proofs
+- Time-shift construction preserving convexity
 
 ## Implementation Notes
 
-- For MVP, we simplify the world history structure to avoid Mathlib dependencies
-- Domain is represented as a predicate on Int
-- Convexity is simplified for MVP (not formally enforced)
+- Type parameter `T` represents temporal durations with `LinearOrderedAddCommGroup` structure
+- Domain is represented as a predicate `T → Prop`
+- Convexity is now formally enforced (matching paper definition exactly)
 - History must respect the task relation (compositionality)
 
 ## References
@@ -52,17 +59,32 @@ World history for a task frame.
 A world history assigns a world state to each time in its domain,
 such that the history respects the task relation of the frame.
 
-For MVP, we use a simplified structure with Int times directly.
+**Type Parameters**:
+- `T`: Temporal duration type with totally ordered abelian group structure
+- `F`: Task frame over temporal type `T`
+
+**Paper Alignment**: Matches JPL paper def:world-history (line 1849) with
+explicit convexity constraint on domain.
 -/
-structure WorldHistory (F : TaskFrame) where
+structure WorldHistory {T : Type*} [LinearOrderedAddCommGroup T] (F : TaskFrame T) where
   /-- Domain predicate (which times are in the history) -/
-  domain : Int → Prop
+  domain : T → Prop
+  /--
+  Convexity constraint: domain has no temporal gaps.
+
+  If times `x` and `z` are in the domain with `x ≤ z`, then every time `y`
+  between them (`x ≤ y ≤ z`) must also be in the domain.
+
+  **Paper Reference**: JPL paper def:world-history (line 1849) requires domain
+  to be a convex subset of the time group.
+  -/
+  convex : ∀ (x z : T), domain x → domain z → ∀ (y : T), x ≤ y → y ≤ z → domain y
   /--
   State assignment function.
 
   For each time `t` in the domain, assigns a world state.
   -/
-  states : (t : Int) → domain t → F.WorldState
+  states : (t : T) → domain t → F.WorldState
   /--
   Task relation respect constraint.
 
@@ -71,12 +93,12 @@ structure WorldHistory (F : TaskFrame) where
 
   This ensures the history is consistent with possible task executions.
   -/
-  respects_task : ∀ (s t : Int) (hs : domain s) (ht : domain t),
+  respects_task : ∀ (s t : T) (hs : domain s) (ht : domain t),
     s ≤ t → F.task_rel (states s hs) (t - s) (states t ht)
 
 namespace WorldHistory
 
-variable {F : TaskFrame}
+variable {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T}
 
 /--
 Universal world history over all time (requires explicit reflexivity proof).
@@ -108,9 +130,13 @@ use the frame-specific constructors `universal_trivialFrame` or `universal_natFr
 - `w`: The constant world state for all times
 - `h_refl`: Proof that the frame is reflexive at state `w` for all durations
 -/
-def universal (F : TaskFrame) (w : F.WorldState)
-    (h_refl : ∀ d : Int, F.task_rel w d w) : WorldHistory F where
+def universal (F : TaskFrame T) (w : F.WorldState)
+    (h_refl : ∀ d : T, F.task_rel w d w) : WorldHistory F where
   domain := fun _ => True
+  convex := by
+    intros x z hx hz y hxy hyz
+    -- Full domain is trivially convex
+    exact True.intro
   states := fun _ _ => w
   respects_task := by
     intros s t hs ht hst
@@ -121,9 +147,13 @@ def universal (F : TaskFrame) (w : F.WorldState)
 Trivial world history for the trivial frame.
 
 Since trivial frame's task relation is always true, this always works.
+The full domain is convex.
 -/
-def trivial : WorldHistory TaskFrame.trivialFrame where
+def trivial {T : Type*} [LinearOrderedAddCommGroup T] : WorldHistory (TaskFrame.trivialFrame (T := T)) where
   domain := fun _ => True
+  convex := by
+    intros x z hx hz y hxy hyz
+    exact True.intro
   states := fun _ _ => ()
   respects_task := by
     intros s t hs ht hst
@@ -136,9 +166,14 @@ This is a variant of `trivial` that allows specifying the constant state
 (though in trivialFrame, WorldState = Unit, so this is equivalent to `trivial`).
 
 Since trivialFrame's task relation is always true, any constant history respects the task relation.
+The full domain is convex.
 -/
-def universal_trivialFrame (w : TaskFrame.trivialFrame.WorldState) : WorldHistory TaskFrame.trivialFrame where
+def universal_trivialFrame {T : Type*} [LinearOrderedAddCommGroup T] (w : (TaskFrame.trivialFrame (T := T)).WorldState) :
+    WorldHistory (TaskFrame.trivialFrame (T := T)) where
   domain := fun _ => True
+  convex := by
+    intros x z hx hz y hxy hyz
+    exact True.intro
   states := fun _ _ => w
   respects_task := by
     intros s t hs ht hst
@@ -151,10 +186,13 @@ Since natFrame's task relation is always true (for any states and duration),
 any constant history respects the task relation.
 
 This demonstrates that reflexive frames (where `task_rel w d w` for all `w, d`)
-admit universal constant histories.
+admit universal constant histories. The full domain is convex.
 -/
-def universal_natFrame (n : Nat) : WorldHistory TaskFrame.natFrame where
+def universal_natFrame {T : Type*} [LinearOrderedAddCommGroup T] (n : Nat) : WorldHistory (TaskFrame.natFrame (T := T)) where
   domain := fun _ => True
+  convex := by
+    intros x z hx hz y hxy hyz
+    exact True.intro
   states := fun _ _ => n
   respects_task := by
     intros s t hs ht hst
@@ -164,7 +202,7 @@ def universal_natFrame (n : Nat) : WorldHistory TaskFrame.natFrame where
 /--
 Get the state at a time (helper function that bundles membership proof).
 -/
-def stateAt (τ : WorldHistory F) (t : Int) (h : τ.domain t) : F.WorldState :=
+def stateAt (τ : WorldHistory F) (t : T) (h : τ.domain t) : F.WorldState :=
   τ.states t h
 
 /-! ## Time-Shift Construction
@@ -187,20 +225,31 @@ This allows us to relate truth at (σ, y) to truth at (τ, x).
 
 **Paper Reference**: app:auto_existence (line ~2330) defines time-shift automorphisms.
 
-**Key Property**: If σ respects the task relation, so does the shifted history,
-because the task relation only depends on duration (t - s), which is preserved
-under time translation.
+**Key Property**: If σ respects the task relation and has convex domain,
+so does the shifted history, because:
+1. Task relation only depends on duration (t - s), preserved under translation
+2. Convexity is preserved under translation by group structure
 -/
-def time_shift (σ : WorldHistory F) (Δ : Int) : WorldHistory F where
+def time_shift (σ : WorldHistory F) (Δ : T) : WorldHistory F where
   domain := fun z => σ.domain (z + Δ)
+  convex := by
+    intros x z hx hz y hxy hyz
+    -- Need: σ.domain (y + Δ)
+    -- Have: σ.domain (x + Δ) and σ.domain (z + Δ) with x ≤ y ≤ z
+    -- By convexity of σ, need to show (x + Δ) ≤ (y + Δ) ≤ (z + Δ)
+    have hxy' : x + Δ ≤ y + Δ := add_le_add_right hxy Δ
+    have hyz' : y + Δ ≤ z + Δ := add_le_add_right hyz Δ
+    exact σ.convex (x + Δ) (z + Δ) hx hz (y + Δ) hxy' hyz'
   states := fun z hz => σ.states (z + Δ) hz
   respects_task := by
     intros s t hs ht hst
     -- Need: task_rel (σ.states (s + Δ)) (t - s) (σ.states (t + Δ))
     -- We have: σ respects task, so task_rel (σ.states (s + Δ)) ((t + Δ) - (s + Δ)) (σ.states (t + Δ))
     -- Since (t + Δ) - (s + Δ) = t - s, this is exactly what we need
-    have h_shifted : (s + Δ) ≤ (t + Δ) := Int.add_le_add_right hst Δ
-    have h_duration : (t + Δ) - (s + Δ) = t - s := by omega
+    have h_shifted : s + Δ ≤ t + Δ := add_le_add_right hst Δ
+    have h_duration : (t + Δ) - (s + Δ) = t - s := by
+      -- (t + Δ) - (s + Δ) = t - s by group theory
+      rw [add_sub_add_right_eq_sub]
     rw [← h_duration]
     exact σ.respects_task (s + Δ) (t + Δ) hs ht h_shifted
 
@@ -208,23 +257,25 @@ def time_shift (σ : WorldHistory F) (Δ : Int) : WorldHistory F where
 Time-shift preserves domain membership (forward direction).
 If z is in the shifted domain, then z + Δ is in the original domain.
 -/
-theorem time_shift_domain_iff (σ : WorldHistory F) (Δ z : Int) :
+theorem time_shift_domain_iff (σ : WorldHistory F) (Δ z : T) :
     (time_shift σ Δ).domain z ↔ σ.domain (z + Δ) := by
   rfl
 
 /--
 Inverse time-shift: shifting by -Δ undoes shifting by Δ on the domain.
 -/
-theorem time_shift_inverse_domain (σ : WorldHistory F) (Δ : Int) (z : Int) :
+theorem time_shift_inverse_domain (σ : WorldHistory F) (Δ : T) (z : T) :
     (time_shift (time_shift σ Δ) (-Δ)).domain z ↔ σ.domain z := by
   simp only [time_shift]
   constructor
   · intro h
-    have : z + -Δ + Δ = z := by omega
+    have : z + -Δ + Δ = z := by
+      rw [add_assoc, neg_add_cancel, add_zero]
     rw [this] at h
     exact h
   · intro h
-    have : z + -Δ + Δ = z := by omega
+    have : z + -Δ + Δ = z := by
+      rw [add_assoc, neg_add_cancel, add_zero]
     rw [this]
     exact h
 
@@ -234,7 +285,7 @@ States are equal when times are provably equal (proof irrelevance).
 This lemma allows us to transport states from one time to another when the times
 are equal. This is essential for dependent type reasoning in time-shift proofs.
 -/
-theorem states_eq_of_time_eq (σ : WorldHistory F) (t₁ t₂ : Int)
+theorem states_eq_of_time_eq (σ : WorldHistory F) (t₁ t₂ : T)
     (h : t₁ = t₂) (ht₁ : σ.domain t₁) (ht₂ : σ.domain t₂) :
     σ.states t₁ ht₁ = σ.states t₂ ht₂ := by
   subst h
@@ -246,18 +297,19 @@ Double time-shift cancels: states at (time_shift (time_shift σ Δ) (-Δ)) equal
 This is the key transport lemma for the box case of time_shift_preserves_truth.
 It shows that shifting by Δ and then by -Δ returns to the original states.
 -/
-theorem time_shift_time_shift_states (σ : WorldHistory F) (Δ : Int) (t : Int)
+theorem time_shift_time_shift_states (σ : WorldHistory F) (Δ : T) (t : T)
     (ht : σ.domain t)
     (ht' : (time_shift (time_shift σ Δ) (-Δ)).domain t) :
     (time_shift (time_shift σ Δ) (-Δ)).states t ht' = σ.states t ht := by
   simp only [time_shift]
-  have h_eq : t + -Δ + Δ = t := by omega
+  have h_eq : t + -Δ + Δ = t := by
+    rw [add_assoc, neg_add_cancel, add_zero]
   exact states_eq_of_time_eq σ (t + -Δ + Δ) t h_eq _ ht
 
 /--
 Extensionality lemma for time_shift: shifting by equal amounts gives equal histories.
 -/
-theorem time_shift_congr (σ : WorldHistory F) (Δ₁ Δ₂ : Int) (h : Δ₁ = Δ₂) :
+theorem time_shift_congr (σ : WorldHistory F) (Δ₁ Δ₂ : T) (h : Δ₁ = Δ₂) :
     time_shift σ Δ₁ = time_shift σ Δ₂ := by
   subst h
   rfl
@@ -265,17 +317,18 @@ theorem time_shift_congr (σ : WorldHistory F) (Δ₁ Δ₂ : Int) (h : Δ₁ = 
 /--
 Domain membership for time_shift by zero is equivalent to original domain.
 -/
-theorem time_shift_zero_domain_iff (σ : WorldHistory F) (z : Int) :
+theorem time_shift_zero_domain_iff (σ : WorldHistory F) (z : T) :
     (time_shift σ 0).domain z ↔ σ.domain z := by
-  simp only [time_shift, Int.add_zero]
+  simp only [time_shift, add_zero]
 
 /--
 Domain membership for double time-shift with opposite amounts equals original.
 -/
-theorem time_shift_time_shift_neg_domain_iff (σ : WorldHistory F) (Δ : Int) (z : Int) :
+theorem time_shift_time_shift_neg_domain_iff (σ : WorldHistory F) (Δ : T) (z : T) :
     (time_shift (time_shift σ Δ) (-Δ)).domain z ↔ σ.domain z := by
   simp only [time_shift]
-  have h : z + -Δ + Δ = z := by omega
+  have h : z + -Δ + Δ = z := by
+    rw [add_assoc, neg_add_cancel, add_zero]
   constructor
   · intro hd; rw [h] at hd; exact hd
   · intro hd; rw [h]; exact hd
@@ -283,61 +336,74 @@ theorem time_shift_time_shift_neg_domain_iff (σ : WorldHistory F) (Δ : Int) (z
 /--
 States at double time-shift with opposite amounts equals original states.
 -/
-theorem time_shift_time_shift_neg_states (σ : WorldHistory F) (Δ : Int) (t : Int)
+theorem time_shift_time_shift_neg_states (σ : WorldHistory F) (Δ : T) (t : T)
     (ht : σ.domain t) (ht' : (time_shift (time_shift σ Δ) (-Δ)).domain t) :
     (time_shift (time_shift σ Δ) (-Δ)).states t ht' = σ.states t ht := by
   simp only [time_shift]
-  have h_eq : t + -Δ + Δ = t := by omega
+  have h_eq : t + -Δ + Δ = t := by
+    rw [add_assoc, neg_add_cancel, add_zero]
   exact states_eq_of_time_eq σ (t + -Δ + Δ) t h_eq _ ht
 
 /-! ## Order Reversal Lemmas
 
-These lemmas establish that negation provides an order-reversing automorphism
-on Int. This is crucial for proving temporal duality soundness: swapping past
-and future corresponds to time reversal via negation.
+These lemmas establish that group inverse (negation) provides an order-reversing
+automorphism on any `LinearOrderedAddCommGroup`. This is crucial for proving
+temporal duality soundness: swapping past and future corresponds to time reversal
+via group inverse.
 
-The key insight is that Int's totally ordered abelian group structure provides
-temporal symmetry without requiring additional frame constraints.
+The key insight is that `LinearOrderedAddCommGroup` structure provides temporal
+symmetry without requiring additional frame constraints.
 -/
 
 /--
-Negation reverses strict order: s < t ↔ -t < -s
+Group inverse reverses strict order: s < t ↔ -t < -s
 
 This order reversal is the algebraic foundation for temporal duality.
-When we swap Past and Future operators, the time domain reverses under negation.
+When we swap Past and Future operators, the time domain reverses under group inverse.
 -/
-theorem neg_lt_neg_iff (s t : Int) : s < t ↔ -t < -s := by
+theorem neg_lt_neg_iff (s t : T) : s < t ↔ -t < -s := by
   constructor
   · intro h
-    omega
+    -- s < t implies -t < -s
+    exact neg_lt_neg h
   · intro h
-    omega
+    -- -t < -s implies s < t
+    -- Rewrite s and t as double negatives
+    have hs : s = -(-s) := by simp
+    have ht : t = -(-t) := by simp
+    rw [hs, ht]
+    exact neg_lt_neg h
 
 /--
-Negation reverses non-strict order: s ≤ t ↔ -t ≤ -s
+Group inverse reverses non-strict order: s ≤ t ↔ -t ≤ -s
 -/
-theorem neg_le_neg_iff (s t : Int) : s ≤ t ↔ -t ≤ -s := by
+theorem neg_le_neg_iff (s t : T) : s ≤ t ↔ -t ≤ -s := by
   constructor
   · intro h
-    omega
+    exact neg_le_neg h
   · intro h
-    omega
+    have hs : s = -(-s) := by simp
+    have ht : t = -(-t) := by simp
+    rw [hs, ht]
+    exact neg_le_neg h
 
 /--
 Double negation is identity: -(-t) = t
 -/
-theorem neg_neg_eq (t : Int) : -(-t) = t := by
-  omega
+theorem neg_neg_eq (t : T) : -(-t) = t := by
+  simp
 
 /--
-Negation is injective: -s = -t ↔ s = t
+Group inverse is injective: -s = -t ↔ s = t
 -/
-theorem neg_injective (s t : Int) : -s = -t ↔ s = t := by
+theorem neg_injective (s t : T) : -s = -t ↔ s = t := by
   constructor
   · intro h
-    omega
+    have : -(-s) = -(-t) := by rw [h]
+    simp at this
+    exact this
   · intro h
-    omega
+    rw [h]
 
 end WorldHistory
 

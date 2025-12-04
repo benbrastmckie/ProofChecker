@@ -25,8 +25,8 @@ The JPL paper defines truth evaluation for TM formulas as follows:
 ✓ Bot: `False` matches paper's definition
 ✓ Imp: Standard material conditional matches paper
 ✓ Box: `∀ (σ : WorldHistory F) (hs : σ.domain t), truth_at M σ t hs φ` matches paper's quantification over all histories
-✓ Past: `∀ (s : Int) (hs : τ.domain s), s < t → truth_at M τ s hs φ` matches paper's quantification with domain restriction
-✓ Future: `∀ (s : Int) (hs : τ.domain s), t < s → truth_at M τ s hs φ` matches paper's quantification with domain restriction
+✓ Past: `∀ (s : T) (hs : τ.domain s), s < t → truth_at M τ s hs φ` matches paper's quantification with domain restriction
+✓ Future: `∀ (s : T) (hs : τ.domain s), t < s → truth_at M τ s hs φ` matches paper's quantification with domain restriction
 
 **Semantic Verification (Task 3A.7)**:
 Temporal operator implementations correctly restrict quantification to `s ∈ τ.domain`
@@ -80,7 +80,7 @@ namespace ProofChecker.Semantics
 open ProofChecker.Syntax
 open ProofChecker.ProofSystem (Axiom Derivable)
 
-variable {F : TaskFrame}
+variable {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T}
 
 /--
 Truth of a formula at a model-history-time triple.
@@ -101,14 +101,14 @@ The evaluation is defined recursively on formula structure:
 - Past (P): true iff φ true at all past times in current history
 - Future (F): true iff φ true at all future times in current history
 -/
-def truth_at (M : TaskModel F) (τ : WorldHistory F) (t : Int) (ht : τ.domain t) :
+def truth_at (M : TaskModel F) (τ : WorldHistory F) (t : T) (ht : τ.domain t) :
     Formula → Prop
   | Formula.atom p => M.valuation (τ.states t ht) p
   | Formula.bot => False
   | Formula.imp φ ψ => truth_at M τ t ht φ → truth_at M τ t ht ψ
   | Formula.box φ => ∀ (σ : WorldHistory F) (hs : σ.domain t), truth_at M σ t hs φ
-  | Formula.past φ => ∀ (s : Int) (hs : τ.domain s), s < t → truth_at M τ s hs φ
-  | Formula.future φ => ∀ (s : Int) (hs : τ.domain s), t < s → truth_at M τ s hs φ
+  | Formula.past φ => ∀ (s : T) (hs : τ.domain s), s < t → truth_at M τ s hs φ
+  | Formula.future φ => ∀ (s : T) (hs : τ.domain s), t < s → truth_at M τ s hs φ
 
 -- Note: We avoid defining a notation for truth_at as it causes parsing conflicts
 -- with the validity notation in Validity.lean. Use truth_at directly.
@@ -118,7 +118,7 @@ namespace Truth
 /--
 Bot (⊥) is false everywhere.
 -/
-theorem bot_false {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t} :
+theorem bot_false {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t} :
     ¬(truth_at M τ t ht Formula.bot) := by
   intro h
   exact h
@@ -126,7 +126,7 @@ theorem bot_false {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : I
 /--
 Truth of implication is material conditional.
 -/
-theorem imp_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t}
+theorem imp_iff {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t}
     (φ ψ : Formula) :
     (truth_at M τ t ht (φ.imp ψ)) ↔ ((truth_at M τ t ht φ) → (truth_at M τ t ht ψ)) := by
   rfl
@@ -134,7 +134,7 @@ theorem imp_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int
 /--
 Truth of atom depends on valuation at current state.
 -/
-theorem atom_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t}
+theorem atom_iff {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t}
     (p : String) :
     (truth_at M τ t ht (Formula.atom p)) ↔ M.valuation (τ.states t ht) p := by
   rfl
@@ -142,7 +142,7 @@ theorem atom_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : In
 /--
 Truth of box: formula true at all histories at current time.
 -/
-theorem box_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t}
+theorem box_iff {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t}
     (φ : Formula) :
     (truth_at M τ t ht φ.box) ↔
       ∀ (σ : WorldHistory F) (hs : σ.domain t), (truth_at M σ t hs φ) := by
@@ -151,19 +151,19 @@ theorem box_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int
 /--
 Truth of past: formula true at all earlier times in history.
 -/
-theorem past_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t}
+theorem past_iff {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t}
     (φ : Formula) :
     (truth_at M τ t ht φ.past) ↔
-      ∀ (s : Int) (hs : τ.domain s), s < t → (truth_at M τ s hs φ) := by
+      ∀ (s : T) (hs : τ.domain s), s < t → (truth_at M τ s hs φ) := by
   rfl
 
 /--
 Truth of future: formula true at all later times in history.
 -/
-theorem future_iff {F : TaskFrame} {M : TaskModel F} {τ : WorldHistory F} {t : Int} {ht : τ.domain t}
+theorem future_iff {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T} {M : TaskModel F} {τ : WorldHistory F} {t : T} {ht : τ.domain t}
     (φ : Formula) :
     (truth_at M τ t ht φ.future) ↔
-      ∀ (s : Int) (hs : τ.domain s), t < s → (truth_at M τ s hs φ) := by
+      ∀ (s : T) (hs : τ.domain s), t < s → (truth_at M τ s hs φ) := by
   rfl
 
 end Truth
@@ -186,7 +186,7 @@ Truth is independent of the domain membership proof (proof irrelevance for truth
 
 This auxiliary lemma is crucial for transporting truth between different domain membership proofs.
 -/
-theorem truth_proof_irrel (M : TaskModel F) (τ : WorldHistory F) (t : Int)
+theorem truth_proof_irrel (M : TaskModel F) (τ : WorldHistory F) (t : T)
     (ht₁ ht₂ : τ.domain t) (φ : Formula) :
     truth_at M τ t ht₁ φ ↔ truth_at M τ t ht₂ φ := by
   -- Proof by structural induction on φ
@@ -216,7 +216,7 @@ Truth transport across equal histories.
 
 When two histories are equal and both domain proofs are valid, truth is preserved.
 -/
-theorem truth_history_eq (M : TaskModel F) (τ₁ τ₂ : WorldHistory F) (t : Int)
+theorem truth_history_eq (M : TaskModel F) (τ₁ τ₂ : WorldHistory F) (t : T)
     (ht₁ : τ₁.domain t) (ht₂ : τ₂.domain t) (h_eq : τ₁ = τ₂) (φ : Formula) :
     truth_at M τ₁ t ht₁ φ ↔ truth_at M τ₂ t ht₂ φ := by
   cases h_eq
@@ -228,7 +228,7 @@ Truth at double time-shift with opposite amounts equals truth at original histor
 This is the key transport lemma for the box case of time_shift_preserves_truth.
 It allows us to transfer truth from (time_shift (time_shift σ Δ) (-Δ)) back to σ.
 -/
-theorem truth_double_shift_cancel (M : TaskModel F) (σ : WorldHistory F) (Δ : Int) (t : Int)
+theorem truth_double_shift_cancel (M : TaskModel F) (σ : WorldHistory F) (Δ : T) (t : T)
     (ht : σ.domain t) (ht' : (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)).domain t)
     (φ : Formula) :
     truth_at M (WorldHistory.time_shift (WorldHistory.time_shift σ Δ) (-Δ)) t ht' φ ↔
@@ -297,7 +297,7 @@ The proof proceeds by structural induction on formulas:
 `time_shift ρ (-Δ)` gives a history at time y (since x + Δ = y means x = y - Δ).
 This establishes a bijection between histories at the two times.
 -/
-theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y : Int)
+theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y : T)
     (hx : (WorldHistory.time_shift σ (y - x)).domain x) (hy : σ.domain y) (φ : Formula) :
     truth_at M (WorldHistory.time_shift σ (y - x)) x hx φ ↔ truth_at M σ y hy φ := by
   -- Proof by structural induction on φ
@@ -490,7 +490,7 @@ Corollary: For any history σ at time y, there exists a history at time x
 
 This is the key lemma for proving MF and TF axioms.
 -/
-theorem exists_shifted_history (M : TaskModel F) (σ : WorldHistory F) (x y : Int)
+theorem exists_shifted_history (M : TaskModel F) (σ : WorldHistory F) (x y : T)
     (hy : σ.domain y) (φ : Formula) :
     truth_at M σ y hy φ ↔
     truth_at M (WorldHistory.time_shift σ (y - x)) x
@@ -527,7 +527,7 @@ Local definition of validity to avoid circular dependency with Validity.lean.
 A formula is valid if it's true at all model-history-time triples.
 -/
 private def is_valid (φ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : Int) (ht : τ.domain t),
+  ∀ {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F) (τ : WorldHistory F) (t : U) (ht : τ.domain t),
     truth_at M τ t ht φ
 
 /--
@@ -536,8 +536,8 @@ Auxiliary lemma: If φ is valid, then for any specific triple (M, τ, t),
 
 This is just the definition of validity, but stated as a lemma for clarity.
 -/
-theorem valid_at_triple {φ : Formula} (h_valid : is_valid φ) (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (t : Int) (ht : τ.domain t) :
+theorem valid_at_triple {φ : Formula} (h_valid : is_valid φ) {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F)
+    (τ : WorldHistory F) (t : U) (ht : τ.domain t) :
     truth_at M τ t ht φ := h_valid F M τ t ht
 
 
@@ -548,8 +548,8 @@ then for any triple where ψ is true, we can construct a relationship.
 Actually, we need a stronger result: truth at a triple is preserved under swap
 when the formula is valid.
 -/
-theorem truth_swap_of_valid_at_triple (φ : Formula) (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (t : Int) (ht : τ.domain t) :
+theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F)
+    (τ : WorldHistory F) (t : U) (ht : τ.domain t) :
     is_valid φ → truth_at M τ t ht φ.swap_past_future := by
   intro h_valid
   -- Proof by structural induction on φ
@@ -820,7 +820,7 @@ theorem swap_axiom_t4_valid (φ : Formula) :
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_past_swap r hr h_r_lt_t u hu h_u_lt_r
-  -- h_past_swap : ∀ (s : Int) (hs : τ.domain s), s < t → truth_at M τ s hs φ.swap_past_future
+  -- h_past_swap : ∀ (s : T) (hs : τ.domain s), s < t → truth_at M τ s hs φ.swap_past_future
   -- Need: truth_at M τ u hu φ.swap_past_future
   -- Since u < r < t, we have u < t, so apply h_past_swap
   have h_u_lt_t : u < t := by omega
@@ -843,7 +843,7 @@ theorem swap_axiom_ta_valid (φ : Formula) :
   intro F M τ t ht
   simp only [Formula.swap_past_future, Formula.sometime_past, Formula.sometime_future, truth_at]
   intro h_swap_φ s hs h_s_lt_t
-  -- Goal: ¬ ∀ (u : Int) (hu : τ.domain u), u > s → ¬ truth_at M τ u hu φ.swap_past_future
+  -- Goal: ¬ ∀ (u : T) (hu : τ.domain u), u > s → ¬ truth_at M τ u hu φ.swap_past_future
   -- Equivalently: ∃ u > s : swap φ at u
   intro h_all_not_future
   -- We can choose u = t, since t > s (from h_s_lt_t)
