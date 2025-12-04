@@ -1,8 +1,8 @@
 ---
 allowed-tools: Read, Bash, Task
 description: Orchestrates wave-based parallel theorem proving with dependency analysis and MCP rate limit coordination
-model: haiku-4.5
-model-justification: Deterministic wave orchestration and state tracking, mechanical theorem batch coordination following explicit algorithm
+model: opus-4.5
+model-justification: Complex delegation logic, wave orchestration, and theorem batch coordination requiring sophisticated reasoning. Opus 4.5's 15% improvement on agentic tasks (Terminal Bench), 90.8% MMLU reasoning capability, and reliable Task tool delegation patterns address Haiku 4.5 delegation failure. 76% token efficiency at medium effort minimizes cost overhead.
 fallback-model: sonnet-4.5
 ---
 
@@ -50,6 +50,23 @@ iteration: 1  # Current iteration (1-5)
 max_iterations: 5  # Maximum iterations allowed
 context_threshold: 85  # Halt if context usage exceeds 85%
 ```
+
+### File-Based Mode Auto-Conversion
+
+When `execution_mode=file-based` (no plan file provided), the coordinator should:
+
+1. **Auto-generate single-phase wave structure**:
+   - Wave 1: All theorems in LEAN_FILE with no dependencies
+   - Single implementer invocation for entire file
+
+2. **Skip dependency analysis** (no plan structure to analyze)
+
+3. **Proceed with standard wave execution**:
+   - Invoke lean-implementer with all sorry markers from file
+   - Collect results and generate summary
+   - Return ORCHESTRATION_COMPLETE
+
+This ensures consistent coordinator/implementer architecture for ALL modes.
 
 ### STEP 1: Plan Structure Detection
 

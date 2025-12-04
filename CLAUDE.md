@@ -117,15 +117,23 @@ ProofChecker/
 - [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation standard
 
 ### User Documentation (Documentation/UserGuide/ and Documentation/ProjectInfo/)
+- [Logos Philosophy](Documentation/UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations and layer architecture
 - [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
 - [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
 - [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
 - [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
+- [Terminology Glossary](Documentation/Reference/GLOSSARY.md) - Key concepts and definitions
 - [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker
 - [Examples](Documentation/UserGuide/EXAMPLES.md) - Modal, temporal, bimodal examples
 - [Contributing](Documentation/ProjectInfo/CONTRIBUTING.md) - How to contribute
 - [Integration](Documentation/UserGuide/INTEGRATION.md) - Model-Checker integration
 - [Versioning](Documentation/ProjectInfo/VERSIONING.md) - Semantic versioning policy
+
+### Research Documentation (Documentation/Research/)
+- [Research Overview](Documentation/Research/README.md) - Research documentation index
+- [Dual Verification](Documentation/Research/DUAL_VERIFICATION.md) - RL training architecture
+- [Proof Library Design](Documentation/Research/PROOF_LIBRARY_DESIGN.md) - Theorem caching architecture
+- [Layer Extensions](Documentation/Research/LAYER_EXTENSIONS.md) - Layers 1-3 specifications
 
 ### Symbol Formatting Standards
 - [Documentation Standards - Formal Symbol Backtick Standard](.claude/docs/reference/standards/documentation-standards.md#formal-symbol-backtick-standard) - Backtick requirements for Unicode symbols in Markdown

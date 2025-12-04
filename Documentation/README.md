@@ -4,16 +4,27 @@ Comprehensive documentation hub for the ProofChecker project.
 
 ## Documentation Organization
 
-Documentation is organized into four categories:
+Documentation is organized into five categories:
 
 ### UserGuide/
 User-facing documentation for working with ProofChecker:
+- **LOGOS_PHILOSOPHY.md**: Philosophical foundations and Logos layer architecture
 - **ARCHITECTURE.md**: System design and TM logic specification
 - **TUTORIAL.md**: Getting started guide for new users
 - **EXAMPLES.md**: Usage examples and proof patterns
 - **INTEGRATION.md**: Integration with model checkers and other tools
 
 **Audience**: Users of the library, learners, researchers
+
+### Research/
+Research vision and planned architecture. For implementation status, see [ProjectInfo/IMPLEMENTATION_STATUS.md](ProjectInfo/IMPLEMENTATION_STATUS.md).
+
+- **README.md**: Research documentation overview
+- **DUAL_VERIFICATION.md**: RL training architecture design
+- **PROOF_LIBRARY_DESIGN.md**: Theorem caching design
+- **LAYER_EXTENSIONS.md**: Layers 1-3 extension specifications
+
+**Audience**: Researchers, future contributors, AI safety researchers
 
 ### ProjectInfo/
 Project status and contribution information:
@@ -41,6 +52,7 @@ Developer standards and conventions:
 ### Reference/
 Reference materials:
 - **OPERATORS.md**: Formal symbols reference (Unicode notation guide)
+- **GLOSSARY.md**: Terminology mapping and key concepts
 
 **Audience**: All users (quick reference)
 
@@ -68,6 +80,13 @@ Reference materials:
 
 ### Quick Reference
 - [Operators Reference](Reference/OPERATORS.md) - Symbol notation guide
+- [Terminology Glossary](Reference/GLOSSARY.md) - Key concepts and definitions
+
+### For Researchers
+- [Logos Philosophy](UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [Research Overview](Research/README.md) - Research documentation index
+- [Dual Verification](Research/DUAL_VERIFICATION.md) - RL training architecture
+- [Layer Extensions](Research/LAYER_EXTENSIONS.md) - Layers 1-3 specifications
 
 ## Documentation Update Workflow
 

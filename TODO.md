@@ -52,44 +52,10 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ## High Priority Tasks
 
-### 5b. Complete Temporal Duality Soundness ✓ COMPLETE
-*Effort**: 5-10 hours (actual: ~4 hours)
-*Status**: COMPLETE (2025-12-03) - Derivation-indexed approach (Approach D)
-*Priority**: Medium
-
-**Description**: Prove soundness for the temporal duality rule (TD). Requires showing that validity is preserved when swapping Past and Future operators.
-
-**Paper Definition** (§sec:Appendix line 1036): If `⊢ φ`, then `⊢ φ_{⟨P|F⟩}`
-
-**Resolution**: Completed using **Approach D: Derivation-Indexed Proof**. Instead of proving validity preservation for ALL valid formulas (impossible via formula induction), we prove swap validity for DERIVABLE formulas via derivation induction.
-
-**Key Theorems**:
-1. `axiom_swap_valid`: All 10 TM axioms remain valid after swap
-2. `derivable_implies_swap_valid`: Main theorem - `Derivable [] φ → is_valid φ.swap`
-3. `soundness` temporal_duality case: Uses new infrastructure (zero sorry)
-
-**Files**:
-- `ProofChecker/Semantics/Truth.lean` - swap validity theorems
-- `ProofChecker/Metalogic/Soundness.lean` - temporal_duality case complete
-
-**Verification**:
-```bash
-grep -c "sorry" ProofChecker/Metalogic/Soundness.lean
-# Output: 0
-```
-
-**Blocking**: None - COMPLETE
-
-**Dependencies**: None
-
-**Reference**: [Implementation Summary](.claude/specs/025_soundness_automation_implementation/summaries/004_iteration_3_final_summary.md)
-
----
-
 ### 7. Implement Core Automation ✓ PARTIAL COMPLETE
-**Effort**: 40-60 hours
-**Status**: PARTIAL COMPLETE (2025-12-03) - 4/12 tactics implemented (33%)
-**Priority**: Medium (developer productivity, proof automation)
+*Effort**: 40-60 hours
+*Status**: PARTIAL COMPLETE (2025-12-03) - 4/12 tactics implemented (33%)
+*Priority**: Medium (developer productivity, proof automation)
 
 **Description**: Implement 3-4 most useful tactics to replace axiom stubs with real implementations using LEAN 4's `Lean.Elab.Tactic` API.
 

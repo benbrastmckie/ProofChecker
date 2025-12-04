@@ -161,7 +161,10 @@ The proof-checker implements TM logic with complete formal specification:
 - Temporal duality (swap past/future)
 - Weakening (context expansion)
 
-**Current Status**: Layer 0 MVP complete in proof-checker repository with syntax, proof system, semantics packages fully implemented. Metalogic partially complete (soundness: 60%, completeness infrastructure defined).
+## Implementation Status
+
+For current implementation progress including soundness proofs, perpetuity principles, and automation tactics, see:
+[IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 
 ### Application Domain
 
@@ -612,20 +615,12 @@ The architecture provides a **basic methodology** that can be extended as new re
 
 The Logos implementation follows a phased development strategy progressively adding layers:
 
-### Phase 1: Core Layer (Layer 0) - Current Status
+### Phase 1: Core Layer (Layer 0)
 
-**Implementation**: Proof-checker Layer 0 MVP complete
-
-**Components**:
-- ✓ Syntax: Formula types, contexts, derived operators
-- ✓ Proof System: 8 axioms, 7 inference rules
-- ✓ Semantics: Task frames, world histories, truth evaluation
-- ~ Metalogic: Soundness 60% (5/8 axioms proven), completeness infrastructure defined
-- ✓ Testing: Comprehensive coverage for completed modules
+For detailed implementation status, see:
+[IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 
 **Capabilities**: Boolean, modal, temporal reasoning with S5 modal logic and linear temporal logic.
-
-**Timeline**: MVP completed, metalogic refinement ongoing.
 
 ### Phase 2: Explanatory Extension (Layer 1) - Planned
 
@@ -697,7 +692,8 @@ The Logos implementation follows a phased development strategy progressively add
 
 The Logos layer architecture provides progressive extensibility from Core Layer (Boolean, modal, temporal) through three semantic extensions (Explanatory, Epistemic, Normative). The combination principle "any combination of extensions can be added to the Core Layer" enables domain-specific customization while maintaining mathematical foundations for verified reasoning.
 
-**Current Status**: Layer 0 (Core TM logic) MVP complete in proof-checker with syntax, proof system, and semantics fully implemented.
+For current implementation status, see:
+[IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 
 **Future Development**: Progressive addition of Layers 1-3 following phased roadmap, enabling increasingly sophisticated AI reasoning across domains.
 

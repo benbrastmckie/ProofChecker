@@ -1,5 +1,9 @@
 # Proof Library Architecture
 
+> **Implementation Status**: This document describes **planned architecture**.
+> For current implementation progress, see
+> [IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md).
+
 This document characterizes the proof library architecture enabling computational scaling through theorem caching, pattern matching, and fast inference lookup. The library provides instant positive RL signals from cached proofs, reduces computational overhead through theorem reuse, and supports incremental learning from simple to complex reasoning patterns.
 
 ## Introduction to Computational Scaling

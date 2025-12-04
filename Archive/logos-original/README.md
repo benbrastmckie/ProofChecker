@@ -121,6 +121,11 @@ The proof library provides computational scaling through caching verified theore
 - **Incremental Learning**: Library grows continuously as new theorems proven
 - **Efficiency**: Reduces computational overhead through theorem reuse
 
+## Implementation Status
+
+For detailed module-by-module implementation progress, see
+[IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md).
+
 ## External Resources
 
 ### Proof-Checker Repository

@@ -25,6 +25,7 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 - [/example-with-agent](#example-with-agent)
 - [/expand](#expand)
 - [/implement](#implement)
+- [/lean-plan](#lean-plan)
 - [/list](#list)
 - [/optimize-claude](#optimize-claude)
 - [/plan](#plan)
@@ -475,6 +476,39 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 **Automatically updates TODO.md**: Yes (after new plan creation)
 
 **See**: [plan.md](../../commands/plan.md)
+
+---
+
+### /lean-plan
+**Purpose**: Create Lean-specific implementation plan for theorem proving projects with Mathlib research and proof strategies
+
+**Usage**: `/lean-plan "<description>" [--file <path>] [--complexity 1-4] [--project <path>]`
+
+**Type**: orchestrator (Lean specialization)
+
+**Arguments**:
+- `description` (required): Natural language formalization goal
+- `--file` (optional): Path to file with detailed prompt (archived to specs/NNN_topic/prompts/)
+- `--complexity` (optional): Research depth 1-4 (default: 3)
+- `--project` (optional): Lean project path (auto-detect if omitted)
+
+**Agents Used**: topic-naming-agent, lean-research-specialist, lean-plan-architect
+
+**Output**: Research reports + Lean implementation plan with theorem specifications
+
+**Workflow**: `research → plan → complete`
+
+**Plan Features**:
+- Theorem-level granularity (individual theorems as tasks)
+- Mathlib theorem discovery and recommendations
+- Proof strategy specifications (tactics, approaches)
+- Dependency tracking for wave-based parallel proving
+- **Lean File** metadata for Tier 1 discovery
+- Goal specifications (Lean 4 type signatures)
+
+**Integration**: Plans execute with `/lean-build` command for automated proving
+
+**See**: [lean-plan-command-guide.md](../../guides/commands/lean-plan-command-guide.md)
 
 ---
 
