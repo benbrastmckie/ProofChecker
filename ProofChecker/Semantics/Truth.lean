@@ -553,7 +553,7 @@ This is just the definition of validity, but stated as a lemma for clarity.
 -/
 theorem valid_at_triple {φ : Formula} (h_valid : is_valid φ) {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F)
     (τ : WorldHistory F) (t : U) (ht : τ.domain t) :
-    truth_at M τ t ht φ := h_valid F M τ t ht
+    truth_at M τ t ht φ := @h_valid U _ F M τ t ht
 
 
 /--
@@ -572,7 +572,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
   | atom p =>
     -- swap_past_future (atom p) = atom p
     simp only [Formula.swap_past_future]
-    exact h_valid F M τ t ht
+    exact @h_valid U _ F M τ t ht
 
   | bot =>
     -- swap_past_future bot = bot
@@ -581,7 +581,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
     simp only [Formula.swap_past_future, truth_at]
     -- h_valid says bot is valid, which means bot is true at all triples
     -- But bot is False by definition, contradiction
-    exact h_valid F M τ t ht
+    exact @h_valid U _ F M τ t ht
 
   | imp ψ χ ih_ψ ih_χ =>
     -- swap_past_future (ψ → χ) = (swap ψ) → (swap χ)
