@@ -79,11 +79,11 @@ namespace WorldHistory
 variable {F : TaskFrame}
 
 /--
-Universal world history over all time (conditional on reflexive frame).
+Universal world history over all time (requires explicit reflexivity proof).
 
 This history has every time in its domain and assigns the same world state everywhere.
 
-**Frame Constraint Required**: ReflexiveTaskFrame
+**Frame Constraint Required**: Reflexivity proof parameter
 
 A frame is reflexive if for all world states `w` and durations `d`, the task relation
 `task_rel w d w` holds. This is stronger than nullity (which only requires `task_rel w 0 w`).
@@ -100,23 +100,22 @@ A frame is reflexive if for all world states `w` and durations `d`, the task rel
 Compositionality alone cannot build arbitrary-duration self-loops without additional
 frame properties.
 
-**Impact on Semantics**: The universal history constructor is valid for reflexive frames
-(like trivialFrame used in examples). For general frames, use alternative history
-construction methods or prove reflexivity for the specific frame.
+**Usage**: Call this function with a proof that `∀ d, F.task_rel w d w`. For common frames,
+use the frame-specific constructors `universal_trivialFrame` or `universal_natFrame` instead.
 
-**Future Work**: Either (a) add reflexivity as a TaskFrame constraint, (b) make universal
-conditional on a proof of reflexivity, or (c) accept conditional validity (current MVP).
+**Parameters**:
+- `F`: The task frame
+- `w`: The constant world state for all times
+- `h_refl`: Proof that the frame is reflexive at state `w` for all durations
 -/
-def universal (F : TaskFrame) (w : F.WorldState) : WorldHistory F where
+def universal (F : TaskFrame) (w : F.WorldState)
+    (h_refl : ∀ d : Int, F.task_rel w d w) : WorldHistory F where
   domain := fun _ => True
   states := fun _ _ => w
   respects_task := by
     intros s t hs ht hst
-    -- This requires F to be reflexive: ∀ w d, task_rel w d w
-    -- For trivialFrame and natFrame, this holds trivially.
-    -- For identityFrame, this only holds when s = t.
-    -- For MVP, we document the requirement and use sorry.
-    sorry
+    -- Use the reflexivity proof for duration (t - s)
+    exact h_refl (t - s)
 
 /--
 Trivial world history for the trivial frame.
@@ -128,6 +127,38 @@ def trivial : WorldHistory TaskFrame.trivialFrame where
   states := fun _ _ => ()
   respects_task := by
     intros s t hs ht hst
+    exact True.intro
+
+/--
+Universal world history for trivial frame with a specific constant state.
+
+This is a variant of `trivial` that allows specifying the constant state
+(though in trivialFrame, WorldState = Unit, so this is equivalent to `trivial`).
+
+Since trivialFrame's task relation is always true, any constant history respects the task relation.
+-/
+def universal_trivialFrame (w : TaskFrame.trivialFrame.WorldState) : WorldHistory TaskFrame.trivialFrame where
+  domain := fun _ => True
+  states := fun _ _ => w
+  respects_task := by
+    intros s t hs ht hst
+    exact True.intro
+
+/--
+Universal world history for nat frame with a specific constant Nat state.
+
+Since natFrame's task relation is always true (for any states and duration),
+any constant history respects the task relation.
+
+This demonstrates that reflexive frames (where `task_rel w d w` for all `w, d`)
+admit universal constant histories.
+-/
+def universal_natFrame (n : Nat) : WorldHistory TaskFrame.natFrame where
+  domain := fun _ => True
+  states := fun _ _ => n
+  respects_task := by
+    intros s t hs ht hst
+    -- natFrame.task_rel is always True
     exact True.intro
 
 /--

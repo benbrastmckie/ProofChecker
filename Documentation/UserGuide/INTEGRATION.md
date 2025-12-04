@@ -1,24 +1,27 @@
 # ProofChecker Integration Guide
 
-This document describes how to integrate ProofChecker with the Model-Checker and other Logos project components.
+This document describes how to integrate ProofChecker with the Model-Checker to create a comprehensive dual verification architecture for Logos.
 
 ## 1. Overview
 
-ProofChecker integrates with the broader Logos project ecosystem:
+ProofChecker and Model-Checker form a **dual verification architecture** providing complementary syntactic and semantic verification:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     Logos Project                           │
+│              Dual Verification Architecture                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│   ┌───────────────┐    ┌───────────────┐    ┌───────────┐  │
-│   │ Model-Builder │    │ ProofChecker  │    │  Model-   │  │
-│   │   (Python)    │───▶│   (LEAN 4)    │◀───│  Checker  │  │
-│   │               │    │               │    │  (Python) │  │
-│   └───────────────┘    └───────────────┘    └───────────┘  │
-│          │                    │                   │        │
-│          └────────────────────┴───────────────────┘        │
-│                     Formula Exchange                        │
+│      ┌───────────────┐                  ┌───────────┐      │
+│      │ ProofChecker  │◀────────────────▶│  Model-   │      │
+│      │   (LEAN 4)    │  Formula         │  Checker  │      │
+│      │               │  Exchange        │  (Python) │      │
+│      └───────────────┘                  └───────────┘      │
+│             │                                  │            │
+│      Syntactic Proofs              Semantic Countermodels  │
+│      (Proof Receipts)              (Validity Checking)     │
+│                                                             │
+│      Layer 0 (Core TM)             Hyperintensional        │
+│      Implementation                Semantics               │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -27,8 +30,7 @@ ProofChecker integrates with the broader Logos project ecosystem:
 
 | Component | Integration Type | Data Exchanged |
 |-----------|------------------|----------------|
-| Model-Checker | Bidirectional | Formulas, validity results |
-| Model-Builder | Inference requests | Premises, conclusions |
+| Model-Checker | Bidirectional | Formulas, validity results, counterexamples |
 | External Tools | Export | SMT-LIB format |
 
 ## 2. Model-Checker Integration
@@ -123,10 +125,12 @@ def FormulaExchange.deserialize (s : String) : Option FormulaExchange :=
   sorry -- JSON parsing
 ```
 
-### Inference Request Interface
+### Generic Inference API
+
+ProofChecker provides a generic inference verification API for external tools:
 
 ```lean
-/-- Inference request from Model-Builder -/
+/-- Generic inference verification request -/
 structure InferenceRequest where
   request_id : String
   premises : List Formula
@@ -134,18 +138,18 @@ structure InferenceRequest where
   timeout_ms : Option Nat := none
   depth_limit : Option Nat := none
 
-/-- Inference response -/
+/-- Inference verification response -/
 structure InferenceResponse where
   request_id : String
   status : InferenceStatus
   proof : Option String  -- Serialized proof if found
-  countermodel : Option String  -- If invalid
+  countermodel : Option String  -- If invalid (from Model-Checker)
   duration_ms : Nat
 
 inductive InferenceStatus
   | valid_proof        -- Proof found
   | valid_no_proof     -- Valid but proof not constructed
-  | invalid            -- Countermodel found
+  | invalid            -- Countermodel found (via Model-Checker)
   | timeout            -- Timed out
   | error (msg : String)
 ```
@@ -275,10 +279,10 @@ ProofChecker uses semantic versioning:
 
 ### Compatibility Matrix
 
-| ProofChecker | Model-Checker | Model-Builder |
-|--------------|---------------|---------------|
-| 0.1.x | 1.0.x | 1.0.x |
-| 0.2.x | 1.0.x, 1.1.x | 1.0.x, 1.1.x |
+| ProofChecker | Model-Checker |
+|--------------|---------------|
+| 0.1.x | 1.0.x, 1.1.x, 1.2.x |
+| 0.2.x | 1.2.x+ |
 
 ### Migration Guide
 

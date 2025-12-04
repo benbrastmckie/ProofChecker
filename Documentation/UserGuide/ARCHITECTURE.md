@@ -963,12 +963,23 @@ def verify_with_model_checker (Γ : Context) (φ : Formula) :
       return Either.left model_result.counterexample
 ```
 
-#### Model-Builder Integration
+#### Future Natural Language Interface
+
+ProofChecker's primary interface is LEAN 4 code for direct theorem proving and verification. Future work may explore natural language interfaces for making formal verification more accessible to domain experts, potentially integrating with external natural language processing systems to translate informal reasoning into formal proofs.
+
+**Potential Interface Capabilities**:
+- Natural language theorem statement translation to Formula syntax
+- Informal proof sketch parsing to guide proof search
+- Plain language counterexample explanations from model-checker results
+- Domain-specific terminology mapping to formal operators
+
+**Note**: Such interfaces would be external tools consuming ProofChecker's API, not core components of the verification architecture.
+
 ```lean
--- Support model-builder inference requests
-def verify_inference_for_model_builder (
-  premises : Context) 
-  (conclusion : Formula) : 
+-- Example: Generic inference verification API
+def verify_inference (
+  premises : Context)
+  (conclusion : Formula) :
   IO InferenceResult := do
   if h : premises ⊢ conclusion then
     return InferenceResult.valid_proof h
@@ -976,7 +987,7 @@ def verify_inference_for_model_builder (
     let search_result ← bounded_proof_search premises conclusion
     match search_result with
     | some proof => return InferenceResult.found_proof proof
-    | none => 
+    | none =>
       let mc_result ← check_with_model_checker premises conclusion
       return InferenceResult.no_proof_found mc_result
 
@@ -1166,63 +1177,41 @@ See [Research/PROOF_LIBRARY_DESIGN.md](../Research/PROOF_LIBRARY_DESIGN.md) for 
 
 ### 8.5 Operator Layer Alignment
 
+This section maps Logos operators to their ProofChecker LEAN 4 implementations and underlying semantic systems.
+
 **Core Layer (Layer 0) Operators**:
 
 **Boolean Operators** (Extensional Logic):
-- Model-Builder: `¬`, `∧`, `∨`, `→`
-- Proof-Checker Layer 0: Defined operators from `⊥` and `→`
-- System: Classical propositional logic (base for TM)
+- **Logos Operators**: `¬`, `∧`, `∨`, `→`, `↔`, `⊥`, `⊤`
+- **ProofChecker Implementation**: Defined operators from `⊥` and `→` (Formula.imp, Formula.bot)
+- **Semantic System**: Classical propositional logic (base for TM)
 
 **Modal Operators** (Metaphysical Modality):
-- Model-Builder: `□` (necessity), `◇` (possibility), `Ca` (actuality)
-- Proof-Checker Layer 0: `□`, `◇` with S5 axioms (MT, M4, MB, MK)
-- System: S5 modal logic component of TM
+- **Logos Operators**: `□` (necessity), `◇` (possibility)
+- **ProofChecker Implementation**: `□`, `◇` with S5 axioms (MT, M4, MB, MK) in ProofSystem/Axioms.lean
+- **Semantic System**: S5 modal logic component of TM with task frame semantics
 
 **Temporal Operators** (Linear Time):
-- Model-Builder: `P`, `F`, `G`, `H` (LTL past/future operators)
-- Proof-Checker Layer 0: `Past`, `Future`, `past`, `future`, `always`, `sometimes`
-- System: Linear temporal logic component of TM with bimodal interaction axioms (MF, TF)
+- **Logos Operators**: `P`, `F`, `G`, `H` (past/future operators), `△` (always), `▽` (sometimes)
+- **ProofChecker Implementation**: `Past`, `Future`, `past`, `future`, `always`, `sometimes` in Syntax/Formula.lean
+- **Semantic System**: Linear temporal logic component of TM with bimodal interaction axioms (MF, TF)
 
-**Explanatory Extension (Layer 1) Operators**:
+**Explanatory Extension (Layer 1) Operators** - Planned:
 
 **Counterfactual Operators**:
-- Model-Builder: `□→` (would counterfactual), `◇→` (might counterfactual)
-- Proof-Checker Layer 1: `boxright`, `diamondright` with selection functions
-- System: Extension requiring counterfactual semantics
+- **Logos Operators**: `□→` (would counterfactual), `◇→` (might counterfactual)
+- **Planned Implementation**: `boxright`, `diamondright` with selection functions
+- **Semantic System**: Extension requiring counterfactual semantics with world similarity
 
 **Constitutive Operators**:
-- Model-Builder: `≤` (grounding), `⊑` (essence), `≡` (grounding equivalence)
-- Proof-Checker Layer 1: `ground`, `essence`, `equiv_ground` with grounding relations
-- System: Extension requiring grounding semantics
+- **Logos Operators**: `≤` (grounding), `⊑` (essence), `≡` (propositional identity)
+- **Planned Implementation**: `ground`, `essence`, `equiv_ground` with grounding relations
+- **Semantic System**: Extension requiring hyperintensional grounding semantics
 
 **Causal Operators**:
-- Model-Builder: `○→` (causation)
-- Proof-Checker Layer 1: `cause` with causal relations
-- System: Extension requiring causal semantics
-
-#### Integration Points with Model-Builder
-
-The proof-checker integrates with the model-builder at the SRI Evaluation stage:
-
-```lean
--- SRI Evaluation coordinates verification across proof-checker and model-checker
-structure InferenceRequest :=
-  (premises : List Formula)                    -- From SRS generation
-  (conclusion : Formula)                       -- Candidate inference
-  (operators_used : Set OperatorType)          -- Determines which layer to use
-
--- Dispatch to appropriate layer based on operators
-def verify_inference (req : InferenceRequest) : IO InferenceResult := do
-  if req.operators_used ⊆ {Boolean, Modal, Temporal} then
-    -- Use Layer 0 Core TM proof system
-    verify_layer0_inference req.premises req.conclusion
-  else if req.operators_used ∩ {Counterfactual, Constitutive, Causal} ≠ ∅ then
-    -- Use Layer 1 Explanatory extension
-    verify_layer1_inference req.premises req.conclusion
-  else
-    -- Unsupported operators (Epistemic/Normative extensions)
-    return InferenceResult.unsupported
-```
+- **Logos Operators**: `○→` (causation)
+- **Planned Implementation**: `cause` with causal relations
+- **Semantic System**: Extension requiring causal semantics with temporal production
 
 #### Task Semantics Alignment
 
@@ -1306,7 +1295,7 @@ These extensions allow the proof-checker to reason about different time structur
 
 ---
 
-This architecture provides a comprehensive foundation for developing a sophisticated axiomatic proof system in LEAN implementing the layered operator approach. Layer 1 delivers a complete and verified core system (TM) for extensional, modal, and temporal reasoning with full soundness and completeness proofs. Layer 2 provides a clear extension path for counterfactual, constitutive, and causal operators. The architecture aligns with the Logos project's phased operator introduction and integrates seamlessly with the model-builder and model-checker components.
+This architecture provides a comprehensive foundation for developing a sophisticated axiomatic proof system in LEAN implementing the layered operator approach. Layer 0 delivers the foundational bimodal logic TM (Tense and Modality) for Boolean, modal, and temporal reasoning with task semantics and partial metalogic implementation. Layers 1-3 provide a clear extension path for counterfactual/constitutive/causal operators (Explanatory), belief/probability/knowledge operators (Epistemic), and deontic/preference/normative operators (Normative). The architecture implements progressive operator extensibility as a core principle, enabling domain-specific operator combinations while maintaining mathematical rigor. ProofChecker integrates seamlessly with the Model-Checker component to create a comprehensive dual verification architecture for training AI systems.
 
 ---
 

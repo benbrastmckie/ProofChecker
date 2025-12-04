@@ -1,27 +1,61 @@
-# ProofChecker: Formal Verification for Transparent AI Reasoning
+# ProofChecker: LEAN 4 Implementation of Logos Layer 0 (Core TM)
 
-ProofChecker provides syntactic verification for the Logos, a comprehensive framework for transparent AI reasoning in interpreted formal languages with an extensible range of operators for planning and evaluating actions in coordination with other agents. The system implements a four-layer logical framework: Layer 0 (Core TM) establishes the foundational bimodal logic combining tense and modality, currently under active development. Three planned extensions build progressively on this foundation: Layer 1 (Explanatory) adds counterfactual, causal, and constitutive operators; Layer 2 (Epistemic) introduces belief, probability, epistemic modals, and indicative conditionals; Layer 3 (Normative) provides deontic, preference, and normative explanatory operators.
+ProofChecker is a LEAN 4 implementation of **Logos Layer 0** - the foundational bimodal logic TM (Tense and Modality) combining S5 modal logic with linear temporal logic. Layer 0 establishes the syntactic and semantic foundation for progressive operator extensions planned in Layers 1-3 (Explanatory, Epistemic, Normative), enabling domain-specific customization while maintaining mathematical rigor.
 
-Built on LEAN 4, the ProofChecker provides an RL signal for training AI systems to reason in the Logos with mathematical certainty, providing scalable oversight through computation rather than human annotation. The system implements a hyperintensional task semantics (possible worlds as functions from times to world-states) and complements semantic verification via the [Model-Checker](https://github.com/benbrastmckie/ModelChecker) to create comprehensive training signals.
+Built on LEAN 4, ProofChecker provides an RL signal for training AI systems to reason in Logos with mathematical certainty, enabling scalable oversight through computation rather than human annotation. The system implements hyperintensional task semantics (possible worlds as functions from times to world-states) and integrates with the [Model-Checker](https://github.com/benbrastmckie/ModelChecker) to create comprehensive dual verification architecture for transparent AI reasoning.
 
-For implementation details of the Model-Checker, see the [GitHub repository](https://github.com/benbrastmckie/ModelChecker) and [PyPI package](https://pypi.org/project/model-checker/). For a compressed overview of the TM logic subsystems, see the [LogicNotes](https://github.com/benbrastmckie/LogicNotes).
+For Model-Checker implementation details, see the [GitHub repository](https://github.com/benbrastmckie/ModelChecker) and [PyPI package](https://pypi.org/project/model-checker/). For theoretical foundations, see [LogicNotes](https://github.com/benbrastmckie/LogicNotes).
 
-## Logos: Tense and Modal Reasoning
+## Logos: Formal Language of Thought with Progressive Extensibility
 
-Layer 0 implements the foundational bimodal logic TM (Tense and Modality), combining S5 modal logic with linear temporal logic. This core layer establishes the semantic and syntactic infrastructure upon which explanatory, epistemic, and normative extensions will be built.
+**Logos** is a formal language of thought designed for verified AI reasoning through progressive operator extensibility. The language implements a layered architecture where operators build incrementally from foundational logic (Boolean, modal, temporal) through domain-specific reasoning capabilities (explanatory, epistemic, normative).
 
-### Operators
+**Core Architectural Principle**: "Any combination of extensions can be added to the Core Layer"
+
+### Layer Architecture
+
+- **Layer 0 (Core TM)**: Boolean, modal, and temporal operators - **Current Implementation (MVP Complete)**
+  - Foundational bimodal logic combining S5 modal logic with linear temporal logic
+  - Provides semantic and syntactic infrastructure for all planned extensions
+  - Task semantics with compositional possible worlds framework
+  - **Status**: MVP complete with partial metalogic (5/8 axioms, 4/7 rules proven)
+
+- **Layer 1 (Explanatory)**: Counterfactual, causal, and constitutive operators - **Planned**
+  - Enables reasoning about what would/might happen under different scenarios
+  - Provides grounding, essence, identity, and relevance operators
+  - Application domains: Medical treatment planning, causal analysis
+
+- **Layer 2 (Epistemic)**: Belief, probability, and knowledge operators - **Planned**
+  - Enables reasoning under uncertainty with belief states and probabilities
+  - Provides epistemic modals and indicative conditionals
+  - Application domains: Legal evidence analysis, multi-agent belief modeling
+
+- **Layer 3 (Normative)**: Deontic, preference, and normative operators - **Planned**
+  - Enables ethical and cooperative reasoning
+  - Provides obligation, permission, and preference ordering
+  - Application domains: Multi-party negotiation, ethical AI decision-making
+
+**Layer 0 provides the foundation for all subsequent extensions**, establishing the semantic framework and syntactic infrastructure that Layers 1-3 build upon.
+
+**For philosophical foundations**: See [LOGOS_PHILOSOPHY.md](Documentation/UserGuide/LOGOS_PHILOSOPHY.md)
+**For extension specifications**: See [LAYER_EXTENSIONS.md](Documentation/Research/LAYER_EXTENSIONS.md)
+
+### Layer 0 (Core TM) - Current Implementation
+
+Layer 0 implements the foundational bimodal logic TM, providing the core reasoning infrastructure for all planned extensions.
+
+#### Operators
 
 - **Modal**: `□` (necessity), `◇` (possibility) - S5 modal logic
 - **Temporal**: `Past` (universal past), `Future` (universal future), `past` (sometime past), `future` (sometime future), `always`/`△` (at all times), `sometimes`/`▽` (at a time)
 
-### Axioms
+#### Axioms
 
 - **S5 Modal**: MT (`□φ → φ`), M4 (`□φ → □□φ`), MB (`φ → □◇φ`)
 - **Temporal**: T4 (`Future φ → Future Future φ`), TA (`φ → Future past φ`), TL (`△ φ → Future Past φ`)
 - **Bimodal Interaction**: MF (`□φ → □Future φ`), TF (`□φ → Future □φ`)
 
-### Perpetuity Principles (Key Theorems)
+#### Perpetuity Principles (Key Theorems)
 
 - **P1**: `□φ → △φ` (what is necessary is always the case)
 - **P2**: `▽φ → ◇φ` (what is sometimes the case is possible)
@@ -44,14 +78,15 @@ Layer 0 implements the foundational bimodal logic TM (Tense and Modality), combi
 - **Positive Reinforcement**: Valid inferences rewarded with mathematical certainty
 - **Systematic Pattern Mastery**: Enables learning logical reasoning systematically
 
-### 3. Integrated Verification Architecture
-- **Dual Checking**: Syntactic proofs (ProofChecker) + semantic validation (Model-Checker)
-- **Rapid Prototyping**: Model-Checker tests theorems before proof attempts
-- **Counterexample Learning**: Invalid reasoning generates corrective training signals
-- **Scalable Oversight**: Verification scales with computation, not human effort
+### 3. Dual Verification Architecture
+- **Syntactic Proofs**: ProofChecker derives valid theorems from TM axioms with LEAN 4 proof receipts
+- **Semantic Validation**: Model-Checker tests theorems via Z3-based hyperintensional semantics
+- **Complementary Signals**: Proof receipts provide positive reinforcement, counterexamples provide corrective feedback
+- **Rapid Prototyping**: Model-Checker tests theorems before proof attempts, reducing wasted effort
+- **Scalable Oversight**: Verification scales with computation, not human annotation
 
 ### 4. Progressive Extension Strategy
-ProofChecker's layered architecture enables incremental extension from core TM logic to explanatory, epistemic, and normative reasoning. Each extension provides independent value while building toward comprehensive AI reasoning capabilities (see Architecture & Extensibility for roadmap).
+ProofChecker's layered architecture enables incremental extension from core TM logic to explanatory, epistemic, and normative reasoning. Each extension provides independent value while building toward comprehensive AI reasoning capabilities (see [Progressive Extension Methodology](#progressive-extension-methodology) for details).
 
 ### 5. Theoretical Innovation
 - **Task Semantics**: Compositional account of possible worlds from [Possible Worlds paper](https://www.benbrastmckie.com/wp-content/uploads/2025/11/possible_worlds.pdf)
@@ -61,7 +96,7 @@ ProofChecker's layered architecture enables incremental extension from core TM l
 
 ## Implementation Status
 
-**MVP Status**: Layer 0 (Core TM) MVP complete with partial metalogic implementation
+**MVP Status**: Layer 0 (Core TM) MVP Complete - Foundation for Planned Extensions
 
 ### ✓ Completed Modules (4/8 - 50%)
 
@@ -86,7 +121,9 @@ ProofChecker's layered architecture enables incremental extension from core TM l
 - **Decidability**: Not yet started (Metalogic/Decidability.lean)
 - **DSL**: Domain-specific syntax for formulas (Syntax/DSL.lean)
 - **Archive Examples**: ModalProofs.lean and TemporalProofs.lean (imports commented in Archive.lean)
-- **Future Layers**: See Architecture & Extensibility for extension roadmap
+- **Layer 1-3 Extensions**: See [LAYER_EXTENSIONS.md](Documentation/Research/LAYER_EXTENSIONS.md) for extension roadmap
+
+All current modules implement **Layer 0 (Core TM)** - the foundational bimodal logic. Layer 1-3 extensions build on this foundation.
 
 **For detailed status**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 **For limitations and workarounds**: See [KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
@@ -99,32 +136,89 @@ ProofChecker's layered architecture enables incremental extension from core TM l
 
 **Estimated Completion Effort**: 155-215 hours for full Layer 0 completion
 
-## Architecture & Extensibility
+## Dual Verification Architecture
 
-### Logos Ecosystem Integration
+ProofChecker and Model-Checker form a **complementary dual verification architecture** providing comprehensive training signals for AI systems learning to reason in Logos.
 
-ProofChecker is the third package in the Logos architecture, providing **syntactic verification** complementing:
+### ProofChecker: Syntactic Verification (Layer 0 Implementation)
 
-1. **Model-Builder** (Design Phase): Transforms natural language → formal semantic models
-   - Extracts formal language fragments (FLF)
-   - Constructs semantic model structures (SMS)
-   - Generates salient inferences (SRI)
+**Role**: LEAN 4 implementation of Logos Layer 0 (Core TM)
+- Derives valid theorems from TM axioms via formal proof
+- Provides proof receipts with mathematical certainty
+- Generates positive RL training signals (valid inferences)
+- Implements task semantics for soundness/completeness theorems
 
-2. **Model-Checker** ([v1.2.12](https://github.com/benbrastmckie/ModelChecker)): Semantic verification via Z3
-   - Implements hyperintensional semantics
-   - Generates counterexamples for invalid inferences
-   - Provides corrective RL training signals
+**Current Status**: MVP complete with partial metalogic (5/8 axioms, 4/7 rules proven)
 
-3. **ProofChecker**: Syntactic verification via LEAN 4
-   - Derives valid theorems from TM axioms
-   - Provides proof receipts with mathematical certainty
-   - Generates positive RL training signals
+### Model-Checker: Semantic Verification (Complementary Tool)
 
-**Dual Verification Architecture**: ProofChecker's syntactic proofs and Model-Checker's semantic countermodels create comprehensive learning signals for AI training without human annotation. This enables scalable oversight through computation rather than labor.
+**Role**: Z3-based semantic verification for Logos ([v1.2.12](https://github.com/benbrastmckie/ModelChecker))
+- Implements hyperintensional semantics via verifier/falsifier state pairs
+- Generates counterexamples for invalid inferences
+- Provides corrective RL training signals (refuting invalid reasoning)
+- Enables rapid prototyping (test theorems before proof attempts)
 
-**For complete TM logic specification**: See [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md)
+**Integration**: Complementary semantic verification tool, not co-equal package in architecture
 
-### Theoretical Foundations
+### Training Signal Generation
+
+The dual verification architecture creates comprehensive learning signals without human annotation:
+
+1. **Positive Signals**: ProofChecker generates valid theorems with proof receipts
+2. **Corrective Signals**: Model-Checker generates counterexamples for invalid inferences
+3. **Scalable Oversight**: Both tools scale with computation, enabling unlimited training data
+4. **Mathematical Certainty**: LEAN 4 proofs provide verifiable justifications, Z3 countermodels refute invalid claims
+
+**For integration details**: See [INTEGRATION.md](Documentation/UserGuide/INTEGRATION.md)
+
+## Progressive Extension Methodology
+
+The Logos architecture implements **progressive operator extensibility** as a core architectural principle, enabling domain-specific customization while maintaining mathematical rigor.
+
+### Core Principle
+
+**"Any combination of extensions can be added to the Core Layer"**
+
+Layer 0 (Core TM) provides the foundational bimodal logic, with Layers 1-3 as independent modular extensions. Applications can selectively load only the operators needed for their domain, avoiding unnecessary complexity while preserving expressive power.
+
+### Extension Strategy
+
+- **Layer 0 (Complete)**: Foundational Boolean, modal, temporal operators - current implementation
+- **Layer 1 (Planned)**: Counterfactual, causal, constitutive operators - explanatory reasoning
+- **Layer 2 (Planned)**: Belief, probability, knowledge operators - epistemic reasoning
+- **Layer 3 (Planned)**: Deontic, preference, normative operators - ethical reasoning
+
+Each layer builds on Layer 0 while providing independent value. Extensions can be combined in any configuration matching application requirements.
+
+### Domain-Specific Operator Combinations
+
+**Medical Planning** (Core + Explanatory):
+- Core operators: Modal (`□`, `◇`) + Temporal (`Future`, `Past`) for treatment timelines
+- Explanatory operators: Counterfactual (`□→`, `◇→`) for evaluating treatment strategies
+- Example: `Prescribe(DrugA) ∧ Taking(MedicationX) □→ F(Normalize(BloodPressure)) ∧ F(Occur(LiverDamage))`
+  - Evaluates what would happen under Drug A prescription given current medication
+  - Distinguishes necessary consequences (`□→`) from possible consequences (`◇→`)
+
+**Legal Reasoning** (Core + Epistemic):
+- Core operators: Modal + Temporal for tracking events and beliefs across time
+- Epistemic operators: Belief (`B`), epistemic modals (`Mi`, `Mu`) for evidence analysis
+- Example: Tracking how evidence reveals agent beliefs and motives, constructing narratives connecting motive to action
+
+**Multi-Agent Coordination** (Core + All Extensions):
+- Core: Modal + Temporal for action timelines and coordination constraints
+- Explanatory: Counterfactuals for evaluating alternative strategies
+- Epistemic: Belief operators for modeling other agents' knowledge states
+- Normative: Deontic operators (`O`, `P`) for obligations and permissions in negotiation
+
+### Extensibility References
+
+**For philosophical foundations and progressive methodology**: See [LOGOS_PHILOSOPHY.md](Documentation/UserGuide/LOGOS_PHILOSOPHY.md)
+
+**For Layer 1-3 specifications and domain examples**: See [LAYER_EXTENSIONS.md](Documentation/Research/LAYER_EXTENSIONS.md)
+
+**For Layer 0 technical specification**: See [ARCHITECTURE.md](Documentation/UserGuide/ARCHITECTURE.md)
+
+## Theoretical Foundations
 
 ProofChecker implements formal semantics developed in recent research:
 
@@ -137,19 +231,6 @@ ProofChecker implements formal semantics developed in recent research:
 - **Papers**: ["Identity and Aboutness"](https://link.springer.com/article/10.1007/s10992-021-09612-w) (2021), ["Counterfactual Worlds"](https://link.springer.com/article/10.1007/s10992-025-09793-8) (2025)
   - State-based semantics enabling fine-grained distinctions for constitutive explanatory reasoning
   - Foundation for planned extensions (counterfactual, causal, constitutive operators)
-
-### Layered Operator Strategy
-
-ProofChecker implements a progressive four-layer architecture, each layer extending the logic with additional reasoning capabilities:
-
-- **Layer 0 (Core TM - Current)**: Boolean, modal, and temporal operators - MVP Complete
-- **Layer 1 (Explanatory - Planned)**: Counterfactual, causal, and constitutive operators
-- **Layer 2 (Epistemic - Future)**: Belief, knowledge, and probability operators
-- **Layer 3 (Normative - Future)**: Deontic, preference, and ought operators
-
-Each layer builds on the previous while providing independent value. The current Layer 0 implementation establishes the syntactic and semantic foundation for all future extensions.
-
-**For detailed roadmap**: See [IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 
 ## Installation
 
@@ -183,6 +264,7 @@ lake test
 
 ### Architecture & Design
 
+- [Logos Philosophy](Documentation/UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations and layer architecture
 - [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
 - [Integration Guide](Documentation/UserGuide/INTEGRATION.md) - Model-Checker integration
 
@@ -198,6 +280,12 @@ lake test
 - [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
 - [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
 - [Versioning Policy](Documentation/ProjectInfo/VERSIONING.md) - Semantic versioning policy
+
+### Research & Extensions
+
+- [Layer Extensions](Documentation/Research/LAYER_EXTENSIONS.md) - Layers 1-3 specifications
+- [Dual Verification](Documentation/Research/DUAL_VERIFICATION.md) - RL training architecture
+- [Proof Library Design](Documentation/Research/PROOF_LIBRARY_DESIGN.md) - Theorem caching architecture
 
 ### Advanced Topics
 
@@ -251,6 +339,7 @@ ProofChecker/
 ├── Documentation/              # User documentation (see Documentation/README.md)
 │   ├── UserGuide/              # User-facing documentation
 │   │   ├── ARCHITECTURE.md         # System design and TM logic specification
+│   │   ├── LOGOS_PHILOSOPHY.md     # Philosophical foundations and layer architecture
 │   │   ├── TUTORIAL.md             # Getting started guide
 │   │   ├── EXAMPLES.md             # Usage examples
 │   │   └── INTEGRATION.md          # Model-Checker integration
@@ -269,8 +358,13 @@ ProofChecker/
 │   │   ├── QUALITY_METRICS.md           # Quality targets
 │   │   ├── TACTIC_DEVELOPMENT.md        # Custom tactic patterns
 │   │   └── TESTING_STANDARDS.md         # Test requirements
+│   ├── Research/               # Research documentation
+│   │   ├── DUAL_VERIFICATION.md      # RL training architecture
+│   │   ├── LAYER_EXTENSIONS.md       # Layers 1-3 specifications
+│   │   └── PROOF_LIBRARY_DESIGN.md   # Theorem caching architecture
 │   └── Reference/              # Reference materials
-│       └── OPERATORS.md              # Formal symbols reference
+│       ├── OPERATORS.md              # Formal symbols reference
+│       └── GLOSSARY.md               # Key concepts and definitions
 ├── lakefile.toml               # LEAN 4 build configuration
 ├── lean-toolchain              # LEAN version pinning
 ├── .gitignore                  # Git exclusions
@@ -279,9 +373,8 @@ ProofChecker/
 
 ## Related Projects
 
-- **[Logos](https://github.com/benbrastmckie/Logos)** - Parent project for transparent AI reasoning with formal logic tools
-- **[Model-Checker](https://github.com/benbrastmckie/ModelChecker)** - Z3-based semantic verification implementing hyperintensional semantics (v1.2.12)
-- **Model-Builder** - Natural language to formal logic interface (design phase)
+- **[Model-Checker](https://github.com/benbrastmckie/ModelChecker)** - Z3-based semantic verification implementing hyperintensional semantics (v1.2.12) - complementary tool for dual verification architecture
+- **[LogicNotes](https://github.com/benbrastmckie/LogicNotes)** - Theoretical foundations and compressed overview of TM logic subsystems
 - **FormalizedFormalLogic/Foundation** - LEAN 4 modal logic library (patterns adopted)
 - **Mathlib4** - LEAN 4 mathematics library (style conventions followed)
 
