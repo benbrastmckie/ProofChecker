@@ -405,7 +405,7 @@ See [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) for curr
 
 - [DUAL_VERIFICATION.md](DUAL_VERIFICATION.md) - RL training architecture
 - [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) - Layers 1-3 specifications
-- [LOGOS_PHILOSOPHY.md](../UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Layer 0 specification
 
 ---

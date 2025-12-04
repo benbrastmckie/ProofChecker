@@ -83,7 +83,25 @@ Group theorems into waves for parallel execution:
 - **Medium** (1-3 hours): Tactic combination, rewrites, `simp`/`ring`
 - **Complex** (3-6 hours): Custom lemmas, deep reasoning, induction
 
-**CHECKPOINT**: YOU MUST have theorem list, dependencies, and wave structure before Step 2.
+**Per-Phase File Targeting** (CRITICAL for Tier 1 Discovery):
+
+For each phase, you MUST specify the primary Lean file where theorems will be proven:
+
+1. **Review Formalization Goal**: Identify which modules/files are affected by this phase's theorems
+2. **Identify Primary File**: Select one Lean file that contains the majority of theorems for this phase
+3. **Use Absolute Paths**: Generate absolute path to .lean file (e.g., `/home/user/lean-project/ProofChecker/Basics.lean`)
+4. **Add lean_file Field**: Include `lean_file: /absolute/path` immediately after phase heading, before `dependencies:`
+5. **Multi-File Plans**: For plans affecting multiple files, assign each phase to its primary file
+   - Example: Phase 1 → TaskFrame.lean, Phase 2 → WorldHistory.lean, Phase 3 → Truth.lean
+
+**File Selection Strategy**:
+- **Single-file plans**: All phases specify same file (most common case)
+- **Multi-file plans**: Each phase specifies different file based on theorem locations
+- **Fallback**: If uncertain, use the primary formalization file specified in project structure
+
+**Why This Matters**: The /lean-build command uses Tier 1 discovery to find phase-specific Lean files before falling back to global metadata. Per-phase file specifications enable efficient multi-file theorem proving workflows.
+
+**CHECKPOINT**: YOU MUST have theorem list, dependencies, wave structure, AND per-phase file assignments before Step 2.
 
 ---
 
@@ -126,6 +144,7 @@ Each phase should represent one or more related theorems with this format:
 
 ```markdown
 ### Phase 1: [Theorem Category Name] [NOT STARTED]
+lean_file: /absolute/path/to/file.lean
 dependencies: []
 
 **Objective**: [High-level goal for this phase]
@@ -167,8 +186,10 @@ grep -c "sorry" path/to/file.lean
 - `dependencies: [1]` for phases depending on Phase 1
 - `dependencies: [1, 2]` for phases depending on Phases 1 and 2
 
-**CRITICAL REQUIREMENTS FOR NEW PLANS**:
+**CRITICAL FORMAT REQUIREMENTS FOR NEW PLANS**:
 - Metadata **Status** MUST be `[NOT STARTED]` (not [IN PROGRESS] or [COMPLETE])
+- ALL phase headings MUST use `### Phase N:` format (level 3, matching /create-plan standard)
+- ALL phases MUST have `lean_file:` field immediately after heading (Tier 1 format)
 - ALL phase headings MUST include `[NOT STARTED]` marker
 - ALL theorem checkboxes MUST use `- [ ]` (unchecked)
 - ALL theorems MUST have Goal specification (Lean 4 type)
@@ -302,6 +323,7 @@ Use this template for each phase:
 
 ```markdown
 ### Phase N: [Category Name] [NOT STARTED]
+lean_file: /absolute/path/to/file.lean
 dependencies: [list of prerequisite phase numbers, or empty list]
 
 **Objective**: [What this phase accomplishes]
@@ -333,6 +355,7 @@ grep -c "sorry" path/to/file.lean  # Ensure no incomplete proofs
 
 ```markdown
 ### Phase 1: Basic Commutativity Properties [NOT STARTED]
+lean_file: /home/user/lean-project/ProofChecker/Basics.lean
 dependencies: []
 
 **Objective**: Prove commutativity for addition and multiplication

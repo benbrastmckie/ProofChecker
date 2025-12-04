@@ -364,41 +364,47 @@ template induction_on_formula (P : Formula → Prop) :
 
 Layer 1 implements **task semantics** where possible worlds are functions from times to world states constrained by a task relation.
 
+**Polymorphic Temporal Type**: The temporal structure is now polymorphic over any type `T` with a
+`LinearOrderedAddCommGroup` instance, matching the JPL paper specification (def:frame, line 1835)
+that requires "a totally ordered abelian group T = ⟨T, +, ≤⟩". Standard instances include:
+- `Int`: Discrete integer time (default, decidable)
+- `Rat`: Dense rational time (infinitely divisible)
+- `Real`: Continuous real time (complete, for physical systems)
+
 #### Task Frame Structure
 
 ```lean
--- Layer 1: Task frame for bimodal logic TM
-structure TaskFrame where
+-- Layer 1: Task frame for bimodal logic TM (polymorphic over temporal type T)
+structure TaskFrame (T : Type*) [LinearOrderedAddCommGroup T] where
   WorldState : Type                                          -- Set of world states (W)
-  Time : Type                                                -- Set of times (T)
-  time_group : OrderedAddCommGroup Time                      -- T is totally ordered abelian group
-  task_rel : WorldState → Time → WorldState → Prop          -- Task relation (⇒)
+  task_rel : WorldState → T → WorldState → Prop              -- Task relation (⇒)
 
   -- Task relation constraints
-  nullity : ∀ w, task_rel w 0 w                             -- w ⇒₀ w
+  nullity : ∀ w, task_rel w 0 w                              -- w ⇒₀ w (0 from typeclass)
   compositionality : ∀ w u v x y,
-    task_rel w x u → task_rel u y v → task_rel w (x + y) v  -- w ⇒ₓ u ∧ u ⇒ᵧ v → w ⇒ₓ₊ᵧ v
+    task_rel w x u → task_rel u y v → task_rel w (x + y) v   -- w ⇒ₓ u ∧ u ⇒ᵧ v → w ⇒ₓ₊ᵧ v
 
 -- Notation for task relation
 notation w " ⇒[" x "] " v => TaskFrame.task_rel w x v
+
+-- Example: Instantiate with Int for discrete time
+#check TaskFrame Int           -- TaskFrame using integer time
+#check @TaskFrame.trivialFrame Int _  -- Trivial frame with Int time
 ```
 
 #### World Histories
 
-A **world history** (possible world) is a function from a convex set of times to world states that respects the task relation.
+A **world history** (possible world) is a function from a convex set of times to world states that respects the task relation. The convexity requirement matches JPL paper def:world-history (line 1849).
 
 ```lean
--- Convexity predicate for time sets
-def IsConvex (F : TaskFrame) (X : Set F.Time) : Prop :=
-  ∀ x z y, x ∈ X → z ∈ X → x ≤ y → y ≤ z → y ∈ X
-
--- World history over task frame F
-structure WorldHistory (F : TaskFrame) where
-  domain : Set F.Time                                        -- Convex set X ⊆ T
-  convex : IsConvex F domain                                 -- X is convex
-  states : (t : F.Time) → t ∈ domain → F.WorldState         -- τ : X → W
-  respects_task : ∀ x y (hx : x ∈ domain) (hxy : x + y ∈ domain),
-    F.task_rel (states x hx) y (states (x + y) hxy)         -- τ(x) ⇒ᵧ τ(x+y)
+-- World history over task frame F (polymorphic over T)
+structure WorldHistory {T : Type*} [LinearOrderedAddCommGroup T] (F : TaskFrame T) where
+  domain : T → Prop                                          -- Domain predicate X ⊆ T
+  convex : ∀ x z, domain x → domain z →
+    ∀ y, x ≤ y → y ≤ z → domain y                           -- X is convex (no temporal gaps)
+  states : (t : T) → domain t → F.WorldState                 -- τ : X → W
+  respects_task : ∀ s t (hs : domain s) (ht : domain t),
+    s ≤ t → F.task_rel (states s hs) (t - s) (states t ht)  -- τ(s) ⇒_{t-s} τ(t)
 
 -- Notation for world history evaluation
 notation τ "(" t ")" => WorldHistory.states τ t
@@ -407,35 +413,36 @@ notation τ "(" t ")" => WorldHistory.states τ t
 #### Task Model and Truth Evaluation
 
 ```lean
--- Layer 1: Task model extending task frame with valuation
-structure TaskModel (F : TaskFrame) where
-  valuation : String → Set F.WorldState                      -- |p_i| ⊆ W
+-- Layer 1: Task model extending task frame with valuation (polymorphic over T)
+structure TaskModel {T : Type*} [LinearOrderedAddCommGroup T] (F : TaskFrame T) where
+  valuation : F.WorldState → String → Prop                   -- Which propositions hold at each state
 
--- Truth at model-history-time triple
-def truth_at (M : TaskModel F) (τ : WorldHistory F) (t : F.Time) : Formula → Prop
+-- Truth at model-history-time triple (polymorphic over T)
+def truth_at {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T}
+    (M : TaskModel F) (τ : WorldHistory F) (t : T) (ht : τ.domain t) : Formula → Prop
   | Formula.atom p =>
-      t ∈ τ.domain ∧ τ(t) ∈ M.valuation p                   -- Atomic truth
+      M.valuation (τ.states t ht) p                          -- Atomic truth
   | Formula.bot =>
       False                                                   -- Falsity never true
   | Formula.imp φ ψ =>
-      truth_at M τ t φ → truth_at M τ t ψ                    -- Implication
+      truth_at M τ t ht φ → truth_at M τ t ht ψ              -- Implication
   | Formula.box φ =>
-      ∀ σ : WorldHistory F, truth_at M σ t φ                -- Necessity: quantify over all histories
+      ∀ (σ : WorldHistory F) (hs : σ.domain t),
+        truth_at M σ t hs φ                                   -- Necessity: all histories at t
   | Formula.past φ =>
-      ∀ s < t, truth_at M τ s φ                             -- Universal past
+      ∀ (s : T) (hs : τ.domain s), s < t →
+        truth_at M τ s hs φ                                   -- Universal past
   | Formula.future φ =>
-      ∀ s > t, truth_at M τ s φ                             -- Universal future
-
--- DSL for semantic evaluation queries
-syntax "eval" term "at" term "in" term : term
-macro_rules
-  | `(eval $φ at $w in $M) => `(truth_at $M $w $φ)
+      ∀ (s : T) (hs : τ.domain s), t < s →
+        truth_at M τ s hs φ                                   -- Universal future
 
 notation M ", " τ ", " t " ⊨ " φ => truth_at M τ t φ
 
 -- Time-shift invariance (critical theorem for temporal reasoning)
-theorem time_shift_invariance (M : TaskModel F) (τ : WorldHistory F) (t : F.Time) (φ : Formula) (d : F.Time) :
-  (M, τ, t ⊨ φ) ↔ (M, time_shift τ d, t + d ⊨ φ) := by sorry
+theorem time_shift_preserves_truth {T : Type*} [LinearOrderedAddCommGroup T] {F : TaskFrame T}
+    (M : TaskModel F) (τ : WorldHistory F) (t : T) (Δ : T) (φ : Formula)
+    (ht : τ.domain t) (ht' : (time_shift τ Δ).domain (t + Δ)) :
+  truth_at M τ t ht φ ↔ truth_at M (time_shift τ Δ) (t + Δ) ht' φ := by sorry
 ```
 
 #### Layer 2 Extended Task Semantics (Future Work)
@@ -1150,7 +1157,7 @@ example (P Q : ExtendedFormula) :
 
 ## 8. Integration with Logos Architecture
 
-ProofChecker implements the Logos formal language of thought. For philosophical foundations and research context, see [LOGOS_PHILOSOPHY.md](LOGOS_PHILOSOPHY.md).
+ProofChecker implements the Logos formal language of thought. For philosophical foundations and research context, see [METHODOLOGY.md](METHODOLOGY.md).
 
 ### Implementation Status
 
@@ -1300,7 +1307,7 @@ This architecture provides a comprehensive foundation for developing a sophistic
 ---
 
 **Related Documentation:**
-- [LOGOS_PHILOSOPHY.md](LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [METHODOLOGY.md](METHODOLOGY.md) - Philosophical foundations
 - [Tutorial](TUTORIAL.md) - Getting started guide
 - [Examples](EXAMPLES.md) - Modal, temporal, and bimodal examples
 - [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) - Current progress

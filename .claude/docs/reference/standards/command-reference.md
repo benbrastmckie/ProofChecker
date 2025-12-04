@@ -25,6 +25,8 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 - [/example-with-agent](#example-with-agent)
 - [/expand](#expand)
 - [/implement](#implement)
+- [/lean-build](#lean-build)
+- [/lean-implement](#lean-implement)
 - [/lean-plan](#lean-plan)
 - [/list](#list)
 - [/optimize-claude](#optimize-claude)
@@ -519,9 +521,75 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 - **Lean File** metadata for Tier 1 discovery
 - Goal specifications (Lean 4 type signatures)
 
-**Integration**: Plans execute with `/lean-build` command for automated proving
+**Integration**: Plans execute with `/lean-build` or `/lean-implement` command for automated proving
 
 **See**: [lean-plan-command-guide.md](../../guides/commands/lean-plan-command-guide.md)
+
+---
+
+### /lean-build
+**Purpose**: Build proofs for all sorry markers in Lean files using wave-based orchestration
+
+**Usage**: `/lean-build [lean-file | plan-file] [--prove-all | --verify] [--max-attempts=N] [--max-iterations=N]`
+
+**Type**: orchestrator (Lean specialization)
+
+**Arguments**:
+- `lean-file` (required): Path to .lean file or plan.md with lean_file metadata
+- `--prove-all`: Attempt to prove all sorry markers (default)
+- `--verify`: Verify existing proofs without modification
+- `--max-attempts=N`: Max proof attempts per theorem (default: 3)
+- `--max-iterations=N`: Max iteration loops (default: 5)
+
+**Agents Used**: lean-coordinator, lean-implementer
+
+**Output**: Proof summaries in topic summaries directory
+
+**Workflow**: `setup → coordinate → prove → summarize`
+
+**Features**:
+- Wave-based parallel theorem proving
+- MCP rate limit coordination (3 requests/30s)
+- Mathlib theorem search integration
+- Multi-file support for complex formalizations
+
+**See**: [lean-build.md](../../commands/lean-build.md)
+
+---
+
+### /lean-implement
+**Purpose**: Hybrid implementation command for mixed Lean/software plans with intelligent phase routing
+
+**Usage**: `/lean-implement <plan-file> [starting-phase] [--mode=MODE] [--max-iterations=N]`
+
+**Type**: orchestrator (hybrid Lean/software)
+
+**Arguments**:
+- `plan-file` (required): Path to implementation plan with mixed phases
+- `starting-phase` (optional): Phase number to start from (default: 1)
+- `--mode=MODE`: Execution mode - `auto`, `lean-only`, `software-only` (default: auto)
+- `--max-iterations=N`: Max iteration loops (default: 5)
+- `--dry-run`: Preview phase classification without executing
+
+**Agents Used**: lean-coordinator (for Lean phases), implementer-coordinator (for software phases)
+
+**Output**: Implementation and proof summaries in topic summaries directory
+
+**Workflow**: `setup → classify → route → verify → summarize`
+
+**Features**:
+- 2-tier phase classification (metadata + keyword analysis)
+- Intelligent routing to appropriate coordinator
+- Mode filtering (lean-only, software-only, auto)
+- Cross-coordinator iteration management
+- Aggregated metrics from both coordinator types
+
+**Phase Classification**:
+- Tier 1: `lean_file:` metadata (strongest signal)
+- Tier 2: Keywords (.lean, theorem, lemma) vs (.ts, .js, implement, create)
+- Default: software (conservative approach)
+
+**See**: [lean-implement-command-guide.md](../../guides/commands/lean-implement-command-guide.md)
 
 ---
 

@@ -310,6 +310,29 @@ phase_num=$(echo "$theorem_obj" | jq -r '.phase_number // 0')
 
 **Note**: `phase_number` is passed as a separate parameter to lean-implementer in addition to being in the `theorem_tasks` array. This enables the implementer to update plan file progress markers in real-time.
 
+#### Progress Tracking Instruction Forwarding
+
+When /lean-build provides Progress Tracking Instructions in the input prompt, the coordinator MUST forward these instructions to each lean-implementer invocation:
+
+**Instructions Received from /lean-build** (plan-based mode only):
+```markdown
+Progress Tracking Instructions (plan-based mode only):
+- Source checkbox utilities: source ${CLAUDE_PROJECT_DIR}/.claude/lib/plan/checkbox-utils.sh
+- Before proving each theorem phase: add_in_progress_marker '${PLAN_FILE}' <phase_num>
+- After completing each theorem proof: mark_phase_complete '${PLAN_FILE}' <phase_num> && add_complete_marker '${PLAN_FILE}' <phase_num>
+- This creates visible progress: [NOT STARTED] -> [IN PROGRESS] -> [COMPLETE]
+- Note: Progress tracking gracefully degrades if unavailable (non-fatal)
+- File-based mode: Skip progress tracking (phase_num = 0)
+```
+
+**Forwarding Pattern**:
+1. Include progress tracking instructions in each lean-implementer Task prompt
+2. Replace `<phase_num>` with actual phase number from theorem metadata
+3. Skip if `execution_mode=file-based` or `phase_number=0`
+4. Instructions are informational only (non-blocking if checkbox-utils unavailable)
+
+This ensures plan file markers update in real-time as theorems are proven, mirroring /implement command's pattern.
+
 #### Parallel Implementer Invocation
 
 For each theorem in wave, invoke lean-implementer subagent via Task tool.

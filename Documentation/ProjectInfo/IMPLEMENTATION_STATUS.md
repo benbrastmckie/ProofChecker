@@ -151,33 +151,38 @@ All semantics modules fully implemented with comprehensive tests.
 
 ### TaskFrame.lean
 - **Status**: Complete
-- **Lines of Code**: 145
+- **Lines of Code**: ~150
 - **Test Coverage**: 100%
-- **Description**: Task frame structure (worlds, times, task relation)
+- **Last Updated**: 2025-12-04 (temporal generalization complete)
+- **Description**: Task frame structure with polymorphic temporal type (JPL paper alignment)
 - **Key Features**:
-  - Time type: integers (`Int`)
-  - World state type: generic `W`
-  - Task relation: `R : W → W → (Int × Int) → Prop`
-  - Nullity axiom: `R w w (t, t)` (identity task at same time)
-  - Compositionality axiom: Task composition preservation
+  - **NEW**: Polymorphic temporal type `T` with `LinearOrderedAddCommGroup` constraint
+  - Matches JPL paper def:frame (line 1835): "totally ordered abelian group T = ⟨T, +, ≤⟩"
+  - Standard instances: `Int` (discrete), `Rat` (dense), `Real` (continuous)
+  - World state type: generic `WorldState`
+  - Task relation: `task_rel : WorldState → T → WorldState → Prop`
+  - Nullity axiom: `task_rel w 0 w` (identity task at zero duration)
+  - Compositionality axiom: Task composition with additive time
 
 ### WorldHistory.lean
 - **Status**: Complete ✓
-- **Lines of Code**: ~320 (with transport lemmas and frame-specific constructors)
+- **Lines of Code**: ~350 (with transport lemmas and frame-specific constructors)
 - **Sorry Count**: 0 ✓
 - **Test Coverage**: 100%
-- **Last Updated**: 2025-12-03 (universal helper refactoring complete)
-- **Description**: World history functions from convex time sets to world states with transport infrastructure
+- **Last Updated**: 2025-12-04 (temporal generalization complete)
+- **Description**: World history functions from convex time sets to world states (JPL paper alignment)
 - **Key Features**:
-  - Convex domain constraint (no temporal gaps)
-  - History composition via task relation
-  - Domain membership proofs
-  - 6 transport lemmas for time-shift operations
+  - **NEW**: Polymorphic over temporal type `T` via `TaskFrame T` parameter
+  - Matches JPL paper def:world-history (line 1849): convex domain X ⊆ T
+  - Convexity field explicitly enforces no temporal gaps
+  - History composition via task relation with polymorphic time
+  - Domain membership proofs with group arithmetic
+  - 6+ transport lemmas using group lemmas (not omega)
   - Time-shift preservation for states and domains
   - Proof irrelevance support for dependent types
-  - **NEW**: `universal_trivialFrame` - constant history for trivialFrame (zero sorry)
-  - **NEW**: `universal_natFrame` - constant history for natFrame (zero sorry)
-  - **NEW**: `universal` refactored to require explicit reflexivity proof parameter
+  - `universal_trivialFrame` - constant history (zero sorry)
+  - `universal_natFrame` - constant history (zero sorry)
+  - `universal` refactored with explicit reflexivity parameter
 
 ### TaskModel.lean
 - **Status**: Complete
@@ -190,29 +195,34 @@ All semantics modules fully implemented with comprehensive tests.
 
 ### Truth.lean
 - **Status**: Complete ✓
-- **Lines of Code**: ~320 (with transport lemmas)
-- **Sorry Count**: 0 (all proofs complete)
+- **Lines of Code**: ~350 (with transport lemmas and temporal duality)
+- **Sorry Count**: 1 (temporal duality sorry at line 577)
 - **Test Coverage**: 100%
-- **Last Updated**: 2025-12-03 (Wave 2 Phase 3 transport lemmas)
-- **Description**: Truth evaluation at model-history-time triples with time-shift preservation
+- **Last Updated**: 2025-12-04 (temporal generalization complete)
+- **Description**: Truth evaluation with polymorphic temporal type (JPL paper alignment)
 - **Key Features**:
-  - Recursive truth evaluation `truth_at M τ t φ`
-  - Modal operators quantify over histories at fixed time
-  - Temporal operators quantify over times within history
-  - Negation, implication, atoms via valuation
-  - **NEW**: Time-shift preservation theorem (`time_shift_preserves_truth`)
-  - **NEW**: Transport lemmas for proof irrelevance and history equality
-  - **NEW**: Double-shift cancellation lemma for compositional transport
+  - **NEW**: Polymorphic truth evaluation over temporal type `T`
+  - Matches JPL paper def:BL-semantics (lines 1864-1865): Past/Future quantify over `y ∈ T`
+  - Recursive truth evaluation `truth_at M τ t ht φ` with domain proof
+  - Modal operators quantify over histories at fixed polymorphic time
+  - Temporal operators quantify over times of type `T` within history
+  - Time-shift preservation using group lemmas (add_sub, add_sub_cancel)
+  - **NEW**: `is_valid` uses explicit `T` parameter for type inference
+  - **NEW**: All axiom swap validity theorems updated for polymorphism
+  - Transport lemmas for proof irrelevance and history equality
 
 ### Validity.lean
 - **Status**: Complete
-- **Lines of Code**: 95
+- **Lines of Code**: ~100
 - **Test Coverage**: 100%
-- **Description**: Semantic validity and consequence relations
+- **Last Updated**: 2025-12-04 (temporal generalization complete)
+- **Description**: Semantic validity with polymorphic temporal quantification
 - **Key Features**:
-  - Validity: `⊨ φ` (true in all models at all points)
-  - Consequence: `Γ ⊨ φ` (if all of Γ true, then φ true)
-  - Universal quantification over frames, models, histories, times
+  - **NEW**: Validity quantifies over all temporal types `T : Type`
+  - `valid φ` = true in all models with any `LinearOrderedAddCommGroup` time
+  - `semantic_consequence` uses explicit type threading
+  - `satisfiable` restructured to parametric approach (avoids universe issues)
+  - Uses `Type` (not `Type*`) to resolve universe level mismatches
 
 **Package Verification**:
 ```bash

@@ -47,6 +47,102 @@ The `/lean-plan` command creates Lean-specific implementation plans for theorem 
 
 ---
 
+## Lean File Metadata Formats
+
+The `/lean-plan` command generates plans with 2-tier Lean file discovery to support both single-file and multi-file theorem proving workflows.
+
+### Tier 1: Phase-Specific File Metadata (Preferred)
+
+**Format**: `lean_file: /absolute/path` immediately after phase heading
+
+**Location**: After `### Phase N:` heading, before `dependencies:` field
+
+**Example**:
+```markdown
+### Phase 1: Basic Commutativity Properties [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/Basics.lean
+dependencies: []
+
+**Objective**: Prove commutativity for addition and multiplication
+```
+
+**Discovery Priority**: Tier 1 is checked FIRST by `/lean-build` command
+
+**Use Case**: Multi-file plans where different phases target different .lean files
+
+**Advantages**:
+- Enables precise file targeting per phase
+- Supports complex multi-module formalizations
+- Faster discovery (no metadata section parsing)
+- Enables parallel proving across different files
+
+### Tier 2: Global File Metadata (Fallback)
+
+**Format**: `- **Lean File**: /absolute/path` in metadata section
+
+**Location**: Metadata section at top of plan file
+
+**Example**:
+```markdown
+## Metadata
+- **Date**: 2025-12-04
+- **Feature**: Formalize group properties
+- **Status**: [NOT STARTED]
+- **Estimated Hours**: 4-6 hours
+- **Standards File**: /home/user/project/CLAUDE.md
+- **Research Reports**: [Link to research](../reports/001-research.md)
+- **Lean File**: /home/user/ProofChecker/ProofChecker/Groups.lean
+- **Lean Project**: /home/user/ProofChecker/
+```
+
+**Discovery Priority**: Tier 2 is checked ONLY if Tier 1 discovery returns empty
+
+**Use Case**: Single-file plans where all phases target the same .lean file
+
+**Advantages**:
+- Simple format for single-file workflows
+- Backward compatible with existing plans
+- Single source of truth for project-wide file path
+
+### Discovery Mechanism
+
+The `/lean-build` command uses this 2-tier discovery algorithm:
+
+```
+For each phase:
+  1. Search for `lean_file:` after phase heading (Tier 1)
+  2. If found: Use phase-specific file
+  3. If empty: Fall back to global **Lean File** in metadata (Tier 2)
+  4. If both empty: Error with format examples
+```
+
+**Key Points**:
+- Tier 1 has precedence over Tier 2
+- No blank lines allowed between phase heading and `lean_file:`
+- Absolute paths required (relative paths not supported)
+- Both tiers can coexist (Tier 1 overrides Tier 2 per phase)
+
+### When to Use Each Tier
+
+**Use Tier 1** (phase-specific):
+- Multi-file formalizations (different phases target different files)
+- Large projects with modular structure
+- When phases have distinct file boundaries
+- When evolving from single-file to multi-file structure
+
+**Use Tier 2** (global):
+- Single-file formalizations (all theorems in one file)
+- Simple projects with one primary module
+- When all phases target the same file
+- For backward compatibility with existing plans
+
+**Use Both**:
+- Tier 2 as fallback for phases without explicit `lean_file:`
+- Tier 1 overrides for phases targeting different files
+- Gradual migration from single-file to multi-file structure
+
+---
+
 ## Usage Examples
 
 ### Example 1: Basic Usage
@@ -135,6 +231,92 @@ cat .claude/specs/*/plans/*.md
 # Step 4: Iterate if needed
 /lean .claude/specs/*/plans/*.md --max-iterations=5
 ```
+
+### Example 6: Multi-File Plan
+
+For formalizations spanning multiple Lean files, `/lean-plan` generates phase-specific `lean_file:` specifications:
+
+```bash
+# Create multi-module formalization plan
+/lean-plan "formalize task execution framework with TaskFrame, WorldHistory, and Truth modules" --complexity 3
+```
+
+**Generated Plan Structure** (with phase-specific files):
+
+```markdown
+## Metadata
+- **Date**: 2025-12-04
+- **Feature**: Formalize task execution framework
+- **Status**: [NOT STARTED]
+- **Estimated Hours**: 12-18 hours
+- **Standards File**: /home/user/project/CLAUDE.md
+- **Research Reports**: [Mathlib Research](../reports/001-mathlib-research.md)
+- **Lean File**: /home/user/ProofChecker/ProofChecker/TaskFrame.lean  # Tier 2 fallback
+- **Lean Project**: /home/user/ProofChecker/
+
+### Phase 1: Task Frame Theorems [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/TaskFrame.lean
+dependencies: []
+
+**Objective**: Prove basic task execution properties
+
+**Theorems**:
+- [ ] `task_execute_deterministic`: Task execution is deterministic
+  - Goal: `∀ (t : Task) (w : World), execute t w = execute t w`
+  - Strategy: Use functional determinism, apply `rfl` tactic
+  - Complexity: Simple
+  - Estimated: 1 hour
+
+---
+
+### Phase 2: World History Theorems [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/WorldHistory.lean
+dependencies: [1]
+
+**Objective**: Prove world state evolution properties
+
+**Theorems**:
+- [ ] `world_history_consistent`: World history maintains consistency
+  - Goal: `∀ (h : History), consistent h → consistent (h.append event)`
+  - Strategy: Induction on history structure, use consistency lemmas
+  - Complexity: Medium
+  - Estimated: 3 hours
+
+---
+
+### Phase 3: Truth Preservation [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/Truth.lean
+dependencies: [1, 2]
+
+**Objective**: Prove truth preservation across task execution
+
+**Theorems**:
+- [ ] `truth_preserved_under_execution`: Execution preserves truth
+  - Goal: `∀ (t : Task) (w : World), truth w → truth (execute t w)`
+  - Strategy: Apply TaskFrame.task_execute_deterministic, use WorldHistory consistency
+  - Complexity: Complex
+  - Prerequisites: `task_execute_deterministic`, `world_history_consistent`
+  - Estimated: 5 hours
+```
+
+**Execution with `/lean-build`**:
+
+```bash
+# /lean-build discovers phase-specific files via Tier 1 mechanism
+/lean .claude/specs/*/plans/*.md --prove-all
+
+# Phase 1 executes on TaskFrame.lean (Tier 1: lean_file specified)
+# Phase 2 executes on WorldHistory.lean (Tier 1: lean_file specified)
+# Phase 3 executes on Truth.lean (Tier 1: lean_file specified)
+
+# Wave-based execution enables parallel proving when phases are independent
+```
+
+**Key Features**:
+- Each phase specifies its target file via `lean_file:` (Tier 1)
+- `/lean-build` uses Tier 1 discovery to route theorems to correct files
+- lean-coordinator groups theorems by file for efficient batch processing
+- Tier 2 global `**Lean File**` provides fallback if phase missing `lean_file:`
 
 ---
 
@@ -264,6 +446,136 @@ Phases within same wave execute in parallel for 40-60% time savings.
 
 ---
 
+## Migrating to Per-Phase File Specifications
+
+Existing plans with only Tier 2 (global `**Lean File**`) metadata continue working via fallback mechanism. Migration to Tier 1 (per-phase `lean_file:`) is OPTIONAL and only needed for multi-file formalization workflows.
+
+### When to Migrate
+
+**Migrate to Tier 1 when**:
+- Adding theorems in multiple different .lean files
+- Evolving from single-file to multi-module structure
+- Need precise file targeting per phase
+- Want to enable file-based parallelization
+
+**Keep Tier 2 when**:
+- All theorems in single .lean file
+- Simple project with one primary module
+- No need for per-phase file customization
+
+### Migration Steps
+
+**Step 1: Identify Phase File Targets**
+
+For each phase, determine which .lean file contains its theorems:
+
+```bash
+# Review existing plan
+cat .claude/specs/*/plans/*.md
+
+# Identify distinct files needed
+# Phase 1: TaskFrame.lean
+# Phase 2: WorldHistory.lean
+# Phase 3: Truth.lean
+```
+
+**Step 2: Add `lean_file:` to Each Phase**
+
+Add `lean_file:` field immediately after phase heading, before `dependencies:`:
+
+**Before** (Tier 2 only):
+```markdown
+### Phase 1: Task Frame Theorems [NOT STARTED]
+dependencies: []
+
+**Objective**: Prove basic task execution properties
+```
+
+**After** (Tier 1 + Tier 2):
+```markdown
+### Phase 1: Task Frame Theorems [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/TaskFrame.lean
+dependencies: []
+
+**Objective**: Prove basic task execution properties
+```
+
+**Step 3: Keep Global Metadata for Fallback**
+
+Retain Tier 2 global `**Lean File**` for backward compatibility:
+
+```markdown
+## Metadata
+- **Date**: 2025-12-04
+- **Feature**: Task execution framework
+- **Lean File**: /home/user/ProofChecker/ProofChecker/TaskFrame.lean  # Tier 2 fallback
+- **Lean Project**: /home/user/ProofChecker/
+```
+
+**Step 4: Validate Tier 1 Discovery**
+
+Test that `/lean-build` correctly discovers phase-specific files:
+
+```bash
+# Run plan with /lean-build (dry-run to verify file discovery)
+/lean .claude/specs/*/plans/*.md --verify
+
+# Check logs for Tier 1 discovery messages:
+# "Phase 1: Using Tier 1 file: /path/to/TaskFrame.lean"
+# "Phase 2: Using Tier 1 file: /path/to/WorldHistory.lean"
+```
+
+### Migration Example
+
+**Original Plan** (Tier 2 only):
+
+```markdown
+## Metadata
+- **Lean File**: /home/user/ProofChecker/ProofChecker/Groups.lean
+- **Lean Project**: /home/user/ProofChecker/
+
+### Phase 1: Basic Properties [NOT STARTED]
+dependencies: []
+
+### Phase 2: Homomorphisms [NOT STARTED]
+dependencies: [1]
+```
+
+**Migrated Plan** (Tier 1 + Tier 2):
+
+```markdown
+## Metadata
+- **Lean File**: /home/user/ProofChecker/ProofChecker/Groups/Basic.lean  # Tier 2 fallback
+- **Lean Project**: /home/user/ProofChecker/
+
+### Phase 1: Basic Properties [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/Groups/Basic.lean
+dependencies: []
+
+### Phase 2: Homomorphisms [NOT STARTED]
+lean_file: /home/user/ProofChecker/ProofChecker/Groups/Hom.lean
+dependencies: [1]
+```
+
+**Result**: Phase 1 uses `Groups/Basic.lean`, Phase 2 uses `Groups/Hom.lean` (Tier 1 discovery). If any phase is missing `lean_file:`, falls back to Tier 2 (`Groups/Basic.lean`).
+
+### Validation After Migration
+
+Verify plan format correctness:
+
+```bash
+# Check phase-level lean_file: format (no blank lines after heading)
+grep -A 1 "^### Phase" .claude/specs/*/plans/*.md | grep "lean_file:"
+
+# Verify absolute paths (no relative paths)
+grep "^lean_file:" .claude/specs/*/plans/*.md | grep -v "^lean_file: /"
+
+# Run standards validation
+bash .claude/scripts/validate-all-standards.sh --plans
+```
+
+---
+
 ## Troubleshooting
 
 ### Error: No Lean project found
@@ -378,6 +690,157 @@ ERROR: Research report(s) too small (< 100 bytes)
 1. Check agent output for errors
 2. Try higher complexity level for deeper research
 3. Manually add Mathlib references to research reports
+
+### Troubleshooting Lean File Discovery
+
+#### Error: Lean file not found (Tier 1)
+
+**Symptom**:
+```
+ERROR: Phase 2 Lean file not found: /home/user/ProofChecker/ProofChecker/NonExistent.lean
+Tier 1 discovery returned invalid path
+```
+
+**Cause**: Phase-specific `lean_file:` points to non-existent file
+
+**Solutions**:
+1. Verify file path exists:
+   ```bash
+   ls -la /home/user/ProofChecker/ProofChecker/NonExistent.lean
+   ```
+2. Fix path in plan (correct typo or use existing file)
+3. Create missing file if needed:
+   ```bash
+   touch /home/user/ProofChecker/ProofChecker/NonExistent.lean
+   ```
+4. Remove `lean_file:` to fall back to Tier 2 global metadata
+
+#### Error: Tier 1 discovery failed (format issue)
+
+**Symptom**:
+```
+WARNING: Tier 1 discovery empty for Phase 2
+Falling back to Tier 2 global metadata
+```
+
+**Cause**: Blank lines between phase heading and `lean_file:`, or incorrect format
+
+**Common Format Errors**:
+
+❌ **WRONG** (blank line after heading):
+```markdown
+### Phase 1: Basic Properties [NOT STARTED]
+
+lean_file: /path/to/file.lean
+dependencies: []
+```
+
+✅ **CORRECT** (no blank line):
+```markdown
+### Phase 1: Basic Properties [NOT STARTED]
+lean_file: /path/to/file.lean
+dependencies: []
+```
+
+❌ **WRONG** (wrong indentation):
+```markdown
+### Phase 1: Basic Properties [NOT STARTED]
+  lean_file: /path/to/file.lean  # Indented
+dependencies: []
+```
+
+✅ **CORRECT** (no indentation):
+```markdown
+### Phase 1: Basic Properties [NOT STARTED]
+lean_file: /path/to/file.lean
+dependencies: []
+```
+
+**Solutions**:
+1. Remove blank lines between phase heading and `lean_file:`
+2. Ensure no indentation before `lean_file:`
+3. Verify format: `lean_file: /absolute/path` (space after colon)
+4. Check validation:
+   ```bash
+   grep -A 2 "^### Phase" plan.md | grep "^lean_file:"
+   ```
+
+#### Error: Tier 2 fallback failed
+
+**Symptom**:
+```
+ERROR: No Lean file found for Phase 2
+Tier 1 discovery: empty
+Tier 2 discovery: empty
+Cannot proceed without file specification
+```
+
+**Cause**: Both Tier 1 and Tier 2 discovery returned empty (no file metadata)
+
+**Solutions**:
+1. Add Tier 2 global metadata:
+   ```markdown
+   ## Metadata
+   - **Lean File**: /absolute/path/to/file.lean
+   - **Lean Project**: /absolute/path/to/project/
+   ```
+2. Add Tier 1 per-phase metadata:
+   ```markdown
+   ### Phase 2: Properties [NOT STARTED]
+   lean_file: /absolute/path/to/file.lean
+   dependencies: []
+   ```
+3. Re-run `/lean-plan` to regenerate plan with proper metadata
+
+#### Warning: Relative path detected
+
+**Symptom**:
+```
+WARNING: Relative path detected in lean_file: ProofChecker/Basics.lean
+Use absolute paths for Tier 1 discovery
+```
+
+**Cause**: `lean_file:` uses relative path instead of absolute
+
+**Solutions**:
+1. Convert to absolute path:
+   ```bash
+   # Get absolute path
+   readlink -f ProofChecker/Basics.lean
+   ```
+2. Update plan with absolute path:
+   ```markdown
+   lean_file: /home/user/ProofChecker/ProofChecker/Basics.lean
+   ```
+
+#### Debugging Tier 1/Tier 2 Discovery
+
+To debug which tier is being used:
+
+```bash
+# Test Tier 1 discovery for Phase 1
+awk -v target="1" '
+  BEGIN { in_phase=0 }
+  /^### Phase / {
+    if (index($0, "Phase " target ":") > 0) {
+      in_phase = 1
+    } else {
+      in_phase = 0
+    }
+    next
+  }
+  in_phase && /^lean_file:/ {
+    sub(/^lean_file:[[:space:]]*/, "")
+    print
+    exit
+  }
+' plan.md
+
+# Test Tier 2 discovery
+grep "^- \*\*Lean File\*\*:" plan.md | sed 's/^- \*\*Lean File\*\*:[[:space:]]*//'
+
+# If Tier 1 returns empty, Tier 2 is used as fallback
+```
 
 ---
 

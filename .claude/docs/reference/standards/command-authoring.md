@@ -227,6 +227,66 @@ fi
 Task { ... }
 ```
 
+#### Model Specification
+
+When invoking subagents via Task tool, you can specify the model tier explicitly using the `model:` field. This enables orchestrator-level control over which model tier handles specific delegation logic.
+
+**Syntax**:
+
+```markdown
+Task {
+  subagent_type: "general-purpose"
+  model: "opus" | "sonnet" | "haiku"
+  description: "..."
+  prompt: "..."
+}
+```
+
+**Model Selection Guidelines**:
+- `"opus"`: Complex reasoning, proof search, sophisticated delegation logic
+- `"sonnet"`: Balanced orchestration, standard implementation tasks
+- `"haiku"`: Deterministic coordination, mechanical processing
+
+**Precedence Order**:
+1. Task invocation `model:` field (highest priority)
+2. Agent frontmatter `model:` field (fallback)
+3. System default model (last resort)
+
+**Example** (from todo.md):
+
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the todo-analyzer agent.
+
+Task {
+  subagent_type: "general-purpose"
+  model: "haiku"
+  description: "Generate TODO.md file"
+  prompt: |
+    Read and follow ALL instructions in: .claude/agents/todo-analyzer.md
+}
+```
+
+**Orchestration Example** (from lean-implement.md):
+
+```markdown
+**EXECUTE NOW**: USE the Task tool to invoke the lean-coordinator agent.
+
+Task {
+  subagent_type: "general-purpose"
+  model: "sonnet"
+  description: "Wave-based Lean theorem proving for phase ${CURRENT_PHASE}"
+  prompt: "
+    Read and follow ALL behavioral guidelines from:
+    ${CLAUDE_PROJECT_DIR}/.claude/agents/lean-coordinator.md
+  "
+}
+```
+
+**When to Specify Model**:
+- **Required**: When orchestrator needs different tier than subagent (e.g., Sonnet for coordination, Opus for subagents)
+- **Optional**: When agent frontmatter already specifies correct tier
+- **Recommended**: For clear separation of orchestration vs. implementation model requirements
+
 ---
 
 ## Subprocess Isolation Requirements
@@ -1201,6 +1261,70 @@ Task {
 ```
 
 **Problem**: Missing "USE the Task tool" phrase. Directive is not explicit enough.
+
+**❌ PROHIBITED Pattern 4: Conditional Prefix Without EXECUTE Keyword**
+
+```markdown
+**If CONDITION**: USE the Task tool to invoke agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Process data"
+  prompt: "..."
+}
+```
+
+**Problem**: The conditional prefix "**If X**:" reads as descriptive documentation, not an imperative execution directive. Claude interprets this as guidance describing what SHOULD happen under certain conditions, not as a command to execute NOW.
+
+**Other Prohibited Conditional Prefixes**:
+- `**When CONDITION**: USE the Task tool...` (descriptive timing)
+- `**Based on CONDITION**: USE the Task tool...` (descriptive logic)
+- `**For CONDITION**: USE the Task tool...` (descriptive scope)
+
+**Why This Fails**: Conditional prefixes lack the explicit "EXECUTE" keyword that signals mandatory action. Without it, Claude cannot distinguish between:
+- Documentation: "When X happens, you should invoke agent" (guidance)
+- Imperative: "Execute agent invocation when X" (action)
+
+**✅ CORRECT Pattern (Option 1 - Separate Directive)**:
+
+```markdown
+**If CONDITION**:
+
+**EXECUTE NOW**: USE the Task tool to invoke agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Process data"
+  prompt: "..."
+}
+```
+
+**✅ CORRECT Pattern (Option 2 - Single Line)**:
+
+```markdown
+**EXECUTE IF CONDITION**: USE the Task tool to invoke agent.
+
+Task {
+  subagent_type: "general-purpose"
+  description: "Process data"
+  prompt: "..."
+}
+```
+
+**✅ CORRECT Pattern (Option 3 - Bash Conditional)**:
+
+```bash
+if [ "$CONDITION" = "true" ]; then
+  echo "Condition met - invoking agent"
+fi
+```
+
+**EXECUTE NOW**: USE the Task tool to invoke agent.
+
+Task { ... }
+```
+
+**Key Principle**: The word "EXECUTE" MUST appear in the directive to signal mandatory action vs. descriptive documentation.
 
 **✅ REQUIRED Pattern: Imperative Task Directive**
 

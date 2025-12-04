@@ -282,7 +282,7 @@ For current implementation progress on proof-checker and model-checker integrati
 
 ## Related Documentation
 
-- [LOGOS_PHILOSOPHY.md](../UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Layer 0 (Core TM) specification
 - [PROOF_LIBRARY_DESIGN.md](PROOF_LIBRARY_DESIGN.md) - Theorem caching architecture
 - [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) - Layers 1-3 specifications

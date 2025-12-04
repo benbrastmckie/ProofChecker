@@ -146,7 +146,7 @@ For all implementation status information, see [IMPLEMENTATION_STATUS.md](../Pro
 
 ## Related Documentation
 
-- [LOGOS_PHILOSOPHY.md](../UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Layer 0 technical specification
 - [OPERATORS.md](OPERATORS.md) - Formal symbols reference
 - [Research/LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) - Layers 1-3 specifications

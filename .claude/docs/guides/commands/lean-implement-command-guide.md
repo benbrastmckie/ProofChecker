@@ -1,0 +1,309 @@
+# /lean-implement Command Guide
+
+The `/lean-implement` command provides hybrid implementation capabilities for plans containing both Lean theorem proving and software implementation phases. It intelligently routes each phase to the appropriate coordinator agent.
+
+## Overview
+
+When working on Lean formalization projects, plans often contain a mix of:
+- **Lean phases**: Theorem proving, proof verification, Mathlib integration
+- **Software phases**: Test harness setup, documentation, tooling
+
+The `/lean-implement` command automatically classifies each phase and routes it to the appropriate coordinator:
+- **lean-coordinator**: For theorem proving using lean-lsp-mcp tools
+- **implementer-coordinator**: For software implementation using standard development tools
+
+## Syntax
+
+```bash
+/lean-implement <plan-file> [starting-phase] [--mode=MODE] [--max-iterations=N] [--dry-run]
+```
+
+### Arguments
+
+| Argument | Description | Default |
+|----------|-------------|---------|
+| `plan-file` | Path to implementation plan (required) | - |
+| `starting-phase` | Phase number to start from | 1 |
+| `--mode=MODE` | Execution mode (see below) | auto |
+| `--max-iterations=N` | Maximum iteration loops | 5 |
+| `--context-threshold=N` | Context usage % before checkpoint | 90 |
+| `--dry-run` | Preview classification without executing | false |
+
+### Execution Modes
+
+| Mode | Description |
+|------|-------------|
+| `auto` | Automatically detect phase type and route appropriately (default) |
+| `lean-only` | Execute only Lean phases, skip software phases |
+| `software-only` | Execute only software phases, skip Lean phases |
+
+## Phase Classification
+
+The command uses a 2-tier detection algorithm:
+
+### Tier 1: Phase Metadata (Strongest Signal)
+
+If a phase contains `lean_file:` metadata, it is classified as a Lean phase:
+
+```markdown
+### Phase 1: Prove Modal Axioms [NOT STARTED]
+lean_file: /path/to/Modal.lean
+
+Tasks:
+- [ ] Prove theorem_K
+- [ ] Prove theorem_T
+```
+
+### Tier 2: Keyword and Extension Analysis
+
+If no explicit metadata, the algorithm analyzes content:
+
+**Lean Indicators**:
+- File extensions: `.lean`
+- Keywords: `theorem`, `lemma`, `sorry`, `tactic`, `mathlib`
+- Patterns: `prove theorem`, `lean_goal`, `lean_build`
+
+**Software Indicators**:
+- File extensions: `.ts`, `.js`, `.py`, `.sh`, `.md`, `.json`
+- Keywords: `implement`, `create`, `write tests`, `setup`, `configure`, `deploy`
+
+**Default**: Phases without clear indicators are classified as "software" (conservative approach).
+
+## Examples
+
+### Basic Usage
+
+```bash
+# Execute mixed plan with automatic routing
+/lean-implement .claude/specs/028_modal_logic/plans/001-modal-proofs.md
+
+# Start from specific phase
+/lean-implement plan.md 3
+
+# Preview classification without executing
+/lean-implement plan.md --dry-run
+```
+
+### Mode Filtering
+
+```bash
+# Execute only Lean phases (skip software)
+/lean-implement plan.md --mode=lean-only
+
+# Execute only software phases (skip Lean)
+/lean-implement plan.md --mode=software-only
+```
+
+### Iteration Control
+
+```bash
+# Allow more iterations for complex plans
+/lean-implement plan.md --max-iterations=10
+
+# Lower context threshold for earlier checkpoints
+/lean-implement plan.md --context-threshold=80
+```
+
+## Plan Format
+
+Plans should use standard phase format with optional `lean_file:` metadata:
+
+```markdown
+# Modal Logic Implementation Plan
+
+## Metadata
+- **Date**: 2025-12-04
+- **Feature**: Modal Logic Formalization
+- **Status**: [NOT STARTED]
+
+## Implementation Phases
+
+### Phase 1: Prove K Axiom [NOT STARTED]
+lean_file: /home/user/project/Modal.lean
+
+**Objective**: Prove the K axiom of modal logic
+
+Tasks:
+- [ ] Define modal operators
+- [ ] Prove theorem_K using intro/apply tactics
+
+### Phase 2: Create Test Harness [NOT STARTED]
+
+**Objective**: Build test infrastructure for proof verification
+
+Tasks:
+- [ ] Create test_modal_proofs.py
+- [ ] Add CI integration
+
+### Phase 3: Prove T Axiom [NOT STARTED]
+lean_file: /home/user/project/Modal.lean
+
+**Objective**: Prove the T axiom (reflexivity)
+
+Tasks:
+- [ ] Prove theorem_T using decidability
+```
+
+## Routing Map
+
+The command builds a routing map that tracks:
+- Phase number
+- Phase type (lean/software)
+- Lean file path (for Lean phases)
+- Completion status
+
+Example routing map (stored in workspace):
+```
+1:lean:/home/user/project/Modal.lean
+2:software:none
+3:lean:/home/user/project/Modal.lean
+```
+
+## Coordinator Integration
+
+### lean-coordinator
+
+For Lean phases, the command invokes lean-coordinator with:
+- `lean_file_path`: Extracted from phase metadata
+- `plan_path`: Original plan file for progress tracking
+- `max_attempts`: Default 3 for theorem proving
+- `iteration`: Per-Lean-phase iteration counter
+
+### implementer-coordinator
+
+For software phases, the command invokes implementer-coordinator with:
+- `plan_path`: Original plan file
+- `continuation_context`: Previous iteration summary if continuing
+- `iteration`: Per-software-phase iteration counter
+
+## Progress Tracking
+
+Both coordinators use checkbox utilities to track progress:
+
+1. Phase marked `[IN PROGRESS]` when execution starts
+2. Individual tasks marked `[x]` as completed
+3. Phase marked `[COMPLETE]` when all tasks done
+4. Plan metadata status updated to `[COMPLETE]` when all phases done
+
+## Iteration Management
+
+The command supports multi-iteration execution:
+
+1. **Context Monitoring**: Tracks context usage percentage
+2. **Checkpoint Creation**: Saves state when context threshold exceeded
+3. **Continuation**: Resumes from checkpoint in next iteration
+4. **Stuck Detection**: Halts if work remaining unchanged for 2 iterations
+
+## Output Signals
+
+### IMPLEMENTATION_COMPLETE
+
+Emitted when all work is done:
+```
+IMPLEMENTATION_COMPLETE:
+  plan_file: /path/to/plan.md
+  topic_path: /path/to/topic
+  summary_path: /path/to/summary.md
+  total_phases: 5
+  lean_phases_completed: 2
+  software_phases_completed: 3
+  theorems_proven: 10
+  execution_mode: auto
+  iterations_used: 2
+  work_remaining: 0
+```
+
+## Troubleshooting
+
+### Phase Misclassified
+
+**Problem**: A phase is routed to the wrong coordinator.
+
+**Solution**: Add explicit `lean_file:` metadata for Lean phases:
+```markdown
+### Phase N: Name [NOT STARTED]
+lean_file: /path/to/file.lean
+```
+
+### Lean Coordinator Fails
+
+**Problem**: lean-coordinator returns error.
+
+**Possible Causes**:
+1. lean-lsp-mcp not installed: `uvx --from lean-lsp-mcp --help`
+2. Lean file not found: Check `lean_file:` path is correct
+3. Not a Lean project: Verify `lakefile.toml` or `lakefile.lean` exists
+
+### Software Coordinator Fails
+
+**Problem**: implementer-coordinator returns error.
+
+**Possible Causes**:
+1. Plan format invalid: Check phase headings
+2. Summaries directory not writable
+3. Previous iteration checkpoint corrupted
+
+### Stuck Detection Triggered
+
+**Problem**: Command halts with "stuck detected" error.
+
+**Solution**:
+1. Check summary for incomplete work
+2. Manually complete blocking tasks
+3. Restart from checkpoint
+
+### Debug Logging
+
+Check workflow debug log for detailed diagnostics:
+```bash
+cat ~/.claude/tmp/workflow_debug.log
+```
+
+Check error log for structured errors:
+```bash
+/errors --command /lean-implement --since 1h
+```
+
+## Related Commands
+
+- `/lean-build`: Lean-only theorem proving (no software phases)
+- `/implement`: Software-only implementation (no Lean phases)
+- `/lean-plan`: Create Lean-specific plans with proof strategies
+- `/create-plan`: Create general implementation plans
+- `/test`: Run tests after implementation
+
+## Architecture
+
+```
+/lean-implement
+    |
+    +-- Block 1a: Setup & State Initialization
+    |
+    +-- Block 1a-classify: Phase Classification
+    |       |
+    |       +-- detect_phase_type() [Tier 1: lean_file metadata]
+    |       +-- detect_phase_type() [Tier 2: keyword/extension]
+    |       +-- build_routing_map()
+    |
+    +-- Block 1b: Coordinator Routing [HARD BARRIER]
+    |       |
+    |       +-- If lean: Task -> lean-coordinator (Opus 4.5)
+    |       +-- If software: Task -> implementer-coordinator (Haiku 4.5)
+    |
+    +-- Block 1c: Verification & Continuation Decision
+    |       |
+    |       +-- Validate summary exists
+    |       +-- Parse work_remaining, context_exhausted
+    |       +-- Iteration loop or proceed to completion
+    |
+    +-- Block 1d: Phase Marker Recovery
+    |       |
+    |       +-- Validate [COMPLETE] markers
+    |       +-- Recover missing markers
+    |
+    +-- Block 2: Completion & Summary
+            |
+            +-- Aggregate metrics
+            +-- Display console summary
+            +-- Emit IMPLEMENTATION_COMPLETE
+```

@@ -307,7 +307,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
     -- (time_shift σ Δ).states x = σ.states (x + Δ) = σ.states y
     simp only [truth_at, WorldHistory.time_shift]
     -- Need to show: M.valuation (σ.states (x + (y - x)) hx) p ↔ M.valuation (σ.states y hy) p
-    have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
+    have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
     -- Use states_eq_of_time_eq to transport states from (x + (y - x)) to y
     rw [WorldHistory.states_eq_of_time_eq σ (x + (y - x)) y h_eq _ hy]
 
@@ -336,7 +336,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- time_shift ρ (y - x) is a history at time x (domain at x iff ρ domain at x + (y-x) = y)
       have hρ_x : (WorldHistory.time_shift ρ (y - x)).domain x := by
         simp only [WorldHistory.time_shift]
-        have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
+        have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
         rw [h_eq]
         exact hρ_y
       have h1 := h_box_x (WorldHistory.time_shift ρ (y - x)) hρ_x
@@ -347,7 +347,7 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       -- time_shift ρ (-(y - x)) = time_shift ρ (x - y) is a history at time y
       have hρ_y : (WorldHistory.time_shift ρ (x - y)).domain y := by
         simp only [WorldHistory.time_shift]
-        have h_eq : y + (x - y) = x := by rw [add_sub, add_sub_cancel']
+        have h_eq : y + (x - y) = x := by rw [add_sub, add_sub_cancel_left]
         rw [h_eq]
         exact hρ_x
       have h1 := h_box_y (WorldHistory.time_shift ρ (x - y)) hρ_y
@@ -359,9 +359,9 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
       have hρ_x' : (WorldHistory.time_shift (WorldHistory.time_shift ρ (x - y)) (y - x)).domain x := by
         simp only [WorldHistory.time_shift]
         have h_eq : x + (y - x) + (x - y) = x := by
-          have h1 : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
+          have h1 : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
           rw [h1]
-          rw [add_sub, add_sub_cancel']
+          rw [add_sub, add_sub_cancel_left]
         rw [h_eq]
         exact hρ_x
       -- Apply IH with time_shift ρ (x - y) instead of σ
@@ -426,11 +426,12 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
         exact hs'
       have h_s_lt_y : s' + (y - x) < y := by
         have h := add_lt_add_right h_s'_lt_x (y - x)
-        rw [add_sub, add_sub_cancel'] at h
-        exact h
+        -- Use group lemmas: s' < x implies s' + (y-x) < x + (y-x) = y
+        calc s' + (y - x) < x + (y - x) := h
+          _ = y := by rw [add_sub, add_sub_cancel_left]
       have h_truth_orig := h_past (s' + (y - x)) hs h_s_lt_y
       -- Apply IH: need shift amount = (s' + (y - x)) - s' = y - x
-      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel' s' (y - x)
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel_left s' (y - x)
       -- Use congruence to equate histories
       have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
@@ -482,11 +483,15 @@ theorem time_shift_preserves_truth (M : TaskModel F) (σ : WorldHistory F) (x y 
         exact hs'
       have h_y_lt_s : y < s' + (y - x) := by
         have h := add_lt_add_right h_x_lt_s' (y - x)
-        rw [add_sub, add_sub_cancel'] at h
-        exact h
+        -- h : x + (y - x) < s' + (y - x)
+        -- Need: y < s' + (y - x)
+        -- Since x + (y - x) = y
+        have h_eq : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
+        calc y = x + (y - x) := h_eq.symm
+          _ < s' + (y - x) := h
       have h_truth_orig := h_future (s' + (y - x)) hs h_y_lt_s
       -- Apply IH with shift amount (s' + (y - x)) - s' = y - x
-      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel' s' (y - x)
+      have h_shift_eq : (s' + (y - x)) - s' = y - x := add_sub_cancel_left s' (y - x)
       -- Use congruence to equate histories
       have h_hist_eq : WorldHistory.time_shift σ ((s' + (y - x)) - s') = WorldHistory.time_shift σ (y - x) := by
         exact WorldHistory.time_shift_congr σ ((s' + (y - x)) - s') (y - x) h_shift_eq
@@ -511,12 +516,12 @@ theorem exists_shifted_history (M : TaskModel F) (σ : WorldHistory F) (x y : T)
     truth_at M (WorldHistory.time_shift σ (y - x)) x
       (by
         simp only [WorldHistory.time_shift]
-        have h : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
+        have h : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
         rw [h]
         exact hy) φ := by
   have hx : (WorldHistory.time_shift σ (y - x)).domain x := by
     simp only [WorldHistory.time_shift]
-    have h : x + (y - x) = y := by rw [add_sub, add_sub_cancel']
+    have h : x + (y - x) = y := by rw [add_sub, add_sub_cancel_left]
     rw [h]
     exact hy
   exact (time_shift_preserves_truth M σ x y hx hy φ).symm
@@ -540,10 +545,16 @@ namespace TemporalDuality
 /--
 Local definition of validity to avoid circular dependency with Validity.lean.
 A formula is valid if it's true at all model-history-time triples.
+
+This is a monomorphic definition (fixed to explicit type parameter T) to avoid universe level mismatch errors.
+Per research report Option A: Make T explicit to allow type inference at call sites.
 -/
-private def is_valid (φ : Formula) : Prop :=
-  ∀ {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F) (τ : WorldHistory F) (t : U) (ht : τ.domain t),
+private def is_valid (T : Type*) [LinearOrderedAddCommGroup T] (φ : Formula) : Prop :=
+  ∀ (F : TaskFrame T) (M : TaskModel F) (τ : WorldHistory F) (t : T) (ht : τ.domain t),
     truth_at M τ t ht φ
+
+-- Section variable for theorem signatures
+variable {T : Type*} [LinearOrderedAddCommGroup T]
 
 /--
 Auxiliary lemma: If φ is valid, then for any specific triple (M, τ, t),
@@ -551,9 +562,9 @@ Auxiliary lemma: If φ is valid, then for any specific triple (M, τ, t),
 
 This is just the definition of validity, but stated as a lemma for clarity.
 -/
-theorem valid_at_triple {φ : Formula} (h_valid : is_valid φ) {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F)
-    (τ : WorldHistory F) (t : U) (ht : τ.domain t) :
-    truth_at M τ t ht φ := @h_valid U _ F M τ t ht
+theorem valid_at_triple {φ : Formula} (F : TaskFrame T) (M : TaskModel F)
+    (τ : WorldHistory F) (t : T) (ht : τ.domain t) (h_valid : is_valid T φ) :
+    truth_at M τ t ht φ := h_valid F M τ t ht
 
 
 /--
@@ -563,16 +574,16 @@ then for any triple where ψ is true, we can construct a relationship.
 Actually, we need a stronger result: truth at a triple is preserved under swap
 when the formula is valid.
 -/
-theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedAddCommGroup U] (F : TaskFrame U) (M : TaskModel F)
-    (τ : WorldHistory F) (t : U) (ht : τ.domain t) :
-    is_valid φ → truth_at M τ t ht φ.swap_past_future := by
+theorem truth_swap_of_valid_at_triple (φ : Formula) (F : TaskFrame T) (M : TaskModel F)
+    (τ : WorldHistory F) (t : T) (ht : τ.domain t) :
+    is_valid T φ → truth_at M τ t ht φ.swap_past_future := by
   intro h_valid
   -- Proof by structural induction on φ
   induction φ generalizing F M τ t ht with
   | atom p =>
     -- swap_past_future (atom p) = atom p
     simp only [Formula.swap_past_future]
-    exact @h_valid U _ F M τ t ht
+    exact h_valid F M τ t ht
 
   | bot =>
     -- swap_past_future bot = bot
@@ -581,7 +592,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
     simp only [Formula.swap_past_future, truth_at]
     -- h_valid says bot is valid, which means bot is true at all triples
     -- But bot is False by definition, contradiction
-    exact @h_valid U _ F M τ t ht
+    exact h_valid F M τ t ht
 
   | imp ψ χ ih_ψ ih_χ =>
     -- swap_past_future (ψ → χ) = (swap ψ) → (swap χ)
@@ -631,7 +642,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
     -- From h_valid: is_valid (box ψ)
     -- This means: ∀ F' M' τ' t' ht', ∀ σ' hs', truth_at M' σ' t' hs' ψ
     -- In particular, this means ψ is valid (true at ALL triples)
-    have h_ψ_valid : is_valid ψ := by
+    have h_ψ_valid : is_valid T ψ := by
       intro F' M' τ' t' ht'
       -- Instantiate h_valid at (F', M', τ', t', ht')
       have h_box := h_valid F' M' τ' t' ht'
@@ -693,7 +704,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
     --
     -- For MVP: Accept that this requires the domain to extend, which is reasonable for
     -- physical interpretations where time extends to the future.
-    have h_ψ_valid : is_valid ψ := by
+    have h_ψ_valid : is_valid T ψ := by
       intro F' M' τ' r hr
       -- We need to find some t > r in τ'.domain.
       -- The key insight: h_valid holds for ALL (F, M, τ, t, ht).
@@ -718,7 +729,7 @@ theorem truth_swap_of_valid_at_triple (φ : Formula) {U : Type*} [LinearOrderedA
     --   - Since s' > r, ψ holds at s'
     --
     -- The same domain extension issue applies as in the past case.
-    have h_ψ_valid : is_valid ψ := by
+    have h_ψ_valid : is_valid T ψ := by
       intro F' M' τ' r hr
       -- We need some t < r in τ'.domain to instantiate Future ψ at t.
       -- This requires the domain to extend into the past.
@@ -744,7 +755,7 @@ holds.
 **Proof Strategy**: For now, we use sorry and document that this requires careful
 analysis of which formulas can validly use temporal duality.
 -/
-theorem valid_swap_of_valid (φ : Formula) : is_valid φ → is_valid φ.swap_past_future := by
+theorem valid_swap_of_valid (φ : Formula) : is_valid T φ → is_valid T φ.swap_past_future := by
   intro h_valid F M τ t ht
   exact truth_swap_of_valid_at_triple φ F M τ t ht h_valid
 
@@ -772,7 +783,7 @@ and MT is valid, this is immediate.
 At any triple (M, τ, t), if box φ.swap holds, then φ.swap holds at (M, τ, t) specifically.
 -/
 theorem swap_axiom_mt_valid (φ : Formula) :
-    is_valid ((Formula.box φ).imp φ).swap_past_future := by
+    is_valid T ((Formula.box φ).imp φ).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_box_swap_φ
@@ -790,7 +801,7 @@ This is still M4, just applied to swapped formula.
 holds at all histories at t (trivially, as this is a global property).
 -/
 theorem swap_axiom_m4_valid (φ : Formula) :
-    is_valid ((Formula.box φ).imp (Formula.box (Formula.box φ))).swap_past_future := by
+    is_valid T ((Formula.box φ).imp (Formula.box (Formula.box φ))).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_box_swap_φ σ hs
@@ -808,7 +819,7 @@ This is still MB, just applied to swapped formula.
 The diamond ◇ψ means "there exists some history where ψ holds". We have τ witnessing this.
 -/
 theorem swap_axiom_mb_valid (φ : Formula) :
-    is_valid (φ.imp (Formula.box φ.diamond)).swap_past_future := by
+    is_valid T (φ.imp (Formula.box φ.diamond)).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, Formula.diamond, truth_at]
   intro h_swap_φ σ hs
@@ -831,7 +842,7 @@ To show PP(swap φ), for any r < t, we need P(swap φ) at r.
 For any u < r, we need swap φ at u. Since u < r < t, swap φ at u follows from P(swap φ) at t.
 -/
 theorem swap_axiom_t4_valid (φ : Formula) :
-    is_valid ((Formula.future φ).imp (Formula.future (Formula.future φ))).swap_past_future := by
+    is_valid T ((Formula.future φ).imp (Formula.future (Formula.future φ))).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_past_swap r hr h_r_lt_t u hu h_u_lt_r
@@ -854,7 +865,7 @@ We can choose u = t, since t > s and swap φ holds at t.
 Note: sometime_future φ = ¬(past (¬φ))
 -/
 theorem swap_axiom_ta_valid (φ : Formula) :
-    is_valid (φ.imp (Formula.future φ.sometime_past)).swap_past_future := by
+    is_valid T (φ.imp (Formula.future φ.sometime_past)).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, Formula.sometime_past, Formula.sometime_future, truth_at]
   intro h_swap_φ s hs h_s_lt_t
@@ -886,7 +897,7 @@ double-negation encoding of conjunction.
 **Proof Status**: COMPLETE
 -/
 theorem swap_axiom_tl_valid (φ : Formula) :
-    is_valid (φ.always.imp (Formula.future (Formula.past φ))).swap_past_future := by
+    is_valid T (φ.always.imp (Formula.future (Formula.past φ))).swap_past_future := by
   intro F M τ t ht
   -- Swapped form: (always φ).swap → (future (past φ)).swap
   --             = always (swap φ) → past (future (swap φ))
@@ -958,7 +969,7 @@ at time t, P(swap φ) holds at σ (i.e., swap φ holds at all times s < t in σ)
 **Proof Status**: COMPLETE
 -/
 theorem swap_axiom_mf_valid (φ : Formula) :
-    is_valid ((Formula.box φ).imp (Formula.box (Formula.future φ))).swap_past_future := by
+    is_valid T ((Formula.box φ).imp (Formula.box (Formula.future φ))).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_box_swap σ hs s hs_s h_s_lt_t
@@ -1002,7 +1013,7 @@ theorem swap_axiom_mf_valid (φ : Formula) :
   -- Applying the iff gives truth at (σ, s).
   have h_shifted_domain : (WorldHistory.time_shift σ (s - t)).domain t := by
     simp only [WorldHistory.time_shift]
-    have h_eq : t + (s - t) = s := by omega
+    have h_eq : t + (s - t) = s := by rw [add_sub, add_sub_cancel_left]
     rw [h_eq]
     exact hs_s
   -- Get truth at shifted history at time t
@@ -1023,7 +1034,7 @@ and truth preservation establishes the result.
 **Proof Status**: COMPLETE
 -/
 theorem swap_axiom_tf_valid (φ : Formula) :
-    is_valid ((Formula.box φ).imp (Formula.future (Formula.box φ))).swap_past_future := by
+    is_valid T ((Formula.box φ).imp (Formula.future (Formula.box φ))).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro h_box_swap s hs h_s_lt_t σ hs_σ
@@ -1034,7 +1045,7 @@ theorem swap_axiom_tf_valid (φ : Formula) :
   -- Same strategy as MF: use time_shift_preserves_truth
   have h_shifted_domain : (WorldHistory.time_shift σ (s - t)).domain t := by
     simp only [WorldHistory.time_shift]
-    have h_eq : t + (s - t) = s := by omega
+    have h_eq : t + (s - t) = s := by rw [add_sub, add_sub_cancel_left]
     rw [h_eq]
     exact hs_σ
   have h_at_shifted := h_box_swap (WorldHistory.time_shift σ (s - t)) h_shifted_domain
@@ -1058,9 +1069,9 @@ If `(φ → ψ).swap` and `φ.swap` are both valid, then `ψ.swap` is valid.
 applied to the swapped formulas.
 -/
 theorem mp_preserves_swap_valid (φ ψ : Formula)
-    (h_imp : is_valid (φ.imp ψ).swap_past_future)
-    (h_phi : is_valid φ.swap_past_future) :
-    is_valid ψ.swap_past_future := by
+    (h_imp : is_valid T (φ.imp ψ).swap_past_future)
+    (h_phi : is_valid T φ.swap_past_future) :
+    is_valid T ψ.swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at] at h_imp h_phi ⊢
   exact h_imp F M τ t ht (h_phi F M τ t ht)
@@ -1074,8 +1085,8 @@ If `φ.swap` is valid, then `(□φ).swap = □(φ.swap)` is valid.
 at all histories σ at time t, `φ.swap` is true at (M, σ, t). This is exactly `□(φ.swap)`.
 -/
 theorem modal_k_preserves_swap_valid (φ : Formula)
-    (h : is_valid φ.swap_past_future) :
-    is_valid (Formula.box φ).swap_past_future := by
+    (h : is_valid T φ.swap_past_future) :
+    is_valid T (Formula.box φ).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro σ hs
@@ -1090,8 +1101,8 @@ If `φ.swap` is valid, then `(Fφ).swap = P(φ.swap)` is valid.
 at all times s < t in τ's domain, `φ.swap` is true at (M, τ, s). This is exactly `P(φ.swap)`.
 -/
 theorem temporal_k_preserves_swap_valid (φ : Formula)
-    (h : is_valid φ.swap_past_future) :
-    is_valid (Formula.future φ).swap_past_future := by
+    (h : is_valid T φ.swap_past_future) :
+    is_valid T (Formula.future φ).swap_past_future := by
   intro F M τ t ht
   simp only [Formula.swap_past_future, truth_at]
   intro s hs h_s_lt_t
@@ -1107,8 +1118,8 @@ Weakening from [] to [] is trivial.
 only applies to theorems (empty context derivations).
 -/
 theorem weakening_preserves_swap_valid (φ : Formula)
-    (h : is_valid φ.swap_past_future) :
-    is_valid φ.swap_past_future := h
+    (h : is_valid T φ.swap_past_future) :
+    is_valid T φ.swap_past_future := h
 
 /-! ## Axiom Swap Validity Master Theorem (Phase 4 - Partial)
 
@@ -1125,8 +1136,8 @@ Since prop_k and prop_s don't contain past or future operators, swap is identity
 If the axiom is valid, then its swap (which equals itself) is valid.
 -/
 theorem swap_axiom_propositional_valid (φ : Formula)
-    (h : is_valid φ) (h_no_temporal : φ.swap_past_future = φ) :
-    is_valid φ.swap_past_future := by
+    (h : is_valid T φ) (h_no_temporal : φ.swap_past_future = φ) :
+    is_valid T φ.swap_past_future := by
   rw [h_no_temporal]
   exact h
 
@@ -1142,7 +1153,7 @@ The proof handles each axiom case:
 - **temp_l (TL)**: Uses case analysis and classical logic for `always` encoding
 - **modal_future (MF), temp_future (TF)**: Use `time_shift_preserves_truth` to bridge times
 -/
-theorem axiom_swap_valid (φ : Formula) (h : Axiom φ) : is_valid φ.swap_past_future := by
+theorem axiom_swap_valid (φ : Formula) (h : Axiom φ) : is_valid T φ.swap_past_future := by
   cases h with
   | prop_k ψ χ ρ =>
     -- prop_k is (ψ → (χ → ρ)) → ((ψ → χ) → (ψ → ρ))
@@ -1192,12 +1203,12 @@ of swap and `valid_swap_of_valid` to close the inductive cycle.
 **Proof Status**: COMPLETE - all derivation cases handled.
 -/
 theorem derivable_implies_swap_valid :
-    ∀ {φ : Formula}, Derivable [] φ → is_valid φ.swap_past_future := by
+    ∀ {φ : Formula}, Derivable [] φ → is_valid T φ.swap_past_future := by
   intro φ h_deriv
   -- Proof by induction on the derivation structure
   -- Note: We generalize to arbitrary contexts but only use the [] case
   have h_general : ∀ (Γ : List Formula) (ψ : Formula),
-      Derivable Γ ψ → Γ = [] → is_valid ψ.swap_past_future := by
+      Derivable Γ ψ → Γ = [] → is_valid T ψ.swap_past_future := by
     intro Γ ψ h
     induction h with
     | «axiom» Γ' ψ' h_axiom =>

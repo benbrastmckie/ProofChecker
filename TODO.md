@@ -84,7 +84,125 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ---
 
+## Medium Priority Tasks
+
+### 14. Clean Up 'Always' Operator Definition Cruft
+**Effort**: 3-5 hours
+**Status**: Not Started
+**Priority**: Medium (code clarity and documentation accuracy)
+
+**Description**: After aligning the `always` operator with the JPL paper definition (`Pφ ∧ φ ∧ Fφ`), the TL, MF, and TF axiom proofs no longer require frame constraints. Remove the unused `BackwardPersistence` and `ModalTemporalPersistence` definitions and update all associated documentation that incorrectly claims these constraints are required.
+
+**Files**:
+- `ProofChecker/Metalogic/Soundness.lean` (primary - remove definitions, update docstrings)
+- `CLAUDE.md` (update implementation status)
+- `Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md` (update frame constraint references)
+- `Documentation/ProjectInfo/KNOWN_LIMITATIONS.md` (remove outdated limitation sections)
+
+**Action Items**:
+1. **Phase 1** (1 hour): Remove unused frame constraint definitions
+   - Delete `BackwardPersistence` definition (Soundness.lean:99-123)
+   - Delete `ModalTemporalPersistence` definition (Soundness.lean:125-149)
+   - Verify `lake build` succeeds
+2. **Phase 2** (1 hour): Update Soundness.lean docstrings
+   - Remove all references to conditional validity and frame constraints
+   - Update module docstring (lines 1-70)
+   - Update `temp_l_valid`, `modal_future_valid`, `temp_future_valid` docstrings
+3. **Phase 3** (1-2 hours): Update external documentation
+   - Update CLAUDE.md line 191 (remove "require frame constraints")
+   - Review and update IMPLEMENTATION_STATUS.md
+   - Review and update KNOWN_LIMITATIONS.md
+4. **Phase 4** (0.5 hours): Final verification
+   - Grep for remaining BackwardPersistence/ModalTemporalPersistence references
+   - Run `lake build && lake test`
+
+**Blocking**: None (cleanup task, doesn't affect functionality)
+
+**Dependencies**: None (can be done anytime)
+
+**Research/Plan Reference**:
+- [Research Report](.claude/specs/034_always_operator_cleanup_alignment/reports/001-always-operator-cruft-analysis.md)
+- [Implementation Plan](.claude/specs/034_always_operator_cleanup_alignment/plans/001-always-operator-cleanup-plan.md)
+
+**Notes**: The definitions were never used in actual proofs - they were documented as "required" but the proofs use time-shift infrastructure (MF, TF) or the correct `always` definition (TL) instead.
+
+---
+
 ## Low Priority Tasks
+
+### 15. Generalize Temporal Order to LinearOrderedAddCommGroup ✓ COMPLETE
+**Effort**: 30-45 hours (Actual: ~25-30 hours)
+**Status**: COMPLETE (2025-12-04)
+**Priority**: Low (architectural improvement, paper alignment)
+
+**Description**: Generalize ProofChecker's temporal domain from hardcoded `Int` to polymorphic `LinearOrderedAddCommGroup` typeclass, matching the JPL paper specification. This enables support for rational/real time models, bounded temporal domains, and custom temporal structures while maintaining alignment with the paper's formal semantics.
+
+**Paper Reference**: JPL Paper §app:TaskSemantics (lines 1835-1867)
+- def:frame (line 1835): "A totally ordered abelian group T = ⟨T, +, ≤⟩"
+- def:world-history (line 1849): Functions τ: X → W where X ⊆ T is convex
+- Current implementation uses `Int` (specific abelian group, line 39 TaskFrame.lean)
+
+**Files**:
+- `ProofChecker/Semantics/TaskFrame.lean` (parameterize by T)
+- `ProofChecker/Semantics/WorldHistory.lean` (add convexity constraint)
+- `ProofChecker/Semantics/Truth.lean` (polymorphic temporal type)
+- `ProofChecker/Semantics/Validity.lean` (update quantification)
+- `ProofChecker/Semantics/TaskModel.lean` (minor updates)
+
+**Benefits**:
+1. **Paper Alignment**: Direct correspondence with JPL paper specification
+2. **Generality**: Support for rational/real time models (physics, economics)
+3. **Bounded Systems**: Enable finite temporal domains (games, bounded processes)
+4. **Mathlib Integration**: Leverage `LinearOrderedAddCommGroup` lemmas
+
+**Action Items**:
+1. **Phase 1** (8-12 hours): Generalize TaskFrame
+   - Add type parameter `(T : Type*) [LinearOrderedAddCommGroup T]`
+   - Replace `Int` with `T` throughout
+   - Update example frames
+   - Fix downstream compilation errors
+2. **Phase 2** (10-15 hours): Generalize WorldHistory
+   - Add type parameter and convexity constraint
+   - Update `time_shift` infrastructure
+   - Prove convexity preservation lemmas
+3. **Phase 3** (6-10 hours): Generalize Truth evaluation
+   - Update temporal quantification to `∀ (s : T)`
+   - Review time-shift preservation with abstract groups
+   - Update temporal duality infrastructure
+4. **Phase 4** (3-5 hours): Update Validity and Model
+   - Generalize validity to quantify over all temporal types
+   - Update semantic consequence definitions
+5. **Phase 5** (3-5 hours): Documentation and Testing
+   - Create examples with `Rat` and `Real` temporal types
+   - Add convexity tests
+   - Update ARCHITECTURE.md with typeclass explanation
+   - Document migration guide
+
+**Breaking Changes**:
+- All `TaskFrame` → `TaskFrame T` with explicit type parameter
+- Convexity proofs required for all world histories
+- Some arithmetic proofs may need group lemmas instead of omega
+
+**Migration Path**:
+```lean
+-- Provide type aliases for backward compatibility
+abbrev TaskFrameInt := TaskFrame Int
+abbrev WorldHistoryInt := WorldHistory (F : TaskFrame Int)
+```
+
+**Blocking**: None (architectural improvement, doesn't affect functionality)
+
+**Dependencies**:
+- **INDEPENDENT**: Can run anytime after Layer 0 stabilization
+- **BENEFITS FROM**: Completed soundness/completeness proofs (more tests to verify)
+
+**Research/Plan Reference**:
+- [Research Report](.claude/specs/035_semantics_temporal_order_generalization/reports/001-semantics-temporal-order-generalization-research.md)
+- [Implementation Plan](.claude/specs/035_semantics_temporal_order_generalization/plans/001-semantics-temporal-order-generalization-plan.md)
+
+**Notes**: This is an architectural improvement for paper alignment and increased expressivity. Not required for Layer 0 MVP completion, but provides foundation for advanced temporal models (continuous time physics, bounded games, rational-time economics). Generalization matches paper's formal specification exactly via Mathlib's `LinearOrderedAddCommGroup` typeclass.
+
+---
 
 ### 9. Begin Completeness Proofs
 **Effort**: 70-90 hours
@@ -698,14 +816,15 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 | 2025-12-03 | **Task 12: Tactic Test Suite** | 31 tests created in TacticsTest.lean (174 lines). Tests build successfully. Target: 50+ tests. |
 | 2025-12-03 | **Task 8: WorldHistory** | COMPLETE: Removed sorry at line 119. Added universal_trivialFrame, universal_natFrame constructors. Refactored universal to require reflexivity proof. Zero sorry in WorldHistory.lean. |
 | 2025-12-03 | **Task 12: Test Expansion** | COMPLETE: Expanded TacticsTest.lean from 31 to 50 tests. Added tm_auto coverage (4 tests), negative tests (8 tests), context tests (4 tests), edge cases (3 tests). |
+| 2025-12-04 | **Task 15: Temporal Generalization** | COMPLETE: Generalized temporal domain from `Int` to `LinearOrderedAddCommGroup`. TaskFrame, WorldHistory, Truth, Validity all updated. Tests updated with explicit Int types. Archive/TemporalStructures.lean created with polymorphic examples. JPL paper alignment achieved. |
 
 ### Status Summary
 
 **Layer 0 Completion Progress**:
 - High Priority: 5/5 tasks complete (100%) ✓
-- Medium Priority: 5/5 tasks complete (100%) ✓ (including partial completions)
-- Low Priority: 0/4 tasks complete (0%)
-- **Overall**: 10/14 tasks complete or partial (71%)
+- Medium Priority: 5/6 tasks complete (83%) (Task 14 pending)
+- Low Priority: 1/5 tasks complete (20%) (Task 15 complete)
+- **Overall**: 11/16 tasks complete or partial (69%)
 
 **Implementation Plan Progress** ([Plan Link](.claude/specs/019_research_todo_implementation_plan/plans/001-research-todo-implementation-plan.md)):
 - Wave 1 (Phase 1): COMPLETE - High priority foundations
@@ -735,7 +854,7 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 - **Total for full completion**: 15-25 hours
 
 **Estimated Effort to Full Completion (including Low Priority)**:
-- Low Priority Tasks: 135-200 hours (Completeness 70-90h, Decidability 40-60h, Layer Planning 20-40h)
+- Low Priority Tasks: 135-200 hours (Completeness 70-90h, Decidability 40-60h, ~~Temporal Generalization 30-45h~~ DONE, Layer Planning 20-40h, Proof Strategies 5-10h)
 - **Grand Total**: 150-225 hours
 
 ---
@@ -770,4 +889,4 @@ When adding new tasks:
 - Dependencies are explicitly tracked; always check Dependency Graph before starting a task
 - CI technical debt should be resolved early to ensure reliable test feedback
 
-**Last Updated**: 2025-12-03 (Tasks 8 and 12 COMPLETE - WorldHistory sorry removed, 50 tests in TacticsTest.lean)
+**Last Updated**: 2025-12-04 (Task 15 added - Temporal order generalization to LinearOrderedAddCommGroup)

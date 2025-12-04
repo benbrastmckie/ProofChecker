@@ -24,6 +24,54 @@ YOU ARE EXECUTING a Lean 4 theorem proving workflow that uses the lean-coordinat
 **Expected Input**: Lean file path or plan file
 **Expected Output**: Completed proofs with summaries
 
+## Lean File Metadata Format
+
+When using plan-based mode, the /lean-build command uses a **2-tier discovery** mechanism to locate Lean files:
+
+### Tier 1: Phase-Specific Metadata (Preferred)
+
+Specify the Lean file immediately after the phase heading:
+
+```markdown
+### Phase 1: Prove Theorems [NOT STARTED]
+lean_file: /absolute/path/to/file.lean
+
+**Tasks**:
+- [ ] Prove theorem_add
+```
+
+**Best Practice**: Use this format for all /lean-plan generated plans. Each phase can target a different Lean file.
+
+### Tier 2: Global Metadata (Fallback)
+
+Specify the Lean file in the metadata section using markdown list format:
+
+```markdown
+## Metadata
+- **Date**: 2025-12-03
+- **Feature**: Modal Logic Proofs
+- **Lean File**: /absolute/path/to/file.lean
+```
+
+**Format Requirements**:
+- Must use markdown list format: `- **Lean File**: /path`
+- Must include hyphen prefix and space
+- Asterisks mark bold text in markdown
+
+### Discovery Priority
+
+1. **Tier 1 attempted first**: Searches for `lean_file:` after phase heading
+2. **Tier 2 fallback**: Searches for `- **Lean File**:` in metadata section
+3. **Error if both fail**: Clear error message with format examples
+
+### Troubleshooting
+
+If metadata extraction fails:
+- Verify Tier 1 format: `lean_file:` immediately after phase heading (no blank lines)
+- Verify Tier 2 format: Markdown list with hyphen prefix `- **Lean File**:`
+- Use absolute paths (relative paths may fail)
+- Check for typos in `lean_file:` or `**Lean File**` keywords
+
 ## Block 1a: Setup & State Initialization
 
 **EXECUTE NOW**: The user invoked `/lean-build [lean-file | plan-file] [--prove-all | --verify] [--max-attempts=N] [--max-iterations=N]`. This block captures arguments, validates Lean project, initializes workflow state, and prepares for coordinator/implementer invocation.
@@ -171,14 +219,21 @@ if [[ "$INPUT_FILE" == *.md ]]; then
   #   ### Phase N: Name [STATUS]
   #   lean_file: path/to/file.lean
   #   lean_file: file1.lean, file2.lean, file3.lean  (comma-separated for multiple files)
-  LEAN_FILE_RAW=$(awk -v phase="$STARTING_PHASE" '
-    /^### Phase '"$STARTING_PHASE"':/ { in_phase=1; next }
+  LEAN_FILE_RAW=$(awk -v target="$STARTING_PHASE" '
+    BEGIN { in_phase=0 }
+    /^### Phase / {
+      if (index($0, "Phase " target ":") > 0) {
+        in_phase = 1
+      } else {
+        in_phase = 0
+      }
+      next
+    }
     in_phase && /^lean_file:/ {
-      sub(/^lean_file:[[:space:]]*/, "");
-      print;
+      sub(/^lean_file:[[:space:]]*/, "")
+      print
       exit
     }
-    /^### Phase [0-9]+:/ && !/^### Phase '"$STARTING_PHASE"':/ { in_phase=0 }
   ' "$PLAN_FILE")
 
   if [ -n "$LEAN_FILE_RAW" ]; then
@@ -188,11 +243,15 @@ if [[ "$INPUT_FILE" == *.md ]]; then
 
   # Tier 2: Fallback to global metadata
   if [ -z "$LEAN_FILE_RAW" ]; then
-    LEAN_FILE_RAW=$(grep -E "^\*\*Lean File\*\*:" "$PLAN_FILE" | sed 's/^\*\*Lean File\*\*:[[:space:]]*//' | head -1)
+    echo "Phase metadata not found, trying global metadata..."
+    LEAN_FILE_RAW=$(grep '^- \*\*Lean File\*\*:' "$PLAN_FILE" | sed 's/^- \*\*Lean File\*\*:[[:space:]]*//' | head -1)
 
     if [ -n "$LEAN_FILE_RAW" ]; then
       DISCOVERY_METHOD="global_metadata"
       echo "Lean file(s) discovered via global metadata: $LEAN_FILE_RAW"
+    else
+      echo "WARNING: Global metadata extraction failed (check markdown format)" >&2
+      echo "  Expected format: '- **Lean File**: /path/to/file.lean'" >&2
     fi
   fi
 
@@ -401,6 +460,14 @@ Task {
 
     For file-based mode: Coordinator should auto-generate single-phase wave structure
     For plan-based mode: Coordinator analyzes dependencies and builds wave structure
+
+    Progress Tracking Instructions (plan-based mode only):
+    - Source checkbox utilities: source ${CLAUDE_PROJECT_DIR}/.claude/lib/plan/checkbox-utils.sh
+    - Before proving each theorem phase: add_in_progress_marker '${PLAN_FILE}' <phase_num>
+    - After completing each theorem proof: mark_phase_complete '${PLAN_FILE}' <phase_num> && add_complete_marker '${PLAN_FILE}' <phase_num>
+    - This creates visible progress: [NOT STARTED] -> [IN PROGRESS] -> [COMPLETE]
+    - Note: Progress tracking gracefully degrades if unavailable (non-fatal)
+    - File-based mode: Skip progress tracking (phase_num = 0)
 
     **CRITICAL**: You MUST create a proof summary in ${SUMMARIES_DIR}/
     The orchestrator will validate the summary exists after you return.

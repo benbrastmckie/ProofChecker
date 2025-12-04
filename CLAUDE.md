@@ -8,15 +8,16 @@ logic TM (Tense and Modality) with task semantics. It provides:
 - **Bimodal Logic TM**: Combining S5 modal logic (metaphysical necessity/possibility) with linear temporal logic (past/future operators)
 - **Task Semantics**: Possible worlds as functions from times to world states constrained by task relations
 - **Layered Architecture**: Layer 0 (Core TM) MVP complete with planned extensions for counterfactual, epistemic, and normative operators
-- **Partial Metalogic**: Core soundness cases proven (5/8 axioms, 4/7 rules), completeness infrastructure defined
-- **Perpetuity Principles**: P1-P3 proven, P4-P6 partial implementation
+- **Complete Soundness**: All 8 axioms and 7 inference rules proven sound
+- **Perpetuity Principles**: All 6 principles (P1-P6) available
 
 ## Implementation Status
 
-**MVP Completion**: Layer 0 (Core TM) MVP complete with partial metalogic
+**MVP Completion**: Layer 0 (Core TM) MVP complete with full soundness
 
 **For detailed status**: See [Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
 **For limitations**: See [Documentation/ProjectInfo/KNOWN_LIMITATIONS.md](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
+**For task tracking**: See [TODO.md](TODO.md)
 
 ## 2. Essential Commands
 
@@ -116,11 +117,14 @@ ProofChecker/
 - [Quality Metrics](Documentation/Development/QUALITY_METRICS.md) - Coverage, lint, performance targets
 - [Directory README Standard](Documentation/Development/DIRECTORY_README_STANDARD.md) - Directory-level documentation standard
 
-### User Documentation (Documentation/UserGuide/ and Documentation/ProjectInfo/)
-- [Logos Philosophy](Documentation/UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations and layer architecture
-- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
+### Project Status (Keep Updated)
+- [TODO.md](TODO.md) - **Task tracking and progress** (central task management)
 - [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Module-by-module status tracking
-- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps, explanations, and workarounds
+- [Known Limitations](Documentation/ProjectInfo/KNOWN_LIMITATIONS.md) - Gaps and workarounds
+
+### User Documentation (Documentation/UserGuide/ and Documentation/ProjectInfo/)
+- [Logos Methodology](Documentation/UserGuide/METHODOLOGY.md) - Philosophical foundations and layer architecture
+- [Architecture Guide](Documentation/UserGuide/ARCHITECTURE.md) - System design and TM logic specification
 - [Logical Operators Glossary](Documentation/Reference/OPERATORS.md) - Formal symbols reference
 - [Terminology Glossary](Documentation/Reference/GLOSSARY.md) - Key concepts and definitions
 - [Tutorial](Documentation/UserGuide/TUTORIAL.md) - Getting started with ProofChecker

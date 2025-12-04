@@ -8,7 +8,7 @@ Documentation is organized into five categories:
 
 ### UserGuide/
 User-facing documentation for working with ProofChecker:
-- **LOGOS_PHILOSOPHY.md**: Philosophical foundations and Logos layer architecture
+- **METHODOLOGY.md**: Philosophical foundations and Logos layer architecture
 - **ARCHITECTURE.md**: System design and TM logic specification
 - **TUTORIAL.md**: Getting started guide for new users
 - **EXAMPLES.md**: Usage examples and proof patterns
@@ -83,7 +83,7 @@ Reference materials:
 - [Terminology Glossary](Reference/GLOSSARY.md) - Key concepts and definitions
 
 ### For Researchers
-- [Logos Philosophy](UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [Logos Methodology](UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [Research Overview](Research/README.md) - Research documentation index
 - [Dual Verification](Research/DUAL_VERIFICATION.md) - RL training architecture
 - [Layer Extensions](Research/LAYER_EXTENSIONS.md) - Layers 1-3 specifications

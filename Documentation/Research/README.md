@@ -44,7 +44,7 @@ Specifications for Layers 1-3 operator extensions building on Core Layer (Layer 
 ## Related Documentation
 
 ### User Documentation
-- [LOGOS_PHILOSOPHY.md](../UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations and layer overview
+- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations and layer overview
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Layer 0 (Core TM) technical specification
 - [TUTORIAL.md](../UserGuide/TUTORIAL.md) - Getting started guide
 - [EXAMPLES.md](../UserGuide/EXAMPLES.md) - Usage examples

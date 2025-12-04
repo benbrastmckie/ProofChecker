@@ -443,7 +443,7 @@ For Layer 0 completion and planning for Layers 1-3, see [IMPLEMENTATION_STATUS.m
 
 ## Related Documentation
 
-- [LOGOS_PHILOSOPHY.md](../UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations and layer overview
+- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations and layer overview
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Layer 0 (Core TM) technical specification
 - [DUAL_VERIFICATION.md](DUAL_VERIFICATION.md) - RL training architecture
 - [PROOF_LIBRARY_DESIGN.md](PROOF_LIBRARY_DESIGN.md) - Theorem caching design

@@ -2,6 +2,7 @@
 import Archive.ModalProofs
 import Archive.TemporalProofs
 import Archive.BimodalProofs
+import Archive.TemporalStructures
 
 /-!
 # ProofChecker Archive
@@ -38,6 +39,13 @@ are intended for:
   - Perpetuity principles (P1-P6)
   - Modal-temporal interactions
   - Task semantics applications
+
+### Temporal Structures Examples
+- **TemporalStructures.lean**: Polymorphic temporal type examples
+  - Integer time frames (discrete temporal logic)
+  - Rational time frames (dense temporal reasoning)
+  - Real time frames (continuous time modeling)
+  - Demonstrates polymorphic `TaskFrame T` and `WorldHistory F`
 
 ## Usage
 

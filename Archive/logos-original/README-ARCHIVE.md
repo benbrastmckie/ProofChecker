@@ -8,7 +8,7 @@ The Logos documentation has been integrated into `/Documentation/` as follows:
 
 ### Philosophical Foundations
 - Original: `Logos/README.md` (partial content)
-- Integrated to: `/Documentation/UserGuide/LOGOS_PHILOSOPHY.md`
+- Integrated to: `/Documentation/UserGuide/METHODOLOGY.md`
 - Purpose: High-level philosophical overview and layer architecture
 
 ### Research Vision Documents
@@ -35,7 +35,7 @@ Original status claims in Logos documents have been replaced with links to IMPLE
 
 For current documentation, see:
 
-- [LOGOS_PHILOSOPHY.md](../../Documentation/UserGuide/LOGOS_PHILOSOPHY.md) - Philosophical foundations
+- [METHODOLOGY.md](../../Documentation/UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [Research/](../../Documentation/Research/) - Research vision documents
 - [IMPLEMENTATION_STATUS.md](../../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Implementation progress
 
