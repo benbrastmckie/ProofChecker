@@ -84,61 +84,6 @@ This file serves as the central task tracking system for ProofChecker developmen
 
 ---
 
-### 8. Fix WorldHistory Universal Helper
-**Effort**: 1-2 hours
-**Status**: DOCUMENTED AS LIMITATION (2025-12-03, Phase 3)
-**Priority**: Medium (completeness, minor gap)
-
-**Description**: Prove `respects_task` property for universal history helper function.
-
-**Files**:
-- `ProofChecker/Semantics/WorldHistory.lean` (line 75 - `sorry` in universal helper)
-
-**Action Items**:
-1. Analyze universal history helper requirements
-2. Prove `respects_task` property for specific frames
-3. Remove `sorry` at line 75
-4. Add test case for universal history in `ProofCheckerTest/Semantics/WorldHistoryTest.lean`
-5. Update IMPLEMENTATION_STATUS.md Semantics status (note: 1 `sorry` → 0 `sorry`)
-
-**Blocking**: None (helper function, doesn't block main semantics)
-
-**Dependencies**: None
-
----
-
-### 12. Create Comprehensive Tactic Test Suite ✓ PARTIAL COMPLETE
-**Effort**: 10-15 hours
-**Status**: PARTIAL COMPLETE (2025-12-03) - 31/50+ tests implemented
-**Priority**: Medium (concurrent with Task 7, follows TDD approach)
-
-**Description**: Develop comprehensive test suite for automation package following test
-patterns from LEAN 4 best practices. Includes unit tests for individual tactics,
-integration tests for tactic combinations, and property-based tests for correctness.
-
-**Files**:
-- `ProofCheckerTest/Automation/TacticsTest.lean` (174 lines, 31 tests) ✓ CREATED
-- `ProofCheckerTest/Automation/ProofSearchTest.lean` (to be created - future work)
-
-**Completed Actions** (2025-12-03):
-1. ✓ Created `TacticsTest.lean` with test structure following LEAN 4 test patterns
-2. ✓ Written 10 tests for direct axiom application (all 10 TM axioms)
-3. ✓ Written 8 tests for `apply_axiom` and `modal_t` tactics
-4. ✓ Written 6 tests for `tm_auto` tactic
-5. ✓ Written 5 tests for `assumption_search` tactic
-6. ✓ Written 8 tests for helper functions
-7. ✓ Tests build successfully
-
-**Remaining Work** (future enhancement):
-- Expand to 50+ tests (19 more tests needed)
-- Add negative tests for error handling
-- Add performance benchmarks
-- Create ProofSearchTest.lean when proof search module is implemented
-
-**Reference**: [Implementation Summary](.claude/specs/025_soundness_automation_implementation/summaries/004_iteration_3_final_summary.md)
-
----
-
 ## Low Priority Tasks
 
 ### 9. Begin Completeness Proofs
@@ -305,13 +250,13 @@ Can be deferred until after core implementation is stable.
 
 This section lists all 41 `sorry` placeholders in the codebase that require resolution. Each entry includes the file, line number, context, and recommended resolution approach.
 
-### ProofChecker/Semantics/WorldHistory.lean (1 sorry)
+### ProofChecker/Semantics/WorldHistory.lean ✓ COMPLETE (0 sorry)
 
-- **WorldHistory.lean:75** - `universal` helper function
+- **WorldHistory.lean:119** - `universal` helper function ✓ RESOLVED (2025-12-03)
   - **Context**: Universal history that maps all times to the same world state
-  - **Resolution**: Prove `respects_task` property for universal history
-  - **Effort**: 1-2 hours
-  - **See**: Task 8 (Fix WorldHistory Universal Helper)
+  - **Resolution**: Refactored to require explicit reflexivity proof parameter
+  - **Added**: `universal_trivialFrame`, `universal_natFrame` for reflexive frames
+  - **See**: Task 8 (COMPLETE)
 
 ### ProofChecker/Theorems/Perpetuity.lean (14 sorry)
 
@@ -724,8 +669,8 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 - [x] **Task 5b**: Temporal Duality Soundness - DOCUMENTED AS LIMITATION (2025-12-03)
 - [x] **Task 6**: Complete Perpetuity Proofs - COMPLETE (2025-12-02, Phase 2)
 - [x] **Task 7**: Implement Core Automation - PARTIAL COMPLETE (2025-12-03, 4/12 tactics)
-- [x] **Task 8**: WorldHistory Universal Helper - DOCUMENTED AS LIMITATION (2025-12-03, Phase 3)
-- [x] **Task 12**: Create Tactic Test Suite - PARTIAL COMPLETE (2025-12-03, 31/50+ tests)
+- [x] **Task 8**: WorldHistory Universal Helper - COMPLETE (2025-12-03, zero sorry)
+- [x] **Task 12**: Create Tactic Test Suite - COMPLETE (2025-12-03, 50 tests)
 
 **Low Priority**:
 - [ ] None yet
@@ -733,7 +678,6 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 ### In Progress
 
 - **Task 7**: Remaining automation work (Aesop integration blocked, 8 tactics remaining)
-- **Task 12**: Test suite expansion (19 more tests to reach 50+)
 
 ### Completion Log
 
@@ -752,6 +696,8 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 | 2025-12-03 | **Task 5b: Temporal Duality** | **COMPLETE**: Derivation-indexed approach (Approach D). `axiom_swap_valid` + `derivable_implies_swap_valid` in Truth.lean. Zero sorry in Soundness.lean. |
 | 2025-12-03 | **Task 7: Core Automation** | 4/12 tactics implemented: apply_axiom, modal_t, tm_auto (native), assumption_search. Aesop integration blocked by Batteries/Truth.lean conflict. |
 | 2025-12-03 | **Task 12: Tactic Test Suite** | 31 tests created in TacticsTest.lean (174 lines). Tests build successfully. Target: 50+ tests. |
+| 2025-12-03 | **Task 8: WorldHistory** | COMPLETE: Removed sorry at line 119. Added universal_trivialFrame, universal_natFrame constructors. Refactored universal to require reflexivity proof. Zero sorry in WorldHistory.lean. |
+| 2025-12-03 | **Task 12: Test Expansion** | COMPLETE: Expanded TacticsTest.lean from 31 to 50 tests. Added tm_auto coverage (4 tests), negative tests (8 tests), context tests (4 tests), edge cases (3 tests). |
 
 ### Status Summary
 
@@ -774,8 +720,8 @@ This section tracks task completion with date stamps. Mark tasks complete here w
 
 **Sorry Placeholder Resolution**:
 - Total: 41 placeholders identified (original count)
-- Resolved: 39 (Truth.lean complete, all axiom proofs done, Perpetuity proofs done, Soundness rules done, Tactics implemented)
-- Remaining: 2 (1 Soundness temporal_duality - documented limitation, 1 Tactics tm_auto_stub - native alternative exists)
+- Resolved: 40 (Truth.lean complete, all axiom proofs done, Perpetuity proofs done, Soundness rules done, Tactics implemented, WorldHistory universal fixed)
+- Remaining: 1 (1 Tactics tm_auto_stub - native alternative exists)
 
 **Missing Files**:
 - Total: 3 files identified
@@ -824,4 +770,4 @@ When adding new tasks:
 - Dependencies are explicitly tracked; always check Dependency Graph before starting a task
 - CI technical debt should be resolved early to ensure reliable test feedback
 
-**Last Updated**: 2025-12-03 (Soundness & Automation Implementation Plan COMPLETE - Tasks 5, 5b, 7, 12 done)
+**Last Updated**: 2025-12-03 (Tasks 8 and 12 COMPLETE - WorldHistory sorry removed, 50 tests in TacticsTest.lean)
