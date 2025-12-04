@@ -28,7 +28,7 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 - [/lean-plan](#lean-plan)
 - [/list](#list)
 - [/optimize-claude](#optimize-claude)
-- [/plan](#plan)
+- [/create-plan](#create-plan)
 - [/plan-from-template](#plan-from-template)
 - [/plan-wizard](#plan-wizard)
 - [/refactor](#refactor)
@@ -346,14 +346,27 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 
 ---
 
-### /plan
-**Status**: ARCHIVED - Use `/plan` instead
+### /create-plan
+**Purpose**: Research and create new implementation plan workflow
 
-**Purpose**: Create detailed implementation plans following project standards
+**Usage**: `/create-plan <feature-description> [--file <path>] [--complexity 1-4]`
 
-**Migration**: This command has been archived. Use `/plan` for planning workflows that include research.
+**Type**: orchestrator
 
-**Archive Location**: `.claude/archive/legacy-workflow-commands/commands/plan.md`
+**Arguments**:
+- `feature-description` (required): Feature to research and plan
+- `--file` (optional): Path to file containing long prompt (archived to specs/NNN_topic/prompts/)
+- `--complexity` (optional): Research depth 1-4 (default: 3)
+
+**Agents Used**: research-specialist, research-sub-supervisor, plan-architect
+
+**Output**: Research reports + implementation plan
+
+**Workflow**: `research → plan → complete`
+
+**Automatically updates TODO.md**: Yes (after new plan creation)
+
+**See**: [create-plan.md](../../commands/create-plan.md)
 
 ---
 
@@ -706,7 +719,7 @@ See [Command Architecture Standards](../architecture/overview.md) for complete s
 Core development workflow drivers:
 - **/implement** - Execute implementation plans phase by phase
 - **/debug** - Debug-focused workflow for root cause analysis
-- **/plan** - Research and create implementation plans
+- **/create-plan** - Research and create implementation plans
 - **/research** - Research-only workflow for reports
 - **/revise** - Research and revise existing plans
 - **/test** - Execute test suite with coverage loop
@@ -714,10 +727,10 @@ Core development workflow drivers:
 ### Archived Commands
 Legacy commands that have been superseded:
 - **/build** - ARCHIVED (use /implement + /test)
-- **/coordinate** - ARCHIVED (use /implement, /plan, /research, /debug, or /revise)
+- **/coordinate** - ARCHIVED (use /implement, /create-plan, /research, /debug, or /revise)
 - **/debug** - ARCHIVED (use /debug)
-- **/plan** - ARCHIVED (use /plan)
-- **/research** - ARCHIVED (use /research or /plan)
+- **/plan** - ARCHIVED (use /create-plan)
+- **/research** - ARCHIVED (use /research or /create-plan)
 - **/revise** - ARCHIVED (use /revise)
 
 ### Support Commands
@@ -749,14 +762,14 @@ Maintenance and setup commands:
 
 ### research-specialist
 Research and codebase analysis:
-- **/plan** (research phase)
+- **/create-plan** (research phase)
 - **/research** (research phase)
 - **/plan-wizard** (optional research phase)
 - **/report**
 
 ### plan-architect
 Structured implementation planning:
-- **/plan** (planning phase)
+- **/create-plan** (planning phase)
 - **/revise** (complex plan changes)
 - **/debug** (debug strategy planning)
 
