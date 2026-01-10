@@ -100,7 +100,7 @@
 
 \makeatletter
 \def\pset#1{\gdef\@pset{#1}} % Define \pset command
-% \def\@pset{\@latex@error{No \noexpand\pset given}\@ehc} % Error if \pset not set
+\def\@pset{} % Default to empty if not set
 
 \raggedbottom    % Put gaps at bottom of pages with insufficient content
 
