@@ -22,10 +22,6 @@
 % Document structure
 \usepackage{subfiles}
 
-% References
-\usepackage{hyperref}
-\usepackage{cleveref}
-
 % Tables
 \usepackage{booktabs}
 \usepackage{array}
@@ -39,6 +35,9 @@
 % Custom packages
 \usepackage{assets/logos-notation}
 \usepackage{assets/formatting}
+
+% References (cleveref must be loaded after hyperref, which formatting.sty loads)
+\usepackage{cleveref}
 
 % ============================================================================
 % Theorem Environments
@@ -106,13 +105,13 @@ through increasingly expressive extensions.
 \subfile{subfiles/04-CoreExtension-Axioms}
 
 % ============================================================================
-% Future Extensions (uncomment when developed)
+% Future Extensions (stub content)
 % ============================================================================
 
-% \subfile{subfiles/05-Epistemic}
-% \subfile{subfiles/06-Normative}
-% \subfile{subfiles/07-Spatial}
-% \subfile{subfiles/08-Agential}
+\subfile{subfiles/05-Epistemic}
+\subfile{subfiles/06-Normative}
+\subfile{subfiles/07-Spatial}
+\subfile{subfiles/08-Agential}
 
 % ============================================================================
 % Back Matter
