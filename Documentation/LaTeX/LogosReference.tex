@@ -77,8 +77,10 @@
 \begin{document}
 
 \maketitle
+\thispagestyle{empty}
 
 \begin{abstract}
+\noindent
 This reference manual provides the formal specification of the Logos logic system.
 Logos is a hyperintensional modal-temporal logic with exact truthmaker semantics,
 designed for reasoning about necessity, possibility, time, and counterfactual
@@ -86,8 +88,11 @@ conditionals. The semantics extends from a mereological state space foundation
 through increasingly expressive extensions.
 \end{abstract}
 
+{
+\pagestyle{empty}
 \tableofcontents
-\newpage
+\cleardoublepage
+}
 
 % ============================================================================
 % Foundation Layer
