@@ -14,7 +14,7 @@
 \subsection{Core Frame}\label{sec:core-frame}
 
 \begin{definition}[Core Frame]\label{def:core-frame}
-A \emph{core frame} is a structure $\frame = \langle \statespace, \parthood, \temporalorder, \taskrel \rangle$ where:
+A \emph{core frame} is a structure $\mframe = \langle \statespace, \parthood, \temporalorder, \taskrel \rangle$ where:
 \begin{itemize}
   \item $\langle \statespace, \parthood \rangle$ is a constitutive frame
   \item $\temporalorder = \langle D, +, \leq \rangle$ is a totally ordered abelian group
@@ -33,7 +33,7 @@ We write $\task{s}{d}{t}$ to denote that $(s, d, t) \in \taskrel$, read ``there 
 \subsection{State Modality Definitions}\label{sec:state-modality}
 
 \begin{definition}[State Modality]\label{def:state-modality}
-Let $\frame = \langle \statespace, \parthood, \temporalorder, \taskrel \rangle$ be a core frame.
+Let $\mframe = \langle \statespace, \parthood, \temporalorder, \taskrel \rangle$ be a core frame.
 \begin{align}
 s \in \possible &\iff \task{s}{0}{s} && \text{(Possible state)} \\
 s \notin \possible &\iff \neg(\task{s}{0}{s}) && \text{(Impossible state)} \\
@@ -87,7 +87,7 @@ See \leansrc{Logos.Core.Frame}{CoreFrame} for the Lean implementation.
 \subsection{World-History}\label{sec:world-history}
 
 \begin{definition}[World-History]\label{def:world-history}
-A \emph{world-history} over a core frame $\frame$ is a function $\history : X \to \worldstates$ where:
+A \emph{world-history} over a core frame $\mframe$ is a function $\history : X \to \worldstates$ where:
 \begin{itemize}
   \item $X \subseteq D$ is a convex subset of the temporal order
   \item $\task{\history(x)}{y-x}{\history(y)}$ for all times $x, y \in X$ where $x \leq y$
@@ -95,7 +95,7 @@ A \emph{world-history} over a core frame $\frame$ is a function $\history : X \t
 \end{definition}
 
 \begin{notation}
-The set of all world-histories over $\frame$ is denoted $\historyspace$.
+The set of all world-histories over $\mframe$ is denoted $\historyspace$.
 \end{notation}
 
 \begin{remark}
