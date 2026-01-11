@@ -25,7 +25,7 @@ The spatial frame extends the core frame with:
 **Status**: Planned for future development
 **Prerequisites**: Explanatory Extension (Core) completion
 
-See: Documentation/Research/layer-extensions.md Section 5
+See: docs/Research/layer-extensions.md Section 5
 -/
 
 namespace Logos.SubTheories.Spatial

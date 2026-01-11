@@ -41,6 +41,6 @@ variable (s : F.State)
 
 ## References
 
-- Logos/Documentation/Research/recursive-semantics.md - Full specification
-- Logos/Documentation/Research/layer-extensions.md - Extension architecture
+- Logos/docs/Research/recursive-semantics.md - Full specification
+- Logos/docs/Research/layer-extensions.md - Extension architecture
 -/

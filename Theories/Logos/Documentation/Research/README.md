@@ -2,7 +2,7 @@
 
 Research and design documents for the Logos second-order hyperintensional logic.
 
-> **Parent**: [Logos/Documentation/](../README.md) | **Project Research**: [Documentation/Research/](../../../Documentation/Research/)
+> **Parent**: [Logos/docs/](../README.md) | **Project Research**: [docs/Research/](../../../docs/Research/)
 
 ## Documents
 
@@ -35,12 +35,12 @@ relationship between natural language and formal systems.
 
 ## Related Documentation
 
-- [theory-comparison.md](../../../Documentation/Research/theory-comparison.md) - Comparison with Bimodal
+- [theory-comparison.md](../../../docs/Research/theory-comparison.md) - Comparison with Bimodal
 - [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Logos methodology and layer architecture
 - [GLOSSARY.md](../Reference/GLOSSARY.md) - Logos terminology
 - [EXTENSION_STUBS.md](../Reference/EXTENSION_STUBS.md) - Planned extension modules
 
 ## Navigation
 
-- **Up**: [Logos/Documentation/](../README.md)
-- **Project Research**: [Documentation/Research/](../../../Documentation/Research/)
+- **Up**: [Logos/docs/](../README.md)
+- **Project Research**: [docs/Research/](../../../docs/Research/)

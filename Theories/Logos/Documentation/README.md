@@ -3,7 +3,7 @@
 Theory-specific documentation hub for the Logos second-order hyperintensional logic.
 
 > **Note**: For project-wide documentation applicable to all theories, see
-> [Documentation/](../../Documentation/README.md).
+> [docs/](../../docs/README.md).
 
 ## About Logos Logic
 
@@ -17,10 +17,10 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 | **Logical level** | Second-order with first and second-order variables |
 
 **Current Implementation**: Logos currently re-exports Bimodal's propositional intensional
-logic. For working functionality, see [Bimodal/Documentation/](../../Bimodal/Documentation/).
+logic. For working functionality, see [Bimodal/docs/](../../Bimodal/docs/).
 
 For comparison with Bimodal propositional logic, see
-[theory-comparison.md](../../Documentation/Research/theory-comparison.md).
+[theory-comparison.md](../../docs/Research/theory-comparison.md).
 
 ## Documentation Organization
 
@@ -94,16 +94,16 @@ Most-referenced documents:
 - [ROADMAP](ProjectInfo/ROADMAP.md) - Development roadmap
 
 **Redirects to Bimodal** (re-exported functionality):
-- [QUICKSTART](UserGuide/QUICKSTART.md) → Bimodal/Documentation/UserGuide/QUICKSTART.md
+- [QUICKSTART](UserGuide/QUICKSTART.md) → Bimodal/docs/UserGuide/QUICKSTART.md
 - [AXIOM_REFERENCE](Reference/AXIOM_REFERENCE.md) → Bimodal axioms
 
-**Project-Wide** (in [Documentation/](../../Documentation/)):
-- [STYLE_GUIDE](../../Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding style
-- [TESTING](../../Documentation/Development/TESTING_STANDARDS.md) - Test standards
+**Project-Wide** (in [docs/](../../docs/)):
+- [STYLE_GUIDE](../../docs/Development/LEAN_STYLE_GUIDE.md) - Coding style
+- [TESTING](../../docs/Development/TESTING_STANDARDS.md) - Test standards
 
 ## Navigation
 
 - **Up**: [Logos/](../)
-- **Project Documentation**: [Documentation/](../../Documentation/)
-- **Bimodal Documentation**: [Bimodal/Documentation/](../../Bimodal/Documentation/)
-- **Theory Comparison**: [theory-comparison.md](../../Documentation/Research/theory-comparison.md)
+- **Project Documentation**: [docs/](../../docs/)
+- **Bimodal Documentation**: [Bimodal/docs/](../../Bimodal/docs/)
+- **Theory Comparison**: [theory-comparison.md](../../docs/Research/theory-comparison.md)

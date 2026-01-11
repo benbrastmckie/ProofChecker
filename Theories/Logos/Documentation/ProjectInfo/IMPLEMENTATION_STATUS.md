@@ -25,7 +25,7 @@ All core Logos modules re-export their Bimodal equivalents:
 | Logos.Automation | Bimodal.Automation | Re-export |
 
 For detailed status of these modules, see:
-**→ [Bimodal Implementation Status](../../../Bimodal/Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)**
+**→ [Bimodal Implementation Status](../../../Bimodal/docs/ProjectInfo/IMPLEMENTATION_STATUS.md)**
 
 ## Extension Modules (Stubs)
 
@@ -101,6 +101,6 @@ lake env lean -c "import Logos; #check Formula"
 
 ## Related
 
-- [Bimodal Status](../../../Bimodal/Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md)
+- [Bimodal Status](../../../Bimodal/docs/ProjectInfo/IMPLEMENTATION_STATUS.md)
 - [Known Limitations](KNOWN_LIMITATIONS.md)
 - [Roadmap](ROADMAP.md)

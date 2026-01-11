@@ -6,7 +6,7 @@ Axiom reference for Logos logic.
 
 Logos currently **re-exports Bimodal axioms**. For the complete axiom reference, see:
 
-**→ [Bimodal Axiom Reference](../../../Bimodal/Documentation/Reference/AXIOM_REFERENCE.md)**
+**→ [Bimodal Axiom Reference](../../../Bimodal/docs/Reference/AXIOM_REFERENCE.md)**
 
 ## Axiom Summary
 
@@ -58,6 +58,6 @@ For details on planned extensions, see [EXTENSION_STUBS.md](EXTENSION_STUBS.md).
 
 ## See Also
 
-- [Bimodal Axiom Reference](../../../Bimodal/Documentation/Reference/AXIOM_REFERENCE.md)
+- [Bimodal Axiom Reference](../../../Bimodal/docs/Reference/AXIOM_REFERENCE.md)
 - [Extension Stubs](EXTENSION_STUBS.md) - Planned extension modules
-- [Theory Comparison](../../../Documentation/Research/theory-comparison.md)
+- [Theory Comparison](../../../docs/Research/theory-comparison.md)

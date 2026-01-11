@@ -14,7 +14,7 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 | **Logical level** | Second-order with first and second-order variables |
 
 For comparison with Bimodal propositional logic, see
-[theory-comparison.md](../Documentation/Research/theory-comparison.md).
+[theory-comparison.md](../docs/Research/theory-comparison.md).
 
 ## Purpose
 
@@ -24,16 +24,16 @@ operators with state-based hyperintensional semantics.
 
 ## Theory-Specific Documentation
 
-For Logos-specific guides and references, see [Documentation/](Documentation/README.md):
+For Logos-specific guides and references, see [docs/](docs/README.md):
 
 | Document | Description |
 |----------|-------------|
-| [Quick Start](Documentation/UserGuide/QUICKSTART.md) | Getting started (redirects to Bimodal) |
-| [Current Status](Documentation/UserGuide/CURRENT_STATUS.md) | Logos development status |
-| [Axiom Reference](Documentation/Reference/AXIOM_REFERENCE.md) | Axioms (via Bimodal) |
-| [Extension Stubs](Documentation/Reference/EXTENSION_STUBS.md) | Planned extensions |
-| [Implementation Status](Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) | Module status |
-| [Roadmap](Documentation/ProjectInfo/ROADMAP.md) | Development roadmap |
+| [Quick Start](docs/UserGuide/QUICKSTART.md) | Getting started (redirects to Bimodal) |
+| [Current Status](docs/UserGuide/CURRENT_STATUS.md) | Logos development status |
+| [Axiom Reference](docs/Reference/AXIOM_REFERENCE.md) | Axioms (via Bimodal) |
+| [Extension Stubs](docs/Reference/EXTENSION_STUBS.md) | Planned extensions |
+| [Implementation Status](docs/ProjectInfo/IMPLEMENTATION_STATUS.md) | Module status |
+| [Roadmap](docs/ProjectInfo/ROADMAP.md) | Development roadmap |
 
 ## Submodules
 
@@ -146,7 +146,7 @@ The Logos module follows a layered architecture:
 - Automation: Tactics stubs only
 - Automation: ProofSearch not started
 
-For detailed status, see [IMPLEMENTATION_STATUS.md](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md).
+For detailed status, see [IMPLEMENTATION_STATUS.md](../docs/ProjectInfo/IMPLEMENTATION_STATUS.md).
 
 ## API Documentation
 
@@ -154,15 +154,15 @@ For detailed API documentation:
 
 - **Module overview**: See [Logos.lean](../Logos.lean) for top-level re-exports
 - **Generated docs**: Run `lake build :docs` to generate doc-gen4 API documentation
-- **Architecture guide**: [ARCHITECTURE.md](../Documentation/UserGuide/ARCHITECTURE.md) for TM logic specification
+- **Architecture guide**: [ARCHITECTURE.md](../docs/UserGuide/ARCHITECTURE.md) for TM logic specification
 - **Code comments**: All public definitions have comprehensive docstrings
 
 ## Development Guidelines
 
 When working on Logos source code:
 
-- **Follow style guide**: [LEAN_STYLE_GUIDE.md](../Documentation/Development/LEAN_STYLE_GUIDE.md)
-- **Write tests first**: [TESTING_STANDARDS.md](../Documentation/Development/TESTING_STANDARDS.md)
+- **Follow style guide**: [LEAN_STYLE_GUIDE.md](../docs/Development/LEAN_STYLE_GUIDE.md)
+- **Write tests first**: [TESTING_STANDARDS.md](../docs/Development/TESTING_STANDARDS.md)
 - **Document thoroughly**: Every public definition requires docstring
 - **Run lint**: Zero `#lint` warnings required
 - **Build successfully**: `lake build` must complete without errors
@@ -199,25 +199,25 @@ When working on Logos source code:
 
 ### Theory-Specific (Logos)
 
-- [Logos Documentation](Documentation/README.md) - Theory-specific documentation hub
-- [Quick Start](Documentation/UserGuide/QUICKSTART.md) - Getting started with Logos
-- [Extension Stubs](Documentation/Reference/EXTENSION_STUBS.md) - Planned extensions
-- [Roadmap](Documentation/ProjectInfo/ROADMAP.md) - Development timeline
+- [Logos Documentation](docs/README.md) - Theory-specific documentation hub
+- [Quick Start](docs/UserGuide/QUICKSTART.md) - Getting started with Logos
+- [Extension Stubs](docs/Reference/EXTENSION_STUBS.md) - Planned extensions
+- [Roadmap](docs/ProjectInfo/ROADMAP.md) - Development timeline
 
 ### Project-Wide
 
-- [Theory Comparison](../Documentation/Research/theory-comparison.md) - Bimodal vs Logos
-- [LEAN Style Guide](../Documentation/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
-- [Module Organization](../Documentation/Development/MODULE_ORGANIZATION.md) - Directory structure
-- [Testing Standards](../Documentation/Development/TESTING_STANDARDS.md) - Test requirements
-- [Architecture Guide](../Documentation/UserGuide/ARCHITECTURE.md) - TM logic specification
-- [Tutorial](../Documentation/UserGuide/TUTORIAL.md) - Getting started
-- [Implementation Status](../Documentation/ProjectInfo/IMPLEMENTATION_STATUS.md) - Project status
+- [Theory Comparison](../docs/Research/theory-comparison.md) - Bimodal vs Logos
+- [LEAN Style Guide](../docs/Development/LEAN_STYLE_GUIDE.md) - Coding conventions
+- [Module Organization](../docs/Development/MODULE_ORGANIZATION.md) - Directory structure
+- [Testing Standards](../docs/Development/TESTING_STANDARDS.md) - Test requirements
+- [Architecture Guide](../docs/UserGuide/ARCHITECTURE.md) - TM logic specification
+- [Tutorial](../docs/UserGuide/TUTORIAL.md) - Getting started
+- [Implementation Status](../docs/ProjectInfo/IMPLEMENTATION_STATUS.md) - Project status
 
 ## Navigation
 
 - **Up**: [Project Root](../)
-- **Theory Docs**: [Documentation/](Documentation/) - Logos-specific documentation
+- **Theory Docs**: [docs/](docs/) - Logos-specific documentation
 - **Tests**: [LogosTest/](../LogosTest/)
-- **Project Docs**: [Documentation/](../Documentation/) - Project-wide documentation
+- **Project Docs**: [docs/](../docs/) - Project-wide documentation
 - **Examples**: [Archive/](../Archive/)

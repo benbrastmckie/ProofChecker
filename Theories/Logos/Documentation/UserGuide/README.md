@@ -3,7 +3,7 @@
 User-facing documentation for working with Logos logic.
 
 > **Note**: Logos currently re-exports Bimodal. For working functionality, see
-> [Bimodal/Documentation/UserGuide/](../../../Bimodal/Documentation/UserGuide/).
+> [Bimodal/docs/UserGuide/](../../../Bimodal/docs/UserGuide/).
 
 ## Documents
 
@@ -19,6 +19,6 @@ User-facing documentation for working with Logos logic.
 
 ## Navigation
 
-- **Up**: [Logos/Documentation/](../)
-- **Bimodal UserGuide**: [Bimodal/Documentation/UserGuide/](../../../Bimodal/Documentation/UserGuide/)
-- **Project UserGuide**: [Documentation/UserGuide/](../../../Documentation/UserGuide/)
+- **Up**: [Logos/docs/](../)
+- **Bimodal UserGuide**: [Bimodal/docs/UserGuide/](../../../Bimodal/docs/UserGuide/)
+- **Project UserGuide**: [docs/UserGuide/](../../../docs/UserGuide/)

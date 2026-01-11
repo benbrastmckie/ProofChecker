@@ -7,7 +7,7 @@ Current limitations of the Logos logic implementation.
 **Logos is not yet implemented.** It currently exists as a re-export layer for Bimodal.
 
 For working functionality, use:
-**→ [Bimodal Documentation](../../../Bimodal/Documentation/)**
+**→ [Bimodal Documentation](../../../Bimodal/docs/)**
 
 ## Limitation Categories
 
@@ -32,7 +32,7 @@ Since Logos re-exports Bimodal, it inherits Bimodal's limitations:
 | ProofSearch issues | Aesop internal errors | Pre-existing |
 | Example sorries | Pedagogical placeholders | Task 367 |
 
-See [Bimodal Known Limitations](../../../Bimodal/Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
+See [Bimodal Known Limitations](../../../Bimodal/docs/ProjectInfo/KNOWN_LIMITATIONS.md)
 for details.
 
 ## When to Use Logos vs Bimodal
@@ -72,4 +72,4 @@ See [Roadmap](ROADMAP.md) for planned development phases:
 
 - [Implementation Status](IMPLEMENTATION_STATUS.md) - Current module status
 - [Roadmap](ROADMAP.md) - Development timeline
-- [Bimodal Limitations](../../../Bimodal/Documentation/ProjectInfo/KNOWN_LIMITATIONS.md)
+- [Bimodal Limitations](../../../Bimodal/docs/ProjectInfo/KNOWN_LIMITATIONS.md)
