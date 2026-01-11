@@ -4,33 +4,34 @@
 %
 % Provides notation for the bimodal logic combining S5 modality and
 % linear temporal operators.
+%
+% Imports shared notation from ProofChecker/LaTeX/notation-standards.sty
 % ============================================================================
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{bimodal-notation}[2026/01/11 Bimodal TM Logic Notation]
 
-% Required packages
-\RequirePackage{amsmath}
-\RequirePackage{amssymb}
-\RequirePackage{mathtools}             % For \coloneqq
+% ============================================================================
+% Import Shared Notation Standards
+% ============================================================================
+
+\RequirePackage{../../../LaTeX/notation-standards}
 
 % ============================================================================
-% Formula Syntax
+% Formula Syntax (Bimodal-specific)
 % ============================================================================
 
 % --- Primitive Operators ---
-\newcommand{\imp}{\to}                     % Implication
-\newcommand{\falsum}{\bot}                 % Falsity
-\newcommand{\nec}{\Box}                    % Necessity (box)
+% \imp, \falsum, \nec provided by notation-standards.sty
 \newcommand{\allpast}{H}                   % Always past (all_past)
 \newcommand{\allfuture}{G}                 % Always future (all_future)
 
 % --- Derived Propositional ---
-\newcommand{\lneg}{\neg}                   % Negation
+% \lneg provided by notation-standards.sty
 % Note: \land and \lor are already defined by amssymb as \wedge and \vee
 
 % --- Derived Modal ---
-\newcommand{\poss}{\Diamond}               % Possibility (diamond)
+% \poss provided by notation-standards.sty
 
 % --- Derived Temporal ---
 \newcommand{\somepast}{P}                  % Sometime past
@@ -39,7 +40,7 @@
 \newcommand{\sometimes}{\triangledown}     % Sometimes (some time)
 
 % ============================================================================
-% Semantics
+% Semantics (Bimodal-specific)
 % ============================================================================
 
 % --- Frame Structure ---
@@ -48,7 +49,7 @@
 \newcommand{\taskrel}{R}
 
 % --- Model Structure ---
-\newcommand{\model}{\mathbf{M}}
+% \model provided by notation-standards.sty
 \newcommand{\valuation}{V}
 
 % --- World History ---
@@ -56,17 +57,15 @@
 \newcommand{\domain}{\mathrm{dom}}
 
 % --- Truth Relation ---
-\newcommand{\satisfies}{\models}
-\newcommand{\notsatisfies}{\not\models}
+% \satisfies, \notsatisfies provided by notation-standards.sty
 \newcommand{\truthat}[4]{#1, #2, #3 \satisfies #4}
 
 % ============================================================================
-% Proof Theory
+% Proof Theory (Bimodal-specific extensions)
 % ============================================================================
 
 % --- Derivability ---
-\newcommand{\proves}{\vdash}
-\newcommand{\context}{\Gamma}
+% \proves, \context provided by notation-standards.sty
 \newcommand{\derivable}[2]{#1 \proves #2}
 
 % --- Validity ---
@@ -77,16 +76,7 @@
 % Meta-Variables
 % ============================================================================
 
-\newcommand{\metaphi}{\varphi}
-\newcommand{\metapsi}{\psi}
-\newcommand{\metachi}{\chi}
-
-% ============================================================================
-% Formatting
-% ============================================================================
-
-% --- Lean source reference ---
-\newcommand{\leansrc}[1]{\texttt{#1}}
+% \metaphi, \metapsi, \metachi provided by notation-standards.sty
 
 % ============================================================================
 % End of Package
