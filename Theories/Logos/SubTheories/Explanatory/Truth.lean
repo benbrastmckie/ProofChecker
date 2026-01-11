@@ -1,6 +1,6 @@
 import Logos.SubTheories.Explanatory.Frame
 import Logos.SubTheories.Explanatory.Syntax
-import Logos.Foundation.Semantics
+import Logos.SubTheories.Foundation.Semantics
 
 /-!
 # Truth Evaluation for Explanatory Extension
@@ -23,7 +23,8 @@ variable assignment σ, and temporal index i⃗ = ⟨i₁, i₂, ...⟩.
 ## Implementation Notes
 
 Truth evaluation is defined recursively on formula structure. The counterfactual
-conditional uses a simplified mereological formulation from the paper.
+conditional uses a simplified mereological formulation from the paper. The causal
+operator follows the counterfactual analysis: A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB).
 -/
 
 namespace Logos.SubTheories.Explanatory
@@ -144,6 +145,20 @@ def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ
       (∃ s, verifies ⟨M.frame.toConstitutiveFrame, M.interp⟩ σ s (toConstitutiveFormula φ) ∧
             M.frame.toConstitutiveFrame.parthood s (β.states t hβ)) →
       truthAt M β t hβ σ idx ψ
+  | Formula.causal φ ψ =>
+    -- A ○→ B: A causes B
+    -- Semantic definition follows counterfactual analysis of causation (Lewis 1973):
+    -- A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB)
+    -- "A is true now, B is true at some future time, and if A were not the case,
+    --  B would not occur in the future."
+    --
+    -- TODO: Future refinements may incorporate:
+    -- - Interventionist semantics (Woodward 2003): Focus on manipulability
+    -- - Structural equations (Pearl 2000): Causal models with do-calculus
+    -- - See "Counterfactual Worlds" (Brast-McKie 2025) for hyperintensional foundation
+    truthAt M τ t ht σ idx φ ∧
+    (∃ y, ∃ hy : y ∈ τ.domain, y > t ∧ truthAt M τ y hy σ idx ψ) ∧
+    truthAt M τ t ht σ idx (Formula.counterfactual (Formula.neg φ) (Formula.neg (Formula.some_future ψ)))
   | Formula.store i φ =>
     -- ↑ⁱA: store current time at index i, then evaluate A
     truthAt M τ t ht σ (idx.update i t) φ
