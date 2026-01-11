@@ -13,7 +13,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 
 **Semantic Progression**: Each extension's frame includes all structure from previous extensions. A formula combining operators from multiple extensions (e.g., `B_a(F(O(p)))` - "agent a believes that it will be obligatory that p") is evaluated in the most complex frame needed.
 
-See [recursive-semantics.md](recursive-semantics.md) for full formal semantic specifications, [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) for philosophical methodology, and [GLOSSARY.md](../Reference/GLOSSARY.md) for term definitions.
+See [recursive-semantics.md](recursive-semantics.md) for full formal semantic specifications, [METHODOLOGY.md](../user-guide/METHODOLOGY.md) for philosophical methodology, and [GLOSSARY.md](../reference/GLOSSARY.md) for term definitions.
 
 ---
 
@@ -322,18 +322,18 @@ If agent A believes agent B prefers y, then A negotiates toward y.
 | **Spatial Extension** | [DETAILS] | Not started |
 | **Agential Extension** | [DETAILS] | Not started |
 
-See [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) for current progress.
+See [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) for current progress.
 
 ---
 
 ## Related Documentation
 
 - [recursive-semantics.md](recursive-semantics.md) - Full formal semantic specifications
-- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
-- [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Technical specification
-- [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
+- [METHODOLOGY.md](../user-guide/METHODOLOGY.md) - Philosophical foundations
+- [ARCHITECTURE.md](../user-guide/ARCHITECTURE.md) - Technical specification
+- [GLOSSARY.md](../reference/GLOSSARY.md) - Term definitions
 - [conceptual-engineering.md](conceptual-engineering.md) - Philosophical motivation
-- [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) - Current state
+- [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) - Current state
 
 ---
 

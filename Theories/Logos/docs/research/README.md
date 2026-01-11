@@ -36,9 +36,9 @@ relationship between natural language and formal systems.
 ## Related Documentation
 
 - [theory-comparison.md](../../../docs/research/theory-comparison.md) - Comparison with Bimodal
-- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Logos methodology and layer architecture
-- [GLOSSARY.md](../Reference/GLOSSARY.md) - Logos terminology
-- [EXTENSION_STUBS.md](../Reference/EXTENSION_STUBS.md) - Planned extension modules
+- [METHODOLOGY.md](../user-guide/METHODOLOGY.md) - Logos methodology and layer architecture
+- [GLOSSARY.md](../reference/GLOSSARY.md) - Logos terminology
+- [EXTENSION_STUBS.md](../reference/EXTENSION_STUBS.md) - Planned extension modules
 
 ## Navigation
 

@@ -63,4 +63,4 @@ For details on planned extensions, see [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 - [Bimodal Documentation](../../../Bimodal/docs/) - Working implementation
 - [Theory Comparison](../../../docs/research/theory-comparison.md) - Bimodal vs Logos
-- [Roadmap](../ProjectInfo/ROADMAP.md) - Development plans
+- [Roadmap](../project-info/ROADMAP.md) - Development plans

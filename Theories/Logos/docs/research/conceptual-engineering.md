@@ -12,7 +12,7 @@ It is worth comparing the physical sciences which seek to describe the laws of n
 
 This engineering perspective has crucial implications for AI reasoning systems. Operators with precise semantics and axiomatic proof theories generate unlimited clean training signals about valid and invalid inferences. Computationally assisted theorem proving provides verified derivations that are guaranteed to be valid by establishing the soundness of the proof system over its semantics, while model checking produces countermodels refuting invalid claims. This dual verification architecture provides consistent, verifiable training signals not achievable by training AI systems of finite, inconsistent, and error prone reasoning in natural language of limited scope or complexity. Training AI systems to produce provably valid reasoning in a language with operators that remain familiar to natural language speakers creates novel conditions for trust that surpass human abilities. Although responsible humans agents are careful to evaluate the plans they enact counterfactually, human computational resources are limited and prone to errors, leaving other agents to ground their trust inductively based on past performance. By contrast, an AI system trained in verified reasoning in the Logos can return proof receipts to verify every step of reasoning.
 
-See also: [dual-verification.md](dual-verification.md) | [layer-extensions.md](layer-extensions.md) | [METHODOLOGY.md](../UserGuide/METHODOLOGY.md)
+See also: [dual-verification.md](dual-verification.md) | [layer-extensions.md](layer-extensions.md) | [METHODOLOGY.md](../user-guide/METHODOLOGY.md)
 
 ## Contextual Parameters
 
@@ -129,7 +129,7 @@ Counterfactual scrutiny asks: "Suppose Plan A is executed (actual) versus suppos
 
 These bimodal combinations express complex temporal-modal claims crucial for planning. For instance, `△◇φ` represents that `φ` remains persistently possible across all times—even if `φ` is not currently actual, it could be achieved at any future time. This captures the idea of **persistent opportunities**: options that remain available throughout a plan's execution.
 
-The perpetuity principles (P1-P6) formalize relationships between modal and temporal quantification, providing inference rules for reasoning about these bimodal combinations. For details on these principles and their proofs, see [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) Section 4.
+The perpetuity principles (P1-P6) formalize relationships between modal and temporal quantification, providing inference rules for reasoning about these bimodal combinations. For details on these principles and their proofs, see [ARCHITECTURE.md](../user-guide/ARCHITECTURE.md) Section 4.
 
 ### From Tense to Modality
 
@@ -150,7 +150,7 @@ This bimodal structure enables representing planning claims like:
 - `G◇φ`: Always, `φ` is possible (persistent possibility throughout temporal evolution)
 - `F□φ`: Eventually, `φ` becomes necessary (future certainty)
 
-For the formal axiomatization of TM bimodal logic, including axiom schemata and soundness proofs, see [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md). The Core Layer implementation provides all axioms and inference rules with verified soundness, creating a stable foundation for the layer extensions discussed in subsequent sections.
+For the formal axiomatization of TM bimodal logic, including axiom schemata and soundness proofs, see [ARCHITECTURE.md](../user-guide/ARCHITECTURE.md). The Core Layer implementation provides all axioms and inference rules with verified soundness, creating a stable foundation for the layer extensions discussed in subsequent sections.
 
 ### Scalable Oversight Through Explicit Semantics
 
@@ -486,9 +486,9 @@ Core Layer (Layer 0) implementation is complete with 12 axioms proven sound, 8 i
 This document integrates with the following project documentation:
 
 - **[README.md](../../README.md)**: Project overview with concise motivations for the Logos architecture (§ Motivations lines 61-68, § RL TRAINING lines 45-56)
-- **[ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md)**: Formal axiomatization of Core Layer TM bimodal logic with soundness proofs
+- **[ARCHITECTURE.md](../user-guide/ARCHITECTURE.md)**: Formal axiomatization of Core Layer TM bimodal logic with soundness proofs
 - **[layer-extensions.md](layer-extensions.md)**: Technical specifications for Layers 1-3 (counterfactual, epistemic, normative operators)
 - **[dual-verification.md](dual-verification.md)**: RL training architecture combining theorem proving (LEAN 4) with model checking (Z3)
-- **[IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md)**: Module-by-module completion tracking and known limitations
-- **[METHODOLOGY.md](../UserGuide/METHODOLOGY.md)**: Philosophical methodology and layer architecture design principles
+- **[IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md)**: Module-by-module completion tracking and known limitations
+- **[METHODOLOGY.md](../user-guide/METHODOLOGY.md)**: Philosophical methodology and layer architecture design principles
 - **[CONTRIBUTING.md](../Development/CONTRIBUTING.md)**: Contribution guidelines and development standards

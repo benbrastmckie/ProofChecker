@@ -58,7 +58,7 @@ The Explanatory Extension provides foundational reasoning through Boolean connec
 
 **Implementation**: See [ARCHITECTURE.md](ARCHITECTURE.md) for complete technical specification.
 
-**Implementation Status**: See [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) for current progress.
+**Implementation Status**: See [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) for current progress.
 
 ### Extension 1 (Explanatory): Counterfactual, Constitutive, Causal
 
@@ -71,7 +71,7 @@ Extension 1 extends the Explanatory Extension with operators for explanatory rea
 
 **Application Domains**: Medical treatment planning, causal analysis, constitutive explanation
 
-**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../research/layer-extensions.md) for specifications.
 
 ### Extension 2 (Epistemic): Belief, Probability, Knowledge
 
@@ -85,7 +85,7 @@ Extension 2 extends the Explanatory Extension with operators for reasoning under
 
 **Application Domains**: Legal evidence analysis, reasoning under uncertainty, multi-agent belief modeling
 
-**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../research/layer-extensions.md) for specifications.
 
 ### Extension 3 (Normative): Obligation, Permission, Preference
 
@@ -98,7 +98,7 @@ Extension 3 extends the Explanatory Extension with operators for ethical and coo
 
 **Application Domains**: Multi-party negotiation, ethical AI decision-making, cooperative planning
 
-**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../research/layer-extensions.md) for specifications.
 
 ## Application Domains
 
@@ -189,7 +189,7 @@ Consider evaluating treatment strategies for hypertension when a patient is alre
 
 Training AI systems to reason in Logos—interpreted through semantic models with explicit semantic clauses—provides a pathway for mastering all three inference modes systematically.
 
-**For detailed RL training architecture**, see [Research/dual-verification.md](../Research/dual-verification.md).
+**For detailed RL training architecture**, see [Research/dual-verification.md](../research/dual-verification.md).
 
 ## Combination Principles
 
@@ -207,7 +207,7 @@ Applications select operator combinations matching domain requirements, optimizi
 
 ## Implementation Status
 
-See [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) for current progress including:
+See [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) for current progress including:
 - Extension 0 (Core TM) implementation status
 - Metalogic completion (soundness, completeness)
 - Perpetuity principles (P1-P6)
@@ -287,10 +287,10 @@ See [AI System Overview](../../.opencode/README.md) for complete workflow docume
 ## Related Documentation
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Extension 0 (Core TM) technical specification
-- [Research/layer-extensions.md](../Research/layer-extensions.md) - Extensions 1-3 specifications
-- [Research/dual-verification.md](../Research/dual-verification.md) - RL training architecture
-- [Research/proof-library-design.md](../Research/proof-library-design.md) - Theorem caching design
-- [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) - Current implementation progress
+- [Research/layer-extensions.md](../research/layer-extensions.md) - Extensions 1-3 specifications
+- [Research/dual-verification.md](../research/dual-verification.md) - RL training architecture
+- [Research/proof-library-design.md](../research/proof-library-design.md) - Theorem caching design
+- [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) - Current implementation progress
 - [AI System Overview](../../.opencode/README.md) - Automated development workflows
 - [AI Command Reference](../../.opencode/command/README.md) - Command usage and examples
 

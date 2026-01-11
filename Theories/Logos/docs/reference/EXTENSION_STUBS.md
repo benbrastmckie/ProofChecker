@@ -118,6 +118,6 @@ Logos/
 
 ## See Also
 
-- [Current Status](../UserGuide/CURRENT_STATUS.md) - Overall Logos status
-- [Roadmap](../ProjectInfo/ROADMAP.md) - Development timeline
+- [Current Status](../user-guide/CURRENT_STATUS.md) - Overall Logos status
+- [Roadmap](../project-info/ROADMAP.md) - Development timeline
 - [Theory Comparison](../../../docs/research/theory-comparison.md)

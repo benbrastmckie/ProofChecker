@@ -2,8 +2,8 @@
 
 **Related Documents**:
 - [layer-extensions.md](layer-extensions.md) - Extension architecture overview
-- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical methodology
-- [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
+- [METHODOLOGY.md](../user-guide/METHODOLOGY.md) - Philosophical methodology
+- [GLOSSARY.md](../reference/GLOSSARY.md) - Term definitions
 
 ---
 
@@ -586,5 +586,5 @@ The Agential Extension requires at least one of the Epistemic, Normative, or Spa
 
 ### Related Documentation
 - [layer-extensions.md](layer-extensions.md) - Extension architecture overview
-- [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
-- [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical methodology
+- [GLOSSARY.md](../reference/GLOSSARY.md) - Term definitions
+- [METHODOLOGY.md](../user-guide/METHODOLOGY.md) - Philosophical methodology
