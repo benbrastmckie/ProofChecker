@@ -24,7 +24,8 @@ variable assignment σ, and temporal index i⃗ = ⟨i₁, i₂, ...⟩.
 
 Truth evaluation is defined recursively on formula structure. The counterfactual
 conditional uses a simplified mereological formulation from the paper. The causal
-operator follows the counterfactual analysis: A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB).
+operator (○→) is awaiting correct implementation from "Counterfactual Worlds"
+(Brast-McKie 2025) - see Task 394.
 -/
 
 namespace Logos.SubTheories.Explanatory
@@ -145,20 +146,27 @@ def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ
       (∃ s, verifies ⟨M.frame.toConstitutiveFrame, M.interp⟩ σ s (toConstitutiveFormula φ) ∧
             M.frame.toConstitutiveFrame.parthood s (β.states t hβ)) →
       truthAt M β t hβ σ idx ψ
-  | Formula.causal φ ψ =>
+  | Formula.causal _ _ =>
     -- A ○→ B: A causes B
-    -- Semantic definition follows counterfactual analysis of causation (Lewis 1973):
-    -- A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB)
-    -- "A is true now, B is true at some future time, and if A were not the case,
-    --  B would not occur in the future."
+    -- STUB: Awaiting correct implementation from "Counterfactual Worlds"
+    -- (Brast-McKie 2025), line 626.
     --
-    -- TODO: Future refinements may incorporate:
-    -- - Interventionist semantics (Woodward 2003): Focus on manipulability
-    -- - Structural equations (Pearl 2000): Causal models with do-calculus
-    -- - See "Counterfactual Worlds" (Brast-McKie 2025) for hyperintensional foundation
-    truthAt M τ t ht σ idx φ ∧
-    (∃ y, ∃ hy : y ∈ τ.domain, y > t ∧ truthAt M τ y hy σ idx ψ) ∧
-    truthAt M τ t ht σ idx (Formula.counterfactual (Formula.neg φ) (Formula.neg (Formula.some_future ψ)))
+    -- The causal operator is PRIMITIVE (like the counterfactual conditional □→),
+    -- NOT defined in terms of counterfactuals.
+    --
+    -- The previous implementation used the simple Lewis (1973) counterfactual
+    -- analysis: A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB). This was INCORRECT because:
+    -- - It cannot handle preemption or overdetermination
+    -- - It lacks context parameters ⟨time_cause, time_effect, background⟩
+    -- - It lacks expected evolution/subevolution structure
+    --
+    -- Correct semantics requires three conditions:
+    -- (1) Inclusion: cause and effect in background assumptions
+    -- (2) Substantial contribution: minimal subevolution requirement
+    -- (3) Difference-making: counterfactual via inverted effect
+    --
+    -- See Task 394 for implementation of correct semantics.
+    sorry
   | Formula.store i φ =>
     -- ↑ⁱA: store current time at index i, then evaluate A
     truthAt M τ t ht σ (idx.update i t) φ

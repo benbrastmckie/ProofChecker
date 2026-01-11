@@ -71,9 +71,12 @@ inductive Formula where
   /-- Counterfactual: A □→ B (if A were the case, B would be the case) -/
   | counterfactual : Formula → Formula → Formula
   /-- Causation: A ○→ B (A causes B)
-      Semantic definition follows counterfactual analysis:
-      A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB)
-      See "Counterfactual Worlds" (Brast-McKie 2025) for hyperintensional foundation. -/
+
+      This operator is PRIMITIVE (like the counterfactual conditional □→).
+
+      AWAITING IMPLEMENTATION: The correct semantics from "Counterfactual Worlds"
+      (Brast-McKie 2025) line 626 requires context parameters and expected evolutions.
+      See Task 394 for research on porting the paper semantics. -/
   | causal : Formula → Formula → Formula
   /-- Store: ↑ⁱA (store current time at index i, then evaluate A) -/
   | store : Nat → Formula → Formula
