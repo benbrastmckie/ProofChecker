@@ -165,7 +165,7 @@ Weakening & \texttt{DerivationTree.weakening} & Any \\
 Derivations are represented as inductive trees.
 
 \begin{definition}[Derivation Tree]
-\texttt{DerivationTree Γ φ} (written $\context \proves \varphi$) is an inductive type
+\texttt{DerivationTree $\Gamma$ $\varphi$} (written $\context \proves \varphi$) is an inductive type
 representing a derivation of $\varphi$ from context $\context$.
 \end{definition}
 
@@ -187,8 +187,8 @@ The height measure enables well-founded recursion in metalogical proofs.
 \toprule
 Notation & Lean \\
 \midrule
-$\context \proves \varphi$ & \texttt{DerivationTree Γ φ} \\
-$\proves \varphi$ & \texttt{DerivationTree [] φ} \\
+$\context \proves \varphi$ & \texttt{DerivationTree $\Gamma$ $\varphi$} \\
+$\proves \varphi$ & \texttt{DerivationTree [] $\varphi$} \\
 \bottomrule
 \end{tabular}
 \end{center}

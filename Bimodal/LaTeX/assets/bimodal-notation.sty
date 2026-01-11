@@ -12,6 +12,7 @@
 % Required packages
 \RequirePackage{amsmath}
 \RequirePackage{amssymb}
+\RequirePackage{mathtools}             % For \coloneqq
 
 % ============================================================================
 % Formula Syntax
@@ -26,8 +27,7 @@
 
 % --- Derived Propositional ---
 \newcommand{\lneg}{\neg}                   % Negation
-\newcommand{\land}{\wedge}                 % Conjunction
-\newcommand{\lor}{\vee}                    % Disjunction
+% Note: \land and \lor are already defined by amssymb as \wedge and \vee
 
 % --- Derived Modal ---
 \newcommand{\poss}{\Diamond}               % Possibility (diamond)
@@ -43,7 +43,7 @@
 % ============================================================================
 
 % --- Frame Structure ---
-\newcommand{\frame}{\mathbf{F}}
+\newcommand{\taskframe}{\mathbf{F}}        % Renamed from \frame to avoid conflicts
 \newcommand{\worldstate}{W}
 \newcommand{\taskrel}{R}
 

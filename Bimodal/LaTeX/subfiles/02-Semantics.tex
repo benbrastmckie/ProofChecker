@@ -9,7 +9,7 @@ Task frames are the fundamental semantic structures for TM.
 
 \begin{definition}[Task Frame]
 A \textbf{task frame} over temporal type $T$ (with totally ordered abelian group structure)
-is a triple $\frame = (\worldstate, T, R)$ where:
+is a triple $\taskframe = (\worldstate, T, R)$ where:
 \begin{itemize}
   \item $\worldstate$ is a type of world states
   \item $T$ is the temporal duration type with \leansrc{LinearOrderedAddCommGroup} instance
@@ -31,8 +31,8 @@ sequential tasks compose with additive time.
 Lean Field & Type & Description \\
 \midrule
 \texttt{WorldState} & \texttt{Type} & World state type \\
-\texttt{task\_rel} & \texttt{WorldState → T → WorldState → Prop} & Task relation \\
-\texttt{nullity} & \texttt{∀ w, task\_rel w 0 w} & Identity constraint \\
+\texttt{task\_rel} & \texttt{WorldState $\to$ T $\to$ WorldState $\to$ Prop} & Task relation \\
+\texttt{nullity} & \texttt{$\forall$ w, task\_rel w 0 w} & Identity constraint \\
 \texttt{compositionality} & (see below) & Composition constraint \\
 \bottomrule
 \end{tabular}
@@ -43,7 +43,7 @@ Lean Field & Type & Description \\
 A world history is a temporal slice through a task frame.
 
 \begin{definition}[World History]
-A \textbf{world history} in task frame $\frame$ is a structure $\history$ with:
+A \textbf{world history} in task frame $\taskframe$ is a structure $\history$ with:
 \begin{itemize}
   \item $\domain : T \to \text{Prop}$ --- a convex temporal domain
   \item $\text{states} : (t : T) \to \domain(t) \to \worldstate$ --- world state at each time
@@ -70,9 +70,9 @@ R(\text{states}(s), t - s, \text{states}(t))
 \toprule
 Lean Field & Type & Description \\
 \midrule
-\texttt{domain} & \texttt{T → Prop} & Temporal domain \\
+\texttt{domain} & \texttt{T $\to$ Prop} & Temporal domain \\
 \texttt{convex} & \texttt{Convex domain} & Domain convexity \\
-\texttt{states} & \texttt{(t : T) → domain t → WorldState} & State function \\
+\texttt{states} & \texttt{(t : T) $\to$ domain t $\to$ WorldState} & State function \\
 \texttt{respects\_task} & (see code) & Task relation respect \\
 \bottomrule
 \end{tabular}
@@ -83,7 +83,7 @@ Lean Field & Type & Description \\
 A task model adds valuation to a task frame.
 
 \begin{definition}[Task Model]
-A \textbf{task model} over frame $\frame$ is a structure $\model$ with valuation:
+A \textbf{task model} over frame $\taskframe$ is a structure $\model$ with valuation:
 \[
 V : \worldstate \to \text{String} \to \text{Prop}
 \]
@@ -146,7 +146,7 @@ The time-shift construction is essential for proving the temporal axioms MF and 
 \begin{definition}[Validity]
 A formula $\varphi$ is \textbf{valid} (written $\valid{\varphi}$) if:
 \[
-\forall T.\, \forall \frame : \text{TaskFrame}\, T.\, \forall \model.\,
+\forall T.\, \forall \taskframe : \text{TaskFrame}\, T.\, \forall \model.\,
 \forall \history.\, \forall t \in \domain.\,
 \truthat{\model}{\history}{t}{\varphi}
 \]
