@@ -1,0 +1,93 @@
+% ============================================================================
+% bimodal-notation.sty
+% Notation package for Bimodal TM logic documentation
+%
+% Provides notation for the bimodal logic combining S5 modality and
+% linear temporal operators.
+% ============================================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bimodal-notation}[2026/01/11 Bimodal TM Logic Notation]
+
+% Required packages
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+
+% ============================================================================
+% Formula Syntax
+% ============================================================================
+
+% --- Primitive Operators ---
+\newcommand{\imp}{\to}                     % Implication
+\newcommand{\falsum}{\bot}                 % Falsity
+\newcommand{\nec}{\Box}                    % Necessity (box)
+\newcommand{\allpast}{H}                   % Always past (all_past)
+\newcommand{\allfuture}{G}                 % Always future (all_future)
+
+% --- Derived Propositional ---
+\newcommand{\lneg}{\neg}                   % Negation
+\newcommand{\land}{\wedge}                 % Conjunction
+\newcommand{\lor}{\vee}                    % Disjunction
+
+% --- Derived Modal ---
+\newcommand{\poss}{\Diamond}               % Possibility (diamond)
+
+% --- Derived Temporal ---
+\newcommand{\somepast}{P}                  % Sometime past
+\newcommand{\somefuture}{F}                % Sometime future
+\newcommand{\always}{\triangle}            % Always (all times)
+\newcommand{\sometimes}{\triangledown}     % Sometimes (some time)
+
+% ============================================================================
+% Semantics
+% ============================================================================
+
+% --- Frame Structure ---
+\newcommand{\frame}{\mathbf{F}}
+\newcommand{\worldstate}{W}
+\newcommand{\taskrel}{R}
+
+% --- Model Structure ---
+\newcommand{\model}{\mathbf{M}}
+\newcommand{\valuation}{V}
+
+% --- World History ---
+\newcommand{\history}{h}
+\newcommand{\domain}{\mathrm{dom}}
+
+% --- Truth Relation ---
+\newcommand{\satisfies}{\models}
+\newcommand{\notsatisfies}{\not\models}
+\newcommand{\truthat}[4]{#1, #2, #3 \satisfies #4}
+
+% ============================================================================
+% Proof Theory
+% ============================================================================
+
+% --- Derivability ---
+\newcommand{\proves}{\vdash}
+\newcommand{\context}{\Gamma}
+\newcommand{\derivable}[2]{#1 \proves #2}
+
+% --- Validity ---
+\newcommand{\valid}[1]{\proves #1}
+\newcommand{\framevalid}[2]{#1 \satisfies #2}
+
+% ============================================================================
+% Meta-Variables
+% ============================================================================
+
+\newcommand{\metaphi}{\varphi}
+\newcommand{\metapsi}{\psi}
+\newcommand{\metachi}{\chi}
+
+% ============================================================================
+% Formatting
+% ============================================================================
+
+% --- Lean source reference ---
+\newcommand{\leansrc}[1]{\texttt{#1}}
+
+% ============================================================================
+% End of Package
+% ============================================================================
