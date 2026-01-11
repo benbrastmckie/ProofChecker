@@ -11,7 +11,7 @@ This layer extends Core TM logic with epistemic operators:
 **Prerequisites**: Layer 0 (Core) completion
 **Estimated Timeline**: 3-6 months post Core completion
 
-See: Documentation/Research/LAYER_EXTENSIONS.md Section 2
+See: Documentation/Research/layer-extensions.md Section 2
 -/
 
 namespace Logos.SubTheories.Epistemic

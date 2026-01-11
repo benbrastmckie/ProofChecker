@@ -8,7 +8,7 @@ These formulas are evaluated relative to world-histories and times.
 
 ## Paper Specification Reference
 
-**Explanatory Extension Syntax (RECURSIVE_SEMANTICS.md)**:
+**Explanatory Extension Syntax (recursive-semantics.md)**:
 The Explanatory Extension interprets these additional syntactic primitives:
 - Modal operators: □ (necessity), ◇ (possibility)
 - Temporal operators: H (always past), G (always future), P (some past), F (some future)

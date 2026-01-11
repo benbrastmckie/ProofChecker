@@ -20,7 +20,7 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 logic. For working functionality, see [Bimodal/Documentation/](../../Bimodal/Documentation/).
 
 For comparison with Bimodal propositional logic, see
-[THEORY_COMPARISON.md](../../Documentation/Research/THEORY_COMPARISON.md).
+[theory-comparison.md](../../Documentation/Research/theory-comparison.md).
 
 ## Documentation Organization
 
@@ -53,9 +53,9 @@ Reference materials for Logos logic:
 Research and design documents for Logos:
 
 - [README.md](Research/README.md) - Research overview
-- [RECURSIVE_SEMANTICS.md](Research/RECURSIVE_SEMANTICS.md) - Full semantic specification
-- [LAYER_EXTENSIONS.md](Research/LAYER_EXTENSIONS.md) - Extension architecture
-- [CONCEPTUAL_ENGINEERING.md](Research/CONCEPTUAL_ENGINEERING.md) - Philosophical foundations
+- [recursive-semantics.md](Research/recursive-semantics.md) - Full semantic specification
+- [layer-extensions.md](Research/layer-extensions.md) - Extension architecture
+- [conceptual-engineering.md](Research/conceptual-engineering.md) - Philosophical foundations
 
 **Audience**: Researchers, contributors
 
@@ -78,7 +78,7 @@ Most-referenced documents:
 - [Current Status](UserGuide/CURRENT_STATUS.md) - Development status
 - [Extension Stubs](Reference/EXTENSION_STUBS.md) - Planned extensions
 - [Methodology](UserGuide/METHODOLOGY.md) - Layer architecture
-- [Recursive Semantics](Research/RECURSIVE_SEMANTICS.md) - Full semantic specification
+- [Recursive Semantics](Research/recursive-semantics.md) - Full semantic specification
 - [Roadmap](ProjectInfo/ROADMAP.md) - Future development
 
 ## Relationship to Project Documentation
@@ -88,9 +88,9 @@ Most-referenced documents:
 - [METHODOLOGY](UserGuide/METHODOLOGY.md) - Layer architecture methodology
 - [EXTENSION_STUBS](Reference/EXTENSION_STUBS.md) - Planned extensions
 - [GLOSSARY](Reference/GLOSSARY.md) - Terminology and operators
-- [RECURSIVE_SEMANTICS](Research/RECURSIVE_SEMANTICS.md) - Semantic specification
-- [LAYER_EXTENSIONS](Research/LAYER_EXTENSIONS.md) - Extension architecture
-- [CONCEPTUAL_ENGINEERING](Research/CONCEPTUAL_ENGINEERING.md) - Philosophical foundations
+- [RECURSIVE_SEMANTICS](Research/recursive-semantics.md) - Semantic specification
+- [LAYER_EXTENSIONS](Research/layer-extensions.md) - Extension architecture
+- [CONCEPTUAL_ENGINEERING](Research/conceptual-engineering.md) - Philosophical foundations
 - [ROADMAP](ProjectInfo/ROADMAP.md) - Development roadmap
 
 **Redirects to Bimodal** (re-exported functionality):
@@ -106,4 +106,4 @@ Most-referenced documents:
 - **Up**: [Logos/](../)
 - **Project Documentation**: [Documentation/](../../Documentation/)
 - **Bimodal Documentation**: [Bimodal/Documentation/](../../Bimodal/Documentation/)
-- **Theory Comparison**: [THEORY_COMPARISON.md](../../Documentation/Research/THEORY_COMPARISON.md)
+- **Theory Comparison**: [theory-comparison.md](../../Documentation/Research/theory-comparison.md)

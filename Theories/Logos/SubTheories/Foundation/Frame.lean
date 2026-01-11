@@ -9,7 +9,7 @@ for Logos based on exact truthmaker semantics.
 
 ## Paper Specification Reference
 
-**Constitutive Frame (RECURSIVE_SEMANTICS.md)**:
+**Constitutive Frame (recursive-semantics.md)**:
 A *constitutive frame* is a structure **F** = ⟨S, ⊑⟩ where:
 - S is a nonempty set of states
 - ⊑ is a partial order on S making ⟨S, ⊑⟩ a complete lattice
@@ -43,7 +43,7 @@ A constitutive frame consists of a state space with complete lattice structure.
 The lattice provides the mereological operations needed for bilateral
 proposition semantics.
 
-**Paper Alignment**: Matches RECURSIVE_SEMANTICS.md definition exactly.
+**Paper Alignment**: Matches recursive-semantics.md definition exactly.
 -/
 structure ConstitutiveFrame where
   /-- Type of states in the state space -/

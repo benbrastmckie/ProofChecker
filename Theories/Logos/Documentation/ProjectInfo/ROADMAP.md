@@ -158,11 +158,11 @@ Logos extension work will begin after Bimodal is polished.
 
 To contribute to Logos development:
 1. Review [Extension Stubs](../Reference/EXTENSION_STUBS.md) for planned architecture
-2. See [Theory Comparison](../../../Documentation/Research/THEORY_COMPARISON.md) for theory details
+2. See [Theory Comparison](../../../Documentation/Research/theory-comparison.md) for theory details
 3. Follow [Contributing Guidelines](../../../Documentation/Development/CONTRIBUTING.md)
 
 ## See Also
 
 - [Implementation Status](IMPLEMENTATION_STATUS.md) - Current status
 - [Extension Stubs](../Reference/EXTENSION_STUBS.md) - Planned modules
-- [Theory Comparison](../../../Documentation/Research/THEORY_COMPARISON.md)
+- [Theory Comparison](../../../Documentation/Research/theory-comparison.md)

@@ -10,7 +10,7 @@ in exact truthmaker semantics. Each proposition is a pair of sets: verifiers
 
 ## Paper Specification Reference
 
-**Bilateral Propositions (RECURSIVE_SEMANTICS.md)**:
+**Bilateral Propositions (recursive-semantics.md)**:
 A bilateral proposition consists of:
 - A set of verifiers (states that make it true)
 - A set of falsifiers (states that make it false)
@@ -48,7 +48,7 @@ allow for states that:
 - Both verify and falsify (overdetermined)
 - Neither verify nor falsify (underdetermined)
 
-**Paper Alignment**: Matches RECURSIVE_SEMANTICS.md bilateral propositions.
+**Paper Alignment**: Matches recursive-semantics.md bilateral propositions.
 -/
 structure BilateralProp (S : Type*) where
   /-- States that verify (make true) the proposition -/

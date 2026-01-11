@@ -71,7 +71,7 @@ Extension 1 extends the Explanatory Extension with operators for explanatory rea
 
 **Application Domains**: Medical treatment planning, causal analysis, constitutive explanation
 
-**Implementation Status**: Planned for future development. See [Research/LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
 
 ### Extension 2 (Epistemic): Belief, Probability, Knowledge
 
@@ -85,7 +85,7 @@ Extension 2 extends the Explanatory Extension with operators for reasoning under
 
 **Application Domains**: Legal evidence analysis, reasoning under uncertainty, multi-agent belief modeling
 
-**Implementation Status**: Planned for future development. See [Research/LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
 
 ### Extension 3 (Normative): Obligation, Permission, Preference
 
@@ -98,7 +98,7 @@ Extension 3 extends the Explanatory Extension with operators for ethical and coo
 
 **Application Domains**: Multi-party negotiation, ethical AI decision-making, cooperative planning
 
-**Implementation Status**: Planned for future development. See [Research/LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) for specifications.
+**Implementation Status**: Planned for future development. See [Research/layer-extensions.md](../Research/layer-extensions.md) for specifications.
 
 ## Application Domains
 
@@ -189,7 +189,7 @@ Consider evaluating treatment strategies for hypertension when a patient is alre
 
 Training AI systems to reason in Logos—interpreted through semantic models with explicit semantic clauses—provides a pathway for mastering all three inference modes systematically.
 
-**For detailed RL training architecture**, see [Research/DUAL_VERIFICATION.md](../Research/DUAL_VERIFICATION.md).
+**For detailed RL training architecture**, see [Research/dual-verification.md](../Research/dual-verification.md).
 
 ## Combination Principles
 
@@ -287,9 +287,9 @@ See [AI System Overview](../../.opencode/README.md) for complete workflow docume
 ## Related Documentation
 
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Extension 0 (Core TM) technical specification
-- [Research/LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) - Extensions 1-3 specifications
-- [Research/DUAL_VERIFICATION.md](../Research/DUAL_VERIFICATION.md) - RL training architecture
-- [Research/PROOF_LIBRARY_DESIGN.md](../Research/PROOF_LIBRARY_DESIGN.md) - Theorem caching design
+- [Research/layer-extensions.md](../Research/layer-extensions.md) - Extensions 1-3 specifications
+- [Research/dual-verification.md](../Research/dual-verification.md) - RL training architecture
+- [Research/proof-library-design.md](../Research/proof-library-design.md) - Theorem caching design
 - [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) - Current implementation progress
 - [AI System Overview](../../.opencode/README.md) - Automated development workflows
 - [AI Command Reference](../../.opencode/command/README.md) - Command usage and examples

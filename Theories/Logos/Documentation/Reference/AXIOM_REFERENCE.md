@@ -60,4 +60,4 @@ For details on planned extensions, see [EXTENSION_STUBS.md](EXTENSION_STUBS.md).
 
 - [Bimodal Axiom Reference](../../../Bimodal/Documentation/Reference/AXIOM_REFERENCE.md)
 - [Extension Stubs](EXTENSION_STUBS.md) - Planned extension modules
-- [Theory Comparison](../../../Documentation/Research/THEORY_COMPARISON.md)
+- [Theory Comparison](../../../Documentation/Research/theory-comparison.md)

@@ -116,6 +116,6 @@ Since Logos re-exports Bimodal, all Bimodal functionality is available:
 
 ## See Also
 
-- [Theory Comparison](../../../Documentation/Research/THEORY_COMPARISON.md) - Bimodal vs Logos
+- [Theory Comparison](../../../Documentation/Research/theory-comparison.md) - Bimodal vs Logos
 - [Roadmap](../ProjectInfo/ROADMAP.md) - Development timeline
 - [Extension Stubs](../Reference/EXTENSION_STUBS.md) - Planned extension modules

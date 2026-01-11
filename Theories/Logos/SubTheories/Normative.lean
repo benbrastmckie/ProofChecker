@@ -10,7 +10,7 @@ This layer extends Core TM logic with normative operators:
 **Prerequisites**: Layer 0 (Core) completion
 **Estimated Timeline**: 3-6 months post Core completion
 
-See: Documentation/Research/LAYER_EXTENSIONS.md Section 3
+See: Documentation/Research/layer-extensions.md Section 3
 -/
 
 namespace Logos.SubTheories.Normative

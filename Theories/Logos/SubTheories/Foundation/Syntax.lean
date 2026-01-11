@@ -9,7 +9,7 @@ falsification relations.
 
 ## Paper Specification Reference
 
-**Constitutive Syntax (RECURSIVE_SEMANTICS.md)**:
+**Constitutive Syntax (recursive-semantics.md)**:
 - Sentence letters: p, q, r, ...
 - Logical connectives: ¬, ∧, ∨, ⊤, ⊥, ≡
 

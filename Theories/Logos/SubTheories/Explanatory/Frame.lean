@@ -10,7 +10,7 @@ relation, enabling evaluation of truth relative to world-histories and times.
 
 ## Paper Specification Reference
 
-**Core Frame Extension (RECURSIVE_SEMANTICS.md)**:
+**Core Frame Extension (recursive-semantics.md)**:
 The Explanatory Extension extends the Constitutive Foundation with:
 - Temporal Order: D = ⟨D, +, ≤⟩ is a totally ordered abelian group
 - Task Relation: ⇒ is a ternary relation on S × D × S satisfying constraints

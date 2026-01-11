@@ -11,7 +11,7 @@ relations for constitutive formulas.
 
 ## Paper Specification Reference
 
-**Verification/Falsification (RECURSIVE_SEMANTICS.md)**:
+**Verification/Falsification (recursive-semantics.md)**:
 A state s verifies (⊩⁺) or falsifies (⊩⁻) a formula A relative to model M
 and assignment σ according to the recursive clauses.
 

@@ -120,4 +120,4 @@ Logos/
 
 - [Current Status](../UserGuide/CURRENT_STATUS.md) - Overall Logos status
 - [Roadmap](../ProjectInfo/ROADMAP.md) - Development timeline
-- [Theory Comparison](../../../Documentation/Research/THEORY_COMPARISON.md)
+- [Theory Comparison](../../../Documentation/Research/theory-comparison.md)

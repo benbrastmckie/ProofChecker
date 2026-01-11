@@ -12,7 +12,7 @@ It is worth comparing the physical sciences which seek to describe the laws of n
 
 This engineering perspective has crucial implications for AI reasoning systems. Operators with precise semantics and axiomatic proof theories generate unlimited clean training signals about valid and invalid inferences. Computationally assisted theorem proving provides verified derivations that are guaranteed to be valid by establishing the soundness of the proof system over its semantics, while model checking produces countermodels refuting invalid claims. This dual verification architecture provides consistent, verifiable training signals not achievable by training AI systems of finite, inconsistent, and error prone reasoning in natural language of limited scope or complexity. Training AI systems to produce provably valid reasoning in a language with operators that remain familiar to natural language speakers creates novel conditions for trust that surpass human abilities. Although responsible humans agents are careful to evaluate the plans they enact counterfactually, human computational resources are limited and prone to errors, leaving other agents to ground their trust inductively based on past performance. By contrast, an AI system trained in verified reasoning in the Logos can return proof receipts to verify every step of reasoning.
 
-See also: [DUAL_VERIFICATION.md](DUAL_VERIFICATION.md) | [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) | [METHODOLOGY.md](../UserGuide/METHODOLOGY.md)
+See also: [dual-verification.md](dual-verification.md) | [layer-extensions.md](layer-extensions.md) | [METHODOLOGY.md](../UserGuide/METHODOLOGY.md)
 
 ## Contextual Parameters
 
@@ -161,7 +161,7 @@ This explicit semantics provides interpretability unavailable in pattern-matchin
 - **Countermodel inspection**: Human overseers can examine Z3 countermodels to understand inference failures
 - **Semantic grounding**: Operators have precise meanings independent of training data patterns
 
-The combination of verified derivations and refutational countermodels creates a foundation for reliable AI reasoning with human oversight at scale. For detailed dual verification architecture including RL training specification, see [DUAL_VERIFICATION.md](DUAL_VERIFICATION.md).
+The combination of verified derivations and refutational countermodels creates a foundation for reliable AI reasoning with human oversight at scale. For detailed dual verification architecture including RL training specification, see [dual-verification.md](dual-verification.md).
 
 **Conceptual bridge to Layer 1**: While the Core Layer's dual verification architecture provides clean training signals for tense and historical modal reasoning, extending to counterfactual and causal operators (Layer 1) requires enriched semantic structure. The mereological framework discussed in the next section enables dual verification for counterfactual scrutiny—generating training signals about comparative plan evaluation and causal relationships.
 
@@ -277,7 +277,7 @@ This mereological structure enables representing partial world-histories directl
 
 Counterfactuals over partial world-histories have well-defined semantics: `φ □→ ψ` is true at `(w_partial, t)` iff all minimal complete extensions of `w_partial` satisfying `φ` also satisfy `ψ`. The mereological structure determines which complete world-histories are **minimal extensions**: those adding just enough detail to make `w_partial` complete while preserving all specified partial states.
 
-For detailed Layer 1 semantic specifications including formal mereological structure and counterfactual truth conditions, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 15-118.
+For detailed Layer 1 semantic specifications including formal mereological structure and counterfactual truth conditions, see [layer-extensions.md](layer-extensions.md) Lines 15-118.
 
 ### From Counterfactual to Causal Operators
 
@@ -301,7 +301,7 @@ The mereological priority condition ensures temporal/modal asymmetry: causes pre
 
 **Planning applications**: Causal operators enable AI systems to represent productive relationships in plans. When evaluating "Allocating resources to marketing causes increased sales," the system checks whether the mereological parts of world-states making "marketing resources allocated" true are productively connected to parts making "increased sales" true. This goes beyond counterfactual reasoning ("If we hadn't allocated resources, sales wouldn't have increased") to represent genuine causal mechanisms.
 
-For detailed causal operator semantics and axiomatization, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 79-88.
+For detailed causal operator semantics and axiomatization, see [layer-extensions.md](layer-extensions.md) Lines 79-88.
 
 ### Integration with Core Layer
 
@@ -344,7 +344,7 @@ The causal claim `○→_K_marketing(marketing_resources, increased_sales)` is t
 
 **Planning applications**: Epistemic parameters enable AI systems to reason about causation under realistic knowledge constraints. When evaluating plans, the system need not have complete information about world-evolution; it suffices to verify that causal relationships hold across epistemically possible evolutions given available knowledge. This makes causal reasoning tractable for real-world planning under uncertainty.
 
-For detailed Layer 2 epistemic operators and their integration with causal operators, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 132-228.
+For detailed Layer 2 epistemic operators and their integration with causal operators, see [layer-extensions.md](layer-extensions.md) Lines 132-228.
 
 ### Preference Orderings for Plan Evaluation
 
@@ -369,7 +369,7 @@ This formula represents that the agent believes action `φ` will causally produc
 
 The probabilistic operator `Pr(w | φ)` represents the probability of world-history `w` conditional on executing `φ`, and the value function `V(w)` is derived from the preference ordering (higher-ranked worlds get higher values). The expected value formula aggregates probable outcomes weighted by their values, providing the decision-theoretic foundation for rational planning.
 
-For detailed preference operator semantics and axiomatization, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 261-273.
+For detailed preference operator semantics and axiomatization, see [layer-extensions.md](layer-extensions.md) Lines 261-273.
 
 ### Epistemic Operators for Uncertainty
 
@@ -397,7 +397,7 @@ Knowledge is stronger than belief: if the agent knows `φ`, then `φ` must be tr
 
 These distinctions enable sophisticated reasoning: the system can identify knowledge gaps requiring investigation, adjust plans when beliefs are uncertain, and update probability estimates as new evidence arrives.
 
-For detailed epistemic operator specifications including axioms and accessibility relation constraints, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 132-228.
+For detailed epistemic operator specifications including axioms and accessibility relation constraints, see [layer-extensions.md](layer-extensions.md) Lines 132-228.
 
 ### Normative Operators for Multi-Agent Coordination
 
@@ -423,7 +423,7 @@ These coordination formulas enable AI systems to reason about joint action, resp
 
 **Preference-deontic integration**: Obligations interact with preference orderings to resolve conflicts between what is preferred and what is required. When `O(φ)` (obligation for `φ`) conflicts with `w_¬φ ≺ w_φ` (preference for `¬φ`-worlds over `φ`-worlds), the obligation takes precedence: rational agents follow obligations even when outcomes are dispreferred. This integration provides a decision-theoretic foundation for deontic constraints.
 
-For detailed normative operator specifications including deontic accessibility relations and axiomatization, see [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) Lines 240-454.
+For detailed normative operator specifications including deontic accessibility relations and axiomatization, see [layer-extensions.md](layer-extensions.md) Lines 240-454.
 
 ## Conclusion: Progressive Extension Methodology
 
@@ -479,7 +479,7 @@ This modularity prevents operator bloat: applications carry only the semantic st
 
 ### Implementation Status and Future Work
 
-Core Layer (Layer 0) implementation is complete with 12 axioms proven sound, 8 inference rules proven, perpetuity principles P1-P6 fully proven, and 12 automation tactics. Future work includes implementing Layers 1-3 (counterfactual/causal, epistemic, normative operators), Z3 model checking integration, and RL training pipeline. See [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) for specifications.
+Core Layer (Layer 0) implementation is complete with 12 axioms proven sound, 8 inference rules proven, perpetuity principles P1-P6 fully proven, and 12 automation tactics. Future work includes implementing Layers 1-3 (counterfactual/causal, epistemic, normative operators), Z3 model checking integration, and RL training pipeline. See [layer-extensions.md](layer-extensions.md) for specifications.
 
 ### Related Documentation
 
@@ -487,8 +487,8 @@ This document integrates with the following project documentation:
 
 - **[README.md](../../README.md)**: Project overview with concise motivations for the Logos architecture (§ Motivations lines 61-68, § RL TRAINING lines 45-56)
 - **[ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md)**: Formal axiomatization of Core Layer TM bimodal logic with soundness proofs
-- **[LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md)**: Technical specifications for Layers 1-3 (counterfactual, epistemic, normative operators)
-- **[DUAL_VERIFICATION.md](DUAL_VERIFICATION.md)**: RL training architecture combining theorem proving (LEAN 4) with model checking (Z3)
+- **[layer-extensions.md](layer-extensions.md)**: Technical specifications for Layers 1-3 (counterfactual, epistemic, normative operators)
+- **[dual-verification.md](dual-verification.md)**: RL training architecture combining theorem proving (LEAN 4) with model checking (Z3)
 - **[IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md)**: Module-by-module completion tracking and known limitations
 - **[METHODOLOGY.md](../UserGuide/METHODOLOGY.md)**: Philosophical methodology and layer architecture design principles
 - **[CONTRIBUTING.md](../Development/CONTRIBUTING.md)**: Contribution guidelines and development standards

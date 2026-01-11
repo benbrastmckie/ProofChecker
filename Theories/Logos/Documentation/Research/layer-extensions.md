@@ -13,7 +13,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 
 **Semantic Progression**: Each extension's frame includes all structure from previous extensions. A formula combining operators from multiple extensions (e.g., `B_a(F(O(p)))` - "agent a believes that it will be obligatory that p") is evaluated in the most complex frame needed.
 
-See [RECURSIVE_SEMANTICS.md](RECURSIVE_SEMANTICS.md) for full formal semantic specifications, [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) for philosophical methodology, and [GLOSSARY.md](../Reference/GLOSSARY.md) for term definitions.
+See [recursive-semantics.md](recursive-semantics.md) for full formal semantic specifications, [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) for philosophical methodology, and [GLOSSARY.md](../Reference/GLOSSARY.md) for term definitions.
 
 ---
 
@@ -67,7 +67,7 @@ The Constitutive Foundation provides recursive verification and falsification cl
 
 Logical consequence at this foundation is restricted to propositional identity sentences. Evaluation of contingent atomic sentences requires the Explanatory Extension.
 
-See [RECURSIVE_SEMANTICS.md](RECURSIVE_SEMANTICS.md) for full verification/falsification clauses.
+See [recursive-semantics.md](recursive-semantics.md) for full verification/falsification clauses.
 
 ---
 
@@ -173,7 +173,7 @@ Drug B would normalize blood pressure, might cause stroke.
 
 Counterfactual operators distinguish necessary (`□→`) from possible (`◇→`) consequences.
 
-See [RECURSIVE_SEMANTICS.md](RECURSIVE_SEMANTICS.md) for full truth conditions.
+See [recursive-semantics.md](recursive-semantics.md) for full truth conditions.
 
 ---
 
@@ -328,11 +328,11 @@ See [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) for curr
 
 ## Related Documentation
 
-- [RECURSIVE_SEMANTICS.md](RECURSIVE_SEMANTICS.md) - Full formal semantic specifications
+- [recursive-semantics.md](recursive-semantics.md) - Full formal semantic specifications
 - [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Technical specification
 - [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
-- [CONCEPTUAL_ENGINEERING.md](CONCEPTUAL_ENGINEERING.md) - Philosophical motivation
+- [conceptual-engineering.md](conceptual-engineering.md) - Philosophical motivation
 - [IMPLEMENTATION_STATUS.md](../ProjectInfo/IMPLEMENTATION_STATUS.md) - Current state
 
 ---

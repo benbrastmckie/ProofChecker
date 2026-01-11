@@ -4,7 +4,7 @@ This glossary maps terminology between Logos and Logos documentation, providing 
 
 ## Extension Architecture
 
-Logos is organized into semantic extensions, each building upon the previous with increasing expressive power. See [LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) for full details and [RECURSIVE_SEMANTICS.md](../Research/RECURSIVE_SEMANTICS.md) for formal semantics.
+Logos is organized into semantic extensions, each building upon the previous with increasing expressive power. See [layer-extensions.md](../Research/layer-extensions.md) for full details and [recursive-semantics.md](../Research/recursive-semantics.md) for formal semantics.
 
 | Term | Definition | Related Terms |
 |------|------------|---------------|
@@ -209,8 +209,8 @@ For all implementation status information, see [IMPLEMENTATION_STATUS.md](../Pro
 - [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical foundations
 - [ARCHITECTURE.md](../UserGuide/ARCHITECTURE.md) - Technical specification
 - [OPERATORS.md](OPERATORS.md) - Formal symbols reference
-- [LAYER_EXTENSIONS.md](../Research/LAYER_EXTENSIONS.md) - Extension architecture overview
-- [RECURSIVE_SEMANTICS.md](../Research/RECURSIVE_SEMANTICS.md) - Full formal semantic specifications
+- [layer-extensions.md](../Research/layer-extensions.md) - Extension architecture overview
+- [recursive-semantics.md](../Research/recursive-semantics.md) - Full formal semantic specifications
 
 ---
 

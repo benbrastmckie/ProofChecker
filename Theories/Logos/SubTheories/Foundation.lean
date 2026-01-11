@@ -46,6 +46,6 @@ def myFrame : ConstitutiveFrame := ConstitutiveFrame.powerSet Nat
 
 ## References
 
-- Logos/Documentation/Research/RECURSIVE_SEMANTICS.md - Full specification
-- Logos/Documentation/Research/LAYER_EXTENSIONS.md - Extension architecture
+- Logos/Documentation/Research/recursive-semantics.md - Full specification
+- Logos/Documentation/Research/layer-extensions.md - Extension architecture
 -/

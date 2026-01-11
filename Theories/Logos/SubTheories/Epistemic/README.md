@@ -26,4 +26,4 @@ Estimated 3-6 months post Core MVP completion.
 
 ## Documentation
 
-See [LAYER_EXTENSIONS.md](../../Documentation/Research/LAYER_EXTENSIONS.md) Section 2 for complete specification.
+See [layer-extensions.md](../../Documentation/Research/layer-extensions.md) Section 2 for complete specification.

@@ -1,7 +1,7 @@
 # Recursive Semantics for Logos
 
 **Related Documents**:
-- [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) - Extension architecture overview
+- [layer-extensions.md](layer-extensions.md) - Extension architecture overview
 - [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical methodology
 - [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
 
@@ -585,6 +585,6 @@ The Agential Extension requires at least one of the Epistemic, Normative, or Spa
 - Brast-McKie, B. "Counterfactual Worlds" (JPL) - Counterfactual conditional semantics
 
 ### Related Documentation
-- [LAYER_EXTENSIONS.md](LAYER_EXTENSIONS.md) - Extension architecture overview
+- [layer-extensions.md](layer-extensions.md) - Extension architecture overview
 - [GLOSSARY.md](../Reference/GLOSSARY.md) - Term definitions
 - [METHODOLOGY.md](../UserGuide/METHODOLOGY.md) - Philosophical methodology

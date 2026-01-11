@@ -10,7 +10,7 @@ non-logical vocabulary in constitutive models.
 
 ## Paper Specification Reference
 
-**Interpretation (RECURSIVE_SEMANTICS.md)**:
+**Interpretation (recursive-semantics.md)**:
 The interpretation function I assigns:
 - n-place function symbols f → I(f) : Sⁿ → S (0-place = individual constants)
 - n-place predicates F → ordered pairs ⟨v_F, f_F⟩ where:

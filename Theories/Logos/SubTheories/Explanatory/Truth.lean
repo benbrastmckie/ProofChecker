@@ -10,7 +10,7 @@ relative to a model, world-history, time, variable assignment, and temporal inde
 
 ## Paper Specification Reference
 
-**Truth Conditions (RECURSIVE_SEMANTICS.md)**:
+**Truth Conditions (recursive-semantics.md)**:
 Truth is evaluated relative to a model M, world-history τ, time x ∈ D,
 variable assignment σ, and temporal index i⃗ = ⟨i₁, i₂, ...⟩.
 
