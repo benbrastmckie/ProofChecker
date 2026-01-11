@@ -14,7 +14,7 @@ Logos currently **re-exports Bimodal** TM (Tense and Modality) logic. This means
 
 Since Logos re-exports Bimodal, follow the Bimodal quick start guide:
 
-**→ [Bimodal Quick Start](../../../Bimodal/docs/UserGuide/QUICKSTART.md)**
+**→ [Bimodal Quick Start](../../../Bimodal/docs/user-guide/QUICKSTART.md)**
 
 ## Using Logos vs Bimodal
 
@@ -55,12 +55,12 @@ For details on planned extensions, see [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 ## Next Steps
 
-1. Follow [Bimodal Quick Start](../../../Bimodal/docs/UserGuide/QUICKSTART.md)
+1. Follow [Bimodal Quick Start](../../../Bimodal/docs/user-guide/QUICKSTART.md)
 2. Read [Current Status](CURRENT_STATUS.md) for Logos-specific development
-3. See [Theory Comparison](../../../docs/Research/theory-comparison.md) for differences
+3. See [Theory Comparison](../../../docs/research/theory-comparison.md) for differences
 
 ## See Also
 
 - [Bimodal Documentation](../../../Bimodal/docs/) - Working implementation
-- [Theory Comparison](../../../docs/Research/theory-comparison.md) - Bimodal vs Logos
+- [Theory Comparison](../../../docs/research/theory-comparison.md) - Bimodal vs Logos
 - [Roadmap](../ProjectInfo/ROADMAP.md) - Development plans

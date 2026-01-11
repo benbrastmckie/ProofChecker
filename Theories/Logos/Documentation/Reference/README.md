@@ -3,7 +3,7 @@
 Reference materials for Logos logic.
 
 > **Note**: Logos currently re-exports Bimodal axioms. For complete axiom reference, see
-> [Bimodal/docs/Reference/](../../../Bimodal/docs/Reference/).
+> [Bimodal/docs/reference/](../../../Bimodal/docs/reference/).
 
 ## Documents
 
@@ -14,11 +14,11 @@ Reference materials for Logos logic.
 
 ## Quick Lookup
 
-- **Current axioms**: See Bimodal/docs/Reference/AXIOM_REFERENCE.md
+- **Current axioms**: See Bimodal/docs/reference/AXIOM_REFERENCE.md
 - **Planned extensions**: Epistemic, Normative, Explanatory modules
 
 ## Navigation
 
 - **Up**: [Logos/docs/](../)
-- **Bimodal Reference**: [Bimodal/docs/Reference/](../../../Bimodal/docs/Reference/)
-- **Project Reference**: [docs/Reference/](../../../docs/Reference/)
+- **Bimodal Reference**: [Bimodal/docs/reference/](../../../Bimodal/docs/reference/)
+- **Project Reference**: [docs/reference/](../../../docs/reference/)

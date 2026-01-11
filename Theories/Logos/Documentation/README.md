@@ -20,7 +20,7 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 logic. For working functionality, see [Bimodal/docs/](../../Bimodal/docs/).
 
 For comparison with Bimodal propositional logic, see
-[theory-comparison.md](../../docs/Research/theory-comparison.md).
+[theory-comparison.md](../../docs/research/theory-comparison.md).
 
 ## Documentation Organization
 
@@ -94,16 +94,16 @@ Most-referenced documents:
 - [ROADMAP](ProjectInfo/ROADMAP.md) - Development roadmap
 
 **Redirects to Bimodal** (re-exported functionality):
-- [QUICKSTART](UserGuide/QUICKSTART.md) → Bimodal/docs/UserGuide/QUICKSTART.md
+- [QUICKSTART](UserGuide/QUICKSTART.md) → Bimodal/docs/user-guide/QUICKSTART.md
 - [AXIOM_REFERENCE](Reference/AXIOM_REFERENCE.md) → Bimodal axioms
 
 **Project-Wide** (in [docs/](../../docs/)):
-- [STYLE_GUIDE](../../docs/Development/LEAN_STYLE_GUIDE.md) - Coding style
-- [TESTING](../../docs/Development/TESTING_STANDARDS.md) - Test standards
+- [STYLE_GUIDE](../../docs/development/LEAN_STYLE_GUIDE.md) - Coding style
+- [TESTING](../../docs/development/TESTING_STANDARDS.md) - Test standards
 
 ## Navigation
 
 - **Up**: [Logos/](../)
 - **Project Documentation**: [docs/](../../docs/)
 - **Bimodal Documentation**: [Bimodal/docs/](../../Bimodal/docs/)
-- **Theory Comparison**: [theory-comparison.md](../../docs/Research/theory-comparison.md)
+- **Theory Comparison**: [theory-comparison.md](../../docs/research/theory-comparison.md)

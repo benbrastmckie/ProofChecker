@@ -24,5 +24,5 @@ Logos is currently a **re-export layer** for Bimodal with stubs for planned exte
 ## Navigation
 
 - **Up**: [Logos/docs/](../)
-- **Bimodal Status**: [Bimodal/docs/ProjectInfo/](../../../Bimodal/docs/ProjectInfo/)
-- **Project Status**: [docs/ProjectInfo/](../../../docs/ProjectInfo/)
+- **Bimodal Status**: [Bimodal/docs/project-info/](../../../Bimodal/docs/project-info/)
+- **Project Status**: [docs/project-info/](../../../docs/project-info/)
