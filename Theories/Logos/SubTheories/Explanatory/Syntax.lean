@@ -1,4 +1,4 @@
-import Logos.Foundation.Syntax
+import Logos.SubTheories.Foundation.Syntax
 
 /-!
 # Core Formula Syntax
@@ -14,13 +14,14 @@ The Explanatory Extension interprets these additional syntactic primitives:
 - Temporal operators: H (always past), G (always future), P (some past), F (some future)
 - Extended temporal operators: ◁ (since), ▷ (until)
 - Counterfactual conditional: □→ (would-counterfactual)
+- Causal operator: ○→ (causation)
 - Store/recall operators: ↑ⁱ (store), ↓ⁱ (recall)
 - Universal quantification: ∀x.A
 
 ## Main Definitions
 
 - `Formula`: Full formula type with all Explanatory Extension operators
-- Derived operators: ◇, P, F, ◇→, always (△), sometimes (▽)
+- Derived operators: ◇, P, F, ◇→, ○→, always (△), sometimes (▽)
 
 ## Implementation Notes
 
@@ -69,6 +70,11 @@ inductive Formula where
   | untl : Formula → Formula → Formula
   /-- Counterfactual: A □→ B (if A were the case, B would be the case) -/
   | counterfactual : Formula → Formula → Formula
+  /-- Causation: A ○→ B (A causes B)
+      Semantic definition follows counterfactual analysis:
+      A ○→ B := A ∧ FB ∧ (¬A □→ ¬FB)
+      See "Counterfactual Worlds" (Brast-McKie 2025) for hyperintensional foundation. -/
+  | causal : Formula → Formula → Formula
   /-- Store: ↑ⁱA (store current time at index i, then evaluate A) -/
   | store : Nat → Formula → Formula
   /-- Recall: ↓ⁱA (recall time from index i, evaluate A at that time) -/
@@ -158,6 +164,7 @@ def complexity : Formula → Nat
   | since φ ψ => 1 + φ.complexity + ψ.complexity
   | untl φ ψ => 1 + φ.complexity + ψ.complexity
   | counterfactual φ ψ => 1 + φ.complexity + ψ.complexity
+  | causal φ ψ => 1 + φ.complexity + ψ.complexity
   | store _ φ => 1 + φ.complexity
   | rcall _ φ => 1 + φ.complexity
   | all _ φ => 1 + φ.complexity
@@ -190,6 +197,9 @@ infixr:50 " □→ " => Formula.counterfactual
 
 /-- Notation for might-counterfactual -/
 infixr:50 " ◇→ " => Formula.might_counterfactual
+
+/-- Notation for causation -/
+infixr:50 " ○→ " => Formula.causal
 
 /-- Notation for always past -/
 prefix:80 "𝐇" => Formula.all_past
