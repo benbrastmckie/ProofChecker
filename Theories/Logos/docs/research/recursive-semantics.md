@@ -25,7 +25,7 @@ The following diagram shows the dependency structure among extensions:
                         │ required
                         ▼
 ┌─────────────────────────────────────────────────┐
-│              Explanatory Extension                     │
+│              Explanatory Extension              │
 │    (modal, temporal, counterfactual, causal)    │
 └───────────────────────┬─────────────────────────┘
                         │
