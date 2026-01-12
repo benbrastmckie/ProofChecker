@@ -31,7 +31,7 @@ the modal, temporal, counterfactual, and indexed reference operators.
 
 namespace Logos.SubTheories.Explanatory
 
-open Logos.Foundation
+open Logos.SubTheories.Foundation
 
 /--
 Core formula syntax.

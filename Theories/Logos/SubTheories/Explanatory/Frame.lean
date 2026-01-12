@@ -1,4 +1,4 @@
-import Logos.Foundation
+import Logos.SubTheories.Foundation
 import Mathlib.Algebra.Order.Group.Defs
 import Mathlib.Algebra.Order.Group.OrderIso
 
@@ -29,9 +29,9 @@ All constraints are formulated using state modality concepts.
 
 namespace Logos.SubTheories.Explanatory
 
-open Logos.Foundation
+open Logos.SubTheories.Foundation
 
-variable {T : Type*} [LinearOrderedAddCommGroup T]
+variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
 
 /--
 A Core Frame extends a Constitutive Frame with temporal structure and a task relation.
@@ -39,7 +39,7 @@ A Core Frame extends a Constitutive Frame with temporal structure and a task rel
 The task relation `s ⇒_d t` (taskRel s d t) means "there is a task from state s
 to state t of duration d".
 -/
-structure CoreFrame (T : Type*) [LinearOrderedAddCommGroup T] extends ConstitutiveFrame where
+structure CoreFrame (T : Type*) [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T] extends ConstitutiveFrame where
   /-- The task relation: taskRel s d t means s ⇒_d t -/
   taskRel : State → T → State → Prop
   /-- Nullity: every state has a trivial task to itself -/
@@ -218,7 +218,7 @@ end WorldHistory
 /--
 A *core model* combines a core frame with an interpretation.
 -/
-structure CoreModel (T : Type*) [LinearOrderedAddCommGroup T] where
+structure CoreModel (T : Type*) [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T] where
   /-- The underlying core frame -/
   frame : CoreFrame T
   /-- The interpretation function (inherited from constitutive model) -/

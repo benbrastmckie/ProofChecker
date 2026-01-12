@@ -31,7 +31,7 @@ import Logos.SubTheories.Explanatory
 open Logos.SubTheories.Explanatory
 
 -- Use state modality concepts
-variable {T : Type*} [LinearOrderedAddCommGroup T]
+variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
 variable {F : CoreFrame T}
 variable (s : F.State)
 

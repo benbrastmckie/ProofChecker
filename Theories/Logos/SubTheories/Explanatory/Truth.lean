@@ -30,10 +30,13 @@ operator (○→) is awaiting correct implementation from "Counterfactual Worlds
 
 namespace Logos.SubTheories.Explanatory
 
-open Logos.Foundation
+open Logos.SubTheories.Foundation
 open Logos.SubTheories.Explanatory.Formula
 
-variable {T : Type*} [LinearOrderedAddCommGroup T]
+variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
+
+-- Performance: Increase heartbeats for deep typeclass hierarchy (unbundled ordered add comm group)
+set_option synthInstance.maxHeartbeats 100000
 
 /--
 Temporal index for store/recall operators.
@@ -96,6 +99,7 @@ Parameters:
 - idx: Temporal index for store/recall
 - φ: The formula to evaluate
 -/
+@[irreducible]
 def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex T)
     : Formula → Prop

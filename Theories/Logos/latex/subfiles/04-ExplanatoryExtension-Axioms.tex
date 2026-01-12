@@ -48,7 +48,7 @@ This rule states that if $\metaC$ is derivable from $\context$, then for any ant
   \item \textbf{C1} (Identity): Every proposition counterfactually implies itself.
   \item \textbf{C2} (Modus Ponens): If $\metaphi$ is actually true and $\metaphi$ would imply $\metaA$, then $\metaA$ is true.
   \item \textbf{C3} (Weakened Transitivity): This weaker form of transitivity avoids the problematic full transitivity principle.
-  \item \textbf{C4-C7} govern the interaction between counterfactuals and Boolean operations on antecedents.
+  \item \textbf{C4-C7}: These axioms govern the interaction between counterfactuals and Boolean operations on antecedents.
 \end{itemize}
 \end{remark}
 
@@ -69,11 +69,13 @@ This rule states that if $\metaC$ is derivable from $\context$, then for any ant
 \end{definition}
 
 \begin{remark}[S5 Modal Logic]
-The combination of M3 and M4 yields an S5 modal logic, which is characterized by an equivalence relation on possible worlds. In the task semantics, this arises from the structure of world-histories: any world-history is accessible from any other at any given time.
+The combination of M3 and M4 yields an S5 modal logic, which is characterized by an equivalence relation on possible worlds.
+In the task semantics, this arises from the structure of world-histories: any world-history is accessible from any other at any given time.
 \end{remark}
 
 \begin{remark}[Strict-to-Counterfactual]
-Axiom M5 states that if $\metaA$ is a strict consequence of $\metaphi$ (i.e., necessarily, if $\metaphi$ then $\metaA$), then $\metaphi$ counterfactually implies $\metaA$. This connects the modal operator with the counterfactual conditional.
+Axiom M5 states that if $\metaA$ is a strict consequence of $\metaphi$ (i.e., necessarily, if $\metaphi$ then $\metaA$), then $\metaphi$ counterfactually implies $\metaA$.
+This connects the modal operator with the counterfactual conditional.
 \end{remark}
 
 % ------------------------------------------------------------
@@ -99,7 +101,8 @@ $(\metaphi \boxright \metaA) \lor (\metaphi \boxright \neg\metaA)$ is \emph{not}
 \end{theorem}
 
 \begin{remark}
-The failure of excluded middle for counterfactuals (Theorem~\ref{thm:excluded-middle}) reflects the mereological structure: when imposing an antecedent $\metaphi$ on the actual world, there may be multiple ways to do so, leading to different worlds where $\metaA$ or $\neg\metaA$ holds. The counterfactual is true only when the consequent holds in \emph{all} such imposed worlds.
+The failure of excluded middle for counterfactuals (Theorem~\ref{thm:excluded-middle}) reflects the mereological structure: when imposing an antecedent $\metaphi$ on the actual world, there may be multiple ways to do so, leading to different worlds where $\metaA$ or $\neg\metaA$ holds.
+The counterfactual is true only when the consequent holds in \emph{all} such imposed worlds.
 \end{remark}
 
 % ------------------------------------------------------------
@@ -113,7 +116,8 @@ If $\context \proves \metaA$ using the axiom system above, then $\context \satis
 \end{theorem}
 
 \begin{question}
-Completeness of the axiom system with respect to the mereological counterfactual semantics remains an open problem. The main challenge is showing that every consistent set of formulas has a model with the required mereological structure.
+Completeness of the axiom system with respect to the mereological counterfactual semantics remains an open problem.
+The main challenge is showing that every consistent set of formulas has a model with the required mereological structure.
 \end{question}
 
 See \leansrc{Logos.Explanatory.Axioms}{CounterfactualAxioms} for the Lean implementation.
