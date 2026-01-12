@@ -33,9 +33,9 @@ namespace Logos.SubTheories.Explanatory
 open Logos.SubTheories.Foundation
 open Logos.SubTheories.Explanatory.Formula
 
-variable {T : Type*} [LinearOrderedAddCommGroup T]
+variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
 
--- Performance: Increase heartbeats for deep typeclass hierarchy (LinearOrderedAddCommGroup)
+-- Performance: Increase heartbeats for deep typeclass hierarchy (unbundled ordered add comm group)
 set_option synthInstance.maxHeartbeats 100000
 
 /--
