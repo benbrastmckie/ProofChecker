@@ -7,7 +7,9 @@
 
 \section{Constitutive Foundation}\label{sec:constitutive-foundation}
 
-The Constitutive Foundation provides the foundational semantic structure based on exact truthmaker semantics. Evaluation is hyperintensional, distinguishing propositions that agree on truth-value across all possible worlds but differ in their exact verification and falsification conditions.
+The Constitutive Foundation provides the foundational semantic structure based on exact truthmaker semantics.
+Evaluation is hyperintensional,
+distinguishing propositions that agree on truth-value across all possible worlds but differ in their exact verification and falsification conditions.
 
 % ------------------------------------------------------------
 % Syntactic Primitives
@@ -42,7 +44,8 @@ A \emph{constitutive frame} is a structure $\mframe = \langle \statespace, \part
 \end{definition}
 
 \begin{remark}
-The constitutive frame is non-modal: possibility and compatibility cannot be defined at this level since they require the task relation introduced in the Explanatory Extension.
+The constitutive frame is non-modal:
+possibility and compatibility cannot be defined at this level since they require the task relation introduced in the Explanatory Extension.
 \end{remark}
 
 \begin{remark}
@@ -84,11 +87,14 @@ The interpretation function $\interp$ assigns:
 \end{definition}
 
 \begin{remark}[Containment Constraint]
-For any function $f$ in $\verifierset{F}$ or $\falsifierset{F}$ and any $n$ states $a_1, \ldots, a_n$, these states are all parts of $f(a_1, \ldots, a_n)$. However, $f(a_1, \ldots, a_n)$ may have additional parts beyond the input states.
+For any function $f$ in $\verifierset{F}$ or $\falsifierset{F}$ and any $n$ states $a_1, \ldots, a_n$,
+these states are all parts of $f(a_1, \ldots, a_n)$.
+However, $f(a_1, \ldots, a_n)$ may have additional parts beyond the input states.
 \end{remark}
 
 \begin{remark}[Predicate Intuition]
-For 1-place predicates, the functions in $\verifierset{F}$ and $\falsifierset{F}$ take an object (which is itself a state) as input and return that object instantiating a verifying or falsifying property instance for the property in question.
+For 1-place predicates, the functions in $\verifierset{F}$ and $\falsifierset{F}$ take an object (which is itself a state) as input
+and return that object instantiating a verifying or falsifying property instance for the property in question.
 \end{remark}
 
 See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the Lean implementation.
@@ -104,7 +110,9 @@ A \emph{variable assignment} $\assignment$ is a function from variables to state
 \end{definition}
 
 \begin{notation}
-Greek letters ($\history, \alpha, \beta, \ldots$) are reserved for world-histories. The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments, chosen for compatibility across \LaTeX, markdown, and Lean notation.
+Greek letters ($\history, \alpha, \beta, \ldots$) are reserved for world-histories.
+The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments,
+chosen for compatibility across \LaTeX, markdown, and Lean notation.
 \end{notation}
 
 \begin{definition}[Term Extension]\label{def:term-extension}
@@ -273,7 +281,15 @@ That is, $\metaA$ is a consequence of $\context$ iff the null state verifies $\m
 \end{definition}
 
 \begin{remark}[Identity Sentences and Evaluation Overlap]
-Identity sentences are formed from extensional (non-identity) sentences: $\metaA \propid \metaB$ where $\metaA$ and $\metaB$ are atomic sentences or built from $\neg, \land, \lor$. The logical consequences holding between identity sentences are preserved by further extensions. However, the Constitutive Foundation lacks the semantic resources to evaluate non-identity sentences, which depend on contingent states of affairs rather than purely structural relations in state space. The Constitutive Foundation is nevertheless important for defining a logic of propositional identity. The same theorems valid at this level remain valid in the Explanatory Extension, though the Explanatory Extension's definition of logical consequence differs, quantifying over world-histories and times in addition to models and variable assignments.
+Identity sentences are formed from extensional (non-identity) sentences:
+$\metaA \propid \metaB$ where $\metaA$ and $\metaB$ are atomic sentences or built from $\neg, \land, \lor$.
+The logical consequences holding between identity sentences are preserved by further extensions.
+However, the Constitutive Foundation lacks the semantic resources to evaluate non-identity sentences,
+which depend on contingent states of affairs rather than purely structural relations in state space.
+The Constitutive Foundation is nevertheless important for defining a logic of propositional identity.
+The same theorems valid at this level remain valid in the Explanatory Extension,
+though the Explanatory Extension's definition of logical consequence differs,
+quantifying over world-histories and times in addition to models and variable assignments.
 \end{remark}
 
 \end{document}

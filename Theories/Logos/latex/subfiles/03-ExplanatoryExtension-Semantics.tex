@@ -75,7 +75,9 @@ The task relation $\taskrel$ satisfies:
 \end{definition}
 
 \begin{remark}
-The Containment constraints ensure that tasks between parts of possible states can be extended to tasks between the states themselves. The Maximality constraint ensures that for any state and possible state, there exists a maximal part compatible with that possible state.
+The Containment constraints ensure that tasks between parts of possible states can be extended to tasks between the states themselves.
+The Maximality constraint ensures that for any state and possible state,
+there exists a maximal part compatible with that possible state.
 \end{remark}
 
 See \leansrc{Logos.Explanatory.Frame}{CoreFrame} for the Lean implementation.
@@ -99,7 +101,9 @@ The set of all world-histories over $\mframe$ is denoted $\historyspace$.
 \end{notation}
 
 \begin{remark}
-World-histories assign world-states to times in a way that respects the task relation. The constraint ensures that consecutive world-states are connected by appropriate tasks. The set of maximal possible evolutions equals the set of world-histories (proven in Brast-McKie, ``Counterfactual Worlds'').
+World-histories assign world-states to times in a way that respects the task relation.
+The constraint ensures that consecutive world-states are connected by appropriate tasks.
+The set of maximal possible evolutions equals the set of world-histories (proven in Brast-McKie, ``Counterfactual Worlds'').
 \end{remark}
 
 % ------------------------------------------------------------
@@ -136,7 +140,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 \end{definition}
 
 \begin{remark}
-It is derivable that $\model, \history, x, \assignment, \tempindex \satisfies \metaA$ iff it is not the case that $\model, \history, x, \assignment, \tempindex \notsatisfies \metaA$. This justifies using $\satisfies$ alone for truth and $\notsatisfies$ for falsehood.
+It is derivable that $\model, \history, x, \assignment, \tempindex \satisfies \metaA$ iff it is not the case that $\model, \history, x, \assignment, \tempindex \notsatisfies \metaA$.
+This justifies using $\satisfies$ alone for truth and $\notsatisfies$ for falsehood.
 \end{remark}
 
 \subsubsection{Lambda Abstraction and Quantification}
@@ -185,7 +190,9 @@ The unrestricted universal quantifier validates the Barcan formulas ($\forall x 
 \end{definition}
 
 \begin{remark}
-$\poss\metaA \equiv \neg\nec\neg\metaA$. Metaphysical necessity can also be defined via counterfactuals: $\nec\metaA := \top \boxright \metaA$. This yields an S5 modal logic.
+$\poss\metaA \equiv \neg\nec\neg\metaA$.
+Metaphysical necessity can also be defined via counterfactuals: $\nec\metaA := \top \boxright \metaA$.
+This yields an S5 modal logic.
 \end{remark}
 
 \subsubsection{Core Tense Operators}
@@ -215,7 +222,8 @@ $\waspast\metaA \equiv \neg\always\neg\metaA$ and $\willfuture\metaA \equiv \neg
 \end{definition}
 
 \begin{remark}
-``$\metaA$ since $\metaB$'' means $\metaB$ was true at some past time, and $\metaA$ has been true ever since. ``$\metaA$ until $\metaB$'' means $\metaB$ will be true at some future time, and $\metaA$ is true until then.
+``$\metaA$ since $\metaB$'' means $\metaB$ was true at some past time, and $\metaA$ has been true ever since.
+``$\metaA$ until $\metaB$'' means $\metaB$ will be true at some future time, and $\metaA$ is true until then.
 \end{remark}
 
 \subsubsection{Counterfactual Conditional}
@@ -232,7 +240,8 @@ We write $\imposition{t}{w}{w'}$ (``imposing $t$ on $w$ yields $w'$'') iff there
 \end{definition}
 
 \begin{remark}[Intuitive Reading]
-A counterfactual ``if $\metaphi$ were the case, then $\metaC$'' is true at world $\history$ and time $x$ iff the consequent $\metaC$ is true in any world $\beta$ at $x$ where $\beta(x)$ is the result of minimally changing $\history(x)$ to make the antecedent $\metaphi$ true.
+A counterfactual ``if $\metaphi$ were the case, then $\metaC$'' is true at world $\history$ and time $x$
+iff the consequent $\metaC$ is true in any world $\beta$ at $x$ where $\beta(x)$ is the result of minimally changing $\history(x)$ to make the antecedent $\metaphi$ true.
 \end{remark}
 
 \subsubsection{Store and Recall Operators}
@@ -280,7 +289,8 @@ The task semantics validates these perpetuity principles connecting modal and te
 
 \subsection{Temporal Frame Constraints}\label{sec:temporal-constraints}
 
-Different temporal structures yield different valid principles. The framework does not assume discrete time:
+Different temporal structures yield different valid principles.
+The framework does not assume discrete time:
 
 \begin{table}[h]
 \centering
@@ -311,7 +321,8 @@ Unbounded Future & No latest time & $\willfuture\top$ \\
 \end{definition}
 
 \begin{remark}
-Unlike the Constitutive Foundation, the Explanatory Extension evaluates truth relative to world-histories and times, not just verification by states. The hyperintensional distinctions are preserved---propositions still differ if their exact verifiers differ---but the Explanatory Extension adds the intensional layer needed to evaluate sentences with modal and temporal operators.
+Unlike the Constitutive Foundation, the Explanatory Extension evaluates truth relative to world-histories and times, not just verification by states.
+The hyperintensional distinctions are preserved---propositions still differ if their exact verifiers differ---but the Explanatory Extension adds the intensional layer needed to evaluate sentences with modal and temporal operators.
 \end{remark}
 
 \end{document}
