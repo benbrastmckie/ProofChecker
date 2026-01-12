@@ -36,30 +36,61 @@ The following operators are defined in terms of the primitives.
 
 \begin{definition}[Propositional]
 \begin{align*}
-  \lneg\varphi &\coloneqq \varphi \imp \falsum && \text{(negation)} \\
-  \varphi \land \psi &\coloneqq \lneg(\varphi \imp \lneg\psi) && \text{(conjunction)} \\
-  \varphi \lor \psi &\coloneqq \lneg\varphi \imp \psi && \text{(disjunction)}
+  \lneg\varphi &\coloneqq \varphi \imp \falsum \\
+  \varphi \land \psi &\coloneqq \lneg(\varphi \imp \lneg\psi) \\
+  \varphi \lor \psi &\coloneqq \lneg\varphi \imp \psi
 \end{align*}
 \end{definition}
 
-% TODO: the '(possibility)' does not align with the parentheticals above or below. It would also be better to use a table to explain their readings following their definitions. Do so for the next two definitions following.
+\begin{center}
+\begin{tabular}{@{}lllp{4cm}@{}}
+\toprule
+Symbol & Name & Lean & Reading \\
+\midrule
+$\lneg\varphi$ & Negation & \texttt{neg} & ``not $\varphi$'' \\
+$\varphi \land \psi$ & Conjunction & \texttt{and} & ``$\varphi$ and $\psi$'' \\
+$\varphi \lor \psi$ & Disjunction & \texttt{or} & ``$\varphi$ or $\psi$'' \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \begin{definition}[Modal]
 \begin{align*}
-  \poss\varphi &\coloneqq \lneg\nec\lneg\varphi && \text{(possibility)}
+  \poss\varphi &\coloneqq \lneg\nec\lneg\varphi
 \end{align*}
 \end{definition}
 
-% TODO: the \sometimes operator doesn't look right. I used \newcommand{\sometimes}{\ensuremath \rotatebox[origin=c]{180}{$\triangle$}} in my paper but maybe this can be improved if this definition is not standard or has unnecessary elements
+\begin{center}
+\begin{tabular}{@{}lllp{4cm}@{}}
+\toprule
+Symbol & Name & Lean & Reading \\
+\midrule
+$\poss\varphi$ & Possibility & \texttt{pos} & ``possibly $\varphi$'' \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \begin{definition}[Temporal]
 \begin{align*}
-  \somepast\varphi &\coloneqq \lneg\allpast\lneg\varphi && \text{(sometime past)} \\
-  \somefuture\varphi &\coloneqq \lneg\allfuture\lneg\varphi && \text{(sometime future)} \\
-  \always\varphi &\coloneqq \allpast\varphi \land \varphi \land \allfuture\varphi && \text{(always)} \\
-  \sometimes\varphi &\coloneqq \somepast\varphi \lor \varphi \lor \somefuture\varphi && \text{(sometimes)}
+  \somepast\varphi &\coloneqq \lneg\allpast\lneg\varphi \\
+  \somefuture\varphi &\coloneqq \lneg\allfuture\lneg\varphi \\
+  \always\varphi &\coloneqq \allpast\varphi \land \varphi \land \allfuture\varphi \\
+  \sometimes\varphi &\coloneqq \somepast\varphi \lor \varphi \lor \somefuture\varphi
 \end{align*}
 \end{definition}
+
+\begin{center}
+\begin{tabular}{@{}lllp{4.5cm}@{}}
+\toprule
+Symbol & Name & Lean & Reading \\
+\midrule
+$\somepast\varphi$ & Sometime past & \texttt{some\_past} & ``at some past time, $\varphi$'' \\
+$\somefuture\varphi$ & Sometime future & \texttt{some\_future} & ``at some future time, $\varphi$'' \\
+$\always\varphi$ & Always & \texttt{always} & ``at all times, $\varphi$'' \\
+$\sometimes\varphi$ & Sometimes & \texttt{sometimes} & ``at some time, $\varphi$'' \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \subsection{Temporal Duality}
 
