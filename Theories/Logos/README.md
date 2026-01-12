@@ -10,6 +10,10 @@ Logos is a **hyperintensional logic system** that goes beyond standard intension
 - **Constitutive relations**: Essence and grounding between propositions
 - **Bilateral propositions**: Verifier/falsifier pairs rather than truth-value assignments
 
+Logos is developed in parallel across two implementations:
+- **Proof-checker** (this repository): Lean 4 formal verification of logical axioms and inference rules
+- **Model-checker**: [ModelChecker](https://github.com/benbrastmckie/ModelChecker) - Z3-based semantic verification for countermodel search
+
 ## Philosophy
 
 ### Why Hyperintensionality?
@@ -212,6 +216,10 @@ lake env lean --run
 - Fine, K. (2017). "Truthmaker Semantics" - Foundation for hyperintensional propositions
 - Brast-McKie, B. "Possible Worlds" (JPL) - Task semantics, bimodal logic
 - Brast-McKie, B. "Counterfactual Worlds" (JPL) - Counterfactual conditional semantics
+
+### Related Projects
+
+- **[ModelChecker](https://github.com/benbrastmckie/ModelChecker)** - Python/Z3 implementation for semantic verification and countermodel search
 
 ## Navigation
 
