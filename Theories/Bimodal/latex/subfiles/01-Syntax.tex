@@ -7,36 +7,25 @@
 
 Formulas are defined inductively with six primitive constructors.
 
-% TODO: I don't like how this looks when it is stacked. Better to provide the definition in line and then to provide a table that explains the name and intuitive reading of each operator
-
 \begin{definition}[Formula]
 The type \texttt{Formula} is defined by:
-\begin{align*}
-  \varphi, \psi ::= \ & p                    && \text{(atomic proposition)} \\
-                    | \ & \falsum             && \text{(falsity)} \\
-                    | \ & \varphi \imp \psi   && \text{(implication)} \\
-                    | \ & \nec\varphi         && \text{(necessity)} \\
-                    | \ & \allpast\varphi     && \text{(always past)} \\
-                    | \ & \allfuture\varphi   && \text{(always future)}
-\end{align*}
+\[
+  \varphi, \psi ::= p \mid \falsum \mid \varphi \imp \psi \mid \nec\varphi \mid \allpast\varphi \mid \allfuture\varphi
+\]
 where $p$ ranges over propositional atoms (type \texttt{String}).
 \end{definition}
 
-\subsection{Notation}
-
-% TODO: change the name 'Falsity' to 'Bottom'
-
 \begin{center}
-\begin{tabular}{@{}llll@{}}
+\begin{tabular}{@{}lllp{4.5cm}@{}}
 \toprule
-Symbol & Name & Lean & Type \\
+Symbol & Name & Lean & Reading \\
 \midrule
-$p, q, r$ & Atom & \texttt{atom s} & \texttt{Formula} \\
-$\falsum$ & Falsity & \texttt{bot} & \texttt{Formula} \\
-$\varphi \imp \psi$ & Implication & \texttt{imp} & \texttt{Formula $\to$ Formula $\to$ Formula} \\
-$\nec\varphi$ & Necessity & \texttt{box} & \texttt{Formula $\to$ Formula} \\
-$\allpast\varphi$ & Always past & \texttt{all\_past} & \texttt{Formula $\to$ Formula} \\
-$\allfuture\varphi$ & Always future & \texttt{all\_future} & \texttt{Formula $\to$ Formula} \\
+$p, q, r$ & Atom & \texttt{atom s} & propositional atom \\
+$\falsum$ & Bottom & \texttt{bot} & falsity \\
+$\varphi \imp \psi$ & Implication & \texttt{imp} & ``if $\varphi$ then $\psi$'' \\
+$\nec\varphi$ & Necessity & \texttt{box} & ``necessarily $\varphi$'' \\
+$\allpast\varphi$ & Always past & \texttt{all\_past} & ``always in the past, $\varphi$'' \\
+$\allfuture\varphi$ & Always future & \texttt{all\_future} & ``always in the future, $\varphi$'' \\
 \bottomrule
 \end{tabular}
 \end{center}
