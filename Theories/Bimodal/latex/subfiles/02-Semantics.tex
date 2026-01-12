@@ -123,6 +123,8 @@ We write $I(w, p)$ when $p$ is true at world state $w$.
 
 \subsection{Truth Conditions}
 
+% TODO: use 'x', 'y', 'z', etc., for times. Also, the time in the definition below is NOT restricted to the domain but may be ANY time in the frame. The same is true in the clauses for the tense operators.
+
 Truth is evaluated relative to three contextual parameters: a model $\model$ providing the interpretation, a world history $\tau$ representing a possible temporal path, and a time $t$ within that history's domain.
 Together these parameters determine the truth value of any formula.
 
@@ -145,9 +147,6 @@ For model $\model$, history $\tau$, time $t \in \domain(\tau)$:
 \noindent
 The modal operator $\nec$ quantifies over all world histories $\sigma$ in $\histories_{\taskframe}$ at the current time $t$.
 The temporal operators $\allpast$ and $\allfuture$ quantify over earlier and later times within the same history's domain.
-
-\textit{Note:} The Lean implementation restricts temporal quantification to times in the history's domain $\domain(\tau)$, matching the semantic clauses above.
-The source paper quantifies over all times $s \in T$; this design choice ensures well-defined evaluation when histories have bounded domains.
 
 \subsection{Time-Shift}
 
