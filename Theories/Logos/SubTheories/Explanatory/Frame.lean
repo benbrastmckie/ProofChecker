@@ -1,4 +1,4 @@
-import Logos.Foundation
+import Logos.SubTheories.Foundation
 import Mathlib.Algebra.Order.Group.Defs
 import Mathlib.Algebra.Order.Group.OrderIso
 
@@ -29,7 +29,7 @@ All constraints are formulated using state modality concepts.
 
 namespace Logos.SubTheories.Explanatory
 
-open Logos.Foundation
+open Logos.SubTheories.Foundation
 
 variable {T : Type*} [LinearOrderedAddCommGroup T]
 
