@@ -7,6 +7,8 @@
 
 Formulas are defined inductively with six primitive constructors.
 
+% TODO: I don't like how this looks when it is stacked. Better to provide the definition in line and then to provide a table that explains the name and intuitive reading of each operator
+
 \begin{definition}[Formula]
 The type \texttt{Formula} is defined by:
 \begin{align*}
@@ -49,11 +51,15 @@ The following operators are defined in terms of the primitives.
 \end{align*}
 \end{definition}
 
+% TODO: the '(possibility)' does not align with the parentheticals above or below. It would also be better to use a table to explain their readings following their definitions. Do so for the next two definitions following.
+
 \begin{definition}[Modal]
 \begin{align*}
   \poss\varphi &\coloneqq \lneg\nec\lneg\varphi && \text{(possibility)}
 \end{align*}
 \end{definition}
+
+% TODO: the \sometimes operator doesn't look right. I used \newcommand{\sometimes}{\ensuremath \rotatebox[origin=c]{180}{$\triangle$}} in my paper but maybe this can be improved if this definition is not standard or has unnecessary elements
 
 \begin{definition}[Temporal]
 \begin{align*}

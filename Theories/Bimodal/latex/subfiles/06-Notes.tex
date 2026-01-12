@@ -23,8 +23,7 @@ Perpetuity Principles & Fully Proven & P1-P6 all proven \\
 
 \subsection{Discrepancy Notes}
 
-This section documents differences between the paper ``The Construction of Possible Worlds''
-and the Lean implementation.
+This section documents differences between the paper ``The Construction of Possible Worlds'' and the Lean implementation.
 
 \subsubsection{Terminology}
 
@@ -66,16 +65,14 @@ for proof convenience in the S5 collapse theorem.
 
 \subsubsection{Temporal Type Generalization}
 
-The paper uses a fixed temporal type $T = \mathbb{Z}$ (integers). The implementation
-generalizes to any type $T$ with \texttt{LinearOrderedAddCommGroup} instance,
-allowing for integers, rationals, reals, or custom bounded time structures.
+The paper uses a fixed temporal type $T = \mathbb{Z}$ (integers).
+The implementation generalizes to any type $T$ with \texttt{LinearOrderedAddCommGroup} instance, allowing for integers, rationals, reals, or custom bounded time structures.
 
 \subsubsection{Completeness Status}
 
-The paper proves completeness via canonical model construction. The Lean implementation
-has the completeness infrastructure (Lindenbaum lemma statement, canonical frame types,
-truth lemma statement) but the core lemmas remain axiomatized. Estimated effort to
-complete: 70-90 hours of focused development.
+The paper proves completeness via canonical model construction.
+The Lean implementation has the completeness infrastructure (Lindenbaum lemma statement, canonical frame types, truth lemma statement) but the core lemmas remain axiomatized.
+Estimated effort to complete: 70-90 hours of focused development.
 
 \subsection{Source Files}
 
