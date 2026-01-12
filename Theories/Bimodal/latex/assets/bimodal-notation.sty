@@ -48,17 +48,21 @@
 % ============================================================================
 
 % --- Frame Structure ---
-\newcommand{\taskframe}{\mathbf{F}}        % Renamed from \frame to avoid conflicts
+\newcommand{\taskframe}{\mathcal{F}}       % Task frame (matches paper's \F)
 \newcommand{\worldstate}{W}
 \newcommand{\taskrel}{R}
+% Task relation arrow: w \taskto{x} u means w transitions to u with duration x
+\newcommand{\taskto}[1]{\Rightarrow_{#1}}
 
 % --- Model Structure ---
 % \model provided by notation-standards.sty
 \newcommand{\valuation}{V}
 
 % --- World History ---
-\newcommand{\history}{h}
+\newcommand{\history}{\tau}                % Primary history (matches paper)
+\newcommand{\althistory}{\sigma}           % Alternative history (for quantification)
 \newcommand{\domain}{\mathrm{dom}}
+\newcommand{\histories}{H}                 % Set of all histories over frame
 
 % --- Truth Relation ---
 % \satisfies, \notsatisfies provided by notation-standards.sty
@@ -81,6 +85,27 @@
 % ============================================================================
 
 % \metaphi, \metapsi, \metachi provided by notation-standards.sty
+
+% ============================================================================
+% Metalanguage Connectives
+% ============================================================================
+
+% Metalanguage biconditional (distinct from object language \iff)
+\newcommand{\Iff}{~\textit{iff}~}
+
+% ============================================================================
+% Lean Identifier Commands
+% ============================================================================
+% Use these for Lean code references to get proper formatting
+
+\newcommand{\leanTaskRel}{\texttt{task\_rel}}
+\newcommand{\leanTimeShift}{\texttt{time\_shift}}
+\newcommand{\leanRespTask}{\texttt{respects\_task}}
+\newcommand{\leanConvex}{\texttt{convex}}
+\newcommand{\leanDomain}{\texttt{domain}}
+\newcommand{\leanStates}{\texttt{states}}
+\newcommand{\leanNullity}{\texttt{nullity}}
+\newcommand{\leanCompositionality}{\texttt{compositionality}}
 
 % ============================================================================
 % End of Package
