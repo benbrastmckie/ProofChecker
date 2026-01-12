@@ -102,7 +102,10 @@ Parameters:
 @[irreducible]
 def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex T)
-    : Formula → Prop
+    : Formula → Prop :=
+  -- Cache CompleteLattice instance to avoid repeated typeclass inference
+  letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
+  fun φ => match φ with
   | Formula.cfml c =>
     -- Constitutive formula: check if some verifier is part of current world-state
     ∃ s, verifies ⟨M.frame.toConstitutiveFrame, M.interp⟩ σ s c ∧
@@ -201,6 +204,8 @@ def falsehoodAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t �
 A formula is valid in a model if it is true at all world-histories and times.
 -/
 def validInModel (M : CoreModel T) (φ : Formula) : Prop :=
+  -- Cache CompleteLattice instance to avoid repeated typeclass inference
+  letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
   ∀ (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame),
     truthAt M τ t ht σ TemporalIndex.empty φ
@@ -209,6 +214,8 @@ def validInModel (M : CoreModel T) (φ : Formula) : Prop :=
 Logical consequence in a model: Γ ⊨_M φ if φ is true whenever all formulas in Γ are true.
 -/
 def entailsInModel (M : CoreModel T) (Γ : List Formula) (φ : Formula) : Prop :=
+  -- Cache CompleteLattice instance to avoid repeated typeclass inference
+  letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
   ∀ (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame),
     (∀ ψ ∈ Γ, truthAt M τ t ht σ TemporalIndex.empty ψ) →

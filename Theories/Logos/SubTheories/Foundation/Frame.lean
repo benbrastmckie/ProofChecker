@@ -1,4 +1,4 @@
-import Mathlib.Order.CompleteLattice
+import Mathlib.Order.CompleteLattice.Basic
 import Mathlib.Order.Lattice
 
 /-!
