@@ -8,8 +8,7 @@
 \section{Constitutive Foundation}\label{sec:constitutive-foundation}
 
 The Constitutive Foundation provides the foundational semantic structure based on exact truthmaker semantics.
-Evaluation is hyperintensional,
-distinguishing propositions that agree on truth-value across all possible worlds but differ in their exact verification and falsification conditions.
+Evaluation is hyperintensional, distinguishing propositions that agree on truth-value across all possible worlds but differ in their exact verification and falsification conditions.
 
 % ------------------------------------------------------------
 % Syntactic Primitives
@@ -87,14 +86,12 @@ The interpretation function $\interp$ assigns:
 \end{definition}
 
 \begin{remark}[Containment Constraint]
-For any function $f$ in $\verifierset{F}$ or $\falsifierset{F}$ and any $n$ states $a_1, \ldots, a_n$,
-these states are all parts of $f(a_1, \ldots, a_n)$.
+For any function $f$ in $\verifierset{F}$ or $\falsifierset{F}$ and any $n$ states $a_1, \ldots, a_n$, these states are all parts of $f(a_1, \ldots, a_n)$.
 However, $f(a_1, \ldots, a_n)$ may have additional parts beyond the input states.
 \end{remark}
 
 \begin{remark}[Predicate Intuition]
-For 1-place predicates, the functions in $\verifierset{F}$ and $\falsifierset{F}$ take an object (which is itself a state) as input
-and return that object instantiating a verifying or falsifying property instance for the property in question.
+For 1-place predicates, the functions in $\verifierset{F}$ and $\falsifierset{F}$ take an object (which is itself a state) as input and return that object instantiating a verifying or falsifying property instance for the property in question.
 \end{remark}
 
 See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the Lean implementation.
@@ -111,8 +108,7 @@ A \emph{variable assignment} $\assignment$ is a function from variables to state
 
 \begin{notation}
 Greek letters ($\history, \alpha, \beta, \ldots$) are reserved for world-histories.
-The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments,
-chosen for compatibility across \LaTeX, markdown, and Lean notation.
+The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments, chosen for compatibility across \LaTeX, markdown, and Lean notation.
 \end{notation}
 
 \begin{definition}[Term Extension]\label{def:term-extension}
@@ -284,12 +280,9 @@ That is, $\metaA$ is a consequence of $\context$ iff the null state verifies $\m
 Identity sentences are formed from extensional (non-identity) sentences:
 $\metaA \propid \metaB$ where $\metaA$ and $\metaB$ are atomic sentences or built from $\neg, \land, \lor$.
 The logical consequences holding between identity sentences are preserved by further extensions.
-However, the Constitutive Foundation lacks the semantic resources to evaluate non-identity sentences,
-which depend on contingent states of affairs rather than purely structural relations in state space.
+However, the Constitutive Foundation lacks the semantic resources to evaluate non-identity sentences, which depend on contingent states of affairs rather than purely structural relations in state space.
 The Constitutive Foundation is nevertheless important for defining a logic of propositional identity.
-The same theorems valid at this level remain valid in the Explanatory Extension,
-though the Explanatory Extension's definition of logical consequence differs,
-quantifying over world-histories and times in addition to models and variable assignments.
+The same theorems valid at this level remain valid in the Explanatory Extension, though the Explanatory Extension's definition of logical consequence differs, quantifying over world-histories and times in addition to models and variable assignments.
 \end{remark}
 
 \end{document}
