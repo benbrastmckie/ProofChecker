@@ -105,10 +105,12 @@ A task model extends a task frame with an interpretation function that assigns t
 
 % TODO: define propositions as sets of world states which represent instantaneous ways for a syste to be.
 
-% TODO: don't use dashes
+% TODO: don't use dashes. use natural sentences to speak directly.
 
-Atomic propositions (sentence letters) express \textbf{propositions}---instantaneous ways for the system to be.
-A proposition can be realized by zero or more world states, unlike world states themselves which are unique configurations.
+Atomic propositions (sentence letters) express \textbf{propositions}---instantaneous ways for the system to be that can be realized by zero or more world states.
+World states themselves are specific configurations of the total system at an instant.
+
+% TODO: specify types explicitly when stating definitions
 
 \begin{definition}[Task Model]
 A \textbf{task model} over frame $\taskframe$ is a structure $\model = (\taskframe, I)$ where the \textbf{interpretation function}:
@@ -116,7 +118,7 @@ A \textbf{task model} over frame $\taskframe$ is a structure $\model = (\taskfra
 I : \worldstate \to \text{String} \to \text{Prop}
 \]
 assigns truth values to atomic propositions at each world state.
-We write $I(w, p)$ or simply $w \vDash p$ when $p$ is true at world state $w$.
+We write $I(w, p)$ or simply $\model, w \vDash p$ when $p$ is true at world state $w$.
 \end{definition}
 
 \subsection{Truth Conditions}
