@@ -14,7 +14,7 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 | **Logical level** | Second-order with first and second-order variables |
 
 For comparison with Bimodal propositional logic, see
-[theory-comparison.md](../docs/research/theory-comparison.md).
+[bimodal-logic.md](../../docs/research/bimodal-logic.md).
 
 ## Purpose
 
@@ -206,7 +206,7 @@ When working on Logos source code:
 
 ### Project-Wide
 
-- [Theory Comparison](../docs/research/theory-comparison.md) - Bimodal vs Logos
+- [Bimodal Logic](../../docs/research/bimodal-logic.md) - Bimodal vs Logos
 - [LEAN Style Guide](../docs/development/LEAN_STYLE_GUIDE.md) - Coding conventions
 - [Module Organization](../docs/development/MODULE_ORGANIZATION.md) - Directory structure
 - [Testing Standards](../docs/development/TESTING_STANDARDS.md) - Test requirements

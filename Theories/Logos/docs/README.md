@@ -20,7 +20,7 @@ Logos is a **planned second-order hyperintensional logic** that will extend beyo
 logic. For working functionality, see [Bimodal/docs/](../../Bimodal/docs/).
 
 For comparison with Bimodal propositional logic, see
-[theory-comparison.md](../../docs/research/theory-comparison.md).
+[bimodal-logic.md](../../../docs/research/bimodal-logic.md).
 
 ## Documentation Organization
 
@@ -106,4 +106,4 @@ Most-referenced documents:
 - **Up**: [Logos/](../)
 - **Project Documentation**: [docs/](../../docs/)
 - **Bimodal Documentation**: [Bimodal/docs/](../../Bimodal/docs/)
-- **Theory Comparison**: [theory-comparison.md](../../docs/research/theory-comparison.md)
+- **Theory Comparison**: [bimodal-logic.md](../../../docs/research/bimodal-logic.md)

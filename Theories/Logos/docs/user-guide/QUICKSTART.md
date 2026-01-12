@@ -57,10 +57,10 @@ For details on planned extensions, see [CURRENT_STATUS.md](CURRENT_STATUS.md).
 
 1. Follow [Bimodal Quick Start](../../../Bimodal/docs/user-guide/QUICKSTART.md)
 2. Read [Current Status](CURRENT_STATUS.md) for Logos-specific development
-3. See [Theory Comparison](../../../docs/research/theory-comparison.md) for differences
+3. See [Bimodal Logic](../../../../docs/research/bimodal-logic.md) for differences
 
 ## See Also
 
 - [Bimodal Documentation](../../../Bimodal/docs/) - Working implementation
-- [Theory Comparison](../../../docs/research/theory-comparison.md) - Bimodal vs Logos
+- [Bimodal Logic](../../../../docs/research/bimodal-logic.md) - Bimodal vs Logos
 - [Roadmap](../project-info/ROADMAP.md) - Development plans
