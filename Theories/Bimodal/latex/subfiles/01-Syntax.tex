@@ -24,6 +24,8 @@ where $p$ ranges over propositional atoms (type \texttt{String}).
 
 \subsection{Notation}
 
+% TODO: change the name 'Falsity' to 'Bottom'
+
 \begin{center}
 \begin{tabular}{@{}llll@{}}
 \toprule
@@ -73,6 +75,10 @@ The following operators are defined in terms of the primitives.
 \subsection{Temporal Duality}
 
 The \texttt{swap\_temporal} function exchanges past and future operators.
+
+% TODO: the \text{swap} doesn't look that good. Define \swap to be \langle{S}\rangle and use this instead of \text{swap}.
+
+% TODO: this definition should take a more explicitly inductive form to help the reader anticipate how it goes in lean code
 
 \begin{definition}[Temporal Swap]
 \begin{align*}
