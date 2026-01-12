@@ -28,41 +28,14 @@ Logos addresses this by using **states** (sub-world-sized entities) as semantic 
 
 ### Extension Architecture
 
-The semantics proceeds through increasingly expressive layers:
+Logos follows a layered semantic architecture:
 
-```
-+--------------------------------------------------+
-|            Constitutive Foundation               |
-|          (hyperintensional base layer)           |
-+------------------------+-------------------------+
-                         | required
-                         v
-+--------------------------------------------------+
-|             Explanatory Extension                |
-|    (modal, temporal, counterfactual, causal)     |
-+------------------------+-------------------------+
-                         |
-       +-----------------+-----------------+
-       | optional        | optional        | optional
-       v                 v                 v
-+--------------+ +--------------+ +--------------+
-|  Epistemic   | |  Normative   | |   Spatial    |
-|  Extension   | |  Extension   | |  Extension   |
-| (belief,     | | (obligation, | | (location,   |
-|  knowledge,  | |  permission, | |  spatial     |
-|  probability)| |  preference) | |  relations)  |
-+------+-------+ +------+-------+ +------+-------+
-       |                |                |
-       +----------------+----------------+
-                        | at least one required
-                        v
-+--------------------------------------------------+
-|              Agential Extension                  |
-|            (multi-agent reasoning)               |
-+--------------------------------------------------+
-```
+1. **Constitutive Foundation** (required) - Hyperintensional semantics with bilateral propositions over mereological state spaces
+2. **Explanatory Extension** (required) - Adds temporal structure and task relation for modal, temporal, and counterfactual reasoning
+3. **Middle Extensions** (optional) - Epistemic, Normative, and Spatial modules that can be combined
+4. **Agential Extension** - Multi-agent reasoning (requires at least one middle extension)
 
-The Constitutive Foundation and Explanatory Extension form the required base. Higher extensions are modular plugins.
+See [recursive-semantics.md](docs/research/recursive-semantics.md) for the full dependency diagram and formal semantic specifications.
 
 ## Core Concepts
 
@@ -104,20 +77,21 @@ World-histories provide the intensional evaluation contexts for modal and tempor
 
 | Component | Status | Description |
 |-----------|--------|-------------|
-| **Foundation** | Complete | ConstitutiveFrame, lattice operations, bilateral propositions |
-| **Foundation/Semantics** | Complete | verifies/falsifies mutual recursion over formula structure |
+| **Foundation** | Complete | ConstitutiveFrame, lattice operations, bilateral propositions, Semantics (verifies/falsifies) |
 | **Explanatory/Frame** | Complete | CoreFrame with task relation, state modality definitions |
 | **Explanatory/WorldHistory** | Complete | Convex domains, task-respecting functions |
-| **Explanatory/truthAt** | Complete | All operators except causal (stub) |
+| **Explanatory/Truth** | Complete | All operators except causal (stub) |
 | **Causal operator** | Stub | Awaiting specification |
 | **Epistemic** | Stub | Placeholder namespace |
 | **Normative** | Stub | Placeholder namespace |
 | **Spatial** | Stub | Placeholder namespace |
 
+*Note: Parallel implementation in [ModelChecker](https://github.com/benbrastmckie/ModelChecker) covers Constitutive Foundation and Explanatory Extension.*
+
 ## Directory Structure
 
 ```
-Logos/SubTheories/
+SubTheories/
 +-- Foundation/           # Constitutive Foundation layer
 |   +-- Frame.lean        # ConstitutiveFrame: complete lattice state space
 |   +-- Syntax.lean       # ConstitutiveFormula: atoms, predicates, connectives, identity
@@ -143,44 +117,66 @@ Logos/SubTheories/
 
 ## Operators Reference
 
+*This section provides a quick reference for commonly-used operators. See [recursive-semantics.md](docs/research/recursive-semantics.md) for complete formal definitions and truth conditions.*
+
 ### Modal Operators
 
 | Operator | Symbol | Reading |
 |----------|--------|---------|
-| Necessity | box | "Necessarily A" - true at all world-histories |
-| Possibility | diamond | "Possibly A" - true at some world-history |
+| Necessity | `□A` or `Box A` | "Necessarily A" - true at all world-histories |
+| Possibility | `◇A` or `Dia A` | "Possibly A" - true at some world-history |
 
 ### Temporal Operators
 
 | Operator | Symbol | Reading |
 |----------|--------|---------|
-| Always Past | H | "It has always been that A" |
-| Always Future | G | "It will always be that A" |
-| Some Past | P | "It was the case that A" |
-| Some Future | F | "It will be the case that A" |
-| Since | A triangleleft B | "A since B" - B was true, A ever since |
-| Until | A triangleright B | "A until B" - A until B becomes true |
+| Always Past | `H A` | "It has always been that A" |
+| Always Future | `G A` | "It will always be that A" |
+| Some Past | `P A` | "It was the case that A" |
+| Some Future | `F A` | "It will be the case that A" |
+| Since | `A S B` | "A since B" - B was true, A ever since |
+| Until | `A U B` | "A until B" - A until B becomes true |
 
 ### Counterfactual Operators
 
 | Operator | Symbol | Reading |
 |----------|--------|---------|
-| Would-counterfactual | box-arrow | "If A were the case, then B" |
+| Would-counterfactual | `A □→ B` | "If A were the case, then B" |
 
 ### Store/Recall Operators
 
 | Operator | Symbol | Effect |
 |----------|--------|--------|
-| Store | uparrow^i | Store current time in index i |
-| Recall | downarrow^i | Evaluate at stored time i |
+| Store | `↑ⁱ` | Store current time in index i |
+| Recall | `↓ⁱ` | Evaluate at stored time i |
 
 ### Propositional Identity
 
 | Operator | Symbol | Reading |
 |----------|--------|---------|
-| Identity | equiv | "A is the same proposition as B" |
-| Essence | A sqsubseteq B | "A is essential to B" (defined: A and B equiv B) |
-| Ground | A leq B | "A grounds B" (defined: A or B equiv B) |
+| Identity | `A ≡ B` | "A is the same proposition as B" |
+| Essence | `A ⊑ B` | "A is essential to B" (defined: A ∧ B ≡ B) |
+| Ground | `A ≤ B` | "A grounds B" (defined: A ∨ B ≡ B) |
+
+### Derived Temporal Operators
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Always | `Alw A` | "At all times A" - H A ∧ A ∧ G A |
+| Sometimes | `Som A` | "At some time A" - P A ∨ A ∨ F A |
+
+### Quantifiers and Predicates
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Universal | `∀y.A` | "For all states y, A holds" |
+| Actuality | `Act(t)` | "t is part of the current world-state" |
+
+### Causal Operators
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Causation | `A ⦿→ B` | "A causes B" (stub - awaiting specification) |
 
 ## Building and Testing
 
@@ -204,6 +200,7 @@ lake env lean --run
 ### Specification
 
 - **[recursive-semantics.md](docs/research/recursive-semantics.md)** - Complete semantic specification with formal definitions, truth clauses, and axiom schemata
+- **[layer-extensions.md](docs/research/layer-extensions.md)** - Extension architecture overview with application examples
 
 ### Theory Documentation
 
