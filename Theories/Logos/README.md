@@ -59,6 +59,12 @@ Logos follows a layered semantic architecture:
 ┌──────────────────────────────────────────────────┐
 │              Agential Extension                  │
 │            (multi-agent reasoning)               │
+└────────────────────────┬─────────────────────────┘
+                         │ inherits from Epistemic
+                         ▼
+┌──────────────────────────────────────────────────┐
+│             Reflection Extension                 │
+│    (metacognition, self-modeling, I operator)    │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -66,6 +72,7 @@ Logos follows a layered semantic architecture:
 2. **Explanatory Extension** (required) - Adds temporal structure and task relation for modal, temporal, and counterfactual reasoning
 3. **Middle Extensions** (optional) - Epistemic, Normative, and Spatial modules that can be combined
 4. **Agential Extension** - Multi-agent reasoning (requires at least one middle extension)
+5. **Reflection Extension** - Metacognition and self-modeling (inherits from Epistemic)
 
 See [recursive-semantics.md](docs/research/recursive-semantics.md) for the full dependency diagram and formal semantic specifications.
 
@@ -117,6 +124,7 @@ World-histories provide the intensional evaluation contexts for modal and tempor
 | **Epistemic** | Stub | Placeholder namespace |
 | **Normative** | Stub | Placeholder namespace |
 | **Spatial** | Stub | Placeholder namespace |
+| **Reflection** | Stub | Placeholder namespace |
 
 *Note: Parallel implementation in [ModelChecker](https://github.com/benbrastmckie/ModelChecker) covers Constitutive Foundation and Explanatory Extension.*
 
@@ -144,7 +152,10 @@ SubTheories/
 |   +-- Normative.lean    # Deontic operators (placeholder)
 |
 +-- Spatial/              # Spatial Extension (stub)
-    +-- Spatial.lean      # Location operators (placeholder)
+|   +-- Spatial.lean      # Location operators (placeholder)
+|
++-- Reflection/           # Reflection Extension (stub)
+    +-- Reflection.lean   # Metacognition, I operator (placeholder)
 ```
 
 ## Operators Reference
