@@ -49,12 +49,14 @@ A world history is a function from times to world states that respects the task 
 World histories represent possible paths through the space of world states.
 
 \begin{definition}[Convex Domain]
-A domain $\domain : T \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ with $a \le b \le c$ is also in $\domain$:
+A domain $\domain : T \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ /with $a \le b \le c$ is also in $\domain$:
 \[
 \forall a\, b\, c.\, \domain(a) \land \domain(c) \land a \le b \land b \le c \to \domain(b)
 \]
 Convexity ensures the domain has no temporal gaps.
 \end{definition}
+
+% TODO: replace 'respects the task relation' with 'lawfull', fixing the grammar accordingly
 
 \begin{definition}[Respects Task]
 A function $\tau : \domain \to \worldstate$ \textbf{respects the task relation} if for all $s, t \in \domain$ with $s \le t$:
@@ -64,8 +66,14 @@ A function $\tau : \domain \to \worldstate$ \textbf{respects the task relation} 
 This ensures the history is consistent with possible task executions.
 \end{definition}
 
+% TODO: don't use the dashes below, use simple sentences that state each constraint in a natural and direct way
+
+% TODO: don't say structure, say what the type of \tau is where it has domain dom that is convex and is lawful.
+
+% TODO: fold the definition above into the definition below, avoiding the need for an extra term 'lawful' by simply stating the lawful constraint in the definition of a world history. Despite using types, this should follow the definition in line 868 in /home/benjamin/Projects/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex
+
 \begin{definition}[World History]
-A \textbf{world history} in task frame $\taskframe$ is a structure $\tau$ with:
+A \textbf{world history} in a task frame $\taskframe$ is a structure $\tau$ that satisfies the following constraints:
 \begin{itemize}
   \item $\domain : T \to \text{Prop}$ --- a convex temporal domain
   \item $\tau : (t : T) \to \domain(t) \to \worldstate$ --- world state assignment
@@ -73,6 +81,8 @@ A \textbf{world history} in task frame $\taskframe$ is a structure $\tau$ with:
 \end{itemize}
 We write $\histories_{\taskframe}$ for the set of all world histories over frame $\taskframe$.
 \end{definition}
+
+% TODO: this next table can be removed
 
 \begin{center}
 \begin{tabular}{@{}ll@{}}
@@ -89,7 +99,13 @@ Lean Field & Type \\
 
 \subsection{Task Models}
 
+% TODO: use 'sentence letters' in place of 'atomic propositions' throughout. Never use 'atomic proposition' anywhere.
+
 A task model extends a task frame with an interpretation function that assigns truth values to atomic propositions at world states.
+
+% TODO: define propositions as sets of world states which represent instantaneous ways for a syste to be.
+
+% TODO: don't use dashes
 
 Atomic propositions (sentence letters) express \textbf{propositions}---instantaneous ways for the system to be.
 A proposition can be realized by zero or more world states, unlike world states themselves which are unique configurations.

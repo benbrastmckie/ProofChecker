@@ -46,6 +46,12 @@ The following diagram shows the dependency structure among extensions:
 ┌─────────────────────────────────────────────────┐
 │             Agential Extension                  │
 │           (multi-agent reasoning)               │
+└───────────────────────┬─────────────────────────┘
+                        │ inherits from Epistemic
+                        ▼
+┌─────────────────────────────────────────────────┐
+│            Reflection Extension                 │
+│    (metacognition, self-modeling, I operator)   │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -57,6 +63,7 @@ The Constitutive Foundation and Explanatory Extension form the required base. Th
 4. **Normative Extension**: Extensions for obligation, permission, and value [DETAILS]
 5. **Spatial Extension**: Extensions for spatial reasoning [DETAILS]
 6. **Agential Extension**: Extensions for multi-agent reasoning [DETAILS]
+7. **Reflection Extension**: Extensions for metacognition and self-modeling [DETAILS]
 
 The Constitutive Foundation provides the foundational mereological structure with bilateral propositions (verifier/falsifier pairs). The Explanatory Extension extends this foundation with temporal structure (a totally ordered abelian group) and a task relation constraining possible state transitions, enabling evaluation of truth relative to world-histories and times.
 
@@ -561,7 +568,8 @@ The spatial frame extends the core frame with:
 
 [DETAILS]
 
-The Agential Extension requires at least one of the Epistemic, Normative, or Spatial Extensions to be loaded. It provides structures for multi-agent reasoning.
+The Agential Extension requires at least one of the Epistemic, Normative, or Spatial Extensions to be loaded.
+It provides structures for multi-agent reasoning.
 
 ### Frame Extension
 
@@ -574,6 +582,142 @@ The Agential Extension requires at least one of the Epistemic, Normative, or Spa
 [DETAILS]
 
 [QUESTION: How do individual and collective agency interact in the semantic framework?]
+
+---
+
+## Reflection Extension
+
+The Reflection Extension enables first-person metacognitive reasoning through the 'I' operator.
+Where the Agential Extension projects epistemic operators onto other agents, the Reflection Extension projects them onto the self, enabling perspectival distance from one's own beliefs, abilities, and goal-states.
+
+### Core Insight
+
+The 'I' operator transforms direct modal expressions into self-aware epistemic stances.
+Consider the difference between:
+
+| Expression | Reading | Epistemic Subject |
+|------------|---------|-------------------|
+| Mu(raining) | "It must be raining" | Implicit/absent |
+| I(raining) | "I believe it is raining" | Explicit (self) |
+
+The direct expression commits the speaker without self-awareness; the self-aware expression registers the speaker as the epistemic subject.
+This distinction follows Kaplan's character/content framework and Lewis's centered-worlds semantics.
+
+### Frame Extension
+
+The Reflection frame extends the Agential frame with:
+
+| Component | Description |
+|-----------|-------------|
+| **Self-Index** | Distinguished agent index `self` in the agent set A |
+| **Self-Accessibility** | Reflexive accessibility relation R_self for self-knowledge |
+| **Self-Model** | Function SM: W -> SelfState mapping world-states to self-representations |
+| **Commitment Register** | Set CR(w) of propositions explicitly self-ascribed at world w |
+
+The self-accessibility relation R_self satisfies:
+- **Seriality (D)**: For all w, there exists w' such that (w, w') in R_self
+- **Transitivity (4)**: Positive introspection: I(phi) -> I(I(phi))
+- **Euclidean (5)**: Negative introspection: -I(phi) -> I(-I(phi))
+
+### Operators
+
+#### Self-Knowledge and Self-Belief
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| **Metacognitive I** | I(phi) | "I judge/believe that phi" |
+| **Self-Knowledge** | I_K(phi) | "I know that phi" |
+| **Self-Belief** | I_B(phi) | "I believe that phi" |
+| **Self-Uncertainty** | I_?(phi) | "I am uncertain whether phi" |
+
+#### Ability Introspection
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| **Self-Ability** | I_Can(phi) | "I can bring about phi" |
+| **Ability-Knowledge** | K_self(Can_self(phi)) | "I know I can bring about phi" |
+| **Limitation-Knowledge** | K_self(-Can_self(phi)) | "I know I cannot bring about phi" |
+
+#### Goal-Distance
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| **Goal-Distance** | Dist(G, n) | "Goal G is n steps away" |
+| **Goal-Progress** | Closer(G) | "I am getting closer to goal G" |
+| **Goal-Achievable** | Achievable(G) | "Goal G is achievable" |
+
+#### Attributed Belief (How Others Perceive Self)
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| **Other's Belief About Self** | B_j(I(phi)) | "Agent j believes that I believe phi" |
+| **Other's Belief About Self-Ability** | B_j(I_Can(phi)) | "Agent j believes I can do phi" |
+
+### Truth Conditions
+
+Given evaluation context (M, tau, x, sigma, i-vector):
+
+**Primary 'I' Operator**:
+
+M, tau, x, sigma |- I(phi) iff:
+1. For all w' accessible via R_self from tau(x): M, tau[w'/x], x, sigma |- phi
+2. phi is in the Commitment Register CR(tau(x))
+
+The second condition distinguishes explicit self-attribution from mere truth across epistemic alternatives.
+
+**Derived Operators**:
+
+| Operator | Definition |
+|----------|------------|
+| I_K(phi) | I(K(phi)) where K is factive |
+| I_B(phi) | I(B(phi)) |
+| I_?(phi) | I(-B(phi) & -B(-phi)) |
+| I_Can(phi) | There exists action-sequence a achievable by self leading to phi |
+
+**Temporal Interaction**:
+
+| Formula | Reading |
+|---------|---------|
+| P(I(phi)) | "I previously believed phi" |
+| I(P(phi)) | "I believe phi was the case" |
+| F(I(phi)) | "I will believe phi" |
+| I(F(phi)) | "I believe phi will be the case" |
+
+These are not equivalent, demonstrating the interaction between temporal and metacognitive perspectives.
+
+### Key Axioms
+
+| Axiom | Name | Schema |
+|-------|------|--------|
+| **I-T** | Veridicality of self-knowledge | I_K(phi) -> phi |
+| **I-4** | Positive introspection | I(phi) -> I(I(phi)) |
+| **I-5** | Negative introspection | -I(phi) -> I(-I(phi)) |
+| **I-D** | Consistency | -I(false) |
+| **I-Commit** | Commitment closure | I(phi) -> Register(phi) |
+
+### Relationship to Agential Extension
+
+The Reflection Extension inherits from the Epistemic Extension in parallel with the Agential Extension:
+
+```
+                Epistemic Extension
+                (B_a, K_a, Pr, Mi, Mu)
+                       |
+          +------------+------------+
+          |                         |
+          v                         v
+  Agential Extension         Reflection Extension
+  (modeling others)          (modeling self)
+          |                         |
+ B_j(phi): "j believes phi"  I(phi): "I believe phi"
+ K_j(phi): "j knows phi"     I_K(phi): "I know I know phi"
+```
+
+Both extensions apply the epistemic apparatus in different directions:
+- **Agential**: Outward projection onto other agents
+- **Reflection**: Inward projection onto self
+
+[DETAILS]
 
 ---
 

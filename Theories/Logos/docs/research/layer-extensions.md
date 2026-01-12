@@ -10,6 +10,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 4. **Normative Extension** - Extensions for obligation, permission, and value
 5. **Spatial Extension** - Extensions for spatial reasoning and location
 6. **Agential Extension** - Extensions for multi-agent reasoning (requires at least one middle extension)
+7. **Reflection Extension** - Extensions for metacognition and self-modeling (inherits from Epistemic)
 
 **Semantic Progression**: Each extension's frame includes all structure from previous extensions. A formula combining operators from multiple extensions (e.g., `B_a(F(O(p)))` - "agent a believes that it will be obligatory that p") is evaluated in the most complex frame needed.
 
@@ -287,6 +288,79 @@ The Agential Extension extends the Normative Extension for multi-agent reasoning
 
 ---
 
+### Reflection Extension
+
+The Reflection Extension enables first-person metacognitive reasoning through the 'I' operator.
+It inherits from the Epistemic Extension in parallel with the Agential Extension: both apply the same epistemic apparatus, but Agential projects onto other agents while Reflection projects onto self.
+
+#### Core Insight
+
+The 'I' operator transforms direct modal expressions into self-aware epistemic stances:
+- **Direct**: "It must be raining" (Mu(raining)) - epistemic necessity without self-reference
+- **Self-aware**: "I believe it is raining" (I(raining)) - explicit first-person epistemic stance
+
+This distinction follows Kaplan's character/content framework and Lewis's centered-worlds semantics.
+
+#### Frame Extension
+
+The Reflection frame extends the Agential frame with:
+
+| Component | Description |
+|-----------|-------------|
+| **Self-Index** | Distinguished agent index `self` in the agent set |
+| **Self-Accessibility** | Reflexive accessibility relation R_self for self-knowledge |
+| **Self-Model** | Function mapping world-states to self-representations |
+| **Commitment Register** | Set of propositions explicitly self-ascribed at each world |
+
+#### Operators
+
+| Operator | Notation | Reading |
+|----------|----------|---------|
+| **Metacognitive I** | I(phi) | "I judge/believe that phi" |
+| **Self-Knowledge** | I_K(phi) | "I know that phi" |
+| **Self-Belief** | I_B(phi) | "I believe that phi" |
+| **Self-Uncertainty** | I_?(phi) | "I am uncertain whether phi" |
+| **Self-Ability** | I_Can(phi) | "I can bring about phi" |
+| **Goal-Distance** | Dist(G, n) | "Goal G is n steps away" |
+| **Goal-Progress** | Closer(G) | "I am getting closer to G" |
+| **Attributed Belief** | B_j(I(phi)) | "Agent j believes I believe phi" |
+
+#### Key Axioms
+
+| Axiom | Name | Schema |
+|-------|------|--------|
+| **I-4** | Positive introspection | I(phi) -> I(I(phi)) |
+| **I-5** | Negative introspection | -I(phi) -> I(-I(phi)) |
+| **I-D** | Consistency | -I(false) |
+
+#### Metacognitive Reasoning Applications
+
+##### Self-Reflection in Planning Example
+
+An AI system evaluating its own capabilities and limitations:
+
+**Ability Introspection**:
+```
+I_Can(solve(problem_X)) ∧ I_K(-I_Can(solve(problem_Y)))
+```
+The system knows it can solve X and knows it cannot solve Y.
+
+**Belief-Goal Alignment**:
+```
+I_B(Achievable(G)) ∧ Dist(G, n) ∧ P(Dist(G, m)) ∧ m > n
+```
+The system believes G is achievable, is n steps away, and was previously m steps away (making progress).
+
+**Attributed Belief for Collaboration**:
+```
+I_B(B_j(I_Can(task_T))) → propose_collaboration(j, task_T)
+```
+If I believe that agent j believes I can do task T, propose collaboration on T.
+
+[DETAILS: Full semantic clauses for Reflection operators pending specification]
+
+---
+
 ## Extension Interaction and Composition
 
 When operators from multiple extensions combine, evaluation uses the most complex frame required:
@@ -321,6 +395,7 @@ If agent A believes agent B prefers y, then A negotiates toward y.
 | **Normative Extension** | [DETAILS] | Not started |
 | **Spatial Extension** | [DETAILS] | Not started |
 | **Agential Extension** | [DETAILS] | Not started |
+| **Reflection Extension** | [DETAILS] | Not started |
 
 See [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) for current progress.
 
