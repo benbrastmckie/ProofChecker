@@ -1,90 +1,184 @@
 # Logos
 
-Re-export layer providing the Logos namespace for TM bimodal logic.
+A hyperintensional logic for truthmaker semantics, implementing exact verification and falsification conditions over a mereological state space with bilateral propositions.
 
-## About Logos Logic
+## About Logos
 
-Logos is a **planned second-order hyperintensional logic** that will extend beyond Bimodal.
+Logos is a **hyperintensional logic system** that goes beyond standard intensional (possible-worlds) semantics. Where intensional logics identify necessarily equivalent propositions, Logos distinguishes them by their exact verification and falsification conditions. This enables formal reasoning about:
 
-| Aspect | Description |
-|--------|-------------|
-| **Type** | Second-order hyperintensional logic (planned) |
-| **Current status** | Re-exports Bimodal TM logic |
-| **Semantic primitives** | States (more fine-grained than worlds) |
-| **Logical level** | Second-order with first and second-order variables |
+- **Truthmaker semantics**: What makes a proposition true or false
+- **Constitutive relations**: Essence and grounding between propositions
+- **Bilateral propositions**: Verifier/falsifier pairs rather than truth-value assignments
 
-For comparison with Bimodal propositional logic, see
-[bimodal-logic.md](../../docs/research/bimodal-logic.md).
+## Philosophy
 
-## Purpose
+### Why Hyperintensionality?
 
-This directory currently re-exports the Bimodal TM logic implementation under the Logos namespace.
-When Logos extensions are implemented, this will include epistemic, normative, and explanatory
-operators with state-based hyperintensional semantics.
+Standard modal logic treats propositions as sets of possible worlds. This identifies all necessarily true propositions (they're all true at every world) and all necessarily false ones. But intuitively:
 
-## Theory-Specific Documentation
+- "2 + 2 = 4" and "Every bachelor is unmarried" are distinct truths
+- Mathematical necessities differ from logical necessities
+- Fine-grained propositional content matters for explanation
 
-For Logos-specific guides and references, see [docs/](docs/README.md):
+Logos addresses this by using **states** (sub-world-sized entities) as semantic primitives. A bilateral proposition is an ordered pair of verifier and falsifier sets, capturing what would make it exactly true vs exactly false.
 
-| Document | Description |
-|----------|-------------|
-| [Quick Start](docs/user-guide/QUICKSTART.md) | Getting started (redirects to Bimodal) |
-| [Current Status](docs/user-guide/CURRENT_STATUS.md) | Logos development status |
-| [Axiom Reference](docs/reference/AXIOM_REFERENCE.md) | Axioms (via Bimodal) |
-| [Extension Stubs](docs/reference/EXTENSION_STUBS.md) | Planned extensions |
-| [Implementation Status](docs/project-info/IMPLEMENTATION_STATUS.md) | Module status |
-| [Roadmap](docs/project-info/ROADMAP.md) | Development roadmap |
+### Extension Architecture
 
-## Submodules
+The semantics proceeds through increasingly expressive layers:
 
-- **Syntax/**: Formula types and proof contexts
-  - Formula inductive type (atom, bot, imp, box, past, future)
-  - Context type for proof premises
-  - DSL for readable formula construction (planned)
+```
++--------------------------------------------------+
+|            Constitutive Foundation               |
+|          (hyperintensional base layer)           |
++------------------------+-------------------------+
+                         | required
+                         v
++--------------------------------------------------+
+|             Explanatory Extension                |
+|    (modal, temporal, counterfactual, causal)     |
++------------------------+-------------------------+
+                         |
+       +-----------------+-----------------+
+       | optional        | optional        | optional
+       v                 v                 v
++--------------+ +--------------+ +--------------+
+|  Epistemic   | |  Normative   | |   Spatial    |
+|  Extension   | |  Extension   | |  Extension   |
+| (belief,     | | (obligation, | | (location,   |
+|  knowledge,  | |  permission, | |  spatial     |
+|  probability)| |  preference) | |  relations)  |
++------+-------+ +------+-------+ +------+-------+
+       |                |                |
+       +----------------+----------------+
+                        | at least one required
+                        v
++--------------------------------------------------+
+|              Agential Extension                  |
+|            (multi-agent reasoning)               |
++--------------------------------------------------+
+```
 
-- **ProofSystem/**: Axioms and derivation trees
-  - 8 TM axiom schemata (MT, M4, MB, T4, TA, TL, MF, TF)
-  - 7 inference rules as `DerivationTree` constructors (axiom, assumption, modusPonens, necessitation, temporalNecessitation, temporalDuality, weakening)
-  - Derivation trees as inductive `Type` (not `Prop`)
-  - Computable `height` function for well-founded recursion
+The Constitutive Foundation and Explanatory Extension form the required base. Higher extensions are modular plugins.
 
-- **Semantics/**: Task frame semantics
-  - Task frame structure (world states, times, task relation)
-  - World history functions
-  - Task models with valuation
-  - Truth evaluation and validity
+## Core Concepts
 
-- **Metalogic/**: Soundness and completeness
-  - Soundness theorem (partial: 5/8 axioms, 4/7 rules proven)
-  - Completeness infrastructure (canonical model construction)
-  - Decidability procedures (planned)
+### Bilateral Propositions
 
-- **Theorems/**: Key theorems and principles
-  - Perpetuity principles P1-P6 (P1-P3 proven)
-  - Modal-temporal interactions
+A *bilateral proposition* is an ordered pair (V, F) where:
+- V = set of verifier states (what makes it true)
+- F = set of falsifier states (what makes it false)
 
-- **Automation/**: Proof automation (planned)
-  - Custom tactics (stubs only)
-  - Automated proof search (planned)
+Both sets must be closed under fusion (mereological sum). Propositions are **exclusive** (no state both verifies and falsifies) and **exhaustive** (every possible state is compatible with some verifier or falsifier).
 
-## Quick Reference
+### State Space
 
-**Where to find specific functionality**:
+The semantic foundation is a **constitutive frame** (S, sqsubseteq) where:
+- S is a nonempty set of states
+- sqsubseteq is a parthood relation making (S, sqsubseteq) a complete lattice
 
-- **Formulas**: `Syntax/Formula.lean` - Inductive formula type
-- **Contexts**: `Syntax/Context.lean` - Proof context lists
-- **Axioms**: `ProofSystem/Axioms.lean` - TM axiom schemata
-- **Derivation Trees**: `ProofSystem/Derivation.lean` - DerivationTree type and constructors
-- **Task Frames**: `Semantics/TaskFrame.lean` - Task frame structure
-- **Models**: `Semantics/TaskModel.lean` - Models with valuation
-- **Truth**: `Semantics/Truth.lean` - Truth evaluation
-- **Validity**: `Semantics/Validity.lean` - Semantic consequence
-- **Soundness**: `Metalogic/Soundness.lean` - Soundness theorem
-- **Completeness**: `Metalogic/Completeness.lean` - Canonical model construction
-- **Perpetuity**: `Theorems/Perpetuity.lean` - Perpetuity principles P1-P6
-- **Tactics**: `Automation/Tactics.lean` - Custom tactics (stubs)
+This provides:
+- **Null state**: Bottom element (empty fusion)
+- **Full state**: Top element (fusion of all states)
+- **Fusion**: Least upper bound operation
 
-## Building and Type-Checking
+### Task Relation
+
+The Explanatory Extension adds a **task relation** s =>_d t constraining how states can evolve:
+- "There is a task from state s to state t with duration d"
+- Enables defining possibility, compatibility, and world-states
+- Satisfies compositionality, parthood, and containment constraints
+
+### World-Histories
+
+A *world-history* is a function tau : X -> W assigning world-states to times where:
+- X is a convex subset of the temporal order
+- tau respects the task relation: tau(x) =>_{y-x} tau(y) for x <= y
+
+World-histories provide the intensional evaluation contexts for modal and temporal operators.
+
+## Implementation Status
+
+| Component | Status | Description |
+|-----------|--------|-------------|
+| **Foundation** | Complete | ConstitutiveFrame, lattice operations, bilateral propositions |
+| **Foundation/Semantics** | Complete | verifies/falsifies mutual recursion over formula structure |
+| **Explanatory/Frame** | Complete | CoreFrame with task relation, state modality definitions |
+| **Explanatory/WorldHistory** | Complete | Convex domains, task-respecting functions |
+| **Explanatory/truthAt** | Complete | All operators except causal (stub) |
+| **Causal operator** | Stub | Awaiting specification |
+| **Epistemic** | Stub | Placeholder namespace |
+| **Normative** | Stub | Placeholder namespace |
+| **Spatial** | Stub | Placeholder namespace |
+
+## Directory Structure
+
+```
+Logos/SubTheories/
++-- Foundation/           # Constitutive Foundation layer
+|   +-- Frame.lean        # ConstitutiveFrame: complete lattice state space
+|   +-- Syntax.lean       # ConstitutiveFormula: atoms, predicates, connectives, identity
+|   +-- Semantics.lean    # verifies/falsifies mutual recursion
+|   +-- Proposition.lean  # BilateralProp type
+|   +-- Interpretation.lean # Interpretation function I
+|   +-- Basic.lean        # Common definitions
+|
++-- Explanatory/          # Explanatory Extension layer
+|   +-- Frame.lean        # CoreFrame: task relation, state modality
+|   +-- Syntax.lean       # Formula type with modal/temporal operators
+|   +-- Truth.lean        # truthAt evaluation with world-histories
+|
++-- Epistemic/            # Epistemic Extension (stub)
+|   +-- Epistemic.lean    # Belief, knowledge operators (placeholder)
+|
++-- Normative/            # Normative Extension (stub)
+|   +-- Normative.lean    # Deontic operators (placeholder)
+|
++-- Spatial/              # Spatial Extension (stub)
+    +-- Spatial.lean      # Location operators (placeholder)
+```
+
+## Operators Reference
+
+### Modal Operators
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Necessity | box | "Necessarily A" - true at all world-histories |
+| Possibility | diamond | "Possibly A" - true at some world-history |
+
+### Temporal Operators
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Always Past | H | "It has always been that A" |
+| Always Future | G | "It will always be that A" |
+| Some Past | P | "It was the case that A" |
+| Some Future | F | "It will be the case that A" |
+| Since | A triangleleft B | "A since B" - B was true, A ever since |
+| Until | A triangleright B | "A until B" - A until B becomes true |
+
+### Counterfactual Operators
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Would-counterfactual | box-arrow | "If A were the case, then B" |
+
+### Store/Recall Operators
+
+| Operator | Symbol | Effect |
+|----------|--------|--------|
+| Store | uparrow^i | Store current time in index i |
+| Recall | downarrow^i | Evaluate at stored time i |
+
+### Propositional Identity
+
+| Operator | Symbol | Reading |
+|----------|--------|---------|
+| Identity | equiv | "A is the same proposition as B" |
+| Essence | A sqsubseteq B | "A is essential to B" (defined: A and B equiv B) |
+| Ground | A leq B | "A grounds B" (defined: A or B equiv B) |
+
+## Building and Testing
 
 ```bash
 # Build entire Logos module
@@ -93,131 +187,34 @@ lake build Logos
 # Build entire project
 lake build
 
-# Type-check specific file
-lake env lean Logos/Syntax/Formula.lean
-lake env lean Logos/ProofSystem/Axioms.lean
-lake env lean Logos/Semantics/TaskFrame.lean
+# Type-check specific SubTheories file
+lake env lean Theories/Logos/SubTheories/Foundation/Frame.lean
+lake env lean Theories/Logos/SubTheories/Explanatory/Truth.lean
 
-# Interactive mode (load and explore)
+# Interactive mode
 lake env lean --run
 ```
 
-## Module Structure
-
-The Logos module follows a layered architecture:
-
-1. **Layer 0 (Foundation)**: Syntax and ProofSystem
-   - Define formulas and axioms
-   - Establish proof rules
-
-2. **Layer 1 (Semantics)**: Task frame semantics
-   - Define models and truth evaluation
-   - Establish validity
-
-3. **Layer 2 (Metalogic)**: Properties of the proof system
-   - Prove soundness (derivability → validity)
-   - Establish completeness (validity → derivability)
-
-4. **Layer 3 (Theorems)**: Derived results
-   - Perpetuity principles
-   - Modal-temporal interactions
-
-5. **Layer 4 (Automation)**: Proof automation
-   - Custom tactics for TM proofs
-   - Automated proof search
-
-## Implementation Status
-
-**Complete (Layer 0)**:
-- Syntax: Formula, Context (DSL planned)
-- ProofSystem: All axioms and rules defined
-
-**Complete (Layer 1)**:
-- Semantics: TaskFrame, TaskModel, Truth, Validity
-
-**Partial (Layer 2)**:
-- Metalogic/Soundness: 5/8 axioms, 4/7 rules proven
-- Metalogic/Completeness: Infrastructure only
-
-**Partial (Layer 3)**:
-- Theorems/Perpetuity: P1-P3 proven, P4-P6 partial
-
-**Planned (Layer 4)**:
-- Automation: Tactics stubs only
-- Automation: ProofSearch not started
-
-For detailed status, see [IMPLEMENTATION_STATUS.md](../docs/project-info/IMPLEMENTATION_STATUS.md).
-
-## API Documentation
-
-For detailed API documentation:
-
-- **Module overview**: See [Logos.lean](../Logos.lean) for top-level re-exports
-- **Generated docs**: Run `lake build :docs` to generate doc-gen4 API documentation
-- **Architecture guide**: [ARCHITECTURE.md](../docs/user-guide/ARCHITECTURE.md) for TM logic specification
-- **Code comments**: All public definitions have comprehensive docstrings
-
-## Development Guidelines
-
-When working on Logos source code:
-
-- **Follow style guide**: [LEAN_STYLE_GUIDE.md](../docs/development/LEAN_STYLE_GUIDE.md)
-- **Write tests first**: [TESTING_STANDARDS.md](../docs/development/TESTING_STANDARDS.md)
-- **Document thoroughly**: Every public definition requires docstring
-- **Run lint**: Zero `#lint` warnings required
-- **Build successfully**: `lake build` must complete without errors
-
-## Common Tasks
-
-### Adding a New Definition
-
-1. Choose appropriate module (Syntax, ProofSystem, Semantics, etc.)
-2. Write comprehensive docstring
-3. Implement definition
-4. Add to module export list
-5. Write tests in `LogosTest/`
-6. Update documentation if significant
-
-### Proving a New Theorem
-
-1. Write theorem statement with docstring in appropriate module
-2. Sketch proof strategy in comments
-3. Implement proof using tactics or term-mode
-4. Add example usage to `Archive/`
-5. Document in relevant guide (TUTORIAL.md, EXAMPLES.md)
-
-### Adding a New Axiom
-
-1. Add axiom schema to `ProofSystem/Axioms.lean`
-2. Add case to `DerivationTree` in `ProofSystem/Derivation.lean` (as constructor)
-3. Update `height` function to handle new constructor
-4. Prove validity in `Metalogic/Soundness.lean`
-5. Write tests in `LogosTest/ProofSystem/`
-6. Update ARCHITECTURE.md if significant
-
 ## Related Documentation
 
-### Theory-Specific (Logos)
+### Specification
 
-- [Logos Documentation](docs/README.md) - Theory-specific documentation hub
-- [Quick Start](docs/user-guide/QUICKSTART.md) - Getting started with Logos
-- [Extension Stubs](docs/reference/EXTENSION_STUBS.md) - Planned extensions
-- [Roadmap](docs/project-info/ROADMAP.md) - Development timeline
+- **[recursive-semantics.md](docs/research/recursive-semantics.md)** - Complete semantic specification with formal definitions, truth clauses, and axiom schemata
 
-### Project-Wide
+### Theory Documentation
 
-- [Bimodal Logic](../../docs/research/bimodal-logic.md) - Bimodal vs Logos
-- [LEAN Style Guide](../docs/development/LEAN_STYLE_GUIDE.md) - Coding conventions
-- [Module Organization](../docs/development/MODULE_ORGANIZATION.md) - Directory structure
-- [Testing Standards](../docs/development/TESTING_STANDARDS.md) - Test requirements
-- [Architecture Guide](../docs/user-guide/ARCHITECTURE.md) - TM logic specification
-- [Tutorial](../docs/user-guide/TUTORIAL.md) - Getting started
-- [Implementation Status](../docs/project-info/IMPLEMENTATION_STATUS.md) - Project status
+- [docs/](docs/README.md) - Logos-specific documentation hub
+- [docs/reference/GLOSSARY.md](docs/reference/GLOSSARY.md) - Term definitions
+- [docs/user-guide/METHODOLOGY.md](docs/user-guide/METHODOLOGY.md) - Philosophical methodology
+
+### Academic Sources
+
+- Fine, K. (2017). "Truthmaker Semantics" - Foundation for hyperintensional propositions
+- Brast-McKie, B. "Possible Worlds" (JPL) - Task semantics, bimodal logic
+- Brast-McKie, B. "Counterfactual Worlds" (JPL) - Counterfactual conditional semantics
 
 ## Navigation
 
-- **Up**: [Project Root](../)
-- **Theory Docs**: [docs/](docs/) - Logos-specific documentation
+- **Project Root**: [../../](../..)
+- **Theory Docs**: [docs/](docs/)
 - **Tests**: [LogosTest/](../LogosTest/)
-- **Project Docs**: [docs/](../docs/) - Project-wide documentation
-- **Examples**: [Archive/](../Archive/)
