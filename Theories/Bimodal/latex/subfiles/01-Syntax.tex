@@ -96,23 +96,34 @@ $\sometimes\varphi$ & Sometimes & \texttt{sometimes} & ``at some time, $\varphi$
 
 The \texttt{swap\_temporal} function exchanges past and future operators.
 
-% TODO: the \text{swap} doesn't look that good. Define \swap to be \langle{S}\rangle and use this instead of \text{swap}.
-
-% TODO: this definition should take a more explicitly inductive form to help the reader anticipate how it goes in lean code
-
 \begin{definition}[Temporal Swap]
+The function $\swap : \texttt{Formula} \to \texttt{Formula}$ is defined recursively:
+
+\textbf{Base cases:}
 \begin{align*}
-  \text{swap}(p) &= p \\
-  \text{swap}(\falsum) &= \falsum \\
-  \text{swap}(\varphi \imp \psi) &= \text{swap}(\varphi) \imp \text{swap}(\psi) \\
-  \text{swap}(\nec\varphi) &= \nec\text{swap}(\varphi) \\
-  \text{swap}(\allpast\varphi) &= \allfuture\text{swap}(\varphi) \\
-  \text{swap}(\allfuture\varphi) &= \allpast\text{swap}(\varphi)
+  \swap(p) &= p \\
+  \swap(\falsum) &= \falsum
+\end{align*}
+
+\textbf{Propositional case:}
+\begin{align*}
+  \swap(\varphi \imp \psi) &= \swap(\varphi) \imp \swap(\psi)
+\end{align*}
+
+\textbf{Modal case:}
+\begin{align*}
+  \swap(\nec\varphi) &= \nec\swap(\varphi)
+\end{align*}
+
+\textbf{Temporal cases (the essential swap):}
+\begin{align*}
+  \swap(\allpast\varphi) &= \allfuture\swap(\varphi) \\
+  \swap(\allfuture\varphi) &= \allpast\swap(\varphi)
 \end{align*}
 \end{definition}
 
 \begin{theorem}[Involution]
-$\text{swap}(\text{swap}(\varphi)) = \varphi$
+$\swap(\swap(\varphi)) = \varphi$
 \end{theorem}
 
 \end{document}
