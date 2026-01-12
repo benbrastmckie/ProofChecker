@@ -11,9 +11,9 @@ They abstract from universal laws governing transitions between world states whi
 \begin{definition}[Task Frame]
 A \textbf{task frame} over temporal type $T$ is a triple $\taskframe = (\worldstate, T, {\taskto{}})$ where:
 \begin{itemize}
-  \item $\worldstate$ is a type of \textbf{world states}---complete instantaneous configurations of the system
-  \item $T$ is the \textbf{temporal duration type} with totally ordered abelian group structure
-  \item $w \taskto{x} u$ is the \textbf{task relation}: world state $w$ can transition to $u$ with duration $x$
+  \item $\worldstate$ is the \textbf{world state} type where these are understood to be complete instantaneous total states of the system in question
+  \item $T$ is the \textbf{temporal duration} type with totally ordered abelian group structure for adding and subtracting times
+  \item $w \taskto{x} u$ is the \textbf{task relation} type, indicating that it is possible for world state $w$ to transition to $u$ in duration $x$
 \end{itemize}
 satisfying two constraints:
 \begin{enumerate}
