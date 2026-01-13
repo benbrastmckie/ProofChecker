@@ -31,33 +31,24 @@ The following diagram shows the dependency structure among extensions:
   arrow/.style={->, thick, >=stealth}
 ]
 
-% Constitutive Foundation
-\node[box] (foundation) at (0, 6) {
+% Constitutive Foundation (full-width)
+\node[widebox] (foundation) {
   \begin{tabular}{c}
     \textbf{Constitutive Foundation} \\
     {\small (hyperintensional base layer)}
   \end{tabular}
 };
 
-% Explanatory Extension
-\node[box] (core) at (0, 4) {
+% Explanatory Extension (full-width)
+\node[widebox, below=1.5cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
     {\small (modal, temporal, counterfactual)}
   \end{tabular}
 };
 
-% Middle Extensions
-\node[smallbox] (epistemic) at (-4, 1.5) {
-  \begin{tabular}{c}
-    \textbf{Epistemic} \\
-    belief, \\
-    knowledge, \\
-    probability
-  \end{tabular}
-};
-
-\node[smallbox] (normative) at (0, 1.5) {
+% Middle Extensions (horizontal row)
+\node[smallbox, below=2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
     obligation, \\
@@ -66,7 +57,16 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-\node[smallbox] (spatial) at (4, 1.5) {
+\node[smallbox, left=0.8cm of normative] (epistemic) {
+  \begin{tabular}{c}
+    \textbf{Epistemic} \\
+    belief, \\
+    knowledge, \\
+    probability
+  \end{tabular}
+};
+
+\node[smallbox, right=0.8cm of normative] (spatial) {
   \begin{tabular}{c}
     \textbf{Spatial} \\
     location, \\
@@ -75,36 +75,33 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Agential Extension
-\node[smallbox] (agential) at (-3, -1.5) {
+% Bottom Layer: Agential and Reflection (side by side, same level)
+\node[box, below=2cm of epistemic, xshift=-0.5cm] (agential) {
   \begin{tabular}{c}
-    \textbf{Agential} \\
-    multi-agent \\
-    reasoning
+    \textbf{Agential Extension} \\
+    {\small (multi-agent reasoning)}
   \end{tabular}
 };
 
-% Reflection Extension
-\node[smallbox] (reflection) at (3, -1.5) {
+\node[box, below=2cm of spatial, xshift=0.5cm] (reflection) {
   \begin{tabular}{c}
-    \textbf{Reflection} \\
-    metacognitive \\
-    self-modeling
+    \textbf{Reflection Extension} \\
+    {\small (metacognitive self-modeling)}
   \end{tabular}
 };
 
-% Arrows
-\draw[arrow] (foundation) -- node[right] {\small required} (core);
-\draw[arrow] (core) -- node[left, pos=0.3] {\small optional} (epistemic);
-\draw[arrow] (core) -- node[right, pos=0.3] {\small optional} (normative);
-\draw[arrow] (core) -- node[right, pos=0.3] {\small optional} (spatial);
+% Arrows - Phase 4 will refine these
+\draw[arrow] (foundation) -- node[right] {\small required} (explanatory);
+\draw[arrow] (explanatory) -- node[left, pos=0.3] {\small optional} (epistemic);
+\draw[arrow] (explanatory) -- node[right, pos=0.3] {\small optional} (normative);
+\draw[arrow] (explanatory) -- node[right, pos=0.3] {\small optional} (spatial);
 \draw[arrow] (epistemic) -- (agential);
 \draw[arrow] (normative) -- (agential);
 \draw[arrow] (spatial) -- (agential);
 \draw[arrow] (epistemic) -- (reflection);
 
-% Label for agential requirement
-\node at (-3, 0.3) {\small at least one required};
+% Labels for requirements
+\node at (-3, -3.5) {\small at least one required};
 
 \end{tikzpicture}
 \end{center}
