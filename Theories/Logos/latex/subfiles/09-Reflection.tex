@@ -67,7 +67,29 @@ The self-accessibility relation $R_{\mathsf{self}}$ satisfies:
 \item \textbf{Euclidean (5)}: Negative introspection: $\neg\mathsf{I}(\varphi) \to \mathsf{I}(\neg\mathsf{I}(\varphi))$
 \end{itemize}
 
-\textsc{[Details pending development]}
+% ------------------------------------------------------------
+% Truth Conditions
+% ------------------------------------------------------------
+
+\subsection{Truth Conditions}\label{sec:reflection-truth}
+
+Given evaluation context $(\model, \history, x, \assignment, \vec{i})$, the primary $\mathsf{I}$ operator is defined by:
+
+\begin{definition}[Truth Condition for $\mathsf{I}$]\label{def:reflection-truth}
+$\model, \history, x, \assignment \vDash \mathsf{I}(\varphi)$ if and only if:
+\begin{enumerate}
+  \item For all $w'$ accessible via $R_{\mathsf{self}}$ from $\history(x)$:
+        $\model, \history[w'/x], x, \assignment \vDash \varphi$
+  \item $\varphi \in \mathsf{CR}(\history(x))$
+\end{enumerate}
+\end{definition}
+
+\begin{remark}[Commitment Register Distinction]
+The second condition distinguishes explicit self-attribution from mere truth across epistemic alternatives.
+A proposition may hold at all worlds compatible with the agent's epistemic state without the agent having explicitly endorsed it.
+The Commitment Register tracks which propositions the agent has actively self-ascribed,
+capturing the difference between implicit epistemic commitment and explicit metacognitive awareness.
+\end{remark}
 
 % ------------------------------------------------------------
 % Operators
