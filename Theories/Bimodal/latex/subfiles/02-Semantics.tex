@@ -187,17 +187,22 @@ If $\tau$ respects the task relation, so does $\leanTimeShift(\tau, \Delta)$.
 
 Logical consequence and validity are defined uniformly across all temporal types, frames, models, histories, and times.
 
+% TODO: this needs to be restated with types for the quantified variables but while keeping the informal sentence form for readability, using natural language for quantifiers and the like.
+
 \begin{definition}[Logical Consequence]
-A formula $\varphi$ is a \textbf{logical consequence} of context $\context$ (written $\context \models \varphi$) if:
-whenever all formulas in $\context$ are true at some model-history-time triple, $\varphi$ is also true there.
+A formula $\varphi$ is a \textbf{logical consequence} of $\Gamma$ (written $\Gamma \models \varphi$) just in case $\varphi$ at any model-history-time triple where all formals in  $\Gamma$ are true.
 \end{definition}
+
+% TODO: define validity here as a logical consequence of no sentences. Make sure that the lean code defines validity in this way as well.
+
+% TODO: this needs to be restated with types for the quantified variables but while keeping the informal sentence form for readability, using natural language for quantifiers and the like. Use \models instead of 'true at'. We are going for quasi-formal for readability but not at the cost of clarity.
 
 \begin{definition}[Satisfiability]
 A context $\context$ is \textbf{satisfiable} in temporal type $T$ if there exist a frame $\taskframe$, model $\model$, history $\tau$, and time $t$ such that all formulas in $\context$ are true at $\model, \tau, t$.
 \end{definition}
 
 \begin{theorem}[Monotonicity]
-Logical consequence is monotonic: if $\context \subseteq \Delta$ and $\context \models \varphi$, then $\Delta \models \varphi$.
+If $\context \subseteq \Delta$ and $\context \models \varphi$, then $\Delta \models \varphi$.
 \end{theorem}
 
 \end{document}
