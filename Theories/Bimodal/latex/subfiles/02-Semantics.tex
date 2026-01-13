@@ -47,7 +47,7 @@ Convexity ensures the domain has no temporal gaps.
 
 \begin{definition}[World History]
 A \textbf{world history} in a task frame $\taskframe$ is a dependent function $\tau : (x : T) \to \domain(x) \to \worldstate$ where $\domain : T \to \text{Prop}$ is a convex subset of $T$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : T$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
-We write $\histories_{\taskframe}$ for the set of all world histories over frame $\taskframe$.
+We write $\histories_{\taskframe}$ for all world histories over frame $\taskframe$.
 \end{definition}
 
 \subsection{Task Models}
@@ -58,16 +58,16 @@ Sentence letters express propositions, which can be realized by zero or more wor
 World states themselves are specific configurations of the total system at an instant.
 
 \begin{definition}[Task Model]
-A \textbf{task model} over frame $\taskframe$ is a pair $\model = (\taskframe, I)$ where the \textbf{interpretation function} $I : \worldstate \to \text{String} \to \text{Prop}$ assigns to each world state $w : \worldstate$ and sentence letter $p : \text{String}$ a truth value $I(w, p) : \text{Prop}$.
-We write $I(w, p)$ to indicate that sentence letter $p$ is true at world state $w$.
+A \textbf{task model} defined over a frame $\taskframe$ is a pair $\model = (\taskframe, I)$ where the \textbf{interpretation function} $I : \worldstate \to \text{String} \to \text{Prop}$ assigns to each world state $w : \worldstate$ and sentence letter $p : \text{String}$ a truth value $I(w, p) : \text{Prop}$.
+We write $I(w, p)$ to indicate that sentence letter $p$ is true at $w$.
 \end{definition}
 
 \subsection{Truth Conditions}
 
-Truth is evaluated relative to three contextual parameters: a model $\model$ providing the interpretation, a world history $\tau$ representing a possible temporal path, and a time $x : T$.
-Together these parameters determine the truth value of any formula.
+Truth is evaluated relative to a model $\model$ providing the interpretation, a world history $\tau$ representing a possible path through the space of world states, and a time $x : T$.
+Whereas the model fixes the interpretation of the language, the contextual parameters $\tau$ and $x$ determine the truth value of every sentence of the langauge.
 
-\begin{definition}[Truth at a Point]
+\begin{definition}[Truth]
 For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : T$:
 \begin{align*}
   \model, \tau, x \vDash p &\Iff x \in \domain(\tau) \text{ and } I(\tau(x), p) \\
@@ -84,18 +84,18 @@ For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : T$
 \end{definition}
 
 \noindent
-The modal operator $\nec$ quantifies over all world histories $\sigma$ in $\histories_{\taskframe}$ at the current time $x$.
-The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y$ in the temporal type $T$.
+The modal operator $\nec$ quantifies over all world histories $\sigma : \histories_{\taskframe}$ at the current time $x : T$.
+The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y : T$.
 
 
 \subsection{Time-Shift}
 
-The time-shift operation is fundamental for establishing the \textbf{perpetuity principles}:
+The time-shift operation is used to establish the \textbf{perpetuity principles}:
 \begin{itemize}
   \item P1: $\nec\varphi \imp \always\varphi$ (what is necessary is always the case)
   \item P2: $\sometimes\varphi \imp \poss\varphi$ (what is sometimes the case is possible)
 \end{itemize}
-It is natural to assume that whatever is metaphysically necessary is always the case, or equivalently, whatever is sometimes the case is metaphysically possible.
+It is natural to assume that whatever is necessary is always the case, or equivalently, whatever is sometimes the case is metaphysically possible.
 Time-shift enables proofs of the bimodal axioms MF ($\nec\varphi \imp \nec\allfuture\varphi$) and TF ($\nec\varphi \imp \allfuture\nec\varphi$) which together imply the perpetuity principles.
 
 \begin{definition}[Time-Shift]
