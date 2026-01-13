@@ -101,18 +101,33 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Arrows - Phase 4 will refine these
-\draw[arrow] (foundation) -- node[right] {\small required} (explanatory);
-\draw[arrow] (explanatory) -- node[left, pos=0.3] {\small optional} (epistemic);
-\draw[arrow] (explanatory) -- node[right, pos=0.3] {\small optional} (normative);
-\draw[arrow] (explanatory) -- node[right, pos=0.3] {\small optional} (spatial);
-\draw[arrow] (epistemic) -- (agential);
-\draw[arrow] (normative) -- (agential);
-\draw[arrow] (spatial) -- (agential);
-\draw[arrow] (epistemic) -- (reflection);
+% Arrows: Foundation -> Explanatory (required)
+\draw[arrow] (foundation) -- node[right] {\footnotesize required} (explanatory);
 
-% Labels for requirements
-\node at (-3, -3.5) {\small at least one required};
+% Arrows: Explanatory -> Middle Extensions (optional, fan-out)
+\coordinate (expbottom) at ($(explanatory.south)+(0,-0.5cm)$);
+\draw[arrow] (explanatory) -- (expbottom);
+\draw[arrow] (expbottom) -| node[pos=0.25, above] {\footnotesize optional} (epistemic);
+\draw[arrow] (expbottom) -- (normative);
+\draw[arrow] (expbottom) -| (spatial);
+
+% Arrows: Middle Extensions -> Agential (at least one required)
+\coordinate (agentialtop) at ($(agential.north)+(0,0.5cm)$);
+\draw[arrow] (epistemic.south) |- (agentialtop);
+\draw[arrow] (normative.south) |- (agentialtop);
+\draw[arrow] (spatial.south) |- (agentialtop);
+\draw[arrow] (agentialtop) -- (agential);
+
+% Arrows: Middle Extensions -> Reflection (at least one required)
+\coordinate (reflectiontop) at ($(reflection.north)+(0,0.5cm)$);
+\draw[arrow] (epistemic.south) |- (reflectiontop);
+\draw[arrow] (normative.south) |- (reflectiontop);
+\draw[arrow] (spatial.south) |- (reflectiontop);
+\draw[arrow] (reflectiontop) -- (reflection);
+
+% Labels for bottom layer requirements
+\node[font=\footnotesize] at ($(agential.north)+(0,0.9cm)$) {at least one};
+\node[font=\footnotesize] at ($(reflection.north)+(0,0.9cm)$) {at least one};
 
 \end{tikzpicture}
 \end{center}
