@@ -16,17 +16,17 @@ The following primitives are required to define a task frame:
 Primitive & Type & Description \\
 \midrule
 $\worldstate$ & Type & World states \\
-$T$ & Type & Temporal durations \\
-$w \taskto{x} u$ & $\worldstate \to T \to \worldstate \to \text{Prop}$ & Task relation \\
+$D$ & Type & Temporal durations \\
+$w \taskto{x} u$ & $\worldstate \to D \to \worldstate \to \text{Prop}$ & Task relation \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 \begin{definition}[Task Frame]
-A \textbf{task frame} over temporal type $T$ is a triple $\taskframe = (\worldstate, T, {\taskto{}})$ satisfying:
+A \textbf{task frame} over temporal type $D$ is a triple $\taskframe = (\worldstate, D, {\taskto{}})$ satisfying:
 \begin{enumerate}
   \item \textbf{Nullity}: For all $w : \worldstate$, we have $w \taskto{0} w$.
-  \item \textbf{Compositionality}: For all $w, u, v : \worldstate$ and $x, y : T$, if $w \taskto{x} u$ and $u \taskto{y} v$, then $w \taskto{x+y} v$.
+  \item \textbf{Compositionality}: For all $w, u, v : \worldstate$ and $x, y : D$, if $w \taskto{x} u$ and $u \taskto{y} v$, then $w \taskto{x+y} v$.
 \end{enumerate}
 \end{definition}
 
@@ -40,13 +40,13 @@ A world history is a function from times to world states that respects the task 
 World histories represent possible paths through the space of world states.
 
 \begin{definition}[Convex Domain]
-A domain $\domain : T \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ with $a \le b \le c$ is also in $\domain$.
-More precisely, for all $a, b, c : T$, if $\domain(a)$ and $\domain(c)$ and $a \le b \le c$, then $\domain(b)$.
+A domain $\domain : D \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ with $a \le b \le c$ is also in $\domain$.
+More precisely, for all $a, b, c : D$, if $\domain(a)$ and $\domain(c)$ and $a \le b \le c$, then $\domain(b)$.
 Convexity ensures the domain has no temporal gaps.
 \end{definition}
 
 \begin{definition}[World History]
-A \textbf{world history} in a task frame $\taskframe$ is a dependent function $\tau : (x : T) \to \domain(x) \to \worldstate$ where $\domain : T \to \text{Prop}$ is a convex subset of $T$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : T$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
+A \textbf{world history} in a task frame $\taskframe$ is a dependent function $\tau : (x : D) \to \domain(x) \to \worldstate$ where $\domain : D \to \text{Prop}$ is a convex subset of $D$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : D$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
 We write $\histories_{\taskframe}$ for all world histories over frame $\taskframe$.
 \end{definition}
 
@@ -64,11 +64,11 @@ We write $I(w, p)$ to indicate that sentence letter $p$ is true at $w$.
 
 \subsection{Truth Conditions}
 
-Truth is evaluated relative to a model $\model$ providing the interpretation, a world history $\tau$ representing a possible path through the space of world states, and a time $x : T$.
+Truth is evaluated relative to a model $\model$ providing the interpretation, a world history $\tau$ representing a possible path through the space of world states, and a time $x : D$.
 Whereas the model fixes the interpretation of the language, the contextual parameters $\tau$ and $x$ determine the truth value of every sentence of the langauge.
 
 \begin{definition}[Truth]
-For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : T$:
+For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : D$:
 \begin{align*}
   \model, \tau, x \vDash p &\Iff x \in \domain(\tau) \text{ and } I(\tau(x), p) \\
   \model, \tau, x \nvDash \falsum \\
