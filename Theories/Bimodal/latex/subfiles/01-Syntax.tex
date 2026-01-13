@@ -101,7 +101,7 @@ The function $\swap : \texttt{Formula} \to \texttt{Formula}$ is defined by struc
 \begin{align*}
   \swap p &= p \\
   \swap \falsum &= \falsum \\
-  \swap (\varphi \imp \psi) &= \swap\varphi \imp \swap\psi \\
+  \swap (\varphi \imp \psi) &= (\swap\varphi \imp \swap\psi) \\
   \swap \nec\varphi &= \nec\swap\varphi \\
   \swap \allpast\varphi &= \allfuture\swap\varphi \\
   \swap \allfuture\varphi &= \allpast\swap\varphi
