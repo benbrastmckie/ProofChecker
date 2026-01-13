@@ -46,8 +46,9 @@ The following diagram shows the dependency structure among extensions:
 \node[widebox, minimum height=1.8cm, below=0.85cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
-    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$, $S$, $U$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)} \\
-    {\small store/recall ($\downarrow$, $\uparrow$),~ quantifiers ($\forall$, $\exists$),~ actuality ($@$)}
+    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$, $S$, $U$),~ store/recall ($\downarrow$, $\uparrow$)} \\
+    {\small counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)} \\
+    {\small quantifiers ($\forall$, $\exists$),~ actuality ($\mathsf{Act}$)}
   \end{tabular}
 };
 
@@ -122,27 +123,21 @@ The following diagram shows the dependency structure among extensions:
 \node[smallbox, below=2.0cm of middlebox] (social) {
   \begin{tabular}{c}
     \textbf{Social} \\
-    {\footnotesize common knowledge,} \\
-    {\footnotesize communication} \\
-    {\small ($\mathsf{C}$, $\mathsf{Ann}$)}
+    {\footnotesize common ground}
   \end{tabular}
 };
 
 \node[smallbox, left=0.3cm of social] (agential) {
   \begin{tabular}{c}
     \textbf{Agential} \\
-    {\footnotesize agent-indexed} \\
-    {\footnotesize operators} \\
-    {\small ($\mathsf{B}_a$, $\mathsf{K}_a$)}
+    {\footnotesize agent-indexing}
   \end{tabular}
 };
 
 \node[smallbox, right=0.3cm of social] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection} \\
-    {\footnotesize first-person} \\
-    {\footnotesize metacognition} \\
-    {\small ($\mathsf{I}$)}
+    {\footnotesize metacognition}
   \end{tabular}
 };
 
