@@ -566,22 +566,99 @@ The spatial frame extends the core frame with:
 
 ## Agential Extension
 
-[DETAILS]
-
-The Agential Extension requires at least one of the Epistemic, Normative, or Spatial Extensions to be loaded.
-It provides structures for multi-agent reasoning.
+The Agential Extension requires at least one of the Epistemic, Normative, or Spatial Extensions to be loaded. It provides structures for ability and free choice reasoning, capturing what agents can bring about through their own capacities.
 
 ### Frame Extension
 
-[DETAILS]
+The agential frame extends the core frame with:
 
-[QUESTION: What frame extensions are required for multi-agent reasoning? Does this extension add agent indices, or agent-relative accessibility relations?]
+| Component | Type | Description |
+|-----------|------|-------------|
+| **Agent set** | A | Set of agents capable of action |
+| **Choice function** | C : A x T -> Partition(H) | Partitions histories into choice cells |
+| **Capacity assignment** | K : A -> P(Prop) | Agent-intrinsic capacities |
+| **Dependence relation** | D : A x W -> P(W) | Dependence domain for each agent at each world |
 
-### Multi-Agent Operators
+The choice function C(a, x) partitions all histories passing through time x into cells. Histories in the same cell are "choice-equivalent" for agent a at x: the agent has made the same choice in both.
 
-[DETAILS]
+### Ability Operators
 
-[QUESTION: How do individual and collective agency interact in the semantic framework?]
+#### Truth Conditions for Ability (Can_a)
+
+[DETAILS: Precise formalization pending]
+
+**Informal semantics**:
+
+> M, tau, x, sigma |- Can_a(p) iff
+> there exists a choice c in C(a, x) containing tau such that:
+>   (1) for some history h in c: M, h, x, sigma |- p
+>   (2) for all worlds w in D(a, tau(x)): if agent a makes choice c at w, then p holds at w
+
+Condition (1) ensures there is a choice leading to p. Condition (2) ensures robustness across the agent's dependence domain - the ability persists regardless of what others do.
+
+#### Truth Conditions for Generic Ability (Able_a)
+
+> M, tau, x, sigma |- Able_a(p) iff
+> for most worlds w in the agent's capacity set K(a):
+>   M, w, x, sigma |- Can_a(p)
+
+Generic ability is a dispositional notion: the agent reliably has the specific ability across a range of circumstances.
+
+#### Truth Conditions for Inability (Cannot_a)
+
+> M, tau, x, sigma |- Cannot_a(p) iff
+> not (M, tau, x, sigma |- Can_a(p))
+
+Inability is simply the negation of ability.
+
+### Free Choice Operators
+
+#### Truth Conditions for Free Permission (FP)
+
+[DETAILS: Precise formalization pending]
+
+**Hyperintensional semantics** (leveraging Constitutive Foundation):
+
+> M, tau, x, sigma |- FP(A or B) iff
+> there exists a state s such that:
+>   (1) s is a permitted state (all permitted worlds contain s as a part)
+>   (2) s = s_A . s_B where s_A verifies A and s_B verifies B
+
+This captures free choice: permission for a disjunction entails permission for each disjunct because the permitted state decomposes mereologically.
+
+**Alternative modal semantics**:
+
+> M, tau, x, sigma |- FP(p) iff
+> there exists a permitted world w where p holds AND
+> the choice to bring about p is available to the relevant agent
+
+#### Truth Conditions for Free Prohibition (FF)
+
+> M, tau, x, sigma |- FF(p) iff
+> not (M, tau, x, sigma |- FP(p))
+
+#### Truth Conditions for Choice Set (Ch)
+
+> M, tau, x, sigma |- Ch(p, q, ...) iff
+> M, tau, x, sigma |- FP(p) and M, tau, x, sigma |- FP(q) and ...
+
+The choice set operator confirms that all listed alternatives are freely permitted.
+
+### Open Questions
+
+1. **STIT integration**: Should the choice function use full STIT branching-time semantics with moments and histories, or can a simpler approximation suffice?
+
+2. **Dependence domain specification**: How exactly is D(a, w) determined? By the agent's intrinsic properties? By counterfactual analysis?
+
+3. **Interaction with deontic operators**: What axioms govern the relationship between Can_a and P (deontic permission)?
+   - Does `Can_a(p) and P(p)` imply the agent should do p?
+   - How does `Can_a(p) and O(not p)` (akrasia) work semantically?
+
+4. **Multi-agent extension**: How do joint abilities work?
+   - `Can_{a,b}(p)` - agents a and b together can bring about p
+   - Requires coordination mechanism in frame
+
+[DETAILS: Full formal semantics pending specification]
 
 ---
 

@@ -34,6 +34,7 @@ For detailed status of these modules, see:
 | Logos.Epistemic | Stub | Empty re-export, comments only |
 | Logos.Normative | Stub | Empty re-export, comments only |
 | Logos.Explanatory | Stub | Empty re-export, comments only |
+| Logos.Agential | Stub | Ability and free choice operators documented |
 
 ### Epistemic/ Status
 
@@ -71,6 +72,19 @@ Logos/Explanatory/
 - State-based hyperintensional semantics
 - Explanation operator
 
+### Agential/ Status
+
+```
+Logos/Agential/
+└── Agential.lean           # Stub: documented ability and free choice operators
+```
+
+**Planned Content**:
+- Ability operators: `Can_a`, `Able_a`, `Cannot_a`
+- Free choice operators: `FP`, `FF`, `Ch`
+- Frame extensions: Agent set, Choice function, Dependence relation
+- Interaction axioms with deontic operators
+
 ## What's Working (via Bimodal)
 
 Since Logos re-exports Bimodal, all Bimodal functionality works:
@@ -89,6 +103,8 @@ Since Logos re-exports Bimodal, all Bimodal functionality works:
 - ❌ Epistemic operators (K, B)
 - ❌ Normative operators (O, P)
 - ❌ Explanatory operators (<, ⊏)
+- ❌ Ability operators (Can_a, Able_a, Cannot_a)
+- ❌ Free choice operators (FP, FF, Ch)
 - ❌ State-based semantics
 
 ## Verification

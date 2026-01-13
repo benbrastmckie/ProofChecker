@@ -278,13 +278,92 @@ Finding optimal collective agreement requires intersection of permitted options 
 
 ### Agential Extension
 
-The Agential Extension extends the Normative Extension for multi-agent reasoning scenarios.
+The Agential Extension extends the framework with operators for ability and free choice reasoning. It requires at least one middle extension (Epistemic, Normative, or Spatial) to be loaded, as ability attributions typically interact with beliefs, permissions, or spatial locations.
 
-[DETAILS]
+#### Frame Extension
 
-[QUESTION: What frame extensions are required for multi-agent reasoning? Does this extension add agent indices, or agent-relative accessibility relations?]
+The agential frame extends the core frame with:
 
-[QUESTION: How do individual and collective agency interact in the semantic framework?]
+| Component | Description |
+|-----------|-------------|
+| **Agent set** A | Set of agents capable of action |
+| **Choice function** C : A -> T -> Partition(H) | Partitions histories into choice cells per agent at each time |
+| **Capacity assignment** K : A -> Set(Prop) | Agent-intrinsic capacities (dispositions) |
+| **Dependence relation** D : A -> World -> Set(World) | Worlds in agent's dependence domain |
+
+The choice function follows STIT (Sees To It That) semantics: at each moment, an agent's available choices partition the possible histories into cells, where the agent has "done their part" to ensure any outcome within a cell.
+
+#### Ability Operators
+
+Ability modals express what an agent can bring about through their own capacities, distinct from mere circumstantial possibility:
+
+| Operator | Notation | Reading |
+|----------|----------|---------|
+| **Ability** | `Can_a(p)` | "Agent a can bring about p" |
+| **Generic Ability** | `Able_a(p)` | "Agent a has the dispositional ability to p" |
+| **Inability** | `Cannot_a(p)` | "Agent a cannot bring about p" |
+
+The key semantic insight is that ability attributions involve "dependence domains" (Santorio 2024): possibilities where facts about the agent remain fixed while facts about other agents and circumstances vary. This captures the intuition that "Ben can hit the target" depends on Ben's skill, not on external interference.
+
+#### Free Choice Operators
+
+Free choice modals address the Free Choice Permission paradox (Kamp 1973): the inference from "You may take an apple or a pear" to both "You may take an apple" and "You may take a pear" is intuitively valid but fails in standard modal logic.
+
+| Operator | Notation | Reading |
+|----------|----------|---------|
+| **Free Permission** | `FP(p)` | "p is freely permitted (choice available)" |
+| **Free Prohibition** | `FF(p)` | "p is freely forbidden" |
+| **Choice Set** | `Ch(p,q,...)` | "Choice among alternatives p, q, ..." |
+
+Logos's hyperintensional foundation provides a natural solution: free choice permission holds when a state verifying the disjunction decomposes mereologically into parts that separately verify each disjunct.
+
+#### Key Axioms (Tentative)
+
+| Axiom | Schema | Name |
+|-------|--------|------|
+| A1 | `Can_a(p) -> diamond(p)` | Ability-Possibility |
+| A2 | `Can_a(p or q) -> Can_a(p) or Can_a(q)` | Ability-FreeChoice |
+| A3 | `FP(p or q) -> FP(p) and FP(q)` | Permission-FreeChoice |
+| A4 | `Cannot_a(p) <-> not Can_a(p)` | Inability-Dual |
+
+#### Example Applications
+
+##### AI Planning with Ability Constraints
+
+An AI system reasoning about its capabilities:
+
+**Ability Assessment**:
+```
+Can_self(move_to(location_A)) and Cannot_self(fly)
+```
+The system knows it can reach location A but cannot fly.
+
+**Conditional Ability**:
+```
+K_a(obstacle_present) and Can_a(obstacle_present -> route_B) and Cannot_a(obstacle_present -> route_A)
+```
+Agent knows there's an obstacle and can take route B but not route A given the obstacle.
+
+##### Free Choice Permission in Authorization
+
+```
+FP(access_file_A or access_file_B) -> FP(access_file_A) and FP(access_file_B)
+```
+If permission is granted to access either file, then both files are individually permitted.
+
+#### Open Questions
+
+1. **STIT vs simpler semantics**: Should ability require full branching-time STIT semantics, or can simpler possible-worlds semantics suffice for most applications?
+
+2. **Interaction with deontic operators**: How do ability and normative permission interact?
+   - `Can_a(p) and P(p)` (able and permitted)
+   - `Can_a(p) and O(not p)` (able but ought not - akrasia scenarios)
+
+3. **Multi-agent abilities**: How should collective agency be formalized?
+   - Joint abilities `Can_{a,b}(p)` for group action
+   - Cooperative abilities requiring coordination
+
+[DETAILS: Full semantic clauses for ability operators pending specification]
 
 ---
 
@@ -394,7 +473,7 @@ If agent A believes agent B prefers y, then A negotiates toward y.
 | **Epistemic Extension** | [DETAILS] | Not started |
 | **Normative Extension** | [DETAILS] | Not started |
 | **Spatial Extension** | [DETAILS] | Not started |
-| **Agential Extension** | [DETAILS] | Not started |
+| **Agential Extension** | Partial (ability, free choice) | Stub created |
 | **Reflection Extension** | [DETAILS] | Not started |
 
 See [IMPLEMENTATION_STATUS.md](../project-info/IMPLEMENTATION_STATUS.md) for current progress.

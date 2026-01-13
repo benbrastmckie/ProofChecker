@@ -124,6 +124,30 @@ Logos aims to be a comprehensive second-order hyperintensional logic supporting:
 **Dependencies**:
 - All previous phases
 
+### Phase 8: Agential Extension
+
+**Status**: Not Started (stub exists)
+
+**Estimated Effort**: 30-40 hours
+
+**Deliverables**:
+- [ ] Ability operators (Can_a, Able_a, Cannot_a)
+- [ ] Free choice operators (FP, FF, Ch)
+- [ ] Choice function semantics (STIT-style)
+- [ ] Dependence domain for ability modals
+- [ ] Interaction axioms with deontic operators
+- [ ] Multi-agent coordination (joint abilities)
+
+**Dependencies**:
+- Requires Explanatory Extension (Phase 1 complete)
+- Requires at least one middle extension (Epistemic, Normative, or Spatial)
+- Benefits from Phase 5 (Normative) for ability-permission interaction
+
+**Key Design Decisions**:
+- STIT branching-time vs simpler possible-worlds semantics
+- Hyperintensional vs modal approach to free choice permission
+- Interaction axioms between Can_a and deontic P
+
 ## Priority Order
 
 Based on research value and implementation complexity:
@@ -144,6 +168,7 @@ Based on research value and implementation complexity:
 | M5 | Second-order quantification | TBD |
 | M6 | Grounding logic | TBD |
 | M7 | Full integration | TBD |
+| M8 | Ability and free choice modals | TBD |
 
 ## Current Focus
 

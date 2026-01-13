@@ -13,7 +13,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | Epistemic Extension | Extensions for belief, knowledge, and probability operators | Credence function, Epistemic modality |
 | Normative Extension | Extensions for obligation, permission, and preference operators | Value ordering, Deontic logic |
 | Spatial Extension | Extensions for spatial reasoning and location operators | Location space, Spatial relations |
-| Agential Extension | Extensions for multi-agent reasoning (requires middle extension) | Agent-relative accessibility |
+| Agential Extension | Extensions for ability and free choice reasoning (requires middle extension) | Ability modal, Free choice modal, STIT |
 | TM logic | Bimodal logic combining Tense (temporal) and Modality (modal) operators | Explanatory Extension |
 | Progressive Extension | Methodology enabling incremental addition of operator extensions | Extension Architecture |
 | Semantic Progression | Each extension's frame includes all structure from previous extensions | Extension Architecture |
@@ -119,6 +119,38 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `P` | Permission | "It is permitted that A" | Deontic logic |
 | `≺_a` | Preference | "Agent a prefers B to A" | Preference reasoning |
 | `↦` | Normative Explanation | "A grounds obligation B" | Normative reasoning |
+
+## Agential Operators (Agential Extension)
+
+[DETAILS: Full semantic specifications pending]
+
+### Ability Operators
+
+| Symbol | Name | Definition | Domain |
+|--------|------|------------|--------|
+| `Can_a` | Ability | "Agent a can bring about A" | Ability reasoning |
+| `Able_a` | Generic Ability | "Agent a has the dispositional ability to A" | Ability reasoning |
+| `Cannot_a` | Inability | "Agent a cannot bring about A" | Ability reasoning |
+
+### Free Choice Operators
+
+| Symbol | Name | Definition | Domain |
+|--------|------|------------|--------|
+| `FP` | Free Permission | "A is freely permitted (choice available)" | Free choice reasoning |
+| `FF` | Free Prohibition | "A is freely forbidden" | Free choice reasoning |
+| `Ch` | Choice Set | "Choice among alternatives A, B, ..." | Free choice reasoning |
+
+### Agential Concepts
+
+| Term | Definition | Related Terms |
+|------|------------|---------------|
+| Ability modal | Modal expressing what an agent can bring about through their capacities | Can_a, Circumstantial modal |
+| Free choice modal | Modal addressing permission over disjunctions | FP, Free Choice Permission paradox |
+| Free Choice Permission paradox | Puzzle: May(p or q) intuitively implies May(p) and May(q), but fails in standard modal logic | Kamp's paradox, FP |
+| STIT logic | "Sees To It That" - logic of agency with branching time | Choice function, Agent |
+| Choice function | C : A x T -> Partition(H) mapping agents and times to partitions of histories | STIT, Agential frame |
+| Dependence domain | Set of worlds where facts about an agent are held fixed | Ability modal, Counterfactual |
+| Capacity assignment | K : A -> Set(Prop) mapping agents to their intrinsic capacities | Generic ability, Able_a |
 
 ## Constitutive Foundation Concepts
 
