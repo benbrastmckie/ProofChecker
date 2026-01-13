@@ -16,6 +16,7 @@ Proof System & Complete & 14 axioms, 7 inference rules \\
 Soundness & Fully Proven & All 14 axioms valid, 7 rules sound \\
 Deduction Theorem & Fully Proven & Well-founded recursion on height \\
 Completeness & Infrastructure Only & Axiomatized (Lindenbaum, truth lemma) \\
+Decidability & Soundness Proven & Tableau-based, requires FMP for completeness \\
 Perpetuity Principles & Fully Proven & P1-P6 all proven \\
 \bottomrule
 \end{tabular}
@@ -74,6 +75,15 @@ The paper proves completeness via canonical model construction.
 The Lean implementation has the completeness infrastructure (Lindenbaum lemma statement, canonical frame types, truth lemma statement) but the core lemmas remain axiomatized.
 Estimated effort to complete: 70-90 hours of focused development.
 
+\subsubsection{Decidability Implementation}
+
+The implementation includes a tableau-based decision procedure for validity that provides an alternative to the canonical model approach.
+The decidability module establishes that validity is decidable via constructive tableau expansion and branch closure.
+Soundness is fully proven: if the procedure returns ``valid'', the formula is semantically valid.
+Completeness is partial because it relies on the Finite Model Property (FMP), which is axiomatized.
+The FMP states that if a formula is satisfiable, it is satisfiable in a finite model.
+Full formalization of the FMP would complete the decidability proof.
+
 \subsection{Source Files}
 
 \begin{center}
@@ -85,6 +95,7 @@ Directory & Contents \\
 \texttt{Bimodal/Semantics/} & TaskFrame, WorldHistory, Truth, Validity \\
 \texttt{Bimodal/ProofSystem/} & Axioms, Derivation \\
 \texttt{Bimodal/Metalogic/} & Soundness, DeductionTheorem, Completeness \\
+\texttt{Bimodal/Metalogic/Decidability/} & SignedFormula, Tableau, Closure, Saturation \\
 \texttt{Bimodal/Theorems/} & Perpetuity, ModalS5, Propositional, Combinators \\
 \bottomrule
 \end{tabular}
