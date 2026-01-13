@@ -107,6 +107,92 @@ If $\valid{\varphi}$ then $\proves \varphi$.
 If $\context \satisfies \varphi$ then $\context \proves \varphi$.
 \end{theorem}
 
+\subsection{Decidability}
+
+The decidability of TM bimodal logic is established via a tableau-based decision procedure.
+
+\begin{theorem}[Decidability]
+Validity in TM bimodal logic is decidable: for any formula $\varphi$, either $\valid{\varphi}$ or $\neg\valid{\varphi}$.
+\end{theorem}
+
+\begin{theorem}[Decision Soundness]
+If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.
+\end{theorem}
+
+The decision procedure operates as follows:
+\begin{enumerate}
+  \item Try direct axiom proof (fast path optimization)
+  \item Try proof search with limited depth
+  \item Build tableau starting with signed formula $F(\varphi)$
+  \item If all branches close: formula is valid, extract proof
+  \item If open saturated branch: formula is invalid, extract countermodel
+\end{enumerate}
+
+\subsubsection{Tableau Structure}
+
+The tableau uses \textbf{signed formulas} with annotations:
+\begin{itemize}
+  \item $T(\varphi)$: formula $\varphi$ is assumed true
+  \item $F(\varphi)$: formula $\varphi$ is assumed false
+\end{itemize}
+
+\textbf{Expansion rules} are categorized as:
+\begin{itemize}
+  \item \textbf{Propositional}: $T(\varphi \land \psi)$ splits, $F(\varphi \imp \psi)$ splits, etc.
+  \item \textbf{Modal}: $T(\nec\varphi)$ propagates to accessible worlds, $F(\poss\varphi)$ creates witness
+  \item \textbf{Temporal}: $T(\always\varphi)$ propagates to future times, $F(\sometimes\varphi)$ creates witness
+\end{itemize}
+
+A branch \textbf{closes} when it contains both $T(\varphi)$ and $F(\varphi)$ for some formula.
+A branch is \textbf{saturated} when no expansion rules apply.
+
+\subsubsection{Complexity}
+
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Measure & Complexity \\
+\midrule
+Time & $O(2^n)$ where $n$ is formula size \\
+Space & $O(n)$ \\
+Class & PSPACE-complete \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Decision Result Types}
+
+The decision procedure returns one of three outcomes:
+\begin{itemize}
+  \item \texttt{valid proof}: Formula is valid with derivation tree
+  \item \texttt{invalid counter}: Formula is invalid with countermodel
+  \item \texttt{timeout}: Resources exhausted before decision
+\end{itemize}
+
+\subsubsection{Implementation Status}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Submodule & Status & Notes \\
+\midrule
+SignedFormula & Complete & Sign, SignedFormula, Branch types \\
+Tableau & Complete & Expansion rules \\
+Closure & Complete & Branch closure detection \\
+Saturation & Complete & Fuel-based termination \\
+ProofExtraction & Partial & Axiom instances only \\
+CountermodelExtraction & Complete & From open branches \\
+DecisionProcedure & Complete & Main decide function \\
+Soundness & Proven & \texttt{decide\_sound} \\
+Completeness & Partial & Requires Finite Model Property \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The soundness proof establishes that a ``valid'' result implies semantic validity.
+The completeness proof is partial because it relies on the Finite Model Property (FMP),
+which is axiomatized pending full formalization.
+
 \subsection{Implementation Status}
 
 \begin{center}
@@ -121,6 +207,7 @@ Canonical Frame & Axiomatized & \texttt{canonical\_frame} \\
 Truth Lemma & Axiomatized & \texttt{truth\_lemma} \\
 Weak Completeness & Axiomatized & \texttt{weak\_completeness} \\
 Strong Completeness & Axiomatized & \texttt{strong\_completeness} \\
+Decidability & Soundness proven & \texttt{validity\_decidable}, \texttt{decide\_sound} \\
 \bottomrule
 \end{tabular}
 \end{center}
