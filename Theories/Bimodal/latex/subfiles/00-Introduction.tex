@@ -18,40 +18,41 @@ World histories are temporal slices through a task frame, representing the unfol
   counterfactual/.style={dotted, thick, gray!50},
   point/.style={circle, fill=blue!60!black, inner sep=2pt}
 ]
-  % Define the marked point P
-  \coordinate (P) at (0,0);
+  % Define the marked point P at the bottom of the S-curve
+  % Moved forward 0.5cm from origin, at the curve's minimum
+  \coordinate (P) at (0.5,-0.2);
 
-  % Tangent direction at P: from control point (-1,0.5) toward (1,-0.3)
-  % Direction vector (2,-0.8), angle = atan(-0.8/2) ≈ -22 degrees
-  % Light cone size: 1.7 units (2/3 of original 2.5)
+  % At the bottom of the curve, tangent is horizontal (0 degrees)
+  % Light cone size: 1.2 units (2/3 of original)
 
-  % Future light cone (opens in direction of travel, rotated -22 degrees)
-  \begin{scope}[rotate=-22]
-    \fill[orange!60, lightcone fill] (P) -- (1.2,1.2) -- (1.2,-1.2) -- cycle;
-    \draw[lightcone edge] (P) -- (1.2,1.2);
-    \draw[lightcone edge] (P) -- (1.2,-1.2);
+  % Future light cone (opens right, horizontal tangent = 0 degrees)
+  \begin{scope}[shift={(P)}]
+    \fill[orange!60, lightcone fill] (0,0) -- (1.2,1.2) -- (1.2,-1.2) -- cycle;
+    \draw[lightcone edge] (0,0) -- (1.2,1.2);
+    \draw[lightcone edge] (0,0) -- (1.2,-1.2);
   \end{scope}
 
-  % Past light cone (opens opposite to travel, rotated 158 degrees)
-  \begin{scope}[rotate=158]
-    \fill[blue!40, lightcone fill] (P) -- (1.2,1.2) -- (1.2,-1.2) -- cycle;
-    \draw[lightcone edge] (P) -- (1.2,1.2);
-    \draw[lightcone edge] (P) -- (1.2,-1.2);
+  % Past light cone (opens left, 180 degrees)
+  \begin{scope}[shift={(P)}]
+    \fill[blue!40, lightcone fill] (0,0) -- (-1.2,1.2) -- (-1.2,-1.2) -- cycle;
+    \draw[lightcone edge] (0,0) -- (-1.2,1.2);
+    \draw[lightcone edge] (0,0) -- (-1.2,-1.2);
   \end{scope}
 
-  % Draw counterfactual paths within cones (rotated to match cone orientation)
-  % Past paths (within past cone, heading back-left-up)
-  \draw[counterfactual] (P) -- (-1.0,0.8);
-  \draw[counterfactual] (P) -- (-0.9,0.2);
+  % Draw counterfactual paths within cones
+  % Past paths (within past cone, heading left)
+  \draw[counterfactual] (P) -- (-0.5,0.6);
+  \draw[counterfactual] (P) -- (-0.4,-0.8);
 
-  % Future paths (within future cone, heading forward-right-down)
-  \draw[counterfactual] (P) -- (1.1,-0.1);
-  \draw[counterfactual] (P) -- (0.9,-0.6);
+  % Future paths (within future cone, heading right)
+  \draw[counterfactual] (P) -- (1.6,0.5);
+  \draw[counterfactual] (P) -- (1.5,-0.8);
 
   % Draw the S-shaped main worldline (actual history)
+  % Controls adjusted so P is at the bottom with horizontal tangent
   \draw[worldline, ->, >=stealth] (-3.5,-1.5)
-    .. controls (-2,-0.5) and (-1,0.5) .. (P)
-    .. controls (1,-0.3) and (2,0.8) .. (3.5,1.5);
+    .. controls (-2,-0.5) and (0,-0.2) .. (P)
+    .. controls (1.0,-0.2) and (2,0.8) .. (3.5,1.5);
 
   % Label tau near beginning of worldline (at 1/4 length)
   \node[font=\small, blue!60!black] at (-2.8,-1.2) {$\tau$};
