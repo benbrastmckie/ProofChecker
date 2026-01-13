@@ -23,10 +23,12 @@ The semantics proceeds through increasingly expressive extensions, each extendin
 The following diagram shows the dependency structure among extensions:
 
 \begin{center}
+\usetikzlibrary{fit,backgrounds,positioning,calc}
 \begin{tikzpicture}[
-  box/.style={rectangle, draw, text centered, minimum width=4cm, minimum height=1cm},
-  smallbox/.style={rectangle, draw, text centered, minimum width=2.8cm, minimum height=1.5cm, font=\small},
-  arrow/.style={->, thick}
+  widebox/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=10cm, minimum height=1cm},
+  box/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=4cm, minimum height=1cm},
+  smallbox/.style={rectangle, draw, text centered, rounded corners=3pt, minimum width=2.5cm, minimum height=1.5cm, font=\small},
+  arrow/.style={->, thick, >=stealth}
 ]
 
 % Constitutive Foundation
