@@ -41,7 +41,7 @@ The following diagram shows the dependency structure among extensions:
 };
 
 % Explanatory Extension (full-width)
-\node[widebox, below=1.2cm of foundation] (explanatory) {
+\node[widebox, below=.8cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
     {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}
@@ -50,7 +50,7 @@ The following diagram shows the dependency structure among extensions:
 
 % Middle Extensions (two rows: 3 on top, 2 centered below)
 % Top row center: Normative
-\node[smallbox, below=2.2cm of explanatory] (normative) {
+\node[smallbox, below=2.0cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
     {\footnotesize obligation, permission,} \\
@@ -80,9 +80,6 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Ellipsis node for extensibility (right side only)
-\node[draw=none, right=0.3cm of abilities, font=\Large] (rightellipsis) {$\cdots$};
-
 % Bottom row: Choice and Spatial centered below
 \node[smallbox, below=0.5cm of normative, xshift=-1.6cm] (choice) {
   \begin{tabular}{c}
@@ -101,6 +98,9 @@ The following diagram shows the dependency structure among extensions:
     {\small ($@$, $\mathsf{Btw}$, \ldots)}
   \end{tabular}
 };
+
+% Ellipsis node for extensibility (second row)
+\node[draw=none, right=0.3cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
 % Invisible spacer nodes to extend grey box
 \node[draw=none, above=0.5cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
