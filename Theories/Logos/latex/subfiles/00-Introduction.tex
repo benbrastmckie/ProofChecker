@@ -48,7 +48,8 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Middle Extensions (horizontal row)
+% Middle Extensions (horizontal row with 5 boxes)
+% Center box: Normative
 \node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
@@ -58,7 +59,18 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-\node[smallbox, left=0.6cm of normative] (epistemic) {
+% Left of center: Abilities
+\node[smallbox, left=0.4cm of normative] (abilities) {
+  \begin{tabular}{c}
+    \textbf{Abilities} \\
+    {\footnotesize specific, generic,} \\
+    {\footnotesize agency} \\
+    {\small ($\mathsf{Can}_a$, $\mathsf{Able}_a$, $\mathsf{stit}_a$)}
+  \end{tabular}
+};
+
+% Far left: Epistemic
+\node[smallbox, left=0.4cm of abilities] (epistemic) {
   \begin{tabular}{c}
     \textbf{Epistemic} \\
     {\footnotesize belief, probability,} \\
@@ -68,7 +80,18 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-\node[smallbox, right=0.6cm of normative] (spatial) {
+% Right of center: Choice
+\node[smallbox, right=0.4cm of normative] (choice) {
+  \begin{tabular}{c}
+    \textbf{Choice} \\
+    {\footnotesize free permission,} \\
+    {\footnotesize alternatives} \\
+    {\small ($\mathsf{FP}$, $\mathsf{Ch}$)}
+  \end{tabular}
+};
+
+% Far right: Spatial
+\node[smallbox, right=0.4cm of choice] (spatial) {
   \begin{tabular}{c}
     \textbf{Spatial} \\
     {\footnotesize location,} \\
@@ -78,7 +101,7 @@ The following diagram shows the dependency structure among extensions:
 };
 
 % Ellipsis node for extensibility (right side only)
-\node[draw=none, right=0.4cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
+\node[draw=none, right=0.3cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
 % Invisible spacer node to extend grey box upward
 \node[draw=none, above=0.5cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
@@ -86,7 +109,7 @@ The following diagram shows the dependency structure among extensions:
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
-        fit=(epistemic)(normative)(spatial)(rightellipsis)(topspacer),
+        fit=(epistemic)(abilities)(normative)(choice)(spatial)(rightellipsis)(topspacer),
         inner sep=12pt,
         label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
@@ -125,7 +148,7 @@ The following diagram shows the dependency structure among extensions:
 \end{center}
 
 The Constitutive Foundation and Explanatory Extension form the required base.
-The middle extensions (Epistemic, Normative, Spatial, and others) are modular plugins that can be combined in any subset.
+The middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
 Both the Agential Extension and Reflection Extension inherit from the middle layer and interact with each other:
 the Agential Extension provides third-person multi-agent reasoning,
 while the Reflection Extension enables first-person metacognitive self-modeling.
