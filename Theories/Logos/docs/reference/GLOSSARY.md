@@ -107,7 +107,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `Pr` | Probability | Probability quantification (Pr(A) ≥ θ) | Uncertainty reasoning |
 | `Mi` | Might (epistemic) | "It might be the case that A" | Epistemic modality |
 | `Mu` | Must (epistemic) | "It must be the case that A" | Epistemic modality |
-| `⟹` | Indicative Conditional | "If...then" under actual beliefs | Conditional reasoning |
+| `↪` | Indicative Conditional | "If A then B" (under actual beliefs) | Conditional reasoning |
 
 ## Normative Operators (Normative Extension)
 
@@ -119,6 +119,16 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `P` | Permission | "It is permitted that A" | Deontic logic |
 | `≺_a` | Preference | "Agent a prefers B to A" | Preference reasoning |
 | `↦` | Normative Explanation | "A grounds obligation B" | Normative reasoning |
+
+## Spatial Operators (Spatial Extension)
+
+[DETAILS: Full semantic specifications pending]
+
+| Symbol | Name | Definition | Domain |
+|--------|------|------------|--------|
+| `@_l` | Location | "A holds at location l" | Spatial reasoning |
+| `Near` | Proximity | "Location l is near location l'" | Spatial relations |
+| `Between` | Betweenness | "Location l is between l' and l''" | Spatial relations |
 
 ## Agential Operators (Agential Extension)
 
@@ -151,6 +161,14 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | Choice function | C : A x T -> Partition(H) mapping agents and times to partitions of histories | STIT, Agential frame |
 | Dependence domain | Set of worlds where facts about an agent are held fixed | Ability modal, Counterfactual |
 | Capacity assignment | K : A -> Set(Prop) mapping agents to their intrinsic capacities | Generic ability, Able_a |
+
+## Reflection Operators (Reflection Extension)
+
+[DETAILS: Full semantic specifications pending]
+
+| Symbol | Name | Definition | Domain |
+|--------|------|------------|--------|
+| `I` | Reflection | "I (the reasoning agent) believe/know that A" | Metacognition |
 
 ## Constitutive Foundation Concepts
 

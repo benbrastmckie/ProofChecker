@@ -52,18 +52,18 @@ The following diagram shows the dependency structure among extensions:
 \node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
-    {\footnotesize obligation,} \\
-    {\footnotesize permission} \\
-    {\small ($\mathsf{O}$, $\mathsf{P}$)}
+    {\footnotesize obligation, permission,} \\
+    {\footnotesize preference, explanation} \\
+    {\small ($\mathsf{O}$, $\mathsf{P}$, $\prec$, $\mapsto$)}
   \end{tabular}
 };
 
 \node[smallbox, left=0.6cm of normative] (epistemic) {
   \begin{tabular}{c}
     \textbf{Epistemic} \\
-    {\footnotesize belief,} \\
-    {\footnotesize knowledge} \\
-    {\small ($\mathsf{B}$, $\mathsf{K}$)}
+    {\footnotesize belief, probability,} \\
+    {\footnotesize might/must, conditional} \\
+    {\small ($\mathsf{B}$, $\mathsf{Pr}$, $\mathsf{Mi}$, $\mathsf{Mu}$, $\hookrightarrow$)}
   \end{tabular}
 };
 
