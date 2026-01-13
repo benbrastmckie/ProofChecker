@@ -77,15 +77,15 @@ For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : D$
   \model, \tau, x \vDash \nec\varphi &\Iff
     \model, \sigma, x \vDash \varphi \text{ for all } \sigma \in \histories_{\taskframe} \\
   \model, \tau, x \vDash \allpast\varphi &\Iff
-    \model, \tau, y \vDash \varphi \text{ for all } y : T \text{ where } y < x \\
+    \model, \tau, y \vDash \varphi \text{ for all } y : D \text{ where } y < x \\
   \model, \tau, x \vDash \allfuture\varphi &\Iff
-    \model, \tau, y \vDash \varphi \text{ for all } y : T \text{ where } x < y
+    \model, \tau, y \vDash \varphi \text{ for all } y : D \text{ where } x < y
 \end{align*}
 \end{definition}
 
 \noindent
-The modal operator $\nec$ quantifies over all world histories $\sigma : \histories_{\taskframe}$ at the current time $x : T$.
-The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y : T$.
+The modal operator $\nec$ quantifies over all world histories $\sigma : \histories_{\taskframe}$ at the current time $x : D$.
+The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y : D$.
 
 
 \subsection{Time-Shift}
@@ -99,7 +99,7 @@ It is natural to assume that whatever is necessary is always the case, or equiva
 Time-shift enables proofs of the bimodal axioms MF ($\nec\varphi \imp \nec\allfuture\varphi$) and TF ($\nec\varphi \imp \allfuture\nec\varphi$) which together imply the perpetuity principles.
 
 \begin{definition}[Time-Shift]
-For $\tau, \sigma \in \histories_{\taskframe}$ and $x, y : T$, world histories $\tau$ and $\sigma$ are \textbf{time-shifted from $y$ to $x$}, written $\tau \approx_y^x \sigma$, if and only if there exists an order automorphism $\bar{a} : T \to T$ where $y = \bar{a}(x)$, $\domain_\sigma = \bar{a}^{-1}(\domain_\tau)$, and $\sigma(z) = \tau(\bar{a}(z))$ for all $z \in \domain_\sigma$.
+For $\tau, \sigma \in \histories_{\taskframe}$ and $x, y : D$, world histories $\tau$ and $\sigma$ are \textbf{time-shifted from $y$ to $x$}, written $\tau \approx_y^x \sigma$, if and only if there exists an order automorphism $\bar{a} : D \to D$ where $y = \bar{a}(x)$, $\domain_\sigma = \bar{a}^{-1}(\domain_\tau)$, and $\sigma(z) = \tau(\bar{a}(z))$ for all $z \in \domain_\sigma$.
 \end{definition}
 
 \noindent
@@ -118,7 +118,7 @@ If $\tau$ respects the task relation and $\tau \approx_y^x \sigma$, then $\sigma
 Logical consequence and validity are defined uniformly across all temporal types, frames, models, histories, and times.
 
 \begin{definition}[Logical Consequence]
-A formula $\varphi$ is a \textbf{logical consequence} of $\Gamma$ (written $\Gamma \models \varphi$) just in case for every temporal type $T : \text{Type}$, frame $\taskframe : \text{TaskFrame}(T)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : T$, if $\model, \tau, x \models \psi$ for all $\psi \in \Gamma$, then $\model, \tau, x \models \varphi$.
+A formula $\varphi$ is a \textbf{logical consequence} of $\Gamma$ (written $\Gamma \models \varphi$) just in case for every temporal type $D : \text{Type}$, frame $\taskframe : \text{TaskFrame}(D)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : D$, if $\model, \tau, x \models \psi$ for all $\psi \in \Gamma$, then $\model, \tau, x \models \varphi$.
 \end{definition}
 
 \begin{definition}[Validity]
@@ -127,7 +127,7 @@ Equivalently, $\varphi$ is true at every model-history-time triple.
 \end{definition}
 
 \begin{definition}[Satisfiability]
-A context $\context$ is \textbf{satisfiable} in temporal type $T : \text{Type}$ if there exist a frame $\taskframe : \text{TaskFrame}(T)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : T$ such that $\model, \tau, x \models \psi$ for all $\psi \in \context$.
+A context $\context$ is \textbf{satisfiable} in temporal type $D : \text{Type}$ if there exist a frame $\taskframe : \text{TaskFrame}(D)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : D$ such that $\model, \tau, x \models \psi$ for all $\psi \in \context$.
 \end{definition}
 
 \begin{theorem}[Monotonicity]
