@@ -9,70 +9,70 @@ The TM proof system has 14 axiom schemata.
 
 \subsubsection{Propositional Axioms}
 
-\begin{axiom}[K (Distribution)]
-$((\varphi \imp (\psi \imp \chi)) \imp ((\varphi \imp \psi) \imp (\varphi \imp \chi)))$
+\begin{axiom}[K - Distribution]
+$(\varphi \imp (\psi \imp \chi)) \imp ((\varphi \imp \psi) \imp (\varphi \imp \chi))$
 \end{axiom}
 
-\begin{axiom}[S (Weakening)]
-$(\varphi \imp (\psi \imp \varphi))$
+\begin{axiom}[S - Weakening]
+$\varphi \imp (\psi \imp \varphi)$
 \end{axiom}
 
-\begin{axiom}[EFQ (Ex Falso)]
-$(\falsum \imp \varphi)$
+\begin{axiom}[EFQ - Ex Falso Quodlibet]
+$\falsum \imp \varphi$
 \end{axiom}
 
 \begin{axiom}[Peirce]
-$(((\varphi \imp \psi) \imp \varphi) \imp \varphi)$
+$((\varphi \imp \psi) \imp \varphi) \imp \varphi$
 \end{axiom}
 
 \subsubsection{Modal Axioms (S5)}
 
 \begin{axiom}[MT (Modal T)]
-$(\nec\varphi \imp \varphi)$
+$\nec\varphi \imp \varphi$
 \end{axiom}
 
 \begin{axiom}[M4 (Modal 4)]
-$(\nec\varphi \imp \nec\nec\varphi)$
+$\nec\varphi \imp \nec\nec\varphi$
 \end{axiom}
 
 \begin{axiom}[MB (Modal B)]
-$(\varphi \imp \nec\poss\varphi)$
+$\varphi \imp \nec\poss\varphi$
 \end{axiom}
 
 \begin{axiom}[M5 (Modal 5 Collapse)]
-$(\poss\nec\varphi \imp \nec\varphi)$
+$\poss\nec\varphi \imp \nec\varphi$
 \end{axiom}
 
 \begin{axiom}[MK (Modal K Distribution)]
-$(\nec(\varphi \imp \psi) \imp (\nec\varphi \imp \nec\psi))$
+$\nec(\varphi \imp \psi) \imp (\nec\varphi \imp \nec\psi)$
 \end{axiom}
 
 \subsubsection{Temporal Axioms}
 
 \begin{axiom}[TK (Temporal K Distribution)]
-$(\allfuture(\varphi \imp \psi) \imp (\allfuture\varphi \imp \allfuture\psi))$
+$\allfuture(\varphi \imp \psi) \imp (\allfuture\varphi \imp \allfuture\psi)$
 \end{axiom}
 
 \begin{axiom}[T4 (Temporal 4)]
-$(\allfuture\varphi \imp \allfuture\allfuture\varphi)$
+$\allfuture\varphi \imp \allfuture\allfuture\varphi$
 \end{axiom}
 
 \begin{axiom}[TA (Temporal A)]
-$(\varphi \imp \allfuture\somepast\varphi)$
+$\varphi \imp \allfuture\somepast\varphi$
 \end{axiom}
 
 \begin{axiom}[TL (Temporal L)]
-$(\always\varphi \imp \allfuture\allpast\varphi)$
+$\always\varphi \imp \allfuture\allpast\varphi$
 \end{axiom}
 
 \subsubsection{Modal-Temporal Interaction}
 
 \begin{axiom}[MF (Modal-Future)]
-$(\nec\varphi \imp \nec\allfuture\varphi)$
+$\nec\varphi \imp \nec\allfuture\varphi$
 \end{axiom}
 
 \begin{axiom}[TF (Temporal-Future)]
-$(\nec\varphi \imp \allfuture\nec\varphi)$
+$\nec\varphi \imp \allfuture\nec\varphi$
 \end{axiom}
 
 \begin{center}
