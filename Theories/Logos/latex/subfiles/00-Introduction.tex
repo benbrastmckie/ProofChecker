@@ -48,8 +48,8 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Middle Extensions (horizontal row with 5 boxes)
-% Center box: Normative
+% Middle Extensions (two rows: 3 on top, 2 centered below)
+% Top row center: Normative
 \node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
@@ -59,18 +59,8 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Left of center: Abilities
-\node[smallbox, left=0.4cm of normative] (abilities) {
-  \begin{tabular}{c}
-    \textbf{Abilities} \\
-    {\footnotesize specific, generic,} \\
-    {\footnotesize agency} \\
-    {\small ($\mathsf{Can}_a$, $\mathsf{Able}_a$, $\mathsf{stit}_a$)}
-  \end{tabular}
-};
-
-% Far left: Epistemic
-\node[smallbox, left=0.4cm of abilities] (epistemic) {
+% Top row left: Epistemic
+\node[smallbox, left=0.5cm of normative] (epistemic) {
   \begin{tabular}{c}
     \textbf{Epistemic} \\
     {\footnotesize belief, probability,} \\
@@ -80,8 +70,21 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Right of center: Choice
-\node[smallbox, right=0.4cm of normative] (choice) {
+% Top row right: Abilities
+\node[smallbox, right=0.5cm of normative] (abilities) {
+  \begin{tabular}{c}
+    \textbf{Abilities} \\
+    {\footnotesize specific, generic,} \\
+    {\footnotesize agency} \\
+    {\small ($\mathsf{Can}_a$, $\mathsf{Able}_a$, $\mathsf{stit}_a$)}
+  \end{tabular}
+};
+
+% Ellipsis node for extensibility (right side only)
+\node[draw=none, right=0.3cm of abilities, font=\Large] (rightellipsis) {$\cdots$};
+
+% Bottom row: Choice and Spatial centered below
+\node[smallbox, below=0.5cm of normative, xshift=-1.6cm] (choice) {
   \begin{tabular}{c}
     \textbf{Choice} \\
     {\footnotesize free permission,} \\
@@ -90,8 +93,7 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Far right: Spatial
-\node[smallbox, right=0.4cm of choice] (spatial) {
+\node[smallbox, below=0.5cm of normative, xshift=1.6cm] (spatial) {
   \begin{tabular}{c}
     \textbf{Spatial} \\
     {\footnotesize location,} \\
@@ -100,30 +102,28 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Ellipsis node for extensibility (right side only)
-\node[draw=none, right=0.3cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
-
-% Invisible spacer node to extend grey box upward
+% Invisible spacer nodes to extend grey box
 \node[draw=none, above=0.5cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
+\node[draw=none, below=0.1cm of choice, minimum width=1pt, minimum height=1pt] (bottomspacer) {};
 
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
-        fit=(epistemic)(abilities)(normative)(choice)(spatial)(rightellipsis)(topspacer),
+        fit=(epistemic)(normative)(abilities)(rightellipsis)(choice)(spatial)(topspacer)(bottomspacer),
         inner sep=12pt,
         label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
 % Bottom Layer: Agential and Reflection (side by side, same level)
-% Position them symmetrically for straight vertical arrows
-\node[box, below=1.5cm of normative, xshift=-2.8cm] (agential) {
+% Position them below the middle extensions grey box
+\node[box, below=1.0cm of choice, xshift=-1.2cm] (agential) {
   \begin{tabular}{c}
     \textbf{Agential Extension} \\
     {\small agent-indexed ($\mathsf{B}_a$, $\mathsf{K}_a$)}
   \end{tabular}
 };
 
-\node[box, below=1.5cm of normative, xshift=2.8cm] (reflection) {
+\node[box, below=1.0cm of spatial, xshift=1.2cm] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection Extension} \\
     {\small first-person ($\mathsf{I}$)}
