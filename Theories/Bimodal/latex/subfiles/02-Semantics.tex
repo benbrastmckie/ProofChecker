@@ -8,19 +8,25 @@
 Task frames are the fundamental semantic structures for \textbf{TM}.
 They abstract from universal laws governing transitions between world states while still retaining the temporal duration for a transition to complete.
 
-% TODO: I don't like how this goes below. Instead I want to introduce the primitives first (the first bullet points) but using a table instead of bullet points to characterize these primitive types. Only then should the definition be given using the types that have been introduced in this table, where the definition can then be asserted somewhat more directly by defining the type of the task frame and imposing the constraints. It is also important that the constraints respect types (they types should not be omitted anywhere there is quantification throughout this document).
+The following primitives are required to define a task frame:
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Primitive & Type & Description \\
+\midrule
+$\worldstate$ & Type & World states (complete instantaneous total states of the system) \\
+$T$ & Type & Temporal durations with totally ordered abelian group structure \\
+$w \taskto{x} u$ & $\worldstate \to T \to \worldstate \to \text{Prop}$ & Task relation \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 \begin{definition}[Task Frame]
-A \textbf{task frame} over temporal type $T$ is a triple $\taskframe = (\worldstate, T, {\taskto{}})$ where:
-\begin{itemize}
-  \item $\worldstate$ is the \textbf{world state} type where these are understood to be complete instantaneous total states of the system in question
-  \item $T$ is the \textbf{temporal duration} type with totally ordered abelian group structure for adding and subtracting times
-  \item $w \taskto{x} u$ is the \textbf{task relation} type, indicating that it is possible for world state $w$ to transition to $u$ in duration $x$
-\end{itemize}
-satisfying two constraints:
+A \textbf{task frame} over temporal type $T$ is a triple $\taskframe = (\worldstate, T, {\taskto{}})$ satisfying:
 \begin{enumerate}
-  \item \textbf{Nullity}: $\forall w.\, w \taskto{0} w$
-  \item \textbf{Compositionality}: $\forall w\, u\, v\, x\, y.\, w \taskto{x} u \land u \taskto{y} v \to w \taskto{x+y} v$
+  \item \textbf{Nullity}: For all $w : \worldstate$, we have $w \taskto{0} w$.
+  \item \textbf{Compositionality}: For all $w, u, v : \worldstate$ and $x, y : T$, if $w \taskto{x} u$ and $u \taskto{y} v$, then $w \taskto{x+y} v$.
 \end{enumerate}
 \end{definition}
 
@@ -28,177 +34,100 @@ satisfying two constraints:
 Nullity ensures that zero-duration tasks leave the world state unchanged.
 Compositionality ensures that executing tasks sequentially yields results consistent with a single task of combined duration.
 
-% TODO: so long as the types for the primitives are provided, this table below can be omitted
-
-\begin{center}
-\begin{tabular}{@{}ll@{}}
-\toprule
-Lean Field & Type \\
-\midrule
-\texttt{WorldState} & \texttt{Type} \\
-\leanTaskRel & \texttt{WorldState $\to$ T $\to$ WorldState $\to$ Prop} \\
-\leanNullity & \texttt{$\forall$ w, task\_rel w 0 w} \\
-\leanCompositionality & \texttt{$\forall$ w u v x y, task\_rel w x u $\to$ task\_rel u y v $\to$ task\_rel w (x+y) v} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
 \subsection{World Histories}
 
 A world history is a function from times to world states that respects the task relation over a convex temporal domain.
 World histories represent possible paths through the space of world states.
 
 \begin{definition}[Convex Domain]
-A domain $\domain : T \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ /with $a \le b \le c$ is also in $\domain$:
-\[
-\forall a\, b\, c.\, \domain(a) \land \domain(c) \land a \le b \land b \le c \to \domain(b)
-\]
+A domain $\domain : T \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ with $a \le b \le c$ is also in $\domain$.
+More precisely, for all $a, b, c : T$, if $\domain(a)$ and $\domain(c)$ and $a \le b \le c$, then $\domain(b)$.
 Convexity ensures the domain has no temporal gaps.
 \end{definition}
 
-% TODO: replace 'respects the task relation' with 'lawfull', fixing the grammar accordingly
-
-\begin{definition}[Respects Task]
-A function $\tau : \domain \to \worldstate$ \textbf{respects the task relation} if for all $s, t \in \domain$ with $s \le t$:
-\[
-\tau(s) \taskto{t - s} \tau(t)
-\]
-This ensures the history is consistent with possible task executions.
-\end{definition}
-
-% TODO: don't use the dashes below, use simple sentences that state each constraint in a natural and direct way
-
-% TODO: don't say structure, say what the type of \tau is where it has domain dom that is convex and is lawful.
-
-% TODO: fold the definition above into the definition below, avoiding the need for an extra term 'lawful' by simply stating the lawful constraint in the definition of a world history. Despite using types, this should follow the definition in line 868 in /home/benjamin/Projects/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex
-
 \begin{definition}[World History]
-A \textbf{world history} in a task frame $\taskframe$ is a structure $\tau$ that satisfies the following constraints:
-\begin{itemize}
-  \item $\domain : T \to \text{Prop}$ --- a convex temporal domain
-  \item $\tau : (t : T) \to \domain(t) \to \worldstate$ --- world state assignment
-  \item $\tau$ respects the task relation
-\end{itemize}
+A \textbf{world history} in a task frame $\taskframe$ is a dependent function $\tau : (x : T) \to \domain(x) \to \worldstate$ where $\domain : T \to \text{Prop}$ is a convex subset of $T$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : T$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
 We write $\histories_{\taskframe}$ for the set of all world histories over frame $\taskframe$.
 \end{definition}
 
-% TODO: this next table can be removed
-
-\begin{center}
-\begin{tabular}{@{}ll@{}}
-\toprule
-Lean Field & Type \\
-\midrule
-\leanDomain & \texttt{T $\to$ Prop} \\
-\leanConvex & \texttt{$\forall$ a b c, domain a $\to$ domain c $\to$ a $\le$ b $\to$ b $\le$ c $\to$ domain b} \\
-\leanStates & \texttt{(t : T) $\to$ domain t $\to$ WorldState} \\
-\leanRespTask & \texttt{$\forall$ s t (hs : domain s) (ht : domain t), s $\le$ t $\to$ task\_rel (states s hs) (t - s) (states t ht)} \\
-\bottomrule
-\end{tabular}
-\end{center}
-
 \subsection{Task Models}
 
-% TODO: use 'sentence letters' in place of 'atomic propositions' throughout. Never use 'atomic proposition' anywhere.
-
-A task model extends a task frame with an interpretation function that assigns truth values to atomic propositions at world states.
-
-% TODO: define propositions as sets of world states which represent instantaneous ways for a syste to be.
-
-% TODO: don't use dashes. use natural sentences to speak directly.
-
-Atomic propositions (sentence letters) express \textbf{propositions}---instantaneous ways for the system to be that can be realized by zero or more world states.
+A task model extends a task frame with an interpretation function that assigns truth values to sentence letters at world states.
+\textbf{Propositions} are subsets of $\worldstate$ representing instantaneous ways for the system to be.
+Sentence letters express propositions, which can be realized by zero or more world states.
 World states themselves are specific configurations of the total system at an instant.
 
-% TODO: specify types explicitly when stating definitions
-
 \begin{definition}[Task Model]
-A \textbf{task model} over frame $\taskframe$ is a structure $\model = (\taskframe, I)$ where the \textbf{interpretation function}:
-\[
-I : \worldstate \to \text{String} \to \text{Prop}
-\]
-assigns truth values to atomic propositions at each world state.
-We write $I(w, p)$ when $p$ is true at world state $w$.
+A \textbf{task model} over frame $\taskframe$ is a pair $\model = (\taskframe, I)$ where the \textbf{interpretation function} $I : \worldstate \to \text{String} \to \text{Prop}$ assigns to each world state $w : \worldstate$ and sentence letter $p : \text{String}$ a truth value $I(w, p) : \text{Prop}$.
+We write $I(w, p)$ to indicate that sentence letter $p$ is true at world state $w$.
 \end{definition}
 
 \subsection{Truth Conditions}
 
-% TODO: use 'x', 'y', 'z', etc., for times. Also, the time in the definition below is NOT restricted to the domain but may be ANY time in the frame. The same is true in the clauses for the tense operators.
-
-Truth is evaluated relative to three contextual parameters: a model $\model$ providing the interpretation, a world history $\tau$ representing a possible temporal path, and a time $t$ within that history's domain.
+Truth is evaluated relative to three contextual parameters: a model $\model$ providing the interpretation, a world history $\tau$ representing a possible temporal path, and a time $x : T$.
 Together these parameters determine the truth value of any formula.
 
 \begin{definition}[Truth at a Point]
-For model $\model$, history $\tau$, time $t \in \domain(\tau)$:
+For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : T$:
 \begin{align*}
-  \model, \tau, t \vDash p &\Iff I(\tau(t), p) \\
-  \model, \tau, t \nvDash \falsum \\
-  \model, \tau, t \vDash \varphi \imp \psi &\Iff
-    \model, \tau, t \nvDash \varphi \text{ or } \model, \tau, t \vDash \psi \\
-  \model, \tau, t \vDash \nec\varphi &\Iff
-    \model, \sigma, t \vDash \varphi \text{ for all } \sigma \in \histories_{\taskframe} \\
-  \model, \tau, t \vDash \allpast\varphi &\Iff
-    \model, \tau, s \vDash \varphi \text{ for all } s \in \domain(\tau) \text{ where } s < t \\
-  \model, \tau, t \vDash \allfuture\varphi &\Iff
-    \model, \tau, s \vDash \varphi \text{ for all } s \in \domain(\tau) \text{ where } t < s
+  \model, \tau, x \vDash p &\Iff x \in \domain(\tau) \text{ and } I(\tau(x), p) \\
+  \model, \tau, x \nvDash \falsum \\
+  \model, \tau, x \vDash \varphi \imp \psi &\Iff
+    \model, \tau, x \nvDash \varphi \text{ or } \model, \tau, x \vDash \psi \\
+  \model, \tau, x \vDash \nec\varphi &\Iff
+    \model, \sigma, x \vDash \varphi \text{ for all } \sigma \in \histories_{\taskframe} \\
+  \model, \tau, x \vDash \allpast\varphi &\Iff
+    \model, \tau, y \vDash \varphi \text{ for all } y : T \text{ where } y < x \\
+  \model, \tau, x \vDash \allfuture\varphi &\Iff
+    \model, \tau, y \vDash \varphi \text{ for all } y : T \text{ where } x < y
 \end{align*}
 \end{definition}
 
 \noindent
-The modal operator $\nec$ quantifies over all world histories $\sigma$ in $\histories_{\taskframe}$ at the current time $t$.
-The temporal operators $\allpast$ and $\allfuture$ quantify over earlier and later times within the same history's domain.
+The modal operator $\nec$ quantifies over all world histories $\sigma$ in $\histories_{\taskframe}$ at the current time $x$.
+The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y$ in the temporal type $T$.
 
 
 \subsection{Time-Shift}
 
-% TODO: relating truths at different times is not the reason this has been defined. Rather it is to establish the perpetuity theorems. Say this, and briefly sketch what these theorems say, and why they are plausible. See line 436 in /home/benjamin/Projects/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex for simple motivation.
-
-The time-shift operation translates a history by a temporal offset.
-This notion plays a critical role in proving the temporal axioms MF and TF.
-
-% TODO: I don't like the informal 'Given a history \tau...' and instead want consistent type notation to be used to get readers accustomed to this way of setting things out. This needs to be maintained uniformly everywhere throughout these latex subfiles documents.
-
-% TODO: the offset should be 'x' which is a duration, not a upper case greek letter! Maintain consistent notation conventions. 
-
-% TODO: use the notation used in def:time-shift-histories from line 1877 in /home/benjamin/Projects/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex
+The time-shift operation is fundamental for establishing the \textbf{perpetuity principles}:
+\begin{itemize}
+  \item P1: $\nec\varphi \imp \always\varphi$ (what is necessary is always the case)
+  \item P2: $\sometimes\varphi \imp \poss\varphi$ (what is sometimes the case is possible)
+\end{itemize}
+It is natural to assume that whatever is metaphysically necessary is always the case, or equivalently, whatever is sometimes the case is metaphysically possible.
+Time-shift enables proofs of the bimodal axioms MF ($\nec\varphi \imp \nec\allfuture\varphi$) and TF ($\nec\varphi \imp \allfuture\nec\varphi$) which together imply the perpetuity principles.
 
 \begin{definition}[Time-Shift]
-Given history $\tau$ and offset $\Delta : T$, the \textbf{time-shifted history} $\leanTimeShift(\tau, \Delta)$ is defined by:
-\begin{itemize}
-  \item $\domain_{\tau'}(t) \Iff \domain_\tau(t + \Delta)$
-  \item $\tau'(t) = \tau(t + \Delta)$
-\end{itemize}
+For $\tau, \sigma \in \histories_{\taskframe}$ and $x, y : T$, world histories $\tau$ and $\sigma$ are \textbf{time-shifted from $y$ to $x$}, written $\tau \approx_y^x \sigma$, if and only if there exists an order automorphism $\bar{a} : T \to T$ where $y = \bar{a}(x)$, $\domain_\sigma = \bar{a}^{-1}(\domain_\tau)$, and $\sigma(z) = \tau(\bar{a}(z))$ for all $z \in \domain_\sigma$.
 \end{definition}
 
 \noindent
 Time-shifting preserves the essential structure of histories:
 
-% TODO: the \leanTimeShift looks really bad, like kids handwriting. use the notation used in def:time-shift-histories and state these definitions more formally to match the paper and lean implementation
-
 \begin{theorem}[Convexity Preservation]
-If $\tau$ has a convex domain, so does $\leanTimeShift(\tau, \Delta)$.
+If $\tau$ has a convex domain and $\tau \approx_y^x \sigma$, then $\sigma$ has a convex domain.
 \end{theorem}
 
 \begin{theorem}[Task Preservation]
-If $\tau$ respects the task relation, so does $\leanTimeShift(\tau, \Delta)$.
+If $\tau$ respects the task relation and $\tau \approx_y^x \sigma$, then $\sigma$ respects the task relation.
 \end{theorem}
 
 \subsection{Logical Consequence and Validity}
 
 Logical consequence and validity are defined uniformly across all temporal types, frames, models, histories, and times.
 
-% TODO: this needs to be restated with types for the quantified variables but while keeping the informal sentence form for readability, using natural language for quantifiers and the like.
-
 \begin{definition}[Logical Consequence]
-A formula $\varphi$ is a \textbf{logical consequence} of $\Gamma$ (written $\Gamma \models \varphi$) just in case $\varphi$ at any model-history-time triple where all formals in  $\Gamma$ are true.
+A formula $\varphi$ is a \textbf{logical consequence} of $\Gamma$ (written $\Gamma \models \varphi$) just in case for every temporal type $T : \text{Type}$, frame $\taskframe : \text{TaskFrame}(T)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : T$, if $\model, \tau, x \models \psi$ for all $\psi \in \Gamma$, then $\model, \tau, x \models \varphi$.
 \end{definition}
 
-% TODO: define validity here as a logical consequence of no sentences. Make sure that the lean code defines validity in this way as well.
-
-% TODO: this needs to be restated with types for the quantified variables but while keeping the informal sentence form for readability, using natural language for quantifiers and the like. Use \models instead of 'true at'. We are going for quasi-formal for readability but not at the cost of clarity.
+\begin{definition}[Validity]
+A formula $\varphi$ is \textbf{valid} (written $\models \varphi$) just in case $\varphi$ is a logical consequence of the empty set: $\varnothing \models \varphi$.
+Equivalently, $\varphi$ is true at every model-history-time triple.
+\end{definition}
 
 \begin{definition}[Satisfiability]
-A context $\context$ is \textbf{satisfiable} in temporal type $T$ if there exist a frame $\taskframe$, model $\model$, history $\tau$, and time $t$ such that all formulas in $\context$ are true at $\model, \tau, t$.
+A context $\context$ is \textbf{satisfiable} in temporal type $T : \text{Type}$ if there exist a frame $\taskframe : \text{TaskFrame}(T)$, model $\model : \text{TaskModel}(\taskframe)$, history $\tau \in \histories_{\taskframe}$, and time $x : T$ such that $\model, \tau, x \models \psi$ for all $\psi \in \context$.
 \end{definition}
 
 \begin{theorem}[Monotonicity]
