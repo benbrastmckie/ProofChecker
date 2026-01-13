@@ -30,7 +30,7 @@ This section documents differences between the paper ``The Construction of Possi
 
 \begin{itemize}
   \item The paper uses ``perpetuity principles'' for P1-P6; the Lean code uses the same terminology.
-  \item The paper's notation $\triangle$ and $\triangledown$ for ``always'' and ``sometimes''
+  \item The paper's notation $\always$ and $\sometimes$ for ``always'' and ``sometimes''
         is preserved in the Lean implementation as \texttt{always} and \texttt{sometimes}.
 \end{itemize}
 
@@ -64,11 +64,6 @@ The implementation includes an explicit M5 collapse axiom (\texttt{Axiom.modal\_
 This is derivable from the other S5 axioms (MB + M4) but is included as a primitive
 for proof convenience in the S5 collapse theorem.
 
-\subsubsection{Temporal Type Generalization}
-
-The paper uses a fixed temporal type $D = \mathbb{Z}$ (integers).
-The implementation generalizes to any type $D$ with \texttt{LinearOrderedAddCommGroup} instance, allowing for integers, rationals, reals, or custom bounded time structures.
-
 \subsubsection{Completeness Status}
 
 The paper proves completeness via canonical model construction.
@@ -82,23 +77,6 @@ The decidability module establishes that validity is decidable via constructive 
 Soundness is fully proven: if the procedure returns ``valid'', the formula is semantically valid.
 Completeness is partial because it relies on the Finite Model Property (FMP), which is axiomatized.
 The FMP states that if a formula is satisfiable, it is satisfiable in a finite model.
-Full formalization of the FMP would complete the decidability proof.
-
-\subsection{Source Files}
-
-\begin{center}
-\begin{tabular}{@{}ll@{}}
-\toprule
-Directory & Contents \\
-\midrule
-\texttt{Bimodal/Syntax/} & Formula, Context, temporal swap \\
-\texttt{Bimodal/Semantics/} & TaskFrame, WorldHistory, Truth, Validity \\
-\texttt{Bimodal/ProofSystem/} & Axioms, Derivation \\
-\texttt{Bimodal/Metalogic/} & Soundness, DeductionTheorem, Completeness \\
-\texttt{Bimodal/Metalogic/Decidability/} & SignedFormula, Tableau, Closure, Saturation \\
-\texttt{Bimodal/Theorems/} & Perpetuity, ModalS5, Propositional, Combinators \\
-\bottomrule
-\end{tabular}
-\end{center}
+Full formalization of the FMP would complete decidability.
 
 \end{document}
