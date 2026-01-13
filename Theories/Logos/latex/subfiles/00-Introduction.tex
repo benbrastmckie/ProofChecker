@@ -84,7 +84,8 @@ The following diagram shows the dependency structure among extensions:
 \begin{pgfonlayer}{background}
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
         fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis),
-        inner sep=12pt, label={[font=\footnotesize\itshape]below:Middle extensions are modular---combine any subset}] (middlebox) {};
+        inner sep=12pt, inner ysep=20pt,
+        label={[font=\footnotesize\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
 % Bottom Layer: Agential and Reflection (side by side, same level)
