@@ -159,6 +159,8 @@ The time-shift operation translates a history by a temporal offset, making it po
 
 % TODO: the offset should be 'x' which is a duration, not a upper case greek letter! Maintain consistent notation conventions. 
 
+% TODO: use the notation used in def:time-shift-histories
+
 \begin{definition}[Time-Shift]
 Given history $\tau$ and offset $\Delta : T$, the \textbf{time-shifted history} $\leanTimeShift(\tau, \Delta)$ is defined by:
 \begin{itemize}
@@ -170,11 +172,13 @@ Given history $\tau$ and offset $\Delta : T$, the \textbf{time-shifted history} 
 \noindent
 Time-shifting preserves the essential structure of histories:
 
+% TODO: the \leanTimeShift looks really bad, like kids handwriting. use the notation used in def:time-shift-histories and state these definitions more formally to match the paper and lean implementation
+
 \begin{theorem}[Convexity Preservation]
-If $\tau$ has convex domain, so does $\leanTimeShift(\tau, \Delta)$.
+If $\tau$ has a convex domain, so does $\leanTimeShift(\tau, \Delta)$.
 \end{theorem}
 
-\begin{theorem}[Task Respect Preservation]
+\begin{theorem}[Task Preservation]
 If $\tau$ respects the task relation, so does $\leanTimeShift(\tau, \Delta)$.
 \end{theorem}
 
