@@ -153,7 +153,8 @@ The temporal operators $\allpast$ and $\allfuture$ quantify over earlier and lat
 
 % TODO: relating truths at different times is not the reason this has been defined. Rather it is to establish the perpetuity theorems. Say this, and briefly sketch what these theorems say, and why they are plausible. See line 436 in /home/benjamin/Projects/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex for simple motivation.
 
-The time-shift operation translates a history by a temporal offset, making it possible to relate truth at different times.
+The time-shift operation translates a history by a temporal offset.
+This notion plays a critical role in proving the temporal axioms MF and TF.
 
 % TODO: I don't like the informal 'Given a history \tau...' and instead want consistent type notation to be used to get readers accustomed to this way of setting things out. This needs to be maintained uniformly everywhere throughout these latex subfiles documents.
 
@@ -182,26 +183,9 @@ If $\tau$ has a convex domain, so does $\leanTimeShift(\tau, \Delta)$.
 If $\tau$ respects the task relation, so does $\leanTimeShift(\tau, \Delta)$.
 \end{theorem}
 
-\noindent
-The time-shift construction is fundamental for proving the temporal axioms MF and TF.
-It establishes a bijection between histories at different times, allowing us to transfer truth values across temporal contexts.
-
 \subsection{Logical Consequence and Validity}
 
-Validity and logical consequence are defined uniformly across all temporal types, frames, models, histories, and times.
-
-\begin{definition}[Validity]
-A formula $\varphi$ is \textbf{valid} (written $\models \varphi$) if it is true at every model-history-time triple:
-\[
-\forall T.\, \forall \taskframe : \text{TaskFrame}\, T.\, \forall \model : \text{TaskModel}\, \taskframe.\,
-\forall \tau \in \histories_{\taskframe}.\, \forall t \in \domain(\tau).\,
-\model, \tau, t \vDash \varphi
-\]
-where $T$ ranges over all types with ordered additive group structure.
-\end{definition}
-
-\noindent
-Validity ensures truth across all possible semantic configurations, guaranteeing logical necessity.
+Logical consequence and validity are defined uniformly across all temporal types, frames, models, histories, and times.
 
 \begin{definition}[Logical Consequence]
 A formula $\varphi$ is a \textbf{logical consequence} of context $\context$ (written $\context \models \varphi$) if:
