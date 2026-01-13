@@ -36,7 +36,7 @@ The following diagram shows the dependency structure among extensions:
 \node[widebox] (foundation) {
   \begin{tabular}{c}
     \textbf{Constitutive Foundation} \\
-    {\small $\equiv$ (identity), $\leq$ (grounding), $\sqsubseteq$ (essence)}
+    {\small identity ($\equiv$), grounding ($\leq$), essence ($\sqsubseteq$)}
   \end{tabular}
 };
 
@@ -44,7 +44,7 @@ The following diagram shows the dependency structure among extensions:
 \node[widebox, below=1.2cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
-    {\small $\Box$, $\Diamond$ (modal) \quad $\mathbf{H}$, $\mathbf{G}$, $\mathbf{P}$, $\mathbf{F}$ (temporal) \quad $\boxright$, $\Diamond\!\to$ (counterfactual)}
+    {\small modal ($\Box$, $\Diamond$) \quad temporal ($H$, $G$, $P$, $F$) \quad counterfactual ($\boxright$, $\Diamond\!\to$)}
   \end{tabular}
 };
 
@@ -52,27 +52,27 @@ The following diagram shows the dependency structure among extensions:
 \node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
-    $\mathsf{O}$, $\mathsf{P}$ \\
     {\footnotesize obligation,} \\
-    {\footnotesize permission}
+    {\footnotesize permission} \\
+    {\small ($\mathsf{O}$, $\mathsf{P}$)}
   \end{tabular}
 };
 
 \node[smallbox, left=0.6cm of normative] (epistemic) {
   \begin{tabular}{c}
     \textbf{Epistemic} \\
-    $\mathsf{B}$, $\mathsf{K}$, $\Pr$ \\
     {\footnotesize belief,} \\
-    {\footnotesize knowledge}
+    {\footnotesize knowledge} \\
+    {\small ($\mathsf{B}$, $\mathsf{K}$)}
   \end{tabular}
 };
 
 \node[smallbox, right=0.6cm of normative] (spatial) {
   \begin{tabular}{c}
     \textbf{Spatial} \\
-    $@$, $\mathsf{Near}$ \\
     {\footnotesize location,} \\
-    {\footnotesize relations}
+    {\footnotesize relations} \\
+    {\small ($@$, $\mathsf{Near}$)}
   \end{tabular}
 };
 
@@ -88,17 +88,18 @@ The following diagram shows the dependency structure among extensions:
 \end{pgfonlayer}
 
 % Bottom Layer: Agential and Reflection (side by side, same level)
-\node[box, below=2.8cm of epistemic, xshift=0.5cm] (agential) {
+% Position them symmetrically for straight vertical arrows
+\node[box, below=2.8cm of normative, xshift=-2.8cm] (agential) {
   \begin{tabular}{c}
     \textbf{Agential Extension} \\
-    {\small $\mathsf{B}_a$, $\mathsf{K}_a$ (agent-indexed)}
+    {\small agent-indexed ($\mathsf{B}_a$, $\mathsf{K}_a$)}
   \end{tabular}
 };
 
-\node[box, below=2.8cm of spatial, xshift=-0.5cm] (reflection) {
+\node[box, below=2.8cm of normative, xshift=2.8cm] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection Extension} \\
-    {\small $\mathsf{I}$ (first-person metacognition)}
+    {\small first-person ($\mathsf{I}$)}
   \end{tabular}
 };
 
@@ -109,9 +110,9 @@ The following diagram shows the dependency structure among extensions:
 % Explanatory -> Middle box (single arrow to the grey box)
 \draw[arrow] (explanatory) -- (middlebox.north);
 
-% Middle box -> Agential and Reflection (two arrows from middle box)
-\draw[arrow] (middlebox.south) ++(-2cm,0) -- ++(0,-0.8cm) -- (agential.north);
-\draw[arrow] (middlebox.south) ++(2cm,0) -- ++(0,-0.8cm) -- (reflection.north);
+% Middle box -> Agential and Reflection (straight vertical arrows to center of each box)
+\draw[arrow] (middlebox.south -| agential) -- (agential.north);
+\draw[arrow] (middlebox.south -| reflection) -- (reflection.north);
 
 % Double arrow between Agential and Reflection
 \draw[doublearrow] (agential.east) -- (reflection.west);
