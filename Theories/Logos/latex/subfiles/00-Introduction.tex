@@ -41,7 +41,7 @@ The following diagram shows the dependency structure among extensions:
 };
 
 % Explanatory Extension (full-width)
-\node[widebox, below=.8cm of foundation] (explanatory) {
+\node[widebox, below=0.85cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
     {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}
@@ -103,8 +103,8 @@ The following diagram shows the dependency structure among extensions:
 \node[draw=none, right=0.3cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
 % Invisible spacer nodes to extend grey box
-\node[draw=none, above=0.5cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
-\node[draw=none, below=0.1cm of choice, minimum width=1pt, minimum height=1pt] (bottomspacer) {};
+\node[draw=none, above=0.7cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
+\node[draw=none, below=0.0cm of choice, minimum width=1pt, minimum height=1pt] (bottomspacer) {};
 
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
@@ -114,32 +114,55 @@ The following diagram shows the dependency structure among extensions:
         label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
-% Bottom Layer: Agential and Reflection (side by side, same level)
-% Position them below the middle extensions grey box
-\node[box, below=1.0cm of choice, xshift=-1.2cm] (agential) {
+% Bottom Layer: Agential, Social, and Reflection (inside third grey box)
+% Position them below the middle extensions grey box, centered
+\node[smallbox, below=2.0cm of middlebox] (social) {
   \begin{tabular}{c}
-    \textbf{Agential Extension} \\
-    {\small agent-indexed ($\mathsf{B}_a$, $\mathsf{K}_a$)}
+    \textbf{Social} \\
+    {\footnotesize common knowledge,} \\
+    {\footnotesize communication} \\
+    {\small ($\mathsf{C}$, $\mathsf{Ann}$)}
   \end{tabular}
 };
 
-\node[box, below=1.0cm of spatial, xshift=1.2cm] (reflection) {
+\node[smallbox, left=0.3cm of social] (agential) {
   \begin{tabular}{c}
-    \textbf{Reflection Extension} \\
-    {\small first-person ($\mathsf{I}$)}
+    \textbf{Agential} \\
+    {\footnotesize agent-indexed} \\
+    {\footnotesize operators} \\
+    {\small ($\mathsf{B}_a$, $\mathsf{K}_a$)}
   \end{tabular}
 };
+
+\node[smallbox, right=0.3cm of social] (reflection) {
+  \begin{tabular}{c}
+    \textbf{Reflection} \\
+    {\footnotesize first-person} \\
+    {\footnotesize metacognition} \\
+    {\small ($\mathsf{I}$)}
+  \end{tabular}
+};
+
+% Invisible spacer node to extend grey box upward for label
+\node[draw=none, above=0.5cm of social, minimum width=1pt, minimum height=1pt] (bottomtopspacer) {};
+
+% Grey background box around bottom extensions
+\begin{pgfonlayer}{background}
+  \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
+        fit=(agential)(social)(reflection)(bottomtopspacer),
+        inner sep=12pt,
+        label={[font=\itshape, anchor=north, yshift=-8pt]north:Agent-dependent extensions}] (bottombox) {};
+\end{pgfonlayer}
 
 % Simplified arrows (no labels)
 % Foundation -> Explanatory
 \draw[arrow] (foundation) -- (explanatory);
 
-% Explanatory -> Middle box (single arrow to the grey box)
-\draw[arrow] (explanatory) -- (middlebox.north);
+% Explanatory -> Middle box (arrow from center of explanatory, straight down)
+\draw[arrow] (explanatory.south) -- (explanatory.south |- middlebox.north);
 
-% Middle box -> Agential and Reflection (straight vertical arrows to center of each box)
-\draw[arrow] (middlebox.south -| agential) -- (agential.north);
-\draw[arrow] (middlebox.south -| reflection) -- (reflection.north);
+% Middle box -> Bottom box (single centered arrow)
+\draw[arrow] (middlebox.south) -- (middlebox.south |- bottombox.north);
 
 % Double arrow between Agential and Reflection
 % \draw[doublearrow] (agential.east) -- (reflection.west);
