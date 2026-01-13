@@ -72,7 +72,7 @@ The following diagram shows the dependency structure among extensions:
     \textbf{Spatial} \\
     {\footnotesize location,} \\
     {\footnotesize relations} \\
-    {\small ($@$, $\mathsf{Near}$)}
+    {\small ($@$, $\mathsf{Near}$, $\mathsf{Between}$)}
   \end{tabular}
 };
 
@@ -88,19 +88,19 @@ The following diagram shows the dependency structure among extensions:
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
         fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis)(topspacer),
         inner sep=12pt,
-        label={[font=\footnotesize\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
+        label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
 % Bottom Layer: Agential and Reflection (side by side, same level)
 % Position them symmetrically for straight vertical arrows
-\node[box, below=2.8cm of normative, xshift=-2.8cm] (agential) {
+\node[box, below=1.5cm of normative, xshift=-2.8cm] (agential) {
   \begin{tabular}{c}
     \textbf{Agential Extension} \\
     {\small agent-indexed ($\mathsf{B}_a$, $\mathsf{K}_a$)}
   \end{tabular}
 };
 
-\node[box, below=2.8cm of normative, xshift=2.8cm] (reflection) {
+\node[box, below=1.5cm of normative, xshift=2.8cm] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection Extension} \\
     {\small first-person ($\mathsf{I}$)}
@@ -119,7 +119,7 @@ The following diagram shows the dependency structure among extensions:
 \draw[arrow] (middlebox.south -| reflection) -- (reflection.north);
 
 % Double arrow between Agential and Reflection
-\draw[doublearrow] (agential.east) -- (reflection.west);
+% \draw[doublearrow] (agential.east) -- (reflection.west);
 
 \end{tikzpicture}
 \end{center}
