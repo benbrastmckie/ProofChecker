@@ -23,119 +23,106 @@ The semantics proceeds through increasingly expressive extensions, each extendin
 The following diagram shows the dependency structure among extensions:
 
 \begin{center}
-\usetikzlibrary{fit,backgrounds,positioning,calc}
+\usetikzlibrary{fit,backgrounds,positioning,calc,arrows.meta}
 \begin{tikzpicture}[
-  widebox/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=10cm, minimum height=1cm},
-  box/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=4cm, minimum height=1cm},
-  smallbox/.style={rectangle, draw, text centered, rounded corners=3pt, minimum width=2.5cm, minimum height=1.5cm, font=\small},
-  arrow/.style={->, thick, >=stealth}
+  widebox/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=10cm, minimum height=1.2cm},
+  box/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=4.5cm, minimum height=1.2cm},
+  smallbox/.style={rectangle, draw, text centered, rounded corners=3pt, minimum width=2.8cm, minimum height=1.6cm, font=\small},
+  arrow/.style={->, thick, >=stealth},
+  doublearrow/.style={<->, thick, >=stealth}
 ]
 
 % Constitutive Foundation (full-width)
 \node[widebox] (foundation) {
   \begin{tabular}{c}
     \textbf{Constitutive Foundation} \\
-    {\small (hyperintensional base layer)}
+    {\small $\equiv$ (identity), $\leq$ (grounding), $\sqsubseteq$ (essence)}
   \end{tabular}
 };
 
 % Explanatory Extension (full-width)
-\node[widebox, below=1.5cm of foundation] (explanatory) {
+\node[widebox, below=1.2cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
-    {\small (modal, temporal, counterfactual)}
+    {\small $\Box$, $\Diamond$ (modal) \quad $\mathbf{H}$, $\mathbf{G}$, $\mathbf{P}$, $\mathbf{F}$ (temporal) \quad $\boxright$, $\Diamond\!\to$ (counterfactual)}
   \end{tabular}
 };
 
 % Middle Extensions (horizontal row)
-\node[smallbox, below=2cm of explanatory] (normative) {
+\node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
-    obligation, \\
-    permission, \\
-    preference
+    $\mathsf{O}$, $\mathsf{P}$ \\
+    {\footnotesize obligation,} \\
+    {\footnotesize permission}
   \end{tabular}
 };
 
-\node[smallbox, left=0.8cm of normative] (epistemic) {
+\node[smallbox, left=0.6cm of normative] (epistemic) {
   \begin{tabular}{c}
     \textbf{Epistemic} \\
-    belief, \\
-    knowledge, \\
-    probability
+    $\mathsf{B}$, $\mathsf{K}$, $\Pr$ \\
+    {\footnotesize belief,} \\
+    {\footnotesize knowledge}
   \end{tabular}
 };
 
-\node[smallbox, right=0.8cm of normative] (spatial) {
+\node[smallbox, right=0.6cm of normative] (spatial) {
   \begin{tabular}{c}
     \textbf{Spatial} \\
-    location, \\
-    spatial \\
-    relations
+    $@$, $\mathsf{Near}$ \\
+    {\footnotesize location,} \\
+    {\footnotesize relations}
   \end{tabular}
 };
 
 % Ellipsis nodes for extensibility
-\node[draw=none, left=0.6cm of epistemic] (leftellipsis) {$\cdots$};
-\node[draw=none, right=0.6cm of spatial] (rightellipsis) {$\cdots$};
+\node[draw=none, left=0.4cm of epistemic, font=\Large] (leftellipsis) {$\cdots$};
+\node[draw=none, right=0.4cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
-  \node[fill=gray!15, draw=gray!50, rounded corners=4pt,
+  \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
         fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis),
-        inner sep=10pt] (middlebox) {};
+        inner sep=12pt, label={[font=\footnotesize\itshape]below:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
 % Bottom Layer: Agential and Reflection (side by side, same level)
-\node[box, below=2cm of epistemic, xshift=-0.5cm] (agential) {
+\node[box, below=2.8cm of epistemic, xshift=0.5cm] (agential) {
   \begin{tabular}{c}
     \textbf{Agential Extension} \\
-    {\small (multi-agent reasoning)}
+    {\small $\mathsf{B}_a$, $\mathsf{K}_a$ (agent-indexed)}
   \end{tabular}
 };
 
-\node[box, below=2cm of spatial, xshift=0.5cm] (reflection) {
+\node[box, below=2.8cm of spatial, xshift=-0.5cm] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection Extension} \\
-    {\small (metacognitive self-modeling)}
+    {\small $\mathsf{I}$ (first-person metacognition)}
   \end{tabular}
 };
 
-% Arrows: Foundation -> Explanatory (required)
-\draw[arrow] (foundation) -- node[right] {\footnotesize required} (explanatory);
+% Simplified arrows (no labels)
+% Foundation -> Explanatory
+\draw[arrow] (foundation) -- (explanatory);
 
-% Arrows: Explanatory -> Middle Extensions (optional, fan-out)
-\coordinate (expbottom) at ($(explanatory.south)+(0,-0.5cm)$);
-\draw[arrow] (explanatory) -- (expbottom);
-\draw[arrow] (expbottom) -| node[pos=0.25, above] {\footnotesize optional} (epistemic);
-\draw[arrow] (expbottom) -- (normative);
-\draw[arrow] (expbottom) -| (spatial);
+% Explanatory -> Middle box (single arrow to the grey box)
+\draw[arrow] (explanatory) -- (middlebox.north);
 
-% Arrows: Middle Extensions -> Agential (at least one required)
-\coordinate (agentialtop) at ($(agential.north)+(0,0.5cm)$);
-\draw[arrow] (epistemic.south) |- (agentialtop);
-\draw[arrow] (normative.south) |- (agentialtop);
-\draw[arrow] (spatial.south) |- (agentialtop);
-\draw[arrow] (agentialtop) -- (agential);
+% Middle box -> Agential and Reflection (two arrows from middle box)
+\draw[arrow] (middlebox.south) ++(-2cm,0) -- ++(0,-0.8cm) -- (agential.north);
+\draw[arrow] (middlebox.south) ++(2cm,0) -- ++(0,-0.8cm) -- (reflection.north);
 
-% Arrows: Middle Extensions -> Reflection (at least one required)
-\coordinate (reflectiontop) at ($(reflection.north)+(0,0.5cm)$);
-\draw[arrow] (epistemic.south) |- (reflectiontop);
-\draw[arrow] (normative.south) |- (reflectiontop);
-\draw[arrow] (spatial.south) |- (reflectiontop);
-\draw[arrow] (reflectiontop) -- (reflection);
-
-% Labels for bottom layer requirements
-\node[font=\footnotesize] at ($(agential.north)+(0,0.9cm)$) {at least one};
-\node[font=\footnotesize] at ($(reflection.north)+(0,0.9cm)$) {at least one};
+% Double arrow between Agential and Reflection
+\draw[doublearrow] (agential.east) -- (reflection.west);
 
 \end{tikzpicture}
 \end{center}
 
 The Constitutive Foundation and Explanatory Extension form the required base.
-The Epistemic, Normative, and Spatial Extensions are modular plugins that can be combined in any subset.
-Both the Agential Extension and Reflection Extension require at least one middle extension to be loaded.
-The Agential Extension provides third-person multi-agent reasoning,
+The middle extensions (Epistemic, Normative, Spatial, and others) are modular plugins that can be combined in any subset.
+Both the Agential Extension and Reflection Extension inherit from the middle layer and interact with each other:
+the Agential Extension provides third-person multi-agent reasoning,
 while the Reflection Extension enables first-person metacognitive self-modeling.
 
 % ------------------------------------------------------------
