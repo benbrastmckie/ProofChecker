@@ -75,6 +75,17 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
+% Ellipsis nodes for extensibility
+\node[draw=none, left=0.6cm of epistemic] (leftellipsis) {$\cdots$};
+\node[draw=none, right=0.6cm of spatial] (rightellipsis) {$\cdots$};
+
+% Grey background box around middle extensions
+\begin{pgfonlayer}{background}
+  \node[fill=gray!15, draw=gray!50, rounded corners=4pt,
+        fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis),
+        inner sep=10pt] (middlebox) {};
+\end{pgfonlayer}
+
 % Bottom Layer: Agential and Reflection (side by side, same level)
 \node[box, below=2cm of epistemic, xshift=-0.5cm] (agential) {
   \begin{tabular}{c}
