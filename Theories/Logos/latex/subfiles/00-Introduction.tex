@@ -49,7 +49,7 @@ The following diagram shows the dependency structure among extensions:
 };
 
 % Middle Extensions (horizontal row)
-\node[smallbox, below=2.5cm of explanatory] (normative) {
+\node[smallbox, below=2.2cm of explanatory] (normative) {
   \begin{tabular}{c}
     \textbf{Normative} \\
     {\footnotesize obligation,} \\
@@ -80,11 +80,14 @@ The following diagram shows the dependency structure among extensions:
 \node[draw=none, left=0.4cm of epistemic, font=\Large] (leftellipsis) {$\cdots$};
 \node[draw=none, right=0.4cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
+% Invisible spacer node to extend grey box upward
+\node[draw=none, above=0.5cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
+
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
-        fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis),
-        inner sep=12pt, inner ysep=20pt,
+        fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis)(topspacer),
+        inner sep=12pt,
         label={[font=\footnotesize\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
 
