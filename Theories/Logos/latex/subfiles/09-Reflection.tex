@@ -153,7 +153,29 @@ Other's Belief About Ability & $B_j(\mathsf{I}_{\mathsf{Can}}(\varphi))$ & ``Age
 \end{tabular}
 \end{center}
 
-\textsc{[Details pending development]}
+\subsubsection{Derived Operators}
+
+The following derived operators are defined in terms of the primary $\mathsf{I}$ operator:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Operator} & \textbf{Definition} & \textbf{Reading} \\
+\midrule
+$\mathsf{I}_K(\varphi)$ & $\mathsf{I}(K(\varphi))$ & ``I know that I know $\varphi$'' \\
+$\mathsf{I}_B(\varphi)$ & $\mathsf{I}(B(\varphi))$ & ``I know that I believe $\varphi$'' \\
+$\mathsf{I}_?(\varphi)$ & $\mathsf{I}(\neg B(\varphi) \land \neg B(\neg\varphi))$ & ``I know I am uncertain about $\varphi$'' \\
+$\mathsf{I}_{\mathsf{Can}}(\varphi)$ & $\exists \vec{a}\, \mathsf{Achievable}_{\mathsf{self}}(\vec{a}) \land \mathsf{LeadsTo}(\vec{a}, \varphi)$ & ``I can bring about $\varphi$'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[Self-Knowledge vs.\ Self-Belief]
+The operators $\mathsf{I}_K$ and $\mathsf{I}_B$ differ in their factivity requirements.
+$\mathsf{I}_K(\varphi)$ requires that the inner knowledge claim $K(\varphi)$ be factive (hence $\varphi$ is true),
+while $\mathsf{I}_B(\varphi)$ requires only that the agent believes $\varphi$.
+Self-uncertainty $\mathsf{I}_?(\varphi)$ captures metacognitive awareness of one's own agnosticism.
+\end{remark}
 
 % ------------------------------------------------------------
 % Key Axioms
@@ -175,7 +197,36 @@ Other's Belief About Ability & $B_j(\mathsf{I}_{\mathsf{Can}}(\varphi))$ & ``Age
 \end{tabular}
 \end{center}
 
-\textsc{[Details pending development]}
+% ------------------------------------------------------------
+% Temporal Interaction
+% ------------------------------------------------------------
+
+\subsection{Temporal Interaction}\label{sec:reflection-temporal}
+
+The metacognitive $\mathsf{I}$ operator interacts non-trivially with temporal operators.
+The following formulas are semantically distinct:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Formula} & \textbf{Reading} \\
+\midrule
+$\waspast(\mathsf{I}(\varphi))$ & ``I previously believed $\varphi$'' \\
+$\mathsf{I}(\waspast(\varphi))$ & ``I believe $\varphi$ was the case'' \\
+$\willfuture(\mathsf{I}(\varphi))$ & ``I will believe $\varphi$'' \\
+$\mathsf{I}(\willfuture(\varphi))$ & ``I believe $\varphi$ will be the case'' \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{remark}[Non-Equivalence]
+The pairs $\waspast(\mathsf{I}(\varphi))$ and $\mathsf{I}(\waspast(\varphi))$ are not equivalent.
+The former describes a past epistemic state (what was believed then),
+while the latter describes a current belief about the past (what is believed now about then).
+An agent may currently believe something was true without having believed it at the time,
+and may have believed something without currently believing it was true.
+This demonstrates the interaction between temporal and metacognitive perspectives.
+\end{remark}
 
 % ------------------------------------------------------------
 % Relationship to Agential Extension
