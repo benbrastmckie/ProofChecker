@@ -31,7 +31,7 @@ namespace Logos.SubTheories.Explanatory
 
 open Logos.SubTheories.Foundation
 
-variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
+variable {D : Type*} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]
 
 /--
 A Core Frame extends a Constitutive Frame with temporal structure and a task relation.
@@ -39,30 +39,30 @@ A Core Frame extends a Constitutive Frame with temporal structure and a task rel
 The task relation `s ⇒_d t` (taskRel s d t) means "there is a task from state s
 to state t of duration d".
 -/
-structure CoreFrame (T : Type*) [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T] extends ConstitutiveFrame where
+structure CoreFrame (D : Type*) [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] extends ConstitutiveFrame where
   /-- The task relation: taskRel s d t means s ⇒_d t -/
-  taskRel : State → T → State → Prop
+  taskRel : State → D → State → Prop
   /-- Nullity: every state has a trivial task to itself -/
   nullity : ∀ s : State, taskRel s 0 s
   /-- Compositionality: If s ⇒_x t and t ⇒_y u, then s ⇒_{x+y} u -/
-  compositionality : ∀ s t u : State, ∀ x y : T,
+  compositionality : ∀ s t u : State, ∀ x y : D,
     taskRel s x t → taskRel t y u → taskRel s (x + y) u
   /-- Parthood Left: If d ⊑ s and s ⇒_x t, then d ⇒_x r for some r ⊑ t -/
-  parthood_left : ∀ d s t : State, ∀ x : T,
+  parthood_left : ∀ d s t : State, ∀ x : D,
     toConstitutiveFrame.parthood d s → taskRel s x t →
     ∃ r, toConstitutiveFrame.parthood r t ∧ taskRel d x r
   /-- Parthood Right: If r ⊑ t and s ⇒_x t, then d ⇒_x r for some d ⊑ s -/
-  parthood_right : ∀ r s t : State, ∀ x : T,
+  parthood_right : ∀ r s t : State, ∀ x : D,
     toConstitutiveFrame.parthood r t → taskRel s x t →
     ∃ d, toConstitutiveFrame.parthood d s ∧ taskRel d x r
   /-- Containment Left: If s ∈ P, d ⊑ s, and d ⇒_x r, then s ⇒_x t.r for some t -/
-  containment_left : ∀ d r s : State, ∀ x : T,
+  containment_left : ∀ d r s : State, ∀ x : D,
     taskRel s 0 s →  -- s is possible
     toConstitutiveFrame.parthood d s →
     taskRel d x r →
     ∃ t, taskRel s x (toConstitutiveFrame.fusion t r)
   /-- Containment Right: If t ∈ P, r ⊑ t, and d ⇒_x r, then s.d ⇒_x t for some s -/
-  containment_right : ∀ d r t : State, ∀ x : T,
+  containment_right : ∀ d r t : State, ∀ x : D,
     taskRel t 0 t →  -- t is possible
     toConstitutiveFrame.parthood r t →
     taskRel d x r →
@@ -70,7 +70,7 @@ structure CoreFrame (T : Type*) [AddCommGroup T] [LinearOrder T] [IsOrderedAddMo
 
 namespace CoreFrame
 
-variable {F : CoreFrame T}
+variable {F : CoreFrame D}
 
 /-! ### State Modality Definitions -/
 
@@ -176,13 +176,13 @@ A *world-history* over a core frame F is a function τ : X → W where:
 - τ(x) is a world-state for each x ∈ X
 - τ(x) ⇒_{y-x} τ(y) for all times x, y ∈ X where x ≤ y
 -/
-structure WorldHistory (F : CoreFrame T) where
+structure WorldHistory (F : CoreFrame D) where
   /-- The domain of the world-history (a convex subset of T) -/
   domain : Set T
   /-- The domain is convex -/
   domain_convex : Convex domain
   /-- The state assignment function -/
-  states : (t : T) → t ∈ domain → F.State
+  states : (t : D) → t ∈ domain → F.State
   /-- Each assigned state is a world-state -/
   world_states : ∀ t (ht : t ∈ domain), CoreFrame.world_state (states t ht)
   /-- The task relation is respected -/
@@ -191,17 +191,17 @@ structure WorldHistory (F : CoreFrame T) where
 
 namespace WorldHistory
 
-variable {F : CoreFrame T}
+variable {F : CoreFrame D}
 
 /--
 The set of all world-histories over a core frame.
 -/
-def AllHistories (F : CoreFrame T) : Set (WorldHistory F) := Set.univ
+def AllHistories (F : CoreFrame D) : Set (WorldHistory F) := Set.univ
 
 /--
 Get the state at a time (if in domain).
 -/
-def stateAt (τ : WorldHistory F) (t : T) (ht : t ∈ τ.domain) : F.State :=
+def stateAt (τ : WorldHistory F) (t : D) (ht : t ∈ τ.domain) : F.State :=
   τ.states t ht
 
 /--
@@ -218,9 +218,9 @@ end WorldHistory
 /--
 A *core model* combines a core frame with an interpretation.
 -/
-structure CoreModel (T : Type*) [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T] where
+structure CoreModel (D : Type*) [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] where
   /-- The underlying core frame -/
-  frame : CoreFrame T
+  frame : CoreFrame D
   /-- The interpretation function (inherited from constitutive model) -/
   interp : Interpretation frame.toConstitutiveFrame
 

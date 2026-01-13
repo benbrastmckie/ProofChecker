@@ -33,7 +33,7 @@ namespace Logos.SubTheories.Explanatory
 open Logos.SubTheories.Foundation
 open Logos.SubTheories.Explanatory.Formula
 
-variable {T : Type*} [AddCommGroup T] [LinearOrder T] [IsOrderedAddMonoid T]
+variable {D : Type*} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]
 
 -- Performance: Increase heartbeats for deep typeclass hierarchy (unbundled ordered add comm group)
 set_option synthInstance.maxHeartbeats 100000
@@ -42,16 +42,16 @@ set_option synthInstance.maxHeartbeats 100000
 Temporal index for store/recall operators.
 A list of times that can be stored into and recalled from.
 -/
-def TemporalIndex (T : Type*) := List T
+def TemporalIndex (D : Type*) := List D
 
 namespace TemporalIndex
 
 /-- Empty temporal index -/
-def empty : TemporalIndex T := []
+def empty : TemporalIndex D := []
 
 /-- Update temporal index at position i with time t -/
-def update (idx : TemporalIndex T) (i : Nat) (t : T) : TemporalIndex T :=
-  let lst : List T := idx
+def update (idx : TemporalIndex D) (i : Nat) (t : D) : TemporalIndex D :=
+  let lst : List D := idx
   if h : i < lst.length then
     lst.set (Fin.mk i h) t
   else
@@ -59,8 +59,8 @@ def update (idx : TemporalIndex T) (i : Nat) (t : T) : TemporalIndex T :=
     lst ++ List.replicate (i - lst.length) t ++ [t]
 
 /-- Get time at position i (returns 0 if out of bounds) -/
-def get [Zero T] (idx : TemporalIndex T) (i : Nat) : T :=
-  (idx : List T).getD i 0
+def get [Zero T] (idx : TemporalIndex D) (i : Nat) : T :=
+  (idx : List D).getD i 0
 
 end TemporalIndex
 
@@ -77,7 +77,7 @@ def toConstitutiveFormula : Formula → ConstitutiveFormula
 /--
 Evaluate a term in a Core model.
 -/
-partial def evalTermCore (M : CoreModel T) (σ : VarAssignment M.frame.toConstitutiveFrame)
+partial def evalTermCore (M : CoreModel D) (σ : VarAssignment M.frame.toConstitutiveFrame)
     : Term → M.frame.State
   | Term.var x => σ x
   | Term.const c => M.interp.getConstant c
@@ -100,8 +100,8 @@ Parameters:
 - φ: The formula to evaluate
 -/
 @[irreducible]
-def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
-    (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex T)
+def truthAt (M : CoreModel D) (τ : WorldHistory M.frame) (t : D) (ht : t ∈ τ.domain)
+    (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex D)
     : Formula → Prop :=
   -- Cache CompleteLattice instance to avoid repeated typeclass inference
   letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
@@ -193,8 +193,8 @@ def truthAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ
 /--
 Falsehood evaluation: M, τ, x, σ, i⃗ ⊭ A
 -/
-def falsehoodAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
-    (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex T)
+def falsehoodAt (M : CoreModel D) (τ : WorldHistory M.frame) (t : D) (ht : t ∈ τ.domain)
+    (σ : VarAssignment M.frame.toConstitutiveFrame) (idx : TemporalIndex D)
     (φ : Formula) : Prop :=
   ¬truthAt M τ t ht σ idx φ
 
@@ -203,20 +203,20 @@ def falsehoodAt (M : CoreModel T) (τ : WorldHistory M.frame) (t : T) (ht : t �
 /--
 A formula is valid in a model if it is true at all world-histories and times.
 -/
-def validInModel (M : CoreModel T) (φ : Formula) : Prop :=
+def validInModel (M : CoreModel D) (φ : Formula) : Prop :=
   -- Cache CompleteLattice instance to avoid repeated typeclass inference
   letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
-  ∀ (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
+  ∀ (τ : WorldHistory M.frame) (t : D) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame),
     truthAt M τ t ht σ TemporalIndex.empty φ
 
 /--
 Logical consequence in a model: Γ ⊨_M φ if φ is true whenever all formulas in Γ are true.
 -/
-def entailsInModel (M : CoreModel T) (Γ : List Formula) (φ : Formula) : Prop :=
+def entailsInModel (M : CoreModel D) (Γ : List Formula) (φ : Formula) : Prop :=
   -- Cache CompleteLattice instance to avoid repeated typeclass inference
   letI : CompleteLattice M.frame.State := M.frame.toConstitutiveFrame.lattice
-  ∀ (τ : WorldHistory M.frame) (t : T) (ht : t ∈ τ.domain)
+  ∀ (τ : WorldHistory M.frame) (t : D) (ht : t ∈ τ.domain)
     (σ : VarAssignment M.frame.toConstitutiveFrame),
     (∀ ψ ∈ Γ, truthAt M τ t ht σ TemporalIndex.empty ψ) →
     truthAt M τ t ht σ TemporalIndex.empty φ
