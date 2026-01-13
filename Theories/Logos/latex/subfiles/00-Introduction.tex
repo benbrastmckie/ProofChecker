@@ -44,7 +44,7 @@ The following diagram shows the dependency structure among extensions:
 \node[widebox, below=1.2cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
-    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$),~ \counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}
+    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}
   \end{tabular}
 };
 
@@ -62,7 +62,7 @@ The following diagram shows the dependency structure among extensions:
   \begin{tabular}{c}
     \textbf{Epistemic} \\
     {\footnotesize belief, probability,} \\
-    {\footnotesize might/must, conditional} \\
+    {\footnotesize might/must, indicative} \\
     {\small ($\mathsf{B}$, $\mathsf{Pr}$, $\mathsf{Mi}$, $\mathsf{Mu}$, $\hookrightarrow$)}
   \end{tabular}
 };
@@ -76,8 +76,7 @@ The following diagram shows the dependency structure among extensions:
   \end{tabular}
 };
 
-% Ellipsis nodes for extensibility
-\node[draw=none, left=0.4cm of epistemic, font=\Large] (leftellipsis) {$\cdots$};
+% Ellipsis node for extensibility (right side only)
 \node[draw=none, right=0.4cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
 
 % Invisible spacer node to extend grey box upward
@@ -86,7 +85,7 @@ The following diagram shows the dependency structure among extensions:
 % Grey background box around middle extensions
 \begin{pgfonlayer}{background}
   \node[fill=gray!15, draw=gray!40, rounded corners=6pt,
-        fit=(leftellipsis)(epistemic)(normative)(spatial)(rightellipsis)(topspacer),
+        fit=(epistemic)(normative)(spatial)(rightellipsis)(topspacer),
         inner sep=12pt,
         label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
 \end{pgfonlayer}
