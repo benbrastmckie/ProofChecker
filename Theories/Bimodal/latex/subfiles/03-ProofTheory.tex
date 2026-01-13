@@ -27,51 +27,51 @@ $((\varphi \imp \psi) \imp \varphi) \imp \varphi$
 
 \subsubsection{Modal Axioms (S5)}
 
-\begin{axiom}[MT (Modal T)]
+\begin{axiom}[MT - Modal T]
 $\nec\varphi \imp \varphi$
 \end{axiom}
 
-\begin{axiom}[M4 (Modal 4)]
+\begin{axiom}[M4 - Modal 4]
 $\nec\varphi \imp \nec\nec\varphi$
 \end{axiom}
 
-\begin{axiom}[MB (Modal B)]
+\begin{axiom}[MB - Modal B]
 $\varphi \imp \nec\poss\varphi$
 \end{axiom}
 
-\begin{axiom}[M5 (Modal 5 Collapse)]
+\begin{axiom}[M5 - Modal 5 Collapse]
 $\poss\nec\varphi \imp \nec\varphi$
 \end{axiom}
 
-\begin{axiom}[MK (Modal K Distribution)]
+\begin{axiom}[MK - Modal Distribution]
 $\nec(\varphi \imp \psi) \imp (\nec\varphi \imp \nec\psi)$
 \end{axiom}
 
 \subsubsection{Temporal Axioms}
 
-\begin{axiom}[TK (Temporal K Distribution)]
+\begin{axiom}[TK - Temporal Distribution]
 $\allfuture(\varphi \imp \psi) \imp (\allfuture\varphi \imp \allfuture\psi)$
 \end{axiom}
 
-\begin{axiom}[T4 (Temporal 4)]
+\begin{axiom}[T4 - Temporal 4]
 $\allfuture\varphi \imp \allfuture\allfuture\varphi$
 \end{axiom}
 
-\begin{axiom}[TA (Temporal A)]
+\begin{axiom}[TA - Temporal A]
 $\varphi \imp \allfuture\somepast\varphi$
 \end{axiom}
 
-\begin{axiom}[TL (Temporal L)]
+\begin{axiom}[TL - Temporal L]
 $\always\varphi \imp \allfuture\allpast\varphi$
 \end{axiom}
 
 \subsubsection{Modal-Temporal Interaction}
 
-\begin{axiom}[MF (Modal-Future)]
+\begin{axiom}[MF - Modal-Future]
 $\nec\varphi \imp \nec\allfuture\varphi$
 \end{axiom}
 
-\begin{axiom}[TF (Temporal-Future)]
+\begin{axiom}[TF - Temporal-Future]
 $\nec\varphi \imp \allfuture\nec\varphi$
 \end{axiom}
 
@@ -133,7 +133,7 @@ Applies only to theorems (empty context).
 
 \begin{definition}[Temporal Duality]
 \[
-\frac{\proves \varphi}{\proves \text{swap}(\varphi)}
+\frac{\proves \varphi}{\proves \swap\varphi}
 \]
 Applies only to theorems (empty context).
 \end{definition}
