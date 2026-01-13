@@ -33,18 +33,21 @@ The following diagram shows the dependency structure among extensions:
 ]
 
 % Constitutive Foundation (full-width)
-\node[widebox] (foundation) {
+\node[widebox, minimum height=1.8cm] (foundation) {
   \begin{tabular}{c}
     \textbf{Constitutive Foundation} \\
-    {\small identity ($\equiv$),~ grounding ($\leq$),~ essence ($\sqsubseteq$),~ reduction ($\Rightarrow$)}
+    {\small predicates ($F$, $G$),~ functions ($f$, $g$),~ variables ($x$, $y$)} \\
+    {\small boolean ($\neg$, $\land$, $\lor$),~ lambda ($\lambda$),~ identity ($=$)} \\
+    {\small propositional identity ($\equiv$),~ grounding ($\leq$),~ essence ($\sqsubseteq$),~ reduction ($\Rightarrow$)}
   \end{tabular}
 };
 
 % Explanatory Extension (full-width)
-\node[widebox, below=0.85cm of foundation] (explanatory) {
+\node[widebox, minimum height=1.8cm, below=0.85cm of foundation] (explanatory) {
   \begin{tabular}{c}
     \textbf{Explanatory Extension} \\
-    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}
+    {\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$, $S$, $U$),~ counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)} \\
+    {\small store/recall ($\downarrow$, $\uparrow$),~ quantifiers ($\forall$, $\exists$),~ actuality ($@$)}
   \end{tabular}
 };
 
