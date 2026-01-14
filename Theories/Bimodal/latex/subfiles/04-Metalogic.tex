@@ -100,11 +100,11 @@ The frame satisfies nullity and compositionality.
 \end{definition}
 
 \begin{definition}[Canonical Valuation]
-An atom $p$ is true at world state $[h, t]$ iff $p \in \text{mcs}(h(t))$.
+An atom $p$ is true at world state $[\tau, x]$ iff $p \in \text{mcs}(\tau(x))$.
 \end{definition}
 
 \begin{lemma}[Truth Lemma]
-In the semantic canonical model, $\varphi \in \text{mcs}(h(t))$ iff $\varphi$ is true at world state $[h, t]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
+In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
 \end{lemma}
 
 \begin{theorem}[Weak Completeness]
@@ -112,23 +112,21 @@ If $\valid{\varphi}$ then $\proves \varphi$.\footnote{This is proven as \texttt{
 \end{theorem}
 
 \begin{theorem}[Strong Completeness]
-If $\context \satisfies \varphi$ then $\context \proves \varphi$.{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the general valid connection.}
+If $\context \satisfies \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the general valid connection.}
 \end{theorem}
 
 \begin{theorem}[Provable iff Valid]
-$\proves \varphi$ iff $\valid{\varphi}$.
-This is proven as \texttt{main\_provable\_iff\_valid}, establishing the completeness of the proof system.
+$\proves \varphi$ iff $\valid{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing the completeness of the proof system.}
 \end{theorem}
 
 \begin{definition}[Finite Model Property]
-If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.
-This is stated as \texttt{finite\_model\_property}.
+If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.\footnote{This is stated as \texttt{finite\_model\_property}.}
 \end{definition}
 
 \subsection{Proof Strategy}
 
 The semantic approach defines world states as equivalence classes of (history, time) pairs.
-Two pairs $(h_1, t_1)$ and $(h_2, t_2)$ are equivalent iff $h_1(t_1) = h_2(t_2)$ as underlying world states.
+Two pairs $(\tau_1, x_1)$ and $(\tau_2, x_2)$ are equivalent iff $\tau_1(x_1) = \tau_2(x_2)$ as underlying world states.
 
 This construction offers key advantages:
 \begin{itemize}
