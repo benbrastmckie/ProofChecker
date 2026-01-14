@@ -74,38 +74,77 @@ A context $\context$ is \textbf{maximal consistent} if it is consistent and
 for all $\varphi \notin \context$, the context $\varphi :: \context$ is inconsistent.
 \end{definition}
 
-\subsection{Completeness Infrastructure}
+\subsection{Completeness}
 
-The completeness proof uses canonical model construction.
+The completeness proof uses the semantic canonical model construction.
+World states are defined as equivalence classes of (history, time) pairs, making the truth lemma straightforward by construction.
 
 \begin{lemma}[Lindenbaum]
 Every consistent context can be extended to a maximal consistent context.
+This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.
 \end{lemma}
 
+\begin{definition}[Semantic World State]
+A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.
+This is formalized as \texttt{SemanticWorldState}.
+\end{definition}
+
 \begin{definition}[Canonical Frame]
-The canonical frame has:
+The semantic canonical frame (\texttt{SemanticCanonicalFrame}) has:
 \begin{itemize}
-  \item World states: Maximal consistent sets
+  \item World states: Equivalence classes of history-time pairs over maximal consistent sets
   \item Times: Integers ($\mathbb{Z}$)
-  \item Task relation: Defined via modal/temporal formula transfer
+  \item Task relation: Defined via history existence (\texttt{SemanticTaskRelV2})
 \end{itemize}
+The frame satisfies nullity and compositionality.
 \end{definition}
 
 \begin{definition}[Canonical Valuation]
-An atom $p$ is true at world $\Gamma$ iff $p \in \Gamma$.
+An atom $p$ is true at world state $[h, t]$ iff $p \in \text{mcs}(h(t))$.
 \end{definition}
 
 \begin{lemma}[Truth Lemma]
-In the canonical model, $\varphi \in \Gamma$ iff $\varphi$ is true at $\Gamma$.
+In the semantic canonical model, $\varphi \in \text{mcs}(h(t))$ iff $\varphi$ is true at world state $[h, t]$.
+This is proven as \texttt{semantic\_truth\_lemma\_v2}.
 \end{lemma}
 
-\begin{theorem}[Weak Completeness (Axiomatized)]
+\begin{theorem}[Weak Completeness]
 If $\valid{\varphi}$ then $\proves \varphi$.
+This is proven as \texttt{semantic\_weak\_completeness}.
 \end{theorem}
 
-\begin{theorem}[Strong Completeness (Axiomatized)]
+\begin{theorem}[Strong Completeness]
 If $\context \satisfies \varphi$ then $\context \proves \varphi$.
+This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the general valid connection.
 \end{theorem}
+
+\begin{theorem}[Provable iff Valid]
+$\proves \varphi$ iff $\valid{\varphi}$.
+This is proven as \texttt{main\_provable\_iff\_valid}, establishing the completeness of the proof system.
+\end{theorem}
+
+\begin{definition}[Finite Model Property]
+If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.
+This is stated as \texttt{finite\_model\_property}.
+\end{definition}
+
+\subsection{Proof Strategy}
+
+The semantic approach defines world states as equivalence classes of (history, time) pairs.
+Two pairs $(h_1, t_1)$ and $(h_2, t_2)$ are equivalent iff $h_1(t_1) = h_2(t_2)$ as underlying world states.
+
+This construction offers key advantages:
+\begin{itemize}
+  \item \textbf{Truth lemma}: Follows directly from the quotient construction.
+  Membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
+  \item \textbf{Compositionality}: The task relation is defined via history existence.
+  Two world states are related by a duration $d$ iff there exists a history passing through both states at times differing by $d$.
+  History concatenation provides the compositionality proof.
+  \item \textbf{Negation-completeness}: The semantic approach does not require proving negation-completeness of arbitrary locally consistent sets, a property that caused difficulties in the syntactic approach.
+\end{itemize}
+
+The syntactic approach (building world states from negation-complete maximal consistent sets) is superseded.
+The deprecated code is archived in \texttt{Boneyard/} for historical reference.
 
 \subsection{Decidability}
 
