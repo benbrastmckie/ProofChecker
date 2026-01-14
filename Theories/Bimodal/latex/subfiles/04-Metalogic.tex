@@ -229,8 +229,7 @@ Completeness & Partial & Requires Finite Model Property \\
 \end{center}
 
 The soundness proof establishes that a ``valid'' result implies semantic validity.
-The completeness proof is partial because it relies on the Finite Model Property (FMP),
-which is axiomatized pending full formalization.
+The completeness proof requires the Finite Model Property (FMP), which is stated but not yet fully formalized.
 
 \subsection{Implementation Status}
 
@@ -239,16 +238,21 @@ which is axiomatized pending full formalization.
 \toprule
 Component & Status & Lean \\
 \midrule
-Soundness & Fully proven & \texttt{soundness} \\
-Deduction Theorem & Fully proven & \texttt{deduction\_theorem} \\
-Lindenbaum Lemma & Axiomatized & \texttt{lindenbaum} \\
-Canonical Frame & Axiomatized & \texttt{canonical\_frame} \\
-Truth Lemma & Axiomatized & \texttt{truth\_lemma} \\
-Weak Completeness & Axiomatized & \texttt{weak\_completeness} \\
-Strong Completeness & Axiomatized & \texttt{strong\_completeness} \\
-Decidability & Soundness proven & \texttt{validity\_decidable}, \texttt{decide\_sound} \\
+Soundness & Proven & \texttt{soundness} \\
+Deduction Theorem & Proven & \texttt{deduction\_theorem} \\
+Lindenbaum Lemma & Proven & \texttt{set\_lindenbaum} \\
+Canonical Frame & Proven & \texttt{SemanticCanonicalFrame} \\
+Truth Lemma & Proven & \texttt{semantic\_truth\_lemma\_v2} \\
+Weak Completeness & Proven & \texttt{semantic\_weak\_completeness} \\
+Strong Completeness & Proven* & \texttt{main\_strong\_completeness} \\
+Provable iff Valid & Proven & \texttt{main\_provable\_iff\_valid} \\
+Finite Model Property & Statement & \texttt{finite\_model\_property} \\
+Decidability & Soundness & \texttt{decide\_sound} \\
 \bottomrule
 \end{tabular}
 \end{center}
+
+\noindent
+* Strong completeness has bridge sorries for the connection between general validity and frame validity.
 
 \end{document}

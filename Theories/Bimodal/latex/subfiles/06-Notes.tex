@@ -13,11 +13,11 @@ Component & Status & Notes \\
 Syntax & Complete & 6 primitives, derived operators \\
 Semantics & Complete & Task frames, world histories, truth \\
 Proof System & Complete & 14 axioms, 7 inference rules \\
-Soundness & Fully Proven & All 14 axioms valid, 7 rules sound \\
-Deduction Theorem & Fully Proven & Well-founded recursion on height \\
-Completeness & Infrastructure Only & Axiomatized (Lindenbaum, truth lemma) \\
-Decidability & Soundness Proven & Tableau-based, requires FMP for completeness \\
-Perpetuity Principles & Fully Proven & P1-P6 all proven \\
+Soundness & Proven & All 14 axioms valid, 7 rules sound \\
+Deduction Theorem & Proven & Well-founded recursion on height \\
+Completeness & Proven (Semantic) & Lindenbaum, truth lemma, weak completeness \\
+Decidability & Soundness Proven & Tableau-based, FMP for full completeness \\
+Perpetuity Principles & Proven & P1-P6 all proven \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -67,16 +67,24 @@ for proof convenience in the S5 collapse theorem.
 \subsubsection{Completeness Status}
 
 The paper proves completeness via canonical model construction.
-The Lean implementation has the completeness infrastructure (Lindenbaum lemma statement, canonical frame types, truth lemma statement) but the core lemmas remain axiomatized.
-Estimated effort to complete: 70-90 hours of focused development.
+The Lean implementation establishes completeness via the semantic canonical model approach.
+The key results are:
+\begin{itemize}
+  \item \texttt{set\_lindenbaum}: Every consistent set extends to a maximal consistent set
+  \item \texttt{semantic\_truth\_lemma\_v2}: Membership corresponds to truth in the semantic model
+  \item \texttt{semantic\_weak\_completeness}: Validity implies derivability
+  \item \texttt{main\_provable\_iff\_valid}: Derivability and validity coincide
+\end{itemize}
+The semantic approach defines world states as equivalence classes of history-time pairs, making the truth lemma straightforward by construction.
+Bridge sorries remain for connecting general validity to frame validity in strong completeness.
 
 \subsubsection{Decidability Implementation}
 
 The implementation includes a tableau-based decision procedure for validity that provides an alternative to the canonical model approach.
 The decidability module establishes that validity is decidable via constructive tableau expansion and branch closure.
-Soundness is fully proven: if the procedure returns ``valid'', the formula is semantically valid.
-Completeness is partial because it relies on the Finite Model Property (FMP), which is axiomatized.
+Soundness is proven: if the procedure returns ``valid'', the formula is semantically valid.
+Completeness requires the Finite Model Property (FMP), which is stated but not yet fully formalized.
 The FMP states that if a formula is satisfiable, it is satisfiable in a finite model.
-Full formalization of the FMP would complete decidability.
+Full formalization of the FMP completes decidability.
 
 \end{document}
