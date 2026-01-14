@@ -124,21 +124,24 @@ This ensures that language and frame are well aligned.
 \node[smallbox, below=2.0cm of middlebox] (social) {
   \begin{tabular}{c}
     \textbf{Social} \\
-    {\footnotesize common ground}
+    {\footnotesize common ground,} \\
+    {\footnotesize trust relations}
   \end{tabular}
 };
 
 \node[smallbox, left=0.3cm of social] (agential) {
   \begin{tabular}{c}
     \textbf{Agential} \\
-    {\footnotesize agent-indexing}
+    {\footnotesize inherited agent-indexed} \\
+    {\footnotesize operators}
   \end{tabular}
 };
 
 \node[smallbox, right=0.3cm of social] (reflection) {
   \begin{tabular}{c}
     \textbf{Reflection} \\
-    {\footnotesize metacognition}
+    {\footnotesize metacognition,} \\
+    {\footnotesize perspectival operators}
   \end{tabular}
 };
 
@@ -172,9 +175,8 @@ This ensures that language and frame are well aligned.
 \end{figure}
 
 Whereas the Constitutive Foundation and Explanatory Extension form the required base, the middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
-The Agential Extension, Social Extension, and Reflection Extension all inherit from the layers above and are free to interact with each other:
-the Agential Extension provides third-person multi-agent reasoning,
-while the Reflection Extension enables first-person metacognitive self-modeling.
+The Agential Extension, Social Extension, and Reflection Extension all inherit from the layers above and are free to interact with each other.
+The Agential Extension provides third-person multi-agent reasoning, the Social Extension provides the construction of the common ground and trust relations, and the Reflection Extension enables first-person metacognition.
 
 % ------------------------------------------------------------
 % Layer Descriptions
@@ -183,29 +185,48 @@ while the Reflection Extension enables first-person metacognitive self-modeling.
 \subsection{Layer Descriptions}\label{sec:layer-descriptions}
 
 \begin{enumerate}
-  \item \textbf{Constitutive Foundation}: Hyperintensional semantics over a mereological state space.
-        Provides the foundational structure with bilateral propositions (verifier/falsifier pairs).
+  \item \textbf{Constitutive Foundation}:
+        Provides the hyperintensional base with predicates ($F$, $G$), functions ($f$, $g$), variables ($x$, $y$), boolean operators ($\neg$, $\land$, $\lor$, $\bot$, $\top$), lambda abstraction ($\lambda$), identity ($=$), and constitutive operators (propositional identity $\equiv$, grounding $\leq$, essence $\sqsubseteq$, reduction $\Rightarrow$) over a state lattice with bilateral propositions (verifier/falsifier pairs).
+        This enables fine-grained distinctions between propositions with identical truth-values but different verification conditions---essential for exact specification of what makes a claim true.
 
-  \item \textbf{Explanatory Extension}: Hyperintensional and intensional semantics over a task space.
-        Extends the foundation with temporal structure (a totally ordered abelian group) and a task relation constraining possible state transitions, enabling evaluation of truth relative to world-histories and times.
+  \item \textbf{Explanatory Extension}:
+        Adds quantifiers ($\forall$, $\exists$), modal operators ($\Box$, $\Diamond$) for necessity and possibility, temporal operators ($H$, $G$, $P$, $F$, $S$, $U$) for reasoning across time, store/recall operators ($\downarrow$, $\uparrow$) for temporal reference, actuality ($\mathsf{Act}$) for distinguishing actual from possible, counterfactual conditionals ($\boxright$, $\diamondright$) for hypothetical reasoning, and causal operators ($\circleright$, $\dotcircleright$) for explanatory links.
+        Together these resources enable reasoning about action sequences, future contingency, what would have happened under different circumstances, and causal relationships.
 
-  \item \textbf{Epistemic Extension}: Extensions for belief, knowledge, and probability. \textsc{[Details pending development]}
+  \item \textbf{Epistemic Extension}:
+        Introduces belief ($\mathsf{B}$), knowledge ($\mathsf{K}$), probability ($\mathsf{Pr}$), and indicative conditional operators for reasoning under uncertainty.
+        By extending the temporal framework with credence functions over state transitions, agents can track how evidence updates beliefs across time and distinguish what an agent believes from what is actually the case.
 
-  \item \textbf{Abilities Extension}: Extensions for agent capacities, including specific ability ($\mathsf{Can}_a$), generic ability ($\mathsf{Able}_a$), and STIT operators ($\mathsf{stit}_a$).
-        Ability modals express what an agent can bring about through their capacities, with stronger truth conditions than circumstantial possibility. \textsc{[Details pending development]}
+  \item \textbf{Abilities Extension}:
+        Provides specific ability ($\mathsf{Can}$), generic ability ($\mathsf{Able}$), and STIT ($\mathsf{stit}$) operators for reasoning about agent capacities.
+        Ability modals express what an agent can bring about through their capacities, with stronger truth conditions than circumstantial possibility---ability entails possibility but not vice versa.
+        This enables reasoning about what agents are capable of accomplishing given their intrinsic capacities and circumstances.
 
-  \item \textbf{Normative Extension}: Extensions for obligation, permission, and value. \textsc{[Details pending development]}
+  \item \textbf{Normative Extension}:
+        Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), and preference operators with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
+        This enables ethical reasoning, multi-party preference aggregation, and grounding obligations in factual circumstances.
 
-  \item \textbf{Choice Extension}: Extensions for free choice permission ($\mathsf{FP}$) and choice sets ($\mathsf{Ch}$).
-        Free choice modals address how permission distributes over disjunctive alternatives, ensuring that permission over a disjunction implies permission for each disjunct. \textsc{[Details pending development]}
+  \item \textbf{Choice Extension}:
+        Introduces free choice permission ($\mathsf{FP}$) and choice set ($\mathsf{Ch}$) operators for reasoning about permission over alternatives.
+        Free choice modals address the distribution of permission over disjunctive alternatives---intuitively, ``you may have an apple or a pear'' implies permission for each disjunct.
+        This enables reasoning about which alternatives are permitted and how permissions combine.
 
-  \item \textbf{Spatial Extension}: Extensions for spatial reasoning. \textsc{[Details pending development]}
+  \item \textbf{Spatial Extension}:
+        Provides location-dependent operators and spatial relations for reasoning about where things are and how spatial proximity affects truth conditions.
+        This supports navigation, containment reasoning, and location-sensitive planning.
 
-  \item \textbf{Agential Extension}: Extensions for multi-agent reasoning. \textsc{[Details pending development]}
+  \item \textbf{Agential Extension}:
+        Indexes epistemic and normative operators to specific agents ($\mathsf{B}_a$, $\mathsf{K}_a$, $\mathsf{O}_a$), enabling reasoning about what different agents believe, prefer, and are obligated to do.
+        This transforms single-perspective reasoning into multi-agent coordination where agents can model each other's epistemic and normative states.
+        Requires at least one middle extension.
 
-  \item \textbf{Reflection Extension}: Extensions for metacognition and self-modeling.
-        Enables first-person reasoning through the $\mathsf{I}$ operator, transforming direct modal expressions into self-aware epistemic stances.
-        Requires at least one middle extension, positioned in parallel with the Agential Extension.
+  \item \textbf{Social Extension}:
+        Provides resources for common ground and group-level reasoning, building upon the Agential Extension to enable reasoning about shared knowledge, collective beliefs, and social coordination.
+
+  \item \textbf{Reflection Extension}:
+        Adds first-person metacognitive operators ($\mathsf{I}$) for self-directed reasoning about one's own beliefs, knowledge, abilities, and goal progress.
+        This enables an agent to reason about what it knows versus believes, recognize its own limitations, and track progress toward goals---essential for AI systems that must understand their own capabilities.
+        Positioned in parallel with the Agential Extension.
 \end{enumerate}
 
 % ------------------------------------------------------------
@@ -217,34 +238,16 @@ while the Reflection Extension enables first-person metacognitive self-modeling.
 This reference manual is organized as follows:
 
 \begin{description}
-  \item[\cref{sec:constitutive-foundation}] presents the Constitutive Foundation, including the mereological state space, verification and falsification clauses, and bilateral propositions.
+  \item[\Cref{sec:constitutive-foundation}] presents the Constitutive Foundation, including the mereological state space, verification and falsification clauses, and bilateral propositions.
 
-  \item[\cref{sec:core-syntax}] introduces the syntactic primitives of the Explanatory Extension, including modal, temporal, and counterfactual operators.
+  \item[\Cref{sec:core-syntax}] introduces the syntactic primitives of the Explanatory Extension, including modal, temporal, and counterfactual operators.
 
-  \item[\cref{sec:core-semantics}] provides the semantic framework for the Explanatory Extension, including core frames, world-histories, and truth conditions.
+  \item[\Cref{sec:core-semantics}] provides the semantic framework for the Explanatory Extension, including core frames, world-histories, and truth conditions.
 
-  \item[\cref{sec:core-axioms}] presents the axiom system for counterfactual logic.
+  \item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.
 
-  \item[\cref{sec:reflection}] specifies the Reflection Extension for first-person metacognitive reasoning, including truth conditions, derived operators, and temporal interactions.
+  \item[\Cref{sec:reflection}] specifies the Reflection Extension for first-person metacognitive reasoning, including truth conditions, derived operators, and temporal interactions.
 \end{description}
-
-% ------------------------------------------------------------
-% Notation
-% ------------------------------------------------------------
-
-\subsection{Notation}\label{sec:notation}
-
-This document uses the following notational conventions:
-
-\begin{itemize}
-  \item $\assignment$ denotes variable assignments (compatible across \LaTeX, markdown, and Lean notation)
-  \item $\history$ denotes world-histories
-  \item $\tempindex = \langle i_1, i_2, \ldots \rangle$ denotes the temporal index (vector of stored times)
-  \item $\imposition{t}{w}$ denotes imposition (``imposing $t$ on $w$ yields $w'$'')
-\end{itemize}
-
-See the \texttt{logos-notation.sty} package for the complete list of notation macros.
-
 % ------------------------------------------------------------
 % Lean Implementation
 % ------------------------------------------------------------
@@ -254,7 +257,6 @@ See the \texttt{logos-notation.sty} package for the complete list of notation ma
 The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}{}| command.
 
 For example, \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
-
-The implementation can be found in the \texttt{Logos/} directory of the \proofchecker{} repository.
+The implementation can be found in the \proofchecker{} repository in the \texttt{Theories/Logos/} directory.
 
 \end{document}
