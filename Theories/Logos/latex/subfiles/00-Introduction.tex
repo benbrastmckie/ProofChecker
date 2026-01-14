@@ -8,8 +8,7 @@
 \section{Introduction}\label{sec:introduction}
 
 This reference manual provides the formal specification for the Logos proof system, semantics, metalogic, and library of theorems.
-The semantics proceeds through increasingly expressive extensions following corresponding extensions to the semantic frame over which the models of the Logos are defined.
-
+The semantics steps through increasingly expressive extensions to support extensions of the Logos of greater expressive power. 
 A semantic frame provides the primitive structures used to interpret a formal language.
 Extending the expressive power of a language requires strategic extensions to the primitive semantic resources provided by the frame, including precisely the resources needed and nothing more.
 This ensures that language and frame are well aligned.
@@ -21,9 +20,10 @@ This ensures that language and frame are well aligned.
 
 \subsection{Extension Dependencies}\label{sec:extension-dependencies}
 
-The following diagram shows the dependency structure among extensions:
+\Cref{fig:extension-dependencies} shows the dependency structure among extensions.
 
-\begin{center}
+\begin{figure}[htbp]
+\centering
 \usetikzlibrary{fit,backgrounds,positioning,calc,arrows.meta}
 \begin{tikzpicture}[
   widebox/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=10cm, minimum height=1.2cm},
@@ -167,11 +167,12 @@ The following diagram shows the dependency structure among extensions:
 % \draw[doublearrow] (agential.east) -- (reflection.west);
 
 \end{tikzpicture}
-\end{center}
+\caption{Extension dependency structure in the Logos system.}
+\label{fig:extension-dependencies}
+\end{figure}
 
-The Constitutive Foundation and Explanatory Extension form the required base.
-The middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
-Both the Agential Extension and Reflection Extension inherit from the middle layer and interact with each other:
+Whereas the Constitutive Foundation and Explanatory Extension form the required base, the middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
+The Agential Extension, Social Extension, and Reflection Extension all inherit from the layers above and are free to interact with each other:
 the Agential Extension provides third-person multi-agent reasoning,
 while the Reflection Extension enables first-person metacognitive self-modeling.
 
