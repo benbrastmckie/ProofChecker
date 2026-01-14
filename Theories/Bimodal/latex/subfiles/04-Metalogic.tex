@@ -80,17 +80,15 @@ The completeness proof uses the semantic canonical model construction.
 World states are defined as equivalence classes of (history, time) pairs, making the truth lemma straightforward by construction.
 
 \begin{lemma}[Lindenbaum]
-Every consistent context can be extended to a maximal consistent context.
-This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.
+Every consistent context can be extended to a maximal consistent context.\footnote{This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.}
 \end{lemma}
 
 \begin{definition}[Semantic World State]
-A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.
-This is formalized as \texttt{SemanticWorldState}.
+A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
 
 \begin{definition}[Canonical Frame]
-The semantic canonical frame (\texttt{SemanticCanonicalFrame}) has:
+The \texttt{SemanticCanonicalFrame} has:
 \begin{itemize}
   \item World states: Equivalence classes of history-time pairs over maximal consistent sets
   \item Times: Integers ($\mathbb{Z}$)
@@ -100,7 +98,7 @@ The frame satisfies nullity and compositionality.
 \end{definition}
 
 \begin{definition}[Canonical Valuation]
-An atom $p$ is true at world state $[\tau, x]$ iff $p \in \text{mcs}(\tau(x))$.
+An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$.
 \end{definition}
 
 \begin{lemma}[Truth Lemma]
@@ -112,11 +110,11 @@ If $\valid{\varphi}$ then $\proves \varphi$.\footnote{This is proven as \texttt{
 \end{theorem}
 
 \begin{theorem}[Strong Completeness]
-If $\context \satisfies \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the general valid connection.}
+If $\context \satisfies \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
 \end{theorem}
 
 \begin{theorem}[Provable iff Valid]
-$\proves \varphi$ iff $\valid{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing the completeness of the proof system.}
+$\proves \varphi$ iff $\valid{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
 
 \begin{definition}[Finite Model Property]
