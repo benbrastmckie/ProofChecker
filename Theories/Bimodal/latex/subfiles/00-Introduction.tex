@@ -3,12 +3,12 @@
 
 \section{Introduction}
 
-The bimodal logic \textbf{TM} combines an S5 historical modal operators ($\nec$, $\poss$) with linear temporal operators for past ($\allpast$) and future ($\allfuture$).
-The logic provides a framework for modal and temporal reasoning, providing a positive RL signal to train AI systems in verified reason about past and future contingency.
+The bimodal logic \textbf{TM} combines S5 historical modal operators for necessity ($\nec$) and possibility ($\poss$) with linear temporal operators for past ($\allpast$) and future ($\allfuture$).
+Implementing \textbf{TM} in Lean 4 provides a positive RL signal for training AI systems to conduct verified reasoning about past and future contingency in an interpreted formal language.
 
-The semantics is based on \emph{task frames}, which extend Kripke frames with a non-deterministic transition relation parameterized by durations.
+The semantics is based on \emph{task frames}, which extend Kripke frames with temporal structure.
 A task frame consists of world states connected by a \emph{task relation} indexed by temporal durations.
-World histories are temporal slices through a task frame, representing the unfolding of a world over time.
+World histories are temporal slices through a task frame, representing the possible evolution of a system.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -68,8 +68,9 @@ World histories are temporal slices through a task frame, representing the unfol
 The diagram above illustrates the conceptual structure underlying TM logic.
 The solid curve $\tau$ represents a single world history---a temporal sequence of states.
 From any point $x$ along a history, the past and future light cones contain all states that are modally accessible.
-The necessity operator $\nec$ quantifies over all histories passing through $x$, while the temporal operators $\allpast$ and $\allfuture$ quantify along the single actual history.
-The dotted lines represent counterfactual paths: alternative pasts that could have led to $x$, and alternative futures that could unfold from $x$.
+The necessity operator $\nec$ quantifies over all possible histories, though we may often restrict to those histories that pass through the world state $\tau(x)$.
+The temporal operators $\allpast$ and $\allfuture$ quantify over past and future times which, given a particular history, determines the range of past and future world states that history occupies relative to a given time.
+These primitive operators may then be used to define a host of combined operators of interest.
 
 \subsection*{Project Structure}
 
