@@ -13,7 +13,11 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | Epistemic Extension | Extensions for belief, knowledge, and probability operators | Credence function, Epistemic modality |
 | Normative Extension | Extensions for obligation, permission, and preference operators | Value ordering, Deontic logic |
 | Spatial Extension | Extensions for spatial reasoning and location operators | Location space, Spatial relations |
-| Agential Extension | Extensions for ability and free choice reasoning (requires middle extension) | Ability modal, Free choice modal, STIT |
+| Abilities Extension | Extensions for agent capacities and STIT operators (middle layer) | Can, Able, STIT |
+| Choice Extension | Extensions for free choice permission and alternatives (middle layer) | FP, FF, Ch |
+| Agential Extension | Agent-indexing for multi-agent reasoning (requires middle extension) | B_a, K_a, O_a |
+| Social Extension | Extensions for common ground and group-level reasoning (theoretical, no primitive operators) | Agential Extension, Common knowledge |
+| Reflection Extension | Extensions for metacognition and self-modeling (requires middle extension, parallel to Agential) | I operator, First-person reasoning |
 | TM logic | Bimodal logic combining Tense (temporal) and Modality (modal) operators | Explanatory Extension |
 | Progressive Extension | Methodology enabling incremental addition of operator extensions | Extension Architecture |
 | Semantic Progression | Each extension's frame includes all structure from previous extensions | Extension Architecture |
@@ -84,7 +88,8 @@ Logos is organized into semantic extensions, each building upon the previous wit
 |--------|------|------------|--------|
 | `□→` | Would Counterfactual | "If it were...then it would" (mereological semantics) | Counterfactual reasoning |
 | `◇→` | Might Counterfactual | "If it were...then it might" | Counterfactual reasoning |
-| `○→` | Causation | Productive causal relationships | Causal reasoning |
+| `○→` | Causation | Productive causal relationships (would-causation) | Causal reasoning |
+| `◌→` | Causal Might | Might-causation relationships | Causal reasoning |
 | `↑ⁱ` | Store | Store current time in register i | Temporal reference |
 | `↓ⁱ` | Recall | Evaluate at stored time i | Temporal reference |
 | `→_w` | Imposition | "imposing t on w yields w'" (t →_w w') | Counterfactual semantics |
@@ -130,19 +135,30 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `Near` | Proximity | "Location l is near location l'" | Spatial relations |
 | `Between` | Betweenness | "Location l is between l' and l''" | Spatial relations |
 
-## Agential Operators (Agential Extension)
+## Abilities Operators (Abilities Extension)
 
 [DETAILS: Full semantic specifications pending]
 
-### Ability Operators
-
 | Symbol | Name | Definition | Domain |
 |--------|------|------------|--------|
-| `Can_a` | Ability | "Agent a can bring about A" | Ability reasoning |
+| `Can_a` | Specific Ability | "Agent a can bring about A" | Ability reasoning |
 | `Able_a` | Generic Ability | "Agent a has the dispositional ability to A" | Ability reasoning |
 | `Cannot_a` | Inability | "Agent a cannot bring about A" | Ability reasoning |
+| `stit_a` | STIT | "Agent a sees to it that A" | Agency reasoning |
 
-### Free Choice Operators
+### Abilities Concepts
+
+| Term | Definition | Related Terms |
+|------|------------|---------------|
+| Ability modal | Modal expressing what an agent can bring about through their capacities | Can_a, Circumstantial modal |
+| STIT logic | "Sees To It That" - logic of agency with branching time | Choice function, Agent |
+| Choice function | C : A x T -> Partition(H) mapping agents and times to partitions of histories | STIT, Agential frame |
+| Dependence domain | Set of worlds where facts about an agent are held fixed | Ability modal, Counterfactual |
+| Capacity assignment | K : A -> Set(Prop) mapping agents to their intrinsic capacities | Generic ability, Able_a |
+
+## Choice Operators (Choice Extension)
+
+[DETAILS: Full semantic specifications pending]
 
 | Symbol | Name | Definition | Domain |
 |--------|------|------------|--------|
@@ -150,21 +166,43 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `FF` | Free Prohibition | "A is freely forbidden" | Free choice reasoning |
 | `Ch` | Choice Set | "Choice among alternatives A, B, ..." | Free choice reasoning |
 
-### Agential Concepts
+### Choice Concepts
 
 | Term | Definition | Related Terms |
 |------|------------|---------------|
-| Ability modal | Modal expressing what an agent can bring about through their capacities | Can_a, Circumstantial modal |
 | Free choice modal | Modal addressing permission over disjunctions | FP, Free Choice Permission paradox |
 | Free Choice Permission paradox | Puzzle: May(p or q) intuitively implies May(p) and May(q), but fails in standard modal logic | Kamp's paradox, FP |
-| STIT logic | "Sees To It That" - logic of agency with branching time | Choice function, Agent |
-| Choice function | C : A x T -> Partition(H) mapping agents and times to partitions of histories | STIT, Agential frame |
-| Dependence domain | Set of worlds where facts about an agent are held fixed | Ability modal, Counterfactual |
-| Capacity assignment | K : A -> Set(Prop) mapping agents to their intrinsic capacities | Generic ability, Able_a |
+
+## Agential Operators (Agential Extension)
+
+[DETAILS: Full semantic specifications pending]
+
+The Agential Extension provides agent-indexing for multi-agent reasoning. It requires at least one middle extension (Epistemic, Abilities, Normative, Choice, or Spatial) and enables indexing operators to specific agents.
+
+| Symbol | Name | Definition | Domain |
+|--------|------|------------|--------|
+| `B_a` | Agent Belief | "Agent a believes that A" | Multi-agent epistemic |
+| `K_a` | Agent Knowledge | "Agent a knows that A" | Multi-agent epistemic |
+| `O_a` | Agent Obligation | "Agent a is obligated to A" | Multi-agent normative |
+| `Can_a` | Agent Ability | "Agent a can bring about A" (indexed ability) | Multi-agent ability |
+
+## Social Extension
+
+[DETAILS: Theoretical extension, no primitive operators]
+
+The Social Extension provides resources for common ground and group-level reasoning. It builds upon the Agential Extension to enable reasoning about shared knowledge, collective beliefs, and social coordination. This extension is theoretical and does not introduce primitive operators beyond those derived from agent-indexed operators.
+
+| Term | Definition | Related Terms |
+|------|------------|---------------|
+| Common ground | Shared knowledge or beliefs among a group of agents | Common knowledge, Agential Extension |
+| Group belief | Beliefs held collectively by a group | Distributed knowledge |
+| Social coordination | Mechanisms for multi-agent agreement and action | Agential Extension |
 
 ## Reflection Operators (Reflection Extension)
 
 [DETAILS: Full semantic specifications pending]
+
+The Reflection Extension enables first-person metacognitive reasoning. It requires at least one middle extension and is positioned in parallel with the Agential Extension (not sequentially after it).
 
 | Symbol | Name | Definition | Domain |
 |--------|------|------------|--------|
