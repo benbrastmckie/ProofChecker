@@ -22,7 +22,17 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | Progressive Extension | Methodology enabling incremental addition of operator extensions | Extension Architecture |
 | Semantic Progression | Each extension's frame includes all structure from previous extensions | Extension Architecture |
 
-## Boolean Operators (Constitutive Foundation/Explanatory Extension)
+## Syntactic Primitives (Constitutive Foundation)
+
+| Symbol | Name | Definition | Example |
+|--------|------|------------|---------|
+| `F`, `G` | Predicates | Symbols denoting properties or relations | `F(x)`, `G(x,y)` |
+| `f`, `g` | Functions | Symbols denoting operations on terms | `f(x)`, `g(x,y)` |
+| `x`, `y`, `z` | Variables | Symbols ranging over individuals | `F(x)`, `∀x.G(x)` |
+| `λ` | Lambda | Abstraction operator binding variables | `λx.F(x)` |
+| `=` | Identity | Equality between terms | `x = y` |
+
+## Boolean Operators (Constitutive Foundation)
 
 | Symbol | Name | Definition | Aliases |
 |--------|------|------------|---------|
@@ -33,6 +43,14 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `↔` | Biconditional | "If and only if" | iff |
 | `⊥` | Falsity | Logical constant false | bot, bottom |
 | `⊤` | Truth | Logical constant true | top |
+
+## Quantifiers (Explanatory Extension)
+
+| Symbol | Name | Definition | Example |
+|--------|------|------------|---------|
+| `∀` | Universal | "For all" quantification | `∀x.F(x)` |
+| `∃` | Existential | "There exists" quantification | `∃x.F(x)` |
+| `Act` | Actuality | Predicate checking if state is part of actual world-state | `Act(t)` |
 
 ## Modal Operators (Explanatory Extension)
 
@@ -80,6 +98,7 @@ Logos is organized into semantic extensions, each building upon the previous wit
 | `≡` | Propositional Identity | "A just is B" (identical verifiers and falsifiers) | Hyperintensional reasoning |
 | `≤` | Grounding | "A is sufficient for B" or "A grounds B" | Constitutive reasoning |
 | `⊑` | Essence | "A is necessary for B" or "A is essential to B" | Constitutive reasoning |
+| `⇒` | Reduction | "A reduces to B" or "A is nothing over and above B" | Constitutive reasoning |
 | `≼` | Relevance | "A is wholly relevant to B" | Constitutive reasoning |
 
 ## Causal Operators (Explanatory Extension)
