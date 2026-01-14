@@ -70,6 +70,18 @@
   columns=fullflexible,
   frame=single,
   backgroundcolor=\color{gray!10},
+  literate={⊢}{{$\vdash$}}1
+           {φ}{{$\varphi$}}1
+           {ψ}{{$\psi$}}1
+           {△}{{$\triangle$}}1
+           {▽}{{$\triangledown$}}1
+           {→}{{$\rightarrow$}}1
+           {↔}{{$\leftrightarrow$}}1
+           {¬}{{$\neg$}}1
+           {∧}{{$\land$}}1
+           {∨}{{$\lor$}}1
+           {∀}{{$\forall$}}1
+           {∃}{{$\exists$}}1,
 }
 
 % ============================================================================
@@ -295,7 +307,7 @@ Decidability & \texttt{decide $\varphi$ : DecisionResult} & \textcolor{provengre
 \vspace{0.5cm}
 
 \begin{block}{Main Theorem}
-\texttt{main\_provable\_iff\_valid : Nonempty ($\proves$ φ) $\leftrightarrow$ valid φ}
+\texttt{main\_provable\_iff\_valid : Nonempty ($\proves$ $\varphi$) $\leftrightarrow$ valid $\varphi$}
 
 Derivability and validity coincide for TM logic.
 \end{block}
