@@ -8,10 +8,22 @@
 \section{Introduction}\label{sec:introduction}
 
 This reference manual provides the formal specification for the Logos proof system, semantics, metalogic, and library of theorems.
-The semantics steps through increasingly expressive extensions to support extensions of the Logos of greater expressive power. 
-A semantic frame provides the primitive structures used to interpret a formal language.
-Extending the expressive power of a language requires strategic extensions to the primitive semantic resources provided by the frame, including precisely the resources needed and nothing more.
-This ensures that language and frame are well aligned.
+The semantics is organized around the semantic frames that provides the primitive structure used to interpret the logical operators included in the Logos.
+By successively extending the primitive resources included in a frame, it becomes possible to provide semantic clauses for a new range of operators, thereby extending the expressive power of the Logos for systematic reasoning. 
+
+The Logos is interpreted over a hyperintensional \textit{state semantics} which comprises the \textit{Constitutive Foundation}.
+By contrast to intensional semantic theories which take worlds to be primitive, the state semantics takes states and their parthood relations to be primitive to provide fine-grained semantic contents by which to recursively interpret the primitive expressions of the language.
+The \textit{Dynamical Foundation} extends the state semantics to include a \textit{task relation} parameterized by durations belonging to a \textit{temporal order} in order to govern the lawful transitions by which a system and its parts evolve.
+These ingredients are then used to construct \textit{world sates} which represent total instantaneous states of the system under study, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states.
+For instance, in modeling a game of chess, the world states correspond to the legal complete configurations of the chessboard, and the world histories correspond to the possible games of chess.
+
+Given a world history, each duration may be referred to as a \textit{time} in that history.
+Taken together, a world history and time may be used to evaluate the sentences of the foundational layers of the Logos.
+In addition to the standard Boolean and first-order operators, the foundational semantic layers for the Logos support modal, temporal, counterfactual, constitutive, and causal operators for complex reasoning including planning and evaluating past and future actions.
+Modular plugins are then provided to extend the expressive power of the foundational layers of the Logos to include sets of related logical operators.
+In addition to extending the semantic primitives included in a frame, plugins may contribute new contextual parameters at which sentences are evaluated.
+For instance, given the addition of a \textit{credence function} which assigns likelihoods to propositions, a \textit{belief parameter} is required along with a world history and time to provide a semantics for the belief operator.
+Given a world history, time, and belief parameter, a proposition is believed just in case the credence in that proposition is greater than the belief parameter included in the point of evaluation.
 
 
 % ------------------------------------------------------------
@@ -20,7 +32,7 @@ This ensures that language and frame are well aligned.
 
 \subsection{Extension Dependencies}\label{sec:extension-dependencies}
 
-\Cref{fig:extension-dependencies} shows the dependency structure among extensions.
+This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions.
 
 \begin{figure}[htbp]
 \centering
@@ -254,9 +266,9 @@ This reference manual is organized as follows:
 
 \subsection{Lean Implementation}\label{sec:lean-implementation}
 
-The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}{}| command.
+The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}| command.
 
-For example, \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
+For example, \leansrc{Logos.Foundation.Frame.ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
 The implementation can be found in the \proofchecker{} repository in the \texttt{Theories/Logos/} directory.
 
 \end{document}
