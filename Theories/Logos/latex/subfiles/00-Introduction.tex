@@ -266,9 +266,9 @@ This reference manual is organized as follows:
 
 \subsection{Lean Implementation}\label{sec:lean-implementation}
 
-The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}| command.
+The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}{}| command.
 
-For example, \leansrc{Logos.Foundation.Frame.ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
+For example, \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
 The implementation can be found in the \proofchecker{} repository in the \texttt{Theories/Logos/} directory.
 
 \end{document}

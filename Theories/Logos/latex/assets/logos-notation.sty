@@ -20,6 +20,7 @@
 
 % Additional required packages for Logos-specific notation
 \RequirePackage{stmaryrd}  % for \llbracket, \rrbracket
+\RequirePackage{mathabx}    % for \square, \sqbullet symbols
 
 % ============================================================================
 % Constitutive Foundation (Logos-specific)
@@ -28,15 +29,16 @@
 % --- State Space ---
 \newcommand{\statespace}{S}
 \newcommand{\nullstate}{\square}
-\newcommand{\fullstate}{\blacksquare}
-\newcommand{\fusion}[2]{#1 \cdot #2}
+\newcommand{\fullstate}{\sqbullet}
+\newcommand{\fusion}[2]{#1\sqcup#2}
+\newcommand{\Fusion}{\bigsqcup}
 \newcommand{\parthood}{\sqsubseteq}
 
 % --- Verification and Falsification ---
-\newcommand{\verifies}{\Vdash^+}
-\newcommand{\falsifies}{\Vdash^-}
-\newcommand{\verifierset}[1]{v_{#1}}
-\newcommand{\falsifierset}[1]{f_{#1}}
+\newcommand{\verifies}{\Vdash}
+\newcommand{\falsifies}{\dashV}
+\newcommand{\verifierset}[1]{|{#1}|^+}
+\newcommand{\falsifierset}[1]{|{#1}|^-}
 
 % --- Propositional Operations ---
 \newcommand{\product}{\otimes}
@@ -111,15 +113,15 @@
 
 \newcommand{\mframe}{\mathbf{F}}
 % \model is provided by notation-standards.sty
-\newcommand{\interp}{I}
+\newcommand{\interp}[1]{|#1|}
 
 % ============================================================================
 % Meta-Variables (Logos-specific extensions)
 % ============================================================================
 
-\newcommand{\metaA}{A}
-\newcommand{\metaB}{B}
-\newcommand{\metaC}{C}
+\newcommand{\metaA}{\varphi}
+\newcommand{\metaB}{\psi}
+\newcommand{\metaC}{\chi}
 % \metaphi, \metapsi, \metachi provided by notation-standards.sty
 
 % ============================================================================
