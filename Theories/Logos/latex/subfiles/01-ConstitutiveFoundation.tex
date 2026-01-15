@@ -96,6 +96,10 @@ Greek letters ($\history, \alpha, \beta, \ldots$) are reserved for world-histori
 The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments, chosen for compatibility across \LaTeX, markdown, and Lean notation.
 \end{notation}
 
+\begin{definition}\label{def:variant-assignment}
+The \textit{$x$-variant} $\assignsub{v}{x}$ of the variable assignment $\assignment$ differs at most from $\assignment$ by assigning $x$ to $v$.
+\end{definition}
+
 \begin{definition}\label{def:term-extension}
 The \emph{extension} of a term given a model $\model$ and assignment $\assignment$:
 \begin{itemize}
@@ -132,12 +136,6 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 \model, \assignment, s \falsifies (\lambda x.\metaA)(t) &\iff \model, \assignsub{\sem{t}^\assignment_\model}{x}, s \falsifies \metaA
 \end{align}
 \end{definition}
-
-\begin{remark}
-Assignment $\assignsub{v}{x}$ differs at most from $\assignment$ by assigning $x$ to $v$.
-\end{remark}
-
-
 
 \subsubsection{Negation}\label{sec:negation}
 
