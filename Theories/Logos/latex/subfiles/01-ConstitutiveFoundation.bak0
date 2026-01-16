@@ -53,7 +53,8 @@ The Constitutive Foundation interprets the following syntactic primitives:
 	\begin{itemize}
 		\item \textbf{Null state} $\nullstate$: The bottom element (fusion of the empty set)
 		\item \textbf{Full state} $\fullstate$: The top element (fusion of all states)
-		\item \textbf{Fusion} $\fusion{s}{t}$: The least upper bound of $s$ and $t$
+		\item \textbf{State Fusion} $\fusion{s}{t}$: The least upper bound of $s$ and $t$
+		\item \textbf{Pointwise Fusion} $(f \sqcup g)(s_1,\ldots,s_n) \coloneq f(s_1,\ldots,s_n) \sqcup g(s_1,\ldots,s_n)$
 	\end{itemize}
 	See \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} for the implementation.
 \end{remark}
@@ -68,18 +69,18 @@ The Constitutive Foundation interprets the following syntactic primitives:
 \begin{definition}\label{def:constitutive-model}
 	A \emph{constitutive model} is a structure $\model = \langle \statespace, \parthood, \interp{\cdot} \rangle$ where $\langle \statespace, \parthood \rangle$ is a constitutive frame and $\interp{\cdot}$ is an \textit{interpretation function} satisfying:
 	\begin{itemize}
-		\item \textbf{n-place function symbols} $\interp{f} : (\mathtt{Fin}\;n \to \statespace) \to \statespace$
-		\item \textbf{Constant symbols} $\interp{c} : (\mathtt{Fin}\;0 \to \statespace) \to \statespace$
+		\item \textbf{n-place function symbols} $\interp{f} : (\Fin\;n \to \statespace) \to \statespace$
+		\item \textbf{Constant symbols} $\interp{c} : \statespace$
 		\item \textbf{n-place predicates} $\interp{F} = \langle \verifierset{F}, \falsifierset{F} \rangle$ where:
-		      \begin{itemize}
-			      \item $\verifierset{F} : \text{Set}((\mathtt{Fin}\;n \to \statespace) \to \statespace)$ is the set of \textit{verifier functions} for which $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^+(a_1, \ldots, a_n)$ for any $f^+ \in \verifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
-			      \item $\falsifierset{F} : \text{Set}((\mathtt{Fin}\;n \to \statespace) \to \statespace)$ is the set of \textit{falsifier functions} for which $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^-(a_1, \ldots, a_n)$ for any $f^- \in \falsifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
-		      \end{itemize}
+      \begin{enumerate}
+        \item $\verifierset{F} : \Set((\Fin\;n \to \statespace) \to \statespace)$ is the set of \textit{verifier functions} for which $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^+(a_1, \ldots, a_n)$ for any $f^+ \in \verifierset{F}$ and $a_1, \ldots, a_n : \statespace$ and $\fusion{f^+}{g^+} \in \verifierset{F}$ whenever both $f^+, g^+ \in \verifierset{F}$.
+        \item $\falsifierset{F} : \Set((\Fin\;n \to \statespace) \to \statespace)$ is the set of \textit{falsifier functions} for which $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^-(a_1, \ldots, a_n)$ for any $f^- \in \falsifierset{F}$ and $a_1, \ldots, a_n : \statespace$ and $\fusion{f^-}{g^-} \in \falsifierset{F}$ whenever both $f^-, g^- \in \falsifierset{F}$.
+      \end{enumerate}
 		\item \textbf{Sentence letters} $\interp{p} = \langle \verifierset{p}, \falsifierset{p} \rangle$ where:
-		      \begin{itemize}
-			      \item $\verifierset{p} : \text{Set}(\statespace)$ is the set of \textit{verified states}.
-			      \item $\falsifierset{p} : \text{Set}(\statespace)$ is the set of \textit{falsified states}.
-		      \end{itemize}
+      \begin{itemize}
+        \item $\verifierset{p} : \Set(\statespace)$ is the set of \textit{verified states}.
+        \item $\falsifierset{p} : \Set(\statespace)$ is the set of \textit{falsified states}.
+      \end{itemize}
 	\end{itemize}
 \end{definition}
 
@@ -93,7 +94,7 @@ See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the implementation.
 \subsection{Variable Assignment}\label{sec:variable-assignment}
 
 \begin{definition}\label{def:variable-assignment}
-	A \emph{variable assignment} $\assignment$ is a function $\assignment : \mathrm{Var} \to \statespace$
+	A \emph{variable assignment} $\assignment : \mathrm{Var} \to \statespace$ maps each variable name to a state in the state space.
 \end{definition}
 
 \begin{notation}
@@ -106,10 +107,10 @@ See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the implementation.
 \end{definition}
 
 \begin{definition}\label{def:term-extension}
-	The \emph{extension} of a term given a model $\model$ and assignment $\assignment$:
+	The \emph{extension} of a term given a model $\model$ and assignment $\assignment$ is a function $\sem{\cdot}^\assignment_\model : \Term \to \statespace$ defined by:
 	\begin{itemize}
 		\item \textbf{Variable} $\sem{x}^\assignment_\model = \assignment(x)$
-		\item \textbf{Function application} $\sem{f(t_1, \ldots, t_n)}^\assignment_\model = \interp{f}(\lambda i : \mathtt{Fin}\;n, \sem{t_i}^\assignment_\model)$
+		\item \textbf{Function application} $\sem{f(t_1, \ldots, t_n)}^\assignment_\model = \interp{f}(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)$
 	\end{itemize}
 \end{definition}
 
@@ -128,8 +129,8 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Atomic Verification and Falsification]\label{def:atomic-verification}
 	\begin{align}
-		\model, \assignment, s \verifies F(t_1, \ldots, t_n)  & \iff \exists f \in \verifierset{F} : s = f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model)  \\
-		\model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : s = f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model)
+		\model, \assignment, s \verifies F(t_1, \ldots, t_n)  & \iff \exists f \in \verifierset{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)  \\
+		\model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)
 	\end{align}
 \end{definition}
 
@@ -155,9 +156,12 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Conjunction Verification and Falsification]\label{def:conjunction-verification}
 	\begin{align}
-		\model, \assignment, s \verifies \metaA \land \metaB  & \iff s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \text{ and } \model, \assignment, u \verifies \metaB        \\
-		\model, \assignment, s \falsifies \metaA \land \metaB & \iff \model, \assignment, s \falsifies \metaA, \text{ or } \model, \assignment, s \falsifies \metaB, \text{ or } \notag                                          \\
-		                                                      & \quad\;\; s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
+		\model, \assignment, s \verifies \metaA \land \metaB \iff
+		 & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \notag                                           \\
+		 & \text{and } \model, \assignment, u \verifies \metaB                                                                                              \\
+		\model, \assignment, s \falsifies \metaA \land \metaB \iff
+		 & \model, \assignment, s \falsifies \metaA, \text{ or } \model, \assignment, s \falsifies \metaB, \text{ or } s = \fusion{t}{u} \text{ for} \notag \\
+		 & \text{some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
 	\end{align}
 \end{definition}
 
@@ -165,9 +169,12 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Disjunction Verification and Falsification]\label{def:disjunction-verification}
 	\begin{align}
-		\model, \assignment, s \verifies \metaA \lor \metaB  & \iff \model, \assignment, s \verifies \metaA, \text{ or } \model, \assignment, s \verifies \metaB, \text{ or } \notag                                          \\
-		                                                     & \quad\;\; s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \text{ and } \model, \assignment, u \verifies \metaB \\
-		\model, \assignment, s \falsifies \metaA \lor \metaB & \iff s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
+		\model, \assignment, s \verifies \metaA \lor \metaB \iff
+		 & \model, \assignment, s \verifies \metaA, \text{ or } \model, \assignment, s \verifies \metaB, \text{ or } s = \fusion{t}{u} \text{ for} \notag \\
+		 & \text{some } t, u \text{ where } \model, \assignment, t \verifies \metaA \text{ and } \model, \assignment, u \verifies \metaB                  \\
+		\model, \assignment, s \falsifies \metaA \lor \metaB \iff
+		 & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \notag                                        \\
+		 & \text{and } \model, \assignment, u \falsifies \metaB
 	\end{align}
 \end{definition}
 
@@ -175,10 +182,10 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Top and Bottom Verification and Falsification]\label{def:top-bottom-verification}
 	\begin{align}
-		 & \model, \assignment, s \verifies \top \text{ for all } s \in \statespace        \\
-		 & \model, \assignment, s \falsifies \top \iff s = \fullstate \text{ (full state)} \\
-		 & \model, \assignment, s \not\verifies \bot \text{ for all } s                    \\
-		 & \model, \assignment, s \falsifies \bot \iff s = \nullstate \text{ (null state)}
+		 & \model, \assignment, s \verifies \top \text{ for all } s \in \statespace                 \\
+		 & \model, \assignment, s \falsifies \top \iff s = \fullstate \text{ (\textit{full state})} \\
+		 & \model, \assignment, s \nverifies \bot \text{ for all } s                                \\
+		 & \model, \assignment, s \falsifies \bot \iff s = \nullstate \text{ (\textit{null state})}
 	\end{align}
 \end{definition}
 
@@ -186,14 +193,20 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Propositional Identity Verification and Falsification]\label{def:propid-verification}
 	\begin{align}
-		\model, \assignment, s \verifies \metaA \propid \metaB  & \iff s = \nullstate \text{ and } \{t : \model, \assignment, t \verifies \metaA\} = \{t : \model, \assignment, t \verifies \metaB\} \notag     \\
-		                                                        & \quad \text{and } \{t : \model, \assignment, t \falsifies \metaA\} = \{t : \model, \assignment, t \falsifies \metaB\}                         \\
-		\model, \assignment, s \falsifies \metaA \propid \metaB & \iff s = \nullstate \text{ and } (\{t : \model, \assignment, t \verifies \metaA\} \neq \{t : \model, \assignment, t \verifies \metaB\} \notag \\
-		                                                        & \quad \text{or } \{t : \model, \assignment, t \falsifies \metaA\} \neq \{t : \model, \assignment, t \falsifies \metaB\})
+		\model, \assignment, s \verifies \metaA \propid \metaB  \iff
+		 & s = \nullstate \text{ and for all } t \text{ both:} \notag                                                                     \\
+		 & (1)~ \model, \assignment, t \verifies \metaA \text{ just in case } \model, \assignment, t \verifies \metaB; \text{ and} \notag \\
+		 & (2)~ \model, \assignment, t \falsifies \metaA \text{ just in case } \model, \assignment, t \falsifies \metaB                   \\
+		\model, \assignment, s \falsifies \metaA \propid \metaB \iff
+		 & \text{ either:} \notag                                                                                                         \\
+		 & (1)~ \model, \assignment, s \verifies \metaA \text{ and } \model, \assignment, s \nverifies \metaB; \notag                     \\
+		 & (2)~ \model, \assignment, s \nverifies \metaA \text{ and } \model, \assignment, s \verifies \metaB; \notag                     \\
+		 & (3)~ \model, \assignment, s \falsifies \metaA \text{ and } \model, \assignment, s \nfalsifies \metaB; \text{ or} \notag        \\
+		 & (4)~ \model, \assignment, s \nfalsifies \metaA \text{ and } \model, \assignment, s \falsifies \metaB.
 	\end{align}
 \end{definition}
 
-See \leansrc{Logos.Foundation.Semantics}{verifies} for the Lean implementation.
+See \leansrc{Logos.Foundation.Semantics}{verifies} for the implementation.
 
 % ------------------------------------------------------------
 % Essence and Ground
@@ -210,11 +223,28 @@ These constitutive relations can be defined via propositional identity:
 	\end{align}
 \end{definition}
 
-\begin{remark}[Negation Distribution]
-	These relations are interrelated through negation:
+\begin{remark}
+	Essence and ground are interrelated by negation:
 	\begin{itemize}
-		\item $\metaA \essence \metaB$ iff $\neg\metaA \ground \neg\metaB$
-		\item $\metaA \ground \metaB$ iff $\neg\metaA \essence \neg\metaB$
+		\item $\metaA \essence \metaB \iff \neg\metaA \ground \neg\metaB$
+		\item $\metaA \ground \metaB \iff \neg\metaA \essence \neg\metaB$
+	\end{itemize}
+\end{remark}
+
+\begin{remark}[Bilattice Structure]
+	A \emph{bilateral proposition} $\prop$ is an ordered pair $\tuple{V, F}$ where $V$ and $F$ are subsets of $\statespace$ with the following properties:
+	\begin{itemize}
+		\item \textbf{Fusion closure for verifiers}: For all $s, t \in V$, $s \sqcup t \in V$
+		\item \textbf{Fusion closure for falsifiers}: For all $s, t \in F$, $s \sqcup t \in F$
+		\item \textbf{Exclusivity}: No state is both a verifier and a falsifier (for non-overdetermined propositions)
+		\item \textbf{Exhaustiveness}: Every possible state is compatible with some verifier or falsifier
+	\end{itemize}
+
+	The space of bilateral propositions with the product $\tensor$ and sum $\psum$ operations forms a \emph{non-interlaced bilattice} where:
+	\begin{itemize}
+		\item $\langle \propspace_V, \essence \rangle$ and $\langle \propspace_V, \ground \rangle$ are complete lattices
+		\item Negation exchanges the two orderings: $X \ground Y$ iff $\neg X \essence \neg Y$
+		\item Conjunction and disjunction are the least upper bounds with respect to $\essence$ and $\ground$ respectively
 	\end{itemize}
 \end{remark}
 
@@ -227,7 +257,8 @@ These constitutive relations can be defined via propositional identity:
 	\end{itemize}
 \end{remark}
 
-See \leansrc{Logos.Foundation.Relations}{essence} for the Lean implementation.
+\noindent
+See \leansrc{Logos.Foundation.Relations}{essence} for the implementation.
 
 % ------------------------------------------------------------
 % Bilateral Propositions
@@ -245,12 +276,13 @@ See \leansrc{Logos.Foundation.Relations}{essence} for the Lean implementation.
 \end{definition}
 
 \begin{definition}[Propositional Operations]\label{def:propositional-operations}
+	For bilateral propositions $X = \langle V_X, F_X \rangle$ and $Y = \langle V_Y, F_Y \rangle$:
 	\begin{align}
-		X \product Y                                      & := \{\fusion{s}{t} : s \in X, t \in Y\}      &  & \text{(Product)}     \\
-		X \psum Y                                         & := X \cup Y \cup (X \product Y)              &  & \text{(Sum)}         \\
-		\langle V, F \rangle \land \langle V', F' \rangle & := \langle V \product V', F \psum F' \rangle &  & \text{(Conjunction)} \\
-		\langle V, F \rangle \lor \langle V', F' \rangle  & := \langle V \psum V', F \product F' \rangle &  & \text{(Disjunction)} \\
-		\neg\langle V, F \rangle                          & := \langle F, V \rangle                      &  & \text{(Negation)}
+		X \product Y & := \langle \{s \sqcup t : s \in V_X, t \in V_Y\}, \, F_X \cup F_Y \cup \{s \sqcup t : s \in F_X, t \in F_Y\} \rangle &  & \text{(Tensor/Product)} \\
+		X \psum Y    & := \langle V_X \cup V_Y \cup \{s \sqcup t : s \in V_X, t \in V_Y\}, \, \{s \sqcup t : s \in F_X, t \in F_Y\} \rangle &  & \text{(Par/Sum)}        \\
+		X \land Y    & := X \product Y                                                                                                      &  & \text{(Conjunction)}    \\
+		X \lor Y     & := X \psum Y                                                                                                         &  & \text{(Disjunction)}    \\
+		\neg X       & := \langle F_X, V_X \rangle                                                                                          &  & \text{(Negation)}
 	\end{align}
 \end{definition}
 
@@ -267,7 +299,7 @@ See \leansrc{Logos.Foundation.Proposition}{BilateralProp} for the Lean implement
 	\[
 		\context \trueat \metaA \iff \text{for any model } \model \text{ and assignment } \assignment : \text{if } \model, \assignment, \nullstate \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \assignment, \nullstate \trueat \metaA
 	\]
-	That is, $\metaA$ is a consequence of $\context$ iff the null state verifies $\metaA$ in any model where it verifies all premises.
+	That is, $\metaA$ is a consequence of $\context$ iff the null state $\trueat$ $\metaA$ in any model where it $\trueat$ all premises.
 \end{definition}
 
 \begin{remark}[Identity Sentences and Evaluation Overlap]

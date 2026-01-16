@@ -1,6 +1,6 @@
 INFO:  latexindent.pl version 3.24.5, 2025-03-13, a script to indent .tex files
        latexindent.pl lives here: /nix/store/2laj3mfxsjqlbz6h9zvgd3i310yg626g-latexindent-3.24.5-tex/scripts/latexindent/
-       Fri Jan 16 10:24:13 2026
+       Fri Jan 16 15:07:48 2026
        Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
@@ -25,7 +25,45 @@ INFO:  YAML reading settings
 INFO:  Backup procedure (-w flag active):
        /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
        /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
-       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak2...
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak3 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak4 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak5 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak6 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak7 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak8 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak9 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak10 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak11 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak12 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak13 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak14 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak15 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak16 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak17 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak18 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak19 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak20 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak21 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak22 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak23 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak24 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak25 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak26 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak27 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak28 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak29 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak30 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak31 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak32 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak33 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak34 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak35 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak36 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak37 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak38 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak39 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak40...
        /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation

@@ -84,6 +84,19 @@ This operation is used in conjunction/disjunction verification clauses.
 def fusion (s t : F.State) : F.State := s ⊔ t
 
 /--
+Function fusion (⨆{f}{g}): Pointwise fusion of functions.
+
+Given two functions f, g : (Fin n → S) → S, their fusion is defined pointwise:
+(⨆{f}{g})(s₁,…,sₙ) ≔ ⨆{f(s₁,…,sₙ)}{g(s₁,…,sₙ)}
+
+This is used to define closure properties of predicate interpretation:
+verifier and falsifier function sets must be closed under function fusion.
+-/
+def functionFusion {n : Nat} (f g : (Fin n → F.State) → F.State) :
+    (Fin n → F.State) → F.State :=
+  fun args => F.fusion (f args) (g args)
+
+/--
 Parthood relation (s ⊑ t): s is a part of t.
 
 In a lattice, parthood is equivalent to: s ⊔ t = t
@@ -100,6 +113,11 @@ scoped infixl:50 " ⊑ " => parthood
 Notation: s ⊔ᶠ t for fusion (to distinguish from general lattice ⊔)
 -/
 scoped infixl:65 " ⊔ᶠ " => fusion
+
+/--
+Notation: f ⊔ᶠᶠ g for function fusion (pointwise fusion)
+-/
+scoped infixl:65 " ⊔ᶠᶠ " => functionFusion
 
 section BasicLemmas
 

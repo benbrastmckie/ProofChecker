@@ -74,31 +74,62 @@ Predicate interpretation: a bilateral proposition for each arity.
 For n-ary predicates, verifier and falsifier "functions" are actually
 sets of functions Sⁿ → S. For sentence letters (0-ary), these reduce to
 sets of states.
+
+The verifier and falsifier function sets must be closed under function fusion:
+if f, g ∈ verifierFns then ⨆{f}{g} ∈ verifierFns, and similarly for falsifierFns.
+This ensures that the semantics respects the mereological structure of states.
 -/
 structure PredicateInterp (F : ConstitutiveFrame) (n : Nat) where
   /-- Verifier functions: each f ∈ verifierFns satisfies f(a₁,...,aₙ) verifies F(a₁,...,aₙ) -/
   verifierFns : Set ((Fin n → F.State) → F.State)
   /-- Falsifier functions: each f ∈ falsifierFns satisfies f(a₁,...,aₙ) falsifies F(a₁,...,aₙ) -/
   falsifierFns : Set ((Fin n → F.State) → F.State)
+  /-- Verifier functions closed under function fusion -/
+  verifierFns_fusion_closed : ∀ (f g : (Fin n → F.State) → F.State), f ∈ verifierFns → g ∈ verifierFns → F.functionFusion f g ∈ verifierFns
+  /-- Falsifier functions closed under function fusion -/
+  falsifierFns_fusion_closed : ∀ (f g : (Fin n → F.State) → F.State), f ∈ falsifierFns → g ∈ falsifierFns → F.functionFusion f g ∈ falsifierFns
 
 namespace PredicateInterp
 
 /--
-Sentence letter interpretation (0-ary predicate).
-Verifier and falsifier functions reduce to constant functions,
-which we can identify with states.
+Sentence letter interpretation (0-ary predicate) with closure requirements.
+
+For sentence letters, we require that the verifier and falsifier state sets
+are closed under fusion, which ensures closure under function fusion for
+the corresponding constant functions.
 -/
-def sentenceLetter (F : ConstitutiveFrame) (verifiers falsifiers : Set F.State) :
+def sentenceLetter (F : ConstitutiveFrame) 
+    (verifiers falsifiers : Set F.State)
+    (verifiers_fusion_closed : ∀ (v w : F.State), v ∈ verifiers → w ∈ verifiers → F.fusion v w ∈ verifiers)
+    (falsifiers_fusion_closed : ∀ (v w : F.State), v ∈ falsifiers → w ∈ falsifiers → F.fusion v w ∈ falsifiers) :
     PredicateInterp F 0 where
   verifierFns := { f | f (Fin.elim0) ∈ verifiers }
   falsifierFns := { f | f (Fin.elim0) ∈ falsifiers }
+  verifierFns_fusion_closed := by
+    intro f g hf hg
+    -- If f and g are constant functions in verifierFns, their fusion is also constant
+    -- with value equal to the fusion of their values
+    have h_val : (F.functionFusion f g) Fin.elim0 = F.fusion (f Fin.elim0) (g Fin.elim0) := by
+      simp only [ConstitutiveFrame.functionFusion]
+    -- Since f, g ∈ verifierFns, their values are in verifiers
+    have h_f_val : (f Fin.elim0) ∈ verifiers := hf
+    have h_g_val : (g Fin.elim0) ∈ verifiers := hg
+    -- By closure of verifiers under fusion, the fused value is in verifiers
+    exact verifiers_fusion_closed (f Fin.elim0) (g Fin.elim0) h_f_val h_g_val
+  falsifierFns_fusion_closed := by
+    intro f g hf hg
+    have h_val : (F.functionFusion f g) Fin.elim0 = F.fusion (f Fin.elim0) (g Fin.elim0) := by
+      simp only [ConstitutiveFrame.functionFusion]
+    have h_f_val : (f Fin.elim0) ∈ falsifiers := hf
+    have h_g_val : (g Fin.elim0) ∈ falsifiers := hg
+    exact falsifiers_fusion_closed (f Fin.elim0) (g Fin.elim0) h_f_val h_g_val
 
 /--
 Convert to bilateral proposition for sentence letters.
 -/
 def toBilateralProp (p : PredicateInterp F 0) : BilateralProp F.State where
-  verifiers := { s | ∃ f ∈ p.verifierFns, f Fin.elim0 = s }
-  falsifiers := { s | ∃ f ∈ p.falsifierFns, f Fin.elim0 = s }
+  verifiers := { s | ∃ (f : (Fin 0 → F.State) → F.State), f ∈ p.verifierFns ∧ f Fin.elim0 = s }
+  falsifiers := { s | ∃ (f : (Fin 0 → F.State) → F.State), f ∈ p.falsifierFns ∧ f Fin.elim0 = s }
 
 end PredicateInterp
 

@@ -18,6 +18,7 @@
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{stmaryrd}
+\usepackage{cancel}
 
 % Document structure
 \usepackage{subfiles}
@@ -33,8 +34,8 @@
 \usepackage{tikz}
 
 % Custom packages (found via TEXINPUTS configured in latexmkrc)
-\usepackage{logos-notation}
-\usepackage{formatting}
+\usepackage{assets/logos-notation}
+\usepackage{../../../latex/formatting}
 
 % References (cleveref must be loaded after hyperref, which formatting.sty loads)
 \usepackage{cleveref}
@@ -69,6 +70,24 @@
 % Custom horizontal rule command
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
+% Custom negated verification and falsification commands with diagonal slash
+\makeatletter
+\newcommand{\nverifies}{\mathrel{\mathpalette\@nverifies\relax}}
+\newcommand{\@nverifies}[2]{%
+  \ooalign{%
+    \hfil$#1\verifies$\hfil\cr
+    \hfil$\mathsurround=0pt#1\mkern3mu/$\hfil\cr
+  }%
+}
+\newcommand{\nfalsifies}{\mathrel{\mathpalette\@nfalsifies\relax}}
+\newcommand{\@nfalsifies}[2]{%
+  \ooalign{%
+    \hfil$#1\falsifies$\hfil\cr
+    \hfil$\mathsurround=0pt#1\mkern3mu/$\hfil\cr
+  }%
+}
+\makeatother
+
 % ============================================================================
 % Begin Document
 % ============================================================================
@@ -77,44 +96,44 @@
 
 % Custom title page
 \begin{titlepage}
-\begin{center}
+	\begin{center}
 
-\vspace*{2cm}
+		\vspace*{2cm}
 
-\HRule\\[0.4cm]
-{\Huge \bfseries Logos Reference Manual}\\[0.2cm]
-\HRule\\[1cm]
+		\HRule\\[0.4cm]
+		{\Huge \bfseries Logos Reference Manual}\\[0.2cm]
+		\HRule\\[1cm]
 
-{\LARGE\itshape A Logic for Interpreted and Verified AI Reasoning}\\[1cm]
+		{\LARGE\itshape A Logic for Interpreted and Verified AI Reasoning}\\[1cm]
 
 
-{\large\itshape Benjamin Brast-McKie}\\[0.15cm]
-\texttt{\href{https://www.benbrastmckie.com}{www.benbrastmckie.com}}\\[0.15cm]
-{--- \today\ ---}\\[1cm]
+		{\large\itshape Benjamin Brast-McKie}\\[0.15cm]
+		\texttt{\href{https://www.benbrastmckie.com}{www.benbrastmckie.com}}\\[0.15cm]
+		{--- \today\ ---}\\[1cm]
 
-\vfill
+		\vfill
 
-{\normalsize\bfseries Primary References:}\\[0.3cm]
-  \href{https://www.benbrastmckie.com/wp-content/uploads/2025/11/possible_worlds.pdf}{\textit{``The Construction of Possible Worlds''}}, Brast-McKie, (under review), 2025.\\[.2cm]
-  \href{https://link.springer.com/article/10.1007/s10992-025-09793-8}{\textit{``Counterfactual Worlds''}}, Brast-McKie, \textit{J.~Phil.~Logic}, 2025.\\[0.2cm]
-  \href{https://link.springer.com/article/10.1007/s10992-021-09612-w}{\textit{``Identity and Aboutness''}}, Brast-McKie, \textit{J.~Phil.~Logic}, 2021.\\[1cm]
+		{\normalsize\bfseries Primary References:}\\[0.3cm]
+		\href{https://www.benbrastmckie.com/wp-content/uploads/2025/11/possible_worlds.pdf}{\textit{``The Construction of Possible Worlds''}}, Brast-McKie, (under review), 2025.\\[.2cm]
+		\href{https://link.springer.com/article/10.1007/s10992-025-09793-8}{\textit{``Counterfactual Worlds''}}, Brast-McKie, \textit{J.~Phil.~Logic}, 2025.\\[0.2cm]
+		\href{https://link.springer.com/article/10.1007/s10992-021-09612-w}{\textit{``Identity and Aboutness''}}, Brast-McKie, \textit{J.~Phil.~Logic}, 2021.\\[1cm]
 
-\end{center}
+	\end{center}
 \end{titlepage}
 \thispagestyle{empty}
 
 {
 
-\begin{abstract}
-\noindent
-This reference manual provides the formal specification of the Logos which is an extensible formal language of though designed to train AI systems in verified logical reasoning.
-The Logos is interpreted by a hyperintensional task semantics designed to support operators for reasoning about necessity, possibility, time, and counterfactual conditionals.
-This semantics and its corresponding proof theory is successively extended by a plugin system to support a wide range of additional operators for complex reasoning to plan and evaluate actions in multi-agent systems under conditions of uncertainty.
-\end{abstract}
+	\begin{abstract}
+		\noindent
+		This reference manual provides the formal specification of the Logos which is an extensible formal language of though designed to train AI systems in verified logical reasoning.
+		The Logos is interpreted by a hyperintensional task semantics designed to support operators for reasoning about necessity, possibility, time, and counterfactual conditionals.
+		This semantics and its corresponding proof theory is successively extended by a plugin system to support a wide range of additional operators for complex reasoning to plan and evaluate actions in multi-agent systems under conditions of uncertainty.
+	\end{abstract}
 
-\pagestyle{empty}
-\tableofcontents
-\cleardoublepage
+	\pagestyle{empty}
+	\tableofcontents
+	\cleardoublepage
 }
 
 % ============================================================================

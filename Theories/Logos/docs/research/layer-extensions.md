@@ -5,7 +5,7 @@
 Logos is organized into semantic extensions, each building upon the previous with increasing expressive power. Each extension corresponds to a **semantic frame** that defines the primitive structure needed to interpret logical formulas. The extensions are:
 
 1. **Constitutive Foundation** - Hyperintensional semantics over mereological state spaces
-2. **Explanatory Extension** - Intensional semantics over world-histories with temporal and modal operators
+2. **Dynamical Foundation** - Intensional semantics over world-histories with temporal and modal operators
 3. **Epistemic Extension** - Extensions for belief, knowledge, and probability
 4. **Normative Extension** - Extensions for obligation, permission, and value
 5. **Spatial Extension** - Extensions for spatial reasoning and location
@@ -22,7 +22,7 @@ See [recursive-semantics.md](recursive-semantics.md) for full formal semantic sp
 
 ### Constitutive Foundation
 
-The Constitutive Foundation provides the foundational mereological structure upon which all other extensions build. Its semantics is **hyperintensional**, distinguishing propositions that agree on truth-value across all possible worlds but differ in their verification and falsification conditions. This foundation is non-modal: possibility and compatibility cannot be defined at this level since they require the task relation introduced in the Explanatory Extension.
+The Constitutive Foundation provides the foundational mereological structure upon which all other extensions build. Its semantics is **hyperintensional**, distinguishing propositions that agree on truth-value across all possible worlds but differ in their verification and falsification conditions. This foundation is non-modal: possibility and compatibility cannot be defined at this level since they require the task relation introduced in the Dynamical Foundation.
 
 #### Syntactic Primitives
 
@@ -66,19 +66,19 @@ The Constitutive Foundation provides recursive verification and falsification cl
 | **Essence** | A ⊑ B | "A is necessary for B" |
 | **Relevance** | A ≼ B | "A is wholly relevant to B" |
 
-Logical consequence at this foundation is restricted to propositional identity sentences. Evaluation of contingent atomic sentences requires the Explanatory Extension.
+Logical consequence at this foundation is restricted to propositional identity sentences. Evaluation of contingent atomic sentences requires the Dynamical Foundation.
 
 See [recursive-semantics.md](recursive-semantics.md) for full verification/falsification clauses.
 
 ---
 
-### Explanatory Extension
+### Dynamical Foundation
 
-The Explanatory Extension extends the Constitutive Foundation with temporal structure and a task relation, enabling evaluation of truth relative to world-histories and times. Semantics at this extension is **intensional** rather than hyperintensional.
+The Dynamical Foundation extends the Constitutive Foundation with temporal structure and a task relation, enabling evaluation of truth relative to world-histories and times. Semantics at this foundation is **intensional** rather than hyperintensional.
 
 #### Syntactic Primitives
 
-The Explanatory Extension interprets these additional syntactic primitives:
+The Dynamical Foundation interprets these additional syntactic primitives:
 - Modal operators: □ (necessity), ◇ (possibility)
 - Temporal operators: H (always past), G (always future), P (some past), F (some future)
 - Extended temporal operators: ◁ (since), ▷ (until)
@@ -149,7 +149,7 @@ The task semantics validates perpetuity principles connecting modal and temporal
 
 #### Planning Applications
 
-The Explanatory Extension enables AI systems to reason about:
+The Dynamical Foundation enables AI systems to reason about:
 - **Action sequences** via temporal operators
 - **Hypothetical interventions** via counterfactuals
 - **Causal relationships** via causation operator
@@ -180,7 +180,7 @@ See [recursive-semantics.md](recursive-semantics.md) for full truth conditions.
 
 ### Epistemic Extension
 
-The Epistemic Extension extends the Explanatory Extension with structures for reasoning under uncertainty.
+The Epistemic Extension extends the Dynamical Foundation with structures for reasoning under uncertainty.
 
 [DETAILS]
 
@@ -469,7 +469,7 @@ If agent A believes agent B prefers y, then A negotiates toward y.
 | Extension | Semantic Specification | Implementation Status |
 |-----------|----------------------|----------------------|
 | **Constitutive Foundation** | Complete | Partial (proof-checker) |
-| **Explanatory Extension** | Complete | Partial (model-checker) |
+| **Dynamical Foundation** | Complete | Partial (model-checker) |
 | **Epistemic Extension** | [DETAILS] | Not started |
 | **Normative Extension** | [DETAILS] | Not started |
 | **Spatial Extension** | [DETAILS] | Not started |

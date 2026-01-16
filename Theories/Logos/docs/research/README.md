@@ -10,9 +10,9 @@ Research and design documents for the Logos second-order hyperintensional logic.
 
 #### recursive-semantics.md
 
-Comprehensive recursive semantics for Logos including the Constitutive Foundation, Explanatory Extension,
+Comprehensive recursive semantics for Logos including the Constitutive Foundation, Dynamical Foundation,
 and planned Epistemic, Normative, Spatial, and Agential extensions. Defines frame structures,
-model components, and evaluation mechanisms for each layer.
+model components, and evaluation mechanisms for each extension.
 
 **Status**: Complete specification
 

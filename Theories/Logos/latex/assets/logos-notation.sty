@@ -5,7 +5,7 @@
 % Based on recursive-semantics.md specification
 % Compatible with LaTeX, markdown, and Lean notation conventions
 %
-% Imports shared notation from ProofChecker/latex/notation-standards.sty
+% Imports shared notation from ../../../latex/notation-standards.sty
 % (found via TEXINPUTS configured in latexmkrc)
 % ============================================================================
 
@@ -40,23 +40,18 @@
 \newcommand{\verifierset}[1]{|{#1}|^+}
 \newcommand{\falsifierset}[1]{|{#1}|^-}
 
-% --- Count Functions ---
-\newcommand{\verifiercount}[1]{|#1|}
-\newcommand{\falsifiercount}[1]{|#1|}
+% --- Type Notation ---
+% These commands match Lean notation exactly for reader consistency
+\newcommand{\Set}{\mathsf{Set}}      % Set constructor (matches Lean notation)
+\newcommand{\powerset}{\mathcal{P}}    % Power set notation
+\newcommand{\Fin}{\mathtt{Fin}}      % Finite set notation
+\newcommand{\Term}{\mathsf{Term}}     % Term type (matches Lean notation)
+\newcommand{\Formula}{\mathsf{Formula}} % Formula type (matches Lean notation)
+\newcommand{\set}[1]{\{#1\}}          % Set notation (replaces \{...\} pairs)
 
-% --- Function Notation ---
-\newcommand{\verifierfn}[2]{#1_{#2}}
-\newcommand{\falsifierfn}[2]{#1_{#2}}
-
-% --- Finite Set Notation ---
-\newcommand{\Fin}{\mathtt{Fin}}
-
-
-
-% --- Propositional Operations ---
-\newcommand{\product}{\otimes}
-\newcommand{\psum}{\oplus}
-\newcommand{\propid}{\equiv}
+% --- Bilateral Proposition Notation ---
+\newcommand{\prop}[1]{\mathsf{#1}} % Use \prop for bilateral propositions
+\newcommand{\props}{\mathbb{P}} % Use \props for space of bilateral propositions
 
 % --- Derived Relations ---
 \newcommand{\essence}{\sqsubseteq}

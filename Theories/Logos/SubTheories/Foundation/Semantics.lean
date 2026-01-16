@@ -128,11 +128,15 @@ def falsifies (M : ConstitutiveModel) (σ : VarAssignment M.frame) (s : M.frame.
     ∃ t u : M.frame.State, s = M.frame.fusion t u ∧
       falsifies M σ t φ ∧ falsifies M σ u ψ
   | ConstitutiveFormula.ident φ ψ =>
-    -- Identity: s falsifies φ ≡ ψ iff s = null and either the verifier sets
-    -- or the falsifier sets of φ and ψ differ
-    s = M.frame.null ∧
-    (¬(∀ t, verifies M σ t φ ↔ verifies M σ t ψ) ∨
-     ¬(∀ t, falsifies M σ t φ ↔ falsifies M σ t ψ))
+    -- Identity: s falsifies φ ≡ ψ iff either:
+    -- (1) s verifies φ and s doesn't verify ψ
+    -- (2) s doesn't verify φ and s verifies ψ  
+    -- (3) s falsifies φ and s doesn't falsify ψ
+    -- (4) s doesn't falsify φ and s falsifies ψ
+    (verifies M σ s φ ∧ ¬verifies M σ s ψ) ∨
+    (¬verifies M σ s φ ∧ verifies M σ s ψ) ∨
+    (falsifies M σ s φ ∧ ¬falsifies M σ s ψ) ∨
+    (¬falsifies M σ s φ ∧ falsifies M σ s ψ)
   | ConstitutiveFormula.lambdaApp x φ t =>
     -- Lambda application: s falsifies (λx.φ)(t) iff s falsifies φ[⟦t⟧/x]
     falsifies M (σ.update x (evalTerm M σ t)) s φ

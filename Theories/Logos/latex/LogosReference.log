@@ -1,6 +1,6 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  16 JAN 2026 09:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex 1980.1.1)  16 JAN 2026 11:40
 entering extended mode
- \write18 enabled.
+ restricted \write18 enabled.
  %&-line parsing enabled.
 **LogosReference.tex
 (./LogosReference.tex
@@ -133,6 +133,10 @@ Package: stmaryrd 1994/03/03 St Mary's Road symbol package
 \symstmry=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
 (Font)                  U/stmry/m/n --> U/stmry/b/n on input line 89.
+)
+(/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
+3-texmfdist/tex/latex/cancel/cancel.sty
+Package: cancel 2013/04/12 v2.2 Cancel math terms
 )
 (/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
 3-texmfdist/tex/latex/subfiles/subfiles.sty
@@ -553,16 +557,16 @@ Enter file name:
 ! Emergency stop.
 <read *> 
          
-l.37 \usepackage
+l.38 \usepackage
                 {formatting}^^M
 *** (cannot \read from terminal in nonstop modes)
 
  
 Here is how much of TeX's memory you used:
- 13214 strings out of 467888
- 274924 string characters out of 5405403
- 626988 words of memory out of 5000000
- 41577 multiletter control sequences out of 15000+600000
+ 13255 strings out of 467888
+ 275845 string characters out of 5405403
+ 627871 words of memory out of 5000000
+ 41614 multiletter control sequences out of 15000+600000
  627125 words of font info for 41 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,0n,107p,395b,90s stack positions out of 10000i,1000n,20000p,200000b,200000s
