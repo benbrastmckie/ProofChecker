@@ -1,7 +1,7 @@
 INFO:  latexindent.pl version 3.24.5, 2025-03-13, a script to indent .tex files
        latexindent.pl lives here: /nix/store/2laj3mfxsjqlbz6h9zvgd3i310yg626g-latexindent-3.24.5-tex/scripts/latexindent/
-       Thu Jan 15 15:22:01 2026
-       Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/03-ExplanatoryExtension-Semantics.tex
+       Thu Jan 15 18:04:25 2026
+       Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
        -w|--overwrite: Overwrite mode active, will make a back up before overwriting
@@ -23,14 +23,18 @@ INFO:  YAML reading settings
        latexindent.pl didn't find indentconfig.yaml or .indentconfig.yaml
        see all possible locations: https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#indentconfig-options)
 INFO:  Backup procedure (-w flag active):
-       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/03-ExplanatoryExtension-Semantics.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/03-ExplanatoryExtension-Semantics.bak0...
-       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/03-ExplanatoryExtension-Semantics.tex will be overwritten after indentation
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak3 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.bak4...
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation
 INFO:  Phase 3: indenting objects
 INFO:  Phase 4: final indentation check
 INFO:  Output routine:
-       Overwriting file /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/03-ExplanatoryExtension-Semantics.tex
+       Overwriting file /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/01-ConstitutiveFoundation.tex
        --------------
 INFO:  Please direct all communication/issues to:
         https://github.com/cmhughes/latexindent.pl

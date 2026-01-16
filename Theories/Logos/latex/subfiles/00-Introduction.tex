@@ -32,7 +32,7 @@ Given a world history, time, and belief parameter, a proposition is believed jus
 
 \subsection{Extension Dependencies}\label{sec:extension-dependencies}
 
-This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions.
+This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions where the first two layers provide an essential foundation followed by a modular plugin system for language extensions.
 
 \begin{figure}[htbp]
 \centering
@@ -207,38 +207,34 @@ The Agential Extension provides third-person multi-agent reasoning, the Social E
 
   \item \textbf{Epistemic Extension}:
         Introduces epistemic modals ($\mathsf{Mi}$, $\mathsf{Mu}$), belief ($\mathsf{B}$), probability ($\mathsf{Pr}$), and indicative conditional operators ($\hookrightarrow$) for reasoning under uncertainty.
-        By extending the temporal framework with credence functions over state transitions, agents can track how evidence updates beliefs across time and distinguish what an agent believes from what is actually the case.
+        By extending the semantic framework with credence functions to assign weights to state transitions, agents can track how evidence updates beliefs across time and distinguish what an agent believes from what is actually the case.
 
   \item \textbf{Abilities Extension}:
-        Provides specific ability ($\mathsf{Can}$), generic ability ($\mathsf{Able}$), and STIT ($\mathsf{stit}$) operators for reasoning about agent capacities.
-        Ability modals express what an agent can bring about through their capacities, with stronger truth conditions than circumstantial possibility---ability entails possibility but not vice versa.
+        Provides ability ($\mathsf{Can}$) and STIT ($\mathsf{stit}$) operators for reasoning about capacities.
+        Ability modals express what an agent can bring about through their capacities, with stronger truth conditions than circumstantial possibility since ability entails possibility but not \textit{vice versa}.
         This enables reasoning about what agents are capable of accomplishing given their intrinsic capacities and circumstances.
 
   \item \textbf{Normative Extension}:
-        Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), and preference operators with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
-        This enables ethical reasoning, multi-party preference aggregation, and grounding obligations in factual circumstances.
+        Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), and a preference operator ($\prec$) with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
+        This enables ethical reasoning about alternatives.
 
   \item \textbf{Choice Extension}:
-        Introduces free choice permission ($\mathsf{FP}$) and choice set ($\mathsf{Ch}$) operators for reasoning about permission over alternatives.
-        Free choice modals address the distribution of permission over disjunctive alternatives---intuitively, ``you may have an apple or a pear'' implies permission for each disjunct.
-        This enables reasoning about which alternatives are permitted and how permissions combine.
+        Introduces free choice permission ($\mathsf{FP}$) and best choice ($\mathsf{Ch}$) operators for reasoning about permission over alternatives, enabling reasoning about which alternatives are permitted and how permissions combine.
 
   \item \textbf{Spatial Extension}:
-        Provides location-dependent operators and spatial relations for reasoning about where things are and how spatial proximity affects truth conditions.
+        Provides location-dependent operators and spatial relations for reasoning about where things are and they are oriented relative to an orientation basis.
         This supports navigation, containment reasoning, and location-sensitive planning.
 
   \item \textbf{Agential Extension}:
-        Indexes epistemic and normative operators to specific agents ($\mathsf{B}_a$, $\mathsf{K}_a$, $\mathsf{O}_a$), enabling reasoning about what different agents believe, prefer, and are obligated to do.
+        Indexes epistemic and normative operators to specific agents ($\mathsf{B}_a$, $\prec$, $\mathsf{O}_a$, \ldots), enabling reasoning about what different agents believe, prefer, and are obligated to do.
         This transforms single-perspective reasoning into multi-agent coordination where agents can model each other's epistemic and normative states.
-        Requires at least one middle extension.
 
   \item \textbf{Social Extension}:
-        Provides resources for common ground and group-level reasoning, building upon the Agential Extension to enable reasoning about shared knowledge, collective beliefs, and social coordination.
+        Provides resources for common ground construction and group-level reasoning, building upon the Agential Extension to enable reasoning about shared beliefs, build trust in other agents, and coordinate on common goals.
 
   \item \textbf{Reflection Extension}:
-        Adds first-person metacognitive operators ($\mathsf{I}$) for self-directed reasoning about one's own beliefs, knowledge, abilities, and goal progress.
-        This enables an agent to reason about what it knows versus believes, recognize its own limitations, and track progress toward goals---essential for AI systems that must understand their own capabilities.
-        Positioned in parallel with the Agential Extension.
+        Adds first-person metacognitive operators ($\mathsf{I}$) for self-directed reasoning about one's own beliefs, abilities, and progress towards goals.
+        This enables an agent to reason about what it is in a good position to believe given evaluation of its own limitations and track relative to other agents. Essential for AI systems that must understand their own capabilities and benefit from the capacity to learn by the testimony of others.
 \end{enumerate}
 
 % ------------------------------------------------------------
@@ -256,10 +252,14 @@ This reference manual is organized as follows:
 
   \item[\Cref{sec:core-semantics}] provides the semantic framework for the Explanatory Extension, including core frames, world-histories, and truth conditions.
 
-  \item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.
+  \item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.\\
+
+  \ldots\\
 
   \item[\Cref{sec:reflection}] specifies the Reflection Extension for first-person metacognitive reasoning, including truth conditions, derived operators, and temporal interactions.
 \end{description}
+
+
 % ------------------------------------------------------------
 % Lean Implementation
 % ------------------------------------------------------------

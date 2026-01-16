@@ -37,8 +37,12 @@
 % --- Verification and Falsification ---
 \newcommand{\verifies}{\Vdash}
 \newcommand{\falsifies}{\dashV}
-\newcommand{\verifierset}[1]{|{#1}|^+}
-\newcommand{\falsifierset}[1]{|{#1}|^-}
+\newcommand{\verifiertype}[1]{|{#1}|^+}
+\newcommand{\falsifiertype}[1]{|{#1}|^-}
+\newcommand{\verifiercount}[1]{\#^+(#1)}
+\newcommand{\falsifiercount}[1]{\#^-(#1)}
+\newcommand{\verifierfn}[2]{\mathrm{verfn}_{#1}(#2)}
+\newcommand{\falsifierfn}[2]{\mathrm{faln}_{#1}(#2)}
 
 % --- Propositional Operations ---
 \newcommand{\product}{\otimes}
@@ -123,6 +127,12 @@
 \newcommand{\metaB}{\psi}
 \newcommand{\metaC}{\chi}
 % \metaphi, \metapsi, \metachi provided by notation-standards.sty
+
+% ============================================================================
+% Type Notation
+% ============================================================================
+
+\newcommand{\bool}{\mathscr{bool}}            % Model symbol
 
 % ============================================================================
 % End of Package

@@ -133,8 +133,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Atomic Truth]\label{def:atomic-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies F(t_1, \ldots, t_n)    & \iff \text{there is some } f \in \verifierset{F} \text{ where } f(\lambda i : \mathtt{Fin}\;n, \sem{t_i}^\assignment_\model) \parthood \history(x)  \\
-		\model, \history, x, \assignment, \tempindex \notsatisfies F(t_1, \ldots, t_n) & \iff \text{there is some } f \in \falsifierset{F} \text{ where } f(\lambda i : \mathtt{Fin}\;n, \sem{t_i}^\assignment_\model) \parthood \history(x)
+		\model, \history, x, \assignment, \tempindex \satisfies F(t_1, \ldots, t_n)    & \iff \exists i : \mathtt{Fin}\;(\verifiercount{F}) : \verifierfn{F}{i}(\lambda j : \mathtt{Fin}\;n, \sem{t_j}^\assignment_\model) \parthood \history(x)   \\
+		\model, \history, x, \assignment, \tempindex \notsatisfies F(t_1, \ldots, t_n) & \iff \exists i : \mathtt{Fin}\;(\falsifiercount{F}) : \falsifierfn{F}{i}(\lambda j : \mathtt{Fin}\;n, \sem{t_j}^\assignment_\model) \parthood \history(x)
 	\end{align}
 \end{definition}
 
@@ -229,7 +229,7 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Counterfactual Conditional]\label{def:counterfactual-truth}
 	\[
-		\model, \history, x, \assignment, \tempindex \satisfies \metaphi \boxright \metaC \iff \text{for all } t \in \verifierset{\metaphi} \text{ and } \beta \in \historyspace:
+		\model, \history, x, \assignment, \tempindex \satisfies \metaphi \boxright \metaC \iff \text{for all } i : \mathtt{Fin}\;(\verifiercount{\metaphi}), t := \verifierfn{\metaphi}{i} \text{ and } \beta \in \historyspace:
 	\]
 	if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \satisfies \metaC$
 \end{definition}

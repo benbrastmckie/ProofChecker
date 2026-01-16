@@ -1,7 +1,7 @@
 INFO:  latexindent.pl version 3.24.5, 2025-03-13, a script to indent .tex files
        latexindent.pl lives here: /nix/store/2laj3mfxsjqlbz6h9zvgd3i310yg626g-latexindent-3.24.5-tex/scripts/latexindent/
-       Wed Jan 14 21:26:04 2026
-       Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_direct_simple.tex
+       Thu Jan 15 17:30:32 2026
+       Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
        -w|--overwrite: Overwrite mode active, will make a back up before overwriting
@@ -23,14 +23,17 @@ INFO:  YAML reading settings
        latexindent.pl didn't find indentconfig.yaml or .indentconfig.yaml
        see all possible locations: https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#indentconfig-options)
 INFO:  Backup procedure (-w flag active):
-       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_direct_simple.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_direct_simple.bak0...
-       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_direct_simple.tex will be overwritten after indentation
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.bak3...
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation
 INFO:  Phase 3: indenting objects
 INFO:  Phase 4: final indentation check
 INFO:  Output routine:
-       Overwriting file /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_direct_simple.tex
+       Overwriting file /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/test_syntax.tex
        --------------
 INFO:  Please direct all communication/issues to:
         https://github.com/cmhughes/latexindent.pl
