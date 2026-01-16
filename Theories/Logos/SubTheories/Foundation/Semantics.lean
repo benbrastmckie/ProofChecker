@@ -57,7 +57,7 @@ def verifies (M : ConstitutiveModel) (σ : VarAssignment M.frame) (s : M.frame.S
     -- Sentence letter: s verifies p iff s is in the verifier collection for p
     s ∈ (M.interp.getSentenceLetter p).verifiers
   | ConstitutiveFormula.pred P ts =>
-    -- Predicate: there exists a verifier function f of the appropriate type such that s = f(⟦t₁⟧,...,⟦tₙ⟧)
+    -- Predicate: there exists a verifier function f in the set of verifier functions such that s = f(⟦t₁⟧,...,⟦tₙ⟧)
     let args : Fin ts.length → M.frame.State := fun i => evalTerm M σ (ts.get i)
     ∃ f ∈ (M.interp.predicate P ts.length).verifierFns,
       s = f (fun i => args (Fin.cast (by rfl) i))
@@ -103,7 +103,7 @@ def falsifies (M : ConstitutiveModel) (σ : VarAssignment M.frame) (s : M.frame.
     -- Sentence letter: s falsifies p iff s is in the falsifier collection for p
     s ∈ (M.interp.getSentenceLetter p).falsifiers
   | ConstitutiveFormula.pred P ts =>
-    -- Predicate: there exists a falsifier function f of the appropriate type such that s = f(⟦t₁⟧,...,⟦tₙ⟧)
+    -- Predicate: there exists a falsifier function f in the set of falsifier functions such that s = f(⟦t₁⟧,...,⟦tₙ⟧)
     let args : Fin ts.length → M.frame.State := fun i => evalTerm M σ (ts.get i)
     ∃ f ∈ (M.interp.predicate P ts.length).falsifierFns,
       s = f (fun i => args (Fin.cast (by rfl) i))
