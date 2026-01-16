@@ -155,12 +155,12 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Conjunction Verification and Falsification]\label{def:conjunction-verification}
 	\begin{align}
-		\model, \assignment, s \verifies \metaA \land \metaB \iff
-		 & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \notag \\
-		 & \text{and } \model, \assignment, u \verifies \metaB \\
-		\model, \assignment, s \falsifies \metaA \land \metaB \iff
-		 & \model, \assignment, s \falsifies \metaA, \text{ or } \model, \assignment, s \falsifies \metaB, \text{ or } s = \fusion{t}{u} \text{ for} \notag \\
-		 & \text{some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
+		\model, \assignment, s \verifies \metaA \land \metaB \iff 
+      & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \\
+      & \text{and } \model, \assignment, u \verifies \metaB        \\
+		\model, \assignment, s \falsifies \metaA \land \metaB \iff 
+      & \model, \assignment, s \falsifies \metaA, \text{ or } \model, \assignment, s \falsifies \metaB, \text{ or } s = \fusion{t}{u} \text{ for} \notag \\
+      & \text{some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
 	\end{align}
 \end{definition}
 
@@ -168,12 +168,11 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Disjunction Verification and Falsification]\label{def:disjunction-verification}
 	\begin{align}
-		\model, \assignment, s \verifies \metaA \lor \metaB \iff
-     & \model, \assignment, s \verifies \metaA, \text{ or } \model, \assignment, s \verifies \metaB, \text{ or } s = \fusion{t}{u} \text{ for} \notag \\
-		 & \text{some } t, u \text{ where } \model, \assignment, t \verifies \metaA \text{ and } \model, \assignment, u \verifies \metaB   \\
-		\model, \assignment, s \falsifies \metaA \lor \metaB \iff
-		  & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \notag \\
-      & \text{and } \model, \assignment, u \falsifies \metaB
+		\model, \assignment, s \verifies \metaA \lor \metaB \iff 
+      & \model, \assignment, s \verifies \metaA, \text{ or } \model, \assignment, s \verifies \metaB, \text{ or } \notag \\
+      & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \verifies \metaA \text{ and } \model, \assignment, u \verifies \metaB \\
+		\model, \assignment, s \falsifies \metaA \lor \metaB \iff 
+      & s = \fusion{t}{u} \text{ for some } t, u \text{ where } \model, \assignment, t \falsifies \metaA \text{ and } \model, \assignment, u \falsifies \metaB
 	\end{align}
 \end{definition}
 

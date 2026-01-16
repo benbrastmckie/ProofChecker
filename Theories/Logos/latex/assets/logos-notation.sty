@@ -37,14 +37,21 @@
 % --- Verification and Falsification ---
 \newcommand{\verifies}{\Vdash}
 \newcommand{\falsifies}{\dashV}
-\newcommand{\verifiertype}[1]{|{#1}|^+}
-\newcommand{\falsifiertype}[1]{|{#1}|^-}
-\newcommand{\verifierset}[1]{\mathcal{V}_{#1}}
-\newcommand{\falsifierset}[1]{\mathcal{F}_{#1}}
-\newcommand{\verifiercount}[1]{\#^+(#1)}
-\newcommand{\falsifiercount}[1]{\#^-(#1)}
-\newcommand{\verifierfn}[2]{\mathrm{verfn}_{#1}(#2)}
-\newcommand{\falsifierfn}[2]{\mathrm{faln}_{#1}(#2)}
+\newcommand{\verifierset}[1]{|{#1}|^+}
+\newcommand{\falsifierset}[1]{|{#1}|^-}
+
+% --- Count Functions ---
+\newcommand{\verifiercount}[1]{|#1|}
+\newcommand{\falsifiercount}[1]{|#1|}
+
+% --- Function Notation ---
+\newcommand{\verifierfn}[2]{#1_{#2}}
+\newcommand{\falsifierfn}[2]{#1_{#2}}
+
+% --- Finite Set Notation ---
+\newcommand{\Fin}{\mathtt{Fin}}
+
+
 
 % --- Propositional Operations ---
 \newcommand{\product}{\otimes}
