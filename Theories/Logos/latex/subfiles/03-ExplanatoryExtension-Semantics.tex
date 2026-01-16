@@ -133,22 +133,22 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Atomic Truth]\label{def:atomic-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies F(t_1, \ldots, t_n)    & \iff \exists f \in \verifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)  \\
-		\model, \history, x, \assignment, \tempindex \notsatisfies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)
+		\model, \history, x, \assignment, \tempindex \trueat F(t_1, \ldots, t_n)    & \iff \exists f \in \verifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)  \\
+		\model, \history, x, \assignment, \tempindex \falseat F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)
 	\end{align}
 \end{definition}
 
 \begin{remark}
-	It is derivable that $\model, \history, x, \assignment, \tempindex \satisfies \metaA$ iff it is not the case that $\model, \history, x, \assignment, \tempindex \notsatisfies \metaA$.
-	This justifies using $\satisfies$ alone for truth and $\notsatisfies$ for falsehood.
+	It is derivable that $\model, \history, x, \assignment, \tempindex \trueat \metaA$ iff it is not the case that $\model, \history, x, \assignment, \tempindex \falseat \metaA$.
+	This justifies using $\trueat$ alone for truth and $\falseat$ for falsehood.
 \end{remark}
 
 \subsubsection{Lambda Abstraction and Quantification}
 
 \begin{definition}[Lambda and Quantification]\label{def:lambda-quant-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies (\lambda y.\metaA)(t) & \iff \model, \history, x, \assignsub{\sem{t}^\assignment_\model}{y}, \tempindex \satisfies \metaA           \\
-		\model, \history, x, \assignment, \tempindex \satisfies \forall y.\metaA      & \iff \model, \history, x, \assignsub{s}{y}, \tempindex \satisfies \metaA \text{ for all } s \in \statespace
+		\model, \history, x, \assignment, \tempindex \trueat (\lambda y.\metaA)(t) & \iff \model, \history, x, \assignsub{\sem{t}^\assignment_\model}{y}, \tempindex \trueat \metaA           \\
+		\model, \history, x, \assignment, \tempindex \trueat \forall y.\metaA      & \iff \model, \history, x, \assignsub{s}{y}, \tempindex \trueat \metaA \text{ for all } s \in \statespace
 	\end{align}
 \end{definition}
 
@@ -156,7 +156,7 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Actuality]\label{def:actuality-truth}
 	\[
-		\model, \history, x, \assignment, \tempindex \satisfies \actual(t) \iff \sem{t}^\assignment_\model \parthood \history(x)
+		\model, \history, x, \assignment, \tempindex \trueat \actual(t) \iff \sem{t}^\assignment_\model \parthood \history(x)
 	\]
 \end{definition}
 
@@ -172,10 +172,10 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Extensional Connectives]\label{def:extensional-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies \neg\metaA          & \iff \model, \history, x, \assignment, \tempindex \notsatisfies \metaA                                                                            \\
-		\model, \history, x, \assignment, \tempindex \satisfies \metaA \land \metaB & \iff \model, \history, x, \assignment, \tempindex \satisfies \metaA \text{ and } \model, \history, x, \assignment, \tempindex \satisfies \metaB   \\
-		\model, \history, x, \assignment, \tempindex \satisfies \metaA \lor \metaB  & \iff \model, \history, x, \assignment, \tempindex \satisfies \metaA \text{ or } \model, \history, x, \assignment, \tempindex \satisfies \metaB    \\
-		\model, \history, x, \assignment, \tempindex \satisfies \metaA \to \metaB   & \iff \model, \history, x, \assignment, \tempindex \notsatisfies \metaA \text{ or } \model, \history, x, \assignment, \tempindex \satisfies \metaB
+		\model, \history, x, \assignment, \tempindex \trueat \neg\metaA          & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA                                                                            \\
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \land \metaB & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ and } \model, \history, x, \assignment, \tempindex \trueat \metaB   \\
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB    \\
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
 	\end{align}
 \end{definition}
 
@@ -183,8 +183,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Modal Operators]\label{def:modal-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies \nec\metaA  & \iff \model, \alpha, x, \assignment, \tempindex \satisfies \metaA \text{ for all } \alpha \in \historyspace  \\
-		\model, \history, x, \assignment, \tempindex \satisfies \poss\metaA & \iff \model, \alpha, x, \assignment, \tempindex \satisfies \metaA \text{ for some } \alpha \in \historyspace
+		\model, \history, x, \assignment, \tempindex \trueat \nec\metaA  & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha \in \historyspace  \\
+		\model, \history, x, \assignment, \tempindex \trueat \poss\metaA & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for some } \alpha \in \historyspace
 	\end{align}
 \end{definition}
 
@@ -198,10 +198,10 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Core Tense Operators]\label{def:tense-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies \always\metaA     & \iff \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for all } y \in D \text{ where } y < x  \\
-		\model, \history, x, \assignment, \tempindex \satisfies \willalways\metaA & \iff \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for all } y \in D \text{ where } y > x  \\
-		\model, \history, x, \assignment, \tempindex \satisfies \waspast\metaA    & \iff \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for some } y \in D \text{ where } y < x \\
-		\model, \history, x, \assignment, \tempindex \satisfies \willfuture\metaA & \iff \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for some } y \in D \text{ where } y > x
+		\model, \history, x, \assignment, \tempindex \trueat \always\metaA     & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \in D \text{ where } y < x  \\
+		\model, \history, x, \assignment, \tempindex \trueat \willalways\metaA & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \in D \text{ where } y > x  \\
+		\model, \history, x, \assignment, \tempindex \trueat \waspast\metaA    & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for some } y \in D \text{ where } y < x \\
+		\model, \history, x, \assignment, \tempindex \trueat \willfuture\metaA & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for some } y \in D \text{ where } y > x
 	\end{align}
 \end{definition}
 
@@ -213,10 +213,10 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Since and Until]\label{def:since-until-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies \metaA \since \metaB & \iff \text{there exists } z < x \text{ where } \model, \history, z, \assignment, \tempindex \satisfies \metaB \notag         \\
-		                                                                             & \quad \text{and } \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for all } y \text{ where } z < y < x \\
-		\model, \history, x, \assignment, \tempindex \satisfies \metaA \until \metaB & \iff \text{there exists } z > x \text{ where } \model, \history, z, \assignment, \tempindex \satisfies \metaB \notag         \\
-		                                                                             & \quad \text{and } \model, \history, y, \assignment, \tempindex \satisfies \metaA \text{ for all } y \text{ where } x < y < z
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \since \metaB & \iff \text{there exists } z < x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \notag         \\
+		                                                                             & \quad \text{and } \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \until \metaB & \iff \text{there exists } z > x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \notag         \\
+		                                                                             & \quad \text{and } \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
 	\end{align}
 \end{definition}
 
@@ -229,9 +229,9 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Counterfactual Conditional]\label{def:counterfactual-truth}
 	\[
-		\model, \history, x, \assignment, \tempindex \satisfies \metaphi \boxright \metaC \iff \text{for all } s \in \maxcompat{\history(x)}{\metaphi}, t \in s \text{ and } \beta \in \historyspace:
+		\model, \history, x, \assignment, \tempindex \trueat \metaphi \boxright \metaC \iff \text{for all } s \in \maxcompat{\history(x)}{\metaphi}, t \in s \text{ and } \beta \in \historyspace:
 	\]
-	if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \satisfies \metaC$
+	if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
 \end{definition}
 
 \begin{definition}[Imposition]\label{def:imposition}
@@ -248,8 +248,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 \begin{definition}[Store and Recall]\label{def:store-recall-truth}
 	For cross-temporal reference within counterfactual evaluation, the context includes a temporal index $\tempindex = \langle i_1, i_2, \ldots \rangle$ of stored times:
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \satisfies \store{k}\metaA  & \iff \model, \history, x, \assignment, \tempindex[x/i_k] \satisfies \metaA \\
-		\model, \history, x, \assignment, \tempindex \satisfies \recall{k}\metaA & \iff \model, \history, i_k, \assignment, \tempindex \satisfies \metaA
+		\model, \history, x, \assignment, \tempindex \trueat \store{k}\metaA  & \iff \model, \history, x, \assignment, \tempindex[x/i_k] \trueat \metaA \\
+		\model, \history, x, \assignment, \tempindex \trueat \recall{k}\metaA & \iff \model, \history, i_k, \assignment, \tempindex \trueat \metaA
 	\end{align}
 	where $\tempindex[x/i_k]$ replaces $i_k$ with current time $x$.
 \end{definition}
@@ -315,7 +315,7 @@ The framework does not assume discrete time:
 
 \begin{definition}[Logical Consequence (Explanatory Extension)]\label{def:consequence-core}
 	\[
-		\context \satisfies \metaA \iff \text{for any } \model, \history \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \history, x, \assignment, \tempindex \satisfies \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \history, x, \assignment, \tempindex \satisfies \metaA
+		\context \trueat \metaA \iff \text{for any } \model, \history \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \history, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \history, x, \assignment, \tempindex \trueat \metaA
 	\]
 \end{definition}
 

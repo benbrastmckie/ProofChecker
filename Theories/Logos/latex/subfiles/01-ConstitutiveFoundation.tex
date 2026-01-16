@@ -265,9 +265,9 @@ See \leansrc{Logos.Foundation.Proposition}{BilateralProp} for the Lean implement
 \begin{definition}[Logical Consequence (Constitutive Foundation)]\label{def:consequence-foundation}
 	Logical consequence at the Constitutive Foundation is restricted to propositional identity sentences:
 	\[
-		\context \satisfies \metaA \iff \text{for any model } \model \text{ and assignment } \assignment : \text{if } \model, \assignment, \nullstate \verifies \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \assignment, \nullstate \verifies \metaA
+		\context \trueat \metaA \iff \text{for any model } \model \text{ and assignment } \assignment : \text{if } \model, \assignment, \nullstate \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \assignment, \nullstate \trueat \metaA
 	\]
-	That is, $\metaA$ is a consequence of $\context$ iff the null state verifies $\metaA$ in any model where it verifies all premises.
+	That is, $\metaA$ is a consequence of $\context$ iff the null state $\trueat$ $\metaA$ in any model where it $\trueat$ all premises.
 \end{definition}
 
 \begin{remark}[Identity Sentences and Evaluation Overlap]
