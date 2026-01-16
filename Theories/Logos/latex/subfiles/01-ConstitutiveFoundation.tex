@@ -72,10 +72,16 @@ The Constitutive Foundation interprets the following syntactic primitives:
 		\item \textbf{0-place function symbols} $\interp{c} : (\mathtt{Fin}\;0 \to \statespace) \to \statespace$
 		\item \textbf{n-place predicates} $\interp{F} = \langle \verifierset{F}, \falsifierset{F} \rangle$ where:
 		      \begin{itemize}
-			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^+(a_1, \ldots, a_n)$ for any $f^+ : \verifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
-			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^-(a_1, \ldots, a_n)$ for any $f^- : \falsifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
+			      \item $\verifierset{F} : \text{Set}((\mathtt{Fin}\;n \to \statespace) \to \statespace)$ is the set of verifier functions
+			      \item $\falsifierset{F} : \text{Set}((\mathtt{Fin}\;n \to \statespace) \to \statespace)$ is the set of falsifier functions
+			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^+(a_1, \ldots, a_n)$ for any $f^+ \in \verifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
+			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f^-(a_1, \ldots, a_n)$ for any $f^- \in \falsifierset{F}$ and $a_1, \ldots, a_n : \statespace$.
 		      \end{itemize}
-		\item \textbf{Sentence letters} $\interp{p} = \langle \verifierset{p}, \falsifierset{p} \rangle$ of verifier and falsifier state sets
+		\item \textbf{Sentence letters} $\interp{p} = \langle \verifierset{p}, \falsifierset{p} \rangle$ where:
+		      \begin{itemize}
+			      \item $\verifierset{p} : \text{Set}(\statespace)$ is the set of verified states
+			      \item $\falsifierset{p} : \text{Set}(\statespace)$ is the set of falsified states
+		      \end{itemize}
 	\end{itemize}
 \end{definition}
 
