@@ -69,46 +69,36 @@ theorem update_other (σ : VarAssignment F) (x y : String) (v : F.State) (h : y 
 end VarAssignment
 
 /--
-Predicate interpretation: zero or more verifier and falsifier functions.
+Predicate interpretation: a bilateral proposition for each arity.
 
-For n-ary predicates, we have:
-- verifierType: (Fin n → F.State) → F.State
-- verifierCount: Nat (number of verifier functions)  
-- verifierFns: Fin verifierCount → verifierType (indexed access)
-
-This represents "zero or more functions" in pure type theory without using Set.
-For sentence letters (0-ary), these reduce to state-based propositions.
+For n-ary predicates, verifier and falsifier "functions" are actually
+sets of functions Sⁿ → S. For sentence letters (0-ary), these reduce to
+sets of states.
 -/
 structure PredicateInterp (F : ConstitutiveFrame) (n : Nat) where
-  /-- Number of verifier functions -/
-  verifierCount : Nat
-  /-- Verifier functions indexed by their count -/
-  verifierFns : Fin verifierCount → ((Fin n → F.State) → F.State)
-  /-- Number of falsifier functions -/
-  falsifierCount : Nat
-  /-- Falsifier functions indexed by their count -/
-  falsifierFns : Fin falsifierCount → ((Fin n → F.State) → F.State)
+  /-- Verifier functions: each f ∈ verifierFns satisfies f(a₁,...,aₙ) verifies F(a₁,...,aₙ) -/
+  verifierFns : Set ((Fin n → F.State) → F.State)
+  /-- Falsifier functions: each f ∈ falsifierFns satisfies f(a₁,...,aₙ) falsifies F(a₁,...,aₙ) -/
+  falsifierFns : Set ((Fin n → F.State) → F.State)
 
 namespace PredicateInterp
 
 /--
 Sentence letter interpretation (0-ary predicate).
-Verifier and falsifier function types reduce to constant function types,
+Verifier and falsifier functions reduce to constant functions,
 which we can identify with states.
 -/
-def sentenceLetter (F : ConstitutiveFrame) (verifiers falsifiers : List F.State) :
+def sentenceLetter (F : ConstitutiveFrame) (verifiers falsifiers : Set F.State) :
     PredicateInterp F 0 where
-  verifierCount := verifiers.length
-  verifierFns := fun i => fun _ => verifiers.get i
-  falsifierCount := falsifiers.length
-  falsifierFns := fun i => fun _ => falsifiers.get i
+  verifierFns := { f | f (Fin.elim0) ∈ verifiers }
+  falsifierFns := { f | f (Fin.elim0) ∈ falsifiers }
 
 /--
 Convert to bilateral proposition for sentence letters.
 -/
 def toBilateralProp (p : PredicateInterp F 0) : BilateralProp F.State where
-  verifiers := { s | ∃ i : Fin p.verifierCount, (p.verifierFns i) Fin.elim0 = s }
-  falsifiers := { s | ∃ i : Fin p.falsifierCount, (p.falsifierFns i) Fin.elim0 = s }
+  verifiers := { s | ∃ f ∈ p.verifierFns, f Fin.elim0 = s }
+  falsifiers := { s | ∃ f ∈ p.falsifierFns, f Fin.elim0 = s }
 
 end PredicateInterp
 
