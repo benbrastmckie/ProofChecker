@@ -89,7 +89,7 @@ This leverages the mereological state space from the Constitutive Foundation.
    Joint abilities `Can_{a,b}(p)` for group agency.
 
 **Status**: Planned for future development
-**Prerequisites**: Explanatory Extension, at least one middle extension (Epistemic/Normative/Spatial)
+**Prerequisites**: Dynamics Foundation, at least one middle extension (Epistemic/Normative/Spatial)
 **Estimated Timeline**: TBD (dependent on middle extension completion)
 
 See: docs/research/layer-extensions.md Section 6

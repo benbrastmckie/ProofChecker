@@ -32,7 +32,8 @@ Given a world history, time, and belief parameter, a proposition is believed jus
 
 \subsection{Extension Dependencies}\label{sec:extension-dependencies}
 
-This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions where the first two layers provide an essential foundation followed by a modular plugin system for language extensions.
+This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions.
+The first two layers provide an essential foundation followed by a modular plugin system for language extensions and an additional agential layer for multi-agent, self-reflective, and social reasoning.
 
 \begin{figure}[htbp]
 	\centering
@@ -186,7 +187,7 @@ This section presents the layer extensions by which the Logos is constructed whe
 	\label{fig:extension-dependencies}
 \end{figure}
 
-Whereas the Constitutive Foundation and Explanatory Extension form the required base, the middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
+Whereas the \textit{Constitutive Foundation} and \textit{Dynamical Foundation} form the required base, the middle extensions (Epistemic, Abilities, Normative, Choice, Spatial, and others) are modular plugins that can be combined in any subset.
 The Agential Extension, Social Extension, and Reflection Extension all inherit from the layers above and are free to interact with each other.
 The Agential Extension provides third-person multi-agent reasoning, the Social Extension provides the construction of the common ground and trust relations, and the Reflection Extension enables first-person metacognition.
 
@@ -219,10 +220,10 @@ The Agential Extension provides third-person multi-agent reasoning, the Social E
 	      This enables ethical reasoning about alternatives.
 
 	\item \textbf{Choice Extension}:
-	      Introduces free choice permission ($\mathsf{FP}$) and best choice ($\mathsf{Ch}$) operators for reasoning about permission over alternatives, enabling reasoning about which alternatives are permitted and how permissions combine.
+	      Introduces free choice permission ($\mathsf{FP}$) and best choice ($\mathsf{Ch}$) operators for reasoning about permission over alternatives, enabling reasoning about which alternatives are permitted and how permissions combine and distribute.
 
 	\item \textbf{Spatial Extension}:
-	      Provides location-dependent operators and spatial relations for reasoning about where things are and they are oriented relative to an orientation basis.
+	      Provides location-dependent operators and spatial relations for reasoning about where things are and how they are oriented relative to an orientation basis.
 	      This supports navigation, containment reasoning, and location-sensitive planning.
 
 	\item \textbf{Agential Extension}:
@@ -236,6 +237,8 @@ The Agential Extension provides third-person multi-agent reasoning, the Social E
 	      Adds first-person metacognitive operators ($\mathsf{I}$) for self-directed reasoning about one's own beliefs, abilities, and progress towards goals.
 	      This enables an agent to reason about what it is in a good position to believe given evaluation of its own limitations and track relative to other agents. Essential for AI systems that must understand their own capabilities and benefit from the capacity to learn by the testimony of others.
 \end{enumerate}
+For the Lean implementations corresponding to each layer, consult the \texttt{Theories/Logos/SubTheories/} directory, where foundational components are in \texttt{Foundation/}, dynamical extensions in \texttt{Dynamical/}, and the various logical extensions in their respective subdirectories.
+
 
 % ------------------------------------------------------------
 % Document Organization
@@ -246,19 +249,19 @@ The Agential Extension provides third-person multi-agent reasoning, the Social E
 This reference manual is organized as follows:
 
 \begin{description}
-	\item[\Cref{sec:constitutive-foundation}] presents the Constitutive Foundation, including the mereological state space, verification and falsification clauses, and bilateral propositions.
+	\item[\Cref{sec:constitutive-foundation}] presents the \textit{Constitutive Foundation}, including the mereological state space, verification and falsification clauses, and bilateral propositions.
 
-	\item[\Cref{sec:dynamical-foundation}] introduces the syntactic primitives of the Explanatory Extension, including modal, temporal, and counterfactual operators.
+	\item[\Cref{sec:dynamical-foundation}] introduces the syntactic primitives of the \textit{Dynamical Foundation}, including modal, temporal, and counterfactual operators.
 
-	\item[\Cref{sec:core-semantics}] provides the semantic framework for the Explanatory Extension, including core frames, world-histories, and truth conditions.
+	\item[\Cref{sec:core-semantics}] provides the semantic framework for the \textit{Dynamical Foundation}, including core frames, world-histories, and truth conditions.
 
 	\item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.\\
 
-	\item[\Cref{sec:epistemic}] extends the Explanatory Extension with structures for belief, knowledge, probability, and indicative conditionals for reasoning under uncertainty.
+	\item[\Cref{sec:epistemic}] extends the \textit{Dynamical Foundation} with structures for belief, knowledge, probability, and indicative conditionals for reasoning under uncertainty.
 
-	\item[\Cref{sec:normative}] extends the Explanatory Extension with structures for obligation, permission, and value orderings for ethical reasoning about alternatives.
+	\item[\Cref{sec:normative}] extends the \textit{Dynamical Foundation} with structures for obligation, permission, and value orderings for ethical reasoning about alternatives.
 
-	\item[\Cref{sec:spatial}] extends the Explanatory Extension with location-dependent operators and spatial relations for reasoning about orientation and navigation.
+	\item[\Cref{sec:spatial}] extends the \textit{Dynamical Foundation} with location-dependent operators and spatial relations for reasoning about orientation and navigation.
 
 	\item[\Cref{sec:agential}] provides multi-agent reasoning structures that index epistemic and normative operators to specific agents, requiring at least one middle extension to be loaded.\\
 

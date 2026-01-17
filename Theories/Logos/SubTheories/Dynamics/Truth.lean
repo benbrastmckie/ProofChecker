@@ -1,11 +1,11 @@
-import Logos.SubTheories.Explanatory.Frame
-import Logos.SubTheories.Explanatory.Syntax
+import Logos.SubTheories.Dynamics.Frame
+import Logos.SubTheories.Dynamics.Syntax
 import Logos.SubTheories.Foundation.Semantics
 
 /-!
-# Truth Evaluation for Explanatory Extension
+# Truth Evaluation for Dynamics Foundation
 
-This module implements truth evaluation for Explanatory Extension formulas
+This module implements truth evaluation for Dynamics Foundation formulas
 relative to a model, world-history, time, variable assignment, and temporal index.
 
 ## Paper Specification Reference
@@ -28,10 +28,10 @@ operator (○→) is awaiting correct implementation from "Counterfactual Worlds
 (Brast-McKie 2025) - see Task 394.
 -/
 
-namespace Logos.SubTheories.Explanatory
+namespace Logos.SubTheories.Dynamics
 
 open Logos.SubTheories.Foundation
-open Logos.SubTheories.Explanatory.Formula
+open Logos.SubTheories.Dynamics.Formula
 
 variable {D : Type*} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]
 
@@ -226,4 +226,4 @@ def entailsInModel (M : CoreModel D) (Γ : List Formula) (φ : Formula) : Prop :
 notation:50 M ", " τ ", " t ", " σ " ⊨ " φ => truthAt M τ t _ σ TemporalIndex.empty φ
 notation:50 M ", " τ ", " t ", " σ " ⊭ " φ => falsehoodAt M τ t _ σ TemporalIndex.empty φ
 
-end Logos.SubTheories.Explanatory
+end Logos.SubTheories.Dynamics

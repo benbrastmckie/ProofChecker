@@ -1,6 +1,6 @@
 INFO:  latexindent.pl version 3.24.5, 2025-03-13, a script to indent .tex files
        latexindent.pl lives here: /nix/store/2laj3mfxsjqlbz6h9zvgd3i310yg626g-latexindent-3.24.5-tex/scripts/latexindent/
-       Fri Jan 16 11:42:13 2026
+       Fri Jan 16 16:27:17 2026
        Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
@@ -23,10 +23,7 @@ INFO:  YAML reading settings
        latexindent.pl didn't find indentconfig.yaml or .indentconfig.yaml
        see all possible locations: https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#indentconfig-options)
 INFO:  Backup procedure (-w flag active):
-       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
-       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
-       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
-       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.bak3...
+       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.bak0...
        /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation

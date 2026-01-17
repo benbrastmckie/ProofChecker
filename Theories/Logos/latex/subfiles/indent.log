@@ -1,6 +1,6 @@
 INFO:  latexindent.pl version 3.24.5, 2025-03-13, a script to indent .tex files
        latexindent.pl lives here: /nix/store/2laj3mfxsjqlbz6h9zvgd3i310yg626g-latexindent-3.24.5-tex/scripts/latexindent/
-       Fri Jan 16 15:45:56 2026
+       Fri Jan 16 16:29:37 2026
        Filename: /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.tex
 INFO:  Processing switches:
        -s|--silent: Silent mode active (you have used either -s or --silent)
@@ -23,7 +23,10 @@ INFO:  YAML reading settings
        latexindent.pl didn't find indentconfig.yaml or .indentconfig.yaml
        see all possible locations: https://latexindentpl.readthedocs.io/en/latest/sec-appendices.html#indentconfig-options)
 INFO:  Backup procedure (-w flag active):
-       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.bak0...
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.bak0 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.bak1 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.bak2 already exists, incrementing by 1 (see maxNumberOfBackUps)
+       Backing up /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.tex to /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.bak3...
        /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/subfiles/00-Introduction.tex will be overwritten after indentation
 INFO:  Phase 1: searching for objects
 INFO:  Phase 2: finding surrounding indentation

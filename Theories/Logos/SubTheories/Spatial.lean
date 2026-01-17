@@ -23,7 +23,7 @@ The spatial frame extends the core frame with:
 | `Near(A)` | A holds at an adjacent location |
 
 **Status**: Planned for future development
-**Prerequisites**: Explanatory Extension (Core) completion
+**Prerequisites**: Dynamics Foundation (Core) completion
 
 See: docs/Research/layer-extensions.md Section 5
 -/

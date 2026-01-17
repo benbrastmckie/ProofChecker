@@ -2,10 +2,10 @@
 \begin{document}
 
 % ============================================================================
-% Section: Explanatory Extension Semantics
+% Section: Dynamics Foundation Semantics
 % ============================================================================
 
-\section{Explanatory Extension: Semantic Framework}\label{sec:core-semantics}
+\section{Dynamics Foundation: Semantic Framework}\label{sec:core-semantics}
 
 % ------------------------------------------------------------
 % Core Frame
@@ -79,7 +79,7 @@
 	The Maximality constraint ensures that for any state and possible state, there exists a maximal part compatible with that possible state.
 \end{remark}
 
-See \leansrc{Logos.Explanatory.Frame}{CoreFrame} for the Lean implementation.
+See \leansrc{Logos.Dynamics.Frame}{CoreFrame} for the Lean implementation.
 
 % ------------------------------------------------------------
 % World-History
@@ -119,7 +119,7 @@ See \leansrc{Logos.Explanatory.Frame}{CoreFrame} for the Lean implementation.
 	\end{itemize}
 \end{definition}
 
-See \leansrc{Logos.Explanatory.Model}{CoreModel} for the Lean implementation.
+See \leansrc{Logos.Dynamics.Model}{CoreModel} for the Lean implementation.
 
 % ------------------------------------------------------------
 % Truth Conditions
@@ -261,7 +261,7 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	\end{itemize}
 \end{example}
 
-See \leansrc{Logos.Explanatory.Semantics}{Satisfies} for the Lean implementation.
+See \leansrc{Logos.Dynamics.Semantics}{Satisfies} for the Lean implementation.
 
 % ------------------------------------------------------------
 % Bimodal Interaction Principles
@@ -313,15 +313,15 @@ The framework does not assume discrete time:
 
 \subsection{Logical Consequence}\label{sec:logical-consequence-core}
 
-\begin{definition}[Logical Consequence (Explanatory Extension)]\label{def:consequence-core}
+\begin{definition}[Logical Consequence (Dynamics Foundation)]\label{def:consequence-core}
 	\[
 		\context \trueat \metaA \iff \text{for any } \model, \history \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \history, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \history, x, \assignment, \tempindex \trueat \metaA
 	\]
 \end{definition}
 
 \begin{remark}
-	Unlike the Constitutive Foundation, the Explanatory Extension evaluates truth relative to world-histories and times, not just verification by states.
-	The hyperintensional distinctions are preserved---propositions still differ if their exact verifiers differ---but the Explanatory Extension adds the intensional layer needed to evaluate sentences with modal and temporal operators.
+	Unlike the Constitutive Foundation, the Dynamics Foundation evaluates truth relative to world-histories and times, not just verification by states.
+	The hyperintensional distinctions are preserved---propositions still differ if their exact verifiers differ---but the Dynamics Foundation adds the intensional layer needed to evaluate sentences with modal and temporal operators.
 \end{remark}
 
 \end{document}

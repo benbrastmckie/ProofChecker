@@ -3,13 +3,13 @@ import Logos.SubTheories.Foundation.Syntax
 /-!
 # Core Formula Syntax
 
-This module defines the formula syntax for the Explanatory Extension layer.
+This module defines the formula syntax for the Dynamics Foundation layer.
 These formulas are evaluated relative to world-histories and times.
 
 ## Paper Specification Reference
 
-**Explanatory Extension Syntax (recursive-semantics.md)**:
-The Explanatory Extension interprets these additional syntactic primitives:
+**Dynamics Foundation Syntax (recursive-semantics.md)**:
+The Dynamics Foundation interprets these additional syntactic primitives:
 - Modal operators: □ (necessity), ◇ (possibility)
 - Temporal operators: H (always past), G (always future), P (some past), F (some future)
 - Extended temporal operators: ◁ (since), ▷ (until)
@@ -20,7 +20,7 @@ The Explanatory Extension interprets these additional syntactic primitives:
 
 ## Main Definitions
 
-- `Formula`: Full formula type with all Explanatory Extension operators
+- `Formula`: Full formula type with all Dynamics Foundation operators
 - Derived operators: ◇, P, F, ◇→, ○→, always (△), sometimes (▽)
 
 ## Implementation Notes
@@ -29,7 +29,7 @@ Formulas embed ConstitutiveFormula from the Foundation layer and add
 the modal, temporal, counterfactual, and indexed reference operators.
 -/
 
-namespace Logos.SubTheories.Explanatory
+namespace Logos.SubTheories.Dynamics
 
 open Logos.SubTheories.Foundation
 
@@ -232,4 +232,4 @@ end Notation
 
 end Formula
 
-end Logos.SubTheories.Explanatory
+end Logos.SubTheories.Dynamics

@@ -11,7 +11,7 @@ relation, enabling evaluation of truth relative to world-histories and times.
 ## Paper Specification Reference
 
 **Core Frame Extension (recursive-semantics.md)**:
-The Explanatory Extension extends the Constitutive Foundation with:
+The Dynamics Foundation extends the Constitutive Foundation with:
 - Temporal Order: D = ⟨D, +, ≤⟩ is a totally ordered abelian group
 - Task Relation: ⇒ is a ternary relation on S × D × S satisfying constraints
 
@@ -27,7 +27,7 @@ The task relation s ⇒_d t represents "there is a task from s to t of duration 
 All constraints are formulated using state modality concepts.
 -/
 
-namespace Logos.SubTheories.Explanatory
+namespace Logos.SubTheories.Dynamics
 
 open Logos.SubTheories.Foundation
 
@@ -224,4 +224,4 @@ structure CoreModel (D : Type*) [AddCommGroup D] [LinearOrder D] [IsOrderedAddMo
   /-- The interpretation function (inherited from constitutive model) -/
   interp : Interpretation frame.toConstitutiveFrame
 
-end Logos.SubTheories.Explanatory
+end Logos.SubTheories.Dynamics

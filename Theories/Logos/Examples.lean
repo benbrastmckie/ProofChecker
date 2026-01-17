@@ -15,7 +15,7 @@ Imports examples from all Logos layers.
 
 ## Future Layer Examples
 
-- `Logos.Explanatory.Examples` (Layer 1) - Causal reasoning examples
+- `Logos.Dynamics.Examples` (Layer 1) - Causal reasoning examples
 - `Logos.Epistemic.Examples` (Layer 2) - Knowledge reasoning examples
 - `Logos.Normative.Examples` (Layer 3) - Normative reasoning examples
 
