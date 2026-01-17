@@ -2,13 +2,13 @@
 \begin{document}
 
 % ============================================================================
-% Section: Explanatory Extension Syntax
+% Section: Dynamical Foundation Syntax
 % ============================================================================
 
-\section{Explanatory Extension: Syntactic Primitives}\label{sec:core-syntax}
+\section{Dynamical Foundation}\label{sec:dynamical-foundation}
 
-The Explanatory Extension extends the Constitutive Foundation with temporal structure and a task relation, enabling evaluation of truth relative to world-histories and times.
-While the hyperintensional foundation remains (distinguishing propositions by their exact verifiers and falsifiers), this extension adds intensional evaluation relative to contextual parameters (world-history, time, variable assignment) to determine truth-values for all Explanatory Extension sentences.
+The \textit{Dynamical Foundation} extends the \textit{Constitutive Foundation} with temporal structure and a task relation, enabling evaluation of truth relative to world-histories and times.
+While the hyperintensional foundation remains (distinguishing propositions by their exact verifiers and falsifiers), this extension adds intensional evaluation relative to contextual parameters (world-history, time, variable assignment) to determine truth-values for all \textit{Dynamical Foundation} sentences.
 
 % ------------------------------------------------------------
 % Additional Syntactic Primitives
@@ -16,7 +16,7 @@ While the hyperintensional foundation remains (distinguishing propositions by th
 
 \subsection{Additional Syntactic Primitives}\label{sec:additional-syntax}
 
-The Explanatory Extension interprets the following additional syntactic primitives beyond those of the Constitutive Foundation:
+The \textit{Dynamical Foundation} interprets the following additional syntactic primitives beyond those of the \textit{Constitutive Foundation}:
 
 \begin{itemize}
 	\item \textbf{Modal operators}: $\nec$ (necessity), $\poss$ (possibility)
@@ -34,13 +34,13 @@ The Explanatory Extension interprets the following additional syntactic primitiv
 
 A well-formed sentence at this extension includes:
 \begin{enumerate}
-	\item All Constitutive Foundation sentences (atomic formulas, $\neg$, $\land$, $\lor$, $\top$, $\bot$, $\equiv$)
+	\item All \textit{Constitutive Foundation} sentences (atomic sentences, $\neg$, $\land$, $\lor$, $\top$, $\bot$, $\equiv$)
 	\item Modal sentences: $\nec\metaA$, $\poss\metaA$
 	\item Temporal sentences: $\always\metaA$, $\willalways\metaA$, $\waspast\metaA$, $\willfuture\metaA$
 	\item Extended temporal sentences: $\metaA \since \metaB$, $\metaA \until \metaB$
-	\item Counterfactual sentences: $\metaphi \boxright \metaC$
+	\item Counterfactual sentences: $\metaA \boxright \metaB$, $\metaA \diamondright \metaB$
 	\item Indexed sentences: $\store{i}\metaA$, $\recall{i}\metaA$
-	\item Universal quantification: $\forall x.\metaA$
+	\item Universal quantification: $\forall\metaA$, $\exists\metaA$
 	\item Actuality predicate: $\actual(t)$
 \end{enumerate}
 
@@ -74,7 +74,7 @@ A well-formed sentence at this extension includes:
 		                  & $\recall{i}\metaA$          & ``Recall stored time and evaluate $\metaA$''   \\
 		\bottomrule
 	\end{tabular}
-	\caption{Explanatory Extension operators}
+	\caption{Dynamical Foundation Operators}
 	\label{tab:core-operators}
 \end{table}
 
