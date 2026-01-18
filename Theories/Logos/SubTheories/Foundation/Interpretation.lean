@@ -75,15 +75,28 @@ For n-ary predicates, verifier and falsifier "functions" are actually
 sets of functions Sⁿ → S. For sentence letters (0-ary), these reduce to
 sets of states.
 
-The verifier and falsifier function sets must be closed under function fusion:
-if f, g ∈ verifierFns then ⨆{f}{g} ∈ verifierFns, and similarly for falsifierFns.
-This ensures that the semantics respects the mereological structure of states.
+The verifier and falsifier function sets must satisfy two mereological constraints:
+
+1. **Fusion of inputs ⊑ output**: For any function f in the set and arguments args,
+   the fusion of all argument states must be a part of the output state:
+   Fusion(args) ⊑ f(args)
+
+2. **Closure under function fusion**: If f, g are in the set, then their pointwise
+   fusion ⨆{f}{g} is also in the set.
+
+These constraints ensure that the semantics respects the mereological structure of states.
 -/
 structure PredicateInterp (F : ConstitutiveFrame) (n : Nat) where
   /-- Verifier functions: each f ∈ verifierFns satisfies f(a₁,...,aₙ) verifies F(a₁,...,aₙ) -/
   verifierFns : Set ((Fin n → F.State) → F.State)
   /-- Falsifier functions: each f ∈ falsifierFns satisfies f(a₁,...,aₙ) falsifies F(a₁,...,aₙ) -/
   falsifierFns : Set ((Fin n → F.State) → F.State)
+  /-- Verifier functions respect mereological constraint: Fusion(args) ⊑ f(args) -/
+  verifierFns_input_fusion : ∀ (f : (Fin n → F.State) → F.State), f ∈ verifierFns →
+    ∀ (args : Fin n → F.State), F.parthood (F.argsFusion n args) (f args)
+  /-- Falsifier functions respect mereological constraint: Fusion(args) ⊑ f(args) -/
+  falsifierFns_input_fusion : ∀ (f : (Fin n → F.State) → F.State), f ∈ falsifierFns →
+    ∀ (args : Fin n → F.State), F.parthood (F.argsFusion n args) (f args)
   /-- Verifier functions closed under function fusion -/
   verifierFns_fusion_closed : ∀ (f g : (Fin n → F.State) → F.State), f ∈ verifierFns → g ∈ verifierFns → F.functionFusion f g ∈ verifierFns
   /-- Falsifier functions closed under function fusion -/
@@ -98,13 +111,26 @@ For sentence letters, we require that the verifier and falsifier state sets
 are closed under fusion, which ensures closure under function fusion for
 the corresponding constant functions.
 -/
-def sentenceLetter (F : ConstitutiveFrame) 
+def sentenceLetter (F : ConstitutiveFrame)
     (verifiers falsifiers : Set F.State)
     (verifiers_fusion_closed : ∀ (v w : F.State), v ∈ verifiers → w ∈ verifiers → F.fusion v w ∈ verifiers)
     (falsifiers_fusion_closed : ∀ (v w : F.State), v ∈ falsifiers → w ∈ falsifiers → F.fusion v w ∈ falsifiers) :
     PredicateInterp F 0 where
   verifierFns := { f | f (Fin.elim0) ∈ verifiers }
   falsifierFns := { f | f (Fin.elim0) ∈ falsifiers }
+  verifierFns_input_fusion := by
+    intro f hf args
+    -- For n=0, Fin 0 is empty, so ⨆ i : Fin 0, args i = ⊥
+    -- We need to prove: ⊥ ⊑ f args, which is always true
+    show F.parthood (F.argsFusion 0 args) (f args)
+    unfold ConstitutiveFrame.argsFusion ConstitutiveFrame.parthood
+    exact bot_le (a := f args)
+  falsifierFns_input_fusion := by
+    intro f hf args
+    -- Same reasoning as for verifiers
+    show F.parthood (F.argsFusion 0 args) (f args)
+    unfold ConstitutiveFrame.argsFusion ConstitutiveFrame.parthood
+    exact bot_le (a := f args)
   verifierFns_fusion_closed := by
     intro f g hf hg
     -- If f and g are constant functions in verifierFns, their fusion is also constant

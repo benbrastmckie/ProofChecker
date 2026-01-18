@@ -1,5 +1,6 @@
 import Mathlib.Order.CompleteLattice.Basic
 import Mathlib.Order.Lattice
+import Mathlib.Data.Finset.Lattice.Fold
 
 /-!
 # Constitutive Frame - Mereological State Space
@@ -82,6 +83,19 @@ Fusion combines two states into their minimal common extension.
 This operation is used in conjunction/disjunction verification clauses.
 -/
 def fusion (s t : F.State) : F.State := s ⊔ t
+
+/--
+Fusion of arguments: Compute the fusion (supremum) of all states in a tuple.
+
+Given args : Fin n → S, this computes ⋃{s | ∃ i, s = args i}, the fusion
+of all argument states. For n=0 this is the null state, for n>0 it's the
+supremum of all argument values.
+
+This is used in mereological constraints: verifier/falsifier functions must
+satisfy Fusion(args) ⊑ f(args).
+-/
+def argsFusion (n : Nat) (args : Fin n → F.State) : F.State :=
+  ⨆ i : Fin n, args i
 
 /--
 Function fusion (⨆{f}{g}): Pointwise fusion of functions.
