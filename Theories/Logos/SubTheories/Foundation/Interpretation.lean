@@ -124,13 +124,13 @@ def sentenceLetter (F : ConstitutiveFrame)
     -- We need to prove: ⊥ ⊑ f args, which is always true
     show F.parthood (F.argsFusion 0 args) (f args)
     unfold ConstitutiveFrame.argsFusion ConstitutiveFrame.parthood
-    exact bot_le (a := f args)
+    simp
   falsifierFns_input_fusion := by
     intro f hf args
     -- Same reasoning as for verifiers
     show F.parthood (F.argsFusion 0 args) (f args)
     unfold ConstitutiveFrame.argsFusion ConstitutiveFrame.parthood
-    exact bot_le (a := f args)
+    simp
   verifierFns_fusion_closed := by
     intro f g hf hg
     -- If f and g are constant functions in verifierFns, their fusion is also constant
