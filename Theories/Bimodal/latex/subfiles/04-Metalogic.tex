@@ -237,8 +237,10 @@ By contraposition, validity implies provability.
 
 \subsubsection{Strong Completeness}
 
+% TODO: This still leaves infinite contexts/sets remaining to be addressed, where this should be addressed by compactness
+
 \begin{theorem}[Strong Completeness]
-If $\context \satisfies \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
+If $\context \valid \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
 \end{theorem}
 
 The proof extends weak completeness using an implication chain technique:
