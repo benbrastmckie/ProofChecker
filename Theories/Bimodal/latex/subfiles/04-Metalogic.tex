@@ -339,6 +339,8 @@ A branch is \textbf{saturated} when no expansion rules apply.
 
 \subsubsection{Complexity}
 
+% FIX: some explanation would help readers here make sense of what these values mean
+
 \begin{center}
 \begin{tabular}{@{}ll@{}}
 \toprule
@@ -351,6 +353,8 @@ Class & PSPACE-complete \\
 \end{tabular}
 \end{center}
 
+% TODO: it would also help to explain where the calculations come from (how these numbers are calculated) and check that they are in fact correct as stated
+
 \subsubsection{Decision Result Types}
 
 The decision procedure returns one of three outcomes:
@@ -360,7 +364,11 @@ The decision procedure returns one of three outcomes:
   \item \texttt{timeout}: Resources exhausted before decision
 \end{itemize}
 
+% FIX: further explanation of why this is useful despite the computational limitations
+
 \subsection{File Organization and Dependencies}
+
+% NOTE: use the standardized formatting for lean directories throughout, replacing 'Metalogic\_v2' here with '\texttt{Metalogic\_v2}', and similarly throughout
 
 The Metalogic\_v2 directory contains 27 Lean files organized into six subdirectories.
 The following diagram illustrates the import structure, showing how files depend on each other.
