@@ -120,8 +120,6 @@ We first define these constituent concepts before assembling them into canonical
 A \textbf{history} is a function $\tau : \mathbb{Z} \to \text{MCS}$ mapping each time to a maximal consistent set, satisfying temporal coherence: for each time $t$, the formulas in $\tau(t)$ are consistent with the temporal operators applied to formulas in $\tau(t')$ for related times $t'$.
 \end{definition}
 
-% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
-
 \begin{definition}[Time]
 \textbf{Times} are integers ($\mathbb{Z}$), providing a discrete linear order with both past and future directions.
 \end{definition}
@@ -129,6 +127,8 @@ A \textbf{history} is a function $\tau : \mathbb{Z} \to \text{MCS}$ mapping each
 \begin{definition}[Task Relation]
 The \textbf{task relation} (\texttt{SemanticTaskRelV2}) relates world states based on the existence of histories connecting them: world state $w$ is task-related to $w'$ if there exists a history $\tau$ such that $w$ and $w'$ both occur along $\tau$.
 \end{definition}
+
+% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
 
 % FIX: this should be moved into the definition below, calling this the 'canonical world state', not 'semantic world state'
 
@@ -139,8 +139,10 @@ The semantic approach defines world states as equivalence classes of (history, t
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
 
-\begin{definition}[Canonical Frame]
-The \texttt{SemanticCanonicalFrame} has:
+% TODO: it would be nice if SemanticCanonicalFrame in the lean source code was renamed CanonicalTaskFrame since this is more accurate
+
+\begin{definition}[\texttt{SemanticCanonicalFrame}]
+The \textbf{canonical semantic frame} has:
 \begin{itemize}
   \item World states: Equivalence classes of history-time pairs over maximal consistent sets
   \item Times: Integers ($\mathbb{Z}$)
