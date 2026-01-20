@@ -3,6 +3,9 @@
 
 \section{Metalogic}
 
+The metalogic of the bimodal logic \textbf{TM} establishes the key properties connecting syntax and semantics.
+This chapter presents these results with the Representation Theorem as the central result, from which completeness follows as a corollary.
+
 \subsection{Soundness}
 
 The soundness theorem establishes that derivability implies semantic validity.
@@ -48,7 +51,12 @@ Axiom Validity & Lean Theorem & Technique \\
 
 The MF and TF axioms use time-shift invariance (via \texttt{WorldHistory.time\_shift}) to relate truth at different times.
 
-\subsection{Deduction Theorem}
+\subsection{Core Infrastructure}
+
+The completeness proof requires three foundational components: the deduction theorem, maximal consistent sets, and Lindenbaum's lemma.
+These provide the infrastructure for constructing canonical models.
+
+\subsubsection{Deduction Theorem}
 
 \begin{theorem}[Deduction Theorem]
 If $A :: \context \proves B$ then $\context \proves A \imp B$.
@@ -63,7 +71,7 @@ The proof uses well-founded induction on derivation height, handling each rule:
   \item \textbf{Modal/temporal rules}: Do not apply (require empty context)
 \end{itemize}
 
-\subsection{Consistency}
+\subsubsection{Consistency}
 
 \begin{definition}[Consistent]
 A context $\context$ is \textbf{consistent} if $\context \not\proves \falsum$.
@@ -74,14 +82,29 @@ A context $\context$ is \textbf{maximal consistent} if it is consistent and
 for all $\varphi \notin \context$, the context $\varphi :: \context$ is inconsistent.
 \end{definition}
 
-\subsection{Completeness}
+Maximal consistent sets (MCS) have the key property that they are ``negation-complete'':
+for every formula $\varphi$, exactly one of $\varphi$ or $\lneg\varphi$ is in the set.
+This property is essential for defining canonical world states.
 
-The completeness proof uses the semantic canonical model construction.
-World states are defined as equivalence classes of (history, time) pairs, making the truth lemma straightforward by construction.
+\subsubsection{Lindenbaum's Lemma}
 
 \begin{lemma}[Lindenbaum]
 Every consistent context can be extended to a maximal consistent context.\footnote{This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.}
 \end{lemma}
+
+The proof applies Zorn's lemma to the partially ordered set of consistent supersets of the given context.
+The key step is showing that the union of any chain of consistent sets is itself consistent.
+This follows because any derivation uses only finitely many premises, so a derivation of $\falsum$ from the union would have to come from some finite subset, which is contained in some member of the chain---contradicting that member's consistency.
+
+\subsection{Representation Theory}
+
+The Representation Theorem is the central result of the metalogic, establishing the fundamental bridge between syntactic consistency and semantic satisfiability.
+The subsequent completeness theorems follow directly from this result.
+
+\subsubsection{Canonical World States}
+
+A \textbf{canonical world state} is derived from a maximal consistent set.
+The semantic approach defines world states as equivalence classes of (history, time) pairs.
 
 \begin{definition}[Semantic World State]
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
@@ -105,39 +128,98 @@ An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$
 In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
 \end{lemma}
 
+The truth lemma follows directly from the quotient construction.
+Membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
+
+\subsubsection{Representation Theorem}
+
+\begin{theorem}[Representation Theorem]
+Every consistent context is satisfiable in the canonical model.\footnote{This is proven as \texttt{representation\_theorem}.}
+\end{theorem}
+
+This theorem is the pivotal result linking syntax to semantics.
+The proof strategy is:
+\begin{enumerate}
+  \item Given a consistent context $\context$, convert it to a set $S = \texttt{contextToSet}(\context)$.
+  \item Apply Lindenbaum's lemma to extend $S$ to a maximal consistent set $M$.
+  \item View $M$ as a canonical world state.
+  \item By the truth lemma, all formulas in $\context$ are satisfied at this world.
+\end{enumerate}
+
+The elegance of this approach is that the MCS construction makes the truth lemma essentially trivial---truth \emph{is} membership in the MCS.
+
+\begin{theorem}[Strong Representation Theorem]
+If $\context \not\proves \varphi$, then $\context \cup \{\lneg\varphi\}$ is satisfiable in the canonical model.\footnote{This is proven as \texttt{strong\_representation\_theorem}.}
+\end{theorem}
+
+\subsection{Completeness as Corollary}
+
+The completeness theorems follow directly from the Representation Theorem via contrapositive arguments.
+This demonstrates the power of the representation-first approach.
+
+\subsubsection{Weak Completeness}
+
 \begin{theorem}[Weak Completeness]
 If $\valid{\varphi}$ then $\proves \varphi$.\footnote{This is proven as \texttt{semantic\_weak\_completeness}.}
 \end{theorem}
+
+The proof proceeds by contraposition:
+\begin{enumerate}
+  \item Assume $\not\proves \varphi$ (i.e., the empty context does not derive $\varphi$).
+  \item Then $\{\lneg\varphi\}$ is consistent (otherwise we could derive $\varphi$).
+  \item By the Representation Theorem, $\{\lneg\varphi\}$ is satisfiable in the canonical model.
+  \item So there exists a world where $\lneg\varphi$ is true, meaning $\varphi$ is false.
+  \item Hence $\varphi$ is not valid.
+\end{enumerate}
+By contraposition, validity implies provability.
+
+\subsubsection{Strong Completeness}
 
 \begin{theorem}[Strong Completeness]
 If $\context \satisfies \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
 \end{theorem}
 
+The proof extends weak completeness using an implication chain technique:
+\begin{enumerate}
+  \item Assume semantic consequence: $\context \satisfies \varphi$.
+  \item For context $\context = [\psi_1, \ldots, \psi_n]$, build the implication chain $\psi_1 \imp (\psi_2 \imp \cdots (\psi_n \imp \varphi))$.
+  \item Show this chain is valid (from the semantic consequence assumption).
+  \item By weak completeness, the chain is provable.
+  \item Unfold the chain with repeated modus ponens applications to obtain $\context \proves \varphi$.
+\end{enumerate}
+
 \begin{theorem}[Provable iff Valid]
 $\proves \varphi$ iff $\valid{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
+
+\subsubsection{Two Canonical Model Approaches}
+
+The codebase contains two canonical model constructions.
+Understanding their differences explains why the semantic approach is primary.
+
+\paragraph{Syntactic Approach.}
+World states are directly identified with maximal consistent sets.
+Accessibility is defined via modal witnesses: $\nec\varphi \in w$ implies $\varphi \in w'$ for all accessible $w'$.
+This approach requires explicit negation-completeness proofs for locally consistent sets.
+The syntactic approach is archived in \texttt{Boneyard/} for historical reference.
+
+\paragraph{Semantic Approach.}
+World states are equivalence classes of (history, time) pairs, where two pairs are equivalent iff they denote the same underlying world state.
+This approach offers key advantages:
+\begin{itemize}
+  \item \textbf{Truth lemma}: Follows trivially from the quotient construction.
+  \item \textbf{Compositionality}: The task relation is defined via history concatenation, making compositionality proofs straightforward.
+  \item \textbf{Negation-completeness}: The semantic approach does not require proving negation-completeness of arbitrary locally consistent sets, a property that caused difficulties in the syntactic approach.
+\end{itemize}
+
+\subsection{Finite Model Property}
 
 \begin{definition}[Finite Model Property]
 If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.\footnote{This is stated as \texttt{finite\_model\_property}.}
 \end{definition}
 
-\subsection{Proof Strategy}
-
-The semantic approach defines world states as equivalence classes of (history, time) pairs.
-Two pairs $(\tau_1, x_1)$ and $(\tau_2, x_2)$ are equivalent iff $\tau_1(x_1) = \tau_2(x_2)$ as underlying world states.
-
-This construction offers key advantages:
-\begin{itemize}
-  \item \textbf{Truth lemma}: Follows directly from the quotient construction.
-  Membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
-  \item \textbf{Compositionality}: The task relation is defined via history existence.
-  Two world states are related by a duration $d$ iff there exists a history passing through both states at times differing by $d$.
-  History concatenation provides the compositionality proof.
-  \item \textbf{Negation-completeness}: The semantic approach does not require proving negation-completeness of arbitrary locally consistent sets, a property that caused difficulties in the syntactic approach.
-\end{itemize}
-
-The syntactic approach (building world states from negation-complete maximal consistent sets) is superseded.
-The deprecated code is archived in \texttt{Boneyard/} for historical reference.
+The finite model property connects the representation infrastructure to decidability.
+The bound on model size is $2^{|\mathsf{closure}(\varphi)|}$, where the subformula closure contains all relevant formulas for determining the truth of $\varphi$.
 
 \subsection{Decidability}
 
@@ -148,7 +230,7 @@ Validity in TM bimodal logic is decidable: for any formula $\varphi$, either $\v
 \end{theorem}
 
 \begin{theorem}[Decision Soundness]
-If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.
+If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.\footnote{This is proven as \texttt{decide\_sound}.}
 \end{theorem}
 
 The decision procedure operates as follows:
@@ -201,7 +283,9 @@ The decision procedure returns one of three outcomes:
   \item \texttt{timeout}: Resources exhausted before decision
 \end{itemize}
 
-\subsubsection{Implementation Status}
+\subsection{Implementation Status}
+
+\subsubsection{Decidability Implementation}
 
 \begin{center}
 \begin{tabular}{@{}lll@{}}
@@ -221,10 +305,7 @@ Completeness & Partial & Requires Finite Model Property \\
 \end{tabular}
 \end{center}
 
-The soundness proof establishes that a ``valid'' result implies semantic validity.
-The completeness proof requires the Finite Model Property (FMP), which is stated but not yet fully formalized.
-
-\subsection{Implementation Status}
+\subsubsection{Metalogic Implementation}
 
 \begin{center}
 \begin{tabular}{@{}lll@{}}
@@ -236,11 +317,12 @@ Deduction Theorem & Proven & \texttt{deduction\_theorem} \\
 Lindenbaum Lemma & Proven & \texttt{set\_lindenbaum} \\
 Canonical Frame & Proven & \texttt{SemanticCanonicalFrame} \\
 Truth Lemma & Proven & \texttt{semantic\_truth\_lemma\_v2} \\
+Representation Theorem & Proven & \texttt{representation\_theorem} \\
 Weak Completeness & Proven & \texttt{semantic\_weak\_completeness} \\
 Strong Completeness & Proven* & \texttt{main\_strong\_completeness} \\
 Provable iff Valid & Proven & \texttt{main\_provable\_iff\_valid} \\
 Finite Model Property & Statement & \texttt{finite\_model\_property} \\
-Decidability & Soundness & \texttt{decide\_sound} \\
+Decidability Soundness & Proven & \texttt{decide\_sound} \\
 \bottomrule
 \end{tabular}
 \end{center}
