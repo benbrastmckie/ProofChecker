@@ -222,7 +222,7 @@ The completeness theorems follow directly from the Representation Theorem via co
 \subsubsection{Weak Completeness}
 
 \begin{theorem}[Weak Completeness]
-If $\satisfies{\varphi}$ then $\proves \varphi$.\footnote{This is proven as \texttt{semantic\_weak\_completeness}.}
+If $~\satisfies{\varphi}$, then $\proves \varphi$.\footnote{This is proven as \texttt{semantic\_weak\_completeness}.}
 \end{theorem}
 
 The proof proceeds by contraposition:
@@ -252,9 +252,13 @@ The proof extends weak completeness using an implication chain technique:
   \item Unfold the chain with repeated modus ponens applications to obtain $\context \proves \varphi$.
 \end{enumerate}
 
+% TODO: it would be better to state this in the strong formulation with contexts behind each turnstile. Both in the latex and lean code, the strong formulations should be the real focus, introducing the weak formulations only where it is useful.
+
 \begin{theorem}[Provable iff Valid]
 $\proves \varphi \iff \satisfies{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
+
+% FIX: some explanation is in order here to explain that this shows that the proof system and semantics align perfectly, capturing all logical consequences in the proof system without deriving anything that fails to be a logical consequence.
 
 \subsubsection{Two Canonical Model Approaches}
 
@@ -297,6 +301,8 @@ The decidability of TM bimodal logic is established via a tableau-based decision
 Validity in TM bimodal logic is decidable: for any formula $\varphi$, either $\valid{\varphi}$ or $\neg\valid{\varphi}$.
 \end{theorem}
 
+% FIX: It is not clear what it is for the decision procedure returns ``valid'' with proof $\pi$. This needs to be defined accurately rather than characterized vaguely. 
+
 \begin{theorem}[Decision Soundness]
 If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.\footnote{This is proven as \texttt{decide\_sound}.}
 \end{theorem}
@@ -325,6 +331,7 @@ The tableau uses \textbf{signed formulas} with annotations:
   \item \textbf{Temporal}: $T(\always\varphi)$ propagates to future times, $F(\sometimes\varphi)$ creates witness
 \end{itemize}
 
+\noindent
 A branch \textbf{closes} when it contains both $T(\varphi)$ and $F(\varphi)$ for some formula.
 A branch is \textbf{saturated} when no expansion rules apply.
 
