@@ -113,7 +113,7 @@ The subsequent completeness theorems follow directly from this result.
 
 \subsubsection{Canonical World States}
 
-% TODO: This is confusing since it should introduce how histories and times are constructed FIRST, and then use these to define canonical world states. In general, no definition should be stated in terms of definitions not yet given.
+% FIX: This is confusing since it should introduce how histories and times are defined FIRST, and then use these to define canonical world states. In general, no definition should be stated in terms of definitions not yet given.
 
 A \textbf{canonical world state} is derived from a maximal consistent set.
 The semantic approach defines world states as equivalence classes of (history, time) pairs.
@@ -256,12 +256,12 @@ The proof extends weak completeness using an implication chain technique:
 $\proves \varphi \iff \satisfies{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
 
-% CONTINUE
-
 \subsubsection{Two Canonical Model Approaches}
 
 The codebase contains two canonical model constructions.
 Understanding their differences explains why the semantic approach is primary.
+
+% TODO: the following syntactic approach would be much better if is possible to port over from the Boneyard. This is deserving of careful study to implement completely. By contrast, the semantic approach abandons the intended spirit of the representation theorem
 
 \paragraph{Syntactic Approach.}
 World states are directly identified with maximal consistent sets.
