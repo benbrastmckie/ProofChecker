@@ -159,6 +159,8 @@ An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$
 In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
 \end{lemma}
 
+% TODO: This is not in the correct spirit of a representation theorem which aims to build a semantic object out of pure syntax. A purely syntactic, and fully general approach should be carefully researched and implemented, thinking hardest about this crux of the metalogic.
+
 The \emph{quotient construction} identifies (history, time) pairs that agree on which formulas hold, forming equivalence classes.
 Two pairs $(\tau_1, t_1)$ and $(\tau_2, t_2)$ are equivalent when $\tau_1(t_1) = \tau_2(t_2)$ as maximal consistent sets.
 The \emph{Truth Lemma} follows directly from this construction: membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
@@ -278,7 +280,7 @@ Together, they establish that \textbf{TM} provides an exact syntactic characteri
 The codebase contains two canonical model constructions.
 Understanding their differences explains why the semantic approach is primary.
 
-% TODO: the following syntactic approach would be much better if is possible to port over from the Boneyard. This is deserving of careful study to implement completely. By contrast, the semantic approach abandons the intended spirit of the representation theorem
+% TODO: the following syntactic approach is in the correct spirit and should be ported over from the Boneyard. This is deserving of careful study to implement completely. By contrast, the semantic approach abandons the intended spirit of the representation theorem.
 
 \paragraph{Syntactic Approach.}
 World states are directly identified with maximal consistent sets.
