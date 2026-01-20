@@ -97,11 +97,15 @@ This property is essential for defining canonical world states.
 Every consistent context can be extended to a maximal consistent context.\footnote{This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.}
 \end{lemma}
 
+% FIX: it feels discontinuous to have both a footnote with a reference and then an explanation on the same thing. Better to move the content of the footnote above into the following explanation. Also, the connection between sets and contexts is left unexplained which needs to be addressed to connect the dots for readers while keeping explanations brief and to the point.
+
 The proof applies Zorn's lemma to the partially ordered set of consistent supersets of the given context.
 The key step is showing that the union of any chain of consistent sets is itself consistent.
-This follows because any derivation uses only finitely many premises, so a derivation of $\falsum$ from the union would have to come from some finite subset, which is contained in some member of the chain--- contradicting that member's consistency.
+This follows because any derivation uses only finitely many premises, so a derivation of $\falsum$ from the union would have to come from some finite subset, which is contained in some member of the chain, contradicting that member's consistency.
 
 \subsection{Representation Theory}
+
+% FIX: I want 'Representation Theorem' and other names of theorems to be in italics
 
 The Representation Theorem is the central result of the metalogic, establishing the fundamental bridge between syntactic consistency and semantic satisfiability.
 The subsequent completeness theorems follow directly from this result.
