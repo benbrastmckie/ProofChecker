@@ -152,6 +152,43 @@ The elegance of this approach is that the MCS construction makes the truth lemma
 If $\context \not\proves \varphi$, then $\context \cup \{\lneg\varphi\}$ is satisfiable in the canonical model.\footnote{This is proven as \texttt{strong\_representation\_theorem}.}
 \end{theorem}
 
+\subsubsection{Theorem Dependency Structure}
+
+The following diagram illustrates how the core infrastructure feeds into the Representation Theorem, from which completeness follows as a corollary.
+
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={rectangle, draw, rounded corners, minimum width=3.5cm, minimum height=0.9cm, align=center, font=\small},
+  arrow/.style={->, >=stealth, thick}
+]
+  % Core Infrastructure layer (bottom)
+  \node[box, fill=blue!10] (deduct) at (0,0) {Deduction Theorem\\{\scriptsize\texttt{deduction\_theorem}}};
+  \node[box, fill=blue!10] (linden) at (4.5,0) {Lindenbaum's Lemma\\{\scriptsize\texttt{set\_lindenbaum}}};
+  \node[box, fill=blue!10] (mcs) at (9,0) {Maximal Consistent Sets\\{\scriptsize\texttt{MaximalConsistent}}};
+
+  % Representation layer (middle) - central
+  \node[box, fill=green!15, minimum width=6cm] (repr) at (4.5,2) {\textbf{Representation Theorem}\\{\scriptsize\texttt{representation\_theorem}}};
+
+  % Completeness layer (top)
+  \node[box, fill=orange!15] (weak) at (1.5,4) {Weak Completeness\\{\scriptsize\texttt{semantic\_weak\_completeness}}};
+  \node[box, fill=orange!15] (strong) at (7.5,4) {Strong Completeness\\{\scriptsize\texttt{main\_strong\_completeness}}};
+
+  % Arrows from Core to Representation
+  \draw[arrow] (deduct.north) -- ++(0,0.4) -| (repr.south west);
+  \draw[arrow] (linden.north) -- (repr.south);
+  \draw[arrow] (mcs.north) -- ++(0,0.4) -| (repr.south east);
+
+  % Arrows from Representation to Completeness
+  \draw[arrow] (repr.north) -- ++(0,0.4) -| (weak.south);
+  \draw[arrow] (repr.north) -- ++(0,0.4) -| (strong.south);
+
+  % Layer labels
+  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,0) {Core Infrastructure};
+  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,2) {Central Result};
+  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,4) {Corollaries};
+\end{tikzpicture}
+\end{center}
+
 \subsection{Completeness as Corollary}
 
 The completeness theorems follow directly from the Representation Theorem via contrapositive arguments.
