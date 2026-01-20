@@ -106,7 +106,7 @@ This follows because any derivation uses only finitely many premises, so a deriv
 
 \subsection{Representation Theory}
 
-The \emph{Representation Theorem} provides the fundamental bridge between syntactic consistency and semantic satisfiability.
+The \emph{Representation Theorem} is the core of the metalogic, providing the bridge between syntactic consistency and semantic satisfiability.
 The subsequent \emph{Completeness Theorems} follow directly from this result.
 
 \subsubsection{Canonical World States}
@@ -114,19 +114,23 @@ The subsequent \emph{Completeness Theorems} follow directly from this result.
 The semantic approach constructs world states from histories and times.
 We first define these constituent concepts before assembling them into canonical structures.
 
+% FIX: these definitions are not accurate or formally precise
+
 \begin{definition}[History]
 A \textbf{history} is a function $\tau : \mathbb{Z} \to \text{MCS}$ mapping each time to a maximal consistent set, satisfying temporal coherence: for each time $t$, the formulas in $\tau(t)$ are consistent with the temporal operators applied to formulas in $\tau(t')$ for related times $t'$.
 \end{definition}
+
+% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
 
 \begin{definition}[Time]
 \textbf{Times} are integers ($\mathbb{Z}$), providing a discrete linear order with both past and future directions.
 \end{definition}
 
-% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
-
 \begin{definition}[Task Relation]
 The \textbf{task relation} (\texttt{SemanticTaskRelV2}) relates world states based on the existence of histories connecting them: world state $w$ is task-related to $w'$ if there exists a history $\tau$ such that $w$ and $w'$ both occur along $\tau$.
 \end{definition}
+
+% FIX: this should be moved into the definition below, calling this the 'canonical world state', not 'semantic world state'
 
 A \textbf{canonical world state} is derived from a maximal consistent set.
 The semantic approach defines world states as equivalence classes of (history, time) pairs.
