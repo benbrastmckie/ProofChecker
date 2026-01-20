@@ -1,5 +1,5 @@
-import Bimodal.Metalogic.Soundness
-import Bimodal.Metalogic.Completeness
+import Bimodal.Metalogic_v2.Soundness.Soundness
+import Bimodal.Metalogic_v2.Completeness.StrongCompleteness
 -- import Bimodal.Metalogic.Decidability  -- Future work
 
 /-!
