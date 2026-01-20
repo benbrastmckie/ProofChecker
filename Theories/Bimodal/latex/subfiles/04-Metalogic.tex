@@ -121,7 +121,9 @@ The semantic approach defines world states as equivalence classes of (history, t
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
 
-% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. 
+% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
+
+% FIX: important to state all relevant definitions before they are used. In particular, the definition of the task relation is critical
 
 \begin{definition}[Canonical Frame]
 The \texttt{SemanticCanonicalFrame} has:
@@ -140,6 +142,8 @@ An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$
 \begin{lemma}[Truth Lemma]
 In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
 \end{lemma}
+
+% FIX: define the quotient construction to avoid empty references that leave the reader unable to follow.
 
 The truth lemma follows directly from the quotient construction.
 Membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
