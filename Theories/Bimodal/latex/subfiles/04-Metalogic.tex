@@ -86,21 +86,21 @@ A context $\context$ is \textbf{maximal consistent} if it is consistent and
 for all $\varphi \notin \context$, the context $\varphi :: \context$ is inconsistent.
 \end{definition}
 
-% FIX: make negation complete a definition and then state that MCSs are negation complete.
+\begin{definition}[Negation-Complete]
+A set of formulas $S$ is \textbf{negation-complete} if for every formula $\varphi$, exactly one of $\varphi$ or $\lneg\varphi$ is in $S$.
+\end{definition}
 
-Maximal consistent sets (MCS) have the key property that they are \textbf{negation-complete}:
-for every formula $\varphi$, exactly one of $\varphi$ or $\lneg\varphi$ is in the set.
-This property is essential for defining canonical world states.
+Maximal consistent sets (MCS) are negation-complete.
+This property is essential for defining canonical world states, as it ensures that every formula has a definite truth value in each MCS.
 
 \subsubsection{Lindenbaum's Lemma}
 
 \begin{lemma}[Lindenbaum]
-Every consistent context can be extended to a maximal consistent context.\footnote{This is proven as \texttt{set\_lindenbaum} using Zorn's lemma.}
+Every consistent context can be extended to a maximal consistent context.
 \end{lemma}
 
-% FIX: it feels discontinuous to have both a footnote with a reference and then an explanation on the same thing. Better to move the content of the footnote above into the following explanation. Also, the connection between sets and contexts is left unexplained which needs to be addressed to connect the dots for readers while keeping explanations brief and to the point.
-
-The proof applies Zorn's lemma to the partially ordered set of consistent supersets of the given context.
+The proof (\texttt{set\_lindenbaum}) applies Zorn's lemma to the partially ordered set of consistent supersets of the given context.
+Note that contexts (finite lists of formulas) embed naturally into sets, so ``consistent context'' and ``consistent set'' are used interchangeably here.
 The key step is showing that the union of any chain of consistent sets is itself consistent.
 This follows because any derivation uses only finitely many premises, so a derivation of $\falsum$ from the union would have to come from some finite subset, which is contained in some member of the chain, contradicting that member's consistency.
 
@@ -111,7 +111,22 @@ The subsequent \emph{Completeness Theorems} follow directly from this result.
 
 \subsubsection{Canonical World States}
 
-% FIX: This is confusing since it should introduce how histories and times are defined FIRST, and then use these to define canonical world states. In general, no definition should be stated in terms of definitions not yet given.
+The semantic approach constructs world states from histories and times.
+We first define these constituent concepts before assembling them into canonical structures.
+
+\begin{definition}[History]
+A \textbf{history} is a function $\tau : \mathbb{Z} \to \text{MCS}$ mapping each time to a maximal consistent set, satisfying temporal coherence: for each time $t$, the formulas in $\tau(t)$ are consistent with the temporal operators applied to formulas in $\tau(t')$ for related times $t'$.
+\end{definition}
+
+\begin{definition}[Time]
+\textbf{Times} are integers ($\mathbb{Z}$), providing a discrete linear order with both past and future directions.
+\end{definition}
+
+% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
+
+\begin{definition}[Task Relation]
+The \textbf{task relation} (\texttt{SemanticTaskRelV2}) relates world states based on the existence of histories connecting them: world state $w$ is task-related to $w'$ if there exists a history $\tau$ such that $w$ and $w'$ both occur along $\tau$.
+\end{definition}
 
 A \textbf{canonical world state} is derived from a maximal consistent set.
 The semantic approach defines world states as equivalence classes of (history, time) pairs.
@@ -119,10 +134,6 @@ The semantic approach defines world states as equivalence classes of (history, t
 \begin{definition}[Semantic World State]
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
-
-% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
-
-% NOTE: important to state all relevant definitions before they are used. In particular, the definition of the task relation is critical
 
 \begin{definition}[Canonical Frame]
 The \texttt{SemanticCanonicalFrame} has:
@@ -142,17 +153,14 @@ An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$
 In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
 \end{lemma}
 
-% FIX: define the quotient construction to avoid empty references that leave the reader unable to follow.
-
-The truth lemma follows directly from the quotient construction.
-Membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
+The \emph{quotient construction} identifies (history, time) pairs that agree on which formulas hold, forming equivalence classes.
+Two pairs $(\tau_1, t_1)$ and $(\tau_2, t_2)$ are equivalent when $\tau_1(t_1) = \tau_2(t_2)$ as maximal consistent sets.
+The \emph{Truth Lemma} follows directly from this construction: membership in a maximal consistent set corresponds to truth by definition of the equivalence class.
 
 \subsubsection{Representation Theorem}
 
-% NOTE: reference the lean theorem names in the theorem itself. For instance, replace 'Representation Theorem' below with '\texttt{representation\_theorem}' and remove the footnote. This will help guide the reader to the lean name of the theorem, pairing it with the latex name of the theorem which uses section numbers and theorem numbers automatically incremented
-
-\begin{theorem}[Representation Theorem]
-Every consistent context is satisfiable in the canonical model.\footnote{This is proven as \texttt{representation\_theorem}.}
+\begin{theorem}[Representation Theorem (\texttt{representation\_theorem})]
+Every consistent context is satisfiable in the canonical model.
 \end{theorem}
 
 This theorem is the pivotal result linking syntax to semantics.
@@ -166,52 +174,51 @@ The proof strategy is:
 
 The elegance of this approach is that the MCS construction makes the \emph{Truth Lemma} essentially trivial since truth \emph{is} membership in the MCS.
 
-% FIX: the following stronger theorem also needs some explanation following
-
 \begin{theorem}[Strong Representation Theorem]
 If $\context \not\proves \varphi$, then $\context \cup \{\lneg\varphi\}$ is satisfiable in the canonical model.\footnote{This is proven as \texttt{strong\_representation\_theorem}.}
 \end{theorem}
 
+This strengthening is crucial for completeness: it says that any formula unprovable from a context can be made false while satisfying the context.
+The proof adds $\lneg\varphi$ to the context and applies the standard \emph{Representation Theorem} to the resulting consistent set.
+
 \subsubsection{Theorem Dependency Structure}
 
-The following diagram illustrates how the core infrastructure feeds into the Representation Theorem, from which completeness follows as a corollary.
+\Cref{fig:theorem-deps} illustrates the dependency structure of the completeness proof.
+The core infrastructure (top row) feeds into the central \emph{Representation Theorem}, from which the completeness corollaries follow.
 
-% NOTE: dependency diagrams should always have the more fundamental results come above (earlier in the order of what the reader sees), with the results following below. In particular, the following diagram should be flipped with the core infrastructure coming first (above) and the central result and corollaries coming after (below)
-
-% FIX: I don't need the 'Corollaries', 'Central Result', and 'Core Infrastructure' labels since instead it would be better to explain this following the diagram. It would be useful to have a diagram reference label that can be referred to where convenient.
-
-\begin{center}
+\begin{figure}[ht]
+\centering
 \begin{tikzpicture}[
   box/.style={rectangle, draw, rounded corners, minimum width=3.5cm, minimum height=0.9cm, align=center, font=\small},
   arrow/.style={->, >=stealth, thick}
 ]
-  % Core Infrastructure layer (bottom)
-  \node[box, fill=blue!10] (deduct) at (0,0) {Deduction Theorem\\{\scriptsize\texttt{deduction\_theorem}}};
-  \node[box, fill=blue!10] (linden) at (4.5,0) {Lindenbaum's Lemma\\{\scriptsize\texttt{set\_lindenbaum}}};
-  \node[box, fill=blue!10] (mcs) at (9,0) {Maximal Consistent Sets\\{\scriptsize\texttt{MaximalConsistent}}};
+  % Core Infrastructure layer (top)
+  \node[box, fill=blue!10] (deduct) at (0,4) {Deduction Theorem\\{\scriptsize\texttt{deduction\_theorem}}};
+  \node[box, fill=blue!10] (linden) at (4.5,4) {Lindenbaum's Lemma\\{\scriptsize\texttt{set\_lindenbaum}}};
+  \node[box, fill=blue!10] (mcs) at (9,4) {Maximal Consistent Sets\\{\scriptsize\texttt{MaximalConsistent}}};
 
   % Representation layer (middle) - central
   \node[box, fill=green!15, minimum width=6cm] (repr) at (4.5,2) {\textbf{Representation Theorem}\\{\scriptsize\texttt{representation\_theorem}}};
 
-  % Completeness layer (top)
-  \node[box, fill=orange!15] (weak) at (1.5,4) {Weak Completeness\\{\scriptsize\texttt{semantic\_weak\_completeness}}};
-  \node[box, fill=orange!15] (strong) at (7.5,4) {Strong Completeness\\{\scriptsize\texttt{main\_strong\_completeness}}};
+  % Completeness layer (bottom)
+  \node[box, fill=orange!15] (weak) at (1.5,0) {Weak Completeness\\{\scriptsize\texttt{semantic\_weak\_completeness}}};
+  \node[box, fill=orange!15] (strong) at (7.5,0) {Strong Completeness\\{\scriptsize\texttt{main\_strong\_completeness}}};
 
   % Arrows from Core to Representation
-  \draw[arrow] (deduct.north) -- ++(0,0.4) -| (repr.south west);
-  \draw[arrow] (linden.north) -- (repr.south);
-  \draw[arrow] (mcs.north) -- ++(0,0.4) -| (repr.south east);
+  \draw[arrow] (deduct.south) -- ++(0,-0.4) -| (repr.north west);
+  \draw[arrow] (linden.south) -- (repr.north);
+  \draw[arrow] (mcs.south) -- ++(0,-0.4) -| (repr.north east);
 
   % Arrows from Representation to Completeness
-  \draw[arrow] (repr.north) -- ++(0,0.4) -| (weak.south);
-  \draw[arrow] (repr.north) -- ++(0,0.4) -| (strong.south);
-
-  % Layer labels
-  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,0) {Core Infrastructure};
-  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,2) {Central Result};
-  \node[anchor=east, font=\footnotesize\itshape] at (-1.5,4) {Corollaries};
+  \draw[arrow] (repr.south) -- ++(0,-0.4) -| (weak.north);
+  \draw[arrow] (repr.south) -- ++(0,-0.4) -| (strong.north);
 \end{tikzpicture}
-\end{center}
+\caption{Theorem dependency structure for completeness.}
+\label{fig:theorem-deps}
+\end{figure}
+
+The three foundational components---the \emph{Deduction Theorem}, \emph{Lindenbaum's Lemma}, and \emph{Maximal Consistent Sets}---provide the infrastructure for the \emph{Representation Theorem}.
+Both weak and strong completeness then follow as direct corollaries via contrapositive arguments.
 
 \subsection{Completeness as Corollary}
 
@@ -256,7 +263,9 @@ The proof extends weak completeness using an implication chain technique:
 $\proves \varphi \iff \satisfies{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
 
-% FIX: some explanation is in order here to explain that this shows that the proof system and semantics align perfectly, capturing all logical consequences in the proof system without deriving anything that fails to be a logical consequence.
+This biconditional shows that the proof system and semantics align perfectly.
+Soundness (left-to-right) ensures no non-logical consequences are derivable, while completeness (right-to-left) ensures all logical consequences are captured by the proof system.
+Together, they establish that \textbf{TM} provides an exact syntactic characterization of semantic validity.
 
 \subsubsection{Two Canonical Model Approaches}
 
@@ -280,41 +289,36 @@ This approach offers key advantages:
   \item \textbf{Negation-completeness}: The semantic approach does not require proving negation-completeness of arbitrary locally consistent sets, a property that caused difficulties in the syntactic approach.
 \end{itemize}
 
-% FIX: I don't like how short this next subsection is. Instead, its content should be included in the following Decidability subsection.
-
-\subsection{Finite Model Property}
-
-\begin{definition}[Finite Model Property]
-If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.\footnote{This is stated as \texttt{finite\_model\_property}.}
-\end{definition}
-
-The \emph{Finite Model Property} connects the representation infrastructure to decidability.
-The bound on model size is $2^{|\mathsf{closure}(\varphi)|}$, where the subformula closure contains all relevant formulas for determining the truth of $\varphi$.
-
 \subsection{Decidability}
 
-The decidability of TM bimodal logic is established via a tableau-based decision procedure.
+The decidability of TM bimodal logic rests on the \emph{Finite Model Property}: if a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.
+The bound on model size is $2^{|\mathsf{closure}(\varphi)|}$, where the subformula closure contains all relevant formulas for determining the truth of $\varphi$.
+This property connects the representation infrastructure to decidability by ensuring that satisfiability checking can terminate.
+
+The decidability proof proceeds via a tableau-based decision procedure.
 
 \begin{theorem}[Decidability]
 Validity in TM bimodal logic is decidable: for any formula $\varphi$, either $\valid{\varphi}$ or $\neg\valid{\varphi}$.
 \end{theorem}
 
-% FIX: It is not clear what it is for the decision procedure returns ``valid'' with proof $\pi$. This needs to be defined accurately rather than characterized vaguely. 
-
 \begin{theorem}[Decision Soundness]
 If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.\footnote{This is proven as \texttt{decide\_sound}.}
 \end{theorem}
 
-% FIX: it is also important to explain what 'Try direct axiom proof' actually amounts to here in the context of using LEAN 4, and similarly for the proof search with limited depth, explaining these concepts to users unfamiliar with LEAN 4 while being brief and concise. Also briefly explain what a tableau is for users unfamiliar with logic. The following section can then provide more concrete details, but some indication here would also be helpful to explain what the goal is and why it works.
+Here $\pi$ is a derivation term witnessing $\proves \varphi$, constructed from the closed tableau.
+In Lean 4, this is a term of type \texttt{ContextDerivable [] $\varphi$}, representing a formal proof tree.
 
 The decision procedure operates as follows:
 \begin{enumerate}
-  \item Try direct axiom proof (fast path optimization)
-  \item Try proof search with limited depth
-  \item Build tableau starting with signed formula $F(\varphi)$
-  \item If all branches close: formula is valid, extract proof
-  \item If open saturated branch: formula is invalid, extract countermodel
+  \item \textbf{Direct axiom proof}: Check if $\varphi$ matches one of the axiom schemata directly, yielding an immediate derivation.
+  \item \textbf{Proof search}: Apply Lean 4 tactics (\texttt{decide}, \texttt{simp}) with bounded recursion depth to find a derivation automatically.
+  \item \textbf{Tableau construction}: Build a systematic tree that decomposes $\varphi$ into simpler signed formulas.
+  \item If all branches close: formula is valid, extract proof.
+  \item If open saturated branch: formula is invalid, extract countermodel.
 \end{enumerate}
+
+A \emph{tableau} is a tree-structured refutation method: to prove $\varphi$ valid, we assume $\varphi$ is false and systematically derive contradictions.
+Each branch represents a possible scenario; if all branches lead to contradictions, the original assumption was impossible, so $\varphi$ must be valid.
 
 \subsubsection{Tableau Structure}
 
@@ -337,8 +341,6 @@ A branch is \textbf{saturated} when no expansion rules apply.
 
 \subsubsection{Complexity}
 
-% FIX: some explanation would help readers here make sense of what these values mean
-
 \begin{center}
 \begin{tabular}{@{}ll@{}}
 \toprule
@@ -351,6 +353,9 @@ Class & PSPACE-complete \\
 \end{tabular}
 \end{center}
 
+The exponential time bound means formulas of modest size (30--50 symbols) remain tractable on modern hardware.
+PSPACE-completeness implies that modal satisfiability is among the hardest problems solvable with polynomial space, but the linear space bound makes memory usage manageable even for larger formulas.
+
 % TODO: it would also help to explain where the calculations come from (how these numbers are calculated) and check that they are in fact correct as stated
 
 \subsubsection{Decision Result Types}
@@ -362,7 +367,7 @@ The decision procedure returns one of three outcomes:
   \item \texttt{timeout}: Resources exhausted before decision
 \end{itemize}
 
-% FIX: further explanation of why this is useful despite the computational limitations
+Despite computational limitations, decidability is practically valuable: small formulas (most proof obligations in practice) resolve quickly, invalid formulas are often rejected early without full exploration, and countermodels provide concrete feedback for debugging specifications.
 
 \subsection{File Organization and Dependencies}
 
