@@ -70,7 +70,7 @@ The proof uses well-founded induction on derivation height, handling each of the
   \item \textbf{Assumption}: Identity if same, S axiom if different
   \item \textbf{Modus ponens}: Use K axiom distribution
   \item \textbf{Weakening}: Case analysis on assumption membership
-  \item \textbf{Modal/temporal rules}: Do not apply since they require an empty context
+  \item \textbf{Modal/temporal rules}: Do not apply (require empty context)
 \end{itemize}
 
 
@@ -85,7 +85,7 @@ A context $\context$ is \textbf{maximal consistent} if it is consistent and
 for all $\varphi \notin \context$, the context $\varphi :: \context$ is inconsistent.
 \end{definition}
 
-Maximal consistent sets (MCS) have the key property that they are ``negation-complete'':
+Maximal consistent sets (MCS) have the key property that they are \textit{negation-complete}:
 for every formula $\varphi$, exactly one of $\varphi$ or $\lneg\varphi$ is in the set.
 This property is essential for defining canonical world states.
 
