@@ -106,10 +106,8 @@ This follows because any derivation uses only finitely many premises, so a deriv
 
 \subsection{Representation Theory}
 
-% NOTE: I want 'Representation Theorem' and other names of theorems to be in italics
-
-The Representation Theorem provides the fundamental bridge between syntactic consistency and semantic satisfiability.
-The subsequent completeness theorems follow directly from this result.
+The \emph{Representation Theorem} provides the fundamental bridge between syntactic consistency and semantic satisfiability.
+The subsequent \emph{Completeness Theorems} follow directly from this result.
 
 \subsubsection{Canonical World States}
 
@@ -166,7 +164,7 @@ The proof strategy is:
   \item By the truth lemma, all formulas in $\context$ are satisfied at this world.
 \end{enumerate}
 
-The elegance of this approach is that the MCS construction makes the truth lemma essentially trivial since truth \emph{is} membership in the MCS.
+The elegance of this approach is that the MCS construction makes the \emph{Truth Lemma} essentially trivial since truth \emph{is} membership in the MCS.
 
 % FIX: the following stronger theorem also needs some explanation following
 
@@ -217,7 +215,7 @@ The following diagram illustrates how the core infrastructure feeds into the Rep
 
 \subsection{Completeness as Corollary}
 
-The completeness theorems follow directly from the Representation Theorem via contrapositive arguments.
+The \emph{Completeness Theorems} follow directly from the \emph{Representation Theorem} via contrapositive arguments.
 
 \subsubsection{Weak Completeness}
 
@@ -229,7 +227,7 @@ The proof proceeds by contraposition:
 \begin{enumerate}
   \item Assume $\not\proves \varphi$ (i.e., the empty context does not derive $\varphi$).
   \item Then $\{\lneg\varphi\}$ is consistent (otherwise we could derive $\varphi$).
-  \item By the Representation Theorem, $\{\lneg\varphi\}$ is satisfiable in the canonical model.
+  \item By the \emph{Representation Theorem}, $\{\lneg\varphi\}$ is satisfiable in the canonical model.
   \item So there exists a world where $\lneg\varphi$ is true, meaning $\varphi$ is false.
   \item Hence $\varphi$ is not valid.
 \end{enumerate}
@@ -290,7 +288,7 @@ This approach offers key advantages:
 If a formula is satisfiable, it is satisfiable in a finite model bounded by the formula's modal and temporal depth.\footnote{This is stated as \texttt{finite\_model\_property}.}
 \end{definition}
 
-The finite model property connects the representation infrastructure to decidability.
+The \emph{Finite Model Property} connects the representation infrastructure to decidability.
 The bound on model size is $2^{|\mathsf{closure}(\varphi)|}$, where the subformula closure contains all relevant formulas for determining the truth of $\varphi$.
 
 \subsection{Decidability}
@@ -368,9 +366,7 @@ The decision procedure returns one of three outcomes:
 
 \subsection{File Organization and Dependencies}
 
-% NOTE: use the standardized formatting for lean directories throughout, replacing 'Metalogic\_v2' here with '\texttt{Metalogic\_v2}', and similarly throughout
-
-The Metalogic\_v2 directory contains 27 Lean files organized into six subdirectories.
+The \texttt{Metalogic\_v2} directory contains 27 Lean files organized into six subdirectories.
 The following diagram illustrates the import structure, showing how files depend on each other.
 
 \begin{center}
@@ -406,24 +402,22 @@ The following diagram illustrates the import structure, showing how files depend
 \end{tikzpicture}
 \end{center}
 
-% FIX: it would be good if the following items were bold and in \texttt{} formatting
-
 \noindent
 \textbf{Directory descriptions}:
 \begin{itemize}
-  \item \textbf{Core/}: Foundational definitions including provability (\texttt{ContextDerivable}), deduction theorem, and maximal consistent sets.
-  \item \textbf{Soundness/}: Validity proofs for all 15 axiom schemata and the main soundness theorem.
-  \item \textbf{Representation/}: Canonical model construction, truth lemma, and the central representation theorems.
-  \item \textbf{Completeness/}: Weak and strong completeness theorems derived from representation.
-  \item \textbf{Applications/}: Compactness theorem (trivial for list-based contexts).
-  \item \textbf{Decidability/}: Tableau-based decision procedure with proof/countermodel extraction.
+  \item \textbf{\texttt{Core/}}: Foundational definitions including provability (\texttt{ContextDerivable}), deduction theorem, and maximal consistent sets.
+  \item \textbf{\texttt{Soundness/}}: Validity proofs for all 15 axiom schemata and the main soundness theorem.
+  \item \textbf{\texttt{Representation/}}: Canonical model construction, truth lemma, and the central representation theorems.
+  \item \textbf{\texttt{Completeness/}}: Weak and strong completeness theorems derived from representation.
+  \item \textbf{\texttt{Applications/}}: Compactness theorem (trivial for list-based contexts).
+  \item \textbf{\texttt{Decidability/}}: Tableau-based decision procedure with proof/countermodel extraction.
 \end{itemize}
 
 \subsection{Implementation Status}
 
 \subsubsection{Sorry Status}
 
-The Metalogic\_v2 codebase has three remaining \texttt{sorry} statements, none of which block the core completeness results:
+The \texttt{Metalogic\_v2} codebase has three remaining \texttt{sorry} statements, none of which block the core completeness results:
 
 \begin{enumerate}
   \item \texttt{semantic\_task\_rel\_compositionality} (SemanticCanonicalModel.lean:236) --- Finite time domain limitation; a fundamental issue with Int-valued durations exceeding finite time bounds.
