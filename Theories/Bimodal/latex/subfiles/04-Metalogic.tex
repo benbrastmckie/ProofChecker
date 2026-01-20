@@ -107,10 +107,12 @@ This follows because any derivation uses only finitely many premises, so a deriv
 
 % FIX: I want 'Representation Theorem' and other names of theorems to be in italics
 
-The Representation Theorem is the central result of the metalogic, establishing the fundamental bridge between syntactic consistency and semantic satisfiability.
+The Representation Theorem provides the fundamental bridge between syntactic consistency and semantic satisfiability.
 The subsequent completeness theorems follow directly from this result.
 
 \subsubsection{Canonical World States}
+
+% TODO: This is confusing since it should introduce how histories and times are constructed FIRST, and then use these to define canonical world states. In general, no definition should be stated in terms of definitions not yet given.
 
 A \textbf{canonical world state} is derived from a maximal consistent set.
 The semantic approach defines world states as equivalence classes of (history, time) pairs.
@@ -118,6 +120,8 @@ The semantic approach defines world states as equivalence classes of (history, t
 \begin{definition}[Semantic World State]
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
+
+% TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. 
 
 \begin{definition}[Canonical Frame]
 The \texttt{SemanticCanonicalFrame} has:
