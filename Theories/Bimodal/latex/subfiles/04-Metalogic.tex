@@ -240,7 +240,7 @@ By contraposition, validity implies provability.
 % TODO: This still leaves infinite contexts/sets remaining to be addressed, where this should be addressed by compactness
 
 \begin{theorem}[Strong Completeness]
-If $\context \valid \varphi$ then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
+If $\context \satisfies \varphi$, then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
 \end{theorem}
 
 The proof extends weak completeness using an implication chain technique:
@@ -253,8 +253,10 @@ The proof extends weak completeness using an implication chain technique:
 \end{enumerate}
 
 \begin{theorem}[Provable iff Valid]
-$\proves \varphi$ iff $\valid{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
+$\proves \varphi \iff \satisfies{\varphi}$.\footnote{This is proven as \texttt{main\_provable\_iff\_valid}, establishing completeness of \textbf{TM}.}
 \end{theorem}
+
+% CONTINUE
 
 \subsubsection{Two Canonical Model Approaches}
 
