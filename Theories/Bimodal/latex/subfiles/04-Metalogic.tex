@@ -307,6 +307,8 @@ Validity in TM bimodal logic is decidable: for any formula $\varphi$, either $\v
 If the decision procedure returns ``valid'' with proof $\pi$, then $\valid{\varphi}$.\footnote{This is proven as \texttt{decide\_sound}.}
 \end{theorem}
 
+% FIX: it is also important to explain what 'Try direct axiom proof' actually amounts to here in the context of using LEAN 4, and similarly for the proof search with limited depth, explaining these concepts to users unfamiliar with LEAN 4 while being brief and concise. Also briefly explain what a tableau is for users unfamiliar with logic. The following section can then provide more concrete details, but some indication here would also be helpful.
+
 The decision procedure operates as follows:
 \begin{enumerate}
   \item Try direct axiom proof (fast path optimization)
