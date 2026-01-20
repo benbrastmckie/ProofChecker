@@ -124,7 +124,7 @@ A world state is an equivalence class of (history, time) pairs under the relatio
 
 % TODO: I don't see how the integers can be used without making time discrete. Rather, a canonical frame should have the same structural properties as the definition of a frame in the semantics where a temporal order is ANY totally ordered commutative group. This is the crux of the proof strategy and so needs careful thinking and research.
 
-% FIX: important to state all relevant definitions before they are used. In particular, the definition of the task relation is critical
+% NOTE: important to state all relevant definitions before they are used. In particular, the definition of the task relation is critical
 
 \begin{definition}[Canonical Frame]
 The \texttt{SemanticCanonicalFrame} has:
@@ -151,6 +151,8 @@ Membership in a maximal consistent set corresponds to truth by definition of the
 
 \subsubsection{Representation Theorem}
 
+% NOTE: reference the lean theorem names in the theorem itself. For instance, replace 'Representation Theorem' below with '\texttt{representation\_theorem}' and remove the footnote. This will help guide the reader to the lean name of the theorem, pairing it with the latex name of the theorem which uses section numbers and theorem numbers automatically incremented
+
 \begin{theorem}[Representation Theorem]
 Every consistent context is satisfiable in the canonical model.\footnote{This is proven as \texttt{representation\_theorem}.}
 \end{theorem}
@@ -164,7 +166,9 @@ The proof strategy is:
   \item By the truth lemma, all formulas in $\context$ are satisfied at this world.
 \end{enumerate}
 
-The elegance of this approach is that the MCS construction makes the truth lemma essentially trivial---truth \emph{is} membership in the MCS.
+The elegance of this approach is that the MCS construction makes the truth lemma essentially trivial since truth \emph{is} membership in the MCS.
+
+% FIX: the following stronger theorem also needs some explanation following
 
 \begin{theorem}[Strong Representation Theorem]
 If $\context \not\proves \varphi$, then $\context \cup \{\lneg\varphi\}$ is satisfiable in the canonical model.\footnote{This is proven as \texttt{strong\_representation\_theorem}.}
@@ -173,6 +177,10 @@ If $\context \not\proves \varphi$, then $\context \cup \{\lneg\varphi\}$ is sati
 \subsubsection{Theorem Dependency Structure}
 
 The following diagram illustrates how the core infrastructure feeds into the Representation Theorem, from which completeness follows as a corollary.
+
+% NOTE: dependency diagrams should always have the more fundamental results come above (earlier in the order of what the reader sees), with the results following below. In particular, the following diagram should be flipped with the core infrastructure coming first (above) and the central result and corollaries coming after (below)
+
+% FIX: I don't need the 'Corollaries', 'Central Result', and 'Core Infrastructure' labels since instead it would be better to explain this following the diagram
 
 \begin{center}
 \begin{tikzpicture}[
