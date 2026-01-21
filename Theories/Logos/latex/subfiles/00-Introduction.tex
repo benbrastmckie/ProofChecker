@@ -107,7 +107,7 @@ The first two layers provide an essential foundation followed by a modular plugi
 				\textbf{Choice}                  \\
 				{\footnotesize free permission,} \\
 				{\footnotesize alternatives}     \\
-				{\small ($\mathsf{FP}$, $\mathsf{FF}$, $\mathsf{Ch}$)}
+				{\small ($\mathsf{FP}$, $\mathsf{Ch}$)}
 			\end{tabular}
 		};
 
@@ -116,7 +116,7 @@ The first two layers provide an essential foundation followed by a modular plugi
 				\textbf{Spatial}          \\
 				{\footnotesize location,} \\
 				{\footnotesize relations} \\
-				{\small ($@$, $\mathsf{Btw}$, \ldots)}
+				{\small ($@$, $\mathsf{Dist}$)}
 			\end{tabular}
 		};
 
@@ -206,12 +206,12 @@ The \textit{Agential Extension} provides third-person multi-agent reasoning, the
 	      This layer enables fine-grained distinctions between propositions with identical truth-values and modal profiles but different verification conditions, essential for exact specification of what makes a claim true.
 
 	\item \textbf{Dynamical Foundation}:
-	      Adds quantifiers ($\forall$, $\exists$), modals ($\Box$, $\Diamond$) for necessity and possibility, tense ($H$, $G$, $P$, $F$, $\since$, $\until$) for reasoning across time, store/recall operators ($\downarrow$, $\uparrow$) for temporal reference, actuality ($\mathsf{Act}$) for distinguishing actual from possible, counterfactual conditionals ($\boxright$, $\diamondright$) for hypothetical reasoning, and causal operators ($\circleright$, $\dotcircleright$) for explanatory links.
+	      Adds quantifiers ($\forall$, $\exists$), modals ($\Box$, $\Diamond$) for necessity and possibility, tense ($H$, $G$, $P$, $F$, $\since$, $\until$) for reasoning across time, store/recall operators ($\downarrow$, $\uparrow$) for temporal reference, actuality ($\mathsf{Act}$) for distinguishing actual from possible, counterfactual conditionals ($\boxright$, $\diamondright$) for hypothetical reasoning, and causal operators ($\circleright$, $\dotcircleright$) for explanatory relations over a duration.
 	      Together these resources enable reasoning about action sequences, future contingency, what would have happened under different circumstances, and causal relationships.
 
 	\item \textbf{Epistemic Extension}:
 	      Introduces epistemic modals ($\mathsf{Mi}$, $\mathsf{Mu}$), belief ($\mathsf{B}$), probability ($\mathsf{Pr}$), and indicative conditional operators ($\hookrightarrow$) for reasoning under uncertainty.
-	      By extending the semantic framework with credence functions to assign weights to state transitions, agents can track how evidence updates beliefs across time and distinguish what an agent believes from what is actually the case.
+	      By extending the semantic framework with credence functions to assign probabilities to states and chance functions which assign probabilities to state transitions, agents can track how evidence updates beliefs as well as engaging in suppositional reasoning.
 
 	\item \textbf{Abilities Extension}:
 	      Provides ability ($\mathsf{Can}$) and STIT ($\mathsf{stit}$) operators for reasoning about capacities.
@@ -219,7 +219,7 @@ The \textit{Agential Extension} provides third-person multi-agent reasoning, the
 	      This enables reasoning about what agents are capable of accomplishing given their intrinsic capacities and circumstances.
 
 	\item \textbf{Normative Extension}:
-	      Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), and a preference operator ($\prec$) with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
+	      Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), along with a preference operator ($\prec$) with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
 	      This enables ethical reasoning about alternatives.
 
 	\item \textbf{Choice Extension}:
@@ -234,7 +234,7 @@ The \textit{Agential Extension} provides third-person multi-agent reasoning, the
 	      This transforms single-perspective reasoning into multi-agent coordination where agents can model each other's epistemic and normative states.
 
 	\item \textbf{Social Extension}:
-	      Provides resources for common ground construction and group-level reasoning, building upon the Agential Extension to enable reasoning about shared beliefs, build trust in other agents, and coordinate on common goals.
+	      Provides resources for common ground construction and group-level reasoning, building upon the \textit{Agential Extension} to enable reasoning about shared beliefs, build trust in other agents, and coordinate on common goals.
 
 	\item \textbf{Reflection Extension}:
 	      Adds first-person metacognitive operators ($\mathsf{I}$) for self-directed reasoning about one's own beliefs, abilities, and progress towards goals.
