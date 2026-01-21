@@ -8,12 +8,13 @@
 \section{Introduction}\label{sec:introduction}
 
 This reference manual provides the formal specification for the Logos proof system, semantics, metalogic, and library of theorems.
-The semantics is organized around the semantic frames that provides the primitive structure used to interpret the logical operators included in the Logos.
+The semantics is organized around the \textit{semantic frames} that provide the primitive structure used to interpret the logical operators included in the Logos.
 By successively extending the primitive resources included in a frame, it becomes possible to provide semantic clauses for a new range of operators, thereby extending the expressive power of the Logos for systematic reasoning.
 
-The Logos is interpreted over a hyperintensional \textit{state semantics} which comprises the \textit{Constitutive Foundation}.
-By contrast to intensional semantic theories which take worlds to be primitive, the state semantics takes states and their parthood relations to be primitive to provide fine-grained semantic contents by which to recursively interpret the primitive expressions of the language.
-The \textit{Dynamical Foundation} extends the state semantics to include a \textit{task relation} parameterized by durations belonging to a \textit{temporal order} in order to govern the lawful transitions by which a system and its parts evolve.
+The Logos is interpreted over a hyperintensional \textit{state semantics} which comprises the \textit{Constitutive Foundation} of the theory.
+Whereas intensional semantic theories take total instantaneous states of a system called \textit{worlds} to be primitive, the state semantics takes partial \textit{states} and their parthood relations to be primitive to provide fine-grained semantic contents by which to recursively interpret the primitive expressions of the language.
+
+The \textit{Dynamical Foundation} extends the state semantics to include a \textit{task relation} parameterized by durations belonging to a \textit{temporal order} that govern the lawful transitions by which a system and its parts evolve.
 These ingredients are then used to construct \textit{world sates} which represent total instantaneous states of the system under study, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states.
 For instance, in modeling a game of chess, the world states correspond to the legal complete configurations of the chessboard, and the world histories correspond to the possible games of chess.
 
@@ -72,7 +73,7 @@ The first two layers provide an essential foundation followed by a modular plugi
 			\begin{tabular}{c}
 				\textbf{Normative}                      \\
 				{\footnotesize obligation, permission,} \\
-				{\footnotesize preference, explanation} \\
+				{\footnotesize preference, reason-for} \\
 				{\small ($\mathsf{O}$, $\mathsf{P}$, $\prec$, $\mapsto$)}
 			\end{tabular}
 		};
@@ -83,7 +84,7 @@ The first two layers provide an essential foundation followed by a modular plugi
 				\textbf{Epistemic}                   \\
 				{\footnotesize belief, probability,} \\
 				{\footnotesize might/must}           \\
-				{\footnotesize indicative}           \\
+				{\footnotesize indicatives}           \\
 				{\small ($\mathsf{B}$, $\mathsf{Pr}$, $\mathsf{Mi}$, $\mathsf{Mu}$, $\hookrightarrow$)}
 			\end{tabular}
 		};
@@ -247,6 +248,8 @@ For the Lean implementations corresponding to each layer, consult the \texttt{Th
 \subsection{Document Organization}\label{sec:document-organization}
 
 This reference manual is organized as follows:
+
+% FIX: I don't like how this list looks; it would be better if the items were justified blocks instead of having each item have an indentent
 
 \begin{description}
 	\item[\Cref{sec:constitutive-foundation}] presents the \textit{Constitutive Foundation}, including the mereological state space, verification and falsification clauses, and bilateral propositions.
