@@ -11,12 +11,12 @@ This reference manual provides the formal specification for the Logos proof syst
 The semantics is organized around the \textit{semantic frames} that provide the primitive structure used to interpret the logical operators included in the Logos.
 By successively extending the primitive resources included in a frame, it becomes possible to provide semantic clauses for a new range of operators, thereby extending the expressive power of the Logos for systematic reasoning.
 
-The Logos is interpreted over a complete lattice called a \textit{state frame} which comprises the \textit{Constitutive Foundation} of the theory.
-Whereas intensional semantic theories take total instantaneous states of a system called \textit{worlds} to be primitive, the state semantics takes partial \textit{states} and their parthood relations to be primitive to provide fine-grained semantic contents by which to recursively interpret the primitive expressions of the language.
+The Logos is interpreted over a complete lattice called a \textit{frame} which provides the semantic primitives for the \textit{Constitutive Foundation} of the theory.
+Whereas intensional semantic theories take total instantaneous states of a system to be primitive, the state semantics takes states and their parthood relations to be primitive to provide fine-grained semantic contents. % by which to recursively interpret the expressions of the language.
 These fine-grained contents can then be used to interpret standard first-order resources along with constitutive explanatory operators for \textit{essence}, \textit{ground}, \textit{reduction}, and \textit{propositional identity} which formalize `sufficient for', `necessary for', `what it is for', and `just is for' explanatory relationships.
 
-The \textit{Dynamical Foundation} extends state frames to include a \textit{task relation} parameterized by the durations belonging to a \textit{temporal order} that govern the lawful transitions by which the states in a system are able to evolve.
-These elements are then used to construct \textit{world sates} which represent total instantaneous states of a system, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states.
+The \textit{Dynamical Foundation} extends the primitive semantic resources given by a frame to include a \textit{task relation} that is parameterized by \textit{times} to govern the lawful transitions by which the states in a system evolve.
+These elements are used to construct \textit{world sates} which represent total instantaneous states of a system, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states in lawful.
 For instance, in modeling a game of chess, the world states correspond to the legal complete configurations of the chessboard, and the world histories correspond to the possible games of chess.
 World histories are used to provide semantic clauses for modal, temporal, counterfactual, and causal operators in addition to those included in the \textit{Constitutive Foundation}.
 
@@ -252,7 +252,7 @@ For the Lean implementations corresponding to each layer, consult the \texttt{Th
 
 This reference manual is organized as follows:
 
-% FIX: I don't like how this list looks; it would be better if the items were justified blocks instead of having each item have an indentent
+% FIX: I don't like how this list looks; it would be better if the items were justified blocks instead of having each item have an indent after the first wrapped line in that item.
 
 \begin{description}
 	\item[\Cref{sec:constitutive-foundation}] presents the \textit{Constitutive Foundation}, including the mereological state space, verification and falsification clauses, and bilateral propositions.
@@ -261,7 +261,7 @@ This reference manual is organized as follows:
 
 	\item[\Cref{sec:core-semantics}] provides the semantic framework for the \textit{Dynamical Foundation}, including core frames, world-histories, and truth conditions.
 
-	\item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.\\
+	\item[\Cref{sec:core-axioms}] presents the axiom system for counterfactual logic.
 
 	\item[\Cref{sec:epistemic}] extends the \textit{Dynamical Foundation} with structures for belief, knowledge, probability, and indicative conditionals for reasoning under uncertainty.
 
@@ -269,7 +269,7 @@ This reference manual is organized as follows:
 
 	\item[\Cref{sec:spatial}] extends the \textit{Dynamical Foundation} with location-dependent operators and spatial relations for reasoning about orientation and navigation.
 
-	\item[\Cref{sec:agential}] provides multi-agent reasoning structures that index epistemic and normative operators to specific agents, requiring at least one middle extension to be loaded.\\
+	\item[\Cref{sec:agential}] provides multi-agent reasoning structures that index epistemic and normative operators to specific agents, requiring at least one middle extension to be loaded.
 
 	\item[\Cref{sec:reflection}] specifies the Reflection Extension for first-person metacognitive reasoning, including truth conditions, derived operators, and temporal interactions.
 \end{description}
