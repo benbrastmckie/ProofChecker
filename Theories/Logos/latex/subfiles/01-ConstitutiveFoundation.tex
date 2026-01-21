@@ -69,7 +69,7 @@ The Constitutive Foundation interprets the following syntactic primitives:
 
 \subsection{Constitutive Model}\label{sec:constitutive-model}
 
-% TODO: what about 
+% TODO: what about using $\verifiertype{F} : (\Fin\;n \to \statespace) \to \statespace \to Prop$ instead? Is this the more dependent type theory native way to define things? It is important that \falsifiertype{F} be defined similarly where these may then have different extensions
 
 \begin{definition}\label{def:constitutive-model}
 	A \emph{constitutive model} is a structure $\model = \tuple{\statespace, \parthood, \interp{\cdot}}$ where $\tuple{\statespace, \parthood}$ is a constitutive frame and $\interp{\cdot}$ is an \textit{interpretation function} satisfying:
