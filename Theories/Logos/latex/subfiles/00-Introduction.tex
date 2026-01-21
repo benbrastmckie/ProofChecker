@@ -11,11 +11,11 @@ This reference manual provides the formal specification for the Logos proof syst
 The semantics is organized around the \textit{semantic frames} that provide the primitive structure used to interpret the logical operators included in the Logos.
 By successively extending the primitive resources included in a frame, it becomes possible to provide semantic clauses for a new range of operators, thereby extending the expressive power of the Logos for systematic reasoning.
 
-The Logos is interpreted over a hyperintensional \textit{state semantics} which comprises the \textit{Constitutive Foundation} of the theory.
+The Logos is interpreted over a complete lattice called a \textit{state frame} which comprises the \textit{Constitutive Foundation} of the theory.
 Whereas intensional semantic theories take total instantaneous states of a system called \textit{worlds} to be primitive, the state semantics takes partial \textit{states} and their parthood relations to be primitive to provide fine-grained semantic contents by which to recursively interpret the primitive expressions of the language.
-These contents can then be used to interpret standard first-order resources along with constitutive explanatory operators for \textit{essence}, \textit{ground}, \textit{reduction}, and \textit{propositional identity}.
+These fine-grained contents can then be used to interpret standard first-order resources along with constitutive explanatory operators for \textit{essence}, \textit{ground}, \textit{reduction}, and \textit{propositional identity} which formalize `sufficient for', `necessary for', `what it is for', and `just is for' explanatory relationships.
 
-The \textit{Dynamical Foundation} extends the state semantics to include a \textit{task relation} parameterized by durations belonging to a \textit{temporal order} that govern the lawful transitions by which a system and its parts evolve.
+The \textit{Dynamical Foundation} extends state frames to include a \textit{task relation} parameterized by durations belonging to a \textit{temporal order} that govern the lawful transitions by which a system and its parts evolve.
 These ingredients are then used to construct \textit{world sates} which represent total instantaneous states of the system under study, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states.
 For instance, in modeling a game of chess, the world states correspond to the legal complete configurations of the chessboard, and the world histories correspond to the possible games of chess.
 
