@@ -67,13 +67,15 @@ The Constitutive Foundation interprets the following syntactic primitives:
 
 \subsection{Constitutive Model}\label{sec:constitutive-model}
 
-% TODO: Use $\verifiertype{F} : (\Fin\;n \to \statespace) \to \statespace \to \Prop$ instead. It is important that \falsifiertype{F} be defined similarly, where \verifiertype{F} and \falsifiertype{F} may then have different extensions (i.e., where different verifier and falsifier functions inhabit them). I want to maintain consistent dependent type theory definitions wherever possible throughout, maintaining consistency between the latex and lean source code.
+% TODO: Revise the lean source code to match the definitions below.
+
+% FIX: the definitions below need to be explained, where the leading ideas are that: objects are interpreted by states, and predicates are interpreted by functions from n states to a state. It is worth nothing that the state assigned to an object are called haecceities and do not specify every way that object is, but rather the ways that object is essentially (and so must be), which is then used to define its modal profile (the world-states in which that object exists) which may include that object being in all sorts of different ways. For instance, the state assigned to me does not include that I happen to be standing since I may also be belong to world-states in which I am sitting.
 
 \begin{definition}\label{def:constitutive-model}
 	A \emph{constitutive model} is a structure $\model = \tuple{\statespace, \parthood, \interp{\cdot}}$ where $\tuple{\statespace, \parthood}$ is a constitutive frame and $\interp{\cdot}$ is an \textit{interpretation function} satisfying:
 	\begin{itemize}
 		\item \textbf{n-place function symbols} $\interp{f} : (\Fin\;n \to \statespace) \to \statespace$
-    \item \textbf{n-place predicates} $\verifiertype{F}, \falsifiertype{F} : (\Fin\;n \to \statespace) \to \statespace \to \Prop$ are the \textit{verifier function type} and \textit{falsifier function type} which are required to satisfy:
+    \item \textbf{n-place predicates} $\verifiertype{F}, \falsifiertype{F} : ((\Fin\;n \to \statespace) \to \statespace) \to \Prop$ are the \textit{verifier function} and \textit{falsifier function} types which are required to satisfy:
 		      \begin{itemize}
             \item $\fusion{f}{g} : |F|^\pm$ for any $f, g : |F|^\pm$.
 			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f(a_1, \ldots, a_n)$ for any $f : |F|^\pm$ and $a_1, \ldots, a_n : \statespace$.
@@ -81,13 +83,11 @@ The Constitutive Foundation interprets the following syntactic primitives:
 	\end{itemize}
 \end{definition}
 
-% TODO: these should be `\verifiertype{p} : \statespace \to \Prop` instead of `\Set(\statespace)` and similarly for \falsifiertype{p}. This separate notation shouldn't be required in the Lean source code since 'p' is the same as a 0-plance predicate 'F'.
-
 \begin{remark}\label{rem:trivial-cases}
 	Constants and sentence letters are covered by the trivial cases of 0-place functions and 0-place predicates:
 	\begin{itemize}
 		\item \textbf{Constant symbols} $\interp{c} : \statespace$ is the type for 0-place functions.
-		\item \textbf{Sentence letters} $\verifiertype{p}, \falsifierset{p} : \statespace \to \Prop$ are the \textit{verifier function type} and \textit{falsifier function type} for 0-place predicates.
+		\item \textbf{Sentence letters} $\verifiertype{p}, \falsifiertype{p} : \statespace \to \Prop$ are the \textit{verifier function type} and \textit{falsifier function type} for 0-place predicates.
 	\end{itemize}
 \end{remark}
 
@@ -108,6 +108,8 @@ See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the implementation.
 	Greek letters ($\history, \alpha, \beta, \ldots$) are reserved for world-histories.
 	The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments, chosen for compatibility across \LaTeX, markdown, and Lean notation.
 \end{notation}
+
+% FIX: A definition should be provided here of the term algebra which matches that in the lean source code for the Logos/
 
 \begin{definition}\label{def:variant-assignment}
 	The \textit{$x$-variant} $\assignsub{v}{x}$ of the variable assignment $\assignment$ differs at most from $\assignment$ by assigning $x$ to $v$.
@@ -130,6 +132,8 @@ See \leansrc{Logos.Foundation.Assignment}{Assignment} for the implementation.
 
 \subsection{Verification and Falsification}\label{sec:verification-falsification}
 
+% TODO: Research /home/benjamin/Philosophy/Papers/IdentityAboutness/IdentityAboutness.tex in order to provide brief explanations for the semantic clauses for boolean operators considered below, extrapolating similar explanations for the other semantic clauses included here but not in that paper
+
 The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of a formula $\metaA$ is defined recursively relative to a model $\model$, assignment $\assignment$, and state $s$.
 
 \subsubsection{Atomic Formulas}\label{sec:atomic-formulas}
@@ -137,7 +141,7 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 \begin{definition}[Atomic Verification and Falsification]\label{def:atomic-verification}
 	\begin{align}
 		\model, \assignment, s \verifies F(t_1, \ldots, t_n)  & \iff \exists f \in \verifiertype{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)  \\
-		\model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)
+		\model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifiertype{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)
 	\end{align}
 \end{definition}
 
@@ -205,7 +209,7 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 		 & (1)~ \model, \assignment, t \verifies \metaA \text{ just in case } \model, \assignment, t \verifies \metaB; \text{ and} \notag \\
 		 & (2)~ \model, \assignment, t \falsifies \metaA \text{ just in case } \model, \assignment, t \falsifies \metaB                   \\
 		\model, \assignment, s \falsifies \metaA \equiv \metaB \iff
-		 & \text{ either:} \notag                                                                                                         \\
+		 & \text{ at least one of the following:} \notag                                                                                                         \\
 		 & (1)~ \model, \assignment, s \verifies \metaA \text{ and } \model, \assignment, s \nverifies \metaB; \notag                     \\
 		 & (2)~ \model, \assignment, s \nverifies \metaA \text{ and } \model, \assignment, s \verifies \metaB; \notag                     \\
 		 & (3)~ \model, \assignment, s \falsifies \metaA \text{ and } \model, \assignment, s \nfalsifies \metaB; \text{ or} \notag        \\
@@ -213,6 +217,7 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 	\end{align}
 \end{definition}
 
+\noindent
 See \leansrc{Logos.Foundation.Semantics}{verifies} for the implementation.
 
 % ------------------------------------------------------------
@@ -222,6 +227,8 @@ See \leansrc{Logos.Foundation.Semantics}{verifies} for the implementation.
 \subsection{Essence and Ground}\label{sec:essence-ground}
 
 These constitutive relations can be defined via propositional identity:
+
+% FIX: expand the definition below to include \Rightarrow for reduction which is just the conjunction of an essence and ground claim \metaA \Rightarrow \metaB \define (\metaA \essence \metaB) \land (\metaA \ground \metaB)
 
 \begin{definition}[Essence and Ground]\label{def:essence-ground}
 	\begin{align}
@@ -251,7 +258,7 @@ See \leansrc{Logos.Foundation.Relations}{essence} for the implementation.
 	A \emph{bilateral proposition} $P$ is an ordered pair $\tuple{V, F}$ where $V$ and $F$ are subsets of $\statespace$ closed under fusion:
 	\begin{itemize}
 		\item \textbf{Fusion closure for verifiers}: $\fusion{s}{t} \in V$ for any $s, t \in V$
-		\item \textbf{Fusion closure for falsifiers}: $\fusion{s}{t} \in V$ for any $s, t \in F$
+		\item \textbf{Fusion closure for falsifiers}: $\fusion{s}{t} \in F$ for any $s, t \in F$
 	\end{itemize}
 \end{definition}
 
