@@ -68,14 +68,14 @@ Truth is evaluated relative to a model $\model$ providing the interpretation, a 
 Whereas the model fixes the interpretation of the language, the contextual parameters $\tau$ and $x$ determine the truth value of every sentence of the langauge.
 
 \begin{definition}[Truth]
-For model $\model$, history $\tau \in \histories_{\taskframe}$, and time $x : D$:
+For model $\model$, history $\tau : \histories_{\taskframe}$, and time $x : D$:
 \begin{align*}
   \model, \tau, x \vDash p &\Iff x \in \domain(\tau) \text{ and } I(\tau(x), p) \\
   \model, \tau, x \nvDash \falsum \\
   \model, \tau, x \vDash \varphi \imp \psi &\Iff
     \model, \tau, x \nvDash \varphi \text{ or } \model, \tau, x \vDash \psi \\
   \model, \tau, x \vDash \nec\varphi &\Iff
-    \model, \sigma, x \vDash \varphi \text{ for all } \sigma \in \histories_{\taskframe} \\
+    \model, \sigma, x \vDash \varphi \text{ for all } \sigma : \histories_{\taskframe} \\
   \model, \tau, x \vDash \allpast\varphi &\Iff
     \model, \tau, y \vDash \varphi \text{ for all } y : D \text{ where } y < x \\
   \model, \tau, x \vDash \allfuture\varphi &\Iff
