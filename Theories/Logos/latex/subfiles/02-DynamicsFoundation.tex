@@ -2,10 +2,108 @@
 \begin{document}
 
 % ============================================================================
-% Section: Dynamics Foundation Semantics
+% Section: Dynamical Foundation Syntax
 % ============================================================================
 
-\section{Dynamical Foundation}\label{sec:core-semantics}
+\section{Dynamical Foundation}\label{sec:dynamical-foundation}
+
+The \textit{Dynamical Foundation} extends the \textit{Constitutive Foundation} with temporal structure and a task relation, enabling evaluation of truth relative to world-histories and times.
+While the hyperintensional foundation remains (distinguishing propositions by their exact verifiers and falsifiers), this extension adds intensional evaluation relative to contextual parameters (world-history, time, variable assignment) to determine truth-values for all \textit{Dynamical Foundation} sentences.
+
+% ------------------------------------------------------------
+% Additional Syntactic Primitives
+% ------------------------------------------------------------
+
+\subsection{Additional Syntactic Primitives}\label{sec:additional-syntax}
+
+The \textit{Dynamical Foundation} interprets the following additional syntactic primitives beyond those of the \textit{Constitutive Foundation}:
+
+\begin{itemize}
+	\item \textbf{Modal operators}: $\nec$ (necessity), $\poss$ (possibility)
+	\item \textbf{Temporal operators}: $\always$ (always past), $\willalways$ (always future), $\waspast$ (some past), $\willfuture$ (some future)
+	\item \textbf{Extended temporal operators}: $\since$ (since), $\until$ (until)
+	\item \textbf{Counterfactual conditional}: $\boxright$ (would-counterfactual)
+	\item \textbf{Store/recall operators}: $\store{i}$ (store), $\recall{i}$ (recall)
+\end{itemize}
+
+% ------------------------------------------------------------
+% Well-Formed Sentences
+% ------------------------------------------------------------
+
+\subsection{Well-Formed Sentences}\label{sec:well-formed-sentences}
+
+A well-formed sentence at this extension includes:
+\begin{enumerate}
+  \item All \textit{Constitutive Foundation} sentences ($F$, $f$, $x$, $\neg$, $\land$, $\lor$, $\top$, $\bot$, $\equiv$, $\lambda$, $=$)
+	\item Modal sentences: $\nec\metaA$, $\poss\metaA$
+	\item Temporal sentences: $\always\metaA$, $\willalways\metaA$, $\waspast\metaA$, $\willfuture\metaA$
+	\item Extended temporal sentences: $\metaA \since \metaB$, $\metaA \until \metaB$
+	\item Counterfactual sentences: $\metaA \boxright \metaB$, $\metaA \diamondright \metaB$
+	\item Indexed sentences: $\store{i}\metaA$, $\recall{i}\metaA$
+	\item Universal quantification: $\forall\metaA$, $\exists\metaA$
+	\item Actuality predicate: $\actual(t)$
+\end{enumerate}
+
+% ------------------------------------------------------------
+% Operator Summary
+% ------------------------------------------------------------
+
+\subsection{Operator Summary}\label{sec:operator-summary}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Category} & \textbf{Symbol}             & \textbf{Reading}                               \\
+		\midrule
+		Modal             & $\nec\metaA$                & ``Necessarily $\metaA$''                       \\
+		                  & $\poss\metaA$               & ``Possibly $\metaA$''                          \\
+		\midrule
+		Past Temporal     & $\always\metaA$             & ``It has always been that $\metaA$''           \\
+		                  & $\waspast\metaA$            & ``It was the case that $\metaA$''              \\
+		\midrule
+		Future Temporal   & $\willalways\metaA$         & ``It will always be that $\metaA$''            \\
+		                  & $\willfuture\metaA$         & ``It will be the case that $\metaA$''          \\
+		\midrule
+		Extended          & $\metaA \since \metaB$      & ``$\metaA$ since $\metaB$''                    \\
+		                  & $\metaA \until \metaB$      & ``$\metaA$ until $\metaB$''                    \\
+		\midrule
+		Counterfactual    & $\metaphi \boxright \metaC$ & ``If $\metaphi$ were the case, then $\metaC$'' \\
+		\midrule
+		Store/Recall      & $\store{i}\metaA$           & ``Store current time and evaluate $\metaA$''   \\
+		                  & $\recall{i}\metaA$          & ``Recall stored time and evaluate $\metaA$''   \\
+		\bottomrule
+	\end{tabular}
+	\caption{Dynamical Foundation Operators}
+	\label{tab:core-operators}
+\end{table}
+
+% ------------------------------------------------------------
+% Derived Operators
+% ------------------------------------------------------------
+
+\subsection{Derived Operators}\label{sec:derived-operators}
+
+\begin{definition}[Derived Temporal Operators]\label{def:derived-temporal}
+	\begin{align}
+		\alwaystemporal\metaA    & := \always\metaA \land \metaA \land \willalways\metaA &  & \text{``Always $\metaA$'' (at all times)}    \\
+		\sometimestemporal\metaA & := \waspast\metaA \lor \metaA \lor \willfuture\metaA  &  & \text{``Sometimes $\metaA$'' (at some time)}
+	\end{align}
+\end{definition}
+
+\begin{definition}[Material Conditional]\label{def:material-conditional}
+	\[
+		\metaA \to \metaB := \neg\metaA \lor \metaB
+	\]
+\end{definition}
+
+\begin{definition}[Biconditional]\label{def:biconditional}
+	\[
+		\metaA \leftrightarrow \metaB := (\metaA \to \metaB) \land (\metaB \to \metaA)
+	\]
+\end{definition}
+
+See \leansrc{Logos.Dynamics.Syntax}{CoreFormula} for the Lean implementation.
 
 % ------------------------------------------------------------
 % Core Frame
@@ -324,4 +422,122 @@ The framework does not assume discrete time:
 	The hyperintensional distinctions are preserved---propositions still differ if their exact verifiers differ---but the Dynamics Foundation adds the intensional layer needed to evaluate sentences with modal and temporal operators.
 \end{remark}
 
+% ============================================================================
+% Section: Dynamics Foundation Axioms
+% ============================================================================
+
+\subsection{Counterfactual Logic}\label{sec:counterfactual-axioms}
+
+This section presents the axiom system for the counterfactual logic of the Dynamics Foundation.
+
+% ------------------------------------------------------------
+% Core Rules
+% ------------------------------------------------------------
+
+\begin{definition}[Closure Under Deduction]\label{def:closure-deduction}
+	\[
+		\textbf{R1}: \quad \text{If } \context \proves \metaC, \text{ then } \metaphi \boxright \context \proves \metaphi \boxright \metaC
+	\]
+\end{definition}
+
+\begin{remark}
+	This rule states that if $\metaC$ is derivable from $\context$, then for any antecedent $\metaphi$, the counterfactual with consequent $\metaC$ is derivable from the counterfactuals with consequents from $\context$.
+\end{remark}
+
+% ------------------------------------------------------------
+% Counterfactual Axiom Schemata
+% ------------------------------------------------------------
+
+\subsection{Counterfactual Axiom Schemata}\label{sec:counterfactual-axioms}
+
+\begin{definition}[Counterfactual Axioms]\label{def:counterfactual-axioms}
+	\begin{align}
+		\textbf{C1}: \quad & \metaphi \boxright \metaphi                                                                                                                    &  & \text{(Identity)}                    \\
+		\textbf{C2}: \quad & \metaphi, \metaphi \boxright \metaA \proves \metaA                                                                                             &  & \text{(Counterfactual Modus Ponens)} \\
+		\textbf{C3}: \quad & \metaphi \boxright \metapsi, \metaphi \land \metapsi \boxright \metaA \proves \metaphi \boxright \metaA                                        &  & \text{(Weakened Transitivity)}       \\
+		\textbf{C4}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metaphi \land \metapsi \boxright \metaA                                                       &  & \text{(Disjunction-Conjunction)}     \\
+		\textbf{C5}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metaphi \boxright \metaA                                                                      &  & \text{(Simplification Left)}         \\
+		\textbf{C6}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metapsi \boxright \metaA                                                                      &  & \text{(Simplification Right)}        \\
+		\textbf{C7}: \quad & \metaphi \boxright \metaA, \metapsi \boxright \metaA, \metaphi \land \metapsi \boxright \metaA \proves \metaphi \lor \metapsi \boxright \metaA &  & \text{(Disjunction Introduction)}
+	\end{align}
+\end{definition}
+
+\begin{remark}[Explanation of Counterfactual Axioms]
+	\begin{itemize}
+		\item \textbf{C1} (Identity): Every proposition counterfactually implies itself.
+		\item \textbf{C2} (Modus Ponens): If $\metaphi$ is actually true and $\metaphi$ would imply $\metaA$, then $\metaA$ is true.
+		\item \textbf{C3} (Weakened Transitivity): This weaker form of transitivity avoids the problematic full transitivity principle.
+		\item \textbf{C4-C7}: These axioms govern the interaction between counterfactuals and Boolean operations on antecedents.
+	\end{itemize}
+\end{remark}
+
+% ------------------------------------------------------------
+% Modal Axiom Schemata
+% ------------------------------------------------------------
+
+\subsection{Modal Axiom Schemata}\label{sec:modal-axioms}
+
+\begin{definition}[Modal Axioms]\label{def:modal-axioms}
+	\begin{align}
+		\textbf{M1}: \quad & \top                                                        &  & \text{(Truth)}                    \\
+		\textbf{M2}: \quad & \neg\bot                                                    &  & \text{(Non-Contradiction)}        \\
+		\textbf{M3}: \quad & \metaA \to \nec\poss\metaA                                  &  & \text{(Brouwer)}                  \\
+		\textbf{M4}: \quad & \nec\metaA \to \nec\nec\metaA                               &  & \text{(S4 Transitivity)}          \\
+		\textbf{M5}: \quad & \nec(\metaphi \to \metaA) \proves \metaphi \boxright \metaA &  & \text{(Strict-to-Counterfactual)}
+	\end{align}
+\end{definition}
+
+\begin{remark}[S5 Modal Logic]
+	The combination of M3 and M4 yields an S5 modal logic, which is characterized by an equivalence relation on possible worlds.
+	In the task semantics, this arises from the structure of world-histories: any world-history is accessible from any other at any given time.
+\end{remark}
+
+\begin{remark}[Strict-to-Counterfactual]
+	Axiom M5 states that if $\metaA$ is a strict consequence of $\metaphi$ (i.e., necessarily, if $\metaphi$ then $\metaA$), then $\metaphi$ counterfactually implies $\metaA$.
+	This connects the modal operator with the counterfactual conditional.
+\end{remark}
+
+% ------------------------------------------------------------
+% Derived Theorems
+% ------------------------------------------------------------
+
+\subsection{Derived Theorems}\label{sec:derived-theorems}
+
+\begin{theorem}[Counterfactual Strengthening]\label{thm:cf-strengthening}
+	If $\metaphi \boxright \metaA$ and $\metaphi \boxright \metapsi$, then $\metaphi \boxright (\metaA \land \metapsi)$.
+\end{theorem}
+
+\begin{theorem}[Counterfactual Weakening]\label{thm:cf-weakening}
+	If $\metaphi \boxright \metaA$ and $\metaA \proves \metaB$, then $\metaphi \boxright \metaB$.
+\end{theorem}
+
+\begin{theorem}[Necessity Introduction]\label{thm:necessity-intro}
+	$\top \boxright \metaA$ is equivalent to $\nec\metaA$.
+\end{theorem}
+
+\begin{theorem}[Excluded Middle]\label{thm:excluded-middle}
+	$(\metaphi \boxright \metaA) \lor (\metaphi \boxright \neg\metaA)$ is \emph{not} generally valid.
+\end{theorem}
+
+\begin{remark}
+	The failure of excluded middle for counterfactuals (Theorem~\ref{thm:excluded-middle}) reflects the mereological structure: when imposing an antecedent $\metaphi$ on the actual world, there may be multiple ways to do so, leading to different worlds where $\metaA$ or $\neg\metaA$ holds.
+	The counterfactual is true only when the consequent holds in \emph{all} such imposed worlds.
+\end{remark}
+
+% ------------------------------------------------------------
+% Soundness and Completeness
+% ------------------------------------------------------------
+
+\subsection{Soundness and Completeness}\label{sec:soundness-completeness}
+
+\begin{theorem}[Soundness]\label{thm:soundness}
+	If $\context \proves \metaA$ using the axiom system above, then $\context \trueat \metaA$.
+\end{theorem}
+
+\begin{question}
+	Completeness of the axiom system with respect to the mereological counterfactual semantics remains an open problem.
+	The main challenge is showing that every consistent set of formulas has a model with the required mereological structure.
+\end{question}
+
+See \leansrc{Logos.Dynamics.Axioms}{CounterfactualAxioms} for the Lean implementation.
 \end{document}
