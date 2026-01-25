@@ -114,9 +114,13 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 	\begin{itemize}
 		\item $\tuple{\statespace, \parthood}$ is a constitutive frame
 		\item $\temporalorder = \tuple{D, +, \leq}$ is a totally ordered abelian group
-		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the following constraints where $\task{s}{d}{t}$ indicates that there is a task from $s$ to $t$ in duration $d$:
+		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
 	\end{itemize}
 \end{definition}
+
+\begin{notation}
+  We write $\task{s}{d}{t}$ to indicate that there is a \textit{task} from $s$ to $t$ in duration $d$ where a task is a possible state transition.
+\end{notation}
 
 % ------------------------------------------------------------
 % State Modality Definitions
@@ -124,11 +128,12 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 
 \subsection{State Modality Definitions}\label{sec:state-modality}
 
-\begin{definition}[State Modality]\label{def:state-modality}
+% FIX: convert the definitions to dependent type theory definitions for consistency both here and with the implementation in the lean source code
+
+\begin{definition}\label{def:state-modality}
 	Let $\mframe = \tuple{\statespace, \parthood, \temporalorder, \taskrel}$ be a dynamical frame.
 	\begin{align}
 		s \in \possible    & \iff \task{s}{0}{s}                                                &  & \text{(Possible state)}    \\
-		s \notin \possible & \iff \neg(\task{s}{0}{s})                                          &  & \text{(Impossible state)}  \\
 		s \connected t     & \iff \task{s}{d}{t} \text{ or } \task{t}{d}{s} \text{ for some } d &  & \text{(Connected states)}  \\
 		s \compatible t    & \iff \fusion{s}{t} \in \possible                                   &  & \text{(Compatible states)} \\
 		w \in \worldstates & \iff w \text{ is a maximal possible state}                         &  & \text{(World-state)}       \\
