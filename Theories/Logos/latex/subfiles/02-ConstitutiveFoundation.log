@@ -2,11 +2,20 @@ This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (prelo
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**LogosReference.tex
-(./LogosReference.tex
+**02-ConstitutiveFoundation.tex
+(./02-ConstitutiveFoundation.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
 
+(/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
+3-texmfdist/tex/latex/subfiles/subfiles.cls
+Document Class: subfiles 2020/11/14 v2.2 Multi-file projects (class)
+Preamble taken from file `../LogosReference.tex'
+
+(/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
+3-texmfdist/tex/latex/import/import.sty
+Package: import 2020/04/01  v 6.2
+) (../LogosReference.tex
 (/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
 3-texmfdist/tex/latex/base/article.cls
 Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
@@ -141,11 +150,7 @@ Package: cancel 2013/04/12 v2.2 Cancel math terms
 (/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
 3-texmfdist/tex/latex/subfiles/subfiles.sty
 Package: subfiles 2020/11/14 v2.2 Multi-file projects (package)
-
-(/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
-3-texmfdist/tex/latex/import/import.sty
-Package: import 2020/04/01  v 6.2
-))
+)
 (/nix/store/mmsrx80s04dd1s9bwnv7k4n5pyil4lkz-texlive-combined-full-2025.2025070
 3-texmfdist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
@@ -546,9 +551,9 @@ File: pgfmodulematrix.code.tex 2023-01-15 v3.1.10 (3.1.10)
 3-texmfdist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.cod
 e.tex
 File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
-))) (./assets/logos-notation.sty
+))) (../assets/logos-notation.sty
 
-LaTeX Warning: You have requested package `assets/logos-notation',
+LaTeX Warning: You have requested package `../assets/logos-notation',
                but the package provides `logos-notation'.
 
 Package: logos-notation 2026/01/11 Logos Logic Notation
@@ -568,11 +573,11 @@ l.20 ^^M
 
  
 Here is how much of TeX's memory you used:
- 13271 strings out of 467888
- 276305 string characters out of 5405403
- 627865 words of memory out of 5000000
- 41626 multiletter control sequences out of 15000+600000
+ 13292 strings out of 467888
+ 277045 string characters out of 5405403
+ 629653 words of memory out of 5000000
+ 41641 multiletter control sequences out of 15000+600000
  627125 words of font info for 41 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,0n,107p,395b,90s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 122i,0n,124p,446b,90s stack positions out of 10000i,1000n,20000p,200000b,200000s
 !  ==> Fatal error occurred, no output PDF file produced!

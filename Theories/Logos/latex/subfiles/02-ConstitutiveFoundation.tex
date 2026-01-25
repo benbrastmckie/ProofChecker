@@ -87,15 +87,13 @@ See \leansrc{Logos.Dynamics.Syntax}{CoreFormula} for the Lean implementation.
 
 \subsection{Constitutive Model}\label{sec:constitutive-model}
 
-% TODO: Revise the lean source code to match the definitions below.
-
 % FIX: the definitions below need to be explained, where the leading ideas are that: objects are interpreted by states, and predicates are interpreted by functions from n states to a state. It is worth nothing that the state assigned to an object are called haecceities and do not specify every way that object is, but rather the ways that object is essentially (and so must be), which is then used to define its modal profile (the world-states in which that object exists) which may include that object being in all sorts of different ways. For instance, the state assigned to me does not include that I happen to be standing since I may also be belong to world-states in which I am sitting.
 
 \begin{definition}\label{def:constitutive-model}
 	A \emph{constitutive model} is a structure $\model = \tuple{\statespace, \parthood, \interp{\cdot}}$ where $\tuple{\statespace, \parthood}$ is a constitutive frame and $\interp{\cdot}$ is an \textit{interpretation function} satisfying:
 	\begin{itemize}
 		\item \textbf{n-place function symbols} $\interp{f} : (\Fin\;n \to \statespace) \to \statespace$
-    \item \textbf{n-place predicates} $\verifiertype{F}, \falsifiertype{F} : ((\Fin\;n \to \statespace) \to \statespace) \to \Prop$ are the \textit{verifier function} and \textit{falsifier function} types which are required to satisfy:
+    \item \textbf{n-place predicates} $\verifiertype{F}, \falsifiertype{F} : ((\Fin\;n \to \statespace) \to \statespace) \to \Prop$ are the \textit{verifier function} and \textit{falsifier function} types which are required to satisfy:\footnote{The Lean implementation uses the mathematically equivalent Set-based formulation $\mathtt{Set}\;((\Fin\;n \to \statespace) \to \statespace)$ since in Lean 4, $\mathtt{Set}\;\alpha$ is defined as $\alpha \to \Prop$. The Set notation emphasizes the collectional aspect while the Prop notation emphasizes the logical aspect; both capture the same mathematical structure.}
 		      \begin{itemize}
             \item $\fusion{f}{g} : |F|^\pm$ for any $f, g : |F|^\pm$.
 			      \item $\Fusion(a_1, \ldots, a_n) \sqsubseteq f(a_1, \ldots, a_n)$ for any $f : |F|^\pm$ and $a_1, \ldots, a_n : \statespace$.
