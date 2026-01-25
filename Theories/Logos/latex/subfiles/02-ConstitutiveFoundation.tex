@@ -129,7 +129,30 @@ See \leansrc{Logos.Foundation.Model}{ConstitutiveModel} for the implementation.
 	The letter $\assignment$ (with subscripts $\assignment_1, \assignment_2, \ldots$) denotes variable assignments, chosen for compatibility across \LaTeX, markdown, and Lean notation.
 \end{notation}
 
-% FIX: A definition should be provided here of the term algebra which matches that in the lean source code for the Logos/
+\begin{definition}[Term Algebra]\label{def:term-algebra}
+The set $\Term$ of \emph{terms} is defined inductively:
+\[
+	t \Define x \mid c \mid f(t_1, \ldots, t_n)
+\]
+where $x$ ranges over variables, $c$ over individual constants (0-place function symbols), and $f$ over $n$-place function symbols.
+
+The \emph{free variables} $\FV(t)$ of a term are defined by:
+\begin{align*}
+	\FV(x) &= \{x\} \\
+	\FV(c) &= \emptyset \\
+	\FV(f(t_1, \ldots, t_n)) &= \bigcup_{i=1}^n \FV(t_i)
+\end{align*}
+
+\emph{Substitution} $t[s/x]$ (replacing $x$ with $s$ in $t$) is defined by:
+\begin{align*}
+	y[s/x] &= \begin{cases} s & \text{if } y = x \\ y & \text{otherwise} \end{cases} \\
+	c[s/x] &= c \\
+	f(t_1, \ldots, t_n)[s/x] &= f(t_1[s/x], \ldots, t_n[s/x])
+\end{align*}
+\end{definition}
+
+\noindent
+See \leansrc{Logos.SubTheories.Foundation.Syntax}{Term} for the Lean implementation.
 
 \begin{definition}\label{def:variant-assignment}
 	The \textit{$x$-variant} $\assignsub{v}{x}$ of the variable assignment $\assignment$ differs at most from $\assignment$ by assigning $x$ to $v$.
