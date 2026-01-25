@@ -29,11 +29,18 @@ The Constitutive Foundation interprets the following syntactic primitives:
 	\item \textbf{Logical connectives}: $\neg, \land, \lor, \top, \bot, \equiv$
 \end{itemize}
 
-% FIX: define the well-formed sentences using the standard definition which uses a double colon and identity sign (find the correct latex symbol to use) and the uses pipes between constructions
+\begin{definition}[Well-Formed Formulas]\label{def:wff}
+The set of \emph{well-formed formulas} is defined inductively:
+\begin{align*}
+	\metaA \Define{}& p \mid F(t_1, \ldots, t_n) \mid \top \mid \bot \\
+	\mid{}& \neg\metaA \mid (\metaA \land \metaB) \mid (\metaA \lor \metaB) \\
+	\mid{}& (\metaA \equiv \metaB) \mid (\lambda x.\metaA)(t)
+\end{align*}
+where $p$ ranges over sentence letters, $F$ over $n$-place predicates, $t, t_i$ over terms, and $x$ over variables.
+\end{definition}
 
-% FIX: define more non-primitive symbols, including \exists' as well as '\forall x' as '\forall\lambda x.' and similarly for '\exists x'
-
-$\Coloneq$
+\noindent
+See \leansrc{Logos.SubTheories.Foundation.Syntax}{ConstitutiveFormula} for the Lean implementation.
 
 \subsection{Derived Operators}\label{sec:derived-operators}
 
@@ -48,6 +55,16 @@ $\Coloneq$
 		\metaA \leftrightarrow \metaB := (\metaA \to \metaB) \land (\metaB \to \metaA)
 	\]
 \end{definition}
+
+\begin{remark}[Quantifier Notation]
+First-order quantifiers are \textit{not} primitive in the Constitutive Foundation.
+Generalized quantification is expressed via lambda abstraction:
+\begin{itemize}
+	\item Universal: $\forall x.\metaA$ abbreviates $\forall(\lambda x.\metaA)$ where $\forall$ is a second-order predicate on properties
+	\item Existential: $\exists x.\metaA$ abbreviates $\exists(\lambda x.\metaA)$ where $\exists$ is a second-order predicate on properties
+\end{itemize}
+First-order quantification is introduced in the Dynamical Foundation layer.
+\end{remark}
 
 See \leansrc{Logos.Dynamics.Syntax}{CoreFormula} for the Lean implementation.
 
@@ -271,13 +288,19 @@ See \leansrc{Logos.Foundation.Semantics}{verifies} for the implementation.
 
 These constitutive relations can be defined via propositional identity:
 
-% FIX: expand the definition below to include \Rightarrow for reduction which is just the conjunction of an essence and ground claim \metaA \Rightarrow \metaB \define (\metaA \essence \metaB) \land (\metaA \ground \metaB)
-
 \begin{definition}[Essence and Ground]\label{def:essence-ground}
 	\begin{align}
 		\metaA \essence \metaB & \define \metaA \land \metaB \equiv \metaB &  & \text{``$\metaA$ is essential to $\metaB$'' (conjunctive part)} \\
 		\metaA \ground \metaB  & \define \metaA \lor \metaB \equiv \metaB  &  & \text{``$\metaA$ grounds $\metaB$'' (disjunctive part)}
 	\end{align}
+\end{definition}
+
+\begin{definition}[Reduction]\label{def:reduction}
+\emph{Reduction} combines essence and ground:
+\[
+	\metaA \Rightarrow \metaB \define (\metaA \essence \metaB) \land (\metaA \ground \metaB)
+\]
+This expresses that $\metaA$ is both a conjunctive part (essential to) and a disjunctive part (grounds) of $\metaB$.
 \end{definition}
 
 \begin{remark}
