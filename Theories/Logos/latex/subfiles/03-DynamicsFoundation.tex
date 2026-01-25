@@ -114,7 +114,16 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 	\begin{itemize}
 		\item $\tuple{\statespace, \parthood}$ is a constitutive frame
 		\item $\temporalorder = \tuple{D, +, \leq}$ is a totally ordered abelian group
-		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
+		% \item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
+		\item A ternary \textit{task relation} $\taskrel$ on $\statespace \times D \times \statespace$ satisfying the constraints below where $\task{s}{x}{t}$ indicates that there is a task from $s$ to $t$ in duration $x$:
+    \begin{itemize}
+      \item \textbf{Compositionality}: If $\task{s}{x}{t}$ and $\task{t}{y}{u}$, then $\task{s}{x+y}{u}$
+      \item \textbf{Parthood (Left)}: If $d \parthood s$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $r \parthood t$
+      \item \textbf{Parthood (Right)}: If $r \parthood t$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $d \parthood s$
+      \item \textbf{Containment (Left)}: If $s \in \possible$, $d \parthood s$, and $\task{d}{x}{r}$, then $\task{s}{x}{\fusion{t}{r}}$ for some $t \in \statespace$
+      \item \textbf{Containment (Right)}: If $t \in \possible$, $r \parthood t$, and $\task{d}{x}{r}$, then $\task{\fusion{s}{d}}{x}{t}$ for some $s \in \statespace$
+      \item \textbf{Maximality}: If $s \in \statespace$ and $t \in \possible$, there is a maximal $t$-compatible part $r \in \maxcompat{s}{t}$
+    \end{itemize}
 	\end{itemize}
 \end{definition}
 
@@ -162,7 +171,7 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 
 \subsection{Task Relation Constraints}\label{sec:task-constraints}
 
-\begin{definition}[Task Relation Constraints]\label{def:task-constraints}
+\begin{definition}\label{def:task-constraints}
 	The task relation $\taskrel$ satisfies:
 
 	\begin{enumerate}
