@@ -114,13 +114,9 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 	\begin{itemize}
 		\item $\tuple{\statespace, \parthood}$ is a constitutive frame
 		\item $\temporalorder = \tuple{D, +, \leq}$ is a totally ordered abelian group
-		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the constraints below
+		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the following constraints where $\task{s}{d}{t}$ indicates that there is a task from $s$ to $t$ in duration $d$:
 	\end{itemize}
 \end{definition}
-
-\begin{notation}
-	We write $\task{s}{d}{t}$ to denote that $(s, d, t) \in \taskrel$, read ``there is a task from $s$ to $t$ of duration $d$.''
-\end{notation}
 
 % ------------------------------------------------------------
 % State Modality Definitions
