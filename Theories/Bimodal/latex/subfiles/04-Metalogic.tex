@@ -138,16 +138,15 @@ The semantic approach defines world states as equivalence classes of (history, t
 A world state is an equivalence class of (history, time) pairs under the relation where two pairs are equivalent iff they denote the same underlying world state.\footnote{This is formalized as \texttt{SemanticWorldState}.}
 \end{definition}
 
-% TODO: it would be nice if SemanticCanonicalFrame in the lean source code was renamed CanonicalTaskFrame since this is more accurate
-
-\begin{definition}[\texttt{SemanticCanonicalFrame}]
-The \textbf{canonical semantic frame} has:
+\begin{definition}[Universal Canonical Model]
+The \textbf{canonical model} is built from an indexed MCS family using the \texttt{IndexedMCSFamily D} construction:
 \begin{itemize}
-  \item World states: Equivalence classes of history-time pairs over maximal consistent sets
-  \item Times: Integers ($\mathbb{Z}$)
-  \item Task relation: Defined via history existence (\texttt{SemanticTaskRelV2})
+  \item Indexed family: \texttt{IndexedMCSFamily D} assigns an MCS to each time $t : D$
+  \item Temporal coherence: G/H formulas propagate between time-indexed MCS via strict inequalities
+  \item Canonical frame: \texttt{canonical\_model D family} with task relation via histories
+  \item Duration type: Parametric over totally ordered abelian group $D$
 \end{itemize}
-The frame satisfies nullity and compositionality.
+The construction is formula-independent and universally parametric, avoiding the T-axiom requirement of same-MCS-at-all-times approaches.\footnote{The T-axiom ($G\varphi \to \varphi$) is \emph{not} valid in TM logic because G/H are irreflexive operators.}
 \end{definition}
 
 \begin{definition}[Canonical Valuation]
@@ -155,7 +154,7 @@ An atom $p$ is true at world state $[\tau, x]$ iff $p \in \mathsf{MCS}(\tau(x))$
 \end{definition}
 
 \begin{lemma}[Truth Lemma]
-In the semantic canonical model, $\varphi \in \mathsf{MCS}(\tau(x))$ iff $\varphi$ is true at world state $[\tau, x]$.\footnote{This is proven as \texttt{semantic\_truth\_lemma\_v2}.}
+In the canonical model, $\varphi \in \mathsf{MCS}(t)$ iff $\varphi$ is true at time $t$ in the canonical model.\footnote{This is proven as \texttt{truth\_lemma} in \texttt{Theories/Bimodal/Metalogic/Representation/TruthLemma.lean}.}
 \end{lemma}
 
 % TODO: This is not in the correct spirit of a representation theorem which aims to build a semantic object out of pure syntax. A purely syntactic, and fully general approach should be carefully researched and implemented, thinking hardest about this crux of the metalogic.
@@ -166,8 +165,8 @@ The \emph{Truth Lemma} follows directly from this construction: membership in a 
 
 \subsubsection{Representation Theorem}
 
-\begin{theorem}[Representation Theorem (\texttt{representation\_theorem})]
-Every consistent context is satisfiable in the canonical model.
+\begin{theorem}[Representation Theorem]
+Every consistent formula is satisfiable in the canonical model.\footnote{This is proven as \texttt{representation\_theorem} in \texttt{Theories/Bimodal/Metalogic/Representation/UniversalCanonicalModel.lean}.}
 \end{theorem}
 
 This theorem is the pivotal result linking syntax to semantics.
@@ -249,7 +248,20 @@ By contraposition, validity implies provability.
 
 \subsubsection{Strong Completeness}
 
-% TODO: This still leaves infinite contexts/sets remaining to be addressed, where this should be addressed by compactness
+\subsubsection{Note on Infinite Contexts}
+
+The current implementation uses list-based finite contexts (\texttt{Context = List Formula}).
+This makes the compactness theorem trivial: if every finite subset of $\Gamma$ is satisfiable, then $\Gamma$ is satisfiable (since $\Gamma$ is already finite).
+
+A true compactness result for infinite sets would require:
+\begin{enumerate}
+  \item Migrating from \texttt{List Formula} to \texttt{Set Formula} contexts
+  \item Ensuring derivability is finitary (derivations use finitely many premises)
+  \item Proving: if $\Gamma \models \varphi$, then finite $\Delta \subseteq \Gamma$ with $\Delta \models \varphi$
+\end{enumerate}
+
+This is a standard result in modal logic but is not required for the current completeness proof.
+See \texttt{Boneyard/Metalogic\_v2/Applications/Compactness.lean} for the trivial version with list-based contexts.
 
 \begin{theorem}[Strong Completeness]
 If $\context \satisfies \varphi$, then $\context \proves \varphi$.\footnote{This is proven as \texttt{main\_strong\_completeness} with bridge sorries for the generalization.}
@@ -378,8 +390,9 @@ Despite computational limitations, decidability is practically valuable: small f
 
 \subsection{File Organization and Dependencies}
 
-The \texttt{Metalogic\_v2} directory contains 27 Lean files organized into six subdirectories.
-The following diagram illustrates the import structure, showing how files depend on each other.
+The active metalogic infrastructure is in \texttt{Theories/Bimodal/Metalogic/}, using the \texttt{IndexedMCSFamily} approach.
+Deprecated code in \texttt{Boneyard/Metalogic\_v2/} is preserved for historical reference.
+The following diagram illustrates the import structure of the active codebase.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -470,8 +483,8 @@ Component & Status & Lean \\
 Soundness & Proven & \texttt{soundness} \\
 Deduction Theorem & Proven & \texttt{deduction\_theorem} \\
 Lindenbaum Lemma & Proven & \texttt{set\_lindenbaum} \\
-Canonical Frame & Proven & \texttt{SemanticCanonicalFrame} \\
-Truth Lemma & Proven & \texttt{semantic\_truth\_lemma\_v2} \\
+IndexedMCSFamily & Proven & \texttt{IndexedMCSFamily} \\
+Truth Lemma & Proven & \texttt{truth\_lemma} \\
 Representation Theorem & Proven & \texttt{representation\_theorem} \\
 Weak Completeness & Proven & \texttt{semantic\_weak\_completeness} \\
 Strong Completeness & Proven* & \texttt{main\_strong\_completeness} \\
