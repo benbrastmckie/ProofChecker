@@ -27,6 +27,27 @@ The interpretation function I assigns:
 
 We use `Fin n → S` for n-ary functions over states, which is equivalent
 to `Sⁿ → S` in the paper notation.
+
+## Set vs Prop Equivalence
+
+The LaTeX specification defines verifier and falsifier types as predicates:
+
+    |F|⁺, |F|⁻ : ((Fin n → S) → S) → Prop
+
+This implementation uses the equivalent Set-based formulation:
+
+    verifierFns : Set ((Fin n → F.State) → F.State)
+
+These are **mathematically equivalent** in Lean 4 because `Set α` is defined
+as `α → Prop` (see Mathlib/Data/Set/Basic.lean). Therefore:
+
+    Set ((Fin n → State) → State) = ((Fin n → State) → State) → Prop
+
+**Design rationale**: The Set notation emphasizes the collectional aspect
+(sets of functions satisfying mereological constraints), while the Prop
+notation emphasizes the logical aspect (predicates on functions). Both
+capture the same mathematical structure, and the Set formulation provides
+more idiomatic Lean syntax for membership operations (∈, ⊆, ∪, etc.).
 -/
 
 namespace Logos.SubTheories.Foundation
@@ -74,6 +95,11 @@ Predicate interpretation: a bilateral proposition for each arity.
 For n-ary predicates, verifier and falsifier "functions" are actually
 sets of functions Sⁿ → S. For sentence letters (0-ary), these reduce to
 sets of states.
+
+**LaTeX equivalence**: The LaTeX specification writes these as predicates:
+  `|F|⁺, |F|⁻ : ((Fin n → S) → S) → Prop`
+Since `Set α := α → Prop` in Lean 4, our Set-based formulation is mathematically
+identical to the predicate-based LaTeX notation.
 
 The verifier and falsifier function sets must satisfy two mereological constraints:
 

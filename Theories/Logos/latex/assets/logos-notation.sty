@@ -27,7 +27,7 @@
 % ============================================================================
 
 % --- State Space ---
-\newcommand{\statespace}{S}
+\newcommand{\statespace}{\mathcal{S}}
 \newcommand{\nullstate}{\square}
 \newcommand{\fullstate}{\sqbullet}
 \newcommand{\fusion}[2]{#1\sqcup#2}
@@ -70,7 +70,7 @@
 % ============================================================================
 
 % --- Temporal Order ---
-\newcommand{\temporalorder}{D}
+\newcommand{\temporalorder}{\mathcal{D}}
 \newcommand{\timelt}{<}
 \newcommand{\timeleq}{\leq}
 
@@ -94,14 +94,14 @@
 \newcommand{\tempindex}{\vec{\imath}}
 
 % --- Core Tense Operators ---
-\newcommand{\always}{H}           % always past
-\newcommand{\willalways}{G}       % always future
-\newcommand{\waspast}{P}          % some past
-\newcommand{\willfuture}{F}       % some future
+\newcommand{\allpast}{H}           % always past
+\newcommand{\allfuture}{G}       % always future
+\newcommand{\somepast}{P}          % some past
+\newcommand{\somefuture}{F}       % some future
 
 % --- Derived Tense Operators ---
-\newcommand{\alwaystemporal}{\triangle}       % at all times
-\newcommand{\sometimestemporal}{\triangledown} % at some time
+\newcommand{\always}{\ensuremath \raisebox{-1.3pt}{$\triangle$}}
+\newcommand{\sometimes}{\ensuremath \raisebox{1.3pt}{\rotatebox[origin=c]{180}{$\triangle$}}}
 
 % --- Extended Tense Operators ---
 \newcommand{\since}{\triangleleft}
@@ -112,8 +112,8 @@
 \newcommand{\imposition}[2]{#1 \to_{#2}}
 
 % --- Store/Recall ---
-\newcommand{\store}[1]{\uparrow^{#1}}
-\newcommand{\recall}[1]{\downarrow^{#1}}
+\newcommand{\store}[1]{\uparrow^{#1}\hspace{-2pt}}
+\newcommand{\recall}[1]{\downarrow^{#1}\hspace{-2pt}}
 
 % --- Actuality ---
 \newcommand{\actual}{\mathsf{Act}}
