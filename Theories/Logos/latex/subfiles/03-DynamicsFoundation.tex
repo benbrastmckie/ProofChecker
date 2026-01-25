@@ -128,10 +128,10 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 
 \subsection{State Modality Definitions}\label{sec:state-modality}
 
-% FIX: convert the definitions to dependent type theory definitions for consistency both here and with the implementation in the lean source code
+% FIX: convert the definitions below to dependent type theory definitions for consistency both here and with the implementation in the lean source code
 
 \begin{definition}\label{def:state-modality}
-	Let $\mframe = \tuple{\statespace, \parthood, \temporalorder, \taskrel}$ be a dynamical frame.
+	Letting $\mframe = \tuple{\statespace, \parthood, \temporalorder, \taskrel}$ be a dynamical frame, we define:
 	\begin{align}
 		s \in \possible    & \iff \task{s}{0}{s}                                                &  & \text{(Possible state)}    \\
 		s \connected t     & \iff \task{s}{d}{t} \text{ or } \task{t}{d}{s} \text{ for some } d &  & \text{(Connected states)}  \\
@@ -141,12 +141,16 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 	\end{align}
 \end{definition}
 
-\begin{definition}[Maximal Compatible Part]\label{def:maximal-compatible}
-	The set of \emph{maximal $t$-compatible parts} of $r$ is:
+% FIX: convert the definition below to dependent type theory definitions for consistency both here and with the implementation in the lean source code
+
+\begin{definition}\label{def:maximal-compatible}
+	A \emph{maximal $t$-compatible part} of $r$ is defined:
 	\[
 		\maxcompat{r}{t} := \set{s : s \parthood r, s \compatible t, \text{ and } s' \parthood s \text{ for all } s' \text{ where } s \parthood s' \parthood r \text{ and } s' \compatible t}
 	\]
 \end{definition}
+
+% FIX: the remark below should be used instead to improve the definition above of a world-state in def:state-modality which is currently stated in terms of 'maximal' which is not defined and then combined to define world-states
 
 \begin{remark}
 	A world-state $w \in \worldstates$ is maximal in the sense that $t \parthood w$ for every compatible state $t \compatible w$.
