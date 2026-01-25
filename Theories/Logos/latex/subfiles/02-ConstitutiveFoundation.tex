@@ -223,6 +223,11 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 	\end{align}
 \end{definition}
 
+\begin{remark}[Negation Semantics]
+Negation exchanges verifiers and falsifiers: what makes $\metaA$ true makes $\neg\metaA$ false, and vice versa.
+This maintains bilateral symmetry and ensures that a state wholly relevant to $\metaA$ is equally relevant to $\neg\metaA$.
+\end{remark}
+
 \subsubsection{Conjunction}\label{sec:conjunction}
 
 \begin{definition}[Conjunction Verification and Falsification]\label{def:conjunction-verification}
@@ -236,6 +241,15 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 	\end{align}
 \end{definition}
 
+\begin{remark}[Conjunction Semantics]
+A conjunction $\metaA \land \metaB$ is verified by a state that is the \textit{fusion} of a verifier for $\metaA$ and a verifier for $\metaB$.
+If state $t$ verifies ``Alice is thinking'' and state $u$ verifies ``Alice is writing,'' then $\fusion{t}{u}$ verifies ``Alice is thinking and writing.''
+Crucially, $\fusion{t}{u}$ does \textit{not} verify ``Alice is thinking'' alone since $u$ is irrelevant to that claim---this non-monotonicity is characteristic of exact semantics.
+
+The falsification clause is \textit{inclusive}: a conjunction is falsified by anything that falsifies either conjunct, or by a fusion of falsifiers for both.
+This ensures that every verifier for $\metaA \land \metaB$ also verifies $\metaA \lor \metaB$, a natural uniformity condition.
+\end{remark}
+
 \subsubsection{Disjunction}\label{sec:disjunction}
 
 \begin{definition}[Disjunction Verification and Falsification]\label{def:disjunction-verification}
@@ -248,6 +262,12 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 		 & \text{and } \model, \assignment, u \falsifies \metaB
 	\end{align}
 \end{definition}
+
+\begin{remark}[Disjunction Semantics]
+Disjunction is dual to conjunction: verification and falsification swap roles.
+A disjunction $\metaA \lor \metaB$ is falsified by a fusion of falsifiers for each disjunct---the state must be wholly relevant to falsifying both.
+The verification clause is inclusive, mirroring the falsification clause for conjunction.
+\end{remark}
 
 \subsubsection{Top and Bottom}\label{sec:top-bottom}
 
