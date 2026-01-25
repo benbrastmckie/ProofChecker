@@ -348,15 +348,38 @@ See \leansrc{Logos.Foundation.Relations}{essence} for the implementation.
 	\end{itemize}
 \end{definition}
 
-% TODO: Find and include the definition of a non-interlaced bilattice given in /home/benjamin/Philosophy/Papers/IdentityAboutness/IdentityAboutness.tex, starting with the definition of a bilattice as well as drawing on the explanations given in this paper to provide clear and precise explanations below that are both brief and illuminating.
+\begin{definition}[Bilattice]\label{def:bilattice}
+A \emph{bilattice} is a structure $B = \tuple{P, \essence, \ground, \neg}$ where:
+\begin{itemize}
+	\item $\tuple{P, \essence}$ is a complete lattice (the \emph{essence} or ``information'' order)
+	\item $\tuple{P, \ground}$ is a complete lattice (the \emph{ground} or ``truth'' order)
+	\item $\neg : P \to P$ is an \emph{involutive negation}: $\neg\neg X = X$
+	\item Negation exchanges the two orderings: $X \essence Y \iff \neg X \ground \neg Y$
+\end{itemize}
+A bilattice is \emph{interlaced} when its two orders interact uniformly:
+$(X \star Z) \circ (Y \star Z)$ whenever $X \circ Y$, for any lattice operation $\star$ and either order $\circ$.
+\end{definition}
 
-\begin{remark}[Bilattice Structure]
-	The space of bilateral propositions forms a non-interlaced bilattice where:
-	\begin{itemize}
-		\item $\tuple{P, \essence}$ and $\tuple{P, \ground}$ are complete lattices
-		\item Negation exchanges the two orderings: $X \ground Y$ iff $\neg X \essence \neg Y$
-		\item Conjunction and disjunction are the least upper bounds with respect to $\essence$ and $\ground$ respectively
-	\end{itemize}
+\begin{remark}[Interpreting the Two Orders]\label{rem:bilattice-orders}
+The essence order $X \essence Y$ captures \emph{conjunctive containment}:
+every verifier for $Y$ has a part that verifies $X$, and every falsifier for $X$ also falsifies $Y$.
+Intuitively, $X$ is ``essentially contained in'' $Y$---the positive content of $X$ is part of $Y$'s positive content.
+
+The ground order $X \ground Y$ captures \emph{disjunctive containment}:
+every falsifier for $Y$ has a part that falsifies $X$, and every verifier for $X$ also verifies $Y$.
+Intuitively, $X$ ``grounds'' $Y$---the negative content of $X$ is part of $Y$'s negative content.
+\end{remark}
+
+\begin{remark}[Bilattice Structure of Bilateral Propositions]\label{rem:bilattice-structure}
+The space of bilateral propositions forms a \emph{non-interlaced} bilattice:
+\begin{itemize}
+	\item Conjunction is the least upper bound with respect to $\essence$
+	\item Disjunction is the least upper bound with respect to $\ground$
+	\item The two orders need not interact uniformly (hence non-interlaced)
+\end{itemize}
+The failure of interlacing reflects the hyperintensional nature of the semantics:
+giving up Boolean identities allows the two orders to diverge.
+See Ginsberg (1988) and Fitting (1989--2002) for the general theory of bilattices.
 \end{remark}
 
 \begin{definition}[Propositional Operations]\label{def:propositional-operations}
