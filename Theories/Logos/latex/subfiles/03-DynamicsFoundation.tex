@@ -257,23 +257,30 @@ See \leansrc{Logos.Dynamics.Model}{DynamicalModel}.
 
 \subsection{Truth Conditions}\label{sec:truth-conditions}
 
-% TODO: I want to revise the dynamical semantics systematically to evaluate sentences at a model, evolutions, time, variable assignment, and temporal index, but use the same \tau, ... as variables for evolutions
-
-Truth is evaluated relative to a model $\model$, world-history $\history$, time $x : D$, variable assignment $\assignment$, and temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$:
+Truth is evaluated relative to five parameters:
+\begin{itemize}
+    \item $\model$: a dynamical model
+    \item $\tau$: a world-history (an evolution $\tau : X \to \statespace$ over convex $X \subseteq D$)
+    \item $x$: a time point ($x \in D$ such that $x \in \mathrm{dom}(\tau)$)
+    \item $\assignment$: a variable assignment ($\assignment : \mathsf{Var} \to \statespace$)
+    \item $\tempindex$: a temporal index ($\tempindex = \tuple{i_1, i_2, \ldots}$ storing times for recall operators)
+\end{itemize}
+\noindent
+We write $\model, \tau, x, \assignment, \tempindex \trueat \metaA$ to indicate that $\metaA$ is true at $\model$, $\tau$, $x$, $\assignment$, $\tempindex$.
 
 \subsubsection{Atomic Sentences}
 
 \begin{definition}[Atomic Truth]\label{def:atomic-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat F(t_1, \ldots, t_n)  & \iff \exists f \in \verifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)  \\
-		\model, \history, x, \assignment, \tempindex \falseat F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \history(x)
+		\model, \tau, x, \assignment, \tempindex \trueat F(t_1, \ldots, t_n)  & \iff \exists f \in \verifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \tau(x)  \\
+		\model, \tau, x, \assignment, \tempindex \falseat F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \tau(x)
 	\end{align}
 \end{definition}
 
 \begin{theorem}[Bivalence for World-Histories]\label{thm:bivalence}
-For any world-history $\history : \mathsf{WorldHistory}(\mframe)$, model $\model$, time $x : D$, assignment $\assignment$, and temporal index $\tempindex$:
+For any world-history $\tau : \mathsf{WorldHistory}(\mframe)$, model $\model$, time $x : D$, assignment $\assignment$, and temporal index $\tempindex$:
 \[
-    \model, \history, x, \assignment, \tempindex \trueat \metaA \iff \model, \history, x, \assignment, \tempindex \nfalseat \metaA
+    \model, \tau, x, \assignment, \tempindex \trueat \metaA \iff \model, \tau, x, \assignment, \tempindex \nfalseat \metaA
 \]
 \end{theorem}
 
@@ -283,29 +290,62 @@ This bivalence property breaks down for non-maximal evolutions $\tau$ that are n
 
 \subsubsection{Lambda Abstraction and Quantification}
 
-% NOTE: I want to avoid using x, y, z as first-order variables, using v_1, v_2, v_3, ... instead since x, y, z are reserved for times in the metalangauge.
-
-% TODO: clean up the below where labdas are just for binding the last free variable (if any) and universal quantifiers are just for quantifying the last open variable in the sentence (if any). Research careful conventions and definitions, defining them above to match the lean code.
-
-\begin{definition}[Lambda and Quantification]\label{def:lambda-quant-truth}
-	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat (\lambda v.\metaA)(t) & \iff \model, \history, x, \assignsub{\sem{t}^\assignment_\model}{v}, \tempindex \trueat \metaA           \\
-    \model, \history, x, \assignment, \tempindex \trueat \forall \metaA(v)      & \iff \model, \history, x, \assignsub{s}{v}, \tempindex \trueat \metaA(v) \text{ for all } s : \statespace
-	\end{align}
+\begin{definition}[Syntactic Conventions]\label{def:syntactic-conventions}
+The following are abbreviations for primitive syntax:
+\begin{align*}
+    \forall v.\metaA &:= \forall(\lambda v.\metaA) && \text{where $\lambda v.\metaA$ binds variable $v$ in $\metaA$} \\
+    \exists v.\metaA &:= \exists(\lambda v.\metaA) && \text{where $\exists := \neg\forall\neg$}
+\end{align*}
+These abbreviations reduce quantified formulas to applications of the universal quantifier $\forall$ (or its dual $\exists$) to lambda-abstracted properties.
 \end{definition}
+
+\begin{definition}[Lambda Application and Universal Quantification]\label{def:lambda-quant-truth}
+The primitive semantic clauses for lambda application and universal quantification are:
+\begin{align}
+    \model, \tau, x, \assignment, \tempindex \trueat (\lambda v.\metaA)(t) &\iff \model, \tau, x, \assignsub{\sem{t}^\assignment_\model}{v}, \tempindex \trueat \metaA \\
+    \model, \tau, x, \assignment, \tempindex \trueat \forall(P) &\iff \model, \tau, x, \assignsub{s}{v}, \tempindex \trueat P \text{ for all } s : \statespace
+\end{align}
+where $P$ is a property (a formula with at least one free variable $v$), and $\assignsub{s}{v}$ extends the assignment $\assignment$ by mapping $v$ to $s$.
+\end{definition}
+
+\begin{remark}[Reduction of Quantified Formulas]
+To evaluate $\forall v.\metaA$, we expand via the syntactic convention and then apply the primitive semantic clauses:
+\begin{align*}
+    \model, \tau, x, \assignment, \tempindex \trueat \forall v.\metaA
+    &\iff \model, \tau, x, \assignment, \tempindex \trueat \forall(\lambda v.\metaA) && \text{(syntactic sugar)} \\
+    &\iff \model, \tau, x, \assignsub{s}{v}, \tempindex \trueat \metaA \text{ for all } s : \statespace && \text{(by $\forall$ and $\lambda$ semantics)}
+\end{align*}
+This matches the Lean implementation where \texttt{Formula.all} and \texttt{Formula.lambdaApp} are separate constructors.
+\end{remark}
+
+\begin{remark}[Naming Conventions]\label{rem:naming-conventions}
+In this LaTeX presentation, we distinguish:
+\begin{itemize}
+    \item \textbf{Metalanguage times}: denoted $x, y, z \in D$
+    \item \textbf{Object language variables}: denoted $v, v_1, v_2, \ldots$
+    \item \textbf{States}: denoted $s, t, r \in \statespace$
+\end{itemize}
+In the Lean implementation (\texttt{Truth.lean}):
+\begin{itemize}
+    \item Times use identifiers \texttt{t}, \texttt{y}
+    \item Variables use \texttt{x} (of type \texttt{String})
+    \item States use identifiers \texttt{s}, \texttt{t}, \texttt{r}
+\end{itemize}
+This notational divergence is intentional to avoid confusion between metalanguage time variables (ranging over the temporal order $D$) and object language term variables (bound by quantifiers and lambda abstractions).
+\end{remark}
 
 \subsubsection{Actuality Predicate}
 
 \begin{definition}[Actuality]\label{def:actuality-truth}
 	\[
-		\model, \history, x, \assignment, \tempindex \trueat \actual(t) \iff \sem{t}^\assignment_\model \parthood \history(x)
+		\model, \tau, x, \assignment, \tempindex \trueat \actual(t) \iff \sem{t}^\assignment_\model \parthood \tau(x)
 	\]
 \end{definition}
 
 \begin{remark}[Restricted Quantification]
 The actuality predicate enables restricting quantification to actually existing objects:
 \[
-    \forall y(\actual(y) \to \metaA) \text{ is true iff } \metaA \text{ holds for all states that are parts of } \history(x)
+    \forall y(\actual(y) \to \metaA) \text{ is true iff } \metaA \text{ holds for all states that are parts of } \tau(x)
 \]
 The unrestricted universal quantifier validates the Barcan formulas ($\forall x \nec\metaA \to \nec\forall x\metaA$ and its converse), while the actuality-restricted quantifier does not.
 
@@ -323,10 +363,10 @@ Both are restrictions of the full unrestricted quantifier, with the unrestricted
 
 \begin{definition}[Extensional Connectives]\label{def:extensional-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat \neg\metaA          & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA                                                                         \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \land \metaB & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ and } \model, \history, x, \assignment, \tempindex \trueat \metaB \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
-		% \model, \history, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
+		\model, \tau, x, \assignment, \tempindex \trueat \neg\metaA          & \iff \model, \tau, x, \assignment, \tempindex \falseat \metaA                                                                         \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \land \metaB & \iff \model, \tau, x, \assignment, \tempindex \trueat \metaA \text{ and } \model, \tau, x, \assignment, \tempindex \trueat \metaB \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \tau, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \tau, x, \assignment, \tempindex \trueat \metaB
+		% \model, \tau, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \tau, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \tau, x, \assignment, \tempindex \trueat \metaB
 	\end{align}
 \end{definition}
 
@@ -335,8 +375,8 @@ Both are restrictions of the full unrestricted quantifier, with the unrestricted
 \begin{definition}[Stability]\label{def:stability-truth}
 The \emph{stability operator} $\mathsf{Stab}\metaA$ quantifies over all histories sharing the current world-state:
 \[
-    \model, \history, x, \assignment, \tempindex \trueat \mathsf{Stab}\metaA \iff
-    \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe) \text{ where } \alpha(x) = \history(x)
+    \model, \tau, x, \assignment, \tempindex \trueat \mathsf{Stab}\metaA \iff
+    \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe) \text{ where } \alpha(x) = \tau(x)
 \]
 \end{definition}
 
@@ -355,8 +395,8 @@ The modal operators are derived from the counterfactual:
 \end{itemize}
 The semantic clauses follow from these definitions:
 \begin{align}
-    \model, \history, x, \assignment, \tempindex \trueat \nec\metaA  & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe)  \\
-    \model, \history, x, \assignment, \tempindex \trueat \poss\metaA & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for some } \alpha : \mathsf{WorldHistory}(\mframe)
+    \model, \tau, x, \assignment, \tempindex \trueat \nec\metaA  & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe)  \\
+    \model, \tau, x, \assignment, \tempindex \trueat \poss\metaA & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for some } \alpha : \mathsf{WorldHistory}(\mframe)
 \end{align}
 This yields an S5 modal logic.
 \end{remark}
@@ -365,8 +405,8 @@ This yields an S5 modal logic.
 
 \begin{definition}[Primitive Tense Operators]\label{def:tense-truth}
 \begin{align}
-    \model, \history, x, \assignment, \tempindex \trueat \allpast\metaA     & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y < x  \\
-    \model, \history, x, \assignment, \tempindex \trueat \allfuture\metaA & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y > x
+    \model, \tau, x, \assignment, \tempindex \trueat \allpast\metaA     & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y < x  \\
+    \model, \tau, x, \assignment, \tempindex \trueat \allfuture\metaA & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y > x
 \end{align}
 \end{definition}
 
@@ -378,8 +418,8 @@ The ``sometimes'' operators are derived:
 \end{itemize}
 Their semantic clauses follow:
 \begin{align}
-    \model, \history, x, \assignment, \tempindex \trueat \somepast\metaA    & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y < x \\
-    \model, \history, x, \assignment, \tempindex \trueat \somefuture\metaA & \iff \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y > x
+    \model, \tau, x, \assignment, \tempindex \trueat \somepast\metaA    & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y < x \\
+    \model, \tau, x, \assignment, \tempindex \trueat \somefuture\metaA & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y > x
 \end{align}
 \end{remark}
 
@@ -387,12 +427,12 @@ Their semantic clauses follow:
 
 \begin{definition}[Since and Until]\label{def:since-until-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \since \metaB \iff 
-      & \text{there exists } z < x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \text{ and} \notag \\
-	    & \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \until \metaB \iff 
-      & \text{there exists } z > x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \text{ and}\notag \\
-		  & \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \since \metaB \iff 
+      & \text{there exists } z < x \text{ where } \model, \tau, z, \assignment, \tempindex \trueat \metaB \text{ and} \notag \\
+	    & \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \until \metaB \iff 
+      & \text{there exists } z > x \text{ where } \model, \tau, z, \assignment, \tempindex \trueat \metaB \text{ and}\notag \\
+		  & \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
 	\end{align}
 \end{definition}
 
@@ -400,9 +440,9 @@ Their semantic clauses follow:
 
 \begin{definition}[Counterfactual Conditional]\label{def:counterfactual-truth}
 	\[
-    \model, \history, x, \assignment, \tempindex \trueat \metaA \boxright \metaC \iff \model, \beta, x, \assignment, \tempindex \trueat \metaC \text{ whenever } \model, \assignment, s \verifies \metaA \text{ and } \beta : \altworlds{\tau}{s}{x}
+    \model, \tau, x, \assignment, \tempindex \trueat \metaA \boxright \metaC \iff \model, \beta, x, \assignment, \tempindex \trueat \metaC \text{ whenever } \model, \assignment, s \verifies \metaA \text{ and } \beta : \altworlds{\tau}{s}{x}
 	\]
-	% if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
+	% if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\tau(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
 \end{definition}
 
 \begin{definition}[Imposition]\label{def:imposition}
@@ -422,8 +462,8 @@ where $\imposition{t}{w}{w'}$ holds iff there exists $r \in \maxcompat{w}{t}$ su
 \begin{definition}[Store and Recall]\label{def:store-recall-truth}
 	For cross-temporal reference, the context includes a temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$ of stored times:
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat \store{k}\metaA  & \iff \model, \history, x, \assignment, \tempindex[x/i_k] \trueat \metaA \\
-		\model, \history, x, \assignment, \tempindex \trueat \recall{k}\metaA & \iff \model, \history, i_k, \assignment, \tempindex \trueat \metaA
+		\model, \tau, x, \assignment, \tempindex \trueat \store{k}\metaA  & \iff \model, \tau, x, \assignment, \tempindex[x/i_k] \trueat \metaA \\
+		\model, \tau, x, \assignment, \tempindex \trueat \recall{k}\metaA & \iff \model, \tau, i_k, \assignment, \tempindex \trueat \metaA
 	\end{align}
 	where $\tempindex[x/i_k]$ replaces $i_k$ with current time $x$.
 \end{definition}
@@ -496,7 +536,7 @@ The framework does not assume discrete time:
 
 \begin{definition}[Logical Consequence]\label{def:consequence-core}
 	\[
-		\context \trueat \metaA \iff \text{for any } \model, \history \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \history, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \history, x, \assignment, \tempindex \trueat \metaA
+		\context \trueat \metaA \iff \text{for any } \model, \tau \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \tau, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \tau, x, \assignment, \tempindex \trueat \metaA
 	\]
 \end{definition}
 
