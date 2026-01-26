@@ -250,7 +250,7 @@ If state $t$ verifies ``Alice is thinking'' and state $u$ verifies ``Alice is wr
 Crucially, $\fusion{t}{u}$ does \textit{not} verify ``Alice is thinking'' alone since $u$ is irrelevant to that claim. The non-monotonicity of the verification and falsification relations is characteristic of exact semantics.
 
 The falsification clause is \textit{inclusive}: a conjunction is falsified by anything that falsifies either conjunct, or by a fusion of falsifiers for both conjuncts.
-This ensures that $\metaA \land \metaA$ has the same falsifiers as $\metaA$ so that we may accept $\metaA \land \metaA \equiv \metaA$, a natural idempotence law.
+This ensures that $\metaA \land \metaA$ has the same falsifiers as $\metaA$ so that $\metaA \land \metaA \equiv \metaA$ comes out valid, providing a natural idempotence law.
 \end{remark}
 
 \subsubsection{Disjunction}\label{sec:disjunction}
@@ -269,7 +269,7 @@ This ensures that $\metaA \land \metaA$ has the same falsifiers as $\metaA$ so t
 \begin{remark}[Disjunction Semantics]
 Disjunction is dual to conjunction: verification and falsification swap roles.
 A disjunction $\metaA \lor \metaB$ is falsified by a fusion of falsifiers for each disjunct---the state must be wholly relevant to falsifying both.
-The verification clause is inclusive, mirroring the falsification clause for conjunction.
+The verification clause is inclusive, mirroring the falsification clause for conjunction, making $\metaA \lor \metaA \equiv \metaA$ valid.
 \end{remark}
 
 \subsubsection{Top and Bottom}\label{sec:top-bottom}
@@ -319,11 +319,12 @@ These constitutive relations can be defined via propositional identity:
 \end{definition}
 
 \begin{definition}[Reduction]\label{def:reduction}
-\emph{Reduction} combines essence and ground:
-\[
-	\metaA \Rightarrow \metaB \define (\metaA \essence \metaB) \land (\metaA \ground \metaB)
-\]
-This expresses that $\metaA$ is both a conjunctive part (essential to) and a disjunctive part (grounds) of $\metaB$.
+  \emph{Reduction} combines essence and ground:
+  \[
+    \metaA \Rightarrow \metaB \define (\metaA \essence \metaB) \land (\metaA \ground \metaB)
+  \]
+  Reduction expresses that $\metaA$ is both essential to (necessary for) and grounds (sufficient for) $\metaB$.
+  Examples include $\metaA \Rightarrow \metaA \lor (\metaA \land \metaB)$ and $\metaA \Rightarrow \metaA \land (\metaA \lor \metaB)$. 
 \end{definition}
 
 \begin{remark}
@@ -335,7 +336,7 @@ This expresses that $\metaA$ is both a conjunctive part (essential to) and a dis
 \end{remark}
 
 \noindent
-See \leansrc{Logos.Foundation.Relations}{essence} for the implementation.
+See \leansrc{Logos.Foundation.Relations}{essence}.
 
 % ------------------------------------------------------------
 % Bilateral Propositions
@@ -354,16 +355,16 @@ See \leansrc{Logos.Foundation.Relations}{essence} for the implementation.
 \begin{definition}[Bilattice]\label{def:bilattice}
 A \emph{bilattice} is a structure $B = \tuple{P, \essence, \ground, \neg}$ where:
 \begin{itemize}
-	\item $\tuple{P, \essence}$ is a complete lattice (the \emph{essence} or ``information'' order)
-	\item $\tuple{P, \ground}$ is a complete lattice (the \emph{ground} or ``truth'' order)
+	\item $\tuple{P, \essence}$ is a complete lattice (the \emph{essence} order)
+	\item $\tuple{P, \ground}$ is a complete lattice (the \emph{ground} order)
 	\item $\neg : P \to P$ is an \emph{involutive negation}: $\neg\neg X = X$
 	\item Negation exchanges the two orderings: $X \essence Y \iff \neg X \ground \neg Y$
 \end{itemize}
-A bilattice is \emph{interlaced} when its two orders interact uniformly:
+A bilattice is \emph{interlaced} when its orders interact uniformly:
 $(X \star Z) \circ (Y \star Z)$ whenever $X \circ Y$, for any lattice operation $\star$ and either order $\circ$.
 \end{definition}
 
-\begin{remark}[Interpreting the Two Orders]\label{rem:bilattice-orders}
+\begin{remark}\label{rem:bilattice-orders}
 The essence order $X \essence Y$ captures \emph{conjunctive containment}:
 every verifier for $Y$ has a part that verifies $X$, and every falsifier for $X$ also falsifies $Y$.
 Intuitively, $X$ is ``essentially contained in'' $Y$---the positive content of $X$ is part of $Y$'s positive content.
