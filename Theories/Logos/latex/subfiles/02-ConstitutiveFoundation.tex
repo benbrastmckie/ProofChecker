@@ -31,11 +31,11 @@ The Constitutive Foundation interprets the following syntactic primitives:
 
 \begin{definition}[Well-Formed Formulas]\label{def:wff}
 The set of \emph{well-formed formulas} is defined inductively:
-\begin{align*}
-	\metaA \Define{}& p \mid F(t_1, \ldots, t_n) \mid \top \mid \bot \\
-	\mid{}& \neg\metaA \mid (\metaA \land \metaB) \mid (\metaA \lor \metaB) \\
-	\mid{}& (\metaA \equiv \metaB) \mid (\lambda x.\metaA)(t)
-\end{align*}
+  \[
+    \metaA, \metaB \Define{} F(t_1, \ldots, t_n) \mid \top \mid \bot
+    \mid{} \neg\metaA \mid (\metaA \land \metaB) \mid (\metaA \lor \metaB)
+    \mid{} (\metaA \equiv \metaB) \mid (\lambda x.\metaA)(t)
+  \]
 where $p$ ranges over sentence letters, $F$ over $n$-place predicates, $t, t_i$ over terms, and $x$ over variables.
 \end{definition}
 
