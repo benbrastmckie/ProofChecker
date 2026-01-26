@@ -114,16 +114,7 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 	\begin{itemize}
 		\item $\tuple{\statespace, \parthood}$ is a constitutive frame
 		\item $\temporalorder = \tuple{D, +, \leq}$ is a totally ordered abelian group
-		% \item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
-		\item A ternary \textit{task relation} $\taskrel$ on $\statespace \times D \times \statespace$ satisfying the constraints below where $\task{s}{x}{t}$ indicates that there is a task from $s$ to $t$ in duration $x$:
-    \begin{itemize}
-      \item \textbf{Compositionality}: If $\task{s}{x}{t}$ and $\task{t}{y}{u}$, then $\task{s}{x+y}{u}$
-      \item \textbf{Parthood (Left)}: If $d \parthood s$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $r \parthood t$
-      \item \textbf{Parthood (Right)}: If $r \parthood t$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $d \parthood s$
-      \item \textbf{Containment (Left)}: If $s \in \possible$, $d \parthood s$, and $\task{d}{x}{r}$, then $\task{s}{x}{\fusion{t}{r}}$ for some $t \in \statespace$
-      \item \textbf{Containment (Right)}: If $t \in \possible$, $r \parthood t$, and $\task{d}{x}{r}$, then $\task{\fusion{s}{d}}{x}{t}$ for some $s \in \statespace$
-      \item \textbf{Maximality}: If $s \in \statespace$ and $t \in \possible$, there is a maximal $t$-compatible part $r \in \maxcompat{s}{t}$
-    \end{itemize}
+		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
 	\end{itemize}
 \end{definition}
 
@@ -173,29 +164,30 @@ See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementatio
 
 \begin{definition}\label{def:task-constraints}
 	The task relation $\taskrel$ satisfies:
-
-	\begin{enumerate}
-		\item \textbf{Compositionality}: If $\task{s}{x}{t}$ and $\task{t}{y}{u}$, then $\task{s}{x+y}{u}$
-		\item \textbf{Parthood (Left)}: If $d \parthood s$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $r \parthood t$
-		\item \textbf{Parthood (Right)}: If $r \parthood t$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $d \parthood s$
-		\item \textbf{Containment (Left)}: If $s \in \possible$, $d \parthood s$, and $\task{d}{x}{r}$, then $\task{s}{x}{\fusion{t}{r}}$ for some $t \in \statespace$
-		\item \textbf{Containment (Right)}: If $t \in \possible$, $r \parthood t$, and $\task{d}{x}{r}$, then $\task{\fusion{s}{d}}{x}{t}$ for some $s \in \statespace$
-		\item \textbf{Maximality}: If $s \in \statespace$ and $t \in \possible$, there is a maximal $t$-compatible part $r \in \maxcompat{s}{t}$
-	\end{enumerate}
+	\begin{itemize}
+    \item \textbf{L-Parthood}: If $d \parthood s$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $r \parthood t$
+    \item \textbf{R-Parthood}: If $r \parthood t$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $d \parthood s$
+    \item \textbf{L-Contained}: If $s : P$, $d \parthood s$, and $\task{d}{x}{r}$, then $\task{s}{x}{\fusion{t}{r}}$ for some $t : \statespace$
+    \item \textbf{R-Contained}: If $t : P$, $r \parthood t$, and $\task{d}{x}{r}$, then $\task{\fusion{s}{d}}{x}{t}$ for some $s : \statespace$
+    \item \textbf{Maximal}: If $s : \statespace$ and $t : \possible$, there is a maximal $t$-compatible part $r : \maxcompat{s}{t}$
+	\end{itemize}
 \end{definition}
 
 \begin{remark}
-	The Containment constraints ensure that tasks between parts of possible states can be extended to tasks between the states themselves.
-	The Maximality constraint ensures that for any state and possible state, there exists a maximal part compatible with that possible state.
+	The \textit{Containment} constraints ensure that tasks between parts of possible states can be extended to tasks between the states themselves.
+	The \textit{Maximality} constraint ensures that there are no strictly increasing series $r_1 \strictpart r_2 \strictpart \ldots \strictpart s$ of parts $r_i \parthood s$ compatible with $t$ with no upper bound.
 \end{remark}
 
-See \leansrc{Logos.Dynamics.Frame}{DynamicalFrame} for the Lean implementation.
+\noindent
+See \leansrc{Logos.Dynamics.Frame}{DynamicalFrame}.
 
 % ------------------------------------------------------------
 % World-History
 % ------------------------------------------------------------
 
 \subsection{World-History}\label{sec:world-history}
+
+% FIX: research sub:Containment (starting line 1436) in order to restate the definition of world-history as a maximal possible evolution, where an evolution is defined in the same way that a world-history is defined below, but where \tau : X \to \statespace
 
 \begin{definition}[World-History]\label{def:world-history}
 	A \emph{world-history} over a dynamical frame $\mframe$ is a function $\history : X \to \worldstates$ where:
@@ -205,15 +197,13 @@ See \leansrc{Logos.Dynamics.Frame}{DynamicalFrame} for the Lean implementation.
 	\end{itemize}
 \end{definition}
 
+% TODO: derive as a theorem that every time in a world-history gets mapped to a world-state and then include a remark below to discuss which constraints play a role in proving this theorem (adapt \textbf{\ref{app:Containment}} in $\S\ref{app:WorldSpace}$ (line 1822) from /home/benjamin/Philosophy/Papers/Counterfactuals/JPL/counterfactual_worlds.tex to establish this result without assuming discreteness. Articulate the theorem in the lean source code to be proved along with an appropriate strategy in the comments before proving the theorem with Lean)
+
+% FIX: update the notation to use dependent type theory notation consistently throughout
+
 \begin{notation}
 	The set of all world-histories over $\mframe$ is denoted $\historyspace$.
 \end{notation}
-
-\begin{remark}
-	World-histories assign world-states to times in a way that respects the task relation.
-	The constraint ensures that consecutive world-states are connected by appropriate tasks.
-	The set of maximal possible evolutions equals the set of world-histories (proven in Brast-McKie, ``Counterfactual Worlds'').
-\end{remark}
 
 % ------------------------------------------------------------
 % Dynamical Model
@@ -221,15 +211,20 @@ See \leansrc{Logos.Dynamics.Frame}{DynamicalFrame} for the Lean implementation.
 
 \subsection{Dynamical Model}\label{sec:core-model}
 
+% NOTE: I don't need definitions to have names as below with '[Dynamical Model]' since instead I want them to use italics when stating the definition to indicate the term being defined. Fix this throughout.
+
 \begin{definition}[Dynamical Model]\label{def:core-model}
-	A \emph{core model} is a structure $\model = \tuple{\statespace, \parthood, \temporalorder, \taskrel, \interp}$ where:
+  A \emph{dynamical model} is a structure $\model = \tuple{\statespace, \parthood, \temporalorder, \taskrel, \interp{\cdot}}$ where:
 	\begin{itemize}
 		\item $\tuple{\statespace, \parthood, \temporalorder, \taskrel}$ is a dynamical frame
-		\item $\interp$ is an interpretation as in the Constitutive Foundation
+    \item $\interp{\cdot}$ is an interpretation as in the \textit{Constitutive Foundation}
 	\end{itemize}
 \end{definition}
 
-See \leansrc{Logos.Dynamics.Model}{DynamicalModel} for the Lean implementation.
+% FIX: restate the definition of an interpretation above from the \textit{Constitutive Foundation}
+
+\noindent
+See \leansrc{Logos.Dynamics.Model}{DynamicalModel}.
 
 % ------------------------------------------------------------
 % Truth Conditions
@@ -237,7 +232,9 @@ See \leansrc{Logos.Dynamics.Model}{DynamicalModel} for the Lean implementation.
 
 \subsection{Truth Conditions}\label{sec:truth-conditions}
 
-Truth is evaluated relative to a model $\model$, world-history $\history$, time $x \in D$, variable assignment $\assignment$, and temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$:
+% TODO: I want to revise the dynamical semantics systematically to evaluate sentences at a model, evolutions, time, variable assignment, and temporal index, but use the same \tau, ... as variables for evolutions
+
+Truth is evaluated relative to a model $\model$, world-history $\history$, time $x : D$, variable assignment $\assignment$, and temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$:
 
 \subsubsection{Atomic Sentences}
 
@@ -248,27 +245,37 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	\end{align}
 \end{definition}
 
+% FIX: this should not be stated as a remark but rather a theorem and proved in the lean source code
+
 \begin{remark}
-	It is derivable that $\model, \history, x, \assignment, \tempindex \trueat \metaA$ iff it is not the case that $\model, \history, x, \assignment, \tempindex \falseat \metaA$.
-	This justifies using $\trueat$ alone for truth and $\falseat$ for falsehood.
+	Whenever $\tau$ is a world-history, $\model, \history, x, \assignment, \tempindex \trueat \metaA$ just in case $\model, \history, x, \assignment, \tempindex \nfalseat \metaA$.
+	This breaks down for non-maximal evolutions $\tau$.
 \end{remark}
 
 \subsubsection{Lambda Abstraction and Quantification}
 
+% NOTE: I want to avoid using x, y, z as first-order variables, using v_1, v_2, v_3, ... instead since x, y, z are reserved for times in the metalangauge.
+
+% TODO: clean up the below where labdas are just for binding the last free variable (if any) and universal quantifiers are just for quantifying the last open variable in the sentence (if any). Research careful conventions and definitions, defining them above to match the lean code.
+
 \begin{definition}[Lambda and Quantification]\label{def:lambda-quant-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat (\lambda y.\metaA)(t) & \iff \model, \history, x, \assignsub{\sem{t}^\assignment_\model}{y}, \tempindex \trueat \metaA           \\
-		\model, \history, x, \assignment, \tempindex \trueat \forall y.\metaA      & \iff \model, \history, x, \assignsub{s}{y}, \tempindex \trueat \metaA \text{ for all } s \in \statespace
+		\model, \history, x, \assignment, \tempindex \trueat (\lambda v.\metaA)(t) & \iff \model, \history, x, \assignsub{\sem{t}^\assignment_\model}{v}, \tempindex \trueat \metaA           \\
+    \model, \history, x, \assignment, \tempindex \trueat \forall \metaA(v)      & \iff \model, \history, x, \assignsub{s}{v}, \tempindex \trueat \metaA(v) \text{ for all } s : \statespace
 	\end{align}
 \end{definition}
 
 \subsubsection{Actuality Predicate}
+
+% FIX: It is important that '\forall v \metaA(v)' is defined as '\forall (\lambda v_1. \metaA)(v_2)' and that this happen above where the other defined symbols are presented
 
 \begin{definition}[Actuality]\label{def:actuality-truth}
 	\[
 		\model, \history, x, \assignment, \tempindex \trueat \actual(t) \iff \sem{t}^\assignment_\model \parthood \history(x)
 	\]
 \end{definition}
+
+% FIX: also mention in the remark below that one could define a quantifier that quantifies over all y that is sometimes actual, or possibly actual to give broader definitions, both of which are restrictions of the full unrestricted quantifier.
 
 \begin{remark}[Restricted Quantification]
 	The actuality predicate enables restricting quantification to actually existing objects:
@@ -278,18 +285,22 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	The unrestricted universal quantifier validates the Barcan formulas ($\forall x \nec\metaA \to \nec\forall x\metaA$ and its converse), while the actuality-restricted quantifier does not.
 \end{remark}
 
+% TODO: The barcan formulas should be derived and shown to be valid for all possibly actual quantifier and the unrestricted quantifier, where similarly the all sometimes actual quantifier should validate the temporal analogs of the barcan formals as do the unrestricted versions
+
 \subsubsection{Extensional Connectives}
 
 \begin{definition}[Extensional Connectives]\label{def:extensional-truth}
 	\begin{align}
 		\model, \history, x, \assignment, \tempindex \trueat \neg\metaA          & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA                                                                         \\
 		\model, \history, x, \assignment, \tempindex \trueat \metaA \land \metaB & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ and } \model, \history, x, \assignment, \tempindex \trueat \metaB \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB  \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \history, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
+		% \model, \history, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \history, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \history, x, \assignment, \tempindex \trueat \metaB
 	\end{align}
 \end{definition}
 
 \subsubsection{Modal Operators}
+
+% FIX: only the primitives need to be given semantic clauses and, given the definitions of the modals in terms of the counterfactual, these semantic clauses should rather be derived as theorems. Instead, I want to introduce the stability operator as a primitive which quantifies over all histories that intersect with the present world state at the same time of evaluation since this cannot be defined in terms of the counterfactual operator
 
 \begin{definition}[Modal Operators]\label{def:modal-truth}
 	\begin{align}
@@ -298,6 +309,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	\end{align}
 \end{definition}
 
+% FIX: This remark should be restated as definitions of the modals where the defined symbols are introduced
+
 \begin{remark}
 	$\poss\metaA \equiv \neg\nec\neg\metaA$.
 	Metaphysical necessity can also be defined via counterfactuals: $\nec\metaA := \top \boxright \metaA$.
@@ -305,6 +318,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 \end{remark}
 
 \subsubsection{Dynamical Tense Operators}
+
+% FIX: only primitive symbols should be given semantic clauses
 
 \begin{definition}[Dynamical Tense Operators]\label{def:tense-truth}
 	\begin{align}
@@ -315,6 +330,8 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	\end{align}
 \end{definition}
 
+% FIX: these equivalences should be taken to be definitional along with the other defined symbols that are introduced
+
 \begin{remark}[Equivalences]
 	$\somepast\metaA \equiv \neg\allpast\neg\metaA$ and $\somefuture\metaA \equiv \neg\allfuture\neg\metaA$.
 \end{remark}
@@ -323,12 +340,16 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Since and Until]\label{def:since-until-truth}
 	\begin{align}
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \since \metaB & \iff \text{there exists } z < x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \notag         \\
-		                                                                          & \quad \text{and } \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
-		\model, \history, x, \assignment, \tempindex \trueat \metaA \until \metaB & \iff \text{there exists } z > x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \notag         \\
-		                                                                          & \quad \text{and } \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \since \metaB \iff 
+      & \text{there exists } z < x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \text{ and} \notag \\
+	    & \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
+		\model, \history, x, \assignment, \tempindex \trueat \metaA \until \metaB \iff 
+      & \text{there exists } z > x \text{ where } \model, \history, z, \assignment, \tempindex \trueat \metaB \text{ and}\notag \\
+		  & \model, \history, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
 	\end{align}
 \end{definition}
+
+% FIX: the readings given below should be presented when the primitive symbols are first introduced
 
 \begin{remark}
 	``$\metaA$ since $\metaB$'' means $\metaB$ was true at some past time, and $\metaA$ has been true ever since.
@@ -339,14 +360,18 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 
 \begin{definition}[Counterfactual Conditional]\label{def:counterfactual-truth}
 	\[
-		\model, \history, x, \assignment, \tempindex \trueat \metaphi \boxright \metaC \iff \text{for all } s \in \maxcompat{\history(x)}{\metaphi}, t \in s \text{ and } \beta \in \historyspace:
+    \model, \history, x, \assignment, \tempindex \trueat \metaA \boxright \metaC \iff \model, \beta, x, \assignment, \tempindex \trueat \metaC \text{ whenever } \model, \assignment, s \verifies \metaA \text{ and } \beta : \altworlds{\tau}{s}{x}
 	\]
-	if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
+	% if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\history(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
 \end{definition}
+
+% FIX: define the \altworlds appropriately in terms of imposition, where imposition is defined in terms of maximal t-compatible parts
 
 \begin{definition}[Imposition]\label{def:imposition}
 	We write $\imposition{t}{w}{w'}$ (``imposing $t$ on $w$ yields $w'$'') iff there exists a maximal $t$-compatible part $s \in \maxcompat{w}{t}$ where $\fusion{s}{t} \parthood w'$.
 \end{definition}
+
+% FIX: this reading should only occur where the primitive symbols are first introduced, not here
 
 \begin{remark}[Intuitive Reading]
 	A counterfactual ``if $\metaphi$ were the case, then $\metaC$'' is true at world $\history$ and time $x$
@@ -356,7 +381,7 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 \subsubsection{Store and Recall Operators}
 
 \begin{definition}[Store and Recall]\label{def:store-recall-truth}
-	For cross-temporal reference within counterfactual evaluation, the context includes a temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$ of stored times:
+	For cross-temporal reference, the context includes a temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$ of stored times:
 	\begin{align}
 		\model, \history, x, \assignment, \tempindex \trueat \store{k}\metaA  & \iff \model, \history, x, \assignment, \tempindex[x/i_k] \trueat \metaA \\
 		\model, \history, x, \assignment, \tempindex \trueat \recall{k}\metaA & \iff \model, \history, i_k, \assignment, \tempindex \trueat \metaA
@@ -364,18 +389,21 @@ Truth is evaluated relative to a model $\model$, world-history $\history$, time 
 	where $\tempindex[x/i_k]$ replaces $i_k$ with current time $x$.
 \end{definition}
 
-\begin{example}[Tensed Counterfactuals]
-	\begin{itemize}
-		\item $\recall{1}(\metaB \boxright \somefuture\allpast)$ --- ``If $\metaB$ had occurred at the stored time, then $\allpast$ would have occurred at some future time''
-		\item $\store{2}\recall{1}(\metaB \boxright \recall{2}\allpast)$ --- ``Store now, recall past time, if $\metaB$ then $\allpast$ at the stored present''
-	\end{itemize}
-\end{example}
+% \begin{example}[Tensed Counterfactuals]
+% 	\begin{itemize}
+% 		\item $\recall{1}(\metaB \boxright \somefuture\allpast)$ --- ``If $\metaB$ had occurred at the stored time, then $\allpast$ would have occurred at some future time''
+% 		\item $\store{2}\recall{1}(\metaB \boxright \recall{2}\allpast)$ --- ``Store now, recall past time, if $\metaB$ then $\allpast$ at the stored present''
+% 	\end{itemize}
+% \end{example}
 
-See \leansrc{Logos.Dynamics.Semantics}{Satisfies} for the Lean implementation.
+\noindent
+See \leansrc{Logos.Dynamics.Semantics}{Satisfies}
 
 % ------------------------------------------------------------
 % Bimodal Interaction Principles
 % ------------------------------------------------------------
+
+% FIX: this next subsection should be moved into a proof theory section for this chapter
 
 \subsection{Bimodal Interaction Principles}\label{sec:bimodal-interaction}
 
@@ -395,6 +423,8 @@ The task semantics validates these perpetuity principles connecting modal and te
 % ------------------------------------------------------------
 % Temporal Frame Constraints
 % ------------------------------------------------------------
+
+% FIX: these frame constraints should be presented just after the task relation frame constraints above, and should also be stated formally, and not in a table which is too wide
 
 \subsection{Temporal Frame Constraints}\label{sec:temporal-constraints}
 
@@ -423,7 +453,9 @@ The framework does not assume discrete time:
 
 \subsection{Logical Consequence}\label{sec:logical-consequence-core}
 
-\begin{definition}[Logical Consequence (Dynamics Foundation)]\label{def:consequence-core}
+% FIX: restate the definition below to match the styling of those given above and to use dependent type theory notation only
+
+\begin{definition}[Logical Consequence]\label{def:consequence-core}
 	\[
 		\context \trueat \metaA \iff \text{for any } \model, \history \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \history, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \history, x, \assignment, \tempindex \trueat \metaA
 	\]
