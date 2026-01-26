@@ -365,9 +365,8 @@ $(X \star Z) \circ (Y \star Z)$ whenever $X \circ Y$, for any lattice operation 
 \end{definition}
 
 \begin{remark}\label{rem:bilattice-orders}
-The essence order $X \essence Y$ captures \emph{conjunctive containment}:
-every verifier for $Y$ has a part that verifies $X$, and every falsifier for $X$ also falsifies $Y$.
-Intuitively, $X$ is ``essentially contained in'' $Y$---the positive content of $X$ is part of $Y$'s positive content.
+  The essence order $X \essence Y$ captures \emph{conjunctive containment}: (1) every verifier for $Y$ has a part that verifies $X$; (2) any fusion of a verifier for $X$ together with a verifier for $Y$ also verifies $Y$; and (3) every falsifier for $X$ also falsifies $Y$.
+Intuitively, $X$ being the case is \textit{part of what it is for} $Y$ to be the case.
 
 The ground order $X \ground Y$ captures \emph{disjunctive containment}:
 every falsifier for $Y$ has a part that falsifies $X$, and every verifier for $X$ also verifies $Y$.
