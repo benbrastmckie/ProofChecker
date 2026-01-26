@@ -18,6 +18,8 @@ Evaluation is hyperintensional, distinguishing propositions that agree on truth-
 
 The Constitutive Foundation interprets the following syntactic primitives:
 
+% NOTE: I want variables in the object language to be represented with v_1, v_2, v_3, ..., and not x, y, z which are reserved for durations in the metalanguage
+
 \begin{itemize}
 	\item \textbf{Variables}: $x, y, z, \ldots$ (ranging over states)
 	\item \textbf{Individual constants}: $a, b, c, \ldots$ (0-place function symbols)
@@ -30,19 +32,21 @@ The Constitutive Foundation interprets the following syntactic primitives:
 \end{itemize}
 
 \begin{definition}[Well-Formed Formulas]\label{def:wff}
-The set of \emph{well-formed formulas} is defined inductively:
+The set of \emph{well-formed formulas} is defined inductively where $F$ over $n$-place predicates, $t_i$ over terms, and $x$ over variables:
   \[
     \metaA, \metaB \Define{} F(t_1, \ldots, t_n) \mid \top \mid \bot
     \mid{} \neg\metaA \mid (\metaA \land \metaB) \mid (\metaA \lor \metaB)
     \mid{} (\metaA \equiv \metaB) \mid (\lambda x.\metaA)(t)
   \]
-where $p$ ranges over sentence letters, $F$ over $n$-place predicates, $t, t_i$ over terms, and $x$ over variables.
+
 \end{definition}
 
 \noindent
 See \leansrc{Logos.SubTheories.Foundation.Syntax}{ConstitutiveFormula} for the Lean implementation.
 
 \subsection{Derived Operators}\label{sec:derived-operators}
+
+% FIX: combine the following definitions and the definition of the quantifier notation below into a single definition which sets metalinguistic conventions (syntactic sugar) for the language
 
 \begin{definition}[Material Conditional]\label{def:material-conditional}
 	\[
