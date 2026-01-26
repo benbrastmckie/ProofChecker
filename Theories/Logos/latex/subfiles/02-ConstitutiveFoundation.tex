@@ -70,7 +70,8 @@ Generalized quantification is expressed via lambda abstraction:
 First-order quantification is introduced in the Dynamical Foundation layer.
 \end{remark}
 
-See \leansrc{Logos.Dynamics.Syntax}{CoreFormula} for the Lean implementation.
+\noindent
+See \leansrc{Logos.Dynamics.Syntax}{CoreFormula}.
 
 % ------------------------------------------------------------
 % Constitutive Frame
@@ -173,7 +174,7 @@ The \emph{free variables} $\FV(t)$ of a term are defined by:
 \end{definition}
 
 \noindent
-See \leansrc{Logos.SubTheories.Foundation.Syntax}{Term} for the Lean implementation.
+See \leansrc{Logos.SubTheories.Foundation.Syntax}{Term}.
 
 \begin{definition}\label{def:variant-assignment}
 	The \textit{$x$-variant} $\assignsub{v}{x}$ of the variable assignment $\assignment$ differs at most from $\assignment$ by assigning $x$ to $v$.
@@ -183,12 +184,12 @@ See \leansrc{Logos.SubTheories.Foundation.Syntax}{Term} for the Lean implementat
 	The \emph{extension} of a term given a model $\model$ and assignment $\assignment$ is a function $\sem{\cdot}^\assignment_\model : \Term \to \statespace$ defined by:
 	\begin{itemize}
 		\item \textbf{Variable} $\sem{x}^\assignment_\model = \assignment(x)$
-		\item \textbf{Function application} $\sem{f(t_1, \ldots, t_n)}^\assignment_\model = \interp{f}(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)$
+		\item \textbf{Function application} $\sem{f(t_1, \ldots, t_n)}^\assignment_\model = \interp{f}(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model)$
 	\end{itemize}
 \end{definition}
 
 \noindent
-See \leansrc{Logos.Foundation.Assignment}{Assignment} for the implementation.
+See \leansrc{Logos.Foundation.Assignment}{Assignment}.
 
 % ------------------------------------------------------------
 % Verification and Falsification Clauses
@@ -225,7 +226,7 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 	\end{align}
 \end{definition}
 
-\begin{remark}[Negation Semantics]
+\begin{remark}
 Negation exchanges verifiers and falsifiers: what makes $\metaA$ true makes $\neg\metaA$ false, and vice versa.
 This maintains bilateral symmetry and ensures that a state wholly relevant to $\metaA$ is equally relevant to $\neg\metaA$.
 \end{remark}
@@ -243,7 +244,7 @@ This maintains bilateral symmetry and ensures that a state wholly relevant to $\
 	\end{align}
 \end{definition}
 
-\begin{remark}[Conjunction Semantics]
+\begin{remark}
 A conjunction $\metaA \land \metaB$ is verified by a state that is the \textit{fusion} of a verifier for $\metaA$ and a verifier for $\metaB$.
 If state $t$ verifies ``Alice is thinking'' and state $u$ verifies ``Alice is writing,'' then $\fusion{t}{u}$ verifies ``Alice is thinking and writing.''
 Crucially, $\fusion{t}{u}$ does \textit{not} verify ``Alice is thinking'' alone since $u$ is irrelevant to that claim---this non-monotonicity is characteristic of exact semantics.
