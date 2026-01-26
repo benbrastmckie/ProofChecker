@@ -345,7 +345,7 @@ See \leansrc{Logos.Foundation.Relations}{essence}.
 \subsection{Bilateral Propositions}\label{sec:bilateral-propositions}
 
 \begin{definition}[Bilateral Proposition]\label{def:bilateral-proposition}
-	A \emph{bilateral proposition} $P$ is an ordered pair $\tuple{V, F}$ where $V$ and $F$ are subsets of $\statespace$ closed under fusion:
+	A \emph{bilateral proposition} $P : \props$ is an ordered pair $\tuple{V, F}$ where $V$ and $F$ are subsets of $\statespace$ closed under fusion:
 	\begin{itemize}
 		\item \textbf{Fusion closure for verifiers}: $\fusion{s}{t} \in V$ for any $s, t \in V$
 		\item \textbf{Fusion closure for falsifiers}: $\fusion{s}{t} \in F$ for any $s, t \in F$
@@ -353,36 +353,34 @@ See \leansrc{Logos.Foundation.Relations}{essence}.
 \end{definition}
 
 \begin{definition}[Bilattice]\label{def:bilattice}
-A \emph{bilattice} is a structure $B = \tuple{P, \essence, \ground, \neg}$ where:
+A \emph{bilattice} is a structure $B = \tuple{\props, \essence, \ground, \neg}$ where:
 \begin{itemize}
-	\item $\tuple{P, \essence}$ is a complete lattice (the \emph{essence} order)
-	\item $\tuple{P, \ground}$ is a complete lattice (the \emph{ground} order)
-	\item $\neg : P \to P$ is an \emph{involutive negation}: $\neg\neg X = X$
-	\item Negation exchanges the two orderings: $X \essence Y \iff \neg X \ground \neg Y$
+	\item $\tuple{\props, \essence}$ is a complete lattice (the \emph{essence} order)
+	\item $\tuple{\props, \ground}$ is a complete lattice (the \emph{ground} order)
+	\item $\neg : \props \to \props$ is an \emph{involutive negation}: $\neg\neg P = P$
+	\item Negation exchange: $P \essence Q \leftrightarrow \neg P \ground \neg Q$ and $P \ground Q \leftrightarrow \neg P \essence \neg Q$.
 \end{itemize}
 A bilattice is \emph{interlaced} when its orders interact uniformly:
-$(X \star Z) \circ (Y \star Z)$ whenever $X \circ Y$, for any lattice operation $\star$ and either order $\circ$.
+$(P \star R) \circ (Q \star R)$ whenever $P \circ Q$, for any lattice operation $\star$ and either order $\circ$.
 \end{definition}
 
 \begin{remark}\label{rem:bilattice-orders}
-  The essence order $X \essence Y$ captures \emph{conjunctive containment}: (1) every verifier for $Y$ has a part that verifies $X$; (2) any fusion of a verifier for $X$ together with a verifier for $Y$ also verifies $Y$; and (3) every falsifier for $X$ also falsifies $Y$.
-Intuitively, $X$ being the case is \textit{part of what it is for} $Y$ to be the case.
+  The essence order $P \essence Q$ captures a constitutive explanatory reading of ``necessary for'' whereby: (1) every verifier for $Q$ has a part that verifies $P$; (2) any fusion of a verifier for $P$ together with a verifier for $Q$ also verifies $Q$; and (3) every falsifier for $P$ also falsifies $Q$.
+  Intuitively, $P$ being the case is \textit{part of what it is for} $Q$ to be the case.
 
-The ground order $X \ground Y$ captures \emph{disjunctive containment}:
-every falsifier for $Y$ has a part that falsifies $X$, and every verifier for $X$ also verifies $Y$.
-Intuitively, $X$ ``grounds'' $Y$---the negative content of $X$ is part of $Y$'s negative content.
+  The ground order $P \ground Q$ captures a constitutive explanatory reading of ``sufficient for'' whereby: (1) every verifier for $P$ also verifies $Q$; (2) every falsifier for $Q$ has a part that falsifies $P$; and (3) any fusion of a falsifier for $P$ together with a falsifier for $Q$ also falsifies $Q$.
+  Intuitively, $P$ being the case \textit{determines} that it is the case that $Q$.
 \end{remark}
 
-\begin{remark}[Bilattice Structure of Bilateral Propositions]\label{rem:bilattice-structure}
-The space of bilateral propositions forms a \emph{non-interlaced} bilattice:
-\begin{itemize}
-	\item Conjunction is the least upper bound with respect to $\essence$
-	\item Disjunction is the least upper bound with respect to $\ground$
-	\item The two orders need not interact uniformly (hence non-interlaced)
-\end{itemize}
-The failure of interlacing reflects the hyperintensional nature of the semantics:
-giving up Boolean identities allows the two orders to diverge.
-See Ginsberg (1988) and Fitting (1989--2002) for the general theory of bilattices.
+\begin{remark}\label{rem:bilattice-structure}
+  The bilateral propositions form a \emph{non-interlaced} bilattice:
+  \begin{itemize}
+    \item Conjunction is the least upper bound with respect to $\essence$
+    \item Disjunction is the least upper bound with respect to $\ground$
+    \item The two orders need not interact uniformly (hence non-interlaced)
+  \end{itemize}
+  The failure of interlacing reflects the hyperintensionality of the semantics:
+  giving up Boolean identities allows the two orders to diverge.
 \end{remark}
 
 \begin{definition}[Propositional Operations]\label{def:propositional-operations}
@@ -404,6 +402,8 @@ See \leansrc{Logos.Foundation.Proposition}{BilateralProp}.
 % ------------------------------------------------------------
 
 \subsection{Logical Consequence}\label{sec:logical-consequence-foundation}
+
+% FIX: the identity sentences need to be precisely defined in both the lean source code and here, where this inductive definition is in terms of the well-formed sentences but takes identity sentences to be atomic
 
 \begin{definition}[Logical Consequence]\label{def:consequence-foundation}
 	The \textit{Constitutive Foundation} of the Logos is restricted to propositional identity sentences of the form $\metaA \equiv \metaB$ where $\metaA$ and $\metaB$ are atomic sentences or built from $\neg, \land, \lor, \equiv$.
