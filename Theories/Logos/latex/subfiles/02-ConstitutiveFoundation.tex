@@ -247,10 +247,10 @@ This maintains bilateral symmetry and ensures that a state wholly relevant to $\
 \begin{remark}
 A conjunction $\metaA \land \metaB$ is verified by a state that is the \textit{fusion} of a verifier for $\metaA$ and a verifier for $\metaB$.
 If state $t$ verifies ``Alice is thinking'' and state $u$ verifies ``Alice is writing,'' then $\fusion{t}{u}$ verifies ``Alice is thinking and writing.''
-Crucially, $\fusion{t}{u}$ does \textit{not} verify ``Alice is thinking'' alone since $u$ is irrelevant to that claim---this non-monotonicity is characteristic of exact semantics.
+Crucially, $\fusion{t}{u}$ does \textit{not} verify ``Alice is thinking'' alone since $u$ is irrelevant to that claim. The non-monotonicity of the verification and falsification relations is characteristic of exact semantics.
 
-The falsification clause is \textit{inclusive}: a conjunction is falsified by anything that falsifies either conjunct, or by a fusion of falsifiers for both.
-This ensures that every verifier for $\metaA \land \metaB$ also verifies $\metaA \lor \metaB$, a natural uniformity condition.
+The falsification clause is \textit{inclusive}: a conjunction is falsified by anything that falsifies either conjunct, or by a fusion of falsifiers for both conjuncts.
+This ensures that $\metaA \land \metaA$ has the same falsifiers as $\metaA$ so that we may accept $\metaA \land \metaA \equiv \metaA$, a natural idempotence law.
 \end{remark}
 
 \subsubsection{Disjunction}\label{sec:disjunction}
