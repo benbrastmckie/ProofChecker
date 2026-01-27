@@ -68,6 +68,11 @@
 % --- Free Variables ---
 \newcommand{\FV}{\mathsf{FV}}           % Free variables function
 
+% --- Object Language Variables ---
+% Use v_1, v_2, v_3, ... for object language variables (bound by quantifiers)
+% Letters x, y, z are reserved for metalanguage durations
+\newcommand{\objvar}[1]{v_{#1}}         % Object language variable: \objvar{1} → v_1
+
 % --- Variable Assignment ---
 \newcommand{\assignment}{\sigma}
 \newcommand{\assignsub}[2]{\sigma[#1/#2]}
