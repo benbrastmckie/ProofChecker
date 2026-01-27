@@ -1,0 +1,668 @@
+\documentclass[../LogosReference.tex]{subfiles}
+\begin{document}
+
+% ============================================================================
+% Section: Dynamical Foundation Syntax
+% ============================================================================
+
+\section{Dynamical Foundation}\label{sec:dynamical-foundation}
+
+The \textit{Dynamical Foundation} extends the \textit{Constitutive Foundation} with both temporal and modal structure by including a task relation parameterized by durations, enabling the evaluation of truth relative to a world-history and time.
+While the hyperintensional foundation provide fine-grained semantic contents, specifying verifiers and falsifiers for sentences does not suffice to model contingency.
+This extension adds an intensional layer by constructing possible states, state evolutions, world-states, and world-histories in order to assign truth-values to contingent and temporary sentences.
+
+% ------------------------------------------------------------
+% Additional Syntactic Primitives
+% ------------------------------------------------------------
+
+\subsection{Additional Syntactic Primitives}\label{sec:additional-syntax}
+
+The \textit{Dynamical Foundation} interprets the following additional syntactic primitives beyond those of the \textit{Constitutive Foundation}:
+
+\begin{itemize}
+    \item \textbf{Actuality Predicate}: $\actual$ (``$t$ is actual'')
+    \item \textbf{Quantification}: $\forall$ (``for all'')
+    \item \textbf{Counterfactual conditional}: $\boxright$ (``if $\metaphi$ were the case, then $\metaC$ would be the case'')
+    \item \textbf{Temporal operators}: $\allpast$ (``it has always been that''), $\allfuture$ (``it will always be that'')
+    \item \textbf{Extended temporal operators}: $\since$ (``$\metaA$ since $\metaB$'' means $\metaB$ was true at some past time and $\metaA$ has been true ever since), $\until$ (``$\metaA$ until $\metaB$'' means $\metaB$ will be true at some future time and $\metaA$ is true until then)
+    \item \textbf{Stability operator}: $\mathsf{Stab}$ (``stably $\metaA$'')
+    \item \textbf{Store/recall operators}: $\store{i}$ (``store current time''), $\recall{i}$ (``recall stored time'')
+\end{itemize}
+
+% ------------------------------------------------------------
+% Well-Formed Sentences
+% ------------------------------------------------------------
+
+\subsection{Well-Formed Sentences}\label{sec:well-formed-sentences}
+
+\begin{definition}[Well-Formed Formulas]\label{def:wff-dynamics}
+The set of \emph{well-formed formulas} extends the Constitutive Foundation:
+\begin{align*}
+    \metaA \Define{}& \metaA_\text{CF} \mid \actual(t) \mid \forall\metaA \\
+    \mid{}& \nec\metaA \mid \allpast\metaA \mid \allfuture\metaA \\
+    \mid{}& \metaA \since \metaB \mid \metaA \until \metaB \\
+    \mid{}& \metaA \boxright \metaB \mid \store{i}\metaA \mid \recall{i}\metaA
+\end{align*}
+where $\metaA_\text{CF}$ ranges over Constitutive Foundation formulas.
+\end{definition}
+
+% ------------------------------------------------------------
+% Derived Operators
+% ------------------------------------------------------------
+
+\subsection{Derived Operators}\label{sec:derived-operators}
+
+\begin{definition}[Derived Operators]\label{def:derived-operators}
+The following operators are defined in terms of primitives:
+\begin{align}
+    \poss\metaA &:= \neg\nec\neg\metaA && \text{``Possibly $\metaA$''} \\
+    \somepast\metaA &:= \neg\allpast\neg\metaA && \text{``Sometimes past $\metaA$''} \\
+    \somefuture\metaA &:= \neg\allfuture\neg\metaA && \text{``Sometimes future $\metaA$''} \\
+    \always\metaA &:= \allpast\metaA \land \metaA \land \allfuture\metaA && \text{``Always $\metaA$''} \\
+    \sometimes\metaA &:= \somepast\metaA \lor \metaA \lor \somefuture\metaA && \text{``Sometimes $\metaA$''} \\
+    \nec\metaA &:= \top \boxright \metaA && \text{``Necessarily $\metaA$''} \\
+    \diamondright\metaA\metaB &:= \neg(\metaA \boxright \neg\metaB) && \text{``$\metaA$ might-counterfactual $\metaB$''}
+\end{align}
+\end{definition}
+
+\begin{definition}[Quantifier Notation]\label{def:quantifier-notation}
+The notation $\forall v.\metaA$ abbreviates $\forall(\lambda v.\metaA)$ where:
+\begin{itemize}
+    \item $\lambda v.\metaA$ binds the variable $v$ in $\metaA$
+    \item $\forall$ is the universal quantifier applied to the resulting property
+\end{itemize}
+Similarly, $\exists v.\metaA$ abbreviates $\exists(\lambda v.\metaA)$ where $\exists := \neg\forall\neg$.
+\end{definition}
+
+See \leansrc{Logos.Dynamics.Syntax}{DynamicalFormula} for the Lean implementation.
+
+% ------------------------------------------------------------
+% Operator Summary
+% ------------------------------------------------------------
+
+\subsection{Operator Summary}\label{sec:operator-summary}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Category} & \textbf{Symbol}             & \textbf{Reading}                               \\
+		\midrule
+		Modal             & $\nec\metaA$                & ``Necessarily $\metaA$''                       \\
+		                  & $\poss\metaA$               & ``Possibly $\metaA$''                          \\
+		\midrule
+		Past Temporal     & $\allpast\metaA$             & ``It has always been that $\metaA$''           \\
+		                  & $\somepast\metaA$            & ``It was the case that $\metaA$''              \\
+		\midrule
+		Future Temporal   & $\allfuture\metaA$         & ``It will always be that $\metaA$''            \\
+		                  & $\somefuture\metaA$         & ``It will be the case that $\metaA$''          \\
+		\midrule
+		Extended          & $\metaA \since \metaB$      & ``$\metaA$ since $\metaB$''                    \\
+		                  & $\metaA \until \metaB$      & ``$\metaA$ until $\metaB$''                    \\
+		\midrule
+		Counterfactual    & $\metaphi \boxright \metaC$ & ``If $\metaphi$ were the case, then $\metaC$ would be the case'' \\
+		                  & $\metaphi \diamondright \metaC$ & ``If $\metaphi$ were the case, then $\metaC$ might be the case'' \\
+		\midrule
+		Store/Recall      & $\store{i}\metaA$           & ``Store current time and evaluate $\metaA$''   \\
+		                  & $\recall{i}\metaA$          & ``Recall stored time and evaluate $\metaA$''   \\
+		\bottomrule
+	\end{tabular}
+	\caption{Dynamical Foundation Operators}
+	\label{tab:core-operators}
+\end{table}
+
+% ------------------------------------------------------------
+% Dynamical Frame
+% ------------------------------------------------------------
+
+\subsection{Dynamical Frame}\label{sec:dynamical-frame}
+
+\begin{definition}\label{def:dynamical-frame}
+	A \emph{dynamical frame} is a structure $\mframe = \tuple{\statespace, \parthood, \temporalorder, \taskrel}$ where:
+	\begin{itemize}
+		\item $\tuple{\statespace, \parthood}$ is a constitutive frame
+		\item $\temporalorder = \tuple{D, +, \leq}$ is a totally ordered abelian group
+		\item $\taskrel$ is a ternary relation on $\statespace \times D \times \statespace$ satisfying the compositionality constraint that $\task{s}{x+y}{r}$ whenever $\task{s}{x}{t}$ and $\task{t}{y}{r}$.
+	\end{itemize}
+\end{definition}
+
+\begin{notation}
+  We write $\task{s}{d}{t}$ to indicate that there is a \textit{task} from $s$ to $t$ in duration $d$ where a task is a possible state transition.
+\end{notation}
+
+% ------------------------------------------------------------
+% State Modality Definitions
+% ------------------------------------------------------------
+
+\subsection{State Modality Definitions}\label{sec:state-modality}
+
+\begin{definition}[State Modality]\label{def:state-modality}
+Let $\mframe = \tuple{\statespace, \parthood, \temporalorder, \taskrel}$ be a dynamical frame.
+We define the following predicates on states:
+\begin{align}
+    \mathsf{Possible}(s) &\define \task{s}{0}{s} \\
+    s \connected t &\define \exists d : D.\; \task{s}{d}{t} \lor \task{t}{d}{s} \\
+    \mathsf{Compatible}(s, t) &\define \mathsf{Possible}(\fusion{s}{t}) \\
+    \mathsf{Maximal}(s) &\define \forall t : \statespace.\; \mathsf{Compatible}(t, s) \to t \parthood s \\
+    \mathsf{WorldState}(w) &\define \mathsf{Possible}(w) \land \mathsf{Maximal}(w) \\
+    \mathsf{Necessary}(s) &\define \forall t : \statespace.\; s \connected t \to s = t
+\end{align}
+\end{definition}
+
+\begin{remark}
+A world-state $w$ satisfying $\mathsf{WorldState}(w)$ is maximal in the sense that every compatible state is a part of $w$.
+\end{remark}
+
+\begin{definition}[Maximal Compatible Part]\label{def:maximal-compatible}
+For states $r, t : \statespace$, the set of \emph{maximal $t$-compatible parts} of $r$ is:
+\[
+    \maxcompat{r}{t} := \set{s : \statespace \mid s \parthood r \land \mathsf{Compatible}(s, t) \land \forall s'.\; (s \parthood s' \parthood r \land \mathsf{Compatible}(s', t)) \to s' \parthood s}
+\]
+\end{definition}
+
+% ------------------------------------------------------------
+% Task Relation Constraints
+% ------------------------------------------------------------
+
+\subsection{Task Relation Constraints}\label{sec:task-constraints}
+
+\begin{definition}\label{def:task-constraints}
+	The task relation $\taskrel$ satisfies:
+	\begin{itemize}
+    \item \textbf{L-Parthood}: If $d \parthood s$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $r \parthood t$
+    \item \textbf{R-Parthood}: If $r \parthood t$ and $\task{s}{x}{t}$, then $\task{d}{x}{r}$ for some $d \parthood s$
+    \item \textbf{L-Contained}: If $s : P$, $d \parthood s$, and $\task{d}{x}{r}$, then $\task{s}{x}{\fusion{t}{r}}$ for some $t : \statespace$
+    \item \textbf{R-Contained}: If $t : P$, $r \parthood t$, and $\task{d}{x}{r}$, then $\task{\fusion{s}{d}}{x}{t}$ for some $s : \statespace$
+    \item \textbf{Maximal}: If $s : \statespace$ and $t : \possible$, there is a maximal $t$-compatible part $r : \maxcompat{s}{t}$
+	\end{itemize}
+\end{definition}
+
+\begin{remark}
+	The \textit{Containment} constraints ensure that tasks between parts of possible states can be extended to tasks between the states themselves.
+	The \textit{Maximality} constraint ensures that there are no strictly increasing series $r_1 \strictpart r_2 \strictpart \ldots \strictpart s$ of parts $r_i \parthood s$ compatible with $t$ with no upper bound.
+\end{remark}
+
+\noindent
+See \leansrc{Logos.Dynamics.Frame}{DynamicalFrame}.
+
+% ------------------------------------------------------------
+% World-History
+% ------------------------------------------------------------
+
+\subsection{World-History}\label{sec:world-history}
+
+\begin{definition}[Evolution]\label{def:evolution}
+An \emph{evolution} over a dynamical frame $\mframe$ is a function $\tau : X \to \statespace$ where:
+\begin{itemize}
+    \item $X \subseteq D$ is a convex subset of the temporal order
+    \item $\task{\tau(x)}{y-x}{\tau(y)}$ for all times $x, y \in X$ where $x \leq y$
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Evolution Parthood]\label{def:evolution-parthood}
+For evolutions $\tau, \sigma : X \to \statespace$, we define $\tau \sqsubseteq \sigma$ iff $\tau(x) \sqsubseteq \sigma(x)$ for all $x \in X$.
+\end{definition}
+
+\begin{definition}[Possible and Maximal Evolution]\label{def:maximal-evolution}
+An evolution $\tau$ is:
+\begin{itemize}
+    \item \emph{possible} iff $\mathsf{Possible}(\tau(x))$ for all $x$ in its domain
+    \item \emph{maximal} iff for any possible evolution $\sigma$ where $\tau \sqsubseteq \sigma$, we have $\sigma = \tau$
+\end{itemize}
+\end{definition}
+
+\begin{definition}[World-History]\label{def:world-history}
+A \emph{world-history} is a maximal possible evolution $\history : X \to \statespace$.
+\end{definition}
+
+\begin{theorem}[Containment]\label{thm:containment}
+An evolution $\tau$ is a world-history iff $\mathsf{WorldState}(\tau(x))$ for all $x$ in its domain.
+\end{theorem}
+
+\begin{notation}
+The type of all world-histories over $\mframe$ is denoted $\mathsf{WorldHistory}(\mframe)$.
+\end{notation}
+
+% ------------------------------------------------------------
+% Dynamical Model
+% ------------------------------------------------------------
+
+\subsection{Dynamical Model}\label{sec:core-model}
+
+% NOTE: I don't need definitions to have names as below with '[Dynamical Model]' since instead I want them to use italics when stating the definition to indicate the term being defined. Fix this throughout.
+
+\begin{definition}[Dynamical Model]\label{def:core-model}
+  A \emph{dynamical model} is a structure $\model = \tuple{\statespace, \parthood, \temporalorder, \taskrel, \interp{\cdot}}$ where:
+	\begin{itemize}
+		\item $\tuple{\statespace, \parthood, \temporalorder, \taskrel}$ is a dynamical frame
+    \item $\interp{\cdot}$ is an interpretation as in the \textit{Constitutive Foundation}
+	\end{itemize}
+\end{definition}
+
+\begin{remark}[Interpretation Function]
+The interpretation function $\interp{\cdot}$ assigns:
+\begin{itemize}
+    \item \textbf{n-place function symbols}: $\interp{f} : (\Fin\;n \to \statespace) \to \statespace$
+    \item \textbf{n-place predicates}: verifier and falsifier function types
+\end{itemize}
+See the Constitutive Foundation (\Cref{def:constitutive-model}) for full details.
+\end{remark}
+
+\noindent
+See \leansrc{Logos.Dynamics.Model}{DynamicalModel}.
+
+% ------------------------------------------------------------
+% Truth Conditions
+% ------------------------------------------------------------
+
+\subsection{Truth Conditions}\label{sec:truth-conditions}
+
+Truth is evaluated relative to five parameters:
+\begin{itemize}
+    \item $\model$: a dynamical model
+    \item $\tau$: a world-history (an evolution $\tau : X \to \statespace$ over convex $X \subseteq D$)
+    \item $x$: a time point ($x \in D$ such that $x \in \mathrm{dom}(\tau)$)
+    \item $\assignment$: a variable assignment ($\assignment : \mathsf{Var} \to \statespace$)
+    \item $\tempindex$: a temporal index ($\tempindex = \tuple{i_1, i_2, \ldots}$ storing times for recall operators)
+\end{itemize}
+\noindent
+We write $\model, \tau, x, \assignment, \tempindex \trueat \metaA$ to indicate that $\metaA$ is true at $\model$, $\tau$, $x$, $\assignment$, $\tempindex$.
+
+\subsubsection{Atomic Sentences}
+
+\begin{definition}[Atomic Truth]\label{def:atomic-truth}
+	\begin{align}
+		\model, \tau, x, \assignment, \tempindex \trueat F(t_1, \ldots, t_n)  & \iff \exists f \in \verifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \tau(x)  \\
+		\model, \tau, x, \assignment, \tempindex \falseat F(t_1, \ldots, t_n) & \iff \exists f \in \falsifierset{F} : f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model) \parthood \tau(x)
+	\end{align}
+\end{definition}
+
+\begin{theorem}[Bivalence for World-Histories]\label{thm:bivalence}
+For any world-history $\tau : \mathsf{WorldHistory}(\mframe)$, model $\model$, time $x : D$, assignment $\assignment$, and temporal index $\tempindex$:
+\[
+    \model, \tau, x, \assignment, \tempindex \trueat \metaA \iff \model, \tau, x, \assignment, \tempindex \nfalseat \metaA
+\]
+\end{theorem}
+
+\begin{remark}
+This bivalence property breaks down for non-maximal evolutions $\tau$ that are not world-histories.
+\end{remark}
+
+\subsubsection{Lambda Abstraction and Quantification}
+
+\begin{definition}[Syntactic Conventions]\label{def:syntactic-conventions}
+The following are abbreviations for primitive syntax:
+\begin{align*}
+    \forall v.\metaA &:= \forall(\lambda v.\metaA) && \text{where $\lambda v.\metaA$ binds variable $v$ in $\metaA$} \\
+    \exists v.\metaA &:= \exists(\lambda v.\metaA) && \text{where $\exists := \neg\forall\neg$}
+\end{align*}
+These abbreviations reduce quantified formulas to applications of the universal quantifier $\forall$ (or its dual $\exists$) to lambda-abstracted properties.
+\end{definition}
+
+\begin{definition}[Lambda Application and Universal Quantification]\label{def:lambda-quant-truth}
+The primitive semantic clauses for lambda application and universal quantification are:
+\begin{align}
+    \model, \tau, x, \assignment, \tempindex \trueat (\lambda v.\metaA)(t) &\iff \model, \tau, x, \assignsub{\sem{t}^\assignment_\model}{v}, \tempindex \trueat \metaA \\
+    \model, \tau, x, \assignment, \tempindex \trueat \forall(P) &\iff \model, \tau, x, \assignsub{s}{v}, \tempindex \trueat P \text{ for all } s : \statespace
+\end{align}
+where $P$ is a property (a formula with at least one free variable $v$), and $\assignsub{s}{v}$ extends the assignment $\assignment$ by mapping $v$ to $s$.
+\end{definition}
+
+\begin{remark}[Reduction of Quantified Formulas]
+To evaluate $\forall v.\metaA$, we expand via the syntactic convention and then apply the primitive semantic clauses:
+\begin{align*}
+    \model, \tau, x, \assignment, \tempindex \trueat \forall v.\metaA
+    &\iff \model, \tau, x, \assignment, \tempindex \trueat \forall(\lambda v.\metaA) && \text{(syntactic sugar)} \\
+    &\iff \model, \tau, x, \assignsub{s}{v}, \tempindex \trueat \metaA \text{ for all } s : \statespace && \text{(by $\forall$ and $\lambda$ semantics)}
+\end{align*}
+This matches the Lean implementation where \texttt{Formula.all} and \texttt{Formula.lambdaApp} are separate constructors.
+\end{remark}
+
+\begin{remark}[Naming Conventions]\label{rem:naming-conventions}
+In this LaTeX presentation, we distinguish:
+\begin{itemize}
+    \item \textbf{Metalanguage times}: denoted $x, y, z \in D$
+    \item \textbf{Object language variables}: denoted $v, v_1, v_2, \ldots$
+    \item \textbf{States}: denoted $s, t, r \in \statespace$
+\end{itemize}
+In the Lean implementation (\texttt{Truth.lean}):
+\begin{itemize}
+    \item Times use identifiers \texttt{t}, \texttt{y}
+    \item Variables use \texttt{x} (of type \texttt{String})
+    \item States use identifiers \texttt{s}, \texttt{t}, \texttt{r}
+\end{itemize}
+This notational divergence is intentional to avoid confusion between metalanguage time variables (ranging over the temporal order $D$) and object language term variables (bound by quantifiers and lambda abstractions).
+\end{remark}
+
+\subsubsection{Actuality Predicate}
+
+\begin{definition}[Actuality]\label{def:actuality-truth}
+	\[
+		\model, \tau, x, \assignment, \tempindex \trueat \actual(t) \iff \sem{t}^\assignment_\model \parthood \tau(x)
+	\]
+\end{definition}
+
+\begin{remark}[Restricted Quantification]
+The actuality predicate enables restricting quantification to actually existing objects:
+\[
+    \forall y(\actual(y) \to \metaA) \text{ is true iff } \metaA \text{ holds for all states that are parts of } \tau(x)
+\]
+The unrestricted universal quantifier validates the Barcan formulas ($\forall x \nec\metaA \to \nec\forall x\metaA$ and its converse), while the actuality-restricted quantifier does not.
+
+Additional restricted quantifiers can be defined:
+\begin{itemize}
+    \item \emph{Sometimes actual}: $\forall y(\sometimes\actual(y) \to \metaA)$ quantifies over all states that are sometimes actual
+    \item \emph{Possibly actual}: $\forall y(\poss\actual(y) \to \metaA)$ quantifies over all states that are possibly actual
+\end{itemize}
+Both are restrictions of the full unrestricted quantifier, with the unrestricted and possibly actual quantifiers validating the Barcan formulas.
+\end{remark}
+
+% TODO: The barcan formulas should be derived and shown to be valid for all possibly actual quantifier and the unrestricted quantifier, where similarly the all sometimes actual quantifier should validate the temporal analogs of the barcan formals as do the unrestricted versions
+
+\subsubsection{Extensional Connectives}
+
+\begin{definition}[Extensional Connectives]\label{def:extensional-truth}
+	\begin{align}
+		\model, \tau, x, \assignment, \tempindex \trueat \neg\metaA          & \iff \model, \tau, x, \assignment, \tempindex \falseat \metaA                                                                         \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \land \metaB & \iff \model, \tau, x, \assignment, \tempindex \trueat \metaA \text{ and } \model, \tau, x, \assignment, \tempindex \trueat \metaB \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \lor \metaB  & \iff \model, \tau, x, \assignment, \tempindex \trueat \metaA \text{ or } \model, \tau, x, \assignment, \tempindex \trueat \metaB
+		% \model, \tau, x, \assignment, \tempindex \trueat \metaA \to \metaB   & \iff \model, \tau, x, \assignment, \tempindex \falseat \metaA \text{ or } \model, \tau, x, \assignment, \tempindex \trueat \metaB
+	\end{align}
+\end{definition}
+
+\subsubsection{Stability Operator (Primitive)}
+
+\begin{definition}[Stability]\label{def:stability-truth}
+The \emph{stability operator} $\mathsf{Stab}\metaA$ quantifies over all histories sharing the current world-state:
+\[
+    \model, \tau, x, \assignment, \tempindex \trueat \mathsf{Stab}\metaA \iff
+    \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe) \text{ where } \alpha(x) = \tau(x)
+\]
+\end{definition}
+
+\begin{remark}
+The stability operator cannot be defined in terms of the counterfactual conditional.
+It captures what is true at the current world-state across all compatible histories.
+\end{remark}
+
+\subsubsection{Modal Operators (Derived)}
+
+\begin{remark}[Modal Operators as Derived]\label{rem:modal-derived}
+The modal operators are derived from the counterfactual:
+\begin{itemize}
+    \item $\nec\metaA := \top \boxright \metaA$ (necessity)
+    \item $\poss\metaA := \neg\nec\neg\metaA$ (possibility)
+\end{itemize}
+The semantic clauses follow from these definitions:
+\begin{align}
+    \model, \tau, x, \assignment, \tempindex \trueat \nec\metaA  & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for all } \alpha : \mathsf{WorldHistory}(\mframe)  \\
+    \model, \tau, x, \assignment, \tempindex \trueat \poss\metaA & \iff \model, \alpha, x, \assignment, \tempindex \trueat \metaA \text{ for some } \alpha : \mathsf{WorldHistory}(\mframe)
+\end{align}
+This yields an S5 modal logic.
+\end{remark}
+
+\subsubsection{Dynamical Tense Operators}
+
+\begin{definition}[Primitive Tense Operators]\label{def:tense-truth}
+\begin{align}
+    \model, \tau, x, \assignment, \tempindex \trueat \allpast\metaA     & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y < x  \\
+    \model, \tau, x, \assignment, \tempindex \trueat \allfuture\metaA & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y : D \text{ where } y > x
+\end{align}
+\end{definition}
+
+\begin{remark}[Derived Tense Operators]\label{rem:tense-derived}
+The ``sometimes'' operators are derived:
+\begin{itemize}
+    \item $\somepast\metaA := \neg\allpast\neg\metaA$
+    \item $\somefuture\metaA := \neg\allfuture\neg\metaA$
+\end{itemize}
+Their semantic clauses follow:
+\begin{align}
+    \model, \tau, x, \assignment, \tempindex \trueat \somepast\metaA    & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y < x \\
+    \model, \tau, x, \assignment, \tempindex \trueat \somefuture\metaA & \iff \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for some } y : D \text{ where } y > x
+\end{align}
+\end{remark}
+
+\subsubsection{Extended Tense Operators}
+
+\begin{definition}[Since and Until]\label{def:since-until-truth}
+	\begin{align}
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \since \metaB \iff 
+      & \text{there exists } z < x \text{ where } \model, \tau, z, \assignment, \tempindex \trueat \metaB \text{ and} \notag \\
+	    & \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } z < y < x \\
+		\model, \tau, x, \assignment, \tempindex \trueat \metaA \until \metaB \iff 
+      & \text{there exists } z > x \text{ where } \model, \tau, z, \assignment, \tempindex \trueat \metaB \text{ and}\notag \\
+		  & \model, \tau, y, \assignment, \tempindex \trueat \metaA \text{ for all } y \text{ where } x < y < z
+	\end{align}
+\end{definition}
+
+\subsubsection{Counterfactual Conditional}
+
+\begin{definition}[Counterfactual Conditional]\label{def:counterfactual-truth}
+	\[
+    \model, \tau, x, \assignment, \tempindex \trueat \metaA \boxright \metaC \iff \model, \beta, x, \assignment, \tempindex \trueat \metaC \text{ whenever } \model, \assignment, s \verifies \metaA \text{ and } \beta : \altworlds{\tau}{s}{x}
+	\]
+	% if $\fusion{s}{t} \parthood \beta(x)$ for some maximal $t$-compatible part $s \in \maxcompat{\tau(x)}{t}$, then $\model, \beta, x, \assignment, \tempindex \trueat \metaC$
+\end{definition}
+
+\begin{definition}[Imposition]\label{def:imposition}
+We write $\imposition{t}{w}{w'}$ (``imposing $t$ on $w$ yields $w'$'') iff there exists a maximal $t$-compatible part $s \in \maxcompat{w}{t}$ where $\fusion{s}{t} \parthood w'$.
+\end{definition}
+
+\begin{definition}[Alternative Worlds]\label{def:altworlds}
+For a world-history $\tau$, state $s : \statespace$, and time $x : D$, the \emph{alternative worlds} are:
+\[
+    \altworlds{\tau}{s}{x} := \set{\beta : \mathsf{WorldHistory}(\mframe) \mid \imposition{s}{\tau(x)}{\beta(x)}}
+\]
+where $\imposition{t}{w}{w'}$ holds iff there exists $r \in \maxcompat{w}{t}$ such that $\fusion{r}{t} \parthood w'$.
+\end{definition}
+
+\subsubsection{Store and Recall Operators}
+
+\begin{definition}[Store and Recall]\label{def:store-recall-truth}
+	For cross-temporal reference, the context includes a temporal index $\tempindex = \tuple{i_1, i_2, \ldots}$ of stored times:
+	\begin{align}
+		\model, \tau, x, \assignment, \tempindex \trueat \store{k}\metaA  & \iff \model, \tau, x, \assignment, \tempindex[x/i_k] \trueat \metaA \\
+		\model, \tau, x, \assignment, \tempindex \trueat \recall{k}\metaA & \iff \model, \tau, i_k, \assignment, \tempindex \trueat \metaA
+	\end{align}
+	where $\tempindex[x/i_k]$ replaces $i_k$ with current time $x$.
+\end{definition}
+
+% \begin{example}[Tensed Counterfactuals]
+% 	\begin{itemize}
+% 		\item $\recall{1}(\metaB \boxright \somefuture\allpast)$ --- ``If $\metaB$ had occurred at the stored time, then $\allpast$ would have occurred at some future time''
+% 		\item $\store{2}\recall{1}(\metaB \boxright \recall{2}\allpast)$ --- ``Store now, recall past time, if $\metaB$ then $\allpast$ at the stored present''
+% 	\end{itemize}
+% \end{example}
+
+\noindent
+See \leansrc{Logos.Dynamics.Semantics}{Satisfies}
+
+% ------------------------------------------------------------
+% Bimodal Interaction Principles
+% ------------------------------------------------------------
+
+% NOTE: This subsection could be moved into a proof theory section in a future revision.
+
+\subsection{Bimodal Interaction Principles}\label{sec:bimodal-interaction}
+
+The task semantics validates these perpetuity principles connecting modal and temporal operators:
+
+\begin{definition}[Perpetuity Principles]\label{def:perpetuity}
+	\begin{align}
+		\textbf{P1}: \quad & \nec\metaphi \to \always\metaphi                                        &  & \text{Necessary implies always}            \\
+		\textbf{P2}: \quad & \sometimes\metaphi \to \poss\metaphi                                    &  & \text{Sometimes implies possible}          \\
+		\textbf{P3}: \quad & \nec\always\metaphi \leftrightarrow \always\nec\metaphi         &  & \text{Necessary-always commutativity}      \\
+		\textbf{P4}: \quad & \poss\sometimes\metaphi \leftrightarrow \sometimes\poss\metaphi &  & \text{Possible-sometimes commutativity}    \\
+		\textbf{P5}: \quad & \nec\metaphi \to \nec\always\metaphi                                    &  & \text{Necessary implies necessary-always}  \\
+		\textbf{P6}: \quad & \sometimes\poss\metaphi \to \poss\metaphi                               &  & \text{Sometimes-possible implies possible}
+	\end{align}
+\end{definition}
+
+% ------------------------------------------------------------
+% Temporal Frame Constraints
+% ------------------------------------------------------------
+
+% NOTE: These frame constraints could be moved after task relation constraints and stated formally in a future revision.
+
+\subsection{Temporal Frame Constraints}\label{sec:temporal-constraints}
+
+Different temporal structures yield different valid principles.
+The framework does not assume discrete time:
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lll}
+		\toprule
+		\textbf{Constraint} & \textbf{Description}                      & \textbf{Corresponding Axiom}                                                                                    \\
+		\midrule
+		Dense               & Between any two times there is another    & $\allfuture\allfuture\metaphi \to \allfuture\metaphi$                                                        \\
+		Complete            & Every bounded set has a least upper bound & $\always(\allpast\metaphi \to \somefuture\allpast\metaphi) \to (\allpast\metaphi \to \allfuture\metaphi)$ \\
+		Unbounded Past      & No earliest time                          & $\somepast\top$                                                                                                  \\
+		Unbounded Future    & No latest time                            & $\somefuture\top$                                                                                               \\
+		\bottomrule
+	\end{tabular}
+	\caption{Temporal frame constraints and corresponding axioms}
+	\label{tab:temporal-constraints}
+\end{table}
+
+% ------------------------------------------------------------
+% Logical Consequence
+% ------------------------------------------------------------
+
+\subsection{Logical Consequence}\label{sec:logical-consequence-core}
+
+% NOTE: This definition could be updated to use dependent type theory notation consistently in a future revision.
+
+\begin{definition}[Logical Consequence]\label{def:consequence-core}
+	\[
+		\context \trueat \metaA \iff \text{for any } \model, \tau \in \historyspace, x \in D, \assignment, \tempindex: \text{if } \model, \tau, x, \assignment, \tempindex \trueat \metaB \text{ for all } \metaB \in \context, \text{ then } \model, \tau, x, \assignment, \tempindex \trueat \metaA
+	\]
+\end{definition}
+
+\begin{remark}
+	Unlike the semantics presented in te \textit{Constitutive Foundation}, the semantics for the \textit{Dynamics Foundation} evaluates truth relative to world-histories and times, fixing the contingencies required to assign truth-values rather than verifiers and falsifiers alone.
+	Nevertheless, the hyperintensional distinctions between necessarily equivalent sentences are still preserved since propositions still differ if their exact verifiers differ.
+\end{remark}
+
+% ============================================================================
+% Section: Dynamics Foundation Axioms
+% ============================================================================
+
+% NOTE: A complete presentation of the Dynamical Foundation logic is planned for a future revision.
+
+\subsection{Counterfactual Logic}\label{sec:counterfactual-axioms}
+
+This section presents the axiom system for the counterfactual logic of the \textit{Dynamics Foundation}.
+
+% ------------------------------------------------------------
+% Dynamical Rules
+% ------------------------------------------------------------
+
+\begin{definition}[Closure Under Deduction]\label{def:closure-deduction}
+	\[
+		\textbf{R1}: \quad \text{If } \context \proves \metaC, \text{ then } \metaphi \boxright \context \proves \metaphi \boxright \metaC
+	\]
+\end{definition}
+
+\begin{remark}
+	This rule states that if $\metaC$ is derivable from $\context$, then for any antecedent $\metaphi$, the counterfactual with consequent $\metaC$ is derivable from the counterfactuals with consequents from $\context$.
+\end{remark}
+
+% ------------------------------------------------------------
+% Counterfactual Axiom Schemata
+% ------------------------------------------------------------
+
+\subsection{Counterfactual Axiom Schemata}\label{sec:counterfactual-axiom-schemata}
+
+\begin{definition}[Counterfactual Axioms]\label{def:counterfactual-axioms}
+	\begin{align}
+		\textbf{C1}: \quad & \metaphi \boxright \metaphi                                                                                                                    &  & \text{(Identity)}                    \\
+		\textbf{C2}: \quad & \metaphi, \metaphi \boxright \metaA \proves \metaA                                                                                             &  & \text{(Counterfactual Modus Ponens)} \\
+		\textbf{C3}: \quad & \metaphi \boxright \metapsi, \metaphi \land \metapsi \boxright \metaA \proves \metaphi \boxright \metaA                                        &  & \text{(Weakened Transitivity)}       \\
+		\textbf{C4}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metaphi \land \metapsi \boxright \metaA                                                       &  & \text{(Disjunction-Conjunction)}     \\
+		\textbf{C5}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metaphi \boxright \metaA                                                                      &  & \text{(Simplification Left)}         \\
+		\textbf{C6}: \quad & \metaphi \lor \metapsi \boxright \metaA \proves \metapsi \boxright \metaA                                                                      &  & \text{(Simplification Right)}        \\
+		\textbf{C7}: \quad & \metaphi \boxright \metaA, \metapsi \boxright \metaA, \metaphi \land \metapsi \boxright \metaA \proves \metaphi \lor \metapsi \boxright \metaA &  & \text{(Disjunction Introduction)}
+	\end{align}
+\end{definition}
+
+\begin{remark}[Explanation of Counterfactual Axioms]
+	\begin{itemize}
+		\item \textbf{C1} (Identity): Every proposition counterfactually implies itself.
+		\item \textbf{C2} (Modus Ponens): If $\metaphi$ is actually true and $\metaphi$ would imply $\metaA$, then $\metaA$ is true.
+		\item \textbf{C3} (Weakened Transitivity): This weaker form of transitivity avoids the problematic full transitivity principle.
+		\item \textbf{C4-C7}: These axioms govern the interaction between counterfactuals and Boolean operations on antecedents.
+	\end{itemize}
+\end{remark}
+
+% ------------------------------------------------------------
+% Modal Axiom Schemata
+% ------------------------------------------------------------
+
+\subsection{Modal Axiom Schemata}\label{sec:modal-axioms}
+
+\begin{definition}[Modal Axioms]\label{def:modal-axioms}
+	\begin{align}
+		\textbf{M1}: \quad & \top                                                        &  & \text{(Truth)}                    \\
+		\textbf{M2}: \quad & \neg\bot                                                    &  & \text{(Non-Contradiction)}        \\
+		\textbf{M3}: \quad & \metaA \to \nec\poss\metaA                                  &  & \text{(Brouwer)}                  \\
+		\textbf{M4}: \quad & \nec\metaA \to \nec\nec\metaA                               &  & \text{(S4 Transitivity)}          \\
+		\textbf{M5}: \quad & \nec(\metaphi \to \metaA) \proves \metaphi \boxright \metaA &  & \text{(Strict-to-Counterfactual)}
+	\end{align}
+\end{definition}
+
+\begin{remark}[S5 Modal Logic]
+	The combination of M3 and M4 yields an S5 modal logic, which is characterized by an equivalence relation on possible worlds.
+	In the task semantics, this arises from the structure of world-histories: any world-history is accessible from any other at any given time.
+\end{remark}
+
+\begin{remark}[Strict-to-Counterfactual]
+	Axiom M5 states that if $\metaA$ is a strict consequence of $\metaphi$ (i.e., necessarily, if $\metaphi$ then $\metaA$), then $\metaphi$ counterfactually implies $\metaA$.
+	This connects the modal operator with the counterfactual conditional.
+\end{remark}
+
+% ------------------------------------------------------------
+% Derived Theorems
+% ------------------------------------------------------------
+
+\subsection{Derived Theorems}\label{sec:derived-theorems}
+
+\begin{theorem}[Counterfactual Strengthening]\label{thm:cf-strengthening}
+	If $\metaphi \boxright \metaA$ and $\metaphi \boxright \metapsi$, then $\metaphi \boxright (\metaA \land \metapsi)$.
+\end{theorem}
+
+\begin{theorem}[Counterfactual Weakening]\label{thm:cf-weakening}
+	If $\metaphi \boxright \metaA$ and $\metaA \proves \metaB$, then $\metaphi \boxright \metaB$.
+\end{theorem}
+
+\begin{theorem}[Necessity Introduction]\label{thm:necessity-intro}
+	$\top \boxright \metaA$ is equivalent to $\nec\metaA$.
+\end{theorem}
+
+\begin{theorem}[Excluded Middle]\label{thm:excluded-middle}
+	$(\metaphi \boxright \metaA) \lor (\metaphi \boxright \neg\metaA)$ is \emph{not} generally valid.
+\end{theorem}
+
+\begin{remark}
+	The failure of excluded middle for counterfactuals (Theorem~\ref{thm:excluded-middle}) reflects the mereological structure: when imposing an antecedent $\metaphi$ on the actual world, there may be multiple ways to do so, leading to different worlds where $\metaA$ or $\neg\metaA$ holds.
+	The counterfactual is true only when the consequent holds in \emph{all} such imposed worlds.
+\end{remark}
+
+% ------------------------------------------------------------
+% Soundness and Completeness
+% ------------------------------------------------------------
+
+\subsection{Soundness and Completeness}\label{sec:soundness-completeness}
+
+\begin{theorem}[Soundness]\label{thm:soundness}
+	If $\context \proves \metaA$ using the axiom system above, then $\context \trueat \metaA$.
+\end{theorem}
+
+\begin{question}
+	Completeness of the axiom system with respect to the mereological counterfactual semantics remains an open problem.
+	The main challenge is showing that every consistent set of formulas has a model with the required mereological structure.
+\end{question}
+
+See \leansrc{Logos.Dynamics.Axioms}{CounterfactualAxioms} for the Lean implementation.
+\end{document}

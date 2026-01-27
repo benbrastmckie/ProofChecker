@@ -27,12 +27,13 @@
 % ============================================================================
 
 % --- State Space ---
-\newcommand{\statespace}{S}
+\newcommand{\statespace}{\mathcal{S}}
 \newcommand{\nullstate}{\square}
 \newcommand{\fullstate}{\sqbullet}
 \newcommand{\fusion}[2]{#1\sqcup#2}
 \newcommand{\Fusion}{\bigsqcup}
 \newcommand{\parthood}{\sqsubseteq}
+\newcommand{\strictpart}{\sqsubset}
 
 % --- Verification and Falsification ---
 \newcommand{\verifies}{\Vdash}
@@ -60,6 +61,13 @@
 \newcommand{\essence}{\sqsubseteq}
 \newcommand{\ground}{\leq}
 
+% --- Inductive Definition Syntax ---
+\newcommand{\Define}{\Coloneq}         % BNF-style definition (::=)
+% Note: \define is \coloneqq (:=) from notation-standards.sty
+
+% --- Free Variables ---
+\newcommand{\FV}{\mathsf{FV}}           % Free variables function
+
 % --- Variable Assignment ---
 \newcommand{\assignment}{\sigma}
 \newcommand{\assignsub}[2]{\sigma[#1/#2]}
@@ -70,7 +78,7 @@
 % ============================================================================
 
 % --- Temporal Order ---
-\newcommand{\temporalorder}{D}
+\newcommand{\temporalorder}{\mathcal{D}}
 \newcommand{\timelt}{<}
 \newcommand{\timeleq}{\leq}
 
@@ -84,24 +92,25 @@
 \newcommand{\connected}{\sim}
 \newcommand{\worldstates}{W}
 \newcommand{\necessary}{N}
-\newcommand{\maxcompat}[2]{#1_{#2}}
+\newcommand{\maxcompat}[2]{[#1]_{#2}}
+\newcommand{\altworlds}[3]{\langle #1 \rangle_{#2}^{#3}}
 
 % --- World-History ---
 \newcommand{\history}{\tau}
-\newcommand{\historyspace}{H_\mathbf{F}}
+\newcommand{\historyspace}{H_\mathcal{F}}
 
 % --- Temporal Index ---
 \newcommand{\tempindex}{\vec{\imath}}
 
 % --- Core Tense Operators ---
-\newcommand{\always}{H}           % always past
-\newcommand{\willalways}{G}       % always future
-\newcommand{\waspast}{P}          % some past
-\newcommand{\willfuture}{F}       % some future
+\newcommand{\allpast}{H}           % always past
+\newcommand{\allfuture}{G}       % always future
+\newcommand{\somepast}{P}          % some past
+\newcommand{\somefuture}{F}       % some future
 
 % --- Derived Tense Operators ---
-\newcommand{\alwaystemporal}{\triangle}       % at all times
-\newcommand{\sometimestemporal}{\triangledown} % at some time
+\newcommand{\always}{\ensuremath \raisebox{-1.3pt}{$\triangle$}}
+\newcommand{\sometimes}{\ensuremath \raisebox{1.3pt}{\rotatebox[origin=c]{180}{$\triangle$}}}
 
 % --- Extended Tense Operators ---
 \newcommand{\since}{\triangleleft}
@@ -112,8 +121,8 @@
 \newcommand{\imposition}[2]{#1 \to_{#2}}
 
 % --- Store/Recall ---
-\newcommand{\store}[1]{\uparrow^{#1}}
-\newcommand{\recall}[1]{\downarrow^{#1}}
+\newcommand{\store}[1]{\uparrow^{#1}\hspace{-2pt}}
+\newcommand{\recall}[1]{\downarrow^{#1}\hspace{-2pt}}
 
 % --- Actuality ---
 \newcommand{\actual}{\mathsf{Act}}

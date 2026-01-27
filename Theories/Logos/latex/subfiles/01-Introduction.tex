@@ -1,0 +1,285 @@
+\documentclass[../LogosReference.tex]{subfiles}
+\begin{document}
+
+% ============================================================================
+% Section: Introduction
+% ============================================================================
+
+\section{Introduction}\label{sec:introduction}
+
+This reference manual provides the formal specification for the Logos proof system, semantics, metalogic, and library of theorems.
+The semantics is organized around the \textit{semantic frames} that provide the primitive structure used to interpret the logical operators included in the Logos.
+By successively extending the primitive resources included in a frame, it becomes possible to provide semantic clauses for a new range of operators, thereby extending the expressive power of the Logos for systematic reasoning.
+
+The Logos is interpreted over a complete lattice called a \textit{frame} which provides the semantic primitives for the \textit{Constitutive Foundation} of the theory.
+Whereas intensional semantic theories take total instantaneous states of a system to be primitive, the state semantics takes states and their parthood relations to be primitive to provide fine-grained semantic contents. % by which to recursively interpret the expressions of the language.
+These fine-grained contents can then be used to interpret standard first-order resources along with constitutive explanatory operators for \textit{essence}, \textit{ground}, \textit{reduction}, and \textit{propositional identity} which formalize `sufficient for', `necessary for', `what it is for', and `just is for' explanatory relationships.
+
+The \textit{Dynamical Foundation} extends the primitive semantic resources given by a frame to include a \textit{task relation} that is parameterized by \textit{times} to govern the lawful transitions by which the states in a system evolve.
+These elements are used to construct \textit{world sates} which represent total instantaneous states of a system, as well as \textit{world histories} which model the possible evolutions of that system by mapping durations to world states in lawful.
+For instance, in modeling a game of chess, the world states correspond to the legal complete configurations of the chessboard, and the world histories correspond to the possible games of chess.
+World histories are used to provide semantic clauses for modal, temporal, counterfactual, and causal operators in addition to those included in the \textit{Constitutive Foundation}.
+
+% Given a world history, each duration may be referred to as a \textit{time} in that history.
+A world history and time suffice to assign truth-values to all sentences of the foundational layers of the Logos for planning and evaluating actions.
+Plugins extend the expressive power of the foundational layers of the Logos by adding semantic primitives as well as new contextual parameters at which sentences are evaluated.
+For instance, given a \textit{credence function} which assigns likelihoods to propositions, a \textit{belief parameter} is required along with a world history and time to provide a semantics for the belief operator.
+Given a world history, time, and belief parameter, a proposition is believed just in case the credence in that proposition is greater than the belief parameter included in the point of evaluation.
+
+
+% ------------------------------------------------------------
+% Extension Dependencies
+% ------------------------------------------------------------
+
+\subsection{Extension Dependencies}\label{sec:extension-dependencies}
+
+% FIX: make references like \Cref{fig:extension-dependencies} appear in italics by revising \Cref or etc as needed
+
+This section presents the layer extensions by which the Logos is constructed where \Cref{fig:extension-dependencies} shows the dependency structure among extensions.
+The first two layers provide an essential foundation followed by a modular plugin system for language extensions and an additional agential layer for multi-agent, self-reflective, and social reasoning.
+
+\begin{figure}[htbp]
+	\centering
+	\usetikzlibrary{fit,backgrounds,positioning,calc,arrows.meta}
+	\begin{tikzpicture}[
+			widebox/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=10cm, minimum height=1.2cm},
+			box/.style={rectangle, draw, text centered, rounded corners=4pt, minimum width=4.5cm, minimum height=1.2cm},
+			smallbox/.style={rectangle, draw, text centered, rounded corners=3pt, minimum width=2.8cm, minimum height=1.6cm, font=\small},
+			arrow/.style={->, thick, >=stealth},
+			doublearrow/.style={<->, thick, >=stealth}
+		]
+
+		% Constitutive Foundation (full-width)
+		\node[widebox, minimum height=1.8cm] (foundation) {
+			\begin{tabular}{c}
+				\textbf{Constitutive Foundation}                                                                 \\
+				{\small predicates ($F$, $G$),~ functions ($f$, $g$),~ variables ($x$, $y$)}                     \\
+				{\small boolean ($\neg$, $\land$, $\lor$, $\bot$, $\top$),~ lambda ($\lambda$),~ identity ($=$)} \\
+				{\small propositional identity ($\equiv$),~ grounding ($\leq$),~ essence ($\sqsubseteq$),~ reduction ($\Rightarrow$)}
+			\end{tabular}
+		};
+
+		% Dynamical Foundation (full-width)
+		\node[widebox, minimum height=1.8cm, below=0.85cm of foundation] (explanatory) {
+			\begin{tabular}{c}
+				\textbf{Dynamical Foundation}                                                                                                     \\
+				{\small modal ($\Box$, $\Diamond$),~ temporal ($H$, $G$, $P$, $F$, $\since$, $\until$),~ store/recall ($\downarrow$, $\uparrow$)} \\
+				{\small counterfactual ($\boxright$, $\diamondright$),~ causal ($\circleright$, $\dotcircleright$)}                               \\
+				{\small quantifiers ($\forall$, $\exists$),~ actuality ($\mathsf{Act}$)}
+			\end{tabular}
+		};
+
+		% Middle Extensions (two rows: 3 on top, 2 centered below)
+		% Top row center: Normative
+		\node[smallbox, below=2.0cm of explanatory] (normative) {
+			\begin{tabular}{c}
+				\textbf{Normative}                      \\
+				{\footnotesize obligation, permission,} \\
+				{\footnotesize preference, reason-for} \\
+				{\small ($\mathsf{O}$, $\mathsf{P}$, $\prec$, $\mapsto$)}
+			\end{tabular}
+		};
+
+		% Top row left: Epistemic
+		\node[smallbox, left=0.3cm of normative] (epistemic) {
+			\begin{tabular}{c}
+				\textbf{Epistemic}                   \\
+				{\footnotesize belief, probability,} \\
+				{\footnotesize might/must}           \\
+				{\footnotesize indicatives}           \\
+				{\small ($\mathsf{B}$, $\mathsf{Pr}$, $\mathsf{Mi}$, $\mathsf{Mu}$, $\hookrightarrow$)}
+			\end{tabular}
+		};
+
+		% Top row right: Abilities
+		\node[smallbox, right=0.3cm of normative] (abilities) {
+			\begin{tabular}{c}
+				\textbf{Abilities}                 \\
+				{\footnotesize specific, generic,} \\
+				{\footnotesize agency}             \\
+				{\small ($\mathsf{Can}$, $\mathsf{Stit}$)}
+			\end{tabular}
+		};
+
+		% Bottom row: Choice and Spatial centered below
+		\node[smallbox, below=0.5cm of normative, xshift=-1.6cm] (choice) {
+			\begin{tabular}{c}
+				\textbf{Choice}                  \\
+				{\footnotesize free permission,} \\
+				{\footnotesize alternatives}     \\
+				{\small ($\mathsf{FP}$, $\mathsf{Ch}$)}
+			\end{tabular}
+		};
+
+		\node[smallbox, below=0.5cm of normative, xshift=1.6cm] (spatial) {
+			\begin{tabular}{c}
+				\textbf{Spatial}          \\
+				{\footnotesize location,} \\
+				{\footnotesize relations} \\
+				{\small ($@$, $\mathsf{Dist}$)}
+			\end{tabular}
+		};
+
+		% Ellipsis node for extensibility (second row)
+		\node[draw=none, right=0.3cm of spatial, font=\Large] (rightellipsis) {$\cdots$};
+
+		% Invisible spacer nodes to extend grey box
+		\node[draw=none, above=0.7cm of normative, minimum width=1pt, minimum height=1pt] (topspacer) {};
+		\node[draw=none, below=0.0cm of choice, minimum width=1pt, minimum height=1pt] (bottomspacer) {};
+
+		% Grey background box around middle extensions
+		\begin{pgfonlayer}{background}
+			\node[fill=gray!15, draw=gray!40, rounded corners=6pt,
+				fit=(epistemic)(normative)(abilities)(rightellipsis)(choice)(spatial)(topspacer)(bottomspacer),
+				inner sep=12pt,
+				label={[font=\itshape, anchor=north, yshift=-8pt]north:Middle extensions are modular---combine any subset}] (middlebox) {};
+		\end{pgfonlayer}
+
+		% Bottom Layer: Agential, Social, and Reflection (inside third grey box)
+		% Position them below the middle extensions grey box, centered
+		\node[smallbox, below=2.0cm of middlebox] (social) {
+			\begin{tabular}{c}
+				\textbf{Social}                \\
+				{\footnotesize common ground,} \\
+				{\footnotesize trust relations}
+			\end{tabular}
+		};
+
+		\node[smallbox, left=0.3cm of social] (agential) {
+			\begin{tabular}{c}
+				\textbf{Agential}                       \\
+				{\footnotesize inherited agent-indexed} \\
+				{\footnotesize operators}
+			\end{tabular}
+		};
+
+		\node[smallbox, right=0.3cm of social] (reflection) {
+			\begin{tabular}{c}
+				\textbf{Reflection}            \\
+				{\footnotesize metacognition,} \\
+				{\footnotesize perspectival operators}
+			\end{tabular}
+		};
+
+		% Invisible spacer node to extend grey box upward for label
+		\node[draw=none, above=0.5cm of social, minimum width=1pt, minimum height=1pt] (bottomtopspacer) {};
+
+		% Grey background box around bottom extensions
+		\begin{pgfonlayer}{background}
+			\node[fill=gray!15, draw=gray!40, rounded corners=6pt,
+				fit=(agential)(social)(reflection)(bottomtopspacer),
+				inner sep=12pt,
+				label={[font=\itshape, anchor=north, yshift=-8pt]north:Agent-dependent extensions}] (bottombox) {};
+		\end{pgfonlayer}
+
+		% Simplified arrows (no labels)
+		% Foundation -> Explanatory
+		\draw[arrow] (foundation) -- (explanatory);
+
+		% Explanatory -> Middle box (arrow from center of explanatory, straight down)
+		\draw[arrow] (explanatory.south) -- (explanatory.south |- middlebox.north);
+
+		% Middle box -> Bottom box (single centered arrow)
+		\draw[arrow] (middlebox.south) -- (middlebox.south |- bottombox.north);
+
+		% Double arrow between Agential and Reflection
+		% \draw[doublearrow] (agential.east) -- (reflection.west);
+
+	\end{tikzpicture}
+	\caption{Extension dependency structure in the Logos system.}
+	\label{fig:extension-dependencies}
+\end{figure}
+
+Whereas the \textit{Constitutive Foundation} and \textit{Dynamical Foundation} form the required base, the middle extensions (\textit{Epistemic}, \textit{Abilities}, \textit{Normative}, \textit{Choice}, \textit{Spatial}, and others) are modular plugins that can be combined in any subset.
+The \textit{Agential Extension}, \textit{Social Extension}, and \textit{Reflection Extension} all inherit from the layers above and are free to interact with each other.
+The \textit{Agential Extension} provides third-person multi-agent reasoning, the \textit{Social Extension} provides the construction of the common ground and trust relations, and the \textit{Reflection Extension} enables first-person metacognition.
+
+% ------------------------------------------------------------
+% Layer Descriptions
+% ------------------------------------------------------------
+
+\subsection{Layer Descriptions}\label{sec:layer-descriptions}
+
+\begin{enumerate}
+	\item \textbf{Constitutive Foundation}:
+	      Provides the hyperintensional base with predicates ($F$, $G$), functions ($f$, $g$), variables ($x$, $y$), booleans ($\neg$, $\land$, $\lor$), extremal ($\bot$, $\top$), lambda abstraction ($\lambda$), identity ($=$), and constitutive operators (propositional identity $\equiv$, grounding $\leq$, essence $\sqsubseteq$, reduction $\Rightarrow$) over a complete lattice with bilateral propositions (verifier/falsifier pairs).
+	      This layer enables fine-grained distinctions between propositions with identical truth-values and modal profiles but different verification conditions, essential for exact specification of what makes a claim true.
+
+	\item \textbf{Dynamical Foundation}:
+	      Adds quantifiers ($\forall$, $\exists$), modals ($\Box$, $\Diamond$) for necessity and possibility, tense ($H$, $G$, $P$, $F$, $\since$, $\until$) for reasoning across time, store/recall operators ($\downarrow$, $\uparrow$) for temporal reference, actuality ($\mathsf{Act}$) for distinguishing actual from possible, counterfactual conditionals ($\boxright$, $\diamondright$) for hypothetical reasoning, and causal operators ($\circleright$, $\dotcircleright$) for explanatory relations over a duration.
+	      Together these resources enable reasoning about action sequences, future contingency, what would have happened under different circumstances, and causal relationships.
+
+	\item \textbf{Epistemic Extension}:
+	      Introduces epistemic modals ($\mathsf{Mi}$, $\mathsf{Mu}$), belief ($\mathsf{B}$), probability ($\mathsf{Pr}$), and indicative conditional operators ($\hookrightarrow$) for reasoning under uncertainty.
+	      By extending the semantic framework with credence functions to assign probabilities to states and chance functions which assign probabilities to state transitions, agents can track how evidence updates beliefs as well as engaging in suppositional reasoning.
+
+	\item \textbf{Abilities Extension}:
+	      Provides ability ($\mathsf{Can}$) and STIT ($\mathsf{stit}$) operators for reasoning about capacities.
+	      Ability modals express what an agent can bring about through their capacities, with stronger truth conditions than circumstantial possibility since ability entails possibility but not \textit{vice versa}.
+	      This enables reasoning about what agents are capable of accomplishing given their intrinsic capacities and circumstances.
+
+	\item \textbf{Normative Extension}:
+	      Adds obligation ($\mathsf{O}$), permission ($\mathsf{P}$), along with a preference operator ($\prec$) with value orderings over states for reasoning about what ought to be done, what is permitted, and how to rank alternatives.
+	      This enables ethical reasoning about alternatives.
+
+	\item \textbf{Choice Extension}:
+	      Introduces free choice permission ($\mathsf{FP}$) and best choice ($\mathsf{Ch}$) operators for reasoning about permission over alternatives, enabling reasoning about which alternatives are permitted and how permissions combine and distribute.
+
+	\item \textbf{Spatial Extension}:
+	      Provides location-dependent operators and spatial relations for reasoning about where things are and how they are oriented relative to an orientation basis.
+	      This supports navigation, containment reasoning, and location-sensitive planning.
+
+	\item \textbf{Agential Extension}:
+	      Indexes epistemic and normative operators to specific agents ($\mathsf{B}_a$, $\prec$, $\mathsf{O}_a$, \ldots), enabling reasoning about what different agents believe, prefer, and are obligated to do.
+	      This transforms single-perspective reasoning into multi-agent coordination where agents can model each other's epistemic and normative states.
+
+	\item \textbf{Social Extension}:
+	      Provides resources for the construction of a common ground and group-level reasoning, building on the \textit{Agential Extension} to enable reasoning about shared beliefs, building trust relations between agents, and coordinate on common goals.
+
+	\item \textbf{Reflection Extension}:
+	      Adds first-person metacognitive operators for self-directed reasoning about one's own beliefs, abilities, and progress towards goals.
+	      This enables an agent to reason about what it is in a good position to believe given an evaluation of its own limitations and track relative to other agents.
+        Essential for AI systems that must understand their own capabilities and benefit from the capacity to learn by appealing to the testimony of others with trusted expertise.
+\end{enumerate}
+For the Lean implementations corresponding to each layer, consult the \texttt{Theories/Logos/SubTheories/} directory, where foundational components are in \texttt{Foundation/}, dynamical extensions in \texttt{Dynamical/}, and the various logical extensions in their respective subdirectories.
+
+
+% ------------------------------------------------------------
+% Document Organization
+% ------------------------------------------------------------
+
+\subsection{Document Organization}\label{sec:document-organization}
+
+This reference manual is organized as follows:
+
+% FIX: I don't like how this list looks; it would be better if the items were justified blocks instead of having each item have an indent after the first wrapped line in that item.
+
+\begin{description}
+	\item[\Cref{sec:constitutive-foundation}] presents the \textit{Constitutive Foundation}, including the mereological state space, verification and falsification clauses, and bilateral propositions.
+
+	\item[\Cref{sec:dynamical-foundation}] introduces the syntactic primitives of the \textit{Dynamical Foundation}, including modal, temporal, and counterfactual operators and provides the semantic framework, including task frames, world-histories, and truth conditions.
+
+	\item[\Cref{sec:epistemic}] extends the \textit{Dynamical Foundation} with structures for belief, knowledge, probability, and indicative conditionals for reasoning under uncertainty.
+
+	\item[\Cref{sec:normative}] extends the \textit{Dynamical Foundation} with structures for obligation, permission, and value orderings for ethical reasoning about alternatives.
+
+	\item[\Cref{sec:spatial}] extends the \textit{Dynamical Foundation} with location-dependent operators and spatial relations for reasoning about orientation and navigation.
+
+	\item[\Cref{sec:agential}] provides multi-agent reasoning structures that index epistemic and normative operators to specific agents, requiring at least one middle extension to be loaded.
+
+	\item[\Cref{sec:reflection}] specifies the Reflection Extension for first-person metacognitive reasoning, including truth conditions, derived operators, and temporal interactions.
+\end{description}
+
+
+% ------------------------------------------------------------
+% Lean Implementation
+% ------------------------------------------------------------
+
+\subsection{Lean Implementation}\label{sec:lean-implementation}
+
+The Logos system is implemented in Lean 4 with Mathlib. Each definition in this reference has a corresponding Lean implementation, referenced using the \verb|\leansrc{}{}| command.
+
+For example, \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} refers to the \texttt{ConstitutiveFrame} definition in the \texttt{Logos.Foundation.Frame} module.
+The implementation can be found in the \proofchecker{} repository in the \texttt{Theories/Logos/} directory.
+
+\end{document}
