@@ -19,11 +19,15 @@ This extension adds an intensional layer by constructing possible states, state 
 
 The \textit{Dynamical Foundation} interprets the following additional syntactic primitives beyond those of the \textit{Constitutive Foundation}:
 
+% FIX: the following don't look that good. Better to present the primitive symbol, and then in an indented item below provide an example with the intended reading for each.
+
+% FIX: replace \mathsf{Stab} with \stability which should be defined to be \boxdot in the notation sty file, where the reading is: it is unpreventable that
+
 \begin{itemize}
     \item \textbf{Actuality Predicate}: $\actual$ (``$t$ is actual'')
     \item \textbf{Quantification}: $\forall$ (``for all'')
     \item \textbf{Counterfactual conditional}: $\boxright$ (``if $\metaphi$ were the case, then $\metaC$ would be the case'')
-    \item \textbf{Temporal operators}: $\allpast$ (``it has always been that''), $\allfuture$ (``it will always be that'')
+    \item \textbf{Temporal operators}: $\allpast$ (``it has always been that''), $\allfuture$ (``it is always going to be that'')
     \item \textbf{Extended temporal operators}: $\since$ (``$\metaA$ since $\metaB$'' means $\metaB$ was true at some past time and $\metaA$ has been true ever since), $\until$ (``$\metaA$ until $\metaB$'' means $\metaB$ will be true at some future time and $\metaA$ is true until then)
     \item \textbf{Stability operator}: $\mathsf{Stab}$ (``stably $\metaA$'')
     \item \textbf{Store/recall operators}: $\store{i}$ (``store current time''), $\recall{i}$ (``recall stored time'')
@@ -35,14 +39,24 @@ The \textit{Dynamical Foundation} interprets the following additional syntactic 
 
 \subsection{Well-Formed Sentences}\label{sec:well-formed-sentences}
 
+% FIX: spell out what constitutive foundation formulas are also included to make the definition explicit
+
 \begin{definition}[Well-Formed Formulas]\label{def:wff-dynamics}
 The set of \emph{well-formed formulas} extends the Constitutive Foundation:
-\begin{align*}
-    \metaA \Define{}& \metaA_\text{CF} \mid \actual(t) \mid \forall\metaA \\
-    \mid{}& \nec\metaA \mid \allpast\metaA \mid \allfuture\metaA \\
-    \mid{}& \metaA \since \metaB \mid \metaA \until \metaB \\
-    \mid{}& \metaA \boxright \metaB \mid \store{i}\metaA \mid \recall{i}\metaA
-\end{align*}
+  \[
+    \metaA \Define{}
+      \metaA_\text{CF} \mid
+      \actual(t) \mid
+      \forall\metaA \mid
+      \nec\metaA \mid
+      \allpast\metaA \mid
+      \allfuture\metaA \mid
+      \metaA \since \metaB \mid
+      \metaA \until \metaB \mid
+      \metaA \boxright \metaB \mid
+      \store{i}\metaA \mid
+      \recall{i}\metaA
+  \]
 where $\metaA_\text{CF}$ ranges over Constitutive Foundation formulas.
 \end{definition}
 
