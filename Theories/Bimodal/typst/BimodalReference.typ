@@ -119,12 +119,19 @@
   The key result `semantic_weak_completeness` demonstrates that validity implies derivability.
 
   #v(1cm)
+
+  // Styled Contents header
+  #align(center)[
+    #text(size: 14pt, weight: "bold")[Contents]
+  ]
+  #v(1em)
+
   // Bold chapter entries (level 1), normal weight for sections/subsections
   #show outline.entry.where(level: 1): it => {
     v(0.5em)
     strong(it)
   }
-  #outline(title: "Contents", indent: auto)
+  #outline(title: none, indent: auto)
 ]
 
 #pagebreak()
