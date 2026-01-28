@@ -14,10 +14,6 @@ They abstract from universal laws governing transitions between world states whi
 
 The following primitives are required to define a task frame:
 
-// FIX: I want the duration to be over the arrow, not under
-
-// TODO: the typst styling is OK, but I would like it to look more like latex than it does currently, improving the professional typeset look. Research templates online for professional math book publications and the like to find out how to improve the appearance.
-
 #figure(
   table(
     columns: 3,
@@ -29,7 +25,7 @@ The following primitives are required to define a task frame:
     table.hline(),
     [$W$], [Type], [World states],
     [$D$], [Type], [Temporal durations],
-    [$w arrow.r.double.long_x u$], [$W arrow.r D arrow.r W arrow.r "Prop"$], [Task relation],
+    [$w #overset($arrow.r.double.long$, $x$) u$], [$W arrow.r D arrow.r W arrow.r "Prop"$], [Task relation],
     table.hline(),
   ),
   caption: none,
@@ -77,20 +73,18 @@ World states themselves are specific configurations of the total system at an in
 Truth is evaluated relative to a model $cal(M)$ providing the interpretation, a world history $tau$ representing a possible path through the space of world states, and a time $x : D$.
 Whereas the model fixes the interpretation of the language, the contextual parameters $tau$ and $x$ determine the truth value of every sentence of the language.
 
-// FIX: I want the 'iff' to appear in italics and it would be good to have a dedicated command for this if it is easy to do so
-
 #definition("Truth")[
   For model $cal(M)$, history $tau : H_(cal(F))$, and time $x : D$:
   $
-    cal(M), tau, x tack.r.double p &"iff" x in "dom"(tau) "and" I(tau(x), p) \
+    cal(M), tau, x tack.r.double p &#Iff x in "dom"(tau) "and" I(tau(x), p) \
     cal(M), tau, x tack.r.double.not bot \
-    cal(M), tau, x tack.r.double phi.alt arrow.r psi &"iff"
+    cal(M), tau, x tack.r.double phi.alt arrow.r psi &#Iff
       cal(M), tau, x tack.r.double.not phi.alt "or" cal(M), tau, x tack.r.double psi \
-    cal(M), tau, x tack.r.double square.stroked phi.alt &"iff"
+    cal(M), tau, x tack.r.double square.stroked phi.alt &#Iff
       cal(M), sigma, x tack.r.double phi.alt "for all" sigma : H_(cal(F)) \
-    cal(M), tau, x tack.r.double H phi.alt &"iff"
+    cal(M), tau, x tack.r.double H phi.alt &#Iff
       cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" y < x \
-    cal(M), tau, x tack.r.double G phi.alt &"iff"
+    cal(M), tau, x tack.r.double G phi.alt &#Iff
       cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" x < y
   $
 ]
@@ -108,20 +102,18 @@ The time-shift operation is used to establish the *perpetuity principles*:
 It is natural to assume that whatever is necessary is always the case, or equivalently, whatever is sometimes the case is possible.
 Time-shift enables proofs of the bimodal axioms MF ($square.stroked phi.alt arrow.r square.stroked G phi.alt$) and TF ($square.stroked phi.alt arrow.r G square.stroked phi.alt$) which together imply the perpetuity principles.
 
-// FIX: I want the sub and super scripts for approx to be more like they are in latex, where they occur just after the approx symbol, and the superscript is stacked just above the subscript
-
 #definition("Time-Shift")[
-  For $tau, sigma in H_(cal(F))$ and $x, y : D$, world histories $tau$ and $sigma$ are *time-shifted from $y$ to $x$*, written $tau approx_y^x sigma$, if and only if there exists an order automorphism $overline(a) : D arrow.r D$ where $y = overline(a)(x)$, $"dom"_sigma = overline(a)^(-1)("dom"_tau)$, and $sigma(z) = tau(overline(a)(z))$ for all $z in "dom"_sigma$.
+  For $tau, sigma in H_(cal(F))$ and $x, y : D$, world histories $tau$ and $sigma$ are *time-shifted from $y$ to $x$*, written $tau #timeshift($y$, $x$) sigma$, if and only if there exists an order automorphism $overline(a) : D arrow.r D$ where $y = overline(a)(x)$, $"dom"_sigma = overline(a)^(-1)("dom"_tau)$, and $sigma(z) = tau(overline(a)(z))$ for all $z in "dom"_sigma$.
 ]
 
 Time-shifting preserves the essential structure of histories:
 
 #theorem("Convexity Preservation")[
-  If $tau$ has a convex domain and $tau approx_y^x sigma$, then $sigma$ has a convex domain.
+  If $tau$ has a convex domain and $tau #timeshift($y$, $x$) sigma$, then $sigma$ has a convex domain.
 ]
 
 #theorem("Task Preservation")[
-  If $tau$ respects the task relation and $tau approx_y^x sigma$, then $sigma$ respects the task relation.
+  If $tau$ respects the task relation and $tau #timeshift($y$, $x$) sigma$, then $sigma$ respects the task relation.
 ]
 
 == Logical Consequence and Validity
