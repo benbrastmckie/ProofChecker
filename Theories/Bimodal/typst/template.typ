@@ -1,6 +1,10 @@
 // ============================================================================
 // template.typ
 // Shared template with theorem environments for all chapters
+//
+// Styling follows the AMS/journal aesthetic: austere, black-only body text,
+// no background colors on theorem environments. Link colors (URLblue) are
+// preserved for digital usability.
 // ============================================================================
 
 #import "@preview/thmbox:0.3.0" as thmbox
@@ -24,21 +28,36 @@
 // Custom Theorem Environment Styling
 // ============================================================================
 
-// Professional styling for math environments - subtle background tints
+// Journal-style theorem environments - AMS aesthetic with no background colors
+// Link colors are preserved separately in BimodalReference.typ (URLblue)
+//
+// AMS convention:
+// - Theorems/lemmas: italic body text (plain style)
+// - Definitions: upright body, defined terms in italic (definition style)
+// - Remarks: upright body, less prominent (remark style)
+
 #let theorem-style = (
-  fill: rgb("#f8f8ff"),  // Very light blue-gray
+  fill: none,
+  stroke: none,
+  bodyfmt: it => emph(it),  // Italic body per AMS plain style
 )
 
 #let definition-style = (
-  fill: rgb("#f0fff0"),  // Very light green (mint)
+  fill: none,
+  stroke: none,
+  // Upright body (thmbox default) per AMS definition style
 )
 
 #let axiom-style = (
-  fill: rgb("#fff8f0"),  // Very light orange
+  fill: none,
+  stroke: none,
+  bodyfmt: it => emph(it),  // Italic body like theorems
 )
 
 #let remark-style = (
-  fill: rgb("#f8f8f8"),  // Light gray
+  fill: none,
+  stroke: none,
+  // Upright body (thmbox default) per AMS remark style
 )
 
 // ============================================================================
