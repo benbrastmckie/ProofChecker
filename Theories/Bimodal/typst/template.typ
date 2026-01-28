@@ -15,7 +15,7 @@
 // ============================================================================
 
 // URLblue color for hyperlinks (matches LogosReference.tex)
-#let URLblue = rgb(0, 0, 150)
+#let URLblue = rgb(30, 144, 255)  // Light blue (Dodger Blue)
 
 // ============================================================================
 // thmbox initialization function
