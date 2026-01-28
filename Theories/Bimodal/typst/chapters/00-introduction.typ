@@ -15,8 +15,6 @@ The semantics is based on _task frames_, which extend Kripke frames with tempora
 A task frame consists of world states connected by a _task relation_ indexed by temporal durations.
 World histories are temporal slices through a task frame, representing the possible evolution of a system.
 
-// FIX: the figure does not look correct. Research how to draw a double light cone (looking forwards and backwards) from a point on a curve to fix the drawing below
-
 #align(center)[
   #cetz.canvas({
     import cetz.draw: *
@@ -24,21 +22,21 @@ World histories are temporal slices through a task frame, representing the possi
     // Define the marked point P at the bottom of the S-curve
     let P = (0.5, -0.2)
 
-    // Past light cone (blue, opens left)
-    line(P, (-0.7, 1.0), stroke: gray.lighten(40%))
-    line(P, (-0.7, -1.2), stroke: gray.lighten(40%))
-    line((-0.7, 1.0), (-0.7, -1.2), stroke: none, fill: blue.transparentize(85%))
+    // Past light cone (blue, opens left) - filled triangle
+    line(
+      P, (-0.7, 1.0), (-0.7, -1.2),
+      close: true,
+      fill: blue.transparentize(85%),
+      stroke: gray.lighten(40%)
+    )
 
-    // Future light cone (orange, opens right)
-    line(P, (1.7, 1.0), stroke: gray.lighten(40%))
-    line(P, (1.7, -1.2), stroke: gray.lighten(40%))
-    line((1.7, 1.0), (1.7, -1.2), stroke: none, fill: orange.transparentize(85%))
-
-    // Fill the past cone
-    line(P, (-0.7, 1.0), (-0.7, -1.2), close: true, stroke: none, fill: blue.transparentize(85%))
-
-    // Fill the future cone
-    line(P, (1.7, 1.0), (1.7, -1.2), close: true, stroke: none, fill: orange.transparentize(85%))
+    // Future light cone (orange, opens right) - filled triangle
+    line(
+      P, (1.7, 1.0), (1.7, -1.2),
+      close: true,
+      fill: orange.transparentize(85%),
+      stroke: gray.lighten(40%)
+    )
 
     // Counterfactual paths (dotted gray)
     // Past paths
