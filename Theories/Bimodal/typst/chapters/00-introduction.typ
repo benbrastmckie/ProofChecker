@@ -73,8 +73,6 @@ World histories are temporal slices through a task frame, representing the possi
   })
 ]
 
-// FIX: TM should always appear in bold
-
 The diagram above illustrates the conceptual structure underlying TM logic.
 The solid curve $tau$ represents a single world history---a temporal sequence of states.
 From any point $x$ along a history, the past and future light cones contain all states that are modally accessible.

@@ -46,6 +46,9 @@
 // Heading spacing
 #show heading: set block(above: 1.4em, below: 1em)
 
+// Automatically bold "TM" throughout the document
+#show "TM": strong
+
 // ============================================================================
 // Theorem Environment Initialization
 // ============================================================================
