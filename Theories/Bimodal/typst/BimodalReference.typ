@@ -11,6 +11,10 @@
 // Package Imports
 // ============================================================================
 
+// FIX: make the margins match those in /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex
+
+// FIX: the hyperlinks and clickable reference links should be in light blue
+
 #import "@preview/great-theorems:0.1.2": *
 #import "@preview/cetz:0.3.4"
 
