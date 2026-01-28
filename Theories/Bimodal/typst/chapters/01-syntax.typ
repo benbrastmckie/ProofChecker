@@ -17,6 +17,8 @@ Formulas are defined inductively with six primitive constructors.
   where $p$ ranges over propositional atoms (type `String`).
 ]
 
+// NOTE:: I want to use 'sentence letter' instead of 'propositional atom' throughout
+
 #figure(
   table(
     columns: 4,
@@ -28,10 +30,10 @@ Formulas are defined inductively with six primitive constructors.
     table.hline(),
     [$p, q, r$], [Atom], [`atom s`], [propositional atom],
     [$bot$], [Bottom], [`bot`], [falsity],
-    [$phi.alt arrow.r psi$], [Implication], [`imp`], ["if $phi.alt$ then $psi$"],
+    [$phi.alt arrow.r psi$], [Implication], [`imp`], ["if $phi.alt$, then $psi$"],
     [$square.stroked phi.alt$], [Necessity], [`box`], ["necessarily $phi.alt$"],
-    [$H phi.alt$], [Always past], [`all_past`], ["always in the past, $phi.alt$"],
-    [$G phi.alt$], [Always future], [`all_future`], ["always in the future, $phi.alt$"],
+    [$H phi.alt$], [Always past], [`all_past`], ["it has always been that $phi.alt$"],
+    [$G phi.alt$], [Always future], [`all_future`], ["it is always going to be that $phi.alt$"],
     table.hline(),
   ),
   caption: none,
@@ -58,7 +60,7 @@ The following operators are defined in terms of the primitives.
       [*Symbol*], [*Name*], [*Lean*], [*Reading*],
     ),
     table.hline(),
-    [$not phi.alt$], [Negation], [`neg`], ["not $phi.alt$"],
+    [$not phi.alt$], [Negation], [`neg`], ["it is not the case that $phi.alt$"],
     [$phi.alt and psi$], [Conjunction], [`and`], ["$phi.alt$ and $psi$"],
     [$phi.alt or psi$], [Disjunction], [`or`], ["$phi.alt$ or $psi$"],
     table.hline(),
@@ -105,10 +107,10 @@ The following operators are defined in terms of the primitives.
       [*Symbol*], [*Name*], [*Lean*], [*Reading*],
     ),
     table.hline(),
-    [$P phi.alt$], [Sometime past], [`some_past`], ["at some past time, $phi.alt$"],
-    [$F phi.alt$], [Sometime future], [`some_future`], ["at some future time, $phi.alt$"],
-    [$triangle.stroked.t phi.alt$], [Always], [`always`], ["at all times, $phi.alt$"],
-    [$triangle.stroked.b phi.alt$], [Sometimes], [`sometimes`], ["at some time, $phi.alt$"],
+    [$P phi.alt$], [Sometime past], [`some_past`], ["it has been that $phi.alt$"],
+    [$F phi.alt$], [Sometime future], [`some_future`], ["it is going to be that $phi.alt$"],
+    [$triangle.stroked.t phi.alt$], [Always], [`always`], ["always $phi.alt$"],
+    [$triangle.stroked.b phi.alt$], [Sometimes], [`sometimes`], ["sometimes $phi.alt$"],
     table.hline(),
   ),
   caption: none,
@@ -119,7 +121,7 @@ The following operators are defined in terms of the primitives.
 The `swap_temporal` function exchanges past and future operators.
 
 #definition("Temporal Swap")[
-  The function $chevron.l S chevron.r : "Formula" arrow.r "Formula"$ is defined by structural induction on formulas:
+  The function $chevron.l S chevron.r : "Formula" arrow.r "Formula"$ is defined by induction on the complexity of formulas:
   $
     chevron.l S chevron.r p &= p \
     chevron.l S chevron.r bot &= bot \
