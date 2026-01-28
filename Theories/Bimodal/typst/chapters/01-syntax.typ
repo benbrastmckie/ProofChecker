@@ -14,10 +14,8 @@ Formulas are defined inductively with six primitive constructors.
 #definition("Formula")[
   The type `Formula` is defined by:
   $ phi.alt, psi ::= p | bot | phi.alt arrow.r psi | square.stroked phi.alt | H phi.alt | G phi.alt $
-  where $p$ ranges over propositional atoms (type `String`).
+  where $p$ ranges over sentence letters (type `String`).
 ]
-
-// NOTE:: I want to use 'sentence letter' instead of 'propositional atom' throughout
 
 #figure(
   table(
@@ -28,7 +26,7 @@ Formulas are defined inductively with six primitive constructors.
       [*Symbol*], [*Name*], [*Lean*], [*Reading*],
     ),
     table.hline(),
-    [$p, q, r$], [Atom], [`atom s`], [propositional atom],
+    [$p, q, r$], [Atom], [`atom s`], [sentence letter],
     [$bot$], [Bottom], [`bot`], [falsity],
     [$phi.alt arrow.r psi$], [Implication], [`imp`], ["if $phi.alt$, then $psi$"],
     [$square.stroked phi.alt$], [Necessity], [`box`], ["necessarily $phi.alt$"],

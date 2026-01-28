@@ -148,7 +148,7 @@ The semantic approach defines world states as equivalence classes of (history, t
 ]
 
 #definition("Canonical Valuation")[
-  An atom $p$ is true at world state $[tau, x]$ iff $p in "MCS"(tau(x))$.
+  A sentence letter $p$ is true at world state $[tau, x]$ iff $p in "MCS"(tau(x))$.
 ]
 
 #lemma("Truth Lemma")[
