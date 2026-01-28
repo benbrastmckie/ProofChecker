@@ -73,13 +73,13 @@
 // ============================================================================
 
 // Metalanguage biconditional (distinct from object language iff) - italic style
-#let Iff = [~_iff_~]
+#let Iff = math.italic("iff")
 
 // Overset: place text above a symbol (for duration over arrows)
-#let overset(base, top) = $attach(#base, t: #top)$
+#let overset(base, top) = $limits(#base)^#top$
 
 // Time-shift relation with subscript/superscript stacking (LaTeX-style)
-#let timeshift(sub, sup) = $attach(approx, t: #sup, b: #sub)$
+#let timeshift(sub, sup) = $limits(approx)_#sub^#sup$
 
 // ============================================================================
 // Lean Identifier Commands
