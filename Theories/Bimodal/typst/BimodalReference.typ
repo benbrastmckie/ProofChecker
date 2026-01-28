@@ -11,9 +11,11 @@
 // Package Imports
 // ============================================================================
 
-// FIX: make the margins match those in /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex
+// TODO: create a typst agent and skill similar to the latex skill and agent
 
-// FIX: the hyperlinks and clickable reference links should be in light blue
+// NOTE: make the margins match those in /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex
+
+// NOTE: the hyperlinks and clickable reference links should be in light blue
 
 #import "@preview/great-theorems:0.1.2": *
 #import "@preview/cetz:0.3.4"
@@ -61,15 +63,17 @@
     #text(size: 24pt, weight: "bold")[Bimodal Reference Manual]
     #v(0.2cm)
     #HRule
-    #v(1cm)
+    #v(.5cm)
 
     #text(size: 18pt, style: "italic")[A Logic for Tense and Modality]
     #v(1cm)
 
+    // NOTE: make the website below appear in the equivalent of texttt in latex
+
     #text(size: 12pt, style: "italic")[Benjamin Brast-McKie]
-    #v(0.15cm)
+    #v(0.0cm)
     #link("https://www.benbrastmckie.com")[www.benbrastmckie.com]
-    #v(0.15cm)
+    #v(0.0cm)
     --- #datetime.today().display("[month repr:long] [day], [year]") ---
     #v(1cm)
 
@@ -86,6 +90,8 @@
 // Abstract
 // ============================================================================
 
+// NOTE: make the Abstract header centered with a bit of space before the paragraph following
+
 #page(numbering: none)[
   #heading(outlined: false, numbering: none)[Abstract]
 
@@ -94,6 +100,8 @@
   Soundness and the deduction theorem are established.
   Completeness is proven via the semantic canonical model approach: the Lindenbaum lemma, truth lemma, and weak completeness theorem are all proven.
   The key result `semantic_weak_completeness` demonstrates that validity implies derivability.
+
+  // FIX: I want the Contents header to have some space before the table of contents following, and I want the chapter names and page numbers for the chapters to be in bold whereas the sections and subsections not to be in bold
 
   #v(1cm)
   #outline(title: "Contents", indent: auto)

@@ -15,6 +15,8 @@ The semantics is based on _task frames_, which extend Kripke frames with tempora
 A task frame consists of world states connected by a _task relation_ indexed by temporal durations.
 World histories are temporal slices through a task frame, representing the possible evolution of a system.
 
+// FIX: the figure does not look correct. Research how to draw a double light cone (looking forwards and backwards) from a point on a curve to fix the drawing below
+
 #align(center)[
   #cetz.canvas({
     import cetz.draw: *
@@ -73,6 +75,8 @@ World histories are temporal slices through a task frame, representing the possi
   })
 ]
 
+// FIX: TM should always appear in bold
+
 The diagram above illustrates the conceptual structure underlying TM logic.
 The solid curve $tau$ represents a single world history---a temporal sequence of states.
 From any point $x$ along a history, the past and future light cones contain all states that are modally accessible.
@@ -84,12 +88,7 @@ These primitive operators may then be used to define a host of combined operator
 
 The Lean 4 implementation is in the `Bimodal/` directory:
 - `Syntax/` -- Defines the formula language with 6 primitive constructors and derived operators.
-  *Complete.*
 - `ProofSystem/` -- Axioms (14 schemata) and inference rules (7 rules) forming a Hilbert-style proof system.
-  *Complete.*
 - `Semantics/` -- Task frames model possible worlds; world histories model time; truth conditions define meaning.
-  *Complete.*
 - `Metalogic/` -- Soundness theorem (proven: all axioms valid, rules preserve validity), deduction theorem (proven: enables assumption introduction), completeness via the semantic canonical model (Lindenbaum lemma proven, truth lemma proven, weak completeness proven), and decidability via tableau-based decision procedure (soundness and completeness proven).
-  *Complete.*
 - `Theorems/` -- Perpetuity principles and modal theorems derived from the axiom system.
-  *Partial.*
