@@ -72,8 +72,14 @@
 // Metalanguage Connectives
 // ============================================================================
 
-// Metalanguage biconditional (distinct from object language iff)
+// Metalanguage biconditional (distinct from object language iff) - italic style
 #let Iff = [~_iff_~]
+
+// Overset: place text above a symbol (for duration over arrows)
+#let overset(base, top) = $attach(#base, t: #top)$
+
+// Time-shift relation with subscript/superscript stacking (LaTeX-style)
+#let timeshift(sub, sup) = $attach(approx, t: #sup, b: #sub)$
 
 // ============================================================================
 // Lean Identifier Commands

@@ -11,18 +11,11 @@
 // Package Imports
 // ============================================================================
 
-// TODO: create a typst agent and skill similar to the latex skill and agent
-
-// NOTE: make the margins match those in /home/benjamin/Projects/ProofChecker/Theories/Logos/latex/LogosReference.tex
-
-// NOTE: the hyperlinks and clickable reference links should be in light blue
-
-#import "@preview/great-theorems:0.1.2": *
 #import "@preview/cetz:0.3.4"
 
-// Local notation and template
+// Local notation and template (includes thmbox theorem environments)
 #import "notation/bimodal-notation.typ": *
-#import "template.typ": definition, theorem, lemma, axiom, remark, proof
+#import "template.typ": thmbox-show, URLblue, definition, theorem, lemma, axiom, remark, proof
 
 // ============================================================================
 // Document Configuration
@@ -33,16 +26,37 @@
   author: "Benjamin Brast-McKie",
 )
 
+// Typography settings - LaTeX-like appearance
 #set text(font: "New Computer Modern", size: 11pt)
 #set heading(numbering: "1.1")
-#set par(justify: true)
-#set page(numbering: "1", number-align: center)
+#set par(
+  justify: true,
+  leading: 0.55em,        // Tight line spacing like LaTeX
+  spacing: 0.55em,        // Paragraph spacing
+  first-line-indent: 1.8em,  // First-line indent like LaTeX
+)
+
+// Page layout with LaTeX-like margins
+#set page(
+  numbering: "1",
+  number-align: center,
+  margin: (x: 1.5in, y: 1.25in),  // Professional margins
+)
+
+// Heading spacing
+#show heading: set block(above: 1.4em, below: 1em)
 
 // ============================================================================
 // Theorem Environment Initialization
 // ============================================================================
 
-#show: great-theorems-init
+#show: thmbox-show
+
+// Style hyperlinks in URLblue color
+#show link: set text(fill: URLblue)
+
+// Allow theorem boxes to break across pages
+#show figure.where(kind: "thmbox"): set block(breakable: true)
 
 // ============================================================================
 // Custom Commands
@@ -68,11 +82,9 @@
     #text(size: 18pt, style: "italic")[A Logic for Tense and Modality]
     #v(1cm)
 
-    // NOTE: make the website below appear in the equivalent of texttt in latex
-
     #text(size: 12pt, style: "italic")[Benjamin Brast-McKie]
     #v(0.0cm)
-    #link("https://www.benbrastmckie.com")[www.benbrastmckie.com]
+    #link("https://www.benbrastmckie.com")[#raw("www.benbrastmckie.com")]
     #v(0.0cm)
     --- #datetime.today().display("[month repr:long] [day], [year]") ---
     #v(1cm)
@@ -90,10 +102,11 @@
 // Abstract
 // ============================================================================
 
-// NOTE: make the Abstract header centered with a bit of space before the paragraph following
-
 #page(numbering: none)[
-  #heading(outlined: false, numbering: none)[Abstract]
+  #align(center)[
+    #text(size: 14pt, weight: "bold")[Abstract]
+  ]
+  #v(0.5em)
 
   This reference manual provides the formal specification of the Bimodal logic *TM* for tense and modality as implemented in the #proofchecker project.
   *TM* is a bimodal logic combining an S5 historical necessity operator with linear temporal operators for the past and future tenses.
@@ -101,9 +114,12 @@
   Completeness is proven via the semantic canonical model approach: the Lindenbaum lemma, truth lemma, and weak completeness theorem are all proven.
   The key result `semantic_weak_completeness` demonstrates that validity implies derivability.
 
-  // FIX: I want the Contents header to have some space before the table of contents following, and I want the chapter names and page numbers for the chapters to be in bold whereas the sections and subsections not to be in bold
-
   #v(1cm)
+  // Bold chapter entries (level 1), normal weight for sections/subsections
+  #show outline.entry.where(level: 1): it => {
+    v(0.5em)
+    strong(it)
+  }
   #outline(title: "Contents", indent: auto)
 ]
 
