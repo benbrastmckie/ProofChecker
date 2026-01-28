@@ -40,7 +40,7 @@
 #set page(
   numbering: "1",
   number-align: center,
-  margin: (x: 1.5in, y: 1.25in),  // Professional margins
+  margin: 1.75in,  // Match LaTeX 11pt article class defaults
 )
 
 // Heading spacing
