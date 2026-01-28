@@ -106,10 +106,11 @@
 // ============================================================================
 
 #page(numbering: none)[
+  #v(1em)
   #align(center)[
     #text(size: 14pt, weight: "bold")[Abstract]
   ]
-  #v(0.5em)
+  #v(1em)
 
   This reference manual provides the formal specification of the Bimodal logic *TM* for tense and modality as implemented in the #proofchecker project.
   *TM* is a bimodal logic combining an S5 historical necessity operator with linear temporal operators for the past and future tenses.
