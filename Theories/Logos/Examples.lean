@@ -8,10 +8,13 @@ Imports examples from all Logos layers.
 ## Current Examples
 
 - `Bimodal.Examples` - TM Logic (Layer 0) examples
-  - Modal proof examples (S5 logic)
-  - Temporal proof examples (linear temporal logic)
   - Bimodal proof examples (perpetuity principles)
-  - Proof strategy tutorials
+  - Temporal proof strategy tutorials
+  - Temporal structure examples
+
+Note: Basic modal/temporal proof exercises (ModalProofs, ModalProofStrategies,
+TemporalProofs) were moved to Boneyard/Examples/ by Task 760 to reduce sorry
+count in the main codebase.
 
 ## Future Layer Examples
 
@@ -28,9 +31,14 @@ import Logos.Examples
 
 Import specific example categories:
 ```lean
-import Bimodal.Examples.ModalProofs
-import Bimodal.Examples.TemporalProofs
 import Bimodal.Examples.BimodalProofs
+import Bimodal.Examples.TemporalProofStrategies
+```
+
+For archived examples with exercises:
+```lean
+import Bimodal.Boneyard.Examples.ModalProofs
+import Bimodal.Boneyard.Examples.TemporalProofs
 ```
 -/
 
