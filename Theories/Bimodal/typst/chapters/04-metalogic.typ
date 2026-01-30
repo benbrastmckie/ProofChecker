@@ -203,29 +203,29 @@ The core infrastructure (top row) feeds into both approaches, but only the contr
     let deprecated-arrow = (stroke: 0.5pt + gray.lighten(40%), mark: (end: ">"))
 
     // Core Infrastructure layer (top)
-    rect((-2, 4.5), (2, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    rect((-2, 4.5), (2, 5.5), ..box-style, fill: gray.lighten(92%), radius: 4pt)
     content((0, 5), text(size: 8pt)[Deduction Theorem\ #text(size: 6pt)[`deduction_theorem`]])
 
-    rect((3.5, 4.5), (7.5, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    rect((3.5, 4.5), (7.5, 5.5), ..box-style, fill: gray.lighten(92%), radius: 4pt)
     content((5.5, 5), text(size: 8pt)[Lindenbaum's Lemma\ #text(size: 6pt)[`set_lindenbaum`]])
 
-    rect((9, 4.5), (13, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    rect((9, 4.5), (13, 5.5), ..box-style, fill: gray.lighten(92%), radius: 4pt)
     content((11, 5), text(size: 8pt)[Maximal Consistent Sets\ #text(size: 6pt)[`MaximalConsistent`]])
 
     // Middle layer - two paths diverge
     // Representation path (deprecated - left side)
-    rect((-1, 2.5), (4, 3.5), ..box-style, fill: yellow.lighten(80%), radius: 4pt)
+    rect((-1, 2.5), (4, 3.5), ..box-style, fill: gray.lighten(88%), radius: 4pt)
     content((1.5, 3), text(size: 8pt)[Representation Theorem\ #text(size: 6pt, fill: gray)[`representation_theorem` (deprecated)]])
 
     // Contrapositive path (primary - right side)
-    rect((7, 2.5), (13, 3.5), ..box-style, fill: green.lighten(80%), radius: 4pt)
+    rect((7, 2.5), (13, 3.5), ..box-style, fill: gray.lighten(80%), radius: 4pt)
     content((10, 3), text(size: 8pt, weight: "bold")[Contrapositive Approach\ #text(size: 6pt)[`semantic_weak_completeness` (primary)]])
 
     // Completeness layer (bottom)
-    rect((3, 0.5), (8, 1.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    rect((3, 0.5), (8, 1.5), ..box-style, fill: gray.lighten(75%), radius: 4pt)
     content((5.5, 1), text(size: 8pt)[Weak Completeness\ #text(size: 6pt)[sorry-free]])
 
-    rect((9.5, 0.5), (13.5, 1.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    rect((9.5, 0.5), (13.5, 1.5), ..box-style, fill: gray.lighten(75%), radius: 4pt)
     content((11.5, 1), text(size: 8pt)[Strong Completeness\ #text(size: 6pt)[`main_strong_completeness`]])
 
     // Arrows from Core to middle layer
@@ -429,31 +429,31 @@ The following diagram illustrates the import structure of the active codebase.
     let deprecated-style = (stroke: 0.5pt + gray.lighten(30%), mark: (end: ">"))
 
     // Core layer (bottom)
-    rect((-1.5, -0.5), (2.5, 0.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    rect((-1.5, -0.5), (2.5, 0.5), ..box-style, fill: gray.lighten(92%), radius: 4pt)
     content((0.5, 0), text(size: 7pt)[Core/\ #text(size: 5pt)[Basic, Provability, Deduction, MCS]])
 
-    rect((4, -0.5), (8, 0.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    rect((4, -0.5), (8, 0.5), ..box-style, fill: gray.lighten(92%), radius: 4pt)
     content((6, 0), text(size: 7pt)[Soundness/\ #text(size: 5pt)[15 axioms, soundness theorem]])
 
     // Middle layer - Representation (deprecated) and FMP (primary)
-    rect((-1.5, 1.5), (3.5, 2.5), ..box-style, fill: yellow.lighten(85%), radius: 4pt)
+    rect((-1.5, 1.5), (3.5, 2.5), ..box-style, fill: gray.lighten(88%), radius: 4pt)
     content((1, 2), text(size: 7pt, fill: gray)[Representation/\ #text(size: 5pt)[Canonical model (deprecated)]])
 
-    rect((5.5, 1.5), (11.5, 2.5), ..box-style, fill: green.lighten(80%), radius: 4pt)
+    rect((5.5, 1.5), (11.5, 2.5), ..box-style, fill: gray.lighten(80%), radius: 4pt)
     content((8.5, 2), text(size: 7pt, weight: "bold")[FMP/\ #text(size: 5pt)[`semantic_weak_completeness` (primary)]])
 
     // Completeness and Algebraic
-    rect((-1.5, 3.5), (3.5, 4.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    rect((-1.5, 3.5), (3.5, 4.5), ..box-style, fill: gray.lighten(75%), radius: 4pt)
     content((1, 4), text(size: 7pt)[Completeness/\ #text(size: 5pt)[Weak, Strong completeness]])
 
-    rect((5.5, 3.5), (11.5, 4.5), ..box-style, fill: green.lighten(85%), radius: 4pt)
+    rect((5.5, 3.5), (11.5, 4.5), ..box-style, fill: gray.lighten(80%), radius: 4pt)
     content((8.5, 4), text(size: 7pt)[Algebraic/\ #text(size: 5pt)[Alternative sorry-free approach]])
 
     // Applications and Decidability
-    rect((-1.5, 5.5), (3.5, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
+    rect((-1.5, 5.5), (3.5, 6.5), ..box-style, fill: gray.lighten(85%), radius: 4pt)
     content((1, 6), text(size: 7pt)[Compactness/\ #text(size: 5pt)[List-based compactness]])
 
-    rect((5.5, 5.5), (11.5, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
+    rect((5.5, 5.5), (11.5, 6.5), ..box-style, fill: gray.lighten(85%), radius: 4pt)
     content((8.5, 6), text(size: 7pt)[Decidability/\ #text(size: 5pt)[Tableau procedure]])
 
     // Arrows from Core/Soundness to middle layer

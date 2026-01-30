@@ -22,19 +22,19 @@ World histories are temporal slices through a task frame, representing the possi
     // Define the marked point P at the bottom of the S-curve
     let P = (0.5, -0.2)
 
-    // Past light cone (blue, opens left) - filled triangle
+    // Past light cone (grayscale, opens left) - filled triangle
     line(
       P, (-0.7, 1.0), (-0.7, -1.2),
       close: true,
-      fill: blue.transparentize(85%),
+      fill: gray.lighten(90%),
       stroke: gray.lighten(40%)
     )
 
-    // Future light cone (orange, opens right) - filled triangle
+    // Future light cone (grayscale, opens right) - filled triangle
     line(
       P, (1.7, 1.0), (1.7, -1.2),
       close: true,
-      fill: orange.transparentize(85%),
+      fill: gray.lighten(85%),
       stroke: gray.lighten(40%)
     )
 
@@ -53,22 +53,22 @@ World histories are temporal slices through a task frame, representing the possi
       (-1.5, -0.6),
       P,
       (1.0, 0.0),
-      stroke: (paint: blue.darken(40%), thickness: 2pt),
+      stroke: (paint: black, thickness: 2pt),
     )
     bezier(
       P,
       (1.0, 0.0),
       (2.0, 0.4),
       (3.5, 1.5),
-      stroke: (paint: blue.darken(40%), thickness: 2pt),
-      mark: (end: ">", fill: blue.darken(40%)),
+      stroke: (paint: black, thickness: 2pt),
+      mark: (end: ">", fill: black),
     )
 
     // Label tau above the worldline
-    content((-2.8, -0.4), text(fill: blue.darken(40%), size: 10pt)[$tau$])
+    content((-2.8, -0.4), text(fill: black, size: 10pt)[$tau$])
 
     // Draw the marked point P
-    circle(P, radius: 0.08, fill: blue.darken(40%), stroke: none)
+    circle(P, radius: 0.08, fill: black, stroke: none)
     content((P.at(0), P.at(1) - 0.25), text(size: 10pt)[$x$])
   })
 ]
