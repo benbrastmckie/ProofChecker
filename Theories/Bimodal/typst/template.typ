@@ -5,9 +5,11 @@
 // Styling follows the AMS/journal aesthetic: austere, black-only body text,
 // no background colors on theorem environments. Link colors (URLblue) are
 // preserved for digital usability.
+//
+// Uses ctheorems package with thmplain for AMS-style plain environments.
 // ============================================================================
 
-#import "@preview/thmbox:0.3.0" as thmbox
+#import "@preview/ctheorems:1.1.3": thmplain, thmproof, thmrules
 #import "notation/bimodal-notation.typ": *
 
 // ============================================================================
@@ -18,57 +20,60 @@
 #let URLblue = rgb(30, 144, 255)  // Light blue (Dodger Blue)
 
 // ============================================================================
-// thmbox initialization function
+// AMS-Style Theorem Environments (using ctheorems thmplain)
 // ============================================================================
 
-// thmbox-init sets up the theorem environment system
-#let thmbox-show = thmbox.thmbox-init()
-
-// ============================================================================
-// Custom Theorem Environment Styling
-// ============================================================================
-
-// Journal-style theorem environments - AMS aesthetic with no background colors
-// Link colors are preserved separately in BimodalReference.typ (URLblue)
-//
 // AMS convention:
-// - Theorems/lemmas: italic body text (plain style)
-// - Definitions: upright body, defined terms in italic (definition style)
-// - Remarks: upright body, less prominent (remark style)
+// - Theorems/lemmas: bold label, italic body (plain style)
+// - Definitions: bold label, upright body (definition style)
+// - Axioms: bold label, italic body (follows theorem style)
+// - Remarks: italic label, upright body, unnumbered (remark style)
 
-#let theorem-style = (
-  fill: none,
-  stroke: none,
-  bodyfmt: it => emph(it),  // Italic body per AMS plain style
+// AMS "plain" style: bold label, italic body
+#let theorem = thmplain(
+  "theorem",
+  "Theorem",
+  titlefmt: strong,
+  bodyfmt: body => emph(body),
 )
 
-#let definition-style = (
-  fill: none,
-  stroke: none,
-  // Upright body (thmbox default) per AMS definition style
+#let lemma = thmplain(
+  "lemma",
+  "Lemma",
+  base: "theorem",
+  titlefmt: strong,
+  bodyfmt: body => emph(body),
 )
 
-#let axiom-style = (
-  fill: none,
-  stroke: none,
-  bodyfmt: it => emph(it),  // Italic body like theorems
+// AMS "definition" style: bold label, upright body
+#let definition = thmplain(
+  "definition",
+  "Definition",
+  titlefmt: strong,
 )
 
-#let remark-style = (
-  fill: none,
-  stroke: none,
-  // Upright body (thmbox default) per AMS remark style
+// Axiom follows theorem style (bold label, italic body)
+#let axiom = thmplain(
+  "axiom",
+  "Axiom",
+  titlefmt: strong,
+  bodyfmt: body => emph(body),
 )
+
+// AMS "remark" style: italic label, upright body, unnumbered
+#let remark = thmplain(
+  "remark",
+  "Remark",
+  titlefmt: emph,
+  numbering: none,
+)
+
+// Proof environment with QED symbol
+#let proof = thmproof("proof", "Proof")
 
 // ============================================================================
-// Theorem Environments (using thmbox predefined environments with custom styling)
+// Show Rule Export for Chapters
 // ============================================================================
 
-// Re-export thmbox environments with custom styling
-// Chapters use: definition, theorem, lemma, axiom, remark, proof
-#let definition = thmbox.definition.with(..definition-style)
-#let theorem = thmbox.theorem.with(..theorem-style)
-#let lemma = thmbox.lemma.with(..theorem-style)
-#let axiom = thmbox.axiom.with(..axiom-style)
-#let remark = thmbox.remark.with(..remark-style)
-#let proof = thmbox.proof
+// Export thmrules for chapters to apply
+// Chapters should use: #show: thmrules.with(qed-symbol: $square$)
