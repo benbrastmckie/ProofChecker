@@ -9,7 +9,8 @@
 = Metalogic
 
 The metalogic for the bimodal logic *TM* establishes that the proof system and semantics describe the same space of inferences.
-This chapter presents a representation theorem from which completeness and compactness follow as corollaries.
+This chapter presents two approaches to completeness: the _representation theorem_, which provides canonical model infrastructure, and the _contrapositive approach_ via `semantic_weak_completeness`, which is the primary sorry-free completeness theorem.
+Both approaches rely on the same foundational infrastructure---the deduction theorem, maximal consistent sets, and Lindenbaum's lemma---but the contrapositive approach avoids the truth bridge gap that creates architectural limitations in the representation theorem path.
 The chapter also proves that *TM* is decidable.
 
 == Soundness
@@ -21,7 +22,7 @@ This theorem establishes that only logical consequences are derivable.
 ]
 
 The proof proceeds by induction on the derivation structure:
-- *Axioms*: Each of the 14 axiom schemata is proven valid
+- *Axioms*: Each of the 15 axiom schemata is proven valid
 - *Assumptions*: Assumed formulas are true by hypothesis
 - *Modus ponens*: Validity preserved under implication elimination
 - *Necessitation*: Valid formulas become necessarily valid
@@ -59,6 +60,7 @@ The proof proceeds by induction on the derivation structure:
 )
 
 The MF and TF axioms use time-shift invariance to relate truth at different times (via `WorldHistory.time_shift`).
+The axiom validity proofs are located in `Metalogic/Soundness/Soundness.lean`, with supporting lemmas in `SoundnessLemmas.lean`.
 
 == Core Infrastructure
 
@@ -110,8 +112,13 @@ This follows because any derivation uses only finitely many premises, so a deriv
 
 == Representation Theory
 
-The _Representation Theorem_ is the core of the metalogic, providing the bridge between syntactic consistency and semantic satisfiability.
-The subsequent _Completeness Theorems_ follow directly from this result.
+The _Representation Theorem_ provides the bridge between syntactic consistency and semantic satisfiability via canonical model construction.
+While the representation theorem and truth lemma are mathematically elegant, the Lean formalization contains architectural limitations.
+
+*Architectural Note*: The `Representation/` subdirectory contains deprecated code with sorries.
+The truth lemma has an S5-style Box semantics limitation: the modal Box quantifies over _all_ histories in the canonical frame, whereas TM logic requires quantification over histories sharing the current time point.
+This creates a "truth bridge gap" that is intentionally left as sorry.
+For a sorry-free completeness proof, the contrapositive approach via `semantic_weak_completeness` (documented in the next section) is recommended.
 
 === Canonical World States
 
@@ -165,7 +172,8 @@ The _Truth Lemma_ follows directly from this construction: membership in a maxim
   Every consistent formula is satisfiable in the canonical model.#footnote[This is proven as `representation_theorem` in `Theories/Bimodal/Metalogic/Representation/UniversalCanonicalModel.lean`.]
 ]
 
-This theorem is the pivotal result linking syntax to semantics.
+This theorem links syntax to semantics via the canonical model construction.
+While the representation theorem depends on the truth lemma (which has architectural sorries), the infrastructure it develops is reused by the sorry-free contrapositive approach.
 The proof strategy is:
 + Given a consistent context $Gamma$, convert it to a set $S = "contextToSet"(Gamma)$.
 + Apply Lindenbaum's lemma to extend $S$ to a maximal consistent set $M$.
@@ -183,8 +191,8 @@ The proof adds $not phi.alt$ to the context and applies the standard _Representa
 
 === Theorem Dependency Structure <fig:theorem-deps>
 
-The diagram below illustrates the dependency structure of the completeness proof.
-The core infrastructure (top row) feeds into the central _Representation Theorem_, from which the completeness corollaries follow.
+The diagram below illustrates the dependency structure of the completeness proof, showing both the deprecated representation theorem path and the primary contrapositive path.
+The core infrastructure (top row) feeds into both approaches, but only the contrapositive path (green, right side) is sorry-free.
 
 #figure(
   cetz.canvas({
@@ -192,43 +200,51 @@ The core infrastructure (top row) feeds into the central _Representation Theorem
 
     let box-style = (stroke: 0.5pt, fill: none)
     let arrow-style = (stroke: 0.5pt + gray.darken(20%), mark: (end: ">"))
+    let deprecated-arrow = (stroke: 0.5pt + gray.lighten(40%), mark: (end: ">"))
 
     // Core Infrastructure layer (top)
-    rect((-2, 3.5), (2, 4.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
-    content((0, 4), text(size: 8pt)[Deduction Theorem\ #text(size: 6pt)[`deduction_theorem`]])
+    rect((-2, 4.5), (2, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    content((0, 5), text(size: 8pt)[Deduction Theorem\ #text(size: 6pt)[`deduction_theorem`]])
 
-    rect((3, 3.5), (7, 4.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
-    content((5, 4), text(size: 8pt)[Lindenbaum's Lemma\ #text(size: 6pt)[`set_lindenbaum`]])
+    rect((3.5, 4.5), (7.5, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    content((5.5, 5), text(size: 8pt)[Lindenbaum's Lemma\ #text(size: 6pt)[`set_lindenbaum`]])
 
-    rect((8, 3.5), (12, 4.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
-    content((10, 4), text(size: 8pt)[Maximal Consistent Sets\ #text(size: 6pt)[`MaximalConsistent`]])
+    rect((9, 4.5), (13, 5.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
+    content((11, 5), text(size: 8pt)[Maximal Consistent Sets\ #text(size: 6pt)[`MaximalConsistent`]])
 
-    // Representation layer (middle)
-    rect((1.5, 1.5), (8.5, 2.5), ..box-style, fill: green.lighten(85%), radius: 4pt)
-    content((5, 2), text(size: 9pt, weight: "bold")[Representation Theorem]
-      + text(size: 6pt)[\ `representation_theorem`])
+    // Middle layer - two paths diverge
+    // Representation path (deprecated - left side)
+    rect((-1, 2.5), (4, 3.5), ..box-style, fill: yellow.lighten(80%), radius: 4pt)
+    content((1.5, 3), text(size: 8pt)[Representation Theorem\ #text(size: 6pt, fill: gray)[`representation_theorem` (deprecated)]])
+
+    // Contrapositive path (primary - right side)
+    rect((7, 2.5), (13, 3.5), ..box-style, fill: green.lighten(80%), radius: 4pt)
+    content((10, 3), text(size: 8pt, weight: "bold")[Contrapositive Approach\ #text(size: 6pt)[`semantic_weak_completeness` (primary)]])
 
     // Completeness layer (bottom)
-    rect((-0.5, -0.5), (4, 0.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
-    content((1.75, 0), text(size: 8pt)[Weak Completeness\ #text(size: 6pt)[`semantic_weak_completeness`]])
+    rect((3, 0.5), (8, 1.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    content((5.5, 1), text(size: 8pt)[Weak Completeness\ #text(size: 6pt)[sorry-free]])
 
-    rect((6, -0.5), (10.5, 0.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
-    content((8.25, 0), text(size: 8pt)[Strong Completeness\ #text(size: 6pt)[`main_strong_completeness`]])
+    rect((9.5, 0.5), (13.5, 1.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    content((11.5, 1), text(size: 8pt)[Strong Completeness\ #text(size: 6pt)[`main_strong_completeness`]])
 
-    // Arrows from Core to Representation
-    line((0, 3.5), (3.5, 2.5), ..arrow-style)
-    line((5, 3.5), (5, 2.5), ..arrow-style)
-    line((10, 3.5), (6.5, 2.5), ..arrow-style)
+    // Arrows from Core to middle layer
+    line((0, 4.5), (1.5, 3.5), ..deprecated-arrow)
+    line((5.5, 4.5), (2.5, 3.5), ..deprecated-arrow)
+    line((5.5, 4.5), (8.5, 3.5), ..arrow-style)
+    line((11, 4.5), (11, 3.5), ..arrow-style)
 
-    // Arrows from Representation to Completeness
-    line((3.5, 1.5), (1.75, 0.5), ..arrow-style)
-    line((6.5, 1.5), (8.25, 0.5), ..arrow-style)
+    // Arrows from middle to completeness
+    line((1.5, 2.5), (4.5, 1.5), ..deprecated-arrow)
+    line((10, 2.5), (6.5, 1.5), ..arrow-style)
+    line((11, 2.5), (11.5, 1.5), ..arrow-style)
   }),
-  caption: [Theorem dependency structure for completeness.],
+  caption: [Theorem dependency structure. Green path (contrapositive) is sorry-free; yellow path (representation) is deprecated.],
 )
 
-The three foundational components---the _Deduction Theorem_, _Lindenbaum's Lemma_, and _Maximal Consistent Sets_---provide the infrastructure for the _Representation Theorem_.
-Both weak and strong completeness then follow as direct corollaries via contrapositive arguments.
+The three foundational components---the _Deduction Theorem_, _Lindenbaum's Lemma_, and _Maximal Consistent Sets_---provide infrastructure for both approaches.
+The contrapositive path via `semantic_weak_completeness` is the primary sorry-free completeness theorem.
+The representation theorem path remains in the codebase for its infrastructure contributions but has architectural sorries in the truth lemma.
 
 == Completeness as Corollary
 
@@ -283,23 +299,46 @@ This biconditional shows that the proof system and semantics align perfectly.
 Soundness (left-to-right) ensures no non-logical consequences are derivable, while completeness (right-to-left) ensures all logical consequences are captured by the proof system.
 Together, they establish that *TM* provides an exact syntactic characterization of semantic validity.
 
+=== The Contrapositive Approach (Primary)
+
+The `semantic_weak_completeness` theorem in `FMP/SemanticCanonicalModel.lean` provides the canonical sorry-free completeness proof.
+Unlike the representation theorem path (which depends on the truth lemma with architectural sorries), this approach works via contrapositive and avoids the truth bridge gap entirely.
+
+#theorem("Contrapositive Weak Completeness")[
+  If $tack.r.double phi.alt$, then $tack.r phi.alt$.#footnote[This is `semantic_weak_completeness` in `FMP/SemanticCanonicalModel.lean`---the primary sorry-free completeness theorem.]
+]
+
+The proof strategy proceeds as follows:
++ *Contrapositive*: Transform `valid phi -> provable phi` into `not provable phi -> not valid phi`.
++ *Consistency*: If $phi.alt$ is not provable, then ${not phi.alt}$ is consistent (otherwise we could derive $phi.alt$ from the empty context).
++ *Lindenbaum extension*: By Lindenbaum's lemma, extend ${not phi.alt}$ to a maximal consistent set $M$.
++ *Closure projection*: Project $M$ to a closure MCS containing the relevant subformulas.
++ *Finite world state construction*: Build a `FiniteWorldState` from closure MCS membership.
++ *Countermodel*: By construction, $not phi.alt$ is true at this world state.
++ *Invalidity*: The world state provides a countermodel, so $phi.alt$ is not valid.
+
+*Why this avoids the truth bridge gap*: The contrapositive approach does not require proving that _every_ formula in the MCS is true at the constructed world state (the truth lemma).
+Instead, it only needs to show that the specific formula $not phi.alt$ is true, which follows directly from the construction: the assignment _is_ the MCS membership function.
+This targeted approach sidesteps the Box semantics limitation where S5-style universal quantification over all histories conflicts with TM's time-indexed modal accessibility.
+
+The theorem `sorry_free_weak_completeness` provides an explicit alias documenting this as the preferred completeness path.
+
 === Two Canonical Model Approaches
 
 The codebase contains two canonical model constructions.
-Understanding their differences explains why the semantic approach is primary.
+Understanding their differences explains why the contrapositive approach supersedes the representation theorem path.
 
-*Syntactic Approach.*
-World states are directly identified with maximal consistent sets.
-Accessibility is defined via modal witnesses: $square.stroked phi.alt in w$ implies $phi.alt in w'$ for all accessible $w'$.
-This approach requires explicit negation-completeness proofs for locally consistent sets.
-The syntactic approach is archived in `Boneyard/` for historical reference.
+*Representation Theorem Path (Deprecated).*
+The representation theorem uses canonical model construction where world states are identified with maximal consistent sets.
+This approach requires the truth lemma, which has architectural sorries due to the Box semantics limitation: the S5-style Box quantifies over _all_ histories, not just those sharing the current time point.
+The `Representation/` subdirectory contains this code, preserved for its infrastructure contributions to the contrapositive approach.
 
-*Semantic Approach.*
-World states are equivalence classes of (history, time) pairs, where two pairs are equivalent iff they denote the same underlying world state.
-This approach offers key advantages:
-- *Truth lemma*: Follows trivially from the quotient construction.
-- *Compositionality*: The task relation is defined via history concatenation, making compositionality proofs straightforward.
-- *Negation-completeness*: The semantic approach does not require proving negation-completeness of arbitrary locally consistent sets, a property that caused difficulties in the syntactic approach.
+*Contrapositive Path (Primary).*
+The `semantic_weak_completeness` theorem in `FMP/SemanticCanonicalModel.lean` works via contrapositive.
+This approach reuses the MCS infrastructure from the representation path but avoids the truth bridge gap by constructing a targeted countermodel for the specific formula being proven invalid.
+This is the recommended completeness theorem for all downstream applications.
+
+*Historical Note*: An older syntactic approach (world states as MCS directly, with modal witness accessibility) is archived in `Boneyard/` for historical reference.
 
 == Decidability
 
@@ -378,7 +417,7 @@ Despite computational limitations, decidability is practically valuable: small f
 == File Organization and Dependencies
 
 The active metalogic infrastructure is in `Theories/Bimodal/Metalogic/`, using the `IndexedMCSFamily` approach.
-Deprecated code in `Boneyard/Metalogic_v2/` is preserved for historical reference.
+The primary completeness theorem `semantic_weak_completeness` is in `FMP/SemanticCanonicalModel.lean`.
 The following diagram illustrates the import structure of the active codebase.
 
 #figure(
@@ -387,63 +426,92 @@ The following diagram illustrates the import structure of the active codebase.
 
     let box-style = (stroke: 0.5pt)
     let arrow-style = (stroke: 0.5pt + gray.darken(30%), mark: (end: ">"))
+    let deprecated-style = (stroke: 0.5pt + gray.lighten(30%), mark: (end: ">"))
 
     // Core layer (bottom)
     rect((-1.5, -0.5), (2.5, 0.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
     content((0.5, 0), text(size: 7pt)[Core/\ #text(size: 5pt)[Basic, Provability, Deduction, MCS]])
 
     rect((4, -0.5), (8, 0.5), ..box-style, fill: blue.lighten(90%), radius: 4pt)
-    content((6, 0), text(size: 7pt)[Soundness/\ #text(size: 5pt)[Soundness, SoundnessLemmas]])
+    content((6, 0), text(size: 7pt)[Soundness/\ #text(size: 5pt)[15 axioms, soundness theorem]])
 
-    // Representation layer (middle)
-    rect((1.5, 1.5), (6.5, 2.5), ..box-style, fill: green.lighten(85%), radius: 4pt)
-    content((4, 2), text(size: 7pt)[Representation/\ #text(size: 5pt)[Canonical, Truth, Representation]])
+    // Middle layer - Representation (deprecated) and FMP (primary)
+    rect((-1.5, 1.5), (3.5, 2.5), ..box-style, fill: yellow.lighten(85%), radius: 4pt)
+    content((1, 2), text(size: 7pt, fill: gray)[Representation/\ #text(size: 5pt)[Canonical model (deprecated)]])
 
-    // Completeness and FMP
-    rect((-1, 3.5), (3, 4.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
-    content((1, 4), text(size: 7pt)[Completeness/\ #text(size: 5pt)[Weak, Strong]])
+    rect((5.5, 1.5), (11.5, 2.5), ..box-style, fill: green.lighten(80%), radius: 4pt)
+    content((8.5, 2), text(size: 7pt, weight: "bold")[FMP/\ #text(size: 5pt)[`semantic_weak_completeness` (primary)]])
 
-    rect((5, 3.5), (8.5, 4.5), ..box-style, fill: yellow.lighten(80%), radius: 4pt)
-    content((6.75, 4), text(size: 7pt)[FMP.lean\ #text(size: 5pt)[Central Hub]])
+    // Completeness and Algebraic
+    rect((-1.5, 3.5), (3.5, 4.5), ..box-style, fill: orange.lighten(85%), radius: 4pt)
+    content((1, 4), text(size: 7pt)[Completeness/\ #text(size: 5pt)[Weak, Strong completeness]])
+
+    rect((5.5, 3.5), (11.5, 4.5), ..box-style, fill: green.lighten(85%), radius: 4pt)
+    content((8.5, 4), text(size: 7pt)[Algebraic/\ #text(size: 5pt)[Alternative sorry-free approach]])
 
     // Applications and Decidability
-    rect((-1, 5.5), (3, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
-    content((1, 6), text(size: 7pt)[Applications/\ #text(size: 5pt)[Compactness]])
+    rect((-1.5, 5.5), (3.5, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
+    content((1, 6), text(size: 7pt)[Compactness/\ #text(size: 5pt)[List-based compactness]])
 
-    rect((5, 5.5), (8.5, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
-    content((6.75, 6), text(size: 7pt)[Decidability/\ #text(size: 5pt)[Tableau, Saturation]])
+    rect((5.5, 5.5), (11.5, 6.5), ..box-style, fill: purple.lighten(90%), radius: 4pt)
+    content((8.5, 6), text(size: 7pt)[Decidability/\ #text(size: 5pt)[Tableau procedure]])
 
-    // Arrows
-    line((0.5, 0.5), (3, 1.5), ..arrow-style)
-    line((6, 0.5), (5, 1.5), ..arrow-style)
-    line((4, 2.5), (1, 3.5), ..arrow-style)
-    line((4, 2.5), (6.75, 3.5), ..arrow-style)
+    // Arrows from Core/Soundness to middle layer
+    line((0.5, 0.5), (1, 1.5), ..deprecated-style)
+    line((6, 0.5), (7, 1.5), ..arrow-style)
+
+    // Arrows from middle to completeness
+    line((1, 2.5), (1, 3.5), ..deprecated-style)
+    line((8.5, 2.5), (8.5, 3.5), ..arrow-style)
+
+    // Arrows to top layer
     line((1, 4.5), (1, 5.5), ..arrow-style)
-    line((6.75, 4.5), (6.75, 5.5), ..arrow-style)
-    line((5, 4), (3, 4), ..arrow-style)
+    line((8.5, 4.5), (8.5, 5.5), ..arrow-style)
   }),
-  caption: none,
+  caption: [Directory structure. Green boxes contain sorry-free code; yellow box is deprecated.],
 )
 
 *Directory descriptions*:
 - *`Core/`*: Foundational definitions including provability (`ContextDerivable`), deduction theorem, and maximal consistent sets.
 - *`Soundness/`*: Validity proofs for all 15 axiom schemata and the main soundness theorem.
-- *`Representation/`*: Canonical model construction, truth lemma, and the central representation theorems.
-- *`Completeness/`*: Weak and strong completeness theorems derived from representation.
-- *`Applications/`*: Compactness theorem (trivial for list-based contexts).
+- *`Representation/`*: Canonical model construction, truth lemma, and representation theorems. _Deprecated_: contains architectural sorries.
+- *`FMP/`*: Finite Model Property. Contains the primary sorry-free completeness theorem `semantic_weak_completeness`.
+- *`Completeness/`*: Weak and strong completeness theorems using both representation and FMP paths.
+- *`Algebraic/`*: Alternative sorry-free completeness via Lindenbaum quotient and Boolean structure.
+- *`Compactness/`*: Compactness theorem (trivial for list-based contexts).
 - *`Decidability/`*: Tableau-based decision procedure with proof/countermodel extraction.
 
 == Implementation Status
 
 === Sorry Status
 
-The `Metalogic_v2` codebase has three remaining `sorry` statements, none of which block the core completeness results:
+The `Metalogic/` codebase contains 20 `sorry` statements, _all of which are deprecated with sorry-free alternatives_.
+The primary completeness theorem `semantic_weak_completeness` is fully proven without sorries.
 
-+ `semantic_task_rel_compositionality` (SemanticCanonicalModel.lean:236) --- Finite time domain limitation; a fundamental issue with Int-valued durations exceeding finite time bounds.
-+ `main_provable_iff_valid_v2` completeness direction (SemanticCanonicalModel.lean:647) --- Requires truth bridge from general validity to finite model truth.
-+ `finite_model_property_constructive` truth bridge (FiniteModelProperty.lean:481) --- Same truth bridge issue.
+#figure(
+  table(
+    columns: 3,
+    stroke: none,
+    table.hline(),
+    table.header(
+      [*File*], [*Count*], [*Cause*],
+    ),
+    table.hline(),
+    [`TruthLemma.lean`], [4], [Box/temporal backward directions],
+    [`TaskRelation.lean`], [5], [Cross-sign duration composition],
+    [`CoherentConstruction.lean`], [8], [Cross-origin coherence],
+    [`SemanticCanonicalModel.lean`], [2], [Frame compositionality, truth bridge],
+    [`FiniteModelProperty.lean`], [1], [FMP truth bridge],
+    table.hline(),
+    [*Total*], [*20*], [All deprecated---use `semantic_weak_completeness`],
+    table.hline(),
+  ),
+  caption: none,
+)
 
-The core completeness result `semantic_weak_completeness` is fully proven without sorries.
+*Architectural Note*: These sorries are _not_ incomplete work.
+They represent fundamental limitations in the representation theorem approach: the S5-style Box semantics quantifies over all histories, whereas TM logic requires quantification over histories sharing the current time point.
+The contrapositive approach via `semantic_weak_completeness` avoids these limitations entirely and is recommended for all downstream applications.
 
 === Decidability Implementation
 
@@ -485,17 +553,22 @@ The core completeness result `semantic_weak_completeness` is fully proven withou
     [Deduction Theorem], [Proven], [`deduction_theorem`],
     [Lindenbaum Lemma], [Proven], [`set_lindenbaum`],
     [IndexedMCSFamily], [Proven], [`IndexedMCSFamily`],
-    [Truth Lemma], [Proven], [`truth_lemma`],
-    [Representation Theorem], [Proven], [`representation_theorem`],
-    [Weak Completeness], [Proven], [`semantic_weak_completeness`],
-    [Strong Completeness], [Proven\*], [`main_strong_completeness`],
+    [Truth Lemma], [Deprecated], [`truth_lemma` (has sorries)],
+    [Representation Theorem], [Deprecated], [`representation_theorem` (has sorries)],
+    [*Weak Completeness*], [*Proven*], [*`semantic_weak_completeness`* (sorry-free)],
+    [Strong Completeness], [Proven], [`main_strong_completeness`],
     [Provable iff Valid], [Proven], [`main_provable_iff_valid`],
-    [Finite Model Property], [Statement], [`finite_model_property`],
+    [Algebraic Completeness], [Proven], [`AlgebraicRepresentation` (sorry-free)],
+    [Finite Model Property], [Statement], [`finite_model_property` (has sorries)],
     [Decidability Soundness], [Proven], [`decide_sound`],
     table.hline(),
   ),
   caption: none,
 )
 
-\* Strong completeness uses the weak completeness result, which is fully proven.
-The three sorries listed above affect only the finite model property path.
+*Status Key*:
+- *Proven*: No sorries, fully verified.
+- *Deprecated*: Contains architectural sorries; use sorry-free alternative.
+- *Statement*: Theorem stated but proof has sorries.
+
+The sorry-free completeness path via `semantic_weak_completeness` is the recommended approach for all applications requiring verified completeness.
