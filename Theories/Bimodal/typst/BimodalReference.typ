@@ -13,9 +13,10 @@
 
 #import "@preview/cetz:0.3.4"
 
-// Local notation and template (includes thmbox theorem environments)
+// Local notation and template (includes ctheorems theorem environments)
 #import "notation/bimodal-notation.typ": *
-#import "template.typ": thmbox-show, URLblue, definition, theorem, lemma, axiom, remark, proof
+#import "template.typ": URLblue, definition, theorem, lemma, axiom, remark, proof
+#import "@preview/ctheorems:1.1.3": thmrules
 
 // ============================================================================
 // Document Configuration
@@ -50,16 +51,13 @@
 #show "TM": strong
 
 // ============================================================================
-// Theorem Environment Initialization
+// Theorem Environment Initialization (ctheorems)
 // ============================================================================
 
-#show: thmbox-show
+#show: thmrules.with(qed-symbol: $square$)
 
 // Style hyperlinks in URLblue color
 #show link: set text(fill: URLblue)
-
-// Allow theorem boxes to break across pages
-#show figure.where(kind: "thmbox"): set block(breakable: true)
 
 // ============================================================================
 // Custom Commands
