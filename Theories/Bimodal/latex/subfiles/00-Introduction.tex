@@ -3,12 +3,12 @@
 
 \section{Introduction}
 
-The bimodal logic \textbf{TM} combines S5 historical modal operators for necessity ($\nec$) and possibility ($\poss$) with linear temporal operators for past ($\allpast$) and future ($\allfuture$).
-Implementing \textbf{TM} in Lean 4 provides a positive RL signal for training AI systems to conduct verified reasoning about past and future contingency in an interpreted formal language.
+\textbf{TM} is a bimodal logic combining S5 a historical necessity operator ($\nec$) with linear temporal operators for past ($\allpast$) and future ($\allfuture$).
+The logic provides a framework for reasoning about necessary truths across time to train AI systems to reason about past and future contingency.
 
 The semantics is based on \emph{task frames}, which extend Kripke frames with temporal structure.
 A task frame consists of world states connected by a \emph{task relation} indexed by temporal durations.
-World histories are temporal slices through a task frame, representing the possible evolution of a system.
+World histories are temporal slices through a task frame, representing the unfolding of a world over time.
 
 \begin{center}
 \begin{tikzpicture}[
@@ -68,9 +68,8 @@ World histories are temporal slices through a task frame, representing the possi
 The diagram above illustrates the conceptual structure underlying TM logic.
 The solid curve $\tau$ represents a single world history---a temporal sequence of states.
 From any point $x$ along a history, the past and future light cones contain all states that are modally accessible.
-The necessity operator $\nec$ quantifies over all possible histories, though we may often restrict to those histories that pass through the world state $\tau(x)$.
-The temporal operators $\allpast$ and $\allfuture$ quantify over past and future times which, given a particular history, determines the range of past and future world states that history occupies relative to a given time.
-These primitive operators may then be used to define a host of combined operators of interest.
+The necessity operator $\nec$ quantifies over all histories passing through $x$, while the temporal operators $\allpast$ and $\allfuture$ quantify along the single actual history.
+The dotted lines represent counterfactual paths: alternative pasts that could have led to $x$, and alternative futures that could unfold from $x$.
 
 \subsection*{Project Structure}
 
@@ -82,8 +81,8 @@ The Lean 4 implementation is in the \texttt{Bimodal/} directory:
   \textbf{Complete.}
   \item \texttt{Semantics/} -- Task frames model possible worlds; world histories model time; truth conditions define meaning.
   \textbf{Complete.}
-  \item \texttt{Metalogic/} -- Soundness theorem (proven: all axioms valid, rules preserve validity), deduction theorem (proven: enables assumption introduction), completeness via the semantic canonical model (Lindenbaum lemma proven, truth lemma proven, weak completeness proven), and decidability via tableau-based decision procedure (soundness and completeness proven).
-  \textbf{Complete.}
+  \item \texttt{Metalogic/} -- Soundness theorem (proven: all axioms valid, rules preserve validity), deduction theorem (proven: enables assumption introduction), and completeness infrastructure (Lindenbaum lemma, canonical model axiomatized).
+  \textbf{Soundness and deduction complete; completeness pending.}
   \item \texttt{Theorems/} -- Perpetuity principles and modal theorems derived from the axiom system.
   \textbf{Partial.}
 \end{itemize}
