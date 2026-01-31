@@ -18,6 +18,8 @@ Evaluation is hyperintensional, distinguishing propositions that agree on truth-
 
 The Constitutive Foundation interprets the following syntactic primitives:
 
+% FIX: include the universal quantifier
+
 \begin{itemize}
 	\item \textbf{Variables}: $v_1, v_2, v_3, \ldots$ (ranging over states)
 	\item \textbf{Individual constants}: $a, b, c, \ldots$ (0-place function symbols)
@@ -37,11 +39,15 @@ When a single variable suffices (e.g., in lambda abstractions), we write simply 
 \begin{definition}[Well-Formed Formulas]\label{def:wff}
 The set of \emph{well-formed formulas} is defined inductively where $F$ over $n$-place predicates, $t_i$ over terms, and $v$ over variables:
   \[
-    \metaA, \metaB \Define{} F(t_1, \ldots, t_n) \mid \top \mid \bot
-    \mid{} \neg\metaA \mid (\metaA \land \metaB) \mid (\metaA \lor \metaB)
-    \mid{} (\metaA \equiv \metaB) \mid (\lambda v.\metaA)(t)
+    \metaA, \metaB \Define{}
+      F(t_1, \ldots, t_n) \mid
+      \top \mid \bot \mid
+      \neg\metaA \mid
+      (\metaA \land \metaB) \mid
+      (\metaA \lor \metaB) \mid
+      (\metaA \equiv \metaB) \mid
+      (\lambda v.\metaA)(t)
   \]
-
 \end{definition}
 
 \noindent
@@ -49,13 +55,11 @@ See \leansrc{Logos.SubTheories.Foundation.Syntax}{ConstitutiveFormula}.
 
 \subsection{Derived Operators}\label{sec:derived-operators}
 
-\begin{definition}[Derived Operators and Notation Conventions]\label{def:derived-operators}
+\begin{definition}[Derived Operators]\label{def:derived-operators}
 The following notation conventions define syntactic sugar for the Constitutive Foundation language:
 \begin{enumerate}
 	\item \textbf{Material Conditional}: $\metaA \to \metaB \define \neg\metaA \lor \metaB$
 	\item \textbf{Biconditional}: $\metaA \leftrightarrow \metaB \define (\metaA \to \metaB) \land (\metaB \to \metaA)$
-	\item \textbf{Universal Quantification}: $\forall v.\metaA \define \forall(\lambda v.\metaA)$ where $\forall$ is a second-order predicate on properties
-  \item \textbf{Existential Quantification}: $\exists v.\metaA \define \neg \forall v. \neg\metaA$
 \end{enumerate}
 First-order quantifiers are \textit{not} primitive in the Constitutive Foundation; first-order quantification is introduced in the Dynamical Foundation layer.
 \end{definition}
@@ -89,7 +93,7 @@ See \leansrc{Logos.Dynamics.Syntax}{CoreFormula}.
 		\item \textbf{Null state} $\nullstate$: The bottom element (fusion of the empty set)
 		\item \textbf{Full state} $\fullstate$: The top element (fusion of all states)
 		\item \textbf{State Fusion} $\fusion{s}{t}$: The least upper bound of $s$ and $t$
-		\item \textbf{Pointwise Fusion} $\fusion{f}{g}(s_1,\ldots,s_n) \define \fusion{f(s_1,\ldots,s_n)}{g(s_1,\ldots,s_n)}$ 
+		\item \textbf{Pointwise Fusion} $(\fusion{f}{g})(s_1,\ldots,s_n) \define \fusion{f(s_1,\ldots,s_n)}{g(s_1,\ldots,s_n)}$ 
 	\end{itemize}
 	See \leansrc{Logos.Foundation.Frame}{ConstitutiveFrame} for the implementation.
 \end{remark}
@@ -163,6 +167,8 @@ The \emph{free variables} $\FV(t)$ of a term are defined by:
 \end{align*}
 \end{definition}
 
+% FIX: add a remark that it follows that c[s/v] = c
+
 \noindent
 See \leansrc{Logos.SubTheories.Foundation.Syntax}{Term}.
 
@@ -195,8 +201,8 @@ The \emph{verification} ($\verifies$) and \emph{falsification} ($\falsifies$) of
 
 \begin{definition}[Atomic Verification and Falsification]\label{def:atomic-verification}
 	\begin{align}
-		\model, \assignment, s \verifies F(t_1, \ldots, t_n)  & \iff \exists f \in \verifiertype{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)  \\
-		\model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifiertype{F} : s = f(\lambda i : \Fin\;n, \sem{t_i}^\assignment_\model)
+    \model, \assignment, s \verifies F(t_1, \ldots, t_n)  & \iff \exists f \in \verifiertype{F} \text{ where } s = f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model)  \\
+    \model, \assignment, s \falsifies F(t_1, \ldots, t_n) & \iff \exists f \in \falsifiertype{F} \text{ where } s = f(\sem{t_1}^\assignment_\model, \ldots, \sem{t_n}^\assignment_\model)
 	\end{align}
 \end{definition}
 
@@ -319,13 +325,13 @@ These constitutive relations can be defined via propositional identity:
   Examples include $\metaA \Rightarrow \metaA \lor (\metaA \land \metaB)$ and $\metaA \Rightarrow \metaA \land (\metaA \lor \metaB)$. 
 \end{definition}
 
-\begin{remark}
-	Essence and ground are interrelated by negation:
-	\begin{itemize}
-		\item $\metaA \essence \metaB \iff \neg\metaA \ground \neg\metaB$
-		\item $\metaA \ground \metaB \iff \neg\metaA \essence \neg\metaB$
-	\end{itemize}
-\end{remark}
+% \begin{remark}
+% 	Essence and ground are interrelated by negation:
+% 	\begin{itemize}
+% 		\item $\metaA \essence \metaB \iff \neg\metaA \ground \neg\metaB$
+% 		\item $\metaA \ground \metaB \iff \neg\metaA \essence \neg\metaB$
+% 	\end{itemize}
+% \end{remark}
 
 \noindent
 See \leansrc{Logos.Foundation.Relations}{essence}.
@@ -343,6 +349,21 @@ See \leansrc{Logos.Foundation.Relations}{essence}.
 		\item \textbf{Fusion closure for falsifiers}: $\fusion{s}{t} \in F$ for any $s, t \in F$
 	\end{itemize}
 \end{definition}
+
+\begin{definition}[Propositional Operations]\label{def:propositional-operations}
+	For sets of states $X, Y \subseteq \statespace$ and bilateral propositions $P = \tuple{P^+, P^-}$ and $Q = \tuple{Q^+, Q^-}$, we may define the operations on their verifier and falsifier sets as follows:
+	\begin{itemize}
+		\item \textbf{Pairwise Fusion}: $X \otimes Y \define \set{\fusion{s}{t} : s \in X, t \in Y}$
+		\item \textbf{Closed Fusion}: $X \oplus Y \define X \cup Y \cup (X \otimes Y)$
+		\item \textbf{Negation}: $\neg P \define \tuple{P^-, P^+}$
+		\item \textbf{Conjunction}: $P \land Q \define \tuple{P^+ \otimes Q^+, P^- \oplus Q^-}$
+		\item \textbf{Disjunction}: $P \lor Q \define \tuple{P^+ \oplus Q^+, P^- \otimes Q^-}$
+    \item \textbf{Essence}: $P \essence Q \define P \land Q = Q$
+    \item \textbf{Ground}: $P \essence Q \define P \lor Q = Q$
+	\end{itemize}
+\end{definition}
+
+% FIX: add a remark that these propositional operators are not to be confused with sentential operators, though it can be shown that a model induces a homomorphism from sentences to propositions on the same signature of operators, motivating the redundancy in notation
 
 \begin{definition}[Bilattice]\label{def:bilattice}
 A \emph{bilattice} is a structure $B = \tuple{\props, \essence, \ground, \neg}$ where:
@@ -375,17 +396,6 @@ $(P \star R) \circ (Q \star R)$ whenever $P \circ Q$, for any lattice operation 
   giving up Boolean identities allows the two orders to diverge.
 \end{remark}
 
-\begin{definition}[Propositional Operations]\label{def:propositional-operations}
-	For sets of states $X, Y \subseteq \statespace$ and bilateral propositions $P = \tuple{P^+, P^-}$ and $Q = \tuple{Q^+, Q^-}$, we may define the operations on their verifier and falsifier sets as follows:
-	\begin{itemize}
-		\item \textbf{Pairwise Fusion}: $X \otimes Y \define \set{\fusion{s}{t} : s \in X, t \in Y}$
-		\item \textbf{Closed Fusion}: $X \oplus Y \define X \cup Y \cup (X \otimes Y)$
-		\item \textbf{Conjunction}: $P \land Q \define \tuple{P^+ \otimes Q^+, P^- \oplus Q^-}$
-		\item \textbf{Disjunction}: $P \lor Q \define \tuple{P^+ \oplus Q^+, P^- \otimes Q^-}$
-		\item \textbf{Negation}: $\neg P \define \tuple{P^-, P^+}$
-	\end{itemize}
-\end{definition}
-
 \noindent
 See \leansrc{Logos.Foundation.Proposition}{BilateralProp}.
 
@@ -393,14 +403,14 @@ See \leansrc{Logos.Foundation.Proposition}{BilateralProp}.
 % Logical Consequence
 % ------------------------------------------------------------
 
-\subsection{Logical Consequence}\label{sec:logical-consequence-foundation}
+\subsection{Constitutive Consequence}\label{sec:constitutive-consequence}
 
 \begin{definition}[Identity Sentences]\label{def:identity-sentences}
 An \emph{identity sentence} is a well-formed formula of the form $\metaA \equiv \metaB$ where the outermost connective is propositional identity.
 The \textit{Constitutive Foundation} evaluates only identity sentences at the null state, as non-identity sentences require the contingent evaluation context provided by the \textit{Dynamical Foundation}.
 \end{definition}
 
-\begin{definition}[Logical Consequence]\label{def:consequence-foundation}
+\begin{definition}[Constitutive Consequence]\label{def:consequence-consequence}
 Let $\context$ be a set of identity sentences (\Cref{def:identity-sentences}) and $\metaA$ an identity sentence.
 Then:
 \begin{align*}
