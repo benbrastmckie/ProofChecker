@@ -1,16 +1,16 @@
 # .claude/ Directory Export
 
-**Generated**: 2026-01-30T20:11:47+00:00
+**Generated**: 2026-02-09T19:18:49-08:00
 
 **Source**: `.claude/` directory
 
-**File count**: 235
+**File count**: 239
 
 ---
 
 ## Table of Contents
 
-**Total files**: 235
+**Total files**: 239
 
 - [CLAUDE.md](#claude-md)
 - [README.md](#readme-md)
@@ -115,6 +115,7 @@
       - [context/core/workflows/status-transitions.md](#context-core-workflows-status-transitions-md)
       - [context/core/workflows/task-breakdown.md](#context-core-workflows-task-breakdown-md)
   - [context/index.md](#context-index-md)
+      - [context/project/hooks/wezterm-integration.md](#context-project-hooks-wezterm-integration-md)
         - [context/project/latex/patterns/cross-references.md](#context-project-latex-patterns-cross-references-md)
         - [context/project/latex/patterns/theorem-environments.md](#context-project-latex-patterns-theorem-environments-md)
       - [context/project/latex/README.md](#context-project-latex-readme-md)
@@ -137,6 +138,7 @@
         - [context/project/lean4/standards/lean4-style-guide.md](#context-project-lean4-standards-lean4-style-guide-md)
         - [context/project/lean4/standards/proof-conventions-lean.md](#context-project-lean4-standards-proof-conventions-lean-md)
         - [context/project/lean4/standards/proof-conventions.md](#context-project-lean4-standards-proof-conventions-md)
+        - [context/project/lean4/standards/proof-debt-policy.md](#context-project-lean4-standards-proof-debt-policy-md)
         - [context/project/lean4/standards/proof-readability-criteria.md](#context-project-lean4-standards-proof-readability-criteria-md)
         - [context/project/lean4/templates/definition-template.md](#context-project-lean4-templates-definition-template-md)
         - [context/project/lean4/templates/new-file-template.md](#context-project-lean4-templates-new-file-template-md)
@@ -211,7 +213,9 @@
   - [hooks/tts-notify.sh](#hooks-tts-notify-sh)
   - [hooks/validate-state-sync.sh](#hooks-validate-state-sync-sh)
   - [hooks/wezterm-clear-status.sh](#hooks-wezterm-clear-status-sh)
+  - [hooks/wezterm-clear-task-number.sh](#hooks-wezterm-clear-task-number-sh)
   - [hooks/wezterm-notify.sh](#hooks-wezterm-notify-sh)
+  - [hooks/wezterm-task-number.sh](#hooks-wezterm-task-number-sh)
 ### output/
 
   - [output/implement.md](#output-implement-md)
@@ -340,13 +344,17 @@ All commands use checkpoint-based execution: GATE IN (preflight) -> DELEGATE (sk
 | `/plan` | `/plan N` | Create implementation plan |
 | `/implement` | `/implement N` | Execute plan, resume from incomplete phase |
 | `/revise` | `/revise N` | Create new plan version |
-| `/review` | `/review` | Analyze codebase |
+| `/review` | `/review` | Analyze codebase, load ROADMAP.md context, propose updates |
 | `/todo` | `/todo` | Archive completed/abandoned tasks, sync repository metrics |
 | `/errors` | `/errors` | Analyze error patterns, create fix plans |
 | `/meta` | `/meta` | System builder for .claude/ changes |
 | `/learn` | `/learn [PATH...]` | Scan for FIX:/NOTE:/TODO: tags |
 | `/lake` | `/lake [--clean] [--max-retries N]` | Build with automatic error repair |
 | `/refresh` | `/refresh [--dry-run] [--force]` | Clean orphaned processes and old files |
+
+##### Utility Scripts
+
+- `.claude/scripts/export-to-markdown.sh` - Export .claude/ directory to consolidated markdown file
 
 #### State Synchronization
 
@@ -361,7 +369,6 @@ TODO.md and state.json must stay synchronized. Update state.json first (machine 
     "project_name": "task_slug",
     "status": "planned",
     "language": "lean",
-    "priority": "high",
     "completion_summary": "Required when status=completed",
     "roadmap_items": ["Optional explicit roadmap items"]
   }],
@@ -374,6 +381,8 @@ TODO.md and state.json must stay synchronized. Update state.json first (machine 
   }
 }
 ```
+
+**Proof Debt Policy**: See @.claude/context/project/lean4/standards/proof-debt-policy.md for axiom and sorry handling policies.
 
 ##### Completion Workflow
 - Non-meta tasks: `completion_summary` + optional `roadmap_items` -> /todo annotates ROAD_MAP.md
@@ -1638,6 +1647,15 @@ See `.claude/context/project/lean4/operations/multi-instance-optimization.md` fo
     ],
     "SessionStart": [
       {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/wezterm-clear-task-number.sh 2>/dev/null || echo '{}'"
+          }
+        ]
+      },
+      {
         "matcher": "startup",
         "hooks": [
           {
@@ -1674,6 +1692,10 @@ See `.claude/context/project/lean4/operations/multi-instance-optimization.md` fo
       {
         "matcher": "*",
         "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/wezterm-task-number.sh 2>/dev/null || echo '{}'"
+          },
           {
             "type": "command",
             "command": "bash .claude/hooks/wezterm-clear-status.sh 2>/dev/null || echo '{}'"
@@ -2745,7 +2767,6 @@ Create directory and write report:
 **Started**: {ISO8601}
 **Completed**: {ISO8601}
 **Effort**: {estimate}
-**Priority**: {priority}
 **Dependencies**: {list or None}
 **Sources/Inputs**: - Codebase, WebSearch, documentation, etc.
 **Artifacts**: - path to this report
@@ -3553,6 +3574,7 @@ Load these on-demand using @-references:
 **Always Load**:
 - `@.claude/context/project/lean4/tools/mcp-tools-guide.md` - Full MCP tool reference
 - `@.claude/context/core/formats/return-metadata-file.md` - Metadata file schema
+- `@.claude/context/project/lean4/standards/proof-debt-policy.md` - Sorry remediation policy (REQUIRED for correct characterization)
 
 **Load After Stage 0**:
 - `@.claude/context/project/lean4/agents/lean-implementation-flow.md` - Detailed execution stages
@@ -3684,7 +3706,7 @@ When proof cannot be completed after multiple attempts:
 2. Mark proof complete if goals remain
 3. Skip `lake build` verification
 4. Leave plan file with stale status markers
-5. Create empty or placeholder proofs (sorry, admit)
+5. Create empty or placeholder proofs (sorry, admit) or introduce axioms
 6. Ignore build errors
 7. Write success status if any phase is incomplete
 8. Use status value "completed" (triggers Claude stop behavior)
@@ -3693,6 +3715,8 @@ When proof cannot be completed after multiple attempts:
 11. **Call blocked tools** (lean_diagnostic_messages, lean_file_outline)
 12. **Skip Stage 0** early metadata creation (critical for interruption recovery)
 13. **Block on MCP failures** - always save progress and continue or return partial
+14. **Use 'acceptable sorry' framing** - sorries are technical debt, never "acceptable" (see proof-debt-policy.md)
+15. **Use 'acceptable axiom' framing** - axioms are technical debt, never "acceptable" (see proof-debt-policy.md)
 
 
 ---
@@ -3779,6 +3803,7 @@ Load these on-demand using @-references:
 **Always Load**:
 - `@.claude/context/project/lean4/tools/mcp-tools-guide.md` - Full MCP tool reference
 - `@.claude/context/core/formats/return-metadata-file.md` - Metadata file schema
+- `@.claude/context/project/lean4/standards/proof-debt-policy.md` - Sorry remediation policy (REQUIRED for correct characterization)
 
 **Load After Stage 0**:
 - `@.claude/context/project/lean4/agents/lean-research-flow.md` - Detailed execution stages
@@ -3898,6 +3923,8 @@ If searches yield no useful results:
 9. **Skip Stage 0** early metadata creation (critical for interruption recovery)
 10. **Block on MCP failures** - always continue with available information
 11. **Call blocked tools** (lean_diagnostic_messages, lean_file_outline)
+12. **Use 'acceptable sorry' framing** - sorries are technical debt, never "acceptable" (see proof-debt-policy.md)
+13. **Use 'acceptable axiom' framing** - axioms are technical debt, never "acceptable" (see proof-debt-policy.md)
 
 
 ---
@@ -4183,8 +4210,6 @@ Options per task:
 - Large: 3-6 hours
 - Very Large: > 6 hours (consider splitting)
 
-**Question 6**: Priority assignment (High, Medium, Low per task)
-
 ##### Interview Stage 5: ReviewAndConfirm (CRITICAL)
 
 **MANDATORY**: User MUST confirm before any task creation.
@@ -4199,10 +4224,10 @@ Options per task:
 
 **Tasks to Create** ({N} total):
 
-| # | Title | Language | Priority | Effort | Dependencies |
-|---|-------|----------|----------|--------|--------------|
-| {N} | {title} | {lang} | {pri} | {hrs} | None |
-| {N} | {title} | {lang} | {pri} | {hrs} | #{N} |
+| # | Title | Language | Effort | Dependencies |
+|---|-------|----------|--------|--------------|
+| {N} | {title} | {lang} | {hrs} | None |
+| {N} | {title} | {lang} | {hrs} | #{N} |
 
 **Total Estimated Effort**: {sum} hours
 ```
@@ -4244,7 +4269,6 @@ slug=$(echo "{title}" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9
 ##### {N}. {Title}
 - **Effort**: {estimate}
 - **Status**: [NOT STARTED]
-- **Priority**: {priority}
 - **Language**: {language}
 - **Dependencies**: Task #{N}, Task #{N}
 
@@ -4261,11 +4285,8 @@ slug=$(echo "{title}" | tr '[:upper:]' '[:lower:]' | tr ' ' '_' | tr -cd 'a-z0-9
 
 Created {N} task(s) for {domain}:
 
-**High Priority**:
 - Task #{N}: {title}
   Path: specs/{N}_{slug}/
-
-**Medium Priority**:
 - Task #{N}: {title} (depends on #{N})
   Path: specs/{N}_{slug}/
 
@@ -4464,7 +4485,7 @@ Return ONLY valid JSON matching this schema:
 For each created task:
 
 1. **Update TODO.md**:
-   - Add task entry under appropriate priority section
+   - Prepend task entry to `## Tasks` section
    - Include all required fields
 
 2. **Update state.json**:
@@ -4714,7 +4735,6 @@ Write plan file following plan-format.md structure:
 - **Task**: {N} - {title}
 - **Status**: [NOT STARTED]
 - **Effort**: {total_hours} hours
-- **Priority**: {priority}
 - **Dependencies**: {deps or None}
 - **Research Inputs**: {research report path or None}
 - **Artifacts**: plans/implementation-{NNN}.md (this file)
@@ -4792,7 +4812,6 @@ Re-read the plan file and verify these fields exist (per plan-format.md):
 - `- **Status**: [NOT STARTED]` - **REQUIRED** - Must be present in plan header
 - `- **Task**: {N} - {title}` - Task identifier
 - `- **Effort**:` - Time estimate
-- `- **Priority**:` - Task priority
 - `- **Type**:` - Language type
 
 **If any required field is missing**:
@@ -7618,6 +7637,135 @@ else
 fi
 ```
 
+##### 1.6. Load ROADMAP Context (Strategies and Ambitions)
+
+**Purpose**: Load Strategies and Ambitions sections from ROAD_MAP.md to inform review focus areas. These sections provide strategic context about active experiments, priorities, and aspirational goals.
+
+**Context**: Load @.claude/context/core/formats/roadmap-format.md for section schemas.
+
+Parse `specs/ROAD_MAP.md` to extract Strategies and Ambitions sections:
+
+###### 1.6.1. Parse Strategies Section
+
+Extract strategies with their status and metadata:
+```
+### Look for "## Strategies" section header
+### Parse each "### Strategy: {Name}" subsection
+
+For each strategy:
+  name = text after "### Strategy: "
+  status = value after "**Status**:" (ACTIVE|PAUSED|CONCLUDED|ABANDONED)
+  hypothesis = text after "**Hypothesis**:"
+  started = date after "**Started**:"
+  outcomes = list items under "**Outcomes**:"
+```
+
+Build `strategies_context` structure:
+```json
+{
+  "strategies": [
+    {
+      "name": "Modal Soundness via FMP",
+      "status": "ACTIVE",
+      "started": "2026-01-15",
+      "hypothesis": "Using Finite Model Property simplifies soundness proofs",
+      "outcomes": ["Partial implementation in Theories/Bimodal/"],
+      "focus_areas": ["Bimodal soundness", "finite model construction"]
+    }
+  ],
+  "active_count": 1,
+  "paused_count": 0
+}
+```
+
+**Focus area extraction**: Extract key terms from hypothesis and outcomes to guide review attention to relevant files/modules.
+
+###### 1.6.2. Parse Ambitions Section
+
+Extract ambitions with their priority and success criteria:
+```
+### Look for "## Ambitions" section header
+### Parse each "### Ambition: {Name}" subsection
+
+For each ambition:
+  name = text after "### Ambition: "
+  priority = value after "**Priority**:" (HIGH|MEDIUM|LOW)
+  timeframe = value after "**Timeframe**:" (SHORT-TERM|MEDIUM-TERM|LONG-TERM|ONGOING)
+  criteria = checkbox items under "**Success Criteria**:"
+  related_phases = numbers in "**Related Phases**:"
+```
+
+Build `ambitions_context` structure:
+```json
+{
+  "ambitions": [
+    {
+      "name": "Complete Modal Logic Foundation",
+      "priority": "HIGH",
+      "timeframe": "MEDIUM-TERM",
+      "criteria": [
+        {"text": "Soundness theorem proven", "completed": true},
+        {"text": "Completeness theorem proven", "completed": false}
+      ],
+      "criteria_progress": "1/2 complete",
+      "related_phases": [1, 2]
+    }
+  ],
+  "high_priority_count": 1,
+  "incomplete_criteria_count": 1
+}
+```
+
+###### 1.6.3. Build Combined Roadmap Context
+
+Combine strategies and ambitions into unified context:
+```json
+{
+  "roadmap_context": {
+    "strategies": {...},
+    "ambitions": {...},
+    "review_focus": {
+      "active_strategy_areas": ["Bimodal soundness", "finite model construction"],
+      "high_priority_ambition_criteria": ["Completeness theorem proven"],
+      "suggested_review_paths": ["Theories/Bimodal/", "Theories/Completeness/"]
+    },
+    "loaded_successfully": true
+  }
+}
+```
+
+###### 1.6.4. Fallback Behavior
+
+If Strategies or Ambitions sections don't exist or are empty placeholders:
+
+```bash
+### Check if sections exist and contain actual content (not placeholder text)
+if sections_missing_or_placeholder; then
+  echo "INFO: Strategies/Ambitions sections not yet populated in ROAD_MAP.md"
+  echo "INFO: Review will proceed without strategic context"
+  echo "INFO: Run /todo or manually populate sections after Task 833"
+
+  roadmap_context = {
+    "strategies": {"strategies": [], "active_count": 0, "paused_count": 0},
+    "ambitions": {"ambitions": [], "high_priority_count": 0, "incomplete_criteria_count": 0},
+    "review_focus": {
+      "active_strategy_areas": [],
+      "high_priority_ambition_criteria": [],
+      "suggested_review_paths": []
+    },
+    "loaded_successfully": false,
+    "fallback_reason": "sections_not_populated"
+  }
+fi
+```
+
+**Detection of placeholder sections**: Look for text like "populated in Phase" or "*No entries yet*" to identify unpopulated sections.
+
+Variables set for later sections:
+- `roadmap_context` - Full context object for use in Section 2 (focus review) and Section 4 (report)
+- `review_focus_paths` - List of suggested file paths to prioritize in review
+- `active_strategies` - List of ACTIVE strategy names for quick reference
+
 ##### 2. Gather Context
 
 **For Lean files (.lean):**
@@ -7828,6 +7976,36 @@ Write to `specs/reviews/review-{DATE}.md`:
 | TODO count | {N} | {Info} |
 | Build status | {Pass/Fail} | {Status} |
 
+#### Roadmap Context
+
+{If roadmap_context.loaded_successfully is true, include these subsections:}
+
+##### Active Strategies
+
+| Strategy | Status | Hypothesis | Focus Areas |
+|----------|--------|------------|-------------|
+| {strategy.name} | {strategy.status} | {strategy.hypothesis} | {strategy.focus_areas} |
+
+{If no active strategies:}
+*No active strategies defined in ROAD_MAP.md*
+
+##### Ambition Progress
+
+| Ambition | Priority | Timeframe | Progress |
+|----------|----------|-----------|----------|
+| {ambition.name} | {ambition.priority} | {ambition.timeframe} | {ambition.criteria_progress} |
+
+**Outstanding Criteria** (high-priority ambitions):
+- [ ] {criterion.text} (from "{ambition.name}")
+
+{If no ambitions:}
+*No ambitions defined in ROAD_MAP.md*
+
+{If roadmap_context.loaded_successfully is false:}
+*Strategies and Ambitions sections not yet populated in ROAD_MAP.md. Run Task 833 or manually add content to enable strategic context.*
+
+---
+
 #### Roadmap Progress
 
 ##### Completed Since Last Review
@@ -7843,6 +8021,45 @@ Write to `specs/reviews/review-{DATE}.md`:
 ##### Recommended Next Tasks
 1. {Task recommendation} (Phase {N}, {Priority})
 2. {Task recommendation} (Phase {N}, {Priority})
+
+---
+
+#### Roadmap Revisions
+
+{Document changes made to ROAD_MAP.md during this review}
+
+##### Strategy Updates
+
+{If strategies_updated > 0:}
+| Strategy | Previous Status | New Status | Reason |
+|----------|-----------------|------------|--------|
+| {strategy.name} | {old_status} | {new_status} | {reason_based_on_findings} |
+
+{If no strategy updates:}
+*No strategy status changes identified during this review.*
+
+##### Proposed Ambitions
+
+{If ambitions_proposed > 0:}
+The following ambitions are proposed based on review findings. User approval required before adding to ROAD_MAP.md.
+
+| Proposed Ambition | Priority | Rationale |
+|-------------------|----------|-----------|
+| {ambition_name} | {priority} | {based_on_finding} |
+
+{If no ambitions proposed:}
+*No new ambitions proposed during this review.*
+
+##### Gap Notes
+
+{If gaps identified in Open Questions or architectural concerns:}
+The following concerns have been noted in the ROAD_MAP.md Open Questions section:
+- {gap_description} (added to Open Questions)
+
+{If no gaps:}
+*No architectural gaps identified for Open Questions.*
+
+---
 
 #### Recommendations
 
@@ -8275,6 +8492,210 @@ If reviewing specific domains, update relevant registries:
 - `.claude/docs/registries/lean-files.md`
 - `.claude/docs/registries/documentation.md`
 
+##### 6.5. Revise ROADMAP.md Based on Findings
+
+**Purpose**: Update ROAD_MAP.md to reflect review findings. This includes updating strategy statuses, proposing new ambitions, and noting architectural gaps.
+
+**Precondition**: `roadmap_context` from Section 1.6 must exist. If `roadmap_context.loaded_successfully` is false, skip this section entirely.
+
+###### 6.5.1. Strategy Status Updates
+
+Analyze review findings against active strategies to determine if status changes are warranted:
+
+**Status change criteria:**
+
+| Current Status | Condition for Change | New Status |
+|----------------|---------------------|------------|
+| ACTIVE | All focus area files pass, no related issues found | CONCLUDED |
+| ACTIVE | Major blockers identified in focus areas | PAUSED |
+| PAUSED | Blocking issues resolved | ACTIVE |
+
+**For each ACTIVE strategy:**
+```
+1. Check if review findings relate to strategy.focus_areas
+2. Assess overall health of focus area files:
+   - No critical/high issues → healthy
+   - Has critical/high issues → blocked
+3. If strategy objectives appear met (based on findings), propose CONCLUDED
+4. If new blockers found, propose PAUSED
+
+strategy_update = {
+  "name": strategy.name,
+  "current_status": "ACTIVE",
+  "proposed_status": "PAUSED",
+  "reason": "Critical issue found in {focus_area}: {issue_description}"
+}
+```
+
+**Edit process for status changes:**
+
+1. Use AskUserQuestion to confirm each status change:
+   ```json
+   {
+     "question": "Update strategy '{name}' from {current} to {proposed}?",
+     "header": "Strategy Status Update",
+     "multiSelect": false,
+     "options": [
+       {"label": "Yes, update status", "description": "Reason: {reason}"},
+       {"label": "No, keep current status", "description": "No change to ROAD_MAP.md"}
+     ]
+   }
+   ```
+
+2. If approved, use Edit tool:
+   ```
+   old_string: "**Status**: ACTIVE"
+   new_string: "**Status**: PAUSED"
+   ```
+
+3. Add outcome entry under strategy:
+   ```
+   old_string: "**Outcomes**:\n- {existing_outcome}"
+   new_string: "**Outcomes**:\n- {existing_outcome}\n- [{DATE}] Status changed to PAUSED: {reason}"
+   ```
+
+**Track changes:**
+```json
+{
+  "strategies_updated": 1,
+  "strategy_changes": [
+    {"name": "Modal Soundness via FMP", "from": "ACTIVE", "to": "PAUSED", "reason": "..."}
+  ]
+}
+```
+
+###### 6.5.2. Propose New Ambitions
+
+Identify gaps from review findings that warrant new ambitions:
+
+**Gap identification criteria:**
+- Pattern of issues across multiple files suggesting systemic problem
+- Missing functionality referenced multiple times
+- Quality debt (sorry count, axiom usage) above thresholds
+- Incomplete areas not covered by existing ambitions
+
+**For each significant gap:**
+```
+gap = {
+  "description": "Improved test coverage for modal logic theorems",
+  "evidence": ["5 untested theorems found in Bimodal/", "3 sorry placeholders"],
+  "priority": "MEDIUM" (based on severity distribution),
+  "timeframe": "SHORT-TERM" (based on effort estimate)
+}
+```
+
+**Ambition proposal process:**
+
+1. Formulate proposed ambition:
+   ```markdown
+   ### Ambition: {gap.description}
+   **Priority**: {gap.priority}
+   **Timeframe**: {gap.timeframe}
+
+   *Rationale*: Identified during review on {DATE}. Evidence: {gap.evidence}
+
+   **Success Criteria**:
+   - [ ] {derived from gap findings}
+
+   **Description**:
+   {Detailed description based on gap analysis}
+
+   **Related Phases**: {inferred from file locations}
+   **References**:
+   - [Review Report](specs/reviews/review-{DATE}.md) - Gap identification
+   ```
+
+2. Present via AskUserQuestion:
+   ```json
+   {
+     "question": "Add new ambition to ROAD_MAP.md?",
+     "header": "Proposed Ambition: {gap.description}",
+     "multiSelect": false,
+     "options": [
+       {"label": "Yes, add ambition", "description": "Priority: {priority}, Timeframe: {timeframe}"},
+       {"label": "No, skip this ambition", "description": "Will be noted in review report only"},
+       {"label": "Defer to later", "description": "Will be marked as suggestion in review report"}
+     ]
+   }
+   ```
+
+3. If approved, use Edit tool to append to Ambitions section:
+   ```
+   old_string: "*Ambitions section populated in Phase 3.*"
+   new_string: "### Ambition: {name}\n...\n\n---"
+   ```
+   OR if section has content:
+   ```
+   old_string: "---\n\n## Dead Ends"
+   new_string: "---\n\n### Ambition: {name}\n...\n\n---\n\n## Dead Ends"
+   ```
+
+**Track changes:**
+```json
+{
+  "ambitions_proposed": 2,
+  "ambitions_approved": 1,
+  "ambitions_deferred": 1,
+  "proposed_ambitions": [
+    {"name": "Improved test coverage", "status": "approved"},
+    {"name": "Documentation refresh", "status": "deferred"}
+  ]
+}
+```
+
+###### 6.5.3. Update Active Tasks Section
+
+If new tasks were created (from Section 5.6), sync them to any relevant roadmap sections:
+
+**Link newly created tasks to roadmap items:**
+```
+For each created task:
+  If task relates to a roadmap phase item:
+    Update checkbox annotation: "- [ ] {item} (Task {N})"
+```
+
+**Update phase progress counts** if checkboxes were modified.
+
+###### 6.5.4. Add Gap Notes to Open Questions
+
+For gaps that don't warrant full ambitions but need tracking:
+
+**Gap note criteria:**
+- Architectural concerns requiring discussion
+- Unclear requirements needing clarification
+- Technical debt observations
+
+**Edit process:**
+1. Find "## Open Questions" section in ROAD_MAP.md
+2. Append gap note:
+   ```
+   old_string: "## Open Questions\n\n{existing_content}"
+   new_string: "## Open Questions\n\n- [{DATE}] {gap_description} (from review)\n{existing_content}"
+   ```
+
+**Track changes:**
+```json
+{
+  "gap_notes_added": 1,
+  "gap_notes": ["Unclear ownership of PropositionalLogic vs Bimodal boundary"]
+}
+```
+
+###### 6.5.5. Summary Variables for Report
+
+After all revision operations, build summary for Section 4 report:
+```json
+{
+  "roadmap_revisions": {
+    "strategies_updated": 1,
+    "ambitions_proposed": 2,
+    "ambitions_approved": 1,
+    "gap_notes_added": 1,
+    "roadmap_modified": true
+  }
+}
+```
+
 ##### 7. Git Commit
 
 Commit review report, state files, task state, and any roadmap changes:
@@ -8297,6 +8718,8 @@ git commit -m "$(cat <<'EOF'
 review: {scope} code review
 
 Roadmap: {annotations_made} items annotated
+Strategies: {strategies_updated} updated
+Ambitions: {ambitions_approved} added ({ambitions_proposed} proposed)
 Tasks: {tasks_created} created ({grouped_count} grouped, {individual_count} individual)
 
 Session: {session_id}
@@ -8306,7 +8729,7 @@ EOF
 )"
 ```
 
-This ensures review report, state tracking, task state, and roadmap updates are committed together.
+This ensures review report, state tracking, task state, roadmap updates, and strategy/ambition changes are committed together.
 
 ##### 8. Output
 
@@ -8329,6 +8752,19 @@ Roadmap Progress:
 - Annotations made: {N} items marked complete
 - Current focus: {phase_name} ({priority})
 
+{If roadmap_context.loaded_successfully:}
+Roadmap Revisions:
+- Strategies updated: {strategies_updated}
+  {For each strategy change:}
+  - {strategy.name}: {from} -> {to} ({reason})
+- Ambitions: {ambitions_approved} added, {ambitions_proposed - ambitions_approved} deferred
+  {For each approved ambition:}
+  - Added: "{ambition.name}" ({priority})
+- Gap notes: {gap_notes_added} added to Open Questions
+
+{If not roadmap_context.loaded_successfully:}
+Roadmap Context: Strategies/Ambitions sections not populated (see Task 833)
+
 {If tasks created via interactive selection}
 Tasks Created: {N} total
 - Grouped tasks: {grouped_count}
@@ -8345,9 +8781,159 @@ Auto-created {N} tasks for critical/high issues:
 {If no tasks created}
 No tasks created (user selected "none" or empty selection).
 
+---
+
+Task Suggestions: {task_suggestions.suggestions_shown} recommended next steps
+- By source: {review_issue}x review issues, {roadmap_ambition}x ambition criteria, {stale_task}x stale tasks
+{If roadmap_context.loaded_successfully and strategic_focus:}
+- Strategic focus: {strategic_focus}
+
+Top suggestions (see Section 8.5 output for full list):
+1. [{priority}] {title} - `{suggested_command}`
+2. [{priority}] {title} - `{suggested_command}`
+3. [{priority}] {title} - `{suggested_command}`
+
+---
+
 Top recommendations for next review:
 1. {recommendation}
 2. {recommendation}
+```
+
+##### 8.5. Task Suggestions
+
+**Purpose**: Provide actionable task suggestions based on review findings, roadmap context, and task queue state. This follows the patterns established by /todo and /learn commands.
+
+###### 8.5.1. Collect Suggestion Sources
+
+Gather candidates from multiple sources:
+
+**1. Unaddressed Review Issues (not converted to tasks):**
+```json
+{
+  "source": "review_issue",
+  "title": "{issue_description}",
+  "priority": "{severity_to_priority}",
+  "rationale": "Found during {scope} review: {impact}",
+  "suggested_command": "/task \"{title}\" --language={lang}"
+}
+```
+
+**2. Incomplete Roadmap Items from Strategies/Ambitions:**
+```json
+{
+  "source": "roadmap_ambition",
+  "title": "Complete: {criterion_text}",
+  "priority": "{ambition.priority}",
+  "rationale": "From ambition '{ambition.name}' - {criteria_progress}",
+  "suggested_command": "/task \"Complete: {criterion}\" --language=lean"
+}
+```
+
+```json
+{
+  "source": "roadmap_strategy",
+  "title": "Advance: {strategy.name}",
+  "priority": "high" (if ACTIVE),
+  "rationale": "Active strategy with focus on {focus_areas}",
+  "suggested_command": "/research {related_task} \"focus on {focus_area}\""
+}
+```
+
+**3. Stale Tasks in TODO.md:**
+```bash
+### Find tasks in not_started status older than 7 days
+jq '.active_projects[] | select(.status == "not_started") | select(.created < "{7_days_ago}")' specs/state.json
+```
+
+```json
+{
+  "source": "stale_task",
+  "title": "Resume: Task #{N} - {title}",
+  "priority": "medium",
+  "rationale": "Not started for {days} days",
+  "suggested_command": "/research {N}"
+}
+```
+
+**4. Follow-up Opportunities from Completed Work:**
+```json
+{
+  "source": "followup",
+  "title": "{follow_up_description}",
+  "priority": "low",
+  "rationale": "Opportunity identified from completed task #{N}",
+  "suggested_command": "/task \"{title}\""
+}
+```
+
+###### 8.5.2. Prioritize Suggestions
+
+Apply prioritization scoring:
+
+| Factor | Score |
+|--------|-------|
+| Source is review_issue with Critical severity | +10 |
+| Source is review_issue with High severity | +7 |
+| Source is roadmap_ambition with HIGH priority | +6 |
+| Source is roadmap_strategy (ACTIVE) | +5 |
+| Source is stale_task (>14 days) | +4 |
+| Source is stale_task (7-14 days) | +2 |
+| Source is followup | +1 |
+| Related to active strategy focus area | +3 |
+| Addresses high-priority ambition criterion | +3 |
+
+Sort suggestions by score descending.
+
+###### 8.5.3. Limit and Format Output
+
+**Limit to 3-5 suggestions** to keep output focused and actionable:
+- If <5 high-priority items: Include all high-priority + top medium
+- If >5 high-priority items: Include only top 5 by score
+
+**Format pattern (following /todo):**
+```
+---
+
+#### Recommended Next Steps
+
+Based on review findings and roadmap context, consider:
+
+1. **[{priority}]** {title}
+   - *Rationale*: {rationale}
+   - *Command*: `{suggested_command}`
+
+2. **[{priority}]** {title}
+   - *Rationale*: {rationale}
+   - *Command*: `{suggested_command}`
+
+3. **[{priority}]** {title}
+   - *Rationale*: {rationale}
+   - *Command*: `{suggested_command}`
+
+{If roadmap_context.loaded_successfully:}
+**Strategic Focus**: Active strategies suggest prioritizing work in: {focus_areas}
+
+{If stale tasks found:}
+**Stale Tasks**: {N} tasks have been not_started for >7 days. Consider `/research` or `/abandon` for each.
+```
+
+###### 8.5.4. Variables for Final Output
+
+Set variables for Section 8 output integration:
+```json
+{
+  "task_suggestions": {
+    "total_candidates": 12,
+    "suggestions_shown": 5,
+    "by_source": {
+      "review_issue": 3,
+      "roadmap_ambition": 1,
+      "stale_task": 1
+    },
+    "strategic_focus": ["Bimodal soundness", "finite model construction"]
+  }
+}
 ```
 
 
@@ -8624,8 +9210,8 @@ When $ARGUMENTS contains a description (no flags):
    ```
 
 2. **Parse description** from $ARGUMENTS:
-   - Remove any trailing flags (--priority, --effort, --language)
-   - Extract optional: priority (default: medium), effort, language
+   - Remove any trailing flags (--effort, --language)
+   - Extract optional: effort, language
 
 3. **Improve description** (transform raw input into well-structured task description):
 
@@ -8702,7 +9288,6 @@ When $ARGUMENTS contains a description (no flags):
         "project_name": "slug",
         "status": "not_started",
         "language": "detected",
-        "priority": "medium",
         "created": $ts,
         "last_updated": $ts
       }] + .active_projects' \
@@ -8719,16 +9304,17 @@ When $ARGUMENTS contains a description (no flags):
      specs/TODO.md
    ```
 
-   **Part B - Add task entry** under appropriate priority section:
+   **Part B - Add task entry** by prepending to `## Tasks` section:
    ```markdown
    ### {N}. {Title}
    - **Effort**: {estimate}
    - **Status**: [NOT STARTED]
-   - **Priority**: {priority}
    - **Language**: {language}
 
    **Description**: {description}
    ```
+
+   **Insertion**: Use sed or Edit to insert the new task entry immediately after the `## Tasks` line, so new tasks appear at the top of the list.
 
    **CRITICAL**: Both state.json AND TODO.md frontmatter MUST have matching next_project_number values.
 
@@ -8787,7 +9373,7 @@ Parse task ranges after --recover (e.g., "343-345", "337, 343"):
    fi
    ```
 
-   **Update TODO.md**: Add recovered task entry under appropriate priority section
+   **Update TODO.md**: Prepend recovered task entry to `## Tasks` section
 
 2. Git commit: "task: recover tasks {ranges}"
 
@@ -8878,7 +9464,6 @@ fi
 slug=$(echo "$task_data" | jq -r '.project_name')
 status=$(echo "$task_data" | jq -r '.status')
 language=$(echo "$task_data" | jq -r '.language // "general"')
-priority=$(echo "$task_data" | jq -r '.priority // "medium"')
 ```
 
 ##### Step 2: Load Task Artifacts
@@ -8936,7 +9521,6 @@ phases=$(grep -E "^### Phase [0-9]+:" "$plan_file" 2>/dev/null)
 
 **Status**: {status from state.json}
 **Language**: {language}
-**Priority**: {priority}
 
 ##### Artifacts Found
 - Plan: {path or "Not found"}
@@ -8974,7 +9558,6 @@ For each incomplete phase, extract:
    - Goal: {extracted phase goal}
    - Effort: {inherited or "TBD"}
    - Language: {inherited from parent}
-   - Priority: {inherited from parent}
    - Ref: Parent task #{N}
 ```
 
@@ -9025,7 +9608,6 @@ jq --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
      "project_name": "followup_{parent_N}_phase_{P}",
      "status": "not_started",
      "language": "'{language}'",
-     "priority": "'{priority}'",
      "description": $desc,
      "parent_task": '{parent_N}',
      "created": $ts,
@@ -9537,6 +10119,14 @@ Total CLAUDE.md suggestions: {N}
 
 Note: Interactive selection will prompt for which suggestions to apply via Edit tool.
 
+Changelog updates (for completed tasks):
+
+Entries to add:
+- {YYYY-MM-DD}: Task #{N1}, Task #{N2} ({N} entries, new date header)
+- {YYYY-MM-DD}: Task #{N3} ({N} entry, existing date header)
+
+Total: {N} entries across {M} dates
+
 Total tasks: {N}
 Total orphans: {N} (specs: {N}, archive: {N})
 Total misplaced: {N}
@@ -9549,6 +10139,13 @@ If no roadmap matches were found (from Step 3.5), omit the "Roadmap updates" sec
 If no CLAUDE.md suggestions were found (from Step 3.6), omit the "CLAUDE.md suggestions" section.
 
 If CLAUDE.md suggestions exist, the "Note: Interactive selection..." line is always shown in dry-run.
+
+If Changelog section doesn't exist in ROAD_MAP.md, omit the "Changelog updates" section and show:
+```
+Note: Changelog section not found in ROAD_MAP.md. Run Task 833 to add the section structure.
+```
+
+If no completed tasks are being archived (only abandoned), omit the "Changelog updates" section.
 
 Exit here if dry run.
 
@@ -10045,6 +10642,149 @@ Track for output:
 - `metrics_build_errors`: Current build errors
 - `metrics_synced`: true/false indicating if sync was performed
 
+##### 5.8. Update Changelog Section
+
+**Condition**: At least one completed task is being archived AND Changelog section exists in ROAD_MAP.md
+
+**Step 5.8.1: Check prerequisites**:
+```bash
+### Verify Changelog section exists
+if ! grep -q "^## Changelog" specs/ROAD_MAP.md; then
+  echo "Note: Changelog section not found in ROAD_MAP.md (requires Task 833)"
+  echo "Skipping changelog updates"
+  changelog_skipped=true
+else
+  changelog_skipped=false
+fi
+
+### Filter only completed tasks (not abandoned)
+completed_for_changelog=()
+for task in "${completed_tasks[@]}"; do
+  status=$(echo "$task" | jq -r '.status')
+  if [ "$status" = "completed" ]; then
+    completed_for_changelog+=("$task")
+  fi
+done
+
+### Skip if no completed tasks
+if [ ${#completed_for_changelog[@]} -eq 0 ]; then
+  echo "No completed tasks to add to changelog"
+  changelog_skipped=true
+fi
+```
+
+**Step 5.8.2: Group completed tasks by date**:
+```bash
+if [ "$changelog_skipped" != "true" ]; then
+  # Build date -> tasks map using arrays (bash associative arrays)
+  declare -A tasks_by_date
+
+  for task in "${completed_for_changelog[@]}"; do
+    # Extract date from task completion timestamp (ISO8601 -> YYYY-MM-DD)
+    completed_ts=$(echo "$task" | jq -r '.last_updated // .completed // .archived')
+    date=$(echo "$completed_ts" | cut -c1-10)  # YYYY-MM-DD
+    project_num=$(echo "$task" | jq -r '.project_number')
+    project_name=$(echo "$task" | jq -r '.project_name')
+    summary=$(echo "$task" | jq -r '.completion_summary // "Completed"')
+
+    # Check for summary artifact
+    summary_path="specs/${project_num}_${project_name}/summaries/"
+    if [ -d "$summary_path" ] && [ -n "$(ls -A "$summary_path" 2>/dev/null)" ]; then
+      summary_file=$(ls -t "$summary_path"/*.md 2>/dev/null | head -1)
+      if [ -n "$summary_file" ]; then
+        entry="- **Task ${project_num}**: ${summary} [(details)](${summary_file})"
+      else
+        entry="- **Task ${project_num}**: ${summary}"
+      fi
+    else
+      entry="- **Task ${project_num}**: ${summary}"
+    fi
+
+    # Append to date's entry list
+    if [ -n "${tasks_by_date[$date]}" ]; then
+      tasks_by_date[$date]+=$'\n'"${entry}"
+    else
+      tasks_by_date[$date]="${entry}"
+    fi
+  done
+fi
+```
+
+**Step 5.8.3: Update ROAD_MAP.md for each date**:
+```bash
+changelog_entries_added=0
+changelog_dates_created=0
+
+if [ "$changelog_skipped" != "true" ]; then
+  # Sort dates in reverse chronological order
+  sorted_dates=($(echo "${!tasks_by_date[@]}" | tr ' ' '\n' | sort -r))
+
+  for date in "${sorted_dates[@]}"; do
+    entries="${tasks_by_date[$date]}"
+    entry_count=$(echo "$entries" | wc -l)
+
+    # Check if date header exists
+    date_header="### ${date}"
+    if grep -q "^${date_header}$" specs/ROAD_MAP.md; then
+      # Append after existing date header
+      # Use Edit tool: find the date header line and the empty line after it
+      # Insert entries between the header and existing content
+
+      # The edit pattern: "### YYYY-MM-DD\n\n" -> "### YYYY-MM-DD\n\n{entries}\n"
+      old_pattern="${date_header}"$'\n\n'
+      new_pattern="${date_header}"$'\n\n'"${entries}"$'\n'
+
+      Edit old_string: "${old_pattern}"
+           new_string: "${new_pattern}"
+
+      echo "Appended ${entry_count} entries to existing date ${date}"
+    else
+      # Insert new date header in reverse chronological position
+      # Find first date header that is older (lexically smaller) than new date
+      # Insert before that, or after ## Changelog if no older dates
+
+      # Get existing date headers
+      existing_dates=$(grep -o "^### [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}$" specs/ROAD_MAP.md | sed 's/^### //' | sort -r)
+
+      insert_before=""
+      for existing_date in $existing_dates; do
+        if [[ "$existing_date" < "$date" ]]; then
+          insert_before="### ${existing_date}"
+          break
+        fi
+      done
+
+      if [ -n "$insert_before" ]; then
+        # Insert before older date
+        new_content="${date_header}"$'\n\n'"${entries}"$'\n\n'"${insert_before}"
+        Edit old_string: "${insert_before}"
+             new_string: "${new_content}"
+      else
+        # No older dates, insert right after ## Changelog header
+        old_changelog="## Changelog"$'\n\n'
+        new_changelog="## Changelog"$'\n\n'"${date_header}"$'\n\n'"${entries}"$'\n\n'
+        Edit old_string: "${old_changelog}"
+             new_string: "${new_changelog}"
+      fi
+
+      echo "Created date header ${date} with ${entry_count} entries"
+      ((changelog_dates_created++))
+    fi
+
+    changelog_entries_added=$((changelog_entries_added + entry_count))
+  done
+fi
+```
+
+**Step 5.8.4: Track changelog changes for reporting**:
+```bash
+### Store for output reporting
+changelog_summary="Changelog: ${changelog_entries_added} entries added"
+if [ "$changelog_dates_created" -gt 0 ]; then
+  changelog_summary+=" (${changelog_dates_created} new date headers)"
+fi
+```
+
 ##### 6. Git Commit
 
 ```bash
@@ -10052,28 +10792,45 @@ git add specs/
 git commit -m "todo: archive {N} completed tasks"
 ```
 
-Include roadmap, orphan, and misplaced counts in message as applicable:
+Include roadmap, changelog, orphan, and misplaced counts in message as applicable:
 ```bash
-### If roadmap items updated, orphans tracked, and misplaced moved:
-git commit -m "todo: archive {N} tasks, update {R} roadmap items, track {M} orphans, move {P} misplaced"
+### Build commit message dynamically based on what was updated
+commit_parts=("archive {N} tasks")
 
-### If roadmap items updated only:
-git commit -m "todo: archive {N} tasks, update {R} roadmap items"
+### Add roadmap items if updated
+if [ "$roadmap_completed_annotated" -gt 0 ] || [ "$roadmap_abandoned_annotated" -gt 0 ]; then
+  R=$((roadmap_completed_annotated + roadmap_abandoned_annotated))
+  commit_parts+=("update {R} roadmap items")
+fi
 
-### If roadmap items updated and orphans tracked:
-git commit -m "todo: archive {N} tasks, update {R} roadmap items, track {M} orphaned directories"
+### Add changelog entries if added
+if [ "$changelog_entries_added" -gt 0 ]; then
+  commit_parts+=("add {C} changelog entries")
+fi
 
-### If orphans tracked and misplaced moved (no roadmap):
-git commit -m "todo: archive {N} tasks, track {M} orphans, move {P} misplaced directories"
+### Add orphans if tracked
+if [ "$orphans_tracked" -gt 0 ]; then
+  commit_parts+=("track {M} orphans")
+fi
 
-### If only orphans tracked (no roadmap):
-git commit -m "todo: archive {N} tasks and track {M} orphaned directories"
+### Add misplaced if moved
+if [ "$misplaced_moved" -gt 0 ]; then
+  commit_parts+=("move {P} misplaced")
+fi
 
-### If only misplaced moved (no roadmap):
-git commit -m "todo: archive {N} tasks and move {P} misplaced directories"
+### Join parts with commas
+git commit -m "todo: $(IFS=', '; echo "${commit_parts[*]}")"
+
+### Example outputs:
+### "todo: archive 3 tasks"
+### "todo: archive 3 tasks, update 2 roadmap items"
+### "todo: archive 3 tasks, update 2 roadmap items, add 3 changelog entries"
+### "todo: archive 3 tasks, add 2 changelog entries, track 1 orphans"
 ```
 
-Where `{R}` = roadmap_completed_annotated + roadmap_abandoned_annotated (total roadmap items updated).
+Where:
+- `{R}` = roadmap_completed_annotated + roadmap_abandoned_annotated (total roadmap items updated)
+- `{C}` = changelog_entries_added (total changelog entries added)
 
 ##### 7. Output
 
@@ -10106,6 +10863,10 @@ Roadmap updated: {N} items
   - {item text} (line {N})
 - Skipped (already annotated): {N}
 
+Changelog updated: {C} entries
+- {YYYY-MM-DD}: {N} entries (new date header)
+- {YYYY-MM-DD}: {N} entries (appended)
+
 CLAUDE.md suggestions applied: {N}
 - Task #{N1}: Added {section}
 - Task #{N2}: Updated {section}
@@ -10122,9 +10883,6 @@ Skipped (no directory): {N}
 - Task #{N6}
 
 Active tasks remaining: {N}
-- High priority: {N}
-- Medium priority: {N}
-- Low priority: {N}
 
 Repository metrics updated:
 - sorry_count: {N}
@@ -10144,6 +10902,12 @@ If no misplaced directories were moved (either none found or user skipped):
 If no roadmap items were updated (no matches found in Step 3.5):
 - Omit the "Roadmap updated" section
 
+If no changelog entries were added (changelog_skipped=true or no completed tasks):
+- Omit the "Changelog updated" section
+
+If changelog section was missing from ROAD_MAP.md:
+- Show note: "Note: Changelog section not found in ROAD_MAP.md (requires Task 833)"
+
 If no CLAUDE.md suggestions were collected (no meta tasks or all had "none" action):
 - Omit the "CLAUDE.md suggestions applied/failed/skipped" sections
 
@@ -10152,6 +10916,180 @@ If all CLAUDE.md suggestions were successfully applied:
 
 If no suggestions were skipped (all selected or "Skip all" not chosen):
 - Omit the "CLAUDE.md suggestions skipped" section
+
+##### 7.5. Generate Task Suggestions
+
+**Condition**: Always execute at end of /todo
+
+This step analyzes sources and proposes 3-5 next tasks, displayed as the final output section.
+
+**Step 7.5.1: Scan active tasks**:
+```bash
+### Get all active tasks
+active_tasks=$(jq '.active_projects[]' specs/state.json)
+active_count=$(jq '.active_projects | length' specs/state.json)
+
+### Find unblocked tasks (no blockedBy or all deps completed)
+unblocked_tasks=()
+for task_json in $(jq -c '.active_projects[]' specs/state.json); do
+  blocked_by=$(echo "$task_json" | jq -r '.blockedBy[]?' 2>/dev/null)
+
+  if [ -z "$blocked_by" ]; then
+    # No dependencies, check if status is not_started or researched/planned
+    status=$(echo "$task_json" | jq -r '.status')
+    if [ "$status" = "not_started" ] || [ "$status" = "researched" ] || [ "$status" = "planned" ]; then
+      project_num=$(echo "$task_json" | jq -r '.project_number')
+      project_name=$(echo "$task_json" | jq -r '.project_name')
+      unblocked_tasks+=("${project_num}:${project_name}:${status}")
+    fi
+  fi
+done
+
+### Find stale tasks (not_started for >7 days)
+stale_tasks=()
+current_ts=$(date +%s)
+for task_json in $(jq -c '.active_projects[]' specs/state.json); do
+  status=$(echo "$task_json" | jq -r '.status')
+  if [ "$status" = "not_started" ]; then
+    created=$(echo "$task_json" | jq -r '.created // .last_updated // empty')
+    if [ -n "$created" ]; then
+      created_ts=$(date -d "$created" +%s 2>/dev/null || echo 0)
+      days_old=$(( (current_ts - created_ts) / 86400 ))
+      if [ "$days_old" -ge 7 ]; then
+        project_num=$(echo "$task_json" | jq -r '.project_number')
+        project_name=$(echo "$task_json" | jq -r '.project_name')
+        stale_tasks+=("${project_num}:${project_name}:${days_old}")
+      fi
+    fi
+  fi
+done
+```
+
+**Step 7.5.2: Parse ROADMAP.md sections** (if Task 833 implemented):
+```bash
+### Check if Ambitions section exists
+if grep -q "^## Ambitions" specs/ROAD_MAP.md; then
+  # Extract unchecked criteria from Ambitions
+  # Pattern: "- [ ] {criterion text}"
+  ambition_unchecked=$(sed -n '/^## Ambitions/,/^## /p' specs/ROAD_MAP.md | grep -c "^[[:space:]]*- \[ \]" || echo 0)
+
+  # Extract specific unchecked items (first 3)
+  ambition_items=$(sed -n '/^## Ambitions/,/^## /p' specs/ROAD_MAP.md | grep "^[[:space:]]*- \[ \]" | head -3)
+else
+  ambition_unchecked=0
+  ambition_items=""
+fi
+
+### Check if Strategies section exists
+if grep -q "^## Strategies" specs/ROAD_MAP.md; then
+  # Find ACTIVE strategies with next_steps
+  # Pattern: "**Status**: ACTIVE" followed by "**Next Steps**:"
+  active_strategies=$(sed -n '/^## Strategies/,/^## /p' specs/ROAD_MAP.md | grep -B5 "^\*\*Status\*\*: ACTIVE" | grep "^### " | head -3)
+else
+  active_strategies=""
+fi
+```
+
+**Step 7.5.3: Analyze recent completions**:
+```bash
+### Check for follow-up patterns from just-archived tasks
+follow_up_suggestions=()
+
+### Pattern 1: If many sorries remain after implementation, suggest /learn
+if [ "$metrics_sorry_count" -gt 100 ]; then
+  follow_up_suggestions+=("maintenance:Consider running /learn to identify cleanup opportunities (sorry_count: ${metrics_sorry_count})")
+fi
+
+### Pattern 2: If tasks were completed in a related area, suggest next phase
+### (This is contextual based on completed task summaries)
+for task in "${completed_for_changelog[@]}"; do
+  summary=$(echo "$task" | jq -r '.completion_summary // empty')
+  # Look for patterns suggesting follow-up work
+  if echo "$summary" | grep -qi "phase 1\|first step\|initial"; then
+    project_num=$(echo "$task" | jq -r '.project_number')
+    follow_up_suggestions+=("followup:Task ${project_num} completed initial work - check for Phase 2 tasks")
+  fi
+done
+```
+
+**Step 7.5.4: Generate prioritized suggestions** (max 5):
+```bash
+suggestions=()
+
+### Priority 1: Unblocked tasks (ready to start)
+for task_info in "${unblocked_tasks[@]}"; do
+  [ ${#suggestions[@]} -ge 5 ] && break
+  IFS=':' read -r num name status <<< "$task_info"
+  if [ "$status" = "not_started" ]; then
+    suggestions+=("**Ready to start**: Task ${num} (${name}) - Run \`/research ${num}\` to begin")
+  elif [ "$status" = "researched" ]; then
+    suggestions+=("**Ready to plan**: Task ${num} (${name}) - Run \`/plan ${num}\` to create implementation plan")
+  elif [ "$status" = "planned" ]; then
+    suggestions+=("**Ready to implement**: Task ${num} (${name}) - Run \`/implement ${num}\` to execute")
+  fi
+done
+
+### Priority 2: Stale tasks (need attention)
+for task_info in "${stale_tasks[@]}"; do
+  [ ${#suggestions[@]} -ge 5 ] && break
+  IFS=':' read -r num name days <<< "$task_info"
+  suggestions+=("**Stale task**: Task ${num} (${name}) has been pending ${days} days - consider prioritizing or \`/task --abandon ${num}\`")
+done
+
+### Priority 3: Ambition progress (if section exists)
+if [ "$ambition_unchecked" -gt 0 ]; then
+  [ ${#suggestions[@]} -ge 5 ] || suggestions+=("**Ambition progress**: ${ambition_unchecked} unchecked criteria in Ambitions section")
+fi
+
+### Priority 4: Strategy next steps (if section exists)
+if [ -n "$active_strategies" ]; then
+  [ ${#suggestions[@]} -ge 5 ] || suggestions+=("**Active strategies**: Check Strategies section for next steps on active items")
+fi
+
+### Priority 5: Follow-up suggestions
+for followup in "${follow_up_suggestions[@]}"; do
+  [ ${#suggestions[@]} -ge 5 ] && break
+  IFS=':' read -r type message <<< "$followup"
+  suggestions+=("**${type^}**: ${message}")
+done
+
+### If no suggestions, default message
+if [ ${#suggestions[@]} -eq 0 ]; then
+  suggestions=("All tasks look good! No immediate actions needed.")
+fi
+```
+
+**Step 7.5.5: Display suggestions**:
+```
+#### Task Suggestions
+
+Based on analysis of active tasks, ROADMAP, and recent completions:
+
+##### Recommended Next Steps
+
+1. {suggestion 1}
+
+2. {suggestion 2}
+
+3. {suggestion 3}
+
+4. {suggestion 4}
+
+5. {suggestion 5}
+
+---
+
+Active tasks: {N} | Completed today: {M} | Repository health: {status}
+```
+
+If no suggestions are available (extremely rare):
+```
+#### Task Suggestions
+
+All looks good! No immediate actions needed.
+
+Active tasks: {N} | Repository health: {status}
+```
 
 #### Notes
 
@@ -10293,6 +11231,61 @@ Users can choose "Skip all" to decline automatic application. Suggestions are th
 
 **Edit Failure Handling**:
 If an Edit operation fails (section not found, text mismatch), the failure is logged and reported. The user can manually apply the suggestion afterward.
+
+##### Changelog Updates
+
+**Overview**:
+Step 5.8 automatically updates the ROAD_MAP.md Changelog section when archiving completed tasks.
+
+**Prerequisites**:
+- Task 833 must be implemented first (creates the Changelog section structure)
+- Only completed tasks are added (abandoned tasks are NOT included in Changelog)
+
+**Entry Format**:
+```markdown
+##### YYYY-MM-DD
+
+- **Task {N}**: {completion_summary} [(details)](path/to/summary)
+```
+
+**Behavior**:
+1. Groups completed tasks by their completion date (YYYY-MM-DD)
+2. If a date header exists, appends new entries after it
+3. If a date header doesn't exist, creates it in reverse chronological order
+4. Optionally includes a link to the implementation summary if it exists
+
+**Graceful Degradation**:
+- If Changelog section is missing from ROAD_MAP.md, Step 5.8 is skipped with a note
+- If no completed tasks are being archived, Step 5.8 is a no-op
+
+**Date Extraction**:
+The date is extracted from the task's `last_updated`, `completed`, or `archived` timestamp in state.json.
+
+##### Task Suggestions
+
+**Overview**:
+Step 7.5 generates 3-5 actionable task suggestions displayed at the end of /todo output.
+
+**Sources Analyzed** (in priority order):
+1. **Active tasks**: Identifies unblocked tasks ready to start
+2. **Stale tasks**: Finds tasks that have been `not_started` for >7 days
+3. **ROADMAP Ambitions**: Extracts unchecked success criteria (requires Task 833)
+4. **ROADMAP Strategies**: Finds ACTIVE strategies with next steps (requires Task 833)
+5. **Recent completions**: Identifies follow-up patterns (e.g., Phase 1 complete → check for Phase 2)
+
+**Suggestion Priority**:
+1. Unblocked tasks ready to start/plan/implement
+2. Stale tasks needing attention
+3. Ambition progress indicators
+4. Strategy next step reminders
+5. Maintenance suggestions (e.g., `/learn` for cleanup)
+
+**Output Format**:
+Follows the `/learn` command pattern with numbered recommendations and a summary line.
+
+**Graceful Degradation**:
+- If Ambitions/Strategies sections don't exist, those suggestion sources are skipped
+- If no suggestions are available, displays "All looks good! No immediate actions needed."
 
 ##### jq Pattern Safety (Issue #1132)
 
@@ -14016,7 +15009,7 @@ See `.claude/context/index.md` for navigation to all context files.
 #### Metadata (Markdown block, required)
 - Use a single **Status** field with status markers (`[NOT STARTED]`, `[IN PROGRESS]`, `[BLOCKED]`, `[ABANDONED]`, `[COMPLETED]`) per status-markers.md.
 - Do **not** use YAML front matter. Use a Markdown metadata block at the top of the plan.
-- Required fields: Task, Status, Effort, Priority, Dependencies, Research Inputs, Artifacts, Standards, Type, Lean Intent.
+- Required fields: Task, Status, Effort, Dependencies, Research Inputs, Artifacts, Standards, Type, Lean Intent.
 - Status timestamps belong where transitions happen (e.g., in phases or a short Started/Completed line under the status). Avoid null placeholder fields.
 - Standards must reference this file plus status-markers.md, artifact-management.md, and tasks.md.
 
@@ -14026,7 +15019,6 @@ See `.claude/context/index.md` for navigation to all context files.
 - **Task**: {id} - {title}
 - **Status**: [NOT STARTED]
 - **Effort**: 3 hours
-- **Priority**: Medium
 - **Dependencies**: None
 - **Research Inputs**: None
 - **Artifacts**: plans/implementation-001.md
@@ -14079,10 +15071,11 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
 1. **Overview** – 2-4 sentences: problem, scope, constraints, definition of done. May include "Research Integration" subsection listing integrated reports.
 2. **Goals & Non-Goals** – bullets.
 3. **Risks & Mitigations** – bullets.
-4. **Implementation Phases** – under `## Implementation Phases` with each phase at level `###` and including a status marker at the end of the heading.
-5. **Testing & Validation** – bullets/tests to run.
-6. **Artifacts & Outputs** – enumerate expected outputs with paths.
-7. **Rollback/Contingency** – brief plan if changes must be reverted.
+4. **Sorry Characterization (Lean plans only)** – document sorry handling with framing rules (see below).
+5. **Implementation Phases** – under `## Implementation Phases` with each phase at level `###` and including a status marker at the end of the heading.
+6. **Testing & Validation** – bullets/tests to run.
+7. **Artifacts & Outputs** – enumerate expected outputs with paths.
+8. **Rollback/Contingency** – brief plan if changes must be reverted.
 
 #### Implementation Phases (format)
 - Heading: `### Phase N: {name} [STATUS]`
@@ -14092,6 +15085,104 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
   - **Timing:** expected duration or window
   - **Owner:** (optional)
   - **Started/Completed/Blocked/Abandoned:** timestamp lines when status changes (ISO8601). Do not leave null placeholders.
+
+#### Sorry Characterization (Lean plans only)
+
+**Applicability**: Include this section only for Lean implementation plans. For non-Lean plans (general, meta, latex, typst), this section should be omitted.
+
+**Purpose**: Documents how the implementation will handle sorries - both pre-existing ones being resolved and any new ones being introduced. Sorries are technical debt that block publication and propagate to dependents.
+
+**Required Elements**:
+- **Pre-existing Sorries**: Sorries in scope that this implementation addresses
+- **Expected Resolution**: Which sorries will be resolved and how
+- **New Sorries**: Any sorries introduced (should be rare and justified)
+- **Remaining Debt**: Sorries that will remain after implementation, with remediation timeline
+
+**Framing Rules**:
+
+NEVER use these phrases (they imply sorries can be permanently acceptable):
+- "acceptable sorry"
+- "acceptable limitation"
+- "sorry is fine"
+- "okay to have sorry"
+- "N acceptable sorries"
+
+ALWAYS use these phrases (they acknowledge temporary technical debt):
+- "tolerated during development"
+- "technical debt requiring remediation"
+- "blocks publication"
+- "inherited by dependents"
+- "remediation priority: high/medium/low"
+
+**Example**:
+```markdown
+#### Sorry Characterization
+
+##### Pre-existing Sorries
+- 2 sorries in `Completeness.lean` at lines 42, 78 (inherited from prior work)
+
+##### Expected Resolution
+- Phase 2 resolves line 42 sorry via canonical model construction
+- Phase 3 resolves line 78 sorry via truth preservation lemma
+
+##### New Sorries
+- None expected. If proof complexity requires temporary sorry, will document with remediation timeline.
+
+##### Remaining Debt
+After this implementation:
+- 0 sorries expected in `Completeness.lean`
+- Downstream theorems will no longer inherit sorry status
+- Publication no longer blocked by these specific sorries
+```
+
+#### Axiom Characterization (Lean plans only)
+
+**Applicability**: Include this section only for Lean implementation plans that involve axiom dependencies. For non-Lean plans (general, meta, latex, typst), this section should be omitted.
+
+**Purpose**: Documents how the implementation handles axioms - both pre-existing ones being addressed and any impact on axiom dependencies. Axioms are technical debt that require structural proofs for elimination.
+
+**Required Elements**:
+- **Pre-existing Axioms**: Axioms in scope that this implementation addresses
+- **Expected Resolution**: Which axioms will be eliminated and how (structural proof approach)
+- **New Axioms**: NEVER introduce new axioms (if unavoidable, justify with remediation timeline)
+- **Remaining Debt**: Axioms that will remain after implementation, with downstream impact
+
+**Framing Rules**:
+
+NEVER use these phrases (they imply axioms can be permanently acceptable):
+- "acceptable axiom"
+- "axiom-based solution"
+- "add axiom to solve"
+- "N acceptable axioms"
+
+ALWAYS use these phrases (they acknowledge technical debt requiring structural proof):
+- "axiom as technical debt"
+- "structural proof eliminates axiom"
+- "inherits axiom dependency"
+- "zero-axiom target"
+- "axiom to be removed via [specific approach]"
+- "publication requires axiom disclosure or elimination"
+
+**Example**:
+```markdown
+#### Axiom Characterization
+
+##### Pre-existing Axioms
+- 1 axiom in `SaturatedConstruction.lean`: `singleFamily_modal_backward_axiom` (construction assumption)
+
+##### Expected Resolution
+- Phase 3 eliminates axiom via completed saturation construction
+- Structural proof approach: extend world state family to include backward-reachable worlds
+
+##### New Axioms
+- None. NEVER introduce new axioms. If proof complexity requires temporary gap, use sorry with remediation timeline.
+
+##### Remaining Debt
+After this implementation:
+- 0 axioms expected in saturation module
+- Downstream theorems will no longer inherit axiom dependency
+- Completeness theorem becomes axiom-free (publication-ready without disclosure)
+```
 
 #### Status Marker Requirements
 - Use markers exactly as defined in status-markers.md.
@@ -14111,7 +15202,6 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
 - **Task**: {id} - {title}
 - **Status**: [NOT STARTED]
 - **Effort**: 3 hours
-- **Priority**: High
 - **Dependencies**: None
 - **Research Inputs**: None
 - **Artifacts**: plans/implementation-001.md (this file)
@@ -14166,7 +15256,6 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
 - **Started**: `{ISO8601}` when work begins
 - **Completed**: `{ISO8601}` when work completes
 - **Effort**: `{estimate}`
-- **Priority**: `High | Medium | Low`
 - **Dependencies**: `{list or None}`
 - **Sources/Inputs**: bullet list of inputs consulted
 - **Artifacts**: list of produced artifacts (paths)
@@ -14196,6 +15285,105 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
 - **Alternative Paths**: Where this provides redundancy or different approaches. Example: "Alternative to the algebraic completeness approach in `Theories/Algebraic/`"
 - **Potential Extensions**: New directions this enables or suggests. Example: "Could extend to multi-modal logics, temporal operators"
 
+#### Sorry Characterization (Lean reports only)
+
+**Applicability**: Include this section only for Lean research reports when documenting sorry occurrences. For non-Lean reports (general, meta, latex, typst), this section should be omitted.
+
+**Purpose**: Documents sorry occurrences with accurate technical characterization. Sorries are technical debt that block publication and propagate to dependents - they require explicit remediation, not acceptance.
+
+**Required Elements**:
+- **Current State**: Count and location of sorries in scope
+- **Transitive Impact**: Which theorems/lemmas inherit sorry status from these
+- **Remediation Path**: How each sorry can be resolved (proof approach, missing lemmas, etc.)
+- **Publication Blockers**: Sorries that must be resolved before publication
+
+**Framing Rules**:
+
+NEVER use these phrases (they imply sorries can be permanently acceptable):
+- "acceptable sorry"
+- "acceptable limitation"
+- "sorry is fine"
+- "okay to have sorry"
+- "N acceptable sorries"
+
+ALWAYS use these phrases (they acknowledge temporary technical debt):
+- "tolerated during development"
+- "technical debt requiring remediation"
+- "blocks publication"
+- "inherited by dependents"
+- "remediation priority: high/medium/low"
+
+**Example**:
+```markdown
+#### Sorry Characterization
+
+##### Current State
+- 3 sorries in `Completeness.lean` (lines 42, 78, 156)
+
+##### Transitive Impact
+- `Main.DecidabilityTheorem` inherits sorry status from `Completeness.completeness`
+- All downstream dependents are blocked from publication
+
+##### Remediation Path
+- Line 42: Requires proof of canonical model construction (see task 450)
+- Line 78: Missing lemma for truth preservation, estimated 2 hours
+- Line 156: Requires induction strengthening, medium complexity
+
+##### Publication Status
+These sorries block publication. Remediation priority: high.
+```
+
+#### Axiom Characterization (Lean reports only)
+
+**Applicability**: Include this section only for Lean research reports when documenting axiom dependencies. For non-Lean reports (general, meta, latex, typst), this section should be omitted.
+
+**Purpose**: Documents axiom dependencies with accurate technical characterization. Axioms are technical debt that require structural proofs - they are never an acceptable permanent solution.
+
+**Required Elements**:
+- **Current State**: Count and location of axioms in scope
+- **Transitive Impact**: Which theorems/lemmas inherit axiom dependency
+- **Remediation Path**: Structural proof approach to eliminate each axiom
+- **Publication Status**: Zero-axiom status or explicit disclosure requirement
+
+**Framing Rules**:
+
+NEVER use these phrases (they imply axioms can be permanently acceptable):
+- "acceptable axiom"
+- "axiom-based solution"
+- "add axiom to solve"
+- "N acceptable axioms"
+
+ALWAYS use these phrases (they acknowledge technical debt requiring structural proof):
+- "axiom as technical debt"
+- "axiom requires structural proof"
+- "eliminates need for axiom"
+- "zero-axiom approach"
+- "inherits axiom dependency"
+- "publication requires axiom disclosure or elimination"
+
+**Example**:
+```markdown
+#### Axiom Characterization
+
+##### Current State
+- 1 axiom in `SaturatedConstruction.lean`: `singleFamily_modal_backward_axiom`
+- Purpose: Asserts modal backward direction in single-family simplification
+
+##### Transitive Impact
+- `Completeness.completeness` inherits axiom dependency
+- All downstream theorems using completeness require axiom disclosure
+
+##### Remediation Path
+- Complete saturation construction (Task 856) eliminates axiom
+- Structural proof: extend world state family to include backward-reachable worlds
+- Estimated effort: 4-6 hours
+
+##### Publication Status
+This axiom blocks undisclosed publication. Options:
+- Eliminate via structural proof (preferred)
+- Disclose as explicit assumption in publication
+```
+
 #### Timestamps
 - Include **Started** timestamp when research/analysis begins
 - Include **Completed** timestamp when report is finalized
@@ -14215,7 +15403,6 @@ Plans may include a `plan_metadata` object in state.json tracking plan character
 - **Started**: 2025-12-22T10:00:00Z
 - **Completed**: 2025-12-22T13:00:00Z
 - **Effort**: 3 hours
-- **Priority**: High
 - **Dependencies**: None
 - **Sources/Inputs**: ...
 - **Artifacts**: ...
@@ -15181,7 +16368,6 @@ Recommendation: Fix researcher subagent return format
 - **Started**: `{ISO8601}` when summary drafting begins
 - **Completed**: `{ISO8601}` when published
 - **Effort**: `{estimate}` (time to produce summary)
-- **Priority**: `High | Medium | Low`
 - **Dependencies**: `{list or None}`
 - **Artifacts**: list of linked artifacts summarized
 - **Standards**: status-markers.md, artifact-management.md, tasks.md, this file
@@ -19617,7 +20803,6 @@ Error: Routing mismatch: Lean task must route to lean-* agent
    ### 258. Resolve Truth.lean sorries
    - **Status**: [NOT STARTED]
    - **Language**: lean
-   - **Priority**: High
    ```
 2. Re-run command
 
@@ -20171,7 +21356,6 @@ specs/
       "project_name": "task_slug",
       "status": "planned",
       "language": "lean",
-      "priority": "high",
       "description": "Detailed task description (50-500 chars)",
       "created": "2025-12-29T09:00:00Z",
       "last_updated": "2025-12-29"
@@ -28155,7 +29339,7 @@ Standards for creating, formatting, and managing tasks within the .opencode syst
 
 1.  **Unique IDs**: Every task MUST have a unique ID derived from `state.json`.
 2.  **Atomic**: Tasks should be actionable units of work.
-3.  **Tracked**: Status and priority must be explicitly tracked using the standard markers.
+3.  **Tracked**: Status must be explicitly tracked using standard markers.
 4.  **Linked**: Tasks must link to relevant artifacts (reports, plans, summaries).
 5.  **No emojis**: Task titles, descriptions, and artifacts must not include emojis.
 
@@ -28183,7 +29367,6 @@ Standards for creating, formatting, and managing tasks within the .opencode syst
 **Required Fields**:
 - **Description**: Clear 2-3 sentence description of the task (50-500 chars, auto-generated by description-clarifier or user-provided)
 - **Language**: Task language (lean|markdown|general|python|shell|json|meta, auto-detected by description-clarifier or user-provided)
-- **Priority**: Task priority (Low|Medium|High, auto-detected by description-clarifier or user-provided)
 - **Effort**: Effort estimate (TBD or time estimate, auto-detected by description-clarifier or user-provided)
 - **Status**: Task status ([NOT STARTED]|[IN PROGRESS]|[BLOCKED]|[ABANDONED]|[COMPLETED])
 
@@ -28195,10 +29378,6 @@ Standards for creating, formatting, and managing tasks within the .opencode syst
 - **Impact**: Generic statement (override for specific impact)
 
 **When to Override Defaults**:
-
-Override Priority when:
-- Task is urgent or blocking critical work → High
-- Task is nice-to-have or low impact → Low
 
 Override Type when:
 - Task involves Lean code → lean
@@ -28230,7 +29409,7 @@ Override Impact when:
 ##### Placement
 
 ###### specs/TODO.md
--   Insert under the appropriate Priority section (High, Medium, Low).
+-   Prepend new tasks to the `## Tasks` section (new tasks at top, older tasks sink down).
 -   Reorganization: /todo may regroup pending tasks by kind (feature, documentation, maintenance, research) while preserving numbering and metadata. Completed tasks move to the "Completed" section. Reorganization must not create or modify project directories or artifacts.
 -   Maintain lazy directory creation: no directories are created during TODO reordering.
 
@@ -28239,7 +29418,7 @@ Override Impact when:
 
 #### Command Integration
 
-- `/task` **must** use description-clarifier to research and clarify rough task descriptions, then delegate to task-creator for atomic task creation. description-clarifier generates clear 2-3 sentence descriptions and detects metadata (language, priority, effort). task-creator enforces task standards (Description field mandatory, Language field mandatory, metadata format, required fields) and performs atomic TODO.md + state.json updates. Direct file manipulation is forbidden. Users can skip clarification with --skip-clarification flag if providing complete metadata.
+- `/task` **must** use description-clarifier to research and clarify rough task descriptions, then delegate to task-creator for atomic task creation. description-clarifier generates clear 2-3 sentence descriptions and detects metadata (language, effort). task-creator enforces task standards (Description field mandatory, Language field mandatory, metadata format, required fields) and performs atomic TODO.md + state.json updates. Direct file manipulation is forbidden. Users can skip clarification with --skip-clarification flag if providing complete metadata.
 - `/implement` **must** reuse the plan link attached in specs/TODO.md when present and update that plan in place with status markers. When no plan is linked, `/implement` executes directly (no failure) while preserving lazy directory creation (no project roots/subdirs unless an artifact is written) and numbering/state sync; guidance to use `/plan {task}` remains recommended for complex work.
 - `/implement`, `/review`, and `/todo` **must** keep IMPLEMENTATION_STATUS.md, SORRY_REGISTRY.md, and TACTIC_REGISTRY.md in sync when they change task/plan/implementation status or sorry/tactic counts.
 - `/implement` must emit an implementation summary artifact (standard naming) whenever task execution writes implementation artifacts; status-only paths do not emit summaries. Maintain lazy directory creation.
@@ -28261,8 +29440,8 @@ The `/task` command supports unified task lifecycle management through flags:
 **Standard Usage**:
 ```bash
 /task "Implement feature X"
-/task "Fix bug in module Y" --priority High
-/task "Add documentation" --priority Medium --effort "2 hours" --language markdown
+/task "Fix bug in module Y"
+/task "Add documentation" --effort "2 hours" --language markdown
 ```
 
 **Inline Division**:
@@ -28274,7 +29453,6 @@ The `/task` command supports unified task lifecycle management through flags:
 **Standards**:
 - Description is mandatory (non-empty)
 - Language auto-detected from keywords or specified via --language flag
-- Priority defaults to Medium (Low|Medium|High)
 - Effort defaults to TBD
 - Creates task entries ONLY (never implements)
 - Delegates to task-creator for atomic TODO.md + state.json updates
@@ -28384,13 +29562,13 @@ The `/task` command supports unified task lifecycle management through flags:
 -   [ ] Task ID is unique and retrieved from `state.json`.
 -   [ ] Title is clear and descriptive (max 200 chars).
 -   [ ] Description is clear and actionable (50-500 chars, 2-3 sentences).
--   [ ] Metadata (Description, Language, Effort, Status, Priority) is complete.
+-   [ ] Metadata (Description, Language, Effort, Status) is complete.
 -   [ ] Language field reflects the primary language for the work (e.g., `lean`, `markdown`, `python`, `shell`, `json`, `meta`, `general`).
 -   [ ] Dependencies are correctly listed.
 -   [ ] Acceptance criteria are testable (if provided).
 -   [ ] No emojis are present.
 -   [ ] Metadata format uses `- **Field**:` pattern (not `*Field**:` or other variants).
--   [ ] All required fields present (Description, Language, Effort, Priority, Status).
+-   [ ] All required fields present (Description, Language, Effort, Status).
 
 #### Troubleshooting
 
@@ -28410,7 +29588,7 @@ The `/task` command supports unified task lifecycle management through flags:
    ```
 2. Ensure description is 50-500 characters
 3. Ensure description is clear and actionable
-4. Place Description field after metadata fields (Effort, Status, Priority, Language)
+4. Place Description field after metadata fields (Effort, Status, Language)
 
 **Prevention**:
 - Use /task command to create tasks (enforces Description field via description-clarifier)
@@ -30261,7 +31439,7 @@ Generated orchestrators must:
     "_comment": "References to specialized state files. These files are auto-created if missing."
   },
   "active_projects": [],
-  "_comment_active_projects": "Populated from TODO.md tasks with status [IN PROGRESS], [PLANNED], [RESEARCHED], [BLOCKED]. Each entry should have: project_number, project_name, type, phase, status, priority, language, created, started, last_updated, and optional fields like plan_path, research_completed, blocked, etc.",
+  "_comment_active_projects": "Populated from TODO.md tasks with status [IN PROGRESS], [PLANNED], [RESEARCHED], [BLOCKED]. Each entry should have: project_number, project_name, type, phase, status, language, created, started, last_updated, and optional fields like plan_path, research_completed, blocked, etc.",
   "completed_projects": [],
   "_comment_completed_projects": "Populated from TODO.md tasks with status [COMPLETED]. Each entry should have: project_number, project_name, type, completed, summary.",
   "repository_health": {
@@ -30272,9 +31450,6 @@ Generated orchestrators must:
     "blocked_tasks": "{COUNT_BLOCKED_TASKS}",
     "in_progress_tasks": "{COUNT_IN_PROGRESS_TASKS}",
     "not_started_tasks": "{COUNT_NOT_STARTED_TASKS}",
-    "high_priority_tasks": "{COUNT_HIGH_PRIORITY}",
-    "medium_priority_tasks": "{COUNT_MEDIUM_PRIORITY}",
-    "low_priority_tasks": "{COUNT_LOW_PRIORITY}",
     "production_readiness": "unknown",
     "technical_debt": {
       "sorry_count": 0,
@@ -30291,7 +31466,7 @@ Generated orchestrators must:
   ],
   "_comment_recent_activities": "Track up to 50 most recent activities. Prepend new activities to maintain chronological order (newest first).",
   "pending_tasks": [],
-  "_comment_pending_tasks": "Populated from TODO.md tasks with status [NOT STARTED]. Each entry should have: project_number, title, status, priority, language.",
+  "_comment_pending_tasks": "Populated from TODO.md tasks with status [NOT STARTED]. Each entry should have: project_number, title, status, language.",
   "reviews_summary": {
     "_comment": "Quick reference to review status - full history in reviews/state.json",
     "last_review": null,
@@ -33438,6 +34613,180 @@ Quick reference:
 
 ---
 
+<a id="context-project-hooks-wezterm-integration-md"></a>
+
+## context/project/hooks/wezterm-integration.md
+
+### WezTerm Tab Integration
+
+This document describes the WezTerm terminal integration for Claude Code, providing tab title updates and visual notifications.
+
+#### Overview
+
+The integration enables:
+- Task number display in WezTerm tab titles (e.g., `ProofChecker #792`)
+- Amber highlighting for tabs awaiting Claude Code input
+- Automatic notification clearing when the user views or responds
+
+#### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│ WezTerm Tab Title                                               │
+│ "1 ProofChecker #792"                                           │
+└─────────────────────────────────────────────────────────────────┘
+                    ▲                           ▲
+                    │                           │
+         ┌─────────┴─────────┐       ┌─────────┴─────────┐
+         │ OSC 7             │       │ OSC 1337          │
+         │ file://host/path  │       │ SetUserVar=...    │
+         └─────────┬─────────┘       └─────────┬─────────┘
+                   │                           │
+    ┌──────────────┴──────────┐    ┌──────────┴──────────────┐
+    │ Shell / Neovim          │    │ Claude Code Hooks        │
+    │                         │    │                          │
+    │ Directory updates from  │    │ wezterm-task-number.sh   │
+    │ shells and Neovim       │    │ wezterm-notify.sh        │
+    │ autocmds                │    │ wezterm-clear-status.sh  │
+    └─────────────────────────┘    └──────────────────────────┘
+```
+
+#### Hook Files
+
+##### wezterm-notify.sh
+
+**Path**: `.claude/hooks/wezterm-notify.sh`
+**Hook Event**: `Stop`
+**Purpose**: Set amber tab notification when Claude awaits input
+
+Sets `CLAUDE_STATUS=needs_input` via OSC 1337 to the pane TTY. The WezTerm `format-tab-title` handler reads this variable and applies amber background (#e5b566) to inactive tabs.
+
+##### wezterm-clear-status.sh
+
+**Path**: `.claude/hooks/wezterm-clear-status.sh`
+**Hook Event**: `UserPromptSubmit`
+**Purpose**: Clear notification when user submits a prompt
+
+Clears `CLAUDE_STATUS` by setting it to an empty value, restoring normal tab appearance.
+
+##### wezterm-task-number.sh
+
+**Path**: `.claude/hooks/wezterm-task-number.sh`
+**Hook Event**: `UserPromptSubmit`
+**Purpose**: Extract and display task number in tab title
+
+Parses `CLAUDE_USER_PROMPT` environment variable for workflow patterns:
+- `/research N`
+- `/plan N`
+- `/implement N`
+- `/revise N`
+
+**Behavior** (task 795):
+- **Workflow command**: Sets `TASK_NUMBER` user variable to N
+- **Non-workflow command**: Clears `TASK_NUMBER` user variable
+- **Claude output**: No change (preserves current state - no hook fires)
+
+This ensures task numbers persist correctly during Claude's responses and tool executions, only changing when the user submits a new prompt.
+
+#### User Variables
+
+| Variable | Purpose | Values |
+|----------|---------|--------|
+| `TASK_NUMBER` | Task number for tab title | Numeric string (e.g., "792") |
+| `CLAUDE_STATUS` | Notification state | "needs_input" or empty |
+
+#### Configuration
+
+##### Disabling Notifications
+
+Set environment variable before starting Claude Code:
+
+```bash
+export WEZTERM_NOTIFY_ENABLED=0
+```
+
+##### Hook Registration
+
+Hooks are registered in `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "Stop": [{
+      "matcher": "*",
+      "hooks": [{
+        "type": "command",
+        "command": "bash .claude/hooks/wezterm-notify.sh 2>/dev/null || echo '{}'"
+      }]
+    }],
+    "UserPromptSubmit": [{
+      "matcher": "*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash .claude/hooks/wezterm-task-number.sh 2>/dev/null || echo '{}'"
+        },
+        {
+          "type": "command",
+          "command": "bash .claude/hooks/wezterm-clear-status.sh 2>/dev/null || echo '{}'"
+        }
+      ]
+    }]
+  }
+}
+```
+
+#### Technical Details
+
+##### TTY Access Pattern
+
+Claude Code hooks run with redirected stdio (stdout is a socket to Claude). To emit OSC sequences visible to WezTerm, hooks must write directly to the pane's TTY:
+
+```bash
+### Get TTY path via WezTerm CLI
+PANE_TTY=$(wezterm cli list --format=json | \
+  jq -r ".[] | select(.pane_id == $WEZTERM_PANE) | .tty_name")
+
+### Write escape sequence to TTY
+printf '\033]1337;SetUserVar=NAME=base64value\007' > "$PANE_TTY"
+```
+
+##### OSC Escape Sequence Format
+
+| Sequence | Format | Purpose |
+|----------|--------|---------|
+| OSC 7 | `ESC ] 7 ; file://hostname/path BEL` | Directory update |
+| OSC 1337 | `ESC ] 1337 ; SetUserVar=name=base64value BEL` | User variable |
+
+Values are base64-encoded in OSC 1337 to handle special characters safely.
+
+##### WezTerm Handler Location
+
+The `format-tab-title` and `update-status` handlers that consume these variables are in `~/.dotfiles/config/wezterm.lua`.
+
+#### Integration with Neovim
+
+When Claude Code runs inside Neovim (via claude-code.nvim), the Neovim autocmds in `~/.config/nvim/lua/neotex/config/autocmds.lua` provide complementary integration:
+
+- **OSC 7**: Neovim emits directory updates on DirChanged, VimEnter, BufEnter
+- **Task Number**:
+  - **Shell hook**: Handles set/clear logic on `UserPromptSubmit` (workflow vs non-workflow)
+  - **Neovim monitor**: Only clears TASK_NUMBER when Claude terminal closes
+
+This separation (task 795) ensures:
+1. Task numbers persist during Claude's responses (no buffer monitoring)
+2. Task numbers clear correctly on non-workflow commands (shell hook handles)
+3. Task numbers clear when terminal closes (Neovim autocmd handles)
+
+#### Related Documentation
+
+- **WezTerm configuration**: `~/.dotfiles/docs/terminal.md`
+- **Neovim integration**: `~/.config/nvim/lua/neotex/config/README.md`
+- **Hook source files**: `.claude/hooks/wezterm-*.sh`
+
+
+---
+
 <a id="context-project-latex-patterns-cross-references-md"></a>
 
 ## context/project/latex/patterns/cross-references.md
@@ -33530,6 +34879,38 @@ determines which states make a formula true.
 ```latex
 For the complete semantics, see \leanref{Logos/Core/Semantics.lean}.
 ```
+
+##### Lean Source Reference Placement
+
+Place Lean source references at the **end of relevant sections** using the `\noindent` prefix for proper formatting. This creates a consistent visual pattern and keeps implementation details separate from mathematical exposition.
+
+**Rules**:
+1. Use `\noindent` before `\leansrc` to prevent indentation
+2. Place after the final prose paragraph of the section
+3. Include only when a relevant Lean implementation exists
+4. Reference the most specific definition/theorem, not entire modules
+
+**Standard Pattern**:
+```latex
+\begin{definition}[Constitutive Frame]\label{def:constitutive-frame}
+A \emph{constitutive frame} is a structure $\mathbf{F} = \langle S, \sqsubseteq \rangle$...
+\end{definition}
+
+The constitutive frame captures the mereological structure of states.
+The partial order $\sqsubseteq$ represents the parthood relation.
+
+\noindent\leansrc{Logos.Foundation.Frame}{ConstitutiveFrame}
+```
+
+**When to Include**:
+- After definitions that have direct Lean counterparts
+- After theorems with formal proofs in Lean
+- At section boundaries where multiple related definitions are implemented
+
+**When to Omit**:
+- For purely expository sections without formal implementation
+- When the Lean code is under development (uncommitted)
+- For background material not specific to this project
 
 ##### Lean Module Mapping
 
@@ -34298,6 +35679,42 @@ The partial order $\sqsubseteq$ represents the parthood relation.
 \begin{definition}[Constitutive Frame]  % Definition comes too late
 ```
 
+#### Set Notation
+
+##### The \set{} Macro
+
+Use the `\set{}` macro from `logos-notation.sty` for set notation instead of raw `\{ \}` braces.
+
+**Rationale**:
+1. **Consistency**: Ensures uniform set notation across all documents
+2. **Maintainability**: Allows global styling changes from one location
+3. **Readability**: Source code is cleaner without escaped braces
+4. **Semantics**: Distinguishes set braces from other brace usages
+
+##### Pass Example
+```latex
+% Good: Using \set{} macro
+The set of states $\set{s \in S \mid s \sqsubseteq t}$ forms a principal ideal.
+Let $\set{w_1, w_2, w_3}$ be the set of worlds.
+```
+
+##### Fail Example
+```latex
+% Bad: Raw escaped braces
+The set of states $\{ s \in S \mid s \sqsubseteq t \}$ forms a principal ideal.
+Let $\{ w_1, w_2, w_3 \}$ be the set of worlds.
+```
+
+##### When to Use
+- Set builder notation: `\set{x \mid P(x)}`
+- Enumerated sets: `\set{a, b, c}`
+- Named sets with conditions: `\set{s \in S \mid \text{condition}}`
+
+##### When NOT to Use
+- Grouping in math expressions: `{a + b}^2` (no \set)
+- Function arguments: `f\{x\}` if intentionally emphasizing argument
+- Literal brace characters in text: `\{` and `\}` are appropriate
+
 #### File Organization
 
 ##### Main Document Structure
@@ -34350,6 +35767,8 @@ A constitutive frame is F = <S, ⊑> where S is states and ⊑ is partial order.
 - [ ] No overfull hboxes in compiled output
 - [ ] Named theorems use italics in prose, normal text in environment brackets
 - [ ] Definitions appear before first use in prose
+- [ ] Use `\set{}` macro for set notation (not `\{ \}`)
+- [ ] Lean source references placed at end of sections with `\noindent`
 
 
 ---
@@ -34395,6 +35814,27 @@ The `logos-notation.sty` package provides consistent notation for Logos document
 |---------|-------|--------|-------|
 | Essence | `\essence` | ⊑ | A essential to B |
 | Ground | `\ground` | ≤ | A grounds B |
+
+##### Bilateral Top/Bottom Elements
+
+In bilateral semantics, propositions are ordered by TWO distinct orderings, each with its own top and bottom elements:
+
+| Concept | Macro | Symbol | Definition | Ordering |
+|---------|-------|--------|------------|----------|
+| Top | `\top` | ⊤ | primitive | Ground ordering (≤) |
+| Bottom | `\bot` | ⊥ | primitive | Ground ordering (≤) |
+| Verum | `\ver` | ⊤̵ (strikethrough) | `\neg\bot` | Parthood ordering (⊑) |
+| Falsum | `\fal` | ⊥̵ (strikethrough) | `\neg\top` | Parthood ordering (⊑) |
+
+**Important distinctions**:
+- `\top` and `\bot` are the standard top/bottom constants (top and bottom for the ground ordering)
+- `\ver` (verum) is the strikethrough top symbol, defined as `\neg\bot` (top for parthood ordering)
+- `\fal` (falsum) is the strikethrough bot symbol, defined as `\neg\top` (bottom for parthood ordering)
+
+**When to use which**:
+- In standard propositional contexts: use `\top` and `\bot`
+- When discussing the parthood ordering: use `\ver` and `\fal`
+- The verum is verified by all states; the falsum is verified by no state
 
 #### Core Extension Notation
 
@@ -35465,7 +36905,6 @@ Create directory and write report.
 **Started**: {ISO8601}
 **Completed**: {ISO8601}
 **Effort**: {estimate}
-**Priority**: {priority}
 **Dependencies**: {list or None}
 **Sources/Inputs**: - Mathlib, lean_leansearch, lean_loogle, etc.
 **Artifacts**: - path to this report
@@ -37767,6 +39206,346 @@ This file has been superseded by the Lean overlay and canonical logic standards.
 - **Notation**: `project/logic/standards/notation-standards.md`
 
 If you followed a link here, update it to point to the overlay above. The old, verbose Lean-proof content was removed to avoid duplication with the canonical logic standards.
+
+
+---
+
+<a id="context-project-lean4-standards-proof-debt-policy-md"></a>
+
+## context/project/lean4/standards/proof-debt-policy.md
+
+### Proof Debt Policy
+
+#### Overview
+
+This file formalizes the project's approach to **proof debt** in Lean 4 proofs. Proof debt encompasses:
+- **Sorries**: Incomplete proofs marked with `sorry` tactic
+- **Axioms**: Explicit unproven assumptions declared with `axiom` keyword
+
+Both represent unverified mathematical claims that propagate transitively through dependencies and block publication.
+
+**Cross-references**:
+- Lean proof conventions: `project/lean4/standards/proof-conventions-lean.md`
+- Sorry/axiom registry: `docs/project-info/SORRY_REGISTRY.md`
+- Boneyard documentation: `Theories/Bimodal/Boneyard/README.md`
+
+#### Philosophy
+
+Sorries and axioms are **mathematical debt**, fundamentally different from technical debt:
+- Each represents an **unverified mathematical claim** that may be false
+- Both propagate: using a lemma with `sorry` or depending on an `axiom` inherits that debt
+- **Never acceptable in publication-ready proofs** (axioms require explicit disclosure)
+
+##### Unified Proof Debt Concept
+
+| Term | Definition |
+|------|------------|
+| **Proof Debt** | Umbrella term for unverified mathematical claims (sorries + axioms) |
+| **Sorry** | Implicit proof gap marked with `sorry` tactic |
+| **Axiom** | Explicit unproven assumption declared with `axiom` keyword |
+| **Transitive Freedom** | No proof debt (direct or inherited) in dependency chain |
+| **Publication Ready** | Transitively free of sorries; axioms either eliminated or explicitly disclosed |
+
+##### Key Differences
+
+| Property | Sorry | Axiom |
+|----------|-------|-------|
+| Visibility | Implicit (proof gap) | Explicit (declared assumption) |
+| Intent | Always temporary | Sometimes intentional design choice |
+| Publication | Cannot publish | Can publish with disclosure |
+| Remediation | Must resolve | Must resolve or disclose |
+
+##### Transitive Proof Debt Inheritance
+
+Proof debt propagates through the dependency graph. If theorem A uses lemma B which contains `sorry` or depends on `axiom`, then:
+- A is **also unproven** (mathematically)
+- A **inherits** B's proof debt
+- Any claim about A must acknowledge B's sorry or axiom
+
+**Transitively debt-free** means: the theorem AND all its transitive dependencies contain no sorries and no undisclosed axioms. This is the ONLY valid state for publication.
+
+```lean
+-- Check transitive freedom with:
+###check @MyTheorem  -- Hover shows axioms used; sorry appears as axiom
+```
+
+**Publication requirement**: All theorems claimed as proven must be transitively sorry-free. Axioms must be explicitly disclosed or eliminated. NO EXCEPTIONS.
+
+**Reporting requirement**: When proof debt exists anywhere in the dependency chain, reports and plans must:
+1. Identify all sorries and axioms (direct and inherited)
+2. Document why each exists
+3. Specify the remediation path
+4. Note impact on dependent theorems
+
+#### Characterizing Sorries in Reports and Plans
+
+When documenting sorries in research reports, implementation plans, or summaries, follow this framing:
+
+**Guiding Principle**: Document what exists, explain WHY it exists, specify the remediation path - never call a sorry acceptable.
+
+##### Required Elements
+
+1. **State the fact**: "This file contains N sorries"
+2. **Categorize each**: Which category from the taxonomy below
+3. **Explain the reason**: Why does this sorry exist
+4. **Specify remediation**: What would remove it (even if not planned)
+5. **Note transitivity**: What depends on this sorry
+
+##### Prohibited Framing
+
+Do NOT use these phrases:
+- "acceptable sorry" / "sorry is acceptable"
+- "acceptable limitation"
+- "sorry is fine" / "okay to have sorry"
+- "sorry count is acceptable"
+- "<N sorries acceptable"
+
+##### Required Framing
+
+USE these phrases instead:
+- "tolerated during development"
+- "technical debt requiring documentation"
+- "blocks publication if not resolved"
+- "inherited by all dependents"
+
+##### Example Transformations
+
+| Prohibited | Required |
+|------------|----------|
+| "1 sorry is acceptable" | "1 sorry remains (construction assumption) - documented, blocks transitive sorry-freedom" |
+| "sorry state acceptable for publication" | "publication requires resolving all N sorries or documenting as explicit axioms" |
+| "<5 acceptable" | "target: 0 sorries; current: N sorries (categorized in SORRY_REGISTRY.md)" |
+| "acceptable architectural limitation" | "documented architectural debt - remediation path: [specific approach]" |
+
+##### Transitive Inheritance in Reports
+
+ALL sorries propagate transitively through imports. When reporting on a theorem:
+
+1. **Direct sorries**: Sorries in the theorem's proof
+2. **Inherited sorries**: Sorries in any lemma the theorem uses
+3. **Publication status**: "Transitively sorry-free" or "Depends on N sorries in [files]"
+
+**Critical**: A theorem claimed as "proven" in a publication MUST be transitively sorry-free.
+
+#### Characterizing Axioms in Reports and Plans
+
+When documenting axioms in research reports, implementation plans, or summaries, follow this framing:
+
+**Guiding Principle**: Axioms are technical debt requiring structural proof - never call an axiom acceptable.
+
+##### Required Elements
+
+1. **State the fact**: "This file depends on N axioms"
+2. **Categorize each**: Which category from the taxonomy below
+3. **Explain the reason**: Why does this axiom exist
+4. **Specify remediation**: Structural proof approach to eliminate it
+5. **Note transitivity**: What inherits this axiom dependency
+
+##### Prohibited Framing
+
+Do NOT use these phrases:
+- "acceptable axiom" / "axiom is acceptable"
+- "axiom-based solution"
+- "add axiom to solve"
+- "axiom count is acceptable"
+- "N acceptable axioms"
+
+##### Required Framing
+
+USE these phrases instead:
+- "axiom as technical debt"
+- "axiom requires structural proof"
+- "eliminates need for axiom"
+- "zero-axiom approach"
+- "axiom to be removed via [specific approach]"
+- "inherits axiom dependency"
+- "publication requires axiom disclosure or elimination"
+
+##### Example Transformations
+
+| Prohibited | Required |
+|------------|----------|
+| "1 axiom is acceptable" | "1 axiom remains (construction assumption) - documented, requires structural proof" |
+| "add axiom to solve this" | "this gap reveals need for completed saturation construction" |
+| "acceptable axiom count" | "target: 0 axioms; current: N axioms (categorized in SORRY_REGISTRY.md)" |
+| "axiom-based approach" | "structural proof approach (eliminates axiom dependency)" |
+
+##### Transitive Inheritance in Reports
+
+ALL axioms propagate transitively through imports. When reporting on a theorem:
+
+1. **Direct axioms**: Axioms declared in the theorem's module
+2. **Inherited axioms**: Axioms in any lemma the theorem uses
+3. **Publication status**: "Axiom-free" or "Depends on N axioms in [files] - requires disclosure"
+
+**Critical**: A theorem published without disclosure MUST be transitively axiom-free.
+
+#### Sorry Categories
+
+##### 1. Construction Assumptions (Tolerated During Development - Technical Debt)
+Treated as axiomatic within the current architecture. **This is still mathematical debt that must be documented and tracked.** Example:
+```lean
+-- Theories/Bimodal/Metalogic/Bundle/Construction.lean
+-- In the single-family simplification, we accept this as axiomatic
+sorry  -- modal_backward direction
+```
+
+##### 2. Development Placeholders (Must Resolve)
+Temporary gaps with clear resolution paths. Track in `SORRY_REGISTRY.md`.
+
+##### 3. Documentation Examples (Excluded from Counts)
+Intentional sorries in `Examples/` or demonstration code. Not counted in metrics.
+
+##### 4. Fundamental Obstacles (Boneyard Candidates)
+Approaches that cannot work. Must archive to Boneyard with documentation. Example: `IsLocallyConsistent` only captures soundness, not negation-completeness.
+
+#### Axiom Categories
+
+##### 1. Construction Assumptions (Technical Debt - Requires Structural Proof)
+Required by current architecture but should be eliminated via completed construction. Example:
+```lean
+-- Theories/Bimodal/Metalogic/Bundle/SaturatedConstruction.lean
+-- Required by single-family simplification; complete saturation eliminates this
+axiom singleFamily_modal_backward_axiom : ...
+```
+
+##### 2. Existence Assumptions (Technical Debt - Requires Lindenbaum Proof)
+Assert existence without proof. Elimination requires Lindenbaum extension or similar. Example:
+```lean
+-- Asserts existence of saturated world state; proof requires Lindenbaum
+axiom someWorldState_exists : ...
+```
+
+##### 3. Documentation Examples (Excluded from Counts)
+Intentional axioms in `Examples/` or demonstration code. Not counted in metrics.
+
+##### 4. Fundamental Obstacles (Rare - Archive with Documentation)
+Cannot be proven structurally within Lean type system. Must document why and archive if approach is fundamentally flawed.
+
+#### Remediation Paths
+
+##### Path A: Proof Completion
+Fill the gap with valid proof. Preferred when mathematically feasible.
+
+**When to use**: The sorry marks a genuine proof gap, not an architectural issue.
+
+##### Path B: Architectural Refactoring
+Change approach to avoid the gap entirely.
+
+**When to use**: The sorry or axiom reveals a flawed proof strategy. Example: Task 473 replaced syntactic world states with semantic approach, bypassing negation-completeness issues.
+
+##### Path C: Boneyard Archival
+Archive fundamentally flawed code with documentation.
+
+**When to use**:
+- Multiple sorry/axiom attempts have failed
+- The approach is mathematically impossible
+- Preserving the learning is valuable
+
+**Requirements**: Document in Boneyard README why the approach failed.
+
+##### Path D: Axiom Disclosure (Publication Only)
+For publication when axiom cannot be eliminated, explicitly disclose as assumption.
+
+**When to use**:
+- Axiom represents genuine mathematical assumption (e.g., Choice)
+- Full elimination not feasible within paper scope
+- Assumption is standard in the field
+
+**Requirements**: Document axiom in publication, explain why it cannot be proven.
+
+#### Discovery Protocol
+
+When encountering proof debt during implementation:
+
+##### For Sorries
+
+1. **Check SORRY_REGISTRY.md** for existing context
+2. **Assess category**: Is this a construction assumption, placeholder, or obstacle?
+3. **Check transitive impact**: Does your work depend on this sorry?
+4. **Decision tree**:
+   - Construction assumption: Document reliance and continue
+   - Fixable placeholder: Include fix if in scope, or create task
+   - Fundamental obstacle: Flag for Boneyard archival
+5. **Update registry** if you add or resolve any sorry
+
+##### For Axioms
+
+1. **Check SORRY_REGISTRY.md** for existing axiom documentation
+2. **Assess category**: Is this a construction assumption, existence assumption, or documentation?
+3. **Check transitive impact**: Does your work inherit this axiom dependency?
+4. **Decision tree**:
+   - Construction assumption: Document, continue; note need for structural proof
+   - Existence assumption: Document, continue; note need for Lindenbaum proof
+   - Documentation example: Ignore (excluded from counts)
+   - Fundamental obstacle: Document why, consider alternative approaches
+5. **Update registry** if you add or resolve any axiom
+
+#### Boneyard References
+
+##### Primary: `Theories/Bimodal/Boneyard/`
+Contains deprecated completeness approaches with comprehensive README documenting:
+- Why each approach was deprecated
+- Key insights from failed attempts
+- Related task numbers for traceability
+
+##### Overflow: `Boneyard/`
+Root-level location for larger deprecated codebases.
+
+##### README Requirements
+Every Boneyard addition must include:
+- **What it contains**: Files and their purpose
+- **Why deprecated**: Fundamental reason (not just "has sorries" or "has axioms")
+- **Key insight**: What was learned
+- **Related tasks**: For traceability
+
+#### Metrics Integration
+
+##### sorry_count Computation
+Repository health uses this pattern (excludes Boneyard and Examples):
+```bash
+grep -r "sorry" Theories/ --include="*.lean" | grep -v "/Boneyard/" | grep -v "/Examples/" | wc -l
+```
+
+##### axiom_count Computation
+Repository health uses this pattern (excludes Boneyard and Examples):
+```bash
+grep -r "^axiom " Theories/ --include="*.lean" | grep -v "/Boneyard/" | grep -v "/Examples/" | wc -l
+```
+
+**Note**: Metrics count direct debt only, not transitive inheritance.
+
+##### Status Thresholds
+
+###### Sorry Status
+| Count | Status | Action |
+|-------|--------|--------|
+| <100 | good | Maintenance mode |
+| 100-299 | manageable | Active reduction |
+| >=300 | concerning | Prioritize resolution |
+
+###### Axiom Status
+| Count | Status | Action |
+|-------|--------|--------|
+| 0 | good | Publication-ready (for axiom-free claims) |
+| 1-5 | manageable | Document and track; plan structural proofs |
+| >5 | concerning | Prioritize elimination; review architecture |
+
+#### Usage Checklist
+
+##### Sorries
+- [ ] No new `sorry` added without SORRY_REGISTRY.md entry
+- [ ] Construction assumptions documented in code comments
+- [ ] Transitive dependencies checked for critical proofs
+- [ ] Fundamental obstacles archived to Boneyard with README
+- [ ] Metrics reflect only active development sorries
+
+##### Axioms
+- [ ] No new `axiom` added without SORRY_REGISTRY.md entry
+- [ ] Axiom purpose and remediation path documented
+- [ ] Transitive dependencies checked (what inherits this axiom?)
+- [ ] Structural proof approach identified (even if not yet implemented)
+- [ ] Publication status noted (requires disclosure or elimination)
 
 
 ---
@@ -42994,7 +44773,7 @@ This document describes the proof verification processes used in the ProofChecke
 **Checks**:
 - Type signatures match
 - All tactics succeed
-- No `sorry` placeholders (unless documented)
+- No `sorry` placeholders (unless documented) and no new `axiom` declarations
 - All imports resolve
 
 **Example**:
@@ -43273,10 +45052,21 @@ have h : ⊢ ψ := Derivable.modus_ponens [] φ ψ h1 h2
 - All subgoals are proven
 - All helper lemmas are proven
 
-**Exception**: Documented `sorry` placeholders for future work are acceptable if:
-- Clearly marked with comments
-- Documented in SORRY_REGISTRY.md
-- Have a resolution plan
+**Development tolerance**: Documented `sorry` placeholders may be tolerated during development if:
+- Clearly marked with comments explaining WHY the sorry exists
+- Documented in SORRY_REGISTRY.md with category and remediation path
+- Have a concrete resolution plan
+
+**Critical**: These sorries are NEVER acceptable for publication. They represent mathematical debt that blocks any downstream theorems from being claimed as proven.
+
+##### Axiom Verification
+
+**Development policy**: No new axioms should be introduced. If structural proof cannot avoid an axiom:
+- Document the axiom with clear justification
+- Register in SORRY_REGISTRY.md with remediation path
+- Note transitive impact on dependent theorems
+
+**Critical**: New axioms are NEVER acceptable as a solution. They represent technical debt requiring structural proof to eliminate. See @.claude/context/project/lean4/standards/proof-debt-policy.md.
 
 ---
 
@@ -43510,6 +45300,7 @@ You've successfully verified a proof when:
 - [ ] Proof compiles without errors (syntactic verification)
 - [ ] All axioms and rules are sound (semantic verification)
 - [ ] Proof is complete with no undocumented `sorry` (completeness verification)
+- [ ] No new axiom declarations (or documented with remediation plan)
 - [ ] Proof passes quality checklist (quality verification)
 - [ ] No circular reasoning detected
 - [ ] All helper lemmas are verified
@@ -52513,7 +54304,29 @@ The template.typ imports notation, making it available to chapters.
 |--------|---------|-------------|
 | `$arrow.r$` | `imp` | Implication |
 | `$not$` | `lneg` | Negation |
-| `$bot$` | `falsum` | Bottom/falsity |
+| `$bot$` | `bottom` | Bottom (primitive, ground ordering) |
+| `$top$` | `top` | Top (primitive, ground ordering) |
+
+##### Bilateral Top/Bottom Elements
+
+In bilateral semantics, there are TWO orderings with distinct top/bottom elements.
+This is a Logos-specific distinction that does not apply to standard modal logic in Bimodal.
+
+| Symbol | Command | Definition | Ordering |
+|--------|---------|------------|----------|
+| `$top$` | `top` | primitive | Ground ordering |
+| `$bot$` | `bottom` | primitive | Ground ordering |
+| `$top$ with strikethrough` | `verum` | `$not bot$` | Parthood ordering |
+| `$bot$ with strikethrough` | `falsum` | `$not top$` | Parthood ordering |
+
+**Note**: Typst does not have built-in strikethrough math symbols.
+For Logos documentation requiring verum/falsum distinction, use:
+- LaTeX with `logos-notation.sty` macros (`\ver`, `\fal`)
+- Or define custom Typst symbols using `#let verum = ...` if needed
+
+**Terminology**:
+- "top" and "bottom" refer to `$top$` and `$bot$` (ground ordering)
+- "verum" and "falsum" refer to `$not bot$` and `$not top$` (parthood ordering)
 
 ##### Lean Cross-References
 
@@ -61872,6 +63685,41 @@ exit_success
 
 ---
 
+<a id="hooks-wezterm-clear-task-number-sh"></a>
+
+## hooks/wezterm-clear-task-number.sh
+
+```bash
+#!/bin/bash
+# Clear TASK_NUMBER user variable for WezTerm tab title
+# Called from SessionStart hook to reset task number on session events
+#
+# Related: Task 802 - Fix WezTerm tab task number clearing
+# Related: wezterm-task-number.sh - Sets task number on workflow commands
+set -euo pipefail
+
+# Only run in WezTerm
+if [[ -z "${WEZTERM_PANE:-}" ]]; then
+    echo '{}'
+    exit 0
+fi
+
+# Get the TTY for the current pane
+PANE_TTY=$(wezterm cli list --format=json 2>/dev/null | \
+    jq -r ".[] | select(.pane_id == $WEZTERM_PANE) | .tty_name" 2>/dev/null || echo "")
+
+if [[ -n "$PANE_TTY" ]] && [[ -w "$PANE_TTY" ]]; then
+    # Clear TASK_NUMBER via OSC 1337
+    printf '\033]1337;SetUserVar=TASK_NUMBER=\007' > "$PANE_TTY"
+fi
+
+echo '{}'
+exit 0
+```
+
+
+---
+
 <a id="hooks-wezterm-notify-sh"></a>
 
 ## hooks/wezterm-notify.sh
@@ -61933,6 +63781,80 @@ STATUS_VALUE=$(echo -n "needs_input" | base64 | tr -d '\n')
 # \033] = OSC
 # \007 = ST (string terminator)
 printf '\033]1337;SetUserVar=CLAUDE_STATUS=%s\007' "$STATUS_VALUE" > "$PANE_TTY"
+
+exit_success
+```
+
+
+---
+
+<a id="hooks-wezterm-task-number-sh"></a>
+
+## hooks/wezterm-task-number.sh
+
+```bash
+#!/bin/bash
+# WezTerm task number hook for Claude Code
+# Sets TASK_NUMBER user variable via OSC 1337 when Claude commands include task numbers
+#
+# Integration: Called from UserPromptSubmit hook in .claude/settings.json
+# Requirements: wezterm with user variable support, jq for JSON parsing
+#
+# Parses prompts for /research N, /plan N, /implement N, /revise N patterns
+# and sets/clears the TASK_NUMBER user variable accordingly.
+#
+# Note: Claude Code hooks run with redirected stdio (stdout is a socket),
+# so we must write the escape sequence directly to the pane's TTY.
+
+set -euo pipefail
+
+# Helper: return success JSON for hook
+exit_success() {
+    echo '{}'
+    exit 0
+}
+
+# Only run in WezTerm
+if [[ -z "${WEZTERM_PANE:-}" ]]; then
+    exit_success
+fi
+
+# Read hook input from stdin (Claude Code provides JSON)
+HOOK_INPUT=$(cat)
+
+# Parse user prompt from JSON input
+PROMPT=$(echo "$HOOK_INPUT" | jq -r '.prompt // ""' 2>/dev/null || echo "")
+
+# Extract task number from Claude commands
+# Matches: /research N, /plan N, /implement N, /revise N
+TASK_NUMBER=""
+if [[ "$PROMPT" =~ ^[[:space:]]*/?(research|plan|implement|revise)[[:space:]]+([0-9]+) ]]; then
+    TASK_NUMBER="${BASH_REMATCH[2]}"
+fi
+
+# Get the TTY for the current pane from WezTerm CLI
+# Claude Code hooks have redirected stdio, so we cannot use /dev/tty
+PANE_TTY=$(wezterm cli list --format=json 2>/dev/null | \
+    jq -r ".[] | select(.pane_id == $WEZTERM_PANE) | .tty_name" 2>/dev/null || echo "")
+
+# Check if we found a writable TTY
+if [[ -z "$PANE_TTY" ]] || [[ ! -w "$PANE_TTY" ]]; then
+    exit_success
+fi
+
+if [[ -n "$TASK_NUMBER" ]]; then
+    # Set TASK_NUMBER user variable via OSC 1337
+    # Format: OSC 1337 ; SetUserVar=name=base64_value ST
+    TASK_VALUE=$(echo -n "$TASK_NUMBER" | base64 | tr -d '\n')
+    printf '\033]1337;SetUserVar=TASK_NUMBER=%s\007' "$TASK_VALUE" > "$PANE_TTY"
+else
+    # Clear TASK_NUMBER on non-workflow commands (task 795)
+    # This implements the correct behavior:
+    # - Workflow commands (/research N, /plan N, /implement N, /revise N) -> Set
+    # - Non-workflow commands (anything else) -> Clear
+    # - Claude output (no UserPromptSubmit event) -> No change (preserves)
+    printf '\033]1337;SetUserVar=TASK_NUMBER=\007' > "$PANE_TTY"
+fi
 
 exit_success
 ```
@@ -64739,6 +66661,8 @@ Before committing LaTeX changes:
 
 - [ ] One sentence per line (semantic linefeeds)
 - [ ] `logos-notation.sty` macros used consistently
+- [ ] Use `\set{}` macro for set notation (not `\{ \}`)
+- [ ] Lean source references placed at end of sections with `\noindent`
 - [ ] Environments properly opened and closed
 - [ ] Cross-references resolve without warnings
 - [ ] No overfull hboxes in compiled output
@@ -64957,7 +66881,12 @@ lake clean && lake build
 After implementation:
 1. Run `lake build` to check compilation
 2. Verify build succeeds with no errors
-3. Check that all theorems compile without `sorry`
+3. Check that all theorems compile without `sorry` or new `axiom` declarations
+
+#### Context References
+
+For deeper understanding, load these context files as needed:
+- `@.claude/context/project/lean4/standards/proof-debt-policy.md` - Axiom and sorry handling policies
 
 
 ---
@@ -64979,13 +66908,13 @@ TODO.md and state.json MUST stay synchronized. Any update to one requires updati
 ##### Canonical Sources
 - **state.json**: Machine-readable source of truth
   - next_project_number
-  - active_projects array with status, language, priority
+  - active_projects array with status, language
   - Faster to query (12ms vs 100ms for TODO.md parsing)
 
 - **TODO.md**: User-facing source of truth
   - Human-readable task list with descriptions
   - Status markers in brackets: [STATUS]
-  - Grouped by priority (High/Medium/Low)
+  - Single `## Tasks` section (new tasks prepended at top)
 
 #### Status Transitions
 
@@ -65034,7 +66963,6 @@ When updating task status:
 ##### {NUMBER}. {TITLE}
 - **Effort**: {estimate}
 - **Status**: [{STATUS}]
-- **Priority**: {High|Medium|Low}
 - **Language**: {lean|general|meta|markdown}
 - **Started**: {ISO timestamp}
 - **Completed**: {ISO timestamp}
@@ -65051,7 +66979,6 @@ When updating task status:
   "project_name": "task_slug_here",
   "status": "planned",
   "language": "lean",
-  "priority": "high",
   "effort": "4 hours",
   "created": "2026-01-08T10:00:00Z",
   "last_updated": "2026-01-08T14:30:00Z",
@@ -69534,7 +71461,6 @@ jq --arg ts "$iso_date" \
       "project_name": $slug,
       "status": "not_started",
       "language": "lean",
-      "priority": "high",
       "source": $source,
       "created": $ts,
       "last_updated": $ts,
@@ -69549,17 +71475,16 @@ jq --arg ts "$iso_date" \
 
 ###### 13E: Task Creation - TODO.md
 
-Use Edit tool to add task entry after the "## High Priority" header:
+Use Edit tool to prepend task entry after the `## Tasks` header:
 
-**Find pattern**: `## High Priority` section header
+**Find pattern**: `## Tasks` section header
 
-**Insert after header**:
+**Insert after header** (new tasks at top):
 ```markdown
 
 ##### {next_num}. Fix build errors in {basename}
 - **Effort**: 1-2 hours
 - **Status**: [NOT STARTED]
-- **Priority**: High
 - **Language**: lean
 - **Source**: {file_path}
 - **Error Report**: [specs/{next_num}_{slug}/reports/error-report-{date_stamp}.md]
@@ -69569,8 +71494,8 @@ Use Edit tool to add task entry after the "## High Priority" header:
 
 **Edit pattern**:
 ```
-old_string: "## High Priority\n"
-new_string: "## High Priority\n\n### {next_num}. Fix build errors in {basename}\n..."
+old_string: "## Tasks\n"
+new_string: "## Tasks\n\n### {next_num}. Fix build errors in {basename}\n..."
 ```
 
 ###### 13F: Final Report
@@ -71202,7 +73127,6 @@ has_note_dependency = (NOTE: tags exist) AND (user selected both "fix-it task" A
   "title": "Update context files from NOTE: tags",
   "description": "Update {N} context files based on learnings:\n\n{grouped by target context}",
   "language": "meta",
-  "priority": "medium",
   "effort": "1-2 hours"
 }
 ```
@@ -71220,7 +73144,6 @@ Increment: `next_num = next_num + 1`
   "title": "Fix issues from FIX:/NOTE: tags",
   "description": "Address {N} items from embedded tags:\n\n{list of items with file:line references}\n\n**Important**: When making changes, remove the FIX: and NOTE: tags from the source files. Leave TODO: tags untouched (they create separate tasks).",
   "language": "{predominant language from source files}",
-  "priority": "high",
   "effort": "2-4 hours",
   "dependencies": [learn_it_task_num]
 }
@@ -71232,7 +73155,6 @@ Increment: `next_num = next_num + 1`
   "title": "Fix issues from FIX:/NOTE: tags",
   "description": "Address {N} items from embedded tags:\n\n{list of items with file:line references}\n\n**Important**: When making changes, remove the FIX: and NOTE: tags from the source files. Leave TODO: tags untouched (they create separate tasks).",
   "language": "{predominant language from source files}",
-  "priority": "high",
   "effort": "2-4 hours"
 }
 ```
@@ -71254,7 +73176,6 @@ else -> "general"
   "title": "Update context files from NOTE: tags",
   "description": "Update {N} context files based on learnings:\n\n{grouped by target context}",
   "language": "meta",
-  "priority": "medium",
   "effort": "1-2 hours"
 }
 ```
@@ -71274,7 +73195,6 @@ For each topic group in `topic_groups`:
   "title": "{topic_label}: {item_count} TODO items",
   "description": "Address TODO items related to {topic_label}:\n\n{item_list}\n\n---\n\nShared context: {shared_terms_description}",
   "language": "{detected from majority file type in group}",
-  "priority": "medium",
   "effort": "{scaled_effort}"
 }
 ```
@@ -71310,7 +73230,6 @@ Create single task containing all selected TODO items:
   "title": "Address {item_count} TODO items",
   "description": "Combined TODO items from scan:\n\n{all_items_list}\n\n---\n\nFiles: {unique_files_list}",
   "language": "{detected from majority file type}",
-  "priority": "medium",
   "effort": "{scaled_effort}"
 }
 ```
@@ -71331,7 +73250,6 @@ For each selected TODO item individually:
   "title": "{tag content, truncated to 60 chars}",
   "description": "{full tag content}\n\nSource: {file}:{line}",
   "language": "{detected from file type}",
-  "priority": "medium",
   "effort": "1 hour"
 }
 ```
@@ -71372,7 +73290,6 @@ current=$(cat specs/state.json)
   "project_name": "{slug}",
   "status": "not_started",
   "language": "{language}",
-  "priority": "high",
   "dependencies": [learn_it_task_num]
 }
 ```
@@ -71381,14 +73298,13 @@ current=$(cat specs/state.json)
 
 ###### 9.2: Update TODO.md
 
-Append new task entry in appropriate priority section:
+Prepend new task entry to `## Tasks` section (new tasks at top):
 
 **Standard format (no dependency)**:
 ```markdown
 ##### {N}. {Title}
 - **Effort**: {estimate}
 - **Status**: [NOT STARTED]
-- **Priority**: {priority}
 - **Language**: {language}
 - **Started**: {timestamp}
 
@@ -71402,7 +73318,6 @@ Append new task entry in appropriate priority section:
 ##### {N}. {Title}
 - **Effort**: {estimate}
 - **Status**: [NOT STARTED]
-- **Priority**: {priority}
 - **Language**: {language}
 - **Dependencies**: {learn_it_task_num}
 - **Started**: {timestamp}
@@ -71423,11 +73338,11 @@ Show summary of created tasks:
 
 ##### Created Tasks
 
-| # | Type | Title | Priority | Language |
-|---|------|-------|----------|----------|
-| {N} | fix-it | Fix issues from FIX:/NOTE: tags | High | {lang} |
-| {N+1} | learn-it | Update context files from NOTE: tags | Medium | meta |
-| {N+2} | todo | {title} | Medium | {lang} |
+| # | Type | Title | Language |
+|---|------|-------|----------|
+| {N} | fix-it | Fix issues from FIX:/NOTE: tags | {lang} |
+| {N+1} | learn-it | Update context files from NOTE: tags | meta |
+| {N+2} | todo | {title} | {lang} |
 
 ---
 
