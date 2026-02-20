@@ -1,5 +1,5 @@
 ---
-next_project_number: 889
+next_project_number: 892
 repository_health:
   overall_score: 90
   production_readiness: improved
@@ -21,6 +21,40 @@ technical_debt:
 # TODO
 
 ## Tasks
+
+### 891. Implement F/P witness obligation tracking to close DovetailingChain sorries
+- **Effort**: 12-20 hours
+- **Status**: [NOT STARTED]
+- **Language**: lean
+- **Created**: 2026-02-20
+- **Description**: [description.md](specs/891_implement_fp_witness_obligation_tracking/description.md)
+
+**Description**: Close the 4 remaining sorries in DovetailingChain.lean (lines 606, 617, 633, 640) by: (Phase 1) unifying the split forward/backward chains into a single interleaved chain to resolve cross-sign G/H propagation, and (Phase 2) adding F/P witness obligation scheduling via dovetailing enumeration with `temporal_witness_seed_consistent` as the consistency argument. Each BFMCS is a world history with temporal coherence constraints — the propagation requirements (forward_G, backward_H, forward_F, backward_P) are construction constraints that must be baked into how each successive MCS is built, not properties verified after the fact. Key insight: F(ψ) → G(F(ψ)) is NOT derivable, so F-obligations don't propagate automatically through GContent seeds and must be explicitly tracked. Supersedes the core blocking issue across tasks 843, 864, 870, 880, 881, 882, 888.
+
+---
+
+### 890. Document BFMCS proof architecture and remaining lacunae
+- **Effort**: 3-5 hours
+- **Status**: [NOT STARTED]
+- **Language**: meta
+- **Created**: 2026-02-20
+- **Dependencies**: Task 889
+- **Description**: [description.md](specs/890_document_bfmcs_proof_architecture/description.md)
+
+**Description**: Write comprehensive documentation explaining the completeness proof architecture. Key topics: (1) Two-level bundling ontology — BFMCS (one temporal history, bundling MCSes over time) vs BMCS (modal bundle of BFMCSes over possible worlds). (2) Propagation requirements as construction constraints — G φ propagates via GContent seeding (automatic by 4_G), but F(ψ) does NOT persist automatically (F(ψ) → G(F(ψ)) is not derivable) so witness obligations need explicit tracking. (3) The consistency argument via `temporal_witness_seed_consistent`: GContent(M) ∪ {ψ} is consistent when F(ψ) ∈ M, proved by generalized temporal K-distribution. (4) Precisely where the 4 remaining DovetailingChain sorries are (cross-sign propagation + witness construction) and what mathematical arguments close them.
+
+---
+
+### 889. Rename IndexedMCSFamily to BFMCS across codebase
+- **Effort**: 4-6 hours
+- **Status**: [NOT STARTED]
+- **Language**: lean
+- **Created**: 2026-02-20
+- **Description**: [description.md](specs/889_rename_indexedmcsfamily_to_bfmcs/description.md)
+
+**Description**: Rename `IndexedMCSFamily` to `BFMCS` (Bundled Family of Maximal Consistent Sets) throughout the codebase (420 occurrences across 38 files). Makes the two-level ontological structure explicit: BFMCS = one temporal history (bundling MCSes over time with G/H/F/P coherence constraints), BMCS = collection of BFMCSes (bundling histories over possible worlds with □/◇ modal coherence). Rename file IndexedMCSFamily.lean → BFMCS.lean, update all imports, doc comments, and documentation files.
+
+---
 
 ### 888. Research Lindenbaum temporal saturation preservation for witness families
 - **Effort**: 8-12 hours

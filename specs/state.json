@@ -599,6 +599,58 @@
       "planned": "2026-02-17T18:18:31Z",
       "started": "2026-02-13T21:26:53Z",
       "blocked_reason": "Task 887 completed with sorries. Temporal coherence of witness families requires temporal-aware Lindenbaum construction. See task 888 for mathematical gap research."
+    },
+    {
+      "project_number": 889,
+      "project_name": "rename_indexedmcsfamily_to_bfmcs",
+      "status": "not_started",
+      "language": "lean",
+      "effort": "4-6 hours",
+      "created": "2026-02-20T12:00:00Z",
+      "last_updated": "2026-02-20T12:00:00Z",
+      "description": "Rename IndexedMCSFamily to BFMCS (Bundled Family of Maximal Consistent Sets) across entire codebase. Makes the two-level ontological structure explicit: BFMCS = one temporal history (bundling MCSes over time), BMCS = collection of BFMCSes (bundling histories over possible worlds). 420 occurrences across 38 files.",
+      "artifacts": [
+        {
+          "path": "specs/889_rename_indexedmcsfamily_to_bfmcs/description.md",
+          "type": "description",
+          "summary": "Detailed rename scope and rationale"
+        }
+      ]
+    },
+    {
+      "project_number": 890,
+      "project_name": "document_bfmcs_proof_architecture",
+      "status": "not_started",
+      "language": "meta",
+      "effort": "3-5 hours",
+      "created": "2026-02-20T12:00:00Z",
+      "last_updated": "2026-02-20T12:00:00Z",
+      "depends_on": [889],
+      "description": "Write comprehensive documentation explaining the completeness proof architecture: two-level bundling (BFMCS temporal families vs BMCS modal bundle), propagation requirements as construction constraints (not post-hoc verification), the consistency argument via temporal_witness_seed_consistent, why F/P obligations need explicit tracking (F(psi) -> G(F(psi)) is NOT derivable), and precisely where the 4 remaining DovetailingChain sorries are and what closes them.",
+      "artifacts": [
+        {
+          "path": "specs/890_document_bfmcs_proof_architecture/description.md",
+          "type": "description",
+          "summary": "Detailed documentation plan with key insights from proof analysis"
+        }
+      ]
+    },
+    {
+      "project_number": 891,
+      "project_name": "implement_fp_witness_obligation_tracking",
+      "status": "not_started",
+      "language": "lean",
+      "effort": "12-20 hours",
+      "created": "2026-02-20T12:00:00Z",
+      "last_updated": "2026-02-20T12:00:00Z",
+      "description": "Close the 4 remaining sorries in DovetailingChain.lean by: (Phase 1) unifying the split forward/backward chains into a single interleaved chain to resolve cross-sign G/H propagation, and (Phase 2) adding F/P witness obligation scheduling via dovetailing enumeration with temporal_witness_seed_consistent as the consistency argument. Supersedes the core blocking issue across tasks 843, 864, 870, 880, 881, 882, 888.",
+      "artifacts": [
+        {
+          "path": "specs/891_implement_fp_witness_obligation_tracking/description.md",
+          "type": "description",
+          "summary": "Detailed 3-phase proof strategy with key lemma inventory and non-derivability analysis"
+        }
+      ]
     }
   ],
   "completed_projects": [
@@ -613,7 +665,7 @@
       "archived_reason": "abandoned"
     }
   ],
-  "next_project_number": 889,
+  "next_project_number": 892,
   "artifacts": [
     {
       "path": "specs/636_fix_sorries_temporalproofstrategies_examples/plans/implementation-001.md",
