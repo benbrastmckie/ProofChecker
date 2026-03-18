@@ -413,16 +413,35 @@ Some extensions are **mutually exclusive**:
 | Axiom | Sahlqvist? | Canonical? | Automatic Completeness? |
 |-------|-----------|-----------|------------------------|
 | All propositional | N/A | Yes | Yes |
-| Modal K, T, 5 | Yes | Yes | Yes |
+| Modal K, T, 4, B, 5 | Yes | Yes | Yes |
 | Temporal K_G, K_H | N/A | Yes | Yes |
 | Temporal 4 (Gφ→GGφ) | Yes | Yes | Yes |
 | Density (Fφ→FFφ) | Yes | Yes | Yes |
 | Seriality (F⊤, P⊤) | Yes | Yes | Yes |
-| MF (□φ→□Gφ) | Yes (in product) | Likely | Needs proof |
+| MF (□φ→□Gφ) | **Yes** | **Yes** | **Yes** |
+| TF (□φ→G□φ) | **Yes** | **Yes** | **Yes** |
+| Barcan/Conv-Barcan | Yes | Yes | Yes |
 | Linearity axioms | Yes | Yes | Yes |
 | IRR rule | N/A (rule) | N/A | Special treatment |
 | McKinsey (□◇φ→◇□φ) | **No** | **No** | No (but derivable in S5) |
 | Löb (□(□φ→φ)→□φ) | **No** | Yes (special) | Special |
+
+### 6.1.1 Why All Interaction Axioms Are Sahlqvist
+
+All natural interaction axioms express **relation composition containments** on two-sorted frames (W, R_□, <):
+
+| Axiom | Composition Condition | Sahlqvist? |
+|-------|----------------------|-----------|
+| MF: □φ→□Gφ | R_□ ; < ⊆ R_□ (R_□ is forward-closed) | Yes (boxed atom → positive) |
+| TF: □φ→G□φ | < ; R_□ ⊆ R_□ (R_□ absorbs temporal past) | Yes |
+| Gφ→□Gφ | R_□ ; < ⊆ < (modal successors' futures ⊆ own futures) | Yes |
+| □Gφ→G□φ | R_□ ; < ⊆ < ; R_□ (forward commutativity) | Yes |
+| ◇Gφ→G◇φ | R_□⁻¹ ; < ⊆ < ; R_□⁻¹ (Church-Rosser) | Yes |
+| □φ→Gφ | < ⊆ R_□ (temporal implies modal) | Yes |
+
+Any formula of the form `□ᵢ₁...□ᵢₙ p → □ⱼ₁...□ⱼₘ p` is Sahlqvist (boxed atom antecedent, positive consequent), with correspondent `Rⱼ₁;...;Rⱼₘ ⊆ Rᵢ₁;...;Rᵢₙ`.
+
+**Consequence**: The entire extension lattice (§3-4) has **automatic Kripke completeness** at every node, since all axioms at every level are Sahlqvist. No ad-hoc completeness proofs needed — Sahlqvist's theorem gives them for free.
 
 ### 6.2 The Irreflexivity Problem
 
