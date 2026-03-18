@@ -379,12 +379,26 @@ Weakening the modal base below S5:
 
 | Modal Base | Effect on Representation | Notes |
 |------------|-------------------------|-------|
-| S5 | Full representation; TN derivable from MF | Current system |
-| S4 | TN NOT derivable; need both MF and TN | More expressive |
+| S5 | Full representation; TF derivable from MF | Current system |
+| S4 | TF NOT derivable; need both MF and TF | More expressive |
 | KD45 | Similar to S5 but without modal T | Lose □φ→φ, so lose P1's "present" part |
 | K | No modal T — cannot derive □φ→φ | Representation breaks down |
 
 **Important**: Weakening the modal base below KT loses □φ→φ (modal T), which is essential for the "present" component of P1 (□φ → φ). Without it, P1 becomes □φ → □(Hφ ∧ Gφ) — necessity implies necessary-always-else, missing the present.
+
+### 5.3 The Diodorean Connection (Bull 1965)
+
+When □ is *defined as* omnitemporal truth (single-operator, no separate G):
+
+| Time Structure | Diodorean □ | Modal Logic Validated |
+|---------------|-------------|----------------------|
+| Continuous (ℝ, ≤) | □φ ≡ φ ∧ Gφ | **S4.3** (KT4 + .3) |
+| Continuous (ℝ, <) | □φ ≡ Gφ | **K4.3** (K4 + .3) |
+| Discrete (ℕ, ≤) | □φ ≡ φ ∧ Gφ | **S4.3.1** (S4.3 + Dum) |
+
+The .3 axiom □(□φ→ψ) ∨ □(□ψ→φ) corresponds to linearity/connectedness of the temporal order. This shows the single-operator representation captures the linear structure but collapses the distinction between modal and temporal necessity.
+
+The two-operator system (□ independent of G, connected by MF) is strictly more expressive: it preserves the distinction while establishing the bridge via P1-P6.
 
 ### 5.3 Independence Table
 
@@ -478,15 +492,19 @@ For the ProofChecker, approach (5) may be simplest: since irreflexivity adds no 
 
 | Logic | Complexity | Notes |
 |-------|-----------|-------|
-| S5 alone | NP-complete | |
-| K_t.Lin alone | PSPACE-complete | |
+| S5 alone | coNP-complete | |
+| K_t.Lin alone | PSPACE-complete | coNP for finitely axiom. tense logics |
 | S5 ⊗ K_t.Lin (fusion) | PSPACE-complete | Fusion preserves decidability |
 | S5 + K_t.Lin + MF | ≤ EXPTIME (conj.) | Single interaction axiom |
 | S5 + K_t.Lin.Dense + MF | ≤ EXPTIME (conj.) | Same + density |
-| S5 × K_t.Lin (product) | ≤ NEXPTIME | Full commutativity |
-| K × K (product) | NEXPTIME-complete | Marx 1999 |
-| K4 × K4 (product) | **Undecidable!** | GKWZ 2003 |
-| S5 × S5 (product) | NEXPTIME-complete | |
+| S5 × K_t.Lin (product) | ≤ EXPSPACE | Full commutativity |
+| K × K (product) | Decidable | FMP holds |
+| S5 × S5 (product) | NEXPTIME | Decidable |
+| K4 × K4 (product) | **Undecidable** | Gabelaia et al. 2005 |
+| S4 × S4 (product) | **Undecidable** | GKWZ 2003 |
+| S5 × S5 × S5 (product) | **Undecidable** | 3+ dimensions |
+
+**Warning**: Products of transitive logics are generally undecidable. The choice to use MF (a single interaction axiom, weaker than full commutativity) avoids this trap.
 
 **Warning**: Adding interaction axioms can jump complexity dramatically. The product K4 × K4 is undecidable. This means the choice of which interaction axioms to add is not just logical but also computational.
 
