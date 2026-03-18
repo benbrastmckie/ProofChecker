@@ -8,9 +8,13 @@
 
 ## Executive Summary
 
-This report identifies the **weakest natural base logic** with irreflexive semantics that preserves the parametric representation theorem, and maps the full **lattice of extensions** with characterization theorems for each node. The key finding is:
+This report identifies the **weakest natural base logic** with irreflexive semantics that preserves the parametric representation theorem, and maps the full **lattice of extensions** with characterization theorems for each node. Three findings are central and should guide the refactoring:
 
-> **The minimal representation-preserving logic is S5 + K_t.Lin.Irr + MF** — a single interaction axiom (time-shift closure) suffices. All other interaction properties (temporal persistence of necessity, perpetuity principles P1-P6) are derivable.
+> **Finding 1 — Minimal interaction**: The minimal representation-preserving logic is **S5 + K_t.Lin.Irr + MF** — a single interaction axiom (time-shift closure) suffices. The axiom TF (`□φ → G(□φ)`) is **derivable** from MF + S5 via a three-step proof (§2.3) and should be removed as an axiom and re-proved as a theorem.
+
+> **Finding 2 — Universal automatic completeness**: Every interaction axiom in the system (MF, TF, Barcan variants, commutativity axioms) is **Sahlqvist** because each expresses a relation composition containment (e.g., MF: `R;< ⊆ R`). By Sahlqvist's theorem, every node in the extension lattice (§3-4) has **automatic Kripke completeness** — no ad-hoc completeness proofs are needed at any level. This is the single most important simplification for the formalization.
+
+> **Finding 3 — Irreflexivity is semantics-only**: Venema's insight that "connectedness and irreflexivity do not yield new validities" means the proof system needs no changes for irreflexivity — only the semantic interpretation changes (§6.2).
 
 ---
 
@@ -196,7 +200,7 @@ MODAL DIMENSION          TEMPORAL DIMENSION        INTERACTION DIMENSION
       |                         |                          |
     S4.3                  K_t.Lin.Dense.Irr          MF + Barcan + Conv-Barcan
       |                         |                          |
-    S4.2                    K_t.Lin.Irr                  MF + TN
+    S4.2                    K_t.Lin.Irr                  MF + TF
       |                         |                          |
      S4                     K_t.Lin                       MF
       |                         |                          |
@@ -281,9 +285,9 @@ Full Commutativity (□G↔G□, □H↔H□)
          ⇓
 Barcan + Conv-Barcan (both directions)
          ⇓
-MF + TN + Com₁ + Com₂
+MF + TF + Com₁ + Com₂
          ⇓
-MF (+ TN derivable in S5)
+MF (+ TF derivable in S5)
          ⇓
 No interaction (fusion)
 ```
@@ -334,7 +338,7 @@ No interaction (fusion)
 **Frame class**: F₃ = F₂ ∩ {no endpoints: ∀t∃s>t, ∀t∃s<t}
 
 **Characterization Theorem**: Additional axioms F⊤, P⊤ characterize no-endpoints.
-- This is the **irreflexive version of the current ProofChecker** (minus temporal T-axioms, which are now invalid, and minus TN which is derivable)
+- This is the **irreflexive version of the current ProofChecker** (minus temporal T-axioms, which are now invalid, and minus TF which is derivable)
 - FMP: Yes (established in codebase modulo reflexivity adjustment)
 - Decidable: Yes
 
@@ -400,7 +404,7 @@ The .3 axiom □(□φ→ψ) ∨ □(□ψ→φ) corresponds to linearity/connec
 
 The two-operator system (□ independent of G, connected by MF) is strictly more expressive: it preserves the distinction while establishing the bridge via P1-P6.
 
-### 5.3 Independence Table
+### 5.4 Independence Table
 
 | Extension | Independent of base? | Independent of each other? | Frame characterization |
 |-----------|---------------------|---------------------------|----------------------|
@@ -412,7 +416,7 @@ The two-operator system (□ independent of G, connected by MF) is strictly more
 | Discreteness | Yes | **Incompatible** with density | Discrete successor exists |
 | Well-foundedness | Yes | Yes | No infinite ascending chains |
 
-### 5.4 Incompatible Extensions
+### 5.5 Incompatible Extensions
 
 Some extensions are **mutually exclusive**:
 - Density + Discreteness: dense orders have no immediate successors
@@ -510,9 +514,68 @@ For the ProofChecker, approach (5) may be simplest: since irreflexivity adds no 
 
 ---
 
-## 8. Recommended Architecture
+## 8. Refactoring Plan: Two Central Simplifications
 
-### 8.1 The Layered System
+The following two results should be the **primary drivers** of the refactoring. Every architectural decision flows from them.
+
+### 8.1 Simplification A: Remove TF as Axiom, Derive It
+
+**Current state**: `temp_future` (TF: □φ → G(□φ)) is listed as an independent axiom (#18 in §1.1).
+
+**Target state**: TF is a **derived theorem**, proved once from MF + M4 + MT.
+
+**Proof** (three steps, each a single axiom application):
+```
+1. □φ → □□φ              (M4: modal_4)
+2. □□φ → □(G(□φ))        (MF: modal_future, applied to □φ)
+3. □(G(□φ)) → G(□φ)      (MT: modal_t, applied to G(□φ))
+∴  □φ → G(□φ)            (chain 1-2-3)
+```
+
+**Refactoring steps**:
+1. Remove `temp_future` from the axiom enum in `Axioms.lean`
+2. Add `theorem tf_from_mf` in the proof system deriving TF from MF + M4 + MT
+3. Update all downstream uses of `temp_future` to reference the theorem instead
+4. P5's proof (which uses TF via a persistence lemma) should import the derived theorem
+
+**Impact**: Reduces the axiom count by 1 and clarifies the logical dependency structure — MF is the **sole** bridge between the modal and temporal components.
+
+### 8.2 Simplification B: Sahlqvist Completeness at Every Level
+
+**Current state**: Completeness proofs are proved ad-hoc for specific frame classes.
+
+**Target state**: **No ad-hoc completeness proofs** at any level of the extension lattice.
+
+**Why this works**: Every interaction axiom in the system expresses a **relation composition containment** on two-sorted frames:
+
+| Axiom | Composition Containment | Sahlqvist Form |
+|-------|------------------------|----------------|
+| MF: □φ→□Gφ | R ; < ⊆ R | Boxed atom → positive |
+| TF: □φ→G□φ | < ; R ⊆ R | Boxed atom → positive |
+| Barcan: G□φ→□Gφ | R ; < ⊆ < ; R | Boxed atom → positive |
+| Conv-Barcan: □Gφ→G□φ | < ; R ⊆ R ; < | Boxed atom → positive |
+| Com₁: ◇Gφ→G◇φ | R⁻¹ ; < ⊆ < ; R⁻¹ | Church-Rosser |
+
+All are instances of the general pattern `□ᵢ₁...□ᵢₙ p → □ⱼ₁...□ⱼₘ p` (Sahlqvist: boxed atom antecedent, positive consequent), with frame correspondent `Rⱼ₁;...;Rⱼₘ ⊆ Rᵢ₁;...;Rᵢₙ`.
+
+**Consequence**: By Sahlqvist's theorem:
+- Every axiom has an automatically computable first-order frame correspondent
+- The canonical frame validates every axiom (canonicity for free)
+- Kripke completeness holds at every node in the extension lattice
+
+**Refactoring steps**:
+1. Factor completeness proofs to use a single Sahlqvist machinery module
+2. Each extension level (§4) should invoke Sahlqvist completeness rather than proving completeness independently
+3. When adding new interaction axioms, verify they fit the `□...p → □...p` pattern (guaranteeing Sahlqvist status) rather than constructing a bespoke completeness proof
+4. Document the composition containment for each axiom as its "semantic certificate"
+
+**Impact**: Eliminates the most labor-intensive part of the formalization (completeness proofs) and makes the system trivially extensible — adding a new interaction axiom at any level requires only stating it and verifying it's Sahlqvist.
+
+---
+
+## 9. Recommended Architecture
+
+### 9.1 The Layered System
 
 ```
 Layer 4: Frame Specializations
@@ -529,7 +592,7 @@ Layer 3: Interaction Strengthening (optional)
              │
 Layer 2: MINIMAL REPRESENTATION BASE ← recommended base
   S5 + K_t.Lin.Irr + MF
-  (P1-P6 all hold; □φ ↔ □△φ; TN derivable)
+  (P1-P6 all hold; □φ ↔ □△φ; TF derivable)
              │
 Layer 1: Pure Fusion (no representation)
   S5 ⊗ K_t.Lin.Irr
@@ -538,42 +601,53 @@ Layer 0: Weakest Components
   K ⊗ K_t
 ```
 
-### 8.2 Implementation Strategy
+### 9.2 Implementation Strategy
 
-For the ProofChecker refactoring to irreflexive semantics:
+For the ProofChecker refactoring to irreflexive semantics, guided by the two central simplifications (§8):
 
-**Phase 1: Establish the minimal base**
+**Phase 1: TF derivability (§8.1)**
+1. Remove `temp_future` from the axiom enum in `Axioms.lean`
+2. Add `theorem tf_from_mf` deriving TF from MF + M4 + MT (three-step chain)
+3. Update all downstream uses of `temp_future` to reference the derived theorem
+4. Verify P5's persistence lemma still works via the derived TF
+
+**Phase 2: Establish the irreflexive base**
 1. Change Truth.lean: `≤` → `<` in temporal quantifiers
 2. Remove `temp_t_future` and `temp_t_past` axioms (invalid under strict <)
-3. Remove `temporal_necessity` axiom (derivable from MF + S5)
-4. Add IRR rule to the derivation system (or restrict semantics)
-5. Update MF soundness proof (no longer uses `le_refl`)
+3. Add IRR rule to the derivation system (or restrict semantics per Venema's insight, §6.2)
+4. Update MF soundness proof (no longer uses `le_refl`)
 
-**Phase 2: Reclassify frame axioms**
+**Phase 3: Reclassify frame axioms**
 1. Mark density as a genuine extension (not trivially true)
 2. Mark seriality as a genuine extension
 3. Reformulate `temp_l` for strict semantics
 4. Add `[DenselyOrdered D]` and `[Nontrivial D]` where needed in soundness proofs
 
-**Phase 3: Verify perpetuity**
-1. Prove P1-P6 from MF alone (no TN needed)
+**Phase 4: Verify perpetuity**
+1. Prove P1-P6 from MF alone (no TF needed as axiom — it's now a theorem)
 2. Verify P5 (representation theorem) holds
 3. Update Bridge.lean derivations
 
-**Phase 4: Build extension modules**
+**Phase 5: Sahlqvist completeness infrastructure (§8.2)**
+1. Factor completeness proofs to use a single Sahlqvist machinery module
+2. Each extension level (§4) invokes Sahlqvist completeness, not bespoke proofs
+3. Document the composition containment (`R;< ⊆ R` etc.) for each axiom
+4. When adding new axioms, verify `□...p → □...p` Sahlqvist form as the completeness certificate
+
+**Phase 6: Build extension modules**
 1. Create modular extension files for each layer
-2. Each extension adds axioms + proves frame characterization
+2. Each extension adds axioms + Sahlqvist certificate + frame characterization
 3. Independence proofs via countermodels
 
 ---
 
-## 9. Key Theorems to Prove in Lean
+## 10. Key Theorems to Prove in Lean
 
-### 9.1 Core (Minimal Base)
+### 10.1 Core (Minimal Base)
 
 ```
--- TN is derivable from MF + S5
-theorem tn_from_mf : ⊢ φ.box.imp φ.box.all_future  -- using MF + 4 + T
+-- TF is derivable from MF + S5 (see §2.3)
+theorem tf_from_mf : ⊢ φ.box.imp φ.box.all_future  -- using MF + M4 + MT
 
 -- P1 from MF alone
 theorem perpetuity_1_irrefl : ⊢ φ.box.imp φ.always  -- using MF + T
@@ -582,7 +656,7 @@ theorem perpetuity_1_irrefl : ⊢ φ.box.imp φ.always  -- using MF + T
 theorem representation : ⊢ φ.always.box.iff φ.box  -- P3 + projection
 ```
 
-### 9.2 Extensions
+### 10.2 Extensions
 
 ```
 -- Density characterization
@@ -600,7 +674,7 @@ theorem barcan_characterizes :
 
 ---
 
-## 10. References
+## 11. References
 
 1. **Gabbay (1981)**: Irreflexivity lemma and IRR rule
 2. **Thomason (1984)**: Combinations of tense and modality
