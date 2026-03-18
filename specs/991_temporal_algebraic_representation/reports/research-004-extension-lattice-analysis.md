@@ -411,13 +411,19 @@ Some extensions are **mutually exclusive**:
 
 ### 6.2 The Irreflexivity Problem
 
-**Irreflexivity is NOT modally definable** (Goldblatt-Thomason theorem: fails closure under ultrafilter extensions). This is why strict temporal semantics requires:
+**Irreflexivity is NOT modally definable** (Goldblatt-Thomason: fails closure under surjective bounded morphisms; van Benthem 1983: `¬Rxx` is not bisimulation-invariant).
 
-1. **Gabbay's IRR rule**: From H(p→φ) ∧ (p→φ) ∧ G(p→φ), infer φ (p fresh)
-2. Or **semantic restriction**: simply restrict validity to irreflexive frames
-3. Or **difference logic**: add a "difference" modality Dφ = "φ at some other time"
+**Key insight (Venema)**: "Connectedness and irreflexivity do not yield any new validities." The set of valid formulas is the same whether or not we enforce irreflexivity on frames. This means the extension lattice structure is preserved — irreflexivity is a semantic constraint, not a proof-theoretic one.
 
-The IRR rule is the standard approach in the literature (Gabbay 1981, Blackburn et al. 2001).
+**Approaches for handling irreflexivity**:
+
+1. **Gabbay's IRR rule** (1981): From `(p ∧ H(¬p)) → φ` where p is fresh, infer φ. Standard approach; used by Burgess (1980) for branching-time logic.
+2. **Difference operator** (de Rijke 1992): Add Dφ = "φ at some w ≠ current w". Captures irreflexivity axiomatically. Decidable (coNP-complete, like S5).
+3. **IRR-free axiomatization** (Reynolds 1992): Over (ℝ, <), orthodox temporal rules suffice without IRR. Also Di Maio & Zanardo (1998) for T×W frames.
+4. **Infinite axiom schema** (Zanardo 1990): Replace IRR rule with infinitely many axioms.
+5. **Semantic restriction**: Simply restrict validity to irreflexive frames (no proof-theoretic change needed if Venema's observation applies).
+
+For the ProofChecker, approach (5) may be simplest: since irreflexivity adds no new validities, the proof system can remain unchanged while the semantics restricts to strict orders.
 
 ### 6.3 Frame Definability Summary
 
@@ -552,8 +558,16 @@ theorem barcan_characterizes :
 6. **Marx (1999)**: Complexity of products of modal logics
 7. **Wolter (2000)**: Fusions of modal logics revisited
 8. **GKWZ (2003)**: Many-Dimensional Modal Logics (Gabbay, Kurucz, Wolter, Zakharyaschev)
-9. **Reynolds (2003)**: Axiomatization of temporal logics on the real line
-10. **Zanardo (1996)**: Branching-time logic with quantification over branches
-11. **van Benthem (1983)**: The Logic of Time
-12. **Blackburn, de Rijke, Venema (2001)**: Modal Logic (Cambridge)
-13. **Blackburn, van Benthem, Wolter (2007)**: Handbook of Modal Logic
+9. **Reynolds (1992)**: An axiomatization for until and since over the reals without the IRR rule
+10. **Reynolds (2003)**: Axiomatization of temporal logics on the real line
+11. **Zanardo (1990)**: IRR-free axiomatization via infinite axiom schemas
+12. **Zanardo (1996)**: Branching-time logic with quantification over branches
+13. **van Benthem (1983)**: The Logic of Time
+14. **Blackburn, de Rijke, Venema (2001)**: Modal Logic (Cambridge)
+15. **Blackburn, van Benthem, Wolter (2007)**: Handbook of Modal Logic
+16. **de Rijke (1992)**: The modal logic of inequality (difference operator)
+17. **Di Maio & Zanardo (1998)**: A Gabbay-rule free axiomatization of T×W validity
+18. **Kracht & Wolter (1991)**: Properties of independently axiomatizable bimodal logics (fusion transfer theorems)
+19. **Venema**: Temporal Logic (chapter) — "connectedness and irreflexivity do not yield new validities"
+20. **Burgess (1980)**: Peircean branching-time temporal logic (used IRR)
+21. **Nalon, Marcos & Dixon (2014)**: Parameterized confluence axioms for modal logics
