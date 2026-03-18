@@ -18,56 +18,92 @@ This report identifies the **weakest natural base logic** with irreflexive seman
 
 ### 1.1 Axiom Catalog
 
-The system (`Theories/Bimodal/Logic/Axioms.lean`) has 16 axiom schemas in 5 categories:
+The system (`Theories/Bimodal/ProofSystem/Axioms.lean`) has 21 axiom schemas organized into Base (18), Dense (1), and Discrete (3):
 
-| # | Axiom | Schema | Category |
-|---|-------|--------|----------|
-| 1 | `prop_1` | φ → (ψ → φ) | Classical |
-| 2 | `prop_2` | (φ→(ψ→χ)) → ((φ→ψ)→(φ→χ)) | Classical |
-| 3 | `prop_3` | (¬φ→¬ψ) → (ψ→φ) | Classical |
-| 4 | `modal_k` | □(φ→ψ) → (□φ→□ψ) | Modal |
-| 5 | `modal_t` | □φ → φ | Modal |
-| 6 | `modal_five` | ◇φ → □◇φ | Modal |
-| 7 | `temp_k_future` | G(φ→ψ) → (Gφ→Gψ) | Temporal |
-| 8 | `temp_k_past` | H(φ→ψ) → (Hφ→Hψ) | Temporal |
-| 9 | `temp_t_future` | Gφ → φ | Temporal |
-| 10 | `temp_t_past` | Hφ → φ | Temporal |
-| 11 | `temp_l` | △φ → G(Hφ) | Temporal |
-| 12 | `modal_future` (MF) | □φ → □(Gφ) | Interaction |
-| 13 | `temporal_necessity` (TN) | □φ → G(□φ) | Interaction |
-| 14 | `density` | Fφ → FFφ | Frame |
-| 15 | `seriality_future` | F⊤ | Frame |
-| 16 | `seriality_past` | P⊤ | Frame |
-| 17 | `discreteness_forward` | Gφ→φ axiom schema | Frame |
+**Propositional (4)**:
+
+| # | Axiom | Schema | Notes |
+|---|-------|--------|-------|
+| 1 | `prop_k` | (φ→(ψ→χ)) → ((φ→ψ)→(φ→χ)) | Distribution |
+| 2 | `prop_s` | φ → (ψ → φ) | Weakening |
+| 3 | `ex_falso` | ⊥ → φ | Explosion |
+| 4 | `peirce` | ((φ→ψ)→φ) → φ | Classical reasoning |
+
+**Modal S5 (5)**:
+
+| # | Axiom | Schema | Frame property |
+|---|-------|--------|----------------|
+| 5 | `modal_t` (MT) | □φ → φ | Reflexivity of R |
+| 6 | `modal_4` (M4) | □φ → □□φ | Transitivity of R |
+| 7 | `modal_b` (MB) | φ → □◇φ | Symmetry of R |
+| 8 | `modal_5_collapse` | ◇□φ → □φ | S5 collapse |
+| 9 | `modal_k_dist` (MK) | □(φ→ψ) → (□φ→□ψ) | Distribution |
+
+**Temporal (9)**:
+
+| # | Axiom | Schema | Frame property |
+|---|-------|--------|----------------|
+| 10 | `temp_k_dist` (TK) | G(φ→ψ) → (Gφ→Gψ) | Distribution |
+| 11 | `temp_4` (T4) | Gφ → GGφ | Transitivity of < |
+| 12 | `temp_t_future` (TT-F) | Gφ → φ | **Reflexivity of ≤** |
+| 13 | `temp_t_past` (TT-P) | Hφ → φ | **Reflexivity of ≤** |
+| 14 | `temp_a` (TA) | φ → G(Pφ) | Temporal connectedness |
+| 15 | `temp_l` (TL) | △φ → G(Hφ) | Temporal introspection |
+| 16 | `temp_linearity` | F(φ)∧F(ψ) → F(φ∧ψ)∨F(φ∧Fψ)∨F(Fφ∧ψ) | Linearity (Task 922) |
+
+**Bimodal Interaction (2)**:
+
+| # | Axiom | Schema | Semantic property |
+|---|-------|--------|-------------------|
+| 17 | `modal_future` (MF) | □φ → □(Gφ) | Time-shift closure forward |
+| 18 | `temp_future` (TF) | □φ → G(□φ) | Temporal persistence of □ |
+
+**Dense Extension (1)**:
+
+| # | Axiom | Schema | Frame condition |
+|---|-------|--------|-----------------|
+| 19 | `density` (DN) | Fφ → FFφ | DenselyOrdered |
+
+**Discrete Extension (3)**:
+
+| # | Axiom | Schema | Frame condition |
+|---|-------|--------|-----------------|
+| 20 | `discreteness_forward` (DF) | (F⊤∧φ∧Hφ) → F(Hφ) | SuccOrder |
+| 21 | `seriality_future` | F(¬⊥) | NoMaxOrder |
+| 22 | `seriality_past` | P(¬⊥) | NoMinOrder |
 
 ### 1.2 Inference Rules
 
-From `Derivation.lean`:
-1. **Modus Ponens** (mp)
-2. **Modal Necessitation** (nec_box): ⊢φ ⟹ ⊢□φ
-3. **Future Necessitation** (nec_future): ⊢φ ⟹ ⊢Gφ
-4. **Past Necessitation** (nec_past): ⊢φ ⟹ ⊢Hφ
-5. **Temporal Swap** (swap_nec_future): ⊢swap(φ) ⟹ ⊢φ
+From `Derivation.lean` — 7 rules:
+1. **axiom**: Any axiom instance is derivable
+2. **assumption**: Context formulas are derivable
+3. **modus_ponens**: Γ ⊢ φ→ψ, Γ ⊢ φ ⟹ Γ ⊢ ψ
+4. **necessitation**: ⊢φ ⟹ ⊢□φ
+5. **temporal_necessitation**: ⊢φ ⟹ ⊢Gφ
+6. **temporal_duality**: ⊢φ ⟹ ⊢swap_past_future(φ)
+7. **weakening**: Γ ⊢ φ, Γ ⊆ Δ ⟹ Δ ⊢ φ
 
 ### 1.3 Reflexivity Dependencies
 
-Axioms whose **soundness** depends on reflexive (≤) semantics:
+Axioms whose **soundness** depends on reflexive (≤) temporal semantics:
 
 | Axiom | Uses `le_refl` | Status Under Strict (<) |
 |-------|---------------|------------------------|
 | `temp_t_future` (Gφ→φ) | Yes | **INVALID** — drops entirely |
 | `temp_t_past` (Hφ→φ) | Yes | **INVALID** — drops entirely |
-| `seriality_future` (F⊤) | Yes (trivializes) | Becomes genuine constraint (needs Nontrivial) |
-| `seriality_past` (P⊤) | Yes (trivializes) | Becomes genuine constraint |
+| `seriality_future` (F⊤) | Yes (trivializes) | Becomes genuine constraint (needs NoMaxOrder) |
+| `seriality_past` (P⊤) | Yes (trivializes) | Becomes genuine constraint (needs NoMinOrder) |
 | `density` (Fφ→FFφ) | Yes (trivializes) | Becomes genuine constraint (needs DenselyOrdered) |
 | `modal_future` (MF) | Yes (proof uses it) | Statement valid with different proof |
 | `temp_l` (△φ→G(Hφ)) | Yes | Needs reformulation |
 
 Axioms **independent** of reflexivity:
-- All propositional axioms
-- `modal_k`, `modal_t`, `modal_five` (modal properties, not temporal)
-- `temp_k_future`, `temp_k_past` (distribution)
-- `temporal_necessity` (statement valid under both)
+- All propositional axioms (`prop_k`, `prop_s`, `ex_falso`, `peirce`)
+- Modal axioms (`modal_t`, `modal_4`, `modal_b`, `modal_5_collapse`, `modal_k_dist`)
+- Temporal distribution (`temp_k_dist`) and transitivity (`temp_4`)
+- `temp_future` / TF (statement valid under both, proof may differ)
+- `temp_a` (temporal connectedness)
+- `temp_linearity` (linearity)
 
 ---
 
@@ -103,17 +139,17 @@ The goal is to find the weakest logic satisfying:
 - MF: □φ → □(Gφ) (time-shift closure forward)
 - Mirror-MF: □φ → □(Hφ) (obtained via temporal swap rule)
 
-### 2.3 Key Theorem: TN is Derivable from MF + S5
+### 2.3 Key Theorem: TF is Derivable from MF + S5
 
-**Claim**: In S5 + MF, the axiom TN (□φ → G(□φ)) is a theorem.
+**Claim**: In S5 + MF, the axiom `temp_future` / TF (□φ → G(□φ)) is a theorem.
 
 **Proof**:
-1. □φ → □□φ (by S5's 4-axiom, derivable from T + 5)
-2. □□φ → □(G(□φ)) (MF applied to □φ)
-3. □(G(□φ)) → G(□φ) (MT applied to G(□φ))
+1. □φ → □□φ (by `modal_4`)
+2. □□φ → □(G(□φ)) (by `modal_future` / MF applied to □φ)
+3. □(G(□φ)) → G(□φ) (by `modal_t` / MT applied to G(□φ))
 4. Chain: □φ → G(□φ) ∎
 
-**Consequence**: TN is NOT an independent axiom in the S5 setting. The system needs only MF as its interaction axiom.
+**Consequence**: `temp_future` is NOT an independent axiom in the S5 setting. The system needs only `modal_future` (MF) as its interaction axiom.
 
 ### 2.4 Perpetuity Principles from MF Alone
 
@@ -133,7 +169,7 @@ All six perpetuity principles are derivable from S5 + K_t.Lin.Irr + MF:
 Moving to the irreflexive base, we **remove**:
 - `temp_t_future` (Gφ→φ) — invalid under strict <
 - `temp_t_past` (Hφ→φ) — invalid under strict <
-- `temporal_necessity` — derivable from MF + S5
+- `temp_future` / TF — derivable from MF + S5 (see §2.3)
 - `temp_l` (△φ→G(Hφ)) — needs reformulation for strict semantics
 
 We **keep but reclassify**:
