@@ -153,16 +153,20 @@ The goal is to find the weakest logic satisfying:
 
 ### 2.4 Perpetuity Principles from MF Alone
 
-All six perpetuity principles are derivable from S5 + K_t.Lin.Irr + MF:
+All six perpetuity principles are derivable from S5 + K_t.Lin.Irr + MF.
 
-| Principle | Statement | Derivation |
-|-----------|-----------|------------|
-| P1 | □φ → △φ | MT gives φ; MF+MT gives Gφ; mirror-MF+MT gives Hφ |
-| P2 | ◇φ → ♢φ | Contrapositive of P1 |
-| P3 | □φ → □△φ | MF gives □Gφ; mirror-MF gives □Hφ; identity gives □φ |
-| P4 | ◇φ → ◇♢φ | Contrapositive of P3 |
-| P5 | □△φ ↔ □φ | Forward: conjunction projection. Backward: P3 |
-| P6 | ◇♢φ ↔ ◇φ | Dual of P5 |
+**Critical finding**: Code analysis confirms that **none of the perpetuity proofs in the codebase use `temp_t_future` or `temp_t_past`**. The actual Lean derivation trees survive the irreflexive refactoring without modification.
+
+P5 uses TF (`temp_future`: □φ → G(□φ)) in its persistence lemma, but TF is derivable from MF + S5 (see §2.3), so MF remains the sole independent interaction axiom needed.
+
+| Principle | Statement | Key axioms used |
+|-----------|-----------|-----------------|
+| P1 | □φ → △φ | MF, MT, temporal duality |
+| P2 | ♢φ → ◇φ | Contrapositive of P1 |
+| P3 | □φ → □△φ | MF, MK, temporal duality |
+| P4 | ◇♢φ → ◇φ | Contrapositive of P3 |
+| P5 | ◇♢φ → △◇φ | MF, TF (derivable), MB, M4, MT, MK, TK |
+| P6 | ♢□φ → □△φ | All of P5's + classical propositional |
 
 ### 2.5 What Gets Dropped from the Current System
 
