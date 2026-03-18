@@ -247,11 +247,26 @@ MODAL DIMENSION          TEMPORAL DIMENSION        INTERACTION DIMENSION
 
 ### 3.4 Interaction Extensions (over fusion S5 ⊗ K_t)
 
+#### Herzig's Classification of Bimodal Interactions
+
+Bimodal interaction axioms fall into four families (Herzig):
+
+| Family | Schema | Frame Condition |
+|--------|--------|-----------------|
+| **Incl(□,G)** | □φ → Gφ | R_G ⊆ R_□ |
+| **Perm(□,G)** | □Gφ → G□φ | R_G ∘ R_□ ⊆ R_□ ∘ R_G |
+| **Confl(□,G)** | ◇Gφ → G◇φ | R_□⁻¹ ∘ R_G ⊆ R_G ∘ R_□⁻¹ (Church-Rosser) |
+| **Scott-Lemmon** | ◇ʰ□ⁱφ → □ʲ◇ᵏφ | Parameterized confluence G(h,i,j,k) |
+
+The Scott-Lemmon scheme `G(h,i,j,k)` = `◇ʰ□ⁱφ → □ʲ◇ᵏφ` unifies axioms 4, 5, B, .2, and many interaction axioms. Frame condition: `wR^h v ∧ wR^j u → ∃x. vR^i x ∧ uR^k x`.
+
+#### Specific Interaction Axioms
+
 | Extension | Axiom | Frame Condition | Independent? |
 |-----------|-------|-----------------|-------------|
 | **MF** | □φ→□(Gφ) | Time-shift closure forward | **Yes** (MINIMAL for representation) |
 | MF-past | □φ→□(Hφ) | Time-shift closure backward | Derivable via temporal swap |
-| TN | □φ→G(□φ) | R preserved forward | **Derivable** from MF+S5 |
+| TF | □φ→G(□φ) | R preserved forward | **Derivable** from MF+S5 |
 | Barcan-F | G□φ→□Gφ | Expanding domains forward | Yes |
 | Conv-Barcan-F | □Gφ→G□φ | Contracting domains forward | Yes |
 | Barcan-P | H□φ→□Hφ | Expanding domains backward | Yes |
