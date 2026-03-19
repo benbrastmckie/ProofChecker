@@ -1,22 +1,22 @@
 ---
-next_project_number: 994
+next_project_number: 996
 repository_health:
   overall_score: 92
   production_readiness: improved
-  last_assessed: 2026-03-16T23:45:00Z
+  last_assessed: 2026-03-19T00:00:00Z
 task_counts:
-  active: 11
+  active: 10
   completed: 686
-  in_progress: 1
+  in_progress: 0
   not_started: 2
-  abandoned: 42
-  total: 743
+  abandoned: 45
+  total: 746
 technical_debt:
   sorry_count: 16
   sorry_count_note: "Excluding Boneyard: 3 wiring (FrameConditions/Completeness), 13 examples"
   publication_path_sorries: 0
-  axiom_count: 1
-  axiom_count_note: "discrete_Icc_finite_axiom (documented debt from task 979)"
+  axiom_count: 3
+  axiom_count_note: "canonicalR_irreflexive_axiom (justified per task 991), discrete_Icc_finite_axiom (documented debt from task 979), discreteImmediateSuccSeed_consistent_axiom (justified per task 991)"
   build_errors: 0
   status: excellent
 ---
@@ -24,6 +24,25 @@ technical_debt:
 # TODO
 
 ## Tasks
+### 995. FMCS domain transfer lemma
+- **Effort**: TBD (estimated 8-12 hours)
+- **Status**: [NOT STARTED]
+- **Language**: lean
+- **Priority**: high
+
+**Description**: Build a general FMCS transfer lemma: given an order-embedding `e : CanonicalMCS → D` (where D has `AddCommGroup + LinearOrder + IsOrderedAddMonoid`), transfer temporal coherence (forward_F, backward_P) from the sorry-free `CanonicalMCS`-based BFMCS to a `BFMCS D`. This is the single highest-leverage piece of work in the codebase. The CanonicalMCS construction (in `CanonicalFMCS.lean`) is fully proven with zero sorries for forward_F, backward_P, and modal saturation. The only remaining gap is that `CanonicalMCS` lacks `AddCommGroup`, so it cannot serve as D in `TaskFrame`. This transfer lemma bridges that gap and simultaneously unblocks: (1) base completeness (embed into ℤ), (2) dense completeness (embed into ℚ via Cantor), (3) discrete completeness (embed into ℤ with SuccOrder).
+
+---
+
+### 994. Wire soundness theorem assembly
+- **Effort**: TBD (estimated 4-6 hours)
+- **Status**: [NOT STARTED]
+- **Language**: lean
+
+**Description**: Wire the 6 remaining sorries in `Soundness.lean` (lines 565, 569, 572, 575, 595, 598) using the already-proven component theorems. The sorries cover: (1) density axiom validity — proven in `DenseSoundness.axiom_dense_valid`, (2) discreteness_forward validity — proven in `DiscreteSoundness.axiom_discrete_valid`, (3) seriality_future/past validity — proven in `DiscreteSoundness`, (4) temporal_duality rule — component proof in `SoundnessLemmas.axiom_swap_valid`, (5) IRR rule — needs product frame construction. The main challenge is that the soundness theorem quantifies over ALL D, but the extension axioms are only valid on frames with specific properties (DenselyOrdered, SuccOrder, etc.). Resolution: either restrict the soundness statement to appropriate frame classes, or use the `Axiom.frameClass` classification already defined in `Axioms.lean` (lines 477-497) to dispatch each axiom to its correct frame class.
+
+---
+
 ### 993. Add stability operator to bimodal formula language
 - **Effort**: TBD
 - **Status**: [NOT STARTED]
@@ -83,14 +102,15 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 988. Dense algebraic completeness
 - **Effort**: 16 hours (4 phases)
-- **Status**: [IMPLEMENTING]
+- **Status**: [BLOCKED]
+- **Blocked on**: Task 995 (FMCS domain transfer lemma)
 - **Language**: lean
 - **Research**: [research-001.md](specs/988_dense_algebraic_completeness/reports/research-001.md), [research-002.md](specs/988_dense_algebraic_completeness/reports/research-002.md), [research-003.md](specs/988_dense_algebraic_completeness/reports/research-003.md), [research-004.md](specs/988_dense_algebraic_completeness/reports/research-004.md), [research-005.md](specs/988_dense_algebraic_completeness/reports/research-005.md), [06_team-research.md](specs/988_dense_algebraic_completeness/reports/06_team-research.md)
 - **Plan**: [06_representation-theorem-path.md](specs/988_dense_algebraic_completeness/plans/06_representation-theorem-path.md) (v6: Fix sorries, transport, wire)
 - **Handoff**: [phase-1-handoff-20260317.md](specs/988_dense_algebraic_completeness/handoffs/phase-1-handoff-20260317.md)
-- **Summary**: [implementation-summary-20260317.md](specs/988_dense_algebraic_completeness/summaries/implementation-summary-20260317.md), [02_implementation-summary.md](specs/988_dense_algebraic_completeness/summaries/02_implementation-summary.md) (v4 plan blocked), [03_sorry-analysis-summary.md](specs/988_dense_algebraic_completeness/summaries/03_sorry-analysis-summary.md) (v6 plan blocked)
+- **Summary**: [implementation-summary-20260317.md](specs/988_dense_algebraic_completeness/summaries/implementation-summary-20260317.md), [02_implementation-summary.md](specs/988_dense_algebraic_completeness/summaries/02_implementation-summary.md) (v4 plan blocked), [03_sorry-analysis-summary.md](specs/988_dense_algebraic_completeness/summaries/03_sorry-analysis-summary.md) (v6 plan blocked), [04_architectural-gap-analysis.md](specs/988_dense_algebraic_completeness/summaries/04_architectural-gap-analysis.md) (v9 plan blocked)
 
-**Plan v6 approach**: Use `dense_representation_conditional` directly. The 4 sorries in ClosureSaturation.lean (lines 659, 664, 679, 724) are the only blockers. Fix them -> transport via `cantor_isomorphism : TimelineQuot ~=o Rat` -> wire into representation theorem.
+**Status note (2026-03-19)**: Plans v4, v6, and v9 all blocked at Phase 1 due to the same fundamental issue: CanonicalMCS (sorry-free BFMCS) lacks AddCommGroup for TaskFrame D. The correct path is via task 995 (FMCS domain transfer): transfer the sorry-free CanonicalMCS construction to D = Rat via Cantor isomorphism (CanonicalMCS antisymmetrization ≃o ℚ). All temporal coherence components are already proven.
 
 **Description**: Prove dense algebraic completeness using D = Rat. Requires: (1) a sorry-free BFMCS construction over Rat (adapting the Int construction with density-exploiting witness placement), (2) proving the DN axiom is valid in `DenseCanonicalTaskFrame Rat` (Rat's density gives the required intermediate witnesses), (3) wiring `dense_representation_conditional` to obtain `valid_dense φ → ⊢_dense φ`. Does not overlap with task 982 (TimelineQuot approach).
 
@@ -98,14 +118,16 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 987. Algebraic base completeness
 - **Effort**: TBD
-- **Status**: [RESEARCHED]
+- **Status**: [ABANDONED]
+- **Abandoned**: 2026-03-19
 - **Language**: lean
-- **Depends On**: Task 986
+- **Depends On**: Task 986 [ARCHIVED]
+- **Superseded By**: Task 995 (FMCS domain transfer lemma)
 - **Research**: [research-001.md](specs/987_algebraic_base_completeness/reports/research-001.md)
 
-**Description**: Wire algebraic base completeness: use the sorry-free BFMCS construction from task 986 as the `construct_bfmcs` argument to `parametric_algebraic_representation_conditional` (D = Int), then prove `valid φ → ⊢ φ`. Resolve any type mismatch between `CanonicalWorldState` and `ParametricCanonicalWorldState`. Create `AlgebraicBaseCompleteness.lean` with the closed completeness theorem.
+**Abandonment reason**: Task 986 (dependency) is archived with 2 unresolvable sorries (forward_F/backward_P for D=Int). The CanonicalMCS path (sorry-free) cannot serve as D due to missing AddCommGroup. Task 995 (FMCS domain transfer) supersedes this by providing the general bridge from sorry-free CanonicalMCS to any D with AddCommGroup via order-embedding. Base completeness becomes a corollary of task 995 (embed into ℤ).
 
-**Research Summary**: Task 986 has 2 sorries (forward_F/backward_P) blocking direct wiring. CanonicalWorldState and ParametricCanonicalWorldState are identical; real mismatch is D=Int (needs AddCommGroup) vs D=CanonicalMCS (sorry-free but only Preorder). Two paths: (A) complete task 986 dovetailing, or (B) semantic equivalence via CanonicalMCS completeness.
+**Description**: Wire algebraic base completeness: use the sorry-free BFMCS construction from task 986 as the `construct_bfmcs` argument to `parametric_algebraic_representation_conditional` (D = Int), then prove `valid φ → ⊢ φ`. Resolve any type mismatch between `CanonicalWorldState` and `ParametricCanonicalWorldState`. Create `AlgebraicBaseCompleteness.lean` with the closed completeness theorem.
 
 ---
 
@@ -187,15 +209,17 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 981. Remove axiom technical debt from task 979
 - **Effort**: 4-6 hours (4 phases)
-- **Status**: [IMPLEMENTING]
+- **Status**: [ABANDONED]
+- **Abandoned**: 2026-03-19
 - **Language**: lean
 - **Depends On**: Task 978 [COMPLETED]
+- **Superseded By**: Task 995 (FMCS domain transfer lemma)
 - **Research**: [research-001.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-001.md), [research-002.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-002.md) (team: constructive method path), [research-003.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-003.md) (team: blocker resolution), [research-004.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-004.md) (team: T-axiom path), [research-005.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-005.md) (blocker analysis), [research-006.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-006.md) (axiom elimination approaches), [research-007.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-007.md) (covering proof gap confirmed unfillable), [research-008.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-008.md) (world history discreteness - W=D equivalence), [research-009.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-009.md) (architectural clarity - W=D is simplification), [research-010.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-010.md) (team: W=D is fundamental error), [research-011.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/research-011.md) (post-task 991 assessment), [24_synthesis-report.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/24_synthesis-report.md) (DEAD END: forward-only approach), [25_correct-truth-lemma-approaches.md](specs/981_remove_axiom_technical_debt_from_task_979/reports/25_correct-truth-lemma-approaches.md) (CORRECT: wire dovetailed coverage for BFMCS temporal coherence)
 - **Plan**: [13_coverage-based-approach.md](specs/981_remove_axiom_technical_debt_from_task_979/plans/13_coverage-based-approach.md) (v13: Coverage-based - prove dovetailed_covers_reachable by induction on CanonicalR chain length)
 
-**Description**: Task 979 incurred technical debt (accepting an axiom temporarily). After completing the systematic refactor in task 978, research the problem deeply, implement the mathematically correct solution, and remove the axiom to yield a debt-free repository.
+**Abandonment reason**: After 25 research reports, 13 plans, and multiple implementation attempts, every approach to removing the `discrete_Icc_finite_axiom` hits the same fundamental wall: the covering proof requires showing that dovetailed construction reaches all CanonicalR-reachable MCSes, but density arguments can arbitrarily increase formula depth, defeating all termination measures. The axiom is mathematically justified (Icc finiteness holds in any discrete linear order with SuccOrder) and documented as intentional technical debt. The axiom does NOT block any completeness path — the CanonicalMCS-based construction (sorry-free, in CanonicalFMCS.lean) bypasses it entirely. Task 995 (FMCS domain transfer) provides the correct architectural path forward.
 
-**Plan Summary (v13)**: 4-phase coverage-based approach. Phase 1: Define CanonicalR_chain reachability. Phase 2: Prove dovetailed_covers_reachable (by induction on chain length, NOT formula depth). Phase 3: Derive forward_F/backward_P from coverage theorem. Phase 4: Cleanup and verification. Key insight: induction on CanonicalR chain length avoids the formula depth measure problem entirely.
+**Description**: Task 979 incurred technical debt (accepting an axiom temporarily). After completing the systematic refactor in task 978, research the problem deeply, implement the mathematically correct solution, and remove the axiom to yield a debt-free repository.
 
 ---
 
@@ -216,7 +240,7 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 949. Update Demo.lean for current bimodal logic state
 - **Effort**: Small (~2 hours)
-- **Status**: [PLANNING]
+- **Status**: [RESEARCHED]
 - **Language**: lean
 - **Research**: [research-001.md](specs/949_update_demo_lean_bimodal_logic/reports/research-001.md)
 
@@ -226,12 +250,12 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 868. Reinstate lean-lsp MCP tools after GitHub issue resolution
 - **Effort**: 1 hour
-- **Status**: [BLOCKED]
+- **Status**: [ABANDONED]
+- **Abandoned**: 2026-03-19
 - **Language**: meta
 - **Created**: 2026-02-11
-- **Blocked on**: lean-lsp-mcp issue #115 resolution
 
-**Description**: Once lean-lsp-mcp issue #115 (server halts on lean_diagnostic_messages) is resolved, reinstate the blocked MCP tools. Follow the unblocking procedure: verify fix in repository, update package version, test tools manually, update blocked-mcp-tools.md to mark as UNBLOCKED, remove from CLAUDE.md blocked list, and restore documentation in mcp-tools-guide.md. Consider re-testing lean_file_outline as well since no specific open issue exists for it.
+**Abandonment reason**: The lean-lsp MCP tools have been reinstated and are actively working in the current project configuration (`.mcp.json`). Tools like `lean_goal`, `lean_hover_info`, `lean_completions`, `lean_diagnostic_messages`, etc. are all functional and used regularly in implementation sessions. Issue #115 (server hanging after import edits) is a minor inconvenience with a known workaround (use `lake build` for authoritative diagnostics). The task's premise — that tools are blocked and need reinstatement — is no longer accurate.
 
 ---
 

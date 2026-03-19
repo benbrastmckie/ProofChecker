@@ -2,9 +2,28 @@
   "metadata": {
     "generated_at": "2026-01-20T20:55:08.000000",
     "total_tasks": 24,
-    "last_sync": "2026-03-14T22:30:00Z"
+    "last_sync": "2026-03-19T00:00:00Z"
   },
   "active_projects": [
+    {
+      "project_number": 995,
+      "project_name": "fmcs_domain_transfer_lemma",
+      "status": "not_started",
+      "language": "lean",
+      "priority": "high",
+      "created": "2026-03-19T00:00:00Z",
+      "last_updated": "2026-03-19T00:00:00Z",
+      "description": "Build a general FMCS transfer lemma: given an order-embedding e : CanonicalMCS → D (where D has AddCommGroup + LinearOrder + IsOrderedAddMonoid), transfer temporal coherence from sorry-free CanonicalMCS BFMCS to BFMCS D. Unblocks base (D=Int), dense (D=Rat), and discrete (D=Int+SuccOrder) completeness simultaneously."
+    },
+    {
+      "project_number": 994,
+      "project_name": "soundness_theorem_assembly",
+      "status": "not_started",
+      "language": "lean",
+      "created": "2026-03-19T00:00:00Z",
+      "last_updated": "2026-03-19T00:00:00Z",
+      "description": "Wire the 6 remaining sorries in Soundness.lean using proven component theorems in DenseSoundness and DiscreteSoundness. Key challenge: soundness quantifies over all D but extension axioms need specific frame properties."
+    },
     {
       "project_number": 993,
       "project_name": "add_stability_operator",
@@ -176,7 +195,9 @@
     {
       "project_number": 987,
       "project_name": "algebraic_base_completeness",
-      "status": "researched",
+      "status": "abandoned",
+      "abandoned": "2026-03-19T00:00:00Z",
+      "abandoned_reason": "Dependency task 986 archived with unresolvable sorries. Superseded by task 995 (FMCS domain transfer).",
       "language": "lean",
       "created": "2026-03-17T02:43:07Z",
       "last_updated": "2026-03-18T20:23:01Z",
@@ -211,7 +232,8 @@
     {
       "project_number": 988,
       "project_name": "dense_algebraic_completeness",
-      "status": "implementing",
+      "status": "blocked",
+      "blocked_on": "Task 995 (FMCS domain transfer lemma)",
       "language": "lean",
       "created": "2026-03-17T02:43:07Z",
       "last_updated": "2026-03-18T16:13:00Z",
@@ -587,7 +609,9 @@
     {
       "project_number": 981,
       "project_name": "remove_axiom_technical_debt_from_task_979",
-      "status": "implementing",
+      "status": "abandoned",
+      "abandoned": "2026-03-19T00:00:00Z",
+      "abandoned_reason": "25 research reports, 13 plans, all approaches hit same termination wall. Axiom is mathematically justified. Superseded by task 995.",
       "language": "lean",
       "created": "2026-03-16T22:57:51Z",
       "last_updated": "2026-03-19T05:24:21Z",
@@ -772,11 +796,12 @@
     {
       "project_number": 868,
       "project_name": "reinstate_lean_mcp_tools",
-      "status": "blocked",
+      "status": "abandoned",
+      "abandoned": "2026-03-19T00:00:00Z",
+      "abandoned_reason": "Tools already reinstated and working in current .mcp.json configuration. Issue #115 is minor inconvenience, not blocker.",
       "language": "meta",
       "created": "2026-02-11T00:41:47Z",
-      "last_updated": "2026-02-11T00:41:47Z",
-      "blocked_on": "lean-lsp-mcp issue #115 resolution"
+      "last_updated": "2026-03-19T00:00:00Z"
     },
     {
       "project_number": 619,
@@ -846,7 +871,7 @@
       "archived_reason": "abandoned"
     }
   ],
-  "next_project_number": 994,
+  "next_project_number": 996,
   "artifacts": [
     {
       "path": "specs/636_fix_sorries_temporalproofstrategies_examples/plans/implementation-001.md",
@@ -855,17 +880,17 @@
     }
   ],
   "task_counts": {
-    "active": 12,
-    "not_started": 11,
-    "total": 336,
-    "abandoned": 38
+    "active": 10,
+    "not_started": 4,
+    "total": 746,
+    "abandoned": 45
   },
   "repository_health": {
-    "last_assessed": "2026-02-27T02:52:44Z",
-    "sorry_count": 76,
-    "axiom_count": 19,
+    "last_assessed": "2026-03-19T00:00:00Z",
+    "sorry_count": 16,
+    "axiom_count": 3,
     "build_errors": 0,
-    "status": "manageable"
+    "status": "excellent"
   },
-  "last_updated": "2026-03-16T19:45:00Z"
+  "last_updated": "2026-03-19T00:00:00Z"
 }
