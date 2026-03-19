@@ -334,7 +334,8 @@
     {
       "project_number": 989,
       "project_name": "discrete_algebraic_completeness",
-      "status": "not_started",
+      "status": "blocked",
+      "blocked_on": "Task 995 (FMCS domain transfer) + Task 974 (SuccOrder instance)",
       "language": "lean",
       "created": "2026-03-17T02:43:07Z",
       "last_updated": "2026-03-17T02:43:07Z",

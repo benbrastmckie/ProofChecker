@@ -93,10 +93,11 @@ temporal semantics, and build a Shift-Closed Tense S5 Algebra (STSA) representat
 
 ### 989. Discrete algebraic completeness
 - **Effort**: TBD
-- **Status**: [NOT STARTED]
+- **Status**: [BLOCKED]
+- **Blocked on**: Task 995 (FMCS domain transfer lemma), Task 974 (SuccOrder instance)
 - **Language**: lean
 
-**Description**: Prove discrete algebraic completeness using D = Int. Requires: (1) proving DF and DP axioms are valid in `DiscreteCanonicalTaskFrame Int` (the G-operator Stone relation on Int-indexed MCS families satisfies immediate successor conditions), (2) using the BFMCS construction from task 986 for the discrete proof system, (3) wiring `discrete_representation_conditional` to obtain `valid_discrete φ → ⊢_discrete φ`. Does not overlap with task 981 (which removes an axiom from the staged construction; this uses the algebraic D = Int approach).
+**Description**: Prove discrete algebraic completeness using D = Int. Requires: (1) FMCS domain transfer from CanonicalMCS to Int (task 995), (2) proving DF and DP axioms are valid in `DiscreteCanonicalTaskFrame Int` (the parametric canonical TaskFrame instantiated at Int), (3) SuccOrder instance on DiscreteTimelineQuot (task 974, archived), (4) wiring `discrete_representation_conditional` to obtain `valid_discrete φ → ⊢_discrete φ`. Note: `DiscreteInstantiation.lean` uses live parametric infrastructure (`ParametricCanonicalTaskFrame Int`), not the deprecated `DiscreteTimeline.discreteCanonicalTaskFrame`.
 
 ---
 
