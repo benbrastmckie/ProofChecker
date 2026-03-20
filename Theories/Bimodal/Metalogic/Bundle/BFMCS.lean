@@ -12,9 +12,9 @@ quantifies over bundled histories rather than all histories.
 
 ## Terminology (Task 928)
 
-- **MCS**: A single maximal consistent set
-- **FMCS**: A SINGLE time-indexed family of MCS (Family of MCS)
-- **BFMCS**: A BUNDLE (set) of FMCS families with modal coherence
+- **MCS**: A single maximal consistent set (a world state)
+- **FMCS**: A SINGLE family of MCS indexed by durations — one world history
+- **BFMCS**: A BUNDLE (set) of FMCS families with modal coherence — the space Ω
 
 ## Key Insight
 
@@ -57,13 +57,14 @@ open Bimodal.Metalogic.Core
 variable (D : Type*) [Preorder D]
 
 /--
-A Bundle of Maximal Consistent Sets (BFMCS) is a collection of indexed MCS families
-with modal coherence conditions that enable a provable truth lemma.
+A Bundle of Maximal Consistent Sets (BFMCS) models the **space of world histories** (Ω).
 
-**Type Parameter `D`**: A preordered index type for the FMCS families in the bundle.
-When `D = Int`, families are time-indexed (each time maps to an MCS / world state).
-When `D = CanonicalMCS`, families are indexed by world states themselves.
-See `FMCS` for details on the parametricity of `D`.
+Each FMCS in the bundle is one world history (a function from durations `D` to world
+states). The bundle collects these histories with modal coherence conditions that
+ensure the box operator quantifies correctly over alternative histories.
+
+**Type Parameter `D`**: A totally ordered abelian group of durations (parametric).
+The Lean definition requires only `[Preorder D]` for technical flexibility.
 
 **Fields**:
 - `families`: The collection of indexed MCS families forming the bundle

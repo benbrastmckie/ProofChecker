@@ -7,30 +7,27 @@ import Bimodal.Metalogic.Bundle.TemporalCoherence
 /-!
 # Canonical FMCS Construction (All-MCS Approach)
 
-This module constructs an FMCS indexed by the space of ALL maximal consistent sets
-(world states), using the Preorder approach from Task 922 v5.
+This module proves the existence of temporally coherent families over the space
+of all maximal consistent sets (world states).
 
-## Architecture: World States as the Index Type
+## Construction Technique
 
-In the canonical model construction, MCS serve as **world states** — each MCS
-represents a complete truth-configuration at a single point. The key design:
+Semantically, each FMCS models a world history: a function from durations `D`
+to world states (MCS). However, proving that temporally coherent families
+**exist** requires an intermediate construction that exploits the fact that
+`FMCS` only requires `[Preorder D]` (not the full group structure of durations).
 
-- **`CanonicalMCS`**: The type of all maximal consistent sets, ordered by
-  `CanonicalR` (forward temporal accessibility: `g_content(M) ⊆ N`).
-  These are world states, NOT times.
-- **`FMCS CanonicalMCS`**: A family indexed by world states. Each world state
-  `w` maps to its own MCS `w.world` (identity mapping). The coherence conditions
-  (`forward_G`, `backward_H`) hold by the definition of `CanonicalR`.
-- **Purpose**: This world-state-indexed family establishes temporal coherence
-  (`forward_F`, `backward_P`) over the full space of MCS, which is then
-  transferred to a time-indexed family (`FMCS Int`) in the completeness pipeline.
+The technique instantiates `FMCS CanonicalMCS`, using the preorder on world
+states (CanonicalR) in place of `D`. This is not a world history in the semantic
+sense — it is a proof device for establishing that `forward_F` and `backward_P`
+witnesses exist. The key advantage of using ALL world states as the domain is
+that every witness MCS is automatically in scope, making both properties trivial.
 
-The durations `D` and task relation are defined separately in `TaskFrame.lean` and
-used to construct world histories in `CanonicalConstruction.lean`. Here, `D` is
-instantiated with `CanonicalMCS` purely as a preordered index — the group structure
-of durations is not needed at this stage.
+Once temporal coherence is established here, the completeness pipeline transfers
+the result to the actual duration-indexed setting (`FMCS D` for a generic totally
+ordered abelian group `D`), where each FMCS genuinely models a world history.
 
-## Key Insight (Why All-MCS, Not CanonicalReachable)
+## Why All-MCS (Not CanonicalReachable)
 
 The v5 plan originally proposed using CanonicalReachable (future-reachable from M₀).
 This works for forward_F (future witnesses are future-reachable by transitivity),
@@ -41,7 +38,7 @@ but FAILS for backward_P because:
 - The G and H modalities are independent; `G(phi) ∈ M₀` does NOT imply `H(phi) ∈ w.world`
 
 The all-MCS approach sidesteps this entirely:
-- Every MCS (world state) is in the domain by construction
+- Every world state is in the domain by construction
 - No reachability requirement for witnesses
 - forward_F and backward_P are genuinely trivial
 
@@ -49,10 +46,8 @@ The all-MCS approach sidesteps this entirely:
 
 The FMCS and TemporalCoherentFamily only require `[Preorder D]`, not totality.
 The completeness chain (TruthLemma, Completeness) does NOT use totality, IsTotal,
-or LinearOrder. So using the non-total CanonicalR Preorder on all MCSes is sound.
-
-The CanonicalReachable/CanonicalQuotient constructions and their totality (IsTotal)
-have been archived to Boneyard (task 933) as they are not used by any active code.
+or LinearOrder. So using the non-total CanonicalR Preorder on all world states
+is sound for this intermediate construction.
 
 ## References
 
@@ -67,15 +62,17 @@ open Bimodal.Metalogic.Core
 open Bimodal.ProofSystem
 
 /-!
-## CanonicalMCS: The Space of World States
+## CanonicalMCS: The Domain of World States
 
-Each `CanonicalMCS` is a world state in the canonical model — a maximal consistent
-set of formulas representing a complete truth-configuration. The type of ALL such
-world states is ordered by `CanonicalR` (forward temporal accessibility).
+Each `CanonicalMCS` is a world state — a maximal consistent set of formulas
+representing a complete truth-configuration. The type of ALL such world states
+is ordered by `CanonicalR` (forward temporal accessibility: `g_content(M) ⊆ N`).
 
-Unlike `CanonicalReachable`, this includes ALL world states, not just those
-future-reachable from a root. This ensures both forward and backward temporal
-witnesses are always available in the domain.
+The durations `D` and task relation (defined in `TaskFrame.lean`) are used to
+build world histories from world states. Here, world states are the codomain
+of a world history — the function `D → WorldState` assigns a world state to
+each duration. The CanonicalMCS preorder is used only for the intermediate
+construction technique described above, not as the duration type.
 -/
 
 /--
@@ -139,16 +136,18 @@ theorem CanonicalMCS.canonicalR_of_lt (a b : CanonicalMCS) (h : a < b) :
   · exact h_R
 
 /-!
-## The Canonical FMCS on All World States
+## Intermediate FMCS over World States
 
-Construct an FMCS indexed by `CanonicalMCS` (world states) where each world state
-maps to its own underlying MCS. This is the identity mapping — each world state
-IS its set of formulas.
+This section constructs `FMCS CanonicalMCS` — an intermediate construction
+where world states serve as the index (exploiting `[Preorder D]`). Each world
+state maps to its own underlying MCS via the identity. This is NOT a world
+history in the semantic sense; it is a proof device for establishing temporal
+coherence (forward_F, backward_P) over the space of all world states.
 -/
 
 /--
-The MCS assignment for the world-state-indexed FMCS: each world state maps to
-its underlying set of formulas. This is the identity mapping.
+The MCS assignment: each world state maps to its own underlying set of formulas.
+This is the identity mapping — a proof device, not a semantic world history.
 -/
 def canonicalMCS_mcs (w : CanonicalMCS) : Set Formula :=
   w.world
@@ -190,11 +189,13 @@ theorem canonicalMCS_backward_H
   exact canonical_backward_H w₁.world w₂.world h_R_past phi h_H
 
 /--
-The canonical FMCS indexed by world states: each `CanonicalMCS` maps to itself.
+Intermediate FMCS over world states for proving temporal coherence.
 
-This construction uses the space of all world states as the index type `D`,
-with the identity mapping for the MCS assignment. Coherence conditions hold because
-the ordering on `CanonicalMCS` is defined via `CanonicalR` (forward accessibility).
+This instantiates `FMCS CanonicalMCS` using the identity mapping (each world
+state maps to its own MCS). This is a proof device — not a semantic world
+history — that leverages the `[Preorder D]` constraint to establish that
+temporal coherence witnesses exist. Coherence conditions hold because the
+ordering on `CanonicalMCS` is defined via `CanonicalR` (forward accessibility):
 
 - Forward G coherence: via `CanonicalR` (g_content inclusion)
 - Backward H coherence: via g_content/h_content duality

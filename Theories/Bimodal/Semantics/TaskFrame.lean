@@ -25,11 +25,12 @@ The JPL paper "The Perpetuity Calculus of Agency" defines task frames as tuples
   define which world histories are possible.
 
 **ProofChecker Implementation**:
-The duration type `D` is parametric, allowing various temporal structures:
-- `Int`: Discrete integer time (standard temporal logic)
-- `Rat`: Dense rational time (for fine-grained temporal reasoning)
-- `Real`: Continuous real time (for physical systems)
-- Custom bounded or modular time structures
+The duration type `D` is parametric: any totally ordered abelian group suffices.
+All definitions and proofs are stated for a generic `D`, accommodating discrete,
+dense, continuous, and other temporal structures without fixing a particular
+instantiation. The specific group used depends on the frame class (e.g., the
+discrete extension adds axioms specific to integer-like durations, while the
+dense extension adds density axioms).
 
 **Alignment Verification**:
 - Paper's nullity: `w ∈ w · 0` corresponds to `nullity : ∀ w, task_rel w 0 w` (derived theorem)
@@ -40,7 +41,7 @@ The duration type `D` is parametric, allowing various temporal structures:
 
 ## Main Definitions
 
-- `TaskFrame D`: Structure with world states, times of type `D`, task relation, and constraints
+- `TaskFrame D`: Structure with world states, durations of type `D`, task relation, and constraints
 - `TaskFrame.nullity_identity`: Zero duration iff identity (`task_rel w 0 u ↔ w = u`)
 - `TaskFrame.forward_comp`: Forward compositionality (restricted to non-negative durations)
 - `TaskFrame.converse`: Temporal symmetry (`task_rel w d u ↔ task_rel u (-d) w`)
@@ -52,9 +53,9 @@ The duration type `D` is parametric, allowing various temporal structures:
 
 ## Implementation Notes
 
-- Type parameter `D` represents temporal duration with ordered additive group structure
+- Type parameter `D` is a parametric totally ordered abelian group of durations
 - Task relation `task_rel w x u` means: world state `u` is reachable from `w` by task
-  of duration `x`
+  of duration `x`; the task relation and `D` together define the admissible world histories
 - Nullity: zero-duration task is identity (reflexivity)
 - Compositionality: sequential tasks compose (transitivity with addition)
 - Typeclass parameter convention: `(D : Type*)` explicit, ordered group instances implicit

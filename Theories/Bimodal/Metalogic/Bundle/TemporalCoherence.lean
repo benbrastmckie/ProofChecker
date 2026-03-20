@@ -135,7 +135,7 @@ The backward lemmas are proven directly using contraposition and MCS properties.
 -/
 
 /--
-TemporalCoherentFamily: An FMCS with existential temporal witness properties.
+TemporalCoherentFamily: A world history (FMCS) with existential temporal witnesses.
 
 Extends `FMCS D` with:
 - `forward_F`: If `F(φ) ∈ mcs t`, then exists `s` with `t < s` and `φ ∈ mcs s`
@@ -144,9 +144,10 @@ Extends `FMCS D` with:
 These are the existential duals of `forward_G` and `backward_H`.
 Uses strict inequality for irreflexive semantics.
 
-**Note on `D`**: The index type `D` is a preorder, not necessarily a time type.
-When `D = CanonicalMCS`, the variables `t` and `s` range over world states
-(ordered by `CanonicalR`), not times. When `D = Int`, they are integer times.
+**On `D`**: The duration type `D` is a parametric totally ordered abelian group.
+The Lean definition requires only `[Preorder D]` for technical flexibility, which
+allows intermediate constructions (e.g., `CanonicalFMCS.lean`) to instantiate `D`
+with world states for proof purposes.
 -/
 structure TemporalCoherentFamily (D : Type*) [Preorder D] [Zero D] extends FMCS D where
   /-- Forward F coherence: F(phi) at t implies witness at some s > t (strict) -/
@@ -209,15 +210,14 @@ theorem temporal_backward_H (fam : TemporalCoherentFamily D) (t : D) (φ : Formu
   exact set_consistent_not_both (fam.is_mcs s).1 φ h_phi_s h_neg_phi_s
 
 /--
-Temporal coherence for a BFMCS: all families have forward_F and backward_P properties.
+Temporal coherence for a BFMCS: all world histories have forward_F and backward_P.
 
-This condition ensures that for each family in the BFMCS:
-- `forward_F`: If `F(φ)` is in the MCS at index `t`, then exists `s > t` with `φ` in the MCS at `s`
-- `backward_P`: If `P(φ)` is in the MCS at index `t`, then exists `s < t` with `φ` in the MCS at `s`
+This condition ensures that for each world history (FMCS) in the bundle:
+- `forward_F`: If `F(φ)` is in the world state at `t`, then exists `s > t` with `φ` at `s`
+- `backward_P`: If `P(φ)` is in the world state at `t`, then exists `s < t` with `φ` at `s`
 
-Here `t` and `s` are elements of the index type `D` (times when `D = Int`, world states
-when `D = CanonicalMCS`). These properties are used in the truth lemma backward direction
-for temporal operators G and H via contraposition (`temporal_backward_G`, `temporal_backward_H`).
+These properties are used in the truth lemma backward direction for temporal operators
+G and H via contraposition (`temporal_backward_G`, `temporal_backward_H`).
 -/
 def BFMCS.temporally_coherent (B : BFMCS D) : Prop :=
   ∀ fam ∈ B.families,
