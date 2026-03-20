@@ -7,21 +7,28 @@ import Bimodal.Metalogic.Bundle.TemporalCoherence
 /-!
 # Canonical FMCS Construction (All-MCS Approach)
 
-This module constructs a FMCS over ALL maximal consistent sets using the Preorder
-approach from Task 922 v5. The original plan used CanonicalReachable (future-reachable
-fragment), but backward_P requires past witnesses which are NOT in the future-reachable
-fragment. The solution uses ALL MCSes as the domain, making both forward_F and backward_P
-trivial.
+This module constructs an FMCS indexed by the space of ALL maximal consistent sets
+(world states), using the Preorder approach from Task 922 v5.
 
-## Overview
+## Architecture: World States as the Index Type
 
-Given a root MCS `M₀`, we construct a FMCS where:
-- The domain is `CanonicalMCS` (all maximal consistent sets, with CanonicalR Preorder)
-- Each element `w` maps directly to `w.world` (the MCS itself)
-- `forward_G` follows from `canonical_forward_G` and the Preorder definition
-- `backward_H` follows from `g_content_subset_implies_h_content_reverse` duality
-- `forward_F` uses `canonical_forward_F` - the witness MCS IS a domain element
-- `backward_P` uses `canonical_backward_P` - the witness MCS IS a domain element
+In the canonical model construction, MCS serve as **world states** — each MCS
+represents a complete truth-configuration at a single point. The key design:
+
+- **`CanonicalMCS`**: The type of all maximal consistent sets, ordered by
+  `CanonicalR` (forward temporal accessibility: `g_content(M) ⊆ N`).
+  These are world states, NOT times.
+- **`FMCS CanonicalMCS`**: A family indexed by world states. Each world state
+  `w` maps to its own MCS `w.world` (identity mapping). The coherence conditions
+  (`forward_G`, `backward_H`) hold by the definition of `CanonicalR`.
+- **Purpose**: This world-state-indexed family establishes temporal coherence
+  (`forward_F`, `backward_P`) over the full space of MCS, which is then
+  transferred to a time-indexed family (`FMCS Int`) in the completeness pipeline.
+
+The durations `D` and task relation are defined separately in `TaskFrame.lean` and
+used to construct world histories in `CanonicalConstruction.lean`. Here, `D` is
+instantiated with `CanonicalMCS` purely as a preordered index — the group structure
+of durations is not needed at this stage.
 
 ## Key Insight (Why All-MCS, Not CanonicalReachable)
 
@@ -34,7 +41,7 @@ but FAILS for backward_P because:
 - The G and H modalities are independent; `G(phi) ∈ M₀` does NOT imply `H(phi) ∈ w.world`
 
 The all-MCS approach sidesteps this entirely:
-- Every MCS is in the domain by construction
+- Every MCS (world state) is in the domain by construction
 - No reachability requirement for witnesses
 - forward_F and backward_P are genuinely trivial
 
@@ -60,15 +67,24 @@ open Bimodal.Metalogic.Core
 open Bimodal.ProofSystem
 
 /-!
-## CanonicalMCS: The Type of All Maximal Consistent Sets
+## CanonicalMCS: The Space of World States
 
-This type wraps all MCSes with a CanonicalR-based Preorder. Unlike CanonicalReachable,
-it includes ALL MCSes, not just those future-reachable from a root. This ensures both
-forward and backward witnesses are always in the domain.
+Each `CanonicalMCS` is a world state in the canonical model — a maximal consistent
+set of formulas representing a complete truth-configuration. The type of ALL such
+world states is ordered by `CanonicalR` (forward temporal accessibility).
+
+Unlike `CanonicalReachable`, this includes ALL world states, not just those
+future-reachable from a root. This ensures both forward and backward temporal
+witnesses are always available in the domain.
 -/
 
 /--
-A maximal consistent set, used as a domain element for the canonical FMCS.
+A canonical world state: a maximal consistent set of formulas.
+
+Each `CanonicalMCS` represents one possible world state — a complete assignment
+of truth values to all formulas, packaged as a maximal consistent set. The
+collection of all `CanonicalMCS` values forms the space of world states for
+the canonical model.
 
 This is a structure (not an abbrev for Subtype) to avoid diamond instance conflicts:
 `Set Formula` has `LE` (subset), so `Subtype (Set Formula)` would inherit `Subtype.instLE`
@@ -76,7 +92,7 @@ This is a structure (not an abbrev for Subtype) to avoid diamond instance confli
 g_content(a.val) ⊆ b.val`), which is different. Using a structure avoids the conflict.
 -/
 structure CanonicalMCS where
-  /-- The underlying set of formulas -/
+  /-- The underlying set of formulas constituting this world state -/
   world : Set Formula
   /-- Proof that the set is maximal consistent -/
   is_mcs : SetMaximalConsistent world
@@ -123,16 +139,16 @@ theorem CanonicalMCS.canonicalR_of_lt (a b : CanonicalMCS) (h : a < b) :
   · exact h_R
 
 /-!
-## The Canonical FMCS on All MCSes
+## The Canonical FMCS on All World States
 
-Construct a FMCS over CanonicalMCS where each element maps directly
-to its underlying MCS.
+Construct an FMCS indexed by `CanonicalMCS` (world states) where each world state
+maps to its own underlying MCS. This is the identity mapping — each world state
+IS its set of formulas.
 -/
 
 /--
-The MCS assignment for the canonical FMCS: each element maps to its underlying set.
-
-This is the identity mapping - each CanonicalMCS element IS its MCS.
+The MCS assignment for the world-state-indexed FMCS: each world state maps to
+its underlying set of formulas. This is the identity mapping.
 -/
 def canonicalMCS_mcs (w : CanonicalMCS) : Set Formula :=
   w.world
@@ -174,12 +190,14 @@ theorem canonicalMCS_backward_H
   exact canonical_backward_H w₁.world w₂.world h_R_past phi h_H
 
 /--
-The canonical FMCS on all MCSes: a family of MCS indexed by CanonicalMCS.
+The canonical FMCS indexed by world states: each `CanonicalMCS` maps to itself.
 
-This construction satisfies all FMCS requirements:
-- Each element maps to its own MCS (identity mapping)
-- Forward G coherence via CanonicalR
-- Backward H coherence via g_content/h_content duality
+This construction uses the space of all world states as the index type `D`,
+with the identity mapping for the MCS assignment. Coherence conditions hold because
+the ordering on `CanonicalMCS` is defined via `CanonicalR` (forward accessibility).
+
+- Forward G coherence: via `CanonicalR` (g_content inclusion)
+- Backward H coherence: via g_content/h_content duality
 -/
 noncomputable def canonicalMCSBFMCS : FMCS CanonicalMCS where
   mcs := canonicalMCS_mcs

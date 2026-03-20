@@ -17,6 +17,27 @@ import Bimodal.Theorems.Propositional
 This module defines the canonical TaskFrame, TaskModel, world-histories, and Omega
 for the direct TruthLemma connecting MCS membership to standard `truth_at` evaluation.
 
+## Architecture: Separating World States from Times
+
+The canonical model has three distinct components:
+
+1. **World states** (`CanonicalWorldState` = MCS): Each maximal consistent set is a
+   world state — a complete truth-configuration. The space of world states is unstructured
+   (no group, no ordering required on `WorldState` itself).
+
+2. **Durations** (`D = Int`): The duration type carries the ordered abelian group structure
+   (addition, ordering, negation). This is parametric in the general `TaskFrame` definition
+   and instantiated to `Int` here for the discrete canonical model. Other extensions use
+   `Rat` (dense) or `Real` (continuous).
+
+3. **Task relation** (`canonical_task_rel`): Connects world states via durations, defining
+   which state transitions are possible over a given duration. The task relation plus durations
+   together determine the space of world histories.
+
+4. **World histories** (`to_history`): Each `FMCS Int` (a time-indexed family of MCS) becomes
+   a `WorldHistory CanonicalTaskFrame` — a function from integer times to world states that
+   respects the task relation. The time structure lives in `Int`, not in `WorldState`.
+
 ## Key Insight (research-006)
 
 The intermediate `bmcs_truth_at` is structurally redundant -- it is definitionally
@@ -25,10 +46,10 @@ we prove the TruthLemma directly at the `truth_at` level, eliminating the interm
 
 ## Definitions
 
-- `CanonicalWorldState`: Subtype of MCS (maximal consistent sets)
-- `CanonicalTaskFrame`: TaskFrame Int with semantically meaningful task_rel
+- `CanonicalWorldState`: Subtype of MCS — the space of world states
+- `CanonicalTaskFrame`: TaskFrame Int with world states = MCS, durations = Int
 - `CanonicalTaskModel`: TaskModel with valuation = MCS membership
-- `to_history`: Convert FMCS to WorldHistory
+- `to_history`: Convert `FMCS Int` to `WorldHistory` (time-indexed MCS → world history)
 - `CanonicalOmega`: Set of world-histories from bundle families
 - `ShiftClosedCanonicalOmega`: Shift-closed enlargement of CanonicalOmega (Task 968)
 - `box_persistent`: Box phi at time t implies Box phi at all times (Task 968)
@@ -121,7 +142,10 @@ open Bimodal.Semantics
 /--
 Canonical world state: a maximal consistent set packaged as a subtype.
 
-This is the WorldState of the canonical TaskFrame.
+Each MCS is a world state — a complete truth-configuration. The collection
+of all `CanonicalWorldState` values forms the unstructured space of possible
+worlds. The ordering and group structure live in the duration type `D` (here `Int`),
+not in `WorldState`.
 -/
 def CanonicalWorldState : Type :=
   { M : Set Formula // SetMaximalConsistent M }
@@ -273,18 +297,20 @@ def CanonicalTaskModel : TaskModel CanonicalTaskFrame where
   valuation := fun M p => Formula.atom p ∈ M.val
 
 /--
-Convert an FMCS to a WorldHistory in the canonical TaskFrame.
+Convert a time-indexed FMCS to a WorldHistory in the canonical TaskFrame.
 
-- domain: full (every integer time is in the domain)
-- states: the MCS at time t IS the world-state
-- respects_task: proved using forward_G from the FMCS structure
+This is the bridge between the FMCS layer (which assigns an MCS to each integer
+time) and the semantic layer (which needs a function from times to world states
+respecting the task relation):
 
-Key property: domain = fun _ => True eliminates all domain-related complexity.
+- **domain**: Full (`fun _ => True`) — every integer time is in the history
+- **states**: At time `t`, the world state is the MCS `fam.mcs t`
+- **respects_task**: The task relation between world states at times `s ≤ t`
+  is satisfied because `forward_G` gives `CanonicalR (mcs s) (mcs t)` when `s < t`
 
-**respects_task proof**: For s ≤ t in Int, the duration d = t - s ≥ 0.
-- If d > 0 (i.e., s < t): need CanonicalR (mcs s) (mcs t), which is forward_G.
-- If d = 0 (i.e., s = t): need ⟨mcs s, ...⟩ = ⟨mcs t, ...⟩, which holds since s = t.
-- d < 0 is impossible since s ≤ t implies t - s ≥ 0.
+The duration type `D = Int` provides the temporal ordering. The MCS at each time
+provides the world state. Together with the task relation, this defines a complete
+world history.
 -/
 def to_history (fam : FMCS Int) : WorldHistory CanonicalTaskFrame where
   domain := fun _ => True

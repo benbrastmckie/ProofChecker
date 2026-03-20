@@ -60,8 +60,10 @@ variable (D : Type*) [Preorder D]
 A Bundle of Maximal Consistent Sets (BFMCS) is a collection of indexed MCS families
 with modal coherence conditions that enable a provable truth lemma.
 
-**Type Parameters**:
-- `D`: Duration/time type with ordered additive group structure
+**Type Parameter `D`**: A preordered index type for the FMCS families in the bundle.
+When `D = Int`, families are time-indexed (each time maps to an MCS / world state).
+When `D = CanonicalMCS`, families are indexed by world states themselves.
+See `FMCS` for details on the parametricity of `D`.
 
 **Fields**:
 - `families`: The collection of indexed MCS families forming the bundle

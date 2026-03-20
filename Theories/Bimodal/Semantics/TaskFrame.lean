@@ -11,18 +11,21 @@ This module defines task frames, the fundamental semantic structures for bimodal
 **Task Frames (app:TaskSemantics, def:frame, line 1835)**:
 The JPL paper "The Perpetuity Calculus of Agency" defines task frames as tuples
 `F = (W, G, ·)` where:
-- `W` is a set of world states
-- `G` is a totally ordered abelian group `D = ⟨D, +, ≤⟩` of "time" elements (durations)
+- `W` is a set of world states (possible truth-configurations)
+- `G` is a totally ordered abelian group of durations (called `D` in this implementation)
 - `·: W × G → P(W)` is the task relation
 
-**ProofChecker Implementation**:
-This implementation generalizes the time group `G` to any type `D` with an
-ordered additive commutative group structure, which provides:
-- Additive abelian group structure (zero, addition, inverse)
-- Total linear order (≤ relation)
-- Order compatibility with addition
+**Two Distinct Components**:
+- **`WorldState`**: The unstructured space of possible worlds. In the canonical model,
+  each world state is a maximal consistent set (MCS). No ordering or group structure
+  is required on `WorldState`.
+- **`D`** (the duration type, called `G` in the JPL paper): Carries the totally ordered
+  abelian group structure (zero, addition, inverse, linear order). Durations measure
+  temporal displacement between world states. The task relation and durations together
+  define which world histories are possible.
 
-This matches the paper's specification exactly and allows for various temporal structures:
+**ProofChecker Implementation**:
+The duration type `D` is parametric, allowing various temporal structures:
 - `Int`: Discrete integer time (standard temporal logic)
 - `Rat`: Dense rational time (for fine-grained temporal reasoning)
 - `Real`: Continuous real time (for physical systems)

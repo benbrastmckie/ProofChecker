@@ -6,28 +6,41 @@ import Bimodal.Syntax.Formula
 # FMCS: Family of Maximal Consistent Sets
 
 This module defines the `FMCS` (Family of Maximal Consistent Sets) structure
-that assigns a maximal consistent set (MCS) to each time point in D, with temporal
-coherence conditions ensuring proper formula propagation.
+that assigns a maximal consistent set (MCS) to each element of a preordered
+index type `D`, with coherence conditions ensuring proper formula propagation
+along the ordering.
 
 ## Terminology (Task 928)
 
-- **FMCS**: A SINGLE time-indexed family of MCS (Family of MCS)
+- **MCS**: A single maximal consistent set (a world state in the canonical model)
+- **FMCS**: A SINGLE indexed family of MCS — one MCS per element of `D`
 - **BFMCS**: A BUNDLE (set) of FMCS families with modal coherence
-- **MCS**: A single maximal consistent set
 
 ## Overview
 
-Build a family of MCS indexed by time, where each time point has its own
-MCS connected to adjacent times via temporal coherence conditions.
+An FMCS assigns an MCS to each element of a preordered index type `D`, with
+coherence conditions that ensure formulas propagate correctly along the ordering.
 
-**Design Evolution**: TM logic uses REFLEXIVE temporal operators with T-axioms
-(`G phi -> phi`, `H phi -> phi`) to enable coherence proofs.
+The type parameter `D` is **not necessarily a time type**. It is any preordered
+type used to index the family:
+
+- **`D = Int`**: Elements of D are integer times. Each time gets an MCS (world state).
+  This is used in `CanonicalConstruction.lean` for the truth lemma, where histories
+  map times to world states.
+- **`D = CanonicalMCS`**: Elements of D are world states themselves, ordered by
+  `CanonicalR` (the reflexive closure of forward accessibility). Each world state
+  maps to its own MCS. This is used in `CanonicalFMCS.lean` to establish temporal
+  coherence over the space of all MCS, before transferring to an integer timeline.
+- **`D = Rat`**: Rational times for dense temporal extensions.
+
+The coherence conditions (`forward_G`, `backward_H`) use the strict ordering on `D`:
+if `t < t'` in `D`, then `G φ ∈ mcs t` implies `φ ∈ mcs t'` (and dually for H).
 
 ## Main Definitions
 
-- `FMCS D`: Structure pairing each time `t : D` with an MCS, plus coherence
-- `forward_G`: G formulas at t propagate to all future t' >= t
-- `backward_H`: H formulas at t propagate to all past t' <= t
+- `FMCS D`: Structure pairing each `t : D` with an MCS, plus coherence conditions
+- `forward_G`: G formulas at t propagate strictly forward: t < t' implies φ ∈ mcs t'
+- `backward_H`: H formulas at t propagate strictly backward: t' < t implies φ ∈ mcs t'
 
 ## Design Note (Task 843)
 
@@ -57,45 +70,49 @@ open Bimodal.Metalogic.Core
 variable (D : Type*) [Preorder D]
 
 /--
-A family of maximal consistent sets indexed by time, with temporal coherence.
+A family of maximal consistent sets indexed by a preordered type `D`.
 
-**Type Parameters**:
-- `D`: Duration/time type with preorder structure
+Each element `t : D` is assigned an MCS, with coherence conditions ensuring
+that temporal formulas propagate correctly along the strict ordering on `D`.
+
+**Type Parameter `D`**: A preordered index type. This is intentionally general:
+- When `D = Int` or `D = Rat`, elements are times and the family is time-indexed.
+- When `D = CanonicalMCS`, elements are world states (MCS ordered by `CanonicalR`),
+  and the family maps each world state to its own MCS.
+
+The parametricity over `D` allows the same structure to serve both as a
+time-indexed family (for the truth lemma) and as a world-state-indexed family
+(for establishing temporal coherence over all MCS).
 
 **Fields**:
-- `mcs`: Function assigning an MCS to each time point
+- `mcs`: Function assigning an MCS (a set of formulas) to each `t : D`
 - `is_mcs`: Proof that each assigned set is maximal consistent
-- `forward_G`: G formulas propagate to future times (reflexive)
-- `backward_H`: H formulas propagate to past times (reflexive)
-
-**Key Properties**:
-- The coherence conditions use REFLEXIVE inequalities (<= not <)
-- This matches TM's temporal operator semantics with T-axioms
-- Reflexivity enables Preorder generalization (Task 922)
+- `forward_G`: G formulas propagate strictly forward (t < t' implies φ ∈ mcs t')
+- `backward_H`: H formulas propagate strictly backward (t' < t implies φ ∈ mcs t')
 
 **Terminology (Task 928)**:
-- FMCS = Family of MCS (single family)
-- BFMCS = Bundle of FMCSs (collection of families)
+- FMCS = Family of MCS (single indexed family)
+- BFMCS = Bundle of FMCSs (collection of families with modal coherence)
 -/
 structure FMCS where
-  /-- The MCS assignment: each time t gets an MCS -/
+  /-- The MCS assignment: each element `t : D` gets an MCS (a set of formulas). -/
   mcs : D -> Set Formula
-  /-- Each assigned set is maximal consistent -/
+  /-- Each assigned set is maximal consistent. -/
   is_mcs : forall t, SetMaximalConsistent (mcs t)
   /--
-  Forward G coherence: G phi at time t implies phi at all strictly future times t' > t.
+  Forward G coherence: `G φ ∈ mcs t` and `t < t'` implies `φ ∈ mcs t'`.
 
-  Semantic justification: With irreflexive semantics, `G phi` means "phi at all times s > t".
-  If `G phi` is in the MCS at t, then phi must be in the MCS at any t' > t.
-  Note: Unlike reflexive semantics, this does NOT imply phi ∈ mcs t (no T-axiom).
+  With irreflexive (strict) semantics, `G φ` means "φ at all strictly later indices".
+  If `G φ` is in the MCS at `t`, then `φ` must be in the MCS at any `t'` with `t < t'`.
+  This does NOT imply `φ ∈ mcs t` (no reflexivity / T-axiom).
   -/
   forward_G : forall t t' phi, t < t' -> Formula.all_future phi ∈ mcs t -> phi ∈ mcs t'
   /--
-  Backward H coherence: H phi at time t implies phi at all strictly past times t' < t.
+  Backward H coherence: `H φ ∈ mcs t` and `t' < t` implies `φ ∈ mcs t'`.
 
-  Semantic justification: With irreflexive semantics, `H phi` means "phi at all times s < t".
-  If `H phi` is in the MCS at t, then phi must be in the MCS at any t' < t.
-  Note: Unlike reflexive semantics, this does NOT imply phi ∈ mcs t (no T-axiom).
+  With irreflexive (strict) semantics, `H φ` means "φ at all strictly earlier indices".
+  If `H φ` is in the MCS at `t`, then `φ` must be in the MCS at any `t'` with `t' < t`.
+  This does NOT imply `φ ∈ mcs t` (no reflexivity / T-axiom).
   -/
   backward_H : forall t t' phi, t' < t -> Formula.all_past phi ∈ mcs t -> phi ∈ mcs t'
 
