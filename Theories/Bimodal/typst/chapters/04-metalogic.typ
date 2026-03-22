@@ -151,7 +151,7 @@ The semantic approach defines world states as equivalence classes of (history, t
   - Canonical frame: `canonical_model D family` with task relation via histories
   - Duration type: Parametric over totally ordered abelian group $D$
 
-  The construction is formula-independent and universally parametric, avoiding the T-axiom requirement of same-MCS-at-all-times approaches.#footnote[The T-axiom ($G phi.alt arrow.r phi.alt$) is _not_ valid in TM logic because G/H are irreflexive operators.]
+  The construction is formula-independent and universally parametric, avoiding the T-axiom requirement of same-MCS-at-all-times approaches.#footnote[The T-axiom ($G phi.alt arrow.r phi.alt$) is _not_ valid in TM logic because G/H use strict semantics. See @sec:design-choices for details.]
 ]
 
 #definition("Canonical Valuation")[

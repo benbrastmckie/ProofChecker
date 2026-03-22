@@ -68,7 +68,7 @@ World states themselves are specific configurations of the total system at an in
   We write $I(w, p)$ to indicate that sentence letter $p$ is true at $w$.
 ]
 
-== Truth Conditions
+== Truth Conditions <sec:truth>
 
 Truth is evaluated relative to a model $cal(M)$ providing the interpretation, a world history $tau$ representing a possible path through the space of world states, and a time $x : D$.
 Whereas the model fixes the interpretation of the language, the contextual parameters $tau$ and $x$ determine the truth value of every sentence of the language.

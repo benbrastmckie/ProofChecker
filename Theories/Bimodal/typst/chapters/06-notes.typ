@@ -112,7 +112,7 @@ This choice has significant consequences for axiom validity, frame definability,
     cal(M), tau, x tack.r.double G phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" x < y \
     cal(M), tau, x tack.r.double H phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" y < x
   $
-  This matches the truth conditions in the Semantics chapter.
+  This matches the truth conditions in @sec:truth.
 ]
 
 #definition("Reflexive Temporal Semantics")[
