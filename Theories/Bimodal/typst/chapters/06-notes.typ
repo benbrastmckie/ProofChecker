@@ -95,3 +95,78 @@ Soundness is proven: if the procedure returns "valid", the formula is semantical
 Completeness requires the Finite Model Property (FMP), which is stated but not yet fully formalized.
 The FMP states that if a formula is satisfiable, it is satisfiable in a finite model.
 Full formalization of the FMP completes decidability.
+
+== Design Choices <sec:design-choices>
+
+The implementation of TM logic involves foundational choices that affect the proof theory and metatheoretic properties.
+This section documents these choices and their rationale.
+
+=== Strict vs Reflexive Temporal Semantics
+
+The temporal operators $G$ (future) and $H$ (past) can be interpreted with either *strict* or *reflexive* quantification over times.
+This choice has significant consequences for axiom validity, frame definability, and completeness proof structure.
+
+#definition("Strict Temporal Semantics (Current)")[
+  Under *strict semantics*, temporal quantification excludes the present moment:
+  $
+    cal(M), tau, x tack.r.double G phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" x < y \
+    cal(M), tau, x tack.r.double H phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" y < x
+  $
+  This matches the truth conditions in the Semantics chapter.
+]
+
+#definition("Reflexive Temporal Semantics")[
+  Under *reflexive semantics*, temporal quantification includes the present moment:
+  $
+    cal(M), tau, x tack.r.double G phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" x lt.eq y \
+    cal(M), tau, x tack.r.double H phi.alt &<=> cal(M), tau, y tack.r.double phi.alt "for all" y : D "where" y lt.eq x
+  $
+  The temporal T-axioms $G phi.alt arrow.r phi.alt$ and $H phi.alt arrow.r phi.alt$ become definitionally valid.
+]
+
+#figure(
+  table(
+    columns: 3,
+    stroke: none,
+    table.hline(),
+    table.header(
+      [*Property*], [*Reflexive ($lt.eq$)*], [*Strict ($<$)*],
+    ),
+    table.hline(),
+    [T-axiom: $G phi.alt arrow.r phi.alt$], [Valid], [Invalid],
+    [Seriality: $G phi.alt arrow.r F phi.alt$], [Trivially valid], [Requires NoMaxOrder],
+    [Density: $G G phi.alt arrow.r G phi.alt$], [Trivially valid], [Requires DenselyOrdered],
+    [Discreteness: DF axiom], [Trivially valid], [Requires SuccOrder],
+    [Frame class separation], [Collapsed], [Preserved],
+    [Canonical irreflexivity], [Not needed], [Requires axiom/proof],
+    table.hline(),
+  ),
+  caption: [Comparison of reflexive and strict temporal semantics.],
+)
+
+#remark("Historical Context")[
+  Arthur Prior (1957--1968) established tense logic using strict semantics, with F ("it will be the case") and P ("it was the case") quantifying over strictly future and past times.
+  This approach enables rich frame correspondence: temporal axioms genuinely characterize frame properties.
+  Computer science applications (CTL, LTL model checking) often use reflexive semantics, where "AG" means "at all states including the current one."
+]
+
+#remark("Frame Definability")[
+  Under strict semantics, temporal axioms characterize frame classes:
+  - *Density*: $G G phi.alt arrow.r G phi.alt$ is valid iff the frame is densely ordered.
+  - *Seriality*: $G phi.alt arrow.r F phi.alt$ is valid iff the frame has no maximum element.
+
+  Under reflexive semantics, these axioms become trivially valid on any linear order.
+  The frame class structure (Base/Dense/Discrete) collapses to a single logic.
+
+  Notably, *irreflexivity is not modally definable* (Blackburn, de Rijke, Venema): no temporal formula characterizes exactly the irreflexive frames.
+]
+
+#remark("Rationale for TM")[
+  TM currently uses strict semantics to:
+  + Preserve three distinct frame classes (Base, Dense, Discrete) with different axiom requirements.
+  + Align with Prior's tense logic tradition and frame correspondence theory.
+  + Enable the density and seriality axioms to genuinely characterize their target frames.
+
+  The trade-off is that the canonical model construction requires proving (or axiomatizing) irreflexivity of the canonical temporal relation.
+  The `canonicalR_irreflexive_axiom` in the current implementation reflects this requirement.
+]
