@@ -526,14 +526,14 @@ The proof proceeds by induction on the derivation tree structure:
 - **Modus ponens**: If Γ ⊨ φ → ψ and Γ ⊨ φ, then Γ ⊨ ψ
 - **Necessitation**: Uses `necessitation_preserves_valid`
 - **Temporal necessitation**: Uses `temporal_necessitation_preserves_valid`
-- **Temporal duality**: Uses `SoundnessLemmas.derivable_implies_swap_valid`
+- **Temporal duality**: Uses `SoundnessLemmas.derivable_universally_swap_valid`
 - **IRR**: See `IRRSoundness.lean` for the product frame construction
 - **Weakening**: Monotonicity of semantic consequence
 
-**Note**: This theorem is stated for the full axiom set under strict semantics.
-The density, discreteness, and seriality axioms require specific frame conditions
-(DenselyOrdered, SuccOrder/PredOrder, NoMaxOrder/NoMinOrder respectively).
-This soundness theorem is therefore only valid when those conditions are satisfied.
+**Note**: Under reflexive semantics (G/H quantify over ≥/≤ including the present),
+ALL axioms—including the extension axioms (density, discreteness, seriality)—are
+trivially valid on every linear order via `le_rfl`. This theorem is therefore
+unconditionally sorry-free with no frame-class constraints.
 -/
 theorem soundness (Γ : Context) (φ : Formula) :
     DerivationTree Γ φ → (D : Type) → [AddCommGroup D] → [LinearOrder D] → [IsOrderedAddMonoid D] →
@@ -566,20 +566,26 @@ theorem soundness (Γ : Context) (φ : Formula) :
     | temp_t_past ψ => exact temp_t_past_valid ψ D F M Omega h_sc τ h_mem t
     | temp_linearity φ ψ => exact temp_linearity_valid φ ψ D F M Omega h_sc τ h_mem t
     | density ψ =>
-      -- Density axiom: GGψ → Gψ. Requires DenselyOrdered D.
-      -- This case cannot be proven without the DenselyOrdered instance.
-      -- Full soundness requires restricting to dense frames.
-      sorry
+      -- GGψ → Gψ: trivially valid under reflexive semantics (le_rfl).
+      simp only [truth_at]
+      intro h_GG s hts; exact h_GG s hts s le_rfl
     | discreteness_forward ψ =>
-      -- Forward discreteness: (F⊤ ∧ φ ∧ Hφ) → F(Hφ)
-      -- Requires SuccOrder D.
-      sorry
+      -- (F⊤ ∧ ψ ∧ Hψ) → F(Hψ): trivially valid; F(Hψ) witnessed by t via le_rfl.
+      simp only [Formula.and, Formula.some_future, Formula.neg, truth_at]
+      intro h_conj h_G_not_H
+      have h1 := and_of_not_imp_not h_conj
+      have ⟨_, h_phi_and_H⟩ := h1
+      have h2 := and_of_not_imp_not h_phi_and_H
+      have ⟨_, h_H⟩ := h2
+      apply h_G_not_H t le_rfl; exact h_H
     | seriality_future ψ =>
-      -- Seriality: Gψ → Fψ. Requires NoMaxOrder D.
-      sorry
+      -- Gψ → Fψ: trivially valid; Fψ witnessed by t via le_rfl.
+      simp only [Formula.some_future, Formula.neg, truth_at]
+      intro h_G h_all_neg; exact h_all_neg t le_rfl (h_G t le_rfl)
     | seriality_past ψ =>
-      -- Seriality: Hψ → Pψ. Requires NoMinOrder D.
-      sorry
+      -- Hψ → Pψ: trivially valid; Pψ witnessed by t via le_rfl.
+      simp only [Formula.some_past, Formula.neg, truth_at]
+      intro h_H h_all_neg; exact h_all_neg t le_rfl (h_H t le_rfl)
   | assumption Γ' φ' h_in =>
     exact h_ctx φ' h_in
   | modus_ponens Γ' φ' ψ' _ _ ih1 ih2 =>
@@ -596,10 +602,10 @@ theorem soundness (Γ : Context) (φ : Formula) :
     intro s _hts
     exact ih τ h_mem s (by simp)
   | temporal_duality φ' d' ih =>
-    -- Temporal duality soundness: swap of valid is valid
-    -- The ih gives validity of φ' at (τ, t), need validity of swap(φ') at (τ, t)
-    -- This follows from axiom_swap_valid in SoundnessLemmas but requires DenselyOrdered/Nontrivial
-    sorry -- See SoundnessLemmas.axiom_swap_valid for the component proofs
+    -- Temporal duality: if φ' is provable from [], then swap(φ') is valid.
+    -- Under reflexive semantics, all axioms and their swaps are universally valid,
+    -- so we use the unconstrained derivable_universally_swap_valid.
+    exact SoundnessLemmas.derivable_universally_swap_valid d' F M Omega h_sc τ h_mem t
   | weakening Γ' Δ' φ' _ h_sub ih =>
     exact ih τ h_mem t (fun ψ h_in => h_ctx ψ (h_sub h_in))
 

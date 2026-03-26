@@ -1781,86 +1781,19 @@ theorem boxClassFamilies_modal_backward (M0 : Set Formula) (h_mcs : SetMaximalCo
   have h_mcs_witness := witness_fam.is_mcs t
   exact set_consistent_not_both h_mcs_witness.1 phi h_phi_at_t h_neg_phi_at_t
 
-/--
-**BLOCKED (depends on SuccChainTemporalCoherent which has mathematically FALSE dependencies)**
-
-Temporal coherence: all families in the bundle satisfy forward_F and backward_P.
-
-This theorem uses `SuccChainTemporalCoherent` which depends on `succ_chain_forward_F`
-and `succ_chain_backward_P`, both of which use the mathematically false
-`f_nesting_is_bounded` and `p_nesting_is_bounded`.
-
-**Impact**: `construct_bfmcs` which uses this theorem has a sorry through the sorry chain.
-However, for completeness purposes, the forward direction of the truth lemma does NOT
-require temporal coherence - only the backward direction does.
-
-**Migration path**: For completeness, use `succ_chain_completeness` which only needs
-the forward truth direction. For full truth lemma, use restricted chain construction
-with `restricted_forward_chain_forward_F`.
-
-**Mathematical Status**: The underlying `f_nesting_is_bounded` claim is FALSE for
-arbitrary MCS. An MCS can consistently contain {F^n(p) | n in Nat}. This is satisfiable
-on the integers with successor semantics: point 0 satisfies all F^n(p) by having p
-at position n.
-
-See Task #55 research reports for detailed analysis.
-
-**Status**: This theorem is BLOCKED. The underlying `SuccChainTemporalCoherent` was removed
-because it depended on the mathematically false `f_nesting_is_bounded`.
-
-**Replacement**: Use `omegaClassFamilies_temporally_coherent` from the omega-enumeration
-construction below, which achieves temporal coherence by construction through dovetailed
-resolution of F/P-obligations.
--/
-@[deprecated "Use omegaClassFamilies_temporally_coherent" (since := "2026-03-24")]
-theorem boxClassFamilies_temporally_coherent (M0 : Set Formula) (h_mcs : SetMaximalConsistent M0) :
-    ∀ fam ∈ boxClassFamilies M0 h_mcs,
-      (∀ t φ, Formula.some_future φ ∈ fam.mcs t → ∃ s, t < s ∧ φ ∈ fam.mcs s) ∧
-      (∀ t φ, Formula.some_past φ ∈ fam.mcs t → ∃ s, s < t ∧ φ ∈ fam.mcs s) := by
-  -- BLOCKED: SuccChainTemporalCoherent was removed (depended on false f_nesting_is_bounded)
-  -- Use omegaClassFamilies_temporally_coherent instead
-  sorry
-
 /-!
-### Phase 5: construct_bfmcs
+### Archived: boxClassFamilies_temporally_coherent and construct_bfmcs
 
-Wire everything together into the signature required by ParametricRepresentation.
+The following definitions were archived (2026-03-26) as they contained sorry
+due to dependence on the mathematically false `f_nesting_is_bounded`:
+
+- `boxClassFamilies_temporally_coherent` (deprecated, sorry)
+- `construct_bfmcs` (deprecated, sorry via boxClassFamilies_temporally_coherent)
+
+**Replacement**: Use `construct_bfmcs_omega` and
+`omegaClassFamilies_temporally_coherent` which achieve temporal coherence
+by construction through dovetailed resolution of F/P-obligations.
 -/
-
-set_option maxHeartbeats 800000 in
-/--
-**BLOCKED (temporal coherence depends on mathematically FALSE theorems)**
-
-The main construction: given an MCS M, produce a temporally coherent BFMCS containing M.
-
-**WARNING**: This function uses `boxClassFamilies_temporally_coherent` which depends on
-the mathematically false `f_nesting_is_bounded`. The temporal coherence proof has a sorry.
-
-**Axiom dependency**: `#print axioms construct_bfmcs` shows `sorryAx` due to:
-- `boxClassFamilies_temporally_coherent` -> `SuccChainTemporalCoherent`
-- -> `succ_chain_forward_F` -> `f_nesting_boundary` -> `f_nesting_is_bounded` (FALSE)
-
-**For completeness proofs**: Use `succ_chain_completeness` instead, which only requires
-the forward direction of the truth lemma and does NOT depend on temporal coherence.
-Alternatively, use `parametric_algebraic_representation_conditional` with a restricted
-chain-based construction.
-
-**Mathematical status**: The issue is that `f_nesting_is_bounded` claims every MCS has
-bounded F-nesting. This is FALSE: {F^n(p) | n in Nat} is finitely consistent and extends
-to an MCS with unbounded F-nesting.
-
-See Task #55 research reports for complete analysis.
-
-**Status**: This definition is BLOCKED. Use `construct_bfmcs_omega` instead.
--/
-@[deprecated "Use construct_bfmcs_omega" (since := "2026-03-24")]
-noncomputable def construct_bfmcs (M : Set Formula) (h_mcs : SetMaximalConsistent M) :
-    Σ' (B : BFMCS Int) (h_tc : B.temporally_coherent)
-       (fam : FMCS Int) (hfam : fam ∈ B.families) (t : Int),
-       M = fam.mcs t := by
-  -- BLOCKED: boxClassFamilies_temporally_coherent uses sorry
-  -- Use construct_bfmcs_omega instead
-  sorry
 
 /-!
 ## Omega-Enumeration BFMCS Construction
@@ -2293,205 +2226,24 @@ theorem omega_chain_forward_G_monotone (M0 : Set Formula) (h_mcs0 : SetMaximalCo
       -- witness.property.2.2.1: G-formulas from chain(n) are in witness
       exact witness.property.2.2.1 phi h_G_n
 
-/--
-Forward G coherence for Z-chain: G(phi) at t implies phi at t' for all t' >= t.
--/
-theorem Z_chain_forward_G (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0)
-    (t t' : Int) (phi : Formula) (h_le : t ≤ t') (h_G : Formula.all_future phi ∈ Z_chain M0 h_mcs0 t) :
-    phi ∈ Z_chain M0 h_mcs0 t' := by
-  -- Strategy: Show G(phi) persists from t to t', then apply T-axiom
-  have h_mcs_t' := Z_chain_mcs M0 h_mcs0 t'
-
-  -- First, we need G(phi) ∈ Z_chain(t')
-  have h_G_t' : Formula.all_future phi ∈ Z_chain M0 h_mcs0 t' := by
-    -- Case analysis on whether t and t' are non-negative
-    unfold Z_chain at h_G ⊢
-    by_cases h_t_nonneg : t ≥ 0
-    · -- t >= 0, so Z_chain(t) = omega_chain_forward(t.toNat)
-      simp only [ge_iff_le, h_t_nonneg, ↓reduceDIte] at h_G
-      by_cases h_t'_nonneg : t' ≥ 0
-      · -- t' >= 0, so Z_chain(t') = omega_chain_forward(t'.toNat)
-        simp only [ge_iff_le, h_t'_nonneg, ↓reduceDIte]
-        -- Need to show t.toNat ≤ t'.toNat
-        have h_toNat_le : t.toNat ≤ t'.toNat := by
-          -- t >= 0 and t' >= 0 and t <= t' implies t.toNat <= t'.toNat
-          have ht : (t.toNat : Int) = t := Int.toNat_of_nonneg h_t_nonneg
-          have ht' : (t'.toNat : Int) = t' := Int.toNat_of_nonneg h_t'_nonneg
-          omega
-        exact omega_chain_forward_G_monotone M0 h_mcs0 phi t.toNat t'.toNat h_toNat_le h_G
-      · -- t >= 0 but t' < 0 contradicts t ≤ t'
-        push_neg at h_t'_nonneg
-        omega
-    · -- t < 0
-      push_neg at h_t_nonneg
-      have h_t_neg : ¬(t ≥ 0) := by omega
-      simp only [ge_iff_le, h_t_neg, ↓reduceDIte] at h_G
-      by_cases h_t'_nonneg : t' ≥ 0
-      · -- t < 0 but t' >= 0
-        -- We need to cross from backward chain to forward chain
-        simp only [ge_iff_le, h_t'_nonneg, ↓reduceDIte]
-        -- The backward chain at (-t).toNat has G(phi)
-        -- We need to propagate it to the forward chain at t'.toNat
-
-        -- Key insight: Both chains pass through M0 at index 0
-        -- backward_chain(0) = M0 = forward_chain(0)
-
-        -- The backward chain is built going "backward" (increasing negative index)
-        -- But at index 0, it IS M0. So if G(phi) is in backward_chain(n),
-        -- we need to show it propagates "forward" to M0.
-
-        -- Actually, the backward chain construction only preserves H-theory, not G-theory
-        -- This is a fundamental gap in the current construction
-
-        -- For now, sorry this crossing case
-        sorry
-      · -- t < 0 and t' < 0
-        push_neg at h_t'_nonneg
-        have h_t'_neg : ¬(t' ≥ 0) := by omega
-        simp only [ge_iff_le, h_t'_neg, ↓reduceDIte]
-        -- Both in backward chain
-        -- t ≤ t' < 0 means |t'| <= |t|, i.e., (-t') <= (-t)
-        -- In backward_chain: (-t').toNat <= (-t).toNat
-
-        -- The backward chain at (-t).toNat has G(phi)
-        -- We need G(phi) at (-t').toNat
-
-        -- Since (-t').toNat <= (-t).toNat, backward_chain((-t').toNat) is
-        -- EARLIER in the construction than backward_chain((-t).toNat)
-
-        -- The backward chain builds: M0 = chain(0), chain(1), chain(2), ...
-        -- Each step takes a P-witness from the previous step
-        -- P-witnesses preserve H-theory, but NOT necessarily G-theory
-
-        -- This is a gap: G-formulas may not propagate backward in the backward chain
-
-        -- For now, sorry this case
-        sorry
-
-  -- Now apply T-axiom: G(phi) → phi
-  have h_T : [] ⊢ (Formula.all_future phi).imp phi :=
-    DerivationTree.axiom [] _ (Axiom.temp_t_future phi)
-  exact SetMaximalConsistent.implication_property h_mcs_t' (theorem_in_mcs h_mcs_t' h_T) h_G_t'
-
-/--
-Backward H coherence for Z-chain: H(phi) at t implies phi at t' for all t' <= t.
--/
-theorem Z_chain_backward_H (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0)
-    (t t' : Int) (phi : Formula) (h_le : t' ≤ t) (h_H : Formula.all_past phi ∈ Z_chain M0 h_mcs0 t) :
-    phi ∈ Z_chain M0 h_mcs0 t' := by
-  -- Symmetric to Z_chain_forward_G
-  sorry
-
-/--
-The OmegaFMCS: wrap Z_chain as an FMCS structure.
-
-**Note**: The forward_G and backward_H proofs currently use sorry because
-the chain construction needs to be extended to track full G/H propagation.
--/
-noncomputable def OmegaFMCS (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0) : FMCS Int where
-  mcs := Z_chain M0 h_mcs0
-  is_mcs := Z_chain_mcs M0 h_mcs0
-  forward_G := Z_chain_forward_G M0 h_mcs0
-  backward_H := Z_chain_backward_H M0 h_mcs0
-
-/--
-OmegaFMCS at time 0 equals M0.
--/
-theorem OmegaFMCS_zero (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0) :
-    (OmegaFMCS M0 h_mcs0).mcs 0 = M0 :=
-  Z_chain_zero M0 h_mcs0
-
 /-!
-### Phase 5: Temporal Coherence (forward_F and backward_P)
+### Archived: Z-chain FMCS coherence and temporal coherence
 
-For completeness, we need to prove that the Z-chain satisfies:
-- forward_F: F(phi) at t → exists s > t with phi at s
-- backward_P: P(phi) at t → exists s < t with phi at s
+The following definitions were archived (2026-03-26) as they contained sorry
+due to gaps in G/H propagation across the backward-to-forward chain crossing
+and incomplete F/P obligation resolution:
 
-These follow from the chain construction: each step of the forward chain
-uses `temporal_theory_witness_exists` which provides F-witnesses, and
-each step of the backward chain uses `past_theory_witness_exists` for P-witnesses.
+- `Z_chain_forward_G` (sorry: G-propagation across backward→forward crossing)
+- `Z_chain_backward_H` (sorry: symmetric to forward_G)
+- `OmegaFMCS` (depended on Z_chain_forward_G and Z_chain_backward_H)
+- `OmegaFMCS_zero` (depended on OmegaFMCS)
+- `Z_chain_forward_F` (sorry: F-obligation resolution not tracked in chain)
+- `Z_chain_backward_P` (sorry: symmetric to forward_F)
+
+**Replacement**: Use bundle-level temporal coherence (below) which relaxes the
+requirement that F/P-witnesses exist within the same family. The sorry-free
+`omega_chain_forward_G_monotone` (above) is preserved as it is complete.
 -/
-
-/--
-Forward F coherence for Z-chain: F(phi) at t implies exists s > t with phi at s.
-
-**Proof**: F(phi) ∈ Z_chain(t) means F(phi) is in the MCS at time t.
-At the next time point t+1, we can use the chain extension property.
-The forward chain at t+1 is obtained from the chain at t via a temporal witness
-that resolves F-obligations. So phi is at t+1.
--/
-theorem Z_chain_forward_F (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0)
-    (t : Int) (phi : Formula) (h_F : Formula.some_future phi ∈ Z_chain M0 h_mcs0 t) :
-    ∃ s : Int, t < s ∧ phi ∈ Z_chain M0 h_mcs0 s := by
-  -- Strategy: find a witness in the forward chain at t+1
-  -- The witness exists because F(phi) ∈ Z_chain(t) and
-  -- temporal_theory_witness_exists gives us a witness for any F-formula
-
-  -- The key insight: from F(phi) at time t, we can use temporal_theory_witness_exists
-  -- to get a witness MCS W with phi ∈ W. This witness is in the box-class of M0,
-  -- so we can find it somewhere in the Z_chain.
-
-  -- For the omega chain construction, at each step we add a temporal witness
-  -- that resolves at least one F-obligation. If F(phi) is in the current MCS,
-  -- eventually it gets resolved.
-
-  -- For a cleaner proof, we use the direct witness construction:
-  have h_mcs_t := Z_chain_mcs M0 h_mcs0 t
-  have h_witness := temporal_theory_witness_exists (Z_chain M0 h_mcs0 t) h_mcs_t phi h_F
-  obtain ⟨W, h_W_mcs, h_phi_W, h_G_agree, h_box_agree⟩ := h_witness
-
-  -- W is an MCS with phi ∈ W and box_class_agree (Z_chain(t)) W
-  -- By transitivity of box_class_agree: box_class_agree M0 W
-  have h_box_M0_t := Z_chain_box_class M0 h_mcs0 t
-  have h_box_M0_W : box_class_agree M0 W := box_class_agree_trans h_box_M0_t h_box_agree
-
-  -- W is in the same box class as M0, so we can build a shifted SuccChainFMCS from W
-  -- and it will be in boxClassFamilies M0 h_mcs0
-
-  -- For the Z_chain specifically, we use the fact that the forward chain
-  -- eventually contains any MCS in the box class of M0
-
-  -- Alternative simpler approach: use s = t + 1
-  -- At t+1, if t >= 0, then t+1 > t and we're in the forward chain
-  -- The forward chain at t+1 is built from the chain at t via a temporal witness
-
-  -- Actually, the cleanest approach is to show that the forward chain at t+1
-  -- was constructed by taking a witness that contains phi (or eventually does)
-
-  -- For this proof, we use the fact that F_top is always resolved,
-  -- which means the chain keeps extending. And since F(phi) ∈ Z_chain(t),
-  -- we can find phi at some future point.
-
-  -- The direct proof: use that the witness W exists with phi ∈ W,
-  -- and W is in the bundle, so there's some time point s > t with phi at s
-
-  -- For now, we use a simpler observation:
-  -- In the forward chain, at step n+1 we resolve an F-obligation from step n
-  -- If F(phi) is in the chain at some point, eventually phi will be there
-
-  -- Actually, let me use the construction directly
-  -- When we're in the forward direction (t >= 0), the next step resolves F_top
-  -- But F(phi) might not be resolved immediately
-
-  -- The real issue: the current omega_chain_forward always resolves F_top,
-  -- not arbitrary F-obligations. We need to show that F(phi) eventually gets resolved.
-
-  -- For now, we use the fact that F(phi) implies the existence of a witness
-  -- and that witness is in the box class, so it appears somewhere in the bundle
-
-  -- Using sorry for now - this requires extending the chain construction
-  -- to track which F-obligations have been resolved
-  sorry
-
-/--
-Backward P coherence for Z-chain: P(phi) at t implies exists s < t with phi at s.
--/
-theorem Z_chain_backward_P (M0 : Set Formula) (h_mcs0 : SetMaximalConsistent M0)
-    (t : Int) (phi : Formula) (h_P : Formula.some_past phi ∈ Z_chain M0 h_mcs0 t) :
-    ∃ s : Int, s < t ∧ phi ∈ Z_chain M0 h_mcs0 s := by
-  -- Symmetric to Z_chain_forward_F
-  sorry
 
 /-!
 ## Bundle-Level Temporal Coherence

@@ -24,11 +24,12 @@ REFLEXIVE: `canonicalR_reflexive` is proven via T-axiom.
 
 ## Completeness Architecture
 
-The completeness proof uses the SuccChain architecture:
+The completeness proof uses the BFMCS (Bundle of Families of Maximal Consistent Sets)
+approach with modal saturation:
 
-1. **Bundle/SuccChain***: Successor chain construction for completeness
-2. **Bundle/**: BFMCS infrastructure with truth lemma
-3. **Completeness/**: Completeness theorem wiring
+1. **Bundle/**: BFMCS infrastructure with truth lemma and canonical construction
+2. **Bundle/SuccChainFMCS.lean**: Sorry-free successor chain FMCS construction (core only)
+3. **Algebraic/**: Alternative algebraic approach via Lindenbaum quotient
 
 ## Axiom Dependencies
 
@@ -59,13 +60,9 @@ Metalogic/
 │   ├── WitnessSeed.lean             # Witness seeds
 │   ├── SuccRelation.lean            # Successor relation
 │   ├── SuccExistence.lean           # Successor existence
-│   ├── SuccChainFMCS.lean           # SuccChain FMCS construction
-│   ├── SuccChainTaskFrame.lean      # SuccChain task frame
-│   ├── SuccChainTruth.lean          # SuccChain truth lemma
-│   └── SuccChainWorldHistory.lean   # SuccChain world/history
+│   └── SuccChainFMCS.lean           # SuccChain FMCS (sorry-free core)
 ├── Algebraic/                   # Algebraic completeness approach
 ├── Completeness/                # Completeness theorem
-│   └── SuccChainCompleteness.lean   # SuccChain completeness wiring
 ├── ConservativeExtension/       # Conservative extension results
 ├── Decidability/                # Tableau decision procedure
 │   ├── FMP/                         # Finite model property

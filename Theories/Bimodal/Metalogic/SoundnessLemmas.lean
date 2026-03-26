@@ -995,4 +995,274 @@ theorem derivable_implies_swap_valid [DenselyOrdered D] [Nontrivial D]
     is_valid D φ.swap_temporal :=
   (derivable_valid_and_swap_valid d h_dc).2
 
+/-! ## Unconstrained Validity Theorems (Reflexive Semantics)
+
+Under reflexive semantics (G quantifies over s ≥ t, H over s ≤ t), ALL axioms—including
+the extension axioms (density, discreteness_forward, seriality_future, seriality_past)—are
+valid on ALL linear orders without any frame-class constraints.
+
+The key insight: every extension axiom proof uses only `le_rfl` (reflexivity of ≤),
+never any actual density, successor order, or unboundedness property.
+
+These unconstrained versions enable the general `soundness` theorem to handle the
+temporal_duality rule without frame-class constraints.
+-/
+
+/-- All TM axioms are valid on every linear order under reflexive semantics. -/
+theorem axiom_universally_valid {φ : Formula} (h : Axiom φ) : is_valid D φ := by
+  cases h with
+  | prop_k φ ψ χ => exact axiom_prop_k_valid φ ψ χ
+  | prop_s φ ψ => exact axiom_prop_s_valid φ ψ
+  | modal_t ψ => exact axiom_modal_t_valid ψ
+  | modal_4 ψ => exact axiom_modal_4_valid ψ
+  | modal_b ψ => exact axiom_modal_b_valid ψ
+  | modal_5_collapse ψ => exact axiom_modal_5_collapse_valid ψ
+  | ex_falso ψ => exact axiom_ex_falso_valid ψ
+  | peirce φ ψ => exact axiom_peirce_valid φ ψ
+  | modal_k_dist φ ψ => exact axiom_modal_k_dist_valid φ ψ
+  | temp_k_dist φ ψ => exact axiom_temp_k_dist_valid φ ψ
+  | temp_4 ψ => exact axiom_temp_4_valid ψ
+  | temp_a ψ => exact axiom_temp_a_valid ψ
+  | temp_l ψ => exact axiom_temp_l_valid ψ
+  | modal_future ψ => exact axiom_modal_future_valid ψ
+  | temp_future ψ => exact axiom_temp_future_valid ψ
+  | temp_linearity φ ψ => exact axiom_temp_linearity_valid φ ψ
+  | density ψ =>
+    -- GGψ → Gψ: trivially valid. For s ≥ t, take r = s in GGψ, then u = s by le_rfl.
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [truth_at]
+    intro h_GG s hts
+    exact h_GG s hts s le_rfl
+  | discreteness_forward ψ =>
+    -- (F⊤ ∧ ψ ∧ Hψ) → F(Hψ): trivially valid. Hψ at t means ∀r≤t,ψ(r).
+    -- F(Hψ) witnessed by t itself (t ≥ t by le_rfl).
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.and, Formula.some_future, Formula.neg, truth_at]
+    intro h_conj h_G_not_H
+    have h1 := and_of_not_imp_not h_conj
+    have ⟨_, h_phi_and_H⟩ := h1
+    have h2 := and_of_not_imp_not h_phi_and_H
+    have ⟨_, h_H⟩ := h2
+    apply h_G_not_H t le_rfl
+    exact h_H
+  | seriality_future ψ =>
+    -- Gψ → Fψ: trivially valid. Gψ gives ψ(t) by le_rfl; Fψ witnessed by t.
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.some_future, Formula.neg, truth_at]
+    intro h_G h_all_neg
+    exact h_all_neg t le_rfl (h_G t le_rfl)
+  | seriality_past ψ =>
+    -- Hψ → Pψ: trivially valid. Hψ gives ψ(t) by le_rfl; Pψ witnessed by t.
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.some_past, Formula.neg, truth_at]
+    intro h_H h_all_neg
+    exact h_all_neg t le_rfl (h_H t le_rfl)
+  | temp_t_future ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [truth_at]
+    intro h_G; exact h_G t le_rfl
+  | temp_t_past ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [truth_at]
+    intro h_H; exact h_H t le_rfl
+
+/-- All TM axiom swaps are valid on every linear order under reflexive semantics. -/
+theorem axiom_universally_swap_valid (φ : Formula) (h : Axiom φ) :
+    is_valid D φ.swap_temporal := by
+  cases h with
+  | prop_k ψ χ ρ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_abc h_ab h_a; exact h_abc h_a (h_ab h_a)
+  | prop_s ψ χ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_a _; exact h_a
+  | modal_t ψ => exact swap_axiom_mt_valid ψ
+  | modal_4 ψ => exact swap_axiom_m4_valid ψ
+  | modal_b ψ => exact swap_axiom_mb_valid ψ
+  | modal_5_collapse ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, Formula.diamond, Formula.neg, truth_at]
+    intro h_diamond_box σ h_σ_mem
+    by_contra h_not_psi
+    apply h_diamond_box
+    intro ρ h_ρ_mem h_box_at_rho
+    exact h_not_psi (h_box_at_rho σ h_σ_mem)
+  | ex_falso ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_bot; exact absurd h_bot id
+  | peirce ψ χ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_peirce
+    by_cases h : truth_at M Omega τ t ψ.swap_temporal
+    · exact h
+    · exact h_peirce (fun h_psi => absurd h_psi h)
+  | modal_k_dist ψ χ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_box_imp h_box_psi σ h_σ_mem
+    exact h_box_imp σ h_σ_mem (h_box_psi σ h_σ_mem)
+  | temp_k_dist ψ χ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_past_imp h_past_psi s hst
+    exact h_past_imp s hst (h_past_psi s hst)
+  | temp_4 ψ => exact swap_axiom_t4_valid ψ
+  | temp_a ψ => exact swap_axiom_ta_valid ψ
+  | temp_l ψ => exact swap_axiom_tl_valid ψ
+  | modal_future ψ => exact swap_axiom_mf_valid ψ
+  | temp_future ψ => exact swap_axiom_tf_valid ψ
+  | temp_linearity ψ χ =>
+    -- Past-linearity: symmetric to temp_linearity, use trichotomy on ≤ witnesses
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, Formula.and, Formula.or, Formula.some_future,
+               Formula.some_past, Formula.neg, truth_at]
+    intro h_conj
+    have h_P_phi : (∀ s, s ≤ t → truth_at M Omega τ s ψ.swap_temporal → False) → False :=
+      Classical.byContradiction (fun h_not =>
+        h_conj (fun h1 _ => h_not (fun h_all => h1 (fun s hs h_phi => h_all s hs h_phi))))
+    have h_P_psi : (∀ s, s ≤ t → truth_at M Omega τ s χ.swap_temporal → False) → False :=
+      Classical.byContradiction (fun h_not =>
+        h_conj (fun _ h2 => h_not (fun h_all => h2 (fun s hs h_psi => h_all s hs h_psi))))
+    have ⟨s1, hs1t, h_phi_s1⟩ : ∃ s, s ≤ t ∧ truth_at M Omega τ s ψ.swap_temporal := by
+      by_contra h_no; push_neg at h_no
+      exact h_P_phi (fun s hs h_phi => h_no s hs h_phi)
+    have ⟨s2, hs2t, h_psi_s2⟩ : ∃ s, s ≤ t ∧ truth_at M Omega τ s χ.swap_temporal := by
+      by_contra h_no; push_neg at h_no
+      exact h_P_psi (fun s hs h_psi => h_no s hs h_psi)
+    rcases lt_trichotomy s1 s2 with h_lt | h_eq | h_gt
+    · intro _h_not_simul; intro _h_not_middle; intro h_not_last
+      apply h_not_last s2 hs2t
+      intro h_imp; apply h_imp
+      · intro h_no_past_phi; exact h_no_past_phi s1 (le_of_lt h_lt) h_phi_s1
+      · exact h_psi_s2
+    · subst h_eq; intro h_not_first; exfalso
+      apply h_not_first; intro h_all_neg_first
+      exact h_all_neg_first s1 hs1t (fun h_imp => h_imp h_phi_s1 h_psi_s2)
+    · intro _h_not_simul; intro h_not_middle; exfalso
+      apply h_not_middle; intro h_all_neg_second
+      exact h_all_neg_second s1 hs1t (fun h_imp => h_imp h_phi_s1 (fun h_neg_P_psi =>
+        h_neg_P_psi s2 (le_of_lt h_gt) h_psi_s2))
+  | density ψ =>
+    -- swap(GGψ → Gψ) = HHψ → Hψ: trivially valid by le_rfl
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_HH s hst; exact h_HH s hst s le_rfl
+  | discreteness_forward ψ =>
+    -- swap((F⊤ ∧ ψ ∧ Hψ) → F(Hψ)) = (P⊤ ∧ swap(ψ) ∧ Gswap(ψ)) → P(Gswap(ψ))
+    -- If Gswap(ψ) at t, then P(Gswap(ψ)) witnessed by t itself (t ≤ t by le_rfl).
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, Formula.and, Formula.some_future,
+               Formula.some_past, Formula.neg, truth_at]
+    intro h_conj h_H_not_G
+    have h1 := and_of_not_imp_not h_conj
+    have ⟨_, h_phi_and_G⟩ := h1
+    have h2 := and_of_not_imp_not h_phi_and_G
+    have ⟨_, h_G⟩ := h2
+    apply h_H_not_G t le_rfl
+    exact h_G
+  | seriality_future ψ =>
+    -- swap(Gψ → Fψ) = Hψ → Pψ: trivially valid by le_rfl
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, Formula.some_past, Formula.neg, truth_at]
+    intro h_H h_all_neg; exact h_all_neg t le_rfl (h_H t le_rfl)
+  | seriality_past ψ =>
+    -- swap(Hψ → Pψ) = Gψ → Fψ: trivially valid by le_rfl
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, Formula.some_future, Formula.neg, truth_at]
+    intro h_G h_all_neg; exact h_all_neg t le_rfl (h_G t le_rfl)
+  | temp_t_future ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_H; exact h_H t le_rfl
+  | temp_t_past ψ =>
+    intro F M Omega _h_sc τ _h_mem t
+    simp only [Formula.swap_temporal, truth_at]
+    intro h_G; exact h_G t le_rfl
+
+/-- Modus ponens preserves swap validity. -/
+private theorem mp_preserves_swap_valid_general {ψ φ : Formula}
+    (h_imp : is_valid D (ψ.imp φ).swap_temporal)
+    (h_phi : is_valid D ψ.swap_temporal) :
+    is_valid D φ.swap_temporal := by
+  intro F M Omega h_sc τ h_mem t
+  simp only [Formula.swap_temporal] at h_imp
+  exact h_imp F M Omega h_sc τ h_mem t (h_phi F M Omega h_sc τ h_mem t)
+
+/-- Modal necessitation preserves swap validity.
+  If swap(φ) is valid, then swap(□φ) = □swap(φ) is valid. -/
+private theorem modal_k_preserves_swap_valid_general {φ : Formula}
+    (h : is_valid D φ.swap_temporal) :
+    is_valid D (Formula.box φ).swap_temporal := by
+  intro F M Omega _h_sc τ _h_mem t
+  simp only [Formula.swap_temporal, truth_at]
+  intro σ h_σ_mem
+  exact h F M Omega _h_sc σ h_σ_mem t
+
+/-- Temporal necessitation preserves swap validity.
+  If swap(φ) is valid, then swap(Gφ) = Hswap(φ) is valid. -/
+private theorem temporal_k_preserves_swap_valid_general {φ : Formula}
+    (h : is_valid D φ.swap_temporal) :
+    is_valid D (Formula.all_future φ).swap_temporal := by
+  intro F M Omega h_sc τ h_mem t
+  simp only [Formula.swap_temporal, truth_at]
+  intro s _hst
+  exact h F M Omega h_sc τ h_mem s
+
+/--
+Unconstrained combined soundness: derivability implies both validity and swap-validity
+on ANY linear order, without frame-class constraints.
+
+Under reflexive semantics, all TM axioms (including extension axioms) are valid on
+every linear order. This eliminates the need for `isDenseCompatible`, `DenselyOrdered`,
+or `Nontrivial` constraints.
+-/
+theorem derivable_universally_valid_and_swap_valid
+    {φ : Formula} (d : DerivationTree [] φ) :
+    is_valid D φ ∧ is_valid D φ.swap_temporal := by
+  match d with
+  | .axiom _ _ h_ax =>
+    exact ⟨axiom_universally_valid h_ax, axiom_universally_swap_valid _ h_ax⟩
+  | .assumption _ _ h_mem =>
+    exact absurd h_mem (Syntax.Context.not_mem_nil _)
+  | .modus_ponens _ ψ' _ d1 d2 =>
+    obtain ⟨h1_valid, h1_swap⟩ := derivable_universally_valid_and_swap_valid d1
+    obtain ⟨h2_valid, h2_swap⟩ := derivable_universally_valid_and_swap_valid d2
+    exact ⟨mp_preserves_valid h1_valid h2_valid,
+           mp_preserves_swap_valid_general h1_swap h2_swap⟩
+  | .necessitation ψ' d' =>
+    obtain ⟨h_valid, h_swap⟩ := derivable_universally_valid_and_swap_valid d'
+    exact ⟨necessitation_preserves_local_valid h_valid,
+           modal_k_preserves_swap_valid_general h_swap⟩
+  | .temporal_necessitation ψ' d' =>
+    obtain ⟨h_valid, h_swap⟩ := derivable_universally_valid_and_swap_valid d'
+    exact ⟨temporal_necessitation_preserves_local_valid h_valid,
+           temporal_k_preserves_swap_valid_general h_swap⟩
+  | .temporal_duality ψ' d' =>
+    obtain ⟨h_valid, h_swap⟩ := derivable_universally_valid_and_swap_valid d'
+    constructor
+    · exact h_swap
+    · simp only [Formula.swap_temporal_involution]; exact h_valid
+  | .weakening Γ' _ _ d' h_sub =>
+    have h_eq : Γ' = [] := List.eq_nil_of_subset_nil h_sub
+    have h_height_eq : (h_eq ▸ d').height = d'.height := by subst h_eq; rfl
+    have h_term : (h_eq ▸ d').height < (DerivationTree.weakening Γ' [] _ d' h_sub).height := by
+      simp only [h_height_eq, DerivationTree.height]; omega
+    exact derivable_universally_valid_and_swap_valid (h_eq ▸ d')
+termination_by d.height
+decreasing_by
+  all_goals first
+    | exact DerivationTree.mp_height_gt_left _ _
+    | exact DerivationTree.mp_height_gt_right _ _
+    | simp only [DerivationTree.height]; omega
+
+/-- Unconstrained: derivability implies swap validity on any linear order. -/
+theorem derivable_universally_swap_valid
+    {φ : Formula} (d : DerivationTree [] φ) :
+    is_valid D φ.swap_temporal :=
+  (derivable_universally_valid_and_swap_valid d).2
+
 end Bimodal.Metalogic.SoundnessLemmas
