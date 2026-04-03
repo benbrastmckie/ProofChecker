@@ -96,6 +96,7 @@ Completeness requires the Finite Model Property (FMP), which is stated but not y
 The FMP states that if a formula is satisfiable, it is satisfiable in a finite model.
 Full formalization of the FMP completes decidability.
 
+// TODO: Rewrite for strict semantics -- reflexive labels are stale (task 83)
 == Design Choices <sec:design-choices>
 
 The implementation of TM logic involves foundational choices that affect the proof theory and metatheoretic properties.
