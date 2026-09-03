@@ -687,24 +687,30 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 3: Fix the `PropDecideTest.lean` docstring and add De Morgan + distributivity regressions [NOT STARTED]
+### Phase 3: Fix the `PropDecideTest.lean` docstring and add De Morgan + distributivity regressions [COMPLETED]
 
 - **Goal:** the verified-wrong "out of scope" claim is removed and replaced by passing regression
   cases that exercise `and`/`or`-shaped goals directly.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: read the current docstring in place (report 01 locates it at `:39-42`, the
+  - [x] **Re-verify first**: read the current docstring in place (report 01 locates it at `:39-42`, the
         task description said `:44-46` — use the content, not the line number, as the anchor) and
         confirm it still makes the "out of scope for the pure imp/bot reflection skeleton" claim.
-  - [ ] Replace the docstring with an accurate one: `PropDecide.reify`'s `whnf` call unfolds
+  - [x] Replace the docstring with an accurate one: `PropDecide.reify`'s `whnf` call unfolds
         `and`/`or`/`neg` into the `imp`/`bot` skeleton automatically, so and/or-shaped goals are in
         scope.
-  - [ ] Add the De Morgan case report 01 verified:
+  - [x] Add the De Morgan case report 01 verified:
         `example (A B : Formula) : ⊢ (A.and B).neg.imp (A.neg.or B.neg) := by propDecide`.
-  - [ ] Add a distributivity regression matching the `le_sup_inf_quot` shape:
+  - [x] Add a distributivity regression matching the `le_sup_inf_quot` shape:
         `example (A B C : Formula) : ⊢ ((A.or B).and (A.or C)).imp (A.or (B.and C)) := by propDecide`.
-  - [ ] Keep the existing contrapositive-flavoured example — it tests a different path and its
+  - [x] Keep the existing contrapositive-flavoured example — it tests a different path and its
         removal is not required by anything.
+
+- **Completion note (2026-09-03):** docstring re-verified in place at `:40-43` (content anchor: "out of
+  scope for the pure imp/bot reflection skeleton"). Replaced by an accurate docstring on a new De Morgan
+  example (`(A.and B).neg.imp (A.neg.or B.neg)`), plus a distributivity example matching the
+  `le_sup_inf_quot` shape; the contrapositive example is kept with its own one-line docstring. Both new
+  examples elaborate to `goals: []`; `lake build BimodalTest.Metalogic.PropDecideTest` exit 0.
 
 - **Timing:** 0.5 hours
 - **Depends on:** none
