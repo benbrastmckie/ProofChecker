@@ -13,13 +13,16 @@ import Mathlib.Order.PrimeIdeal
 # Ultrafilter-MCS Correspondence
 
 This module establishes the bijection between ultrafilters of the Lindenbaum algebra
-and maximal consistent sets.
+and maximal consistent sets. Ultrafilters are encoded Mathlib-natively as prime filters,
+`Order.PrimeFilter LindenbaumAlg` (on a Boolean algebra the two notions coincide); the generic
+proper/maximal/prime-filter API comes from `FormalSystem/ForMathlib/Order/PFilter.lean`.
 
 ## Main Results
 
-- `mcs_to_ultrafilter`: MCS → Ultrafilter LindenbaumAlg
-- `ultrafilterToMcs`: Ultrafilter LindenbaumAlg → MCS
-- The two maps are inverses
+- `mcsToUltrafilter`: MCS → `Order.PrimeFilter LindenbaumAlg` (via `mcsToPFilter`)
+- `ultrafilterToMcs`: `Order.PrimeFilter LindenbaumAlg` → MCS (via `ultrafilterToSet`)
+- `SetMaximalConsistent.ultrafilterEquiv`: the two maps assembled into an `Equiv`
+- `SetMaximalConsistent.ultrafilter_correspondence`: the existential corollary
 
 ## Status
 
@@ -33,55 +36,6 @@ open FormalSystem.Metalogic.Algebraic.LindenbaumQuotient
 open FormalSystem.Metalogic.Algebraic.BooleanStructure
 open FormalSystem.Metalogic.Core
 open Order
-
-/-!
-## Ultrafilter Definition for Boolean Algebras
-
-An ultrafilter on a Boolean algebra is a proper filter that contains exactly one
-of each element and its complement.
--/
-
-/--
-An ultrafilter on a Boolean algebra.
--/
-structure Ultrafilter (α : Type*) [BooleanAlgebra α] where
-  /-- The carrier set of the ultrafilter -/
-  carrier : Set α
-  /-- Ultrafilters contain ⊤ -/
-  top_mem : ⊤ ∈ carrier
-  /-- Ultrafilters don't contain ⊥ -/
-  bot_not_mem : ⊥ ∉ carrier
-  /-- Ultrafilters are upward closed -/
-  mem_of_le : ∀ {a b}, a ∈ carrier → a ≤ b → b ∈ carrier
-  /-- Ultrafilters are closed under finite meets -/
-  inf_mem : ∀ {a b}, a ∈ carrier → b ∈ carrier → a ⊓ b ∈ carrier
-  /-- For each element, exactly one of it or its complement is in the ultrafilter -/
-  compl_or : ∀ a, a ∈ carrier ∨ aᶜ ∈ carrier
-  /-- An element and its complement cannot both be in the ultrafilter -/
-  compl_not : ∀ a, a ∈ carrier → aᶜ ∉ carrier
-
-/--
-Membership in an ultrafilter's carrier.
--/
-instance instMembershipUltrafilter {α : Type*} [BooleanAlgebra α] :
-    Membership α (Ultrafilter α) where
-  mem U a := a ∈ U.carrier
-
-/--
-Ultrafilter extensionality: two ultrafilters are equal iff their carriers are equal.
--/
-@[ext]
-theorem Ultrafilter.ext {α : Type*} [BooleanAlgebra α] {U V : Ultrafilter α}
-    (h : U.carrier = V.carrier) : U = V := by
-  cases U; cases V
-  simp only [Ultrafilter.mk.injEq]
-  exact h
-
-/--
-An ultrafilter doesn't contain ⊥.
--/
-theorem Ultrafilter.empty_not_mem {α : Type*} [BooleanAlgebra α] (U : Ultrafilter α) :
-    ⊥ ∉ U.carrier := U.bot_not_mem
 
 /-!
 ## MCS to Ultrafilter Direction
