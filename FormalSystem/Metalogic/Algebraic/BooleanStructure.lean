@@ -119,12 +119,11 @@ theorem inf_le_left_quot (a b : LindenbaumAlg) : andQuot a b ≤ a := by
 `a ⊓ b ≤ b`: conjunction implies second conjunct.
 -/
 theorem inf_le_right_quot (a b : LindenbaumAlg) : andQuot a b ≤ b := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  rename_i φ ψ
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
   change Derives (φ.and ψ) ψ
-  exact ⟨FormalSystem.Metalogic.Core.deductionTheorem [] (φ.and ψ) ψ
-    (FormalSystem.Theorems.Propositional.andRight φ ψ)⟩
+  unfold Derives
+  propDecide
 
 /--
 `a ≤ b → a ≤ c → a ≤ b ⊓ c`: greatest lower bound property.
