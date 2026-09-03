@@ -145,15 +145,11 @@ theorem le_inf_quot {a b c : LindenbaumAlg} (hab : a ≤ b) (hac : a ≤ c) : a 
 `a ≤ a ⊔ b`: first disjunct implies disjunction.
 -/
 theorem le_sup_left_quot (a b : LindenbaumAlg) : a ≤ orQuot a b := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  rename_i φ ψ
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
   change Derives φ (φ.or ψ)
-  -- φ ∨ ψ = ¬φ → ψ, so we need ⊢ φ → (¬φ → ψ)
-  -- This is impNegImp (Reductio ad Absurdum): ⊢ φ → (¬φ → ψ)
   unfold Derives
-  unfold Formula.or
-  exact ⟨FormalSystem.Theorems.Propositional.impNegImp φ ψ⟩
+  propDecide
 
 /--
 `b ≤ a ⊔ b`: second disjunct implies disjunction.
