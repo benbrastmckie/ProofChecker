@@ -733,22 +733,36 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 4: Restate `fold_le_of_derives` over `Multiset.inf` [NOT STARTED]
+### Phase 4: Restate `fold_le_of_derives` over `Multiset.inf` [COMPLETED]
 
 - **Goal:** `fold_le_of_derives` is stated over `((L.map toQuot : List _) : Multiset _).inf` and the
   hand-rolled `fold_from_x` reassociation `have` is gone.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: confirm `Multiset.inf`, `Multiset.inf_coe`, `Multiset.le_inf`, and
+  - [x] **Re-verify first**: confirm `Multiset.inf`, `Multiset.inf_coe`, `Multiset.le_inf`, and
         `Multiset.inf_le` resolve at the pinned Mathlib with the `[SemilatticeInf α] [OrderTop α]`
         instances `LindenbaumAlg` provides (`#check` each, or `lean_hover_info`). Record the four
         signatures.
-  - [ ] **Re-verify second**: re-confirm `fold_le_of_derives` has exactly one call site
+  - [x] **Re-verify second**: re-confirm `fold_le_of_derives` has exactly one call site
         (`UltrafilterMCS.lean:718`) and zero references elsewhere in the live tree. Record the grep.
-  - [ ] Restate the theorem over the multiset coercion. Do **not** route through `Finset` — report 01
+  - [x] Restate the theorem over the multiset coercion. Do **not** route through `Finset` — report 01
         verified `Multiset.le_inf`/`Multiset.inf_le` give both directions directly.
-  - [ ] Delete the inlined `fold_from_x` reassociation `have`.
-  - [ ] Update the single call site at `:718` in the same commit.
+  - [x] Delete the inlined `fold_from_x` reassociation `have`.
+  - [x] Update the single call site at `:718` in the same commit.
+
+- **Completion note (2026-09-03):**
+  - Re-verify 1 (`#check` at the pin, via a scratch snippet): `Multiset.inf : [SemilatticeInf α] [OrderTop α] → Multiset α → α`;
+    `Multiset.inf_coe (l : List α) : (↑l).inf = List.foldr (· ⊓ ·) ⊤ l`; `Multiset.le_inf : a ≤ s.inf ↔ ∀ b ∈ s, a ≤ b`;
+    `Multiset.inf_le : a ∈ s → s.inf ≤ a`; also used: `Multiset.inf_zero`, `Multiset.inf_cons`, `Multiset.cons_coe`.
+    `inferInstance : SemilatticeInf LindenbaumAlg` and `OrderTop LindenbaumAlg` both resolve.
+  - Re-verify 2: `grep -rn fold_le_of_derives` over live `FormalSystem/`, `Tests/`, `docs/`, `README.md` finds
+    only the declaration and the single in-file call site (`:718` pre-edit) — no second call site.
+  - Restated over `((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf`; the cons step is
+    `simp only [List.map_cons, ← Multiset.cons_coe, Multiset.inf_cons]` and the `fold_from_x` `have` is gone
+    (`grep -c fold_from_x` = 0). The `mp_le` sub-proof is retained verbatim. The call-site helper
+    `h_meet_in_U` is restated over the same `Multiset.inf` and shrinks from a nested double induction to a
+    single induction (`inf_zero`/`inf_cons` + `U.top_mem`/`U.inf_mem`). One atomic commit.
+  - `lake build FormalSystem.Metalogic.Algebraic.UltrafilterMCS` exit 0; file 1,071 -> 1,027 lines.
 
 - **Timing:** 1.5 hours
 - **Depends on:** none
