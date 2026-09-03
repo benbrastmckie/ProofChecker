@@ -1,15 +1,38 @@
 {
-  "status": "in_progress",
+  "status": "researched",
   "started_at": "2026-09-03T00:00:00Z",
-  "artifacts": [],
-  "partial_progress": {
-    "stage": "initializing",
-    "details": "Agent started, parsing delegation context (round 03 source-acquisition dossier)"
-  },
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+      "summary": "Source-acquisition dossier: audits what --lit surfaces for task 528, confirms D-A/D-B/D-C are decided by Mathlib source and convention rather than BAO literature, inventories owned-but-unregistered and not-owned sources with verified bibliographic data, cross-checks tasks 461/504, gives ingestion mechanics/cost, and concludes another --lit round is not warranted before implementing plan v2."
+    }
+  ],
+  "next_steps": "Proceed with plan v2 (no further research round); optionally register trufas_2024, bentzen_2023, blackburn_2002_app_B-C and add a relevance note to chagrovzakharyaschev_1997_modallogic; ingest Burris-Sankappanavar and Gehrke-van Gool (both free) for the foundation.",
   "metadata": {
     "session_id": "sess_1788463107_3e290a",
     "agent_type": "lean-research-agent",
     "delegation_depth": 1,
     "delegation_path": ["orchestrator", "research", "skill-lean-research", "lean-research-agent"]
-  }
+  },
+  "modified_files": [
+    "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+    "specs/528_algebraic_modernisation_propdecide_mathlib_filters/.return-meta.json"
+  ],
+  "memory_candidates": [
+    {
+      "content": "Downstream Lean projects place Mathlib-bound generic code under a dedicated directory with three observed spellings: PFR/ForMathlib/, LeanLTL/ForMathlib.lean, SphereEversion/ToMathlib/, FLT/Mathlib/. The Mathlib style guide says nothing about such files.",
+      "category": "PATTERN",
+      "source_artifact": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+      "confidence": 0.9,
+      "suggested_keywords": ["ForMathlib", "Lean project layout", "upstreaming"]
+    },
+    {
+      "content": "Pinned Mathlib (v4.33.0-rc1) has no Stone representation theorem for Boolean algebras and no Priestley duality: Order/Birkhoff.lean covers only the finite case, Topology/Order/Priestley.lean defines only the PriestleySpace mixin, and Order/PrimeSeparator.lean carries a commented TODO to define prime filters.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+      "confidence": 0.9,
+      "suggested_keywords": ["Mathlib", "Stone duality", "prime filter", "PriestleySpace"]
+    }
+  ]
 }

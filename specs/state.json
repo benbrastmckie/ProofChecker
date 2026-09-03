@@ -36,13 +36,14 @@
     {
       "project_number": 535,
       "project_name": "axiomatize_stability_modal_tm_star",
-      "status": "not_started",
+      "status": "researching",
       "task_type": "lean4",
       "description": "RESEARCH TASK -- report and probe files only; no changes to FormalSystem/ or Tests/. Determine the axiomatization of the stability modal ⊡ and the completeness strategy for the resulting TM⋆, so that task 533 builds the L⋆ proof system around the right axiom set (or an explicitly extensible design) the first time. Task 533 DEPENDS ON this task; the Lean implementation of TM⋆ completeness and the non-definability theorem is task 537. THE REAL DEFINITION (possible_worlds.tex line 1114): M,τ,x ⊨ ⊡φ iff M,σ,x ⊨ φ for all σ ∈ ⟨τ⟩_x, where ⟨τ⟩_x := {σ ∈ H_F | σ(x) = τ(x)} (line 1108). The paper gives no axiomatization (line 1375). Known-valid (machine-checked in task 533's research prototypes): K and necessitation for ⊡; T, 4, 5 (⊡ is S5 on the equivalence ⟨τ⟩_x); □φ → ⊡φ (⟨τ⟩_x ⊆ H_F); p → ⊡p for atoms (atoms are valued on world states); commutation with time shift. NOT valid: ⊡φ → □⊡φ (would collapse ⊡ into □) and any ⊡/tense interaction in general (the point of Will := ⊡G vs will := ⊡F, lines 1125-1129). Nearest literature: Ockhamist branching-time logic, where □ quantifies over branches through the current moment exactly as ⊡ quantifies over ⟨τ⟩_x -- Zanardo 1991 (complete deductive system for Since-Until Ockhamist logic, Burgess/Gabbay-style irreflexivity rules), Reynolds, Venema 2001 §4 -- with the differences that task frames also carry the global □ over all of H_F, the MF interaction axiom, and a fixed duration group. DELIVERABLES: (1) the candidate axiom set for TM⋆ over task frames and per frame class, each candidate validated or refuted against the real semantics by lean_run_code probes (a sorry-free probes file under this task's directory, in the manner of specs/511_*/02_probes.lean, is the evidence of record); (2) the completeness strategy: canonical-model design (candidate: world states := ⊡-equivalence classes of maximal consistent sets, task relation := some pair of histories through the two classes; the six TaskFrame axioms nullity_identity, comp, converse, serial, limit, saturation must be re-verified), which literature technique carries over, and an honest per-class feasibility verdict -- research-grade obstructions named precisely, never assumed away; (3) the non-definability argument for ⊡ in L⁺ on paper, ready for transcription: the bisimulation notion appropriate to task models (histories, shared world states, the global □) and two models or two evaluation points that agree on every L⁺-formula but differ on a ⊡-formula (p → ⊡p is valid for atoms, so the separating formula must be temporal, e.g. ⊡Fp versus □Fp on histories that share a world state at x but diverge afterwards, alongside a history that does not intersect them); (4) which conservative-extension results the addition of ⊡ permits beyond the both-direction TM⋆/TM⁺ result task 533 delivers: composed rows over TMFrag and TM, anything TM⋆ completeness would transfer back to the L⁺ level, and the logic of the defined modals Will/will/Could/could and of Determined φ → ⊡φ over deterministic frames; (5) an engineering recommendation binding on task 533's plan: whether StarAxiom should be parameterized over the ⊡-axiom set or closed with a one-lemma-per-new-constructor soundness discipline, and whether the TD/swap soundness case should be discharged semantically (a stab case in the TruthAntiIso pattern) or proof-theoretically. Consult the Literature/ corpus via --lit (venema_2001, venema_1993_since_until, burgess_1982*, burgess_1984) and survey online sources for Ockhamist Since/Until axiomatizations and any formalized branching-time completeness.",
       "topic": "metalogic",
       "dependencies": [],
       "created": "2026-09-03T19:14:55Z",
-      "last_updated": "2026-09-03T19:24:26Z"
+      "last_updated": "2026-09-03T19:28:00Z",
+      "session_id": "sess_1788463671_addd20"
     },
     {
       "project_number": 534,
@@ -2078,7 +2079,7 @@
     {
       "project_number": 528,
       "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
-      "status": "researching",
+      "status": "researched",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -2095,7 +2096,7 @@
         "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-03T19:19:40Z",
+      "last_updated": "2026-09-03T19:33:32Z",
       "artifacts": [
         {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
@@ -2106,9 +2107,15 @@
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/02_algebraic-modernisation-prime-filter.md",
           "type": "plan",
           "summary": "Plan v2: D1 resolved as option (c), Mathlib-native Order.PrimeFilter encoding with zero bridge lemmas. Generic layer lands in FormalSystem/ForMathlib/Order/PFilter.lean (PR-shaped). Seven phases, 9.5h, waves [1,3,4,5]->[2,6]->[7]. D2 remains open."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+          "type": "report",
+          "summary": "Source-acquisition dossier: audits what --lit surfaces for task 528, confirms D-A/D-B/D-C are decided by Mathlib source and convention rather than BAO literature, inventories owned-but-unregistered and not-owned sources, cross-checks tasks 461/504, and concludes another --lit round is not warranted before implementing plan v2."
         }
       ],
-      "session_id": "sess_1788463107_3e290a"
+      "session_id": "sess_1788463107_3e290a",
+      "researched": "2026-09-03T19:33:32Z"
     },
     {
       "project_number": 529,
