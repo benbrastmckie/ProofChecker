@@ -608,30 +608,56 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 2: Tautology + pairing + MP extension for the three hypothesis-driven `*_quot` lemmas [NOT STARTED]
+### Phase 2: Tautology + pairing + MP extension for the three hypothesis-driven `*_quot` lemmas [COMPLETED WITH EXCLUSIONS]
 
 - **Goal:** `sup_le_quot`, `le_inf_quot`, and `le_trans_quot` are proved by stating their conditional
   form as a closed tautology over opaque atoms, closing it with `propDecide`, and combining with the
   actual hypotheses via `Combinators.pairing` + `DerivationTree.modus_ponens`.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: confirm `Combinators.pairing` (`Theorems/Combinators.lean:555`,
+  - [x] **Re-verify first**: confirm `Combinators.pairing` (`Theorems/Combinators.lean:555`,
         `⊢[fc] A.imp (B.imp (A.and B))`) and `DerivationTree.modus_ponens` are reachable from
         `BooleanStructure.lean`'s existing imports without adding one. Record the check.
-  - [ ] **Spike `sup_le_quot` first, alone.** It is the largest of the three (39 lines) and the one
+  - [x] **Spike `sup_le_quot` first, alone.** It is the largest of the three (39 lines) and the one
         the line-count bar depends on. Target shape: `propDecide` closes the constructive-dilemma
         tautology `⊢ ((φ.imp χ).and (ψ.imp χ)).imp ((φ.or ψ).imp χ)`, then `pairing` builds
         `(φ.imp χ).and (ψ.imp χ)` from `hac`/`hbc` and two `modus_ponens` steps discharge it.
-  - [ ] If the spike closes, commit it, then apply the same shape to `le_inf_quot`
+  - [x] If the spike closes, commit it, then apply the same shape to `le_inf_quot`
         (`⊢ ((φ.imp ψ).and (φ.imp χ)).imp (φ.imp (ψ.and χ))`).
-  - [ ] Evaluate `le_trans_quot` (currently 6 lines via `derives_trans`). It is **already minimal**;
+  - [x] Evaluate `le_trans_quot` (currently 6 lines via `derives_trans`). It is **already minimal**;
         rewrite it only if the result is strictly shorter *and* no less readable. Recording "left as
-        is, already minimal" is an acceptable outcome, not a miss.
-  - [ ] Re-measure the acceptance-criterion-1 figure and record it explicitly in the completion note,
+        is, already minimal" is an acceptable outcome, not a miss. *(left as is, already minimal: any tautology+MP rewrite is >= 6 lines)*
+  - [x] Re-measure the acceptance-criterion-1 figure and record it explicitly in the completion note,
         against Decision D2's table.
-  - [ ] If the figure lands in 100-115, close the phase `[COMPLETED WITH EXCLUSIONS]` with a
+  - [x] If the figure lands in 100-115, close the phase `[COMPLETED WITH EXCLUSIONS]` with a
         `#### Reasoned Exclusions` record naming the shortfall, the measured number, and the evidence
         (the command output). Do not churn on formatting to buy the last few lines.
+
+- **Completion note (2026-09-03):**
+  - Re-verify 1: `Combinators.pairing` is `def pairing {fc} (A B : Formula) : ⊢[fc] A.imp (B.imp (A.and B))`
+    (`Theorems/Combinators.lean:555`); `DerivationTree.modus_ponens` was already used at three sites in the
+    file and `Theorems.Combinators` is imported transitively via `LindenbaumQuotient.lean:10`. No new import.
+  - `sup_le_quot` spike closed on the first attempt with exactly the plan's shape (tautology
+    `((φ.imp χ).and (ψ.imp χ)).imp ((φ.or ψ).imp χ)` by `propDecide`, `pairing` + three `modus_ponens`):
+    39 -> 8 source lines (commit phase 2.1). `le_inf_quot` by the same shape: 13 -> 8 (phase 2.2).
+  - `le_trans_quot` left as is (6 lines via `derives_trans`): a tautology+MP rewrite is 3 `induction`
+    lines + obtains + tautology + `exact` = at least 7, so not strictly shorter.
+  - Acceptance-criterion-1 command output, verbatim: `lemmas: 15 total_body_lines: 105`. Per lemma
+    (inclusive span as the command counts it, which includes the one blank line following each proof):
+    le_refl 6, le_trans 6, le_antisymm 5, inf_le_left 7, inf_le_right 7, le_inf 9, le_sup_left 7,
+    le_sup_right 7, sup_le 9, bot_le 6, le_top 6, le_sup_inf 9, inf_compl_le_bot 6, top_le_sup_compl 6,
+    sup_comm 9. Matches Decision D2's row 2 (~109 expected; landed at 105): **accept bar (≤ 115) met,
+    stretch bar (< 100) not met**. Note for the user's D2 ruling: the command counts the trailing
+    blank line of every lemma; the plan's prose definition ("declaration line through last proof
+    line") gives 90. The plan says the command is the metric, so 105 is the recorded figure.
+  - No `*_quot` statement changed (`git diff` on `^theorem` lines is empty).
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| Under-100 stretch target for acceptance criterion 1 | Landed at 105, inside D2's 100-115 accept band; the remaining 6 lines are only reachable by formatting churn (removing per-lemma blank lines or joining tactic lines), which D2 explicitly rules out. All 13 rewritable lemmas are at the plan's four-to-eight-line shape; `le_antisymm_quot` and `sup_comm_quot` are out of scope by Non-Goals. Decided, not deferred. | `lemmas: 15 total_body_lines: 105` (command output above); per-lemma spans listed above |
+| Rewrite of `le_trans_quot` | Already minimal at 6 lines; the extension shape is not strictly shorter | current proof: `induction` x3 + `exact derives_trans hab hbc` |
 
 - **Timing:** 2 hours
 - **Depends on:** 1
