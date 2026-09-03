@@ -243,32 +243,10 @@ The complement is given by negation.
 `a ⊓ aᶜ ≤ ⊥`: meet with complement is at most bot.
 -/
 theorem inf_compl_le_bot_quot (a : LindenbaumAlg) : andQuot a (negQuot a) ≤ ⊥ := by
-  induction a using Quotient.ind
-  rename_i φ
-  -- Need: ⊢ (φ ∧ ¬φ) → ⊥
-  -- From [φ ∧ ¬φ] we can derive ⊥ via andLeft, andRight, and modus ponens
+  induction a using Quotient.ind with | _ φ =>
   change Derives (φ.and φ.neg) Formula.bot
   unfold Derives
-  -- Use deduction theorem: from [φ ∧ ¬φ] ⊢ ⊥, derive ⊢ (φ ∧ ¬φ) → ⊥
-  have h_conj_ctx : [φ.and φ.neg] ⊢ φ.and φ.neg := by
-    apply DerivationTree.assumption
-    simp
-  have h_phi : [φ.and φ.neg] ⊢ φ := by
-    apply DerivationTree.modus_ponens [φ.and φ.neg] _ _
-    · apply DerivationTree.weakening [] [φ.and φ.neg]
-      · exact FormalSystem.Theorems.Propositional.lceImp φ φ.neg
-      · intro; simp
-    · exact h_conj_ctx
-  have h_neg_phi : [φ.and φ.neg] ⊢ φ.neg := by
-    apply DerivationTree.modus_ponens [φ.and φ.neg] _ _
-    · apply DerivationTree.weakening [] [φ.and φ.neg]
-      · exact FormalSystem.Theorems.Propositional.rceImp φ φ.neg
-      · intro; simp
-    · exact h_conj_ctx
-  -- φ.neg = φ → ⊥, so modus ponens gives ⊥
-  have h_bot : [φ.and φ.neg] ⊢ Formula.bot :=
-    DerivationTree.modus_ponens [φ.and φ.neg] φ Formula.bot h_neg_phi h_phi
-  exact ⟨FormalSystem.Metalogic.Core.deductionTheorem [] (φ.and φ.neg) Formula.bot h_bot⟩
+  propDecide
 
 /--
 `⊤ ≤ a ⊔ aᶜ`: top is at most join with complement.
