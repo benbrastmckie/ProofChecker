@@ -129,17 +129,13 @@ theorem inf_le_right_quot (a b : LindenbaumAlg) : andQuot a b ≤ b := by
 `a ≤ b → a ≤ c → a ≤ b ⊓ c`: greatest lower bound property.
 -/
 theorem le_inf_quot {a b c : LindenbaumAlg} (hab : a ≤ b) (hac : a ≤ c) : a ≤ andQuot b c := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  induction c using Quotient.ind
-  rename_i φ ψ χ
-  change Derives φ (ψ.and χ)
-  -- Use combineImpConj: from ⊢ φ → ψ and ⊢ φ → χ, derive ⊢ φ → (ψ ∧ χ)
-  have h_ab : Derives φ ψ := hab
-  have h_ac : Derives φ χ := hac
-  obtain ⟨d_ab⟩ := h_ab
-  obtain ⟨d_ac⟩ := h_ac
-  exact ⟨FormalSystem.Theorems.Combinators.combineImpConj d_ab d_ac⟩
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
+  induction c using Quotient.ind with | _ χ =>
+  obtain ⟨d_ab⟩ := (hab : Derives φ ψ); obtain ⟨d_ac⟩ := (hac : Derives φ χ)
+  obtain ⟨d_taut⟩ := (show |-! ((φ.imp ψ).and (φ.imp χ)).imp (φ.imp (ψ.and χ)) by propDecide)
+  exact ⟨DerivationTree.modus_ponens [] _ _ d_taut (DerivationTree.modus_ponens [] _ _
+    (DerivationTree.modus_ponens [] _ _ (FormalSystem.Theorems.Combinators.pairing _ _) d_ab) d_ac)⟩
 
 /--
 `a ≤ a ⊔ b`: first disjunct implies disjunction.
