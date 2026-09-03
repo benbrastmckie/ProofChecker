@@ -1,16 +1,21 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/01_algebraic-modernisation-verification.md",
-      "summary": "Re-measured all review anchors in Algebraic/ (confirmed accurate, no drift found); empirically verified via lean_build that propDecide closes the le_sup_inf_quot distributivity shape and the De Morgan and/or case; scoped which of the 15 BooleanStructure.lean *_quot lemmas fit the bare propDecide pattern vs. need a tautology+pairing+MP extension; found LindenbaumQuotient's provEquiv_* congruences don't fit at all; found Order.Ideal.ofPFilterCompl does not exist in Mathlib and recommended the Ideal-side IsMaximal encoding over PFilter; confirmed Multiset.inf/inf_coe/le_inf/inf_le exist for the fold_le_of_derives restatement."
+      "type": "plan",
+      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/01_algebraic-modernisation-propdecide-mathlib.md",
+      "summary": "Eight-phase lean4 plan modernising FormalSystem/Metalogic/Algebraic/: propDecide rewrite of the closed-tautology *_quot lemmas plus a tautology+pairing+MP extension for the three hypothesis-driven ones, PropDecideTest docstring fix and regressions, ultrafilterEquiv as a named Equiv, fold_le_of_derives over Multiset.inf, BAUltrafilter rename plus a Mathlib maximal-ideal bridge Equiv, and a README refresh; two open decisions surfaced (D1 encoding choice, D2 line-count bar)."
     }
   ],
+  "next_steps": "Run /implement 528 to execute the plan",
+  "memory_candidates": [],
   "metadata": {
     "session_id": "team-lead-dispatch-528",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 8,
+    "estimated_hours": 12,
+    "dependency_waves": [[1, 3, 4], [2, 5], [6], [7], [8]]
   }
 }

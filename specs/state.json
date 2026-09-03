@@ -2023,7 +2023,7 @@
     {
       "project_number": 528,
       "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
-      "status": "researched",
+      "status": "planned",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -2040,12 +2040,17 @@
         "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-03T18:01:31Z",
+      "last_updated": "2026-09-03T18:10:16Z",
       "artifacts": [
         {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/01_algebraic-modernisation-verification.md",
           "type": "report",
           "summary": "Verifies every measured-state anchor against the live tree (no drift); empirically re-validates propDecide on the distributivity and De Morgan shapes; narrows item 1 to ~10 of 15 *_quot lemmas; finds Order.Ideal.ofPFilterCompl absent from Mathlib and recommends dropping the PFilter option."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/01_algebraic-modernisation-propdecide-mathlib.md",
+          "type": "plan",
+          "summary": "Eight-phase plan in five waves: propDecide rewrite of 10 tautology *_quot lemmas plus a tautology+pairing+MP extension for the three hypothesis-driven ones, ultrafilterEquiv, BAUltrafilter bridge, Multiset.inf restatement. Two open decisions surfaced (D1 bridge encoding, D2 line-count metric)."
         }
       ],
       "session_id": "sess_1788452026_624704_528"
