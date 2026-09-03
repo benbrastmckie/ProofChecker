@@ -1,6 +1,13 @@
 # PFilter Maximality Design Spike — Option (c) Verified in Lean
 
 **Task**: 528 — Algebraic modernisation (propDecide + Mathlib filters)
+- **Started**: 2026-09-03
+- **Completed**: 2026-09-03
+- **Effort**: Single research session (three scratch Lean files compiled against the pinned tree; see Appendix C)
+- **Dependencies**: reports/01_algebraic-modernisation-verification.md; plans/01_algebraic-modernisation-propdecide-mathlib.md (Decision D1)
+- **Sources/Inputs**: `FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean`; pinned Mathlib `79d0395a` (`Order/PFilter.lean`, `Order/Ideal.lean`, `Order/PrimeIdeal.lean`, `Order/PrimeSeparator.lean`); upstream mathlib4 master fetched 2026-09-03
+- **Artifacts**: this report (scratch files discarded; no repository source touched)
+- **Standards**: `.claude/context/formats/report-format.md`
 **Scope**: Decision D1 only. Resolve, empirically, whether the bespoke `structure Ultrafilter`
 in `FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean:44-59` should be replaced by an
 `Order.PFilter`-based encoding, and what the highest-quality organisation of that layer is.
