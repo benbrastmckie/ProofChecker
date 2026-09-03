@@ -89,7 +89,7 @@ next_project_number: 538
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
-  └─ 533 [PLANNING] — Establish soundness, completeness, compactness, and decidability 
+  └─ 533 [PLANNED] — Establish soundness, completeness, compactness, and decidability 
     └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
     └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
       └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
@@ -143,11 +143,12 @@ next_project_number: 538
 ---
 
 ### 533. L and lstar metatheory conservative extension
-- **Status**: [PLANNING]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 535
 - **Research**: [533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md]
+- **Plan**: [533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md]
 
 **Description**: Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.
 

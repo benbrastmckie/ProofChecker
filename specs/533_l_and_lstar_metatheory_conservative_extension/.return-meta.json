@@ -1,0 +1,105 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+      "summary": "Hard-mode plan: 16 leaf phases in 8 waves delivering the TMFrag fragment logic for L and the full L-star stack (syntax, semantics, closed StarAxiom around the 535 axiom set, soundness by atomization + companion recursion, semantic and two-directional proof-theoretic conservativity over TM-plus) with no TM-star completeness spike."
+    }
+  ],
+  "next_steps": "Run /implement 533 --hard (per-phase dispatch); waves 1-3 have parallel phases with disjoint file territories.",
+  "summary": "Planned 16 bounded phases (H8) across 8 dependency waves; 14 postmortem do-not rules encode the amendment (no forward TM-plus-over-TM conservativity, no 'Determined exactly over deterministic frames', no ofPlus-only schemata, no TM-star completeness); StarAxiom is a closed inductive with the 45 TM-plus schemata re-declared over StarFormula plus {stab_k, stab_t, stab_4, stab_5, box_stab, atom_stab, paste, untl_paste}; TM-plus arm soundness by atomization; TD by the tree's companion recursion (anti-iso confirmed unused in soundness); no skeleton/sorries.",
+  "metadata": {
+    "session_id": "sess_1788466948_b21400",
+    "agent_type": "planner-hard-agent",
+    "delegation_depth": 1,
+    "delegation_path": [
+      "orchestrator",
+      "plan",
+      "planner-hard-agent"
+    ],
+    "phase_count": 16,
+    "top_level_phase_groups": 7,
+    "estimated_hours": 32,
+    "complexity": "complex",
+    "dependency_waves": [
+      [
+        "1.1",
+        "2"
+      ],
+      [
+        "1.2",
+        "3.1",
+        "4.1"
+      ],
+      [
+        "3.2",
+        "3.3",
+        "3.4",
+        "4.2"
+      ],
+      [
+        "3.5",
+        "5.1"
+      ],
+      [
+        "5.2",
+        "5.3"
+      ],
+      [
+        "5.4"
+      ],
+      [
+        "6"
+      ],
+      [
+        "7"
+      ]
+    ],
+    "postmortem_rules_count": 14,
+    "reference_tier": "tier1",
+    "skeleton": false,
+    "follow_up_tasks": [],
+    "research_integrated": true,
+    "reports_integrated": [
+      {
+        "path": "specs/533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md",
+        "integrated_in_plan_version": 1,
+        "integrated_date": "2026-09-03"
+      },
+      {
+        "path": "specs/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md",
+        "integrated_in_plan_version": 1,
+        "integrated_date": "2026-09-03"
+      }
+    ]
+  },
+  "memory_candidates": [
+    {
+      "content": "To make an extended language's proof system inherit every base-language axiom schema instantiated over the extended language, do not re-prove the schemata: if the new operator's formulas are state formulas (truth depends only on the world state), define an injective encoding Atom ⊕ ExtFormula → Atom, an atomize map replacing each maximal new-operator subformula by a fresh atom, and a model on the same frame whose valuation at the fresh atom is the new-operator truth at that state; one transfer lemma plus the landed per-axiom validity lemmas then discharge all schemata, validity and swap-validity alike (swap-validity needs atomize e (φ.swap) = (atomize (e ∘ Sum.map id swap) φ).swap).",
+      "category": "PATTERN",
+      "source_artifact": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+      "confidence": 0.8,
+      "suggested_keywords": [
+        "atomization",
+        "language extension",
+        "schema transfer",
+        "state formula",
+        "soundness"
+      ]
+    },
+    {
+      "content": "In this tree temporal_duality soundness is the companion recursion derivable_valid_and_swap_validIn (Soundness.lean:1217) with a per-constructor swap-validity dispatch (axiom_swap_validIn_min, :1190); TruthAntiIso/truthAt_of_truthAntiIso is used only in Metalogic/Independence/CoNotPriorU.lean, never on the soundness path. New languages should mirror the companion recursion, not build an anti-iso.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+      "confidence": 0.75,
+      "suggested_keywords": [
+        "temporal duality",
+        "swap validity",
+        "companion recursion",
+        "TruthAntiIso",
+        "soundness"
+      ]
+    }
+  ]
+}
