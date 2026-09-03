@@ -155,17 +155,11 @@ theorem le_sup_left_quot (a b : LindenbaumAlg) : a ≤ orQuot a b := by
 `b ≤ a ⊔ b`: second disjunct implies disjunction.
 -/
 theorem le_sup_right_quot (a b : LindenbaumAlg) : b ≤ orQuot a b := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  rename_i φ ψ
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
   change Derives ψ (φ.or ψ)
-  -- Need disjunction introduction right: ⊢ ψ → (φ ∨ ψ)
-  -- φ ∨ ψ = ¬φ → ψ, so we need ⊢ ψ → (¬φ → ψ)
-  -- This is just weakening (prop_s): ⊢ ψ → (¬φ → ψ)
   unfold Derives
-  have d_s : ⊢ (ψ.imp (φ.neg.imp ψ)) :=
-    DerivationTree.axiom [] _ (Axiom.prop_s ψ φ.neg) trivial
-  exact ⟨d_s⟩
+  propDecide
 
 /--
 `a ≤ c → b ≤ c → a ⊔ b ≤ c`: least upper bound property.
