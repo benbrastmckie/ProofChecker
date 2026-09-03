@@ -4,7 +4,12 @@
 the live completeness proof. The Boolean-algebra/ultrafilter layer (`LindenbaumQuotient.lean`,
 `BooleanStructure.lean`, `InteriorOperators.lean`, `UltrafilterMCS.lean`) is standalone
 sorry-free infrastructure with **no current consumer**; it is covered by `lake build` because
-`Metalogic.lean` imports the sibling aggregator `../Algebraic.lean`.
+`Metalogic.lean` imports the sibling aggregator `../Algebraic.lean`. Ultrafilters of the
+Lindenbaum algebra are encoded Mathlib-natively as `Order.PrimeFilter LindenbaumAlg`, with the
+generic proper/maximal/prime-filter API supplied by `FormalSystem/ForMathlib/Order/PFilter.lean`
+(see "Design decisions" below). `BooleanStructure.lean`'s fifteen `*_quot` lemmas total 105
+inclusive source lines under the metric `awk '/^theorem [a-zA-Z_]*_quot/ …'` (from 286 before
+they were discharged by `propDecide`).
 
 This directory contains:
 1. An algebraic approach to the representation theorem using Lindenbaum-Tarski algebra and ultrafilter theory
@@ -35,9 +40,9 @@ not depended on by any proof. See [Metalogic README](../README.md) for the route
 
 ## Modules
 
-The directory holds **5 `.lean` files, 2,887 lines**: `BooleanStructure.lean` (441),
-`FlowFrame.lean` (806), `InteriorOperators.lean` (176), `LindenbaumQuotient.lean` (393), and
-`UltrafilterMCS.lean` (1,071). Rows below that name any other file describe **archived** modules
+The directory holds **5 `.lean` files, 2,425 lines**: `BooleanStructure.lean` (261),
+`FlowFrame.lean` (794), `InteriorOperators.lean` (176), `LindenbaumQuotient.lean` (393), and
+`UltrafilterMCS.lean` (801). Rows below that name any other file describe **archived** modules
 under `Boneyard/` and are labelled as such.
 
 ### Boolean Algebra Foundation
@@ -45,10 +50,10 @@ under `Boneyard/` and are labelled as such.
 |--------|---------|--------|
 | `../Algebraic.lean` | Re-export module for the Algebraic package. **Sibling aggregator**, at `FormalSystem/Metalogic/Algebraic.lean` — not a file inside this directory | Complete |
 | `LindenbaumQuotient.lean` | Quotient by provable equivalence | **Sorry-free** |
-| `BooleanStructure.lean` | Boolean algebra instance | **Sorry-free** |
+| `BooleanStructure.lean` | Boolean algebra instance; the `*_quot` lattice/complement laws are closed by `propDecide` (`Automation/Tactics/PropDecide.lean`), the three hypothesis-driven ones via a `propDecide` tautology + `Combinators.pairing` + modus ponens | **Sorry-free** |
 | `InteriorOperators.lean` | Box as interior operator; H monotonicity | **Sorry-free** |
 | `TenseS5Algebra.lean` | Tense S5 algebra structure | **Archived** (3 sorries; moved to `Boneyard/UltrafilterFrame/`) |
-| `UltrafilterMCS.lean` | Ultrafilter-MCS bijection | **Sorry-free** |
+| `UltrafilterMCS.lean` | MCS ↔ `Order.PrimeFilter LindenbaumAlg` bijection, packaged as `SetMaximalConsistent.ultrafilterEquiv`; consumes `FormalSystem/ForMathlib/Order/PFilter.lean` | **Sorry-free** |
 
 ### Ultrafilter Frame Infrastructure (Archived to `Boneyard/UltrafilterFrame/`)
 | Module | Purpose | Status |
@@ -77,18 +82,24 @@ truth lemma is re-hosted on `bundleFlowFrame` in `FlowFrame.lean`.
 ```
 Boolean Algebra Path:
 
-                LindenbaumQuotient
-                         │
-            ┌────────────┼────────────┐
-            v            v            v
-    BooleanStructure  InteriorOps  TenseS5Algebra
-            │            │
-            └────────────┤
-                         v
-              UltrafilterMCS
+    Automation/Tactics/PropDecide          Mathlib (Order.PrimeIdeal, Order.PrimeSeparator)
+                │                                        │
+                v                                        v
+                LindenbaumQuotient            ForMathlib/Order/PFilter  (Order.PFilter.IsProper /
+                         │                              │               IsMaximal, Order.PrimeFilter)
+            ┌────────────┼────────────┐                 │
+            v            v            v                 │
+    BooleanStructure  InteriorOps  TenseS5Algebra       │
+            │            │           (archived)         │
+            └────────────┤                              │
+                         v                              │
+              UltrafilterMCS  <─────────────────────────┘
                          │
                          v
            (ultrafilter representation; no completeness theorem is stated here)
+
+    Import direction is strictly Mathlib → ForMathlib → Metalogic/Algebraic/UltrafilterMCS → downstream;
+    nothing under FormalSystem/ForMathlib/ imports FormalSystem.*.
 
 Completeness Path (current):
 
@@ -146,13 +157,94 @@ the quotient carries `boxQuot` (`LindenbaumQuotient.lean:289`), `hQuot` (`:296`)
 ### Ultrafilter-MCS Correspondence (`UltrafilterMCS.lean`)
 
 ```lean
-def mcsToUltrafilter : SetMaximalConsistent S -> Ultrafilter LindenbaumAlg
-def ultrafilterToSet : Ultrafilter LindenbaumAlg -> Set Formula
-theorem SetMaximalConsistent.ultrafilter_correspondence : -- Bijection
+def mcsToPFilter    : {S // SetMaximalConsistent S} -> Order.PFilter LindenbaumAlg
+def mcsToUltrafilter : {S // SetMaximalConsistent S} -> Order.PrimeFilter LindenbaumAlg
+def ultrafilterToSet : Order.PrimeFilter LindenbaumAlg -> Set Formula
+noncomputable def SetMaximalConsistent.ultrafilterEquiv :
+    {Γ : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) Γ} ≃ Order.PrimeFilter LindenbaumAlg
+theorem SetMaximalConsistent.ultrafilter_correspondence : -- existential corollary of the Equiv
 ```
 
-Establishes the bijection between ultrafilters of the Lindenbaum algebra and maximal
-consistent sets.
+Establishes the bijection between prime filters (= ultrafilters) of the Lindenbaum algebra and
+maximal consistent sets. `mcsToPFilter Γ` is `mcsToSet Γ` bundled via `Order.IsPFilter.toPFilter`,
+with `IsProper`/`IsPrime` instances from `mcsToSet_bot_not_mem` and `mcsToSet_compl_or`; the
+`Equiv`'s `left_inv` is the three-line `toQuot_mem_mcsToSet_iff`, and `ultrafilter_correspondence`
+is `⟨e, e.symm, e.left_inv, e.right_inv⟩`. The fold lemma `fold_le_of_derives` is stated over
+`Multiset.inf` of the mapped list.
+
+## Design decisions
+
+**Ultrafilters are Mathlib-native prime filters.** The layer once carried a bespoke seven-field
+`structure Ultrafilter` that shadowed Mathlib's. Mathlib's own `Ultrafilter α` is a filter on
+`Set α` (it `extends Filter α`), not an ultrafilter of an arbitrary Boolean algebra, so it was
+never the right target; `Order.PFilter.IsPrime` (`Mathlib/Order/PrimeIdeal.lean`) is. The chosen
+encoding is `Order.PrimeFilter P := {F : Order.PFilter P // F.IsPrime}`, an `abbrev` supplied by
+`FormalSystem/ForMathlib/Order/PFilter.lean` together with the `IsProper`/`IsMaximal` API and
+Boolean-algebra section that Mathlib has on the ideal side but not on the filter side. The
+reasons, in order of weight:
+
+- *Two dualities, one of them free.* The order dual costs nothing: `Order.PFilter.mem_dual_iff`,
+  `le_iff_dual_le`, `lt_iff_dual_lt`, `coe_eq_univ_iff` are all `Iff.rfl`, so every filter-side
+  statement is a definitional repackaging of its `Order.Ideal` dual. The alternative encoding —
+  `{I : Order.Ideal α // I.IsMaximal}` with the Boolean *complement* as the bridge — inverts every
+  downstream membership statement (`a ∈ U` becomes `aᶜ ∈ I`), an ergonomic tax on exactly the
+  consumers this layer exists for.
+- *`IsPrime` suffices.* `IsPrime`'s single field `compl_ideal : IsIdeal (F : Set P)ᶜ` bundles
+  `IsIdeal.Nonempty`, so `Order.PFilter.IsPrime.toIsProper` is a three-line instance and
+  `IsProper` is a consequence, not a prerequisite. On a Boolean algebra prime filters are exactly
+  the ultrafilters (`Order.PFilter.IsPrime.isMaximal`, `IsMaximal.isPrime`).
+- *No bridge lemma was written.* Where the deleted structure would have needed a hand-written
+  `Equiv` to Mathlib's ideals, the ideal is already `U.2.toPrimePair.I` — the complement ideal
+  packaged by `Order.PFilter.IsPrime.toPrimePair`.
+- *One seen-and-accepted trade-off.* `Order.PrimeFilter` is an `abbrev` subtype rather than a
+  `SetLike` `structure` following Mathlib's bundled-subobject template (`Mathlib/Data/SetLike/Basic.lean`;
+  compare `PrimeSpectrum`, a `structure` with `equivSubtype` as a bridge *to* the subtype). This is
+  the one place a Mathlib reviewer would predictably push back on upstreaming; the generic
+  `Order.PFilter` half of the file is unaffected either way.
+
+*Textbook statement.* The prime-filter vocabulary is the textbook one: Chagrov and
+Zakharyaschev, *Modal Logic* (1997), Part III §8.2 "The Stone and Jónsson–Tarski theorems",
+Theorem 8.14 (pp. 241–243), states Stone's representation with the Stone space defined as the set
+of all prime filters of the algebra and the representing map sending an element to the set of
+prime filters containing it, via the prime-filter separation of Corollary 7.42.
+
+*Mathlib coverage at the pin* (`v4.33.0-rc1`, `79d0395a`). Mathlib has no Stone representation
+theorem for Boolean algebras and no Priestley duality: `Mathlib/Order/Birkhoff.lean` scopes itself
+to *finite* Stone duality ("TODO: extend to morphisms"), `Mathlib/Topology/Order/Priestley.lean`
+defines only the `PriestleySpace` mixin and three clopen-separation lemmas, and
+`Mathlib/Order/Category/BoolAlg.lean` is the bare category. `Mathlib/Order/PrimeSeparator.lean`
+(van Gool, 2024) names Stone's duality for bounded distributive lattices as its purpose and leaves
+the prime-*filter* separator as a commented-out TODO for want of a prime-filter vocabulary.
+`ForMathlib/Order/PFilter.lean` is therefore the next brick in a direction a Mathlib author has
+already begun — which is why it is kept PR-shaped (Mathlib's namespace, lemma names one-for-one
+with their ideal duals, `*_iff_dual` transports, no `FormalSystem.*` import) and why it states the
+separator's filter-side corollary, `DistribLattice.prime_filter_of_disjoint_filter_ideal`, with
+exactly the TODO's name and shape.
+
+**`propDecide` in `BooleanStructure.lean`.** The lattice and complement laws of the Boolean
+algebra are closed propositional tautologies over the representatives, so `BooleanStructure.lean`
+imports `FormalSystem.Automation.Tactics.PropDecide` and discharges them by
+`induction … using Quotient.ind with | _ φ =>` / `change Derives …` / `unfold Derives` /
+`propDecide`. The three hypothesis-driven laws (`le_inf_quot`, `sup_le_quot`; `le_trans_quot` was
+already minimal) state their conditional form as a closed tautology, close it with `propDecide`,
+and combine with the hypotheses through `Combinators.pairing` and modus ponens. There is no
+cycle: nothing under `Metalogic/Decidability/`, `Metalogic/Core/`, `Theorems/` or `Automation/`
+imports an `Algebraic.*` module, so `Automation/Tactics/PropDecide.lean` sits strictly below this
+directory.
+
+**What the layer now offers downstream** (durable anchors): Lindenbaum's lemma on the filter side,
+`Order.PFilter.IsProper.exists_le_maximal` and, on a Boolean algebra,
+`Order.PFilter.IsProper.exists_le_prime`; the Zorn-free separator
+`DistribLattice.prime_filter_of_disjoint_filter_ideal`; the complement ideal of a prime filter as
+`U.2.toPrimePair`; and the Boolean characterisation `Order.PFilter.isPrime_iff_mem_or_compl_mem`
+with its `mem_iff_compl_notMem` / `compl_mem_iff_notMem` corollaries.
+
+**Documented gap.** Mathlib gives `Order.PFilter P` no lattice structure (`Order.Ideal P` has one
+under `[SemilatticeSup P] [IsCodirectedOrder P]`, `Mathlib/Order/Ideal.lean`; `PFilter` has no
+`Max` instance at all). A representation construction that needs `F ⊔ Order.PFilter.principal x`
+must first transport that lattice through the order dual — a five-line `⟨F.dual ⊔ G.dual⟩` job —
+which this layer deliberately does not write. Meet it as a documented five-line task, not as a
+surprise.
 
 ## Mathematical Overview
 
@@ -202,8 +294,10 @@ This directory additionally provides:
 
 ## Dependencies
 
-- **Mathlib**: `BooleanAlgebra`, `Quotient`, `Filter`
-- **ProofChecker**: `FormalSystem.ProofSystem`, `FormalSystem.Metalogic.Core`
+- **Mathlib**: `BooleanAlgebra`, `Quotient`, `Multiset.inf`, `Order.PFilter` / `Order.PFilter.IsPrime`
+  (`Mathlib/Order/PrimeIdeal.lean`), `Mathlib/Order/PrimeSeparator.lean`
+- **ProofChecker**: `FormalSystem.ProofSystem`, `FormalSystem.Metalogic.Core`,
+  `FormalSystem.ForMathlib.Order.PFilter`, `FormalSystem.Automation.Tactics.PropDecide`
 
 ## Related Documentation
 
@@ -215,8 +309,12 @@ This directory additionally provides:
 ## References
 
 - Modal Logic, Blackburn et al., Chapter 5 (Algebraic Semantics)
+- Chagrov and Zakharyaschev, *Modal Logic* (1997), Part III §8.2, Theorem 8.14 (Stone
+  representation in prime-filter vocabulary)
 - Stone Duality: Boolean Algebras and Topological Spaces
 
 ---
 
-*Last updated: 2026-08-26*
+*Last verified: 2026-09-03*
+
+*Last updated: 2026-09-03*
