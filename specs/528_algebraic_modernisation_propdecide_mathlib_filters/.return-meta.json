@@ -1,33 +1,15 @@
 {
-  "status": "planned",
-  "artifacts": [
-    {
-      "type": "plan",
-      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/02_algebraic-modernisation-prime-filter.md",
-      "summary": "Revised plan (v2) integrating the PFilter maximality design spike: D1 resolved as option (c) (Mathlib-native prime filter, zero bridge lemmas), D-A/D-B/D-C recorded as resolved, ultrafilterEquiv target type corrected to Order.PrimeFilter LindenbaumAlg, v1 Phases 4/6/7 replaced by the spike's generic-layer + consumer-port group, 7 phases / 9.5 hours"
-    }
-  ],
-  "next_steps": "Run /implement 528 to execute the revised plan (v2)",
+  "status": "in_progress",
+  "started_at": "2026-09-03T00:00:00Z",
+  "artifacts": [],
+  "partial_progress": {
+    "stage": "initializing",
+    "details": "Agent started, parsing delegation context (round 03 source-acquisition dossier)"
+  },
   "metadata": {
-    "session_id": "plan-528-revise",
-    "agent_type": "reviser-agent",
+    "session_id": "sess_1788463107_3e290a",
+    "agent_type": "lean-research-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "revise", "reviser-agent"],
-    "phase_count": 7,
-    "estimated_hours": 9.5,
-    "plan_version": 2,
-    "dependency_waves": [[1, 3, 4, 5], [2, 6], [7]],
-    "reports_integrated": [
-      {
-        "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/01_algebraic-modernisation-verification.md",
-        "integrated_in_plan_version": 1,
-        "integrated_date": "2026-09-03"
-      },
-      {
-        "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
-        "integrated_in_plan_version": 2,
-        "integrated_date": "2026-09-03"
-      }
-    ]
+    "delegation_path": ["orchestrator", "research", "skill-lean-research", "lean-research-agent"]
   }
 }

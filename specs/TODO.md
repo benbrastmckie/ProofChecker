@@ -1,5 +1,5 @@
 ---
-next_project_number: 537
+next_project_number: 538
 ---
 
 # TODO
@@ -11,16 +11,16 @@ next_project_number: 537
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,528,529,530,533 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,534,535,536 | 193,298,433,461,529,530,533 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497 | 231,463,502,528 | algebraic-representation, dataset-enhancement, decidability |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,528,529,530,535 | -- | automation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,533 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,464,497,534,536,537 | 231,463,502,528,533 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
 | 7 | 410 | 429 | decidability |
 | 8 | 411 | 410 | decidability |
 | 9 | 430 | 411 | decidability |
-| 10 | 177,412 | 193,430,530 | decidability, formula-refactor |
+| 10 | 177,412 | 193,430,530,533 | decidability, formula-refactor |
 | 11 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
@@ -84,21 +84,32 @@ next_project_number: 537
 
 ### Metalogic
 
-528 [PLANNED] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
+528 [RESEARCHING] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
 529 [NOT STARTED] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
-533 [RESEARCHED] — Establish soundness, completeness, compactness, and decidability 
-  └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
-  └─ 535 [NOT STARTED] — Axiomatize the stability modal ⊡ and establish the metatheory of 
-  └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
+535 [NOT STARTED] — RESEARCH TASK -- report and probe files only; no changes to Forma
+  └─ 533 [RESEARCHED] — Establish soundness, completeness, compactness, and decidability 
+    └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
+    └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
+    └─ 537 [NOT STARTED] — Implement in Lean the completeness of TM⋆ and the non-definabilit
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
 
 ## Tasks
+
+### 537. Tm star completeness stab nondefinability
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: metalogic
+- **Dependencies**: Task 533, Task 535
+
+**Description**: Implement in Lean the completeness of TM⋆ and the non-definability of the stability modal ⊡, per the axiomatization and strategy settled by research task 535, over the L⋆ infrastructure (StarFormula, StarTruthAt, StarValidIn, StarAxiom, StarDerivable, star soundness, both-direction conservativity over TM⁺) built by task 533. (1) COMPLETENESS: star_completeness for the Base class first, then per class wherever 535's strategy extends (canonical model on ⊡-classes of maximal consistent sets with the six TaskFrame axioms re-verified, or whatever construction 535 settled). Exit criterion: sorry-free, or a written obstruction postmortem naming the exact failure and a follow-up spawned -- never a sorry placeholder; a completeness theorem stated and discharged with sorry is an unsound placeholder, not deferred debt. (2) NON-DEFINABILITY: the machine-checked theorem stab_not_definable -- no Formula is equivalent to the StarFormula ⊡Fp over all task models -- via the bisimulation argument 535 prepared. Without this, someone can reasonably ask why L⋆ is a separate language at all. (3) CONSERVATIVITY COROLLARIES that ⊡ permits: the composed rows of TM⋆ over TMFrag and over TM at each class, and whatever TM⋆ completeness transfers back to the L⁺ level; the logic of the defined modals Will/will/Could/could as derived theorems. (4) OPTIONAL: compactness of TM⋆ at Base and Dense via a stab case in the Łoś lemma los_truthAt (the ultraproduct histories are orbit representatives, so SameStateAt must be shown eventually-agreeing via omk_eq_omk). Update Metalogic/Conservativity.lean's Star section, README metatheory rows, and keep C2/C3/C14 invariants green.
+
+---
 
 ### 536. Stability deterministic collapse store recall
 - **Status**: [NOT STARTED]
@@ -114,9 +125,9 @@ next_project_number: 537
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
 - **Topic**: metalogic
-- **Dependencies**: Task 533
+- **Dependencies**: None
 
-**Description**: Axiomatize the stability modal ⊡ and establish the metatheory of the resulting TM⋆ over the ⊡-extended language L⋆ built by task 533, using the REAL definition from possible_worlds.tex line 1114: M,τ,x ⊨ ⊡φ iff M,σ,x ⊨ φ for all σ ∈ ⟨τ⟩_x, where ⟨τ⟩_x := {σ ∈ H_F | σ(x) = τ(x)} (line 1108). The paper gives no axiomatization (line 1375: outside its scope). (1) AXIOMATIZATION AND COMPLETENESS. Find a sound and -- target -- complete axiomatization of TM⋆ over task frames and per frame class. Known-valid principles (machine-checked in task 533's research prototypes): K and necessitation for ⊡, T/4/5 (⊡ is S5 on the equivalence ⟨τ⟩_x), □φ → ⊡φ (since ⟨τ⟩_x ⊆ H_F), p → ⊡p for atoms (atoms are valued on world states), commutation with time shift; NOT valid: ⊡φ → □⊡φ (would collapse ⊡ into □), and any ⊡/tense interaction in general (that is the point of Will := ⊡G vs will := ⊡F, lines 1125-1129). Nearest literature: Ockhamist branching-time logic, where □ quantifies over branches through the current moment exactly as ⊡ quantifies over ⟨τ⟩_x -- Zanardo 1991 (complete deductive system for Since-Until Ockhamist logic, Burgess/Gabbay-style irreflexivity rules), Reynolds, Venema 2001 §4; difference: task frames also carry the global □ over all of H_F and a fixed duration group. Candidate canonical construction: world states := ⊡-equivalence classes of maximal consistent sets, task relation := some pair of histories through the two classes; the six TaskFrame axioms must be re-verified. This task ABSORBS the TM⋆ completeness spike (research report Phase 7) removed from task 533's scope. Exit criterion: a sorry-free star_completeness for at least the Base class, or a written obstruction postmortem naming the exact failure -- never a sorry placeholder. (2) NON-DEFINABILITY OF ⊡ IN L⁺. Prove, machine-checked, that ⊡ is not definable in L⁺: a bisimulation-style argument exhibiting two task models (or two evaluation points) that agree on every L⁺-formula but differ on some ⊡-formula. Note p → ⊡p is valid for atoms, so the separating formula must be temporal (e.g. ⊡Fp versus □Fp on two histories that share a world state at x but diverge afterwards, alongside a third history that does not intersect them). State it as: no Formula is equivalent to the StarFormula ⊡Fp over all task models. Without this, someone can reasonably ask why L⋆ is a separate language at all. (3) CONSERVATIVE EXTENSIONS THE ADDITION PERMITS. Task 533 delivers conservativity of TM⋆ over TM⁺ in both directions (forward via TM⋆ soundness plus the existing completeness engines). Explore what further conservativity results ⊡ permits, if any: whether TM⋆ is conservative over the fragment logics TMFrag and over TM at each class (composed rows); whether TM⋆ completeness, if obtained, yields anything back at the L⁺ level; whether ⊡ lets defined modals (Will, will, Could, Could) express principles -- Determined φ → ⊡φ on deterministic frames -- that have no L⁺ counterpart, and what their logic is. (4) OPTIONAL: compactness of TM⋆ at Base and Dense via a stab case in the Łoś lemma (los_truthAt; the ultraproduct histories are orbit representatives, so SameStateAt must be shown eventually-agreeing). Consult the Literature/ corpus via --lit and survey online sources for Ockhamist Since/Until axiomatizations.
+**Description**: RESEARCH TASK -- report and probe files only; no changes to FormalSystem/ or Tests/. Determine the axiomatization of the stability modal ⊡ and the completeness strategy for the resulting TM⋆, so that task 533 builds the L⋆ proof system around the right axiom set (or an explicitly extensible design) the first time. Task 533 DEPENDS ON this task; the Lean implementation of TM⋆ completeness and the non-definability theorem is task 537. THE REAL DEFINITION (possible_worlds.tex line 1114): M,τ,x ⊨ ⊡φ iff M,σ,x ⊨ φ for all σ ∈ ⟨τ⟩_x, where ⟨τ⟩_x := {σ ∈ H_F | σ(x) = τ(x)} (line 1108). The paper gives no axiomatization (line 1375). Known-valid (machine-checked in task 533's research prototypes): K and necessitation for ⊡; T, 4, 5 (⊡ is S5 on the equivalence ⟨τ⟩_x); □φ → ⊡φ (⟨τ⟩_x ⊆ H_F); p → ⊡p for atoms (atoms are valued on world states); commutation with time shift. NOT valid: ⊡φ → □⊡φ (would collapse ⊡ into □) and any ⊡/tense interaction in general (the point of Will := ⊡G vs will := ⊡F, lines 1125-1129). Nearest literature: Ockhamist branching-time logic, where □ quantifies over branches through the current moment exactly as ⊡ quantifies over ⟨τ⟩_x -- Zanardo 1991 (complete deductive system for Since-Until Ockhamist logic, Burgess/Gabbay-style irreflexivity rules), Reynolds, Venema 2001 §4 -- with the differences that task frames also carry the global □ over all of H_F, the MF interaction axiom, and a fixed duration group. DELIVERABLES: (1) the candidate axiom set for TM⋆ over task frames and per frame class, each candidate validated or refuted against the real semantics by lean_run_code probes (a sorry-free probes file under this task's directory, in the manner of specs/511_*/02_probes.lean, is the evidence of record); (2) the completeness strategy: canonical-model design (candidate: world states := ⊡-equivalence classes of maximal consistent sets, task relation := some pair of histories through the two classes; the six TaskFrame axioms nullity_identity, comp, converse, serial, limit, saturation must be re-verified), which literature technique carries over, and an honest per-class feasibility verdict -- research-grade obstructions named precisely, never assumed away; (3) the non-definability argument for ⊡ in L⁺ on paper, ready for transcription: the bisimulation notion appropriate to task models (histories, shared world states, the global □) and two models or two evaluation points that agree on every L⁺-formula but differ on a ⊡-formula (p → ⊡p is valid for atoms, so the separating formula must be temporal, e.g. ⊡Fp versus □Fp on histories that share a world state at x but diverge afterwards, alongside a history that does not intersect them); (4) which conservative-extension results the addition of ⊡ permits beyond the both-direction TM⋆/TM⁺ result task 533 delivers: composed rows over TMFrag and TM, anything TM⋆ completeness would transfer back to the L⁺ level, and the logic of the defined modals Will/will/Could/could and of Determined φ → ⊡φ over deterministic frames; (5) an engineering recommendation binding on task 533's plan: whether StarAxiom should be parameterized over the ⊡-axiom set or closed with a one-lemma-per-new-constructor soundness discipline, and whether the TD/swap soundness case should be discharged semantically (a stab case in the TruthAntiIso pattern) or proof-theoretically. Consult the Literature/ corpus via --lit (venema_2001, venema_1993_since_until, burgess_1982*, burgess_1984) and survey online sources for Ockhamist Since/Until axiomatizations and any formalized branching-time completeness.
 
 ---
 
@@ -134,11 +145,12 @@ next_project_number: 537
 - **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: metalogic
-- **Dependencies**: None
+- **Dependencies**: Task 535
 - **Research**: [533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md]
 
 **Description**: Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.=== SCOPE AMENDMENT (post-research, 2026-09-03) ===
-(1) L⋆ is scoped to the stability modal ⊡ only -- not the paper's BL⋆ (line 1373), which also carries the store/recall operators. (2) The TM⋆ completeness spike proposed as Phase 7 of the research report is REMOVED from this task and owned by task 535. This task delivers for L⋆: syntax (StarFormula + the ofFormula embedding), semantics (StarTruthAt, SameStateAt, StarValidIn), the definitional ⊡ axioms (K, necessitation, T, 4, 5, □φ→⊡φ, p→⊡p for atoms) with soundness, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in BOTH directions -- the forward direction via TM⋆ soundness plus the existing completeness engines, which needs no TM⋆ completeness. (3) For L ⊂ L⁺: forward proof-theoretic conservativity of TM⁺ over TM is refuted (tmCompleteDiscrete_refuted at Discrete, (DD) at Base; equivalent to TM completeness by tmComplete_iff_forward) and MUST NOT be attempted; deliver semantic conservativity (already landed, blValidIn_iff_validIn_tr) plus the fragment logic TMFrag fc φ := TM⁺ ⊢ tr φ with its transferred soundness, completeness, and Base/Dense compactness, and the strict inclusion TM ⊊ TMFrag at Discrete. (4) Split out as dependents of this task: native finite axiomatizability of the H/G-fragment (task 534); axiomatization/completeness of TM⋆, non-definability of ⊡ in L⁺, and the conservativity results ⊡ permits (task 535); the deterministic-collapse sufficiency lemma, its failing converse, and the store/recall correspondence question (task 536). Claims made in discussion that Determined is valid EXACTLY over deterministic frames are wrong (paper line 1437) and must not be transcribed.
+(1) L⋆ is scoped to the stability modal ⊡ only -- not the paper's BL⋆ (line 1373), which also carries the store/recall operators. (2) The TM⋆ completeness spike proposed as Phase 7 of the research report is REMOVED from this task and owned by task 535. This task delivers for L⋆: syntax (StarFormula + the ofFormula embedding), semantics (StarTruthAt, SameStateAt, StarValidIn), the definitional ⊡ axioms (K, necessitation, T, 4, 5, □φ→⊡φ, p→⊡p for atoms) with soundness, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in BOTH directions -- the forward direction via TM⋆ soundness plus the existing completeness engines, which needs no TM⋆ completeness. (3) For L ⊂ L⁺: forward proof-theoretic conservativity of TM⁺ over TM is refuted (tmCompleteDiscrete_refuted at Discrete, (DD) at Base; equivalent to TM completeness by tmComplete_iff_forward) and MUST NOT be attempted; deliver semantic conservativity (already landed, blValidIn_iff_validIn_tr) plus the fragment logic TMFrag fc φ := TM⁺ ⊢ tr φ with its transferred soundness, completeness, and Base/Dense compactness, and the strict inclusion TM ⊊ TMFrag at Discrete. (4) Split out as dependents of this task: native finite axiomatizability of the H/G-fragment (task 534); axiomatization/completeness of TM⋆, non-definability of ⊡ in L⁺, and the conservativity results ⊡ permits (task 535); the deterministic-collapse sufficiency lemma, its failing converse, and the store/recall correspondence question (task 536). Claims made in discussion that Determined is valid EXACTLY over deterministic frames are wrong (paper line 1437) and must not be transcribed.=== SCOPE AMENDMENT (post-research, 2026-09-03) ===
+(1) L⋆ is scoped to the stability modal ⊡ only -- not the paper's BL⋆ (line 1373), which also carries the store/recall operators. (2) The TM⋆ completeness spike proposed as Phase 7 of the research report is REMOVED from this task: its axiomatization and completeness strategy are settled first by research task 535, ON WHICH THIS TASK DEPENDS, and its Lean implementation is task 537. Build StarAxiom around 535's axiom set, or the extensible design 535 recommends, so 537 adds constructors without re-running 533's soundness. This task delivers for L⋆: syntax (StarFormula + the ofFormula embedding), semantics (StarTruthAt, SameStateAt, StarValidIn), the ⊡ axioms with soundness, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in BOTH directions -- the forward direction via TM⋆ soundness plus the existing completeness engines, which needs no TM⋆ completeness. (3) For L ⊂ L⁺: forward proof-theoretic conservativity of TM⁺ over TM is refuted (tmCompleteDiscrete_refuted at Discrete, (DD) at Base; equivalent to TM completeness by tmComplete_iff_forward) and MUST NOT be attempted; deliver semantic conservativity (already landed, blValidIn_iff_validIn_tr) plus the fragment logic TMFrag fc φ := TM⁺ ⊢ tr φ with its transferred soundness, completeness, and Base/Dense compactness, and the strict inclusion TM ⊊ TMFrag at Discrete. (4) Sequencing: 535 (research) -> 533 (this task) -> 537 (TM⋆ completeness + non-definability), 534 (native finite axiomatizability of the H/G-fragment), 536 (deterministic-collapse sufficiency lemma, its failing converse, and the store/recall correspondence question). Claims made in discussion that Determined is valid EXACTLY over deterministic frames are wrong (paper line 1437) and must not be transcribed.
 
 ---
 
@@ -186,7 +198,7 @@ next_project_number: 537
 ---
 
 ### 528. Algebraic modernisation propdecide mathlib filters
-- **Status**: [PLANNED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 526
@@ -1495,7 +1507,7 @@ decidability example remains gated on the decidability/tableau front (410-465,
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
 - **Topic**: formula-refactor
-- **Dependencies**: Task 131, Task 193, Task 402, Task 426, Task 428, Task 429, Task 430, Task 432, Task 433, Task 434, Task 440, Task 441, Task 448, Task 494, Task 510, Task 513, Task 524, Task 526, Task 530
+- **Dependencies**: Task 131, Task 193, Task 402, Task 426, Task 428, Task 429, Task 430, Task 432, Task 433, Task 434, Task 440, Task 441, Task 448, Task 494, Task 510, Task 513, Task 524, Task 526, Task 530, Task 533
 
 **Description**: Update README.md, docs/, and FormalSystem/ module-level docstrings to their final post-refactor state, once the decidability chain (426, 428, 429, 430, 432, 433, 434) lands. This is the final polish pass, distinct from and run after task 472's already-completed immediate correction pass. Explicitly excludes: every item task 472 already corrected (the Decidability.lean Status block, Verified/README.md, FMP/README.md, DecisionProcedure.lean's decideAuto docstring, Verified/Decidable.lean's Status docstring, WeakCanonical.lean, RealModel/ShuffleReal.lean, Soundness.lean, PriorExpressivenessDense.lean) and the two Kamp files task 473 already swept (Kamp/EANegationClosure.lean, NfMultiAnchorBridge/NavigatedSpine.lean). This task's residual content is: re-auditing all touched documentation for drift accumulated during the decidability chain's landing (472/473 audited a snapshot; the chain's remaining tasks will touch further files after 472/473 ran), and the Axiom Reference update the charter names as part of 177's original scope.
 
