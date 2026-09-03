@@ -3,7 +3,7 @@
 - **Task**: 528 - Algebraic/ modernisation: `propDecide` in `BooleanStructure.lean`,
   `SetMaximalConsistent.ultrafilterEquiv` as a named `Equiv`, the bespoke `Ultrafilter` structure
   replaced by a Mathlib-native prime filter, `fold_le_of_derives` over `Multiset.inf`
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 9.5 hours
 - **Dependencies**: 518, 526 (both landed)
 - **Research Inputs**:
@@ -542,19 +542,37 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 1: Wire `propDecide` into `BooleanStructure.lean` and rewrite the closed-tautology `*_quot` lemmas [NOT STARTED]
+### Phase 1: Wire `propDecide` into `BooleanStructure.lean` and rewrite the closed-tautology `*_quot` lemmas [COMPLETED]
 
 - **Goal:** `BooleanStructure.lean` imports `propDecide` with no import cycle, and every `*_quot`
   lemma whose statement is a closed propositional tautology is proved by the four-line pattern.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: re-run `grep -rn 'import FormalSystem.Metalogic.Algebraic' FormalSystem/ Tests/ --include=*.lean` and confirm nothing under `Metalogic/Decidability/`, `Metalogic/Core/`, `Theorems/`, or `Automation/` imports any `Algebraic.*` module. Record the output in the completion note.
-  - [ ] **Re-verify second**: enumerate the `*_quot` theorems and re-confirm the count is 15 and that each candidate below takes no derivation hypothesis. Record the per-declaration verdict (amenable / hypothesis-driven / not `Derives`-shaped).
-  - [ ] Add `import FormalSystem.Automation.Tactics.PropDecide` to `BooleanStructure.lean` and build **before** touching any proof. If the build fails, stop and report — do not work around a cycle.
-  - [ ] Rewrite each confirmed closed-tautology lemma as `induction … using Quotient.ind` (one per quotient argument) / `rename_i …` / `change Derives …` / `unfold Derives` / `propDecide`. Expected set: `le_refl_quot`, `inf_le_left_quot`, `inf_le_right_quot`, `le_sup_left_quot`, `le_sup_right_quot`, `bot_le_quot`, `le_top_quot`, `le_sup_inf_quot`, `inf_compl_le_bot_quot`, `top_le_sup_compl_quot`.
-  - [ ] Where `induction a using Quotient.ind with | _ φ =>` binds the representative inline, prefer it over a separate `rename_i` line (Decision D2's line-shaving; one line saved per lemma).
-  - [ ] Leave `le_antisymm_quot`, `le_trans_quot`, `le_inf_quot`, `sup_le_quot`, and `sup_comm_quot` untouched in this phase.
-  - [ ] Measure and record the acceptance-criterion-1 figure after the rewrite.
+  - [x] **Re-verify first**: re-run `grep -rn 'import FormalSystem.Metalogic.Algebraic' FormalSystem/ Tests/ --include=*.lean` and confirm nothing under `Metalogic/Decidability/`, `Metalogic/Core/`, `Theorems/`, or `Automation/` imports any `Algebraic.*` module. Record the output in the completion note.
+  - [x] **Re-verify second**: enumerate the `*_quot` theorems and re-confirm the count is 15 and that each candidate below takes no derivation hypothesis. Record the per-declaration verdict (amenable / hypothesis-driven / not `Derives`-shaped).
+  - [x] Add `import FormalSystem.Automation.Tactics.PropDecide` to `BooleanStructure.lean` and build **before** touching any proof. If the build fails, stop and report — do not work around a cycle.
+  - [x] Rewrite each confirmed closed-tautology lemma as `induction … using Quotient.ind` (one per quotient argument) / `rename_i …` / `change Derives …` / `unfold Derives` / `propDecide`. Expected set: `le_refl_quot`, `inf_le_left_quot`, `inf_le_right_quot`, `le_sup_left_quot`, `le_sup_right_quot`, `bot_le_quot`, `le_top_quot`, `le_sup_inf_quot`, `inf_compl_le_bot_quot`, `top_le_sup_compl_quot`.
+  - [x] Where `induction a using Quotient.ind with | _ φ =>` binds the representative inline, prefer it over a separate `rename_i` line (Decision D2's line-shaving; one line saved per lemma).
+  - [x] Leave `le_antisymm_quot`, `le_trans_quot`, `le_inf_quot`, `sup_le_quot`, and `sup_comm_quot` untouched in this phase.
+  - [x] Measure and record the acceptance-criterion-1 figure after the rewrite.
+
+- **Completion note (2026-09-03):**
+  - Re-verify 1 (import cycle): `grep -rn 'import FormalSystem.Metalogic.Algebraic' FormalSystem/ Tests/ --include=*.lean` —
+    live importers are `Metalogic.lean`, `Metalogic/Algebraic.lean`, the intra-`Algebraic/` edges, and
+    six `FlowFrame` consumers under `BXCanonical/`, `Conservativity/`, `WeakCanonical/`; the rest are
+    Boneyard. Nothing under `Metalogic/Decidability/`, `Metalogic/Core/`, `Theorems/` or `Automation/`
+    imports any `Algebraic.*` module; `PropDecide.lean` imports only `Decidability.Propositional.Kalmar`
+    and `Automation.Tactics.Helpers`. Import added in isolation, full `lake build` exit 0 (commit `f0a75a3f0`).
+  - Re-verify 2 (enumeration): 15 `*_quot` theorems. Amenable (closed tautology, no hypothesis): `le_refl_quot`,
+    `inf_le_left_quot`, `inf_le_right_quot`, `le_sup_left_quot`, `le_sup_right_quot`, `bot_le_quot`,
+    `le_top_quot`, `le_sup_inf_quot`, `inf_compl_le_bot_quot`, `top_le_sup_compl_quot` (10).
+    Hypothesis-driven: `le_trans_quot`, `le_inf_quot`, `sup_le_quot` (3, Phase 2). Not `Derives`-shaped:
+    `le_antisymm_quot` (equality via `Quotient.sound`), `sup_comm_quot` (equality via `le_antisymm`) (2).
+  - All 10 rewritten with the inline-binder form `induction a using Quotient.ind with | _ φ =>` /
+    `change Derives …` / `unfold Derives` / `propDecide`; each its own green commit (phase 1.2-1.11).
+  - Acceptance-criterion-1 command after the phase: `lemmas: 15 total_body_lines: 139` (baseline 286;
+    the plan's ~147 projection was slightly pessimistic). `git diff` shows no `theorem …_quot` signature change.
+  - `bash scripts/check-module-invariants.sh` (full): see the phase-close log; C2 baseline unchanged.
 
 - **Timing:** 2 hours
 - **Depends on:** none
