@@ -800,23 +800,23 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 5: Land the generic prime-filter layer at `FormalSystem/ForMathlib/Order/PFilter.lean` [NOT STARTED]
+### Phase 5: Land the generic prime-filter layer at `FormalSystem/ForMathlib/Order/PFilter.lean` [COMPLETED]
 
 - **Goal:** a Mathlib-shaped, upstream-ready `Order.PFilter` extension exists, is reachable from the
   Lake root, is sorry-free, and imports nothing from `FormalSystem.*`.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: confirm which file is the Lake root aggregator that must gain
+  - [x] **Re-verify first**: confirm which file is the Lake root aggregator that must gain
         `import FormalSystem.ForMathlib`. Planning found the repo-root `FormalSystem.lean` contains
         only `import FormalSystem.FormalSystem`, and the eight real submodule imports live in
         `FormalSystem/FormalSystem.lean:8-15` — so the new import belongs in the latter. Confirm by
         reading both files and record the verdict. Adding it to the wrong one leaves the module
         unreachable and C6 will say so.
-  - [ ] **Re-verify second**: confirm C8's scope by reading `scripts/check-module-invariants.sh`'s
+  - [x] **Re-verify second**: confirm C8's scope by reading `scripts/check-module-invariants.sh`'s
         C8 block (`for parent in ("FormalSystem", "FormalSystem/Metalogic")`). Planning read it as
         requiring `FormalSystem/ForMathlib.lean` and **not** requiring
         `FormalSystem/ForMathlib/Order.lean`. Record which sibling aggregators you create and why.
-  - [ ] **Re-verify third**: `#check` the Mathlib names the layer builds on against the pinned
+  - [x] **Re-verify third**: `#check` the Mathlib names the layer builds on against the pinned
         checkout — `Order.PFilter`, `Order.PFilter.IsPrime`, `Order.PFilter.mem_of_le`,
         `Order.PFilter.inf_mem`, `Order.PFilter.top_mem`, `Order.Ideal.IsProper`,
         `Order.Ideal.IsMaximal`, `Order.Ideal.IsProper.exists_le_maximal`,
@@ -825,26 +825,26 @@ HARD STOP: stop, report, do not re-baseline.
         Record the signatures. If a name is absent or differs, **stop and report** rather than
         substituting a guess — report 01 already found one non-existent name
         (`Order.Ideal.ofPFilterCompl`) in this exact area.
-  - [ ] Create `FormalSystem/ForMathlib/Order/PFilter.lean` **from report 02 Appendix A**, which is
+  - [x] Create `FormalSystem/ForMathlib/Order/PFilter.lean` **from report 02 Appendix A**, which is
         already compiled and sorry-free (202 lines: 163 generic + 39 bundling). Transcribe it; do
         not re-derive it. Keep its section structure verbatim — `[Preorder P]`, `[OrderBot P]`,
         `[DistribLattice P]`, `[BooleanAlgebra P]` in **separate `section`s** (mixing them trips the
         `overlappingInstances` linter; this was hit once during the spike and fixed by sectioning).
-  - [ ] Import only `Mathlib.Order.PrimeIdeal`. **Nothing under `ForMathlib/` may import
+  - [x] Import only `Mathlib.Order.PrimeIdeal`. **Nothing under `ForMathlib/` may import
         `FormalSystem.*`** — state this dependency rule in the file header. Direction is strictly
         `Mathlib → ForMathlib → Metalogic/Algebraic/UltrafilterMCS → downstream`.
-  - [ ] Preserve the upstream-PR shape as a property of the file, at no extra cost: namespace
+  - [x] Preserve the upstream-PR shape as a property of the file, at no extra cost: namespace
         `Order.PFilter` exactly (so upstreaming deletes the file and renames nothing); lemma names
         one-for-one with their `Order/Ideal.lean` / `Order/PrimeIdeal.lean` duals; `*_iff_dual` for
         transport lemmas; the genuinely-new names `IsPrime.toIsProper`, `IsProper.exists_le_prime`.
         Report 02 Appendix A carries the name correspondence in its right margin — keep it as
         comments.
-  - [ ] Create the C8-required sibling aggregator `FormalSystem/ForMathlib.lean` importing
+  - [x] Create the C8-required sibling aggregator `FormalSystem/ForMathlib.lean` importing
         `FormalSystem.ForMathlib.Order.PFilter`, with a module docstring stating the
         delete-on-upstreaming intent and the dependency rule.
-  - [ ] Add `import FormalSystem.ForMathlib` to the aggregator identified in the first task, and
+  - [x] Add `import FormalSystem.ForMathlib` to the aggregator identified in the first task, and
         build **before** proceeding.
-  - [ ] **Optional, decided by measurement, not by default**: report 02 §5 shows
+  - [x] **Optional, decided by measurement, not by default**: report 02 §5 shows
         `DistribLattice.prime_filter_of_disjoint_filter_ideal` (the Zorn-free prime-filter separator,
         Mathlib's own commented-out TODO in `Order/PrimeSeparator.lean:123-125`) is a four-line
         theorem once `isPrime_iff_dual` exists. It requires the extra leaf import
@@ -859,17 +859,47 @@ HARD STOP: stop, report, do not re-baseline.
           open, but the surrounding statement may have moved or been reworded. Record the diff (or
           "no diff") in the completion note. If upstream has since landed a prime-filter statement,
           match its name and shape rather than report 02 §5's, and say so.
-  - [ ] **Re-verify fourth**: re-read, rather than inherit, every documentation enumeration that
+  - [x] **Re-verify fourth**: re-read, rather than inherit, every documentation enumeration that
         lists `FormalSystem/` subdirectories or aggregators. Planning found three in
         `FormalSystem/README.md` (aggregator/line-count table `:219-226`, layer table `:247-257`,
         subdirectory/README table `:273-276`) plus the root `CLAUDE.md` "Project Structure" bullet
         list. Record the list you find before editing. Add a `ForMathlib/` row or bullet to each.
-  - [ ] `.claude/context/repo/project-overview.md` is a **non-tracked courtesy edit**: `.claude/` is
+  - [x] `.claude/context/repo/project-overview.md` is a **non-tracked courtesy edit**: `.claude/` is
         gitignored in this repo and `context/repo/project-overview.md` is listed in `.syncprotect`,
         so the edit persists locally but is not part of the deliverable. Make it if convenient;
-        never let it gate the phase.
-  - [ ] Record the observed `lake build` wall-clock delta from the new Mathlib leaf import(s) —
+        never let it gate the phase. *(deviation: skipped — `.claude/rules/source-store-deploy-boundary.md` forbids hand-authoring under `.claude/**`; the plan itself marks this non-tracked and optional)*
+  - [x] Record the observed `lake build` wall-clock delta from the new Mathlib leaf import(s) —
         report 02 §13 lists this as explicitly not measured.
+
+- **Completion note (2026-09-03):**
+  - Re-verify 1: repo-root `FormalSystem.lean` contains only `import FormalSystem.FormalSystem`; the eight
+    submodule imports live in `FormalSystem/FormalSystem.lean:8-15`. `import FormalSystem.ForMathlib` added
+    there (first, since it imports nothing from the project), plus a Components bullet in its docstring.
+  - Re-verify 2: C8 loops `for parent in ("FormalSystem", "FormalSystem/Metalogic")` — so
+    `FormalSystem/ForMathlib.lean` is required and created; no `ForMathlib/Order.lean` (not checked by C8;
+    house style not needed for a single-file subdirectory).
+  - Re-verify 3: all 13 names `#check`ed at the pin via a scratch snippet (signatures recorded in the
+    Phase 4 completion note's sibling snippet output): `Order.PFilter`, `.IsPrime`, `.mem_of_le`, `.inf_mem`,
+    `.top_mem`, `Order.Ideal.IsProper`, `.IsMaximal`, `.IsProper.exists_le_maximal`, `.IsMaximal.isPrime`,
+    `.IsPrime.mem_or_compl_mem`, `.isProper_of_notMem`, `Order.IsPFilter.of_def`, `.toPFilter` — all present,
+    none differ from report 02's usage.
+  - Appendix A transcribed verbatim (sections kept separate; margin name-correspondence kept as comments):
+    compiled first time, zero warnings. `#print axioms Order.PFilter.IsProper.exists_le_prime` =
+    `[propext, Classical.choice, Quot.sound]` against the built module.
+  - Optional corollary **included**: import cost measured with `lake env lean` on two one-line files —
+    `Mathlib.Order.PrimeIdeal` only: 1.26 s / 1.22 s; with `Mathlib.Order.PrimeSeparator`: 1.34 s / 1.18 s
+    (within noise, no measurable delta). Pre-step: upstream master `Mathlib/Order/PrimeSeparator.lean`
+    fetched 2026-09-03 — the TODO is still a commented-out `prime_filter_of_disjoint_filter_ideal … := by sorry`
+    with the same statement as the pinned copy (`:123-125`); the only textual diff is the `public import`
+    module-system syntax. `DistribLattice.prime_filter_of_disjoint_filter_ideal` is stated with exactly
+    that name and shape; axioms `[propext, Classical.choice, Quot.sound]`.
+  - Re-verify 4 (doc enumerations, re-read): `FormalSystem/README.md` aggregator table (`:217-227`; also
+    corrected the stale `FormalSystem.lean` count 107 -> 105), Layer 0 table (`:229-235`), Submodule
+    Navigation table (`:268-280`), and `CLAUDE.md` Project Structure (`:13-14`). One row/bullet added to each.
+  - `grep -rn 'import FormalSystem' FormalSystem/ForMathlib/` is empty. Headers pass
+    `scripts/check-copyright-headers.sh` (both new files on the conforming list).
+  - `lake build` wall-clock delta from the new leaf imports: nil at this scale (scoped ForMathlib build
+    ~1.0 s + 0.7 s; the Mathlib oleans are cached).
 
 - **Timing:** 0.5 hours
 
