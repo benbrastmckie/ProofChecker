@@ -165,43 +165,13 @@ theorem le_sup_right_quot (a b : LindenbaumAlg) : b ≤ orQuot a b := by
 `a ≤ c → b ≤ c → a ⊔ b ≤ c`: least upper bound property.
 -/
 theorem sup_le_quot {a b c : LindenbaumAlg} (hac : a ≤ c) (hbc : b ≤ c) : orQuot a b ≤ c := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  induction c using Quotient.ind
-  rename_i φ ψ χ
-  change Derives (φ.or ψ) χ
-  -- Need disjunction elimination: from ⊢ φ → χ and ⊢ ψ → χ, derive ⊢ (φ ∨ ψ) → χ
-  -- φ ∨ ψ = ¬φ → ψ
-  -- Strategy: Build (¬φ → ψ) → χ by:
-  -- 1. From ⊢ ψ → χ and ⊢ ¬φ → ψ, get ⊢ ¬φ → χ via composition
-  -- 2. From ⊢ φ → χ and ⊢ ¬φ → χ, get χ via classicalMerge
-  have h_ac : Derives φ χ := hac
-  have h_bc : Derives ψ χ := hbc
-  obtain ⟨d_ac⟩ := h_ac
-  obtain ⟨d_bc⟩ := h_bc
-  unfold Derives Formula.or
-  -- We need: ⊢ (¬φ → ψ) → χ
-  -- Step 1: Build (¬φ → χ) using composition with (¬φ → ψ) → (ψ → χ) → (¬φ → χ)
-  -- bCombinator: (ψ → χ) → (¬φ → ψ) → (¬φ → χ)
-  have b1 : ⊢ (ψ.imp χ).imp ((φ.neg.imp ψ).imp (φ.neg.imp χ)) :=
-    FormalSystem.Theorems.Combinators.bCombinator
-  have neg_phi_to_chi_given_disj : ⊢ (φ.neg.imp ψ).imp (φ.neg.imp χ) :=
-    DerivationTree.modus_ponens [] _ _ b1 d_bc
-  -- Step 2: Use classicalMerge: (φ → χ) → ((¬φ → χ) → χ)
-  -- We have d_ac : ⊢ φ → χ
-  -- We need to combine with the above to get: (¬φ → ψ) → χ
-  -- Build: (φ → χ) → ((¬φ → χ) → χ) and compose with (¬φ → ψ) → (¬φ → χ)
-  have cm : ⊢ (φ.imp χ).imp ((φ.neg.imp χ).imp χ) :=
-    FormalSystem.Theorems.Propositional.classicalMerge φ χ
-  have step1 : ⊢ (φ.neg.imp χ).imp χ :=
-    DerivationTree.modus_ponens [] _ _ cm d_ac
-  -- Now compose: (¬φ → ψ) → (¬φ → χ) with (¬φ → χ) → χ
-  have b2 : ⊢ ((φ.neg.imp χ).imp χ).imp (((φ.neg.imp ψ).imp (φ.neg.imp χ)).imp
-      ((φ.neg.imp ψ).imp χ)) :=
-    FormalSystem.Theorems.Combinators.bCombinator
-  have step2 : ⊢ ((φ.neg.imp ψ).imp (φ.neg.imp χ)).imp ((φ.neg.imp ψ).imp χ) :=
-    DerivationTree.modus_ponens [] _ _ b2 step1
-  exact ⟨DerivationTree.modus_ponens [] _ _ step2 neg_phi_to_chi_given_disj⟩
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
+  induction c using Quotient.ind with | _ χ =>
+  obtain ⟨d_ac⟩ := (hac : Derives φ χ); obtain ⟨d_bc⟩ := (hbc : Derives ψ χ)
+  obtain ⟨d_taut⟩ := (show |-! ((φ.imp χ).and (ψ.imp χ)).imp ((φ.or ψ).imp χ) by propDecide)
+  exact ⟨DerivationTree.modus_ponens [] _ _ d_taut (DerivationTree.modus_ponens [] _ _
+    (DerivationTree.modus_ponens [] _ _ (FormalSystem.Theorems.Combinators.pairing _ _) d_ac) d_bc)⟩
 
 /--
 `⊥ ≤ a`: bot is least element.
