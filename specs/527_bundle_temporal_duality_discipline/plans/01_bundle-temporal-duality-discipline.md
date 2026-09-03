@@ -1,7 +1,7 @@
 # Implementation Plan: Bundle Temporal Duality Discipline
 
 - **Task**: 527 - WAVE 4 (canonical-model infrastructure): replace textual future/past mirroring in `Metalogic/Bundle/` with derived duals, bundle the truth lemma's coherence hypotheses, and put the limit-MCS construction on Mathlib's `Filter` API
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 16 hours
 - **Dependencies**: 520 (COMPLETED), 526 (COMPLETED)
 - **Research Inputs**: `specs/527_bundle_temporal_duality_discipline/reports/01_bundle-temporal-duality-discipline.md`
@@ -837,7 +837,68 @@ Phase 8's ALL CHECKS PASSED result still holds).
 
 ---
 
-### Phase 10: Final accounting, line-delta measurement, Group C green checkpoint [NOT STARTED]
+### Phase 10: Final accounting, line-delta measurement, Group C green checkpoint [COMPLETED]
+
+**Measured line delta**: `wc -l FormalSystem/Metalogic/Bundle/*.lean FormalSystem/Metalogic/Bundle.lean
+FormalSystem/Metalogic/Algebraic/FlowFrame.lean` = **3,697 lines** (`README.md` excluded per the
+baseline definition), against the Phase 1 baseline of **4,082 lines**: a reduction of **385
+lines**.
+
+**Reported against the three options, not self-declared** (per the plan's explicit instruction):
+
+| Option | Measured outcome |
+|---|---|
+| **A** (restate as 550-830 lines) | **Not met.** 385 lines falls short of the 550-line low end of the report's own re-baselined range. |
+| **B** (hold "at least 800 lines" as a hard gate) | **Not met.** 385 < 800. |
+| **C** (drop the numeric criterion, gate on structural criteria only) | **All structural criteria met** — see the checklist below. |
+
+**Structural acceptance criteria** (checked explicitly, evidence recorded):
+
+- **Zero unused hypotheses on the truth lemma**: `grep -n "_h_rtc" FlowFrame.lean` returns
+  nothing; `bundleFlow_truth_lemma` takes one bundled `h_coh : B.CanonicalCoherence root`
+  argument (Phase 1).
+- **One frame-construction site**: `multiFamTaskFrame` (`ReynoldsBridge.lean`) is now
+  `Algebraic.multiFamTaskFrameGen intOrder FamIdx` -- a one-line specialization, not a second
+  `where`-block (Phase 4).
+- **Every consumer theorem unchanged in statement**: `git diff 0e14260f0..HEAD` over all 12
+  files touched outside the declared `file_scope` (listed below) shows only argument-packing
+  hunks (`h_rtc h_buc h_fuc` -> `⟨h_rtc, h_fuc, h_buc⟩`), `mem_limitSetBelow`-routing hunks
+  (proof-body-internal, no enclosing type changed), and prose/docstring refreshes -- confirmed by
+  reading the full diff, not by assertion.
+- **`lake build` green**: full project + `Tests/BimodalTest/`, clean from the last full build
+  (2573/2573 jobs in Phase 9; re-confirmed 2522/2522 project jobs plus a full, un-scoped
+  `check-module-invariants.sh` run in this phase).
+- **C2 axiom baseline unchanged**: `bash scripts/check-module-invariants.sh` (full run, not
+  `--no-build`) reports **ALL CHECKS PASSED** including C2, at task-final `HEAD`.
+- **Zero `sorry` introduced**: `grep -c sorry` across every `Bundle/*.lean` and
+  `Algebraic/FlowFrame.lean` is 0 for all of them; repo-wide C3 (structural sorry inventory) also
+  reports zero.
+- **Test suite green**: `Tests/BimodalTest/` built successfully as part of the Phase 9 and this
+  phase's `check-module-invariants.sh` C1 checks.
+
+**`file_scope` addition** (12 files touched outside the declared `file_scope`, all with only
+argument-packing, `mem_limitSetBelow`-routing, or prose changes -- statements unchanged):
+
+- `FormalSystem/Boneyard/LimitMCSCoherenceDeadCases/{LimitMCSCoherenceDeadCases.lean,README.md}`
+  (new -- Phase 8 archive)
+- `FormalSystem/Metalogic/BXCanonical/Chronicle/{ChronicleGuardAccumulation,ChronicleLimitGuardAbove,
+  ChronicleLimitGuardWitness,ChronicleRealExtension}.lean` (Phase 7 -- `mem_limitSetBelow` routing)
+- `FormalSystem/Metalogic/BXCanonical/Chronicle/{ChronicleToCountermodel,ChronicleToCountermodelBasic}.lean`,
+  `FormalSystem/Metalogic/BXCanonical/{Completeness,CompletenessDedekind,DiscreteCarrierProbe}.lean`,
+  `FormalSystem/Metalogic/StrongCompleteness.lean` (Phase 1 -- argument packing / docstring refresh)
+
+**`Bundle/README.md` refresh for Phases 7-9**: the "Temporal Duality Discipline" section's
+order-theoretic-exception paragraph, which forward-referenced Group C's `TemporalSide` parameter
+as not-yet-landed, now names the landed definitions (`limitFilter`, `limitSet`,
+`limitSet_consistent`, `limitUltrafilter`, `limitMCS`) and the delivered `limitFilterAbove` /
+`limitMCSAbove` specializations. No other README content was invalidated by Phases 7-9 (verified
+by re-reading the file in full; no stale `limitMCSLindenbaum` / `limitUltrafilterBelow` /
+`TemporalCoherentFamily` references remain).
+
+**Group C green checkpoint / final gate**: `lake build` green from a build incorporating every
+phase's changes; `bash scripts/check-module-invariants.sh` full run (not `--no-build`) reports
+**ALL CHECKS PASSED**; C2 baseline unchanged across all ten phases (verified after every single
+phase, never re-baselined); zero `sorry` introduced.
 
 **Goal**: The task closes with a measured, honestly-reported line delta and every acceptance
 criterion checked.

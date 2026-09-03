@@ -76,8 +76,11 @@ full per-pair evidence.
 **Order-theoretic mirrors are a separate case, handled separately**: where the "mirror" is a
 `<`/`>` order reversal rather than a `swapTemporal` image — the `limitSet`/`limitMCS` family in
 `LimitMCS.lean` — this discipline does not apply at all. That duplication is closed by the
-`TemporalSide` parameter introduced in Group C (`LimitMCS.lean`, `LimitMCSCoherence.lean`), not
-by `swapTemporal`.
+`TemporalSide` parameter (`below`/`above`), landed in `LimitMCS.lean`: `limitFilter`, `limitSet`,
+`limitSet_consistent`, `limitUltrafilter`, `limitMCS` and its supporting theorems are each stated
+once, parameterized on it, with `limitFilterBelow`/`limitSetBelow`/`limitMCSBelow` surviving as
+unchanged thin specializations at `.below` and `limitFilterAbove`/`limitMCSAbove` newly available
+at `.above`. Not `swapTemporal`.
 
 ## Architecture
 
