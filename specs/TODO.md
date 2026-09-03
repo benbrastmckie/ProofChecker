@@ -1,5 +1,5 @@
 ---
-next_project_number: 533
+next_project_number: 534
 ---
 
 # TODO
@@ -11,7 +11,7 @@ next_project_number: 533
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,527,528,529,530 | -- | automation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,527,528,529,530,533 | -- | automation, dataset-enhancement, decidability, ... |
 | 2 | 178,231,282,296,463,502,531 | 193,298,433,461,529,530 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,464,497 | 231,463,502,528 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
@@ -84,18 +84,29 @@ next_project_number: 533
 
 ### Metalogic
 
-527 [PLANNED] — WAVE 4 (canonical-model infrastructure). Replace textual future/p
+527 [IMPLEMENTING] — WAVE 4 (canonical-model infrastructure). Replace textual future/p
 528 [NOT STARTED] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
 529 [NOT STARTED] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
+533 [NOT STARTED] — Establish soundness, completeness, compactness, and decidability 
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
 
 ## Tasks
+
+### 533. L and lstar metatheory conservative extension
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: metalogic
+- **Dependencies**: None
+
+**Description**: Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.
+
+---
 
 ### 532. Worldhistory extension faithfulness audit
 - **Status**: [COMPLETED]
@@ -151,7 +162,7 @@ next_project_number: 533
 ---
 
 ### 527. Bundle temporal duality discipline
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 520, Task 526

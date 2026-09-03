@@ -681,7 +681,7 @@ seven files before closing the phase.
 
 ---
 
-### Phase 8: `TemporalSide` parameterization and limit-MCS dead-code prune [NOT STARTED]
+### Phase 8: `TemporalSide` parameterization and limit-MCS dead-code prune [IN PROGRESS]
 
 **Goal**: `limitSet`, `limitFilter`, `limitMCS` and the `LimitMCSCoherence` families are stated
 once and instantiated at future/past; the dead constructions are gone.
