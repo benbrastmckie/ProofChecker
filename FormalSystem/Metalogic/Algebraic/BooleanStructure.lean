@@ -207,10 +207,10 @@ theorem sup_le_quot {a b c : LindenbaumAlg} (hac : a ≤ c) (hbc : b ≤ c) : or
 `⊥ ≤ a`: bot is least element.
 -/
 theorem bot_le_quot (a : LindenbaumAlg) : ⊥ ≤ a := by
-  induction a using Quotient.ind
-  rename_i φ
+  induction a using Quotient.ind with | _ φ =>
   change Derives Formula.bot φ
-  exact ⟨DerivationTree.axiom [] _ (Axiom.ex_falso φ) trivial⟩
+  unfold Derives
+  propDecide
 
 /--
 `a ≤ ⊤`: top is greatest element.
