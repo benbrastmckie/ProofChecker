@@ -533,6 +533,47 @@ Using the helper lemmas, we construct an ultrafilter from an MCS.
 -/
 
 /--
+`mcsToSet Γ` is a filter (`Order.IsPFilter`) for an MCS `Γ`: it is nonempty (`⊤`), downward
+directed (closed under `⊓`), and upward closed. The three witnesses are the existing
+`mcsToSet_top`, `mcsToSet_inf_mem`, `mcsToSet_mem_of_le`, reused unchanged.
+-/
+theorem mcsToSet_isPFilter {Γ : Set Formula}
+    (h_mcs : SetMaximalConsistent (fc := FrameClass.Base) Γ) : IsPFilter (mcsToSet Γ) :=
+  IsPFilter.of_def ⟨⊤, mcsToSet_top h_mcs⟩
+    (fun a ha b hb => ⟨a ⊓ b, mcsToSet_inf_mem h_mcs ha hb, inf_le_left, inf_le_right⟩)
+    (fun hle ha => mcsToSet_mem_of_le h_mcs ha hle)
+
+/--
+The bundled filter `{ [φ] | φ ∈ Γ }` on the Lindenbaum algebra, for an MCS `Γ`.
+-/
+def mcsToPFilter (Γ : {S : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) S}) :
+    PFilter LindenbaumAlg := (mcsToSet_isPFilter Γ.2).toPFilter
+
+/--
+Membership in `mcsToPFilter Γ` is membership in `mcsToSet Γ`, definitionally.
+-/
+theorem mem_mcsToPFilter_iff
+    (Γ : {S : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) S})
+    (a : LindenbaumAlg) : a ∈ mcsToPFilter Γ ↔ a ∈ mcsToSet Γ.1 := Iff.rfl
+
+/--
+`mcsToPFilter Γ` is proper: `⊥ ∉ mcsToSet Γ` (`mcsToSet_bot_not_mem`, reused unchanged).
+-/
+instance mcsToPFilter_isProper
+    (Γ : {S : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) S}) :
+    (mcsToPFilter Γ).IsProper :=
+  PFilter.isProper_of_notMem (mcsToSet_bot_not_mem Γ.2)
+
+/--
+`mcsToPFilter Γ` is prime (= an ultrafilter of the Boolean algebra): for every `a`, `a` or `aᶜ`
+is in it (`mcsToSet_compl_or`, reused unchanged).
+-/
+instance mcsToPFilter_isPrime
+    (Γ : {S : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) S}) :
+    (mcsToPFilter Γ).IsPrime :=
+  PFilter.isPrime_of_mem_or_compl_mem fun {a} => mcsToSet_compl_or Γ.2 a
+
+/--
 Convert an MCS to an ultrafilter on the Lindenbaum algebra.
 
 Given a maximal consistent set Γ, the set `{ [φ] | φ ∈ Γ }` forms an ultrafilter.
