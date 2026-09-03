@@ -226,113 +226,12 @@ Stronger form of distributivity: `(a ⊔ b) ⊓ (a ⊔ c) ≤ a ⊔ (b ⊓ c)`.
 -/
 theorem le_sup_inf_quot (a b c : LindenbaumAlg) :
     andQuot (orQuot a b) (orQuot a c) ≤ orQuot a (andQuot b c) := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  induction c using Quotient.ind
-  rename_i φ ψ χ
-  -- Need: ⊢ ((φ ∨ ψ) ∧ (φ ∨ χ)) → (φ ∨ (ψ ∧ χ))
-  -- This is classical distributivity - requires case analysis via LEM
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
+  induction c using Quotient.ind with | _ χ =>
   change Derives ((φ.or ψ).and (φ.or χ)) (φ.or (ψ.and χ))
   unfold Derives
-  -- Strategy: Use disjunction elimination on φ ∨ ψ
-  -- Case 1 (φ): We get φ, hence φ ∨ (ψ ∧ χ) immediately
-  -- Case 2 (ψ): We have ψ and (φ ∨ χ). Apply disjunction elimination on φ ∨ χ:
-  --   Case 2a (φ): φ ∨ (ψ ∧ χ)
-  --   Case 2b (χ): ψ ∧ χ, hence φ ∨ (ψ ∧ χ)
-
-  -- Let P = (φ ∨ ψ) ∧ (φ ∨ χ), Q = φ ∨ (ψ ∧ χ)
-  let P := (φ.or ψ).and (φ.or χ)
-  let Q := φ.or (ψ.and χ)
-  -- We'll use the classicalMerge approach:
-  -- From (φ → Q) and (¬φ → Q), derive Q
-  -- (φ → Q): φ → φ ∨ (ψ ∧ χ) is di_left
-  -- (¬φ → Q): From ¬φ and P, we get ψ and χ, hence ψ ∧ χ, hence Q
-
-  -- Left intro: φ → φ ∨ (ψ ∧ χ)
-  -- Using deduction theorem on orInl: [φ] ⊢ φ ∨ (ψ ∧ χ) implies ⊢ φ → φ ∨ (ψ ∧ χ)
-  have di_left : ⊢ φ.imp Q :=
-    FormalSystem.Metalogic.Core.deductionTheorem [] φ Q
-        (FormalSystem.Theorems.Propositional.orInl φ (ψ.and χ))
-  -- From context [P], derive φ ∨ ψ and φ ∨ χ
-  -- Then derive: ¬φ → ψ (from φ ∨ ψ = ¬φ → ψ) and ¬φ → χ (from φ ∨ χ = ¬φ → χ)
-  -- Combine: ¬φ → (ψ ∧ χ)
-  -- Then: ¬φ → φ ∨ (ψ ∧ χ) (via di_right and impTrans)
-
-  -- di_right: ψ ∧ χ → φ ∨ (ψ ∧ χ)
-  -- Using deduction theorem on orInr: [ψ ∧ χ] ⊢ φ ∨ (ψ ∧ χ) implies ⊢ (ψ ∧ χ) → φ ∨ (ψ ∧ χ)
-  have di_right_conj : ⊢ (ψ.and χ).imp Q :=
-    FormalSystem.Metalogic.Core.deductionTheorem [] (ψ.and χ) Q
-        (FormalSystem.Theorems.Propositional.orInr φ (ψ.and χ))
-  -- andLeft: P → (φ ∨ ψ)
-  have lce_p : ⊢ P.imp (φ.or ψ) := FormalSystem.Theorems.Propositional.lceImp (φ.or ψ) (φ.or χ)
-  -- andRight: P → (φ ∨ χ)
-  have rce_p : ⊢ P.imp (φ.or χ) := FormalSystem.Theorems.Propositional.rceImp (φ.or ψ) (φ.or χ)
-  -- φ ∨ ψ = ¬φ → ψ, so P → (¬φ → ψ)
-  have p_to_neg_phi_psi : ⊢ P.imp (φ.neg.imp ψ) := lce_p
-  -- φ ∨ χ = ¬φ → χ, so P → (¬φ → χ)
-  have p_to_neg_phi_chi : ⊢ P.imp (φ.neg.imp χ) := rce_p
-  -- Combine: P → (¬φ → ψ ∧ χ)
-  -- We need: from (P → (¬φ → ψ)) and (P → (¬φ → χ)), derive P → (¬φ → ψ ∧ χ)
-  -- This requires combining under implication
-
-  -- Use deduction theorem approach: from [P, ¬φ] derive ψ ∧ χ
-  have h_ctx : [φ.neg, P] ⊢ ψ.and χ := by
-    -- Get P from context
-    have h_p : [φ.neg, P] ⊢ P := by apply DerivationTree.assumption; simp
-    -- Get ¬φ from context
-    have h_neg_phi : [φ.neg, P] ⊢ φ.neg := by apply DerivationTree.assumption; simp
-    -- Weaken p_to_neg_phi_psi to context
-    have h1 : [φ.neg, P] ⊢ P.imp (φ.neg.imp ψ) :=
-      DerivationTree.weakening [] _ _ p_to_neg_phi_psi (List.nil_subset _)
-    -- Apply to get ¬φ → ψ
-    have h2 : [φ.neg, P] ⊢ φ.neg.imp ψ :=
-      DerivationTree.modus_ponens _ _ _ h1 h_p
-    -- Apply to get ψ
-    have h_psi : [φ.neg, P] ⊢ ψ :=
-      DerivationTree.modus_ponens _ _ _ h2 h_neg_phi
-    -- Similarly for χ
-    have h3 : [φ.neg, P] ⊢ P.imp (φ.neg.imp χ) :=
-      DerivationTree.weakening [] _ _ p_to_neg_phi_chi (List.nil_subset _)
-    have h4 : [φ.neg, P] ⊢ φ.neg.imp χ :=
-      DerivationTree.modus_ponens _ _ _ h3 h_p
-    have h_chi : [φ.neg, P] ⊢ χ :=
-      DerivationTree.modus_ponens _ _ _ h4 h_neg_phi
-    -- Combine ψ and χ into ψ ∧ χ using pairing
-    have pair : ⊢ ψ.imp (χ.imp (ψ.and χ)) := FormalSystem.Theorems.Combinators.pairing ψ χ
-    have pair_ctx : [φ.neg, P] ⊢ ψ.imp (χ.imp (ψ.and χ)) :=
-      DerivationTree.weakening [] _ _ pair (List.nil_subset _)
-    have step1 : [φ.neg, P] ⊢ χ.imp (ψ.and χ) :=
-      DerivationTree.modus_ponens _ _ _ pair_ctx h_psi
-    exact DerivationTree.modus_ponens _ _ _ step1 h_chi
-  -- Apply deduction theorem twice: [P, ¬φ] ⊢ ψ ∧ χ implies [P] ⊢ ¬φ → ψ ∧ χ
-  have h_ctx2 : [P] ⊢ φ.neg.imp (ψ.and χ) :=
-    FormalSystem.Metalogic.Core.deductionTheorem [P] φ.neg (ψ.and χ) h_ctx
-  -- Now [P] ⊢ ¬φ → ψ ∧ χ, and ψ ∧ χ → Q (di_right)
-  -- Compose to get [P] ⊢ ¬φ → Q
-  have di_right_ctx : [P] ⊢ (ψ.and χ).imp Q :=
-    DerivationTree.weakening [] _ _ di_right_conj (List.nil_subset _)
-  have b_inst : ⊢ ((ψ.and χ).imp Q).imp ((φ.neg.imp (ψ.and χ)).imp (φ.neg.imp Q)) :=
-    FormalSystem.Theorems.Combinators.bCombinator
-  have b_ctx : [P] ⊢ ((ψ.and χ).imp Q).imp ((φ.neg.imp (ψ.and χ)).imp (φ.neg.imp Q)) :=
-    DerivationTree.weakening [] _ _ b_inst (List.nil_subset _)
-  have step2 : [P] ⊢ (φ.neg.imp (ψ.and χ)).imp (φ.neg.imp Q) :=
-    DerivationTree.modus_ponens _ _ _ b_ctx di_right_ctx
-  have h_neg_phi_Q : [P] ⊢ φ.neg.imp Q :=
-    DerivationTree.modus_ponens _ _ _ step2 h_ctx2
-  -- Now we have [P] ⊢ φ → Q (via di_left weakened) and [P] ⊢ ¬φ → Q
-  -- Use classicalMerge: (φ → Q) → ((¬φ → Q) → Q)
-  have di_left_ctx : [P] ⊢ φ.imp Q :=
-    DerivationTree.weakening [] _ _ di_left (List.nil_subset _)
-  have cm : ⊢ (φ.imp Q).imp ((φ.neg.imp Q).imp Q) :=
-    FormalSystem.Theorems.Propositional.classicalMerge φ Q
-  have cm_ctx : [P] ⊢ (φ.imp Q).imp ((φ.neg.imp Q).imp Q) :=
-    DerivationTree.weakening [] _ _ cm (List.nil_subset _)
-  have step3 : [P] ⊢ (φ.neg.imp Q).imp Q :=
-    DerivationTree.modus_ponens _ _ _ cm_ctx di_left_ctx
-  have h_Q : [P] ⊢ Q :=
-    DerivationTree.modus_ponens _ _ _ step3 h_neg_phi_Q
-  -- Apply deduction theorem: [P] ⊢ Q implies [] ⊢ P → Q
-  exact ⟨FormalSystem.Metalogic.Core.deductionTheorem [] P Q h_Q⟩
+  propDecide
 
 /-!
 ## Complement and Boolean Algebra
