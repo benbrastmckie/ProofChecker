@@ -6,6 +6,8 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Metalogic.Algebraic.InteriorOperators
 import FormalSystem.Metalogic.Core.MaximalConsistent
+import FormalSystem.ForMathlib.Order.PFilter
+import Mathlib.Order.PrimeIdeal
 
 /-!
 # Ultrafilter-MCS Correspondence
@@ -30,6 +32,7 @@ open FormalSystem.Syntax FormalSystem.ProofSystem
 open FormalSystem.Metalogic.Algebraic.LindenbaumQuotient
 open FormalSystem.Metalogic.Algebraic.BooleanStructure
 open FormalSystem.Metalogic.Core
+open Order
 
 /-!
 ## Ultrafilter Definition for Boolean Algebras
