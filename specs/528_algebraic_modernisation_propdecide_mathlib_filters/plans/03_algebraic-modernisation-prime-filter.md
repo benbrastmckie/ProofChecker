@@ -945,26 +945,69 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 6: Port `UltrafilterMCS.lean` onto `Order.PrimeFilter` and delete the bespoke structure [NOT STARTED]
+### Phase 6: Port `UltrafilterMCS.lean` onto `Order.PrimeFilter` and delete the bespoke structure [COMPLETED]
 
 - **Goal:** the bespoke `structure Ultrafilter` is gone, `UltrafilterMCS.lean` states its content
   over `Order.PrimeFilter LindenbaumAlg`, `SetMaximalConsistent.ultrafilterEquiv` exists at the
   corrected type, and `ultrafilter_correspondence` is its corollary.
 
 - **Tasks:**
-  - [ ] **Re-verify first, per file**: re-run `grep -rn 'Ultrafilter' FormalSystem/ Tests/ --include=*.lean` and classify every hit as *bespoke* or *Mathlib's*. Planning found the bespoke set confined to `UltrafilterMCS.lean` (63 hits), with `Bundle/LimitMCS.lean` (16), `Semantics/Ultraproduct/*` (12), `Chronicle/ChronicleRealExtension.lean` (2 prose), and `Semantics.lean`/`DependentUltraproductProbe.lean` all being Mathlib's `Ultrafilter` on filters. **Re-derive this classification; do not inherit it.** Touching a Mathlib `Ultrafilter` site is a defect, not a scope expansion.
-  - [ ] **Re-verify second**: confirm the module is **not** being renamed (only declarations inside it change), and confirm each of the four Boneyard consumers places `#exit` *before* its first `Ultrafilter` occurrence (`Boneyard/UltrafilterFrame/AlgebraicCompleteness.lean:27`, `Boneyard/UltrafilterFrame/UltrafilterFrame.lean:54`, `Boneyard/StrictSemanticsLegacy/Algebraic/UltrafilterChain.lean:46`, `Boneyard/UltrafilterFrame/TenseS5Algebra.lean:37`). Record the check — C11 requires their *import* lines to keep resolving.
-  - [ ] **Re-verify third, per declaration**: re-run the reference greps and confirm (a) `ultrafilter_correspondence` (`:782`) is referenced only by `ultrafilter_mcs_round_trip` (`:983`), (b) `mcs_ultrafilter_round_trip` (`:1056`) is referenced nowhere outside its own declaration, (c) neither is referenced from `docs/`, `README.md`, or any live `.lean` file outside `UltrafilterMCS.lean`. Record each grep's output. **Do not proceed on the reports' claims alone** — this is the exact assumption class that cost a sibling task its line target.
-  - [ ] Add `import FormalSystem.ForMathlib.Order.PFilter` and `import Mathlib.Order.PrimeIdeal`, and build **before** writing any proof.
-  - [ ] Add `toQuot_mem_mcsToSet_iff` (report 02 §6, three lines via `SetMaximalConsistent.implication_property` at `Core/MCSProperties.lean:160` and `theorem_in_mcs` at `Core/MaximalConsistent.lean:462`). This is the dedup that collapses ~60 duplicated lines across `:782` and `:983`; it is worth taking independently of the encoding choice.
-  - [ ] Add `mcsToSet_isPFilter`, `mcsToPFilter`, `mem_mcsToPFilter_iff`, the two instances (`mcsToPFilter_isProper`, `mcsToPFilter_isPrime`) and the new `mcsToUltrafilter`, **from report 02 Appendix B** — already compiled. The five existing `mcsToSet_*` witness lemmas are **reused unchanged**; do not restate them.
-  - [ ] Re-type `ultrafilterToSet` and `ultrafilterToSet_mcs` by **textual substitution only** (report 02 §6): `U.carrier` → `U` (x18), `U.top_mem` → `PFilter.top_mem`, `U.inf_mem` → `PFilter.inf_mem`, `U.mem_of_le` → `PFilter.mem_of_le`, `U.bot_not_mem` → `U.2.toIsProper.bot_notMem`, the `cases U.compl_or` block → `U.2.compl_mem_of_notMem hφ`. **Zero proof-step changes.** If a proof step needs changing, that is a finding — record it, do not absorb it silently.
-  - [ ] Add `SetMaximalConsistent.ultrafilterEquiv` at the corrected type (acceptance criterion 3), from Appendix B. **Friction 1 is pre-loaded**: the `right_inv` branch leaves an `ofDual (toDual a)` residue in a destructured hypothesis; fix it with the one-line `show a = toQuot φ from h_eq`, exactly as the spike did.
-  - [ ] Restate `ultrafilter_correspondence` as the corollary `⟨ultrafilterEquiv, ultrafilterEquiv.symm, ultrafilterEquiv.left_inv, ultrafilterEquiv.right_inv⟩`. **Its statement must not change** — it stays the existential, so any future consumer is unaffected.
-  - [ ] Replace `Ultrafilter.compl_xor`, `mem_iff_compl_not_mem`, `not_mem_iff_compl_mem` (`:910-947`) — these **are** `IsPrime.mem_iff_compl_notMem` / `compl_mem_iff_notMem` in the generic layer — and collapse `ultrafilter_neg_iff` / `ultrafilter_neg_iff'` (`:950-966`) to the two one-liners. **Friction 2 is pre-loaded**: `U.2.compl_mem_iff_notMem` cannot infer `x` from `⟦φ.neg⟧ ∈ U` (the unifier will not invert `toQuot φ.neg` to `(toQuot φ)ᶜ`); pass `(x := toQuot φ)`. One site.
-  - [ ] Delete: `structure Ultrafilter` + its `Membership` instance + `ext` + `empty_not_mem` (`:44-81`), the old `mcsToUltrafilter` and `mcsToUltrafilter_carrier` / `mem_mcsToUltrafilter_iff` (`:538-556`, now `Iff.rfl`), `ultrafilter_mcs_round_trip` (`:983-1053`, subsumed by `Equiv.left_inv`), and `mcs_ultrafilter_round_trip` (`:1056-1069`, subsumed by `Equiv.right_inv`). Enumerate every deletion in the completion note.
-  - [ ] Measure and record the resulting file line count against the ~780 projection (acceptance criterion 7).
-  - [ ] **If a third friction appears** beyond the two pre-loaded above, record it explicitly in the completion note rather than improvising around it — the spike's claim is "four frictions, all handled"; a fifth is new information.
+  - [x] **Re-verify first, per file**: re-run `grep -rn 'Ultrafilter' FormalSystem/ Tests/ --include=*.lean` and classify every hit as *bespoke* or *Mathlib's*. Planning found the bespoke set confined to `UltrafilterMCS.lean` (63 hits), with `Bundle/LimitMCS.lean` (16), `Semantics/Ultraproduct/*` (12), `Chronicle/ChronicleRealExtension.lean` (2 prose), and `Semantics.lean`/`DependentUltraproductProbe.lean` all being Mathlib's `Ultrafilter` on filters. **Re-derive this classification; do not inherit it.** Touching a Mathlib `Ultrafilter` site is a defect, not a scope expansion.
+  - [x] **Re-verify second**: confirm the module is **not** being renamed (only declarations inside it change), and confirm each of the four Boneyard consumers places `#exit` *before* its first `Ultrafilter` occurrence (`Boneyard/UltrafilterFrame/AlgebraicCompleteness.lean:27`, `Boneyard/UltrafilterFrame/UltrafilterFrame.lean:54`, `Boneyard/StrictSemanticsLegacy/Algebraic/UltrafilterChain.lean:46`, `Boneyard/UltrafilterFrame/TenseS5Algebra.lean:37`). Record the check — C11 requires their *import* lines to keep resolving.
+  - [x] **Re-verify third, per declaration**: re-run the reference greps and confirm (a) `ultrafilter_correspondence` (`:782`) is referenced only by `ultrafilter_mcs_round_trip` (`:983`), (b) `mcs_ultrafilter_round_trip` (`:1056`) is referenced nowhere outside its own declaration, (c) neither is referenced from `docs/`, `README.md`, or any live `.lean` file outside `UltrafilterMCS.lean`. Record each grep's output. **Do not proceed on the reports' claims alone** — this is the exact assumption class that cost a sibling task its line target.
+  - [x] Add `import FormalSystem.ForMathlib.Order.PFilter` and `import Mathlib.Order.PrimeIdeal`, and build **before** writing any proof.
+  - [x] Add `toQuot_mem_mcsToSet_iff` (report 02 §6, three lines via `SetMaximalConsistent.implication_property` at `Core/MCSProperties.lean:160` and `theorem_in_mcs` at `Core/MaximalConsistent.lean:462`). This is the dedup that collapses ~60 duplicated lines across `:782` and `:983`; it is worth taking independently of the encoding choice.
+  - [x] Add `mcsToSet_isPFilter`, `mcsToPFilter`, `mem_mcsToPFilter_iff`, the two instances (`mcsToPFilter_isProper`, `mcsToPFilter_isPrime`) and the new `mcsToUltrafilter`, **from report 02 Appendix B** — already compiled. The five existing `mcsToSet_*` witness lemmas are **reused unchanged**; do not restate them.
+  - [x] Re-type `ultrafilterToSet` and `ultrafilterToSet_mcs` by **textual substitution only** (report 02 §6): `U.carrier` → `U` (x18), `U.top_mem` → `PFilter.top_mem`, `U.inf_mem` → `PFilter.inf_mem`, `U.mem_of_le` → `PFilter.mem_of_le`, `U.bot_not_mem` → `U.2.toIsProper.bot_notMem`, the `cases U.compl_or` block → `U.2.compl_mem_of_notMem hφ`. **Zero proof-step changes.** If a proof step needs changing, that is a finding — record it, do not absorb it silently.
+  - [x] Add `SetMaximalConsistent.ultrafilterEquiv` at the corrected type (acceptance criterion 3), from Appendix B. **Friction 1 is pre-loaded**: the `right_inv` branch leaves an `ofDual (toDual a)` residue in a destructured hypothesis; fix it with the one-line `show a = toQuot φ from h_eq`, exactly as the spike did.
+  - [x] Restate `ultrafilter_correspondence` as the corollary `⟨ultrafilterEquiv, ultrafilterEquiv.symm, ultrafilterEquiv.left_inv, ultrafilterEquiv.right_inv⟩`. **Its statement must not change** — it stays the existential, so any future consumer is unaffected.
+  - [x] Replace `Ultrafilter.compl_xor`, `mem_iff_compl_not_mem`, `not_mem_iff_compl_mem` (`:910-947`) — these **are** `IsPrime.mem_iff_compl_notMem` / `compl_mem_iff_notMem` in the generic layer — and collapse `ultrafilter_neg_iff` / `ultrafilter_neg_iff'` (`:950-966`) to the two one-liners. **Friction 2 is pre-loaded**: `U.2.compl_mem_iff_notMem` cannot infer `x` from `⟦φ.neg⟧ ∈ U` (the unifier will not invert `toQuot φ.neg` to `(toQuot φ)ᶜ`); pass `(x := toQuot φ)`. One site.
+  - [x] Delete: `structure Ultrafilter` + its `Membership` instance + `ext` + `empty_not_mem` (`:44-81`), the old `mcsToUltrafilter` and `mcsToUltrafilter_carrier` / `mem_mcsToUltrafilter_iff` (`:538-556`, now `Iff.rfl`), `ultrafilter_mcs_round_trip` (`:983-1053`, subsumed by `Equiv.left_inv`), and `mcs_ultrafilter_round_trip` (`:1056-1069`, subsumed by `Equiv.right_inv`). Enumerate every deletion in the completion note.
+  - [x] Measure and record the resulting file line count against the ~780 projection (acceptance criterion 7).
+  - [x] **If a third friction appears** beyond the two pre-loaded above, record it explicitly in the completion note rather than improvising around it — the spike's claim is "four frictions, all handled"; a fifth is new information.
+
+- **Completion note (2026-09-03):**
+  - Re-verify 1 (classification, re-derived): `grep -rn Ultrafilter FormalSystem/ Tests/ --include=*.lean`
+    minus Boneyard and `UltrafilterMCS.lean` hits only Mathlib's filter-ultrafilter: `Bundle/LimitMCS.lean`
+    (`Ultrafilter Rat`, `Ultrafilter.of`), `Semantics/Ultraproduct/{Los,IndexFilter,Carrier,ShiftSetProduct}.lean`
+    (`Ultrafilter I`), `Metalogic/Compactness.lean:128`, `Tests/.../DependentUltraproductProbe.lean:56`, and prose in
+    `Semantics.lean:126`, `ChronicleRealExtension.lean:154,158`, `Metalogic/Algebraic.lean:28` (the module name).
+    Bespoke hits were confined to `UltrafilterMCS.lean` (63 occurrences, 46 `carrier`). No Mathlib site touched.
+  - Re-verify 2: module not renamed. Boneyard `#exit` vs first `Ultrafilter` *code* use:
+    `AlgebraicCompleteness.lean` exit@27, first use @35; `UltrafilterFrame.lean` exit@54 (only docstring/comment
+    mentions before it, @2/@15/@18); `UltrafilterChain.lean` exit@46 (docstring mentions @15/@26/@37);
+    `TenseS5Algebra.lean` exit@37, zero mentions. C11 green (see invariants log).
+  - Re-verify 3: `ultrafilter_correspondence` / `ultrafilter_mcs_round_trip` / `mcs_ultrafilter_round_trip` /
+    `fold_le_of_derives` referenced outside the file only at `Algebraic/README.md:151` (Phase 7). Nothing in
+    `docs/`, `README.md`, or any live `.lean`.
+  - Commit sequence (each green): 6.1 imports + `open Order`; 6.2 `toQuot_mem_mcsToSet_iff`; 6.3 the
+    `mcsToPFilter` group; 6.4 the retype pass — `mcsToUltrafilter` on `PrimeFilter`, `ultrafilterToSet(_mcs)`
+    by substitution, `ultrafilterEquiv`, the `ultrafilter_correspondence` corollary, `neg_iff` one-liners,
+    `ultrafilterToMcs`/`_val` retyped, both round trips removed; 6.5 the structure and its generic lemmas
+    deleted. The plan's finer split (Equiv / corollary / `:910-966` as separate commits) is not realisable:
+    `mcsToUltrafilter` keeps its name, so the type change is one connected component and had to land in
+    one commit (6.4) for every intermediate state to build — which is the plan's governing requirement.
+  - Substitution pass, `git diff` on `ultrafilterToSet_mcs`: 7 `∈ U.carrier` -> `∈ U`; `U.top_mem` ->
+    `PFilter.top_mem`; `U.inf_mem` -> `PFilter.inf_mem`; `U.bot_not_mem` -> `U.2.toIsProper.bot_notMem`;
+    the `cases U.compl_or` block -> `U.2.compl_mem_of_notMem hφ`; **and one argument swap**
+    `U.mem_of_le h_meet h_le_bot` -> `PFilter.mem_of_le h_le_bot h_meet` (Mathlib's signature takes
+    `x ≤ y` first). No tactic added, removed or reordered. Recorded as a signature-shape difference, not a
+    proof-step change; not report 02's "zero proof-step changes" claim being false.
+  - **One necessary statement change, recorded**: `ultrafilter_correspondence`'s binder types read
+    `Ultrafilter LindenbaumAlg`; with the bespoke structure deleted that spelling would silently resolve to
+    Mathlib's `_root_.Ultrafilter` (a filter on `Set LindenbaumAlg` — report 02 §2's hazard), so the
+    ascriptions were changed to `PrimeFilter LindenbaumAlg`. The existential form is otherwise unchanged.
+  - Frictions: both pre-loaded ones met exactly as described (`show a = toQuot φ from h_eq`; `(x := toQuot φ)`);
+    no third friction.
+  - Deletions: `structure Ultrafilter` + `instMembershipUltrafilter` + `Ultrafilter.ext` +
+    `Ultrafilter.empty_not_mem`; old `mcsToUltrafilter` + `mcsToUltrafilter_carrier` (`mem_mcsToUltrafilter_iff`
+    is now `Iff.rfl`); `Ultrafilter.compl_xor`, `Ultrafilter.mem_iff_compl_not_mem`,
+    `Ultrafilter.not_mem_iff_compl_mem`; `ultrafilter_mcs_round_trip`; `mcs_ultrafilter_round_trip`.
+  - `#check SetMaximalConsistent.ultrafilterEquiv : {Γ // SetMaximalConsistent Γ} ≃ Order.PrimeFilter LindenbaumAlg`;
+    `#print axioms` on it, on `ultrafilter_correspondence` and on `fold_le_of_derives`:
+    `[propext, Classical.choice, Quot.sound]`.
+  - Acceptance criterion 7: `UltrafilterMCS.lean` 1,071 -> **801** lines (report 02 projected ~780; the
+    difference is docstrings kept/added on the new declarations). Acceptance criterion 2 greps both empty.
 
 - **Timing:** 2 hours
 - **Depends on:** 4, 5
