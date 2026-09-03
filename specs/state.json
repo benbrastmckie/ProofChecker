@@ -2043,14 +2043,14 @@
       "last_updated": "2026-09-03T18:10:16Z",
       "artifacts": [
         {
-          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/01_algebraic-modernisation-propdecide-mathlib.md",
-          "type": "plan",
-          "summary": "Eight-phase plan in five waves: propDecide rewrite of 10 tautology *_quot lemmas plus a tautology+pairing+MP extension for the three hypothesis-driven ones, ultrafilterEquiv, BAUltrafilter bridge, Multiset.inf restatement. Two open decisions surfaced (D1 bridge encoding, D2 line-count metric)."
-        },
-        {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
           "type": "report",
           "summary": "Design spike resolving Decision D1: verifies Mathlib's Ultrafilter is Set-based (corrected target Order.PrimeFilter LindenbaumAlg), that order-dual transport is Iff.rfl, and that PFilter.IsPrime alone implies proper so all seven bespoke axioms derive with no bridge lemma. Option (c) recommended at option (b)'s cost. Surfaces D-A location, D-B name, D-C IsMaximal."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/02_algebraic-modernisation-prime-filter.md",
+          "type": "plan",
+          "summary": "Plan v2: D1 resolved as option (c), Mathlib-native Order.PrimeFilter encoding with zero bridge lemmas. Generic layer lands in FormalSystem/ForMathlib/Order/PFilter.lean (PR-shaped). Seven phases, 9.5h, waves [1,3,4,5]->[2,6]->[7]. D2 remains open."
         }
       ],
       "session_id": "sess_1788452026_624704_528"
