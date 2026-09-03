@@ -2079,7 +2079,7 @@
     {
       "project_number": 528,
       "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
-      "status": "researched",
+      "status": "planned",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -2096,7 +2096,7 @@
         "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-03T19:33:32Z",
+      "last_updated": "2026-09-03T19:46:20Z",
       "artifacts": [
         {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
@@ -2104,18 +2104,18 @@
           "summary": "Design spike resolving Decision D1: verifies Mathlib's Ultrafilter is Set-based (corrected target Order.PrimeFilter LindenbaumAlg), that order-dual transport is Iff.rfl, and that PFilter.IsPrime alone implies proper so all seven bespoke axioms derive with no bridge lemma. Option (c) recommended at option (b)'s cost. Surfaces D-A location, D-B name, D-C IsMaximal."
         },
         {
-          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/02_algebraic-modernisation-prime-filter.md",
-          "type": "plan",
-          "summary": "Plan v2: D1 resolved as option (c), Mathlib-native Order.PrimeFilter encoding with zero bridge lemmas. Generic layer lands in FormalSystem/ForMathlib/Order/PFilter.lean (PR-shaped). Seven phases, 9.5h, waves [1,3,4,5]->[2,6]->[7]. D2 remains open."
-        },
-        {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
           "type": "report",
           "summary": "Source-acquisition dossier: audits what --lit surfaces for task 528, confirms D-A/D-B/D-C are decided by Mathlib source and convention rather than BAO literature, inventories owned-but-unregistered and not-owned sources, cross-checks tasks 461/504, and concludes another --lit round is not warranted before implementing plan v2."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
+          "type": "plan"
         }
       ],
-      "session_id": "sess_1788463107_3e290a",
-      "researched": "2026-09-03T19:33:32Z"
+      "session_id": "sess_1788464483_205d50",
+      "researched": "2026-09-03T19:33:32Z",
+      "next_artifact_number": 2
     },
     {
       "project_number": 529,

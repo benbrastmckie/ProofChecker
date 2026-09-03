@@ -1,0 +1,43 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
+      "summary": "Plan v3: targeted rationale/citation refinement of plan v2 from report 03 (verified ForMathlib project-tree citations for D-A, the abbrev-subtype vs SetLike-template trade-off for D-B, an upstream PrimeSeparator diff pre-step for Phase 5's optional corollary, textbook and Mathlib-coverage citations for Phase 7's README subsection); option (c), all seven phases, effort, and acceptance criteria unchanged."
+    }
+  ],
+  "next_steps": "Run /implement 528 to execute the revised plan",
+  "metadata": {
+    "session_id": "sess_1788464483_205d50",
+    "agent_type": "reviser-agent",
+    "delegation_path": ["orchestrator", "revise", "reviser-agent"],
+    "mode": "plan_revision",
+    "plan_version": 3,
+    "phase_count": 7,
+    "estimated_hours": 9.5,
+    "reports_integrated": [
+      "01_algebraic-modernisation-verification.md",
+      "02_pfilter-maximality-design-spike.md",
+      "03_literature-source-acquisition-dossier.md"
+    ],
+    "newly_integrated_reports": ["03_literature-source-acquisition-dossier.md"],
+    "preserved_phases": [1, 2, 3, 4, 6],
+    "phases_with_added_tasks": {
+      "5": "pre-step under the optional E3 corollary: diff upstream Order/PrimeSeparator.lean against the pin",
+      "7": "two optional citation items in the README Design decisions subsection (CZ 1997 Part III section 8.2 Thm 8.14; no Stone/Priestley duality in pinned Mathlib)"
+    },
+    "revised_sections": [
+      "metadata block (Research Inputs, Artifacts, Revision history)",
+      "Overview closing paragraph",
+      "Research Integration (report 03 row and findings; section 7 verdict)",
+      "Facts established during planning (intro sentence only)",
+      "Prior Plan Reference (v2-to-v3 table added; v1-to-v2 table retained)",
+      "Decision D-A rationale (project-tree citations, style-guide silence, dependency rule)",
+      "Decision D-B rationale (abbrev-subtype vs SetLike-template trade-off)",
+      "Phase 5 optional E3 corollary pre-step",
+      "Phase 7 Design decisions subsection optional citations"
+    ],
+    "unchanged": "option (c); Decisions D1, D-C; open Decision D2; Goals & Non-Goals; Risks; all seven Acceptance Criteria; dependency waves and territory contract; Testing & Validation; Artifacts & Outputs; Rollback/Contingency; effort total 9.5 h"
+  }
+}
