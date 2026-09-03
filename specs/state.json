@@ -2023,7 +2023,7 @@
     {
       "project_number": 528,
       "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
-      "status": "researching",
+      "status": "researched",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -2040,8 +2040,14 @@
         "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-03T17:51:17Z",
-      "artifacts": [],
+      "last_updated": "2026-09-03T18:01:31Z",
+      "artifacts": [
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/01_algebraic-modernisation-verification.md",
+          "type": "report",
+          "summary": "Verifies every measured-state anchor against the live tree (no drift); empirically re-validates propDecide on the distributivity and De Morgan shapes; narrows item 1 to ~10 of 15 *_quot lemmas; finds Order.Ideal.ofPFilterCompl absent from Mathlib and recommends dropping the PFilter option."
+        }
+      ],
       "session_id": "sess_1788452026_624704_528"
     },
     {
