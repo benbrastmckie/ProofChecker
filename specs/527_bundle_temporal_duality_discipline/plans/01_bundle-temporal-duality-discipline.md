@@ -595,7 +595,46 @@ green together.
 
 ---
 
-### Phase 7: `LimitMCS.lean` Filter foundation [NOT STARTED]
+### Phase 7: `LimitMCS.lean` Filter foundation [COMPLETED]
+
+**Deviation notes**:
+- `limitFilterBelow` is now `Filter.comap Rat.cast (nhdsWithin r (Set.Iio r))`; `limitSetBelow`
+  is now `{A | ∀ᶠ q in limitFilterBelow r, A ∈ m q}`. `mem_limitSetBelow` is the sole exported
+  unfolding lemma. `limitSetBelow_mono_directed` and `limitSetBelow_finite_subset_mem` are
+  deleted; `limitSetBelow_consistent` is re-proved via `Filter.inter_mem` +
+  `Filter.nonempty_of_mem` (list induction mirroring the pre-existing
+  `limitMCSBelow_finite_subset_mem` pattern in this same file).
+- **Above-side support lemmas kept, not deleted as the task list's parenthetical named.**
+  `limitSetAbove_mono_directed` and `limitSetAbove_finite_subset_mem` remain: `limitSetAbove`
+  itself is required to stay hand-rolled this phase (`TemporalSide`, Phase 8, is what turns it
+  into the second instantiation of a single parameterized family), and `limitSetAbove_consistent`
+  needs a directedness argument from *somewhere`. Introducing a throwaway private "above" filter
+  here just to route it through `Filter.inter_mem` would duplicate Phase 8's real work early for
+  no lasting benefit -- documented in the `limitSetAbove` docstring.
+- **Discovered dependency the plan did not name**: `Bundle/LimitMCSCoherence.lean` (in
+  `file_scope`, Phase 8's own target) directly destructures/constructs `limitSetBelow` membership
+  via the old anonymous-constructor shape in six proofs. Left unfixed, the tree would not build
+  green after this phase. Fixed minimally (route each through `mem_limitSetBelow` /
+  `mem_limitFilterBelow`) without otherwise touching proof content -- Phase 8 will restructure
+  this file further regardless.
+- **Four of the seven named external consumer files needed the same minimal routing fix**
+  (`ChronicleGuardAccumulation.lean`, `ChronicleLimitGuardAbove.lean`,
+  `ChronicleLimitGuardWitness.lean`, `ChronicleRealExtension.lean`), contradicting this phase's
+  "with no source change" framing -- any file that previously destructured/constructed
+  `limitSetBelow` membership directly necessarily needs to route through the new sole unfolding
+  lemma, which is the direct consequence of "keep exactly one unfolding lemma... the interface
+  every downstream file uses." `CounterexampleElimination.lean`, `RealExtensionBundle.lean` and
+  `RealExtension.lean` did build with zero source change, confirmed via `git diff --stat`.
+- **No Phase 6 wall-time baseline was captured** (no phase before this one recorded `lake build`
+  timing), so the ">20% regression" check has no number to compare against. This build's full,
+  from-cache `lake build` completed in well under a minute; nothing in this phase's profile
+  suggests an elaboration regression, but the comparison itself could not be performed as
+  specified.
+
+**Verification performed**: `lake build` green (full project, 2522/2522 jobs);
+`bash scripts/check-module-invariants.sh` ALL CHECKS PASSED, C2 baseline unchanged; all seven
+named consumer files (plus `LimitMCSCoherence.lean`) build; exactly one `mem_limitSetBelow`
+exists.
 
 **Goal**: The limit set is the `Filter`-eventually set by definition, and the hand-rolled
 finite-intersection argument is gone.

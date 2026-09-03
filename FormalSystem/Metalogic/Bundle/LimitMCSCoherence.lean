@@ -94,6 +94,7 @@ theorem limitSetBelow_forward_G_rat_source (m : Rat → Set Formula)
     (q : Rat) (t : ℝ) (φ : Formula) (hqt : (q : ℝ) < t)
     (hφ : Formula.allFuture φ ∈ m q) :
     φ ∈ limitSetBelow m t := by
+  rw [mem_limitSetBelow]
   refine ⟨(q : ℝ), hqt, ?_⟩
   intro p hp1 _
   have hqp : q < p := by exact_mod_cast hp1
@@ -112,6 +113,7 @@ theorem limitSetBelow_forward_G_rat_target (m : Rat → Set Formula)
     (s : ℝ) (p : Rat) (φ : Formula) (hsp : s < (p : ℝ))
     (hφ : Formula.allFuture φ ∈ limitSetBelow m s) :
     φ ∈ m p := by
+  rw [mem_limitSetBelow] at hφ
   obtain ⟨z, hz, hmem⟩ := hφ
   have hq : ∃ q : Rat, z < (q : ℝ) ∧ (q : ℝ) < s := exists_rat_btwn hz
   obtain ⟨q, hq1, hq2⟩ := hq
@@ -133,6 +135,7 @@ theorem limitSetBelow_forward_G_limit (m : Rat → Set Formula)
     (s t : ℝ) (φ : Formula) (hst : s < t)
     (hφ : Formula.allFuture φ ∈ limitSetBelow m s) :
     φ ∈ limitSetBelow m t := by
+  rw [mem_limitSetBelow] at hφ ⊢
   obtain ⟨z, hz, hmem⟩ := hφ
   have hq₀ : ∃ q : Rat, z < (q : ℝ) ∧ (q : ℝ) < s := exists_rat_btwn hz
   obtain ⟨q₀, hq₀1, hq₀2⟩ := hq₀
@@ -160,6 +163,7 @@ theorem limitSetBelow_backward_H_rat_source (m : Rat → Set Formula)
     (q : Rat) (t : ℝ) (φ : Formula) (htq : t ≤ (q : ℝ))
     (hφ : Formula.allPast φ ∈ m q) :
     φ ∈ limitSetBelow m t := by
+  rw [mem_limitSetBelow]
   refine ⟨t - 1, by linarith, ?_⟩
   intro p _ hp2
   have hpq : p < q := by
@@ -190,6 +194,7 @@ theorem limitSetBelow_backward_H_rat_target (m : Rat → Set Formula)
     (s : ℝ) (p : Rat) (φ : Formula) (hps : (p : ℝ) < s)
     (hφ : Formula.allPast φ ∈ limitSetBelow m s) :
     φ ∈ m p := by
+  rw [mem_limitSetBelow] at hφ
   obtain ⟨z, hz, hmem⟩ := hφ
   have hmax : max z (p : ℝ) < s := max_lt hz hps
   have hq : ∃ q : Rat, max z (p : ℝ) < (q : ℝ) ∧ (q : ℝ) < s := exists_rat_btwn hmax
@@ -213,6 +218,7 @@ theorem limitSetBelow_backward_H_limit (m : Rat → Set Formula)
     (s t : ℝ) (φ : Formula) (hts : t < s)
     (hφ : Formula.allPast φ ∈ limitSetBelow m s) :
     φ ∈ limitSetBelow m t := by
+  rw [mem_limitSetBelow] at hφ ⊢
   obtain ⟨z, hz, hmem⟩ := hφ
   have hmax : max z t < s := max_lt hz hts
   have hq₀ : ∃ q : Rat, max z t < (q : ℝ) ∧ (q : ℝ) < s := exists_rat_btwn hmax
@@ -282,7 +288,7 @@ theorem limitMCSBelow_forward_G_limit (m : Rat → Set Formula)
     φ ∈ limitMCSBelow m t := by
   obtain ⟨q₀, _, hq₀2, hq₀mem⟩ := limitMCSBelow_cofinal_below m s hφ (s - 1) (by linarith)
   have hq₀t : (q₀ : ℝ) < t := lt_trans hq₀2 hst
-  refine limitSetBelow_subset_limitMCSBelow m t ⟨(q₀ : ℝ), hq₀t, ?_⟩
+  refine limitSetBelow_subset_limitMCSBelow m t (mem_limitSetBelow.mpr ⟨(q₀ : ℝ), hq₀t, ?_⟩)
   intro p hp1 _
   have hq₀p : q₀ < p := by exact_mod_cast hp1
   exact hG q₀ p φ hq₀p hq₀mem
@@ -318,7 +324,7 @@ theorem limitMCSBelow_backward_H_limit (m : Rat → Set Formula)
     (hφ : Formula.allPast φ ∈ limitMCSBelow m s) :
     φ ∈ limitMCSBelow m t := by
   obtain ⟨q₀, hq₀1, _, hq₀mem⟩ := limitMCSBelow_cofinal_below m s hφ t hts
-  refine limitSetBelow_subset_limitMCSBelow m t ⟨t - 1, by linarith, ?_⟩
+  refine limitSetBelow_subset_limitMCSBelow m t (mem_limitSetBelow.mpr ⟨t - 1, by linarith, ?_⟩)
   intro p _ hp2
   have hpq₀ : p < q₀ := by
     have : (p : ℝ) < (q₀ : ℝ) := lt_trans hp2 hq₀1

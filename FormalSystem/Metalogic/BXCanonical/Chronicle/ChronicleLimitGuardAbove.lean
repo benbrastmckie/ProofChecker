@@ -116,6 +116,7 @@ theorem limitGuardAbove_of_priorU {fc : FrameClass} (hfc : FrameClass.Dedekind �
     (hev : ψ ∈ limitSetBelow m r) :
     ∃ c : Rat, r < (c : ℝ) ∧ ∀ q : Rat, r < (q : ℝ) → (q : ℝ) < (c : ℝ) → ψ ∈ m q := by
   -- The eventual-truth datum: a real threshold `z < r` below which `ψ` is uninterrupted.
+  rw [mem_limitSetBelow] at hev
   obtain ⟨z, hzr, hguard⟩ := hev
   -- A rational `x` strictly inside the guarded interval `(z, r)`.
   obtain ⟨x, hzx, hxr⟩ := exists_rat_btwn hzr

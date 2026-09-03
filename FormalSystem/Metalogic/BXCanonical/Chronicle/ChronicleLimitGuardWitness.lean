@@ -113,6 +113,7 @@ theorem limitGuardBelow_of_priorS {fc : FrameClass} (hfc : FrameClass.Dedekind �
     (c : Rat) (hc : r < (c : ℝ))
     (hguard : ∀ q : Rat, r < (q : ℝ) → (q : ℝ) < (c : ℝ) → ψ ∈ m q) :
     ψ ∈ limitSetBelow m r := by
+  rw [mem_limitSetBelow]
   -- A rational `t` strictly inside the guarded interval `(r, c)`.
   obtain ⟨t, hrt, htc⟩ := exists_rat_btwn hc
   -- `⊤` sits in every member of the family, so `⊤`-guards are free.

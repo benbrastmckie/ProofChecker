@@ -333,7 +333,7 @@ theorem limitGuardEventual_of_noGuardAccumulation {fc : FrameClass} (B : BFMCS (
     intro z hz
     by_contra hno
     push Not at hno
-    exact hψ ⟨z, hz, fun q h1 h2 => hno q h1 h2⟩
+    exact hψ (mem_limitSetBelow.mpr ⟨z, hz, fun q h1 h2 => hno q h1 h2⟩)
   set S : Set Rat := {q : Rat | (q : ℝ) < r ∧ Formula.neg ψ ∈ fam.mcs q} with hS
   have hlt : ∀ q ∈ S, (q : ℝ) < r := fun q hq => hq.1
   have hcof : ∀ z : ℝ, z < r → ∃ q ∈ S, z < (q : ℝ) := by

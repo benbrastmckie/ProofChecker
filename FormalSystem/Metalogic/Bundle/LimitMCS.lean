@@ -7,6 +7,8 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Metalogic.Bundle.FMCSDef
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Order.Filter.Ultrafilter.Basic
+import Mathlib.Topology.Order.LeftRightNhds
+import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
 # LimitMCS: the limit set of a rational MCS family at a real point
@@ -123,55 +125,84 @@ open FormalSystem.Syntax
 open FormalSystem.ProofSystem
 open FormalSystem.Metalogic.Core
 
+/-! ## The left-neighbourhood filter -/
+
+/--
+The **left-neighbourhood filter** of a real point `r` on the rationals: the pullback along
+`Rat.cast` of `ℝ`'s neighbourhood filter within `Set.Iio r`. A set of rationals is large
+exactly when it contains every rational in some interval `(z, r)` with `z < r` --
+`mem_limitFilterBelow` unfolds this from Mathlib's order-topology basis for
+`nhdsWithin r (Set.Iio r)`.
+-/
+def limitFilterBelow (r : ℝ) : Filter Rat :=
+  Filter.comap (Rat.cast : Rat → ℝ) (nhdsWithin r (Set.Iio r))
+
+/-- Membership in `limitFilterBelow`, unfolded to the interval-threshold shape. -/
+theorem mem_limitFilterBelow {r : ℝ} {S : Set Rat} :
+    S ∈ limitFilterBelow r ↔ ∃ z : ℝ, z < r ∧ ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → q ∈ S := by
+  have hbasis := (nhdsLT_basis_of_exists_lt (a := r) ⟨r - 1, by linarith⟩).comap
+    (Rat.cast : Rat → ℝ)
+  rw [limitFilterBelow, hbasis.mem_iff]
+  constructor
+  · rintro ⟨z, hz, hsub⟩
+    exact ⟨z, hz, fun q h1 h2 => hsub ⟨h1, h2⟩⟩
+  · rintro ⟨z, hz, h⟩
+    exact ⟨z, hz, fun q ⟨h1, h2⟩ => h q h1 h2⟩
+
+/--
+The left-neighbourhood filter is proper: every interval `(z, r)` with `z < r` contains a
+rational, by `exists_rat_btwn`.
+-/
+instance limitFilterBelow_neBot (r : ℝ) : (limitFilterBelow r).NeBot := by
+  rw [Filter.neBot_iff, Ne, ← Filter.empty_mem_iff_bot, mem_limitFilterBelow]
+  rintro ⟨z, hz, hmem⟩
+  obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hz
+  exact hmem q hq1 hq2
+
 /-! ## The limit sets -/
 
 /--
-The **limit set from below** of a rational family `m` at a real point `r`: the formulas that
-are eventually in `m q` as the rational `q` increases to `r`.
-
-"Eventually" is witnessed by a real threshold `z < r`: every rational strictly between `z` and
-`r` already carries the formula.
+The **limit set from below** of a rational family `m` at a real point `r`: the `A`s that are
+eventually in `m q` for `limitFilterBelow r` -- i.e. `A ∈ m q` for every rational `q`
+sufficiently close to `r` from below.
 -/
 def limitSetBelow (m : Rat → Set Formula) (r : ℝ) : Set Formula :=
-  {A | ∃ z : ℝ, z < r ∧ ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → A ∈ m q}
+  {A | ∀ᶠ q in limitFilterBelow r, A ∈ m q}
+
+/--
+Membership in `limitSetBelow`, unfolded to the interval-threshold shape via
+`mem_limitFilterBelow`. **The one unfolding lemma** every downstream file uses -- `limitSetBelow`
+itself is no longer unfolded directly outside this module.
+-/
+theorem mem_limitSetBelow {m : Rat → Set Formula} {r : ℝ} {A : Formula} :
+    A ∈ limitSetBelow m r ↔ ∃ z : ℝ, z < r ∧ ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → A ∈ m q :=
+  mem_limitFilterBelow
 
 /--
 The **limit set from above** of a rational family `m` at a real point `r`: the past-side dual
 of `limitSetBelow`, with the witness threshold `z` now above `r`.
+
+Deliberately left in its pre-`Filter` hand-rolled form in this phase: `TemporalSide`
+(Phase 8) is what turns this into the second instantiation of a single parameterized
+`limitSet`/`limitFilter` family, at which point `limitFilterAbove` becomes the genuine dual of
+`limitFilterBelow` above. Introducing a throwaway private "above" filter here just to route
+`limitSetAbove_consistent` through `Filter.inter_mem` would duplicate that work early for no
+lasting benefit.
 -/
 def limitSetAbove (m : Rat → Set Formula) (r : ℝ) : Set Formula :=
   {A | ∃ z : ℝ, r < z ∧ ∀ q : Rat, (q : ℝ) < z → r < (q : ℝ) → A ∈ m q}
 
-/-! ## Directedness of the witness intervals -/
+/-! ## Directedness of the witness intervals (above side only)
 
-/--
-The witness intervals of `limitSetBelow` are **directed**: any finite list of members of
-`limitSetBelow m r` shares a single threshold `z < r` that works for all of them
-simultaneously.
-
-Proved by list induction, taking the maximum of the two thresholds at each cons step. The
-empty list is witnessed by `r - 1`.
+The below-side directedness argument (`limitSetBelow_mono_directed` /
+`limitSetBelow_finite_subset_mem`) is retired in favour of the `Filter` route above
+(`Filter.inter_mem` + `Filter.NeBot.nonempty_of_mem`, used directly in
+`limitSetBelow_consistent`). The above-side pair stays -- see the `limitSetAbove` docstring.
 -/
-theorem limitSetBelow_mono_directed (m : Rat → Set Formula) (r : ℝ) (L : List Formula)
-    (hL : ∀ A ∈ L, A ∈ limitSetBelow m r) :
-    ∃ z : ℝ, z < r ∧ ∀ A ∈ L, ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → A ∈ m q := by
-  induction L with
-  | nil =>
-    refine ⟨r - 1, by linarith, ?_⟩
-    intro A hA
-    exact absurd hA (List.not_mem_nil)
-  | cons A L ih =>
-    obtain ⟨zA, hzA, hAmem⟩ := hL A (by simp)
-    obtain ⟨zL, hzL, hLmem⟩ := ih (fun B hB => hL B (List.mem_cons_of_mem _ hB))
-    refine ⟨max zA zL, max_lt hzA hzL, ?_⟩
-    intro B hB q hq1 hq2
-    rcases List.mem_cons.mp hB with rfl | hB'
-    · exact hAmem q (lt_of_le_of_lt (le_max_left _ _) hq1) hq2
-    · exact hLmem B hB' q (lt_of_le_of_lt (le_max_right _ _) hq1) hq2
 
 /--
-The witness intervals of `limitSetAbove` are directed. Dual of `limitSetBelow_mono_directed`,
-with `min` in place of `max` and `r + 1` witnessing the empty list.
+The witness intervals of `limitSetAbove` are directed. Dual of the below-side argument that used
+to stand here, with `min` in place of `max` and `r + 1` witnessing the empty list.
 -/
 theorem limitSetAbove_mono_directed (m : Rat → Set Formula) (r : ℝ) (L : List Formula)
     (hL : ∀ A ∈ L, A ∈ limitSetAbove m r) :
@@ -190,23 +221,7 @@ theorem limitSetAbove_mono_directed (m : Rat → Set Formula) (r : ℝ) (L : Lis
     · exact hAmem q (lt_of_lt_of_le hq1 (min_le_left _ _)) hq2
     · exact hLmem B hB' q (lt_of_lt_of_le hq1 (min_le_right _ _)) hq2
 
-/-! ## Consistency of the limit sets -/
-
-/--
-Every finite list drawn from `limitSetBelow m r` is contained in a **single** `m q`.
-
-This is the content that makes the limit set consistent: directedness supplies one threshold
-`z < r`, and the density of `ℚ` in `ℝ` (`exists_rat_btwn`) supplies a rational strictly between
-`z` and `r`.
--/
-theorem limitSetBelow_finite_subset_mem (m : Rat → Set Formula) (r : ℝ) (L : List Formula)
-    (hL : ∀ A ∈ L, A ∈ limitSetBelow m r) :
-    ∃ q : Rat, ∀ A ∈ L, A ∈ m q := by
-  obtain ⟨z, hz, hzL⟩ := limitSetBelow_mono_directed m r L hL
-  obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hz
-  exact ⟨q, fun A hA => hzL A hA q hq1 hq2⟩
-
-/-- Dual of `limitSetBelow_finite_subset_mem` for the past side. -/
+/-- Dual of the below-side finite-subset argument, for the past side. -/
 theorem limitSetAbove_finite_subset_mem (m : Rat → Set Formula) (r : ℝ) (L : List Formula)
     (hL : ∀ A ∈ L, A ∈ limitSetAbove m r) :
     ∃ q : Rat, ∀ A ∈ L, A ∈ m q := by
@@ -214,21 +229,45 @@ theorem limitSetAbove_finite_subset_mem (m : Rat → Set Formula) (r : ℝ) (L :
   obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hz
   exact ⟨q, fun A hA => hzL A hA q hq2 hq1⟩
 
+/-! ## Consistency of the limit sets -/
+
 /--
 **The limit set from below is consistent.**
 
-`SetConsistent` (`Core/MaximalConsistent.lean`) is a property of finite subsets, and every
-finite subset of `limitSetBelow m r` sits inside a single `m q`, which is consistent by
-hypothesis.
+`SetConsistent` (`Core/MaximalConsistent.lean`) is a property of finite subsets. Every finite
+list drawn from `limitSetBelow m r` gives a finite intersection of `limitFilterBelow r`-large
+sets, which is itself large (`Filter.inter_mem`, by induction on the list) and hence nonempty
+(`Filter.nonempty_of_mem`, via the `NeBot` instance) -- so some `q` realises the whole list, and
+`m q`'s own consistency finishes it.
 -/
 theorem limitSetBelow_consistent {fc : FrameClass} (m : Rat → Set Formula)
     (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q)) (r : ℝ) :
     SetConsistent (fc := fc) (limitSetBelow m r) := by
   intro L hL
-  obtain ⟨q, hq⟩ := limitSetBelow_finite_subset_mem m r L hL
+  have key : ∀ L : List Formula, (∀ A ∈ L, A ∈ limitSetBelow m r) →
+      {q : Rat | ∀ A ∈ L, A ∈ m q} ∈ limitFilterBelow r := by
+    intro L
+    induction L with
+    | nil =>
+      intro _
+      have huniv : {q : Rat | ∀ A ∈ ([] : List Formula), A ∈ m q} = Set.univ := by
+        ext q; simp
+      rw [huniv]
+      exact Filter.univ_mem
+    | cons A L ih =>
+      intro hL'
+      have hA : {q : Rat | A ∈ m q} ∈ limitFilterBelow r := hL' A (by simp)
+      have hrest := ih (fun B hB => hL' B (List.mem_cons_of_mem _ hB))
+      refine Filter.mem_of_superset (Filter.inter_mem hA hrest) ?_
+      rintro q ⟨hq1, hq2⟩ B hB
+      rcases List.mem_cons.mp hB with rfl | hB'
+      · exact hq1
+      · exact hq2 B hB'
+  obtain ⟨q, hq⟩ := Filter.nonempty_of_mem (key L hL)
   exact (hm q).1 L hq
 
-/-- **The limit set from above is consistent.** Dual of `limitSetBelow_consistent`. -/
+/-- **The limit set from above is consistent.** Dual of `limitSetBelow_consistent`, on the
+hand-rolled route (see the `limitSetAbove` docstring for why). -/
 theorem limitSetAbove_consistent {fc : FrameClass} (m : Rat → Set Formula)
     (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q)) (r : ℝ) :
     SetConsistent (fc := fc) (limitSetAbove m r) := by
@@ -255,6 +294,7 @@ theorem limitSetBelow_of_rat (m : Rat → Set Formula)
     (hH : ∀ (s t : Rat) (φ : Formula), t < s → Formula.allPast φ ∈ m s → φ ∈ m t)
     (q : Rat) (A : Formula) (hA : Formula.allPast A ∈ m q) :
     A ∈ limitSetBelow m (q : ℝ) := by
+  rw [mem_limitSetBelow]
   refine ⟨(q : ℝ) - 1, by linarith, ?_⟩
   intro p _ hp2
   exact hH q p A (by exact_mod_cast hp2) hA
@@ -301,43 +341,9 @@ theorem limitMCSLindenbaum_is_mcs {fc : FrameClass} (m : Rat → Set Formula)
 
 The extension consumers should use. Its members are exactly the formulas whose membership set
 `{q | A ∈ m q}` is "large" for a fixed ultrafilter refining the left-neighbourhood filter of
-`r`, so maximality is immediate from the ultrafilter dichotomy while every member remains
-realised at rationals arbitrarily close below `r`.
+`r` (`limitFilterBelow`, defined above), so maximality is immediate from the ultrafilter
+dichotomy while every member remains realised at rationals arbitrarily close below `r`.
 -/
-
-/--
-The **left-neighbourhood filter** of a real point `r` on the rationals: a set of rationals is
-large when it contains every rational in some interval `(z, r)` with `z < r`.
-
-The filter axioms are the same directedness argument as `limitSetBelow_mono_directed`, taking
-the maximum of two thresholds for intersections.
--/
-def limitFilterBelow (r : ℝ) : Filter Rat where
-  sets := {S | ∃ z : ℝ, z < r ∧ ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → q ∈ S}
-  univ_sets := ⟨r - 1, by linarith, fun _ _ _ => Set.mem_univ _⟩
-  sets_of_superset := by
-    rintro S T ⟨z, hz, hS⟩ hST
-    exact ⟨z, hz, fun q h1 h2 => hST (hS q h1 h2)⟩
-  inter_sets := by
-    rintro S T ⟨zS, hzS, hSm⟩ ⟨zT, hzT, hTm⟩
-    exact ⟨max zS zT, max_lt hzS hzT, fun q h1 h2 =>
-      ⟨hSm q (lt_of_le_of_lt (le_max_left _ _) h1) h2,
-        hTm q (lt_of_le_of_lt (le_max_right _ _) h1) h2⟩⟩
-
-/-- Membership in `limitFilterBelow` unfolded. -/
-theorem mem_limitFilterBelow {r : ℝ} {S : Set Rat} :
-    S ∈ limitFilterBelow r ↔ ∃ z : ℝ, z < r ∧ ∀ q : Rat, z < (q : ℝ) → (q : ℝ) < r → q ∈ S :=
-  Iff.rfl
-
-/--
-The left-neighbourhood filter is proper: every interval `(z, r)` with `z < r` contains a
-rational, by `exists_rat_btwn`.
--/
-instance limitFilterBelow_neBot (r : ℝ) : (limitFilterBelow r).NeBot := by
-  rw [Filter.neBot_iff, Ne, ← Filter.empty_mem_iff_bot]
-  rintro ⟨z, hz, hmem⟩
-  obtain ⟨q, hq1, hq2⟩ := exists_rat_btwn hz
-  exact hmem q hq1 hq2
 
 /-- A fixed ultrafilter refining the left-neighbourhood filter of `r`. -/
 noncomputable def limitUltrafilterBelow (r : ℝ) : Ultrafilter Rat :=
@@ -364,8 +370,10 @@ below" formula has a membership set that is already large for the left-neighbour
 -/
 theorem limitSetBelow_subset_limitMCSBelow (m : Rat → Set Formula) (r : ℝ) :
     limitSetBelow m r ⊆ limitMCSBelow m r := by
-  rintro A ⟨z, hz, hA⟩
-  exact limitFilterBelow_le r ⟨z, hz, fun q h1 h2 => hA q h1 h2⟩
+  intro A hA
+  rw [mem_limitSetBelow] at hA
+  obtain ⟨z, hz, hA⟩ := hA
+  exact limitFilterBelow_le r (mem_limitFilterBelow.mpr ⟨z, hz, fun q h1 h2 => hA q h1 h2⟩)
 
 /--
 **The descent handle.** Every member of the ultrafilter limit at `r` is realised at rationals
@@ -379,7 +387,7 @@ theorem limitMCSBelow_cofinal_below (m : Rat → Set Formula) (r : ℝ) {A : For
     (hA : A ∈ limitMCSBelow m r) (z : ℝ) (hz : z < r) :
     ∃ q : Rat, z < (q : ℝ) ∧ (q : ℝ) < r ∧ A ∈ m q := by
   have hbasis : {q : Rat | z < (q : ℝ) ∧ (q : ℝ) < r} ∈ (limitUltrafilterBelow r : Filter Rat) :=
-    limitFilterBelow_le r ⟨z, hz, fun q h1 h2 => ⟨h1, h2⟩⟩
+    limitFilterBelow_le r (mem_limitFilterBelow.mpr ⟨z, hz, fun q h1 h2 => ⟨h1, h2⟩⟩)
   obtain ⟨q, hq⟩ := Filter.nonempty_of_mem (Filter.inter_mem hA hbasis)
   exact ⟨q, hq.2.1, hq.2.2, hq.1⟩
 

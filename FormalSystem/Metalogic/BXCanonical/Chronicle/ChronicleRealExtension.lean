@@ -328,7 +328,7 @@ theorem guard_transport_realLimitMCS (m : Rat → Set Formula) (δ a b : ℝ) (�
     rw [realLimitMCS_of_rat m δ r p hp]
     exact hguard p (by rw [hp]; exact hra) (by rw [hp]; exact hrb)
   · rw [realLimitMCS_of_not_rat m δ r hx]
-    refine limitSetBelow_subset_limitMCSBelow m (r + δ) ⟨a, hra, ?_⟩
+    refine limitSetBelow_subset_limitMCSBelow m (r + δ) (mem_limitSetBelow.mpr ⟨a, hra, ?_⟩)
     intro q h1 h2
     exact hguard q h1 (by linarith)
 
@@ -528,9 +528,9 @@ theorem toRealBundle_backward_until_unselected {fc : FrameClass} (B : BFMCS (fc 
     intro q h1 h2
     have hr := hguard ((q : ℝ) - δ) (by linarith) (by linarith)
     rwa [realLimitMCS_of_rat fam.mcs δ ((q : ℝ) - δ) q (by ring)] at hr
-  obtain ⟨a, ha, hA⟩ := h_lgb fam hfam (t + δ) hx ψ u hu1 hrg
+  obtain ⟨a, ha, hA⟩ := mem_limitSetBelow.mp (h_lgb fam hfam (t + δ) hx ψ u hu1 hrg)
   rw [realLimitMCS_of_not_rat fam.mcs δ t hx]
-  refine limitSetBelow_subset_limitMCSBelow fam.mcs (t + δ) ⟨a, ha, ?_⟩
+  refine limitSetBelow_subset_limitMCSBelow fam.mcs (t + δ) (mem_limitSetBelow.mpr ⟨a, ha, ?_⟩)
   intro q h1 h2
   have hqu : (q : ℝ) < (u : ℝ) := by linarith
   refine (h_rbuc fam hfam).1 q φ ψ hsub ⟨u, by exact_mod_cast hqu, hφu, ?_⟩
@@ -588,8 +588,8 @@ theorem exists_rat_since_witness_below_of_limitGuardBelow {fc : FrameClass}
     intro q h1 h2
     exact hrg q (by rw [← hw]; exact h1) h2
   · obtain ⟨c, hc1, hc2⟩ := exists_rat_btwn (show s + δ < t + δ by linarith)
-    obtain ⟨a, ha, hA⟩ :=
-      h_lgb fam hfam (s + δ) hy ψ c hc1 (fun q h1 h2 => hrg q h1 (by linarith))
+    obtain ⟨a, ha, hA⟩ := mem_limitSetBelow.mp
+      (h_lgb fam hfam (s + δ) hy ψ c hc1 (fun q h1 h2 => hrg q h1 (by linarith)))
     rw [realLimitMCS_of_not_rat fam.mcs δ s hy] at hφ
     obtain ⟨u, hu1, hu2, hφu⟩ := limitMCSBelow_cofinal_below fam.mcs (s + δ) hφ a ha
     refine ⟨u, by linarith, hφu, ?_⟩
@@ -647,7 +647,8 @@ theorem toRealBundle_backward_since_unselected {fc : FrameClass} (B : BFMCS (fc 
   obtain ⟨u, hut, hφu, hg⟩ :=
     exists_rat_since_witness_below_of_limitGuardBelow B h_lgb fam hfam δ t s φ ψ hst hφ hguard
   rw [realLimitMCS_of_not_rat fam.mcs δ t hx]
-  refine limitSetBelow_subset_limitMCSBelow fam.mcs (t + δ) ⟨(u : ℝ), hut, ?_⟩
+  refine limitSetBelow_subset_limitMCSBelow fam.mcs (t + δ)
+    (mem_limitSetBelow.mpr ⟨(u : ℝ), hut, ?_⟩)
   intro q h1 h2
   refine (h_rbuc fam hfam).2 q φ ψ hsub ⟨u, by exact_mod_cast h1, hφu, ?_⟩
   intro w hw1 hw2
@@ -808,6 +809,7 @@ theorem limitSetBelow_someFuture_of_cofinal (m : Rat → Set Formula) (T : ℝ) 
     (htop : ∀ q : Rat, Formula.top ∈ m q)
     (hcof : ∀ z : ℝ, z < T → ∃ w : Rat, z < (w : ℝ) ∧ (w : ℝ) < T ∧ φ ∈ m w) :
     Formula.someFuture φ ∈ limitSetBelow m T := by
+  rw [mem_limitSetBelow]
   refine ⟨T - 1, by linarith, ?_⟩
   intro q _ hqT
   obtain ⟨w, hqw, hwT, hφ⟩ := hcof (q : ℝ) hqT
@@ -987,9 +989,9 @@ theorem boundedWitness_of_limitGuardBelow {fc : FrameClass} (hfc : FrameClass.De
     rcases SetMaximalConsistent.negation_complete (hm q) φ with h | h
     · exact absurd h (hcon q h1 h2)
     · exact h
-  obtain ⟨z, hz, hall⟩ :=
-    FormalSystem.Metalogic.BXCanonical.Chronicle.limitGuardBelow_of_priorS hfc m hm hSf hSb r hr
-      φ.neg c hc hguard
+  obtain ⟨z, hz, hall⟩ := mem_limitSetBelow.mp
+    (FormalSystem.Metalogic.BXCanonical.Chronicle.limitGuardBelow_of_priorS hfc m hm hSf hSb r hr
+      φ.neg c hc hguard)
   obtain ⟨w, hzw, hwr, hphi⟩ := hcof z hz
   exact SetMaximalConsistent.neg_excludes (hm w) φ (hall w hzw hwr) hphi
 
@@ -1084,7 +1086,7 @@ theorem toRealBundle_forward_since_unselected {fc : FrameClass}
     ∃ s : ℝ, s < t ∧ φ ∈ realLimitMCS fam.mcs δ s ∧
       ∀ r : ℝ, s < r → r < t → ψ ∈ realLimitMCS fam.mcs δ r := by
   rw [realLimitMCS_of_not_rat fam.mcs δ t hx] at hS
-  obtain ⟨z, hzT, hzguard⟩ := h_lge fam hfam (t + δ) hx φ ψ (Or.inr hS)
+  obtain ⟨z, hzT, hzguard⟩ := mem_limitSetBelow.mp (h_lge fam hfam (t + δ) hx φ ψ (Or.inr hS))
   obtain ⟨p, hzp, hpT, hSp⟩ := limitMCSBelow_cofinal_below fam.mcs (t + δ) hS z hzT
   obtain ⟨s', hs'p, hφ, hguard⟩ := (h_rfuc fam hfam).2 p φ ψ hsub hSp
   have hs'pR : (s' : ℝ) < (p : ℝ) := by exact_mod_cast hs'p
