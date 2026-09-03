@@ -37,11 +37,18 @@ noncomputable example (p q : Formula) : ⊢ ((p.imp q).imp p).imp p := by propDe
 /-- Reductio-ad-absurdum skeleton: `A → (¬A → B)`. -/
 noncomputable example (A B : Formula) : ⊢ A.imp (A.neg.imp B) := by propDecide
 
-/-- De Morgan-style: `¬(A ∧ B) → (¬A ∨ ¬B)` unfolded to imp/bot skeleton via `and`/`or`/`neg`
-definitional unfolding is out of scope for the pure imp/bot reflection skeleton (`and`/`or`
-are themselves defined via `imp`/`neg`, so this reduces to an imp/bot tautology once
-unfolded). Test the already-imp/bot-unfolded contrapositive-flavoured tautology instead. -/
+/-- Contrapositive-flavoured tautology, already in imp/bot form: `(¬A → ¬B) → (B → A)`. -/
 noncomputable example (A B : Formula) : ⊢ (A.neg.imp B.neg).imp (B.imp A) := by propDecide
+
+/-- De Morgan: `¬(A ∧ B) → (¬A ∨ ¬B)`. `and`/`or`/`neg`-shaped goals are in scope:
+`PropDecide.reify` calls `whnf` on every subterm, which unfolds `Formula.and`/`Formula.or`/
+`Formula.neg` into the `imp`/`bot` skeleton automatically, so no manual unfolding is needed. -/
+noncomputable example (A B : Formula) : ⊢ (A.and B).neg.imp (A.neg.or B.neg) := by propDecide
+
+/-- Distributivity, in the shape `BooleanStructure.le_sup_inf_quot` discharges:
+`((A ∨ B) ∧ (A ∨ C)) → (A ∨ (B ∧ C))`. -/
+noncomputable example (A B C : Formula) :
+    ⊢ ((A.or B).and (A.or C)).imp (A.or (B.and C)) := by propDecide
 
 /-- Modal K axiom's propositional skeleton, with `□A`/`□B` as opaque reified variables —
 demonstrates the schematic-`env` reflection argument closing goals that a bare truth-table
