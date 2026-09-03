@@ -557,25 +557,21 @@ The key lemma relating list derivation to the quotient algebra ordering.
 -/
 
 /--
-If L derives ψ, then the meet of quotients of L is ≤ [ψ].
+If L derives ψ, then the meet (`Multiset.inf`) of the quotients of L is ≤ [ψ].
 
 This is the key lemma for showing that ultrafilterToSet is consistent:
-from `L ⊢ ⊥` we get `fold L ≤ ⊥`, so if `fold L ∈ U`, then `⊥ ∈ U` by upward closure.
+from `L ⊢ ⊥` we get `inf L ≤ ⊥`, so if `inf L ∈ U`, then `⊥ ∈ U` by upward closure.
 -/
 theorem fold_le_of_derives (L : List Formula) (ψ : Formula)
     (h : DerivationTree FrameClass.Base L ψ) :
-    List.foldl (fun acc φ => acc ⊓ toQuot φ) ⊤ L ≤ toQuot ψ := by
+    ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ≤ toQuot ψ := by
   induction L generalizing ψ with
   | nil =>
     -- [] ⊢ ψ means ⊢ ψ (a theorem), so ⊤ ≤ [ψ]
-    -- Need to show: ⊤ ≤ toQuot ψ
     -- ⊤ = toQuot (⊥ → ⊥), so need ⊢ (⊥ → ⊥) → ψ
-    simp only [List.foldl_nil]
-    -- Since h : [] ⊢ ψ, we have ⊢ ψ
-    -- From ⊢ ψ, derive ⊢ ⊤ → ψ (where ⊤ = ⊥ → ⊥)
+    simp only [List.map_nil, Multiset.coe_nil, Multiset.inf_zero]
     change topQuot ≤ toQuot ψ
     unfold topQuot
-    -- Need to show: [⊥ → ⊥] ≤ [ψ], i.e., ⊢ (⊥ → ⊥) → ψ
     change Derives (Formula.bot.imp Formula.bot) ψ
     unfold Derives
     -- From h : [] ⊢ ψ, we get ⊢ ψ. Then ⊢ T → ψ by prop_s.
@@ -583,43 +579,17 @@ theorem fold_le_of_derives (L : List Formula) (ψ : Formula)
       DerivationTree.axiom [] _ (Axiom.prop_s ψ (Formula.bot.imp Formula.bot)) trivial
     exact ⟨DerivationTree.modus_ponens [] _ _ d_s h⟩
   | cons φ L' ih =>
-    -- (φ :: L') ⊢ ψ, need to show: ⊤ ⊓ [φ] ⊓ fold(L') ≤ [ψ]
+    -- (φ :: L') ⊢ ψ, need to show: [φ] ⊓ inf(L') ≤ [ψ]
     -- Use deduction theorem: L' ⊢ φ → ψ
-    -- By IH: fold(L') ≤ [φ → ψ]
-    -- Then: ⊤ ⊓ [φ] ⊓ fold(L') ≤ [φ] ⊓ [φ → ψ] ≤ [ψ]
-    simp only [List.foldl_cons]
+    -- By IH: inf(L') ≤ [φ → ψ]
+    -- Then: [φ] ⊓ inf(L') ≤ [φ] ⊓ [φ → ψ] ≤ [ψ]
+    simp only [List.map_cons, ← Multiset.cons_coe, Multiset.inf_cons]
     -- Apply deduction theorem to get L' ⊢ φ → ψ
     have d_imp : DerivationTree FrameClass.Base L' (φ.imp ψ) :=
       FormalSystem.Metalogic.Core.deductionTheorem L' φ ψ h
-    -- By IH: fold(L') ≤ [φ → ψ]
-    have ih_applied : List.foldl (fun acc χ => acc ⊓ toQuot χ) ⊤ L' ≤ toQuot (φ.imp ψ) :=
-      ih (φ.imp ψ) d_imp
-    -- We have: List.foldl ... (⊤ ⊓ toQuot φ) L' ≤ [ψ]
-    -- The left side is fold(L') starting from ⊤ ⊓ [φ]
-    -- We need to relate fold from (⊤ ⊓ [φ]) with fold from ⊤
-
-    -- Lemma: fold from x = x ⊓ (fold from ⊤)
-    have fold_from_x : ∀ (M : List Formula) (x : LindenbaumAlg),
-        List.foldl (fun acc χ => acc ⊓ toQuot χ) x M =
-        x ⊓ List.foldl (fun acc χ => acc ⊓ toQuot χ) ⊤ M := by
-      intro M
-      induction M with
-      | nil => intro x; simp
-      | cons m M' ih_M =>
-        intro x
-        simp only [List.foldl_cons]
-        rw [ih_M (x ⊓ toQuot m), ih_M (⊤ ⊓ toQuot m)]
-        simp only [top_inf_eq]
-        -- Need: x ⊓ (toQuot m ⊓ fold(M')) = x ⊓ toQuot m ⊓ fold(M')
-        -- This is associativity
-        rw [← inf_assoc]
-    rw [fold_from_x L' (⊤ ⊓ toQuot φ)]
-    simp only [top_inf_eq]
-    -- Now we have: [φ] ⊓ fold(L') ≤ [ψ]
-    -- We know fold(L') ≤ [φ → ψ]
-    -- And [φ] ⊓ [φ → ψ] ≤ [ψ] (modus ponens in the algebra)
-    -- So [φ] ⊓ fold(L') ≤ [φ] ⊓ [φ → ψ] ≤ [ψ]
-
+    -- By IH: inf(L') ≤ [φ → ψ]
+    have ih_applied : ((L'.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ≤
+        toQuot (φ.imp ψ) := ih (φ.imp ψ) d_imp
     -- First show: [φ] ⊓ [φ → ψ] ≤ [ψ]
     have mp_le : toQuot φ ⊓ toQuot (φ.imp ψ) ≤ toQuot ψ := by
       -- [φ ∧ (φ → ψ)] ≤ [ψ] means ⊢ (φ ∧ (φ → ψ)) → ψ
@@ -649,8 +619,8 @@ theorem fold_le_of_derives (L : List Formula) (ψ : Formula)
           · exact h_conj
         exact DerivationTree.modus_ponens [φ.and (φ.imp ψ)] φ ψ h_imp h_φ
       exact ⟨FormalSystem.Metalogic.Core.deductionTheorem [] (φ.and (φ.imp ψ)) ψ h_ctx⟩
-    -- Now use monotonicity: [φ] ⊓ fold(L') ≤ [φ] ⊓ [φ → ψ] ≤ [ψ]
-    calc toQuot φ ⊓ List.foldl (fun acc χ => acc ⊓ toQuot χ) ⊤ L'
+    -- Now use monotonicity: [φ] ⊓ inf(L') ≤ [φ] ⊓ [φ → ψ] ≤ [ψ]
+    calc toQuot φ ⊓ ((L'.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf
         ≤ toQuot φ ⊓ toQuot (φ.imp ψ) := inf_le_inf_left (toQuot φ) ih_applied
       _ ≤ toQuot ψ := mp_le
 
@@ -683,38 +653,24 @@ theorem ultrafilterToSet_mcs (U : Ultrafilter LindenbaumAlg) :
 
     -- Helper: the meet of quotients of list elements is in U
     have h_meet_in_U : ∀ M : List Formula, (∀ ψ ∈ M, toQuot ψ ∈ U.carrier) →
-        List.foldl (fun acc φ => acc ⊓ toQuot φ) ⊤ M ∈ U.carrier := by
+        ((M.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U.carrier := by
       intro M
       induction M with
       | nil =>
         intro _
+        simp only [List.map_nil, Multiset.coe_nil, Multiset.inf_zero]
         exact U.top_mem
       | cons ψ M ih =>
         intro hM
-        have h_ψ : toQuot ψ ∈ U.carrier := hM ψ (by simp)
-        have h_rest : ∀ φ ∈ M, toQuot φ ∈ U.carrier := fun φ hφ => hM φ (by simp [hφ])
-        -- fold (ψ :: M) from ⊤ = fold M from (⊤ ⊓ [ψ])
-        simp only [List.foldl_cons]
-        -- Prove by inner induction: fold from any x ∈ U stays in U if all quotients in U
-        have h_fold_preserves : ∀ N : List Formula, (∀ φ ∈ N, toQuot φ ∈ U.carrier) →
-            ∀ x : LindenbaumAlg, x ∈ U.carrier →
-            List.foldl (fun acc φ => acc ⊓ toQuot φ) x N ∈ U.carrier := by
-          intro N
-          induction N with
-          | nil => intro _ x hx; simp only [List.foldl_nil]; exact hx
-          | cons m N ih_N =>
-            intro hN x hx
-            simp only [List.foldl_cons]
-            apply ih_N (fun φ hφ => hN φ (by simp [hφ]))
-            apply U.inf_mem hx (hN m (by simp))
-        apply h_fold_preserves M h_rest
-        apply U.inf_mem U.top_mem h_ψ
+        simp only [List.map_cons, ← Multiset.cons_coe, Multiset.inf_cons]
+        exact U.inf_mem (hM ψ (by simp)) (ih (fun φ hφ => hM φ (by simp [hφ])))
     -- Now use this to show ⊥ ∈ U
     have h_all_in_U : ∀ ψ ∈ L, toQuot ψ ∈ U.carrier := hL
-    have h_meet : List.foldl (fun acc φ => acc ⊓ toQuot φ) ⊤ L ∈ U.carrier := h_meet_in_U L
-        h_all_in_U
-    -- From L ⊢ ⊥ and fold_le_of_derives, we get fold L ≤ [⊥] = ⊥
-    have h_le_bot : List.foldl (fun acc φ => acc ⊓ toQuot φ) ⊤ L ≤ toQuot Formula.bot :=
+    have h_meet : ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U.carrier :=
+      h_meet_in_U L h_all_in_U
+    -- From L ⊢ ⊥ and fold_le_of_derives, we get inf L ≤ [⊥] = ⊥
+    have h_le_bot : ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ≤
+        toQuot Formula.bot :=
       fold_le_of_derives L Formula.bot d_bot
     -- Since fold L ∈ U and fold L ≤ ⊥, by upward closure ⊥ ∈ U
     -- Note: toQuot Formula.bot = ⊥ in the BooleanAlgebra
