@@ -216,16 +216,10 @@ theorem bot_le_quot (a : LindenbaumAlg) : ⊥ ≤ a := by
 `a ≤ ⊤`: top is greatest element.
 -/
 theorem le_top_quot (a : LindenbaumAlg) : a ≤ ⊤ := by
-  induction a using Quotient.ind
-  rename_i φ
+  induction a using Quotient.ind with | _ φ =>
   change Derives φ (Formula.bot.imp Formula.bot)
-  -- ⊢ φ → (⊥ → ⊥)
-  -- Derivable: from identity and weakening
-  have d_id : ⊢ (Formula.bot.imp Formula.bot) :=
-    FormalSystem.Theorems.Combinators.identity Formula.bot
-  have d_s : ⊢ ((Formula.bot.imp Formula.bot).imp (φ.imp (Formula.bot.imp Formula.bot))) :=
-    DerivationTree.axiom [] _ (Axiom.prop_s (Formula.bot.imp Formula.bot) φ) trivial
-  exact ⟨DerivationTree.modus_ponens [] _ _ d_s d_id⟩
+  unfold Derives
+  propDecide
 
 /--
 Stronger form of distributivity: `(a ⊔ b) ⊓ (a ⊔ c) ≤ a ⊔ (b ⊓ c)`.
