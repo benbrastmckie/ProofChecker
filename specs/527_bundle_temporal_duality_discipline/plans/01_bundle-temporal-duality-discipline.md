@@ -772,7 +772,25 @@ possible. Any declaration found live stays and gets a `#### Reasoned Exclusions`
 
 ---
 
-### Phase 9: `FMCS`/`BFMCS` parameter reorder [NOT STARTED]
+### Phase 9: `FMCS`/`BFMCS` parameter reorder [COMPLETED WITH EXCLUSIONS]
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| No source-text reorder of `structure FMCS`/`structure BFMCS` | The elaborated signature is **already** `(D : Type) [Preorder D] (fc : FrameClass := FrameClass.Base)` -- the phase's own goal -- because `variable (D : Type) [Preorder D]` precedes both structure declarations and Lean's auto-bound-variable mechanism already inserts them ahead of the explicit `fc` parameter written in the `structure ... where` line. There is nothing to visibly reorder in the source text; the target order was already true before this phase started. | `lean_hover_info` on `FMCS` (`FMCSDef.lean:104`) and `BFMCS` (`BFMCS.lean:91`) reports the elaborated type as `(D : Type) [Preorder D] (fc : FrameClass := FrameClass.Base) : Type` for both, matching the phase's verification bullet verbatim. |
+| Bounded, optional call-site simplification (`TemporalCoherence.lean`, `RealExtensionBundle.lean`) skipped | Explicitly framed as optional in the plan ("Optionally, and bounded to...") and delivers no structural value -- pure cosmetic shortening of `FMCS (fc := fc) D` to `FMCS D` at sites where `fc` is already the default. Skipped to conserve effort for Phase 10's mandatory final accounting. | N/A -- a deliberate skip of explicitly-optional scope, not a correction of a mistaken plan assumption. |
+
+**What was verified**: 117 `FMCS (fc := ...)` / `BFMCS (fc := ...)` call sites remain repository-wide
+(down from the plan-time estimate of 127, due to Phases 2-3's deletions) -- **all still elaborate**,
+confirmed by a full project build plus the full `Tests/BimodalTest/` suite, both green, with **zero
+source changes made this phase**. Measured line delta: **zero**, exactly as Established Fact 5
+anticipated.
+
+**Verification performed**: `lake build` green (full project + `BimodalTest`, 2573/2573 jobs) --
+`full` tier, as required since `FMCS`/`BFMCS` are core types touched by every file in the
+canonical stack. No `check-module-invariants.sh` re-run was needed (no `.lean` file changed;
+Phase 8's ALL CHECKS PASSED result still holds).
 
 **Goal**: Both structures declare `(D) [Preorder D] (fc := .Base)`.
 
