@@ -84,12 +84,12 @@ next_project_number: 538
 
 ### Metalogic
 
-528 [PLANNED] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
+528 [IMPLEMENTING] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
 529 [NOT STARTED] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
-535 [RESEARCHING] — RESEARCH TASK -- report and probe files only; no changes to Forma
+535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 533 [RESEARCHED] — Establish soundness, completeness, compactness, and decidability 
     └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
     └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
@@ -122,7 +122,7 @@ next_project_number: 538
 ---
 
 ### 535. Axiomatize stability modal tm star
-- **Status**: [RESEARCHING]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
@@ -200,7 +200,7 @@ next_project_number: 538
 ---
 
 ### 528. Algebraic modernisation propdecide mathlib filters
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 526

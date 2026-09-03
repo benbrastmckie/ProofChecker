@@ -1,0 +1,52 @@
+{
+  "status": "researched",
+  "session_id": "sess_1788463671_addd20",
+  "agent_type": "lean-research-hard-agent",
+  "delegation_path": ["orchestrator", "research", "lean-research-hard-agent"],
+  "task_number": 535,
+  "task_name": "axiomatize_stability_modal_tm_star",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md",
+      "summary": "Axiom inventory for the stability modal (naive S5+bridge set shown incomplete; pasting schemata PS/US validated), completeness strategy verdict (blocked at all four classes, engines deterministic), decidability (open, no easier than TM+), bisimulation separation models, and binding engineering recommendations for the L-star proof system."
+    },
+    {
+      "type": "probes",
+      "path": "specs/535_axiomatize_stability_modal_tm_star/probes/01_stab-axiom-probes.lean",
+      "summary": "632-line sorry-free Lean probes file (60 declarations) compiling from disk via lake env lean: definitional validities, state-invariance, history pasting with pure-future/pure-past agreement, four new valid schemata (C2-C5), five refutations on natFrame over Z (D1-D5), and time-shift invariance (E1-E2)."
+    }
+  ],
+  "metadata": {
+    "findings_count": 8,
+    "adversarial_verification_triggered": true,
+    "reference_grounding_tier": "Tier 1 (literature-backed, lean4 strict)",
+    "divergence_audit_activated": false,
+    "probes_compiled": true,
+    "probe_declaration_count": 60,
+    "validated_candidates": ["SK", "SN", "ST", "S4", "S5", "MS", "AS", "PS", "US", "FS", "GS", "box_stab_iff", "stab_state_only"],
+    "refuted_candidates": ["stab_to_box_stab", "allFuture_stab_to_stab_allFuture", "stab_allFuture_somePast_to_allFuture_stab_somePast", "determined", "somePast_stab_to_stab_somePast"],
+    "unverified_candidates": ["dstab_F_dstab_Pq_refutation", "TD_mirrors_of_PS_US", "naming_rule_soundness"],
+    "completeness_verdict": "BLOCKED as research at Base/Dense/Discrete/Dedekind over the all-histories semantics; deterministic-class completeness of TM-star + Determined recommended as the provable deliverable",
+    "decidability_verdict": "open; at least as hard as TM+ (open); no undecidability from product-logic results",
+    "literature_second_hand": ["Zanardo 1991", "Zanardo 1985", "von Kutschera 1997", "Di Maio-Zanardo 1996"]
+  },
+  "memory_candidates": [
+    {
+      "type": "pattern",
+      "summary": "Every TM+ completeness engine's countermodel is a deterministic disjoint-lines frame (FlowFrame multiFamTaskFrameGen, zTaskFrameV2); any history-restricted modality collapses to the identity on them, so they cannot be reused for completeness of such extensions.",
+      "keywords": ["completeness", "canonical model", "deterministic", "FlowFrame", "stability modal"]
+    },
+    {
+      "type": "technique",
+      "summary": "Pasting two total histories at a shared state (past of one, future of the other) is a total history using only TaskFrame.comp and TaskFrame.converse; pure-future/pure-past formula fragments are invariant under agreement on the corresponding half-line. This yields the valid pasting schemata for the stability modal.",
+      "keywords": ["WorldHistory", "paste", "pure future", "task frame", "Compositionality"]
+    },
+    {
+      "type": "technique",
+      "summary": "Schema transfer by atomization: a modality whose truth depends only on the world state can be replaced by fresh state-valued atoms, so every TM+ axiom schema instantiated over the extended language is sound via the landed L+ soundness theorem in an expanded model on the same frame.",
+      "keywords": ["soundness", "atomization", "language extension", "StarFormula", "state formula"]
+    }
+  ],
+  "next_steps": "Run /plan 535 to create implementation plan"
+}
