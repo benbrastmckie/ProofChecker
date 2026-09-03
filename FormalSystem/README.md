@@ -215,10 +215,11 @@ invariant check allowlists it by name (check C8).
 | File | Lines | Description |
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
-| `FormalSystem.lean` | 107 | Library aggregator: imports all submodules for unified access |
+| `FormalSystem.lean` | 105 | Library aggregator: imports all submodules for unified access |
 | `Automation.lean` | 102 | Re-export for Automation submodule |
 | `BaseLanguage.lean` | 34 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
+| `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `Metalogic.lean` | 199 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 88 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 137 | Re-export for Semantics submodule |
@@ -229,6 +230,7 @@ invariant check allowlists it by name (check C8).
 
 | Module | File | Description |
 |--------|------|-------------|
+| ForMathlib | `ForMathlib.lean` | Mathlib-shaped extensions intended for upstreaming (proper/maximal/prime-filter API of `Order.PFilter`, `Order.PrimeFilter`); imports nothing from `FormalSystem.*` |
 | Syntax | `Syntax.lean` | Formula type, atoms, contexts, subformula closure |
 | ProofSystem | `ProofSystem.lean` | 45 axiom constructors, 7 inference rules, derivation trees |
 
@@ -273,6 +275,7 @@ invariant check allowlists it by name (check C8).
 | [Theorems/](Theorems/README.md) | Yes | Derived theorems |
 | [Automation/](Automation/README.md) | Yes | Proof tactics and ML pipeline |
 | [Examples/](Examples/README.md) | Yes | Pedagogical examples |
+| `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
 | `BaseLanguage/` | No | Shared base-language definitions (no README yet) |
 | [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — 156 archived `.lean` files, excluded from the live build |
 

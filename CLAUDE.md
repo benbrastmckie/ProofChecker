@@ -11,6 +11,7 @@ lake build
 ## Project Structure
 
 - `FormalSystem/` — Main library source
+  - `ForMathlib/` — Mathlib-shaped extensions intended for upstreaming (prime-filter API); imports nothing from `FormalSystem.*`
   - `Syntax/` — Formula types, atoms, contexts
   - `ProofSystem/` — Axioms, derivation trees, inference rules
   - `Semantics/` — Task frame semantics, truth evaluation
