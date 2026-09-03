@@ -541,7 +541,19 @@ requires and derive the past half from it.
 
 ---
 
-### Phase 6: Record the discipline in `Bundle/README.md`; Group A+B green checkpoint [NOT STARTED]
+### Phase 6: Record the discipline in `Bundle/README.md`; Group A+B green checkpoint [COMPLETED]
+
+**Group A+B green checkpoint**: `lake build` green; `bash scripts/check-module-invariants.sh`
+ALL CHECKS PASSED, C2 baseline unchanged; all 15 Phase 2 deletions, `UntilWitnessSeed` +
+`since_witness_seed_consistent` (Phase 3), and `multiFamTaskFrame_eq_gen` +
+`famShiftRel_fib_subsingleton` (Phase 4) return zero live hits; all preserved/added
+declarations (`RestrictedTemporallyCoherent`, `RestrictedForwardUntilSinceCoherent`,
+`RestrictedBackwardUntilSinceCoherent`, `BackwardUntilSinceCoherent`,
+`ForwardUntilSinceCoherent`, `BFMCS.CanonicalCoherence`, `allFuture_neg_of_gseed_inconsistent`,
+`allPast_neg_of_hseed_inconsistent`, `until_witness_seed_consistent`, `multiFamTaskFrame`)
+resolve. **Running line delta against the Phase 1 baseline (4,082)**:
+`Bundle/*.lean + Bundle.lean + Algebraic/FlowFrame.lean` = 3,745 lines (`README.md` excluded
+per the baseline definition), a reduction of **337 lines** through Group A+B.
 
 **Goal**: The duality rule is written down as the standing convention, and Groups A and B close
 green together.

@@ -38,6 +38,47 @@ The BFMCS approach constructs exactly ONE such satisfying model by:
 The completeness theorem states that derivability and BFMCS-validity coincide. Combined with
 soundness (derivability implies standard-validity), we get a full characterization.
 
+## Temporal Duality Discipline
+
+**The rule**: when a past statement is the `Formula.swapTemporal` image of a future one, prove
+the future form and obtain the past form by `Formula.swapTemporal` +
+`DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`; do not write the mirror
+by hand. `Algebraic/FlowFrame.lean`'s `past_tf_deriv` is the reference implementation: it proves
+a future-side syntactic theorem generically in its argument formula, applies it at the *swapped*
+argument, dualizes the whole derivation with `DerivationTree.temporal_duality`, then uses
+`swap_temporal_involution` (plus the `swap_temporal_*` simp set) to fold the double-swap back to
+the original formula.
+
+**Worked example**: `WitnessSeed.lean`'s `allFuture_bot_imp_neg_deriv` /
+`allPast_bot_imp_neg_deriv` pair applies the rule directly. The future-side lemma is a closed
+`DerivationTree fc [] (...)` fact (`⊢ G(⊥) → G(¬chi)`, built from `prop_s` + temporal
+necessitation + temporal K distribution + modus ponens); its past dual follows `past_tf_deriv`'s
+pattern verbatim and is wired into the shared witness-seed core
+(`allFuture_neg_of_gseed_inconsistent` / `allPast_neg_of_hseed_inconsistent`) in place of a
+second hand derivation through `pastNecessitation`/`pastKDist`.
+
+**The boundary the technique does not cross**: the rule applies to *closed* syntactic facts
+(`⊢[fc] φ`, no free context) — a `Formula.swapTemporal`-image of a provable formula is provable,
+full stop. It does **not** apply directly to a statement relative to a fixed, arbitrary MCS `M`
+(or a fixed `FMCS` family), because swapping the *formula* without also transporting `M` itself
+(via `Formula.swapTemporal '' M`, together with a proof that the image of an MCS is again an MCS)
+proves a fact about a *different* set, not about `M`. Four mirror pairs surveyed during this
+discipline's rollout — `TemporalContent.lean`'s `f_content_iff_not_neg_in_g_content` /
+`p_content_iff_not_neg_in_h_content`, `TemporalCoherence.lean`'s
+`restricted_temporal_backward_{G,H}[_strict]`, and `WitnessSeed.lean`'s two `_absurd` /
+`_to_all_*_neg` helper pairs — all fall on this side of the boundary: each direction already
+calls its own pre-existing, independently-defined primitive (`someFuture_mono`/`somePast_mono`,
+`dneTheorem`), so there is no isolable closed syntactic step left to dualize, and building the
+general MCS-image-transport machinery to cross the boundary was judged disproportionate to the
+size of these four pairs. See the implementation plan's Phase 5 Reasoned Exclusions table for the
+full per-pair evidence.
+
+**Order-theoretic mirrors are a separate case, handled separately**: where the "mirror" is a
+`<`/`>` order reversal rather than a `swapTemporal` image — the `limitSet`/`limitMCS` family in
+`LimitMCS.lean` — this discipline does not apply at all. That duplication is closed by the
+`TemporalSide` parameter introduced in Group C (`LimitMCS.lean`, `LimitMCSCoherence.lean`), not
+by `swapTemporal`.
+
 ## Architecture
 
 ```
@@ -69,7 +110,9 @@ them: the iterated-`F`/`P` machinery is now
 | Theorem | Type | Status | File |
 |---------|------|--------|------|
 | `BFMCS.reflexivity` / `BFMCS.transitivity` | S5 modal coherence of the bundle | **SORRY-FREE** | BFMCS.lean |
-| `temporal_backward_G` / `temporal_backward_H` | Backward temporal coherence for the truth lemma | **SORRY-FREE** | TemporalCoherence.lean |
+| `BFMCS.CanonicalCoherence` | Bundles the three restricted coherence hypotheses the truth lemma needs | **SORRY-FREE** | TemporalCoherence.lean |
+| `restricted_temporal_backward_G` / `restricted_temporal_backward_H` (and `_strict` variants) | Backward temporal coherence for the truth lemma | **SORRY-FREE** | TemporalCoherence.lean |
+| `allFuture_neg_of_gseed_inconsistent` / `allPast_neg_of_hseed_inconsistent` | Shared witness-seed consistency core (future/past) | **SORRY-FREE** | WitnessSeed.lean |
 | `BFMCS.toRealBundle_restricted_temporally_coherent` | Transport of restricted coherence to the real bundle | **SORRY-FREE** | RealExtensionBundle.lean |
 
 ### Sorry Status
