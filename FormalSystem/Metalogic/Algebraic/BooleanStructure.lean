@@ -109,12 +109,11 @@ instance instBotLindenbaumAlg : Bot LindenbaumAlg where
 `a ⊓ b ≤ a`: conjunction implies first conjunct.
 -/
 theorem inf_le_left_quot (a b : LindenbaumAlg) : andQuot a b ≤ a := by
-  induction a using Quotient.ind
-  induction b using Quotient.ind
-  rename_i φ ψ
+  induction a using Quotient.ind with | _ φ =>
+  induction b using Quotient.ind with | _ ψ =>
   change Derives (φ.and ψ) φ
-  exact ⟨FormalSystem.Metalogic.Core.deductionTheorem [] (φ.and ψ) φ
-    (FormalSystem.Theorems.Propositional.andLeft φ ψ)⟩
+  unfold Derives
+  propDecide
 
 /--
 `a ⊓ b ≤ b`: conjunction implies second conjunct.
