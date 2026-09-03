@@ -1,43 +1,125 @@
 {
-  "status": "planned",
+  "status": "implemented",
+  "started_at": "2026-09-03T00:00:00Z",
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
-      "summary": "Plan v3: targeted rationale/citation refinement of plan v2 from report 03 (verified ForMathlib project-tree citations for D-A, the abbrev-subtype vs SetLike-template trade-off for D-B, an upstream PrimeSeparator diff pre-step for Phase 5's optional corollary, textbook and Mathlib-coverage citations for Phase 7's README subsection); option (c), all seven phases, effort, and acceptance criteria unchanged."
+      "type": "summary",
+      "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+      "summary": "Implementation summary: propDecide-backed *_quot lemmas (286 -> 105), Multiset.inf fold lemma, generic Order.PFilter layer under ForMathlib/, UltrafilterMCS ported onto Order.PrimeFilter with SetMaximalConsistent.ultrafilterEquiv, README refreshed."
+    },
+    {
+      "type": "implementation",
+      "path": "FormalSystem/ForMathlib/Order/PFilter.lean",
+      "summary": "New Mathlib-shaped Order.PFilter IsProper/IsMaximal/Boolean API, Order.PrimeFilter, and the prime-filter separator."
+    },
+    {
+      "type": "implementation",
+      "path": "FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean",
+      "summary": "Ported onto Order.PrimeFilter LindenbaumAlg; bespoke Ultrafilter structure deleted; ultrafilterEquiv at the corrected type; 1071 -> 801 lines."
+    },
+    {
+      "type": "implementation",
+      "path": "FormalSystem/Metalogic/Algebraic/BooleanStructure.lean",
+      "summary": "*_quot lemmas discharged by propDecide (metric 286 -> 105)."
     }
   ],
-  "next_steps": "Run /implement 528 to execute the revised plan",
   "metadata": {
-    "session_id": "sess_1788464483_205d50",
-    "agent_type": "reviser-agent",
-    "delegation_path": ["orchestrator", "revise", "reviser-agent"],
-    "mode": "plan_revision",
-    "plan_version": 3,
-    "phase_count": 7,
-    "estimated_hours": 9.5,
-    "reports_integrated": [
-      "01_algebraic-modernisation-verification.md",
-      "02_pfilter-maximality-design-spike.md",
-      "03_literature-source-acquisition-dossier.md"
+    "session_id": "sess_1788465505_51370d",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": [
+      "orchestrator",
+      "implement",
+      "skill-lean-implementation"
     ],
-    "newly_integrated_reports": ["03_literature-source-acquisition-dossier.md"],
-    "preserved_phases": [1, 2, 3, 4, 6],
-    "phases_with_added_tasks": {
-      "5": "pre-step under the optional E3 corollary: diff upstream Order/PrimeSeparator.lean against the pin",
-      "7": "two optional citation items in the README Design decisions subsection (CZ 1997 Part III section 8.2 Thm 8.14; no Stone/Priestley duality in pinned Mathlib)"
+    "phases_completed": 7,
+    "phases_total": 7,
+    "compliance_check": "passed",
+    "duration_seconds": 73981
+  },
+  "modified_files": [
+    "CLAUDE.md",
+    "FormalSystem/ForMathlib.lean",
+    "FormalSystem/ForMathlib/Order/PFilter.lean",
+    "FormalSystem/FormalSystem.lean",
+    "FormalSystem/Metalogic/Algebraic/BooleanStructure.lean",
+    "FormalSystem/Metalogic/Algebraic/README.md",
+    "FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean",
+    "FormalSystem/README.md",
+    "Tests/BimodalTest/Metalogic/PropDecideTest.lean",
+    "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
+    "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md"
+  ],
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "vacuous_note": "grep reports 1 pre-existing hit (Examples/TemporalStructures.lean:496), present in the pre-task baseline commit and untouched",
+    "axiom_count": 7,
+    "axiom_count_baseline": 7,
+    "build_passed": true,
+    "c2_invariant_unchanged": true,
+    "invariants_all_pass": true,
+    "invariants_runs": [
+      "baseline",
+      "phase1",
+      "phase2",
+      "phase3",
+      "phase4",
+      "phase5",
+      "phase6",
+      "final"
+    ]
+  },
+  "completion_data": {
+    "completion_summary": "Modernised FormalSystem/Metalogic/Algebraic/: the BooleanStructure *_quot lemmas are discharged by propDecide (metric 286 -> 105, D2 accept bar), fold_le_of_derives is stated over Multiset.inf, a Mathlib-shaped Order.PFilter proper/maximal/prime-filter layer landed under FormalSystem/ForMathlib/ (including the PrimeSeparator corollary), and UltrafilterMCS.lean was ported onto Order.PrimeFilter LindenbaumAlg with SetMaximalConsistent.ultrafilterEquiv at the corrected type and the bespoke Ultrafilter structure deleted (1071 -> 801 lines). lake build and all module invariants green; C2 axiom baseline unchanged.",
+    "roadmap_items": []
+  },
+  "memory_candidates": [
+    {
+      "content": "propDecide only matches a goal that is syntactically `Derivable \u2026`; on the Lindenbaum quotient order the pattern is `induction a using Quotient.ind with | _ \u03c6 =>` then `change Derives \u2026; unfold Derives; propDecide`. Hypothesis-driven lattice laws: state the conditional as a closed tautology (e.g. `((\u03c6.imp \u03c7).and (\u03c8.imp \u03c7)).imp ((\u03c6.or \u03c8).imp \u03c7)`), close it with propDecide, and discharge with Combinators.pairing + DerivationTree.modus_ponens.",
+      "category": "TECHNIQUE",
+      "source_artifact": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+      "confidence": 0.85,
+      "suggested_keywords": [
+        "propDecide",
+        "Quotient.ind",
+        "LindenbaumAlg",
+        "Derives",
+        "BooleanStructure"
+      ]
     },
-    "revised_sections": [
-      "metadata block (Research Inputs, Artifacts, Revision history)",
-      "Overview closing paragraph",
-      "Research Integration (report 03 row and findings; section 7 verdict)",
-      "Facts established during planning (intro sentence only)",
-      "Prior Plan Reference (v2-to-v3 table added; v1-to-v2 table retained)",
-      "Decision D-A rationale (project-tree citations, style-guide silence, dependency rule)",
-      "Decision D-B rationale (abbrev-subtype vs SetLike-template trade-off)",
-      "Phase 5 optional E3 corollary pre-step",
-      "Phase 7 Design decisions subsection optional citations"
-    ],
-    "unchanged": "option (c); Decisions D1, D-C; open Decision D2; Goals & Non-Goals; Risks; all seven Acceptance Criteria; dependency waves and territory contract; Testing & Validation; Artifacts & Outputs; Rollback/Contingency; effort total 9.5 h"
-  }
+    {
+      "content": "Mathlib-native encoding of Boolean-algebra ultrafilters: `Order.PrimeFilter P := {F : Order.PFilter P // F.IsPrime}` with the IsProper/IsMaximal API in FormalSystem/ForMathlib/Order/PFilter.lean. Mathlib's own `Ultrafilter \u03b1` is a filter on `Set \u03b1`, never the right target. Deleting a bespoke `Ultrafilter` structure silently retargets any surviving `Ultrafilter X` spelling to Mathlib's \u2014 retype every binder.",
+      "category": "PATTERN",
+      "source_artifact": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+      "confidence": 0.85,
+      "suggested_keywords": [
+        "Order.PFilter",
+        "PrimeFilter",
+        "IsPrime",
+        "Ultrafilter",
+        "ForMathlib"
+      ]
+    },
+    {
+      "content": "`Order.PFilter.mem_of_le` takes `x \u2264 y` before `x \u2208 F` (opposite of a hand-rolled `mem_of_le : a \u2208 F \u2192 a \u2264 b \u2192 b \u2208 F`); `Multiset.inf` over `(\u2191(L.map f) : Multiset _)` steps by `simp only [List.map_cons, \u2190 Multiset.cons_coe, Multiset.inf_cons]` and `[List.map_nil, Multiset.coe_nil, Multiset.inf_zero]`.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+      "confidence": 0.75,
+      "suggested_keywords": [
+        "Multiset.inf",
+        "inf_cons",
+        "cons_coe",
+        "PFilter.mem_of_le"
+      ]
+    }
+  ],
+  "reflection": {
+    "what_worked": "Trialling every proof shape in a standalone lean_run_code snippet against the built oleans before touching a file meant every one of the 32 commits built green on the first attempt; the research spike's appendices transcribed unchanged.",
+    "what_was_hard": "The plan's finer commit split for Phase 6 assumed old and new `mcsToUltrafilter` could coexist; they cannot under one name, so the type change had to land as one connected commit. Also the acceptance-criterion-1 command counts each lemma's trailing blank line, which is what keeps the figure at 105 rather than 90.",
+    "what_was_missed": "Nothing in scope; the optional non-tracked project-overview courtesy edit was skipped on a rule conflict.",
+    "successes": "All seven acceptance criteria satisfied (criterion 1 at the D2 accept bar), C2 unchanged across eight full invariant runs, no sorries, no new axioms, UltrafilterMCS.lean 1071 -> 801."
+  },
+  "next_steps": "Review the D2 line-count ruling (105 by the plan's command; 90 by its prose definition). Downstream Jonsson-Tarski work can consume Order.PrimeFilter LindenbaumAlg and the ForMathlib API directly."
 }

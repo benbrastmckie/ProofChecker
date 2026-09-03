@@ -1,6 +1,11 @@
 # Implementation Summary: Algebraic/ Modernisation (propDecide, Mathlib Prime Filters)
 
 - **Task**: 528
+- **Status**: TBD
+- **Started**: TBD
+- **Completed**: TBD
+- **Artifacts**: TBD
+- **Standards**: TBD
 - **Plan**: `plans/03_algebraic-modernisation-prime-filter.md` (v3), all 7 phases executed
 - **Session**: sess_1788465505_51370d
 - **Date**: 2026-09-03

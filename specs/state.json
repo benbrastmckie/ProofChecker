@@ -74,13 +74,13 @@
     {
       "project_number": 533,
       "project_name": "l_and_lstar_metatheory_conservative_extension",
-      "status": "researched",
+      "status": "planning",
       "task_type": "lean4",
       "description": "Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.\n\n\n=== SCOPE AMENDMENT (post-research, 2026-09-03) ===\n(1) L⋆ is scoped to the stability modal ⊡ only -- not the paper's BL⋆ (line 1373), which also carries the store/recall operators. (2) The TM⋆ completeness spike proposed as Phase 7 of the research report is REMOVED from this task: its axiomatization and completeness strategy are settled first by research task 535, ON WHICH THIS TASK DEPENDS, and its Lean implementation is task 537. Build StarAxiom around 535's axiom set, or the extensible design 535 recommends, so 537 adds constructors without re-running 533's soundness. This task delivers for L⋆: syntax (StarFormula + the ofFormula embedding), semantics (StarTruthAt, SameStateAt, StarValidIn), the ⊡ axioms with soundness, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in BOTH directions -- the forward direction via TM⋆ soundness plus the existing completeness engines, which needs no TM⋆ completeness. (3) For L ⊂ L⁺: forward proof-theoretic conservativity of TM⁺ over TM is refuted (tmCompleteDiscrete_refuted at Discrete, (DD) at Base; equivalent to TM completeness by tmComplete_iff_forward) and MUST NOT be attempted; deliver semantic conservativity (already landed, blValidIn_iff_validIn_tr) plus the fragment logic TMFrag fc φ := TM⁺ ⊢ tr φ with its transferred soundness, completeness, and Base/Dense compactness, and the strict inclusion TM ⊊ TMFrag at Discrete. (4) Sequencing: 535 (research) -> 533 (this task) -> 537 (TM⋆ completeness + non-definability), 534 (native finite axiomatizability of the H/G-fragment), 536 (deterministic-collapse sufficiency lemma, its failing converse, and the store/recall correspondence question). Claims made in discussion that Determined is valid EXACTLY over deterministic frames are wrong (paper line 1437) and must not be transcribed.(5) BINDING INPUT FROM TASK 535 (specs/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md, probes/01_stab-axiom-probes.lean -- the plan MUST read both): the ⊡-axiom set is {SK, ST, S4, S5, MS (□φ→⊡φ), AS (p→⊡p), PS (same-time pasting ⟐φ⁺∧⟐ψ⁻→⟐(φ⁺∧ψ⁻)), US (future pasting (α⁻ U ⟐φ⁺)→⟐(α⁻ U φ⁺)), with pure-future/pure-past side conditions}; all validated by compiled probes. StarAxiom is a CLOSED inductive with one soundness lemma per constructor. CORRECTION to the research report's Phase 4: the TM⁺ schemata must be RE-DECLARED over StarFormula (an ofPlus constructor yields only ⊡-free instances, which is not the intended TM⋆) and discharged once by atomization (⊡φ depends on the world state alone, probes E1/E2); TD is discharged semantically via a StarFormula TruthAntiIso twin (the proof-theoretic route is circular because the BX axiom set is not mirror-closed).",
       "topic": "metalogic",
       "created": "2026-09-03T17:31:04Z",
-      "last_updated": "2026-09-03T19:24:26Z",
-      "session_id": "sess_1788456943_a08fff",
+      "last_updated": "2026-09-03T20:22:52Z",
+      "session_id": "sess_1788466948_b21400",
       "artifacts": [
         {
           "path": "specs/533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md",
@@ -2092,7 +2092,7 @@
     {
       "project_number": 528,
       "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -2109,7 +2109,7 @@
         "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-03T19:58:47Z",
+      "last_updated": "2026-09-03T20:33:42Z",
       "artifacts": [
         {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
@@ -2124,11 +2124,17 @@
         {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
           "type": "plan"
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+          "type": "summary",
+          "summary": "Implementation summary: propDecide-backed *_quot lemmas (286 -> 105), Multiset.inf fold lemma, generic Order.PFilter layer under ForMathlib/, UltrafilterMCS ported onto Order.PrimeFilter with SetMaximalConsistent.ultrafilterEquiv, README refreshed."
         }
       ],
       "session_id": "sess_1788465505_51370d",
       "researched": "2026-09-03T19:33:32Z",
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Modernised FormalSystem/Metalogic/Algebraic/: the BooleanStructure *_quot lemmas are discharged by propDecide (metric 286 -> 105, D2 accept bar), fold_le_of_derives is stated over Multiset.inf, a Mathlib-shaped Order.PFilter proper/maximal/prime-filter layer landed under FormalSystem/ForMathlib/ (including the PrimeSeparator corollary), and UltrafilterMCS.lean was ported onto Order.PrimeFilter LindenbaumAlg with SetMaximalConsistent.ultrafilterEquiv at the corrected type and the bespoke Ultrafilter structure deleted (1071 -> 801 lines). lake build and all module invariants green; C2 axiom baseline unchanged."
     },
     {
       "project_number": 529,

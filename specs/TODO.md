@@ -11,9 +11,9 @@ next_project_number: 538
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,528,529,530,535 | -- | automation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,535 | -- | automation, dataset-enhancement, decidability, ... |
 | 2 | 178,231,282,296,463,502,531,533 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497,534,536 | 231,463,502,528,533 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,464,497,534,536 | 231,463,502,533 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 465,498,499,500,537 | 464,497,536 | algebraic-representation, decidability, metalogic |
 | 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
@@ -84,13 +84,12 @@ next_project_number: 538
 
 ### Metalogic
 
-528 [IMPLEMENTING] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
 529 [NOT STARTED] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
-  └─ 533 [RESEARCHED] — Establish soundness, completeness, compactness, and decidability 
+  └─ 533 [PLANNING] — Establish soundness, completeness, compactness, and decidability 
     └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
     └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
       └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
@@ -144,7 +143,7 @@ next_project_number: 538
 ---
 
 ### 533. L and lstar metatheory conservative extension
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 535
@@ -202,7 +201,7 @@ next_project_number: 538
 ---
 
 ### 528. Algebraic modernisation propdecide mathlib filters
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 526
@@ -210,6 +209,7 @@ next_project_number: 538
   - [528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md]
   - [528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md]
 - **Plan**: [528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md]
+- **Summary**: [528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md]
 
 **Description**: WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/ before the Jonsson-Tarski representation front builds on it. THIS TASK IS A DEPENDENCY OF TASKS 497 AND 125: they port the STSA class and the ultrafilter frame onto LindenbaumQuotient/BooleanStructure/UltrafilterMCS as they stand, and would inherit a bespoke `Ultrafilter` structure that shadows Mathlib's and ~430 lines of hand-built Boolean algebra. Findings D-08 (validated), F-11, F-12, F-13, D-16 in specs/reviews/2026-09-01-lean-engineering/{D-tactics,F-canonical}.md; High H9 and utility U16 in the review. MEASURED STATE: Algebraic/BooleanStructure.lean carries 15 `*_quot` lemmas (~430 lines; le_sup_inf_quot :242 is 119 lines with 31 `have`s hand-building an object-language derivation of distributivity out of deductionTheorem/orInl/orInr/lceImp/rceImp/impTrans). The existing tactic `propDecide` (Automation/Tactics/PropDecide.lean:123) was VALIDATED by lean_multi_attempt to close a distributivity instance in exactly that shape and De Morgan, and to correctly reject a non-tautology; its test file's docstring at PropDecideTest.lean:44-46 wrongly claims and/or goals are out of scope (PropDecide.reify calls whnf, which unfolds them). No import cycle: Kalmar.lean imports only PropForm/Derivable/Core.DeductionTheorem/Theorems.*. Algebraic/UltrafilterMCS.lean:44-59 defines its own six-field `structure Ultrafilter (α) [BooleanAlgebra α]`, shadowing Mathlib's Ultrafilter in a directory whose neighbour LimitMCS.lean uses Mathlib's `Ultrafilter Rat`; its compl_or field is the prime property (Order.Ideal.IsMaximal.isPrime), compl_not is IsProper, mem_of_le/inf_mem are Order.PFilter's axioms, and Order.Ideal.IsProper.exists_le_maximal is an algebra-level Lindenbaum already in Mathlib; `instance : BooleanAlgebra LindenbaumAlg` exists at BooleanStructure.lean:421. SetMaximalConsistent.ultrafilter_correspondence (:782, 127 lines) is stated as an anonymous `∃ f g, LeftInverse ∧ RightInverse`, so ultrafilter_mcs_round_trip (:983, 72 lines) destructures it, discards it, and re-proves the round trip -- and both round-trip theorems are referenced nowhere (D-16 flags them as forgotten headline results). fold_le_of_derives (:565, 102 lines) fights a List.foldl accumulator that Multiset.inf / List.foldr removes. WORK: (1) import Automation.Tactics.PropDecide into BooleanStructure.lean; rewrite the *_quot bodies as `induction … using Quotient.ind; change Derives …; unfold Derives; propDecide` (do one first to confirm the Derives shape reaches extractDerivationGoal at Helpers.lean:524); apply the same to LindenbaumQuotient's provEquiv_* congruences where it fits; fix the PropDecideTest docstring and add De Morgan/distributivity regression cases. (2) State `noncomputable def SetMaximalConsistent.ultrafilterEquiv : {Γ // SetMaximalConsistent Γ} ≃ Ultrafilter LindenbaumAlg` with the two round trips as its fields and ultrafilter_correspondence as a corollary (task 125's description already asks for this Equiv). (3) Either express the ultrafilter side as `{F : Order.PFilter LindenbaumAlg // (Order.Ideal.ofPFilterCompl F).IsMaximal}` (or the dual prime-ideal form) and reuse Mathlib, or -- if the bespoke structure is kept for readability -- rename it BAUltrafilter and prove `BAUltrafilter α ≃ {I : Order.Ideal α // I.IsMaximal}` once so Mathlib's lemmas are reachable; record the choice in Algebraic/README.md. (4) Restate fold_le_of_derives over `((L.map toQuot : List _) : Multiset _).inf` and reuse Multiset.inf_coe / Finset.inf_le / Finset.le_inf. Refresh Algebraic/README.md (add a 'Last verified' stamp; it has none). ACCEPTANCE: BooleanStructure.lean's *_quot lemmas total under 100 lines; no declaration named Ultrafilter outside Mathlib in the live tree, or a documented BAUltrafilter with a bridge Equiv; ultrafilterEquiv exists and is consumed by ultrafilter_correspondence; lake build green; C2 baseline unchanged. Tasks 497 and 125 must not start before this lands.
 

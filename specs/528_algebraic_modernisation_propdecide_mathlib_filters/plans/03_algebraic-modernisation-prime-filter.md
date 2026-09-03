@@ -3,7 +3,7 @@
 - **Task**: 528 - Algebraic/ modernisation: `propDecide` in `BooleanStructure.lean`,
   `SetMaximalConsistent.ultrafilterEquiv` as a named `Equiv`, the bespoke `Ultrafilter` structure
   replaced by a Mathlib-native prime filter, `fold_le_of_derives` over `Multiset.inf`
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 9.5 hours
 - **Dependencies**: 518, 526 (both landed)
 - **Research Inputs**:
