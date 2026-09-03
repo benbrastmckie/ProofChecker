@@ -681,7 +681,39 @@ seven files before closing the phase.
 
 ---
 
-### Phase 8: `TemporalSide` parameterization and limit-MCS dead-code prune [IN PROGRESS]
+### Phase 8: `TemporalSide` parameterization and limit-MCS dead-code prune [COMPLETED WITH EXCLUSIONS]
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| `limitUltrafilterBelow` retained, not deleted | The plan's own phrasing ("confirm the ultrafilter route is genuinely unused first") flagged this as uncertain. Re-verification found it heavily load-bearing: `limitMCSBelow`, `limitMCSBelow_cofinal_below`, `limitMCSBelow_finite_subset_mem`, `limitMCSBelow_is_mcs` and `limitFilterBelow_le` are all stated directly over it. Deleting it would require re-deriving all five from `limitUltrafilter .below` and losing the concrete name external files may (or, per grep, do not currently, but could reasonably) reference. | `grep -rn "\blimitUltrafilterBelow\b"` finds 4 hits, all in `LimitMCS.lean` itself as the target of these five theorems' own statements/proofs -- genuinely load-bearing, not dead. |
+| `LimitMCSCoherence.lean`'s four live `limitMCSBelow_{forward_G,backward_H}_{rat_target,limit}` theorems left in their existing `Below`-specific hand-written form, not restated as a generic `TemporalSide`-parameterized family | Each mixes a direction-specific coherence hypothesis (`hG`/`hH`, themselves direction-specific, not side-generic) with `limitMCSBelow_cofinal_below`, which is itself kept `below`-specific (see its own docstring). No `above` instantiation of any of the four is consumed anywhere -- the `Below`/`Above` split these four exist inside is orthogonal to the concrete, tested deliverable of this phase (`limitFilterAbove` / `limitMCSAbove` existing and typechecking, delivered in `LimitMCS.lean` itself). Generalizing these four would require new generic "coherence hypothesis indexed by side" and "cofinal descent indexed by side" infrastructure with no external consumer to justify it, on top of the infrastructure already built for `limitFilter`/`limitSet`/`limitSet_consistent`/`limitMCS`. | `git diff` on `LimitMCSCoherence.lean` since the Phase 7 commit shows these four theorem bodies textually unchanged (only docstring prose referencing the Boneyarded names was refreshed); `RealExtension.lean`, which consumes all four, builds with zero source change since Phase 7. |
+
+**What was delivered** (the core, load-bearing part of this phase): `TemporalSide` (`below`/
+`above`) parameterizes `limitFilter`, `limitSet`, `limitSet_consistent`, `limitUltrafilter`,
+`limitFilter_le`, `limitMCS`, `limitMCS_finite_subset_mem` and `limitMCS_is_mcs` once each in
+`LimitMCS.lean`. `limitFilterBelow`, `limitSetBelow`, `limitMCSBelow` and all of their supporting
+theorem *statements* are unchanged (thin specializations at `.below`) -- the ~57 external
+references across seven files, five under `BXCanonical/Chronicle/`, all build with **zero source
+change** since the Phase 7 commit (`git diff 715bcc998 --stat` on those seven files plus
+`RealExtensionBundle.lean` is empty). `limitFilterAbove` and `limitMCSAbove` now exist and
+typecheck (the previously-missing deliverable). The below-side hand-rolled directedness lemmas
+(`limitSetBelow_mono_directed`, `limitSetBelow_finite_subset_mem`) are retired in favour of the
+generic Filter route, and — since `limitSetAbove_consistent` now also goes through the generic
+`limitSet_consistent` — the above-side pair Phase 7 had to keep (`limitSetAbove_mono_directed`,
+`limitSetAbove_finite_subset_mem`) is retired too, completing the Phase 7 deferral. The five dead
+`LimitMCSCoherence.lean` lemmas are Boneyarded to
+`FormalSystem/Boneyard/LimitMCSCoherenceDeadCases/` with a README recording the retirement
+reason. The dead Zorn/Lindenbaum construction (`limitMCSLindenbaum` + 2 support lemmas) is
+deleted, confirmed zero external references before deletion.
+
+**Verification performed**: `lake build` green (full project, 2522/2522 jobs);
+`bash scripts/check-module-invariants.sh` ALL CHECKS PASSED, C2 baseline unchanged; every named
+deleted declaration returns zero live hits (Boneyard excluded); every preserved/added
+declaration resolves; `limitFilterAbove`/`limitMCSAbove` exist and typecheck. **Running line
+delta against the Phase 1 baseline (4,082)**: 3,697 lines (`README.md` excluded), a reduction of
+**385 lines** through Groups A+B and Phase 7-8 of Group C.
 
 **Goal**: `limitSet`, `limitFilter`, `limitMCS` and the `LimitMCSCoherence` families are stated
 once and instantiated at future/past; the dead constructions are gone.
