@@ -2043,14 +2043,14 @@
       "last_updated": "2026-09-03T18:10:16Z",
       "artifacts": [
         {
-          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/01_algebraic-modernisation-verification.md",
-          "type": "report",
-          "summary": "Verifies every measured-state anchor against the live tree (no drift); empirically re-validates propDecide on the distributivity and De Morgan shapes; narrows item 1 to ~10 of 15 *_quot lemmas; finds Order.Ideal.ofPFilterCompl absent from Mathlib and recommends dropping the PFilter option."
-        },
-        {
           "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/01_algebraic-modernisation-propdecide-mathlib.md",
           "type": "plan",
           "summary": "Eight-phase plan in five waves: propDecide rewrite of 10 tautology *_quot lemmas plus a tautology+pairing+MP extension for the three hypothesis-driven ones, ultrafilterEquiv, BAUltrafilter bridge, Multiset.inf restatement. Two open decisions surfaced (D1 bridge encoding, D2 line-count metric)."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
+          "type": "report",
+          "summary": "Design spike resolving Decision D1: verifies Mathlib's Ultrafilter is Set-based (corrected target Order.PrimeFilter LindenbaumAlg), that order-dual transport is Iff.rfl, and that PFilter.IsPrime alone implies proper so all seven bespoke axioms derive with no bridge lemma. Option (c) recommended at option (b)'s cost. Surfaces D-A location, D-B name, D-C IsMaximal."
         }
       ],
       "session_id": "sess_1788452026_624704_528"
