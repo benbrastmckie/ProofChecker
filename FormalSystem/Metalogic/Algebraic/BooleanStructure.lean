@@ -252,18 +252,10 @@ theorem inf_compl_le_bot_quot (a : LindenbaumAlg) : andQuot a (negQuot a) ≤ �
 `⊤ ≤ a ⊔ aᶜ`: top is at most join with complement.
 -/
 theorem top_le_sup_compl_quot (a : LindenbaumAlg) : ⊤ ≤ orQuot a (negQuot a) := by
-  induction a using Quotient.ind
-  rename_i φ
-  -- Need: ⊢ ⊤ → (φ ∨ ¬φ)
-  -- ⊤ = ⊥ → ⊥, so need: ⊢ (⊥ → ⊥) → (φ ∨ ¬φ)
-  -- This follows from LEM (⊢ φ ∨ ¬φ) by weakening
+  induction a using Quotient.ind with | _ φ =>
   change Derives (Formula.bot.imp Formula.bot) (φ.or φ.neg)
   unfold Derives
-  have h_lem : ⊢ φ.or φ.neg := FormalSystem.Theorems.Propositional.em φ
-  -- Weaken: ⊢ (φ ∨ ¬φ) → ((⊥ → ⊥) → (φ ∨ ¬φ))
-  have h_s : ⊢ (φ.or φ.neg).imp ((Formula.bot.imp Formula.bot).imp (φ.or φ.neg)) :=
-    DerivationTree.axiom [] _ (Axiom.prop_s (φ.or φ.neg) (Formula.bot.imp Formula.bot)) trivial
-  exact ⟨DerivationTree.modus_ponens [] _ _ h_s h_lem⟩
+  propDecide
 
 /--
 Sup is commutative.
