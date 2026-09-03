@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 -- Re-export all Bimodal library modules
+import FormalSystem.ForMathlib
 import FormalSystem.Syntax
 import FormalSystem.ProofSystem
 import FormalSystem.BaseLanguage
@@ -23,6 +24,9 @@ with linear temporal logic.
 
 ## Components
 
+- `FormalSystem.ForMathlib`: Mathlib-shaped extensions intended for upstreaming (currently the
+  proper/maximal/prime-filter API of `Order.PFilter` and the bundled `Order.PrimeFilter`). Imports
+  nothing from `FormalSystem.*`; the import direction is strictly `Mathlib → ForMathlib → FormalSystem`
 - `FormalSystem.Syntax`: Formula type with 6 primitives (atom, bot, imp, box, allPast, allFuture)
   plus derived operators and context types
 - `FormalSystem.ProofSystem`: Hilbert-style proof system with 45 axiom schemata
