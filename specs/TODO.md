@@ -84,12 +84,12 @@ next_project_number: 534
 
 ### Metalogic
 
-528 [NOT STARTED] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
+528 [RESEARCHING] — WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/
 529 [NOT STARTED] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
-533 [RESEARCHING] — Establish soundness, completeness, compactness, and decidability 
+533 [RESEARCHED] — Establish soundness, completeness, compactness, and decidability 
 
 ### Publication Quality
 
@@ -98,7 +98,7 @@ next_project_number: 534
 ## Tasks
 
 ### 533. L and lstar metatheory conservative extension
-- **Status**: [RESEARCHING]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
@@ -151,7 +151,7 @@ next_project_number: 534
 ---
 
 ### 528. Algebraic modernisation propdecide mathlib filters
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 526

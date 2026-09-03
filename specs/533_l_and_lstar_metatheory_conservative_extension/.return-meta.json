@@ -1,0 +1,51 @@
+{
+  "status": "researched",
+  "agent_type": "lean-research-hard-agent",
+  "session_id": "sess_1788456943_a08fff",
+  "task_number": 533,
+  "delegation_path": ["orchestrator", "research", "lean-research-hard-agent"],
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md",
+      "summary": "Hard-mode Lean research: verbatim stability-modal ground truth (paper line 1114), full file:line inventory of the landed L/L+ metatheory (zero structural sorry), Tier-1 literature mapping table, architecture decision (separate StarFormula inductive + ofFormula embedding, mirroring BaseLanguage/tr), precise conservativity statements (L<L+ forward refuted/open, L+<L* forward provable from soundness + existing completeness engines), verified Mathlib names, three compiled lean_run_code prototypes, online survey (nothing reusable), and a 9-phase outline with TM* completeness as a gated spike."
+    }
+  ],
+  "metadata": {
+    "findings_count": 8,
+    "adversarial_verification_triggered": true,
+    "reference_grounding_tier": "Tier 1 (literature-backed, lean4 strict)",
+    "h5_divergence_audit": false,
+    "prototypes_compiled": 3,
+    "structural_sorry_count_live_tree": 0,
+    "lit_flag": true,
+    "literature_chunks_missing_on_disk": ["9f80f388f5225699", "7c42179f7f6996ec", "f15b98cf4adac8cc", "40cd71b3dc0a95bd", "4539eb77cf20b49f", "45bf37846111a8e6", "99f92a454394127e", "beeabbb9d0b505f8"],
+    "key_decisions": [
+      "Architecture (b): separate StarFormula inductive with constructor-to-constructor embedding ofFormula; no change to Formula or BLFormula",
+      "L<L+ conservativity delivered semantically (landed) and via the L-fragment logic TMFrag; proof-theoretic forward direction is refuted at Base/Discrete and must not be attempted",
+      "L+<L* proof-theoretic conservativity is provable in both directions now; the forward direction uses TM* soundness + existing WeakCompleteness engines, not TM* completeness",
+      "TM* completeness is research-grade (no paper axiomatization; nearest relative Zanardo 1991 Ockhamist S/U) and is scoped as a gated spike phase; TM* decidability out of scope"
+    ]
+  },
+  "memory_candidates": [
+    {
+      "title": "Forward conservativity via soundness-plus-base-completeness",
+      "content": "For a syntactic language extension e : L1 -> L2 with a truth-transfer lemma (truth of e(phi) iff truth of phi), the hard direction of proof-theoretic conservativity (L2 |- e(phi) implies L1 |- phi) follows from L2 soundness plus L1 completeness alone; it never needs L2 completeness. In BimodalLogic this makes TM* conservative over TM+ cheap (engines completeness_base/dense/discrete/dedekind), while the same route fails for TM+ over TM because TM is incomplete over task frames (tmComplete_iff_forward).",
+      "keywords": ["conservative extension", "lean4", "completeness", "translation", "bimodal"],
+      "tags": ["lean4", "metatheory", "pattern"]
+    },
+    {
+      "title": "Language extension pattern in BimodalLogic: separate inductive plus embedding",
+      "content": "Adding an operator to FormalSystem.Syntax.Formula would touch ~414 constructor match arms in 57 files; the repository's validated pattern is a separate inductive (BLFormula, proposed StarFormula) with an explicit embedding (tr, ofFormula), native truth recursion, a truth-transfer lemma, and a structural-recursion backward bridge on derivation trees. Constructor-to-constructor embeddings (L+ into L*) need no axiom-discharge bridge; definitional ones (H/G via untl/snce) do (AxiomDischarge.lean's notGNot_imp_F).",
+      "keywords": ["lean4", "syntax", "embedding", "formula", "architecture"],
+      "tags": ["lean4", "architecture", "pattern"]
+    },
+    {
+      "title": "Stability modal semantics on task frames",
+      "content": "Paper line 1114: M,tau,x |= [.]phi iff M,sigma,x |= phi for all total sigma with sigma(x)=tau(x). In Lean: SameStateAt tau sigma t := forall proofs of domain membership, tau.states t _ = sigma.states t _; clause: forall sigma, sigma.IsTotal -> SameStateAt tau sigma t -> StarTruthAt M sigma t phi. Valid by definition: T, 4, 5, box phi -> [.]phi, p -> [.]p for atoms; time-shift invariance is Iff.rfl. No valid tense interaction; [.]phi -> box [.]phi is invalid.",
+      "keywords": ["stability modal", "task frame", "lean4", "S5", "semantics"],
+      "tags": ["lean4", "semantics", "bimodal"]
+    }
+  ],
+  "next_steps": "Run /plan 533 to create implementation plan"
+}
