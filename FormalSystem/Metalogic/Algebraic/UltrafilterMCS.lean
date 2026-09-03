@@ -513,6 +513,19 @@ theorem mcsToSet_compl_not {Γ : Set Formula}
     · exact h_psi_mem
   exact h_cons ⟨d_bot⟩
 
+/--
+`[φ] ∈ mcsToSet Γ ↔ φ ∈ Γ` for an MCS `Γ`: the forward direction uses that `[φ] = [ψ]` with
+`ψ ∈ Γ` gives `⊢ ψ → φ`, which is in `Γ` by `theorem_in_mcs`, so `φ ∈ Γ` by closure under
+modus ponens (`implication_property`). This is the single fact both halves of the correspondence
+used to re-prove by hand.
+-/
+theorem toQuot_mem_mcsToSet_iff {Γ : Set Formula}
+    (h_mcs : SetMaximalConsistent (fc := FrameClass.Base) Γ) (φ : Formula) :
+    toQuot φ ∈ mcsToSet Γ ↔ φ ∈ Γ := by
+  refine ⟨fun ⟨ψ, hψ, h_eq⟩ => ?_, mem_mcsToSet⟩
+  obtain ⟨d_imp⟩ := (show toQuot ψ ≤ toQuot φ by rw [← h_eq] : Derives ψ φ)
+  exact h_mcs.implication_property (theorem_in_mcs h_mcs d_imp) hψ
+
 /-!
 ## MCS to Ultrafilter Construction
 
