@@ -1057,30 +1057,30 @@ HARD STOP: stop, report, do not re-baseline.
 
 ---
 
-### Phase 7: Refresh `Algebraic/README.md` and record the D1 rationale [NOT STARTED]
+### Phase 7: Refresh `Algebraic/README.md` and record the D1 rationale [COMPLETED]
 
 - **Goal:** the README describes the modernised layer accurately, carries a "Last verified" stamp,
   and records why the Mathlib-native prime-filter encoding was chosen.
 
 - **Tasks:**
-  - [ ] **Re-verify first**: re-read the README against the post-Phase-6 tree and list every stale
+  - [x] **Re-verify first**: re-read the README against the post-Phase-6 tree and list every stale
         claim — line counts (`UltrafilterMCS.lean` is currently documented as 1,071 and will have
         changed), the `mcsToUltrafilter`/`ultrafilterToSet` API sketch at `:149-150`, the file table
         at `:40-56`, and any sorry/axiom counts C14 asserts. Record the list before editing.
-  - [ ] Update the module table row for `UltrafilterMCS.lean`: new line count, "sorry-free", and
+  - [x] Update the module table row for `UltrafilterMCS.lean`: new line count, "sorry-free", and
         that it now consumes `FormalSystem/ForMathlib/Order/PFilter.lean`.
-  - [ ] Update the API sketch to name `Order.PrimeFilter LindenbaumAlg`,
+  - [x] Update the API sketch to name `Order.PrimeFilter LindenbaumAlg`,
         `SetMaximalConsistent.ultrafilterEquiv` at its corrected type, and `mcsToPFilter`.
-  - [ ] Add the `ForMathlib` node to the dependency flowchart, showing the direction
+  - [x] Add the `ForMathlib` node to the dependency flowchart, showing the direction
         `Mathlib → ForMathlib → Metalogic/Algebraic/UltrafilterMCS → downstream`.
-  - [ ] Add a "Design decisions" subsection recording D1 = option (c) with: the **two-dualities**
+  - [x] Add a "Design decisions" subsection recording D1 = option (c) with: the **two-dualities**
         argument (the order dual is free — `mem_dual_iff`, `le_iff_dual_le`, `lt_iff_dual_lt`,
         `coe_eq_univ_iff` are all `Iff.rfl` — whereas the Boolean-complement duality of the
         ideal-side encoding inverts every downstream statement); the **`IsPrime`-suffices** fact
         (`IsPrime`'s `compl_ideal` field bundles `IsIdeal.Nonempty`, so `IsPrime.toIsProper` is a
         3-line instance and `IsProper` is a consequence, not a prerequisite); and that **no bridge
         lemma was written** because the ideal is `IsPrime.toPrimePair`.
-  - [ ] **Optional textbook citation for the `Order.PrimeFilter` vocabulary** (report 03 §3.2): the
+  - [x] **Optional textbook citation for the `Order.PrimeFilter` vocabulary** (report 03 §3.2): the
         subsection may cite Chagrov & Zakharyaschev, *Modal Logic* (1997), Part III §8.2 "The Stone
         and Jónsson-Tarski theorems" (printed pp. 241-243), **Theorem 8.14** — Stone's representation
         with the Stone space defined as the set of all *prime filters* and `f_A(a) = {∇ : a ∈ ∇}`,
@@ -1091,7 +1091,7 @@ HARD STOP: stop, report, do not re-baseline.
         DJVU-derived OCR** (fraktur A reads as `21`, `∈` as `G`, `f_A` as `/a`): use it as a
         locator only and read the page images before transcribing any formula into the README.
         Cite by author, year, part/section, theorem number and printed page — never by task number.
-  - [ ] **Optional Mathlib-coverage note** (report 03 §2.3): the subsection may record that the
+  - [x] **Optional Mathlib-coverage note** (report 03 §2.3): the subsection may record that the
         pinned Mathlib (`v4.33.0-rc1`, `79d0395a`) has **no** Stone representation theorem for
         Boolean algebras and **no** Priestley duality — `Order/Birkhoff.lean:40` scopes itself to
         finite Stone duality, `Topology/Order/Priestley.lean` defines only the `PriestleySpace`
@@ -1101,23 +1101,45 @@ HARD STOP: stop, report, do not re-baseline.
         brick in a direction a Mathlib author has already begun; say so in one sentence, as
         motivation for keeping the file PR-shaped. Re-verify the three Mathlib anchors against the
         pinned checkout before writing them into the README.
-  - [ ] Note the `propDecide` dependency: `BooleanStructure.lean` now imports
+  - [x] Note the `propDecide` dependency: `BooleanStructure.lean` now imports
         `Automation/Tactics/PropDecide.lean`, and the layering rationale (no cycle).
-  - [ ] Record the **documented gap** for the downstream representation work: Mathlib gives `PFilter`
+  - [x] Record the **documented gap** for the downstream representation work: Mathlib gives `PFilter`
         no lattice, so `F ⊔ principal x` needs a five-line dual transport `⟨F.dual ⊔ G.dual⟩` that
         this task deliberately does not write.
-  - [ ] **Use durable anchors, never task numbers.** When describing what the layer now unblocks,
+  - [x] **Use durable anchors, never task numbers.** When describing what the layer now unblocks,
         name the declarations (`Order.PFilter.IsProper.exists_le_maximal`, `.exists_le_prime`,
         `Order.Ideal.PrimePair` via `U.2.toPrimePair`) and the file paths, not "task 497" or
         "task 125" — C9 enforces zero task-number citations under `FormalSystem/`, and
         `.claude/rules/no-task-references-in-deliverables.md` is the governing rule.
-  - [ ] Add the "Last verified" stamp using the form the majority of sibling `Metalogic/*/README.md`
+  - [x] Add the "Last verified" stamp using the form the majority of sibling `Metalogic/*/README.md`
         files use (`FormalSystem/BaseLanguage/README.md:69` uses `**Last verified**: YYYY-MM-DD`;
         `FormalSystem/Automation/README.md:107` uses `*Last verified: YYYY-MM-DD*`). Keep the
         existing `*Last updated:*` footer and update its date too.
-  - [ ] Record the final acceptance-criterion-1 measurement in the README's status section.
-  - [ ] Touch `FormalSystem/Metalogic/Algebraic.lean`'s docstring only if it names the deleted
-        `Ultrafilter` structure; re-verify by grep before editing.
+  - [x] Record the final acceptance-criterion-1 measurement in the README's status section.
+  - [x] Touch `FormalSystem/Metalogic/Algebraic.lean`'s docstring only if it names the deleted
+        `Ultrafilter` structure; re-verify by grep before editing. *(re-verified: `Algebraic.lean` names only the module `UltrafilterMCS` (`:11`, `:28`), not the deleted structure — no edit)*
+
+- **Completion note (2026-09-03):**
+  - Stale-claim list (re-read against the post-Phase-6 tree): line-count sentence (`:38-40`: 2,887 total,
+    `BooleanStructure` 441, `FlowFrame` 806, `UltrafilterMCS` 1,071 — now 2,425 / 261 / 794 / 801);
+    `UltrafilterMCS.lean` table row (`:51`); the API sketch (`:149-151`, bespoke `Ultrafilter` type);
+    the dependency flowchart (`:78-91`, no `ForMathlib` node); the Dependencies list (`:205`, `Filter`);
+    no "Last verified" stamp; `*Last updated: 2026-08-26*`. No sorry/axiom count claims other than
+    "Sorry-free" rows, which remain true.
+  - All updated. New "## Design decisions" subsection records D1 = option (c) with the two-dualities
+    argument, the `IsPrime`-suffices fact, "no bridge lemma" (`IsPrime.toPrimePair`), the `abbrev`
+    trade-off, the Chagrov–Zakharyaschev Part III §8.2 / Theorem 8.14 citation (by author, year,
+    section, theorem, pages; no formula transcribed from the OCR), the Mathlib-coverage note with the
+    three anchors re-verified against the pinned checkout (`Order/Birkhoff.lean:38-42` "finite Stone
+    duality … TODO: extend to morphisms"; `Topology/Order/Priestley.lean` = `class PriestleySpace` +
+    three clopen lemmas; `Order/PrimeSeparator.lean:12-18` names Stone duality), the `propDecide`
+    dependency and no-cycle rationale, the durable-anchor list of what the layer unblocks, and the
+    documented `PFilter`-lattice gap. Stamp form: `*Last verified: 2026-09-03*` (majority form among
+    sibling READMEs, 8 of 10); `*Last updated:*` bumped. Acceptance-criterion-1 figure (105) recorded
+    in the Status paragraph.
+  - `grep -rn 'task [0-9]' FormalSystem/Metalogic/Algebraic/README.md` empty; every module-shaped
+    `FormalSystem.*` path in the README resolves (C5); C12/C13 do not scan `FormalSystem/**/README.md`
+    (script comment at `check-module-invariants.sh:581`).
 
 - **Timing:** 1 hour
 - **Depends on:** 2, 3, 6
@@ -1146,18 +1168,18 @@ HARD STOP: stop, report, do not re-baseline.
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0 at every phase boundary.
-- [ ] `bash scripts/check-module-invariants.sh` all-pass at task close; C2 axiom baseline byte-identical to its pre-task value.
-- [ ] C3: zero structural `sorry` — no new sorry introduced by any phase.
-- [ ] C6: the new `FormalSystem/ForMathlib/Order/PFilter.lean` is **reachable** (absent from `scripts/module-invariants-manifest.txt`); C8 green for the `ForMathlib.lean` sibling aggregator.
-- [ ] C11 green: every Boneyard import still resolves (the module is not renamed).
-- [ ] `Tests/BimodalTest/Metalogic/PropDecideTest.lean` compiles with the two new regression examples.
-- [ ] Acceptance-criterion-1 command run and its output recorded, with the outcome mapped to a row of Decision D2's table.
-- [ ] `#check SetMaximalConsistent.ultrafilterEquiv` elaborates at `≃ Order.PrimeFilter LindenbaumAlg`; `#print axioms` on it shows no `sorryAx`.
-- [ ] `#print axioms Order.PFilter.IsProper.exists_le_prime` shows exactly `[propext, Classical.choice, Quot.sound]`.
-- [ ] `grep -rn 'structure Ultrafilter\|def Ultrafilter' FormalSystem/ --include=*.lean | grep -v Boneyard` returns nothing.
-- [ ] `grep -rn 'import FormalSystem' FormalSystem/ForMathlib/` returns nothing.
-- [ ] `grep -c 'fold_from_x' FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean` returns 0.
+- [x] `lake build` exits 0 at every phase boundary.
+- [x] `bash scripts/check-module-invariants.sh` all-pass at task close; C2 axiom baseline byte-identical to its pre-task value.
+- [x] C3: zero structural `sorry` — no new sorry introduced by any phase.
+- [x] C6: the new `FormalSystem/ForMathlib/Order/PFilter.lean` is **reachable** (absent from `scripts/module-invariants-manifest.txt`); C8 green for the `ForMathlib.lean` sibling aggregator.
+- [x] C11 green: every Boneyard import still resolves (the module is not renamed).
+- [x] `Tests/BimodalTest/Metalogic/PropDecideTest.lean` compiles with the two new regression examples.
+- [x] Acceptance-criterion-1 command run and its output recorded, with the outcome mapped to a row of Decision D2's table.
+- [x] `#check SetMaximalConsistent.ultrafilterEquiv` elaborates at `≃ Order.PrimeFilter LindenbaumAlg`; `#print axioms` on it shows no `sorryAx`.
+- [x] `#print axioms Order.PFilter.IsProper.exists_le_prime` shows exactly `[propext, Classical.choice, Quot.sound]`.
+- [x] `grep -rn 'structure Ultrafilter\|def Ultrafilter' FormalSystem/ --include=*.lean | grep -v Boneyard` returns nothing.
+- [x] `grep -rn 'import FormalSystem' FormalSystem/ForMathlib/` returns nothing.
+- [x] `grep -c 'fold_from_x' FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean` returns 0.
 
 ## Artifacts & Outputs
 
