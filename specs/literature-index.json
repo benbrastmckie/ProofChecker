@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-08-26T18:33:21Z",
+  "updated": "2026-09-03T00:00:00Z",
   "entries": [
     {
       "doc_id": "rabinovich_2014",
@@ -363,7 +363,8 @@
       "added": "2026-08-26",
       "source": "formal-research (representation-section literature sweep)",
       "citation_rule": "Cite by the book's own numbering plus printed page. Never cite md line numbers.",
-      "fidelity": "Converted from DJVU. Verify statements against the source before relying on them."
+      "fidelity": "Converted from DJVU. Verify statements against the source before relying on them.",
+      "relevance": "Task 528 / algebraic front: Part III §8.2 The Stone and Jonsson-Tarski theorems (printed pp. 241-243, child chunk chagrovzakharyaschev_1997_modallogic_p03) — Theorem 8.14, Stone representation for distributive lattices with the Stone space W_A = the set of all PRIME FILTERS and f_A(a) = {nabla in W_A : a in nabla}, then extended to pseudo-Boolean and modal algebras; Corollary 7.42 is the prime-filter separation lemma. This is the only in-corpus textbook statement of the construction in exactly the `Order.PrimeFilter` vocabulary that Metalogic/Algebraic adopts (bundled prime filters; on a Boolean algebra these are the ultrafilters). DJVU-derived OCR on these pages: fraktur A reads as `21`, the membership symbol as `G`, f_A as `/a` — use the .md as a locator and read the page images for any formula."
     },
     {
       "doc_id": "zakharyaschev_2001",
@@ -378,6 +379,30 @@
       "added": "2026-08-26",
       "source": "formal-research (representation-section literature sweep)",
       "citation_rule": "Cite by the chapter's own section numbering. Never cite md line numbers."
+    },
+    {
+      "doc_id": "trufas_2024",
+      "reason": "Algebraic front (task 528 source dossier, reports/03): Lean 4 formalization of intuitionistic propositional logic with both Kripke and algebraic semantics via a Lindenbaum-Tarski algebra. The corpus's only Lean 4 comparator for Metalogic/Algebraic/LindenbaumQuotient.lean's quotient-carries-an-algebra-instance design; consult for how it builds the Heyting-algebra instance on the quotient and how it phrases completeness through the algebra. Engineering comparator, not a mathematical source.",
+      "citation_rule": "Cite by the paper's own section/definition/theorem labels. Never cite md:NN line numbers.",
+      "hazard": "provenance_fidelity is no_source_pdf — markdown only, no PDF on disk to verify against. Cite as an engineering comparator only, never for a load-bearing mathematical claim.",
+      "added": "2026-09-03",
+      "source": "manual (task 528 round-03 source-acquisition dossier)"
+    },
+    {
+      "doc_id": "bentzen_2023",
+      "reason": "Algebraic front (task 528 source dossier, reports/03): verified Henkin-style completeness for intuitionistic propositional logic in Lean, following Troelstra-van Dalen, built on a prime-extension lemma — the intuitionistic sibling of the filter-side Lindenbaum step (Order.PFilter.IsProper.exists_le_prime in the ForMathlib layer) that the Jonsson-Tarski front consumes. Second Lean idiom for the algebra-side prime-extension argument.",
+      "citation_rule": "Cite by the paper's own section/lemma labels. Never cite md:NN line numbers.",
+      "hazard": "provenance_fidelity is no_source_pdf — markdown only, no PDF on disk to verify against. Cite as an engineering comparator only, never for a load-bearing mathematical claim.",
+      "added": "2026-09-03",
+      "source": "manual (task 528 round-03 source-acquisition dossier)"
+    },
+    {
+      "doc_id": "blackburn_2002_app_B-C",
+      "reason": "Representation section: BdRV Appendix B An Algebraic Toolkit (+ Appendix C), the universal-algebra background Chapter 5 assumes — similarity types, algebras and classes of algebras, Birkhoff's HSP/variety theorems stated without proof, equational logic. Its opening paragraph recommends Burris-Sankappanavar, Gratzer, and Davey-Priestley as the fuller references (see ~/Projects/Literature/SOURCES.md acquisition list).",
+      "citation_rule": "Cite by BdRV's own numbering (e.g. Definition B.1) plus printed page from the `## Page NNN` anchors in the .md. Never cite md:NN line numbers.",
+      "fidelity": "Chunk of blackburn_2002_book (parent stamped verified_conversion); clean conversion with page anchors. Verify any theorem statement against the printed page before relying on it.",
+      "added": "2026-09-03",
+      "source": "manual (task 528 round-03 source-acquisition dossier)"
     }
   ]
 }
