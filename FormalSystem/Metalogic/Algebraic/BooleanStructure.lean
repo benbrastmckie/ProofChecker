@@ -55,8 +55,10 @@ instance instLELindenbaumAlg : LE LindenbaumAlg where
 The order is reflexive.
 -/
 theorem le_refl_quot (a : LindenbaumAlg) : a ≤ a := by
-  induction a using Quotient.ind
-  exact derives_refl _
+  induction a using Quotient.ind with | _ φ =>
+  change Derives φ φ
+  unfold Derives
+  propDecide
 
 /--
 The order is transitive.
