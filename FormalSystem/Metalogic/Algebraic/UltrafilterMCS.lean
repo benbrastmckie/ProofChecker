@@ -574,38 +574,20 @@ instance mcsToPFilter_isPrime
   PFilter.isPrime_of_mem_or_compl_mem fun {a} => mcsToSet_compl_or Γ.2 a
 
 /--
-Convert an MCS to an ultrafilter on the Lindenbaum algebra.
+Convert an MCS to a prime filter (= ultrafilter) on the Lindenbaum algebra.
 
-Given a maximal consistent set Γ, the set `{ [φ] | φ ∈ Γ }` forms an ultrafilter.
+Given a maximal consistent set Γ, the set `{ [φ] | φ ∈ Γ }` is a prime filter:
+`mcsToPFilter Γ` bundled with its `IsPrime` instance.
 -/
 def mcsToUltrafilter (Γ : {S : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) S}) :
-    Ultrafilter LindenbaumAlg where
-  carrier := mcsToSet Γ.val
-  top_mem := mcsToSet_top Γ.property
-  bot_not_mem := mcsToSet_bot_not_mem Γ.property
-  mem_of_le := fun ha h_le => mcsToSet_mem_of_le Γ.property ha h_le
-  inf_mem := fun ha hb => mcsToSet_inf_mem Γ.property ha hb
-  compl_or := mcsToSet_compl_or Γ.property
-  compl_not := fun _ ha => mcsToSet_compl_not Γ.property ha
+    PrimeFilter LindenbaumAlg := ⟨mcsToPFilter Γ, inferInstance⟩
 
 /--
-The carrier of mcsToUltrafilter is mcsToSet.
--/
-@[simp]
-theorem mcsToUltrafilter_carrier (Γ : {S : Set Formula // SetMaximalConsistent
-    (fc := FrameClass.Base) S}) :
-    (mcsToUltrafilter Γ).carrier = mcsToSet Γ.val := by
-  unfold mcsToUltrafilter
-  rfl
-
-/--
-Membership in mcsToUltrafilter iff formula in MCS.
+Membership in mcsToUltrafilter iff formula-class in mcsToSet (definitional).
 -/
 theorem mem_mcsToUltrafilter_iff (Γ : {S : Set Formula // SetMaximalConsistent
     (fc := FrameClass.Base) S}) (a : LindenbaumAlg) :
-    a ∈ (mcsToUltrafilter Γ).carrier ↔ a ∈ mcsToSet Γ.val := by
-  unfold mcsToUltrafilter
-  constructor <;> exact id
+    a ∈ mcsToUltrafilter Γ ↔ a ∈ mcsToSet Γ.val := Iff.rfl
 
 /-!
 ## Fold-Derives Lemma
@@ -684,21 +666,21 @@ theorem fold_le_of_derives (L : List Formula) (ψ : Formula)
 /-!
 ## Ultrafilter to MCS Direction
 
-Given an ultrafilter U on LindenbaumAlg, we construct an MCS.
+Given a prime filter (= ultrafilter) U on LindenbaumAlg, we construct an MCS.
 -/
 
 /--
-The set of formulas whose equivalence classes are in an ultrafilter.
+The set of formulas whose equivalence classes are in a prime filter.
 
-Given ultrafilter U, this is `{ φ | [φ] ∈ U }`.
+Given prime filter U, this is `{ φ | [φ] ∈ U }`.
 -/
-def ultrafilterToSet (U : Ultrafilter LindenbaumAlg) : Set Formula :=
+def ultrafilterToSet (U : PrimeFilter LindenbaumAlg) : Set Formula :=
   { φ | toQuot φ ∈ U }
 
 /--
 ultrafilterToSet U is an MCS.
 -/
-theorem ultrafilterToSet_mcs (U : Ultrafilter LindenbaumAlg) :
+theorem ultrafilterToSet_mcs (U : PrimeFilter LindenbaumAlg) :
     SetMaximalConsistent (fc := FrameClass.Base) (ultrafilterToSet U) := by
   constructor
   · -- Consistency: for any L ⊆ ultrafilterToSet U, L is consistent (¬(L ⊢ ⊥))
@@ -706,24 +688,24 @@ theorem ultrafilterToSet_mcs (U : Ultrafilter LindenbaumAlg) :
     intro L hL ⟨d_bot⟩
     -- Key insight: If L ⊢ ⊥ and each [φᵢ] ∈ U, then the meet ⨅[φᵢ] ∈ U,
     -- and since L ⊢ ⊥ gives us [⨀L] ≤ ⊥, we get ⊥ ∈ U (by upward closure).
-    -- This contradicts U.bot_not_mem.
+    -- This contradicts properness (⊥ ∉ U).
 
     -- Helper: the meet of quotients of list elements is in U
-    have h_meet_in_U : ∀ M : List Formula, (∀ ψ ∈ M, toQuot ψ ∈ U.carrier) →
-        ((M.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U.carrier := by
+    have h_meet_in_U : ∀ M : List Formula, (∀ ψ ∈ M, toQuot ψ ∈ U) →
+        ((M.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U := by
       intro M
       induction M with
       | nil =>
         intro _
         simp only [List.map_nil, Multiset.coe_nil, Multiset.inf_zero]
-        exact U.top_mem
+        exact PFilter.top_mem
       | cons ψ M ih =>
         intro hM
         simp only [List.map_cons, ← Multiset.cons_coe, Multiset.inf_cons]
-        exact U.inf_mem (hM ψ (by simp)) (ih (fun φ hφ => hM φ (by simp [hφ])))
+        exact PFilter.inf_mem (hM ψ (by simp)) (ih (fun φ hφ => hM φ (by simp [hφ])))
     -- Now use this to show ⊥ ∈ U
-    have h_all_in_U : ∀ ψ ∈ L, toQuot ψ ∈ U.carrier := hL
-    have h_meet : ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U.carrier :=
+    have h_all_in_U : ∀ ψ ∈ L, toQuot ψ ∈ U := hL
+    have h_meet : ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ∈ U :=
       h_meet_in_U L h_all_in_U
     -- From L ⊢ ⊥ and fold_le_of_derives, we get inf L ≤ [⊥] = ⊥
     have h_le_bot : ((L.map toQuot : List LindenbaumAlg) : Multiset LindenbaumAlg).inf ≤
@@ -733,23 +715,20 @@ theorem ultrafilterToSet_mcs (U : Ultrafilter LindenbaumAlg) :
     -- Note: toQuot Formula.bot = ⊥ in the BooleanAlgebra
     have h_bot_eq : toQuot Formula.bot = ⊥ := rfl
     rw [h_bot_eq] at h_le_bot
-    have h_bot_in_U : (⊥ : LindenbaumAlg) ∈ U.carrier := U.mem_of_le h_meet h_le_bot
-    -- But this contradicts U.bot_not_mem
-    exact U.bot_not_mem h_bot_in_U
+    have h_bot_in_U : (⊥ : LindenbaumAlg) ∈ U := PFilter.mem_of_le h_le_bot h_meet
+    -- But this contradicts properness (⊥ ∉ U)
+    exact U.2.toIsProper.bot_notMem h_bot_in_U
   · -- Maximality: φ ∉ ultrafilterToSet U implies ¬SetConsistent (fc := FrameClass.Base) (insert φ
   -- (ultrafilterToSet U))
     intro φ hφ
     -- hφ : φ ∉ ultrafilterToSet U, i.e., [φ] ∉ U
     unfold ultrafilterToSet at hφ
     simp only [Set.mem_setOf_eq] at hφ
-    -- By ultrafilter completeness, either [φ] ∈ U or [φ]ᶜ ∈ U
+    -- By primality, either [φ] ∈ U or [φ]ᶜ ∈ U
     -- Since [φ] ∉ U, we have [φ]ᶜ ∈ U
-    have h_compl : (toQuot φ)ᶜ ∈ U.carrier := by
-      cases U.compl_or (toQuot φ) with
-      | inl h => exact absurd h hφ
-      | inr h => exact h
+    have h_compl : (toQuot φ)ᶜ ∈ U := U.2.compl_mem_of_notMem hφ
     -- [φ]ᶜ = [¬φ] in the Boolean algebra
-    have h_neg_phi : toQuot φ.neg ∈ U.carrier := h_compl
+    have h_neg_phi : toQuot φ.neg ∈ U := h_compl
     -- So ¬φ ∈ ultrafilterToSet U
     have h_neg_in : φ.neg ∈ ultrafilterToSet U := h_neg_phi
     -- Now show insert φ (ultrafilterToSet U) is inconsistent
@@ -784,202 +763,77 @@ theorem ultrafilterToSet_mcs (U : Ultrafilter LindenbaumAlg) :
 /-!
 ## Bijection
 
-The two directions are inverses.
+The two directions are inverses; the bijection is packaged as the `Equiv`
+`SetMaximalConsistent.ultrafilterEquiv`, and the existential `ultrafilter_correspondence` is its
+corollary.
 -/
+
+/--
+The MCS/ultrafilter correspondence as an `Equiv` between maximal consistent sets and prime
+filters (= ultrafilters) of the Lindenbaum algebra: `mcsToUltrafilter` and `ultrafilterToSet` are
+inverse to each other.
+-/
+noncomputable def SetMaximalConsistent.ultrafilterEquiv :
+    {Γ : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) Γ} ≃
+      PrimeFilter LindenbaumAlg where
+  toFun := mcsToUltrafilter
+  invFun U := ⟨ultrafilterToSet U, ultrafilterToSet_mcs U⟩
+  left_inv Γ := Subtype.ext (Set.ext fun φ => toQuot_mem_mcsToSet_iff Γ.2 φ)
+  right_inv U := by
+    apply PrimeFilter.ext
+    intro a
+    constructor
+    · rintro ⟨φ, h_phi_in, h_eq⟩
+      rw [show a = toQuot φ from h_eq]
+      exact h_phi_in
+    · intro h_mem
+      induction a using Quotient.ind with
+      | _ φ => exact ⟨φ, h_mem, rfl⟩
 
 /--
 The MCS-ultrafilter correspondence is a bijection.
 
-`mcsToUltrafilter` and `ultrafilterToSet` are inverses of each other.
+`mcsToUltrafilter` and `ultrafilterToSet` are inverses of each other; corollary of
+`SetMaximalConsistent.ultrafilterEquiv`.
 -/
 theorem SetMaximalConsistent.ultrafilter_correspondence :
-    ∃ (f : {Γ : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) Γ} → Ultrafilter
+    ∃ (f : {Γ : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) Γ} → PrimeFilter
         LindenbaumAlg)
-      (g : Ultrafilter LindenbaumAlg → {Γ : Set Formula // SetMaximalConsistent
+      (g : PrimeFilter LindenbaumAlg → {Γ : Set Formula // SetMaximalConsistent
           (fc := FrameClass.Base) Γ}),
-      Function.LeftInverse g f ∧ Function.RightInverse g f := by
-  -- f = mcsToUltrafilter
-  -- g = fun U => ⟨ultrafilterToSet U, ultrafilterToSet_mcs U⟩
-  use mcsToUltrafilter
-  use fun U => ⟨ultrafilterToSet U, ultrafilterToSet_mcs U⟩
-  constructor
-  · -- LeftInverse: g (f Γ) = Γ for all MCS Γ
-    -- i.e., ultrafilterToSet (mcsToUltrafilter Γ) = Γ.val
-    intro Γ
-    apply Subtype.ext
-    -- Need to show: ultrafilterToSet (mcsToUltrafilter Γ) = Γ.val
-    ext φ
-    simp only [ultrafilterToSet, Set.mem_setOf_eq]
-    -- toQuot φ ∈ (mcsToUltrafilter Γ).carrier ↔ φ ∈ Γ.val
-    constructor
-    · -- toQuot φ ∈ mcsToSet Γ.val → φ ∈ Γ.val
-      intro h_mem
-      -- h_mem : toQuot φ ∈ mcsToSet Γ.val
-      -- mcsToSet Γ.val = { a | ∃ ψ ∈ Γ.val, a = toQuot ψ }
-      obtain ⟨ψ, h_psi_in, h_eq⟩ := h_mem
-      -- h_eq : toQuot φ = toQuot ψ
-      -- This means [φ] = [ψ], i.e., ⊢ φ ↔ ψ
-      -- Since Γ is MCS and ψ ∈ Γ, we get φ ∈ Γ by closure
-      have h_le : toQuot ψ ≤ toQuot φ := by rw [← h_eq]
-      obtain ⟨d_imp⟩ := (h_le : Derives ψ φ)
-      -- From ψ ∈ Γ and ⊢ ψ → φ, derive φ ∈ Γ
-      by_contra h_not
-      have h_incons : ¬SetConsistent (fc := FrameClass.Base) (insert φ Γ.val) := Γ.property.2 φ
-          h_not
-      unfold SetConsistent at h_incons
-      push Not at h_incons
-      obtain ⟨L, hL, hL_incons⟩ := h_incons
-      have ⟨d_bot⟩ := FormalSystem.Metalogic.Core.inconsistent_derives_bot hL_incons
-
-      let Γ' := L.filter (· ≠ φ)
-      have h_Γ'_sub : ∀ χ ∈ Γ', χ ∈ Γ.val := by
-        intro χ hχ
-        have hχ' := List.mem_filter.mp hχ
-        have hχne : χ ≠ φ := by simpa using hχ'.2
-        specialize hL χ hχ'.1
-        simp only [Set.mem_insert_iff] at hL
-        rcases hL with rfl | h_in_Γ
-        · exact absurd rfl hχne
-        · exact h_in_Γ
-      have h_L_sub : L ⊆ φ :: Γ' := by
-        intro χ hχ
-        by_cases hχeq : χ = φ
-        · simp [hχeq]
-        · simp only [List.mem_cons]; right
-          exact List.mem_filter.mpr ⟨hχ, by simpa⟩
-
-      have d_bot' : DerivationTree FrameClass.Base (φ :: Γ') Formula.bot :=
-        DerivationTree.weakening L (φ :: Γ') Formula.bot d_bot h_L_sub
-      have d_neg : DerivationTree FrameClass.Base Γ' φ.neg :=
-        FormalSystem.Metalogic.Core.deductionTheorem Γ' φ Formula.bot d_bot'
-
-      -- Now from ψ ∈ Γ and ⊢ ψ → φ, we have [ψ, Γ'] ⊢ φ
-      -- But also [Γ'] ⊢ ¬φ, so [ψ, Γ'] ⊢ ¬φ
-      -- Contradiction
-      have d_neg' : DerivationTree FrameClass.Base (ψ :: Γ') φ.neg :=
-        DerivationTree.weakening Γ' (ψ :: Γ') φ.neg d_neg (fun x hx => List.mem_cons_of_mem ψ hx)
-      have d_ψ : DerivationTree FrameClass.Base (ψ :: Γ') ψ :=
-        DerivationTree.assumption (ψ :: Γ') ψ (by simp)
-      have d_imp' : DerivationTree FrameClass.Base (ψ :: Γ') (ψ.imp φ) :=
-        DerivationTree.weakening [] (ψ :: Γ') (ψ.imp φ) d_imp (by simp)
-      have d_φ : DerivationTree FrameClass.Base (ψ :: Γ') φ :=
-        DerivationTree.modus_ponens (ψ :: Γ') ψ φ d_imp' d_ψ
-      have d_bot'' : DerivationTree FrameClass.Base (ψ :: Γ') Formula.bot :=
-        DerivationTree.modus_ponens (ψ :: Γ') φ Formula.bot d_neg' d_φ
-
-      have h_cons : Consistent (fc := FrameClass.Base) (ψ :: Γ') := by
-        apply Γ.property.1 (ψ :: Γ')
-        intro χ hχ
-        simp only [List.mem_cons] at hχ
-        rcases hχ with rfl | hχ'
-        · exact h_psi_in
-        · exact h_Γ'_sub χ hχ'
-      exact h_cons ⟨d_bot''⟩
-    · -- φ ∈ Γ.val → toQuot φ ∈ mcsToSet Γ.val
-      intro h_mem
-      exact mem_mcsToSet h_mem
-  · -- RightInverse: f (g U) = U for all ultrafilters U
-    -- i.e., mcsToUltrafilter ⟨ultrafilterToSet U, ...⟩ = U
-    intro U
-    -- Two ultrafilters are equal iff their carriers are equal
-    apply Ultrafilter.ext
-    -- Need: (mcsToUltrafilter ⟨ultrafilterToSet U, ...⟩).carrier = U.carrier
-    -- LHS = mcsToSet (ultrafilterToSet U) = { [φ] | φ ∈ ultrafilterToSet U }
-    --     = { [φ] | [φ] ∈ U.carrier }
-    ext a
-    simp only [mcsToUltrafilter]
-    -- a ∈ mcsToSet (ultrafilterToSet U) ↔ a ∈ U.carrier
-    constructor
-    · -- a ∈ mcsToSet (ultrafilterToSet U) → a ∈ U.carrier
-      intro ⟨φ, h_phi_in, h_eq⟩
-      -- h_phi_in : φ ∈ ultrafilterToSet U, i.e., toQuot φ ∈ U.carrier
-      -- h_eq : a = toQuot φ
-      rw [h_eq]
-      exact h_phi_in
-    · -- a ∈ U.carrier → a ∈ mcsToSet (ultrafilterToSet U)
-      intro h_mem
-      induction a using Quotient.ind with
-      | _ φ =>
-        -- h_mem : toQuot φ ∈ U.carrier
-        -- Need: toQuot φ ∈ mcsToSet (ultrafilterToSet U)
-        -- i.e., ∃ ψ ∈ ultrafilterToSet U, toQuot φ = toQuot ψ
-        use φ
-        constructor
-        · -- φ ∈ ultrafilterToSet U
-          exact h_mem
-        · rfl
+      Function.LeftInverse g f ∧ Function.RightInverse g f :=
+  ⟨SetMaximalConsistent.ultrafilterEquiv, SetMaximalConsistent.ultrafilterEquiv.symm,
+    SetMaximalConsistent.ultrafilterEquiv.left_inv, SetMaximalConsistent.ultrafilterEquiv.right_inv⟩
 
 /-!
-## Helper Lemmas for Ultrafilter Properties
+## Helper Lemmas for Prime-Filter Properties
 
-These lemmas make it easier to work with ultrafilters in the context of
-temporal and modal accessibility relations.
+These lemmas make it easier to work with prime filters (= ultrafilters) in the context of
+temporal and modal accessibility relations. The generic facts (`a ∈ U ↔ aᶜ ∉ U`,
+`a ∉ U ↔ aᶜ ∈ U`) live in `FormalSystem/ForMathlib/Order/PFilter.lean` as
+`Order.PFilter.IsPrime.mem_iff_compl_notMem` / `compl_mem_iff_notMem`.
 -/
-
-/--
-Exactly one of a or aᶜ is in an ultrafilter.
-This is the fundamental ultrafilter property that eliminates the F-persistence problem.
--/
-theorem Ultrafilter.compl_xor {α : Type*} [BooleanAlgebra α] (U : Ultrafilter α) (a : α) :
-    (a ∈ U.carrier ∧ aᶜ ∉ U.carrier) ∨ (a ∉ U.carrier ∧ aᶜ ∈ U.carrier) := by
-  cases U.compl_or a with
-  | inl h => exact Or.inl ⟨h, U.compl_not a h⟩
-  | inr h =>
-    have h_not_a : a ∉ U.carrier := by
-      intro ha
-      exact U.compl_not a ha h
-    exact Or.inr ⟨h_not_a, h⟩
-
-/--
-Membership in ultrafilter is equivalent to non-membership of complement.
--/
-theorem Ultrafilter.mem_iff_compl_not_mem {α : Type*} [BooleanAlgebra α]
-    (U : Ultrafilter α) (a : α) : a ∈ U.carrier ↔ aᶜ ∉ U.carrier := by
-  constructor
-  · exact U.compl_not a
-  · intro h
-    cases U.compl_or a with
-    | inl ha => exact ha
-    | inr hac => exact absurd hac h
-
-/--
-Non-membership in ultrafilter is equivalent to membership of complement.
--/
-theorem Ultrafilter.not_mem_iff_compl_mem {α : Type*} [BooleanAlgebra α]
-    (U : Ultrafilter α) (a : α) : a ∉ U.carrier ↔ aᶜ ∈ U.carrier := by
-  constructor
-  · intro h
-    cases U.compl_or a with
-    | inl ha => exact absurd ha h
-    | inr hac => exact hac
-  · intro hac ha
-    exact U.compl_not a ha hac
 
 /--
 For formulas: [φ] ∈ U iff [¬φ] ∉ U.
 
-This is the formula-level version of ultrafilter negation completeness.
+This is the formula-level version of prime-filter negation completeness
+(`(toQuot φ)ᶜ = toQuot φ.neg` is `rfl`).
 -/
-theorem ultrafilter_neg_iff (U : Ultrafilter LindenbaumAlg) (φ : Formula) :
-    toQuot φ ∈ U.carrier ↔ toQuot φ.neg ∉ U.carrier := by
-  -- (toQuot φ)ᶜ = toQuot φ.neg by definition of negQuot
-  have h_compl : (toQuot φ)ᶜ = toQuot φ.neg := rfl
-  rw [← h_compl]
-  exact U.mem_iff_compl_not_mem (toQuot φ)
+theorem ultrafilter_neg_iff (U : PrimeFilter LindenbaumAlg) (φ : Formula) :
+    toQuot φ ∈ U ↔ toQuot φ.neg ∉ U := U.2.mem_iff_compl_notMem
 
 /--
 For formulas: [¬φ] ∈ U iff [φ] ∉ U.
 -/
-theorem ultrafilter_neg_iff' (U : Ultrafilter LindenbaumAlg) (φ : Formula) :
-    toQuot φ.neg ∈ U.carrier ↔ toQuot φ ∉ U.carrier := by
-  have h_compl : (toQuot φ)ᶜ = toQuot φ.neg := rfl
-  rw [← h_compl]
-  exact U.not_mem_iff_compl_mem (toQuot φ) |>.symm
+theorem ultrafilter_neg_iff' (U : PrimeFilter LindenbaumAlg) (φ : Formula) :
+    toQuot φ.neg ∈ U ↔ toQuot φ ∉ U := U.2.compl_mem_iff_notMem (x := toQuot φ)
 
 /--
-Convenience: wrap ultrafilterToSet result with its MCS proof.
+Convenience: wrap ultrafilterToSet result with its MCS proof
+(definitionally `SetMaximalConsistent.ultrafilterEquiv.symm U`).
 -/
-noncomputable def ultrafilterToMcs (U : Ultrafilter LindenbaumAlg) :
+noncomputable def ultrafilterToMcs (U : PrimeFilter LindenbaumAlg) :
     {Γ : Set Formula // SetMaximalConsistent (fc := FrameClass.Base) Γ} :=
   ⟨ultrafilterToSet U, ultrafilterToSet_mcs U⟩
 
@@ -987,98 +841,7 @@ noncomputable def ultrafilterToMcs (U : Ultrafilter LindenbaumAlg) :
 The carrier of ultrafilterToMcs.
 -/
 @[simp]
-theorem ultrafilter_to_mcs_val (U : Ultrafilter LindenbaumAlg) :
+theorem ultrafilter_to_mcs_val (U : PrimeFilter LindenbaumAlg) :
     (ultrafilterToMcs U).val = ultrafilterToSet U := rfl
-
-/--
-Round-trip: ultrafilterToMcs ∘ mcsToUltrafilter = id.
--/
-theorem ultrafilter_mcs_round_trip (Γ : {S : Set Formula // SetMaximalConsistent
-    (fc := FrameClass.Base) S}) :
-    ultrafilterToMcs (mcsToUltrafilter Γ) = Γ := by
-  obtain ⟨f, g, h_left, _⟩ := SetMaximalConsistent.ultrafilter_correspondence
-  -- f = mcsToUltrafilter, g = ultrafilterToMcs
-  -- h_left says g (f Γ) = Γ
-  -- We need to show this for our specific definitions
-  apply Subtype.ext
-  simp only [ultrafilterToMcs, ultrafilterToSet, mcsToUltrafilter]
-  ext φ
-  constructor
-  · intro h_mem
-    obtain ⟨ψ, h_psi_in, h_eq⟩ := h_mem
-    -- h_eq : toQuot φ = toQuot ψ and ψ ∈ Γ.val
-    -- Need φ ∈ Γ.val
-    -- Since [φ] = [ψ], we have ⊢ φ ↔ ψ, so by MCS closure...
-    have h_le : toQuot ψ ≤ toQuot φ := by rw [← h_eq]
-    obtain ⟨d_imp⟩ := (h_le : Derives ψ φ)
-    -- From ψ ∈ Γ and ⊢ ψ → φ, derive φ ∈ Γ
-    by_contra h_not
-    have h_incons : ¬SetConsistent (fc := FrameClass.Base) (insert φ Γ.val) := Γ.property.2 φ h_not
-    unfold SetConsistent at h_incons
-    push Not at h_incons
-    obtain ⟨L, hL, hL_incons⟩ := h_incons
-    have ⟨d_bot⟩ := FormalSystem.Metalogic.Core.inconsistent_derives_bot hL_incons
-
-    let Γ' := L.filter (· ≠ φ)
-    have h_Γ'_sub : ∀ χ ∈ Γ', χ ∈ Γ.val := by
-      intro χ hχ
-      have hχ' := List.mem_filter.mp hχ
-      have hχne : χ ≠ φ := by simpa using hχ'.2
-      specialize hL χ hχ'.1
-      simp only [Set.mem_insert_iff] at hL
-      rcases hL with rfl | h_in_Γ
-      · exact absurd rfl hχne
-      · exact h_in_Γ
-    have h_L_sub : L ⊆ φ :: Γ' := by
-      intro χ hχ
-      by_cases hχeq : χ = φ
-      · simp [hχeq]
-      · simp only [List.mem_cons]; right
-        exact List.mem_filter.mpr ⟨hχ, by simpa⟩
-
-    have d_bot' : DerivationTree FrameClass.Base (φ :: Γ') Formula.bot :=
-      DerivationTree.weakening L (φ :: Γ') Formula.bot d_bot h_L_sub
-    have d_neg : DerivationTree FrameClass.Base Γ' φ.neg :=
-      FormalSystem.Metalogic.Core.deductionTheorem Γ' φ Formula.bot d_bot'
-
-    have d_neg' : DerivationTree FrameClass.Base (ψ :: Γ') φ.neg :=
-      DerivationTree.weakening Γ' (ψ :: Γ') φ.neg d_neg (fun x hx => List.mem_cons_of_mem ψ hx)
-    have d_ψ : DerivationTree FrameClass.Base (ψ :: Γ') ψ :=
-      DerivationTree.assumption (ψ :: Γ') ψ (by simp)
-    have d_imp' : DerivationTree FrameClass.Base (ψ :: Γ') (ψ.imp φ) :=
-      DerivationTree.weakening [] (ψ :: Γ') (ψ.imp φ) d_imp (by simp)
-    have d_φ : DerivationTree FrameClass.Base (ψ :: Γ') φ :=
-      DerivationTree.modus_ponens (ψ :: Γ') ψ φ d_imp' d_ψ
-    have d_bot'' : DerivationTree FrameClass.Base (ψ :: Γ') Formula.bot :=
-      DerivationTree.modus_ponens (ψ :: Γ') φ Formula.bot d_neg' d_φ
-
-    have h_cons : Consistent (fc := FrameClass.Base) (ψ :: Γ') := by
-      apply Γ.property.1 (ψ :: Γ')
-      intro χ hχ
-      simp only [List.mem_cons] at hχ
-      rcases hχ with rfl | hχ'
-      · exact h_psi_in
-      · exact h_Γ'_sub χ hχ'
-    exact h_cons ⟨d_bot''⟩
-  · intro h_mem
-    exact mem_mcsToSet h_mem
-
-/--
-Round-trip: mcsToUltrafilter ∘ ultrafilterToMcs = id.
--/
-theorem mcs_ultrafilter_round_trip (U : Ultrafilter LindenbaumAlg) :
-    mcsToUltrafilter (ultrafilterToMcs U) = U := by
-  apply Ultrafilter.ext
-  simp only [mcsToUltrafilter, ultrafilterToMcs, ultrafilterToSet]
-  ext a
-  constructor
-  · intro ⟨φ, h_phi_in, h_eq⟩
-    rw [h_eq]
-    exact h_phi_in
-  · intro h_mem
-    induction a using Quotient.ind with
-    | _ φ =>
-      use φ
-      exact ⟨h_mem, rfl⟩
 
 end FormalSystem.Metalogic.Algebraic.UltrafilterMCS
