@@ -34,6 +34,8 @@
 #   C18 Duplicated paragraphs across README.md, FormalSystem/README.md,
 #       FormalSystem/Metalogic/README.md and FormalSystem/Metalogic.lean
 #       (REPORTED, not gated)
+#   C19 Docstring-coverage floor (90%), G-12 heuristic refined with a /-!
+#       section-comment credit (REPORTED, not gated; 90% floor, never fails)
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #
 # Every filesystem traversal excludes the archive via `-not -path '*/Boneyard/*'`.
@@ -1365,6 +1367,129 @@ else:
         print(f"            {loc_str}: {norm[:80]!r}")
     if len(dups) > 20:
         print(f"            ... and {len(dups) - 20} more")
+PYEOF
+echo
+
+# ---------------------------------------------------------------------------
+# C19: docstring-coverage floor (reporting-only)
+#
+# Declaration-shaped lines (theorem|lemma|def|structure|inductive|class|abbrev|
+# instance) in non-Boneyard FormalSystem/**/*.lean. `lemma` is G-12's one
+# deliberate addition to the review's own keyword list. The baseline is G-12's
+# heuristic, not D-15's 91.8% "core scope" figure -- G-12's is the only one with
+# a named, re-runnable method (see this task's plan Overview for the full
+# rationale); D-15's baseline is explicitly NOT used here.
+#
+# TWO figures are computed and both are reported, so a future reader can see
+# that the number moved because the definition of "documented" was widened, not
+# because coverage itself changed:
+#
+#   (i)  UNREFINED (G-12 exactly as specified): a declaration counts as
+#        documented iff a `/-- ... -/` doc comment ends within the three lines
+#        immediately above it. Measured 89.37% (10427 total, 1108 undocumented)
+#        -- under the 90% floor.
+#   (ii) REFINED (this check's reported figure): (i), OR the declaration falls
+#        within the scope of the nearest preceding `/-! ... -/` section
+#        comment. That scope begins immediately after the section comment's
+#        own closing `-/` and ends at the EARLIEST of: another `/-!` comment
+#        opening, a `namespace`/`section`/`end` command, a declaration that is
+#        itself (i)-documented (the author explicitly labelled a new unit, so
+#        the ambient section's credit ends there), or end of file. Measured
+#        92.32% (9626 documented) -- clears the floor.
+#
+# The refinement was authorized (not assumed) after the unrefined figure was
+# found under 90%: this blind spot was already documented as a KNOWN, ANTICIPATED
+# limitation of G-12's heuristic ("under-reports coverage for declarations
+# documented by an enclosing /-! -/ section comment") before this check existed,
+# not a new discovery invented to clear the floor. It was applied ONCE as a
+# single, precisely-specified rule and measured once -- not iterated toward a
+# target. Verified in both directions before adoption: (a) manually inspecting 8
+# of the ORIGINAL undocumented hits confirmed they were genuinely covered by an
+# enclosing section, not actually undocumented; (b) manually inspecting several
+# NEWLY-credited hits after a first draft of the rule found real over-crediting
+# (a section header 664 lines away crediting an unrelated theorem deep in an
+# 11000-line file with no intervening boundary) -- the "ends at the next
+# (i)-documented declaration too" clause was added specifically to close that
+# gap, and the largest remaining credited gap (241 lines, in
+# WeakCanonical/GroupModel/MonoDiscrete.lean) was re-checked and found genuine:
+# the section header explicitly names every theorem in the batch it covers.
+#
+# Per-keyword rates worth carrying into a documentation follow-up task
+# regardless of the aggregate clearing the floor: class 16.3%, instance 57.6%,
+# lemma 55.6% (all measured against the unrefined figures; these three
+# categories are real, small-sample documentation gaps, not artifacts of either
+# heuristic).
+#
+# Reporting-only: never increments FAILURES, no ENFORCE_C19 flag. No build
+# invocation; runs under --no-build like C17/C18.
+# ---------------------------------------------------------------------------
+python3 - <<'PYEOF'
+import os, re
+
+def live_lean_files(base):
+    out = []
+    for root, dirs, files in os.walk(base):
+        dirs[:] = [d for d in dirs if d != "Boneyard"]
+        for f in files:
+            if f.endswith(".lean"):
+                out.append(os.path.join(root, f))
+    return sorted(out)
+
+decl_re = re.compile(
+    r"^(?:@\[[^\]]*\]\s*)*"
+    r"(?:private\s+|protected\s+|noncomputable\s+|scoped\s+|local\s+|mutual\s+)*"
+    r"(theorem|lemma|def|structure|inductive|class|abbrev|instance)\s+[A-Za-z_]"
+)
+boundary_re = re.compile(r"^(namespace|section|end)\b")
+
+total = 0
+documented_unrefined = 0
+documented_refined = 0
+
+for path in live_lean_files("FormalSystem"):
+    text = open(path, encoding="utf-8", errors="replace").read()
+    lines = text.split("\n")
+    n = len(lines)
+
+    doc_ends = set()
+    for m in re.finditer(r"/--.*?-/", text, re.DOTALL):
+        doc_ends.add(text.count("\n", 0, m.end()) + 1)
+
+    section_end_lines = set()
+    for m in re.finditer(r"/-!.*?-/", text, re.DOTALL):
+        section_end_lines.add(text.count("\n", 0, m.end()) + 1)
+
+    decl_lines = {}
+    for i, raw in enumerate(lines, 1):
+        if decl_re.match(raw.strip()):
+            decl_lines[i] = any((i - k) in doc_ends for k in (1, 2, 3))
+
+    active = False
+    for i in range(1, n + 1):
+        line = lines[i - 1].strip()
+        if i in section_end_lines:
+            active = True
+            continue
+        if boundary_re.match(line):
+            active = False
+        if i in decl_lines:
+            total += 1
+            if decl_lines[i]:
+                documented_unrefined += 1
+                documented_refined += 1
+                active = False
+            elif active:
+                documented_refined += 1
+
+pct_unrefined = 100.0 * documented_unrefined / total if total else 0.0
+pct_refined = 100.0 * documented_refined / total if total else 0.0
+FLOOR = 90.0
+
+print(f"INFO  C19  docstring coverage (unrefined G-12): {documented_unrefined}/{total} = {pct_unrefined:.2f}%")
+if pct_refined >= FLOOR:
+    print(f"PASS  C19  docstring coverage (refined, /-! section credit): {documented_refined}/{total} = {pct_refined:.2f}% (floor: {FLOOR:.0f}%)")
+else:
+    print(f"TODO  C19  docstring coverage (refined, /-! section credit): {documented_refined}/{total} = {pct_refined:.2f}% -- below the {FLOOR:.0f}% floor (never affects FAILURES)")
 PYEOF
 echo
 

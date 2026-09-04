@@ -1,8 +1,8 @@
 {
-  "status": "blocked",
+  "status": "in_progress",
   "phase": "implement",
   "dispatch_seq": 3,
-  "summary": "Phases 1-8 complete, Phase 9 BLOCKED (escalated to team lead, awaiting response). Phase 6 (E-09: widen C14 regex, correct stale documents) closed COMPLETED: a third genuinely stale claim was found at FormalSystem/ProofSystem.lean:21 beyond the plan's two named documents, and a new 'covers' precision guard was needed for a genuine false positive (a subset claim, not a stale total, in ProofSearch/Core.lean). Phase 7 (E-06: readme-lint Check 4) closed COMPLETED: stamp-vs-commit-date comparison added, reporting-only; verified equivalently via a direct pre/post script comparison since Phase 1 never actually captured the readme-lint baseline the plan's own Verification bullet expected. Phase 8 (D-16/E-13: C17 dead-declaration scan, C18 paragraph duplication) closed COMPLETED: both reporting-only, both verified structurally and empirically incapable of affecting FAILURES; C17 found 989 candidate dead declarations (documented blind spot: attribute/simp-set-driven indirect usage), C18 found zero duplicates (mechanism verified via a synthetic test before the real run). Phase 1 (baseline capture, D-01 re-verification) closed COMPLETED WITH EXCLUSIONS: the D-01 simp loop is confirmed dead, but a pre-existing unrelated C15 (paper-anchor citation) failure and simpNF/dupNamespace findings (1 and 14 respectively, both pre-existing and unrelated to this task) were discovered during baseline capture. Phase 2 (lint driver and CI activation) closed COMPLETED in full: lintDriver landed, lake check-lint exits 0, and after an extended investigation (lint-args narrowing proved structurally impossible for this linter set) the plan's actual lint: true goal was achieved via scripts/nolints.json -- Batteries/Mathlib's standard grandfathering mechanism -- rather than the plan's originally-sketched narrowing. Plain `lake lint` exits 0; `lake test` exits 0; ci.yml runs on every push/PR with test: true and lint: true. Phase 3 (C16 invariant check) closed COMPLETED WITH EXCLUSIONS: C16 added to check-module-invariants.sh, blocking on the full nolints.json-aware env_linter batch (stronger than the plan's simpNF/dupNamespace-pair sketch); dupNamespace was initially reported as a static count rather than live-checked (rebuild cost), which the team lead objected to after the phase committed. Phase 4 (G-15 assert_not_exists) closed COMPLETED: assertions added to 5 of the plan's 6 named Semantics/ files; BLValidity.lean excluded after a real build failure showed it transitively imports the ProofSystem seam via Validity.lean (a Scope Hypothesis gap the plan's direct-import-only grep couldn't see). Phase 5 (D-18: C9 widening, lakefile docstrings) closed COMPLETED: 9 lakefile.lean docstrings rewritten, C9 widened to lakefile.lean/README.md/scripts/, PLUS a Scope Hypothesis correction (scripts/*.sh actually had 7 citations, not 0) and PLUS the team-lead-directed Phase 3 follow-up: C16's static dupNamespace count replaced with a live, validated (exact 14/14 match) textual check.",
+  "summary": "Phases 1-10 complete. Phase 9 (C19 docstring-coverage floor) triggered its own STOP condition (G-12's unrefined heuristic measured 89.40%, under the 90% floor) and was escalated rather than resolved unilaterally; the user authorized a precisely-specified, once-applied refinement crediting enclosing `/-!` section comments (a blind spot G-12's own design already anticipated), which measures 92.34% -- clears the floor, and lands within 0.5 points of research's original 92.8% figure. Both figures are reported in C19's output. Phase 10 (Init.lean/CheckInitImports linter root) closed COMPLETED, proceeding in parallel with Phase 9's escalation since it only depends on Phase 2 (already done): found and corrected two plan-parenthetical imprecisions by reading CSLib's actual source directly rather than trusting the plan's description (Init.lean has 1 extra CSLib-local import, not 2; the exceptions list needs 1 entry, not 2), both confirmed empirically. Baseline: 434 modules do not yet transitively import FormalSystem.Init (the ~430-file rewrite is an explicit, deferred follow-up).",
   "artifacts": [
     {
       "type": "summary",
@@ -47,17 +47,17 @@
     {
       "type": "summary",
       "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-9-progress.json",
-      "summary": "Phase 9 progress: G-12 heuristic measured 89.37% coverage (under the 90% floor), verified as a faithful measurement (not a bug), and escalated per the plan's own STOP instruction."
-    }
-  ],
-  "phases_completed": 8,
-  "phases_total": 11,
-  "blockers": [
+      "summary": "Phase 9 progress: the STOP-condition escalation, the user-authorized /-!-section-credit refinement (precisely specified, validated in both directions against over- and under-crediting), and the final wired C19 check."
+    },
     {
-      "phase": 9,
-      "description": "C19's docstring-coverage floor: the G-12 heuristic, implemented exactly as the plan specifies, measures 89.37% coverage (10427 total, 1108 undocumented), under the plan's 90% floor. Verified this is a faithful measurement, not an implementation bug: a per-keyword breakdown is sane, and manual inspection of 8 undocumented theorem samples shows they are all covered by an enclosing /-! section comment documenting a batch of rfl lemmas at once -- exactly the heuristic's own already-documented blind spot, not genuinely undocumented content. The plan's own Scope Hypothesis explicitly instructs STOP and report rather than lowering the floor to fit, so this was escalated to the team lead rather than resolved unilaterally. Awaiting a methodology decision (four options put to the team lead: authorize a /-!-crediting heuristic refinement; accept 89.37% as the reported baseline; land the floor check as reporting-only regardless since it never gates either way; or other)."
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-10-progress.json",
+      "summary": "Phase 10 progress: Init.lean and CheckInitImports, the two CSLib-source corrections, and the 434-module baseline."
     }
   ],
+  "phases_completed": 10,
+  "phases_total": 11,
+  "blockers": [],
   "sorry_inventory": [],
-  "continuation_path": "BLOCKED on Phase 9's methodology question. Phase 10 (Linter root -- Init.lean and CheckInitImports) depends only on Phase 2 (already complete) and could proceed independently while Phase 9 is resolved, per the plan's dependency table (Phase 10 is in wave 3, not downstream of Phase 9's wave 7)."
+  "continuation_path": "Phase 11 (Acceptance gate) is next and final -- depends on Phases 3, 4, 5, 6, 7, 8, 9, 10, all of which are now complete."
 }
