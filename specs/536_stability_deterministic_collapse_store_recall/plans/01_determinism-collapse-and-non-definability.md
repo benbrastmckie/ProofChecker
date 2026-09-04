@@ -1,7 +1,7 @@
 # Implementation Plan: The Stability Modal and the Deterministic Task Frames
 
 - **Task**: 536 - Establish in Lean the exact relationship between the stability modal `⊡` and the Deterministic task frames
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 12 hours
 - **Dependencies**: None (task 537 depends on this plan's Phase 1 output)
 - **Research Inputs**: `specs/536_stability_deterministic_collapse_store_recall/reports/01_determinism-collapse-and-store-recall.md`
@@ -497,30 +497,31 @@ here.
 
 ---
 
-### Phase 7: Instantiate at F° and F¹ — (T3), (T4), and the axiom pins [NOT STARTED]
+### Phase 7: Instantiate at F° and F¹ — (T3), (T4), and the axiom pins [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: The two headline results, plus the constructivity pins and aggregator wiring.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean`.
-- [ ] Discharge (H1) and (H2) for F° from Phase 4, and for F¹ from Phase 2's `total_eq_orbit`
+- [x] Create `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean`.
+- [x] Discharge (H1) and (H2) for F° from Phase 4, and for F¹ from Phase 2's `total_eq_orbit`
       specialization (translations are trivially strictly monotone and surjective).
-- [ ] **(T3)**: `fzeroFrame.StarValidOn (.imp φ (.stab φ))` for every `φ`, together with
+- [x] **(T3)**: `fzeroFrame.StarValidOn (.imp φ (.stab φ))` for every `φ`, together with
       `fzero_not_deterministic` — a non-deterministic frame validating *Determined*, so the converse
       of Phase 1's collapse fails. State it as the refutation of the "exactly" claim.
-- [ ] **(T4)**: `fzeroFrame.StarValidOn φ ↔ F1.StarValidOn φ` for every `StarFormula φ` (both sides
+- [x] **(T4)**: `fzeroFrame.StarValidOn φ ↔ F1.StarValidOn φ` for every `StarFormula φ` (both sides
       reduce to `∀ V, satSet V φ = univ`), and the non-definability conclusion: no set of
       `StarFormula`s valid over every `Deterministic` frame excludes the non-deterministic F°, so
       `Deterministic` is not L⋆-definable.
-- [ ] `#print axioms` on the (T3) and (T4) statements; record the absence of `Classical.choice` in
-      the module docstring (C4). If `Classical.choice` appears, trace it to the `box`-case encoding
-      (Phase 6) and switch to the disjunction form.
-- [ ] Docstring the **three-way split** the task description conflates (report §3): `⊡` trivializes
+- [x] `#print axioms` on the (T3) and (T4) statements; record the axiom profile in the module
+      docstring (C4). *(deviation: altered — `Classical.choice` DOES appear, and the plan's
+      prescribed remedy does not apply: it is not the `box`-case encoding. Traced instead to `ℝ`
+      itself. See the Reasoned Exclusions record below.)*
+- [x] Docstring the **three-way split** the task description conflates (report §3): `⊡` trivializes
       *semantically* (`⟨τ⟩_x` a singleton) **exactly** on the Deterministic frames; it trivializes
       *logically* (*Determined* valid) on a class **strictly containing** them; and neither region is
       L⋆-definable. Note also C3: US is unsound here, `p → ⊡p` being frame-valid over F° while
       `Fp → ⊡Fp` is refutable over `F′` — so no proof here argues by substitution.
-- [ ] Wire the four new `Independence/` modules into
+- [x] Wire the four new `Independence/` modules into
       `FormalSystem/Metalogic/Independence.lean` and add rows to
       `FormalSystem/Metalogic/Independence/README.md` (file/lines/description table) and the
       `FormalSystem/Metalogic.lean` docstring.
@@ -543,34 +544,40 @@ here.
 - `FormalSystem/Metalogic.lean` — docstring row
 
 **Verification**:
-- Full `lake build` green and sorry-free across the whole tree.
-- `#print axioms` on (T3) and (T4): no `Classical.choice`.
-- `grep -rn 'task [0-9]' FormalSystem/` finds no new hits (C7).
+- Full `lake build` green and sorry-free across the whole tree. **Met.**
+- `#print axioms` on (T3) and (T4): no `Classical.choice`. **NOT met — see Reasoned Exclusions.**
+- `grep -rn 'task [0-9]' FormalSystem/` finds no new hits (C7). **Met.**
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|---|---|---|
+| "`#print axioms` on (T3) and (T4): no `Classical.choice`" | Unsatisfiable for any statement mentioning `ℝ`: Mathlib's real order and field structure are classical. The plan's prescribed remedy (switch the Phase 6 `box` encoding to a disjunction) does not apply — the `box` encoding is not the source. C4's *substance* — no "validity ⟹ frame condition" step, no Zorn — is met, and is pinned by three sharper checks recorded in `DeterminismUndefinable.lean`'s module docstring. | `#print axioms fzero_not_deterministic` (proof: two `norm_num` facts) already reports `Classical.choice`; `#print axioms starTruthAt_iff_mem_satSet` reports `[propext]` alone and `determined_of_orderFlow` reports `[propext, Quot.sound]`, so the whole generic argument is choice-free; `fzero_stateOccurs` and `f1_stateOccurs` are discharged by explicit affine witnesses rather than by `cor:occurrence`. Phase 1's collapse theorems still report `[propext]` alone. |
 
 ---
 
-### Phase 8: Deliverables (c) and (d) — recommendation and correspondence record [NOT STARTED]
+### Phase 8: Deliverables (c) and (d) — recommendation and correspondence record [COMPLETED]
 
 **Goal**: The two non-Lean deliverables, written entirely inside `specs/536_*/`.
 
 **Tasks**:
-- [ ] Write the deliverable (d) **correspondence record**: a table mapping each paper `\label`
+- [x] Write the deliverable (d) **correspondence record**: a table mapping each paper `\label`
       (`def:deterministic`, `lem:deterministic-singleton`, `app:deterministic` both halves,
       `app:drift`, `cor:no-characterization`, `app:deterministic-future`) to its Lean declaration and
       path, marking what is formalized, what is deliberately not (the ⇐ half of the bridge; `Det`,
       `Det-pm`, `Det-m`), and where the two must agree. Include the rename list from R9 so a future
       reader does not restore dangling references.
-- [ ] Write the deliverable (c) **recommendation** as a spawn-ready task description: narrow world
+- [x] Write the deliverable (c) **recommendation** as a spawn-ready task description: narrow world
       store/recall with a **single** register (evaluation point `(τ, x, μ)`), ~600-900 lines,
       sufficient for `Det-m`, leaving time-shift invariance intact and the `untl`/`snce` clauses
       unchanged. Record the rejected alternative — the full ℕ-indexed four-operator BL⋆ apparatus,
       2500+ lines, which additionally invalidates the atomization route that task 533's
       conservativity rests on — and the choice-asymmetry finding (validity ⟹ frame condition needs
       Zorn; the reverse direction is safe), so it is not rediscovered late.
-- [ ] Record the transport-layer breakage table (`truth_congr_ext`, `starTruthAt_timeShift`,
+- [x] Record the transport-layer breakage table (`truth_congr_ext`, `starTruthAt_timeShift`,
       `stab_state_only`, `TruthCorr`/`TruthAntiIso`, `Atomization`, `StarPasting`) as the follow-up's
       known cost.
-- [ ] Note explicitly, for whoever runs the follow-up, that this task's relationship to the
+- [x] Note explicitly, for whoever runs the follow-up, that this task's relationship to the
       manuscript is **read and record only** (C1), and that PossibleWorlds task 105 holds staged
       LaTeX for `Det-pm`/`Det-m` — cite Theorem C as a report-level result pending paper
       integration, never as manuscript text and never as a conjecture.
@@ -600,17 +607,19 @@ Confirm by `git status` before committing — any path outside `specs/536_*/` is
 
 ## Testing & Validation
 
-- [ ] `lake build` green and sorry-free after every phase.
-- [ ] `grep -rn 'sorry' FormalSystem/Semantics/StarDeterminism.lean FormalSystem/Metalogic/Independence/` returns nothing.
-- [ ] `#print axioms` on `determined_of_deterministic`, the F° *Determined* validity, and the
-      F°/F¹ indistinguishability shows no `Classical.choice` (C4).
-- [ ] The determinism predicate's duration binder is unrestricted (C2) — check by inspection and by
+- [x] `lake build` green and sorry-free after every phase.
+- [x] `grep -rn 'sorry' FormalSystem/Semantics/StarDeterminism.lean FormalSystem/Metalogic/Independence/` returns nothing.
+- [x] `#print axioms` on `determined_of_deterministic` shows no `Classical.choice` (`[propext]`
+      alone), and so does `starTruthAt_iff_mem_satSet`. *(deviation: partially unmet — the F°
+      *Determined* validity and the F°/F¹ indistinguishability DO report `Classical.choice`,
+      carrier-borne from `ℝ`. See Phase 7's Reasoned Exclusions.)*
+- [x] The determinism predicate's duration binder is unrestricted (C2) — check by inspection and by
       the fact that the bridge proof applies it at `s - t`.
-- [ ] No `.lean` file under `FormalSystem/` references a task number (C7).
-- [ ] No file outside `specs/536_*/` and `FormalSystem/` is modified; in particular nothing under
+- [x] No `.lean` file under `FormalSystem/` references a task number (C7).
+- [x] No file outside `specs/536_*/` and `FormalSystem/` is modified; in particular nothing under
       `/home/benjamin/Philosophy/` (C1).
-- [ ] Task 537 can `import FormalSystem.Semantics.StarDeterminism` and cite the collapse by name
-      (C6) — verify the names appear in `Semantics/README.md`.
+- [x] Task 537 can `import FormalSystem.Semantics.StarDeterminism` and cite the collapse by name
+      (C6) — the four names are stated in that module's docstring and in `Semantics/README.md`.
 
 ## Artifacts & Outputs
 
@@ -618,14 +627,19 @@ Confirm by `git status` before committing — any path outside `specs/536_*/` is
   `deterministic_iff`, `saturation_of_deterministic`
 - `FormalSystem/Semantics/StarDeterminism.lean` (new) — bridge + collapse, deliverable (a)
 - `FormalSystem/Metalogic/Independence/RealTranslationFrame.lean` (new) — F¹
-- `FormalSystem/Metalogic/Independence/DriftFrame.lean` (new) — F° and its histories
+- `FormalSystem/Metalogic/Independence/DriftFrame.lean` (new) — F°
+- `FormalSystem/Metalogic/Independence/DriftHistories.lean` (new) — F°'s histories as
+  order-isomorphisms, and (H1)/(H2) for F°
 - `FormalSystem/Metalogic/Independence/OrderTransfer.lean` (new) — generic (H1)/(H2) transfer
 - `FormalSystem/Metalogic/Independence/StateSetTruth.lean` (new) — `satSet` and the bridge theorem
 - `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean` (new) — (T3), (T4)
 - Wiring/doc edits: `Semantics.lean`, `Semantics/README.md`, `Semantics/StarNonValidities.lean`
   (docstring), `Metalogic/Independence.lean`, `Metalogic/Independence/README.md`, `Metalogic.lean`
-- `specs/536_*/` — the deliverable (d) correspondence record and the deliverable (c) follow-up
+- `specs/536_stability_deterministic_collapse_store_recall/reports/02_correspondence-record-and-store-recall-recommendation.md`
+  (new) — the deliverable (d) correspondence record and the deliverable (c) follow-up
   recommendation
+- `specs/536_stability_deterministic_collapse_store_recall/summaries/01_determinism-collapse-and-non-definability-summary.md`
+  (new) — the implementation summary
 
 ## Rollback/Contingency
 

@@ -162,6 +162,15 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   `sat_discrete_ssubset_mod_axiomSet` proves the analogous fact for `Sat .Discrete`
   (`Metalogic/Independence/{RationalWitness,LexIntWitness}.lean`). Closed-form characterizations
   of `Mod (AxiomSet .Discrete)` and `Mod (AxiomSet .Dedekind)` remain open and are not promised.
+- **Non-definability of determinism** (`deterministic_not_starDefinable`,
+  `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `StarFormula`s
+  defines the class of frames satisfying `TaskFrame.Deterministic`, witnessed by the
+  indistinguishable pair `F°` (a drift band over `ℝ`) and `F¹` (translation over `ℝ`), which
+  validate exactly the same L⋆ formulas while differing in determinism. The same pair refutes the
+  converse of the deterministic collapse `determined_of_deterministic`
+  (`Semantics/StarDeterminism.lean`): validity of *Determined* holds on a class strictly larger
+  than the deterministic frames. Uniform substitution is unsound in this setting, so no proof
+  here argues by substitution.
 - **Expressive completeness (Kamp, Prior structures)** (`kampPriorExpressiveCompleteness`,
   `WeakCanonical/Kamp/KampPrior.lean`): SORRY-FREE (axioms: exactly `propext`,
   `Classical.choice`, `Quot.sound`). `{U, S}` is expressively complete relative to monadic

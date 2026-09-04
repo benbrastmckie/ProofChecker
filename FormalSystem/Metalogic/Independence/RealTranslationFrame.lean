@@ -36,9 +36,9 @@ deterministic in the sense of `def:deterministic`. Its partner `F°` — the *dr
 `D = realOrder`. It is nevertheless **not** the route taken here, and the reason is a
 reducibility barrier that bites late rather than early.
 
-`translationFrame` is a plain `def`, not `@[reducible]`, so `(translationFrame realOrder).WorldState`
-does not reduce to `ℝ` at the transparency instance synthesis and unification use. There are two
-distinct symptoms:
+`translationFrame` is a plain `def`, not `@[reducible]`, so
+`(translationFrame realOrder).WorldState` does not reduce to `ℝ` at the transparency instance
+synthesis and unification work at. There are two distinct symptoms:
 
 1. **At the frame level**, `example (w x u : ℝ) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl` fails
    with "`w` has type `ℝ` but is expected to have type `F1.WorldState`" and a failed

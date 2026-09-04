@@ -32,6 +32,12 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 | `StaticFrame.lean` | 323 | The static frame at an arbitrary duration group: every nonzero duration loops, so truth is time-invariant, and the `untl`/`snce` clauses collapse into a small constant-truth calculus (general, dense and discrete forms, plus `K⁺`/`K⁻` and `Axiom.z1`). Turns every later axiom check into a rewrite. |
 | `RationalWitness.lean` | 200 | `rat_not_complete` — `ℚ` is not Dedekind-complete, written out because Mathlib carries no statement in this shape — and the static frame over `ℚ` as a member of `Mod (AxiomSet .Dedekind)` outside `Sat .Dedekind`, with the Dedekind sandwich. |
 | `LexIntWitness.lean` | 200 | The discrete, non-Archimedean carrier `ℤ ×ₗ ℤ`, the static frame over it as a member of `Mod (AxiomSet .Discrete)` outside `Sat .Discrete`, the semantic upper-bound engine `validOn_nextTop_of_mem_mod_discrete`, and the Discrete sandwich. |
+| `RealTranslationFrame.lean` | 189 | `realOrder`; `F¹`, the deterministic translation flow over `ℝ`, built through `ShiftSet` (the only route on which the world-set characterization elaborates); `f1_deterministic`, `f1_total_eq_orbit`, `f1_eq_of_states_eq`. |
+| `DriftFrame.lean` | 254 | `F°`, the drift band `x ≤ u - w ≤ 2x` over `ℝ`, with all six `FrameOver` axioms (`limit` and `saturation` included) and `fzero_not_deterministic`. |
+| `DriftHistories.lean` | 178 | `F°`'s total histories are strictly increasing bi-Lipschitz bijections of `ℝ` (`fzero_hits_future` is the crux, by IVT); (H1) `fzero_orderFlow` and (H2) `fzero_stateOccurs`, the latter by an explicit affine witness. |
+| `OrderTransfer.lean` | 197 | The frame-independent layer: `OrderFlow` (H1), `StateOccurs` (H2), and the order-transfer lemmas — `future_image`, `past_image`, `between`, `between_past`, `state_image`. |
+| `StateSetTruth.lean` | 240 | `satSet` and `starTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⋆ truth depends only on the world state of evaluation. Plus `starValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
+| `DeterminismUndefinable.lean` | 183 | The instantiation at `F°`/`F¹`: (T3) `determined_valid_on_non_deterministic`, (T4) `fzero_starValidOn_iff_f1`, and `deterministic_not_starDefinable`. |
 
 ## Key Results
 
@@ -46,6 +52,14 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
   `sat_discrete_ssubset_mod_axiomSet` (`LexIntWitness.lean`) — `Sat .Dedekind` and
   `Sat .Discrete` are strictly smaller than the model classes of their axiom sets, hence not
   Galois-closed.
+- `deterministic_not_starDefinable` (`DeterminismUndefinable.lean`) — no set of `StarFormula`s
+  defines the deterministic frames (`cor:no-characterization`), via the `F°`/`F¹`
+  indistinguishable pair.
+- `determined_valid_on_non_deterministic` (`DeterminismUndefinable.lean`) — `F°` validates
+  *Determined* without being deterministic, refuting the converse of `determined_of_deterministic`
+  (`Semantics/StarDeterminism.lean`).
+- `starTruthAt_iff_mem_satSet` (`StateSetTruth.lean`) — the state-set bridge, proved once against
+  (H1)+(H2) and instantiated twice; `[propext]` alone.
 
 ## Dependencies
 

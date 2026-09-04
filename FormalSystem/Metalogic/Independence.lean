@@ -10,6 +10,12 @@ import FormalSystem.Metalogic.Independence.CoNotPriorU
 import FormalSystem.Metalogic.Independence.StaticFrame
 import FormalSystem.Metalogic.Independence.RationalWitness
 import FormalSystem.Metalogic.Independence.LexIntWitness
+import FormalSystem.Metalogic.Independence.RealTranslationFrame
+import FormalSystem.Metalogic.Independence.DriftFrame
+import FormalSystem.Metalogic.Independence.DriftHistories
+import FormalSystem.Metalogic.Independence.OrderTransfer
+import FormalSystem.Metalogic.Independence.StateSetTruth
+import FormalSystem.Metalogic.Independence.DeterminismUndefinable
 
 /-!
 # Independence results
@@ -17,8 +23,8 @@ import FormalSystem.Metalogic.Independence.LexIntWitness
 Underivability results, established by exhibiting a model of the assumptions in which the target
 formula fails.
 
-Three results are carried here, over six modules — the opening sentence of this docstring used to
-say "the one result carried here", which stopped being true two witnesses ago:
+Four results are carried here, over twelve modules — the opening sentence of this docstring used
+to say "the one result carried here", which stopped being true three witnesses ago:
 
 1. The paper's `CO` principle does not derive Reynolds' `Axiom.prior_U_gap` over the dense base.
    The converse direction — Reynolds' triple *does* derive `CO` — is
@@ -26,6 +32,10 @@ say "the one result carried here", which stopped being true two witnesses ago:
    directions.
 2. `Sat .Dedekind ⊊ Mod (AxiomSet .Dedekind)`, witnessed by the static frame over `ℚ`.
 3. `Sat .Discrete ⊊ Mod (AxiomSet .Discrete)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.
+4. `TaskFrame.Deterministic` is **not L⋆-definable** (`cor:no-characterization`), witnessed by
+   the indistinguishable pair `F°`/`F¹` over `ℝ`. The same pair refutes the converse of the
+   deterministic collapse (`Semantics/StarDeterminism.lean`): `F°` validates *Determined*
+   without being deterministic.
 
 Results 2 and 3 are the two halves of the finding that the frame-class *narrowings* are not
 Galois-closed, in contrast with the paper's bare classes.
@@ -47,11 +57,26 @@ Galois-closed, in contrast with the paper's bare classes.
 * `Independence/LexIntWitness.lean` — the discrete, non-Archimedean carrier `ℤ ×ₗ ℤ`, the static
   frame over it as a member of `Mod (AxiomSet .Discrete)` outside `Sat .Discrete`, and the
   Discrete sandwich with its semantic upper bound.
+* `Independence/RealTranslationFrame.lean` — `realOrder`, and `F¹`, the deterministic
+  translation flow over `ℝ`, built through `ShiftSet` so that its world-set characterization
+  elaborates.
+* `Independence/DriftFrame.lean` — `F°`, the drift band `x ≤ u - w ≤ 2x` over `ℝ`, with all six
+  `FrameOver` axioms and its failure of `def:deterministic`.
+* `Independence/DriftHistories.lean` — `F°`'s total histories are strictly increasing
+  bi-Lipschitz bijections of `ℝ`; (H1) and (H2) discharged for `F°`.
+* `Independence/OrderTransfer.lean` — the frame-independent layer: hypotheses (H1) `OrderFlow`
+  and (H2) `StateOccurs`, and the order-transfer lemmas the temporal cases consume.
+* `Independence/StateSetTruth.lean` — `satSet` and the state-set bridge: over an (H1)+(H2) frame,
+  L⋆ truth depends only on the world state of evaluation.
+* `Independence/DeterminismUndefinable.lean` — the instantiation at `F°` and `F¹`, and
+  `deterministic_not_starDefinable`.
 
 ## The method
 
-Every result here follows the same four steps, and the shape is worth naming because this is the
-tree's first independence result:
+Results 1-3 follow the same four steps, and the shape is worth naming because this was the
+tree's first independence result. Result 4 is a variant: instead of *refuting* the target in one
+model, it exhibits **two** models that agree on the whole language and disagree on the target
+frame property — elimination by indistinguishability rather than by counterexample.
 
 1. build a concrete frame satisfying every structural axiom of the semantics;
 2. prove a truth-invariance lemma for it — a symmetry or periodicity constraining *every* formula
