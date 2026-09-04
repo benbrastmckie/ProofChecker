@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/530_documentation_single_source_of_truth_theorem_index/reports/01_documentation-single-source-of-truth.md",
+      "summary": "Re-derived every measured-state claim at HEAD f6ce84139: 9 of 16 wrong, 5 findings already fixed, 4 new defects; specifies the --emit-inventory mechanism, the corrected theorem-index seed, the C15/C18/C20 gate work, and an 11-phase decomposition."
+    }
+  ],
+  "metadata": {
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"],
+    "dispatch_seq": 4
+  }
+}
