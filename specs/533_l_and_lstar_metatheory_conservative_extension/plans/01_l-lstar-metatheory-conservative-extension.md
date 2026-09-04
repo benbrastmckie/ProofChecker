@@ -555,23 +555,23 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   after that the phase closes `[BLOCKED]` with the goal state recorded, and Phase 5.3's US swap
   arm is the only consumer affected.
 
-### Phase 3.4: Non-validity witnesses D1-D5 on the permissive frame over ℤ [IN PROGRESS]
+### Phase 3.4: Non-validity witnesses D1-D5 on the permissive frame over ℤ [COMPLETED]
 - **Goal:** Land `FormalSystem/Semantics/StarNonValidities.lean` by transcribing probes Part D,
   so that every docstring claim of the form "X is not an axiom because it is refuted" is
   machine-backed.
 - **Tasks:**
-  - [ ] `NF := FrameOver.natFrame (D := ℤ)` (`TaskFrame.lean:1602`), `natHist`,
+  - [x] `NF := FrameOver.natFrame (D := ℤ)` (`TaskFrame.lean:1602`), `natHist`,
         `natHist_isTotal`, `natModel` — verbatim, with the `Mathlib.Algebra.Order.Group.Int`
         and `Mathlib.Data.Int.SuccPred` imports the probes use.
-  - [ ] `refute_stab_box` (D1: `⊡p → □⊡p`), `refute_allFuture_stab` (D2: `G⊡p → ⊡Gp`),
+  - [x] `refute_stab_box` (D1: `⊡p → □⊡p`), `refute_allFuture_stab` (D2: `G⊡p → ⊡Gp`),
         `refute_stab_allFuture_past` (D3: `⊡GPp → G⊡Pp`, the pure-future restriction is
         necessary), `refute_determined` (D4: `Fp → ⊡Fp` over a non-deterministic frame),
         `refute_somePast_stab` (D5: `P⊡p → ⊡Pp`).
-  - [ ] Docstrings: D4 says only "refuted over a non-deterministic frame (paper
+  - [x] Docstrings: D4 says only "refuted over a non-deterministic frame (paper
         `app:non-deterministic`); validity over deterministic frames is not formalized here" —
         no "exactly" (Postmortem rule 2). D2/D3 docstrings state that GS (`stab_allFuture_valid`)
         needs its purity side condition.
-  - [ ] Build: `lake build FormalSystem.Semantics.StarNonValidities`.
+  - [x] Build: `lake build FormalSystem.Semantics.StarNonValidities`.
 - **Territory:** creates `FormalSystem/Semantics/StarNonValidities.lean` only.
 - **Estimated output:** ~150 lines. **Done when:** the five refutations build sorry-free.
 - **Timing:** 1.5 hours
@@ -579,7 +579,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 - **Verification Tier:** local
 - **Scope Hypothesis:** five refutations, ~150 lines, transcribed from probes Part D (`natFrame` over ℤ); the count is fixed by the probes file — no new refutation is added here (the DAG-frame refutation the 535 report leaves UNVERIFIED belongs to a follow-up, not this phase).
 
-### Phase 3.5: `Semantics.lean` aggregator wiring and docstring rows [NOT STARTED]
+### Phase 3.5: `Semantics.lean` aggregator wiring and docstring rows [IN PROGRESS]
 - **Goal:** Make the four `Semantics/Star*.lean` modules reachable from the root and document
   them in the aggregator, in one owner phase.
 - **Tasks:**
