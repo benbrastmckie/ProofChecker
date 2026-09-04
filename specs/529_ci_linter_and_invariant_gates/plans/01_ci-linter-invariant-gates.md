@@ -476,27 +476,27 @@ it finds more, fix them all rather than only the two named here. *(CORRECTED: th
 
 ---
 
-### Phase 7: E-06 -- readme-lint Check 4 stamp-vs-commit-date comparison [NOT STARTED]
+### Phase 7: E-06 -- readme-lint Check 4 stamp-vs-commit-date comparison [COMPLETED]
 
 **Goal**: Make a present-but-stale `Last verified` stamp visible, without turning a documentation
 nicety into a gate.
 
 **Tasks**:
-- [ ] In `scripts/readme-lint.sh` Check 4 (lines ~184-201), keep the existing missing-stamp
+- [x] In `scripts/readme-lint.sh` Check 4 (lines ~184-201), keep the existing missing-stamp
       warning unchanged, and add: when the stamp IS present, extract its `YYYY-MM-DD` date, take
       `git log -1 --format=%cs -- "$dir"`, and compare as strings (ISO8601 sorts
-      lexicographically).
-- [ ] Emit a `STALE DATE:` warning line (incrementing `WARNINGS`, never `ERRORS`) when the stamp
+      lexicographically). *(completed)*
+- [x] Emit a `STALE DATE:` warning line (incrementing `WARNINGS`, never `ERRORS`) when the stamp
       predates the directory's last commit. Check 4 is documented as REPORTED, not gated -- the
-      delegation says "report, not gate", and the script's own header policy agrees.
-- [ ] Handle the no-git and no-commits-for-this-dir cases (empty `git log` output) by skipping the
-      comparison silently rather than warning.
-- [ ] Handle a stamp whose date does not parse as `YYYY-MM-DD` by skipping, not by crashing --
-      the script runs under `set -euo pipefail`.
-- [ ] Update the script header's Checks list (line 8) and the "What is gated vs. merely reported"
-      paragraph to name the new sub-check.
-- [ ] Run `bash scripts/readme-lint.sh` and confirm the exit code is unchanged from its
-      pre-change value.
+      delegation says "report, not gate", and the script's own header policy agrees. *(completed)*
+- [x] Handle the no-git and no-commits-for-this-dir cases (empty `git log` output) by skipping the
+      comparison silently rather than warning. *(completed: `[ -z "$COMMIT_DATE" ] && continue`)*
+- [x] Handle a stamp whose date does not parse as `YYYY-MM-DD` by skipping, not by crashing --
+      the script runs under `set -euo pipefail`. *(completed: `[ -z "$STAMP_DATE" ] && continue`)*
+- [x] Update the script header's Checks list (line 8) and the "What is gated vs. merely reported"
+      paragraph to name the new sub-check. *(completed)*
+- [x] Run `bash scripts/readme-lint.sh` and confirm the exit code is unchanged from its
+      pre-change value. *(completed)*
 
 **Timing**: 0.75 hours.
 
@@ -508,9 +508,9 @@ nicety into a gate.
 - `scripts/readme-lint.sh` - Check 4 body, header comment.
 
 **Verification**:
-- `bash scripts/readme-lint.sh` exit code matches the pre-change baseline captured in Phase 1.
+- `bash scripts/readme-lint.sh` exit code matches the pre-change baseline captured in Phase 1. *(NOTE: Phase 1's own task list never actually ran readme-lint.sh, so no baseline exists there to compare against -- a small gap in the plan's own cross-phase wiring, not something to fix retroactively. Verified equivalently instead: ran the pre-edit script via `git show HEAD:scripts/readme-lint.sh` and the post-edit script side by side -- both exit 1, both report identical Missing-READMEs (5) and Broken-references (0) counts; the only difference is the new STALE DATE reporting lines, which is exactly the intended change. This is airtight regardless of what Phase 1 recorded, since Check 4 only ever increments WARNINGS, never ERRORS, so it structurally cannot change the exit code.)*
 - `FormalSystem/README.md` (stamped `Last verified: 2026-08-25`) is correctly classified against
-  `git log -1 --format=%cs -- FormalSystem`.
+  `git log -1 --format=%cs -- FormalSystem`. *(confirmed: `STALE DATE: FormalSystem/README.md (stamped 2026-08-25, directory last changed 2026-09-04)` -- correctly flagged stale, since the directory's last commit (this task's own Phase 6 work) postdates the stamp)*
 
 ---
 

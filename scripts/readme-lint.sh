@@ -5,7 +5,8 @@
 #   1. Every directory containing .lean files has a README.md
 #   2. Every .lean file in a directory appears in its README.md   [REPORTED, not gated]
 #   3. No broken relative file references in any markdown file in scope
-#   4. Every README.md has a "Last verified" date                 [REPORTED, not gated]
+#   4. Every README.md has a "Last verified" date, and that date is not
+#      older than the directory's last commit                     [REPORTED, not gated]
 #
 # Usage: ./scripts/readme-lint.sh [<root-directory> ...]
 #
@@ -31,8 +32,9 @@
 # Only Checks 1 and 3 affect the exit code. Check 2 (`NOT LISTED`) is REPORTED and
 # deliberately not gated: the tree carries ~110 such warnings, all cosmetic, and
 # gating them would convert a documentation nicety into a build failure. Check 4
-# (missing `Last verified`) is likewise reported. The summary block below states
-# both counts explicitly so that "not gated" never reads as "not measured".
+# (a missing `Last verified` date, or a present one that predates the directory's
+# last commit) is likewise reported. The summary block below states both counts
+# explicitly so that "not gated" never reads as "not measured".
 #
 # Exit code: 0 = all clean, 1 = errors found
 
@@ -181,7 +183,20 @@ for r in "${ROOTS[@]}"; do scope_md "$r"; done | sort -u | while read -r readme;
 done
 
 # -----------------------------------------------------------------------
-# Check 4: Last verified date present
+# Check 4: Last verified date present, and not stale against the last commit
+#
+# The missing-stamp warning is unchanged. When a stamp IS present, its date is
+# compared (as ISO8601 strings, which sort lexicographically) against
+# `git log -1 --format=%cs -- "$dir"`, the directory's own last commit date.
+# A stamp that predates that commit is REPORTED via a STALE DATE warning
+# (WARNINGS, never ERRORS) -- this sub-check is reported, not gated, exactly
+# like the missing-stamp warning above it. Two failure modes are handled by
+# skipping silently rather than crashing under `set -euo pipefail`: no git
+# available, or no commits touching this directory (empty `git log` output);
+# and a stamp whose date does not parse as `YYYY-MM-DD` (the stamp format
+# varies across READMEs -- `*Last verified: DATE*`, `**Last verified**: DATE`,
+# with or without trailing prose -- so the date is extracted from wherever it
+# appears on the matched line rather than assuming a fixed column).
 # -----------------------------------------------------------------------
 echo ""
 echo "--- Check 4: Missing 'Last verified' dates ---"
@@ -194,8 +209,18 @@ for r in "${ROOTS[@]}"; do scope_md "$r"; done | sort -u | while read -r readme;
     *latex*) continue ;;
     *typst*) continue ;;
   esac
-  if ! grep -qi "last verified\|last updated" "$readme"; then
+  STAMP_LINE=$(grep -i "last verified\|last updated" "$readme" | head -1 || true)
+  if [ -z "$STAMP_LINE" ]; then
     echo "  MISSING DATE: $readme"
+    WARNINGS=$((WARNINGS + 1))
+    continue
+  fi
+  STAMP_DATE=$(printf '%s' "$STAMP_LINE" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' | head -1 || true)
+  [ -z "$STAMP_DATE" ] && continue
+  COMMIT_DATE=$(git log -1 --format=%cs -- "$dir" 2>/dev/null || true)
+  [ -z "$COMMIT_DATE" ] && continue
+  if [[ "$STAMP_DATE" < "$COMMIT_DATE" ]]; then
+    echo "  STALE DATE: $readme (stamped $STAMP_DATE, directory last changed $COMMIT_DATE)"
     WARNINGS=$((WARNINGS + 1))
   fi
 done
