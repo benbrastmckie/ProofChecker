@@ -3,7 +3,7 @@
 **Task**: 536 — stability deterministic collapse, its failing converse, and the store/recall correspondence
 **Type**: lean4 · research
 **Status**: researched
-**Evidence of record**: `specs/536_stability_deterministic_collapse_store_recall/probes/01_determinism-collapse-probes.lean` (45 lines) and `probes/02_fzero-frame-probes.lean` (272 lines), both compiled sorry-free against the current tree with `lake env lean`.
+**Evidence of record**: three probe files under `specs/536_stability_deterministic_collapse_store_recall/probes/` — `01_determinism-collapse-probes.lean` (45 lines), `02_fzero-frame-probes.lean` (272 lines), `03_fib-form-and-translation-frame.lean` (~85 lines) — all compiled sorry-free against the current tree with `lake env lean`.
 
 ---
 
@@ -331,9 +331,51 @@ theorem stab_biconditional_starValidOn_of_deterministic (hD) (φ) :
    at exactly that point — which is the Lean shadow of task 105's `F^N` observation that `Det`
    defines only forward determinism.
 
-### Placement recommendation
+### 4.1 Two prerequisites are ABSENT from the tree — verified
 
-`TaskFrame.IsDeterministic` belongs in `FormalSystem/Semantics/FrameProperty.lean`, beside
+Deliverable (a) depends on two declarations that do not exist yet. Both are cheap, but the plan
+must schedule them:
+
+1. **No determinism predicate exists.** `grep` over `FormalSystem/` for
+   `def TaskFrame.Deterministic | def Deterministic | IsDeterministic` returns **only**
+   `Boneyard/ChainCompleteness/Algebraic/DeterministicFMCS.lean:52`, which is an unrelated
+   proof-theoretic construction. Confirmed absent.
+2. **No singleton bridge lemma exists, in either direction.** `SameStateAt` occurs only in
+   `Semantics/StarTruth.lean` (its definition, `refl`/`symm`/`trans`, and the clause lemmas) and in
+   `Semantics/StarPasting.lean` (always as an *input hypothesis*). Nothing states `⟨τ⟩_x = {τ}`.
+   Task 533's own summary concedes the gap.
+
+**The forward half is ~8 lines and choice-free** (`states_eq_of_deterministic`, §4), so deliverable
+(a) is blocked on a lemma that costs almost nothing *in the direction it needs*.
+
+### 4.2 Adopt the tree's `Fib`-subsingleton idiom, not the pointwise form
+
+The probes use the pointwise `∀ w u v x, R w x u → R w x v → u = v`. **Prefer the `Fib` form in the
+library**:
+
+```lean
+def TaskFrame.Deterministic (F : TaskFrame) : Prop :=
+  ∀ (w : F.WorldState) (d : F.Duration), (TaskFrame.Fib F.TaskRel w d).Subsingleton
+```
+
+`probes/03` proves the two equivalent (`deterministic_iff`, one line each way) and restates the
+whole of deliverable (a) against the `Fib` form. The `Fib` form is better for two concrete reasons,
+both verified against the tree:
+
+- **`TaskFrame.saturation_of_fib_subsingleton` (`Semantics/TaskFrame.lean:1401`) already consumes
+  exactly this shape**: `(h : ∀ w x, (Fib R w x).Subsingleton) → Saturation R`. So
+  `Deterministic F` yields the `saturation` field *for free*, and a deterministic frame never has
+  to discharge Saturation by hand. (It is also noted there as resting on `[propext]` alone.)
+- **`translationRel_fib_subsingleton` (`Semantics/Frames/Standard.lean:58`) is already literally a
+  proof of this predicate**, generic in `D` — so F¹'s determinism is that lemma verbatim, no new
+  proof at all.
+
+Note the quantifier: `d : F.Duration`, unrestricted. See §5bis for why a `0 ≤ d` version would
+falsify the bridge lemma.
+
+### 4.3 Placement recommendation
+
+`TaskFrame.Deterministic` belongs in `FormalSystem/Semantics/FrameProperty.lean`, beside
 `IsDense` / `IsDiscrete` / `IsSuccArchDiscrete` / `IsComplete` / `IsDedekind` — it is exactly the
 same kind of object (a `TaskFrame → Prop` transcribing a `def:`-level frame condition), and that
 module's docstring conventions already cover how such predicates are named and cited. The collapse
@@ -456,15 +498,54 @@ Its proof introduces F¹ explicitly:
 yield order-isomorphisms of `(ℝ,<)`. So this is **one theorem plus two instantiations**, not two
 parallel developments — which is the architecture §5.4 recommends.
 
-F¹ is nearly free: `foneRel w d u := u = w + d` over `rOrder`, six axioms in ~30 lines
-(`saturation` by the functional-relation argument — every fibre and segment is a singleton or
-empty), plus a one-line `fone_deterministic`. All machine-checked in `probes/02`.
+**F¹ is already in the tree — do not build it.** `translationFrame D`
+(`FormalSystem/Semantics/Frames/Standard.lean:73`) *is* F¹: `WorldState := ↑D`,
+`TaskRel w x u := u = w + x`, with **all six `FrameOver` axioms discharged generically in `D`**
+(Limit by `TaskFrame.limit_of_shift`; Saturation by `saturation_of_fib_subsingleton` applied to
+`translationRel_fib_subsingleton`). Instantiating at ℝ adds **no proof obligation whatsoever**, and
+determinism is `translationRel_fib_subsingleton` verbatim. `probes/03` verifies this:
 
-Note also `FormalSystem/Semantics/ShiftSet.lean` builds exactly F¹'s shape generically
-(`TaskRel w d u := u = sh w d`, all seven fields discharged, with `total_eq_orbit` giving that
-every total history is the orbit history). If F¹ is wanted with less bespoke code, instantiate
-`ShiftSet` at `Carrier := ℝ`, `sh := (· + ·)` rather than rebuilding; the probe's direct version
-exists because it was faster to write, not because `ShiftSet` is unsuitable.
+```lean
+@[reducible] noncomputable def rOrd : TemporalOrder := ⟨ℝ⟩
+noncomputable def F1 : FrameOver rOrd := translationFrame rOrd
+theorem f1_deterministic : TaskFrame.Deterministic F1.toTaskFrame :=
+  fun w d => translationRel_fib_subsingleton (D := rOrd) w d
+theorem f1_determined (φ : StarFormula) : F1.toTaskFrame.StarValidOn (.imp φ (.stab φ)) :=
+  determined_of_deterministic f1_deterministic φ
+```
+
+`probes/02`'s bespoke `foneFrame` is therefore **redundant and should not be transcribed**; it was
+written before `Frames/Standard.lean` was found. Keep it in the probe as a cross-check only.
+
+#### A reducibility trap, reproduced — with two instances, and the second one decides the route
+
+`translationFrame` is a **plain `def`, not `@[reducible]`**, so `F1.WorldState` does not reduce to
+`ℝ` at instance-synthesis transparency. `probes/03` reproduces both failures verbatim:
+
+- **Frame-level**, `example (w x u : ℝ) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl` fails with
+  *"w has type ℝ but is expected to have type F1.WorldState"* and
+  *"failed to synthesize HAdd ℝ ℝ ?m"*. **Fixable**: type the variables at `↑rOrd` rather than `ℝ`
+  (`rOrd` is `@[reducible]`, so its coercion does reduce). Verified working.
+- **History-level**, the F¹ world characterization
+  `τ.states r (hτ r) = τ.states 0 (hτ 0) + r` fails with
+  *"failed to synthesize HAdd F1.toTaskFrame.WorldState rOrd.carrier ?m"* — and **the `↑rOrd`
+  workaround does not reach it**, because `τ.states` *returns* `F1.toTaskFrame.WorldState`. The
+  barrier is inside `translationFrame` itself, so neither a type ascription nor a `@[reducible]`
+  alias helps.
+
+**Recommended route: build F¹ through `ShiftSet` instead.** `ShiftSet.fibre`
+(`Semantics/ShiftSet.lean:157`) and `ShiftSet.frame` (`:199`) are `@[reducible]` precisely for this
+reason. The ℝ shift set is ~15 lines (the `sep` proof is the only content), and it additionally
+hands over **`total_eq_orbit` (`ShiftSet.lean:228`) for free — which *is* the F¹ world
+characterization** ("possible worlds are exactly the translations"), already proved generically.
+That is exactly what `cor:no-characterization`'s F¹ half needs. The alternative — adding
+`@[reducible]` to `translationFrame` at `Standard.lean:73` — is cheaper but touches a shared
+declaration with unchecked downstream effects.
+
+This is the same hazard already documented at `Metalogic/DedekindNonCompactness.lean:315-317`
+(for `realOrder`) and `Semantics/TemporalOrder.lean:97-104` (for `TemporalOrder.of`). **The tree
+has an established precedent for this pattern — follow it rather than duplicating `realOrder`**,
+which also settles the R5 placement question below.
 
 ### 5.4 What remains: the `S_φ` induction
 
@@ -802,23 +883,29 @@ never as established manuscript text, and never as conjectures.
 
 ---
 
-## 9. Recommended phase decomposition for the plan
+## 9. Recommended build order and phase decomposition
+
+The order below is dictated by the two absent prerequisites found in §4.1, and it puts a
+**complete, choice-free deliverable (a) on the board before any frame construction is attempted**.
+That is a genuine early-green milestone and the recommended phase cut.
 
 | Phase | Content | Size | Risk |
 |---|---|---|---|
-| 1 | `TaskFrame.IsDeterministic` into `Semantics/FrameProperty.lean`; the bridge + collapse from `probes/01` into the `⊡` validity layer; docstring the choice-freeness and the unrestricted-`x` requirement | ~120 lines | none — transcription of compiled probes |
-| 2 | Promote task 535's `refute_determined` (over `natFrame`, ℤ) as `app:deterministic`'s negative half; docstring the discreteness hypothesis and its `[SuccOrder D] [NoMaxOrder D]` encoding | ~60 lines | none |
-| 3 | F° as a `FrameOver realOrder` (from `probes/02`), with the `comp`-is-positive-cone-only note; `fzero_not_deterministic` | ~140 lines | low — settles R5/R6 placement |
-| 4 | The order-isomorphism core (`fzero_bounds` … `fzero_hits_past`) lifted from bare functions to `WorldHistory` | ~90 lines | low |
-| 5 | `satSet` + the generic (H1)+(H2) bridge theorem | ~250 lines | **the one real phase**; `untl`/`snce` cases |
-| 6 | F¹ (or a `ShiftSet` instantiation); discharge (H1)/(H2) for both; conclude `⊨_{F°} φ → ⊡φ`, non-characterization, and non-L⋆-definability | ~120 lines | low |
-| 7 | README / `Metalogic.lean` docstring rows; §2 cross-referenced for task 105 (**record only — no manuscript prose, §7.1bis**) | ~40 lines | none |
-| 8 *(optional)* | `F^N` and the forward-vs-bidirectional separation (§5bis) — only if the forward/backward distinction is wanted in Lean. Blocked on a **finite-fibres** saturation helper that may not exist (R11) | ~150 lines | medium — gap check first |
+| 1 | **`TaskFrame.Deterministic`** in `Semantics/FrameProperty.lean`, in the `Fib`-subsingleton form (§4.2). Verified absent from the tree. Record the unrestricted-`d` requirement in its docstring, with the `F^N` reason (§5bis). | ~15 lines | none |
+| 2 | **The forward singleton bridge lemma** (`states_eq_of_deterministic`). Verified absent; task 533's summary concedes the gap. Choice-free. | ~8 lines | none |
+| 3 | **Deliverable (a)**: `Deterministic F → ⊨_F ⊡φ ↔ φ`, plus `Determined` as a frame validity. Three lines off the bridge lemma. Docstring the choice-freeness *and the direction that buys it* (§6.4). | ~30 lines | none |
+| — | **RECOMMENDED PHASE CUT.** Phases 1–3 are a complete, self-contained, choice-free deliverable (a), transcribed from compiled probes. Commit here. | | |
+| 4 | **F¹ via `ShiftSet`** at `Carrier := ℝ` (route (i), §5.3) — sidesteps the reproduced reducibility trap and yields `total_eq_orbit`, i.e. the F¹ world characterization, free. Cross-check against `translationFrame rOrd`. | ~15 lines | low — the trap is the reason for the route, not a residual risk |
+| 5 | **F° via the `uIcc` encoding** (from `probes/02`), with the positive-cone-only `comp` note and the two deliberate deviations from the paper's proof (§5.1). **The expensive item.** | ~150–200 lines | low — all six axioms already compile |
+| 6 | **The order-isomorphism core** (`fzero_bounds` … `fzero_hits_past`) lifted from bare functions to `WorldHistory` | ~90 lines | low — compiles on bare functions |
+| 7 | **`satSet` + the generic (H1)+(H2) representation lemma**, parameterized by the order on `W`, then instantiated at both frames (§5.4). | ~250 lines | **the one real phase**; `untl`/`snce` cases |
+| 8 | Conclude `⊨_{F°} φ → ⊡φ`, `app:drift`'s non-characterization, and `cor:no-characterization`'s non-definability | ~60 lines | low |
+| 9 | Promote task 535's `refute_determined` as `app:deterministic`'s negative half; docstring the discreteness hypothesis and its `[SuccOrder D] [NoMaxOrder D]` encoding | ~60 lines | none |
+| 10 | README / `Metalogic.lean` docstring rows; §2 cross-referenced for task 105 (**record only — no manuscript prose, §7.1bis**) | ~40 lines | none |
+| 11 *(optional)* | `F^N` and the forward-vs-bidirectional separation (§5bis) — only if that distinction is wanted in Lean. Blocked on a **finite-fibres** saturation helper that may not exist (R11) | ~150 lines | medium — gap check first |
 
 Deliverable (c) is **not** a phase of this task: it is the recommended follow-up (§6.3, Option 1),
 to be `/spawn`ed with the choice-asymmetry note (§6.4) in its description.
-
----
 
 ## 10. Evidence table
 
@@ -844,3 +931,8 @@ to be `/spawn`ed with the choice-asymmetry note (§6.4) in its description.
 | `F^N` separates forward from bidirectional determinism | task 105 report 02; frame-check script | reported, machine-verified in PossibleWorlds repo | **Medium-High** |
 | No **finite** frame separates forward from bidirectional determinism | Seriality ⇒ surjective ⇒ injective on finite `W` | derivation | **High** |
 | Task 105 holds staged LaTeX for `Det-pm`; do not redraft | task 105 phase-collision analysis | reported | **Medium-High** |
+| `TaskFrame.Deterministic` is **absent** from the tree | grep over `FormalSystem/`; only an unrelated Boneyard `DeterministicFMCS` | grep | **High** |
+| The singleton bridge lemma is **absent** in both directions | `SameStateAt` occurs only in `StarTruth.lean` and `StarPasting.lean`; 533's summary concedes it | grep + file read | **High** |
+| `Fib`-subsingleton is the right idiom | `saturation_of_fib_subsingleton` (`TaskFrame.lean:1401`) and `translationRel_fib_subsingleton` (`Standard.lean:58`) both already have that shape | file read; `probes/03` `deterministic_iff` compiles | **High** |
+| F¹ already exists as `translationFrame` | `Semantics/Frames/Standard.lean:73`, six axioms generic in `D` | file read; `probes/03` `F1`/`f1_deterministic`/`f1_determined` compile | **High** |
+| The `translationFrame` reducibility trap, both instances | `probes/03` (failures reproduced and recorded as comments; `↑rOrd` workaround verified for the frame-level one, verified NOT to fix the history-level one) | compiled | **High** |

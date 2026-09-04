@@ -71,11 +71,17 @@ noncomputable def F1 : FrameOver rOrd := translationFrame rOrd
 -- `rOrd` is `@[reducible]`, so `↑rOrd` does reduce.
 example (w x u : ↑rOrd) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl
 
-/-- The reference history of F¹: total histories are exactly the translations. -/
-example (τ : WorldHistory F1.toTaskFrame) (hτ : τ.IsTotal) (r : ↑rOrd) :
-    τ.states r (hτ r) = τ.states 0 (hτ 0) + r := by
-  have h := τ.respects_task 0 r (hτ 0) (hτ r)
-  simpa using h
+-- SECOND TRAP INSTANCE — and this one the `↑rOrd` workaround does NOT fix. The history
+-- characterization ("total histories are exactly the translations") FAILS:
+--   example (τ : WorldHistory F1.toTaskFrame) (hτ : τ.IsTotal) (r : ↑rOrd) :
+--       τ.states r (hτ r) = τ.states 0 (hτ 0) + r := by
+--     have h := τ.respects_task 0 r (hτ 0) (hτ r); simpa using h
+-- with "failed to synthesize HAdd F1.toTaskFrame.WorldState rOrd.carrier ?m", because
+-- `τ.states` returns `F1.toTaskFrame.WorldState`, which does not reduce. The barrier is inside
+-- `translationFrame` (a plain `def`), so neither a type ascription nor a `@[reducible]` alias
+-- reaches it. Route (i) — build F¹ through `ShiftSet` instead, whose `fibre`/`frame` ARE
+-- `@[reducible]` — is therefore the recommendation, and it also hands over `total_eq_orbit`,
+-- which IS this characterization, already proved generically.
 
 theorem f1_deterministic : TaskFrame.Deterministic F1.toTaskFrame :=
   fun w d => translationRel_fib_subsingleton (D := rOrd) w d
