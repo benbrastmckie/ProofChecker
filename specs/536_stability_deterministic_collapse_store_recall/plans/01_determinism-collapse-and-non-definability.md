@@ -256,31 +256,31 @@ file set differs, record the deviation rather than silently widening.
 
 ---
 
-### Phase 2: F¹ over ℝ through `ShiftSet` [NOT STARTED]
+### Phase 2: F¹ over ℝ through `ShiftSet` [COMPLETED]
 
 **Goal**: F¹ — the deterministic translation flow over ℝ — in the library via the only route that
 survives at the history level, with its world-set characterization free.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Independence/RealTranslationFrame.lean`.
-- [ ] Decide and record the `realOrder` placement (R5): define
+- [x] Create `FormalSystem/Metalogic/Independence/RealTranslationFrame.lean`.
+- [x] Decide and record the `realOrder` placement (R5): define
       `@[reducible] noncomputable def realOrder : TemporalOrder := ⟨ℝ⟩` **locally in this module**,
       with a docstring citing the `Metalogic/DedekindNonCompactness.lean:318` precedent, noting both
       annotations are load-bearing, and stating the reason for not importing it there
       (`DedekindNonCompactness` imports `Metalogic.StrongCompleteness`, far too heavy for this
       module) and the reason for not lifting it into `Semantics/` (it would pull
       `Mathlib.Data.Real.Basic` into the most upstream layer).
-- [ ] Build the ℝ shift set (`sh w d := w + d`; the `sep` field is the only content, ~15 lines,
+- [x] Build the ℝ shift set (`sh w d := w + d`; the `sep` field is the only content, ~15 lines,
       mirroring `rShift`'s `sep` proof) and take `F1 := (…).frame`. Supply a trivial valuation for
       the `A` field and **document that only `.frame` is used** — validity quantifies over all
       `TaskModel`s, never `S.model`.
-- [ ] `f1_deterministic : TaskFrame.Deterministic F1` — either
+- [x] `f1_deterministic : TaskFrame.Deterministic F1` — either
       `fib_subsingleton_of_functional` or `translationRel_fib_subsingleton`, a one-liner either way.
-- [ ] Specialize `ShiftSet.total_eq_orbit` to record the F¹ world-set characterization: total
+- [x] Specialize `ShiftSet.total_eq_orbit` to record the F¹ world-set characterization: total
       histories are **exactly** the translations `τ(t) = τ(0) + t`. This is what
       `cor:no-characterization`'s F¹ half needs.
-- [ ] `f1_determined (φ) : F1.StarValidOn (.imp φ (.stab φ))` from Phase 1, as a smoke test.
-- [ ] Module docstring: state C5 (the reproduced reducibility trap, both instances, and why the
+- [x] `f1_determined (φ) : F1.StarValidOn (.imp φ (.stab φ))` from Phase 1, as a smoke test.
+- [x] Module docstring: state C5 (the reproduced reducibility trap, both instances, and why the
       `translationFrame` route is unusable at the history level) and mark `probes/02`'s bespoke
       `foneFrame` as a probe artifact deliberately **not** promoted, so no later reader restores it.
 
