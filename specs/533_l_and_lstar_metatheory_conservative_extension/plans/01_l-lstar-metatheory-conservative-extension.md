@@ -461,27 +461,27 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group C — L⋆ semantics (Phases 3.1-3.5)**
 
-### Phase 3.1: `SameStateAt`, `StarTruthAt`, clause lemmas, definitional validities, shift invariance [NOT STARTED]
+### Phase 3.1: `SameStateAt`, `StarTruthAt`, clause lemmas, definitional validities, shift invariance [COMPLETED]
 - **Goal:** Land `FormalSystem/Semantics/StarTruth.lean` by transcribing probes Parts A, B and E
   into repo style (docstrings with paper anchors, `FormalSystem.Semantics` namespace, no
   `Scratch535` namespace, no task numbers).
 - **Tasks:**
-  - [ ] `def SameStateAt (τ σ : WorldHistory F) (t : F.Duration) : Prop` (paper line 1108);
+  - [x] `def SameStateAt (τ σ : WorldHistory F) (t : F.Duration) : Prop` (paper line 1108);
         `theorem sameStateAt_iff_of_total (hτ : τ.IsTotal) (hσ : σ.IsTotal) : SameStateAt τ σ t ↔ τ.states t (hτ t) = σ.states t (hσ t)`;
         reflexivity/symmetry/transitivity lemmas at total histories; `sameStateAt_timeShift`
         (A6, `Iff.rfl`); `sameStateAt_congr_left`.
-  - [ ] `def StarTruthAt (M : TaskModel F) (τ) (t) : StarFormula → Prop` with the seven clauses
+  - [x] `def StarTruthAt (M : TaskModel F) (τ) (t) : StarFormula → Prop` with the seven clauses
         exactly as in the probes (the six L⁺ clauses verbatim from `Truth.lean:223`'s shape, the
         `stab` clause per paper line 1114).
-  - [ ] Clause lemmas: `atom_iff`, `conj_iff`, `neg_iff`, `dstab_iff`, `someFuture_iff`,
+  - [x] Clause lemmas: `atom_iff`, `conj_iff`, `neg_iff`, `dstab_iff`, `someFuture_iff`,
         `allFuture_iff`, `somePast_iff`, `allPast_iff`, `untl_iff`, `snce_iff`, `box_iff`, and
         `stab_iff` (all `Iff.rfl` or `simp`), in a `StarTruth` namespace mirroring `BLTruth.*`.
-  - [ ] A1-A5: `stab_of_box`, `of_stab`, `stab_four`, `stab_five`, `stab_atom_of_atom`.
-  - [ ] B1-B3: `stab_congr_sameState`, `box_stab_iff`, `stab_box_of_box`.
-  - [ ] E0-E2: `states_congr`, `truth_congr_ext`, `timeShift_isTotal'` (check whether
+  - [x] A1-A5: `stab_of_box`, `of_stab`, `stab_four`, `stab_five`, `stab_atom_of_atom`.
+  - [x] B1-B3: `stab_congr_sameState`, `box_stab_iff`, `stab_box_of_box`.
+  - [x] E0-E2: `states_congr`, `truth_congr_ext`, `timeShift_isTotal'` (check whether
         `WorldHistory.timeShift_isTotal` already exists and reuse it), `shift_neg_shift_domain`,
         `shift_neg_shift_states`, `starTruthAt_timeShift`, `stab_state_only`.
-  - [ ] Build: `lake build FormalSystem.Semantics.StarTruth`.
+  - [x] Build: `lake build FormalSystem.Semantics.StarTruth`.
 - **Territory:** creates `FormalSystem/Semantics/StarTruth.lean` only (no aggregator edit;
   wiring is Phase 3.5).
 - **Estimated output:** ~330 lines (transcription of ~280 compiled probe lines plus
