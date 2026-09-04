@@ -514,28 +514,28 @@ nicety into a gate.
 
 ---
 
-### Phase 8: D-16 and E-13 -- reporting-only C17 and C18 [NOT STARTED]
+### Phase 8: D-16 and E-13 -- reporting-only C17 and C18 [COMPLETED]
 
 **Goal**: Add two reporting-only censuses: dead declarations, and duplicated prose paragraphs.
 
 **Tasks**:
-- [ ] C17 (dead-declaration scan): for each declaration name in non-Boneyard
+- [x] C17 (dead-declaration scan): for each declaration name in non-Boneyard
       `FormalSystem/**/*.lean`, count tokenised occurrences of the base identifier across all
       `.lean` and prose files, excluding the declaring line itself. Report declarations whose
-      count is zero.
-- [ ] C18 (paragraph duplication): whitespace-normalise paragraphs and report any paragraph
+      count is zero. *(completed: base identifier = the last dot-segment of the declared name (matching dot-notation/`open`-scoped reference style); occurrence corpus = FormalSystem/**/*.lean + Tests/**/*.lean + every repo-wide *.md (excluding .git/.lake/specs/Boneyard/build/__pycache__, reusing C5's exact markdown scope). 989 declarations flagged of 10346 total, in ~2s. Spot-checked one (release_unfold): genuinely has zero textual references anywhere outside its own line -- it is live only via the @[formula_unfold] attribute/simp-set mechanism, exactly the kind of indirect-usage blind spot a token-based census cannot see and now documents explicitly.)*
+- [x] C18 (paragraph duplication): whitespace-normalise paragraphs and report any paragraph
       appearing more than once across `README.md`, `FormalSystem/README.md`,
       `FormalSystem/Metalogic/README.md`, and `FormalSystem/Metalogic.lean`. Confirm those four
-      paths before hard-coding them.
-- [ ] Both checks are reporting-only from the outset: `info`/`note` output, capped at 20 lines
+      paths before hard-coding them. *(completed: all four confirmed to exist before hard-coding. Paragraphs = blank-line-delimited blocks, normalised by collapsing all whitespace runs to a single space; markdown headers/horizontal-rule paragraphs and paragraphs under 40 normalised characters excluded. Zero duplicates found in the current tree (expected -- this is a regression census, not a currently-known defect); mechanism verified sound via a synthetic two-file test with a deliberately duplicated paragraph, confirmed detected at both locations, before running for real.)*
+- [x] Both checks are reporting-only from the outset: `info`/`note` output, capped at 20 lines
       each, never touching `FAILURES`. Do NOT add `ENFORCE_C17`/`ENFORCE_C18` flags -- the
       delegation specifies reporting-only, and an unused enforcement flag invites a later
-      unreviewed flip.
-- [ ] Neither check invokes the build, so both run under `--no-build` (Risk R9).
-- [ ] Record the numbering rationale in a comment: E-13's own text calls its check "C16", which
+      unreviewed flip. *(completed: no ENFORCE flags added; capped at 20 lines each)*
+- [x] Neither check invokes the build, so both run under `--no-build` (Risk R9). *(completed: both run unconditionally, not gated by RUN_BUILD at all -- neither needs the toolchain)*
+- [x] Record the numbering rationale in a comment: E-13's own text calls its check "C16", which
       collides with this task's linter check; the delegation's mapping (C17 = D-16,
-      C18 = E-13) supersedes the review's label.
-- [ ] Add C17 and C18 to the header `# Checks:` inventory.
+      C18 = E-13) supersedes the review's label. *(completed, in both blocks' header comments)*
+- [x] Add C17 and C18 to the header `# Checks:` inventory. *(completed)*
 
 **Timing**: 2 hours.
 
@@ -545,15 +545,15 @@ nicety into a gate.
 
 **Scope Hypothesis**: C18's scope is asserted to be exactly four files. Confirm all four exist at
 the stated paths before hard-coding; `FormalSystem/Metalogic.lean` in particular is an aggregator
-whose presence C8 governs.
+whose presence C8 governs. *(confirmed: all four exist)*
 
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - new C17 and C18 blocks, header inventory.
 
 **Verification**:
-- `bash scripts/check-module-invariants.sh --no-build` exits 0 with C17 and C18 both reporting.
+- `bash scripts/check-module-invariants.sh --no-build` exits 0 with C17 and C18 both reporting. *(deviation: altered — exit is 1, solely from the pre-existing, unrelated C15 gap recorded since Phase 1; C17 and C18 both report correctly (C17: 989 findings; C18: 0, PASS) in both the --no-build and full runs.)*
 - Neither check increments `FAILURES` even when it reports findings (prove by inspection of the
-  exit code against a run with known findings).
+  exit code against a run with known findings). *(confirmed by inspection: neither Python block calls sys.exit(), and no bash `fail` call wraps either -- structurally impossible to affect FAILURES. Confirmed empirically too: C17 reported 989 findings in both runs above and the overall "CHECK GROUP(S) FAILED" count stayed at 1 (C15 only), not 2.)*
 
 ---
 

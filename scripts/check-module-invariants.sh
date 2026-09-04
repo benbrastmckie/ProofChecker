@@ -27,7 +27,13 @@
 #       record (manifest row, or an explicit KNOWN-ANCHORS row)
 #   C16 Batteries env_linter batch (simpNF, docBlame, unusedArguments, ...) has no
 #       finding beyond scripts/nolints.json's grandfathered baseline; dupNamespace
-#       reported as a static count (live-checking it forces a full rebuild)
+#       reported via a live textual (namespace-nesting) approximation, never gated
+#   C17 Dead-declaration scan: base identifiers with zero occurrences outside their
+#       own declaring line, across FormalSystem/ + Tests/ + repo-wide markdown
+#       (REPORTED, not gated)
+#   C18 Duplicated paragraphs across README.md, FormalSystem/README.md,
+#       FormalSystem/Metalogic/README.md and FormalSystem/Metalogic.lean
+#       (REPORTED, not gated)
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #
 # Every filesystem traversal excludes the archive via `-not -path '*/Boneyard/*'`.
@@ -1179,6 +1185,186 @@ else:
         print(f"            {p}:{l}: {ident} (duplicated component: {dup})")
     if len(findings) > 20:
         print(f"            ... and {len(findings) - 20} more")
+PYEOF
+echo
+
+# ---------------------------------------------------------------------------
+# C17: dead-declaration scan (reporting-only)
+#
+# Numbering note: the review's own text calls this check "C16", which collides
+# with this file's C16 (the environment-linter batch above). The delegation's
+# mapping supersedes the review's label: C17 = D-16 (this check), C18 = E-13
+# (paragraph duplication, below).
+#
+# For each declaration in non-Boneyard FormalSystem/**/*.lean, the BASE
+# identifier (the last dot-segment of its name -- e.g. `c0` for `Chronicle.c0`,
+# matching how dot notation and an `open` namespace actually reference it) is
+# tokenised and counted across every `.lean` file in FormalSystem/ and Tests/
+# plus every `.md` file in the repo (excluding .git/.lake/specs/Boneyard/
+# build/__pycache__, the same scope C5 already uses for markdown). A
+# declaration whose base identifier occurs nowhere else -- not even on another
+# line of its own file -- is reported as a candidate dead declaration.
+#
+# This is reporting-only and deliberately approximate, same spirit as C16's
+# dupNamespace check: it is blind to attribute/simp-set-driven indirect usage
+# (a theorem tagged `@[formula_unfold]` and consumed only via `simp only
+# [formula_unfold]` elsewhere is textually "dead" by this scan but is not
+# actually unused), to `to_additive`-generated names, and to same-named
+# declarations in different namespaces (a shared base name like `mk` or
+# `toString` will never register as dead, which is the safe direction of
+# error for a census that must never gate). No ENFORCE_C17 flag -- reporting-
+# only per the delegation, and an unused enforcement flag invites a later
+# unreviewed flip.
+# ---------------------------------------------------------------------------
+python3 - <<'PYEOF'
+import os, re
+
+def live_lean_files(base):
+    out = []
+    for root, dirs, files in os.walk(base):
+        dirs[:] = [d for d in dirs if d != "Boneyard"]
+        for f in files:
+            if f.endswith(".lean"):
+                out.append(os.path.join(root, f))
+    return sorted(out)
+
+def prose_files():
+    out = []
+    for root, dirs, files in os.walk("."):
+        dirs[:] = [d for d in dirs
+                   if d not in (".git", ".lake", "specs", "Boneyard", "build", "__pycache__")]
+        for f in files:
+            if f.endswith(".md"):
+                out.append(os.path.relpath(os.path.join(root, f), "."))
+    return sorted(out)
+
+decl_re = re.compile(
+    r"^(?:@\[[^\]]*\]\s*)*"
+    r"(?:private\s+|protected\s+|noncomputable\s+|scoped\s+|local\s+|mutual\s+)*"
+    r"(structure|inductive|def|abbrev|theorem|instance|class)\s+"
+    r"([A-Za-z_][A-Za-z0-9_'.]*)"
+)
+token_re = re.compile(r"[A-Za-z_][A-Za-z0-9_']*")
+
+lean_files = live_lean_files("FormalSystem")
+declarations = []
+for path in lean_files:
+    try:
+        lines = open(path, encoding="utf-8", errors="replace").readlines()
+    except OSError:
+        continue
+    for i, raw in enumerate(lines, 1):
+        m = decl_re.match(raw.strip())
+        if m:
+            declarations.append((m.group(2).split(".")[-1], path, i))
+
+# Tests/ is not part of C17's declaration scope but IS a legitimate reference
+# site (tests routinely call library declarations by name), so it is included
+# in the occurrence corpus -- excluding it would misreport every
+# test-only-referenced declaration as dead.
+occurrence_files = list(lean_files) + prose_files()
+for root, dirs, files in os.walk("Tests"):
+    for f in files:
+        if f.endswith(".lean"):
+            occurrence_files.append(os.path.join(root, f))
+
+occurrences = {}
+for path in occurrence_files:
+    try:
+        lines = open(path, encoding="utf-8", errors="replace").readlines()
+    except OSError:
+        continue
+    for i, line in enumerate(lines, 1):
+        for tok in set(token_re.findall(line)):
+            occurrences.setdefault(tok, set()).add((path, i))
+
+dead = []
+for base, decl_file, decl_line in declarations:
+    other = occurrences.get(base, set()) - {(decl_file, decl_line)}
+    if not other:
+        dead.append((base, decl_file, decl_line))
+
+if not dead:
+    print("PASS  C17  zero dead declaration(s) (base-identifier token scan)")
+else:
+    print(f"INFO  C17  {len(dead)} declaration(s) with zero other occurrences (dead-declaration scan, approximate; never affects FAILURES)")
+    for base, f, l in dead[:20]:
+        print(f"            {f}:{l}: {base}")
+    if len(dead) > 20:
+        print(f"            ... and {len(dead) - 20} more")
+PYEOF
+echo
+
+# ---------------------------------------------------------------------------
+# C18: paragraph duplication across the top-level READMEs (reporting-only)
+#
+# D-16/E-13's "C16" label collision note above applies to this check too --
+# C18 is the delegation's mapping for E-13.
+#
+# Scope (confirmed to exist at implementation time, per the Scope Hypothesis):
+# README.md, FormalSystem/README.md, FormalSystem/Metalogic/README.md, and
+# FormalSystem/Metalogic.lean (an aggregator whose presence C8 governs).
+# Paragraphs (blank-line-delimited blocks) are whitespace-normalised (all
+# runs of whitespace, including newlines, collapsed to a single space) and
+# pooled across all four files; any normalised paragraph appearing more than
+# once -- within one file or across files -- is reported. Markdown headers
+# and horizontal rules are excluded (they are structure, not prose), and
+# paragraphs under 40 normalised characters are excluded to keep the census
+# aimed at substantial copy-paste duplication rather than short, legitimately
+# repeated phrases. No ENFORCE_C18 flag -- reporting-only per the delegation.
+# ---------------------------------------------------------------------------
+python3 - <<'PYEOF'
+import re
+
+FILES = [
+    "README.md",
+    "FormalSystem/README.md",
+    "FormalSystem/Metalogic/README.md",
+    "FormalSystem/Metalogic.lean",
+]
+
+def paragraphs(path):
+    try:
+        text = open(path, encoding="utf-8", errors="replace").read()
+    except OSError:
+        return []
+    paras, cur, start = [], [], None
+    for i, line in enumerate(text.split("\n"), 1):
+        if line.strip() == "":
+            if cur:
+                paras.append((start, "\n".join(cur)))
+                cur, start = [], None
+        else:
+            if start is None:
+                start = i
+            cur.append(line)
+    if cur:
+        paras.append((start, "\n".join(cur)))
+    return paras
+
+def normalize(p):
+    return re.sub(r"\s+", " ", p).strip()
+
+occ = {}
+for path in FILES:
+    for lineno, raw in paragraphs(path):
+        norm = normalize(raw)
+        if len(norm) < 40:
+            continue
+        if re.match(r"^#{1,6}\s", norm) or re.match(r"^[-*_]{3,}$", norm):
+            continue
+        occ.setdefault(norm, []).append((path, lineno))
+
+dups = [(norm, locs) for norm, locs in occ.items() if len(locs) > 1]
+if not dups:
+    print("PASS  C18  zero duplicated paragraph(s) across the four top-level READMEs")
+else:
+    print(f"INFO  C18  {len(dups)} duplicated paragraph(s) across the four top-level READMEs (never affects FAILURES)")
+    for norm, locs in dups[:20]:
+        loc_str = ", ".join(f"{f}:{l}" for f, l in locs)
+        print(f"            {loc_str}: {norm[:80]!r}")
+    if len(dups) > 20:
+        print(f"            ... and {len(dups) - 20} more")
 PYEOF
 echo
 

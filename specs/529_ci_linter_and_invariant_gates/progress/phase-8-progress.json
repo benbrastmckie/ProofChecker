@@ -1,0 +1,26 @@
+{
+  "phase": 8,
+  "phase_name": "D-16 and E-13 -- reporting-only C17 and C18",
+  "started_at": "2026-09-04T12:45:00Z",
+  "last_updated": "2026-09-04T13:20:00Z",
+  "objectives": [
+    {"id": 1, "description": "C17 dead-declaration scan", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Base identifier = last dot-segment of declared name. Occurrence corpus: FormalSystem/**/*.lean + Tests/**/*.lean + repo-wide *.md (C5's markdown scope). 10346 declarations scanned, 989 flagged, ~2s runtime. Spot-checked release_unfold: genuinely zero textual references outside its declaring line, live only via @[formula_unfold] attribute/simp-set indirection -- documented as a known blind spot."},
+    {"id": 2, "description": "C18 paragraph duplication across 4 named files", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "All 4 files confirmed present before hard-coding. Blank-line-delimited paragraphs, whitespace-normalised, headers/hr/short-paragraph exclusions. Zero duplicates in current tree. Mechanism verified via a synthetic two-file duplicate-paragraph test before the real run."},
+    {"id": 3, "description": "Both reporting-only, capped at 20 lines, no ENFORCE flags", "status": "done", "files_touched": [], "note": "Confirmed no ENFORCE_C17/C18 flags added."},
+    {"id": 4, "description": "Both run under --no-build (Risk R9)", "status": "done", "files_touched": [], "note": "Neither gated by RUN_BUILD at all; run unconditionally."},
+    {"id": 5, "description": "Numbering-rationale comment (E-13's own 'C16' label collision)", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Documented in both blocks' header comments."},
+    {"id": 6, "description": "Add C17/C18 to header # Checks: inventory", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Completed."}
+  ],
+  "current_objective": 6,
+  "approaches_tried": [],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "8.verification",
+      "description": "bash scripts/check-module-invariants.sh --no-build exits 0 with C17 and C18 both reporting",
+      "type": "altered",
+      "reason": "Exits 1, solely from the pre-existing, unrelated C15 gap recorded since Phase 1. C17 and C18 both report/pass correctly in both --no-build and full runs; no new failure introduced.",
+      "annotation": "*(deviation: altered — exit is 1 due to the pre-existing C15 gap, not 0; C17/C18 themselves behave exactly as specified)*"
+    }
+  ]
+}
