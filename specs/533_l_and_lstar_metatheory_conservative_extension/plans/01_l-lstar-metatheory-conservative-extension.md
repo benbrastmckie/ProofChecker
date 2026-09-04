@@ -720,18 +720,18 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   `String`/`Option Nat` encodings) and `Infinite Atom` exists or follows from the fresh index.
   Confirm both by `lean_local_search` before writing.
 
-### Phase 5.2: `starAxiom_validIn_min` — validity dispatch over every `StarAxiom` constructor [IN PROGRESS]
+### Phase 5.2: `starAxiom_validIn_min` — validity dispatch over every `StarAxiom` constructor [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/AxiomValidity.lean` (first half):
   one lemma, one arm per constructor.
 - **Tasks:**
-  - [ ] `theorem starAxiom_validIn_min {φ} (ax : StarAxiom φ) : StarValidIn ax.minFrameClass φ := by cases ax with …`
+  - [x] `theorem starAxiom_validIn_min {φ} (ax : StarAxiom φ) : StarValidIn ax.minFrameClass φ := by cases ax with …`
         — the 45 TM⁺ arms each `exact starValidIn_of_plus e _ (Axiom.c (atomize e ψ₁) …) le_rfl`
         (with `e` fixed once by `Classical.choice Encoding.nonempty` at the top of the file);
         the ⊡ arms: `stab_k` (direct from the `stab` clause), `stab_t`/`stab_4`/`stab_5`/
         `box_stab`/`atom_stab` from Phase 3.1's A1-A5 via `StarValidIn.of_forall_total`;
         `paste`/`untl_paste` from Phase 3.3's `paste_starValid`/`untl_paste_starValid`.
-  - [ ] `theorem starAxiom_validIn {fc} (ax : StarAxiom φ) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ := StarValidIn.mono h (starAxiom_validIn_min ax)`.
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.AxiomValidity`.
+  - [x] `theorem starAxiom_validIn {fc} (ax : StarAxiom φ) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ := StarValidIn.mono h (starAxiom_validIn_min ax)`.
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.AxiomValidity`.
 - **Territory:** creates `Conservativity/Star/AxiomValidity.lean` (Phase 5.3 appends to the same
   file in the next wave; no parallel edit).
 - **Estimated output:** ~180 lines. **Done when:** the dispatch lemma builds with no `sorry`
@@ -745,11 +745,11 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   push-through lemmas). If an arm needs `simp only [atomize_*]` first, that is acceptable; if it
   needs anything else, the derived-operator RHS in Phase 2 is wrong and is fixed there.
 
-### Phase 5.3: `starAxiom_swap_validIn_min` — swap-validity dispatch (the semantic TD input) [IN PROGRESS]
+### Phase 5.3: `starAxiom_swap_validIn_min` — swap-validity dispatch (the semantic TD input) [COMPLETED]
 - **Goal:** Complete `Conservativity/Star/AxiomValidity.lean` with the mirrored dispatch, which
   is what makes `temporal_duality` sound without any proof-theoretic mirror argument.
 - **Tasks:**
-  - [ ] `theorem starAxiom_swap_validIn_min {φ} (ax : StarAxiom φ) : StarValidIn ax.minFrameClass φ.swapTemporal := by cases ax with …`
+  - [x] `theorem starAxiom_swap_validIn_min {φ} (ax : StarAxiom φ) : StarValidIn ax.minFrameClass φ.swapTemporal := by cases ax with …`
         — TM⁺ arms: `exact starValidIn_swap_of_plus e _ (Axiom.c (atomize e.swap ψ₁) …) le_rfl`
         (mirror of `axiom_swap_validIn_min`, `Soundness.lean:1190`, but uniform: no per-class
         case split is needed because the L⁺ lemma already carries it);
@@ -762,8 +762,8 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
         `hφ.swapTemporal : IsPurePast φ.swapTemporal` (Phase 2) — `exact paste'_starValid …`;
         `untl_paste α φ hα hφ`: the swapped formula is SS at `(α.swapTemporal, φ.swapTemporal)`
         — `exact snce_paste_starValid hα.swapTemporal hφ.swapTemporal`.
-  - [ ] `theorem starAxiom_swap_validIn {fc} (ax) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ.swapTemporal`.
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.AxiomValidity`.
+  - [x] `theorem starAxiom_swap_validIn {fc} (ax) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ.swapTemporal`.
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.AxiomValidity`.
 - **Territory:** edits `Conservativity/Star/AxiomValidity.lean` (append) only.
 - **Estimated output:** ~180 lines. **Done when:** the swap dispatch builds sorry-free with
   every constructor named explicitly.
@@ -775,7 +775,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   `simp only` — if the conjunct order differs, add the missing `conj` commutation lemma in this
   file rather than re-opening Phase 3.3.
 
-### Phase 5.4: `star_derivable_valid_and_swap_validIn` companion recursion and the four soundness rows [NOT STARTED]
+### Phase 5.4: `star_derivable_valid_and_swap_validIn` companion recursion and the four soundness rows [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean`: soundness of
   TM⋆ at every class, TD discharged semantically.
 - **Tasks:**
