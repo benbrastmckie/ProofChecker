@@ -11,14 +11,6 @@ jobs:
   build:
     name: Build and Test
     runs-on: ubuntu-latest
-    # Skip CI by default on push, run only when:
-    # 1. Manual workflow_dispatch trigger
-    # 2. Pull request event
-    # 3. Commit message contains [ci] marker
-    if: |
-      github.event_name == 'workflow_dispatch' ||
-      github.event_name == 'pull_request' ||
-      contains(github.event.head_commit.message, '[ci]')
 
     steps:
       - name: Checkout repository
@@ -29,8 +21,17 @@ jobs:
         uses: leanprover/lean-action@v1
         with:
           build: true
-          test: false
-          lint: false
+          test: true
+          # The Batteries env_linter set (simpNF, docBlame, defsWithUnderscore,
+          # structureInType, tacticDocs, unusedArguments) cannot be narrowed via lint-args --
+          # runLinter's own CLI always runs every registered linter unconditionally, with no
+          # selection flag. scripts/nolints.json grandfathers the 307 pre-existing findings
+          # (the standard Batteries/Mathlib mechanism: generated via
+          # `lake exe runLinter --update`, read on every run), so `lake lint` now fails only on
+          # a genuinely NEW finding. dupNamespace (a separate Lean core text linter, 14
+          # pre-existing warnings in ChronicleTypes.lean) never reaches the driver's report or
+          # its exit code either way.
+          lint: true
           use-mathlib-cache: true
 
       - name: Report results
@@ -38,3 +39,4 @@ jobs:
         run: |
           echo "Build status: ${{ steps.lean-action.outputs.build-status }}"
           echo "Test status: ${{ steps.lean-action.outputs.test-status }}"
+          echo "Lint status: ${{ steps.lean-action.outputs.lint-status }}"

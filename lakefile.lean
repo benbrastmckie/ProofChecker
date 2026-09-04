@@ -3,6 +3,7 @@ open Lake DSL
 
 package Logos where
   testDriver := "BimodalTest"
+  lintDriver := "batteries/runLinter"
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git" @ "v4.33.0-rc1"
