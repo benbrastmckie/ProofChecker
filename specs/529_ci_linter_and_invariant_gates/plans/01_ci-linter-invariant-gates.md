@@ -557,26 +557,26 @@ whose presence C8 governs. *(confirmed: all four exist)*
 
 ---
 
-### Phase 9: C19 -- docstring-coverage floor [NOT STARTED]
+### Phase 9: C19 -- docstring-coverage floor [BLOCKED]
 
 **Goal**: Add a reporting-only docstring-coverage check with a 90% floor, on the baseline chosen
 in the Overview.
 
 **Tasks**:
-- [ ] Implement the G-12 heuristic: count declaration-shaped lines
+- [x] Implement the G-12 heuristic: count declaration-shaped lines
       (`theorem|lemma|def|structure|inductive|class|abbrev|instance`) in non-Boneyard
       `FormalSystem/**/*.lean`; a declaration counts as documented iff a `/-- ... -/` doc comment
-      ends within the three lines immediately above it.
+      ends within the three lines immediately above it. *(completed, prototyped standalone: 10427 total, 9319 documented, 1108 undocumented, 89.37% coverage. See BLOCKED note below -- not yet wired into the script pending resolution.)*
 - [ ] Report the percentage and the raw counts. Emit a `soft`/`TODO`-style line when coverage
-      falls below 90%; never increment `FAILURES` (delegation: "as a reporting check").
+      falls below 90%; never increment `FAILURES` (delegation: "as a reporting check"). *(blocked: awaiting direction on the methodology question below before writing the final block)*
 - [ ] In the block comment, state (a) the chosen baseline and why -- G-12's is the only
       reproducible one; (b) that the heuristic under-reports coverage for declarations documented
       by an enclosing `/-! -/` section comment, so the figure is a lower bound; (c) that `lemma`
       is added to G-12's keyword list, the one deliberate deviation; (d) that D-15's 91.8% "core
-      scope" figure is explicitly NOT this check's baseline.
-- [ ] Record the measured coverage at implementation time in the phase notes, and compare against
-      research's 92.8% expectation.
-- [ ] No build invocation; runs under `--no-build`. Add C19 to the header inventory.
+      scope" figure is explicitly NOT this check's baseline. *(blocked, same reason)*
+- [x] Record the measured coverage at implementation time in the phase notes, and compare against
+      research's 92.8% expectation. *(completed: 89.37% (with lemma) / 89.64% (without, for direct comparison) vs. research's 92.8% (8982 total, no lemma). Total declaration count grew ~16% since research measured it (10427 vs 8982).)*
+- [ ] No build invocation; runs under `--no-build`. Add C19 to the header inventory. *(blocked, pending the block being written)*
 
 **Timing**: 1 hour.
 
@@ -590,13 +590,30 @@ totals. Confirm the recomputed figure clears 90% by a comfortable margin; if it 
 STOP and report rather than lowering the floor to fit -- the floor is the delegation's, not the
 implementer's.
 
+**STOP condition triggered.** The recomputed figure does NOT clear 90% -- it lands at 89.37%
+(with `lemma`) / 89.64% (without). Verified this is a faithful measurement, not an
+implementation bug, three ways: (a) a per-keyword breakdown is sane (def 97.1%, abbrev 96.3%,
+inductive 96.3%, structure 82.5%, theorem 86.8% [the dominant category at 6429 of 10427 total,
+so its rate drives the aggregate], instance 57.6%, class 16.3%, lemma 55.6%); (b) manually
+inspected 8 undocumented `theorem` hits (`BaseLanguage/Formula.lean`'s `swapBL_*` family,
+`BaseLanguage/Translation.lean`'s `tr_*` family) -- every one is covered by an enclosing
+`/-! ### ... -/` section comment documenting a whole batch of `@[simp]` `rfl` lemmas at once,
+exactly the heuristic's own already-documented blind spot, not genuinely undocumented content;
+(c) the total declaration count grew ~16% since research measured it, consistent with ordinary
+development. Per this Scope Hypothesis's own explicit instruction, escalated to the team lead
+(not resolved unilaterally) rather than either landing a floor-violating check silently or
+adjusting the heuristic to route around the shortfall. Phase marked **[BLOCKED]** pending a
+methodology decision; see Phase 9's progress file for the full finding and the options put to
+the team lead.
+
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - new C19 block, header inventory.
 
 **Verification**:
 - `bash scripts/check-module-invariants.sh --no-build` exits 0 and prints a C19 line with the
   measured percentage.
-- The measured percentage is >= 90%.
+- The measured percentage is >= 90%. *(NOT MET as measured -- see STOP condition above; this is
+  the reason the phase is blocked rather than closed with a deviation annotation.)*
 
 ---
 
