@@ -707,28 +707,28 @@ papered over. *(confirmed: both hold. The exceptions list itself needed one entr
 
 ---
 
-### Phase 11: Acceptance gate [NOT STARTED]
+### Phase 11: Acceptance gate [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Run every acceptance criterion the delegation named, and state plainly what could not be
 verified locally.
 
 **Tasks**:
-- [ ] `lake build` -- exits 0.
-- [ ] `lake test` -- exits 0 (the criterion behind `test: true`).
-- [ ] `lake check-lint` -- exits 0.
-- [ ] `lake lint <the exact args ci.yml passes>` -- exits 0, zero `simpNF` and zero
-      `dupNamespace` findings.
-- [ ] `bash scripts/check-module-invariants.sh` -- prints ALL CHECKS PASSED, including
-      `PASS C16`, and exits 0.
-- [ ] `bash scripts/check-module-invariants.sh --no-build` -- exits 0 (proves every new check
-      honours the fast path).
-- [ ] `bash scripts/readme-lint.sh` -- exit code matches the Phase 1 baseline.
-- [ ] Confirm both stale-count documents read correctly and the widened C14 finds nothing.
-- [ ] Parse `.github/workflows/ci.yml` as YAML; confirm `test: true`, `lint: true`, no
-      `head_commit.message` reference, and a `lint-args` narrowing present.
-- [ ] Record in the summary that "CI green on a plain push" is **inferred** from the local
+- [x] `lake build` -- exits 0. *(confirmed: 2591 jobs, exit 0)*
+- [x] `lake test` -- exits 0 (the criterion behind `test: true`). *(confirmed: exit 0)*
+- [x] `lake check-lint` -- exits 0. *(confirmed: exit 0)*
+- [x] `lake lint <the exact args ci.yml passes>` -- exits 0, zero `simpNF` and zero
+      `dupNamespace` findings. *(deviation: altered — the exact args ci.yml passes are NO args (per Phase 2's outcome: nolints.json grandfathering supersedes the plan's originally-sketched lint-args narrowing). Plain `lake lint` exits 0 ("Linting passed for FormalSystem"). simpNF's 1 pre-existing finding is grandfathered by scripts/nolints.json, so it does not appear as a failure here -- it remains a real, un-fixed, tracked finding (recorded since Phase 1/3, not silently dropped). dupNamespace is not part of this gate at all, by design (Phase 2/3 established it never reaches the driver under any invocation) -- its 14 findings are tracked separately by C16's live textual check, not this command.)*
+- [x] `bash scripts/check-module-invariants.sh` -- prints ALL CHECKS PASSED, including
+      `PASS C16`, and exits 0. *(deviation: altered — exits 1, not 0; PASS C16 confirmed, but the pre-existing, unrelated C15 gap (recorded since Phase 1, out of this task's scope) is the sole remaining failure. See the residual-risk note below; "ALL CHECKS PASSED" is not literally achievable without a separate fix to specs/paper-definitions-of-record.md that requires paper-content knowledge outside this task's authority.)*
+- [x] `bash scripts/check-module-invariants.sh --no-build` -- exits 0 (proves every new check
+      honours the fast path). *(deviation: altered — exits 1, same sole cause (C15); every check added or modified by this task (C9, C14, C16, C17, C18, C19) correctly runs or skips under --no-build with no other regression, confirmed by identical output shape to the full run apart from the build-dependent checks' skip lines.)*
+- [x] `bash scripts/readme-lint.sh` -- exit code matches the Phase 1 baseline. *(confirmed: exit 1, 5 missing READMEs (Check 1, pre-existing/unrelated), 0 broken references (Check 3) -- identical to the pre/post comparison already verified in Phase 7, since Phase 1 itself never captured a readme-lint baseline)*
+- [x] Confirm both stale-count documents read correctly and the widened C14 finds nothing. *(confirmed: PASS C14 both halves; zero hits re-running the widened grep over docs + README.md directly)*
+- [x] Parse `.github/workflows/ci.yml` as YAML; confirm `test: true`, `lint: true`, no
+      `head_commit.message` reference, and a `lint-args` narrowing present. *(deviation: altered — test: true and lint: true confirmed, zero head_commit.message references confirmed, YAML parses cleanly. No `lint-args` is present -- correctly so, per Phase 2's nolints.json-based resolution, which needs no narrowing at all. This is the intended final state, not a gap.)*
+- [x] Record in the summary that "CI green on a plain push" is **inferred** from the local
       equivalents above, not observed -- no push is permitted (Risk R7,
-      `.claude/rules/pr-prohibition.md`). Name this as the one residual acceptance risk.
+      `.claude/rules/pr-prohibition.md`). Name this as the one residual acceptance risk. *(completed: recorded in the implementation summary)*
 
 **Timing**: 0.75 hours.
 
@@ -740,6 +740,13 @@ verified locally.
 
 **Verification**: every command above exits as stated, with the outputs quoted in the
 implementation summary rather than asserted.
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| `bash scripts/check-module-invariants.sh` (both modes) print/exit as ALL CHECKS PASSED / 0 | Both exit 1 solely from the pre-existing, unrelated C15 paper-anchor gap, first recorded in Phase 1 and carried unchanged through every subsequent phase. Fixing it requires paper-content knowledge (LIVE-UNPINNED vs. DANGLING classification against the actual paper) outside this task's scope and authority; the task delegation is about CI/linter/invariant-gate infrastructure, not paper-anchor citation resolution. Every check this task added or modified (C9, C14, C16, C17, C18, C19) passes/reports correctly in every run throughout this task. | Full and `--no-build` invariants logs; identical single-failure pattern (C15 only) across all 11 phases' verification runs. |
+| `lake lint <the exact args ci.yml passes>` narrows to `simpNF`/`dupNamespace` per the plan's original sketch | Superseded by a materially better mechanism (Phase 2): `scripts/nolints.json` grandfathers the full env_linter batch, so `lint: true` lands with no `lint-args` at all, and the full linter set (not just two) stays live as a regression gate. simpNF's 1 finding and dupNamespace's 14 findings remain real, tracked, un-fixed pre-existing gaps -- recorded as a follow-up-task worklist in this summary, not silently dropped. | Phase 2's progress notes and Reasoned Exclusions; this phase's `lake lint` output (exit 0, no per-linter breakdown since nolints.json filters cleanly). |
 
 ---
 
