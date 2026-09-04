@@ -308,33 +308,33 @@ route was abandoned and must be justified.
 
 ---
 
-### Phase 3: F° — the drift frame over ℝ [NOT STARTED]
+### Phase 3: F° — the drift frame over ℝ [COMPLETED]
 
 **Goal**: F° as a legal `FrameOver realOrder`, all six axioms, plus its non-determinism.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Independence/DriftFrame.lean`, importing Phase 2's module for
+- [x] Create `FormalSystem/Metalogic/Independence/DriftFrame.lean`, importing Phase 2's module for
       `realOrder`.
-- [ ] Transcribe from `probes/02` (lines 17-137): `fzeroRel w d u := u - w ∈ Set.uIcc d (2 * d)`,
+- [x] Transcribe from `probes/02` (lines 17-137): `fzeroRel w d u := u - w ∈ Set.uIcc d (2 * d)`,
       `fzeroRel_iff`, `mem_fib_iff`, `fib_eq_Icc`/`fib_eq_Icc'`, `isCompact_fib`, `isClosed_fib`, and
       the six axiom proofs `fzero_nullity`, `fzero_converse`, `fzero_serial`, `fzero_comp`,
       `fzero_limit`, `fzero_saturation`, assembled into `fzeroFrame : FrameOver realOrder`.
-- [ ] Transcribe `fzero_not_deterministic` (`0 ⇒_1 1` and `0 ⇒_1 2`), restated against Phase 1's
+- [x] Transcribe `fzero_not_deterministic` (`0 ⇒_1 1` and `0 ⇒_1 2`), restated against Phase 1's
       `TaskFrame.Deterministic`.
-- [ ] Docstring the **uIcc encoding**: the paper states the relation only for `x ≥ 0`;
+- [x] Docstring the **uIcc encoding**: the paper states the relation only for `x ≥ 0`;
       `FrameOver.converse` forces a two-sided extension, and the unordered interval is the extension
       that makes `converse` hold on the nose.
-- [ ] Docstring the **`comp` scope note**: the repo's `Compositional` (`Semantics/TaskFrame.lean:474`)
+- [x] Docstring the **`comp` scope note**: the repo's `Compositional` (`Semantics/TaskFrame.lean:474`)
       is confined to `0 ≤ x, 0 ≤ y`, so mixed-sign composition — which F° genuinely *fails* — is
       never demanded. Had `comp` been two-sided, F° would not be a frame.
-- [ ] Docstring the **two deliberate deviations** from `app:drift`'s proof: the interpolant splits on
+- [x] Docstring the **two deliberate deviations** from `app:drift`'s proof: the interpolant splits on
       `le_total (w+x) (v-2y)` (no division, no degenerate `x+y = 0` case) rather than using
       `λ := (v-w)/(x+y)`; and `saturation` goes through Mathlib's Cantor lemma rather than an
       explicit FIP argument. `limit_of_shift` does **not** apply — the relation is not functional.
-- [ ] Docstring **why F° survives density where `F′` does not**: F°'s fibres are bounded intervals
+- [x] Docstring **why F° survives density where `F′` does not**: F°'s fibres are bounded intervals
       shrinking linearly to `{w}`, so its cone shrinks in any order; `F′`'s fibres at nonzero
       duration are all of `W`. The two frames are not interchangeable.
-- [ ] Docstring: **a ℤ-carrier version does not work** — over `W = D = ℤ` histories are not
+- [x] Docstring: **a ℤ-carrier version does not work** — over `W = D = ℤ` histories are not
       surjective, so the `untl` case of Phase 6's induction fails. The choice of ℝ is essential and
       the `[d, 2d]` bracket is what forces surjectivity via IVT. Record so nobody "simplifies" it.
 
