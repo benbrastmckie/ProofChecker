@@ -1,5 +1,5 @@
 ---
-next_project_number: 538
+next_project_number: 543
 ---
 
 # TODO
@@ -11,8 +11,8 @@ next_project_number: 538
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,534,535 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,537 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,534,535,538 | -- | automation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,537,539,540,541,542 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
@@ -84,19 +84,80 @@ next_project_number: 538
 
 ### Metalogic
 
-529 [PLANNED] — WAVE 5 (publication infrastructure). Turn on the two automated si
+529 [IMPLEMENTING] — WAVE 5 (publication infrastructure). Turn on the two automated si
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
+538 [NOT STARTED] — Resolve the three paper anchors that make C15 fail, so scripts/ch
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
 
+### Documentation
+
+540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
+
+### Infrastructure
+
+539 [NOT STARTED] — Draw down the linter debt that the CI/linter-gates work recorded 
+541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
+542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
+
 ## Tasks
+
+### 542. Dead declaration triage c17 findings
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: infrastructure
+- **Dependencies**: Task 529
+
+**Description**: Triage the dead-declaration census that C17 produces, separating genuine dead code from the scan's known blind spot. MEASURED STATE: C17 in scripts/check-module-invariants.sh is a reporting-only token census: for each declared name it takes the last dot-segment as a base identifier and counts occurrences across FormalSystem/**/*.lean, Tests/**/*.lean, and repo-wide *.md. It currently flags 989 of 10346 declarations as having zero occurrences outside their own declaration site, in roughly 2 seconds. The census has a documented structural blind spot: it cannot see indirect usage through attributes. A spot-check of one flagged declaration, `release_unfold`, confirmed it has genuinely zero textual references yet is live via the `@[formula_unfold]` attribute and its simp-set mechanism -- exactly the pattern the scan cannot detect. So 989 is an upper bound on dead code, not a count of it, and the false-positive rate is unknown. WORK: (1) quantify the blind spot first -- enumerate the attribute and simp-set mechanisms in use (`@[formula_unfold]`, `@[simp]` sets, aesop rule sets, instance registration) and determine how many of the 989 are reachable only through one of them. This is the step that makes the rest of the triage meaningful; skipping it risks deleting live code. (2) Of the genuine remainder, delete what is dead or move it to Boneyard/ per the repository's existing convention. (3) Where a declaration is intentionally part of a public surface but currently unused internally, note that rather than deleting it. (4) If the attribute-reachability analysis is mechanizable, fold it into C17 so the reported number means something closer to actual dead code. ACCEPTANCE: C17's flagged count is materially reduced with every removal justified; no declaration removed that is reachable via an attribute or simp-set mechanism; `lake build` green and the test suite passing after removals; if C17 gained an attribute-awareness refinement, its new counting rule is documented in the script header the way the existing blind spot already is.
+
+---
+
+### 541. Formalsystem init transitive import adoption
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: infrastructure
+- **Dependencies**: Task 529
+
+**Description**: Make the Init.lean import invariant enforceable by adopting FormalSystem.Init across the module tree. MEASURED STATE: FormalSystem/Init.lean and a CSLib-style CheckInitImports executable exist (ported from leanprover/cslib's Cslib/Init.lean + scripts/CheckInitImports.lean, using the ImportGraph transitive-closure API, which is already an inherited transitive dependency via Mathlib so no new `require` was needed). The check currently runs reporting-only: 434 modules do not yet transitively import FormalSystem.Init. This was an explicit, recorded deferral -- the CI/linter-gates task landed the mechanism and excluded the tree-wide import rewrite as out of scope. The purpose of the Init root is to give every module a single place from which repository-wide linter options and syntax settings are inherited; until adoption is universal, that guarantee does not hold and the check cannot gate. WORK: add the FormalSystem.Init import to the 434 modules that lack it transitively, working bottom-up through the import graph so most files inherit it via an existing dependency rather than each acquiring a direct import -- the goal is transitive reachability, not 434 new import lines. Confirm no import cycle is introduced (Init.lean must stay above the rest of the tree). Then flip CheckInitImports from reporting-only to gating, and wire it into scripts/check-module-invariants.sh alongside the existing checks. Note FormalSystem/Automation/AxiomNames.lean currently has zero imports and will need explicit treatment. ACCEPTANCE: CheckInitImports reports zero modules missing FormalSystem.Init transitively; the check gates rather than reports; `lake build` green; `bash scripts/check-module-invariants.sh` still reports ALL CHECKS PASSED.
+
+---
+
+### 540. Docstring coverage class instance lemma
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: documentation
+- **Dependencies**: Task 529
+
+**Description**: Close the three declaration categories that sit far below the repository's docstring-coverage floor. MEASURED STATE: C19 in scripts/check-module-invariants.sh reports 92.34% aggregate coverage over non-Boneyard FormalSystem/**/*.lean, against a 90% reporting floor, using a heuristic that counts a declaration documented if a `/-- -/` doc comment ends within the 3 lines above it OR it falls within an enclosing `/-! -/` section comment's scope. The aggregate passes, but it hides three categories that do not: class 16.3%, lemma 55.6%, instance 57.6%. For comparison the healthy categories are def 97.1%, abbrev 96.3%, inductive 96.3%, theorem 86.8%, structure 82.5%. `class` in particular is the worst-covered category in the tree and also the most consequential to a reader, since a typeclass's docstring is where its intended instances and laws are stated. Note also that the aggregate is dominated by theorem, which is 6429 of 10427 declarations, so category-level gaps do not move the headline number much. WORK: raise class, instance, and lemma coverage to at least the 90% floor by writing real docstrings -- what the declaration IS, present tense, with caller traps where they exist, per the repository's three-register docstring convention. Do not close the gap by widening C19's heuristic further; the heuristic was already deliberately refined once (to credit `/-!` sections) under explicit authorization, and a second widening to make a category pass would be fitting the measure to the data. Where a `lemma` is genuinely an internal step not worth documenting, consider whether it should be `private` rather than undocumented. ACCEPTANCE: C19 reports at least 90% for each of class, instance, and lemma individually, not merely in aggregate; the aggregate does not regress below its current 92.34%; no change to C19's counting rule.
+
+---
+
+### 539. Linter debt burndown nolints dupnamespace
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: infrastructure
+- **Dependencies**: Task 529
+
+**Description**: Draw down the linter debt that the CI/linter-gates work recorded rather than fixed. MEASURED STATE: `lint: true` is live in CI via scripts/nolints.json, Batteries' standard grandfathering mechanism -- the full env_linter batch runs and fails only on NEW findings, while 307 pre-existing findings are suppressed by that checked-in file. The 307 break down as unusedArguments=217, docBlame=51, defsWithUnderscore=33, tacticDocs=4, simpNF=1, structureInType=1. Separately, dupNamespace (a Lean-core syntax linter, architecturally distinct from the Batteries env_linter family and unreachable by the driver, so nolints.json cannot cover it) reports 14 findings, all in FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean, where `structure Chronicle` is declared inside `namespace ...Chronicle` so every field projection and the `.mk` constructor double-namespaces (Chronicle.Chronicle.dom, .f, .g, .c0..c5', etc.). C16 in check-module-invariants.sh reports the dupNamespace count via a live textual scan and does not gate on it. WORK: (1) fix the single simpNF finding, `length_range_map` in FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean (a 'simp can prove this' duplicate-lemma notice). (2) Fix the 14 dupNamespace findings by renaming the Chronicle structure out of its same-named namespace, updating every projection site. (3) Decide and record a policy for the remaining nolints.json entries: either burn down whole linter categories (docBlame's 51 and defsWithUnderscore's 33 are the tractable ones; unusedArguments' 217 is the bulk and may be largely legitimate for instance-argument-heavy signatures), or document explicitly which categories are permanently grandfathered and why. After any fix, regenerate nolints.json with `lake exe runLinter --update FormalSystem` -- but only after confirming every remaining entry is intentional, since --update grandfathers everything currently reported including a genuine regression. ACCEPTANCE: simpNF and dupNamespace both report zero findings; scripts/nolints.json shrinks by at least the categories the recorded policy commits to; plain `lake lint` still exits 0; C16 reports zero dupNamespace findings via its textual scan.
+
+---
+
+### 538. Resolve unpinned paper anchors c15 gate
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: metalogic
+- **Dependencies**: None
+
+**Description**: Resolve the three paper anchors that make C15 fail, so scripts/check-module-invariants.sh can report ALL CHECKS PASSED. MEASURED STATE: C15 (paper-anchor citation resolution) is the sole failing check group in the invariant script as of the CI/linter-gates work; every other group (B0, C1-C14, C16-C19) passes. The three unresolved anchors are `app:drift`, `cor:no-characterization`, and `lem:deterministic-singleton`, cited in FormalSystem/Metalogic/Independence/DriftFrame.lean, RealTranslationFrame.lean, and StateSetTruth.lean respectively, and absent from specs/paper-definitions-of-record.md. The gap was introduced by the stability/deterministic-collapse work that added those Independence/ files; it predates and is unrelated to the invariant-gates task, which recorded it as a Reasoned Exclusion in every phase rather than fixing it, because resolving it needs paper-content knowledge the implementer did not have. WORK: for each of the three anchors, determine against the actual paper whether it is LIVE-UNPINNED (the result exists in the paper and simply needs recording in specs/paper-definitions-of-record.md with its statement and location) or DANGLING (no such result exists, and the citing docstring must be corrected or the anchor removed). Apply the correct treatment per anchor -- do not blanket-add all three to the record without checking, since a dangling anchor recorded as live converts a detectable citation error into an undetectable one. Then re-run the invariant script and confirm C15 passes. ACCEPTANCE: `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED with no group failing; each of the three anchors is either present in specs/paper-definitions-of-record.md with a real paper location, or its citation is removed/corrected in the Independence/ file that carried it, with the classification recorded per anchor.
+
+---
 
 ### 537. Tm star completeness stab nondefinability
 - **Status**: [NOT STARTED]
@@ -194,7 +255,7 @@ next_project_number: 538
 ---
 
 ### 529. Ci linter and invariant gates
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: general
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 519, Task 520, Task 521, Task 522, Task 523
