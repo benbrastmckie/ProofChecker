@@ -775,27 +775,27 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   `simp only` — if the conjunct order differs, add the missing `conj` commutation lemma in this
   file rather than re-opening Phase 3.3.
 
-### Phase 5.4: `star_derivable_valid_and_swap_validIn` companion recursion and the four soundness rows [IN PROGRESS]
+### Phase 5.4: `star_derivable_valid_and_swap_validIn` companion recursion and the four soundness rows [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean`: soundness of
   TM⋆ at every class, TD discharged semantically.
 - **Tasks:**
-  - [ ] `theorem star_derivable_valid_and_swap_validIn {fc} {φ} (d : StarDerivationTree fc [] φ) : StarValidIn fc φ ∧ StarValidIn fc φ.swapTemporal`
+  - [x] `theorem star_derivable_valid_and_swap_validIn {fc} {φ} (d : StarDerivationTree fc [] φ) : StarValidIn fc φ ∧ StarValidIn fc φ.swapTemporal`
         — mirror `derivable_valid_and_swap_validIn` (`Soundness.lean:1217-1315`) arm by arm:
         `axiom` uses `starAxiom_validIn`/`starAxiom_swap_validIn`; `assumption` is absurd at
         `[]`; `modus_ponens` pointwise; `necessitation` and `temporal_necessitation` from the
         clause lemmas (the `box`/`allFuture` clauses quantify over total histories / later
         times, and `swapTemporal` sends `allFuture` to `allPast`); `temporal_duality` swaps
         the pair using the involution lemma; `weakening` at `[]` is the identity.
-  - [ ] `theorem star_soundness_validIn {fc} {φ} : StarDerivable fc [] φ → StarValidIn fc φ`.
-  - [ ] `theorem star_soundness_in {fc} (Γ) (φ) (d : StarDerivationTree fc Γ φ) (F) (hF : fc.Sat F) (M) (τ) (hτ : τ.IsTotal) (t) (h_ctx : ∀ ψ ∈ Γ, StarTruthAt M τ t ψ) : StarTruthAt M τ t φ`
+  - [x] `theorem star_soundness_validIn {fc} {φ} : StarDerivable fc [] φ → StarValidIn fc φ`.
+  - [x] `theorem star_soundness_in {fc} (Γ) (φ) (d : StarDerivationTree fc Γ φ) (F) (hF : fc.Sat F) (M) (τ) (hτ : τ.IsTotal) (t) (h_ctx : ∀ ψ ∈ Γ, StarTruthAt M τ t ψ) : StarTruthAt M τ t φ`
         — the context form, mirror of `bl_soundness_in` (`BaseLanguageSoundness.lean:232`);
         obtain it from the `[]` form by the deduction-theorem-free route the L⁺ tree uses
         (`Soundness.lean:1377`'s `soundness (Γ) (φ)` — read its proof and mirror).
-  - [ ] Rows `star_soundness_base/dense/discrete/dedekind` and the `StarValid` corollary at
+  - [x] Rows `star_soundness_base/dense/discrete/dedekind` and the `StarValid` corollary at
         `.Base`.
-  - [ ] Inline `example`: `star_soundness_validIn ⟨stab_necessitation d⟩` typechecks for a
+  - [x] Inline `example`: `star_soundness_validIn ⟨stab_necessitation d⟩` typechecks for a
         derivable `d`; `#print axioms star_soundness_validIn` is the standard three.
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.StarSoundness`.
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.StarSoundness`.
 - **Territory:** creates `Conservativity/Star/StarSoundness.lean` only.
 - **Estimated output:** ~220 lines. **Done when:** `star_soundness_validIn` and
   `star_soundness_in` build sorry-free at generic `fc`.
@@ -809,7 +809,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group F — L⋆ conservativity (Phase 6)**
 
-### Phase 6: Forward conservativity via the engines, composed rows, `tmFrag_iff_star`, and `Conservativity/Star` wiring [NOT STARTED]
+### Phase 6: Forward conservativity via the engines, composed rows, `tmFrag_iff_star`, and `Conservativity/Star` wiring [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` and the
   `Conservativity/Star.lean` aggregator; wire into `Conservativity.lean` with the "Star"
   docstring section.
