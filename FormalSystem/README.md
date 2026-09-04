@@ -218,6 +218,7 @@ invariant check allowlists it by name (check C8).
 | `FormalSystem.lean` | 105 | Library aggregator: imports all submodules for unified access |
 | `Automation.lean` | 102 | Re-export for Automation submodule |
 | `BaseLanguage.lean` | 34 | Re-export for BaseLanguage submodule |
+| `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `Metalogic.lean` | 199 | Re-export for Metalogic submodule |
@@ -233,6 +234,7 @@ invariant check allowlists it by name (check C8).
 | ForMathlib | `ForMathlib.lean` | Mathlib-shaped extensions intended for upstreaming (proper/maximal/prime-filter API of `Order.PFilter`, `Order.PrimeFilter`); imports nothing from `FormalSystem.*` |
 | Syntax | `Syntax.lean` | Formula type, atoms, contexts, subformula closure |
 | ProofSystem | `ProofSystem.lean` | 45 axiom constructors, 7 inference rules, derivation trees |
+| StarLanguage | `StarLanguage.lean` | `StarFormula` (L⁺ plus `⊡`), `StarAxiom` (the 45 TM⁺ schemata over `StarFormula` plus the `⊡` schemata), `StarDerivationTree`, the embedding `ofFormula` and backward conservativity |
 
 ### Layer 1 — Semantics
 
@@ -277,6 +279,7 @@ invariant check allowlists it by name (check C8).
 | [Examples/](Examples/README.md) | Yes | Pedagogical examples |
 | `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
 | `BaseLanguage/` | No | Shared base-language definitions (no README yet) |
+| [StarLanguage/](StarLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
 | [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — 156 archived `.lean` files, excluded from the live build |
 
 ## Quick Reference
@@ -295,6 +298,8 @@ invariant check allowlists it by name (check C8).
 - **BL validity**: `Semantics/BLValidity.lean` - Base-language validity predicates
 - **Soundness**: `Metalogic/Soundness.lean` - Soundness theorem
 - **BL soundness**: `Metalogic/Conservativity/BaseLanguageSoundness.lean` - Soundness for BL, by composition
+- **L⋆ truth and validity**: `Semantics/StarTruth.lean`, `Semantics/StarValidity.lean` - Native truth evaluation and validity for L⋆
+- **TM⋆ soundness and conservativity**: `Metalogic/Conservativity/Star.lean` - Soundness of TM⋆ at every class, conservativity over TM⁺ in both directions
 - **Completeness**: `Metalogic/BXCanonical/Completeness.lean` - Canonical model
 - **Perpetuity**: `Theorems/Perpetuity.lean` - P1-P6 principles
 - **Tactics**: `Automation/Tactics/Commands.lean` - Custom tactics

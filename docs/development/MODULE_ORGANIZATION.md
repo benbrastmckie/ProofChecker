@@ -13,6 +13,7 @@ BimodalLogic/
 │   ├── Syntax.lean             # Aggregates Syntax/
 │   ├── ProofSystem.lean        # Aggregates ProofSystem/
 │   ├── BaseLanguage.lean       # Aggregates BaseLanguage/
+│   ├── StarLanguage.lean       # Aggregates StarLanguage/
 │   ├── Semantics.lean          # Aggregates Semantics/
 │   ├── Metalogic.lean          # Aggregates Metalogic/
 │   ├── Theorems.lean           # Aggregates Theorems/
@@ -21,6 +22,7 @@ BimodalLogic/
 │   ├── Syntax/                 # Formula types, atoms, contexts, subformulas
 │   ├── ProofSystem/            # Axioms, derivation trees, inference rules
 │   ├── BaseLanguage/           # The tense-primitive second object language
+│   ├── StarLanguage/           # L⋆: L⁺ plus the stability modal ⊡, and its logic TM⋆
 │   ├── Semantics/              # Task frame semantics, truth evaluation, extension
 │   ├── Metalogic/              # Soundness, completeness, decidability, independence
 │   ├── Theorems/               # Derived theorems (perpetuity, combinators, propositional)
@@ -109,12 +111,13 @@ Dependencies flow in one direction to prevent circular imports:
 ```
 Layer 4: Automation (depends on all below)
     ↑
-Layer 3: Metalogic (depends on ProofSystem, Semantics, BaseLanguage)
+Layer 3: Metalogic (depends on ProofSystem, Semantics, BaseLanguage, StarLanguage)
     ↑
 Layer 2: Semantics, Theorems (depend on Syntax, ProofSystem; Semantics also on
-         BaseLanguage.Formula)
+         BaseLanguage.Formula and StarLanguage.Formula)
     ↑
-Layer 1: ProofSystem (depends on Syntax), BaseLanguage (depends on Syntax)
+Layer 1: ProofSystem (depends on Syntax), BaseLanguage (depends on Syntax),
+         StarLanguage (depends on Syntax, ProofSystem)
     ↑
 Layer 0: Syntax (no internal dependencies)
 ```
@@ -124,6 +127,9 @@ Layer 0: Syntax (no internal dependencies)
 `Syntax.Atom`, and the rest of `BaseLanguage/` imports only `Syntax` and itself. Nothing under
 `BaseLanguage/` imports `Semantics/` — that is the directory's standing module invariant, stated
 in `FormalSystem/BaseLanguage.lean`.
+`StarLanguage/` follows the same pattern and the same directional invariant (stated in
+`FormalSystem/StarLanguage.lean`): `Semantics/StarTruth.lean` imports `StarLanguage.Formula`,
+and nothing under `StarLanguage/` imports `Semantics/`.
 
 The invariant is **directional**, and the converse edge is both permitted and used:
 `Semantics/BLTruth.lean` imports `BaseLanguage.Formula` to define `BLTruthAt` natively on

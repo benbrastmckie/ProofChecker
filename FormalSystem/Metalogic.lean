@@ -44,6 +44,27 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   be attempted or `sorry`-ed. That record's list of prerequisites a machine-checked refutation
   would need has narrowed: the BL-side semantics and soundness theorem now exist
   (`Metalogic/Conservativity/BaseLanguageSoundness.lean`), and the two countermodels remain outstanding.
+- **The H/G-fragment of TM⁺** (`Conservativity.TMFrag`, `Metalogic/Conservativity/Fragment.lean`):
+  SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Because the forward
+  direction is refuted, TM is not the complete logic of base-language validity; the fragment
+  `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
+  (`tmFrag_complete_*`), containing TM everywhere (`tm_le_tmFrag`) and strictly at `.Discrete`
+  (`tm_lt_tmFrag_discrete`). Its consequence relation is compact at `.Base` and `.Dense`
+  (`blCompactBase`, `blCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
+  Discrete/Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
+- **The stability extension L⋆ / TM⋆** (`Metalogic/Conservativity/Star.lean`, over
+  `FormalSystem/StarLanguage/` and `Semantics/Star*.lean`): SORRY-FREE (axioms: exactly
+  `propext`, `Classical.choice`, `Quot.sound`). Soundness of TM⋆ at every frame class
+  (`star_soundness_validIn`), TD discharged semantically by the companion recursion with the
+  TM⁺ schemata over L⋆ handled by atomization; semantic conservativity
+  (`Semantics.starValidIn_ofFormula_iff`); and **proof-theoretic conservativity of TM⋆ over TM⁺
+  in both directions at all four classes** (`starDerivable_ofFormula_iff`) — the forward
+  direction from TM⋆ soundness and the four completeness engines, needing no TM⋆ completeness.
+  TM⋆ completeness and decidability are open. One durable fact bears on any future attempt: the
+  countermodels of all four completeness engines are **deterministic** — `multiFamTaskFrameGen`
+  (`Metalogic/Algebraic/FlowFrame.lean`) has `TaskRel p d q := p.1 = q.1 ∧ q.2 = p.2 + d`, and
+  `zTaskFrameV2` (`Metalogic/WeakCanonical/IntegerModel/ReynoldsBridge.lean`) has `u = w + d` —
+  so on them `⊡` is the identity, and none of the engines transfers to L⋆.
 
 ## Publication-Ready Results
 

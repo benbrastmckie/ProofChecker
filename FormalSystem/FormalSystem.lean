@@ -9,6 +9,7 @@ import FormalSystem.ForMathlib
 import FormalSystem.Syntax
 import FormalSystem.ProofSystem
 import FormalSystem.BaseLanguage
+import FormalSystem.StarLanguage
 import FormalSystem.Semantics
 import FormalSystem.Metalogic
 import FormalSystem.Theorems

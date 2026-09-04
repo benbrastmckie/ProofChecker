@@ -1,7 +1,7 @@
 # Implementation Plan: L and L⋆ metatheory and conservative extension over L⁺
 
 - **Task**: 533 - l_and_lstar_metatheory_conservative_extension
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 32 hours (16 leaf phases, 8 dependency waves, ~3,300 lines of Lean)
 - **Dependencies**: 535 (binding axiom set and corrections; satisfied — its report and probes are read below)
 - **Research Inputs**:
@@ -850,32 +850,32 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group G — documentation and invariants (Phase 7)**
 
-### Phase 7: Documentation, README rows, invariants, and root reachability [IN PROGRESS]
+### Phase 7: Documentation, README rows, invariants, and root reachability [COMPLETED]
 - **Goal:** Bring every inventory and count into agreement with the tree and close the task
   with the full gate set green.
 - **Tasks:**
-  - [ ] Complete `FormalSystem/StarLanguage/README.md` (module list with all three files, the
+  - [x] Complete `FormalSystem/StarLanguage/README.md` (module list with all three files, the
         import invariant, the extension recipe for adding a `StarAxiom` constructor — the three
         dispatch points from the Design note — phrased without task numbers).
-  - [ ] `FormalSystem/Metalogic.lean` module docstring: add the "Star" rows next to the
+  - [x] `FormalSystem/Metalogic.lean` module docstring: add the "Star" rows next to the
         Conservativity rows (lines 36-60 pattern); state that the four completeness engines'
         countermodels are deterministic and therefore do not transfer to L⋆ (535 §4.1 — a
         durable fact, cite `FlowFrame.lean:145-160` and `ReynoldsBridge.lean:464`).
-  - [ ] `README.md`: metatheory table rows for L (`TMFrag`) and L⋆ (soundness, semantic
+  - [x] `README.md`: metatheory table rows for L (`TMFrag`) and L⋆ (soundness, semantic
         conservativity, proof-theoretic conservativity both directions), and open-problems rows
         for TM⋆ completeness (all-histories semantics) and TM⋆ decidability, citing Reynolds
         2003 and Zanardo 1991 as the nearest literature (535 Recommendation 6) — no promises
         either way (Postmortem rule 10).
-  - [ ] Confirm root reachability: every new module is reachable from `FormalSystem` (through
+  - [x] Confirm root reachability: every new module is reachable from `FormalSystem` (through
         `Semantics.lean`, `Conservativity.lean`, and `StarLanguage.lean`); if the root
         `FormalSystem.lean` lists `BaseLanguage` explicitly, add `StarLanguage` alongside.
-  - [ ] Run `bash scripts/check-module-invariants.sh` (full, with build); fix every C4/C5/C8/
-        C9/C12/C13/C14 finding it reports (documented counts in `docs/` and `README.md`).
-  - [ ] `#print axioms` for `tmFrag_iff_blValidIn`, `star_soundness_validIn`,
+  - [x] Run `bash scripts/check-module-invariants.sh` (full, with build); fix every C4/C5/C8/
+        C9/C12/C13/C14 finding it reports (documented counts in `docs/` and `README.md`). *(deviation: altered — C1 executed as guarded detached builds of the default target and `BimodalTest`, then the script run with `--no-build`; C15 flagged a non-existent `app:non-deterministic` anchor, corrected to `app:deterministic`)*
+  - [x] `#print axioms` for `tmFrag_iff_blValidIn`, `star_soundness_validIn`,
         `starDerivable_ofFormula_iff`, `tm_lt_tmFrag_discrete` recorded in the summary.
   - [ ] Optional (only if time remains in the dispatch): `docs/` note "adding a language
         extension" distilled from `BaseLanguage/` + `StarLanguage/` (533 report Context
-        Extension Recommendations).
+        Extension Recommendations). *(deviation: skipped — optional item, not attempted in this dispatch)*
 - **Territory:** edits `FormalSystem/StarLanguage/README.md`, `FormalSystem/Metalogic.lean`
   (docstring only), `README.md`, `docs/**` count lines the invariants script names, and
   optionally the root `FormalSystem.lean` import list.

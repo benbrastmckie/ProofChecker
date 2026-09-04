@@ -26,7 +26,7 @@ true at world state `0` and nowhere else.
 | `refute_somePast_stab` | `P⊡p → ⊡Pp` | `⟨τ⟩_t` is not closed towards the past |
 
 On `refute_determined`: this module lands only the refutation over a non-deterministic frame
-(the paper's `app:non-deterministic`, in the `natFrame` shape); validity of the *Determined*
+(the second half of the paper's `app:deterministic` correspondence theorem, in the `natFrame` shape); validity of the *Determined*
 schema over deterministic frames is **not** formalized here, and no claim about the class of
 frames validating it is made.
 
@@ -46,7 +46,7 @@ Transcription of Part D of the compiled stability-modal probes recorded with the
 
 ## References
 
-* JPL paper line 1426 (*Determined*), `app:non-deterministic`
+* JPL paper line 1426 (*Determined*), `app:deterministic` (whose second half is the non-deterministic refutation)
 * `FormalSystem/Semantics/TaskFrame.lean` — `natFrame`
 -/
 
@@ -136,7 +136,8 @@ theorem refute_stab_allFuture_past (p : Atom) :
   exact one_ne_zero v'
 
 /-- *Determined* `Fp → ⊡Fp` (paper line 1426) is refuted over a non-deterministic frame (the
-paper's `app:non-deterministic`, in the `natFrame` shape). Validity over deterministic frames is
+second half of the paper's `app:deterministic` theorem, in the `natFrame` shape). Validity over
+deterministic frames is
 not formalized here. -/
 theorem refute_determined (p : Atom) :
     ¬ StarValid (.imp (someFuture (.atom p)) (.stab (someFuture (.atom p)))) := by

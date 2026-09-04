@@ -107,6 +107,7 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 ├── FormalSystem/                 # TM bimodal logic library (413 live .lean files)
 │   ├── FormalSystem.lean         # library aggregator
 │   ├── BaseLanguage/             # shared base-language definitions
+│   ├── StarLanguage/             # L⋆ = L⁺ plus the stability modal ⊡, and its logic TM⋆
 │   ├── Syntax/                   # Formula types, atoms, contexts
 │   ├── ProofSystem/              # Axioms (45 constructors, nine layers), derivation trees
 │   ├── Semantics/                # TemporalOrder, FrameOver, TaskFrame, WorldHistory, TaskModel, validity
@@ -196,6 +197,43 @@ The Dense and Discrete logics are independent extensions — neither subsumes th
 **`FrameClass.Dedekind` is the paper's TM⁺_c.** Under the paper's current text, `cor:tm-completeness` reads "TM⁺_c — Weakly complete over the dense-and-complete class", which is exactly what `FrameClass.Dedekind` denotes: `DenselyOrdered D` plus Dedekind completeness. Earlier revisions of this README described TM⁺_c as completeness *simpliciter* with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picks the class out. That is stale on both counts: the `{ℤ, ℝ}` / `Th(ℤ) ∩ Th(ℝ)` footnote is commented out in the live `def:TMplus-c`, and the class the paper now names for TM⁺_c is dense-and-complete, not complete-simpliciter. There is no gap.
 
 One question does remain open, and it is the paper's, not the tree's: `def:TMplus-c` bases BX_c on `TMP-PU` and `TMP-SEP` with **no density axiom**, whereas `FrameClass.Dedekind` admits `density` and `dense_indicator` alongside Reynolds' triple. Either the paper's BX_c should carry the density axioms, or this tree should record that `completeness_dedekind` proves a stronger-premise statement than the paper's corollary. That is an author decision and is not made here.
+
+### The base language L and the stability extension L⋆
+
+Two further object languages sit beside L⁺ (`Formula`): the tense-primitive **base language L**
+(`FormalSystem/BaseLanguage/`, `BLFormula`, related to L⁺ by the translation `tr`) and the
+**stability extension L⋆** (`FormalSystem/StarLanguage/`, `StarFormula` = L⁺ plus the stability
+modal `⊡`, related to L⁺ by the embedding `ofFormula`). Every result below is sorry-free
+(axioms: exactly `propext`, `Classical.choice`, `Quot.sound`) and holds at all four frame classes
+unless a class is named.
+
+| Result | L (TM, via `tr`) | L⋆ (TM⋆, via `ofFormula`) |
+|--------|------------------|----------------------------|
+| Semantic conservativity over/under L⁺ | `blValidIn_iff_validIn_tr` | `starValidIn_ofFormula_iff` |
+| Soundness | `bl_soundness_*` (TM) | `star_soundness_validIn` (TM⋆), TD discharged semantically |
+| Proof-theoretic conservativity, backward | `derivable_translate` (TM ⊆ TM⁺) | `starDerivable_of_derivable` (TM⁺ ⊆ TM⋆) |
+| Proof-theoretic conservativity, forward | **refuted** at Base/Discrete, open at Dense/Dedekind (`tmComplete_iff_forward`, `tmCompleteDiscrete_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
+| Completeness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`); TM itself is incomplete, and `TM ⊊ TMFrag` at Discrete (`tm_lt_tmFrag_discrete`) | **open** (see below) |
+| Compactness | `blCompactBase`, `blCompactDense` for the fragment's consequence relation | not attempted |
+
+The L side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⋆ side
+in `Semantics/Star*.lean` and `Metalogic/Conservativity/Star/`. TM⋆'s axioms are the 45 TM⁺
+schemata re-declared over `StarFormula` (so that, e.g., `□⊡p → □G⊡p` is an MF instance) plus S5
+for `⊡`, `□φ → ⊡φ`, `p → ⊡p` for atoms, and two **pasting** schemata with pure-future/pure-past
+side conditions (`Semantics/StarPasting.lean`); the five refutations in
+`Semantics/StarNonValidities.lean` bound the set from above.
+
+**Open problems for TM⋆.**
+
+- **Completeness** of TM⋆ over the paper's all-histories semantics, at any class. The nearest
+  results in the literature are for Ockhamist branching time: Reynolds 2003 axiomatizes the
+  complete-tree Ockhamist logic (F/P only, with an IRR-style rule and a long construction), and
+  Zanardo 1991 axiomatizes the *bundled* Since/Until Ockhamist semantics with Burgess-Gabbay-style
+  rules. Neither transfers directly: every completeness engine in this tree builds a
+  deterministic countermodel, on which `⊡` is the identity. Nothing here asserts or approaches
+  TM⋆ completeness.
+- **Decidability** of TM⋆. By the conservativity above it is no easier than decidability of
+  TM⁺, itself open for every class (next subsection); no result in either direction is claimed.
 
 ### Decidability
 
