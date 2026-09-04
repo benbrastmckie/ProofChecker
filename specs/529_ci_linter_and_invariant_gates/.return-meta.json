@@ -1,0 +1,41 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
+      "summary": "Verifies all MEASURED STATE claims (all hold, with one correction: the D-01 simp loop appears already fixed), and grounds CI/linter wiring in verified mechanics: native lintDriver := \"batteries/runLinter\" (tested live, zero new files) supersedes the review's hand-rolled RunLinter sketch; lean-action's lint: true hard-fails via lake check-lint if lintDriver is not configured first; CSLib's Init.lean + ImportGraph-based CheckInitImports.lean is directly portable (ImportGraph is already an inherited transitive dependency); precise assert_not_exists targets for G-15; exact scope/counts for the D-18, E-09, and E-06 mechanical fixes."
+    }
+  ],
+  "next_steps": "Run /plan 529 to create implementation plan",
+  "metadata": {
+    "session_id": "sess_1788503051_6873ef_529",
+    "agent_type": "general-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["team-lead", "general-research-agent"],
+    "findings_count": 9
+  },
+  "memory_candidates": [
+    {
+      "content": "In a Lean 4 / Lake 5.0 project downstream of Mathlib, wiring Mathlib's environment linters (simpNF, dupNamespace, docBlame, etc.) does NOT require writing a bespoke `lean_exe` that imports the package and runs `#lint`. Both Mathlib's own lakefile.lean and CSLib's lakefile.toml simply set the package config field `lintDriver := \"batteries/runLinter\"`, reusing Batteries' generic runLinter executable (which auto-resolves the workspace's default-target root modules if none are given). `lake check-lint` verifies a driver is configured (exit 0/1); `lake lint` runs it. Verified live: adding just this one line to `package X where` flips `lake check-lint` from exit 1 to exit 0, with zero new Lean files.",
+      "category": "TECHNIQUE",
+      "source_artifact": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
+      "confidence": 0.9,
+      "suggested_keywords": ["lake", "lintDriver", "lean_action", "simpNF", "batteries/runLinter", "lake check-lint"]
+    },
+    {
+      "content": "leanprover/lean-action's `lint: true` input runs `lake lint` but is gated by `lake check-lint` first (scripts/config.sh): if no lint driver is configured, the CI job hard-fails with `::error::lake check-lint failed: could not find a lint driver` rather than skipping silently. This differs from `auto-config` mode, where a missing driver is a silent skip. A `lintDriver` package-config change must land in the same commit/phase as flipping `lint: true` in ci.yml, or CI breaks immediately.",
+      "category": "CONFIG",
+      "source_artifact": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["lean-action", "ci.yml", "lake check-lint", "lint: true", "github actions"]
+    },
+    {
+      "content": "Mathlib's `linter.checkInitImports` option (scripts/lint-style.lean) is an internal Mathlib self-test that parses Mathlib.lean specifically and is explicitly documented as \"disabled, not relevant downstream\" (Mathlib/Init.lean). It is NOT a reusable downstream mechanism for enforcing \"every file imports my project's Init.lean\". The actual downstream pattern, used by CSLib, is a hand-written script (Cslib/Init.lean as the root import file + scripts/CheckInitImports.lean) using the `ImportGraph` package's `env.importGraph.transitiveClosure` API to compute which modules under the project's root namespace do not transitively import Init.lean. ImportGraph is typically already an inherited transitive dependency via mathlib (mathlib's own Init.lean imports ImportGraph.Tools), so no new `require` is needed to reuse this pattern.",
+      "category": "PATTERN",
+      "source_artifact": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["Mathlib.Init", "checkInitImports", "ImportGraph", "CSLib", "linter root", "downstream Lean project"]
+    }
+  ]
+}
