@@ -11,8 +11,8 @@ next_project_number: 543
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,534,535,538 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,537,539,540,541,542 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,538,539,540,541,542 | -- | automation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,537 | 193,298,433,461,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
@@ -84,10 +84,8 @@ next_project_number: 543
 
 ### Metalogic
 
-529 [IMPLEMENTING] — WAVE 5 (publication infrastructure). Turn on the two automated si
-  └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
-  └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
+  └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
@@ -255,12 +253,13 @@ next_project_number: 543
 ---
 
 ### 529. Ci linter and invariant gates
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: general
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 519, Task 520, Task 521, Task 522, Task 523
 - **Research**: [529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md]
 - **Plan**: [529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md]
+- **Summary**: [529_ci_linter_and_invariant_gates/summaries/01_ci-linter-invariant-gates-summary.md]
 
 **Description**: WAVE 5 (publication infrastructure). Turn on the two automated signals a Lean project relies on -- the test suite and Mathlib's environment linters -- and close the gaps in the invariant script that let this review's Criticals through. Findings D-15, D-16, D-18, E-06, E-09, E-13, G-08, G-15 in specs/reviews/2026-09-01-lean-engineering/{D-tactics,E-docs,G-ecosystem}.md; High H8 (infrastructure half) in the review. MEASURED STATE: .github/workflows/ci.yml runs lean-action with `build: true, test: false, lint: false` and skips push events unless the commit message contains `[ci]`; lakefile.lean declares testDriver := "BimodalTest" (700+ cases, the only consumer of most of the tactic layer) but CI never runs it; `#lint`/runLinter occur zero times in the repo -- `simpNF` alone would have caught the global simp loop (task 518) the day it landed; there is no Mathlib.Init-style linter root (compare Cslib/Init.lean + scripts/CheckInitImports.lean); `assert_not_exists` occurs zero times though Correspondence/Galois.lean's 'Import seam' section and FrameClassValidity.lean:58 argue the single Semantics→ProofSystem edge in prose; C9 (task-number citations) scans FormalSystem/ only, so lakefile.lean's nine work-item citations pass; C14's stale-count regex `\b(14|21|42|44)[[:space:]]+(axiom|constructor)` misses 'All 21 TM axiom schemas' (docs/project-info/implementation-status.md:36) and 'one of the 14 TM axiom schemas' (docs/user-guide/examples.md:579); readme-lint.sh Check 4 reports missing 'Last verified' stamps but never compares a present stamp against `git log -1 --format=%cs -- <dir>` (nine stamps are 1-3 months stale); 146 declarations in the core scope occur exactly once in the entire repository. WORK: (1) ci.yml: `test: true`, `lint: true`, delete the `[ci]` gate so CI runs on every push. (2) FormalSystem/Init.lean importing Mathlib.Init (the linter set); a checkInitImports-style script asserting every FormalSystem/** file imports it; `lean_exe runLinter` (root FormalSystem.RunLinter: `import FormalSystem` + `#lint`, supportInterpreter := true) wired as check C16 in check-module-invariants.sh with simpNF + dupNamespace blocking and the rest reporting-only behind ENFORCE_C16, matching the existing ENFORCE_C* flag pattern (:64-78). (3) `assert_not_exists` lines in the lower Semantics files naming the ProofSystem declarations that must not be reachable (G-15). (4) C9 traversal widened to lakefile.lean, README.md and scripts/ (keeping specs/** excluded); rewrite lakefile.lean's nine executable docstrings to describe what each produces (D-18). (5) C14 regex widened to `\b(14|21|42|44)[[:space:]]+([A-Za-z⁺+]+[[:space:]]+)?(axiom|constructor|schema)`; fix the two documents. (6) readme-lint.sh Check 4 compares stamps to the directory's last-change date (report, not gate). (7) The dead-declaration scan (D-16's method: tokenised occurrence count across all .lean and prose files) as a reporting-only C17, and a whitespace-normalised paragraph-duplication check across README.md, FormalSystem/README.md, Metalogic/README.md and Metalogic.lean as C18 (E-13 -- would have caught the Dedekind contradiction when it was introduced). (8) A docstring-coverage floor of 90% on the core scope as a reporting check. ACCEPTANCE: CI green on a plain push with tests and lint enabled; `bash scripts/check-module-invariants.sh` ALL PASS including C16; simpNF reports zero blocking issues after task 518; the two stale-count documents corrected.
 

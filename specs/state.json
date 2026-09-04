@@ -2240,7 +2240,7 @@
     {
       "project_number": 529,
       "project_name": "ci_linter_and_invariant_gates",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "general",
       "topic": "metalogic",
       "priority": "medium",
@@ -2265,7 +2265,7 @@
         "FormalSystem/Semantics/FrameClassValidity.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-04T06:42:57Z",
+      "last_updated": "2026-09-04T09:17:22Z",
       "artifacts": [
         {
           "path": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
@@ -2276,6 +2276,11 @@
           "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
           "type": "plan",
           "summary": "11 phases in 8 dependency waves: baseline/D-01 re-verification, lintDriver+CI atomic batch, C16 linter check, G-15 assert_not_exists, C9/C14 widening plus the two stale-doc fixes, readme-lint Check 4, reporting-only C17/C18/C19, the Init.lean linter root, and a final acceptance gate."
+        },
+        {
+          "path": "specs/529_ci_linter_and_invariant_gates/summaries/01_ci-linter-invariant-gates-summary.md",
+          "type": "summary",
+          "summary": "Full implementation summary covering all 11 phases, decisions, deviations, verification, impacts, and a 7-item follow-up worklist."
         }
       ],
       "session_id": "sess_1788503051_6873ef_529"
