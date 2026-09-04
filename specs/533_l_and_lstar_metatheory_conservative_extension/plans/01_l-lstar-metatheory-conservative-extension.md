@@ -493,24 +493,24 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   per the 535 report); re-run that command first — if it fails, the tree moved and the
   transcription adapts to the failing lemma names before anything else.
 
-### Phase 3.2: `StarValidIn` family and semantic conservativity along `ofFormula` [NOT STARTED]
+### Phase 3.2: `StarValidIn` family and semantic conservativity along `ofFormula` [COMPLETED]
 - **Goal:** Land `FormalSystem/Semantics/StarValidity.lean` mirroring `BLValidity.lean:96-123`
   binder for binder, plus the truth-transfer and validity-transfer lemmas.
 - **Tasks:**
-  - [ ] `def TaskFrame.StarValidOn (F) (φ : StarFormula)`, `def StarValidOnFrames (P : TaskFrame → Prop) (φ)`
+  - [x] `def TaskFrame.StarValidOn (F) (φ : StarFormula)`, `def StarValidOnFrames (P : TaskFrame → Prop) (φ)`
         (the primitive; the 537 hook), `def StarValidIn (fc) (φ) := StarValidOnFrames fc.Sat φ`,
         `def StarValid (φ) := StarValidIn .Base φ`; per-class abbreviations
         `StarValidDense/Discrete/Dedekind` if `BLValidity.lean:204-268` has them.
-  - [ ] `StarValidIn.of_forall_total`, `StarValidIn.apply_total`, `StarValidIn.mono` (mirror
+  - [x] `StarValidIn.of_forall_total`, `StarValidIn.apply_total`, `StarValidIn.mono` (mirror
         `Validity.lean:551,558` and `ValidIn.mono`), `StarValidOnFrames.mono` on the predicate.
-  - [ ] `theorem starTruthAt_ofFormula (M) (φ : Formula) : ∀ τ t, StarTruthAt M τ t (ofFormula φ) ↔ TruthAt M τ t φ`
+  - [x] `theorem starTruthAt_ofFormula (M) (φ : Formula) : ∀ τ t, StarTruthAt M τ t (ofFormula φ) ↔ TruthAt M τ t φ`
         (compiled in the 533 report Appendix A: `induction φ` with `Iff.rfl`/`Iff.imp`/
         `forall_congr'`/`exists_congr`/`and_congr`); `starTruthAt_ofCtx`.
-  - [ ] `theorem starValidIn_ofFormula_iff (fc) (φ) : StarValidIn fc (ofFormula φ) ↔ ValidIn fc φ`
+  - [x] `theorem starValidIn_ofFormula_iff (fc) (φ) : StarValidIn fc (ofFormula φ) ↔ ValidIn fc φ`
         — **semantic conservativity of L⋆ over L⁺, all classes** (generic `fc` form of the
         compiled `starValid_ofFormula_iff`, using `ValidIn.of_forall_total`/`apply_total`).
-  - [ ] `theorem starValid_ofFormula_iff (φ) : StarValid (ofFormula φ) ↔ Valid φ` corollary.
-  - [ ] Build: `lake build FormalSystem.Semantics.StarValidity`.
+  - [x] `theorem starValid_ofFormula_iff (φ) : StarValid (ofFormula φ) ↔ Valid φ` corollary.
+  - [x] Build: `lake build FormalSystem.Semantics.StarValidity`.
 - **Territory:** creates `FormalSystem/Semantics/StarValidity.lean` only.
 - **Estimated output:** ~200 lines. **Done when:** `starValidIn_ofFormula_iff` builds
   sorry-free at generic `fc`.
@@ -519,7 +519,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 - **Verification Tier:** local
 - **Scope Hypothesis:** the `BLValidity.lean:96-123` binder shapes and the per-class abbreviations at `:204-268` are the template; confirm the exact list with `lean_file_outline` before mirroring, and the ~200-line estimate follows that list.
 
-### Phase 3.3: History pasting, purity congruences, and the PS/US/FS/GS/SS validities [NOT STARTED]
+### Phase 3.3: History pasting, purity congruences, and the PS/US/FS/GS/SS validities [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Semantics/StarPasting.lean` by transcribing probes Part C and
   adding the two past mirrors Phase 5.3 needs.
 - **Tasks:**
