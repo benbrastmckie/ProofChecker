@@ -362,33 +362,33 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   Derivable fc [] ψ`), and `TMComplete` (`TMCompletenessReduction.lean:94`); confirm by
   `lean_hover_info` on each before writing.
 
-### Phase 1.2: `TMFrag` compactness at Base and Dense, and `Conservativity.lean` wiring [NOT STARTED]
+### Phase 1.2: `TMFrag` compactness at Base and Dense, and `Conservativity.lean` wiring [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/FragmentCompactness.lean` transferring
   `compactBase`/`compactDense` to the base language, and wire both Group A modules into the
   `Conservativity.lean` aggregator.
 - **Tasks:**
-  - [ ] Native definitions mirroring `SetConsequence.lean:153-197` shapes for `BLFormula`:
+  - [x] Native definitions mirroring `SetConsequence.lean:153-197` shapes for `BLFormula`:
         `BLSetSemanticConsequenceOn fc (Γ : Set BLFormula) (φ)` (every model in `fc`, every
         total history and time satisfying `Γ` satisfies `φ`, via `BLTruthAt`) and
         `BLCompact fc := ∀ Γ φ, BLSetSemanticConsequenceOn fc Γ φ → ∃ L : List BLFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ BLValidIn fc (L.foldr BLFormula.imp φ)`.
-  - [ ] `theorem blSetConsequence_iff_image : BLSetSemanticConsequenceOn fc Γ φ ↔ SetSemanticConsequenceOn fc (tr '' Γ) (tr φ)`
+  - [x] `theorem blSetConsequence_iff_image : BLSetSemanticConsequenceOn fc Γ φ ↔ SetSemanticConsequenceOn fc (tr '' Γ) (tr φ)`
         via `truthAt_tr` (`BaseLanguageSoundness.lean:110`).
-  - [ ] `theorem tr_foldr_imp (L : List BLFormula) (φ) : tr (L.foldr BLFormula.imp φ) = (L.map tr).foldr Formula.imp (tr φ)`
+  - [x] `theorem tr_foldr_imp (L : List BLFormula) (φ) : tr (L.foldr BLFormula.imp φ) = (L.map tr).foldr Formula.imp (tr φ)`
         by induction on `L` (`tr` is definitional on `imp`).
-  - [ ] `theorem blCompact_of_compact {fc} (h : Compact fc) : BLCompact fc` — obtain the L⁺
+  - [x] `theorem blCompact_of_compact {fc} (h : Compact fc) : BLCompact fc` — obtain the L⁺
         witness list `L' ⊆ tr '' Γ`, pull each element back along `tr` (choice on the image
         membership, or `List.map` over a chosen preimage function on `tr '' Γ`), rewrite with
         `tr_foldr_imp` and `blValidIn_iff_validIn_tr`.
-  - [ ] `theorem blCompactBase : BLCompact .Base := blCompact_of_compact compactBase`;
+  - [x] `theorem blCompactBase : BLCompact .Base := blCompact_of_compact compactBase`;
         `theorem blCompactDense : BLCompact .Dense := blCompact_of_compact compactDense`.
-  - [ ] Docstring: state that the Discrete/Dedekind rows do NOT transfer (Postmortem rule 13)
+  - [x] Docstring: state that the Discrete/Dedekind rows do NOT transfer (Postmortem rule 13)
         and why (`tr_ne_untl`; `Formula.next`/`K⁺` outside `range tr`).
-  - [ ] Add `import FormalSystem.Metalogic.Conservativity.Fragment` and
+  - [x] Add `import FormalSystem.Metalogic.Conservativity.Fragment` and
         `import FormalSystem.Metalogic.Conservativity.FragmentCompactness` to
         `FormalSystem/Metalogic/Conservativity.lean` (aggregator, lines 7-11 pattern) and a
         one-paragraph "## The H/G-fragment logic" section to its module docstring pointing at
         the two files (the full "Star" section is Phase 6's).
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity` (direct dependents of the
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity` (direct dependents of the
         aggregator: `FormalSystem.Metalogic`).
 - **Territory:** creates `Conservativity/FragmentCompactness.lean`; edits
   `FormalSystem/Metalogic/Conservativity.lean` (import lines + one docstring section).
