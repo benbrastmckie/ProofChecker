@@ -360,21 +360,21 @@ probe; any *new* lemma needed is a deviation to record.
 
 ---
 
-### Phase 4: F°'s histories are order-isomorphisms of `(ℝ, <)` [NOT STARTED]
+### Phase 4: F°'s histories are order-isomorphisms of `(ℝ, <)` [COMPLETED]
 
 **Goal**: The order-isomorphism core, lifted from bare state functions to F°'s `WorldHistory`s.
 
 **Tasks**:
-- [ ] Transcribe from `probes/02` (lines 139-216), on the bare function `f : ℝ → ℝ` with
+- [x] Transcribe from `probes/02` (lines 139-216), on the bare function `f : ℝ → ℝ` with
       `hf : ∀ s t, fzeroRel (f s) (t - s) (f t)`: `fzero_bounds`, `fzero_lipschitz`,
       `fzero_continuous`, `fzero_strictMono`, `fzero_hits_future`, `fzero_hits_past`.
-- [ ] Lift each to total `WorldHistory fzeroFrame`s: derive `hf` from `respects_task` plus
+- [x] Lift each to total `WorldHistory fzeroFrame`s: derive `hf` from `respects_task` plus
       `IsTotal`, and state the history-level forms the Phase 7 instantiation consumes.
-- [ ] Add the "every world state occurs at every time" witness: for any `w` and `x`, the translation
+- [x] Add the "every world state occurs at every time" witness: for any `w` and `x`, the translation
       `δ(t) := t + w - x` is a total history of F° with `δ(x) = w`. This is hypothesis (H2)'s F°
       half, and it is what keeps (b) constructive (C4) — no appeal to `thm:extension` or
       `cor:occurrence`.
-- [ ] Docstring: `fzero_hits_future` is the crux and the expensive part of `app:drift`'s key lemma
+- [x] Docstring: `fzero_hits_future` is the crux and the expensive part of `app:drift`'s key lemma
       (`a := x + (v - f x)/2`, `b := x + (v - f x)`, then `intermediate_value_Icc` on the
       Lipschitz-hence-continuous `f`); it was independently corroborated by a second derivation.
 
@@ -390,8 +390,10 @@ probe; any *new* lemma needed is a deviation to record.
 translation witness. Confirm by enumerating the promoted declaration names against `probes/02`.
 
 **Files to modify**:
-- `FormalSystem/Metalogic/Independence/DriftFrame.lean` — extend, or a new
-  `Independence/DriftHistories.lean` if the implementer judges `DriftFrame.lean` full; record which
+- `FormalSystem/Metalogic/Independence/DriftHistories.lean` — **new** (recorded choice: the plan
+  permitted either extending `DriftFrame.lean` or a new module; `DriftFrame.lean` was already
+  254 lines with the frame's own docstring load, so the order-isomorphism core went into its own
+  module)
 
 **Verification**:
 - `lake build` green, sorry-free.
