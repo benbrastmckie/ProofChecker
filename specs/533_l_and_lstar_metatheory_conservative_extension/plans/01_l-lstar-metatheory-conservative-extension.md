@@ -405,48 +405,48 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group B — L⋆ syntax (Phase 2)**
 
-### Phase 2: `StarFormula` syntax, derived operators, purity predicates, and `ofFormula` [NOT STARTED]
+### Phase 2: `StarFormula` syntax, derived operators, purity predicates, and `ofFormula` [COMPLETED]
 - **Goal:** Land `FormalSystem/StarLanguage/Formula.lean`: the 7-constructor `StarFormula`,
   derived operators with right-hand sides identical to `Formula`'s, `swapTemporal`, the
   purity predicates, and the embedding with its algebraic lemmas.
 - **Tasks:**
-  - [ ] `inductive StarFormula` with constructors `atom, bot, imp, box, untl, snce, stab` (order
+  - [x] `inductive StarFormula` with constructors `atom, bot, imp, box, untl, snce, stab` (order
         and argument order as in `Syntax/Formula.lean:74`), `deriving Repr, DecidableEq`; add
         `Countable` the way `Formula` obtains it; `instance : Infinite StarFormula` via
         `Infinite.of_injective (StarFormula.atom)`; `noncomputable instance : Denumerable
         StarFormula := Classical.choice (nonempty_denumerable _)` (mirror `Formula.lean:126`).
-  - [ ] `abbrev StarContext := List StarFormula`.
-  - [ ] Derived operators, each with the RHS copied from `Syntax/Formula.lean:148-180` and the
+  - [x] `abbrev StarContext := List StarFormula`.
+  - [x] Derived operators, each with the RHS copied from `Syntax/Formula.lean:148-180` and the
         operators referenced by any `Axiom` constructor statement (`neg`, `top`, `conj`, `disj`,
         `iff`, `diamond`, `someFuture`, `allFuture`, `somePast`, `allPast`, and every other
         derived operator the 45 constructors mention — enumerate by reading
         `ProofSystem/Axioms.lean:111-464`); plus the ⊡-specific `dstab := neg ∘ stab ∘ neg`,
         `Will := stab ∘ allFuture`, `will := stab ∘ someFuture`, `Could := dstab ∘ allFuture`,
-        `could := dstab ∘ someFuture` (paper 1121, 1125-1129).
-  - [ ] `def swapTemporal : StarFormula → StarFormula` (mirror `Formula.lean:668`; `stab φ ↦
+        `could := dstab ∘ someFuture` (paper 1121, 1125-1129). *(deviation: altered — conjunction/disjunction are named `and`/`or` to match `Formula` exactly, not `conj`/`disj`; `strongRelease`/`strongTrigger` are not mirrored (no axiom mentions them), `and`/`or`/`kPlus`/`kMinus`/`dstab` push-through lemmas are added instead)*
+  - [x] `def swapTemporal : StarFormula → StarFormula` (mirror `Formula.lean:668`; `stab φ ↦
         stab φ.swapTemporal`), involution lemma, and the `swap_temporal_*` push-through lemmas
         for every derived operator (mirror the eleven `Formula.swap_temporal_*` lemmas).
-  - [ ] `inductive IsPureFuture : StarFormula → Prop` and `IsPurePast` exactly as in the 535
+  - [x] `inductive IsPureFuture : StarFormula → Prop` and `IsPurePast` exactly as in the 535
         probes (`box`/`stab` are leaves); `theorem IsPureFuture.swapTemporal : IsPureFuture φ →
         IsPurePast φ.swapTemporal`, `theorem IsPurePast.swapTemporal : IsPurePast φ → IsPureFuture
         φ.swapTemporal` (induction on the predicate); `IsPureFuture` closure lemmas for `neg`,
         `conj`, `someFuture`, `allFuture` (needed by Phase 5.3's swap arms).
-  - [ ] `def ofFormula : Formula → StarFormula` (constructor to constructor);
+  - [x] `def ofFormula : Formula → StarFormula` (constructor to constructor);
         `theorem ofFormula_injective` (per-constructor `cases ψ <;> simp [ofFormula] at h <;> rw
         [ih …]` — the compiled proof from the 533 report Appendix A; `simp_all` alone fails);
         `theorem ofFormula_ne_stab`; `theorem ofFormula_swapTemporal : ofFormula φ.swapTemporal =
         (ofFormula φ).swapTemporal`; `def ofCtx : Context → StarContext := List.map ofFormula`
         with `ofCtx_nil`, `mem_ofCtx`.
-  - [ ] `rfl` pins: `example : ofFormula (Formula.allFuture φ) = StarFormula.allFuture (ofFormula φ) := rfl`
+  - [x] `rfl` pins: `example : ofFormula (Formula.allFuture φ) = StarFormula.allFuture (ofFormula φ) := rfl`
         and one such `example` for every derived operator (these are what Phases 4.2 and 5.1
         rely on).
-  - [ ] Module docstring: the `StarLanguage/ → Semantics/` import prohibition (mirror
+  - [x] Module docstring: the `StarLanguage/ → Semantics/` import prohibition (mirror
         `BaseLanguage/Formula.lean:32-39`), the paper anchors (lines 1108-1129), and the
         statement that the paper's `\BL^\star` store/recall operators are out of scope.
-  - [ ] `FormalSystem/StarLanguage/README.md` (short: purpose, invariant, module list — the two
+  - [x] `FormalSystem/StarLanguage/README.md` (short: purpose, invariant, module list — the two
         later modules listed as "landed by later phases" is not acceptable under C5/C12; list
         only `Formula.lean` now, Phase 7 completes it).
-  - [ ] Build: `lake build FormalSystem.StarLanguage.Formula`.
+  - [x] Build: `lake build FormalSystem.StarLanguage.Formula`.
 - **Territory:** creates `FormalSystem/StarLanguage/Formula.lean`,
   `FormalSystem/StarLanguage/README.md`.
 - **Estimated output:** ~260 lines Lean + ~30 lines README. **Done when:** the module builds,
