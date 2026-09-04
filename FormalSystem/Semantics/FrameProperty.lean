@@ -25,6 +25,8 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
   `FrameClass.Discrete` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
 - `TaskFrame.IsDedekind` — dense *and* complete: `cor:tm-completeness`'s TM⁺_c target
+- `TaskFrame.Deterministic` — `def:deterministic`: every fibre of the task relation is a
+  subsingleton, the frame condition the stability modal `⊡` collapses over
 
 ## Why five predicates and not three
 
@@ -230,6 +232,57 @@ theorem isDense_of_isDedekind {F : TaskFrame} (h : F.IsDedekind) : F.IsDense := 
 /-- A dense-and-complete frame is complete. Named so that downstream sites cite a lemma rather
 than an anonymous `And` projection. -/
 theorem isComplete_of_isDedekind {F : TaskFrame} (h : F.IsDedekind) : F.IsComplete := h.2
+
+/-!
+## Determinism
+
+`def:deterministic` — the sixth frame property, and the only one here that constrains the *task
+relation* rather than the duration order.
+-/
+
+/--
+`def:deterministic`: **the frame is deterministic** — every fibre of the task relation is a
+subsingleton. Equivalently (`TaskFrame.deterministic_iff`), `w ⇒_x u` and `w ⇒_x v` force
+`u = v`.
+
+Stated in the tree's own `Fib` idiom rather than pointwise so that the two existing helpers
+consume it verbatim: `TaskFrame.saturation_of_fib_subsingleton` turns it into the frame's
+*Saturation* field (`TaskFrame.saturation_of_deterministic` below), and
+`translationRel_fib_subsingleton` (`Semantics/Frames/Standard.lean`) is already literally a proof
+of it for the translation frames.
+
+**One bidirectional condition, not a forward/backward conjunction.** `d` ranges over *all* of
+`F.Duration`, negative durations included. That is not a strengthening bolted on for convenience:
+`FrameOver.converse` is a structure field, so `w ⇒_x u ↔ u ⇒_{-x} w` holds in every frame, and
+the past instances of this predicate are therefore already determined by the future ones being
+asserted about *every* state. Writing it with an unrestricted binder is what makes that visible.
+
+**Restricting `d` to `0 ≤ d` gives a strictly weaker predicate that does NOT support the bridge
+lemma.** `states_eq_of_deterministic` (`Semantics/StarDeterminism.lean`) applies this at the
+possibly negative duration `s - t`; under a `0 ≤ d` guard the frame `natFrame` over `ℤ` (which
+relates every state to every state at every nonzero duration in the past direction) would count
+as "deterministic" while refuting the collapse. The unrestricted binder is a correctness
+requirement, not fidelity to a particular phrasing.
+-/
+def Deterministic (F : TaskFrame) : Prop :=
+  ∀ (w : F.WorldState) (d : F.Duration), (TaskFrame.Fib F.TaskRel w d).Subsingleton
+
+/-- The `Fib` form and the pointwise form of `def:deterministic` agree — one line each way. The
+pointwise form is the one a refutation is easiest to state against (see
+`Metalogic/Independence/DriftFrame.lean`); the `Fib` form is the one the helpers consume. -/
+theorem deterministic_iff (F : TaskFrame) :
+    F.Deterministic ↔
+      ∀ (w u v : F.WorldState) (x : F.Duration), F.TaskRel w x u → F.TaskRel w x v → u = v :=
+  ⟨fun h w _ _ x hu hv => h w x hu hv, fun h w x _ hu _ hv => h w _ _ x hu hv⟩
+
+/-- A deterministic frame gets its *Saturation* field for free, via
+`TaskFrame.saturation_of_fib_subsingleton`: a fibre that is a subsingleton is trivially
+spherically well-behaved, and `Seg` is a subset of a fibre. No Zorn, no frame machinery. This is
+what lets a determinism hypothesis be *assumed* on an abstract frame without also assuming
+anything else. -/
+theorem saturation_of_deterministic {F : TaskFrame} (h : F.Deterministic) :
+    TaskFrame.Saturation F.TaskRel :=
+  TaskFrame.saturation_of_fib_subsingleton h
 
 end TaskFrame
 

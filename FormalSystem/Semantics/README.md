@@ -9,7 +9,7 @@ Task frame semantics for TM bimodal logic.
 | TemporalOrder.lean | `TemporalOrder` — a nontrivial totally ordered abelian group, `def:temporal-order`'s object, bundled with its four algebraic instances; `intOrder` |
 | TaskFrame.lean | Task frame structure (worlds, times, accessibility), the fibre/total-space pair, the class-helper families A-D, and the frame constants |
 | Frames/ | The standard-frame index: `Standard` (1 file) — home of `translationFrame` and `permissiveFrame`, and the linked census of every other standard frame |
-| FrameProperty.lean | Frame properties as predicates on `TaskFrame`, and the `FrameClass` ordering they induce |
+| FrameProperty.lean | Frame properties as predicates on `TaskFrame` (`IsDense`, `IsDiscrete`, `IsSuccArchDiscrete`, `IsComplete`, `IsDedekind`, and `Deterministic`), and the `FrameClass` ordering they induce |
 | FrameClassValidity.lean | `FrameClass.Sat` and the `sat_intro` binder adapters: validity relative to a frame class |
 | IntNormalForm.lean | The ℤ-frame normal form: over `D = ℤ` a frame is its one-step relation |
 | TaskModel.lean | Task models with valuation functions |
@@ -24,6 +24,7 @@ Task frame semantics for TM bimodal logic.
 | StarValidity.lean | `StarValidOnFrames`, `StarValidIn`, `StarValid` and per-class abbreviations — L⋆ mirrors of Validity.lean; `starTruthAt_ofFormula` and `starValidIn_ofFormula_iff`, semantic conservativity of L⋆ over L⁺ at every frame class |
 | StarPasting.lean | `paste` — two total histories sharing a state paste into a total history — the purity congruences, and the pasting validities PS/US/FS/GS with their past mirrors |
 | StarNonValidities.lean | The five refutations on `natFrame` over ℤ that bound the `⊡` axiom set from above (`⊡p → □⊡p`, `G⊡p → ⊡Gp`, `⊡GPp → G⊡Pp`, *Determined*, `P⊡p → ⊡Pp`) |
+| StarDeterminism.lean | `app:deterministic`'s positive half: `states_eq_of_deterministic` (the singleton bridge), `stab_iff_of_deterministic`, `determined_of_deterministic`, `stab_biconditional_starValidOn_of_deterministic` — the collapse `⊡φ ↔ φ` over every `TaskFrame.Deterministic` frame, choice-free (`[propext]` only) |
 | DurationClassification.lean | Classification of Dedekind-complete duration groups: discrete (`≃+o ℤ`) or densely ordered; also `duration_dense_or_least_pos`, the Archimedean-free order dichotomy |
 | LexCarrier.lean | `LexInt`: `SuccOrder`/`PredOrder` instances, `isLeast_pos`, and the three non-Archimedean theorems for `α ×ₗ ℤ` at an arbitrary ordered abelian group `α` — instantiated at `ℚ` for the CEF countermodel and at `ℤ` for the `Sat .Discrete` separation |
 | FrameAxioms.lean | The frame axioms (nullity, compositionality, reflection) as standalone statements |

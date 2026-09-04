@@ -1,7 +1,7 @@
 # Implementation Plan: The Stability Modal and the Deterministic Task Frames
 
 - **Task**: 536 - Establish in Lean the exact relationship between the stability modal `⊡` and the Deterministic task frames
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 12 hours
 - **Dependencies**: None (task 537 depends on this plan's Phase 1 output)
 - **Research Inputs**: `specs/536_stability_deterministic_collapse_store_recall/reports/01_determinism-collapse-and-store-recall.md`
@@ -184,45 +184,48 @@ before any frame construction begins.
 
 ---
 
-### Phase 1: Determinism predicate, singleton bridge, and the collapse [NOT STARTED]
+### Phase 1: Determinism predicate, singleton bridge, and the collapse [COMPLETED]
 
 **Goal**: Deliverable (a), complete and choice-free, at stable library paths.
 
 **Tasks**:
-- [ ] Add to `FormalSystem/Semantics/FrameProperty.lean`, beside `IsDense`/`IsDiscrete`/
+- [x] Add to `FormalSystem/Semantics/FrameProperty.lean`, beside `IsDense`/`IsDiscrete`/
       `IsSuccArchDiscrete`/`IsComplete`/`IsDedekind`:
       `def TaskFrame.Deterministic (F : TaskFrame) : Prop := ∀ (w : F.WorldState) (d : F.Duration), (TaskFrame.Fib F.TaskRel w d).Subsingleton`
       — `d` unrestricted (C2), transcribing `probes/03`.
-- [ ] Add `TaskFrame.deterministic_iff` (the `Fib` form agrees with the pointwise form, one line each
+- [x] Add `TaskFrame.deterministic_iff` (the `Fib` form agrees with the pointwise form, one line each
       way, from `probes/03`) and `TaskFrame.saturation_of_deterministic` (the free `saturation`
       field, via `saturation_of_fib_subsingleton`).
-- [ ] Docstring `Deterministic` with: `def:deterministic`; that it is **one bidirectional
+- [x] Docstring `Deterministic` with: `def:deterministic`; that it is **one bidirectional
       condition**, not a forward/backward conjunction (`FrameOver.converse` is a structure field, so
       past instances come free); and that restricting `d` to `0 ≤ d` yields the strictly weaker
       *forward* determinism, which does **not** support the bridge lemma (C2).
-- [ ] Create `FormalSystem/Semantics/StarDeterminism.lean` importing `Semantics.FrameProperty` and
+- [x] Create `FormalSystem/Semantics/StarDeterminism.lean` importing `Semantics.FrameProperty` and
       `Semantics.StarValidity`, carrying, from `probes/03`:
       `states_eq_of_deterministic` (the forward singleton bridge, ~8 lines),
       `stab_iff_of_deterministic`, `determined_of_deterministic`, and the biconditional frame
       validity `stab_biconditional_starValidOn_of_deterministic`.
-- [ ] Module docstring: this is `app:deterministic`'s positive half; it uses only the (⇒) half of
+- [x] Module docstring: this is `app:deterministic`'s positive half; it uses only the (⇒) half of
       `lem:deterministic-singleton` and is therefore **choice-free** — no `thm:extension`, no Zorn,
       no `serial`/`limit`/`saturation`; and the bridge is stated **pointwise on states**, not as
       history equality, because `truth_congr_ext` already converts pointwise agreement into L⋆ truth
       agreement for every `StarFormula` including `stab` (§4.2 finding 2). Record C4: the statement
       stays an implication; restating it as a biconditional correspondence would make the converse
       half ZFC.
-- [ ] Repair the now-false sentence in `refute_determined`'s docstring
+- [x] Repair the now-false sentence in `refute_determined`'s docstring
       (`Semantics/StarNonValidities.lean:142`): "Validity over deterministic frames is not
       formalized here" → cross-reference `determined_of_deterministic`, so the two halves of
       `app:deterministic` cite each other. Record there that the refuting instance is `Fp`, **not**
       an atom (at atoms the schema holds on every frame), and that `F′`'s discreteness is a genuine
       hypothesis carried by `natFrame`'s `[SuccOrder D] [NoMaxOrder D]` binders — in a dense order
       the cone is all of `W` and *Limit* fails outright (C3).
-- [ ] Wire `import FormalSystem.Semantics.StarDeterminism` into `FormalSystem/Semantics.lean` and add
+- [x] Wire `import FormalSystem.Semantics.StarDeterminism` into `FormalSystem/Semantics.lean` and add
       a `Semantics/README.md` module row.
-- [ ] Add `#print axioms determined_of_deterministic` (and the biconditional) as a comment block or
-      test recording the absence of `Classical.choice` (C4).
+- [x] Add `#print axioms determined_of_deterministic` (and the biconditional) as a comment block or
+      test recording the absence of `Classical.choice` (C4). *(deviation: altered — recorded as a
+      re-runnable comment block in the `StarDeterminism` module docstring rather than a new test
+      file, to keep the touched-file set to the plan's list; verified externally by
+      `lake env lean` on a scratch file: all four report `[propext]` only)*
 
 **Timing**: 1.5 hours
 

@@ -34,6 +34,7 @@ import FormalSystem.Semantics.StarTruth
 import FormalSystem.Semantics.StarValidity
 import FormalSystem.Semantics.StarPasting
 import FormalSystem.Semantics.StarNonValidities
+import FormalSystem.Semantics.StarDeterminism
 import FormalSystem.Semantics.DurationClassification
 import FormalSystem.Semantics.LexCarrier
 import FormalSystem.Semantics.IntTransfer
@@ -131,6 +132,10 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
 - `StarNonValidities`: the five refutations on `natFrame` over `ℤ` (`⊡p → □⊡p`, `G⊡p → ⊡Gp`,
   `⊡GPp → G⊡Pp`, *Determined* `Fp → ⊡Fp` over a non-deterministic frame, `P⊡p → ⊡Pp`), which
   bound the axiom set from above
+- `StarDeterminism`: `app:deterministic`'s **positive** half — the singleton bridge
+  `states_eq_of_deterministic` and the deterministic collapse `⊡φ ↔ φ`
+  (`determined_of_deterministic`, `stab_biconditional_starValidOn_of_deterministic`), valid on
+  every frame satisfying `TaskFrame.Deterministic`, and choice-free
 - `DurationClassification`: Hölder classification of Dedekind-complete duration groups --
   completeness implies Archimedean, and the discrete-or-dense dichotomy pinning the discrete
   branch to `ℤ`

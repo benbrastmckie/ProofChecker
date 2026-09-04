@@ -135,10 +135,30 @@ theorem refute_stab_allFuture_past (p : Atom) :
   rw [if_neg (fun h => by rw [h] at hs1'; exact lt_irrefl _ hs1')] at v'
   exact one_ne_zero v'
 
-/-- *Determined* `Fp → ⊡Fp` (paper line 1426) is refuted over a non-deterministic frame (the
-second half of the paper's `app:deterministic` theorem, in the `natFrame` shape). Validity over
-deterministic frames is
-not formalized here. -/
+/--
+*Determined* `Fp → ⊡Fp` is refuted over a non-deterministic frame: the **negative half** of
+`app:deterministic`, in the `natFrame` shape.
+
+The positive half **is** formalized, in `FormalSystem/Semantics/StarDeterminism.lean` — see
+`determined_of_deterministic`, which shows the schema valid on every frame satisfying
+`TaskFrame.Deterministic` (`Semantics/FrameProperty.lean`). The two halves are the two sides of
+`app:deterministic` and cite each other; neither statement claims the other's converse, and in
+fact the converse of the positive half is false (a non-deterministic frame validating the schema
+is exhibited under `Metalogic/Independence/`).
+
+Two things the refutation depends on, recorded because both are easy to lose:
+
+* **The refuting instance is `Fp`, not an atom.** At an atom the schema `p → ⊡p` holds on *every*
+  frame (`stab_atom_of_atom`, `Semantics/StarTruth.lean`): an atom's truth depends on the world
+  state alone, which is exactly what `⊡` quantifies over. So no uniform-substitution argument is
+  available here — a schema can be frame-valid at its atomic instances and refutable at a
+  genuinely temporal one, and it is. Every refutation in this family must exhibit a temporal
+  formula.
+* **`NF`'s discreteness is a genuine hypothesis**, carried by `natFrame`'s `[SuccOrder D]` and
+  `[NoMaxOrder D]` binders, not a convenience of the presentation. In a *dense* order the cone
+  around a state is all of `W` and the frame's *Limit* field fails outright, so this particular
+  witness does not survive relaxing the carrier.
+-/
 theorem refute_determined (p : Atom) :
     ¬ StarValid (.imp (someFuture (.atom p)) (.stab (someFuture (.atom p)))) := by
   intro h
