@@ -1,0 +1,34 @@
+{
+  "phase": 1,
+  "phase_name": "Baseline capture and D-01 blocker re-verification",
+  "started_at": "2026-09-04T06:43:46Z",
+  "last_updated": "2026-09-04T07:05:00Z",
+  "objectives": [
+    {"id": 1, "description": "lake build to completion, record wall time and warnings", "status": "done", "files_touched": [], "note": "Build completed successfully (2591 jobs), real 0m22.321s. Only 1 warning (unused variable, DatasetGenerator.lean:2269:6)."},
+    {"id": 2, "description": "bash scripts/check-module-invariants.sh pre-change baseline", "status": "done", "files_touched": [], "note": "Exit code 1, NOT clean. C15 FAILS (3 unresolved paper-anchor citations: app:drift, cor:no-characterization, lem:deterministic-singleton), all in task-536-added Independence/ files. Pre-existing, unrelated to task 529 scope. C9D soft-reports 138 task citations under docs/ as expected. All other checks (B0,C1-C14 except noted) PASS."},
+    {"id": 3, "description": "lake test, record pass/fail", "status": "done", "files_touched": [], "note": "Exit 0."},
+    {"id": 4, "description": "grep -c @[simp] in Normalization.lean == 2, no half of mutually-inverse rfl pair", "status": "done", "files_touched": [], "note": "grep -c returns 2, but only 1 is a real @[simp] tag (normalizeFormula_id at line 1207); the other match (line 178) is prose inside a doc comment describing the historical D-01 loop. No mutually-inverse pair remains."},
+    {"id": 5, "description": "D-01 smoke test: simp on a.neg = a.neg in DecisionProcedure.lean context", "status": "done", "files_touched": [], "note": "Ran via lean_run_code (import FormalSystem.Metalogic.Decidability.DecisionProcedure; open FormalSystem.Syntax; example (a : Formula) : a.neg = a.neg := by simp). success=true, timed_out=false, no diagnostics. D-01 loop confirmed DEAD."},
+    {"id": 6, "description": "lake exe runLinter FormalSystem, record per-linter issue counts", "status": "done", "files_touched": [], "note": "Exit 1 (307 errors, 14 linters run, 6 with findings). Per-linter table: defsWithUnderscore=33, docBlame=51, simpNF=1, structureInType=1, tacticDocs=4, unusedArguments=217, dupNamespace=0 (not in findings list). Full log: /tmp/claude-1000/-home-benjamin-Projects-BimodalLogic/ee9e0309-105f-4f92-8a43-1c65c0ab45d0/scratchpad/runlinter-output.txt"},
+    {"id": 7, "description": "Write per-linter table to progress notes; STOP if simpNF/dupNamespace non-zero", "status": "done", "files_touched": [], "note": "simpNF=1 (NON-ZERO). Finding is FormalSystem.Metalogic.Decidability.length_range_map at BiLasso/Extraction.lean:97 -- 'simp can prove this: by simp only [*, @List.length_map, @List.length_range]'. This is UNRELATED to the D-01 mutually-inverse-pair loop (confirmed dead by objective 5's smoke test). dupNamespace=0 (clean). Per plan's literal Phase 1 instruction this is a STOP-and-report condition; per the plan's own Rollback/Contingency #1 (which covers exactly 'simpNF non-zero'), proceeding with the contingency's prescribed remedy rather than halting the task: Phase 2 lint-args narrows to dupNamespace-only (not simpNF); Phase 3 defaults ENFORCE_C16=0 with the reason recorded in its comment; the length_range_map fix is recorded as a follow-up-task recommendation in the final summary, not performed here (Phase 1's own Files-to-modify is 'none'; fixing linter findings is out of this task's Non-Goals scope). Team lead notified of this deviation and of the pre-existing C15 failure before proceeding."}
+  ],
+  "current_objective": 7,
+  "approaches_tried": [],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "1.7",
+      "description": "simpNF reports zero blocking issues (delegation acceptance criterion)",
+      "type": "altered",
+      "reason": "simpNF has 1 finding (length_range_map duplicate-lemma notice), unrelated to the D-01 mutually-inverse-pair loop which is confirmed dead. Following the plan's own Rollback/Contingency #1 verbatim: simpNF cannot become blocking in CI or C16 this round; narrowed lint-args to dupNamespace-only; ENFORCE_C16 defaults to 0; the fix is escalated as a follow-up-task recommendation rather than absorbed into this task.",
+      "annotation": "*(deviation: altered — simpNF has 1 unrelated finding; Contingency #1 followed: dupNamespace-only blocking, ENFORCE_C16=0, fix escalated as follow-up)*"
+    },
+    {
+      "task_id": "1.2",
+      "description": "bash scripts/check-module-invariants.sh exits 0 (pre-change baseline)",
+      "type": "altered",
+      "reason": "C15 fails with 3 unresolved paper-anchor citations, all traced to task-536-added Independence/ files. Pre-existing and unrelated to task 529's scope (CI/linter/C16-C19 gates). Recorded as a residual/follow-up item; not fixed here since resolving requires paper-content knowledge (LIVE-UNPINNED vs DANGLING classification) outside this task's authority.",
+      "annotation": "*(deviation: altered — pre-existing C15 failure from task 536's Independence/ work, out of scope; recorded as follow-up)*"
+    }
+  ]
+}

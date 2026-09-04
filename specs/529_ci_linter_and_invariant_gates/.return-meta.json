@@ -1,34 +1,12 @@
 {
-  "status": "planned",
-  "artifacts": [
-    {
-      "type": "plan",
-      "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
-      "summary": "Implementation plan with 11 phases across 8 dependency waves covering CI activation, the native lint driver, C16-C19 invariant checks, G-15 assert_not_exists, and the D-18/E-09/E-06 mechanical fixes."
-    },
-    {
-      "type": "handoff",
-      "path": "specs/529_ci_linter_and_invariant_gates/.orchestrator-handoff.json",
-      "summary": "Orchestrator handoff for dispatch_seq 2 (plan phase)."
-    }
-  ],
-  "next_steps": "Run /implement 529 to execute the plan",
-  "memory_candidates": [
-    {
-      "content": "When a plan's phases share a mutable file (here: five separate checks all appended to scripts/check-module-invariants.sh), express the file contention as a serialized dependency chain in the per-phase 'Depends on' fields rather than leaving the phases in one parallel wave. The Dependency Analysis wave table is read as a parallel-execution authorization, so two phases in the same wave editing the same file is a plan-level defect, not just a runtime race. Record in the plan that the chain is serialized on file ownership, not logical dependency, so a later reader does not 'optimize' it back into a parallel wave.",
-      "category": "PATTERN",
-      "source_artifact": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
-      "confidence": 0.8,
-      "suggested_keywords": ["dependency-waves", "file-contention", "parallel-phases", "plan-format", "territory"]
-    }
-  ],
+  "status": "in_progress",
+  "artifacts": [],
   "metadata": {
-    "session_id": "sess_1788503051_6873ef_529",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 11,
-    "estimated_hours": 13,
-    "dependency_waves": [[1], [2, 4, 7], [3, 10], [5], [6], [8], [9], [11]]
+    "session_id": "sess_1788504226_897b10",
+    "agent_type": "general-implementation-agent",
+    "delegation_depth": 2,
+    "delegation_path": ["orchestrator", "implement", "general-implementation-agent"],
+    "phases_completed": 0,
+    "phases_total": 11
   }
 }

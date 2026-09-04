@@ -2,7 +2,7 @@
 
 - **Task**: 529 - WAVE 5 (publication infrastructure): turn on tests and Mathlib environment
   linters in CI, and close the review's gaps in `check-module-invariants.sh`
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 13 hours
 - **Dependencies**: None (external). Internal sequencing constraints are recorded in the
   Dependency Analysis table below and are load-bearing -- see Risks R1 and R2.
@@ -169,29 +169,29 @@ dependency; do not "optimize" it into a parallel wave.
 
 ---
 
-### Phase 1: Baseline capture and D-01 blocker re-verification [NOT STARTED]
+### Phase 1: Baseline capture and D-01 blocker re-verification [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Establish the pre-change ground truth and settle, with a build rather than a grep,
 whether `simpNF` can safely become blocking. Nothing in this phase edits a tracked file.
 
 **Tasks**:
-- [ ] Run `lake build` to completion; record wall time and the full warning inventory.
-- [ ] Run `bash scripts/check-module-invariants.sh` and save the output as the pre-change
-      baseline (expected: ALL CHECKS PASSED, with C9D soft-reported).
-- [ ] Run `lake test` and record pass/fail -- `ci.yml` is about to switch this on.
-- [ ] Confirm `grep -c '@\[simp\]' FormalSystem/Automation/Normalization.lean` returns 2, and
-      that neither remaining tag is half of a mutually-inverse `rfl` pair.
-- [ ] Run the D-01 smoke test the review used: `simp` on `a.neg = a.neg` in the context of
+- [x] Run `lake build` to completion; record wall time and the full warning inventory. *(completed: 2591 jobs, real 0m22.321s, 1 warning)*
+- [x] Run `bash scripts/check-module-invariants.sh` and save the output as the pre-change
+      baseline (expected: ALL CHECKS PASSED, with C9D soft-reported). *(deviation: altered — exits 1, C15 fails with 3 pre-existing unrelated paper-anchor citations from task-536's Independence/ files; see progress file)*
+- [x] Run `lake test` and record pass/fail -- `ci.yml` is about to switch this on. *(completed: exit 0)*
+- [x] Confirm `grep -c '@\[simp\]' FormalSystem/Automation/Normalization.lean` returns 2, and
+      that neither remaining tag is half of a mutually-inverse `rfl` pair. *(completed: grep=2, but only 1 is a real tag; the other is prose in a doc comment. No mutually-inverse pair remains.)*
+- [x] Run the D-01 smoke test the review used: `simp` on `a.neg = a.neg` in the context of
       `FormalSystem/Metalogic/Decidability/DecisionProcedure.lean` (via `lean_multi_attempt` or a
-      scratch file). It must terminate, not loop.
-- [ ] Run `lake exe runLinter FormalSystem` (Batteries' executable, invoked directly -- no
+      scratch file). It must terminate, not loop. *(completed: terminates cleanly via lean_run_code, D-01 loop confirmed dead)*
+- [x] Run `lake exe runLinter FormalSystem` (Batteries' executable, invoked directly -- no
       `lintDriver` needed for a direct `lake exe`) and record the issue count **per linter name**
       (`simpNF`, `dupNamespace`, `docBlame`, `unusedArguments`, ...). This table is the input to
-      Phase 2's `lint-args` narrowing and Phase 3's blocking/reporting split.
-- [ ] Write the per-linter table into the phase's progress notes. If `simpNF` or `dupNamespace`
+      Phase 2's `lint-args` narrowing and Phase 3's blocking/reporting split. *(completed: defsWithUnderscore=33, docBlame=51, simpNF=1, structureInType=1, tacticDocs=4, unusedArguments=217, dupNamespace=0)*
+- [x] Write the per-linter table into the phase's progress notes. If `simpNF` or `dupNamespace`
       is non-zero, STOP and report: the delegation's acceptance criterion ("simpNF reports zero
       blocking issues") is then a code-fix task, not a wiring task, and must be escalated rather
-      than absorbed.
+      than absorbed. *(deviation: altered — simpNF=1 (unrelated to D-01), following Contingency #1: dupNamespace-only blocking, ENFORCE_C16=0, fix escalated as follow-up task)*
 
 **Timing**: 1 hour (dominated by a cold `lake build`).
 
@@ -213,6 +213,13 @@ hypothesis.
 - The `simp` smoke test terminates.
 - A per-linter issue-count table exists in the progress notes, with `simpNF` and `dupNamespace`
   counts stated explicitly.
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| `bash scripts/check-module-invariants.sh` exits 0 | C15 (paper-anchor citations) fails with 3 unresolved anchors (`app:drift`, `cor:no-characterization`, `lem:deterministic-singleton`), all traced to a prior task's newly-added `FormalSystem/Metalogic/Independence/{DriftFrame,RealTranslationFrame,StateSetTruth}.lean`, which cite anchors not yet recorded in `specs/paper-definitions-of-record.md`. Pre-existing at this task's starting commit, unrelated to this task's scope (CI/linter/C16-C19 invariant gates), and not resolvable without paper-content knowledge (LIVE-UNPINNED vs. DANGLING classification) outside this task's authority. | `bash scripts/check-module-invariants.sh` output, saved baseline; every other check group in the same run passes (B0, C1-C14 except this, C9D soft as expected). |
+| `simpNF` reports zero blocking issues | `lake exe runLinter FormalSystem` finds 1 `simpNF` issue: `FormalSystem.Metalogic.Decidability.length_range_map` at `BiLasso/Extraction.lean:97` ("simp can prove this"). This is unrelated to the D-01 mutually-inverse-pair loop, which is independently confirmed dead (grep + clean build + terminating smoke test). `dupNamespace` = 0 (clean). Followed the plan's own Rollback/Contingency #1 verbatim: `simpNF` does not become blocking this round; Phase 2's CI `lint-args` narrows to `dupNamespace`-only; Phase 3 defaults `ENFORCE_C16=0` with the reason recorded; the one-line fix is recorded as a follow-up-task recommendation in the final summary rather than performed here (Phase 1's own scope is verification-only, and an incidental linter fix is outside this task's Non-Goals). | `lake exe runLinter FormalSystem` full output (per-linter table: defsWithUnderscore=33, docBlame=51, simpNF=1, structureInType=1, tacticDocs=4, unusedArguments=217, dupNamespace=0), saved to progress notes. |
 
 ---
 
