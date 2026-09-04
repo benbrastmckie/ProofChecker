@@ -680,34 +680,34 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group E — L⋆ soundness (Phases 5.1-5.4)**
 
-### Phase 5.1: Atomization — encoding, `atomize`, `atomModel`, transfer lemma, swap commutation [IN PROGRESS]
+### Phase 5.1: Atomization — encoding, `atomize`, `atomModel`, transfer lemma, swap commutation [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/Atomization.lean`, the single
   lemma that discharges all 45 TM⁺ schemata over L⋆ (535 §8.2).
 - **Tasks:**
-  - [ ] `structure Encoding where ι : Atom ⊕ StarFormula → Atom; inj : Function.Injective ι`;
+  - [x] `structure Encoding where ι : Atom ⊕ StarFormula → Atom; inj : Function.Injective ι`;
         `theorem Encoding.nonempty : Nonempty Encoding` from `Denumerable (Atom ⊕ StarFormula)`
         and `Denumerable Atom` (both `Countable` + `Infinite`; `Atom` is a structure with an
         `Option Nat` fresh index, `Syntax/Atom.lean:75`); `def Encoding.swap (e) : Encoding :=
         ⟨e.ι ∘ Sum.map id StarFormula.swapTemporal, …⟩` (injective by the involution).
-  - [ ] `def atomize (e : Encoding) : StarFormula → Formula` — structural on the six L⁺
+  - [x] `def atomize (e : Encoding) : StarFormula → Formula` — structural on the six L⁺
         constructors, `atom p ↦ .atom (e.ι (.inl p))`, `stab χ ↦ .atom (e.ι (.inr χ))`;
         push-through lemmas `atomize_neg`, `atomize_allFuture`, … for every derived operator
         (all `rfl`), and `theorem atomize_swapTemporal (e) (φ) : atomize e φ.swapTemporal = (atomize e.swap φ).swapTemporal`
         (induction; the `stab` and `atom` cases are the only non-structural ones).
-  - [ ] `def TaskModel.atomModel (M : TaskModel F) (e : Encoding) : TaskModel F` with
+  - [x] `def TaskModel.atomModel (M : TaskModel F) (e : Encoding) : TaskModel F` with
         `valuation w a := (∃ p, e.ι (.inl p) = a ∧ M.valuation w p) ∨ (∃ χ, e.ι (.inr χ) = a ∧ ∃ (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration), τ.states t (hτ t) = w ∧ StarTruthAt M τ t (.stab χ))`.
-  - [ ] `theorem starTruthAt_iff_atomize (M) (e) (φ) : ∀ τ (hτ : τ.IsTotal) t, StarTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ)`
+  - [x] `theorem starTruthAt_iff_atomize (M) (e) (φ) : ∀ τ (hτ : τ.IsTotal) t, StarTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ)`
         — induction on `φ`; `atom` case by injectivity (the `inr` disjunct is impossible);
         `stab` case: `→` witnesses `τ` itself, `←` is `stab_state_only` (E2); `box` case ranges
         over total `σ`; `untl`/`snce` stay on the total `τ`.
-  - [ ] `theorem starValidIn_of_plus {fc} (e : Encoding) (φ : StarFormula) (ax : Axiom (atomize e φ)) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ`
+  - [x] `theorem starValidIn_of_plus {fc} (e : Encoding) (φ : StarFormula) (ax : Axiom (atomize e φ)) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ`
         and `theorem starValidIn_swap_of_plus {fc} (e) (φ) (ax : Axiom (atomize e.swap φ)) (h) : StarValidIn fc φ.swapTemporal`
         — from `axiom_validIn`/`axiom_swap_validIn` (`Soundness.lean:1206-1214`) at
         `M.atomModel e` (same frame, so `fc.Sat` is inherited) and the transfer lemma
         (the swap form rewrites with `atomize_swapTemporal`).
-  - [ ] Acceptance `example` (535's acceptance test): `StarValidIn .Base ((.box (.stab (.atom p))).imp (.box (allFuture (.stab (.atom p)))))`
+  - [x] Acceptance `example` (535's acceptance test): `StarValidIn .Base ((.box (.stab (.atom p))).imp (.box (allFuture (.stab (.atom p)))))`
         via `starValidIn_of_plus e _ (Axiom.modal_future _) le_rfl` for some `e := Classical.choice Encoding.nonempty`.
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.Atomization`.
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity.Star.Atomization`.
 - **Territory:** creates `FormalSystem/Metalogic/Conservativity/Star/Atomization.lean` only.
 - **Estimated output:** ~300 lines. **Done when:** the transfer lemma, `atomize_swapTemporal`,
   and both `starValidIn_*_of_plus` helpers build sorry-free and the acceptance `example`
@@ -720,7 +720,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   `String`/`Option Nat` encodings) and `Infinite Atom` exists or follows from the fresh index.
   Confirm both by `lean_local_search` before writing.
 
-### Phase 5.2: `starAxiom_validIn_min` — validity dispatch over every `StarAxiom` constructor [NOT STARTED]
+### Phase 5.2: `starAxiom_validIn_min` — validity dispatch over every `StarAxiom` constructor [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/AxiomValidity.lean` (first half):
   one lemma, one arm per constructor.
 - **Tasks:**
@@ -745,7 +745,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   push-through lemmas). If an arm needs `simp only [atomize_*]` first, that is acceptable; if it
   needs anything else, the derived-operator RHS in Phase 2 is wrong and is fixed there.
 
-### Phase 5.3: `starAxiom_swap_validIn_min` — swap-validity dispatch (the semantic TD input) [NOT STARTED]
+### Phase 5.3: `starAxiom_swap_validIn_min` — swap-validity dispatch (the semantic TD input) [IN PROGRESS]
 - **Goal:** Complete `Conservativity/Star/AxiomValidity.lean` with the mirrored dispatch, which
   is what makes `temporal_duality` sound without any proof-theoretic mirror argument.
 - **Tasks:**
