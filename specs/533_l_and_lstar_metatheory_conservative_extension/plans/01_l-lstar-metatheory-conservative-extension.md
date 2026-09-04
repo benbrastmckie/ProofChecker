@@ -519,19 +519,19 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 - **Verification Tier:** local
 - **Scope Hypothesis:** the `BLValidity.lean:96-123` binder shapes and the per-class abbreviations at `:204-268` are the template; confirm the exact list with `lean_file_outline` before mirroring, and the ~200-line estimate follows that list.
 
-### Phase 3.3: History pasting, purity congruences, and the PS/US/FS/GS/SS validities [IN PROGRESS]
+### Phase 3.3: History pasting, purity congruences, and the PS/US/FS/GS/SS validities [COMPLETED]
 - **Goal:** Land `FormalSystem/Semantics/StarPasting.lean` by transcribing probes Part C and
   adding the two past mirrors Phase 5.3 needs.
 - **Tasks:**
-  - [ ] `pasteFun`, `paste_rel_le_lt`, `paste_rel`, `paste` (via `WorldHistory.ofTotal`),
+  - [x] `pasteFun`, `paste_rel_le_lt`, `paste_rel`, `paste` (via `WorldHistory.ofTotal`),
         `paste_isTotal`, `AgreeFrom`, `AgreeUpTo`, `agreeFrom_mono`, `agreeUpTo_mono`,
         `paste_agreeFrom`, `paste_agreeUpTo` — verbatim from the probes with docstrings citing
         `TaskFrame.comp`/`TaskFrame.converse` (paper `def:frame`).
-  - [ ] `truth_congr_agreeFrom` (C1a), `truth_congr_agreeUpTo` (C1b) — inductions on
+  - [x] `truth_congr_agreeFrom` (C1a), `truth_congr_agreeUpTo` (C1b) — inductions on
         `IsPureFuture`/`IsPurePast` from Phase 2.
-  - [ ] `paste_valid` (C2, PS), `future_dstab_valid` (C3, FS), `stab_allFuture_valid` (C4, GS),
+  - [x] `paste_valid` (C2, PS), `future_dstab_valid` (C3, FS), `stab_allFuture_valid` (C4, GS),
         `untl_dstab_valid` (C5, US) — verbatim.
-  - [ ] New: `paste_valid'` — PS with the conjunct order exchanged
+  - [x] New: `paste_valid'` — PS with the conjunct order exchanged
         (`(dstab ψ).imp ((dstab φ).imp (dstab (conj ψ φ)))` for pure-past `ψ`, pure-future `φ`),
         proved by the same argument (this is exactly `(StarAxiom.paste φ ψ).formula.swapTemporal`
         up to the purity swap); and `snce_dstab_valid` (SS) — the `snce` mirror of C5:
@@ -539,10 +539,10 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
         with `τ` from `y` onward, pure-past `φ` at `y` sees `ρ`, the pure-future guard on
         `(y, t)` sees `τ`. Mirror the C5 proof line by line with `paste_agreeUpTo`/`AgreeFrom`
         roles exchanged.
-  - [ ] Package the class-level statements the dispatch lemmas will consume:
+  - [x] Package the class-level statements the dispatch lemmas will consume:
         `theorem paste_starValid (hφ) (hψ) : StarValid (…)`, likewise `untl_paste_starValid`,
         `paste'_starValid`, `snce_paste_starValid`, each by `StarValidIn.of_forall_total`.
-  - [ ] Build: `lake build FormalSystem.Semantics.StarPasting`.
+  - [x] Build: `lake build FormalSystem.Semantics.StarPasting`.
 - **Territory:** creates `FormalSystem/Semantics/StarPasting.lean` only.
 - **Estimated output:** ~330 lines (≈250 transcribed + ≈80 new). **Done when:** all four probe
   validities and both mirrors build sorry-free; the `StarValid` packagings typecheck.
@@ -555,7 +555,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   after that the phase closes `[BLOCKED]` with the goal state recorded, and Phase 5.3's US swap
   arm is the only consumer affected.
 
-### Phase 3.4: Non-validity witnesses D1-D5 on the permissive frame over ℤ [NOT STARTED]
+### Phase 3.4: Non-validity witnesses D1-D5 on the permissive frame over ℤ [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Semantics/StarNonValidities.lean` by transcribing probes Part D,
   so that every docstring claim of the form "X is not an axiom because it is refuted" is
   machine-backed.
