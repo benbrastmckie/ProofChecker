@@ -304,7 +304,7 @@ affecting the exit code, matching the file's existing `ENFORCE_C*` convention.
 - [x] Blocking half: any `simpNF` or `dupNamespace` finding calls `fail C16` when `ENFORCE_C16`
       is 1, `soft C16` otherwise. *(deviation: altered — the blocking half is the full env_linter batch (which includes simpNF) via `lake exe runLinter FormalSystem`, exactly mirroring CI's `lake lint` gate (Phase 2). `dupNamespace` is NOT part of this blocking half; see the next deviation for why.)*
 - [x] Reporting half: findings from every other linter are emitted via `info`/`note`, capped at
-      20 lines like C9 and C10, and never affect `FAILURES`. *(deviation: altered — there is no separate "every other linter" reporting half, since the full env_linter batch is already the blocking check (nolints.json-grandfathered). `dupNamespace` fills the reporting-half role instead, but as a STATIC recorded count (14, in ChronicleTypes.lean) rather than a live-recomputed one: isolating dupNamespace requires `lake lint --builtin-only --lint-only .dupNamespace`, which forces a full-project rebuild under different linter options on EVERY invocation (confirmed during this task's own investigation: ~10 minutes, OOM-killed once). Making every routine run of this script pay that cost was judged unsustainable; team lead was notified of this design call before implementing and raised no objection. dupNamespace's fix is recorded as a follow-up-task item in the final summary instead.)*
+      20 lines like C9 and C10, and never affect `FAILURES`. *(deviation: altered — there is no separate "every other linter" reporting half, since the full env_linter batch is already the blocking check (nolints.json-grandfathered). `dupNamespace` fills the reporting-half role instead. Flagged to the team lead before implementing: making every routine run of this script pay a full-project-rebuild cost to invoke the real linter (`lake lint --builtin-only --lint-only .dupNamespace`, confirmed ~10 minutes, one OOM kill) was judged unsustainable, so the live linter invocation is excluded -- the team lead did not object to that part. The team lead DID object to reporting a static hardcoded count (14) as the substitute, on the grounds that a frozen number is exactly the defect class C14/Phase 6 exist to catch, and proposed a cheap textual (awk-based) live approximation instead; that message arrived after this phase was committed. See the Reasoned Exclusions row below for the corrected record and the follow-up plan.)*
 - [x] Honour `--no-build`: C16 invokes the toolchain, so it must skip under `RUN_BUILD=0`
       exactly as C1/C2/C6 do, printing an explicit skip line rather than silently vanishing. *(completed: `INFO C16 skipped (--no-build)`, verified)*
 - [x] Add `C16` to the `# Checks:` inventory comment at the top of the script (lines 7-27). *(completed, also updated the Usage/Companion-files header lines for --no-build's skip list and scripts/nolints.json)*
@@ -337,29 +337,29 @@ the scope Phase 2 recorded, not a re-guess. *(confirmed: `lake exe runLinter For
 | Item | Reason | Evidence |
 |------|--------|----------|
 | `bash scripts/check-module-invariants.sh` / `--no-build` both exit 0 | Both exit 1 due to the pre-existing, unrelated C15 (paper-anchor citation) failure recorded in Phase 1's own Reasoned Exclusions -- out of this task's scope, not introduced or worsened by this phase. | Full-run and `--no-build` logs; C16 itself prints PASS (full run) or the explicit skip line (`--no-build`) in both, with no other check regressed relative to Phase 2's baseline. |
-| `dupNamespace` is a live, blocking check alongside `simpNF` | Isolating dupNamespace requires `lake lint --builtin-only --lint-only .dupNamespace`, which forces Lake to rebuild the entire default target under different linter options on every invocation of this routinely-run script -- confirmed costly (~10 minutes) and memory-risky (one OOM kill) during this task's own investigation. Reported instead as a static, periodically-reconfirmed count (14 findings, `ChronicleTypes.lean`) with a header comment explaining why, and recorded as a follow-up-task item. Flagged to the team lead as a design decision before implementing; no objection raised. | `scripts/check-module-invariants.sh`'s C16 header comment; `lake lint --builtin-only --lint-only .dupNamespace` output (14 findings) saved in Phase 2's progress notes. |
+| `dupNamespace` is a live, blocking check alongside `simpNF` | Isolating dupNamespace via the real linter requires `lake lint --builtin-only --lint-only .dupNamespace`, which forces Lake to rebuild the entire default target under different linter options on every invocation of this routinely-run script -- confirmed costly (~10 minutes) and memory-risky (one OOM kill) during this task's own investigation. Flagged to the team lead before implementing: the team lead did not object to excluding the live linter invocation on cost grounds, but DID object -- twice -- to this phase's chosen substitute, a static hardcoded count (14, `ChronicleTypes.lean`) baked into the script's comment. Their point: a frozen number in `check-module-invariants.sh` is exactly the defect class C14 (and the two documents Phase 6 corrects) exists to catch -- it silently goes stale the moment a Chronicle projection changes, and nothing notices. Their objection arrived after this phase was committed, which is why the static count landed here; it was not adopted with the team lead's agreement, and this row records that accurately rather than as consensus. **Follow-up (not yet in this phase)**: replace the static count with a live, textual (awk-based) check that tracks `namespace`/`end` nesting and flags any `structure`/`inductive`/`def`/`abbrev`/`theorem`/`instance` whose identifier repeats the innermost enclosing namespace segment -- milliseconds, no rebuild, recomputed every run, validated by confirming it reproduces the same 14 `ChronicleTypes.lean` declarations the real linter found. Planned for folding into a later phase that also touches this script (5, 6, 8, or 9) rather than reopening this one. | `scripts/check-module-invariants.sh`'s C16 header comment (as committed); `lake lint --builtin-only --lint-only .dupNamespace` output (14 findings) saved in Phase 2's progress notes; team lead messages proposing the awk-based alternative. |
 
 ---
 
-### Phase 4: G-15 -- assert_not_exists in the lower Semantics files [NOT STARTED]
+### Phase 4: G-15 -- assert_not_exists in the lower Semantics files [COMPLETED]
 
 **Goal**: Encode, as a build-checked assertion rather than prose, that the lower semantic layer
 cannot reach the proof system.
 
 **Tasks**:
-- [ ] Confirm research Finding 4 still holds: `grep -rln "import FormalSystem.ProofSystem"
+- [x] Confirm research Finding 4 still holds: `grep -rln "import FormalSystem.ProofSystem"
       FormalSystem/Semantics/` returns exactly `FrameClassValidity.lean`, and that file imports
-      only `FormalSystem.ProofSystem.Axioms`.
-- [ ] Grep `FormalSystem/Semantics/` for a locally-declared `FrameClass` (Risk R5). If one
-      exists, omit `FormalSystem.ProofSystem.FrameClass` from the assertion list and record why.
-- [ ] Add `assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree
+      only `FormalSystem.ProofSystem.Axioms`. *(completed: confirmed exactly, both facts hold)*
+- [x] Grep `FormalSystem/Semantics/` for a locally-declared `FrameClass` (Risk R5). If one
+      exists, omit `FormalSystem.ProofSystem.FrameClass` from the assertion list and record why. *(completed: no local declaration -- `FrameClass` is declared once, as `FormalSystem.ProofSystem.FrameClass` in `ProofSystem/Axioms.lean`; `FrameClassValidity.lean`'s `def FrameClass.Sat` extends the imported type's namespace, it does not redeclare it. `.FrameClass` included in the assertion list.)*
+- [x] Add `assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree
       FormalSystem.ProofSystem.Derivable` (plus `.FrameClass` if the grep above clears it),
       placed immediately after the `import` block, to each of: `TaskFrame.lean`, `Truth.lean`,
-      `WorldHistory.lean`, `FrameProperty.lean`, `BLTruth.lean`, `BLValidity.lean`.
-- [ ] Do NOT add the assertion to `Validity.lean` or `Correspondence/Galois.lean` -- both
+      `WorldHistory.lean`, `FrameProperty.lean`, `BLTruth.lean`, `BLValidity.lean`. *(deviation: altered — added to 5 of the 6 named files; `BLValidity.lean` excluded, see the next task and the Scope Hypothesis correction below)*
+- [x] Do NOT add the assertion to `Validity.lean` or `Correspondence/Galois.lean` -- both
       legitimately import `FrameClassValidity.lean` and therefore `ProofSystem.Axioms`. The
-      assertion belongs strictly below the one documented seam.
-- [ ] Build each edited module.
+      assertion belongs strictly below the one documented seam. *(deviation: altered — a THIRD file, `BLValidity.lean`, must also be excluded for the same reason, even though the plan named it as a target. It imports `FormalSystem.Semantics.Validity`, which imports `FrameClassValidity.lean`, so it transitively reaches `ProofSystem.Axioms` exactly like `Validity.lean` and `Correspondence/Galois.lean` do. This was NOT visible to the plan's own direct-import grep (`grep -rln "import FormalSystem.ProofSystem" FormalSystem/Semantics/`), which only checks direct imports of `FormalSystem.ProofSystem`, not transitive reachability through an intermediate file like `Validity.lean`. Discovered empirically: adding the assertion to `BLValidity.lean` and building it produces two `error: ... is not allowed to be imported by this file` errors naming the exact chain (BLValidity -> Validity -> FrameClassValidity -> ProofSystem.Axioms). Reverted the assertion from `BLValidity.lean`; confirmed via a full transitive-closure computation (not just direct-import greps) that the other 5 files have no such path.)*
+- [x] Build each edited module. *(completed: all 5 files with the assertion build individually and together; BLValidity.lean builds clean without it; a full `lake build` (2591 jobs) exits 0)*
 
 **Timing**: 1 hour.
 
@@ -370,16 +370,17 @@ cannot reach the proof system.
 **Scope Hypothesis**: Six files are asserted to be the correct targets and two files are asserted
 to be correct exclusions. Confirm at implementation time by re-running the two greps above, not
 by trusting this list -- if a seventh lower file appears or one of the six has since acquired a
-`ProofSystem` import, follow the tree, not the plan, and record the deviation.
+`ProofSystem` import, follow the tree, not the plan, and record the deviation. *(CORRECTED: the hypothesis undercounted the exclusions by one. Five files are the correct targets (`TaskFrame.lean`, `Truth.lean`, `WorldHistory.lean`, `FrameProperty.lean`, `BLTruth.lean`) and THREE files are correct exclusions (`Validity.lean`, `Correspondence/Galois.lean`, and `BLValidity.lean` -- the last one not anticipated by the plan). The tree was followed, not the plan, per this hypothesis's own instruction; see the deviation above for the empirical evidence.)*
 
 **Files to modify**:
 - `FormalSystem/Semantics/TaskFrame.lean`, `Truth.lean`, `WorldHistory.lean`,
-  `FrameProperty.lean`, `BLTruth.lean`, `BLValidity.lean` - one `assert_not_exists` line each.
+  `FrameProperty.lean`, `BLTruth.lean` - one `assert_not_exists` line each. (`BLValidity.lean`
+  removed from this list -- see the Scope Hypothesis correction above.)
 
 **Verification**:
-- `lake build` exits 0 with the assertions in place.
+- `lake build` exits 0 with the assertions in place. *(confirmed: full `lake build`, 2591 jobs, exit 0)*
 - `grep -rc assert_not_exists FormalSystem/Semantics/` reports the expected file count (was 0
-  repo-wide before this phase).
+  repo-wide before this phase). *(confirmed: 5 files now carry the assertion, matching the corrected Scope Hypothesis, not the original 6)*
 
 ---
 

@@ -7,6 +7,11 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Semantics.TaskFrame
 import FormalSystem.Semantics.PartialHistory
 
+-- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
+-- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
+assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree
+  FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass
+
 /-!
 # WorldHistory - World Histories for Task Semantics
 

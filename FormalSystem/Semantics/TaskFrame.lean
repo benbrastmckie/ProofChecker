@@ -14,6 +14,11 @@ import Mathlib.Order.Minimal
 import Mathlib.Data.Fintype.Powerset
 import FormalSystem.Semantics.TemporalOrder
 
+-- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
+-- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
+assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree
+  FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass
+
 /-!
 # TaskFrame — the frame fibration: `TemporalOrder`, `FrameOver`, and the total space
 

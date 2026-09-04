@@ -1,0 +1,27 @@
+{
+  "phase": 4,
+  "phase_name": "G-15 -- assert_not_exists in the lower Semantics files",
+  "started_at": "2026-09-04T09:00:00Z",
+  "last_updated": "2026-09-04T10:07:00Z",
+  "objectives": [
+    {"id": 1, "description": "Confirm research Finding 4 still holds", "status": "done", "files_touched": [], "note": "Confirmed exactly: grep -rln 'import FormalSystem.ProofSystem' FormalSystem/Semantics/ returns only FrameClassValidity.lean, which imports only FormalSystem.ProofSystem.Axioms."},
+    {"id": 2, "description": "Grep for a locally-declared FrameClass (Risk R5)", "status": "done", "files_touched": [], "note": "None found. FrameClass is declared once, as FormalSystem.ProofSystem.FrameClass in ProofSystem/Axioms.lean:529 (inductive FrameClass where). FrameClassValidity.lean:124's def FrameClass.Sat extends that namespace, doesn't redeclare the type. .FrameClass included in the assertion list for all 5 target files."},
+    {"id": 3, "description": "Add assert_not_exists to the 6 named files", "status": "done", "files_touched": ["FormalSystem/Semantics/TaskFrame.lean", "FormalSystem/Semantics/Truth.lean", "FormalSystem/Semantics/WorldHistory.lean", "FormalSystem/Semantics/FrameProperty.lean", "FormalSystem/Semantics/BLTruth.lean"], "note": "Added to 5 of the 6 named files (excludes BLValidity.lean -- see objective 4). Each: assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass, placed immediately after the import block with a one-line comment explaining the G-15 rationale, matching Mathlib's multi-name assert_not_exists wrapping convention (verified against .lake/packages/mathlib examples)."},
+    {"id": 4, "description": "Do NOT add the assertion to Validity.lean or Correspondence/Galois.lean", "status": "done", "files_touched": [], "note": "CORRECTION to the plan's own Scope Hypothesis: a THIRD file, BLValidity.lean, must ALSO be excluded even though the plan named it as a target. It imports FormalSystem.Semantics.Validity, which imports FrameClassValidity.lean, so it transitively reaches ProofSystem.Axioms exactly like Validity.lean and Correspondence/Galois.lean do -- invisible to the plan's own direct-import-only grep. Discovered empirically: first added the assertion to BLValidity.lean per the plan, ran `lake build FormalSystem.Semantics.BLValidity`, got two real errors ('Declaration FormalSystem.ProofSystem.Axiom is not allowed to be imported by this file... which is imported by FormalSystem.Semantics.FrameClassValidity, which is imported by FormalSystem.Semantics.Validity, which is imported by this file'). Reverted the assertion from BLValidity.lean. Independently confirmed via a python transitive-closure computation (not just direct-import greps) that the OTHER 5 files have no path to FrameClassValidity or any ProofSystem.* module -- 'seam hit: NONE' for all 5."},
+    {"id": 5, "description": "Build each edited module", "status": "done", "files_touched": [], "note": "All 5 assertion-bearing files build individually and together (lake build <the 5 module names + BLValidity>, exit 0). A full `lake build` (2591 jobs) also exits 0. `bash scripts/check-module-invariants.sh` re-run: exit 1, but solely due to the pre-existing, unrelated C15 paper-anchor failure (Phase 1's own exclusion) -- no other check regressed, confirming the Semantics import seam change introduced no fresh failure."}
+  ],
+  "current_objective": 5,
+  "approaches_tried": [
+    {"approach": "assert_not_exists on BLValidity.lean per the plan's literal 6-file list", "result": "failed", "reason": "BLValidity.lean transitively imports the ProofSystem seam via Validity.lean -> FrameClassValidity.lean -> ProofSystem.Axioms. Build fails with 'Declaration ... is not allowed to be imported by this file', naming the exact chain. Reverted."}
+  ],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "4.3-4.4",
+      "description": "assert_not_exists lands on exactly the 6 files the plan names (TaskFrame, Truth, WorldHistory, FrameProperty, BLTruth, BLValidity); Validity.lean and Correspondence/Galois.lean are the only two exclusions",
+      "type": "altered",
+      "reason": "BLValidity.lean must be a THIRD exclusion, for the same underlying reason as the other two (transitive reach to ProofSystem.Axioms via Validity.lean/FrameClassValidity.lean) -- the plan's Scope Hypothesis undercounted the exclusion set because its verification grep only checks DIRECT imports of FormalSystem.ProofSystem, not transitive closure through an intermediate file. Followed the tree (a real build failure), not the plan's file list, per the Scope Hypothesis's own instruction to do so if the list turns out wrong.",
+      "annotation": "*(deviation: altered — BLValidity.lean excluded (transitively reaches the seam via Validity.lean), not one of the 5 assertion-bearing files; 3 exclusions total, not 2, correcting the plan's Scope Hypothesis)*"
+    }
+  ]
+}

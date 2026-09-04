@@ -9,6 +9,11 @@ import FormalSystem.Semantics.WorldHistory
 import FormalSystem.Syntax.Formula
 import FormalSystem.Automation.TruthNormAttr
 
+-- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
+-- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
+assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree
+  FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass
+
 /-!
 # Truth - Truth Evaluation in Task Semantics
 
