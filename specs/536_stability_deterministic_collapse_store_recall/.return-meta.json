@@ -1,0 +1,25 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/536_stability_deterministic_collapse_store_recall/reports/01_determinism-collapse-and-store-recall.md",
+      "summary": "Corrects the Determined/Deterministic claim into three distinct collapse phenomena; records the paper's committed and git-recovered statements (def:deterministic, lem:deterministic-singleton, app:deterministic, app:drift, cor:no-characterization, app:deterministic-future, Theorem C); delivers the machine-checked deterministic collapse, the F-zero/F-one indistinguishable pair as legal task frames, the direction-indexed choice-dependence finding, and a narrowed store/recall recommendation."
+    },
+    {
+      "type": "probe",
+      "path": "specs/536_stability_deterministic_collapse_store_recall/probes/01_determinism-collapse-probes.lean",
+      "summary": "Sorry-free, choice-free: TaskFrame.IsDeterministic, the forward singleton bridge, the collapse StarTruthAt (stab phi) <-> StarTruthAt phi, and Determined as a frame validity (45 lines, compiles)."
+    },
+    {
+      "type": "probe",
+      "path": "specs/536_stability_deterministic_collapse_store_recall/probes/02_fzero-frame-probes.lean",
+      "summary": "Sorry-free: F-zero (the drift frame over the reals) as a FrameOver with all six axioms including limit and saturation, its non-determinism, the full order-isomorphism core (bounds, Lipschitz, continuity, strict monotonicity, forward/backward IVT surjectivity), and F-one with its determinism (272 lines, compiles)."
+    }
+  ],
+  "metadata": {
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

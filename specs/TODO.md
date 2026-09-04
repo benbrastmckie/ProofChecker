@@ -91,7 +91,7 @@ next_project_number: 538
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
-536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
+536 [RESEARCHED] — Investigate and establish, in Lean, the exact relationship betwee
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53 (see above)
 
 ### Publication Quality
@@ -111,10 +111,11 @@ next_project_number: 538
 ---
 
 ### 536. Stability deterministic collapse store recall
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 533
+- **Research**: [536_stability_deterministic_collapse_store_recall/reports/01_determinism-collapse-and-store-recall.md]
 
 **Description**: Investigate and establish, in Lean, the exact relationship between the stability modal ⊡ and Deterministic task frames, correcting a claim made in discussion of task 533's research: it is NOT the case that Determined (φ → ⊡φ) is valid exactly over the deterministic frames, and the collapse of L⋆ into L⁺ over deterministic frames is not the whole story. WHAT THE PAPER (possible_worlds.tex) ACTUALLY ESTABLISHES: app:deterministic (around line 3476) shows Determined is valid over every frame satisfying Deterministic (for w,u,v ∈ W and x ∈ D, if w ⇒_x u and w ⇒_x v then u = v); the sentence at line 1437 and its footnote show Determined does NOT characterize the Deterministic frames -- the frames F° (W = ℝ, D = ℝ, w ⇒_x u iff x ≤ u−w ≤ 2x for x ≥ 0) and F¹ (u = w + x) have every possible world an order-isomorphism of (ℝ,<) onto itself, so an induction on complexity assigns every store-free and recall-free sentence the same world states at which it is true over both frames, although F¹ is Deterministic and F° is not; app:deterministic-future (around line 3566) shows the store/recall sentence Det = ↑¹F↑²↓¹(⊡↓²¬φ ∨ ⊡↓²φ) is valid over deterministic frames and invalid over some non-deterministic frame; and PossibleWorlds task 105 (in flight; report specs/105_characterize_deterministic_task_frames/reports/02_determinism-axiom-correspondence.md in /home/benjamin/Philosophy/Papers/PossibleWorlds) shows that Det defines only FORWARD determinism (counterexample frame F^N, forward-deterministic with an absorbing state but not backward-deterministic), that Deterministic holds iff every intersection class ⟨τ⟩_x is a singleton (lem:deterministic-singleton, a biconditional), and that Det-pm (Det with F replaced by always) and Det-m (a world-store variant ↑w¹⊡always(φ ↔ ↓w¹φ)) each define the Deterministic frames exactly. So the full correspondence result genuinely needs the store/recall operators, which the ⊡-only L⋆ of task 533 lacks. DELIVERABLES: (a) machine-check the sufficiency collapse: Deterministic F → StarValidIn F (⊡φ ↔ φ) for every StarFormula φ, via the singleton bridge lemma; (b) machine-check the failure of the converse for the ⊡-only language: formalize F° and F¹ (or a simpler separating pair) as TaskFrames and prove every StarFormula has the same validity over both, so Deterministic is not L⋆-definable -- the region where ⊡ trivializes is the Deterministic frames, but membership in that region is not expressible in L⋆; (c) determine what the store/recall operators add and at what cost: whether L⋆ should be extended by the time store/recall ↑ⁱ/↓ⁱ and/or world store/recall operators to state Det-pm/Det-m ⟺ Deterministic in Lean (evaluation points gain stored-time and stored-world vectors; every existing L⁺ transport lemma is Formula-only), and recommend whether to pursue that as a follow-up task; (d) record the exact statements in the paper's terms so that possible_worlds.tex and the Lean tree agree, coordinating wording with PossibleWorlds task 105 rather than duplicating its mathematics. Depends on task 533 for StarFormula, StarTruthAt, StarValidIn and the SameStateAt/singleton infrastructure.
 
