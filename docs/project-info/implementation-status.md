@@ -33,7 +33,7 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | `Derivation.lean` | ✅ | DerivationTree type |
 
 **Features**:
-- All 21 TM axiom schemas organized into base (17), dense (1), and discrete (3) layers
+- All 45 axiom constructors organized into base (37), dense (2), discrete (3), and Dedekind (3) layers
 - 7 inference rule constructors
 - Computable height function
 

@@ -751,8 +751,14 @@ C14_FAIL=0
 # which omits the Dedekind layer; 21, 14 and 44 are older figures still.
 # Scope note: `FormalSystem` is scanned for `*.lean` only, and Boneyard/ is excluded --
 # archived modules are not documentation and are allowed to carry historical figures.
+#
+# WIDENING (both branches, kept identical so they cannot drift apart): the terminal
+# word set gains `schema` (matches `schemata` too, since the pattern has no trailing
+# `\b`) alongside `axiom`/`constructor`, and an optional single interposed word (e.g.
+# "21 TM axiom schemas") is now tolerated between the count and the terminal word.
 STALE_AXIOMS=$(grep -rniE --include='*.md' \
-  '\b(14|21|42|44)[[:space:]]+(axiom|constructor)' docs README.md 2>/dev/null || true)
+  '\b(14|21|42|44)[[:space:]]+([A-Za-z⁺+]+[[:space:]]+)?(axiom|constructor|schema)' \
+  docs README.md 2>/dev/null || true)
 # The trailing `grep -i axiom` is a PRECISION guard, not a weakening: `.lean` sources
 # carry constructor counts for types other than `Axiom` (e.g. `EnrichedFormula`'s 21
 # constructors in Automation/Normalization.lean), and a bare "21 constructors" in such
@@ -760,9 +766,17 @@ STALE_AXIOMS=$(grep -rniE --include='*.md' \
 # somewhere on the line keeps the tripwire aimed at axiom-count claims. The markdown
 # half above is deliberately left exactly as it was -- this is a widening of C14's
 # scope, not a rewrite of its existing behavior.
+#
+# A second PRECISION guard (`grep -v -i covers`) was added alongside the first when
+# widening exposed a genuine false positive: `Automation/ProofSearch/Core.lean`
+# documents that its matcher "covers" 42 of the tree's 45 axiom constructors --
+# a correct SUBSET claim, not a stale TOTAL claim, and the word "covers" is what
+# distinguishes the two in every case checked at widening time (verified: neither
+# guard removes either of this phase's two genuine stale-count fixes).
 STALE_AXIOMS_LEAN=$(grep -rniE --include='*.lean' \
-  '\b(14|21|42|44)[[:space:]]+(axiom|constructor)' FormalSystem 2>/dev/null \
-  | grep -v '/Boneyard/' | grep -i 'axiom' || true)
+  '\b(14|21|42|44)[[:space:]]+([A-Za-z⁺+]+[[:space:]]+)?(axiom|constructor|schema)' \
+  FormalSystem 2>/dev/null \
+  | grep -v '/Boneyard/' | grep -i 'axiom' | grep -v -i 'covers' || true)
 STALE_AXIOMS=$(printf '%s\n%s' "$STALE_AXIOMS" "$STALE_AXIOMS_LEAN" | grep -c . >/dev/null \
   && printf '%s\n%s' "$STALE_AXIOMS" "$STALE_AXIOMS_LEAN" | grep . || true)
 STALE_AXIOM_COUNT=$(printf '%s' "$STALE_AXIOMS" | grep -c . || true)

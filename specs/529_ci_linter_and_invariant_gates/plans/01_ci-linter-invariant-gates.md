@@ -430,27 +430,27 @@ editing; a count other than 9/0/0 means the tree moved and the phase must follow
 
 ---
 
-### Phase 6: E-09 -- widen the C14 regex and correct the two stale documents [NOT STARTED]
+### Phase 6: E-09 -- widen the C14 regex and correct the two stale documents [COMPLETED]
 
 **Goal**: Catch stale axiom-count claims that interpose a word (`21 TM axiom schemas`) or use
 `schema` as the terminal noun, and fix the two documents this exposes.
 
 **Tasks**:
-- [ ] Dry-run the widened pattern
+- [x] Dry-run the widened pattern
       `\b(14|21|42|44)[[:space:]]+([A-Za-z⁺+]+[[:space:]]+)?(axiom|constructor|schema)`
       repo-wide over `docs`, `README.md` and `FormalSystem/**/*.lean` BEFORE editing the script.
-      Reconcile every hit as genuinely stale or a false positive (Risk R6).
-- [ ] Apply the widened pattern to BOTH the `STALE_AXIOMS` (markdown) and `STALE_AXIOMS_LEAN`
-      (Lean docstring) branches -- they share the core pattern and must not drift apart.
-- [ ] Preserve the `STALE_AXIOMS_LEAN` branch's trailing `grep -i 'axiom'` precision guard; the
+      Reconcile every hit as genuinely stale or a false positive (Risk R6). *(completed: 5 raw hits over docs+README.md+FormalSystem. 3 genuinely stale (see Scope Hypothesis correction below); 2 false positives correctly excludable by the existing/precision guards -- see next tasks.)*
+- [x] Apply the widened pattern to BOTH the `STALE_AXIOMS` (markdown) and `STALE_AXIOMS_LEAN`
+      (Lean docstring) branches -- they share the core pattern and must not drift apart. *(completed: identical pattern in both branches)*
+- [x] Preserve the `STALE_AXIOMS_LEAN` branch's trailing `grep -i 'axiom'` precision guard; the
       block comment explains why it exists (`EnrichedFormula`'s 21 constructors), and widening
-      the terminal word to include `schema` makes that guard more load-bearing, not less.
-- [ ] Fix `docs/project-info/implementation-status.md:36` ("All 21 TM axiom schemas organized
+      the terminal word to include `schema` makes that guard more load-bearing, not less. *(completed: guard preserved; correctly still excludes Normalization.lean's two 'EnrichedFormula...21 constructors' lines, verified by direct re-run)*
+- [x] Fix `docs/project-info/implementation-status.md:36` ("All 21 TM axiom schemas organized
       into base (17), dense (1), and discrete (3) layers") to the current 45-constructor,
-      nine-layer figures as stated in `specs/ROADMAP.md`'s Architecture paragraph.
-- [ ] Fix `docs/user-guide/examples.md:579` ("Modal K distribution is one of the 14 TM axiom
-      schemas.").
-- [ ] Update C14's block comment to record the widened terminal-word set.
+      nine-layer figures as stated in `specs/ROADMAP.md`'s Architecture paragraph. *(completed: rewritten to '45 axiom constructors organized into base (37), dense (2), discrete (3), and Dedekind (3) layers', matching the file's own already-correct line 32 breakdown rather than importing ROADMAP.md's differently-shaped nine-layer framing into a bullet already using a base/dense/discrete/Dedekind split)*
+- [x] Fix `docs/user-guide/examples.md:579` ("Modal K distribution is one of the 14 TM axiom
+      schemas."). *(completed: '14' -> '45 TM axiom constructors')*
+- [x] Update C14's block comment to record the widened terminal-word set. *(completed, plus documents the new 'covers' precision guard added below)*
 
 **Timing**: 0.75 hours.
 
@@ -460,16 +460,19 @@ editing; a count other than 9/0/0 means the tree moved and the phase must follow
 
 **Scope Hypothesis**: Research verified the widened pattern matches both stale strings by hand
 and identified exactly 2 documents. The dry run above is what confirms 2 is the whole set -- if
-it finds more, fix them all rather than only the two named here.
+it finds more, fix them all rather than only the two named here. *(CORRECTED: the dry run found a THIRD genuinely stale claim the plan's research pass missed -- `FormalSystem/ProofSystem.lean:21` ("21 TM axiom schemata organized into base (17), dense (1), and discrete (3) layers"), the exact same stale figure and breakdown as the two docs/ files, but in a `.lean` docstring rather than markdown. Fixed with the same corrected breakdown, plus one added bullet naming the Reynolds Dedekind layer (previously entirely absent from this file's enumeration, which is why the total was stuck at 21). Also found ONE genuine false positive the plan did not anticipate: `Automation/ProofSearch/Core.lean:697` ("...matches any of the 42 TM axiom schemata this matcher covers") correctly describes a SUBSET (42 of 45) the matcher handles, not a stale total -- confirmed by the very next line's own text ("The tree has 45 axiom constructors; `matchAxiom` covers 42 of them"). This is NOT a document to fix; it required a new precision guard (`grep -v -i covers`) in the STALE_AXIOMS_LEAN branch instead, verified to not remove any of the three genuine fixes.)*
 
 **Files to modify**:
-- `scripts/check-module-invariants.sh` - C14 regex (both branches) and block comment.
+- `scripts/check-module-invariants.sh` - C14 regex (both branches), the new `covers` precision
+  guard, and block comment.
 - `docs/project-info/implementation-status.md` - line 36 count correction.
 - `docs/user-guide/examples.md` - line 579 count correction.
+- `FormalSystem/ProofSystem.lean` - line 21 count correction (not in the original plan; see
+  Scope Hypothesis correction above).
 
 **Verification**:
-- `bash scripts/check-module-invariants.sh --no-build` prints `PASS C14` and exits 0.
-- Re-running the widened grep over `docs` + `README.md` returns zero stale hits.
+- `bash scripts/check-module-invariants.sh --no-build` prints `PASS C14` and exits 0. *(confirmed PASS C14 (both halves of the content scan); overall exit is 1 solely from the pre-existing, unrelated C15 gap, as in every phase since Phase 1)*
+- Re-running the widened grep over `docs` + `README.md` returns zero stale hits. *(confirmed: zero hits over docs+README.md; the FormalSystem/*.lean re-run also returns zero genuine hits -- the two remaining raw regex matches are the known, guard-excluded false positives)*
 
 ---
 

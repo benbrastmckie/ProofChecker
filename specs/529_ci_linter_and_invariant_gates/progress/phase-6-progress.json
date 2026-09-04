@@ -1,0 +1,33 @@
+{
+  "phase": 6,
+  "phase_name": "E-09 -- widen the C14 regex and correct the two stale documents",
+  "started_at": "2026-09-04T11:25:00Z",
+  "last_updated": "2026-09-04T12:10:00Z",
+  "objectives": [
+    {"id": 1, "description": "Dry-run the widened pattern repo-wide before editing the script", "status": "done", "files_touched": [], "note": "5 raw hits over docs+README.md+FormalSystem/**/*.lean: implementation-status.md:36, examples.md:579, ProofSystem.lean:21 (genuinely stale, all 3), Normalization.lean:28+306 (false positive, no 'axiom' word, already excluded by the existing precision guard), ProofSearch/Core.lean:697 (false positive, a genuine subset claim, needed a NEW precision guard)."},
+    {"id": 2, "description": "Apply widened pattern to both STALE_AXIOMS and STALE_AXIOMS_LEAN branches", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Identical pattern in both, per the plan's own 'must not drift apart' instruction."},
+    {"id": 3, "description": "Preserve the STALE_AXIOMS_LEAN grep -i axiom precision guard", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Preserved; verified it still excludes both Normalization.lean lines."},
+    {"id": 4, "description": "Fix docs/project-info/implementation-status.md:36", "status": "done", "files_touched": ["docs/project-info/implementation-status.md"], "note": "21 -> 45, base(17)/dense(1)/discrete(3) -> base(37)/dense(2)/discrete(3)/Dedekind(3), matching the file's own already-correct line 32."},
+    {"id": 5, "description": "Fix docs/user-guide/examples.md:579", "status": "done", "files_touched": ["docs/user-guide/examples.md"], "note": "14 TM axiom schemas -> 45 TM axiom constructors."},
+    {"id": 6, "description": "Update C14's block comment for the widened terminal-word set", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Documents the schema/interposed-word widening and the new covers guard."}
+  ],
+  "current_objective": 6,
+  "approaches_tried": [],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "6.scope-hypothesis",
+      "description": "Research identified exactly 2 stale documents",
+      "type": "altered",
+      "reason": "A THIRD genuinely stale claim exists at FormalSystem/ProofSystem.lean:21 -- the exact same stale figure (21, base 17/dense 1/discrete 3) as the two docs/ files, in a .lean docstring the plan's research pass didn't check. Fixed with the same corrected breakdown used for implementation-status.md, plus added a bullet naming the previously entirely-absent Reynolds Dedekind layer (prior_U_gap, prior_S_gap, sep).",
+      "annotation": "*(deviation: altered — a third stale claim found at ProofSystem.lean:21, fixed alongside the plan's two named documents)*"
+    },
+    {
+      "task_id": "6.risk-r6",
+      "description": "Widened pattern reconciled as genuinely stale or false positive with existing guards",
+      "type": "altered",
+      "reason": "One false positive (Automation/ProofSearch/Core.lean:697, 'matches any of the 42 TM axiom schemata this matcher covers') is NOT excluded by the existing grep -i axiom guard, since it genuinely contains the word 'axiom' -- it's a correct SUBSET claim (42 of 45), not a stale total, confirmed by the very next line's explicit clarification. Added a second precision guard (grep -v -i covers) to the STALE_AXIOMS_LEAN branch, verified via a repo-wide grep for similar 'covers' phrasing near axiom-count numbers that no other line in the widened pattern's match set is affected, and that neither guard removes any of the three genuine fixes.",
+      "annotation": "*(deviation: altered — Risk R6 materialized as anticipated; added a new 'covers' precision guard for a genuine subset-claim false positive not caught by the existing 'axiom' guard)*"
+    }
+  ]
+}
