@@ -1,0 +1,37 @@
+{
+  "phase": 3,
+  "phase_name": "C16 -- environment linters as an invariant check",
+  "started_at": "2026-09-04T08:00:00Z",
+  "last_updated": "2026-09-04T08:55:00Z",
+  "objectives": [
+    {"id": 1, "description": "Add ENFORCE_C16 flag to the enforcement-flag block", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Default 1: governs the full env_linter batch (all six linters), not a simpNF/dupNamespace pair, since scripts/nolints.json (Phase 2) makes the whole batch genuinely green today."},
+    {"id": 2, "description": "Add the C16 block after C15, before C9-DOCS, invoking the linter and parsing by name", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Uses `lake exe runLinter FormalSystem` (nolints.json-aware automatically, ~11s, no rebuild forced)."},
+    {"id": 3, "description": "Blocking half: simpNF/dupNamespace fail C16 when ENFORCE_C16=1", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Blocking half = full env_linter batch via lake exe runLinter FormalSystem (includes simpNF), mirroring CI's lake lint gate exactly. dupNamespace excluded from the blocking half -- see objective 4."},
+    {"id": 4, "description": "Reporting half: other linters via info/note, capped at 20 lines, never affect FAILURES", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "No separate reporting half exists (the whole batch is the blocking check, already nolints.json-filtered). dupNamespace fills this role instead, but as a STATIC recorded count (14, ChronicleTypes.lean), not live-recomputed: isolating it requires lake lint --builtin-only --lint-only .dupNamespace, which forces a full-project rebuild under different linter options on EVERY invocation (confirmed ~10 minutes, one OOM kill during this task's own investigation). Flagged to team lead before implementing (msg_id 1178f86c), no objection. Recorded as a follow-up-task item alongside simpNF's length_range_map fix."},
+    {"id": 5, "description": "Honour --no-build: C16 skips under RUN_BUILD=0 with an explicit skip line", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Confirmed: 'INFO C16 skipped (--no-build)'."},
+    {"id": 6, "description": "Add C16 to the # Checks: header inventory", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Also updated the Usage line's --no-build skip list (C1/C2/C6/C16) and the Companion files list (scripts/nolints.json)."},
+    {"id": 7, "description": "Run full and --no-build invariants runs, confirm exit 0", "status": "done", "files_touched": [], "note": "Both exit 1, solely due to the pre-existing, unrelated C15 paper-anchor failure (Phase 1's own Reasoned Exclusions). C16 itself PASSes in the full run and prints the explicit skip line under --no-build; no other check regressed. Recorded as a phase-level Reasoned Exclusion."},
+    {"id": 8, "description": "Load-bearing verification: force a fake simpNF finding, confirm C16 fails, revert", "status": "done", "files_touched": [], "note": "Added a scratch `def c16_lint_force_test_zzz : Nat := 0` (triggers defsWithUnderscore) to FormalSystem/Examples/TemporalStructures.lean -- a leaf file with no other dependents, chosen to keep the rebuild cheap. First attempt showed a false negative: `lake exe runLinter` only rebuilds a module if its .olean is MISSING, not if it's stale, so the linter silently checked the OLD cached .olean and reported clean. Learned: must `lake build <module>` explicitly before `runLinter` to pick up a source edit -- this matches CI's own step order (build: true runs before lint: true). After an explicit `lake build FormalSystem.Examples.TemporalStructures`, `lake exe runLinter FormalSystem` correctly reported the new finding by name, and the full check-module-invariants.sh run showed `FAIL C16` naming it explicitly. Reverted the scratch declaration, rebuilt again, confirmed `PASS C16` and `git diff` on the file is empty (clean revert)."}
+  ],
+  "current_objective": 8,
+  "approaches_tried": [
+    {"approach": "Live dupNamespace check inside C16 via lake lint --builtin-only --lint-only .dupNamespace", "result": "failed", "reason": "Forces a full-project rebuild under different linter options on every invocation of this routinely-run script (~10 minutes, one OOM kill during investigation). Judged unsustainable; replaced with a static recorded count instead."}
+  ],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "3.3-3.4",
+      "description": "Blocking half is exactly {simpNF, dupNamespace}; reporting half is every other linter",
+      "type": "altered",
+      "reason": "The full env_linter batch (via lake exe runLinter FormalSystem, nolints.json-aware) is now the blocking check -- a strictly stronger local mirror of CI's own lake lint gate than a simpNF/dupNamespace pair would be. dupNamespace is excluded from live checking entirely (static count instead) due to its rebuild cost. Flagged to team lead before implementing; no objection.",
+      "annotation": "*(deviation: altered — blocking half is the full env_linter batch (nolints.json-aware), not simpNF+dupNamespace; dupNamespace is a static recorded count, not a live check, due to rebuild cost)*"
+    },
+    {
+      "task_id": "3.7",
+      "description": "Both full and --no-build invariants runs exit 0",
+      "type": "altered",
+      "reason": "Both exit 1 due to the pre-existing, unrelated C15 failure (task-536 paper-anchor citations) already recorded as a Phase 1 exclusion. Not introduced or worsened by this phase.",
+      "annotation": "*(deviation: altered — both exit 1 solely due to the pre-existing C15 exclusion; C16 itself passes/skips correctly in both)*"
+    }
+  ]
+}

@@ -24,6 +24,9 @@
 #       theorems C2 does not cover match their baseline
 #   C15 Every paper-anchor citation in live scope resolves against the pinned
 #       record (manifest row, or an explicit KNOWN-ANCHORS row)
+#   C16 Batteries env_linter batch (simpNF, docBlame, unusedArguments, ...) has no
+#       finding beyond scripts/nolints.json's grandfathered baseline; dupNamespace
+#       reported as a static count (live-checking it forces a full rebuild)
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #
 # Every filesystem traversal excludes the archive via `-not -path '*/Boneyard/*'`.
@@ -37,7 +40,7 @@
 #
 # Usage:
 #   bash scripts/check-module-invariants.sh            # all checks
-#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6 (fast structural pass)
+#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16 (fast structural pass)
 #
 # Companion files:
 #   scripts/module-invariants-manifest.txt   known-unreachable live modules (C6)
@@ -46,6 +49,7 @@
 #   scripts/markdown-slash-path-allowlist.txt  hypothetical slash paths (C12)
 #   scripts/markdown-link-allowlist.txt        link-syntax-illustration files (C13)
 #   specs/paper-definitions-of-record.md       pinned paper anchors + known-anchor rows (C15)
+#   scripts/nolints.json                       grandfathered env_linter findings (C16)
 
 set -uo pipefail
 
@@ -73,6 +77,13 @@ ENFORCE_C10=${ENFORCE_C10:-1} # no stale docs/latex/typst paths (enforced)
 # reported from the outset; flip to 1 once docs/development/PHASED_IMPLEMENTATION.md
 # and the smaller residue are cleared.
 ENFORCE_C9_DOCS=${ENFORCE_C9_DOCS:-0} # no task-number citations under docs/ (NOT yet enforced)
+# C16 gates the Batteries env_linter batch (defsWithUnderscore, docBlame, simpNF,
+# structureInType, tacticDocs, unusedArguments -- everything `lake exe runLinter`/the
+# configured `lintDriver` checks). scripts/nolints.json grandfathers the 307 findings
+# that existed when it was generated, so a clean run here means "no NEW finding", not
+# "the tree has zero findings" -- exactly CI's own `lake lint` gate. Enforced from the
+# outset because nolints.json makes it genuinely green today, unlike C8/C9/C10 above.
+ENFORCE_C16=${ENFORCE_C16:-1} # env_linter batch has no un-nolisted finding (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -985,6 +996,54 @@ else
     note "(status LIVE-UNPINNED if it resolves in the paper, DANGLING if it does not)"
   fi
   rm -f "$C15_KNOWN" "$C15_CITED"
+fi
+echo
+
+# ---------------------------------------------------------------------------
+# C16: environment linters (defsWithUnderscore, docBlame, simpNF, structureInType,
+# tacticDocs, unusedArguments, ...) via the configured lintDriver
+#
+# `lake exe runLinter FormalSystem` runs Batteries' full env_linter suite -- the same
+# one `lintDriver := "batteries/runLinter"` wires into `lake lint`/CI -- and reads
+# scripts/nolints.json unconditionally, filtering out every declaration recorded
+# there before deciding pass/fail. nolints.json grandfathers the 307 findings that
+# existed when it was generated (`lake exe runLinter --update FormalSystem`), so a
+# clean run here means "no NEW finding since the grandfather baseline", mirroring
+# CI's own `lake lint` gate exactly -- this is the local equivalent of that check.
+# Never regenerate nolints.json to make a genuine regression disappear; confirm
+# every new finding is intentional (or itself grandfather-worthy) before running
+# `--update` again.
+#
+# `dupNamespace` is deliberately NOT part of this batch (it is a separate Lean-core
+# text linter, not a Batteries @[env_linter], and never appears in runLinter's
+# output regardless of its true count) and is reported below as a STATIC count
+# rather than a live check: isolating it requires `lake lint --builtin-only
+# --lint-only .dupNamespace`, which forces Lake to rebuild the ENTIRE default
+# target under different linter options on every single invocation (confirmed
+# during this check's own development: roughly ten minutes, and OOM-killed once).
+# Making every routine run of this script pay that cost is not sustainable, so
+# `dupNamespace` stays a periodically-reconfirmed recorded count, not a live gate.
+# ---------------------------------------------------------------------------
+if [ "$RUN_BUILD" -eq 1 ]; then
+  C16_LOG=$(mktemp)
+  if lake exe runLinter FormalSystem >"$C16_LOG" 2>&1; then
+    pass C16 "env_linter batch (defsWithUnderscore, docBlame, simpNF, structureInType, tacticDocs, unusedArguments) has no un-nolisted finding"
+  else
+    MSG="env_linter batch reports new finding(s) beyond scripts/nolints.json's grandfathered baseline"
+    if [ "$ENFORCE_C16" -eq 1 ]; then fail C16 "$MSG"; else soft C16 "$MSG (not yet enforced)"; fi
+    grep -m1 '^-- Found ' "$C16_LOG" | while IFS= read -r l; do note "$l"; done
+    tail -20 "$C16_LOG" | while IFS= read -r l; do note "$l"; done
+    note "run 'lake exe runLinter --update FormalSystem' only after confirming every new finding is intentional -- --update grandfathers everything currently reported, including a genuine regression"
+  fi
+  rm -f "$C16_LOG"
+  # dupNamespace: static count, not live-checked -- see header comment above for why.
+  # Measured 2026-09-04 via `lake lint --builtin-only --lint-only .dupNamespace`:
+  # 14 findings, all in FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean
+  # (`structure Chronicle` nested inside `namespace ...Chronicle`, double-namespacing
+  # every field). Re-run that command by hand to reconfirm; do not automate it here.
+  info C16 "dupNamespace: 14 known finding(s) in ChronicleTypes.lean (statically recorded above -- not live-checked, see header comment)"
+else
+  info C16 "skipped (--no-build)"
 fi
 echo
 

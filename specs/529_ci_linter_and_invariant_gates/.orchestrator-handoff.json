@@ -1,18 +1,28 @@
 {
-  "status": "planned",
-  "phase": "plan",
-  "dispatch_seq": 2,
-  "summary": "Created an 11-phase, ~13-hour implementation plan covering all eight delegated work items. Both sequencing constraints are encoded: lintDriver and ci.yml's lint: true land in one atomic-batch phase (Phase 2), and a build-backed D-01 simp-loop re-verification gate (Phase 1) precedes any phase that makes simpNF blocking.",
+  "status": "in_progress",
+  "phase": "implement",
+  "dispatch_seq": 3,
+  "summary": "Phases 1-3 complete. Phase 1 (baseline capture, D-01 re-verification) closed COMPLETED WITH EXCLUSIONS: the D-01 simp loop is confirmed dead, but a pre-existing unrelated C15 (paper-anchor citation) failure and simpNF/dupNamespace findings (1 and 14 respectively, both pre-existing and unrelated to this task) were discovered during baseline capture. Phase 2 (lint driver and CI activation) closed COMPLETED in full: lintDriver landed, lake check-lint exits 0, and after an extended investigation (lint-args narrowing proved structurally impossible for this linter set) the plan's actual lint: true goal was achieved via scripts/nolints.json -- Batteries/Mathlib's standard grandfathering mechanism -- rather than the plan's originally-sketched narrowing. Plain `lake lint` now exits 0; `lake test` exits 0; ci.yml runs on every push/PR with test: true and lint: true. Phase 3 (C16 invariant check) closed COMPLETED WITH EXCLUSIONS: C16 added to check-module-invariants.sh, blocking on the full nolints.json-aware env_linter batch (a stronger mirror of CI than the plan's simpNF/dupNamespace-pair sketch); dupNamespace is reported as a static count rather than live-checked, since isolating it forces a full-project rebuild on every invocation (cost/OOM risk, flagged to and accepted by the team lead). Load-bearing verified by injecting and reverting a scratch finding.",
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
-      "summary": "11 phases in 8 dependency waves: baseline/D-01 re-verification, lintDriver+CI atomic batch, C16 linter check, G-15 assert_not_exists, C9/C14 widening plus the two stale-doc fixes, readme-lint Check 4, reporting-only C17/C18/C19, the Init.lean linter root, and a final acceptance gate."
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-1-progress.json",
+      "summary": "Phase 1 progress: build/test/D-01 baseline capture, per-linter inventory, and the two corrections (dupNamespace measurement, Contingency #3 superseded by nolints.json)."
+    },
+    {
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-2-progress.json",
+      "summary": "Phase 2 progress: lintDriver, ci.yml activation, the lint-args narrowing investigation (failed, structurally impossible), and the successful scripts/nolints.json grandfathering resolution."
+    },
+    {
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-3-progress.json",
+      "summary": "Phase 3 progress: C16 design (nolints.json-aware blocking batch, static dupNamespace count), the rebuild-cost investigation, and the load-bearing verification cycle."
     }
   ],
-  "phases_completed": 0,
+  "phases_completed": 3,
   "phases_total": 11,
   "blockers": [],
   "sorry_inventory": [],
-  "continuation_path": null
+  "continuation_path": "Phase 4 (G-15 -- assert_not_exists in the lower Semantics files) is next, per the plan's dependency table (depends on Phase 1, wave 2 alongside Phases 2/7)."
 }
