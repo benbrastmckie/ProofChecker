@@ -2,7 +2,7 @@
 
 - **Task**: 529 - WAVE 5 (publication infrastructure): turn on tests and Mathlib environment
   linters in CI, and close the review's gaps in `check-module-invariants.sh`
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 13 hours
 - **Dependencies**: None (external). Internal sequencing constraints are recorded in the
   Dependency Analysis table below and are load-bearing -- see Risks R1 and R2.

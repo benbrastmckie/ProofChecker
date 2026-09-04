@@ -1,63 +1,18 @@
 {
-  "status": "in_progress",
+  "status": "implemented",
   "phase": "implement",
   "dispatch_seq": 3,
-  "summary": "Phases 1-10 complete. Phase 9 (C19 docstring-coverage floor) triggered its own STOP condition (G-12's unrefined heuristic measured 89.40%, under the 90% floor) and was escalated rather than resolved unilaterally; the user authorized a precisely-specified, once-applied refinement crediting enclosing `/-!` section comments (a blind spot G-12's own design already anticipated), which measures 92.34% -- clears the floor, and lands within 0.5 points of research's original 92.8% figure. Both figures are reported in C19's output. Phase 10 (Init.lean/CheckInitImports linter root) closed COMPLETED, proceeding in parallel with Phase 9's escalation since it only depends on Phase 2 (already done): found and corrected two plan-parenthetical imprecisions by reading CSLib's actual source directly rather than trusting the plan's description (Init.lean has 1 extra CSLib-local import, not 2; the exceptions list needs 1 entry, not 2), both confirmed empirically. Baseline: 434 modules do not yet transitively import FormalSystem.Init (the ~430-file rewrite is an explicit, deferred follow-up).",
+  "summary": "All 11 phases complete. CI now runs on every push/PR with test: true and lint: true (via scripts/nolints.json grandfathering, not the plan's originally-sketched lint-args narrowing, which proved structurally impossible). check-module-invariants.sh gained C16 (env_linter regression gate + live dupNamespace textual approximation), C17 (dead-declaration scan), C18 (paragraph duplication), C19 (docstring-coverage floor, refined with user authorization after its own STOP condition); C9 and C14 were widened, each finding real gaps beyond the plan's own scope estimates (7 additional task citations, a third stale document, one new false-positive precision guard). G-15's assert_not_exists landed on 5 of the plan's 6 named files (a real Scope Hypothesis gap found the 6th transitively reaches the seam). readme-lint gained a stamp-vs-commit-date comparison. FormalSystem.Init/CheckInitImports landed as the linter root, baseline 434 unmigrated modules. Full implementation summary at specs/529_ci_linter_and_invariant_gates/summaries/01_ci-linter-invariant-gates-summary.md.",
   "artifacts": [
     {
       "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-1-progress.json",
-      "summary": "Phase 1 progress: build/test/D-01 baseline capture, per-linter inventory, and the two corrections (dupNamespace measurement, Contingency #3 superseded by nolints.json)."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-2-progress.json",
-      "summary": "Phase 2 progress: lintDriver, ci.yml activation, the lint-args narrowing investigation (failed, structurally impossible), and the successful scripts/nolints.json grandfathering resolution."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-3-progress.json",
-      "summary": "Phase 3 progress: C16 design (nolints.json-aware blocking batch, initially-static dupNamespace count), the rebuild-cost investigation, the load-bearing verification cycle, and a correction re: the team lead's objection timing."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-4-progress.json",
-      "summary": "Phase 4 progress: G-15 assert_not_exists, the BLValidity.lean transitive-seam exclusion discovered via a real build failure, and the corrected Scope Hypothesis (3 exclusions, not 2)."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-5-progress.json",
-      "summary": "Phase 5 progress: lakefile docstring rewrites, C9 widening, the scripts/*.sh Scope Hypothesis correction, and the live dupNamespace textual check (validation trail: naive version found 10/14, _root_. false positives found and fixed, final version 14/14 exact match)."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-6-progress.json",
-      "summary": "Phase 6 progress: C14 widening, the three genuine stale-count fixes (a third beyond the plan's two), and the new 'covers' precision guard for a genuine subset-claim false positive."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-7-progress.json",
-      "summary": "Phase 7 progress: readme-lint Check 4's stamp-vs-commit-date comparison and the equivalent pre/post verification used in place of a nonexistent Phase 1 baseline."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-8-progress.json",
-      "summary": "Phase 8 progress: C17 dead-declaration scan (989 findings, one spot-checked) and C18 paragraph duplication (zero findings, synthetic-test-verified mechanism)."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-9-progress.json",
-      "summary": "Phase 9 progress: the STOP-condition escalation, the user-authorized /-!-section-credit refinement (precisely specified, validated in both directions against over- and under-crediting), and the final wired C19 check."
-    },
-    {
-      "type": "summary",
-      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-10-progress.json",
-      "summary": "Phase 10 progress: Init.lean and CheckInitImports, the two CSLib-source corrections, and the 434-module baseline."
+      "path": "specs/529_ci_linter_and_invariant_gates/summaries/01_ci-linter-invariant-gates-summary.md",
+      "summary": "Full implementation summary covering all 11 phases, decisions, deviations, verification, impacts, and a 7-item follow-up worklist."
     }
   ],
-  "phases_completed": 10,
+  "phases_completed": 11,
   "phases_total": 11,
   "blockers": [],
   "sorry_inventory": [],
-  "continuation_path": "Phase 11 (Acceptance gate) is next and final -- depends on Phases 3, 4, 5, 6, 7, 8, 9, 10, all of which are now complete."
+  "continuation_path": "None -- task implementation complete. Residual items are recorded as follow-ups in the summary (nolints.json's 307-entry debt, dupNamespace's 14 findings, simpNF's 1 finding, three low-coverage C19 keyword categories, the ~430-file Init rewrite, the pre-existing C15 gap, and specs/ROADMAP.md's stale grounding line), none of which are in this task's scope."
 }
