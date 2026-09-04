@@ -400,22 +400,22 @@ translation witness. Confirm by enumerating the promoted declaration names again
 
 ---
 
-### Phase 5: Generic order-transfer lemmas under (H1) [NOT STARTED]
+### Phase 5: Generic order-transfer lemmas under (H1) [COMPLETED]
 
 **Goal**: The frame-independent content of the `S_φ` induction's temporal cases, proved once against
 an abstract hypothesis, so Phase 6's induction has its inputs already green.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Independence/OrderTransfer.lean`.
-- [ ] Package hypothesis **(H1)** for a frame `F` with `F.WorldState = ℝ` (or an abstract linear
+- [x] Create `FormalSystem/Metalogic/Independence/OrderTransfer.lean`.
+- [x] Package hypothesis **(H1)** for a frame `F` with `F.WorldState = ℝ` (or an abstract linear
       order): every total history's state function is strictly monotone, hits every strictly greater
       state at a strictly later time, and every strictly lesser state at a strictly earlier time.
       Package **(H2)**: every world state lies on some total history at every time.
-- [ ] Prove, from (H1) alone: the future-image lemma `{τ(y) : y > x} = {v : v > τ(x)}`, its past
+- [x] Prove, from (H1) alone: the future-image lemma `{τ(y) : y > x} = {v : v > τ(x)}`, its past
       mirror, and the **betweenness/change-of-variables** lemma — `x < y < z` matches
       `τ(x) < τ(y) < τ(z)` in both directions. These are exactly what the `untl`/`snce` cases need.
-- [ ] Prove, from (H2): the `box` transfer — `{ρ(x) : ρ a total history} = univ`.
-- [ ] Docstring: **the recursion mentions only the order on `W` and neither task relation** — this is
+- [x] Prove, from (H2): the `box` transfer — `{ρ(x) : ρ a total history} = univ`.
+- [x] Docstring: **the recursion mentions only the order on `W` and neither task relation** — this is
       the crux clause of `cor:no-characterization` and the reason this is one generic lemma with two
       instantiations rather than two parallel developments. Also record the terminology: F° and F¹
       are an **indistinguishable** pair, not a "separating" pair — they *agree* on every store-free,
