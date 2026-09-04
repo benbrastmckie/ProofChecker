@@ -6,21 +6,21 @@ next_project_number: 538
 
 ## Task Order
 
-*Updated 2026-09-03. Generated from state.json dependency graph.*
+*Updated 2026-09-04. Generated from state.json dependency graph.*
 
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,535 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,533 | 193,298,433,461,529,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497,534,536 | 231,463,502,533 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 4 | 465,498,499,500,537 | 464,497,536 | algebraic-representation, decidability, metalogic |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,529,530,534,535,536 | -- | automation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,537 | 193,298,433,461,529,530,535,536 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
+| 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
 | 7 | 410 | 429 | decidability |
 | 8 | 411 | 410 | decidability |
 | 9 | 430 | 411 | decidability |
-| 10 | 177,412 | 193,430,530,533 | decidability, formula-refactor |
+| 10 | 177,412 | 193,430,530 | decidability, formula-refactor |
 | 11 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
@@ -88,11 +88,11 @@ next_project_number: 538
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 530 [NOT STARTED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio (see above)
+534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
-  └─ 533 [PLANNED] — Establish soundness, completeness, compactness, and decidability 
-    └─ 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
-    └─ 536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
-      └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
+  └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
+536 [NOT STARTED] — Investigate and establish, in Lean, the exact relationship betwee
+  └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53 (see above)
 
 ### Publication Quality
 
@@ -143,12 +143,13 @@ next_project_number: 538
 ---
 
 ### 533. L and lstar metatheory conservative extension
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 535
 - **Research**: [533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md]
 - **Plan**: [533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md]
+- **Summary**: [533_l_and_lstar_metatheory_conservative_extension/summaries/01_l-lstar-metatheory-conservative-extension-summary.md]
 
 **Description**: Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.
 
