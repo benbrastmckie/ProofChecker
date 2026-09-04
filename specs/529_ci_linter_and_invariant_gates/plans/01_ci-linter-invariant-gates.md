@@ -617,33 +617,33 @@ the team lead.
 
 ---
 
-### Phase 10: Linter root -- Init.lean and CheckInitImports [NOT STARTED]
+### Phase 10: Linter root -- Init.lean and CheckInitImports [COMPLETED]
 
 **Goal**: Port CSLib's downstream linter-root pattern: a `FormalSystem/Init.lean` root and an
 import-graph checker, wired and run reporting-only.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Init.lean` as a thin root file importing `Mathlib.Init` and
+- [x] Create `FormalSystem/Init.lean` as a thin root file importing `Mathlib.Init` and
       `Mathlib.Tactic.Common` (the BimodalLogic analogue of CSLib's `Cslib/Init.lean`; this repo
       has no local lint/tactic-attribute modules for it to pin, so the CSLib file's other two
-      imports have no counterpart).
-- [ ] Create `scripts/CheckInitImports.lean`, a near-verbatim port of CSLib's: open the
+      imports have no counterpart). *(deviation: altered — read CSLib's actual `Cslib/Init.lean` directly rather than trusting the parenthetical's count: it has exactly ONE extra import beyond Mathlib.Init/Mathlib.Tactic.Common (`Cslib.Foundations.Lint.Basic`, its local lint module), not two. The "other two" language turns out to describe CheckInitImports.lean's TWO-entry exceptions list (`Cslib.Foundations.Lint.Basic`, `Cslib.Init`), not Init.lean's own imports -- a minor imprecision in the plan's parenthetical, not a scope change. The explicit instruction ("importing Mathlib.Init and Mathlib.Tactic.Common") was followed exactly. Also: did not copy CSLib's `module` / `public import` Lean-module-system syntax verbatim -- confirmed via repo-wide grep that no file in this repo uses it, so plain `import` matches this repo's universal convention instead.)*
+- [x] Create `scripts/CheckInitImports.lean`, a near-verbatim port of CSLib's: open the
       environment over `` `FormalSystem ``, compute `env.importGraph.transitiveClosure`, and
       report modules under the `FormalSystem` root whose transitive imports do not include
       `FormalSystem.Init`, minus an exceptions list (`FormalSystem.Init` itself and its direct
-      imports, which would otherwise cycle).
-- [ ] Verify no new `require` is needed: `ImportGraph` is an inherited transitive dependency via
+      imports, which would otherwise cycle). *(deviation: altered — exceptions list has ONE entry (`FormalSystem.Init` itself), not `FormalSystem.Init` plus its direct imports. Verified against CSLib's actual source (not just the plan's description): CSLib's own exceptions list has two entries because `Cslib.Foundations.Lint.Basic` (imported BY `Cslib.Init`) would otherwise cycle -- a LOCAL, CSLib-rooted circular dependency. `FormalSystem.Init`'s own imports (`Mathlib.Init`, `Mathlib.Tactic.Common`) are rooted at `Mathlib`, not `FormalSystem`, so the `name.getRoot = `FormalSystem`` filter already excludes them from consideration -- they never need an explicit exception. Confirmed empirically: the executable runs to completion with a one-entry exceptions list and does not spuriously flag either Mathlib import.)*
+- [x] Verify no new `require` is needed: `ImportGraph` is an inherited transitive dependency via
       Mathlib (`lake-manifest.json`). If a `require` turns out to be needed, STOP and report --
-      adding a direct dependency is a decision beyond this phase.
-- [ ] Wire `lean_exe checkInitImports` in `lakefile.lean` (`srcDir := "scripts"`,
+      adding a direct dependency is a decision beyond this phase. *(completed: confirmed "inherited": true in lake-manifest.json; lake build succeeds with zero manifest change)*
+- [x] Wire `lean_exe checkInitImports` in `lakefile.lean` (`srcDir := "scripts"`,
       `root := \`CheckInitImports`, `supportInterpreter := true`), following the existing
       `lean_exe` blocks' style, and give it a docstring that says what it produces -- C9 is
-      widened to `lakefile.lean` by Phase 5 and will reject a task citation here.
-- [ ] Run `lake exe checkInitImports` and record the baseline violation count.
-- [ ] **Do not** rewrite `FormalSystem/**/*.lean` imports to route through `FormalSystem.Init`,
+      widened to `lakefile.lean` by Phase 5 and will reject a task citation here. *(completed: docstring says what it produces, no task citation, PASS C9 confirmed)*
+- [x] Run `lake exe checkInitImports` and record the baseline violation count. *(completed: 434 modules do not yet transitively import FormalSystem.Init. Note: the process exit code itself shows 178, not 434 -- `diff.length.toUInt32` returned as a process exit code truncates mod 256 on POSIX (434 - 256 = 178), an inherited CSLib-design quirk, not a bug introduced here; the count is read from the printed message, not the exit code.)*
+- [x] **Do not** rewrite `FormalSystem/**/*.lean` imports to route through `FormalSystem.Init`,
       and do not wire this into `check-module-invariants.sh` as a gate. The mechanism plus a
       recorded baseline is this phase's deliverable; the ~430-file import rewrite is an explicit
-      Non-Goal and belongs to a follow-up task.
+      Non-Goal and belongs to a follow-up task. *(completed: no rewrite performed, not wired into check-module-invariants.sh as a gate. FormalSystem.Init IS added to scripts/module-invariants-manifest.txt, since it is a newly-unreachable live module and C6's rot guard requires every such module to be listed -- this is bookkeeping/compile-checking, not the gate the task prohibits.)*
 
 **Timing**: 1.5 hours.
 
@@ -656,18 +656,20 @@ and that CSLib's `CheckInitImports.lean` is directly portable by changing only t
 the exceptions list. Confirm the first by `lake build` succeeding with no manifest change, and
 the second by the executable running to completion -- an API mismatch against this repo's pinned
 `v4.33.0-rc1` resolution invalidates the "near-verbatim" claim and must be reported, not
-papered over.
+papered over. *(confirmed: both hold. The exceptions list itself needed one entry, not two -- see the deviation above -- but the port is otherwise unmodified and runs to completion with no API mismatch.)*
 
 **Files to modify**:
 - `FormalSystem/Init.lean` - new file.
 - `scripts/CheckInitImports.lean` - new file.
 - `lakefile.lean` - new `lean_exe checkInitImports` block.
+- `scripts/module-invariants-manifest.txt` - new entry for `FormalSystem.Init` (not in the
+  original plan; see the last deviation above).
 
 **Verification**:
-- `lake build` exits 0.
-- `lake exe checkInitImports` runs to completion and prints a violation count.
+- `lake build` exits 0. *(confirmed: 2591 jobs, exit 0)*
+- `lake exe checkInitImports` runs to completion and prints a violation count. *(confirmed: 434)*
 - `bash scripts/check-module-invariants.sh` still exits 0 (C4 must resolve the new imports; C8's
-  aggregator convention must accept the new `Init.lean`).
+  aggregator convention must accept the new `Init.lean`). *(deviation: altered — exits 1, solely from the pre-existing, unrelated C15 gap; C4, C6, C8, C9 all confirmed PASS with the new files in place)*
 
 ---
 

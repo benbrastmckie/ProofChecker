@@ -11,6 +11,14 @@
 #   - Wiring a module into the build graph means DELETING its line here.
 # One module path per line; `#` starts a comment.
 
+# --- Root ------------------------------------------------------------------
+# The intended root file for FormalSystem (see FormalSystem/Init.lean itself and
+# scripts/CheckInitImports.lean). No live module imports it yet -- rewriting the
+# ~430-file import graph to route through it is an explicit, deferred follow-up
+# (see the task that introduced this file), not this line's concern. DELETE this
+# line when that rewrite lands and something in the build graph imports it.
+FormalSystem.Init
+
 # --- Automation ------------------------------------------------------------
 # Benchmark harness. Its only importer is BimodalTest.Automation.ProofFirstTests,
 # which cannot be wired into the test root (see the Tests section below), so this

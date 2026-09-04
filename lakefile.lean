@@ -109,3 +109,10 @@ lean_exe machine_appendix where
   root := `FormalSystem.Automation.MachineAppendixExport
   srcDir := "."
   supportInterpreter := true
+
+/-- Reports FormalSystem modules that do not (transitively) import FormalSystem.Init.
+    Run with: lake exe checkInitImports -/
+lean_exe checkInitImports where
+  root := `CheckInitImports
+  srcDir := "scripts"
+  supportInterpreter := true
