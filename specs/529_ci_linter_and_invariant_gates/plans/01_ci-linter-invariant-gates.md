@@ -337,7 +337,7 @@ the scope Phase 2 recorded, not a re-guess. *(confirmed: `lake exe runLinter For
 | Item | Reason | Evidence |
 |------|--------|----------|
 | `bash scripts/check-module-invariants.sh` / `--no-build` both exit 0 | Both exit 1 due to the pre-existing, unrelated C15 (paper-anchor citation) failure recorded in Phase 1's own Reasoned Exclusions -- out of this task's scope, not introduced or worsened by this phase. | Full-run and `--no-build` logs; C16 itself prints PASS (full run) or the explicit skip line (`--no-build`) in both, with no other check regressed relative to Phase 2's baseline. |
-| `dupNamespace` is a live, blocking check alongside `simpNF` | Isolating dupNamespace via the real linter requires `lake lint --builtin-only --lint-only .dupNamespace`, which forces Lake to rebuild the entire default target under different linter options on every invocation of this routinely-run script -- confirmed costly (~10 minutes) and memory-risky (one OOM kill) during this task's own investigation. Flagged to the team lead before implementing: the team lead did not object to excluding the live linter invocation on cost grounds, but DID object -- twice -- to this phase's chosen substitute, a static hardcoded count (14, `ChronicleTypes.lean`) baked into the script's comment. Their point: a frozen number in `check-module-invariants.sh` is exactly the defect class C14 (and the two documents Phase 6 corrects) exists to catch -- it silently goes stale the moment a Chronicle projection changes, and nothing notices. Their objection arrived after this phase was committed, which is why the static count landed here; it was not adopted with the team lead's agreement, and this row records that accurately rather than as consensus. **Follow-up (not yet in this phase)**: replace the static count with a live, textual (awk-based) check that tracks `namespace`/`end` nesting and flags any `structure`/`inductive`/`def`/`abbrev`/`theorem`/`instance` whose identifier repeats the innermost enclosing namespace segment -- milliseconds, no rebuild, recomputed every run, validated by confirming it reproduces the same 14 `ChronicleTypes.lean` declarations the real linter found. Planned for folding into a later phase that also touches this script (5, 6, 8, or 9) rather than reopening this one. | `scripts/check-module-invariants.sh`'s C16 header comment (as committed); `lake lint --builtin-only --lint-only .dupNamespace` output (14 findings) saved in Phase 2's progress notes; team lead messages proposing the awk-based alternative. |
+| `dupNamespace` is a live, blocking check alongside `simpNF` | Isolating dupNamespace via the real linter requires `lake lint --builtin-only --lint-only .dupNamespace`, which forces Lake to rebuild the entire default target under different linter options on every invocation of this routinely-run script -- confirmed costly (~10 minutes) and memory-risky (one OOM kill) during this task's own investigation. Flagged to the team lead before implementing: the team lead did not object to excluding the live linter invocation on cost grounds, but DID object -- twice -- to this phase's chosen substitute, a static hardcoded count (14, `ChronicleTypes.lean`) baked into the script's comment. Their point: a frozen number in `check-module-invariants.sh` is exactly the defect class C14 (and the two documents Phase 6 corrects) exists to catch -- it silently goes stale the moment a Chronicle projection changes, and nothing notices. Their objection arrived after this phase was committed, which is why the static count landed here; it was not adopted with the team lead's agreement, and this row records that accurately rather than as consensus. **RESOLVED in Phase 5**: the static count was replaced with a live, textual (Python, embedded the same way C4/C5 already embed Python in this script) check that tracks `namespace`/`section`/`end` nesting and flags any `structure`/`inductive`/`def`/`abbrev`/`theorem`/`instance`/`class` whose identifier repeats an open namespace segment -- including, for a `structure`/`class`, its auto-generated field projections and `.mk` constructor, which is what actually produces the real linter's per-declaration findings (a bare identifier-match alone would have found 1, not 14). Runs in ~0.3s over the whole tree, no build, works even under `--no-build`. Validated: reproduces exactly the same 14 `ChronicleTypes.lean` declarations at the same line numbers that `lake lint --builtin-only --lint-only .dupNamespace` reports. See Phase 5's own record for the full implementation history (including a `_root_.`-qualified-name false-positive class discovered and fixed during validation). | `scripts/check-module-invariants.sh`'s C16 header comment (as committed); `lake lint --builtin-only --lint-only .dupNamespace` output (14 findings) saved in Phase 2's progress notes; team lead messages proposing the textual alternative; Phase 5's progress notes for the validation trail. |
 
 ---
 
@@ -384,25 +384,25 @@ by trusting this list -- if a seventh lower file appears or one of the six has s
 
 ---
 
-### Phase 5: D-18 -- widen C9 traversal and rewrite the lakefile docstrings [NOT STARTED]
+### Phase 5: D-18 -- widen C9 traversal and rewrite the lakefile docstrings [COMPLETED]
 
 **Goal**: Make C9 see the files that were slipping past it, and clear the citations that widening
 exposes -- in one phase, because widening first would fail the gate.
 
 **Tasks**:
-- [ ] Rewrite the 9 task citations in `lakefile.lean`'s `lean_exe` docstrings to describe what
+- [x] Rewrite the 9 task citations in `lakefile.lean`'s `lean_exe` docstrings to describe what
       each executable produces. The mechanical shape is deleting the trailing `(Task NNN).`
       parenthetical, since the docstrings already state the purpose before it; where a docstring
       says nothing but the citation, write the purpose. Cited tasks: 210, 205 (x2), 206, 246,
-      242, 277, 279, 316.
-- [ ] Widen C9's `grep` target list from the bare `FormalSystem` positional to
+      242, 277, 279, 316. *(completed: all 9 rewritten)*
+- [x] Widen C9's `grep` target list from the bare `FormalSystem` positional to
       `FormalSystem lakefile.lean README.md scripts`, and add `--include='*.sh'` so the
       `scripts/` half is not inert. `specs/**` stays excluded (it is the rule's own documented
-      exemption).
-- [ ] Update C9's block comment and the header `# Checks:` line to state the widened scope.
-- [ ] Confirm the widened C9 finds zero citations after the docstring rewrite.
-- [ ] Confirm `scripts/check-module-invariants.sh` itself does not self-match (C10 already
-      carries a self-exclusion for this reason; check whether C9 needs the same).
+      exemption). *(completed)*
+- [x] Update C9's block comment and the header `# Checks:` line to state the widened scope. *(completed)*
+- [x] Confirm the widened C9 finds zero citations after the docstring rewrite. *(completed: PASS C9, widened scope, zero citations)*
+- [x] Confirm `scripts/check-module-invariants.sh` itself does not self-match (C10 already
+      carries a self-exclusion for this reason; check whether C9 needs the same). *(completed: added a self-exclusion (`grep -v '^scripts/check-module-invariants\.sh:'`) since the widened scan now includes scripts/, matching C10's own pattern; no self-match occurred in practice since this file currently has no task-number-shaped text, but the exclusion guards against a future header example doing so)*
 
 **Timing**: 1 hour.
 
@@ -413,15 +413,20 @@ exposes -- in one phase, because widening first would fail the gate.
 **Scope Hypothesis**: Research measured exactly 9 citations in `lakefile.lean`, 0 in `README.md`,
 0 in `scripts/*.sh`. Confirm by re-running
 `grep -niE '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b'` against all three targets before
-editing; a count other than 9/0/0 means the tree moved and the phase must follow the new count.
+editing; a count other than 9/0/0 means the tree moved and the phase must follow the new count. *(CORRECTED: the tree moved for scripts/*.sh -- the real count was 9/0/7, not 9/0/0. Confirmed by re-running the exact grep; the 7 hits were prose comments in run_dataset_generation.sh (x2), typst-machine-appendix.sh, typst-sync-check.sh (x2), and typst-status-counts.sh. Followed the tree, cleared all 7 with the same mechanical shape used for lakefile.lean.)*
 
 **Files to modify**:
 - `lakefile.lean` - 9 docstring rewrites.
-- `scripts/check-module-invariants.sh` - C9 grep scope, block comment, header inventory.
+- `scripts/check-module-invariants.sh` - C9 grep scope, block comment, header inventory; plus,
+  folded in from a team-lead-directed follow-up on Phase 3 (see Phase 3's Reasoned Exclusions),
+  C16's dupNamespace half replaced with a live textual check.
+- `scripts/run_dataset_generation.sh`, `typst-machine-appendix.sh`, `typst-sync-check.sh`,
+  `typst-status-counts.sh` - 7 task-citation removals (not in the original plan; see Scope
+  Hypothesis correction above).
 
 **Verification**:
-- `lake build` exits 0 (docstring edits are inside a build config file).
-- `bash scripts/check-module-invariants.sh` prints `PASS C9` with the widened scope and exits 0.
+- `lake build` exits 0 (docstring edits are inside a build config file). *(confirmed: 2591 jobs, exit 0)*
+- `bash scripts/check-module-invariants.sh` prints `PASS C9` with the widened scope and exits 0. *(confirmed PASS C9 with the widened scope; overall script exit is 1 solely from the pre-existing, unrelated C15 gap, as in every phase since Phase 1)*
 
 ---
 

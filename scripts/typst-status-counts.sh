@@ -6,7 +6,7 @@
 # typst/ (sorry totals, axiom-constructor count, rule
 # count). Reproduces the SYNC-MAP.md "Ground-Truth Counts" (Phase 1)
 # methodology so that no hand-copied number ever needs to survive in
-# chapter prose (task 313 Phase 2).
+# chapter prose.
 #
 # Usage:
 #   scripts/typst-status-counts.sh            # writes typst/generated/status.typ

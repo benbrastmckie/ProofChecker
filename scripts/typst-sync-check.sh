@@ -15,8 +15,8 @@
 #                           (jq/python/awk only; no lake invocation).
 #
 # (The former banner-presence and legend-discipline checks were retired with
-# the sync-class banner system in task 319; the compiled book carries no
-# sync-class markings.)
+# the sync-class banner system; the compiled book carries no sync-class
+# markings.)
 #
 # Exit code: 0 if all checks pass, 1 if any check fails (a per-violation
 # report is printed to stderr).
@@ -246,7 +246,7 @@ fi
 # ---------------------------------------------------------------------------
 # Check 3: machine appendix freshness
 #
-# Two sub-checks over the committed machine appendix artifacts (task 316):
+# Two sub-checks over the committed machine appendix artifacts:
 #   A. Count agreement -- the committed JSONL's axiom/rule line counts match
 #      a live recount of the `inductive Axiom` / `inductive DerivationTree`
 #      constructor blocks (same awk scans as typst-status-counts.sh), and

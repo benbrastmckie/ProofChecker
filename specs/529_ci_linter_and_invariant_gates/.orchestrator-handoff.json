@@ -2,7 +2,7 @@
   "status": "in_progress",
   "phase": "implement",
   "dispatch_seq": 3,
-  "summary": "Phases 1-3 complete. Phase 1 (baseline capture, D-01 re-verification) closed COMPLETED WITH EXCLUSIONS: the D-01 simp loop is confirmed dead, but a pre-existing unrelated C15 (paper-anchor citation) failure and simpNF/dupNamespace findings (1 and 14 respectively, both pre-existing and unrelated to this task) were discovered during baseline capture. Phase 2 (lint driver and CI activation) closed COMPLETED in full: lintDriver landed, lake check-lint exits 0, and after an extended investigation (lint-args narrowing proved structurally impossible for this linter set) the plan's actual lint: true goal was achieved via scripts/nolints.json -- Batteries/Mathlib's standard grandfathering mechanism -- rather than the plan's originally-sketched narrowing. Plain `lake lint` now exits 0; `lake test` exits 0; ci.yml runs on every push/PR with test: true and lint: true. Phase 3 (C16 invariant check) closed COMPLETED WITH EXCLUSIONS: C16 added to check-module-invariants.sh, blocking on the full nolints.json-aware env_linter batch (a stronger mirror of CI than the plan's simpNF/dupNamespace-pair sketch); dupNamespace is reported as a static count rather than live-checked, since isolating it forces a full-project rebuild on every invocation (cost/OOM risk, flagged to and accepted by the team lead). Load-bearing verified by injecting and reverting a scratch finding.",
+  "summary": "Phases 1-5 complete. Phase 1 (baseline capture, D-01 re-verification) closed COMPLETED WITH EXCLUSIONS: the D-01 simp loop is confirmed dead, but a pre-existing unrelated C15 (paper-anchor citation) failure and simpNF/dupNamespace findings (1 and 14 respectively, both pre-existing and unrelated to this task) were discovered during baseline capture. Phase 2 (lint driver and CI activation) closed COMPLETED in full: lintDriver landed, lake check-lint exits 0, and after an extended investigation (lint-args narrowing proved structurally impossible for this linter set) the plan's actual lint: true goal was achieved via scripts/nolints.json -- Batteries/Mathlib's standard grandfathering mechanism -- rather than the plan's originally-sketched narrowing. Plain `lake lint` exits 0; `lake test` exits 0; ci.yml runs on every push/PR with test: true and lint: true. Phase 3 (C16 invariant check) closed COMPLETED WITH EXCLUSIONS: C16 added to check-module-invariants.sh, blocking on the full nolints.json-aware env_linter batch (stronger than the plan's simpNF/dupNamespace-pair sketch); dupNamespace was initially reported as a static count rather than live-checked (rebuild cost), which the team lead objected to after the phase committed. Phase 4 (G-15 assert_not_exists) closed COMPLETED: assertions added to 5 of the plan's 6 named Semantics/ files; BLValidity.lean excluded after a real build failure showed it transitively imports the ProofSystem seam via Validity.lean (a Scope Hypothesis gap the plan's direct-import-only grep couldn't see). Phase 5 (D-18: C9 widening, lakefile docstrings) closed COMPLETED: 9 lakefile.lean docstrings rewritten, C9 widened to lakefile.lean/README.md/scripts/, PLUS a Scope Hypothesis correction (scripts/*.sh actually had 7 citations, not 0) and PLUS the team-lead-directed Phase 3 follow-up: C16's static dupNamespace count replaced with a live, validated (exact 14/14 match) textual check.",
   "artifacts": [
     {
       "type": "summary",
@@ -17,12 +17,22 @@
     {
       "type": "summary",
       "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-3-progress.json",
-      "summary": "Phase 3 progress: C16 design (nolints.json-aware blocking batch, static dupNamespace count), the rebuild-cost investigation, and the load-bearing verification cycle."
+      "summary": "Phase 3 progress: C16 design (nolints.json-aware blocking batch, initially-static dupNamespace count), the rebuild-cost investigation, the load-bearing verification cycle, and a correction re: the team lead's objection timing."
+    },
+    {
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-4-progress.json",
+      "summary": "Phase 4 progress: G-15 assert_not_exists, the BLValidity.lean transitive-seam exclusion discovered via a real build failure, and the corrected Scope Hypothesis (3 exclusions, not 2)."
+    },
+    {
+      "type": "summary",
+      "path": "specs/529_ci_linter_and_invariant_gates/progress/phase-5-progress.json",
+      "summary": "Phase 5 progress: lakefile docstring rewrites, C9 widening, the scripts/*.sh Scope Hypothesis correction, and the live dupNamespace textual check (validation trail: naive version found 10/14, _root_. false positives found and fixed, final version 14/14 exact match)."
     }
   ],
-  "phases_completed": 3,
+  "phases_completed": 5,
   "phases_total": 11,
   "blockers": [],
   "sorry_inventory": [],
-  "continuation_path": "Phase 4 (G-15 -- assert_not_exists in the lower Semantics files) is next, per the plan's dependency table (depends on Phase 1, wave 2 alongside Phases 2/7)."
+  "continuation_path": "Phase 6 (E-09 -- widen the C14 regex and correct the two stale documents) is next, per the plan's dependency table (wave 4, depends on Phase 5)."
 }

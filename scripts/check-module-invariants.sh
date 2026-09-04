@@ -14,7 +14,8 @@
 #   C6  Known-unreachable live modules still compile (rot guard)
 #   C7  Live inventory (informational, never asserted)
 #   C8  Aggregator convention: sibling `X.lean` beside `X/`, no `X/X.lean`
-#   C9  Zero task-number citations under FormalSystem/
+#   C9  Zero task-number citations under FormalSystem/, lakefile.lean, README.md,
+#       and scripts/
 #   C10 Zero references to the pre-relocation docs/latex/typst paths
 #   C11 Every import inside FormalSystem/Boneyard/ resolves, or is waived
 #   C12 Every slash-shaped source path in docs/ + README.md resolves
@@ -538,19 +539,28 @@ PY_STATUS=$?
 echo
 
 # ---------------------------------------------------------------------------
-# C9: no task-number citations under FormalSystem/
+# C9: no task-number citations under FormalSystem/, lakefile.lean, README.md,
+# or scripts/
 #
 # `.claude/rules/no-task-references-in-deliverables.md` forbids ephemeral
 # task-management identifiers in deliverable files. Task numbers are renumbered
-# by vault operations and mean nothing to a future reader of a README.
+# by vault operations and mean nothing to a future reader of a README. Scope
+# widened beyond FormalSystem/ to catch the same defect in the other places it
+# was slipping past this check: lakefile.lean's lean_exe docstrings and
+# scripts/*.sh's own comments. specs/** stays excluded -- it is the rule's own
+# documented exemption -- and this script's own path is excluded (self-match:
+# widening the scan to scripts/ would otherwise catch this file's own header
+# examples the moment one is added, the same reason C10 self-excludes below).
 # ---------------------------------------------------------------------------
-TASK_REFS=$(grep -rniE --include='*.lean' --include='*.md' \
-  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b' FormalSystem 2>/dev/null | grep -v '/Boneyard/')
+TASK_REFS=$(grep -rniE --include='*.lean' --include='*.md' --include='*.sh' \
+  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b' \
+  FormalSystem lakefile.lean README.md scripts 2>/dev/null \
+  | grep -v '/Boneyard/' | grep -v '^scripts/check-module-invariants\.sh:')
 TASK_REF_COUNT=$(printf '%s' "$TASK_REFS" | grep -c . || true)
 if [ "$TASK_REF_COUNT" -eq 0 ]; then
-  pass C9 "zero task-number citations under FormalSystem/"
+  pass C9 "zero task-number citations under FormalSystem/, lakefile.lean, README.md, scripts/"
 else
-  MSG="$TASK_REF_COUNT task-number citation(s) under FormalSystem/ (use a durable anchor instead)"
+  MSG="$TASK_REF_COUNT task-number citation(s) under FormalSystem/, lakefile.lean, README.md, scripts/ (use a durable anchor instead)"
   if [ "$ENFORCE_C9" -eq 1 ]; then fail C9 "$MSG"; else soft C9 "$MSG (not yet enforced)"; fi
   printf '%s\n' "$TASK_REFS" | head -20 | while IFS= read -r l; do note "$l"; done
   [ "$TASK_REF_COUNT" -gt 20 ] && note "... and $((TASK_REF_COUNT - 20)) more"
@@ -1016,13 +1026,27 @@ echo
 #
 # `dupNamespace` is deliberately NOT part of this batch (it is a separate Lean-core
 # text linter, not a Batteries @[env_linter], and never appears in runLinter's
-# output regardless of its true count) and is reported below as a STATIC count
-# rather than a live check: isolating it requires `lake lint --builtin-only
-# --lint-only .dupNamespace`, which forces Lake to rebuild the ENTIRE default
-# target under different linter options on every single invocation (confirmed
-# during this check's own development: roughly ten minutes, and OOM-killed once).
-# Making every routine run of this script pay that cost is not sustainable, so
-# `dupNamespace` stays a periodically-reconfirmed recorded count, not a live gate.
+# output regardless of its true count). Isolating it via the REAL linter requires
+# `lake lint --builtin-only --lint-only .dupNamespace`, which forces Lake to
+# rebuild the ENTIRE default target under different linter options on every
+# single invocation (confirmed during this check's own development: roughly ten
+# minutes, and OOM-killed once) -- unsustainable for a routinely-run script.
+#
+# Instead, dupNamespace's condition is checked TEXTUALLY below, reporting-only:
+# it fires when a declaration's own name repeats a component of its enclosing
+# `namespace`, so a plain scan tracking `namespace`/`section`/`end` nesting and
+# flagging any `structure`/`inductive`/`def`/`abbrev`/`theorem`/`instance`/`class`
+# whose name (plus, for a `structure`/`class`, its auto-generated field
+# projections and `.mk` constructor) repeats an open segment reproduces the real
+# linter's verdict closely, in milliseconds, with no build. This is intentionally
+# an approximation (it will miss `to_additive`-style generated names, and
+# multi-line/attribute-heavy declarations are best-effort) -- acceptable because
+# this half is reporting-only. Validated against ChronicleTypes.lean: finds
+# exactly the same 14 declarations `lake lint --builtin-only --lint-only
+# .dupNamespace` reports, at the same lines. A HARDCODED count was deliberately
+# rejected here: this script exists in part to catch hand-typed numbers drifting
+# from the tree (see C14, and the two documents Phase 6 of this task corrects),
+# so freezing dupNamespace's count would be the same defect class in miniature.
 # ---------------------------------------------------------------------------
 if [ "$RUN_BUILD" -eq 1 ]; then
   C16_LOG=$(mktemp)
@@ -1036,15 +1060,112 @@ if [ "$RUN_BUILD" -eq 1 ]; then
     note "run 'lake exe runLinter --update FormalSystem' only after confirming every new finding is intentional -- --update grandfathers everything currently reported, including a genuine regression"
   fi
   rm -f "$C16_LOG"
-  # dupNamespace: static count, not live-checked -- see header comment above for why.
-  # Measured 2026-09-04 via `lake lint --builtin-only --lint-only .dupNamespace`:
-  # 14 findings, all in FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean
-  # (`structure Chronicle` nested inside `namespace ...Chronicle`, double-namespacing
-  # every field). Re-run that command by hand to reconfirm; do not automate it here.
-  info C16 "dupNamespace: 14 known finding(s) in ChronicleTypes.lean (statically recorded above -- not live-checked, see header comment)"
 else
-  info C16 "skipped (--no-build)"
+  info C16 "env_linter batch skipped (--no-build)"
 fi
+# dupNamespace: live textual check, runs regardless of --no-build (no build needed).
+python3 - <<'PYEOF'
+import os, re
+
+def live_lean_files(base):
+    out = []
+    for root, dirs, files in os.walk(base):
+        dirs[:] = [d for d in dirs if d != "Boneyard"]
+        for f in files:
+            if f.endswith(".lean"):
+                out.append(os.path.join(root, f))
+    return sorted(out)
+
+ns_open_re = re.compile(r"^namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)")
+section_re = re.compile(r"^section(?:\s+[A-Za-z_][A-Za-z0-9_']*)?\s*$")
+end_re = re.compile(r"^end(?:\s+([A-Za-z_][A-Za-z0-9_'.]*))?\s*$")
+decl_re = re.compile(
+    r"^(?:@\[[^\]]*\]\s*)*"
+    r"(?:private\s+|protected\s+|noncomputable\s+|scoped\s+|local\s+|mutual\s+)*"
+    r"(structure|inductive|def|abbrev|theorem|instance|class)\s+"
+    r"([A-Za-z_][A-Za-z0-9_'.]*)"
+)
+field_re = re.compile(r"^[A-Za-z_][A-Za-z0-9_']*\s*:")
+
+findings = []
+for path in live_lean_files("FormalSystem"):
+    stack, frames = [], []
+    try:
+        lines = open(path, encoding="utf-8", errors="replace").readlines()
+    except OSError:
+        continue
+    n_lines = len(lines)
+    i = 0
+    while i < n_lines:
+        raw = lines[i]
+        line = raw.strip()
+        m = ns_open_re.match(line)
+        if m:
+            segs = m.group(1).split(".")
+            stack.extend(segs)
+            frames.append(len(segs))
+            i += 1
+            continue
+        if section_re.match(line):
+            frames.append(0)
+            i += 1
+            continue
+        if end_re.match(line):
+            if frames:
+                n = frames.pop()
+                if n:
+                    stack = stack[:-n] if n <= len(stack) else []
+            i += 1
+            continue
+        m = decl_re.match(line)
+        if m and stack:
+            kind, ident = m.group(1), m.group(2)
+            if ident.startswith("_root_."):
+                combined = ident[len("_root_."):].split(".")
+            else:
+                combined = stack + ident.split(".")
+            seen, dup = set(), None
+            for s in combined:
+                if s in seen:
+                    dup = s
+                    break
+                seen.add(s)
+            if dup:
+                findings.append((path, i + 1, ident, dup))
+                if kind in ("structure", "class") and ident == dup:
+                    j, field_count, in_doc = i + 1, 0, False
+                    while j < n_lines:
+                        body_raw = lines[j]
+                        stripped_body = body_raw.strip()
+                        if stripped_body == "":
+                            j += 1; continue
+                        if not body_raw[:1].isspace():
+                            break
+                        if in_doc:
+                            if "-/" in stripped_body:
+                                in_doc = False
+                            j += 1; continue
+                        if stripped_body.startswith("/--"):
+                            if "-/" not in stripped_body[3:]:
+                                in_doc = True
+                            j += 1; continue
+                        if field_re.match(stripped_body):
+                            field_count += 1
+                        j += 1
+                    findings.append((path, i + 1, f"{ident}.mk", dup))
+                    for _ in range(field_count):
+                        findings.append((path, i + 1, f"{ident}.<field>", dup))
+        i += 1
+
+if not findings:
+    print("PASS  C16  dupNamespace: zero declaration(s) with a repeated namespace component (live textual check)")
+else:
+    print(f"INFO  C16  dupNamespace: {len(findings)} declaration(s) with a repeated namespace component (live textual check, approximate; never affects FAILURES)")
+    for p, l, ident, dup in findings[:20]:
+        print(f"            {p}:{l}: {ident} (duplicated component: {dup})")
+    if len(findings) > 20:
+        print(f"            ... and {len(findings) - 20} more")
+PYEOF
 echo
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,35 @@
+{
+  "phase": 5,
+  "phase_name": "D-18 -- widen C9 traversal and rewrite the lakefile docstrings",
+  "started_at": "2026-09-04T10:10:00Z",
+  "last_updated": "2026-09-04T11:20:00Z",
+  "objectives": [
+    {"id": 1, "description": "Rewrite the 9 task citations in lakefile.lean's lean_exe docstrings", "status": "done", "files_touched": ["lakefile.lean"], "note": "All 9 rewritten (enum_benchmark, benchmark_anchors, benchmark_oracle, contrastive_generator, tableau_bridge, tableau_proof_steps, trace_exporter, proof_first_generator, machine_appendix): deleted the trailing '(Task NNN)' parenthetical, since each docstring already stated the purpose before it."},
+    {"id": 2, "description": "Widen C9's grep target list, add --include='*.sh'", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "grep -rniE --include='*.lean' --include='*.md' --include='*.sh' over FormalSystem lakefile.lean README.md scripts."},
+    {"id": 3, "description": "Update C9's block comment and header # Checks: line", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Both updated to state the widened scope."},
+    {"id": 4, "description": "Confirm the widened C9 finds zero citations after the docstring rewrite", "status": "done", "files_touched": [], "note": "PASS C9 confirmed with the widened scope."},
+    {"id": 5, "description": "Confirm check-module-invariants.sh itself does not self-match; add self-exclusion if needed", "status": "done", "files_touched": ["scripts/check-module-invariants.sh"], "note": "Added grep -v '^scripts/check-module-invariants\\.sh:' self-exclusion, matching C10's own pattern, guarding against a future header example self-matching."}
+  ],
+  "current_objective": 5,
+  "approaches_tried": [
+    {"approach": "Naive dupNamespace textual detector (declaration identifier == innermost namespace segment only)", "result": "failed", "reason": "Only found 10 of the real linter's 14 ChronicleTypes.lean findings -- missed the 4 auto-generated structure field projections + .mk constructor, since those aren't textually declared via a def/theorem keyword."},
+    {"approach": "dupNamespace textual detector without _root_.-qualified-name handling", "result": "failed", "reason": "42 false positives across the tree: a `def _root_.A.B.C ...` declaration escapes every currently-open namespace, so concatenating it with the open-namespace stack (as done for ordinary declarations) produces spurious 'FormalSystem' duplicates for every _root_.-qualified declaration in a file whose own namespace also starts with FormalSystem."}
+  ],
+  "handoff_count": 0,
+  "deviations": [
+    {
+      "task_id": "5.scope-hypothesis",
+      "description": "Research measured exactly 9/0/0 citations in lakefile.lean/README.md/scripts/*.sh",
+      "type": "altered",
+      "reason": "The tree moved: re-running the exact grep found 9/0/7, not 9/0/0. 7 real task-number citations exist in scripts/*.sh prose comments (run_dataset_generation.sh x2, typst-machine-appendix.sh, typst-sync-check.sh x2, typst-status-counts.sh). Followed the tree per the Scope Hypothesis's own instruction and cleared all 7 with the same mechanical shape (delete the task-number reference, keep the surrounding meaning) used for lakefile.lean.",
+      "annotation": "*(deviation: altered — real count 9/0/7, not 9/0/0; cleared the 7 additional scripts/*.sh citations following the tree)*"
+    },
+    {
+      "task_id": "5.folded-in",
+      "description": "(added, not in the original plan) Fold in the Phase 3 dupNamespace follow-up: replace the static hardcoded count with a live textual check",
+      "type": "altered",
+      "reason": "Team-lead-directed follow-up from Phase 3 (see that phase's Reasoned Exclusions), folded into this phase per the team lead's own suggestion since it also touches scripts/check-module-invariants.sh. Implemented as an embedded Python block (matching the file's existing C4/C5 embedded-Python convention): tracks namespace/section/end nesting, flags any structure/inductive/def/abbrev/theorem/instance/class whose identifier repeats an open namespace segment, and -- the key precision fix beyond the team lead's own sketch -- accounts for a structure/class's auto-generated field projections and implicit .mk constructor, since those (not the type declaration line itself) produce most of the real linter's findings. Validated iteratively: (1) naive identifier-match-only version found 10/14 (missing the 4 field projections) -- fixed by scanning the structure body for field lines; (2) full-tree run then surfaced 42 false positives from _root_.-qualified declarations incorrectly combined with the open-namespace stack -- fixed by detecting the _root_. prefix and not prepending the stack in that case. Final version: exactly 14/14 matching the real linter, at the same line numbers, over the whole FormalSystem/ tree in ~0.3s, runs even under --no-build. Runs unconditionally (moved outside the RUN_BUILD gate, unlike the env_linter blocking half).",
+      "annotation": "*(deviation: altered — folded in a team-lead-directed follow-up from Phase 3: replaced C16's static dupNamespace count with a live, validated textual check)*"
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 # typst-machine-appendix.sh
 #
 # Single-source-of-truth generator for the shipped machine-readable
-# axiomatization (task 316). Runs the Lean exporter through the Lean
+# axiomatization. Runs the Lean exporter through the Lean
 # INTERPRETER (`lake env lean --run`) with git commit stamps and renders
 # the committed JSONL artifact into a typst data file. Modeled on
 # scripts/typst-status-counts.sh.

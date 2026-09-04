@@ -481,10 +481,10 @@ run_c9() {
 
     # Stratified: exhaustive up to c7, sampled at c8/c9.
     # NOTE: The old "exhaustive c9 is infeasible (~11M formulas, >12h)" estimate
-    # predates the task 274 labeling speedup (~663 formulas/sec) and the task 283
-    # enumeration rewrite. Exhaustive c9 is now believed feasible but has not been
-    # measured or run; the exhaustive flip is deferred pending a feasibility probe
-    # (task 282 continuation). Stratified is retained until then.
+    # predates the labeling speedup (~663 formulas/sec) and the enumeration
+    # rewrite. Exhaustive c9 is now believed feasible but has not been
+    # measured or run; the exhaustive flip is deferred pending a feasibility
+    # probe (a follow-up continuation). Stratified is retained until then.
     # shellcheck disable=SC2086
     run_cmd time lake exe dataset_generator -- \
         --max-complexity 9 \
@@ -522,7 +522,7 @@ run_c11() {
 
     # Stratified enumeration: exhaustive up to c9, sampled at c10/c11.
     # Quotas: c10 = 100K samples, c11 = 300K samples (0 = exhaustive for c1-c9).
-    # NOTE: Task 251 optimized generateValidBatch from O(n^2) to O(n) MP closure.
+    # NOTE: generateValidBatch was optimized from O(n^2) to O(n) MP closure.
     # 10000 seeds is now feasible with HashMap-based implication index; provides
     # strong valid enrichment for the larger c11 formula pool.
     # shellcheck disable=SC2086
