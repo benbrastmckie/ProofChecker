@@ -605,16 +605,16 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group D — L⋆ proof system (Phases 4.1-4.2)**
 
-### Phase 4.1: `StarAxiom` — closed inductive with the TM⁺ schemata over `StarFormula` and the eight ⊡ constructors [IN PROGRESS]
+### Phase 4.1: `StarAxiom` — closed inductive with the TM⁺ schemata over `StarFormula` and the eight ⊡ constructors [COMPLETED]
 - **Goal:** Land `FormalSystem/StarLanguage/Axioms.lean` defining the TM⋆ axiom schemata
   exactly as 535 §8.1 prescribes, plus `minFrameClass`.
 - **Tasks:**
-  - [ ] `inductive StarAxiom : StarFormula → Type` whose first block re-declares every
+  - [x] `inductive StarAxiom : StarFormula → Type` whose first block re-declares every
         constructor of `ProofSystem.Axiom` (`Axioms.lean:111-464`) with the same name, the same
         parameter list with `StarFormula` in place of `Formula`, and the same statement using the
         Phase 2 derived operators; copy each docstring's first sentence and its Burgess 1982 /
         paper anchor.
-  - [ ] Second block, the ⊡ constructors (docstrings cite paper 1118/1119/1108 and the probes
+  - [x] Second block, the ⊡ constructors (docstrings cite paper 1118/1119/1108 and the probes
         C2/C5 by lemma name):
         `stab_k (φ ψ) : StarAxiom ((.stab (φ.imp ψ)).imp ((.stab φ).imp (.stab ψ)))`,
         `stab_t (φ) : StarAxiom ((.stab φ).imp φ)`,
@@ -625,14 +625,14 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
         `atom_stab (p : Atom) : StarAxiom ((.atom p).imp (.stab (.atom p)))`,
         `paste (φ ψ) (hφ : IsPureFuture φ) (hψ : IsPurePast ψ) : StarAxiom ((dstab φ).imp ((dstab ψ).imp (dstab (conj φ ψ))))`,
         `untl_paste (α φ) (hα : IsPurePast α) (hφ : IsPureFuture φ) : StarAxiom ((.untl α (dstab φ)).imp (dstab (.untl α φ)))`.
-  - [ ] `def StarAxiom.minFrameClass : StarAxiom φ → FrameClass` — TM⁺ arms copied from
+  - [x] `def StarAxiom.minFrameClass : StarAxiom φ → FrameClass` — TM⁺ arms copied from
         `Axiom.minFrameClass` (`Axioms.lean:599-607`), the eight ⊡ arms `.Base`.
-  - [ ] Module docstring: the axiom inventory table (validated / derived / refuted, pointing at
+  - [x] Module docstring: the axiom inventory table (validated / derived / refuted, pointing at
         Phase 3.3/3.4 lemma names), the statement that the naive S5-plus-bridges set is
         incomplete without `paste`/`untl_paste` (Postmortem rule 10, phrased positively), that
         the past mirrors are derived by TD, that ⊡-necessitation is derived, and that
         completeness/decidability of TM⋆ are open and out of this module's scope.
-  - [ ] Build: `lake build FormalSystem.StarLanguage.Axioms`.
+  - [x] Build: `lake build FormalSystem.StarLanguage.Axioms`.
 - **Territory:** creates `FormalSystem/StarLanguage/Axioms.lean` only.
 - **Estimated output:** ~380 lines (45 + 8 constructors with one-line docstrings, one
   `minFrameClass`). Over the advisory band but one bounded unit: one inductive, transcribed from
@@ -644,30 +644,30 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
   count). Confirm with `lean_file_outline` on `ProofSystem/Axioms.lean` before writing; the
   re-declared block must have exactly that many.
 
-### Phase 4.2: `StarDerivationTree`, `StarDerivable`, derived ⊡-necessitation, and backward conservativity via `ofPlus` [NOT STARTED]
+### Phase 4.2: `StarDerivationTree`, `StarDerivable`, derived ⊡-necessitation, and backward conservativity via `ofPlus` [COMPLETED]
 - **Goal:** Land `FormalSystem/StarLanguage/Derivation.lean` and the `FormalSystem/StarLanguage.lean`
   aggregator; prove the easy conservativity direction at all four classes.
 - **Tasks:**
-  - [ ] `inductive StarDerivationTree (fc : FrameClass) : StarContext → StarFormula → Type`
+  - [x] `inductive StarDerivationTree (fc : FrameClass) : StarContext → StarFormula → Type`
         with exactly the seven rules of `ProofSystem.DerivationTree` (`Derivation.lean:98-164`):
         `axiom (Γ φ) (h : StarAxiom φ) (h_fc : h.minFrameClass ≤ fc)`, `assumption`,
         `modus_ponens`, `necessitation`, `temporal_necessitation`, `temporal_duality`
         (concluding `φ.swapTemporal`), `weakening` — same argument shapes.
-  - [ ] `def StarDerivable (fc) (Γ) (φ) : Prop := Nonempty (StarDerivationTree fc Γ φ)`;
+  - [x] `def StarDerivable (fc) (Γ) (φ) : Prop := Nonempty (StarDerivationTree fc Γ φ)`;
         the `lift`/`mono` helpers `BaseLanguage/Derivation.lean` provides.
-  - [ ] `theorem stab_necessitation (d : StarDerivationTree fc [] φ) : StarDerivationTree fc [] (.stab φ)`
+  - [x] `theorem stab_necessitation (d : StarDerivationTree fc [] φ) : StarDerivationTree fc [] (.stab φ)`
         — `necessitation` then `modus_ponens` with `box_stab` (Postmortem rule 11).
-  - [ ] `def StarAxiom.ofPlus : Axiom φ → StarAxiom (ofFormula φ)` by `cases` (45 arms, each
+  - [x] `def StarAxiom.ofPlus : Axiom φ → StarAxiom (ofFormula φ)` by `cases` (45 arms, each
         `exact .c _ …` after the `rfl` reduction of `ofFormula` through the derived operators),
         and `theorem minFrameClass_ofPlus (ax) : (StarAxiom.ofPlus ax).minFrameClass = ax.minFrameClass`.
-  - [ ] `def StarDerivationTree.ofPlus : DerivationTree fc Γ φ → StarDerivationTree fc (ofCtx Γ) (ofFormula φ)`
+  - [x] `def StarDerivationTree.ofPlus : DerivationTree fc Γ φ → StarDerivationTree fc (ofCtx Γ) (ofFormula φ)`
         by structural recursion (the TD arm uses `ofFormula_swapTemporal`; the `weakening` arm
         uses `mem_ofCtx`); `theorem starDerivable_of_derivable : Derivable fc Γ φ → StarDerivable fc (ofCtx Γ) (ofFormula φ)`.
-  - [ ] Four row corollaries `star_backward_base/dense/discrete/dedekind` at `Γ = []`.
-  - [ ] Create the aggregator `FormalSystem/StarLanguage.lean` importing `Formula`, `Axioms`,
+  - [x] Four row corollaries `star_backward_base/dense/discrete/dedekind` at `Γ = []`.
+  - [x] Create the aggregator `FormalSystem/StarLanguage.lean` importing `Formula`, `Axioms`,
         `Derivation` (C8: sibling `X.lean` beside `X/`), with a module docstring mirroring
         `FormalSystem/BaseLanguage.lean`'s.
-  - [ ] Build: `lake build FormalSystem.StarLanguage`.
+  - [x] Build: `lake build FormalSystem.StarLanguage`.
 - **Territory:** creates `FormalSystem/StarLanguage/Derivation.lean`,
   `FormalSystem/StarLanguage.lean`.
 - **Estimated output:** ~230 lines. **Done when:** `starDerivable_of_derivable` builds
@@ -680,7 +680,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group E — L⋆ soundness (Phases 5.1-5.4)**
 
-### Phase 5.1: Atomization — encoding, `atomize`, `atomModel`, transfer lemma, swap commutation [NOT STARTED]
+### Phase 5.1: Atomization — encoding, `atomize`, `atomModel`, transfer lemma, swap commutation [IN PROGRESS]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/Atomization.lean`, the single
   lemma that discharges all 45 TM⁺ schemata over L⋆ (535 §8.2).
 - **Tasks:**
