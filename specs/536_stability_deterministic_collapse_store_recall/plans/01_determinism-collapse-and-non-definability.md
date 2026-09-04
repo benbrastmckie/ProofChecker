@@ -447,29 +447,31 @@ means frame-specific content leaked into the generic layer.
 
 ---
 
-### Phase 6: `satSet` and the generic state-set bridge theorem [NOT STARTED]
+### Phase 6: `satSet` and the generic state-set bridge theorem [COMPLETED]
 
 **Goal**: The one real proof obligation of deliverable (b): truth over an (H1)+(H2) frame depends
 only on the world state of evaluation.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Independence/StateSetTruth.lean`.
-- [ ] Define `satSet (V : ℝ → Atom → Prop) : StarFormula → Set ℝ` by the report §5.4 recursion:
+- [x] Create `FormalSystem/Metalogic/Independence/StateSetTruth.lean`.
+- [x] Define `satSet (V : ℝ → Atom → Prop) : StarFormula → Set ℝ` by the report §5.4 recursion:
       `atom ↦ {w | V w p}`, `bot ↦ ∅`, `imp ↦ (satSet φ)ᶜ ∪ satSet ψ`,
       `box ↦ univ if satSet φ = univ else ∅`, `stab ↦ satSet φ`, and the `untl`/`snce` interval
       forms.
-- [ ] Resolve the `box` decidability question: `open scoped Classical` (as `StarTruth.lean` does) or
-      the `= univ ∨ = ∅` disjunction encoding. Prefer the disjunction if `Decidable` friction
-      appears, and re-check the Phase 7 `#print axioms` pin either way (C4).
-- [ ] Prove the bridge: for any frame satisfying (H1) and (H2), any `M`, total `τ`, and `x`,
+- [x] Resolve the `box` decidability question. *(deviation: altered — neither option was needed.
+      The clause is written as the argument-ignoring set `{_w | ∀ v, v ∈ satSet V φ}`, which is
+      extensionally the `univ`/`∅` split but requires no set-equality decision, so no `Classical`
+      of any kind enters the definition. The `atom` case was additionally rewritten off
+      `Exists.choose` for the same reason.)*
+- [x] Prove the bridge: for any frame satisfying (H1) and (H2), any `M`, total `τ`, and `x`,
       `StarTruthAt M τ x φ ↔ τ.states x _ ∈ satSet M.valuation φ`, by induction on `StarFormula` with
       the history universally quantified **inside** the induction (the `Independence/` house style,
       per that directory's README) so the `box` case can apply the IH.
-- [ ] The `stab` case is `S_{⊡φ} = S_φ` — one line, and it holds for **both** frames for different
+- [x] The `stab` case is `S_{⊡φ} = S_φ` — one line, and it holds for **both** frames for different
       reasons: over F° because `σ ∈ ⟨τ⟩_x` are exactly the histories with `σ(x) = τ(x)` and truth
       depends only on that state; over F¹ because `⟨τ⟩_x = {τ}` by Phase 1's bridge. Docstring both,
       and note that the F¹ reason uses only the choice-free (⇒) half (C4).
-- [ ] Derive the validity corollary: `F.StarValidOn φ ↔ ∀ V, satSet V φ = univ`.
+- [x] Derive the validity corollary: `F.StarValidOn φ ↔ ∀ V, satSet V φ = univ`.
 
 **Timing**: 2 hours
 
