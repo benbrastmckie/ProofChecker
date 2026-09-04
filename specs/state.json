@@ -2240,7 +2240,7 @@
     {
       "project_number": 529,
       "project_name": "ci_linter_and_invariant_gates",
-      "status": "researched",
+      "status": "planned",
       "task_type": "general",
       "topic": "metalogic",
       "priority": "medium",
@@ -2265,12 +2265,17 @@
         "FormalSystem/Semantics/FrameClassValidity.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-04T06:33:45Z",
+      "last_updated": "2026-09-04T06:42:16Z",
       "artifacts": [
         {
           "path": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
           "type": "report",
           "summary": "Verifies all MEASURED STATE claims (all hold, with one correction: the D-01 simp loop appears already fixed), and grounds CI/linter wiring in verified mechanics: native lintDriver := \"batteries/runLinter\" (tested live, zero new files) supersedes the review's hand-rolled RunLinter sketch; lean-action's lint: true hard-fails via lake check-lint if lintDriver is not configured first; CSLib's Init.lean + ImportGraph-based CheckInitImports.lean is directly portable (ImportGraph is already an inherited transitive dependency); precise assert_not_exists targets for G-15; exact scope/counts for the D-18, E-09, and E-06 mechanical fixes."
+        },
+        {
+          "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
+          "type": "plan",
+          "summary": "11 phases in 8 dependency waves: baseline/D-01 re-verification, lintDriver+CI atomic batch, C16 linter check, G-15 assert_not_exists, C9/C14 widening plus the two stale-doc fixes, readme-lint Check 4, reporting-only C17/C18/C19, the Init.lean linter root, and a final acceptance gate."
         }
       ],
       "session_id": "sess_1788503051_6873ef_529"

@@ -1,0 +1,18 @@
+{
+  "status": "planned",
+  "phase": "plan",
+  "dispatch_seq": 2,
+  "summary": "Created an 11-phase, ~13-hour implementation plan covering all eight delegated work items. Both sequencing constraints are encoded: lintDriver and ci.yml's lint: true land in one atomic-batch phase (Phase 2), and a build-backed D-01 simp-loop re-verification gate (Phase 1) precedes any phase that makes simpNF blocking.",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
+      "summary": "11 phases in 8 dependency waves: baseline/D-01 re-verification, lintDriver+CI atomic batch, C16 linter check, G-15 assert_not_exists, C9/C14 widening plus the two stale-doc fixes, readme-lint Check 4, reporting-only C17/C18/C19, the Init.lean linter root, and a final acceptance gate."
+    }
+  ],
+  "phases_completed": 0,
+  "phases_total": 11,
+  "blockers": [],
+  "sorry_inventory": [],
+  "continuation_path": null
+}
