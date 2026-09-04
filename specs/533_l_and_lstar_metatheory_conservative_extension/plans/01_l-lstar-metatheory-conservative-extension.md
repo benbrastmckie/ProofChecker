@@ -1,7 +1,7 @@
 # Implementation Plan: L and L⋆ metatheory and conservative extension over L⁺
 
 - **Task**: 533 - l_and_lstar_metatheory_conservative_extension
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 32 hours (16 leaf phases, 8 dependency waves, ~3,300 lines of Lean)
 - **Dependencies**: 535 (binding axiom set and corrections; satisfied — its report and probes are read below)
 - **Research Inputs**:
@@ -326,31 +326,31 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group A — L side: the H/G-fragment logic (Phases 1.1-1.2)**
 
-### Phase 1.1: `TMFrag` — fragment logic, soundness, completeness, strict inclusion [NOT STARTED]
+### Phase 1.1: `TMFrag` — fragment logic, soundness, completeness, strict inclusion [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Fragment.lean` defining the H/G-fragment
   of TM⁺ and transferring soundness and completeness through `blValidIn_iff_validIn_tr`.
 - **Tasks:**
-  - [ ] `def TMFrag (fc : FrameClass) (φ : BLFormula) : Prop := ProofSystem.Derivable fc [] (tr φ)`
+  - [x] `def TMFrag (fc : FrameClass) (φ : BLFormula) : Prop := ProofSystem.Derivable fc [] (tr φ)`
         with a docstring naming it "the H/G-fragment of TM⁺" and stating why it, not TM, is the
         complete logic of `BLValidIn` (cite `tmComplete_iff_forward`).
-  - [ ] `theorem tmFrag_sound {fc} (φ) : TMFrag fc φ → BLValidIn fc φ` — from `soundness_validIn`
+  - [x] `theorem tmFrag_sound {fc} (φ) : TMFrag fc φ → BLValidIn fc φ` — from `soundness_validIn`
         (`Soundness.lean:1316`) and `(blValidIn_iff_validIn_tr fc φ).mpr`.
-  - [ ] `theorem tmFrag_complete {fc} (engine : WeakCompleteness fc) (φ) : BLValidIn fc φ → TMFrag fc φ`;
+  - [x] `theorem tmFrag_complete {fc} (engine : WeakCompleteness fc) (φ) : BLValidIn fc φ → TMFrag fc φ`;
         `theorem tmFrag_iff_blValidIn (engine) (φ) : TMFrag fc φ ↔ BLValidIn fc φ`.
-  - [ ] Four rows `tmFrag_complete_base/dense/discrete/dedekind` from
+  - [x] Four rows `tmFrag_complete_base/dense/discrete/dedekind` from
         `completeness_base/dense/discrete/dedekind`.
-  - [ ] `theorem tm_le_tmFrag {fc} (φ) : BaseLanguage.Derivable fc [] φ → TMFrag fc φ` — the
+  - [x] `theorem tm_le_tmFrag {fc} (φ) : BaseLanguage.Derivable fc [] φ → TMFrag fc φ` — the
         `Γ = []` instance of `derivable_translate` (`Backward.lean:88`; confirm the context
         shape `trCtx [] = []` reduces).
-  - [ ] `theorem tmFrag_z1_discrete (p) : TMFrag .Discrete (Z1 (.atom p))` (= `z1_translate`);
+  - [x] `theorem tmFrag_z1_discrete (p) : TMFrag .Discrete (Z1 (.atom p))` (= `z1_translate`);
         `theorem tm_lt_tmFrag_discrete : (∀ φ, BaseLanguage.Derivable .Discrete [] φ → TMFrag .Discrete φ) ∧ ∃ φ, TMFrag .Discrete φ ∧ ¬ BaseLanguage.Derivable .Discrete [] φ`
         from `not_bl_derivable_z1` (`Z1Countermodel.lean:175`).
-  - [ ] `theorem tmComplete_iff_tmFrag_le_tm {fc} : TMComplete fc ↔ ∀ φ, TMFrag fc φ → BaseLanguage.Derivable fc [] φ`
+  - [x] `theorem tmComplete_iff_tmFrag_le_tm {fc} : TMComplete fc ↔ ∀ φ, TMFrag fc φ → BaseLanguage.Derivable fc [] φ`
         given an engine (one line from `tmComplete_iff_forward`; `Forward` is unfolded, never
         asserted).
-  - [ ] Inline `example`s: `tmFrag_iff_blValidIn completeness_base` typechecks; `#print axioms
+  - [x] Inline `example`s: `tmFrag_iff_blValidIn completeness_base` typechecks; `#print axioms
         tm_lt_tmFrag_discrete` shows only `propext`, `Classical.choice`, `Quot.sound`.
-  - [ ] Build: `lake build FormalSystem.Metalogic.Conservativity.Fragment`.
+  - [x] Build: `lake build FormalSystem.Metalogic.Conservativity.Fragment`.
 - **Territory:** creates `FormalSystem/Metalogic/Conservativity/Fragment.lean` only.
 - **Estimated output:** ~150 lines. **Done when:** the module builds sorry-free and every
   theorem above is present with the stated statement shape.
