@@ -809,36 +809,36 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group F — L⋆ conservativity (Phase 6)**
 
-### Phase 6: Forward conservativity via the engines, composed rows, `tmFrag_iff_star`, and `Conservativity/Star` wiring [IN PROGRESS]
+### Phase 6: Forward conservativity via the engines, composed rows, `tmFrag_iff_star`, and `Conservativity/Star` wiring [COMPLETED]
 - **Goal:** Land `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` and the
   `Conservativity/Star.lean` aggregator; wire into `Conservativity.lean` with the "Star"
   docstring section.
 - **Tasks:**
-  - [ ] `theorem forward_star {fc} (engine : WeakCompleteness fc) (φ : Formula) : StarDerivable fc [] (ofFormula φ) → Derivable fc [] φ`
+  - [x] `theorem forward_star {fc} (engine : WeakCompleteness fc) (φ : Formula) : StarDerivable fc [] (ofFormula φ) → Derivable fc [] φ`
         := `engine φ ((starValidIn_ofFormula_iff fc φ).mp (star_soundness_validIn h))` — the
         compiled `forward_star_of_sound` shape from the 533 report Appendix A, now with real
         soundness.
-  - [ ] Four rows `forward_star_base/dense/discrete/dedekind` from the engines
+  - [x] Four rows `forward_star_base/dense/discrete/dedekind` from the engines
         (`StrongCompleteness.lean:879/987/1101/775`).
-  - [ ] `theorem starDerivable_ofFormula_iff {fc} (engine) (φ) : StarDerivable fc [] (ofFormula φ) ↔ Derivable fc [] φ`
+  - [x] `theorem starDerivable_ofFormula_iff {fc} (engine) (φ) : StarDerivable fc [] (ofFormula φ) ↔ Derivable fc [] φ`
         (backward from Phase 4.2, forward from above) — **proof-theoretic conservativity of TM⋆
         over TM⁺, both directions**; four instantiated rows.
-  - [ ] Composed L ⊂ L⋆ backward rows: `theorem star_of_tm {fc} (φ : BLFormula) : BaseLanguage.Derivable fc [] φ → StarDerivable fc [] (ofFormula (tr φ))`
+  - [x] Composed L ⊂ L⋆ backward rows: `theorem star_of_tm {fc} (φ : BLFormula) : BaseLanguage.Derivable fc [] φ → StarDerivable fc [] (ofFormula (tr φ))`
         (`derivable_translate` then `starDerivable_of_derivable`), four class rows; docstring
         stating that the forward direction for this pair inherits the L ⊂ L⁺ status
         (refuted at Base/Discrete, open at Dense/Dedekind) and is not asserted (Postmortem
         rule 1).
-  - [ ] `theorem tmFrag_iff_star {fc} (engine) (φ : BLFormula) : TMFrag fc φ ↔ StarDerivable fc [] (ofFormula (tr φ))`
+  - [x] `theorem tmFrag_iff_star {fc} (engine) (φ : BLFormula) : TMFrag fc φ ↔ StarDerivable fc [] (ofFormula (tr φ))`
         (one line from `starDerivable_ofFormula_iff`).
-  - [ ] Create `FormalSystem/Metalogic/Conservativity/Star.lean` (C8 sibling aggregator)
+  - [x] Create `FormalSystem/Metalogic/Conservativity/Star.lean` (C8 sibling aggregator)
         importing `Atomization`, `AxiomValidity`, `StarSoundness`, `Forward`, with a module
         docstring: what TM⋆ is, the five files, the exact statement "`Forward⋆` (TM⋆ over TM⁺)
         holds at all four classes, unlike `Forward` (TM⁺ over TM)", and the open items (TM⋆
         completeness, decidability) named as open without promises.
-  - [ ] Add `import FormalSystem.Metalogic.Conservativity.Star` to
+  - [x] Add `import FormalSystem.Metalogic.Conservativity.Star` to
         `FormalSystem/Metalogic/Conservativity.lean` and a "## The stability extension L⋆ (Star)"
         docstring section there (5-10 lines pointing at `Star.lean`).
-  - [ ] Build: `lake build FormalSystem.Metalogic` (the aggregator's dependents).
+  - [x] Build: `lake build FormalSystem.Metalogic` (the aggregator's dependents).
 - **Territory:** creates `Conservativity/Star/Forward.lean`, `Conservativity/Star.lean`; edits
   `FormalSystem/Metalogic/Conservativity.lean` (import + docstring section).
 - **Estimated output:** ~200 lines. **Done when:** `starDerivable_ofFormula_iff` builds at all
@@ -850,7 +850,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group G — documentation and invariants (Phase 7)**
 
-### Phase 7: Documentation, README rows, invariants, and root reachability [NOT STARTED]
+### Phase 7: Documentation, README rows, invariants, and root reachability [IN PROGRESS]
 - **Goal:** Bring every inventory and count into agreement with the tree and close the task
   with the full gate set green.
 - **Tasks:**

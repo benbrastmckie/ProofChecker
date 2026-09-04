@@ -11,6 +11,7 @@ import FormalSystem.Metalogic.Conservativity.SpWitness
 import FormalSystem.Metalogic.Conservativity.Z1Countermodel
 import FormalSystem.Metalogic.Conservativity.Fragment
 import FormalSystem.Metalogic.Conservativity.FragmentCompactness
+import FormalSystem.Metalogic.Conservativity.Star
 
 /-!
 # The TM/TM⁺ conservativity bridge — backward direction
@@ -158,6 +159,19 @@ base-language consequence relation transfers along `tr` at `.Base` and `.Dense` 
 (`blCompactBase`, `blCompactDense`, `Conservativity/FragmentCompactness.lean`); the Discrete and
 Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
 
+## The stability extension L⋆ (Star)
+
+The other extension direction, L⁺ ⊂ L⋆ (L⁺ plus the paper's stability modal `⊡`, line 1114;
+`FormalSystem/StarLanguage/`), is the mirror image of L ⊂ L⁺ with the hard direction *available*:
+`Conservativity/Star.lean` (aggregating `Star/{Atomization,AxiomValidity,StarSoundness,Forward}.lean`)
+proves soundness of TM⋆ at every frame class and **proof-theoretic conservativity of TM⋆ over
+TM⁺ in both directions** — `starDerivable_ofFormula_iff : TM⋆ ⊢[fc] ofFormula φ ↔ TM⁺ ⊢[fc] φ`
+at all four classes. Backward is the embedding of derivations; forward is TM⋆ soundness plus the
+truth-transfer bridge `starValidIn_ofFormula_iff` plus the TM⁺ completeness engine — the very
+composition that fails for L ⊂ L⁺ because TM is incomplete. So `Forward⋆` holds everywhere,
+unlike `Forward`; the composed pair L ⊂ L⋆ (`star_of_tm`) inherits this module's forward status
+unchanged. TM⋆ completeness and decidability are open and not asserted anywhere.
+
 ## CED / CEC — open
 
 No counterexample analogous to the CEB and CEF witnesses is known for CED. CEC inherits that
@@ -254,7 +268,7 @@ truth-transfer bridge `truthAt_tr`. This module and everything under
 
 **This file is the aggregator, and it holds no declarations.** It carries the narrative above —
 the forward-conservativity prohibition, the paper-anchor record, and the per-row status of CEB
-and CEF — and re-exports the seven modules that make up the BL-vs-TM story:
+and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺-vs-TM⋆ story:
 
 | Module | Contents |
 |--------|----------|
@@ -265,12 +279,14 @@ and CEF — and re-exports the seven modules that make up the BL-vs-TM story:
 | `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteDiscrete_refuted` |
 | `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.Discrete` |
 | `Conservativity/FragmentCompactness.lean` | `BLCompact`, `blCompactBase`, `blCompactDense` — base-language compactness transferred along `tr` |
+| `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`starDerivable_ofFormula_iff`) |
 
 **The children must never import this file.** Each imports
 `FormalSystem.Metalogic.Conservativity.Backward` directly; importing the aggregator from a child
 is an import cycle, because the aggregator imports every child. The chain the children preserve
 is `Backward ← BaseLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ←
-FragmentCompactness`, with `SpWitness` hanging off `BaseLanguageSoundness`.
+FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness` and the
+`Star/` chain `Atomization ← AxiomValidity ← StarSoundness ← Forward` hanging off `Fragment`.
 
 The namespace is unchanged by the reorganization: `Backward.lean` still opens
 `namespace FormalSystem.Metalogic.Conservativity`, so every declaration keeps its
