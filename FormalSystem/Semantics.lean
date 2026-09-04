@@ -30,6 +30,10 @@ import FormalSystem.Semantics.Ultraproduct.Los
 import FormalSystem.Semantics.Validity
 import FormalSystem.Semantics.BLValidity
 import FormalSystem.Semantics.BLSchemaValidity
+import FormalSystem.Semantics.StarTruth
+import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.StarPasting
+import FormalSystem.Semantics.StarNonValidities
 import FormalSystem.Semantics.DurationClassification
 import FormalSystem.Semantics.LexCarrier
 import FormalSystem.Semantics.IntTransfer
@@ -111,6 +115,22 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
 - `BLValidity`: the base-language mirrors — `BLValid`, `BLSemanticConsequence`, `BLValidDense`,
   `BLValidDiscrete` and `BLValidDedekind`, binder for binder against `BLTruthAt`; there is
   deliberately no density-free `BLValidComplete`, which would be refutable
+- `StarTruth`: the truth recursion for the language L⋆ (L⁺ plus the stability modal `⊡`,
+  `FormalSystem/StarLanguage/Formula.lean`) — `SameStateAt` (the paper's `⟨τ⟩_x`, line 1108) and
+  `StarTruthAt`, whose seventh clause is the paper's `($\Stability$)` clause (line 1114); the
+  `StarTruth.*` clause lemmas, the S5 validities of `⊡`, and `stab_state_only` (`⊡φ` depends on
+  the world state alone)
+- `StarValidity`: the L⋆ mirrors of `Validity` — `StarValidOnFrames` (the frame-predicate
+  primitive), `StarValidIn`, `StarValid` and the per-class abbreviations — plus the truth-transfer
+  bridge `starTruthAt_ofFormula` and `starValidIn_ofFormula_iff`, the semantic conservativity of
+  L⋆ over L⁺ at every frame class
+- `StarPasting`: the history-pasting lemma (`paste`: two total histories sharing a state at `t`
+  paste into a total history, by *Compositionality* and the converse convention alone), the
+  purity congruences, and the pasting validities PS/US/FS/GS and their past mirrors — the
+  `⊡`/tense interaction principles the S5 axioms of `⊡` miss
+- `StarNonValidities`: the five refutations on `natFrame` over `ℤ` (`⊡p → □⊡p`, `G⊡p → ⊡Gp`,
+  `⊡GPp → G⊡Pp`, *Determined* `Fp → ⊡Fp` over a non-deterministic frame, `P⊡p → ⊡Pp`), which
+  bound the axiom set from above
 - `DurationClassification`: Hölder classification of Dedekind-complete duration groups --
   completeness implies Archimedean, and the discrete-or-dense dichotomy pinning the discrete
   branch to `ℤ`

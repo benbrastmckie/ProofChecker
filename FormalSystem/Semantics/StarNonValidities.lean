@@ -15,7 +15,7 @@ Machine-checked refutations of the candidate `⊡`/tense interaction principles 
 axioms of TM⋆ (`StarLanguage/Axioms.lean`). Every refutation lives on one countermodel: the
 permissive frame `natFrame` over `ℤ` (`Semantics/TaskFrame.lean`), where every function
 `ℤ → ℕ` is a total history, so `⟨τ⟩_t` is as large as it can be; the valuation makes every atom
-true exactly at world state `0`.
+true at world state `0` and nowhere else.
 
 | Name | Refuted schema | What it shows |
 |------|----------------|---------------|
@@ -71,7 +71,7 @@ def natHist (f : ℤ → ℕ) : WorldHistory NF :=
 
 theorem natHist_isTotal (f : ℤ → ℕ) : (natHist f).IsTotal := WorldHistory.ofTotal_isTotal _ _ _
 
-/-- Every atom is true exactly at world state `0`. -/
+/-- Every atom is true at world state `0` and nowhere else. -/
 def natModel : TaskModel NF where
   valuation := fun (n : ℕ) _ => n = 0
 

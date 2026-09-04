@@ -20,6 +20,10 @@ Task frame semantics for TM bimodal logic.
 | Validity.lean | Validity and semantic consequence |
 | BLValidity.lean | `BLValid`, `BLSemanticConsequence`, `BLValidDense`, `BLValidDiscrete`, `BLValidDiscreteSucc`, `BLValidDedekind` — binder-for-binder base-language mirrors of Validity.lean |
 | BLSchemaValidity.lean | DF/DN semantic lemmas (Lemmas B/C) and DF's `PredOrder` past-dual, consumed by `Metalogic/Conservativity/SpWitness.lean` and `bl_soundness_discrete_succ` |
+| StarTruth.lean | `SameStateAt` (the paper's `⟨τ⟩_x`) and `StarTruthAt` — the truth recursion for L⋆ (L⁺ plus the stability modal `⊡`, `StarLanguage/Formula.lean`), the `StarTruth.*` clause lemmas, the S5 validities of `⊡`, and `stab_state_only` |
+| StarValidity.lean | `StarValidOnFrames`, `StarValidIn`, `StarValid` and per-class abbreviations — L⋆ mirrors of Validity.lean; `starTruthAt_ofFormula` and `starValidIn_ofFormula_iff`, semantic conservativity of L⋆ over L⁺ at every frame class |
+| StarPasting.lean | `paste` — two total histories sharing a state paste into a total history — the purity congruences, and the pasting validities PS/US/FS/GS with their past mirrors |
+| StarNonValidities.lean | The five refutations on `natFrame` over ℤ that bound the `⊡` axiom set from above (`⊡p → □⊡p`, `G⊡p → ⊡Gp`, `⊡GPp → G⊡Pp`, *Determined*, `P⊡p → ⊡Pp`) |
 | DurationClassification.lean | Classification of Dedekind-complete duration groups: discrete (`≃+o ℤ`) or densely ordered; also `duration_dense_or_least_pos`, the Archimedean-free order dichotomy |
 | LexCarrier.lean | `LexInt`: `SuccOrder`/`PredOrder` instances, `isLeast_pos`, and the three non-Archimedean theorems for `α ×ₗ ℤ` at an arbitrary ordered abelian group `α` — instantiated at `ℚ` for the CEF countermodel and at `ℤ` for the `Sat .Discrete` separation |
 | FrameAxioms.lean | The frame axioms (nullity, compositionality, reflection) as standalone statements |

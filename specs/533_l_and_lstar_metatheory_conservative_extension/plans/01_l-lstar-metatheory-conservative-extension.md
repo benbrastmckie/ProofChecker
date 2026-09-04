@@ -579,19 +579,19 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 - **Verification Tier:** local
 - **Scope Hypothesis:** five refutations, ~150 lines, transcribed from probes Part D (`natFrame` over ℤ); the count is fixed by the probes file — no new refutation is added here (the DAG-frame refutation the 535 report leaves UNVERIFIED belongs to a follow-up, not this phase).
 
-### Phase 3.5: `Semantics.lean` aggregator wiring and docstring rows [IN PROGRESS]
+### Phase 3.5: `Semantics.lean` aggregator wiring and docstring rows [COMPLETED]
 - **Goal:** Make the four `Semantics/Star*.lean` modules reachable from the root and document
   them in the aggregator, in one owner phase.
 - **Tasks:**
-  - [ ] Add `import FormalSystem.Semantics.StarTruth`, `…StarValidity`, `…StarPasting`,
+  - [x] Add `import FormalSystem.Semantics.StarTruth`, `…StarValidity`, `…StarPasting`,
         `…StarNonValidities` to `FormalSystem/Semantics.lean` next to the `BLTruth`/`BLValidity`
         imports (lines 24, 31-32).
-  - [ ] Add four docstring rows to the aggregator's module list (mirror the `BLTruth`/
+  - [x] Add four docstring rows to the aggregator's module list (mirror the `BLTruth`/
         `BLValidity` rows at lines 106-112), naming the paper anchor (line 1114) and the
         pasting lemma.
-  - [ ] Add a "Star" paragraph to `FormalSystem/Semantics/README.md` if it carries a module
+  - [x] Add a "Star" paragraph to `FormalSystem/Semantics/README.md` if it carries a module
         inventory (check; C5/C12 require every listed path to resolve).
-  - [ ] Build: `lake build FormalSystem.Semantics` and its direct dependents
+  - [x] Build: `lake build FormalSystem.Semantics` and its direct dependents
         (`FormalSystem.Metalogic` is the transitive consumer; a full `lake build` is acceptable
         here since nothing else changes).
 - **Territory:** edits `FormalSystem/Semantics.lean` and (if present in inventory form)
@@ -605,7 +605,7 @@ disjoint. Group labels below are prose only; the `### Phase` headings are the le
 
 **Group D — L⋆ proof system (Phases 4.1-4.2)**
 
-### Phase 4.1: `StarAxiom` — closed inductive with the TM⁺ schemata over `StarFormula` and the eight ⊡ constructors [NOT STARTED]
+### Phase 4.1: `StarAxiom` — closed inductive with the TM⁺ schemata over `StarFormula` and the eight ⊡ constructors [IN PROGRESS]
 - **Goal:** Land `FormalSystem/StarLanguage/Axioms.lean` defining the TM⋆ axiom schemata
   exactly as 535 §8.1 prescribes, plus `minFrameClass`.
 - **Tasks:**
