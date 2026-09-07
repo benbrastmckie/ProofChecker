@@ -212,20 +212,23 @@ The Lake library root is a **pair** of files, not one: `lean_lib FormalSystem` s
 — the file `FormalSystem/FormalSystem.lean`. That self-named indirection is load-bearing, and the
 invariant check allowlists it by name (check C8).
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem rows=loose -->
 | File | Lines | Description |
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
-| `FormalSystem.lean` | 105 | Library aggregator: imports all submodules for unified access |
-| `Automation.lean` | 102 | Re-export for Automation submodule |
-| `BaseLanguage.lean` | 34 | Re-export for BaseLanguage submodule |
-| `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
+| `Automation.lean` | 103 | Re-export for Automation submodule |
+| `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
-| `Metalogic.lean` | 199 | Re-export for Metalogic submodule |
-| `ProofSystem.lean` | 88 | Re-export for ProofSystem submodule |
-| `Semantics.lean` | 137 | Re-export for Semantics submodule |
-| `Syntax.lean` | 75 | Re-export for Syntax submodule |
-| `Theorems.lean` | 88 | Re-export for Theorems submodule |
+| `FormalSystem.lean` | 106 | Library aggregator: imports all submodules for unified access |
+| `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
+| `Metalogic.lean` | 286 | Re-export for Metalogic submodule |
+| `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
+| `Semantics.lean` | 236 | Re-export for Semantics submodule |
+| `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
+| `Syntax.lean` | 76 | Re-export for Syntax submodule |
+| `Theorems.lean` | 90 | Re-export for Theorems submodule |
+<!-- END GENERATED -->
 
 ### Layer 0 — Foundation
 

@@ -97,7 +97,10 @@ RUN_BUILD=1
 #
 # Marker options (all optional except dir=):
 #   dir=<path>              directory the inventory covers, repo-relative
-#   rows=loose|subdirs|both which rows to emit (default both)
+#   rows=loose|subdirs|both|totals
+#                           which rows to emit (default both); `totals` emits the
+#                           live/archived file and line rollup for dir= instead
+#                           of a per-file listing
 #   filter=all|aggregators|non-aggregators
 #                           restrict the loose rows; an aggregator is a loose
 #                           `X.lean` with a sibling directory `X/` (default all)
@@ -114,6 +117,15 @@ RUN_BUILD=1
 # whose file no longer exists is dropped. A row naming a file outside the
 # scanned directory (`../FormalSystem.lean`) is kept as a pinned row with its
 # numbers refreshed, as long as the path still resolves.
+#
+# A table that is deliberately NOT generated -- one ordered by the layering rather
+# than alphabetically, or carrying no counts at all -- registers itself instead with
+#
+#     <!-- INVENTORY: hand-maintained (dir=FormalSystem/Semantics) -->
+#
+# placed immediately above it. Registration buys exemption from generation, never
+# from being checked: this mode still asserts that such a table has a row for every
+# live file and subdirectory and no row for anything else.
 #
 # Two modes:
 #   --emit-inventory           rewrite every registered block in place
@@ -134,6 +146,7 @@ CHECK = os.environ.get("EMIT_CHECK") == "1"
 
 BEGIN_RE = re.compile(r'^<!--\s*BEGIN GENERATED:\s*inventory\s*(?P<opts>[^>]*?)\s*-->\s*$')
 END_RE = re.compile(r'^<!--\s*END GENERATED\s*-->\s*$')
+HAND_RE = re.compile(r'^<!--\s*INVENTORY:\s*hand-maintained\s*\(dir=(?P<dir>[^)\s]+)\)')
 SEP_CELL_RE = re.compile(r'^:?-{2,}:?$')
 LINK_RE = re.compile(r'^\[(?P<label>.*)\]\((?P<href>[^)]*)\)$')
 TODO_DESC = "<!-- TODO: add description -->"
@@ -190,6 +203,19 @@ def scan(directory, opts):
 
     subdir_names = {os.path.basename(p) for p in live_subdirs(directory)}
     out = []
+    if rows == "totals":
+        live = live_files(directory, ".lean")
+        archived = [f for f in
+                    (os.path.join(r, n)
+                     for r, _d, ns in os.walk(directory) for n in ns)
+                    if f.endswith(".lean") and (os.sep + "Boneyard" + os.sep) in f]
+        out.append(("Live `.lean` files", ["{:,}".format(len(live))], "literal"))
+        out.append(("Live lines", ["{:,}".format(sum(line_count(f) for f in live))], "literal"))
+        if archived:
+            out.append(("Archived `.lean` files", ["{:,}".format(len(archived))], "literal"))
+            out.append(("Archived lines",
+                        ["{:,}".format(sum(line_count(f) for f in archived))], "literal"))
+        return out
     if rows in ("loose", "both"):
         for path in live_loose_files(directory, ".lean"):
             name = os.path.basename(path)
@@ -279,7 +305,13 @@ def render_block(opts, existing_lines):
 
     out = [header, sep]
     for key, nums, link in rows:
-        label = "[`%s`](%s)" % (key, link) if link else "`%s`" % key
+        if link == "literal":
+            # A rollup row: the first cell is a metric name, not a path.
+            label = key
+        elif link:
+            label = "[`%s`](%s)" % (key, link)
+        else:
+            label = "`%s`" % key
         cells = [label] + nums
         if want_desc:
             cells.append(descriptions.get(key, TODO_DESC))
@@ -287,10 +319,44 @@ def render_block(opts, existing_lines):
     return out
 
 
+def audit_hand_maintained(target, lines):
+    """A table registered as hand-maintained must still be exhaustive.
+
+    Registration buys exemption from *generation* (a deliberate reading order, no
+    line counts), never from being checked: the failure mode a hand table has left
+    is a file that appeared or moved and never made it into the list.
+    """
+    problems = []
+    for i, ln in enumerate(lines):
+        m = HAND_RE.match(ln.strip())
+        if not m:
+            continue
+        directory = m.group("dir")
+        j = i
+        while j < len(lines) and not lines[j].strip().startswith("|"):
+            j += 1
+        have = set()
+        while j < len(lines) and lines[j].strip().startswith("|"):
+            cells = split_row(lines[j])
+            if cells and not is_separator(cells):
+                have.add(row_key(cells[0]))
+            j += 1
+        want = {os.path.basename(f) for f in live_loose_files(directory, ".lean")}
+        want |= {os.path.basename(d) + "/" for d in live_subdirs(directory)
+                 if live_files(d, ".lean")}
+        for missing in sorted(want - have):
+            problems.append("%s: %s is live but has no row" % (target, missing))
+        for phantom in sorted(k for k in have - want if k.endswith((".lean", "/"))):
+            problems.append("%s: row `%s` names nothing live" % (target, phantom))
+    return problems
+
+
 changed = []
+hand_problems = []
 for target in markdown_targets():
     with open(target, encoding="utf-8") as fh:
         lines = fh.read().split("\n")
+    hand_problems.extend(audit_hand_maintained(target, lines))
     out = []
     i = 0
     touched = False
@@ -323,13 +389,20 @@ for target in markdown_targets():
             fh.write("\n".join(out))
 
 if CHECK:
+    if hand_problems:
+        print("FAIL  INV  %d hand-maintained inventory row problem(s)" % len(hand_problems))
+        for m in hand_problems:
+            print("            %s" % m)
+        if not changed:
+            sys.exit(1)
     if changed:
         print("FAIL  INV  %d file(s) carry a stale generated inventory block" % len(changed))
         for t in changed:
             print("            %s" % t)
         print("            run: bash scripts/check-module-invariants.sh --emit-inventory")
         sys.exit(1)
-    print("PASS  INV  every generated inventory block is current")
+    print("PASS  INV  every generated inventory block is current, "
+          "every hand-maintained one is exhaustive")
     sys.exit(0)
 
 if changed:

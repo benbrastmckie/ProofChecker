@@ -86,3 +86,7 @@ indent.log
 /data
 /.agent-logs
 /other
+
+# Python bytecode caches (scripts/lib/ is imported by the invariant harness)
+__pycache__/
+*.pyc

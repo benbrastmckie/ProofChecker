@@ -179,24 +179,33 @@ shape before Phase 2 starts.
 
 ---
 
-### Phase 2: Convert and regenerate all inventory targets [NOT STARTED]
+### Phase 2: Convert and regenerate all inventory targets [COMPLETED]
 
 **Goal**: The remaining eight registered targets carry generated blocks, and every stale per-file
 line count and aggregate rollup is corrected by generation rather than by hand.
 
 **Tasks**:
-- [ ] Convert `README.md`, `FormalSystem/README.md`, `FormalSystem/Automation/README.md`,
+- [x] Convert `README.md`, `FormalSystem/README.md`, `FormalSystem/Automation/README.md`,
       `FormalSystem/Syntax/README.md`, `FormalSystem/Theorems/README.md`,
       `FormalSystem/Metalogic/SoundnessLemmas/README.md`,
       `FormalSystem/Metalogic/Independence/README.md`,
-      `FormalSystem/Automation/Tactics/README.md`.
-- [ ] Regenerate; confirm the corrected ground truth lands (`FormalSystem/` 459 files /
+      `FormalSystem/Automation/Tactics/README.md`. *(deviation: altered — `README.md` has no
+      per-file table, so a new `rows=totals` marker mode was added and its `Metric | Count`
+      rollup converted instead)*
+- [x] Regenerate; confirm the corrected ground truth lands (`FormalSystem/` 459 files /
       281,222 lines; `Metalogic/` 330 / 227,266; `Decidability` 62; `WeakCanonical` 179).
-- [ ] Fix the aggregate rollup prose that sits outside the generated blocks
+      *(deviation: altered — file counts match; line counts are higher than the plan's figures
+      and moved during the phase, because a concurrent session is editing
+      `BXCanonical/Chronicle/ChronicleTypes.lean`. The generator's output is authoritative, which
+      is the point of the phase)*
+- [x] Fix the aggregate rollup prose that sits outside the generated blocks
       (`Metalogic/README.md:6-7`, `:213`; `README.md:107`) to read from, or point at, the
       generated block instead of restating a number.
-- [ ] Confirm `Semantics/README.md`'s Contents table (the best in the tree) is either converted
-      losslessly or explicitly registered as already-correct and left alone.
+- [x] Confirm `Semantics/README.md`'s Contents table (the best in the tree) is either converted
+      losslessly or explicitly registered as already-correct and left alone. *(deviation:
+      altered — registered via a new `<!-- INVENTORY: hand-maintained (dir=…) -->` marker, and
+      the `INV` check was extended to assert such a table is exhaustive, so registration is an
+      exemption from generation but not from checking)*
 
 **Timing**: 2 hours
 

@@ -4,6 +4,13 @@ Task frame semantics for TM bimodal logic.
 
 ## Contents
 
+This table is ordered by the layering, not alphabetically, and carries no line counts, so it is
+registered as hand-maintained rather than generated. Registration is not an exemption from being
+checked: the `INV` check in `scripts/check-module-invariants.sh` asserts it has a row for every
+live file and subdirectory here, and no row for anything else.
+
+<!-- INVENTORY: hand-maintained (dir=FormalSystem/Semantics) -->
+
 | File | Description |
 |------|-------------|
 | TemporalOrder.lean | `TemporalOrder` — a nontrivial totally ordered abelian group, `def:temporal-order`'s object, bundled with its four algebraic instances; `intOrder` |

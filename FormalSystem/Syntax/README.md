@@ -4,14 +4,16 @@ Core syntactic definitions for TM bimodal logic formulas.
 
 ## Modules
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Syntax -->
 | File | Lines | Description |
 |------|-------|-------------|
-| `Atom.lean` | 208 | `Atom`: Propositional atom type with decidable equality |
-| `BigConj.lean` | 49 | `bigConj`: Big conjunction over a list of formulas |
-| `Context.lean` | 204 | `Context`: Type alias for `List Formula` (proof contexts) |
-| `Formula.lean` | 566 | `Formula`: Inductive formula type with modal and temporal operators |
-| `Subformulas.lean` | 229 | `subformulas`: Subformula relation and listing function |
+| `Atom.lean` | 214 | `Atom`: Propositional atom type with decidable equality |
+| `BigConj.lean` | 55 | `bigConj`: Big conjunction over a list of formulas |
+| `Context.lean` | 210 | `Context`: Type alias for `List Formula` (proof contexts) |
+| `Formula.lean` | 851 | `Formula`: Inductive formula type with modal and temporal operators |
+| `Subformulas.lean` | 235 | `subformulas`: Subformula relation and listing function |
 | `SubformulaClosure/` | — | Subformula closure as `Finset` for BFMCS construction (3 files) |
+<!-- END GENERATED -->
 
 ## Key Definitions
 

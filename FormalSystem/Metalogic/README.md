@@ -3,9 +3,11 @@
 Soundness, completeness, and decidability for the bimodal logic TM, combining S5
 modality with linear temporal logic.
 
-This directory is the largest thing in the repository: **315 live `.lean` files**
-(226,146 lines), of which 179 sit under `WeakCanonical/` alone. Every count below excludes the
-archive — see [Counting Live Files](#counting-live-files).
+This directory is the largest thing in the repository, and `WeakCanonical/` alone is the
+largest thing in it. Every file and line count on this page is generated from the tree by
+`bash scripts/check-module-invariants.sh --emit-inventory` — the
+[Directory Inventory](#directory-inventory) is the rollup, and no number is restated in prose.
+Every count excludes the archive — see [Counting Live Files](#counting-live-files).
 
 ## Counting Live Files
 
@@ -26,12 +28,15 @@ bash scripts/check-module-invariants.sh --no-build   # structural checks only, n
 This is the central organizing question of the directory: there are **three**
 distinct routes to completeness, and they are siblings rather than layers.
 
-| Route | Directory | Files | Lines | Approach |
-|-------|-----------|------:|------:|----------|
-| Chronicle | `BXCanonical/` | 28 | 23,256 | Chronicle construction over a canonical chain; carries the flagship theorems |
-| Kamp/Reynolds | `WeakCanonical/` | 179 | 132,177 | Reflexive canonical model, separation, and the Kamp/Reynolds machinery |
-| Algebraic | `Algebraic/` | 5 | 2,887 | Lindenbaum–Tarski quotient algebra, the ultrafilter/MCS correspondence, and the flow-frame countermodel engine |
-| Independence (support) | `Independence/` | 3 | 1,097 | Axiom-independence models; not a completeness route, listed here so the inventory is exhaustive |
+| Route | Directory | Approach |
+|-------|-----------|----------|
+| Chronicle | `BXCanonical/` | Chronicle construction over a canonical chain; carries the flagship theorems |
+| Kamp/Reynolds | `WeakCanonical/` | Reflexive canonical model, separation, and the Kamp/Reynolds machinery |
+| Algebraic | `Algebraic/` | Lindenbaum–Tarski quotient algebra, the ultrafilter/MCS correspondence, and the flow-frame countermodel engine |
+| Independence (support) | `Independence/` | Axiom-independence models; not a completeness route, listed here so the inventory is exhaustive |
+
+Sizes for these four directories are in the [Directory Inventory](#directory-inventory), which
+is generated; they are deliberately not restated here.
 
 **`BXCanonical` is the wired entry point.** The flagship results — `completeness`,
 `completeness_dense` and `completeness_discrete` (`BXCanonical/Completeness.lean`),
@@ -173,8 +178,8 @@ sibling directory:
 | `StrongCompleteness.lean` | 1,124 | Strong/consequence completeness, including `completeness_dedekind`, and the two `FrameClass`-generic compactness reductions `strongCompleteness_of_compact` and `compact_of_modelExistence` |
 <!-- END GENERATED -->
 
-Plus the directory's own root `Metalogic.lean` (227 lines), which sits one level up,
-beside `Metalogic/`.
+Plus the directory's own root `Metalogic.lean`, which sits one level up, beside `Metalogic/`;
+its size is a row in [`FormalSystem/README.md`](../README.md)'s generated root-module table.
 
 Two rules keep this safe:
 
@@ -193,9 +198,10 @@ Two rules keep this safe:
 The one deliberate exception to the sibling rule is the Lake library root pair
 `FormalSystem.lean` + `FormalSystem/FormalSystem.lean` — *both* files, not one of them.
 `lean_lib FormalSystem` sets `srcDir := "."` and ``roots := #[`FormalSystem]`` (`lakefile.lean:15-19`),
-so module `FormalSystem` resolves to the **repository-root** `FormalSystem.lean` (50 lines), which
-in turn imports module `FormalSystem.FormalSystem` — the file `FormalSystem/FormalSystem.lean`
-(107 lines). That self-named indirection is load-bearing, not a convention violation. The
+so module `FormalSystem` resolves to the **repository-root** `FormalSystem.lean`, which
+in turn imports module `FormalSystem.FormalSystem` — the file `FormalSystem/FormalSystem.lean`.
+Both are rows in [`FormalSystem/README.md`](../README.md)'s generated root-module table.
+That self-named indirection is load-bearing, not a convention violation. The
 invariant check allowlists it by name (check C8; the allowlist entry is the inner file).
 
 ## Directory Inventory
@@ -214,20 +220,41 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,111 | Kamp/Reynolds route, including all of `Kamp/` |
 <!-- END GENERATED -->
 
-The eight directories total 296 files. C7's `Metalogic 315` rollup is 19 higher because it also
-counts the loose modules sitting directly in `Metalogic/` — the sibling aggregators plus
-`Soundness.lean`, `Compactness.lean`, `StrongCompleteness.lean` and the rest.
+C7's `Metalogic` rollup is larger than the sum of the table above, because it also counts the
+loose modules sitting directly in `Metalogic/` — the sibling aggregators plus `Soundness.lean`,
+`Compactness.lean`, `StrongCompleteness.lean` and the rest, both listed above. Run
+`bash scripts/check-module-invariants.sh --no-build` for the rollup; it is not restated here.
 
 ### Inside `BXCanonical/`
 
-Eight loose modules: `CanonicalChain.lean`, `CanonicalModel.lean`, `Completeness.lean`,
-`CompletenessDedekind.lean`, `DiscreteCarrierProbe.lean`, `Frame.lean`,
-`OrderedSeedConsistency.lean`, `TruthLemma.lean`.
-Subdirectories: `Chronicle/` (14 files), `Quasimodel/` (5), `Filtration/` (1).
+Loose modules:
+
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/BXCanonical rows=loose desc=no -->
+| Module | Lines |
+|--------|------:|
+| `CanonicalChain.lean` | 115 |
+| `CanonicalModel.lean` | 846 |
+| `Completeness.lean` | 443 |
+| `CompletenessDedekind.lean` | 613 |
+| `DiscreteCarrierProbe.lean` | 96 |
+| `Frame.lean` | 718 |
+| `OrderedSeedConsistency.lean` | 257 |
+| `TruthLemma.lean` | 298 |
+<!-- END GENERATED -->
+
+Subdirectories:
+
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/BXCanonical rows=subdirs cols=files-lines desc=no sort=lines-desc -->
+| Subdirectory | Files | Lines |
+|--------------|------:|------:|
+| `Chronicle/` | 14 | 17,915 |
+| `Quasimodel/` | 5 | 1,685 |
+| `Filtration/` | 1 | 134 |
+<!-- END GENERATED -->
 
 ### Inside `WeakCanonical/`, and the `Kamp/` subtree
 
-`WeakCanonical/` holds 19 loose modules plus **eight** subdirectories. One of them
+`WeakCanonical/` holds its loose modules plus the subdirectories below. One of them
 dominates everything else in the repository:
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/WeakCanonical rows=subdirs cols=files-lines desc=no sort=lines-desc -->
@@ -247,8 +274,8 @@ dominates everything else in the repository:
 `completeness` — is proved, in `WeakCanonical/GroupModel/CountermodelBase.lean`. See
 [Sorry Status](#sorry-status).
 
-`Kamp/` is the Kamp/Reynolds separation machinery: 57 loose modules plus **three** large
-sub-subtrees. It no longer carries a local `Boneyard/`; its archived work is in
+`Kamp/` is the Kamp/Reynolds separation machinery: a large body of loose modules plus the
+sub-subtrees below. It no longer carries a local `Boneyard/`; its archived work is in
 [`FormalSystem/Boneyard/Kamp/`](../Boneyard/Kamp/README.md).
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/WeakCanonical/Kamp rows=subdirs cols=files-lines desc=no sort=lines-desc -->

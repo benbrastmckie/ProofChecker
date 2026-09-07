@@ -14,17 +14,18 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 
 **Demo**: [BimodalProofs.lean](FormalSystem/Examples/BimodalProofs.lean) — sorry-free demonstration proofs
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem rows=totals desc=no -->
 | Metric | Count |
 |--------|-------|
-| Lean files | 579 |
-| Lines of code | ~175,284 |
-| Comment lines | ~99,897 |
+| Live `.lean` files | 459 |
+| Live lines | 281,304 |
+| Archived `.lean` files | 164 |
+| Archived lines | 90,890 |
+<!-- END GENERATED -->
 
-To get current numbers (excludes `.lake` dependencies and `Boneyard/`), run:
-
-```bash
-cloc --include-lang=Lean --exclude-dir=.lake,lake-packages,Boneyard .
-```
+The table above is generated: `bash scripts/check-module-invariants.sh --emit-inventory`
+rewrites it from the tree, and the `INV` check in the same script fails if it has drifted. Do
+not edit the numbers by hand.
 
 ---
 
@@ -104,7 +105,7 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 .                                 # repository root
 ├── lakefile.lean                 # two libraries: FormalSystem (default target), BimodalTest
 ├── FormalSystem.lean             # Lake root module for the FormalSystem library
-├── FormalSystem/                 # TM bimodal logic library (413 live .lean files)
+├── FormalSystem/                 # TM bimodal logic library (live file and line counts: see the table above)
 │   ├── FormalSystem.lean         # library aggregator
 │   ├── BaseLanguage/             # shared base-language definitions
 │   ├── StarLanguage/             # L⋆ = L⁺ plus the stability modal ⊡, and its logic TM⋆
@@ -115,7 +116,7 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 │   │   ├── Core/                 # MCS theory, deduction theorem
 │   │   ├── Bundle/               # BFMCS construction
 │   │   ├── BXCanonical/          # BX chronicle construction — the wired completeness entry point
-│   │   ├── WeakCanonical/        # Reynolds/Doets pipeline (19 modules, 8 subdirectories)
+│   │   ├── WeakCanonical/        # Reynolds/Doets pipeline — the largest subtree
 │   │   ├── Algebraic/            # Boolean/ultrafilter infrastructure (FlowFrame, Lindenbaum quotient)
 │   │   ├── Decidability/         # Tableau procedure with proof extraction
 │   │   ├── Independence/         # axiom-independence results
@@ -123,17 +124,16 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 │   ├── Theorems/                 # Derived theorems (perpetuity, combinators, propositional)
 │   ├── Automation/               # Proof search tactics & training data pipeline
 │   ├── Examples/                 # Pedagogical examples
-│   └── Boneyard/                 # ARCHIVE — 156 archived .lean files, excluded from the live build
+│   └── Boneyard/                 # ARCHIVE — the single archive, excluded from every live count
 ├── Tests/BimodalTest/            # Test suite (the BimodalTest library)
 ├── scripts/                      # Repository invariant checks and tooling
 └── docs/                         # Repository documentation
 ```
 
-`Metalogic/WeakCanonical/` is the largest subtree: 19 loose modules and 8 subdirectories. Besides
-the Reynolds/Doets discrete pipeline it carries the Dedekind/real route — `DenseModelSurgery/`
-(9 files) and `RealModel/` (7 files) — and `GroupModel/` (6 files), which hosts the discharged
-`countermodel_discrete` at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ`. `Kamp/` (116 files) is
-the Kamp-style expressiveness development; its headline theorem,
+`Metalogic/WeakCanonical/` is the largest subtree. Besides the Reynolds/Doets discrete pipeline
+it carries the Dedekind/real route — `DenseModelSurgery/` and `RealModel/` — and `GroupModel/`,
+which hosts the discharged `countermodel_discrete` at the non-Archimedean discrete carrier
+`ℚ ×ₗ ℤ`. `Kamp/` is the Kamp-style expressiveness development; its headline theorem,
 `kampPriorExpressiveCompleteness` (expressive completeness of `{U, S}` for Prior structures), is
 discharged sorry-free — see "Characterization and Definability" below.
 
