@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md",
+      "summary": "Mechanical kernel-level dependency trace: decide reaches zero MintBound constants (verdict NO DEPENDENCY, theorem-index:113 left untouched); vacuous set corrected from six to nine; disposition recommendation RETIRE."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788824812_856447",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
