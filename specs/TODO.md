@@ -79,12 +79,12 @@ next_project_number: 549
 
 ### Literature
 
-461 [NOT STARTED] — SCOPE 8 acquisition gap identified by task 457's research and re-
+461 [RESEARCHED] — SCOPE 8 acquisition gap identified by task 457's research and re-
 504 [NOT STARTED] — Retry acquisition of the standard modal-representation sources th
 
 ### Metalogic
 
-530 [PLANNED] — WAVE 5 (publication infrastructure). Make status and counts machi
+530 [IMPLEMENTING] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
@@ -111,7 +111,7 @@ next_project_number: 549
 
 ### Infrastructure
 
-539 [NOT STARTED] — Draw down the linter debt that the CI/linter-gates work recorded 
+539 [RESEARCHING] — Draw down the linter debt that the CI/linter-gates work recorded 
 541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
@@ -213,7 +213,7 @@ next_project_number: 549
 ---
 
 ### 539. Linter debt burndown nolints dupnamespace
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529
@@ -265,7 +265,7 @@ next_project_number: 549
 ---
 
 ### 530. Documentation single source of truth theorem index
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 518, Task 524
@@ -638,11 +638,11 @@ Dependencies: 462, as a file_scope SERIALIZATION edge only (both tasks edit Mint
 ---
 
 ### 461. Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHED]
 - **Task Type**: general
 - **Topic**: literature
 - **Dependencies**: Task 460
-- **Research**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-feasibility.md]
+- **Research**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md]
 
 **Description**: SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.
 
