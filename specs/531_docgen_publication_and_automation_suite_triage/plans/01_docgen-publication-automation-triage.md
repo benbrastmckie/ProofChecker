@@ -1,7 +1,7 @@
 # Implementation Plan: Task #531
 
 - **Task**: 531 - docgen publication and automation suite triage
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 27.5 hours (17 phases, each capped at 2 hours)
 - **Dependencies**: 529 (completed), 530 (completed)
 - **Research Inputs**: specs/531_docgen_publication_and_automation_suite_triage/reports/01_docgen-publication-automation-triage.md
@@ -146,21 +146,33 @@ same tree, each carries an explicit territory line; those exclusions are load-be
 
 ---
 
-### Phase 1: Complete references.bib [NOT STARTED]
+### Phase 1: Complete references.bib [COMPLETED]
 
 **Goal**: `references.bib` holds an entry for every work cited in live-scope `## References`
 sections, so the published references page is complete on first sight.
 
 **Tasks**:
-- [ ] Re-run the prose-citation census to confirm the missing set (report Appendix gives the
-      one-line command).
-- [ ] Add the missing entries: `rabinovich2014` (71 citations — the most-cited work in the tree),
+- [x] Re-run the prose-citation census to confirm the missing set (report Appendix gives the
+      one-line command). *(completed — 20 distinct cited works, 190 occurrences; census output
+      recorded in the summary)*
+- [x] Add the missing entries: `rabinovich2014` (71 citations — the most-cited work in the tree),
       `doets1989`, `goldblatt1992`, `burgess1984`, `reynolds1996`, `reynolds2003`,
-      `verbrugge2007`, `venema2001`, `fisherLadner1979`.
-- [ ] Verify each added entry's bibliographic detail against a real source; do not fabricate
-      volume/page data.
-- [ ] Confirm the existing near-miss pairs are genuinely distinct works and not typos:
-      `doets1987` vs. `doets1989`, `burgess1982` vs. `burgess1984`.
+      `verbrugge2007`, `venema2001`, `fisherLadner1979`. *(deviation: altered — 8 entries added,
+      not 9. `reynolds1996` → `reynolds2001` (the quoted title "An Axiomatization of Full
+      Computation Tree Logic" is the 2001 JSL paper; corpus entry `reynolds_2001`);
+      `verbrugge2007` → `verbrugge2004` (corpus entry `verbrugge_2004`, de Jongh/Veltman/
+      Verbrugge); `fisherLadner1979` → `fischerLadner1979` (correct author spelling);
+      `venema2001` NOT added — the prose is literally "Blackburn, de Rijke, Venema 2001, Modal
+      Logic", i.e. the existing `blackburn2002` entry)*
+- [x] Verify each added entry's bibliographic detail against a real source; do not fabricate
+      volume/page data. *(completed — verified against ~/Projects/Literature/index.json and the
+      converted source scans: `doets_1989` sec01 carries the NDJFL 30(2) Spring 1989 masthead,
+      `reynolds-2003-ockhamist` chunk_0001 carries the title/author, `verbrugge_2004` sec01
+      carries the Liber Amicorum framing, `burgess_1984` scan confirms the Handbook Vol. II
+      pagination)*
+- [x] Confirm the existing near-miss pairs are genuinely distinct works and not typos:
+      `doets1987` vs. `doets1989`, `burgess1982` vs. `burgess1984`. *(completed — distinct:
+      thesis vs. NDJFL paper; "Axioms for Tense Logic I" vs. "Basic Tense Logic")*
 
 **Timing**: 1 hour
 
