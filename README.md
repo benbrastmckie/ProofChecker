@@ -241,11 +241,8 @@ side conditions (`Semantics/StarPasting.lean`); the five refutations in
 ### Decidability
 
 `FormalSystem/Metalogic/Decidability/` implements a tableau decision procedure with proof
-extraction. Its status is **one-directional**, and the directory's own history is the reason to
-state that precisely: two theorems named `validity_decidable` and
-`validity_has_decision_procedure` once stood in `Decidability/Correctness.lean` and are recorded
-there as *retired as vacuous*, because their names claimed a decidability result their proofs
-(instances of `Classical.em`) did not contain.
+extraction. Its status is **one-directional**, and must be described that way; the reason is
+recorded in [ADR-007](docs/architecture/ADR-007-Decidability-One-Directional.md).
 
 - **Landed.** The sound direction of the `isValid`-shaped statement, `isValid φ fc = true → ⊨ φ`:
   `sound_of_isValid` and its corollary `isValid_sound` (`Decidability/Correctness.lean`),

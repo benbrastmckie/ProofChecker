@@ -23,8 +23,16 @@ understand why the system is designed the way it is.
 |-----|-------|--------|
 | [ADR-001](ADR-001-Classical-Logic-Noncomputable.md) | Classical Logic for Metalogic | Accepted |
 | [ADR-004](ADR-004-Remove-Project-Level-State-Files.md) | Remove Project-Level State Files | Accepted |
+| [ADR-005](ADR-005-Single-Boneyard.md) | One Archive, Excluded by Directory Name | Accepted |
+| [ADR-006](ADR-006-Metalogic-No-Physical-Regroup.md) | No Physical Regroup of the Three Completeness Routes | Accepted |
+| [ADR-007](ADR-007-Decidability-One-Directional.md) | Decidability Is One-Directional, and Says So | Accepted |
+| [ADR-008](ADR-008-FrameClass-Validity-Seam.md) | `FrameClass.Sat` Lives in `Semantics/`, and the Seam Stays There | Accepted |
 
 **Note**: ADR-002 and ADR-003 are reserved for future decisions or were superseded.
+
+**This directory is the one ADR convention in the repository.** There is no `docs/decisions/`;
+a second location for the same genre would recreate exactly the duplicate-authority problem ADRs
+exist to remove.
 
 ## Specification Documents
 
@@ -48,6 +56,28 @@ Establishes the use of Classical logic (including `noncomputable` definitions an
 
 Documents the decision to remove project-level state tracking files in favor of centralized
 management through the `specs/` directory structure.
+
+### ADR-005: One Archive, Excluded by Directory Name
+
+Records why archived code lives in exactly one tree and why every traversal filters on the
+`Boneyard` directory **name** rather than a path prefix. B0 asserts the count is 1.
+
+### ADR-006: No Physical Regroup of the Three Completeness Routes
+
+Records the measurement that declined nesting the three completeness routes: the single
+directory-level cycle `BXCanonical` <-> `WeakCanonical`, enumerated edge-by-edge, plus the
+partial-move risk. `scripts/check-metalogic-cycles.sh` regenerates the enumeration.
+
+### ADR-007: Decidability Is One-Directional, and Says So
+
+Records why `validity_decidable` and `validity_has_decision_procedure` were retired as vacuous,
+what actually holds (the sound direction), what is open (the completeness direction), and why no
+`isValid`-shaped biconditional may be written before it can be proved.
+
+### ADR-008: `FrameClass.Sat` Lives in `Semantics/`, and the Seam Stays There
+
+Records the one `Semantics -> ProofSystem` import edge, the acyclicity argument that makes it
+safe, and the two relocations that were considered and rejected on cost.
 
 ## Creating New ADRs
 

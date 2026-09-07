@@ -12,11 +12,10 @@ Every count excludes the archive — see [Counting Live Files](#counting-live-fi
 ## Counting Live Files
 
 Archived code lives in exactly one place, [`FormalSystem/Boneyard/`](../Boneyard/README.md),
-which is also the single place its counts are stated — this page does not restate them. There
-used to be a second archive nested at `WeakCanonical/Kamp/Boneyard/`, and a `find` filter naming
-only the top-level directory silently counted it as live. The two were consolidated, and B0 now
-asserts the archive-directory count is exactly 1. Use the invariant script rather than an ad-hoc
-`find`:
+which is also the single place its counts are stated — this page does not restate them. Check B0
+asserts the archive-directory count is exactly 1 and every traversal excludes it by directory
+**name**, not by path prefix; [ADR-005](../../docs/architecture/ADR-005-Single-Boneyard.md)
+records why. Use the invariant script rather than an ad-hoc `find`:
 
 ```bash
 bash scripts/check-module-invariants.sh              # C7 prints the live inventory
@@ -70,79 +69,12 @@ Beneath all three sits a genuinely layered core:
 
 ## Why There Is No Physical Regroup
 
-A natural instinct is to nest the three routes under a `Completeness/` parent, or to
-nest one inside another. **Measurement rules both out.** This is a decision, not an
-oversight.
-
-There is exactly **one** directory-level cycle in `Metalogic/`. It is enumerated
-edge-by-edge, file-and-line, in the measurement output this document is drawn from —
-regenerated from the tree rather than copied from any report, and
-`scripts/check-metalogic-cycles.sh` asserts the count mechanically.
-
-There used to be a second, `Bundle` ↔ `Core`. It is gone: `Core/RestrictedMCS/Basic.lean` was
-the sole reverse edge, and it now reaches the iterated-temporal syntax it needed through
-`Syntax/SubformulaClosure/IteratedTemporal.lean` instead of through
-`Bundle/CanonicalTaskRelation.lean`. `Bundle → Core` remains, one-directionally, at 9 import
-lines across 5 files — down from 18 across 10, because six of `Bundle/`'s fifteen modules were
-retired to [`Boneyard/BundleDeadHalf/`](../Boneyard/BundleDeadHalf/README.md) in the same change.
-
-### The cycle: `BXCanonical` ↔ `WeakCanonical`
-
-```
-BXCanonical → WeakCanonical  (9 import lines)
-  BXCanonical/Chronicle/ChronicleMonadicBridge.lean
-      → FormalSystem.Metalogic.WeakCanonical.IntegerModel.ReynoldsBridge
-      → FormalSystem.Metalogic.WeakCanonical.Kamp.KPlusFaithful
-      → FormalSystem.Metalogic.WeakCanonical.PriorDefsDense
-      → FormalSystem.Metalogic.WeakCanonical.PriorExpressivenessDense
-      → FormalSystem.Metalogic.WeakCanonical.Table
-      → FormalSystem.Metalogic.WeakCanonical.Transfer
-  BXCanonical/Chronicle/ChronicleToCountermodel.lean
-      → FormalSystem.Metalogic.WeakCanonical.IntegerModel.GoodStructuresModelSurgery
-  BXCanonical/Completeness.lean
-      → FormalSystem.Metalogic.WeakCanonical
-  BXCanonical/CompletenessDedekind.lean
-      → FormalSystem.Metalogic.WeakCanonical.RealModel.ChronicleRealFlow
-
-WeakCanonical → BXCanonical  (5 import lines)
-  WeakCanonical/ChronicleExtraction.lean
-      → FormalSystem.Metalogic.BXCanonical.Chronicle.ChronicleConstruction
-      → FormalSystem.Metalogic.BXCanonical.Chronicle.ChronicleToCountermodelBasic
-  WeakCanonical/DenseModelSurgery/ChronicleInstance.lean
-      → FormalSystem.Metalogic.BXCanonical.Chronicle.ChronicleMonadicBridge
-  WeakCanonical/ReflexiveCanonical.lean
-      → FormalSystem.Metalogic.BXCanonical.OrderedSeedConsistency
-  WeakCanonical/Transfer.lean
-      → FormalSystem.Metalogic.BXCanonical.Chronicle.ChronicleToCountermodel
-```
-
-The figures above were 2 and 4 until this pass; `ChronicleMonadicBridge.lean` alone contributes
-six forward edges the earlier enumeration never mentioned. Regenerate them with
-`bash scripts/check-metalogic-cycles.sh`, which prints exactly this list and asserts the cycle
-count is 1.
-
-Nesting either of that pair inside the other produces a directory whose contents import upward
-out of it — which is not a hierarchy. Lean permits the cycle because it exists only at
-*directory* granularity; the module-level dependency graph is acyclic, which is why
-the build works at all. Directory structure simply cannot express a mutual dependency.
-
-### The declined regroup, and its evidence
-
-Physically regrouping the three routes was **considered and declined**. Beyond the
-cycle argument: `WeakCanonical` is 339 import lines across 137 live files, roughly
-five times the next-largest subtree. That makes it the single largest partial-move
-risk in the repository, and a half-updated move leaving dangling imports is worse
-than no move at all. The deliverable is therefore a correct map plus a standardized
-aggregator convention, not a physical relocation.
-
-The `Bundle` ↔ `Core` cycle was broken, and the measurement that once said not to is
-superseded. That measurement costed a *different* plan — relocating `Core/RestrictedMCS/Basic.lean`
-itself, at 9 files touched, 5 of them markdown — and it was declined on that basis. What was
-actually done instead moves the dependency, not the dependent: the 29 pure-syntax iterated-`F`/`P`
-declarations `Basic.lean` needed were relocated to
-`Syntax/SubformulaClosure/IteratedTemporal.lean`, where nothing about them mentions MCSs,
-derivability or frame classes, and the `Core → Bundle` import line was deleted. The reverse edge
-had exactly one source, so one relocation removed the whole cycle.
+The three completeness routes are **not** nested under a `Completeness/` parent, and none is
+nested inside another. There is exactly one directory-level cycle in `Metalogic/`
+(`BXCanonical` <-> `WeakCanonical`), and directory structure cannot express a mutual dependency.
+The decision, the edge-by-edge cycle enumeration and the costing that declined the regroup are in
+[ADR-006](../../docs/architecture/ADR-006-Metalogic-No-Physical-Regroup.md). Regenerate the edge
+list with `bash scripts/check-metalogic-cycles.sh`, which also asserts the cycle count is 1.
 
 ## Aggregator Convention
 

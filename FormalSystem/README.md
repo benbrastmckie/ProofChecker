@@ -11,11 +11,11 @@ This README provides an overview; BimodalReference contains the detailed specifi
 ## Counting Live Files: Exclude the Archive
 
 Archived code lives in exactly one place, [`Boneyard/`](Boneyard/README.md), and must be excluded
-from any count of this tree. It used to live in two places -- there was a second archive nested at
-`Metalogic/WeakCanonical/Kamp/Boneyard/`, and a filter naming only the top-level directory counted
-it as live. That is not hypothetical: repeated past descriptions of this repository's size were
-wrong for exactly that reason. The archives are now consolidated, and B0 in the invariant script
-asserts the directory count is exactly **1**, so a second one reappearing fails the gate.
+from any count of this tree. B0 in the invariant script asserts the archive-directory count is
+exactly **1**, and every traversal filters on the `*/Boneyard/*` **name glob** rather than a path
+prefix, so a second archive appearing anywhere fails the gate instead of silently leaking into
+the counts. [ADR-005](../docs/architecture/ADR-005-Single-Boneyard.md) records why that rule is
+the load-bearing one.
 
 **Do not hand-roll the count, and do not restate it here.** The archive's own counts are stated in
 exactly one place -- [`Boneyard/README.md`](Boneyard/README.md) -- and the live source for both
@@ -365,10 +365,9 @@ per-theorem rows are in [`docs/theorem-index.md`](../docs/theorem-index.md).
 direction of the `isValid`-shaped statement is landed — `sound_of_isValid` and `isValid_sound`
 (`Metalogic/Decidability/Correctness.lean`). The *completeness* direction
 `⊨ φ → isValid φ fc = true`, and hence `valid_iff_allClosed`, the biconditional, and the four
-`Decidable (⊨ φ)` instances, are **open**. Two declarations, `validity_decidable` and
-`validity_has_decision_procedure`, previously papered over exactly this gap and are recorded in
-`Correctness.lean` as *retired as vacuous* because their names claimed a decidability result their
-proofs did not contain; restating the claim in prose would reproduce that defect.
+`Decidable (⊨ φ)` instances, are **open**. See
+[ADR-007](../docs/architecture/ADR-007-Decidability-One-Directional.md) for why restating this
+as a two-directional claim reproduces a defect this tree already removed once.
 
 ## Theory-Specific Documentation
 

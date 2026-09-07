@@ -670,25 +670,25 @@ phase start. **Re-measured: 1,141 / 7 hits, 626 / 11 hits, 299 / 1 hit.** Now 1,
 
 ---
 
-### Phase 13: Architecture decision records [NOT STARTED]
+### Phase 13: Architecture decision records [COMPLETED]
 
 **Goal**: Four ADRs exist under `docs/architecture/` (ADR-005 onward, matching the existing
 convention), and their source sites carry pointers instead of duplicated rationale.
 
 **Tasks**:
-- [ ] Record the convention decision explicitly in the first new ADR: `docs/architecture/ADR-NNN`
+- [x] Record the convention decision explicitly in the first new ADR: `docs/architecture/ADR-NNN`
       is used, not a new `docs/decisions/` directory, because the repo already carries
       ADR-001..ADR-004 there.
-- [ ] `ADR-005-single-boneyard.md` — archive consolidation, replacing the narrative at
+- [x] `ADR-005-single-boneyard.md` — archive consolidation, replacing the narrative at
       `FormalSystem/README.md:11-33` and `Metalogic/README.md:10-22`.
-- [ ] `ADR-006-metalogic-no-physical-regroup.md` — "Why There Is No Physical Regroup" and "The
+- [x] `ADR-006-metalogic-no-physical-regroup.md` — "Why There Is No Physical Regroup" and "The
       declined regroup" from `Metalogic/README.md`.
-- [ ] `ADR-007-decidability-one-directional.md` — the `validity_decidable` retirement, currently
+- [x] `ADR-007-decidability-one-directional.md` — the `validity_decidable` retirement, currently
       told in four places (`README.md`, `FormalSystem/README.md`, `Decidability/README.md`,
       `Decidability/Verified/README.md`).
-- [ ] `ADR-008-frameclass-validity-seam.md` — the rejected `FrameClass` relocation from
+- [x] `ADR-008-frameclass-validity-seam.md` — the rejected `FrameClass` relocation from
       `FrameClassValidity.lean`.
-- [ ] Replace each source site with a one-line pointer to its ADR.
+- [x] Replace each source site with a one-line pointer to its ADR.
 
 **Timing**: 2 hours
 
@@ -701,10 +701,13 @@ convention), and their source sites carry pointers instead of duplicated rationa
 `validity_decidable` retirement phrasing at phase start.
 
 **Files to modify**:
-- `docs/architecture/ADR-005-single-boneyard.md` (new)
-- `docs/architecture/ADR-006-metalogic-no-physical-regroup.md` (new)
-- `docs/architecture/ADR-007-decidability-one-directional.md` (new)
-- `docs/architecture/ADR-008-frameclass-validity-seam.md` (new)
+- `docs/architecture/ADR-005-Single-Boneyard.md` (new)
+- `docs/architecture/ADR-006-Metalogic-No-Physical-Regroup.md` (new)
+- `docs/architecture/ADR-007-Decidability-One-Directional.md` (new)
+- `docs/architecture/ADR-008-FrameClass-Validity-Seam.md` (new)
+  *(deviation: altered — filenames use the existing `ADR-{NNN}-{Title-With-Hyphens}.md`
+  capitalisation that `docs/architecture/README.md` documents and ADR-001/ADR-004 already
+  follow, not the lower-case slugs the plan wrote)*
 - `FormalSystem/README.md`, `FormalSystem/Metalogic/README.md`,
   `FormalSystem/Metalogic/Decidability/README.md`,
   `FormalSystem/Metalogic/Decidability/Verified/README.md`, `README.md`,
