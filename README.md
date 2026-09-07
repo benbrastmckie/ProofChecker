@@ -319,6 +319,53 @@ It is load-bearing for the live completeness chain via `uSExpressivelyCompleteOv
 
 ---
 
+## Verifying the main theorems
+
+Every headline result in this repository is machine-checked, and you can check that claim
+yourself rather than take it. Two commands do it.
+
+**One: read the axiom sets out of the built library.** Write this to a scratch file and run it
+with `lake env lean`:
+
+```lean
+import FormalSystem
+
+#print axioms FormalSystem.Metalogic.soundness
+#print axioms FormalSystem.Metalogic.BXCanonical.completeness
+#print axioms FormalSystem.Metalogic.strongCompletenessBase
+#print axioms FormalSystem.Metalogic.notStrongCompletenessZTime
+#print axioms FormalSystem.Metalogic.Decidability.sound_of_isValid
+```
+
+All five print the same record:
+
+```
+'FormalSystem.Metalogic.soundness' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+Those three are Lean's standard classical axioms. The absence of `sorryAx` is the point: a
+`sorry` anywhere on a proof's dependency graph would appear in this list. The five above are a
+representative slice — soundness, weak completeness, strong completeness, a machine-checked
+*refutation*, and the sound half of decidability — not the whole set.
+
+**Two: run the invariant harness.** It checks the axiom sets of **105** pinned declarations, not
+five, along with the build, the structural-`sorry` inventory, every import, every module path
+cited in markdown, every paper anchor, and the generated inventory tables:
+
+```bash
+bash scripts/check-module-invariants.sh              # everything, including the build
+bash scripts/check-module-invariants.sh --no-build   # structural checks only, seconds not minutes
+```
+
+A change to any pinned axiom set is a hard stop, not a new baseline: it means a proof was
+silently rerouted through different dependencies, which is detectable even when the build stays
+green and the sorry count is unchanged.
+
+Per-theorem status — statement, Lean name, file, frame class and pinned axiom set — is in
+[`docs/theorem-index.md`](docs/theorem-index.md), the single ledger.
+
+---
+
 ## Citation
 
 If you use this project in your research, please cite:
@@ -341,6 +388,10 @@ If you use this project in your research, please cite:
   url       = {https://github.com/benbrastmckie/BimodalLogic}
 }
 ```
+
+A [`CITATION.cff`](CITATION.cff) is provided for citation managers, and
+[`references.bib`](references.bib) collects the works this development formalizes, transcribes
+or cites by name.
 
 **Key references**:
 

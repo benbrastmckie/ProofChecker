@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+title: "BimodalLogic: A Lean 4 Formalization of the Bimodal Logic TM"
+message: "If you use this software, please cite both the software and the paper it formalizes."
+type: software
+authors:
+  - family-names: Brast-McKie
+    given-names: Benjamin
+    email: benjamin@logos-labs.ai
+repository-code: "https://github.com/benbrastmckie/BimodalLogic"
+abstract: >-
+  A Lean 4 formalization of TM, the bimodal logic of Tense and Modality, which combines S5
+  modal operators with the Since/Until linear tense operators over task semantics. The
+  development carries machine-checked soundness, weak completeness and finite-context
+  consequence completeness at all four frame classes, strong completeness and compactness at
+  two of them, machine-checked refutations of strong completeness at the other two, and a
+  one-directional tableau decision procedure. Every headline result's axiom set is asserted on
+  every build; the per-theorem ledger is docs/theorem-index.md.
+keywords:
+  - Lean 4
+  - modal logic
+  - temporal logic
+  - bimodal logic
+  - completeness
+  - formalized mathematics
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-09-07"
+references:
+  - type: article
+    title: "The Construction of Possible Worlds"
+    authors:
+      - family-names: Brast-McKie
+        given-names: Benjamin
+    journal: "Journal of Philosophical Logic"
+    publisher:
+      name: Springer
+    year: 2026
+    notes: "Forthcoming. The paper this repository formalizes."
+    url: "https://benbrastmckie.com/publications/possible_worlds.pdf"

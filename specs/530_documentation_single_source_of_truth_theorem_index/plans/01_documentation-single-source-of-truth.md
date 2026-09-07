@@ -913,24 +913,29 @@ provenance stamp is unified.
 
 ---
 
-### Phase 18: Publication packaging [NOT STARTED]
+### Phase 18: Publication packaging [COMPLETED]
 
 **Goal**: `CITATION.cff`, `docs/ARCHITECTURE.md`, `references.bib` and README's
 `## Verifying the main theorems` section exist.
 
 **Tasks**:
-- [ ] Create `CITATION.cff` with `year: 2026`, reconciling the BibTeX discrepancy, and state the
-      ProofChecker/BimodalLogic name relationship exactly once.
-- [ ] Create `docs/ARCHITECTURE.md` with one layer diagram naming **both** upward edges:
+- [x] Create `CITATION.cff` with `year: 2026`, reconciling the BibTeX discrepancy, and state the
+      ProofChecker/BimodalLogic name relationship exactly once. *(deviation: altered — the
+      relationship is not stated, it is **removed**. "ProofChecker" appeared only as a stale
+      BibTeX key and title; the repository, the `.cff` title and the software entry now all say
+      BimodalLogic, so there are no longer two names to relate.)*
+- [x] Create `docs/ARCHITECTURE.md` with one layer diagram naming **both** upward edges:
       `Semantics -> ProofSystem` via `Semantics/FrameClassValidity.lean`, and
       `Decidability -> Automation`. Source the layers from `FormalSystem/README.md`'s six
       one-row layer tables and `Metalogic/README.md`; include Layer 0's `ForMathlib` and
       `StarLanguage`, which no existing diagram shows.
-- [ ] Create `references.bib` with Reynolds, Blackburn-de Rijke-Venema, Kamp and Prior, already
+- [x] Create `references.bib` with Reynolds, Blackburn-de Rijke-Venema, Kamp and Prior, already
       cited in prose in `ProofSystem/Axioms.lean`'s `sep` docstring.
-- [ ] Add `## Verifying the main theorems` to `README.md`: a `#print axioms` snippet over a
+- [x] Add `## Verifying the main theorems` to `README.md`: a `#print axioms` snippet over a
       representative slice of the pinned declarations (not all of them) plus the one-line
-      `bash scripts/check-module-invariants.sh`.
+      `bash scripts/check-module-invariants.sh`. *(the five-declaration snippet was extracted
+      from the README and run verbatim through `lake env lean`; it produces exactly the output
+      the section documents)*
 
 **Timing**: 2 hours
 
