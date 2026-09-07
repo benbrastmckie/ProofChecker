@@ -1,5 +1,5 @@
 ---
-next_project_number: 547
+next_project_number: 548
 ---
 
 # TODO
@@ -12,7 +12,7 @@ next_project_number: 547
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
 | 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,538,539,540,541,542,544,545,546 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,537 | 193,298,433,461,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,537,547 | 193,298,433,461,530,535,546 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -91,6 +91,10 @@ next_project_number: 547
 538 [NOT STARTED] — Resolve the three paper anchors that make C15 fail, so scripts/ch
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
+### Paper Refactor
+
+547 [NOT STARTED] — Replace the historical system names TM⁺, TM⁺_f, TM_f, TM_c, TM_dc
+
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
@@ -116,6 +120,16 @@ next_project_number: 547
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 547. Replace historical system names in docstrings
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: paper-refactor
+- **Dependencies**: Task 546
+
+**Description**: Replace the historical system names TM⁺, TM⁺_f, TM_f, TM_c, TM_dc, BX_f, BX_c in docstrings, comments, docs and scripts with the paper's current names TM, TM_z, TM_d, TM_r, BX_z, BX_d, BX_r. PAPER CONVENTION (implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex): the base logic of BL is called TM, with no plus superscript anywhere in the paper; its extensions are named by the class over which each is complete -- TM_z (Z-time), TM_d (dense task frames), TM_r (R-time, i.e. dense and complete), with the same subscripts on BX_z, BX_d, BX_r and on the fragments TM⁻_z, TM⁻_d, TM⁻_r. Under the new definitions BX_r is the extension of BX_d by PU and SP, and CO is a derived theorem of it -- this now matches this repository's Dedekind-class derivations, which admit density and dense_indicator. MEASURED STATE under FormalSystem/: `TM⁺` 124 lines in 21 files; `TM_f` 29 lines in 8 files; `TM_dc` 8 lines in 4 files; `TM_c` 7 lines in 3 files; `BX_c` 3 lines in 2 files; `BX_f` 2 lines in 2 files; a further 12 lines across docs/, scripts/ and specs/paper-definitions-of-record.md. CAUTIONS: TM⋆ (the stability-modal system of Metalogic/Conservativity/Star/) is a different system and must not be touched; `TMFrag` in Metalogic/Conservativity/Fragment.lean is the paper's Past/Future fragment TM⁻ and its docstring should say so in the new names; the `def:TMplus` LaTeX label still exists in the paper and still names TM, so label citations are not in scope here (the anchor re-pinning is a separate follow-on task). WORK: a comment-and-docstring-only sweep -- no identifier renames beyond what the FrameClass rename task already did -- replacing each historical name by its current one, and rewriting the Semantics/FrameClassValidity.lean per-constructor anchors so they state the classes in the new vocabulary. Verify with a final grep that TM⁺, _f, _c and _dc system names no longer occur outside the archive, and that lake build FormalSystem stays green.
+
+---
 
 ### 546. Rename frameclass tags to ztime rtime
 - **Status**: [NOT STARTED]
