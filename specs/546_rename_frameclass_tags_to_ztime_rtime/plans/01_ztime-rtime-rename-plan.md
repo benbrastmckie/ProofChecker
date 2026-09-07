@@ -435,7 +435,7 @@ word-boundary sed is unsafe and the phase must stop and re-scope.
 
 ---
 
-### Phase 6: String literals, round-trip parsers, Tests, generated artifacts [NOT STARTED]
+### Phase 6: String literals, round-trip parsers, Tests, generated artifacts [IN PROGRESS]
 
 **Goal**: Move the class-naming string literals and their matched parsers, then regenerate the
 two committed generated artifacts so the byte-for-byte typst checks pass.

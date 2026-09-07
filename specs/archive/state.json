@@ -1912,6 +1912,1378 @@
   ],
   "completed_projects": [
     {
+      "project_number": 536,
+      "project_name": "stability_deterministic_collapse_store_recall",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "Investigate and establish, in Lean, the exact relationship between the stability modal ⊡ and Deterministic task frames, correcting a claim made in discussion of task 533's research: it is NOT the case that Determined (φ → ⊡φ) is valid exactly over the deterministic frames, and the collapse of L⋆ into L⁺ over deterministic frames is not the whole story. WHAT THE PAPER (possible_worlds.tex) ACTUALLY ESTABLISHES: app:deterministic (around line 3476) shows Determined is valid over every frame satisfying Deterministic (for w,u,v ∈ W and x ∈ D, if w ⇒_x u and w ⇒_x v then u = v); the sentence at line 1437 and its footnote show Determined does NOT characterize the Deterministic frames -- the frames F° (W = ℝ, D = ℝ, w ⇒_x u iff x ≤ u−w ≤ 2x for x ≥ 0) and F¹ (u = w + x) have every possible world an order-isomorphism of (ℝ,<) onto itself, so an induction on complexity assigns every store-free and recall-free sentence the same world states at which it is true over both frames, although F¹ is Deterministic and F° is not; app:deterministic-future (around line 3566) shows the store/recall sentence Det = ↑¹F↑²↓¹(⊡↓²¬φ ∨ ⊡↓²φ) is valid over deterministic frames and invalid over some non-deterministic frame; and PossibleWorlds task 105 (in flight; report specs/105_characterize_deterministic_task_frames/reports/02_determinism-axiom-correspondence.md in /home/benjamin/Philosophy/Papers/PossibleWorlds) shows that Det defines only FORWARD determinism (counterexample frame F^N, forward-deterministic with an absorbing state but not backward-deterministic), that Deterministic holds iff every intersection class ⟨τ⟩_x is a singleton (lem:deterministic-singleton, a biconditional), and that Det-pm (Det with F replaced by always) and Det-m (a world-store variant ↑w¹⊡always(φ ↔ ↓w¹φ)) each define the Deterministic frames exactly. So the full correspondence result genuinely needs the store/recall operators, which the ⊡-only L⋆ of task 533 lacks. DELIVERABLES: (a) machine-check the sufficiency collapse: Deterministic F → StarValidIn F (⊡φ ↔ φ) for every StarFormula φ, via the singleton bridge lemma; (b) machine-check the failure of the converse for the ⊡-only language: formalize F° and F¹ (or a simpler separating pair) as TaskFrames and prove every StarFormula has the same validity over both, so Deterministic is not L⋆-definable -- the region where ⊡ trivializes is the Deterministic frames, but membership in that region is not expressible in L⋆; (c) determine what the store/recall operators add and at what cost: whether L⋆ should be extended by the time store/recall ↑ⁱ/↓ⁱ and/or world store/recall operators to state Det-pm/Det-m ⟺ Deterministic in Lean (evaluation points gain stored-time and stored-world vectors; every existing L⁺ transport lemma is Formula-only), and recommend whether to pursue that as a follow-up task; (d) record the exact statements in the paper's terms so that possible_worlds.tex and the Lean tree agree, coordinating wording with PossibleWorlds task 105 rather than duplicating its mathematics. Depends on task 533 for StarFormula, StarTruthAt, StarValidIn and the SameStateAt/singleton infrastructure.",
+      "topic": "metalogic",
+      "dependencies": [
+        533
+      ],
+      "created": "2026-09-03T19:14:55Z",
+      "last_updated": "2026-09-04T03:26:06Z",
+      "session_id": "sess_1788488886_221c19",
+      "artifacts": [
+        {
+          "path": "specs/536_stability_deterministic_collapse_store_recall/reports/01_determinism-collapse-and-store-recall.md",
+          "type": "report",
+          "summary": "Corrects the Determined/Deterministic claim into three distinct collapse phenomena; records the paper's committed and git-recovered statements; delivers the machine-checked deterministic collapse, the F-zero/F-one indistinguishable pair as legal task frames, the direction-indexed choice-dependence finding, and a narrowed store/recall recommendation."
+        },
+        {
+          "path": "specs/536_stability_deterministic_collapse_store_recall/plans/01_determinism-collapse-and-non-definability.md",
+          "type": "plan",
+          "summary": "8-phase plan: Phase 1 delivers the choice-free deterministic collapse at FormalSystem/Semantics/StarDeterminism.lean; waves 2+ construct F-zero/F-one and the generic order-transfer and S-phi induction for non-definability."
+        },
+        {
+          "path": "specs/536_stability_deterministic_collapse_store_recall/summaries/01_determinism-collapse-and-non-definability-summary.md",
+          "type": "summary",
+          "summary": "8/8 phases; deliverable (a) choice-free at Semantics/StarDeterminism.lean, deliverable (b) via six Metalogic/Independence modules; Phase 7 COMPLETED WITH EXCLUSIONS on an unsatisfiable no-Classical.choice criterion over the reals."
+        }
+      ],
+      "next_artifact_number": 2,
+      "completion_summary": "Landed the deterministic collapse of the stability modal as a choice-free library result (FormalSystem/Semantics/StarDeterminism.lean, [propext] only), and proved that TaskFrame.Deterministic is not L-star-definable by building the F-zero (drift) and F-one (translation) frames over the reals and showing they validate exactly the same StarFormulas while differing in determinism. The state-set bridge behind the second result is proved once generically under hypotheses (H1)/(H2) and instantiated twice. F-zero also validates Determined without being deterministic, refuting the converse of the collapse. Deliverables (c) and (d) are records only; nothing under /home/benjamin/Philosophy/ was touched.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 533,
+      "project_name": "l_and_lstar_metatheory_conservative_extension",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "Establish soundness, completeness, compactness, and decidability results for the bimodal tense-only language L (primitive tense operators 'H' and 'G') and for L^*, the extension of L^+ (primitive tense operators 'snce' and 'untl') by the stability modal defined at line 1114 of /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, mirroring the metatheory already established for L^+. Prove conservative extension results relating L, L^+, and L^*. Implement with high-quality Lean 4 engineering so the results compose naturally and efficiently across the three systems. Requires careful review of existing literature via --lit (Literature/ repo) and a survey of additional online sources relevant to this novel bimodal logic.\n\n\n=== SCOPE AMENDMENT (post-research, 2026-09-03) ===\n(1) L⋆ is scoped to the stability modal ⊡ only -- not the paper's BL⋆ (line 1373), which also carries the store/recall operators. (2) The TM⋆ completeness spike proposed as Phase 7 of the research report is REMOVED from this task: its axiomatization and completeness strategy are settled first by research task 535, ON WHICH THIS TASK DEPENDS, and its Lean implementation is task 537. Build StarAxiom around 535's axiom set, or the extensible design 535 recommends, so 537 adds constructors without re-running 533's soundness. This task delivers for L⋆: syntax (StarFormula + the ofFormula embedding), semantics (StarTruthAt, SameStateAt, StarValidIn), the ⊡ axioms with soundness, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in BOTH directions -- the forward direction via TM⋆ soundness plus the existing completeness engines, which needs no TM⋆ completeness. (3) For L ⊂ L⁺: forward proof-theoretic conservativity of TM⁺ over TM is refuted (tmCompleteDiscrete_refuted at Discrete, (DD) at Base; equivalent to TM completeness by tmComplete_iff_forward) and MUST NOT be attempted; deliver semantic conservativity (already landed, blValidIn_iff_validIn_tr) plus the fragment logic TMFrag fc φ := TM⁺ ⊢ tr φ with its transferred soundness, completeness, and Base/Dense compactness, and the strict inclusion TM ⊊ TMFrag at Discrete. (4) Sequencing: 535 (research) -> 533 (this task) -> 537 (TM⋆ completeness + non-definability), 534 (native finite axiomatizability of the H/G-fragment), 536 (deterministic-collapse sufficiency lemma, its failing converse, and the store/recall correspondence question). Claims made in discussion that Determined is valid EXACTLY over deterministic frames are wrong (paper line 1437) and must not be transcribed.(5) BINDING INPUT FROM TASK 535 (specs/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md, probes/01_stab-axiom-probes.lean -- the plan MUST read both): the ⊡-axiom set is {SK, ST, S4, S5, MS (□φ→⊡φ), AS (p→⊡p), PS (same-time pasting ⟐φ⁺∧⟐ψ⁻→⟐(φ⁺∧ψ⁻)), US (future pasting (α⁻ U ⟐φ⁺)→⟐(α⁻ U φ⁺)), with pure-future/pure-past side conditions}; all validated by compiled probes. StarAxiom is a CLOSED inductive with one soundness lemma per constructor. CORRECTION to the research report's Phase 4: the TM⁺ schemata must be RE-DECLARED over StarFormula (an ofPlus constructor yields only ⊡-free instances, which is not the intended TM⋆) and discharged once by atomization (⊡φ depends on the world state alone, probes E1/E2); TD is discharged semantically via a StarFormula TruthAntiIso twin (the proof-theoretic route is circular because the BX axiom set is not mirror-closed).",
+      "topic": "metalogic",
+      "created": "2026-09-03T17:31:04Z",
+      "last_updated": "2026-09-04T01:42:19Z",
+      "session_id": "sess_1788483497_dcf1d6",
+      "artifacts": [
+        {
+          "path": "specs/533_l_and_lstar_metatheory_conservative_extension/reports/01_l-lstar-metatheory-conservative-extension.md",
+          "type": "report",
+          "summary": "Hard-mode Lean research: verbatim stability-modal ground truth (paper line 1114), full file:line inventory of the landed L/L+ metatheory (zero structural sorry), Tier-1 literature mapping table, architecture decision (separate StarFormula inductive + ofFormula embedding, mirroring BaseLanguage/tr), precise conservativity statements (L<L+ forward refuted/open, L+<L* forward provable from soundness + existing completeness engines), verified Mathlib names, three compiled lean_run_code prototypes, online survey (nothing reusable), and a 9-phase outline with TM* completeness as a gated spike."
+        },
+        {
+          "path": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+          "type": "plan",
+          "summary": "Hard-mode plan: 16 leaf phases in 8 waves delivering the TMFrag fragment logic for L and the full L-star stack (syntax, semantics, closed StarAxiom around the 535 axiom set, soundness by atomization + companion recursion, semantic and two-directional proof-theoretic conservativity over TM-plus) with no TM-star completeness spike."
+        },
+        {
+          "path": "specs/533_l_and_lstar_metatheory_conservative_extension/summaries/01_l-lstar-metatheory-conservative-extension-summary.md",
+          "type": "summary",
+          "summary": "TMFrag (L side) and the full L⋆/TM⋆ stack (syntax, semantics, closed StarAxiom, soundness at all four classes, conservativity over TM⁺ in both directions), 3,547 sorry-free Lean lines across 15 new modules."
+        }
+      ],
+      "dependencies": [
+        535
+      ],
+      "memory_candidates": [
+        {
+          "content": "To make an extended language's proof system inherit every base-language axiom schema instantiated over the extended language, do not re-prove the schemata: if the new operator's formulas are state formulas (truth depends only on the world state), define an injective encoding Atom ⊕ ExtFormula → Atom, an atomize map replacing each maximal new-operator subformula by a fresh atom, and a model on the same frame whose valuation at the fresh atom is the new-operator truth at that state; one transfer lemma plus the landed per-axiom validity lemmas then discharge all schemata, validity and swap-validity alike (swap-validity needs atomize e (φ.swap) = (atomize (e ∘ Sum.map id swap) φ).swap).",
+          "category": "PATTERN",
+          "source_artifact": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+          "confidence": 0.8,
+          "suggested_keywords": [
+            "atomization",
+            "language extension",
+            "schema transfer",
+            "state formula",
+            "soundness"
+          ]
+        },
+        {
+          "content": "In this tree temporal_duality soundness is the companion recursion derivable_valid_and_swap_validIn (Soundness.lean:1217) with a per-constructor swap-validity dispatch (axiom_swap_validIn_min, :1190); TruthAntiIso/truthAt_of_truthAntiIso is used only in Metalogic/Independence/CoNotPriorU.lean, never on the soundness path. New languages should mirror the companion recursion, not build an anti-iso.",
+          "category": "INSIGHT",
+          "source_artifact": "specs/533_l_and_lstar_metatheory_conservative_extension/plans/01_l-lstar-metatheory-conservative-extension.md",
+          "confidence": 0.75,
+          "suggested_keywords": [
+            "temporal duality",
+            "swap validity",
+            "companion recursion",
+            "TruthAntiIso",
+            "soundness"
+          ]
+        },
+        {
+          "content": "TM⁺ schema soundness over an extended language can be discharged in one lemma by atomization: replace each state-formula operator instance (⊡χ) by a fresh atom via an injective encoding Atom ⊕ Formula' → Atom, build the atomized model on the same frame with an existential valuation, and prove a single truth-transfer induction; then the landed axiom_validIn/axiom_swap_validIn apply on the same frame so fc.Sat is inherited. Swap-validity needs the encoding conjugated by swapTemporal (Encoding.swap).",
+          "category": "TECHNIQUE",
+          "source_artifact": "FormalSystem/Metalogic/Conservativity/Star/Atomization.lean",
+          "confidence": 0.9,
+          "suggested_keywords": [
+            "atomization",
+            "soundness",
+            "language extension",
+            "stability modal"
+          ]
+        },
+        {
+          "content": "lake-build-guard.sh requires the lake subcommand AFTER the `--` separator: `lake-build-guard.sh build --timeout 1800 -- build <Module>`; omitting `build` after `--` exits 77. Editing any file imported (transitively) by Semantics.lean (e.g. Semantics/Star*.lean docstrings) triggers a ~5-15 min rebuild of the entire Metalogic tree, so batch docstring edits to those modules.",
+          "category": "WORKFLOW",
+          "source_artifact": "specs/533_l_and_lstar_metatheory_conservative_extension/handoffs/phase-1.1-handoff-20260903-180335.md",
+          "confidence": 0.95,
+          "suggested_keywords": [
+            "lake-build-guard",
+            "build",
+            "Semantics.lean",
+            "rebuild"
+          ]
+        },
+        {
+          "content": "Paper anchor `app:non-deterministic` does not exist in possible_worlds.tex; the non-deterministic refutation of Determined is the second half of `app:deterministic` (LIVE-UNPINNED in specs/paper-definitions-of-record.md). C15 fails on the former.",
+          "category": "INSIGHT",
+          "source_artifact": "FormalSystem/Semantics/StarNonValidities.lean",
+          "confidence": 0.95,
+          "suggested_keywords": [
+            "paper anchor",
+            "C15",
+            "app:deterministic",
+            "Determined"
+          ]
+        }
+      ],
+      "completion_summary": "Landed TMFrag (sound, complete at all four classes, Base/Dense compact, TM ⊊ TMFrag at Discrete) for L, and for L⋆ the syntax StarFormula/ofFormula, native semantics, the closed 53-constructor StarAxiom (45 TM⁺ schemata over StarFormula plus SK/ST/S4/S5/MS/AS/PS/US), TM⋆ soundness at all four classes with TD discharged semantically via atomization, semantic conservativity, and proof-theoretic conservativity of TM⋆ over TM⁺ in both directions at all four classes — all sorry-free, standard three axioms only.",
+      "reflection": {
+        "what_worked": "Transcribing the compiled 535 probes verbatim into repo style; keeping derived-operator RHS identical to Formula so every ofPlus arm and atomize push-through was rfl; overlapping the two big transitive rebuilds with syntactic (StarLanguage) work verified by lake env lean.",
+        "what_was_hard": "Every docstring-only edit under Semantics/ re-triggered the full Metalogic rebuild (twice); the paper-anchor typo inherited from the 535 report was only caught by C15 at the end.",
+        "what_was_missed": "The optional docs/ 'adding a language extension' note.",
+        "successes": "All 16 phases closed sorry-free on first or second compile; SS mirror and atomization transfer lemma each closed on the first attempt."
+      },
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 532,
+      "project_name": "worldhistory_extension_faithfulness_audit",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "Audit and resolve the partial-vs-total WorldHistory faithfulness gap in the Lean semantics against the paper's extension theorem. ANCHOR SOURCE: /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex -- thm:extension (line 3155, in the Appendix beginning line 1789), which states that every partial history tau : X -> W over a task frame F is extended by some total world history sigma in H_F (proved via Zorn's lemma over partial histories ordered by extension, appealing to lem:step and def:world-history), together with its corollary cor:occurrence. Read this alongside the supporting discussion in sec:Construction (line 933), where possible worlds are defined as functions from durations to world states, and the supporting definitions and lemmas in the Appendix (def:frame, def:world-history, def:frame-properties, lem:step, lem:nullity, cor:saturation-finite, and the surrounding partial-history material). TRIGGERING QUESTION: the frame-kit transport work left one phase blocked on a quantifier mismatch. Truth.time_shift_preserves_truth (FormalSystem/Semantics/Truth.lean) and IntTransfer.truthAt_map (FormalSystem/Semantics/IntTransfer.lean) both quantify over an ARBITRARY WorldHistory with no totality hypothesis, while the TruthIso structure carries hist : F.HF equiv F'.HF and transports only TOTAL histories. The prior implementation dispatch argued that an arbitrary history cannot be reduced to a total one, because TruthAt's atom clause is an existential over the history's domain, so a partial history makes atoms false off its domain and no total history reproduces that truth-value profile -- extension in the paper's sense preserves the history but not necessarily the truth-value profile of the partial one. Determine whether that reasoning is correct, and whether thm:extension and its supporting apparatus license a different resolution. DELIVERABLE: decide between (a) widening TruthIso to a WorldHistory-level equivalence, which would unblock both transports, and (b) accepting the remaining hand-written six-case inductions -- with the decision grounded in what the paper actually proves, not in what is convenient in Lean. BROADER SCOPE: the goal is that the Lean codebase be fully faithful and aligned with the paper in BOTH content and convention. Audit how FormalSystem/Semantics/ (WorldHistory.lean, TaskFrame.lean, Truth.lean, IntTransfer.lean) represents the partial/total history distinction, whether the paper's extension theorem is stated or available in Lean at all, and whether naming and structural conventions track def:world-history and def:frame. Report every divergence found, including places where the Lean development is stronger, weaker, or differently quantified than the paper. CAUTION: an earlier research report's section 4.3 recorded time_shift_preserves_truth as \"derivable from a uniform TruthIso? yes\", which is now known to be an error -- do not treat that report as authoritative on this point.",
+      "topic": "semantics",
+      "created": "2026-09-02T22:29:10Z",
+      "last_updated": "2026-09-03T00:26:38Z",
+      "session_id": "sess_1788388902_211d42",
+      "artifacts": [
+        {
+          "path": "specs/532_worldhistory_extension_faithfulness_audit/reports/01_worldhistory-extension-faithfulness-audit.md",
+          "type": "report",
+          "summary": "Audit of partial/total WorldHistory fidelity vs thm:extension; decision: relational TruthCorr transport derives timeShift_preserves_truth and truthAt_map unchanged, machine-checked; 30-item divergence table."
+        },
+        {
+          "path": "specs/532_worldhistory_extension_faithfulness_audit/plans/01_truthcorr-relational-transport.md",
+          "type": "plan",
+          "summary": "Six-phase plan (4 waves): land relational TruthCorr and derive timeShift_preserves_truth, truthAt_map, truthAt_of_truthIso unchanged; re-pin 10 drifted paper anchors; docstring hygiene; closure gates."
+        },
+        {
+          "path": "specs/532_worldhistory_extension_faithfulness_audit/summaries/01_truthcorr-relational-transport-summary.md",
+          "type": "summary",
+          "summary": "Implementation summary with induction ledger and axiom report"
+        }
+      ],
+      "next_artifact_number": 2,
+      "memory_candidates": [
+        {
+          "content": "When a generic transport lemma must range over a dependently-typed structure (e.g. Lean WorldHistory with `states` indexed by a domain proof), package the transport as a Prop-valued RELATION with existence clauses in both directions (Rel, total_fwd, total_bwd) rather than an Equiv on the structure. The Equiv route forces a dependent structure equality and degenerates into HEq; the relational route needs only pointwise agreement plus a `states_eq_of_time_eq`-style congruence and matches how the source paper proves the box case (existence forward + existence backward + IH at a related pair). Concretely in BimodalLogic: `TruthCorr` (dur : order-iso, Rel, atom, total_fwd, total_bwd) derives timeShift_preserves_truth, IntTransfer.truthAt_map, and truthAt_of_truthIso unchanged, while `TruthIso.hist : HF ≃ HF'` could reach only total histories. Applies whenever a bijective packaging is stronger than what the mathematical proof consumes.",
+          "category": "PATTERN",
+          "source_artifact": "specs/532_worldhistory_extension_faithfulness_audit/plans/01_truthcorr-relational-transport.md",
+          "confidence": 0.85,
+          "suggested_keywords": [
+            "relational-transport",
+            "TruthCorr",
+            "HEq-trap",
+            "Equiv-vs-relation",
+            "dependent-structure",
+            "truth-transport"
+          ]
+        },
+        {
+          "content": "When a Lean truth-transport lemma must hold on arbitrary (partial) histories but the paper's proof only uses existence of related total histories in both directions, package the transport as a Prop-valued relation structure (relation on arbitrary histories + atomic agreement on related pairs + totality-existence fwd/bwd) rather than an Equiv on the history type: the box case only needs existence, and an Equiv on a structure with a dependent states field forces HEq. TruthCorr in FormalSystem/Semantics/Truth.lean is the worked instance; TruthIso, time shift, and IntTransfer's Aligned are all instances.",
+          "category": "PATTERN",
+          "source_artifact": "specs/532_worldhistory_extension_faithfulness_audit/summaries/01_truthcorr-relational-transport-summary.md",
+          "confidence": 0.85,
+          "suggested_keywords": [
+            "lean4",
+            "truth transport",
+            "relational",
+            "HEq",
+            "TruthCorr",
+            "induction φ"
+          ]
+        },
+        {
+          "content": "Do not run a lake env lean axiom check concurrently with a full lake build in the same .lake tree: it produced a spurious 'no such file or directory' .olean write failure mid-build. Serialize them; re-running the build recovers. Also: the lake-build-guard wrapper needs the lake subcommand repeated after '--' (guard build --timeout N -- build Module.Name).",
+          "category": "WORKFLOW",
+          "source_artifact": "specs/532_worldhistory_extension_faithfulness_audit/summaries/01_truthcorr-relational-transport-summary.md",
+          "confidence": 0.7,
+          "suggested_keywords": [
+            "lake build",
+            "olean",
+            "concurrency",
+            "lake-build-guard"
+          ]
+        }
+      ],
+      "completion_summary": "Landed the paper's relational truth transport TruthCorr with a single six-case induction truthAt_of_truthCorr, and derived TimeShift.timeShift_preserves_truth, IntTransfer.truthAt_map, and truthAt_of_truthIso from it with byte-identical statements, deleting their hand-written inductions (truth-transport inductions 5 -> 3, no HEq, no Equiv on WorldHistory, no sorry, axioms unchanged). Re-pinned specs/paper-definitions-of-record.md so check-paper-definitions.sh exits 0, replaced raw-line-number paper citations with \\label citations, corrected the atom-clause and convex docstrings, and updated the stale H_F quotes.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 517,
+      "project_name": "rename_spherical_axiom_to_saturation",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "Rename the fourth task-frame axiom from Spherical to Saturation across the Lean codebase and documentation, matching the published paper. The paper (possible_worlds.tex) now names this axiom Saturation throughout; the repository still uses Spherical. Scope: the TaskFrame.Spherical predicate and the spherical field of FrameOver in FormalSystem/Semantics/TaskFrame.lean, roughly 30 downstream lemma and instance names (spherical_of_finite, spherical_of_permissive, spherical_of_subsingleton, wlem_of_spherical, multiFamGen_spherical, and the per-frame *_spherical witnesses), the Tests/BimodalTest/Semantics/SphericalFiniteAxiomTest.lean file name and its declarations, and prose in docs/reference/API_REFERENCE.md, docs/user-guide/architecture.md, the module READMEs under FormalSystem/, latex/subfiles/02-Semantics.tex, and the typst sources (FormalFoundations.typ, chapters/02-semantics.typ, notation/bimodal-notation.typ, SYNC-MAP.md, sync-check-whitelist.txt). Preserve the substantive ball-space claim, which remains accurate: Saturation is the condition S1d, strictly stronger than spherically complete (S1) -- so the term spherically complete must survive wherever it names that weaker standard condition, and only the axiom name itself changes. README.md line 80 has already been renamed and currently carries an interim note that the Lean sources still use the old name; remove that note as part of this work. Verify with lake build and scripts/check-module-invariants.sh.",
+      "topic": "semantics",
+      "created": "2026-09-01T21:36:01Z",
+      "last_updated": "2026-09-02T07:04:30Z",
+      "dependencies": [
+        518
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/TaskFrame.lean",
+        "FormalSystem/Semantics/",
+        "FormalSystem/Metalogic/",
+        "Tests/BimodalTest/Semantics/",
+        "docs/",
+        "latex/",
+        "typst/",
+        "README.md"
+      ],
+      "session_id": "sess_1788324209_de679d_517",
+      "artifacts": [
+        {
+          "path": "specs/517_rename_spherical_axiom_to_saturation/reports/01_spherical-to-saturation-occurrence-inventory.md",
+          "type": "report",
+          "summary": "Occurrence inventory: 444 occurrences across 40 files, 441 rename / 3 keep"
+        },
+        {
+          "path": "specs/517_rename_spherical_axiom_to_saturation/plans/01_spherical-to-saturation-rename.md",
+          "type": "plan",
+          "summary": "Three-phase sentinel-guarded rename with one atomic edit and a single detached guarded build"
+        },
+        {
+          "path": "specs/517_rename_spherical_axiom_to_saturation/summaries/01_spherical-to-saturation-rename-summary.md",
+          "type": "summary",
+          "summary": "Spherical -> Saturation rename: 3 phases, all gates green, 0 unresolvable anchors"
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 516,
+      "project_name": "update_documentation_for_finalized_metalogic_results",
+      "status": "completed",
+      "task_type": "general",
+      "description": "Update README.md and other relevant documentation to reflect the finalized completeness, soundness, compactness, and characterization results, maintaining accuracy without over-representing progress (task 494 remains outstanding)",
+      "topic": "documentation",
+      "created": "2026-09-01T20:49:37Z",
+      "last_updated": "2026-09-01T21:27:35Z",
+      "session_id": "sess_1788296678_762598",
+      "artifacts": [
+        {
+          "path": "specs/516_update_documentation_for_finalized_metalogic_results/reports/01_finalized-metalogic-documentation.md",
+          "type": "report",
+          "summary": "Verifies metalogic claims against live build tooling; identifies characterization/definability results as the documentation gap."
+        },
+        {
+          "path": "specs/516_update_documentation_for_finalized_metalogic_results/plans/01_finalized-metalogic-documentation.md",
+          "type": "plan",
+          "summary": "5-phase documentation-accuracy plan adding Galois-closure/definability and Kamp expressive-completeness results to README.md, Metalogic.lean status ledger, and implementation-status.md, gated on a verify-first evidence phase."
+        },
+        {
+          "path": "specs/516_update_documentation_for_finalized_metalogic_results/summaries/01_finalized-metalogic-documentation-summary.md",
+          "type": "summary",
+          "summary": "Documents the Galois-closure/definability and Kamp expressive-completeness result families in README.md, FormalSystem/Metalogic.lean's status ledger, and docs/project-info/implementation-status.md, with a verify-before-write evidence ledger and a passing cross-document accuracy gate."
+        }
+      ],
+      "next_artifact_number": 2,
+      "completion_summary": "Added the frame-class Galois-closure/definability result family and the Kamp expressive-completeness-for-Prior-structures result to README.md's new 'Characterization and Definability' subsection, FormalSystem/Metalogic.lean's 'Publication-Ready Results' ledger, and docs/project-info/implementation-status.md's status tables, gated on a re-verified per-claim evidence file. check-module-invariants.sh and typst-status-counts.sh both match the Phase 1 baseline exactly (only the pre-existing C6 manifest gap fails); no previously-accurate soundness/completeness/compactness/decidability prose was altered.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 515,
+      "project_name": "eliminate_overlapping_nontrivial_instance_warnings",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "Eliminate the 21 remaining \"Overlapping instance parameters -- There are 2 [Nontrivial D] instances; one is sufficient\" warnings across three Metalogic files. All 21 are the same linter class, but they split into two structurally DIFFERENT shapes and the second needs real judgment -- do not treat this as a uniform find-and-replace.\n\nPRECEDENT, ALREADY DONE (do not redo): the same warning class was fixed in FormalSystem/Semantics/TaskFrame.lean at 9 sites in commit e73dcb62f -- limit_of_shift, exists_uniform_radius_of_finite, exists_pos_of_nontrivial, limit_of_eq, staticFrame_rel_iff, staticFrame_serial, staticFrame_interpolates, staticFrame_limit, staticFrame_spherical. There the fix was mechanical: each theorem re-declared [Nontrivial D] explicitly while the enclosing section variable blocks (:783, :1308) already bound it; deleting the explicit binder sufficed. Result: 9 -> 0 overlapping warnings, 0 errors, and unused-section-variable warnings also dropped 30 -> 20 because the section binder became genuinely used. Full lake build green, 2506 jobs. Use that commit as the reference pattern for CLASS A below.\n\nAUTHORITATIVE SITE LIST. Do not re-derive by grepping for the binder text -- 4 of the 21 sites carry no explicit [Nontrivial D] on the flagged line and a text grep will miss them. Get the list from the compiler: `lake env lean <file>` and read the \"Overlapping instance parameters\" diagnostics.\n\nCLASS A -- MECHANICAL (17 sites). An explicit [Nontrivial D] on the declaration duplicates an enclosing section variable binder. Same fix as TaskFrame: delete the explicit binder only.\n  FormalSystem/Metalogic/Algebraic/FlowFrame.lean (section binder at :449) -- 13 sites:\n    :466 bundleFlowFrame, :472 bundleFlowHistory, :479 bundleFlowModel, :483 bundleFlowHistory_total,\n    :491 bundleFlow_pos_shift, :498 bundleFlow_comp_iff, :506 bundleFlow_serial, :514 bundleFlow_limit,\n    :521 bundleFlow_spherical, :533 bundleFlow_total_eq, :549 bundleFlow_total_eq_range,\n    :678 bundleFlow_truth_lemma, :803 bundleFlow_completeness_from_neg_membership\n  FormalSystem/Metalogic/Decidability/Verified/Decidable.lean (section binder at :136) -- 4 sites:\n    :2144 exists_gt_self, :2149 exists_lt_self, :2162 exists_gt_not_untl_disj, :2172 exists_lt_not_snce_disj\n\nCLASS B -- NOT MECHANICAL (4 sites), THE REAL CONTENT OF THIS TASK. These have NO explicit [Nontrivial D] on the flagged line. The duplication arises from nested/shadowing section variable blocks, so the fix is a decision about which block should own the instance -- not a deletion.\n  FormalSystem/Metalogic/Decidability/Verified/Bridge/TruthLemma.lean -- :364 RegionValued, :374 atomRegionInvariant_regionHistory, :389 interpInvariantAt_regionHistory.\n    Structure: an outer `variable {D : Type} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] [Nontrivial D]` at :74, then `section Countermodel` at :343 whose :345 RE-DECLARES `{D : Type}` (shadowing the outer D) and whose :351 binds [Nontrivial D] again. Both get auto-included.\n  FormalSystem/Metalogic/Decidability/Verified/Decidable.lean:2761 truthAt_sep -- [Nontrivial D] sits on a CONTINUATION line (:2762, alongside [DenselyOrdered D]) under the :136 section binder, so it is a Class A shape hiding from a single-line grep, but confirm that before treating it as one.\n\nBINDING CONSTRAINT ON CLASS B: a careless fix here can silently change WHICH `D` a theorem quantifies over, inside the decidability bridge. Establish, before editing, whether the shadowing at TruthLemma:345 is deliberate (the Countermodel section genuinely working over a different D) or accidental. If deliberate, the outer binder must not simply be deleted. State the finding explicitly in the plan and justify the chosen owner of the instance; do not infer it from the fact that the build stays green, since both arrangements may well compile.\n\nPROHIBITIONS:\n- Do NOT use `set_option linter.overlappingInstances false`, at any scope. The duplicate is what gets removed, never the warning.\n- Do NOT restructure section variable blocks beyond what removing the duplication requires.\n- Do NOT modify FormalSystem/Semantics/TaskFrame.lean; it is already fixed and verified.\n- Do NOT touch FormalSystem/Semantics/Ultraproduct/** or ShiftSet.lean.\n\nACCEPTANCE:\n- `lake env lean` on each of the three files reports 0 \"Overlapping instance parameters\" diagnostics; tree-wide the count goes 21 -> 0.\n- Full `lake build` exits 0 with no new errors and no new warnings of any other class. Note the guard shares completed results: force a genuine full build and confirm the job count (~2506), because a scoped result can replay and present as a full pass.\n- `lake test` green.\n- No `sorry`, `admit`, or `native_decide` introduced; no linter disabled anywhere (`grep -rn overlappingInstances FormalSystem/` returns nothing).\n- The plan records, per Class B site, which variable block owns [Nontrivial D] and why.\n\nWHY THIS IS A TASK AND NOT AN AD-HOC FIX: it spans three files in a subsystem separate from where it was discovered, contains four sites needing genuine judgment about binder ownership in the decidability bridge, and each verification round costs a full multi-minute rebuild. It surfaced incidentally during unrelated ultraproduct work; it is pre-existing and unrelated to that work.",
+      "topic": "code-quality",
+      "file_scope": [
+        "FormalSystem/Metalogic/Algebraic/FlowFrame.lean",
+        "FormalSystem/Metalogic/Decidability/Verified/Decidable.lean",
+        "FormalSystem/Metalogic/Decidability/Verified/Bridge/TruthLemma.lean"
+      ],
+      "created": "2026-09-01T11:39:26Z",
+      "last_updated": "2026-09-01T12:11:34Z",
+      "session_id": "sess_1788262971_5329aa",
+      "artifacts": [
+        {
+          "path": "specs/515_eliminate_overlapping_nontrivial_instance_warnings/reports/01_overlapping-nontrivial-instance-warnings.md",
+          "type": "report",
+          "summary": "Authoritative 21-site inventory, root-cause attribution to sweep commit ddfcb59c35, and a build-verified fix: 18 Class A binder deletions plus a Class B ownership decision at TruthLemma:346 vs :351, with the brief's shadowing premise falsified."
+        },
+        {
+          "path": "specs/515_eliminate_overlapping_nontrivial_instance_warnings/plans/01_eliminate-overlapping-instance-binders.md",
+          "type": "plan",
+          "summary": "4-phase plan eliminating 21 overlapping [Nontrivial D] warnings: three territory-disjoint per-file phases (13 + 5 Class A deletions, 1 Class B ownership fix) plus a forced-full-build acceptance phase."
+        },
+        {
+          "path": "specs/515_eliminate_overlapping_nontrivial_instance_warnings/summaries/01_eliminate-overlapping-instance-binders-summary.md",
+          "type": "summary",
+          "summary": "Deleted 21 redundant [Nontrivial D] instance binders across three Metalogic files, driving the overlappingInstances warning count 21 -> 0 with no linter suppression and no new warning of any class."
+        }
+      ],
+      "completion_summary": "Eliminated all 21 linter.overlappingInstances warnings by deleting the redundant [Nontrivial D] binders: 13 declaration-line deletions in FlowFrame.lean, 5 in Decidable.lean (including the continuation-line site at :2762, where the sibling [DenselyOrdered D] was preserved), and one section-level variable line in TruthLemma.lean with its explanatory comment retargeted to the surviving :346 binder. Verified by a forced full lake build --no-share at exit 0 showing 'Build completed successfully (2506 jobs).', lake test at exit 0, and a set-theoretic comm -13 check over sorted warning text confirming no warning of any class was newly introduced; the paired unusedSectionVars count fell 97 -> 83 exactly as predicted. No linter was disabled and no sorry, admit, axiom, or native_decide was introduced.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 492,
+      "project_name": "build_shiftset_ultraproduct_and_los_lemma",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "strong_completeness",
+      "effort": "20-30 hours",
+      "dependencies": [
+        491
+      ],
+      "description": "HARD. Build the ultraproduct of shift sets and prove Los for TruthAt. This is steps S2 and S3 of the route task 424 authorized. S2: construct the ultraproduct over an ultrafilter on the index type {L : List Formula // forall psi in L, psi in Gamma}, using the carrier route selected by the preceding research task -- do not re-litigate that choice here. S3: the Los lemma for TruthAt, by induction on Formula, six cases (atom, bot, imp, box, untl, snce). Five are mechanical. The box case is the real content and carries task 424's risk R2: it needs a choice-function argument for the forward direction, because box quantifies over all total world-histories (TruthAt, Semantics/Truth.lean:164) rather than over a pointwise-definable family. ACCEPTANCE: sorry-free, lake build green, #print axioms recorded for the Los statement (Classical.choice is expected and acceptable here; sorryAx is not). SEQUENCING NOTE: ShiftSet.lean's forward_repr/reverse_repr is the representation this builds on, and it is also the representation the algebraic route should reuse -- see the reconciliation task, which should not be allowed to fork a second, parallel representation. CARRIER ROUTE (SETTLED -- do not re-litigate): route (a), a bespoke quotient of the Pi group (forall i, D i) by its eventually-zero AddSubgroup, with AddCommGroup inherited free from QuotientAddGroup.Quotient.addCommGroup and only LE, LinearOrder, IsOrderedAddMonoid, Nontrivial (plus DenselyOrdered on the Dense branch) supplied by hand -- 5 instances, 6 on Dense, not the ~15 the design doc estimated. The history carrier is the parallel Quotient of (forall i, Omega i) by eventual equality, with the shift action lifted through both and sh_zero/sh_add discharged. Route (b), carrier normalization first, is a NO-GO: the only normalization machinery in the tree (DurationClassification.lean intIso, IntTransfer.lean TaskFrame.map) is Discrete-only, and DiscreteNonCompactness.lean discrete_consequence_not_compact refutes compactness exactly at Discrete. Do NOT import Mathlib.Order.Filter.Germ or FilterProduct: Filter.Product carries only coeTC and Inhabited, and Mathlib.Order.Filter.Ultrafilter.Basic (already built) supplies everything the route needs. EVIDENCE, COMPILED AND UNDER A BUILD TARGET: Tests/BimodalTest/Semantics/DependentUltraproductProbe.lean, imported from Tests/BimodalTest.lean, carries the whole carrier construction sorry-free with axiom profile [propext, Classical.choice, Quot.sound]; its shiftSetOnUD is the live check that ShiftSet (UD phi D) elaborates and that the quotient lands in Type. FULL REASONING: specs/491_select_dependent_ultraproduct_carrier_route/reports/01_dependent-ultraproduct-carrier-route.md (section 9 is the decision record, section 5 lists what S2 still owes). The probe deliberately does NOT supply: the ultrafilter on the index type, ShiftSet.sep, carrier_nonempty, or the valuation A -- shiftSetOnUD takes the last three as hypotheses. Those are this task's work.",
+      "created": "2026-08-26T05:15:00Z",
+      "last_updated": "2026-09-01T11:06:45Z",
+      "session_id": "sess_1788244020_f09481",
+      "artifacts": [
+        {
+          "path": "specs/492_build_shiftset_ultraproduct_and_los_lemma/reports/01_shiftset-ultraproduct-and-los.md",
+          "type": "report",
+          "summary": "S2+S3 fully verified: ultraproduct ShiftSet, Los for ShiftTruth and TruthAt, index ultrafilter -- sorry-free"
+        },
+        {
+          "path": "specs/492_build_shiftset_ultraproduct_and_los_lemma/plans/01_shiftset-ultraproduct-los.md",
+          "type": "plan",
+          "summary": "4-phase hard-mode transcription plan promoting the verified ultraproduct/Los prototypes into FormalSystem/Semantics/Ultraproduct/, wired to a green lake build."
+        },
+        {
+          "path": "FormalSystem/Semantics/Ultraproduct/Los.lean",
+          "type": "source",
+          "summary": "los (six Formula cases) and los_truthAt; axioms [propext, Classical.choice, Quot.sound], no sorryAx"
+        },
+        {
+          "path": "specs/492_build_shiftset_ultraproduct_and_los_lemma/summaries/01_shiftset-ultraproduct-los-summary.md",
+          "type": "summary",
+          "summary": "Acceptance evidence: los_truthAt/los/uShiftSet/uSep/eventually_mem all [propext, Classical.choice, Quot.sound], no sorryAx; lake build 2506 jobs green; lake test 2556/2556"
+        }
+      ],
+      "completion_summary": "Built the dependent ultraproduct of shift sets and Los's theorem for both ShiftTruth and TruthAt, sorry-free, across four modules under FormalSystem/Semantics/Ultraproduct/, and retired the duplicate carrier construction from the test tree so exactly one carrier construction remains. Acceptance criterion met: #print axioms los_truthAt reports [propext, Classical.choice, Quot.sound] with sorryAx absent; lake build green at 2506 jobs and lake test green at 2556 jobs.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 493,
+      "project_name": "discharge_compactbase_compactdense_and_strong_completeness",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "strong_completeness",
+      "effort": "10-16 hours",
+      "dependencies": [
+        490,
+        492
+      ],
+      "description": "Assemble the compactness result and collect strong completeness for Base and Dense. Steps S4 and S5 of task 424's authorized route. S4: from the Los lemma, prove ModelExistenceBase and ModelExistenceDense (every finitely-satisfiable Gamma is satisfiable), then compose with the ModelExistence -> Compact bridge to obtain CompactBase and CompactDense. S5: feed those into strongCompletenessBase_of_compact (StrongCompleteness.lean:305) and strongCompletenessDense_of_compact (:331), which are already proved as reductions, and DISCHARGE their engine hypotheses -- deliberately left live so that compactness was isolated as the whole remaining obligation. The engines are BXCanonical.completeness (BXCanonical/Completeness.lean:196) for Base and BXCanonical.completeness_dense (:256) for Dense, both sorry-free and both of exactly the required type. WHY THIS MATTERS BEYOND THE TREE: the paper's cor:tm-completeness rows 1 and 2 assert strong completeness for TM+ and TM+_d and attribute them to this repository, where they are currently CONDITIONAL on unproved hypotheses. This task is what makes the paper's own headline claim true; task 488's author memo records the mismatch as a live paper-side correction until then. ACCEPTANCE: StrongCompletenessBase and StrongCompletenessDense proved unconditionally, sorry-free, axiom-audited; the author-memo item retired.",
+      "created": "2026-08-26T05:15:00Z",
+      "last_updated": "2026-09-01T17:38:37Z",
+      "file_scope": [
+        "FormalSystem/Metalogic/StrongCompleteness.lean"
+      ],
+      "session_id": "sess_1788282938_f2ac03_493",
+      "artifacts": [
+        {
+          "path": "specs/493_discharge_compactbase_compactdense_and_strong_completeness/reports/01_compactness-and-strong-completeness.md",
+          "type": "report",
+          "summary": "Verified proofs, placement recommendation (new FormalSystem/Metalogic/Compactness.lean), status-claim correction inventory, gate wiring, 5-phase decomposition."
+        },
+        {
+          "path": "specs/493_discharge_compactbase_compactdense_and_strong_completeness/plans/01_compactness-strong-completeness.md",
+          "type": "plan",
+          "summary": ""
+        },
+        {
+          "path": "specs/493_discharge_compactbase_compactdense_and_strong_completeness/summaries/01_compactness-strong-completeness-summary.md",
+          "type": "summary",
+          "summary": "Compactness and strong completeness discharged over base and dense frame classes."
+        }
+      ],
+      "completion_summary": "CompactBase, CompactDense, ModelExistenceBase, ModelExistenceDense, StrongCompletenessBase and StrongCompletenessDense are now proved unconditionally in the new FormalSystem/Metalogic/Compactness.lean, by an ultraproduct model-existence construction over the finite sublists of the premise set. All six are sorry-free at exactly [propext, Classical.choice, Quot.sound], and the axiom audit is now a standing C14 gate rather than a one-off observation. Roughly 30 now-false status claims across Lean docstrings, documentation, the paper record and the archived author memo were corrected, collapsing the three-way status taxonomy to two-way.",
+      "roadmap_items": [
+        "ROADMAP.md Phase 1 Leg B (genuine Set Formula strong completeness for Base/Dense) is closed."
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 494,
+      "project_name": "define_and_refute_dedekind_compactness",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "strong_completeness",
+      "effort": "10-16 hours",
+      "dependencies": [
+        490,
+        493,
+        509
+      ],
+      "description": "NOW SEQUENCED BEHIND THE COMPACTNESS PARAMETERIZATION (see the REVISED note at the end); still INDEPENDENT of the ultraproduct chain. Settle the fourth frame class negatively and complete the compactness picture. CURRENT STATE: there is NO CompactDedekind definition anywhere in the tree, no StrongCompletenessDedekind, no SatisfiableDedekindSet, and no refutation -- the Dedekind row of StrongCompleteness.lean's status ledger (:84-89) rests on the scope of Reynolds 1992 section 9 Theorem 7 alone. Meanwhile the paper (cor:tm-completeness, possible_worlds.tex:4657) asserts that strong completeness 'provably fails for Z-time as well as for the dense-and-complete class R where compactness fails' -- so this is a REFUTATION target, not a proof target. DELIVERABLE PART 1: define the missing vocabulary in SetConsequence.lean mirroring the Base/Dense/Discrete groups -- SetSemanticConsequenceDedekindDense already exists (:103); add StrongCompletenessDedekind, CompactDedekind, SatisfiableDedekindSet, ModelExistenceDedekind. PART 2: refute CompactDedekind and StrongCompletenessDedekind. CRITICAL CONSTRAINT: the Discrete witness does NOT port. archWitness (DiscreteNonCompactness.lean:102) and its unsatisfiability half (:229-242) turn entirely on Order.succ_le_of_lt and exists_succ_iterate, i.e. on [SuccOrder D] + [IsSuccArchimedean D]; the Dedekind binder list is DenselyOrdered plus LUB with no successor at all, and over R the operator Formula.next = untl bot phi is vacuous, so archWitness carries no contradiction. A NEW witness is required. Model DiscreteNonCompactness.lean's structure (finitely-satisfiable half, then unsatisfiable half) but not its witness. ACCEPTANCE: both refutations sorry-free and axiom-audited; the four-class compactness picture complete (Base/Dense open pending the ultraproduct chain, Discrete refuted, Dedekind refuted). === REVISED 2026-08-31 (review: metalogic systematicity) === PART 1 IS RESCOPED. Do NOT define StrongCompletenessDedekind/CompactDedekind/SatisfiableDedekindSet/ModelExistenceDedekind by mirroring the Base/Dense/Discrete groups -- that fourth hand copy is exactly what the compactness-parameterization prerequisite collapses. After that task lands, Part 1 is a SINGLE INSTANTIATION of the FrameClass-indexed family at FrameClass.Dedekind. PART 2 IS UNCHANGED and remains the real content: a new non-compactness witness, since archWitness does not port (it turns on SuccOrder/IsSuccArchimedean and the Dedekind binder list has no successor structure; over the reals Formula.next = untl bot phi is vacuous). Grounding: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue H3.",
+      "created": "2026-08-26T05:15:00Z",
+      "last_updated": "2026-09-02T00:57:13Z",
+      "blocks_note": "dep on 490 is TERRITORY SERIALIZATION, not semantics: both write FormalSystem/Metalogic/SetConsequence.lean (490 adds the ModelExistence->Compact bridge theorems, 494 adds the Dedekind vocabulary group). 490 is the cheaper of the two (3-5h vs 10-16h) so it goes first. If 490 lands its theorems in a sibling file instead -- which its own description permits -- this edge can be dropped and the two run in parallel.",
+      "file_scope": [
+        "FormalSystem/Metalogic/StrongCompleteness.lean",
+        "FormalSystem/Metalogic/DiscreteNonCompactness.lean"
+      ],
+      "session_id": "sess_1788308014_451fe6",
+      "artifacts": [
+        {
+          "path": "specs/494_define_and_refute_dedekind_compactness/reports/01_dedekind-noncompactness-witness.md",
+          "type": "report",
+          "summary": "Confirms Part 1 is a single instantiation of the post-509 FrameClass-indexed family, designs a new Dedekind non-compactness witness (bounded next-q-point chain vs a left-gap formula), and supplies the complete module machine-verified sorry-free at [propext, Classical.choice, Quot.sound]."
+        },
+        {
+          "path": "specs/494_define_and_refute_dedekind_compactness/plans/01_dedekind-non-compactness-refutation.md",
+          "type": "plan",
+          "summary": "Five-phase sequential plan transcribing and re-verifying the research-verified Dedekind non-compactness module in tree, with axiom audit and a grep-driven documentation reconciliation phase."
+        },
+        {
+          "path": "specs/494_define_and_refute_dedekind_compactness/summaries/01_dedekind-non-compactness-summary.md",
+          "type": "summary",
+          "summary": "Dedekind non-compactness refuted in tree: new witness module, four .Dedekind instantiations, and full documentation reconciliation."
+        }
+      ],
+      "next_artifact_number": 2,
+      "completion_summary": "Settled FrameClass.Dedekind negatively. Added the four .Dedekind instantiations of the FrameClass-indexed compactness family to SetConsequence.lean, and a new 516-line module FormalSystem/Metalogic/DedekindNonCompactness.lean carrying the witness {G(T S -q), F(G -q)} u {Xq^n T : n in N} — finitely satisfiable over an R ShiftSet model, unsatisfiable over every Dedekind-complete frame — which refutes CompactDedekind (dedekind_consequence_not_compact) and StrongCompletenessDedekind (strongCompletenessDedekind_refuted), both sorry-free at exactly [propext, Classical.choice, Quot.sound]. Reconciled 15 documentation hunks across five files that previously asserted the tree contained no Dedekind refutation.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 495,
+      "project_name": "determine_tm_completeness_status_over_task_frames",
+      "status": "completed",
+      "task_type": "formal",
+      "topic": "metalogic",
+      "effort": "12-20 hours",
+      "dependencies": [
+        489
+      ],
+      "description": "RESEARCH TASK, DELIBERATELY AGNOSTIC ABOUT THE VERDICT. Determine whether TM (the BaseLanguage proof system) is complete over task frames, and if not, characterize what it IS complete for. DO NOT ASSUME COMPLETENESS HOLDS; the evidence points the other way, and a machine-checked incompleteness result is a complete and valid outcome. EVIDENCE THAT IT MAY FAIL: (1) the paper's cor:tm-completeness (possible_worlds.tex:4657) carries completeness for the BL+ systems ONLY -- TM+, TM+_d, TM+_f, TM+_c -- and never claims it for TM. (2) Metalogic/Conservativity.lean's scope section states that the forward direction TM+ |- tr phi => TM |- phi is REFUTED at FrameClass.Base (the (Sp) witness) and at FrameClass.Discrete (the Z1 witness), with the TM+ half of the Discrete witness already machine-checked in-tree as z1_translate. THE SUBTLETY ANY DISPATCH MUST CONFRONT FIRST: since |-[Base] tr (Sp) is proved and TM+ is sound over all task frames, (Sp) is VALID ON EVERY TASK FRAME. So a refutation of TM |- Sp by soundness CANNOT use a task frame. It needs a structure outside the class on which TM remains sound precisely because it lacks the Until/Since expressive power to detect the violation. Identifying that broader class is the actual research content. SCOPE: (a) settle whether TM is complete over task frames; (b) if not, identify the class TM is sound and complete for; (c) determine whether the CEB and CEF refutations that Conservativity.lean currently only DOCUMENTS can now be machine-checked, given the BL-side semantics and soundness theorem delivered by the prerequisite task. Conservativity.lean's own 'What a machine-checked refutation would need' section names three missing pieces: a BL-side semantics, a BL-side soundness theorem, and the two countermodels (a two-fibre structure for CEB, Z x_lex Z for CEF); the prerequisite supplies the first two. HARD CONSTRAINT INHERITED FROM Conservativity.lean: do not state a forward-conservativity theorem and discharge it with sorry -- it is provably false at two frame classes, so that would be an unsound placeholder, not deferred debt.",
+      "created": "2026-08-26T05:15:00Z",
+      "last_updated": "2026-09-01T18:04:51Z",
+      "session_id": "sess_1788282938_f2ac03_495",
+      "artifacts": [
+        {
+          "path": "specs/495_determine_tm_completeness_status_over_task_frames/reports/01_tm-completeness-status.md",
+          "type": "report",
+          "summary": "Research report: verdict, the completeness-equals-forward-conservativity reduction, first-principles (Sp) reconstruction with validity proof, hand-verified Z1 countermodel, per-row machine-checkability assessment, and three recommended in-tree corrections."
+        },
+        {
+          "path": "specs/495_determine_tm_completeness_status_over_task_frames/plans/01_tm-completeness-formalization.md",
+          "type": "plan",
+          "summary": "Nine-phase implementation plan: reduction, (Sp) witness, binder-weakened discrete BL soundness, Z1 countermodel, and Conservativity.lean prose correction."
+        },
+        {
+          "path": "specs/495_determine_tm_completeness_status_over_task_frames/summaries/01_tm-completeness-formalization-summary.md",
+          "type": "summary",
+          "summary": "TM completeness status over task frames determined; Z1 countermodel closes CEF."
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 507,
+      "project_name": "parameterize_validity_by_frameclass",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "dependencies": [
+        514,
+        512
+      ],
+      "description": "ROOT FIX for the metalogic systematicity front. Give the proof-side FrameClass tag a SEMANTIC interpretation, then define validity ONCE, indexed by it. THE ASYMMETRY: the proof side is already fully parameterized -- Derivable (fc : FrameClass) (ProofSystem/Derivable.lean:69), DerivationTree (fc : FrameClass) (ProofSystem/Derivation.lean:91), DerivationTree.lift along fc1 <= fc2 (Derivation.lean:184), PartialOrder FrameClass (ProofSystem/Axioms.lean:551), Axiom.minFrameClass as declared single source of truth (Axioms.lean:531ff). The semantic side has NONE of this: 15 hand-copied validity predicates with no fc index (5 in Semantics/Validity.lean:94,206,248,301,336; 4 in Semantics/BLValidity.lean:77,102,115,132; ValidInt in Semantics/IntTransfer.lean; 5 in FrameConditions/Validity.lean), plus 8 semantic-consequence variants. SMOKING GUN IN ONE FILE: Metalogic/SetConsequence.lean carries SetDerivable (fc : FrameClass) at :72 with ONE monotonicity lemma at :118, and directly beneath it SetSemanticConsequence{Base,Dense,Discrete,DedekindDense} at :79,:87,:97,:106 with FOUR copied monotonicity lemmas at :124,:130,:136,:144. Those four definitions are BYTE-IDENTICAL except for the typeclass binder line; their own docstrings cross-reference the Valid* whose binder list they copy. THE MISSING INGREDIENT ALREADY EXISTS: FrameConditions/FrameClass.lean defines marker typeclasses LinearTemporalFrame(:88), SerialFrame(:103), DenseTemporalFrame(:124), DiscreteTemporalFrame(:148), DedekindTemporalFrame(:182) -- exactly the binder-list-as-predicate-on-D that a FrameClass-indexed validity needs. That layer is orphaned (see the FrameConditions resolution task) and this task should consume it rather than invent a sixth vocabulary. DELIVERABLE: (1) a FrameClass -> carrier-constraint interpretation; (2) ValidOn (fc : FrameClass) (phi) and SetSemanticConsequence (fc) defined once; (3) ONE monotonicity lemma replacing valid_implies_valid_dense/_discrete/_validDedekind/_validDedekindDense (Validity.lean:349,356,364,371), pointing the same direction as DerivationTree.lift; (4) the existing 15 predicates retained as abbreviations or retired, with every call site migrated. HAZARD THIS CLOSES: the ValidDedekind docstring (Validity.lean:301) warns that retargeting soundness_dedekind to it yields a REFUTABLE theorem -- a trap that exists only because binder lists are inlined rather than derived from the frame class. ACCEPTANCE: sorry-free, lake build green, check-module-invariants.sh passes, axiom profiles unchanged on the flagship theorems. GROUNDING: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue H1.=== DIRECTION AMENDED (supersedes the plan at plans/01_frameclass-indexed-validity.md) ===\nThe existing plan is SUPERSEDED and must be revised before implementation. Its Phase 1 defines\n  FrameClass.Sat (fc : FrameClass) (D : Type) [insts] : Prop\n  ValidIn (fc) (phi) := forall (D : Type) [insts], fc.Sat D -> ValidOver D phi\ni.e. `Sat` is a predicate on the CARRIER TYPE and `ValidIn` is duration-quantified. That is\nduration validity, and it is explicitly NOT what this project wants. Landing it would harden the\nwrong notion into the tree's single validity definition.\n\nREQUIRED SHAPE INSTEAD -- frame validity, on bundled frames:\n  FrameClass.Sat : FrameClass -> TaskFrame -> Prop     (a predicate on FRAMES)\n  ValidIn (fc : FrameClass) (phi : Formula) : Prop := forall F : TaskFrame, fc.Sat F -> F |= phi\nThis mirrors `Derivable fc` on the proof side exactly, which is the symmetry this task exists to\nrestore.\n\nDEPENDS ON the TaskFrame duration-bundling refactor: `Sat` cannot be a predicate on frames until a\nframe carries its own duration. Sequence behind it.\n\nWHAT SURVIVES from the research report (reports/01_frameclass-indexed-validity.md): the verified\ncorrection that the FrameConditions marker typeclasses are NOT reusable (DiscreteTemporalFrame\nomits IsPredArchimedean, which would silently widen the discrete class under soundness_discrete);\nthat Sat must be Prop-valued with an existential Discrete case because SuccOrder/PredOrder are\ndata-carrying; the finding that FrameConditions/Validity.lean is nearly all dead code; the\nValidInt/ValidOverInt definitional duplicate. All of that holds under the frame-level shape.\nThe report's further recommendation to rename ValidDedekind to ValidComplete is REJECTED — see\nthe naming decision below.\n\nWHAT CHANGES: the 92-site binder-list migration is substantially DISSOLVED rather than performed --\nbundling removes the inlined `[DenselyOrdered D]`-style binder lists at the root, which is the\ndisease this task was treating symptomatically. Re-scope the migration against the post-refactor\ntree rather than against the counts in the current report.\n\n=== PAPER GROUNDING AND NAMING === ValidIn fc is the paper's class-restricted consequence ⊨_C\n(cor:tm-completeness: \"restricts def:logical-consequence to models over task frames in a class\nC\"); TaskFrame.ValidOn is def:frame-validity and stays the single frame-level primitive.\nSat interpretation of record: .Base ↦ True; .Dense ↦ DenselyOrdered F.Duration; .Discrete ↦\n∃ least positive duration WITH the successor-Archimedean refinement kept as a SEPARATE\nnamed predicate (the paper's def:TMplus-f narrows TM+_f's target to Z-time via Hölder — do not\nsilently conflate the Discrete property with the Z-time class); KEEP the name FrameClass.Dedekind — do NOT rename it to .Complete, and\ndo NOT rename ValidDedekind. The paper's def:frame-properties calls this class Complete, but\n\"complete\" is already load-bearing in this tree for PROOF-THEORETIC completeness (the\ncompleteness-theorem family), so FrameClass.Complete would collide with the tree's most\nprominent existing use of the word; \"Dedekind complete\" is the standard and unambiguous name\nfor the least-upper-bound property this class actually denotes. This is a DELIBERATE,\nRECORDED deviation from paper naming — the ONLY naming deviation sanctioned on this front —\nand it must be documented at the definition site, citing def:frame-properties as the\ndefinition of record and naming the divergence explicitly. Sat .Dedekind ↦ DenselyOrdered ∧\nconditionally-complete (the paper's TM+_c target is the DENSE-AND-COMPLETE class,\ncor:tm-completeness; the bare Complete property of def:frame-properties admits Z as well —\nrecord both, one predicate each, no bridged duplicates). See specs/514_align_definitions_with_source_paper/reports/01 §1.1, §3.3.",
+      "created": "2026-08-31T00:00:00Z",
+      "last_updated": "2026-09-01T16:24:12Z",
+      "session_id": "sess_1788278928_134aad",
+      "artifacts": [
+        {
+          "path": "specs/507_parameterize_validity_by_frameclass/reports/01_frameclass-indexed-validity.md",
+          "type": "report",
+          "summary": "FrameClass-indexed semantic validity: verified prototype (FrameClass.Sat, ValidIn, one monotonicity lemma, 8 bridges) compiling sorry-free, full 92-site call-site census, and a 6-phase decomposition with off-ramp."
+        },
+        {
+          "path": "specs/507_parameterize_validity_by_frameclass/plans/02_frame-level-validity-indexing.md",
+          "type": "plan",
+          "summary": "Plan v2, all 9 phases [COMPLETED], deviations annotated inline on the checklist items."
+        },
+        {
+          "path": "specs/507_parameterize_validity_by_frameclass/summaries/01_frame-level-validity-indexing-summary.md",
+          "type": "summary",
+          "summary": "Implementation summary: four deliverables verified by content, full acceptance-gate output."
+        },
+        {
+          "path": "specs/507_parameterize_validity_by_frameclass/plans/01_frameclass-indexed-validity.md",
+          "type": "plan",
+          "summary": "frameclass indexed validity (backfilled by --sync)"
+        }
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/Validity.lean",
+        "FormalSystem/Semantics/BLValidity.lean",
+        "FormalSystem/Semantics/IntTransfer.lean",
+        "FormalSystem/Metalogic/SetConsequence.lean",
+        "FormalSystem/FrameConditions/"
+      ],
+      "completion_summary": "The semantic layer is now indexed by FrameClass, mirroring the proof layer. FrameClass.Sat interprets each class tag as a named, paper-anchored predicate on bundled TaskFrames; ValidIn and SetSemanticConsequenceOn are each defined exactly once against it; one monotonicity lemma per axis replaces the five hand-written validity bridges and the four copied set-consequence bridges; and all fifteen legacy predicates are abbreviations over the new primitives or retired, with every call site migrated. lake build is green at 2508/2508 with C2/C14 axiom baselines byte-identical and zero sorries.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 508,
+      "project_name": "parameterize_soundness_over_indexed_validity",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "dependencies": [
+        507,
+        510
+      ],
+      "description": "Collapse ~23 soundness theorems into ONE parameterized theorem plus corollaries. CURRENT DUPLICATION, all instances of a single schema: Metalogic/Soundness.lean has soundness(:1100), soundness_dense(:1274), soundness_discrete(:1420), soundness_dedekind(:1947) plus three *_valid variants(:1205,:1368,:1928); Metalogic/StrongCompleteness.lean has soundness_{base,dense,discrete,dedekind}_consequence(:667,:771,:879,:524); FrameConditions/Soundness.lean has soundness_over, soundness_linear, soundness_dense, soundness_discrete, soundness_Int; Metalogic/BaseLanguageSoundness.lean has bl_soundness{,_dense,_discrete,_dedekind} plus four *_valid variants(:168-252). Metalogic/SoundnessLemmas/FrameClassVariants.lean (1041 lines) exists solely to carry per-frame-class variants of the axiom-validity lemmas. TARGET: one theorem, Derivable fc Gamma phi -> SetSemanticConsequence fc Gamma phi, by induction on the derivation, with the axiom case discharged from the Axiom.minFrameClass <= fc side condition already carried by DerivationTree's axiom constructor plus a per-axiom validity lemma. The existing theorems become one-line corollaries. BL SIDE COLLAPSES FOR FREE: blValid_iff_valid_tr (BaseLanguageSoundness.lean:141) already reduces BL validity to Formula validity through the translation tr, so BLValidOn fc phi := ValidOn fc (tr phi) subsumes all four BLValid* definitions (BLValidity.lean:77,102,115,132), the three blValid_implies_* bridges (:153,:157,:162), and all eight bl_soundness* theorems -- do NOT scope that as separate work. CONSTRAINT: preserve the soundness_dedekind target discipline -- it targets ValidDedekindDense, not ValidDedekind, and the docstring at Validity.lean:301 explains why retargeting is refutable. ACCEPTANCE: sorry-free, lake build green, axiom profiles preserved on all flagship soundness results, no theorem weakened. GROUNDING: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue H2 and M3.=== DIRECTION NOTE ===\nThe FrameClass-indexed validity this task builds on is being defined at FRAME level, not carrier\nlevel: `FrameClass.Sat : FrameClass -> TaskFrame -> Prop` and\n`ValidIn fc phi := forall F : TaskFrame, fc.Sat F -> F |= phi`, on frames that carry their own\nduration type. Do not plan against the earlier carrier-quantified shape\n(`fc.Sat D -> ValidOver D phi`), which is superseded. This task sequences transitively behind the\nTaskFrame duration-bundling refactor via its dependency on the indexed-validity task.\n\n=== PAPER GROUNDING === Targets def:soundness / def:logical-consequence / cor:tm-completeness's\n⊨_C and per-class strong/weak completeness roster (TM+ strong over all task frames; TM+_d\nstrong over dense; TM+_f weak over Z-time; TM+_c weak over dense-and-complete). Class naming\nfollows 507: the class keeps the name .Dedekind (the .Complete rename was rejected — \"complete\"\nis reserved in this tree for proof-theoretic completeness). See\nspecs/514_align_definitions_with_source_paper/reports/01 §1.2.",
+      "created": "2026-08-31T00:00:00Z",
+      "last_updated": "2026-09-01T20:02:06Z",
+      "file_scope": [
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Metalogic/SoundnessLemmas/",
+        "FormalSystem/Metalogic/SoundnessLemmas.lean",
+        "FormalSystem/Metalogic/BaseLanguageSoundness.lean",
+        "FormalSystem/FrameConditions/"
+      ],
+      "session_id": "sess_1788282938_f2ac03_508",
+      "artifacts": [
+        {
+          "path": "specs/508_parameterize_soundness_over_indexed_validity/reports/01_parameterized-soundness.md",
+          "type": "report",
+          "summary": "Verified collapse design with compiled reference implementation, corrected citations, and 7-phase decomposition."
+        },
+        {
+          "path": "specs/508_parameterize_soundness_over_indexed_validity/plans/01_soundness-in-parameterized-collapse.md",
+          "type": "plan",
+          "summary": "9-phase transplant plan for the parameterized soundness collapse."
+        },
+        {
+          "path": "specs/508_parameterize_soundness_over_indexed_validity/summaries/01_soundness-in-parameterized-collapse-summary.md",
+          "type": "summary",
+          "summary": "23 soundness theorems collapsed to one parameterized soundness_in plus corollaries; BL and consequence layers collapsed."
+        },
+        {
+          "path": "specs/508_parameterize_soundness_over_indexed_validity/reports/02_anchor-and-callsite-inventory.md",
+          "type": "report",
+          "summary": "anchor and callsite inventory (backfilled by --sync)"
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 509,
+      "project_name": "parameterize_compactness_and_strong_completeness_family",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "dependencies": [
+        493,
+        507,
+        508
+      ],
+      "description": "Make the compactness / strong-completeness layer a FrameClass-indexed family instead of three hand-copied rows with a missing fourth. THE ARCHITECTURE IS ALREADY RIGHT AND IS THE PLAN OF RECORD -- strong completeness derived from compactness plus weak completeness. Present and sorry-free: strongCompletenessBase_of_compact (StrongCompleteness.lean:314), strongCompletenessDense_of_compact (:340), compactBase_of_modelExistence (:378), compactDense_of_modelExistenceDense (:424), and the negative results discrete_consequence_not_compact (DiscreteNonCompactness.lean:250) and strongCompletenessDiscrete_refuted (:280). WHAT IS WRONG IS THE SHAPE, NOT THE MATHEMATICS. SetConsequence.lean defines the family once per class by hand: Base at :214,:222,:230,:245; Dense at :262,:269,:277,:291; Discrete at :315,:329,:342 (ModelExistenceDiscrete correctly absent, it is refuted); Dedekind ENTIRELY ABSENT. And the two strongCompleteness*_of_compact reductions are the same argument written twice. DELIVERABLE: (1) StrongCompleteness (fc), Compact (fc), SatisfiableSet (fc), ModelExistence (fc) as one indexed family over the interpretation landed by the prerequisite; (2) ONE strongCompleteness_of_compact (fc) replacing the two reductions; (3) ONE modelExistence_implies_compact (fc) replacing the two bridges; (4) the existing Base/Dense/Discrete results recovered as instantiations with identical statements and axiom profiles. WHY THIS SEQUENCES BEFORE THE DEDEKIND REFUTATION TASK: that task's Part 1 is specified as defining the missing vocabulary 'mirroring the Base/Dense/Discrete groups' -- a fourth hand copy of exactly what this task collapses. After this lands, its Part 1 becomes a single instantiation and only its genuinely hard Part 2 (a new non-compactness witness that cannot reuse archWitness, since the Dedekind binder list has no successor structure) remains. DOES NOT DISCHARGE ANYTHING: ModelExistenceBase/Dense stay unproven here; the ultraproduct chain owns that. This is a restructuring task, and the conditional results must stay exactly as strong as they are today. ACCEPTANCE: sorry-free, lake build green, every currently-provable result still provable with an unchanged axiom profile. GROUNDING: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue H3.=== DIRECTION NOTE ===\nThe FrameClass-indexed validity this task builds on is being defined at FRAME level, not carrier\nlevel: `FrameClass.Sat : FrameClass -> TaskFrame -> Prop` and\n`ValidIn fc phi := forall F : TaskFrame, fc.Sat F -> F |= phi`, on frames that carry their own\nduration type. Do not plan against the earlier carrier-quantified shape\n(`fc.Sat D -> ValidOver D phi`), which is superseded. This task sequences transitively behind the\nTaskFrame duration-bundling refactor via its dependency on the indexed-validity task.\n\n=== PAPER GROUNDING === Targets def:soundness / def:logical-consequence / cor:tm-completeness's\n⊨_C and per-class strong/weak completeness roster (TM+ strong over all task frames; TM+_d\nstrong over dense; TM+_f weak over Z-time; TM+_c weak over dense-and-complete). Class naming\nfollows 507: the class keeps the name .Dedekind (the .Complete rename was rejected — \"complete\"\nis reserved in this tree for proof-theoretic completeness). See\nspecs/514_align_definitions_with_source_paper/reports/01 §1.2.\n\n=== SEQUENCING EDGE ADDED (file-safety, not a mathematical dependency) ===\nThe 493 entry in dependencies[] is a SERIALIZATION edge, not a proof dependency. Both this task\nand 493 rewrite FormalSystem/Metalogic/StrongCompleteness.lean: 493 discharges the engine\nhypotheses of strongCompletenessBase_of_compact (:305) and strongCompletenessDense_of_compact\n(:331) in their existing shape, while this task restates that same file as a FrameClass-indexed\nfamily. With no edge between them, /orchestrate wave assignment would place them in the SAME\nwave (per commands/orchestrate.md: two tasks share a wave whenever no dependencies[] edge\nconnects them) and 493 declares no file_scope, so the in_batch collision detector cannot see the\noverlap. Order is 493 first: it lands the mathematical content, this task then reshapes it.\nDo not remove this edge as spurious.",
+      "created": "2026-08-31T00:00:00Z",
+      "last_updated": "2026-09-01T20:43:04Z",
+      "file_scope": [
+        "FormalSystem/Metalogic/StrongCompleteness.lean",
+        "FormalSystem/Metalogic/SetConsequence.lean",
+        "FormalSystem/Metalogic/DiscreteNonCompactness.lean"
+      ],
+      "session_id": "sess_1788282938_f2ac03_509",
+      "artifacts": [
+        {
+          "path": "specs/509_parameterize_compactness_and_strong_completeness_family/reports/01_frameclass-indexed-compactness-family.md",
+          "type": "report",
+          "summary": "Compile-verified indexed compactness family: defeq collapse, two friction points with fixes, Dedekind row for free."
+        },
+        {
+          "path": "specs/509_parameterize_compactness_and_strong_completeness_family/plans/01_frameclass-indexed-compactness-family.md",
+          "type": "plan",
+          "summary": "6-phase transplant plan for the FrameClass-indexed compactness family."
+        },
+        {
+          "path": "specs/509_parameterize_compactness_and_strong_completeness_family/summaries/01_frameclass-indexed-compactness-family-summary.md",
+          "type": "summary",
+          "summary": "Compactness/strong-completeness collapsed to one FrameClass-indexed family; Dedekind row complete."
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 510,
+      "project_name": "resolve_orphaned_frameconditions_layer",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "dependencies": [
+        507
+      ],
+      "description": "Decide the fate of FormalSystem/FrameConditions/ (4 modules, 906 lines) -- currently orphaned code that also contains a half-built version of the validity parameterization. MEASURED STATE: consumers outside the directory itself number exactly ONE, the library aggregator FormalSystem/FormalSystem.lean:13. Nothing in Metalogic/, Semantics/, Theorems/, or Tests/ references any definition it exports. SILENT REGRESSION TO RECORD: archived task 58 logged 'Wire completeness to FrameConditions -- wiring is DONE: completeness_over_Int, discrete_completeness_fc, dovetailed_bundle'. All three identifiers are ABSENT from the entire live tree today; the wiring was removed and the claim never retracted. Its README separately states the live-importer count as 1 without drawing the conclusion. THREE THINGS IT CONTAINS: (a) FrameClass.lean marker typeclasses LinearTemporalFrame(:88), SerialFrame(:103), DenseTemporalFrame(:124), DiscreteTemporalFrame(:148), DedekindTemporalFrame(:182) -- the binder-list-as-predicate-on-D that the prerequisite parameterization needs, and which it should consume rather than re-invent; (b) Validity.lean's ValidOver/ValidLinear/ValidDenseFc/ValidDiscreteFc/ValidOverInt (:59,:79,:89,:100,:199), a FOURTH parallel validity vocabulary plus the bridge lemmas that exist only to translate to and from Semantics/Validity.lean; (c) Compatibility.lean's AxiomLinearCompatible/AxiomDenseCompatible/AxiomDiscreteCompatible (:85,:93,:102) with roughly 40 hand-written per-axiom instances that duplicate Axiom.minFrameClass -- whose own docstring calls itself 'the single source of truth for axiom-frame-class compatibility' and says it 'replaces the ad-hoc predicates isBase, isDenseCompatible, isDiscreteCompatible'. Both encodings are live. DELIVERABLE: an explicit verdict, executed. PROMOTE (marker typeclasses become the FrameClass interpretation, tree consumes them) or DELETE. Its README argues for staying separate on layering grounds, but that argument addresses placement, not zero consumers, and under the promote path the layering inverts anyway since the interpretation belongs beside Semantics/Validity.lean, below Metalogic/. THE AxiomCompatible INSTANCES SHOULD GO IN EITHER CASE -- minFrameClass supersedes them. A DELETE VERDICT IS A COMPLETE OUTCOME if the prerequisite task chose a different interpretation. ACCEPTANCE: no orphaned validity vocabulary remains; lake build green; check-module-invariants.sh C6 unreachable-module count updated and manifested. GROUNDING: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue M1.=== DIRECTION NOTE ===\nThe FrameClass-indexed validity this task builds on is being defined at FRAME level, not carrier\nlevel: `FrameClass.Sat : FrameClass -> TaskFrame -> Prop` and\n`ValidIn fc phi := forall F : TaskFrame, fc.Sat F -> F |= phi`, on frames that carry their own\nduration type. Do not plan against the earlier carrier-quantified shape\n(`fc.Sat D -> ValidOver D phi`), which is superseded. This task sequences transitively behind the\nTaskFrame duration-bundling refactor via its dependency on the indexed-validity task.\n\n=== VERDICT PRE-REGISTERED BY TASK 514 RESEARCH === DELETE. Under the frame-level Sat of 507\nthe carrier-typeclass layer has no role and no paper counterpart (the paper has no\ncarrier-level validity notion at all — def:frame-validity is per-frame, ⊨_C is per-class).\nExecute as deletion + C6 manifest update; promotion is off the table unless 507's\nimplementation discovers a concrete consumer, which its plan must record explicitly if so.",
+      "created": "2026-08-31T00:00:00Z",
+      "last_updated": "2026-09-01T17:57:45Z",
+      "file_scope": [
+        "FormalSystem/FrameConditions/"
+      ],
+      "session_id": "sess_1788282938_f2ac03_510",
+      "artifacts": [
+        {
+          "path": "specs/510_resolve_orphaned_frameconditions_layer/reports/01_frameconditions-deletion.md",
+          "type": "report",
+          "summary": "Deletion verdict, five corrections to the brief, four execution blockers, full delete/edit inventory, and gate baselines captured at b7ccf6702."
+        },
+        {
+          "path": "specs/510_resolve_orphaned_frameconditions_layer/plans/01_delete-frameconditions-layer.md",
+          "type": "plan",
+          "summary": "7-phase deletion plan for FormalSystem/FrameConditions/, typst prose rewrite sequenced before deletion."
+        },
+        {
+          "path": "specs/510_resolve_orphaned_frameconditions_layer/summaries/01_delete-frameconditions-layer-summary.md",
+          "type": "summary",
+          "summary": "FrameConditions layer deleted; 853 lines removed, all doc/book/gate consequences repaired, build green."
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 511,
+      "project_name": "research_frame_correspondence_infrastructure",
+      "status": "expanded",
+      "task_type": "formal",
+      "topic": "metalogic",
+      "priority": "medium",
+      "dependencies": [
+        514,
+        512,
+        513
+      ],
+      "description": "RESEARCH TASK, DELIBERATELY AGNOSTIC ABOUT FEASIBILITY. Determine what frame-correspondence infrastructure this bimodal setting can support, and specify it. THE GAP IS TOTAL, NOT PARTIAL: there is NO result anywhere in the live tree of the form 'axiom X is valid on frame class C IF AND ONLY IF C satisfies condition Y'. A search for correspond|characteriz|definabl|Sahlqvist across live code returns only chronicleMonadic_truth_correspondence (a chronicle/monadic bridge, BXCanonical/Chronicle/ChronicleMonadicBridge.lean:413), SetMaximalConsistent.ultrafilter_correspondence (algebraic, Algebraic/UltrafilterMCS.lean:782), and the *Definable* family in WeakCanonical/EFGames/ -- which concerns DEFINABLE GAPS in the Kamp/Ehrenfeucht-Fraisse machinery, not axiom-frame correspondence. WHAT EXISTS IS THE SUFFICIENCY HALF ONLY: Axiom.minFrameClass declares the intended class per axiom (a definition, not a theorem); Metalogic/SoundnessLemmas/ proves each axiom valid on its class. The NECESSITY half -- that each frame condition is required, i.e. the axiom fails on some frame violating it -- is established nowhere systematically. The closest artifacts are the three ad hoc non-derivability countermodels in Metalogic/Independence/ (ClockFrame.lean, LoopingDuration.lean, CoNotPriorU.lean), which are per-axiom and not organized as correspondence. CONSEQUENCE: Axiom.minFrameClass is currently an ASSERTION about the axiom-class relation with one direction proven, and the tree cannot state 'TM+_d is the logic of dense task frames' as a theorem. SCOPE: (a) which of the 45 axiom constructors admit a correspondence argument at all; (b) whether Sahlqvist-style machinery transfers to task frames with Until/Since and an S5 modality, or whether a bespoke argument is needed per axiom layer -- DO NOT ASSUME IT TRANSFERS; (c) what the right general statement is here given that frame classes are carrier-type constraints (DenselyOrdered, SuccOrder, LUB) rather than relational conditions on a Kripke accessibility relation, which is the setting standard correspondence theory assumes; (d) whether the Independence/ countermodels generalize into the necessity half. A NEGATIVE OR HEAVILY-QUALIFIED VERDICT IS A COMPLETE OUTCOME -- if correspondence in the textbook sense does not apply to carrier-constraint frame classes, say so with evidence and specify whatever weaker characterization IS available, so the question is not reopened. SEQUENCING: run alongside the TM-completeness-characterization research task, which asks the adjacent question for the BaseLanguage fragment. DELIVERABLE: a report with a verdict and, if affirmative, a concrete construction specification. GROUNDING: specs/reviews/review-2026-08-31-metalogic-systematicity.md issue M2.=== DIRECTION AMENDED (three research reports complete; construction spec partially retired) ===\nVERDICT REACHED AND MACHINE-VERIFIED across reports 01/02/03 (evidence: 02_probes.lean,\n03_probes.lean, both sorry-free):\n  - Carrier-only correspondence (`forall D F, F |= ax <-> Cond(D)`) is FALSE and mis-shaped -- it\n    quantifies over frames on the left and only over the carrier on the right.\n  - Per-frame correspondence in its textbook shape `F |= ax <-> C(F)` EXISTS and is proved for\n    density: `Corr.density_iff_fwdRec` (atomic, arbitrary D) and\n    `Bridge.density_schema_iff_fwdRec` (every formula, at D = Z).\n  - `FwdRec F` implies every total history is periodic (at D = Z), via determinism.\n  - The differentiation/refined-frame side-condition route is exactly trivial, not merely\n    near-trivial, and is refuted for good.\n\nRETIRED FROM THE CONSTRUCTION SPEC (report 02 section 9): Phase D (`transFrame` + Tier 1\n`ValidOn D density <-> DenselyOrdered D`) is CUT. It is duration validity -- the notion this\nproject is rejecting -- and it was the only genuinely new proof work in the spec. Phase E1 was\nalready deleted by report 03. What remains (Phases A, B', C, E2) is transcription of proofs that\ncompile today, restated at frame level.\n\nDEPENDS ON: the TaskFrame duration-bundling refactor (correspondence must be stated per-frame on\nbundled frames, not per-carrier), and on the uniform frame-faithfulness research task, which\ndecides whether the correspondent is a bare frame condition (`FwdRec`) or `Sat (minFrameClass ax)`\nunder a uniform non-degeneracy hypothesis. Do not implement before that design question is settled\n-- the choice determines the shape of every per-axiom correspondence theorem that follows.\n\nSTILL OPEN: E2' -- over a general non-dense D, does FwdRec still give full-schema density, with\n\"periodic\" weakened to shift-recurrence under a history-preserving order automorphism? Currently\n[paper], unverified; the counterexample is the sum of Z/nZ over Z x_lex Z. All exactness claims are\nscoped to D = Z and nowhere wider.\n\n=== BOARD NOTE (task 514 postflight) ===\nResearch complete and absorbed: FwdRec and the Tier-1/T1 statements land under revised task\n513; probe files remain the evidence of record. Terminal at [RESEARCHED]; do not dispatch\n/plan 511.",
+      "created": "2026-08-31T00:00:00Z",
+      "last_updated": "2026-08-31T19:55:41Z",
+      "session_id": "sess_1788198220_972012_511",
+      "artifacts": [
+        {
+          "path": "specs/511_research_frame_correspondence_infrastructure/reports/03_e2-periodicity.md",
+          "type": "report",
+          "summary": "E2 closed affirmatively at D=Z: FwdRec implies every total history is periodic (via determinism), giving full-schema exactness F |= GGphi->Gphi <-> FwdRec F for every formula. New open item E2' at wider D."
+        },
+        {
+          "path": "specs/511_research_frame_correspondence_infrastructure/reports/01_frame-correspondence-infrastructure.md",
+          "type": "report",
+          "summary": "frame correspondence infrastructure (backfilled by --sync)"
+        },
+        {
+          "path": "specs/511_research_frame_correspondence_infrastructure/reports/02_per-frame-correspondence-reassessment.md",
+          "type": "report",
+          "summary": "per frame correspondence reassessment (backfilled by --sync)"
+        }
+      ],
+      "subtasks": [
+        513
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 513,
+      "project_name": "uniform_frame_faithfulness_predicate",
+      "status": "completed",
+      "task_type": "lean4",
+      "description": "GALOIS-CLOSURE IMPLEMENTATION for the frame-class layer, replacing the uniform-faithfulness\nquestion, which is ANSWERED and closed: no uniform Faithful predicate is needed for\nDense/Discrete (class-level exactness already holds via indicator axioms) and none can exist\nfor Complete (Reynolds: completeness is not characterizable by temporal formulas — the sep\ndocstring in ProofSystem/Axioms.lean already quotes this; sep itself has no correspondent,\n511 report 01 §6.5). Design (A)-with-indicators is the design of record.\n\nDELIVERABLES (all post-512, post-507; spec at\nspecs/514_align_definitions_with_source_paper/reports/01 §3.3–3.4):\n(1) Semantics/Correspondence/Galois.lean: Th, Mod, antitonicity, closure operator,\nGaloisClosed — one definition pair, no per-class copies.\n(2) Indicator exactness: F.ValidOn ¬X⊤ ↔ DenselyOrdered F.Duration and the X⊤/discrete dual;\ncorollaries Mod(Th(Sat .Dense)) = Sat .Dense and the paper-Discrete analogue; the\nDerivable-level X⊤-from-prior_UZ+serial_future lemma.\n(3) Per-axiom closure of the density schema: port 511's Corr.density_iff_fwdRec (atomic,\narbitrary D) and Bridge.density_schema_iff_fwdRec (schema, D = Z) from the probe files into\nthe tree over bundled frames, stated as Mod {density} = {F | FwdRec F} at Z.\n(4) Duration-level correspondence (T1) for DF/DN/CO in the paper's proven form —\n\"(∀ F over D, F ⊨ ax) ↔ D is Discrete/Dense/Complete\" — with the translation frame and the\ntwo-state permissive frame as (⇒) witnesses (app:discrete/app:dense/app:complete adjudication:\nreport 01 §2.4).\n(5) Non-closure witnesses: generalize the static-frame time-invariance lemma to arbitrary D\n(03_probes density_of_hist_periodic is the pattern); derive staticFrame over Q ∈\nMod(Axioms .Complete) \\ Sat .Complete and staticFrame over Z ×ₗ Z ∈ Mod(Axioms .Discrete) \\\nZ-time; sandwich corollaries Z-time ⊊ Mod(TM+_f) ⊆ paper-Discrete and R-time ⊊ Mod(TM+_c) ⊆\nSat .Dense.\n(6) EXPLICIT NON-GOALS, recorded so the question is not reopened: closed-form\ncharacterizations of Mod(TM+_f) and Mod(TM+_c) are OPEN and not promised — evidence: no\nvariable-free BL+ sentence separates Z from Z ×ₗ Z or Q from R, and sep has no correspondent.\n\nACCEPTANCE: sorry-free, lake build green, every theorem above stated over bundled frames with\nSat from 507, axiom profiles clean; the FwdRec port must not re-prove what the probes proved —\ntransplant and restate. GROUNDING: possible_worlds.tex def:frame-properties, def:frame-validity,\ncor:tm-completeness, app:discrete/dense/complete;\nspecs/514_align_definitions_with_source_paper/reports/01;\nspecs/511_research_frame_correspondence_infrastructure/reports/01–03 + probes.",
+      "topic": "correspondence theory",
+      "priority": "high",
+      "dependencies": [
+        512,
+        507
+      ],
+      "artifacts": [
+        {
+          "path": "specs/513_uniform_frame_faithfulness_predicate/reports/01_galois-closure-implementation.md",
+          "type": "report",
+          "summary": "Verified feasibility study and phase decomposition for the frame-class Galois closure layer."
+        },
+        {
+          "path": "specs/513_uniform_frame_faithfulness_predicate/plans/01_galois-closure-implementation.md",
+          "type": "plan",
+          "summary": "11-phase Galois closure implementation plan, three dependency waves, two optional phases."
+        },
+        {
+          "path": "specs/513_uniform_frame_faithfulness_predicate/summaries/01_galois-closure-implementation-summary.md",
+          "type": "summary",
+          "summary": "Galois closure layer: Th/Mod adjunction, indicator exactness, FwdRec correspondence, non-closure witnesses and both AxiomSet sandwiches."
+        }
+      ],
+      "created": "2026-08-31T19:38:48Z",
+      "last_updated": "2026-09-01T18:59:15Z",
+      "session_id": "sess_1788282938_f2ac03_513",
+      "file_scope": [
+        "FormalSystem/Semantics/Correspondence/"
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 518,
+      "project_name": "metalogic_hotfix_simp_loop_unbuilt_modules",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "description": "WAVE 0 HOTFIX for the metalogic consolidation programme (specs/reviews/review-2026-09-01-lean-engineering.md, Critical findings C1-C6; territory detail in specs/reviews/2026-09-01-lean-engineering/{D-tactics,B-completeness,E-docs,F-canonical}.md). Six small, independent edits; land them all before any other task in the programme. (1) SIMP LOOP (D-01, validated): FormalSystem/Automation/Normalization.lean registers 21 @[simp] unfold lemmas (:69-161) and 10 @[simp] fold lemmas (:800-834) that are exact rfl inverses in the GLOBAL simp set; plain `simp` on `a.neg = a.neg` hits maximum recursion depth in 43 modules and for every `import FormalSystem` consumer. Fix: `register_simp_attr formula_unfold` / `formula_fold`, retag both families, redefine modalNorm/modalNormAt/modalNormAll/modalFold as `simp only [formula_unfold]` etc., add a regression `example (a : Formula) : a.neg = a.neg := by simp` to Tests/BimodalTest/Automation/. (2) UNBUILT MODULES (B-08, C-19; C6 currently FAILS): Metalogic/SpWitness.lean, Metalogic/TMCompletenessReduction.lean, Metalogic/Z1Countermodel.lean and Semantics/LexCarrier.lean are unreachable from every Lake root and absent from scripts/module-invariants-manifest.txt, so `lake build` never compiles Z1Countermodel.tmCompleteDiscrete_refuted, the machine-checked CEF half that Conservativity.lean:159-166 cites. Fix: import Z1Countermodel and SpWitness from FormalSystem/Metalogic.lean; add LexCarrier and BLSchemaValidity to FormalSystem/Semantics.lean; confirm `bash scripts/check-module-invariants.sh` passes C6. (3) README.md:167 and :240-241 say Dedekind strong completeness is 'not stated ... no CompactDedekind definition and no refuting theorem'; SetConsequence.lean:601,609 define both and DedekindNonCompactness.lean:431,459 refute both. Rewrite to match Metalogic.lean:116-120 (E-01). (4) typst/FormalFoundations.typ:697,701,993,999-1004,1543 report `completeness` as carrying sorryAx and claim one live structural sorry in WeakCanonical/Transfer.lean; C2 pins completeness at propext/Classical.choice/Quot.sound, C3 asserts zero, and countermodel_discrete is proved at WeakCanonical/GroupModel/CountermodelBase.lean:143. Correct all five sites (E-02). (5) FormalSystem/README.md:51-58,68-69 and FormalSystem/Syntax/README.md:19 present all_past/all_future as Formula constructors and omit untl/snce; the constructors are atom, bot, imp, box, untl, snce (Syntax/Formula.lean:78-106). Replace both tables with a link to the correct top-level README.md:33-69 version (E-03). (6) CYCLE (F-03): Bundle/LimitMCS.lean:8 imports Algebraic.FlowFrame solely for the orphan `fc_theorem_true_in_bundle_flow_model` (:461-473, zero consumers), creating an undocumented Bundle<->Algebraic directory cycle that Metalogic/README.md:88 denies. Delete the orphan and the import; correct README.md:88 to 'three cycles' or, after deletion, 'two'. (7) D-13: AesopRules.lean's 18 attributes sit in Aesop's DEFAULT rule set despite the file's deprecation notice; wrap them in `declare_aesop_rule_sets [TMLogic]` + `(rule_sets := [TMLogic])`. ACCEPTANCE: lake build green; check-module-invariants.sh ALL PASS; the simp regression example compiles; grep confirms the five doc sites and README.md:167 corrected.",
+      "dependencies": [],
+      "file_scope": [
+        "FormalSystem/Automation/Normalization.lean",
+        "FormalSystem/Automation/AesopRules.lean",
+        "FormalSystem/Metalogic.lean",
+        "FormalSystem/Semantics.lean",
+        "FormalSystem/Metalogic/Bundle/LimitMCS.lean",
+        "README.md",
+        "FormalSystem/README.md",
+        "FormalSystem/Syntax/README.md",
+        "typst/FormalFoundations.typ",
+        "scripts/module-invariants-manifest.txt"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-02T05:21:49Z",
+      "artifacts": [
+        {
+          "path": "specs/518_metalogic_hotfix_simp_loop_unbuilt_modules/reports/01_wave-0-hotfix-verification.md",
+          "type": "report",
+          "summary": "Verification of all seven Wave 0 hotfix claims against source, with measured build probes"
+        },
+        {
+          "path": "specs/518_metalogic_hotfix_simp_loop_unbuilt_modules/plans/01_wave-0-hotfix-execution.md",
+          "type": "plan",
+          "summary": "Eight-phase Wave 0 hotfix plan covering the simp loop, C6 unreachable modules, the Bundle/Algebraic cycle, four documentation fronts, and a final acceptance gate."
+        },
+        {
+          "path": "specs/518_metalogic_hotfix_simp_loop_unbuilt_modules/summaries/01_wave-0-hotfix-summary.md",
+          "type": "summary",
+          "summary": "Wave 0 hotfix: simp loop fixed via dedicated formula_unfold/formula_fold simp sets, C6 flipped to PASS by wiring four unreachable modules in, Bundle<->Algebraic cycle broken, four documentation fronts corrected, and AesopRules moved into a dedicated TMLogic rule set."
+        }
+      ],
+      "session_id": "sess_1788324209_de679d_518",
+      "completion_summary": "All eight phases of the Wave 0 hotfix landed on a green tree. Invariant check C6 flipped FAIL -> PASS and scripts/check-module-invariants.sh now reports ALL CHECKS PASSED (baseline: all-pass-except-C6); plain simp terminates on Formula goals again after the 31 unfold/fold lemmas moved into dedicated formula_unfold/formula_fold simp sets; the Bundle <-> Algebraic directory cycle is gone; AesopRules' 21 rules moved out of Aesop's default rule set into a dedicated TMLogic set; and four drifted documentation fronts (README Dedekind status, Formula constructor tables, typst sorryAx claims, the AesopRules docstring) now agree with machine-checked fact. lake build and lake build BimodalTest are both at exit 0, with no sorry, no new axiom, and no vacuous definition introduced.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 519,
+      "project_name": "soundnesslemmas_consolidation_delete_dead",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "description": "WAVE 1 (deletion). Retire the soundness machinery that the FrameClass refactor superseded but left compiling. Findings A-01, A-02, A-08, A-09, D-03, D-04, D-05, D-09, D-11 in specs/reviews/2026-09-01-lean-engineering/{A-soundness,D-tactics}.md; Critical C6 and High H1 in the review. MEASURED STATE: FormalSystem/Metalogic/SoundnessLemmas/DenseValidity.lean carries 615 of 1,297 lines (47%) that are transitively unreachable -- axiom_locally_valid (:970, 298 lines, private, zero references), swap_axiom_{t4,ta,tl}_valid (:98-169), the four *_preserves_swap_valid lemmas (:228-279), eleven axiom_*_valid local-validity helpers (:717-874) consumed only by the dead dispatcher, axiom_density_valid (:960), and three *_preserves_* lemmas (:1268-1297); its own docstring at :215-217 records the supersession. Two 45-arm swap dispatchers, axiom_swap_valid (DenseValidity.lean:297, 416 lines) and axiom_swap_valid_general (FrameClassVariants.lean:46, 348 lines), share 321 byte-identical lines, and Soundness.lean:1337,1341 reach into the Dense one for exactly two arms (density, dense_indicator). SoundnessLemmas/Core.lean:42's IsValid D is a second monomorphic validity notion whose stated justification (circularity, universe levels) has expired -- CoValidity.lean and Separability.lean already import Semantics.Validity -- and forces .toFibre + (D := F.Duration) shims at Soundness.lean:913-935 and :1326-1356. exists_isGLB_of_lub is duplicated at Soundness.lean:1000 and Separability.lean:48 with a docstring apologising for the copy. and_of_not_imp_not is defined five times (Soundness.lean:153, DenseValidity.lean:826 and :280, CoValidity.lean:61, Decidability/Verified/Decidable.lean:2563). WORK: delete the eight dead ranges; move the four live survivors (axiom_temp_linearity_valid :875, axiom_temp_linearity_past_valid :907, axiom_F_until_equiv_valid :940, axiom_P_since_equiv_valid :950) into FrameClassVariants.lean; delete axiom_swap_valid, replacing its two live arms with `density_swap_valid` and `dense_indicator_swap_valid` beside sep_swap_valid (Soundness.lean:1217); make every arm of the surviving dispatcher a one-line `exact <ctor>_swap_valid` (the shape axiom_validIn_min at Soundness.lean:1277 already has), extracting per-constructor lemmas where they are inlined and dropping the no-op `simp only [Formula.swapTemporal, TruthAt]` lines before `intro` (D-09, validated); restate FrameClassVariants' five theorems at ValidIn/ValidDiscrete and delete IsValid and Core.lean; un-private Separability.exists_isGLB_of_lub and delete the Soundness.lean copy; keep ONE and_of_not_imp_not (it mostly disappears once task 521 lands Truth.and_iff). Add Separability to the SoundnessLemmas.lean aggregator (it is omitted today, A-10) and regenerate SoundnessLemmas/README.md. ACCEPTANCE: SoundnessLemmas/ at most ~1,400 lines (from 2,487); exactly one 45-arm swap dispatcher with one-line arms; zero declarations in the directory with only their own occurrence in the tree; lake build green; check-module-invariants.sh ALL PASS; C2 axiom baseline unchanged.",
+      "dependencies": [
+        518
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/SoundnessLemmas/",
+        "FormalSystem/Metalogic/SoundnessLemmas.lean",
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Metalogic/SoundnessLemmas/README.md",
+        "FormalSystem/Metalogic/Decidability/Verified/Decidable.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-02T14:20:54Z",
+      "artifacts": [
+        {
+          "path": "specs/519_soundnesslemmas_consolidation_delete_dead/reports/01_soundnesslemmas-dead-code-reachability.md",
+          "type": "report",
+          "summary": "Reachability audit, six-phase dependency map, risk analysis, and line-count projection for the SoundnessLemmas consolidation."
+        },
+        {
+          "path": "specs/519_soundnesslemmas_consolidation_delete_dead/plans/01_soundnesslemmas-consolidation-deletion.md",
+          "type": "plan",
+          "summary": "Nine phases, ~13h, waves [[1,2],[3],[4],[5],[6],[7],[8],[9]]; lake build green at every phase boundary."
+        },
+        {
+          "path": "specs/519_soundnesslemmas_consolidation_delete_dead/summaries/01_soundnesslemmas-consolidation-summary.md",
+          "type": "summary",
+          "summary": "SoundnessLemmas/ reduced 2487 -> 1457 lines across 5 -> 3 files; duplicate swap dispatcher and local IsValid notion retired."
+        }
+      ],
+      "session_id": "sess_1788332773_c2fa9f_519",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 520,
+      "project_name": "bundle_retirement_and_cycle_breaking",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 1 (deletion). Retire the dead half of Metalogic/Bundle/ and break the Core<->Bundle directory cycle. Findings F-01, F-02, F-06, F-07, F-16, F-18, F-21 in specs/reviews/2026-09-01-lean-engineering/F-canonical.md; High H5 in the review. MEASURED STATE: Bundle/CanonicalFrame.lean (312 lines, 11 declarations) and Bundle/Construction.lean (253 lines, 11 declarations) have zero live cross-file consumers; BXCanonical/Frame.lean:11 imports CanonicalFrame and references nothing from it while :223-244 re-proves canonical_forward_F / canonical_backward_P as bx_forward_witness / bx_backward_witness; Bundle/README.md advertises both files as deliverables and lists three files that do not exist (FMCS.lean, CanonicalIrreflexivity.lean, SuccExistence.lean). Bundle/UntilSinceCoherence.lean (46 lines) declares nothing and exists to forward two imports to ChronicleToCountermodelBasic.lean. Bundle/SuccRelation.lean:432-543 is 85 lines of first-person proof diary ('Hmm, this may need additional infrastructure. Let me check.') around an 8-line proof, citing SuccExistence.lean five times across three files. Bundle/ModalSaturation.lean is imported by nine route modules for five general S5/propositional derivation helpers (boxDneTheorem :262, axiom5NegativeIntrospection :422, negBoxToBoxNegBox :502, SetMaximalConsistent.contrapositive :281, .neg_box_implies_box_neg_box :511) while everything named 'saturation' in it is dead. The sole Core->Bundle edge, Core/RestrictedMCS/Basic.lean:12 -> Bundle/CanonicalTaskRelation, exists only so four theorems (:469,488,573,593) can use iterF/iterP/closureFBound/closurePBound (CanonicalTaskRelation.lean:74-194, :707-849) -- 24 pure-syntax declarations that Syntax/SubformulaClosure/NestingDepth.lean:23,106 already names in its docstrings. Metalogic/README.md:115-119 records breaking this cycle as 'touches 9 files' for a different plan (relocating Basic.lean itself). WORK: move CanonicalFrame.lean, Construction.lean and UntilSinceCoherence.lean to Boneyard/ with a README (relocate ExistsTask/ExistsTaskPast to TemporalContent.lean first if SuccRelation keeps them; drop the unused import at BXCanonical/Frame.lean:11; have ChronicleToCountermodelBasic import TemporalCoherence and SuccRelation directly); create FormalSystem/Syntax/SubformulaClosure/IteratedTemporal.lean hosting the 24 iterF/iterP declarations verbatim and point both Basic.lean and CanonicalTaskRelation.lean at it (3 Lean files, no renames); create FormalSystem/Theorems/ModalDerived.lean and move the five live ModalSaturation helpers plus gDneTheorem/hDneTheorem (TemporalCoherence.lean:66,82), pastTempA (WitnessSeed.lean:567 -- fix its docstring: it is a direct Axiom.connect_past application, and `temp_a` does not exist), dneTheorem, dniTheorem; re-point the nine importers; Boneyard the saturation layer; delete the SuccRelation diary (:432-543) leaving a two-sentence note on why h_p_step is a hypothesis; fix the F-21 docstring errors (SuccRelation.lean:131-143 definitional claim contradicted by WitnessSeed.lean:47-49; UltrafilterMCS.lean:26 'contains sorries'; Construction/FMCSDef/BFMCS changelog and 'But wait' prose); delete the duplicate import at Bundle.lean:12; regenerate Bundle/README.md's architecture block and Main Theorems table; correct Metalogic/README.md's cycle count and 'Cycle 2' section. ACCEPTANCE: directory-level import cycles in Metalogic/ = 1 (BXCanonical<->WeakCanonical, the measured and documented one); Bundle/ has zero modules with no live consumer; lake build green; check-module-invariants.sh ALL PASS; C2 baseline unchanged.",
+      "dependencies": [
+        518
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/Bundle/",
+        "FormalSystem/Metalogic/Bundle.lean",
+        "FormalSystem/Metalogic/Core/RestrictedMCS/Basic.lean",
+        "FormalSystem/Syntax/SubformulaClosure/",
+        "FormalSystem/Theorems/",
+        "FormalSystem/Metalogic/BXCanonical/Frame.lean",
+        "FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleToCountermodelBasic.lean",
+        "FormalSystem/Metalogic/README.md",
+        "FormalSystem/Boneyard/",
+        "FormalSystem/Metalogic/Algebraic/UltrafilterMCS.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-02T15:07:03Z",
+      "artifacts": [
+        {
+          "path": "specs/520_bundle_retirement_and_cycle_breaking/reports/01_bundle-retirement-cycle-breaking.md",
+          "type": "report",
+          "summary": "Bundle retirement and Core/Bundle cycle-breaking research: verified dead-code cascade, exact import surgery, ModalSaturation consumer matrix, 4-phase ordering, gate obligations."
+        },
+        {
+          "path": "specs/520_bundle_retirement_and_cycle_breaking/plans/01_bundle-retirement-cycle-breaking.md",
+          "type": "plan",
+          "summary": "Five-phase implementation plan, 8 hours, waves [[1],[2,3],[4],[5]]."
+        },
+        {
+          "path": "specs/520_bundle_retirement_and_cycle_breaking/summaries/00_baseline.md",
+          "type": "summary",
+          "summary": ""
+        },
+        {
+          "path": "specs/520_bundle_retirement_and_cycle_breaking/summaries/01_bundle-retirement-cycle-breaking-summary.md",
+          "type": "summary",
+          "summary": "bundle retirement cycle breaking summary (backfilled by --sync)"
+        }
+      ],
+      "session_id": "sess_1788332773_c2fa9f_520",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 521,
+      "project_name": "truth_layer_simp_normal_form",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "description": "WAVE 2 (core utilities). Give the primary language's truth relation the @[simp] API its base-language mirror already has, and register the named simp set every truth-level proof should use. This is the highest-leverage single change in the review: five territory reviewers converged on it independently (A-03, C-04, B-13, D-06, D-07, D-10, D-21, C-05, C-17, A-13, A-17 in specs/reviews/2026-09-01-lean-engineering/{A-soundness,C-frames,B-completeness,D-tactics}.md; High H2 and utility U2/U13 in the review). MEASURED STATE: Semantics/BLTruth.lean:137-196 has neg_iff, top_true, and_iff, or_iff, diamond_iff, somePast_iff, someFuture_iff, always_iff, all @[simp]. Semantics/Truth.lean has none of and/or/neg/top/always/diamond, and its primitive clauses imp_iff (:192), box_iff (:237), bot_false (:182) are not @[simp], while strong_release_iff/strong_trigger_iff are @[simp] with zero uses. Consequences: truth_and_iff exists in four private copies (Correspondence/DurationFrames.lean:298, DedekindNonCompactness.lean:158 -- with a docstring choosing to duplicate rather than widen imports, Independence/CoNotPriorU.lean:180, Decidability/Verified/Decidable.lean:1408); 279 `simp only [...TruthAt...]` lists across the live scope (229 in the core scope); 144 simp lists naming Formula.neg and 51 naming Formula.and; 85 by_contra and ~60 hand-rolled `exact h_conj (fun ...)` de-conjunctions; proof comments such as `-- Goal: (((D1->F)->D2)->F) -> D3. For D1: intro h; exfalso; apply h; ...` at Soundness.lean:779. Validated: `Truth.imp_iff` is a drop-in for `simp only [TruthAt]` at DenseValidity.lean:302; the and_iff/or_iff proofs already compile in BLTruth. WORK: (1) in the Truth namespace of Semantics/Truth.lean add @[simp] neg_iff, top_true, and_iff, or_iff, diamond_iff, always_iff (both the three-conjunct form BLTruth uses and a collected `forall s` form, since DurationFrames.truth_of_always does that trichotomy by hand), kPlus_iff/kMinus_iff, and tag imp_iff/box_iff/bot_false; decide strong_release_iff/strong_trigger_iff deliberately (drop the attribute or delete). (2) `register_simp_attr truth_norm` covering the TruthAt equations plus every characterisation lemma, and `macro \"truth_simp\" loc? => simp only [truth_norm] loc?`; a `swap_norm` set over the nine Formula.swap_temporal_* lemmas. (3) Delete the four truth_and_iff copies, DurationFrames' truth_always_of_forall/truth_of_always, CoValidity.always_elim (:73), the surviving and_of_not_imp_not; move validOn_iff_total (Correspondence/FwdRec.lean:73) to Semantics/Validity.lean beside TaskFrame.ValidOn as TaskFrame.validOn_iff_total (C-17). (4) Tag the frame-constant atom-truth lemmas @[simp] (translationModel_atom, permissiveModel_atom, clock_atom_truth, zTruth_atom) and add the tau.val-normalised forms so the 8-site `rw [show tau.val = ... from rfl, ...]` idiom at DurationFrames.lean:409-531 becomes `simp` (C-05). (5) Add truthAt_atomFree_history_indep and truthAt_gap_shift beside Truth.box_const (:733) and derive discrete_box_necessity_valid and the four uniformity-axiom proofs (Soundness.lean:825-912) from them (A-17). (6) Rewrite the ~10 worst soundness proofs named in A-03 (linear_until_valid :715, linear_since_valid :752, temp_linearity_valid :347, enrichment_*_valid :610/:632, absorb_*_valid :673/:692, discreteness_forward_valid :472, temp_l_valid :293, the two Prior gap lemmas) against the new API as the proof that the set works; the mechanical sweep of the remaining soundness-layer sites is task 193's re-scoped charter. State the chosen simp-normal form in Truth.lean's module docstring. SEQUENCING: after task 518 (the global fold/unfold loop must be out of the default simp set before new @[simp] lemmas land) and after 519 (so DenseValidity's 600 dead lines are not rewritten). ACCEPTANCE: zero private copies of truth_and_iff / and_of_not_imp_not in the live tree; `simp only [...TruthAt...]` sites in the touched files down by at least 80%; the ten named proofs each at most half their current length; lake build green; C2 baseline unchanged.",
+      "dependencies": [
+        517,
+        518,
+        519
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/Truth.lean",
+        "FormalSystem/Semantics/BLTruth.lean",
+        "FormalSystem/Semantics/Correspondence/DurationFrames.lean",
+        "FormalSystem/Metalogic/DedekindNonCompactness.lean",
+        "FormalSystem/Metalogic/DiscreteNonCompactness.lean",
+        "FormalSystem/Metalogic/Independence/CoNotPriorU.lean",
+        "FormalSystem/Metalogic/SoundnessLemmas/CoValidity.lean",
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Automation/TruthNormAttr.lean",
+        "FormalSystem/Syntax/Formula.lean",
+        "FormalSystem/Semantics/Validity.lean",
+        "FormalSystem/Semantics/Correspondence/FwdRec.lean",
+        "FormalSystem/Semantics/Correspondence/FwdRecBridge.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-02T16:31:33Z",
+      "artifacts": [
+        {
+          "path": "specs/521_truth_layer_simp_normal_form/reports/01_truth-layer-simp-normal-form.md",
+          "type": "report",
+          "summary": "Truth-layer simp normal form research: re-measurement, verified lemma set, three charter defects, 7-phase ordering."
+        },
+        {
+          "path": "specs/521_truth_layer_simp_normal_form/plans/01_truth-layer-simp-normal-form.md",
+          "type": "plan",
+          "summary": ""
+        },
+        {
+          "path": "specs/521_truth_layer_simp_normal_form/summaries/01_truth-layer-simp-normal-form-summary.md",
+          "type": "summary",
+          "summary": ""
+        }
+      ],
+      "session_id": "sess_1788332773_c2fa9f_521",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 522,
+      "project_name": "frame_property_representation_and_validity_names",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "description": "WAVE 2 (core utilities). Fix the one representation choice that costs 47 adapter lemmas, and make the validity names carry the Dedekind/Complete distinction that nine docstrings currently defend. Findings A-04, A-07, A-15, A-16, C-08, C-09, C-10, D-20, G-05 in specs/reviews/2026-09-01-lean-engineering/{A-soundness,C-frames,D-tactics,G-ecosystem}.md; High H3 and utilities U3/U10 in the review. MEASURED STATE: Semantics/FrameProperty.lean:71 declares `def TaskFrame.IsDense (F) : Prop := DenselyOrdered F.Duration`, so `Sat .Dense F` has head symbol IsDense and is invisible to instance search (the stated reason at Validity.lean:536-543); IsSuccArchDiscrete (:118) is a bare existential over data-carrying SuccOrder/PredOrder instances, forcing positional @-application (the `haveI`-breaks-defeq trap at Validity.lean:612-616 and :820-824 is real). The entire .of_forall/.apply/.of_not adapter family exists to route around this: 21 in Validity.lean, 12 in BLValidity.lean, 6 in StrongCompleteness.lean, 8 in SetConsequence.lean. ValidDedekind (Validity.lean:711) is ValidOnFrames TaskFrame.IsComplete, NOT ValidIn .Dedekind (that is ValidDedekindDense :765); the mismatch is warned about in nine places across six files ('Read this first: ValidDedekind is NOT ValidIn .Dedekind', Validity.lean:638-648, :672-690, :748-758; FrameClassValidity.lean:45-52; Soundness.lean:966-980, :1654-1667; BLValidity.lean:26-45; BaseLanguageSoundness.lean:46-54; FrameProperty.lean:129-172) and the wrong target yields a refutable soundness theorem. BLValidity.lean is a binder-for-binder clone of Validity.lean (~30 declarations) despite the truthAt_tr bridge (BaseLanguageSoundness.lean:110,147,167). Seven spellings exist for 'axiom X is valid' (X_valid, axiom_X_valid, X_is_valid, swap_axiom_X_valid, X_swap_valid, X_valid_of_h, co_valid) and `valid` is lowercase beside ValidIn/ValidDense. 231 validity intro-chains use ~44 spellings, 53 of them naming an `_h_mem` parameter that Validity.lean:352-357 documents as removed. DESIGN CONSTRAINT (C-frames section 2): do NOT make FrameClass.Sat a typeclass -- IsSuccArchDiscrete carries data; the narrow fix is abbrev + a Prop-structure with instance-tagged projections. WORK: (1) `abbrev TaskFrame.IsDense`; `structure TaskFrame.IsSuccArchDiscrete (F) : Prop where [succ : SuccOrder F.Duration] [pred : PredOrder F.Duration] [succArch : IsSuccArchimedean F.Duration] [predArch : IsPredArchimedean F.Duration]`; a `sat_intro h` macro that destructures `fc.Sat F` into the instance cache uniformly in fc; the bridge `isSuccArchDiscrete_of_instances` and its eliminator (C-10); delete 45 of the 47 adapters, keeping the two generic ValidIn.of_forall_total / .apply_total and their BL twins; add the missing ValidDedekind.of_not (C-09) under its final name. (2) Rename ValidDedekind -> ValidComplete (it is literally ValidOnFrames IsComplete, and the paper says Complete) and ValidDedekindDense -> ValidDedekind, likewise BLValidDedekindDense -> BLValidDedekind, so ValidX = ValidIn .X for every tag; collapse the nine warnings to one cross-reference on ValidComplete. (3) One BL transfer theorem `blValidIn_iff_validIn_tr (fc) (phi) : BLValidIn fc phi <-> ValidIn fc (tr phi)` in BaseLanguageSoundness.lean, generalising blValid_iff_valid_tr and blValidDiscrete_iff_validDiscrete_tr; derive BLValidIn.mono, BLValidOnFrames.mono, the three blValid_implies_*, blValid_iff_empty_consequence and BLSchemaValidity's dn_valid_of_denselyOrdered as corollaries; keep the BL-native definitions and the native examples at BaseLanguageSoundness.lean:489-503. (4) Naming convention for axiom validity lemmas: `<axiom>_valid` / `<axiom>_swap_valid` at whatever predicate the class requires; rename the `swap_axiom_*` and `*_is_valid` stragglers; rename `valid` -> `Valid` with a deprecated alias (~200 occurrences) or document the exception once. (5) Normalise the 231 intro-chains to one spelling and rename `_h_mem`/`h_mem` to `hτ`/`_hτ` (D-20 -- no binder macro; macro hygiene makes it worse than intro). (6) Machine-check the discrete-bundle implications DurationClassification/TaskFrame.lean:836-842 state in prose, as `example`s (C-10). ACCEPTANCE: binder adapters 47 -> 2 (+2 BL); every `ValidX` is definitionally `ValidIn .X`; grep finds one 'Read this first' paragraph; BLValidity.lean's lemma layer consists of corollaries of the transfer theorem; lake build green; C2/C14 baselines unchanged (the rename is mechanical and must not reroute any proof).",
+      "dependencies": [
+        518,
+        519,
+        521
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/FrameProperty.lean",
+        "FormalSystem/Semantics/FrameClassValidity.lean",
+        "FormalSystem/Semantics/Validity.lean",
+        "FormalSystem/Semantics/BLValidity.lean",
+        "FormalSystem/Semantics/DurationClassification.lean",
+        "FormalSystem/Metalogic/StrongCompleteness.lean",
+        "FormalSystem/Metalogic/SetConsequence.lean",
+        "FormalSystem/Metalogic/BaseLanguageSoundness.lean",
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Metalogic/SoundnessLemmas/"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-02T18:48:22Z",
+      "artifacts": [
+        {
+          "path": "specs/522_frame_property_representation_and_validity_names/reports/01_frame-property-representation-validity-names.md",
+          "type": "report",
+          "summary": "Machine-checked research on the FrameProperty representation fix and the ValidDedekind/ValidComplete rename: proves abbrev IsDense alone is insufficient (FrameClass.Sat must also be reducible), proves the recommended Prop-structure for IsSuccArchDiscrete does not compile, restates the unachievable 47->2 adapter target as 47->12, and corrects stale census figures for the rename, naming and intro-chain passes."
+        },
+        {
+          "path": "specs/522_frame_property_representation_and_validity_names/plans/01_frame-property-validity-names.md",
+          "type": "plan",
+          "summary": "Eleven-phase, 17.5-hour plan for the frame-property representation fix and the validity rename, following the research report's corrections over the task brief: reducible Sat plus abbrev IsDense with a Plan B fallback, sat_intro, adapters 47 -> 12, two BL transfer theorems, and two hazard-scoped rename passes."
+        },
+        {
+          "path": "specs/522_frame_property_representation_and_validity_names/summaries/01_frame-property-validity-names-summary.md",
+          "type": "summary",
+          "summary": "Frame-property representation fix (abbrev IsDense + @[reducible] Sat, Plan A), sat_intro, adapters 47 -> 21 (+ SatisfiableSet 4 -> 1), two BL transfer theorems, and the ValidComplete/ValidDedekind + valid -> Valid rename passes; all 11 phases green."
+        }
+      ],
+      "session_id": "sess_1788366935_b56865_522",
+      "completion_summary": "Made FrameClass.Sat transparent to instance search (abbrev TaskFrame.IsDense plus @[reducible] FrameClass.Sat; Plan A confirmed by a full green build), added the sat_intro tactic and the IsSuccArchDiscrete bridge lemmas, migrated 21 class-specific adapter call sites onto generic fc-indexed adapters and deleted the tag-specific families (47 -> 21 adapters, SatisfiableSet 4 -> 1, acceptance grep empty), added two BL transfer theorems with the BL equivalences rewritten as one-line corollaries, and ran both rename passes: ValidDedekind -> ValidComplete, ValidDedekindDense -> ValidDedekind (so every ValidX is now definitionally ValidIn .X), the D3 consequence family, the axiom-validity name normalisation with D4's export, and valid -> Valid. lake build, lake build BimodalTest and scripts/check-module-invariants.sh are all green; the executable sorry count is unchanged at 160 (all under Boneyard/) and no axiom was introduced.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 523,
+      "project_name": "frame_kit_helpers_transport_standard_frames",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 2 (core utilities). Complete the task-frame construction kit so that countermodel frames are built from once-and-for-all helpers instead of re-discharging the frame axioms, and give truth transport one lemma instead of five. Findings C-01, C-02, C-03, C-05, C-07, C-11, C-12, C-13, C-14, C-15, C-16, C-19, C-20, C-21, C-22, C-23, A-06, A-12 in specs/reviews/2026-09-01-lean-engineering/{C-frames,A-soundness}.md; High H7 and utilities U6/U7/U9 in the review. MEASURED STATE: the 'deterministic frame => Spherical' argument appears SEVEN times (ClockFrame.lean:156; DurationFrames.lean:163, whose docstring admits copying the former; RegionFrame.lean:208,295; ReynoldsBridge.lean:464,522,784; ShiftSet.lean:186) with two competing generic helpers (TaskFrame.lean:977 vs Algebraic/FlowFrame.lean:116) and one site using neither. Helper B (TaskFrame.lean:1129-1235) covers four of seven FrameOver fields for the permissive class, so natFrame (:1449), genericNatFrame (Examples/TemporalStructures.lean:382, verbatim copy) and permissiveFrame (DurationFrames.lean:210) each inline nullity_identity/converse/forward-comp (~85 lines). Five independent `induction phi` truth-transport proofs (~370 lines) share one six-case skeleton and the same 'generalize over the history for the box case' trick, each documenting it separately: Truth.lean:450 time_shift_preserves_truth (236 lines, four near-identical arithmetic blocks), IntTransfer.lean:292, FwdRecPeriodicity.lean:356, LoopingDuration.lean:98, CoNotPriorU.lean:416. FwdRecBridge.lean:61-115 re-derives IntNormalForm.lean:177-345's Z step-path dictionary under new names though IntNormalForm is upstream. Six copies of the total-history boilerplate (domain := fun _ => True, ...). 'Least positive element => immediate successor' written four times (C-15); LexCarrier.lean (Q x_lex Z) and LexIntWitness.lean (Z x_lex Z) develop the same apparatus twice (C-16). WorldHistory.lean:382-444 has four dead lemmas that SHADOW Mathlib's neg_lt_neg_iff/neg_le_neg_iff with the opposite orientation (C-13). FrameClassVariants' Prior-UZ/SZ and Z1/Z1-past pairs (:400/440, :479/541, ~90 lines) are hand-mirrored though Separability.lean:270/324 demonstrates the D-op recipe in the same directory (A-06). Fourteen frame constants live in nine files with no index (C-11); Semantics.lean does not aggregate LexCarrier/BLSchemaValidity (fixed by 518) and Semantics/README.md omits TemporalOrder, FrameProperty and FrameClassValidity (C-20). WORK: (1) Helper D in TaskFrame.lean after Helper C: sInter_nonempty_of_directed_subsingleton, spherical_of_fib_subsingleton, fib_subsingleton_of_functional; collapse the seven sites; delete the Algebraic duplicate. (2) Complete Helper B (nullity_identity_of_permissive, converse_of_permissive, forward_comp_of_permissive, comp_of_permissive); migrate natFrame/staticFrame/trivialFrame to (D : TemporalOrder); merge genericNatFrame/genericTimeFrame into abbrevs. (3) WorldHistory.ofTotal / TaskFrame.HF.ofTotal with @[simp] ofTotal_states; collapse the six sites. (4) `structure TruthIso M M'` (dur : D ≃o D', hist : HF ≃ HF', atom compatibility) with truthAt_of_truthIso and an anti-isomorphism twin concluding phi.swapTemporal; derive the five transports (land the three shift/period cases first, then truthAt_map's Aligned shape, then truthAt_mirror); shrink time_shift_preserves_truth to ~90 lines (A-12). (5) import IntNormalForm from FwdRecBridge and delete the duplicate dictionary (~55 lines), adding `isWalk_iff_isStepPath`. (6) isLeast_succ_of_isLeast_pos / isGreatest_pred_of_isLeast_pos in DurationClassification.lean; generalise LexCarrier to `alpha x_lex Z` (LexInt namespace: SuccOrder/PredOrder instances, isLeast_pos, not_archimedean) and make LexIntWitness an instance (~70 lines out). (7) Order-dual cores exists_nearest_succ / forall_gt_of_succ_step (P : D -> Prop over a successor-Archimedean order) in a new SoundnessLemmas/DiscreteOrder.lean; obtain prior_SZ_is_valid and z1_past_is_valid at D-op (A-06). (8) Delete WorldHistory.lean:382-444; hook per_period to Function.Periodic (C-14 -- and record in FwdRecPeriodicity's docstring that the Mathlib survey for Walk/MinCyc came back negative, so it is not re-run). (9) Create Semantics/Frames/Standard.lean indexing trivialFrame/staticFrame/permissiveFrame/translationFrame at (D : TemporalOrder) with @[simp] taskRel/atom lemmas; re-export from Semantics.lean; fix Semantics/README.md and Independence.lean's 'one result' docstring (C-21); merge TaskFrame.lean's five overlapping regression-example sections into two (C-22); rename WorldHistory.time_shift_* -> timeShift_* (C-23). SEQUENCING: after task 517 (Spherical -> Saturation) -- Helper D collapses the seven proofs 517 renames, so 517 must land first or it renames copies about to become one; after 521 for the truth simp set. ACCEPTANCE: Spherical/Saturation discharged by one helper at every deterministic frame; exactly one `induction phi` truth-transport proof in Semantics/ + Independence/; natFrame/genericNatFrame merged; ~700-800 lines removed net of ~250 added; lake build green; C2 baseline unchanged.",
+      "dependencies": [
+        517,
+        518,
+        521,
+        522,
+        532
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/TaskFrame.lean",
+        "FormalSystem/Semantics/WorldHistory.lean",
+        "FormalSystem/Semantics/Truth.lean",
+        "FormalSystem/Semantics/IntTransfer.lean",
+        "FormalSystem/Semantics/IntNormalForm.lean",
+        "FormalSystem/Semantics/LexCarrier.lean",
+        "FormalSystem/Semantics/DurationClassification.lean",
+        "FormalSystem/Semantics/Correspondence/",
+        "FormalSystem/Semantics/ShiftSet.lean",
+        "FormalSystem/Semantics/Frames/",
+        "FormalSystem/Semantics.lean",
+        "FormalSystem/Semantics/README.md",
+        "FormalSystem/Metalogic/Independence/",
+        "FormalSystem/Metalogic/Independence.lean",
+        "FormalSystem/Metalogic/Algebraic/FlowFrame.lean",
+        "FormalSystem/Metalogic/DiscreteNonCompactness.lean",
+        "FormalSystem/Examples/TemporalStructures.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T01:02:43Z",
+      "artifacts": [
+        {
+          "path": "specs/523_frame_kit_helpers_transport_standard_frames/reports/01_frame-kit-helpers-transport-standard-frames.md",
+          "type": "report",
+          "summary": "Verifies all nine work items against the live tree, supplies verified-compiling text for Helper D and the Helper B completion, corrects ~20 stale figures (Spherical is now Saturation; C-05 already landed; A-06 pairs are at 780/821 and 861/924, 184 lines), and shows the 'exactly one induction phi' acceptance criterion is unachievable because truthAt_add_hist_period's period is per-history."
+        },
+        {
+          "path": "specs/523_frame_kit_helpers_transport_standard_frames/plans/01_frame-kit-helpers-transport.md",
+          "type": "plan",
+          "summary": "14-phase, 22.5-hour lean4 consolidation plan across 8 dependency waves: Saturation Helper D, Helper B completion, ofTotal, the TruthIso transport chain, Z-dictionary import, LexCarrier generalisation, order-dual cores, dead-lemma deletion, and the Frames/Standard.lean index."
+        },
+        {
+          "path": "specs/523_frame_kit_helpers_transport_standard_frames/summaries/01_frame-kit-helpers-transport-summary.md",
+          "type": "summary",
+          "summary": "Updated implementation summary: status IMPLEMENTED, Phase 10 resolution, induction-phi ledger at three, resumed-dispatch verification rows"
+        }
+      ],
+      "session_id": "sess_1788396924_3fde5e",
+      "memory_candidates": [
+        {
+          "content": "In this repo, a consolidation target protected by a #guard_msgs-gated `#print axioms` block is specified by its axiom profile, not just its statement. Tests/BimodalTest/Semantics/SaturationFiniteAxiomTest.lean pins four such profiles and its own prose names the wrong consolidation ('route the subsingleton case through the general lemma'). When planning a helper that subsumes such a site, the helper must be ADDITIVE: added beside the guarded lemma, never routed through it, and never routed through a helper whose `classical`/`by_cases` opening drags in Classical.choice. A direct proof can be both shorter and strictly cleaner axiomatically than reuse -- measured here: saturation_of_fib_subsingleton is [propext]-only, while the existing univ_or_singleton route is Classical.choice-dependent. Generalisation: when a test pins a non-functional property (axiom profile, allocation count, elaboration time), treat DRY consolidation as constrained by that property, and verify the profile rather than the build.",
+          "category": "PATTERN",
+          "source_artifact": "specs/523_frame_kit_helpers_transport_standard_frames/plans/01_frame-kit-helpers-transport.md",
+          "confidence": 0.8,
+          "suggested_keywords": [
+            "guard_msgs",
+            "print axioms",
+            "additive helper",
+            "lean consolidation",
+            "axiom profile",
+            "propext"
+          ]
+        }
+      ],
+      "completion_summary": "Closed Phase 10, the last open phase, on re-verification: task 532's relational TruthCorr had already derived timeShift_preserves_truth (the blocked item), and the phase's other deliverables (truthAt_add_period via loopingTruthIso, truth_double_shift_cancel and two dead lemmas deleted, the truthAt_add_hist_period cross-reference) were on the tree from dispatch 1. All 14 phases are closed with a green guarded build and invariants check; no Lean file changed in this dispatch.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 524,
+      "project_name": "consequence_compactness_generic_theorems",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 3 (theorem layer). Finish the FrameClass collapse at the THEOREM layer of the consequence/compactness/strong-completeness stack: the definitions are generic (SemanticConsequenceIn, SetSemanticConsequenceOn, SatisfiableSet/ModelExistence/Compact/StrongCompleteness) but almost every proof is still four per-class copies, because three textbook facts are missing as declarations. Findings B-01..B-07, B-09, B-10, B-18..B-23, A-05, G-01, G-02, G-03 in specs/reviews/2026-09-01-lean-engineering/{B-completeness,A-soundness,G-ecosystem}.md; High H4 and utilities U4/U5 in the review. MEASURED STATE: semantic_deduction_{dedekind_dense,base,dense,discrete} at StrongCompleteness.lean:256,632,762,907 are the same 10-line script; soundness_{dedekind,base,dense,discrete}_consequence at :525,675,805,948 have byte-identical bodies (`intro F hF M τ hτ t h_ctx; exact h.elim fun d => soundness_in ...`); consequence_completeness_* and completeness_* (:504-966) are eight instances of two theorems, with only the Dedekind section using the `_of_engine` shape; the engine shape `∀ ψ, ValidIn fc ψ → Derivable fc [] ψ` is written longhand at three hypothesis sites and never named; modelExistenceBase and modelExistenceDense (Compactness.lean:84,121) differ only by a haveI whose content is already an instance at Ultraproduct/Carrier.lean:182; the four refutations (DiscreteNonCompactness.lean:249,278; DedekindNonCompactness.lean:431,459) execute the identical five-step skeleton because `StrongCompleteness fc → Compact fc` is not stated; `Compact fc ↔ ModelExistence fc` is half-present (only compact_of_modelExistence :423), so ModelExistenceDedekind's refutation is 'simply not drawn here' in prose (:627-636); ~110 lines of SetConsequence.lean have no consumer (fifteen declarations, two of which are the only reason it imports Core.MaximalConsistent); naming spans three schemes (compactBase / discrete_consequence_not_compact / strongCompletenessDiscrete_refuted); 45 in-file #print axioms with hand-transcribed output blocks duplicate C2. The five BL-vs-TM files (Conservativity, TMCompletenessReduction, SpWitness, Z1Countermodel, BaseLanguageSoundness) have a documented reading order but no directory or aggregator, against the sibling-aggregator convention (B-19) -- which is how they fell out of the build (fixed provisionally by 518). Mathlib's ModelTheory shape (Satisfiability.lean:65,69,100; Bundled.lean:73): one IsSatisfiable := Nonempty (ModelType T), compactness as isSatisfiable_iff_isFinitelySatisfiable. WORK, each generic in fc: (1) semantic_deduction_in; soundness_consequence; `def WeakCompleteness (fc) : Prop`; consequence_completeness_of_engine; retype the three engine hypotheses and state the four BXCanonical engines' corollaries as WeakCompleteness .X. (2) compact_of_strongCompleteness and `strongCompleteness_iff_compact (engine : WeakCompleteness fc)` -- the headline 'strong completeness = weak completeness + compactness' as one iff; modelExistence_of_compact and compact_iff_modelExistence; draw ¬ModelExistenceDedekind. (3) setConsequence_of_not_satisfiable, not_compact_of_witness, not_strongCompleteness_of_witness; the four refutations become one-liners; extract qAlpha_step / exists_strictMono_qPoints from dedWitness_core (B-20); @[simp] mem_archWitness_iff / mem_dedWitness_iff (B-21). (4) modelExistence_of_satPreserved with an ultraproduct-closure hypothesis on fc.Sat, with the docstring that explains why Base/Dense succeed and Discrete/Dedekind fail; modelExistenceBase/Dense as instantiations. (5) `structure PointedModel fc Γ` (frame, class membership, model, total history, time, truth condition), SatisfiableSet fc Γ := Nonempty (PointedModel fc Γ), FinitelySatisfiableSet, SatisfiableSet.mono, compactness restated as SatisfiableSet ↔ FinitelySatisfiableSet given Compact fc, and `SetSemanticConsequenceOn fc Γ φ ↔ ¬ SatisfiableSet fc (Γ ∪ {φ.neg})`; the four *_of_forall constructors become PointedModel.of (G-01/G-03). (6) TMComplete/Forward generic in fc with the four names as instantiations (B-22). (7) Delete the fifteen dead SetConsequence declarations and the Core.MaximalConsistent import (B-07); adopt one naming scheme for the family (B-18); move the in-file #print axioms into C2's manifest keeping only the termini (B-23). (8) Create Metalogic/Conservativity/ with a sibling aggregator carrying the prohibition narrative, holding Backward.lean (today's body), TMCompletenessReduction, SpWitness, Z1Countermodel, BaseLanguageSoundness (B-19); fix Conservativity.lean:347-357's wrong carrier / denied result (B-17). ACCEPTANCE: strongCompleteness_iff_compact and compact_iff_modelExistence exist; zero per-class copies of the deduction theorem, soundness guard, model-existence proof or refutation skeleton; ~230 lines of per-class instantiation removed; C2 manifest extended to every declaration this task touches; lake build green; check-module-invariants.sh ALL PASS.",
+      "dependencies": [
+        521,
+        522
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/StrongCompleteness.lean",
+        "FormalSystem/Metalogic/SetConsequence.lean",
+        "FormalSystem/Metalogic/Compactness.lean",
+        "FormalSystem/Metalogic/DiscreteNonCompactness.lean",
+        "FormalSystem/Metalogic/DedekindNonCompactness.lean",
+        "FormalSystem/Metalogic/Conservativity.lean",
+        "FormalSystem/Metalogic/Conservativity/",
+        "FormalSystem/Metalogic/TMCompletenessReduction.lean",
+        "FormalSystem/Metalogic/SpWitness.lean",
+        "FormalSystem/Metalogic/Z1Countermodel.lean",
+        "FormalSystem/Metalogic/BaseLanguageSoundness.lean",
+        "FormalSystem/Metalogic.lean",
+        "FormalSystem/Semantics/Ultraproduct/",
+        "scripts/check-module-invariants.sh"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T07:11:57Z",
+      "artifacts": [
+        {
+          "type": "report",
+          "path": "specs/524_consequence_compactness_generic_theorems/reports/01_consequence-compactness-generic-theorems.md",
+          "summary": "FrameClass collapse at the theorem layer: all eight work items verified constructible, with the mathematically load-bearing declarations for items 1-6 elaborated clean against the built library; four corrections to the task's measured state."
+        },
+        {
+          "type": "plan",
+          "path": "specs/524_consequence_compactness_generic_theorems/plans/01_generic-consequence-compactness-theorems.md",
+          "summary": "11-phase plan collapsing the consequence/compactness/strong-completeness theorem layer onto generic FrameClass declarations, with the Conservativity/ reorganization and C2/C14 manifest extension."
+        },
+        {
+          "path": "specs/524_consequence_compactness_generic_theorems/summaries/01_generic-consequence-compactness-theorems-summary.md",
+          "type": "summary",
+          "summary": "Collapsed the consequence/compactness/strong-completeness theorem layer onto generic FrameClass declarations, reorganized Metalogic/Conservativity/, and consolidated the axiom manifest."
+        }
+      ],
+      "session_id": "sess_1788416566_823cec_524",
+      "memory_candidates": [
+        {
+          "content": "When a Lean repo's per-class theorem copies are collapsed onto generic FrameClass declarations, the phase boundaries must be cut along the actual dependency edges rather than along the work-item numbering. In BimodalLogic task 524 the compactness triangle (item 2) and the shared refutation skeleton (item 3) interleave in both directions: compact_of_strongCompleteness feeds not_strongCompleteness_of_witness, while not_compact_of_witness feeds modelExistence_of_compact. Treating the items as two sequential phases would deadlock. The general pattern: when two work items each supply a lemma the other consumes, split by lemma (all mutually-independent generics in one phase, all the theorems that consume both in the next) instead of by item.",
+          "category": "PATTERN",
+          "source_artifact": "specs/524_consequence_compactness_generic_theorems/plans/01_generic-consequence-compactness-theorems.md",
+          "confidence": 0.75,
+          "suggested_keywords": [
+            "phase-decomposition",
+            "dependency-edges",
+            "lean4",
+            "generic-collapse",
+            "interleaved-items"
+          ]
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 525,
+      "project_name": "galois_over_mathlib_correspondence_tidy",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 3 (theorem layer). Put the frame-class Galois layer on Mathlib's polarity API and tidy the correspondence modules. Findings C-06, C-14, C-18, C-21, C-24, C-25, G-06, G-13 in specs/reviews/2026-09-01-lean-engineering/{C-frames,G-ecosystem}.md; utility U8 in the review. MEASURED STATE: Semantics/Correspondence/Galois.lean:90-139 defines Th/Mod/th_anti/mod_anti/subset_mod_th/subset_th_mod/mod_th_mod/th_mod_th/GaloisClosed/galoisClosed_mod by hand; with r := fun F φ => F.ValidOn φ these are, verbatim, Mathlib.Order.Concept's upperPolar (Mathlib/Order/Concept.lean:48), lowerPolar (:53), gc_upperPolar_lowerPolar (:70), upperPolar_lowerPolar_upperPolar / lowerPolar_upperPolar_lowerPolar (:137,:142), Order.IsExtent (:184) and isExtent_iff (:188) -- verified locally in the pinned Mathlib. The repo has zero GaloisConnection occurrences. The mapping table is in C-frames C-06 and G-ecosystem section 3.2 (the latter frames it as `@GaloisConnection (Set Formula) (Set TaskFrame)ᵒᵈ _ _ Mod Th` in the shape of PrimeSpectrum.gc / MvPolynomial.zeroLocus_vanishingIdeal_galoisConnection; the two are reconciled: Concept's polars ARE that connection, so instantiate them and get both APIs). Reuse frees Order.IsExtent.iInter (intersections of Galois-closed classes), .univ, upperPolar_empty, GaloisConnection.l_sup / l_iSup (`Mod (S₁ ∪ S₂) = Mod S₁ ∩ Mod S₂`, useful for AxiomSet as a union of per-axiom sets in the Independence/ sandwiches), u_top, lt_iff_lt, and the Concept complete lattice. galoisClosed_of_indicator (:158) takes two arguments both call sites derive from one Iff (C-24). The three (T1) biconditionals in DurationFrames.lean (:354,:419,:485; 65/66/78 lines) each hand-build the same witness frame/history and never name the realisation step (C-18). RationalWitness/LexIntWitness prove `Sat .Dedekind ⊊ Mod (AxiomSet .Dedekind)` and the Discrete analogue -- definability results, not axiom independence -- and Independence.lean:17-19's docstring says 'the one result' above a six-module list (C-21). Separability.lean carries a private copy `arch_of_lub` of DurationClassification.archimedean_of_lub (:125) (G-13). DO NOT take the ClosureOperator step (G-ecosystem 3.3: the OrderDual coercions cost more than they save) and do NOT replace Walk/MinCyc (C-14: not in Mathlib; only per_period ↔ Function.Periodic is worth hooking up, and that is in task 523). WORK: (1) `def validOnRel (F : TaskFrame) (φ : Formula) : Prop := F.ValidOn φ`; `abbrev Th := upperPolar validOnRel`, `abbrev Mod := lowerPolar validOnRel`, `abbrev GaloisClosed := Order.IsExtent validOnRel`; keep the six theorem names as one-line re-exports with their docstrings; add mod_th_gc as the explicit GaloisConnection and the free corollaries (IsExtent.iInter, l_sup/l_iSup, u_top) as named theorems; verify the abbrevs elaborate at `Set TaskFrame : Type 1` before committing, falling back to `theorem th_eq_upperPolar : Th = upperPolar validOnRel := rfl` if not. (2) galoisClosed_of_indicator_iff as the primary entry point; retarget the two Indicator.lean corollaries. (3) `translation_realizes (D) (A : Set D)` naming the atom-realisation step; rewrite the three (T1) proofs to open with it (209 -> ~110 lines). (4) Decide C-21's relocation: check whether RationalWitness/LexIntWitness genuinely need Metalogic.Soundness or whether StaticFrame's constant-truth calculus suffices; if the latter, move them to Semantics/Correspondence/NonClosure.lean beside Indicator.lean; either way fix Independence.lean's and Independence/README.md's opening paragraphs to describe all three result families and add reciprocal pointers. (5) Promote or parameterise corrAtom (C-25). (6) Delete Separability's arch_of_lub copy and import DurationClassification's. Update Correspondence/README.md. ACCEPTANCE: Galois.lean's theorem bodies are Mathlib projections; the four free lemmas exist and are named; the three (T1) proofs visibly parallel; zero private Archimedean copies; lake build green; C2 baseline unchanged (galoisClosed_* are ledger entries).",
+      "dependencies": [
+        523
+      ],
+      "file_scope": [
+        "FormalSystem/Semantics/Correspondence/",
+        "FormalSystem/Semantics/Correspondence/README.md",
+        "FormalSystem/Metalogic/Independence/RationalWitness.lean",
+        "FormalSystem/Metalogic/Independence/LexIntWitness.lean",
+        "FormalSystem/Metalogic/Independence/README.md",
+        "FormalSystem/Metalogic/SoundnessLemmas/Separability.lean",
+        "FormalSystem/Semantics/DurationClassification.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T05:37:52Z",
+      "artifacts": [
+        {
+          "type": "report",
+          "path": "specs/525_galois_over_mathlib_correspondence_tidy/reports/01_galois-over-mathlib-correspondence-tidy.md",
+          "summary": "Compile-verified research for all six work items: Mathlib Order.Concept polars replace the hand-rolled Th/Mod layer (abbrevs elaborate at Type 1, 6 projections + 7 free lemmas typecheck); iff-form indicator makes both Indicator corollaries one-liners; atom-realisation lemmas need a permissive twin the review missed; C-21 relocation refused (Metalogic.Soundness genuinely required, edge explicitly refused in-tree); corrAtom parameterised not promoted; arch_of_lub deletion is a drop-in with an acyclic 3-module import edge plus three docstrings to repair."
+        },
+        {
+          "type": "plan",
+          "path": "specs/525_galois_over_mathlib_correspondence_tidy/plans/01_galois-over-mathlib-tidy.md",
+          "summary": "Six-phase plan re-basing the frame-class Galois layer on Mathlib.Order.Concept and tidying the correspondence modules, 5.5 hours across three dependency waves."
+        },
+        {
+          "type": "summary",
+          "path": "specs/525_galois_over_mathlib_correspondence_tidy/summaries/01_galois-over-mathlib-tidy-summary.md",
+          "summary": "Six-phase implementation: Galois layer re-based on Mathlib.Order.Concept polars, Indicator corollaries retargeted, atom-realisation layer added with permissive twin, three (T1) proofs rewritten 207->165 lines, corrAtom and arch_of_lub deleted, both READMEs regenerated."
+        }
+      ],
+      "session_id": "sess_1788407456_70233f_525",
+      "memory_candidates": [
+        {
+          "content": "When re-basing a hand-rolled Galois/adjunction layer onto Mathlib, prefer the polarity API in Mathlib.Order.Concept (upperPolar/lowerPolar/Order.IsExtent) over deriving everything from an explicit GaloisConnection. The GaloisConnection route forces one side through OrderDual (e.g. mod_th_mod via .dual.u_l_u_eq_u, plus simp cleanup), while Concept supplies dual-free direct lemmas: lowerPolar_upperPolar_lowerPolar, upperPolar_lowerPolar_upperPolar, lowerPolar_union (a plain @[simp] lemma, not GaloisConnection.l_sup), lowerPolar_empty. Still declare the GaloisConnection as a named theorem for discoverability, but derive nothing from it. Two further gotchas: defining the closure predicate as Order.IsExtent changes it from a fixed-point equation to a range membership -- equivalent by Order.isExtent_iff but NOT defeq, so audit consumers and ship a one-line `iff` compat lemma; and importing a Mathlib module for its lemmas also injects its @[simp] lemmas into the default simp set for every downstream module, which is a whole-tree build risk, not a single-module one.",
+          "category": "PATTERN",
+          "source_artifact": "specs/525_galois_over_mathlib_correspondence_tidy/plans/01_galois-over-mathlib-tidy.md",
+          "confidence": 0.8,
+          "suggested_keywords": [
+            "mathlib",
+            "galois-connection",
+            "order-concept",
+            "polar",
+            "isextent",
+            "simp-set"
+          ]
+        }
+      ],
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 526,
+      "project_name": "core_mcs_api_consolidation",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 3 (theorem layer). Consolidate the maximal-consistent-set API in Metalogic/Core/ so the three completeness routes consume one set of lemmas, and run the MCS-automation experiment. Findings B-11, B-12, F-09, F-10, F-15, F-22, A-14, D-12 in specs/reviews/2026-09-01-lean-engineering/{B-completeness,F-canonical,A-soundness,D-tactics}.md; utilities U11/U14/U15 in the review. MEASURED STATE: restricted_lindenbaum (Core/RestrictedMCS/Basic.lean:316, 59 lines) re-proves set_lindenbaum's Zorn argument (Core/MaximalConsistent.lean:303, 50 lines) line for line, differing only in a four-line closure-preservation obligation; restricted_mcs_F_bounded (:488) and restricted_mcs_P_bounded (:593) are byte-identical modulo iterF/iterP renaming (one differing line, a comment) and hand-roll a well-founded minimum with truncated subtraction that Nat.find gives directly -- 154 lines for one 25-line lemma; bot_not_in_mcs is proved three times with the same script (BXCanonical/TruthLemma.lean:69, WeakCanonical/TruthLemma.lean:57, inlined at Algebraic/FlowFrame.lean:695) and never in Core/, so WeakCanonical/Transfer.lean:455,892,986,1036 reach across to the BXCanonical copy -- an accidental cross-route dependency; the four-step idiom `notNotIntro -> temporal_necessitation -> DerivationTree.axiom (Axiom.right_mono_until φ ψ Formula.top) -> modus_ponens` is written out 14 times in Bundle/ (and at BXCanonical/Chronicle/RRelation.lean:1264,1287) though Theorems/TemporalDerived.lean:407,418 name it fMono/pMono; CanonicalTask_backward (Bundle/CanonicalTaskRelation.lean:286) is an inductive provably equal to CanonicalTask_forward with arguments swapped (:501), so four supporting lemmas re-induct; the `weakening`-at-empty-context scaffold (h_eq/h_height_eq/h_term + decreasing_by) is duplicated at Soundness.lean:1422-1429 and BaseLanguageSoundness.lean:382-393 and soundness_in and derivable_valid_and_swap_validIn use two different induction idioms for one recursion. The MCS API is a five-lemma forward-chaining set with 869 call sites (theorem_in_mcs 340, implication_property 315, negation_complete 139, closed_under_derivation 38, neg_excludes 37) and zero aesop use; five of the twenty longest proofs in the core scope are UltrafilterMCS.lean membership bookkeeping. WORK: (1) `exists_maximal_of_chainClosed {P : Set Formula → Prop} {A}` in Core/MaximalConsistent.lean; set_lindenbaum and restricted_lindenbaum as instantiations. (2) `restricted_mcs_iter_bounded {it b op}` via Nat.find on `fun n => it (n+1) phi ∉ M`; F/P as one-line instantiations (this consumes the IteratedTemporal.lean relocation from task 520). (3) `SetMaximalConsistent.bot_not_mem` in Core/MCSProperties.lean; delete the two copies; replace FlowFrame's inlined branch; re-point Transfer.lean. (4) `someFuture_mono` / `somePast_mono` in Theorems/TemporalDerived.lean; replace the 14+2 inline blocks. (5) `def CanonicalTask_backward u n v := CanonicalTask_forward v n u`; collapse its lemma family (or Boneyard the family if 520 leaves it unconsumed). (6) `DerivationTree.ofWeakeningNil` + height lemma in ProofSystem/Derivation.lean with a BL twin; unify the two soundness inductions. (7) EXPERIMENT (D-12, not validated): a NAMED Aesop rule set `declare_aesop_rule_sets [MCS]` in a new Core/MCSAesop.lean -- safe forward: implication_property, closed_under_derivation, neg_excludes, theorem_in_mcs; unsafe 50%: negation_complete (the only branching rule); norm simp: Set.mem_insert_iff, Set.mem_singleton_iff, List.mem_cons; `macro \"mcs_auto\"`. Trial it on RestrictedMCS/Basic.lean:137 (restricted_mcs_negation_complete, 136 lines) and one UltrafilterMCS lemma; keep it only if it shortens both, and record the outcome either way in Core/README.md so the question is not reopened. Update Core/README.md ('Last verified' 2026-05-29 against a directory last changed 2026-08-25). ACCEPTANCE: one Zorn lemma, one iteration-boundedness lemma, one bot_not_mem in the live tree; zero inline right_mono_until-with-top idioms in Bundle/; Transfer.lean no longer imports BXCanonical for a one-liner; mcs_auto decision recorded; lake build green; C2 baseline unchanged.",
+      "dependencies": [
+        520,
+        521,
+        524
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/Core/",
+        "FormalSystem/Metalogic/Core.lean",
+        "FormalSystem/Metalogic/Core/README.md",
+        "FormalSystem/Theorems/TemporalDerived.lean",
+        "FormalSystem/ProofSystem/Derivation.lean",
+        "FormalSystem/BaseLanguage/Derivation.lean",
+        "FormalSystem/Metalogic/BXCanonical/TruthLemma.lean",
+        "FormalSystem/Metalogic/WeakCanonical/TruthLemma.lean",
+        "FormalSystem/Metalogic/WeakCanonical/Transfer.lean",
+        "FormalSystem/Metalogic/Algebraic/FlowFrame.lean",
+        "FormalSystem/Metalogic/Bundle/",
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Metalogic/BaseLanguageSoundness.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T09:01:49Z",
+      "artifacts": [
+        {
+          "path": "specs/526_core_mcs_api_consolidation/reports/01_core-mcs-api-consolidation.md",
+          "type": "report",
+          "summary": "Core MCS API consolidation research: six viable consolidations compiled against the live tree; mcs_auto Aesop experiment returned a negative result; new 197-site mp_of_theorem idiom identified."
+        },
+        {
+          "path": "specs/526_core_mcs_api_consolidation/plans/01_core-mcs-api-consolidation.md",
+          "type": "plan",
+          "summary": "Plan file; all 11 phases marked [COMPLETED], acceptance checklist ticked, deviations annotated inline."
+        },
+        {
+          "path": "specs/526_core_mcs_api_consolidation/summaries/01_core-mcs-api-consolidation-summary.md",
+          "type": "summary",
+          "summary": "Implementation summary: per-phase outcomes with commits, acceptance-criteria evidence, scope findings, and deviations."
+        }
+      ],
+      "session_id": "sess_1788416566_823cec_526",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 527,
+      "project_name": "bundle_temporal_duality_discipline",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 4 (canonical-model infrastructure). Replace textual future/past mirroring in Metalogic/Bundle/ with derived duals, bundle the truth lemma's coherence hypotheses, and put the limit-MCS construction on Mathlib's Filter API. Findings F-04, F-05, F-08, F-14, F-17, F-20 in specs/reviews/2026-09-01-lean-engineering/F-canonical.md; High H6 and utility U12 in the review. This is the largest single line reduction available (est. 800-1,400 lines) and the highest-risk task in the programme; land it in the three phases below, each independently green. MEASURED STATE: roughly 30 declaration pairs are produced by substituting allFuture↔allPast, someFuture↔somePast, untl↔snce, right_mono_until↔right_mono_since, temporal_necessitation↔pastNecessitation, max↔min, <↔> -- WitnessSeed.lean:59/81, :107/128, :150/271, :181/290, :408/488, :573/602; TemporalContent.lean:157/212; SuccRelation.lean:149/315, :246/406; CanonicalTaskRelation.lean:619/906, :661/1008; TemporalCoherence.lean:66/82, :98/117, :178/204, :225/247, :339/365, :393/418; LimitMCS.lean:136/143, :156/177, :203/211, :225/233, :255/267; LimitMCSCoherence.lean:92/158, :110/188, :131/211, :259/298, :278/315. The machinery to avoid this exists and is used correctly exactly once: past_tf_deriv (Algebraic/FlowFrame.lean:618-628) derives □φ→H□φ from □φ→G□φ via Formula.swapTemporal + DerivationTree.temporal_duality + swap_temporal_involution. Four ~85-line witness-seed consistency proofs (WitnessSeed.lean:181,290,408,488) share one ~60-line core, and UntilWitnessSeed (:379) is ForwardTemporalWitnessSeed (:150) under a second name with duplicated membership lemmas. bundleFlow_truth_lemma (FlowFrame.lean:678) binds `_h_rtc : B.RestrictedTemporallyCoherent root` -- demanded of every caller, never used -- and threads three loose coherence arguments through three theorems; TemporalCoherence.lean defines seven coherence predicates of which four have no live consumer. LimitMCS.lean proves the finite-intersection argument twice: hand-rolled with max/min thresholds (:136-240) and correctly via Filter.inter_mem (:316-424); limitSetBelow m r is exactly `{A | ∀ᶠ q in limitFilterBelow r, A ∈ m q}` and limitFilterBelow is `Filter.comap Rat.cast (𝓝[<] r)`, so limitSetBelow_mono_directed is Filter.eventually_all_finite and _finite_subset_mem is Filter.NeBot.nonempty_of_mem; five limitSetBelow_* coherence lemmas are dead. multiFamTaskFrame (ReynoldsBridge.lean:767-793) re-discharges all six FrameOver fields that multiFamTaskFrameGen (FlowFrame.lean:153-199) discharges D-generically, then proves itself rfl-equal (:803; stated again reversed at ChronicleMonadicBridge.lean:144). FMCS/BFMCS declare fc before D so 130 sites write `FMCS (fc := fc) D`. WORK -- Phase A (M): `structure BFMCS.CanonicalCoherence (B) (root) : Prop` with temporal/untilSince_fwd/untilSince_bwd fields; retype bundleFlow_truth_lemma and its two consumers; prune the four dead coherence predicates; extract `allFuture_neg_of_gseed_inconsistent` (+ past mirror) as the witness-seed core and reduce the four proofs to applications; delete UntilWitnessSeed; make multiFamTaskFrame a definitional specialisation of multiFamTaskFrameGen and delete one rfl certification. Phase B (M): the temporal-duality discipline for derivations -- wherever a past statement is the swapTemporal image of a future one (WitnessSeed's duality helpers, TemporalCoherence.lean:66/82, :98/117, TemporalContent.lean:157/212, SuccRelation's mirrors), prove the future form and obtain the past form as past_tf_deriv does; record the pattern in Bundle/README.md as the rule. Phase C (L): for the order-theoretic mirrors in LimitMCS/LimitMCSCoherence where the mirror is <↔> not swapTemporal, define limitFilterBelow first as the comap, define limitSetBelow as the eventually-set, delete :156-218 in favour of the Filter lemmas, keep one mem_limitSetBelow unfolding lemma, Boneyard the five dead coherence lemmas, and introduce a `TemporalSide` parameter (all/some/lt) so limitSet, limitSet_mono_directed, limitSet_consistent and the LimitMCSCoherence families are stated once and instantiated at future/past. Reorder FMCS/BFMCS parameters to `(D) [Preorder D] (fc := .Base)` (mechanical, 130 sites). ACCEPTANCE (cumulative): Bundle/ + Algebraic/FlowFrame.lean shrink by at least 800 lines with every consumer theorem unchanged in statement; zero unused hypotheses on the truth lemma; one frame-construction site; lake build green; C2 baseline unchanged after every phase.",
+      "dependencies": [
+        520,
+        526
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/Bundle/",
+        "FormalSystem/Metalogic/Bundle.lean",
+        "FormalSystem/Metalogic/Bundle/README.md",
+        "FormalSystem/Metalogic/Algebraic/FlowFrame.lean",
+        "FormalSystem/Metalogic/WeakCanonical/IntegerModel/ReynoldsBridge.lean",
+        "FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T17:50:01Z",
+      "artifacts": [
+        {
+          "path": "specs/527_bundle_temporal_duality_discipline/reports/01_bundle-temporal-duality-discipline.md",
+          "type": "report",
+          "summary": "Re-measures F-04/F-05/F-08/F-14/F-17/F-20 against current tree (post-520, post-526): stale anchors, larger dead-code set in TemporalCoherence.lean, asymmetric Filter rewrite in LimitMCS.lean, and a revised 550-830 line reduction estimate."
+        },
+        {
+          "path": "specs/527_bundle_temporal_duality_discipline/plans/01_bundle-temporal-duality-discipline.md",
+          "type": "plan",
+          "summary": "Ten-phase plan grouped A/B/C for bundling truth-lemma coherence, applying the swapTemporal duality discipline, and putting limit-MCS on Mathlib's Filter API with a TemporalSide parameter."
+        },
+        {
+          "path": "specs/527_bundle_temporal_duality_discipline/summaries/01_bundle-temporal-duality-discipline-summary.md",
+          "type": "summary",
+          "summary": "Ten-phase implementation: CanonicalCoherence bundling, dead-set prune, witness-seed core with duality-derived past half, multiFamTaskFrame specialization, LimitMCS on Mathlib Filter API with TemporalSide parameterization. Measured line delta -385 against a 550-830 target; five Reasoned Exclusions."
+        }
+      ],
+      "session_id": "sess_1788452026_624704_527",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 528,
+      "project_name": "algebraic_modernisation_propdecide_mathlib_filters",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 4 (algebraic infrastructure). Modernise Metalogic/Algebraic/ before the Jonsson-Tarski representation front builds on it. THIS TASK IS A DEPENDENCY OF TASKS 497 AND 125: they port the STSA class and the ultrafilter frame onto LindenbaumQuotient/BooleanStructure/UltrafilterMCS as they stand, and would inherit a bespoke `Ultrafilter` structure that shadows Mathlib's and ~430 lines of hand-built Boolean algebra. Findings D-08 (validated), F-11, F-12, F-13, D-16 in specs/reviews/2026-09-01-lean-engineering/{D-tactics,F-canonical}.md; High H9 and utility U16 in the review. MEASURED STATE: Algebraic/BooleanStructure.lean carries 15 `*_quot` lemmas (~430 lines; le_sup_inf_quot :242 is 119 lines with 31 `have`s hand-building an object-language derivation of distributivity out of deductionTheorem/orInl/orInr/lceImp/rceImp/impTrans). The existing tactic `propDecide` (Automation/Tactics/PropDecide.lean:123) was VALIDATED by lean_multi_attempt to close a distributivity instance in exactly that shape and De Morgan, and to correctly reject a non-tautology; its test file's docstring at PropDecideTest.lean:44-46 wrongly claims and/or goals are out of scope (PropDecide.reify calls whnf, which unfolds them). No import cycle: Kalmar.lean imports only PropForm/Derivable/Core.DeductionTheorem/Theorems.*. Algebraic/UltrafilterMCS.lean:44-59 defines its own six-field `structure Ultrafilter (α) [BooleanAlgebra α]`, shadowing Mathlib's Ultrafilter in a directory whose neighbour LimitMCS.lean uses Mathlib's `Ultrafilter Rat`; its compl_or field is the prime property (Order.Ideal.IsMaximal.isPrime), compl_not is IsProper, mem_of_le/inf_mem are Order.PFilter's axioms, and Order.Ideal.IsProper.exists_le_maximal is an algebra-level Lindenbaum already in Mathlib; `instance : BooleanAlgebra LindenbaumAlg` exists at BooleanStructure.lean:421. SetMaximalConsistent.ultrafilter_correspondence (:782, 127 lines) is stated as an anonymous `∃ f g, LeftInverse ∧ RightInverse`, so ultrafilter_mcs_round_trip (:983, 72 lines) destructures it, discards it, and re-proves the round trip -- and both round-trip theorems are referenced nowhere (D-16 flags them as forgotten headline results). fold_le_of_derives (:565, 102 lines) fights a List.foldl accumulator that Multiset.inf / List.foldr removes. WORK: (1) import Automation.Tactics.PropDecide into BooleanStructure.lean; rewrite the *_quot bodies as `induction … using Quotient.ind; change Derives …; unfold Derives; propDecide` (do one first to confirm the Derives shape reaches extractDerivationGoal at Helpers.lean:524); apply the same to LindenbaumQuotient's provEquiv_* congruences where it fits; fix the PropDecideTest docstring and add De Morgan/distributivity regression cases. (2) State `noncomputable def SetMaximalConsistent.ultrafilterEquiv : {Γ // SetMaximalConsistent Γ} ≃ Ultrafilter LindenbaumAlg` with the two round trips as its fields and ultrafilter_correspondence as a corollary (task 125's description already asks for this Equiv). (3) Either express the ultrafilter side as `{F : Order.PFilter LindenbaumAlg // (Order.Ideal.ofPFilterCompl F).IsMaximal}` (or the dual prime-ideal form) and reuse Mathlib, or -- if the bespoke structure is kept for readability -- rename it BAUltrafilter and prove `BAUltrafilter α ≃ {I : Order.Ideal α // I.IsMaximal}` once so Mathlib's lemmas are reachable; record the choice in Algebraic/README.md. (4) Restate fold_le_of_derives over `((L.map toQuot : List _) : Multiset _).inf` and reuse Multiset.inf_coe / Finset.inf_le / Finset.le_inf. Refresh Algebraic/README.md (add a 'Last verified' stamp; it has none). ACCEPTANCE: BooleanStructure.lean's *_quot lemmas total under 100 lines; no declaration named Ultrafilter outside Mathlib in the live tree, or a documented BAUltrafilter with a bridge Equiv; ultrafilterEquiv exists and is consumed by ultrafilter_correspondence; lake build green; C2 baseline unchanged. Tasks 497 and 125 must not start before this lands.",
+      "dependencies": [
+        518,
+        526
+      ],
+      "file_scope": [
+        "FormalSystem/Metalogic/Algebraic/",
+        "FormalSystem/Metalogic/Algebraic.lean",
+        "FormalSystem/Metalogic/Algebraic/README.md",
+        "FormalSystem/Automation/Tactics/PropDecide.lean",
+        "Tests/BimodalTest/Metalogic/PropDecideTest.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-03T20:33:42Z",
+      "artifacts": [
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/02_pfilter-maximality-design-spike.md",
+          "type": "report",
+          "summary": "Design spike resolving Decision D1: verifies Mathlib's Ultrafilter is Set-based (corrected target Order.PrimeFilter LindenbaumAlg), that order-dual transport is Iff.rfl, and that PFilter.IsPrime alone implies proper so all seven bespoke axioms derive with no bridge lemma. Option (c) recommended at option (b)'s cost. Surfaces D-A location, D-B name, D-C IsMaximal."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/reports/03_literature-source-acquisition-dossier.md",
+          "type": "report",
+          "summary": "Source-acquisition dossier: audits what --lit surfaces for task 528, confirms D-A/D-B/D-C are decided by Mathlib source and convention rather than BAO literature, inventories owned-but-unregistered and not-owned sources, cross-checks tasks 461/504, and concludes another --lit round is not warranted before implementing plan v2."
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/plans/03_algebraic-modernisation-prime-filter.md",
+          "type": "plan"
+        },
+        {
+          "path": "specs/528_algebraic_modernisation_propdecide_mathlib_filters/summaries/01_algebraic-modernisation-prime-filter-summary.md",
+          "type": "summary",
+          "summary": "Implementation summary: propDecide-backed *_quot lemmas (286 -> 105), Multiset.inf fold lemma, generic Order.PFilter layer under ForMathlib/, UltrafilterMCS ported onto Order.PrimeFilter with SetMaximalConsistent.ultrafilterEquiv, README refreshed."
+        }
+      ],
+      "session_id": "sess_1788465505_51370d",
+      "researched": "2026-09-03T19:33:32Z",
+      "next_artifact_number": 2,
+      "completion_summary": "Modernised FormalSystem/Metalogic/Algebraic/: the BooleanStructure *_quot lemmas are discharged by propDecide (metric 286 -> 105, D2 accept bar), fold_le_of_derives is stated over Multiset.inf, a Mathlib-shaped Order.PFilter proper/maximal/prime-filter layer landed under FormalSystem/ForMathlib/ (including the PrimeSeparator corollary), and UltrafilterMCS.lean was ported onto Order.PrimeFilter LindenbaumAlg with SetMaximalConsistent.ultrafilterEquiv at the corrected type and the bespoke Ultrafilter structure deleted (1071 -> 801 lines). lake build and all module invariants green; C2 axiom baseline unchanged.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 529,
+      "project_name": "ci_linter_and_invariant_gates",
+      "status": "completed",
+      "task_type": "general",
+      "topic": "metalogic",
+      "priority": "medium",
+      "description": "WAVE 5 (publication infrastructure). Turn on the two automated signals a Lean project relies on -- the test suite and Mathlib's environment linters -- and close the gaps in the invariant script that let this review's Criticals through. Findings D-15, D-16, D-18, E-06, E-09, E-13, G-08, G-15 in specs/reviews/2026-09-01-lean-engineering/{D-tactics,E-docs,G-ecosystem}.md; High H8 (infrastructure half) in the review. MEASURED STATE: .github/workflows/ci.yml runs lean-action with `build: true, test: false, lint: false` and skips push events unless the commit message contains `[ci]`; lakefile.lean declares testDriver := \"BimodalTest\" (700+ cases, the only consumer of most of the tactic layer) but CI never runs it; `#lint`/runLinter occur zero times in the repo -- `simpNF` alone would have caught the global simp loop (task 518) the day it landed; there is no Mathlib.Init-style linter root (compare Cslib/Init.lean + scripts/CheckInitImports.lean); `assert_not_exists` occurs zero times though Correspondence/Galois.lean's 'Import seam' section and FrameClassValidity.lean:58 argue the single Semantics→ProofSystem edge in prose; C9 (task-number citations) scans FormalSystem/ only, so lakefile.lean's nine work-item citations pass; C14's stale-count regex `\\b(14|21|42|44)[[:space:]]+(axiom|constructor)` misses 'All 21 TM axiom schemas' (docs/project-info/implementation-status.md:36) and 'one of the 14 TM axiom schemas' (docs/user-guide/examples.md:579); readme-lint.sh Check 4 reports missing 'Last verified' stamps but never compares a present stamp against `git log -1 --format=%cs -- <dir>` (nine stamps are 1-3 months stale); 146 declarations in the core scope occur exactly once in the entire repository. WORK: (1) ci.yml: `test: true`, `lint: true`, delete the `[ci]` gate so CI runs on every push. (2) FormalSystem/Init.lean importing Mathlib.Init (the linter set); a checkInitImports-style script asserting every FormalSystem/** file imports it; `lean_exe runLinter` (root FormalSystem.RunLinter: `import FormalSystem` + `#lint`, supportInterpreter := true) wired as check C16 in check-module-invariants.sh with simpNF + dupNamespace blocking and the rest reporting-only behind ENFORCE_C16, matching the existing ENFORCE_C* flag pattern (:64-78). (3) `assert_not_exists` lines in the lower Semantics files naming the ProofSystem declarations that must not be reachable (G-15). (4) C9 traversal widened to lakefile.lean, README.md and scripts/ (keeping specs/** excluded); rewrite lakefile.lean's nine executable docstrings to describe what each produces (D-18). (5) C14 regex widened to `\\b(14|21|42|44)[[:space:]]+([A-Za-z⁺+]+[[:space:]]+)?(axiom|constructor|schema)`; fix the two documents. (6) readme-lint.sh Check 4 compares stamps to the directory's last-change date (report, not gate). (7) The dead-declaration scan (D-16's method: tokenised occurrence count across all .lean and prose files) as a reporting-only C17, and a whitespace-normalised paragraph-duplication check across README.md, FormalSystem/README.md, Metalogic/README.md and Metalogic.lean as C18 (E-13 -- would have caught the Dedekind contradiction when it was introduced). (8) A docstring-coverage floor of 90% on the core scope as a reporting check. ACCEPTANCE: CI green on a plain push with tests and lint enabled; `bash scripts/check-module-invariants.sh` ALL PASS including C16; simpNF reports zero blocking issues after task 518; the two stale-count documents corrected.",
+      "dependencies": [
+        518,
+        519,
+        520,
+        521,
+        522,
+        523
+      ],
+      "file_scope": [
+        ".github/workflows/ci.yml",
+        "lakefile.lean",
+        "FormalSystem/Init.lean",
+        "FormalSystem/RunLinter.lean",
+        "scripts/check-module-invariants.sh",
+        "scripts/readme-lint.sh",
+        "scripts/module-invariants-manifest.txt",
+        "FormalSystem/Semantics/Correspondence/Galois.lean",
+        "FormalSystem/Semantics/FrameClassValidity.lean"
+      ],
+      "created": "2026-09-02T03:30:31Z",
+      "last_updated": "2026-09-04T09:17:22Z",
+      "artifacts": [
+        {
+          "path": "specs/529_ci_linter_and_invariant_gates/reports/01_ci-linter-invariant-gates.md",
+          "type": "report",
+          "summary": "Verifies all MEASURED STATE claims (all hold, with one correction: the D-01 simp loop appears already fixed), and grounds CI/linter wiring in verified mechanics: native lintDriver := \"batteries/runLinter\" (tested live, zero new files) supersedes the review's hand-rolled RunLinter sketch; lean-action's lint: true hard-fails via lake check-lint if lintDriver is not configured first; CSLib's Init.lean + ImportGraph-based CheckInitImports.lean is directly portable (ImportGraph is already an inherited transitive dependency); precise assert_not_exists targets for G-15; exact scope/counts for the D-18, E-09, and E-06 mechanical fixes."
+        },
+        {
+          "path": "specs/529_ci_linter_and_invariant_gates/plans/01_ci-linter-invariant-gates.md",
+          "type": "plan",
+          "summary": "11 phases in 8 dependency waves: baseline/D-01 re-verification, lintDriver+CI atomic batch, C16 linter check, G-15 assert_not_exists, C9/C14 widening plus the two stale-doc fixes, readme-lint Check 4, reporting-only C17/C18/C19, the Init.lean linter root, and a final acceptance gate."
+        },
+        {
+          "path": "specs/529_ci_linter_and_invariant_gates/summaries/01_ci-linter-invariant-gates-summary.md",
+          "type": "summary",
+          "summary": "Full implementation summary covering all 11 phases, decisions, deviations, verification, impacts, and a 7-item follow-up worklist."
+        }
+      ],
+      "session_id": "sess_1788503051_6873ef_529",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
+      "project_number": 538,
+      "project_name": "resolve_unpinned_paper_anchors_c15_gate",
+      "status": "completed",
+      "task_type": "lean4",
+      "topic": "metalogic",
+      "priority": "high",
+      "description": "Resolve the three paper anchors that make C15 fail, so scripts/check-module-invariants.sh can report ALL CHECKS PASSED. MEASURED STATE: C15 (paper-anchor citation resolution) is the sole failing check group in the invariant script as of the CI/linter-gates work; every other group (B0, C1-C14, C16-C19) passes. The three unresolved anchors are `app:drift`, `cor:no-characterization`, and `lem:deterministic-singleton`, cited in FormalSystem/Metalogic/Independence/DriftFrame.lean, RealTranslationFrame.lean, and StateSetTruth.lean respectively, and absent from specs/paper-definitions-of-record.md. The gap was introduced by the stability/deterministic-collapse work that added those Independence/ files; it predates and is unrelated to the invariant-gates task, which recorded it as a Reasoned Exclusion in every phase rather than fixing it, because resolving it needs paper-content knowledge the implementer did not have. WORK: for each of the three anchors, determine against the actual paper whether it is LIVE-UNPINNED (the result exists in the paper and simply needs recording in specs/paper-definitions-of-record.md with its statement and location) or DANGLING (no such result exists, and the citing docstring must be corrected or the anchor removed). Apply the correct treatment per anchor -- do not blanket-add all three to the record without checking, since a dangling anchor recorded as live converts a detectable citation error into an undetectable one. Then re-run the invariant script and confirm C15 passes. ACCEPTANCE: `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED with no group failing; each of the three anchors is either present in specs/paper-definitions-of-record.md with a real paper location, or its citation is removed/corrected in the Independence/ file that carried it, with the classification recorded per anchor. ANCHOR CLASSIFICATION SUPPLIED (appended from the MF frame-correspondence research in the PossibleWorlds repository; this is the paper-content knowledge the task description notes the implementer lacked, and it answers the LIVE-UNPINNED vs DANGLING question for all three anchors -- verify each against the paper before acting, but the legwork is done). (1) lem:deterministic-singleton: LIVE AND ALREADY LABELLED in JPL/possible_worlds.tex as \\begin{Lthm} \\label{lem:deterministic-singleton}, with citing sites later in the same appendix and an existing comment noting that other results cite it by label. It is NOT dangling; it is simply missing from specs/paper-definitions-of-record.md. Treatment: record it, with its statement and location. Lowest-risk of the three. (2) cor:no-characterization: LIVE BUT UNLABELLED. Its content is the footnote attached to the sentence '\\textit{Determined} does not characterize the task frames satisfying \\textsc{Deterministic}', which constructs the drift frames F-circ (w =>_x u iff x <= u - w <= 2x) and F-1 (u = w + x) over R-time and argues that since every possible world over either frame is an order-isomorphism of (R,<) onto itself, an induction assigns each store-free and recall-free formula the same set of worlds. Treatment: it cannot be recorded against a label that does not exist, so it needs a paper-side edit first. That edit is owned by the PossibleWorlds task 'repair_paper_lean_anchor_drift', which will either promote the footnote to a numbered corollary or attach a label to it; coordinate with it rather than recording a location that is about to change. (3) app:drift: names the SAME footnote content as (2) -- specifically the F-circ/F-1 construction and the reason F-circ is indistinguishable from the deterministic F-1. The citing docstring expects an APPENDIX SECTION, which the paper does not have. This is a structural mismatch rather than a missing pin: two Lean anchors point at one unlabelled footnote and one of them expects a section. Treatment: decide jointly with the PossibleWorlds task whether the paper grows an appendix subsection for the drift construction (making app:drift genuinely live) or the Lean citation is redirected to whatever label (2) produces. Do NOT record app:drift as live against the footnote without that decision -- per this task's own warning, recording a structurally dangling anchor as live converts a detectable citation error into an undetectable one. RELATED: a separate finding from the same research is that scripts/check-paper-definitions.sh reports 18 pinned definition blocks changed and 6 anchors dangling; the 244 uncommitted lines in the paper that caused much of that drift have now been committed, so re-measure before treating that as in scope here.",
+      "dependencies": [],
+      "file_scope": [
+        "specs/paper-definitions-of-record.md",
+        "FormalSystem/Metalogic/Independence/DriftFrame.lean",
+        "FormalSystem/Metalogic/Independence/RealTranslationFrame.lean",
+        "FormalSystem/Metalogic/Independence/StateSetTruth.lean"
+      ],
+      "created": "2026-09-04T08:00:00Z",
+      "last_updated": "2026-09-07T15:53:21Z",
+      "artifacts": [
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
+          "type": "report",
+          "summary": "C15 has FOUR unresolved anchors (app:ObjectiveModality added by commit d155835f2, not three); all four are LIVE and labelled in the current paper, so the supplied DANGLING/unlabelled classification is stale; fix is four LIVE-UNPINNED rows in the record's KNOWN-ANCHORS block, dry-run verified to empty the unresolved set."
+        },
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/plans/01_resolve-c15-paper-anchors.md",
+          "type": "plan",
+          "summary": "Three-phase plan (re-measure, add four LIVE-UNPINNED KNOWN-ANCHORS rows, full invariant run with Reasoned Exclusions) to make check-module-invariants.sh report ALL CHECKS PASSED."
+        },
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/summaries/01_c15-anchor-resolution-summary.md",
+          "type": "summary",
+          "summary": "Four LIVE-UNPINNED KNOWN-ANCHORS rows plus a dated narrative subsection in specs/paper-definitions-of-record.md restore check-module-invariants.sh to ALL CHECKS PASSED."
+        }
+      ],
+      "session_id": "sess_1788795069_3d83b2_538",
+      "completion_summary": "Recorded the four unresolved paper anchors (app:ObjectiveModality, app:drift, cor:no-characterization, lem:deterministic-singleton) as LIVE-UNPINNED rows in the KNOWN-ANCHORS block of specs/paper-definitions-of-record.md, each with a per-anchor why-unpinned note, plus a dated 2026-09-07 classification subsection in the record's provenance narrative. C15 was the sole failing check group; bash scripts/check-module-invariants.sh now exits 0 with ALL CHECKS PASSED and C15 resolving all 52 cited anchors. No .lean file, manifest row, or checksum/commit sentinel was touched.",
+      "archived_at": "2026-09-07T18:16:13Z"
+    },
+    {
       "project_number": 512,
       "project_name": "bundle_duration_into_taskframe",
       "status": "completed",
