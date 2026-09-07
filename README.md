@@ -159,22 +159,22 @@ For detailed setup instructions, see [Installation Guide](docs/installation/BASI
 
 ## Metalogical Results
 
-The metalogic is organized around a base axiom system with three extensions: Dense, Discrete, and Dedekind. Every flagship soundness and completeness result below is `SORRY-FREE (sorryAx-free; axioms: exactly propext, Classical.choice, Quot.sound)`. Weak completeness and finite-context consequence completeness are proven for **all four** frame classes — Base, Dense, Discrete, and Dedekind.
+The metalogic is organized around a base axiom system with three extensions: Dense, ZTime, and RTime. Every flagship soundness and completeness result below is `SORRY-FREE (sorryAx-free; axioms: exactly propext, Classical.choice, Quot.sound)`. Weak completeness and finite-context consequence completeness are proven for **all four** frame classes — Base, Dense, ZTime, and RTime.
 
 **Strong completeness** is a separate matter. The repository reserves the term for consequence from a possibly-infinite premise set `Γ : Set Formula`; the results above are *finite*-context (`Context` is `List Formula`, so every context here is finite, and each such result is inter-derivable with the corresponding weak form through the deduction theorem). The infinitary statement has three distinct statuses across the four classes, which must not be collapsed into one:
 
-- **Discrete** — **refuted**. `notStrongCompletenessDiscrete` and its companion `notCompactDiscrete` (`Metalogic/DiscreteNonCompactness.lean`) settle it negatively.
+- **ZTime** — **refuted**. `notStrongCompletenessZTime` and its companion `notCompactZTime` (`Metalogic/DiscreteNonCompactness.lean`) settle it negatively.
 - **Base** and **Dense** — **proved**. `strongCompletenessBase` and `strongCompletenessDense` (`Metalogic/Compactness.lean`) inhabit the `StrongCompletenessBase`/`StrongCompletenessDense` statements of `Metalogic/SetConsequence.lean`, via `compactBase`/`compactDense` and the corresponding model-existence theorems, proved by an ultraproduct over the finite sublists of the premise set.
-- **Dedekind** — **refuted**, like Discrete. `notStrongCompletenessDedekind` and its companion `notCompactDedekind` (`Metalogic/DedekindNonCompactness.lean`) settle it negatively; `StrongCompletenessDedekind` and `CompactDedekind` are stated in `Metalogic/SetConsequence.lean` so the refutations have something to name, and both docstrings there already record that the statements are false. Reynolds 1992 Theorem 7 is weak-only, and the refutation is why: it does not contradict Reynolds, it explains why only weak completeness is available for this class.
+- **RTime** — **refuted**, like ZTime. `notStrongCompletenessRTime` and its companion `notCompactRTime` (`Metalogic/DedekindNonCompactness.lean`) settle it negatively; `StrongCompletenessRTime` and `CompactRTime` are stated in `Metalogic/SetConsequence.lean` so the refutations have something to name, and both docstrings there already record that the statements are false. Reynolds 1992 Theorem 7 is weak-only, and the refutation is why: it does not contradict Reynolds, it explains why only weak completeness is available for this class.
 
-Soundness and completeness for the Dedekind class are both stated against the *dense* Dedekind validity predicate `ValidDedekindDense`, not the density-free `ValidDedekind`: `density` and `dense_indicator` are admissible in a Dedekind derivation and both are false on ℤ (`FormalSystem/ProofSystem/Axioms.lean`).
+Soundness and completeness for the RTime class are both stated against `ValidRTime`, the dense-and-complete predicate, not the density-free `ValidComplete`: `density` and `dense_indicator` are admissible in a RTime derivation and both are false on ℤ (`FormalSystem/ProofSystem/Axioms.lean`).
 
 ```mermaid
 graph TD
     B("<b>Base</b><br/>AddCommGroup<br/>LinearOrder · Nontrivial<br/>NoMaxOrder · NoMinOrder<br/>37 axioms<br/>Sound ✓ · Complete ✓")
     D("<b>Dense</b><br/>+ DenselyOrdered<br/>Base + 2 axioms = 39<br/>Sound ✓ · Complete ✓")
-    C("<b>Dedekind</b><br/>+ DedekindComplete<br/>Dense + 3 axioms = 42<br/>Sound ✓ · Complete ✓")
-    Z("<b>Discrete</b><br/>+ SuccOrder · PredOrder<br/>+ IsSuccArchimedean<br/>Base + 3 axioms = 40<br/>Sound ✓ · Complete ✓")
+    C("<b>RTime</b><br/>+ DedekindComplete<br/>Dense + 3 axioms = 42<br/>Sound ✓ · Complete ✓")
+    Z("<b>ZTime</b><br/>+ SuccOrder · PredOrder<br/>+ IsSuccArchimedean<br/>Base + 3 axioms = 40<br/>Sound ✓ · Complete ✓")
 
     B --> D
     D --> C
@@ -186,17 +186,17 @@ graph TD
 | System | Axioms | Additional Axioms | Standard Model | Soundness | Completeness |
 |--------|--------|-------------------|----------------|-----------|--------------|
 | **Base** | 37 | seriality built in (`⊤ → F⊤`, `⊤ → P⊤`) | — | `soundness` | `completeness` |
-| **Discrete** | 40 | `Fφ → U(φ,¬φ)`, `Pφ → S(φ,¬φ)`, `G(Gφ→φ) → (FGφ→Gφ)` | ℤ | `soundness_discrete` | `completeness_discrete` |
+| **ZTime** | 40 | `Fφ → U(φ,¬φ)`, `Pφ → S(φ,¬φ)`, `G(Gφ→φ) → (FGφ→Gφ)` | ℤ | `soundness_ztime` | `completeness_ztime` |
 | **Dense** | 39 | `GGφ → Gφ` (`density`), `¬U(⊤,⊥)` (`dense_indicator`) | ℚ | `soundness_dense` | `completeness_dense` |
-| **Dedekind** | 42 | the two Dense axioms plus Reynolds' `prior_U_gap`, `prior_S_gap`, `sep` | ℝ | `soundness_dedekind` | `completeness_dedekind` |
+| **RTime** | 42 | the two Dense axioms plus Reynolds' `prior_U_gap`, `prior_S_gap`, `sep` | ℝ | `soundness_rtime` | `completeness_rtime` |
 
-`inductive Axiom` has **45 constructors in nine layers** (`FormalSystem/ProofSystem/Axioms.lean`). The 37 Base constructors are propositional (4), S5 modal (5), Burgess-Xu temporal (18), an additional Burgess-Xu temporal layer (4), modal-temporal interaction (1), and uniformity (5). The remaining eight are the class-specific extensions: density (2), Prior-UZ/SZ (2) and Z1 (1) for the discrete class, and Reynolds' Dedekind axioms (3).
+`inductive Axiom` has **45 constructors in nine layers** (`FormalSystem/ProofSystem/Axioms.lean`). The 37 Base constructors are propositional (4), S5 modal (5), Burgess-Xu temporal (18), an additional Burgess-Xu temporal layer (4), modal-temporal interaction (1), and uniformity (5). The remaining eight are the class-specific extensions: density (2), Prior-UZ/SZ (2) and Z1 (1) for the ZTime class, and Reynolds' Dedekind axioms (3).
 
-The Dense and Discrete logics are independent extensions — neither subsumes the other. Dedekind extends **Dense**: `Axiom.minFrameClass` places `density` and `dense_indicator` below `FrameClass.Dedekind`, because Reynolds' own axiomatization of real flow contains them. Discrete and Dedekind are likewise incomparable, and `Dedekind ≰ Dense`.
+The Dense and ZTime logics are independent extensions — neither subsumes the other. RTime extends **Dense**: `Axiom.minFrameClass` places `density` and `dense_indicator` below `FrameClass.RTime`, because Reynolds' own axiomatization of real flow contains them. ZTime and RTime are likewise incomparable, and `RTime ≰ Dense`.
 
-**`FrameClass.Dedekind` is the paper's TM⁺_c.** Under the paper's current text, `cor:tm-completeness` reads "TM⁺_c — Weakly complete over the dense-and-complete class", which is exactly what `FrameClass.Dedekind` denotes: `DenselyOrdered D` plus Dedekind completeness. Earlier revisions of this README described TM⁺_c as completeness *simpliciter* with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picks the class out. That is stale on both counts: the `{ℤ, ℝ}` / `Th(ℤ) ∩ Th(ℝ)` footnote is commented out in the live `def:TMplus-c`, and the class the paper now names for TM⁺_c is dense-and-complete, not complete-simpliciter. There is no gap.
+**`FrameClass.RTime` is the paper's TM⁺_c.** Under the paper's current text, `cor:tm-completeness` reads "TM⁺_c — Weakly complete over the dense-and-complete class", which is exactly what `FrameClass.RTime` denotes: `DenselyOrdered D` plus Dedekind completeness. Earlier revisions of this README described TM⁺_c as completeness *simpliciter* with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picks the class out. That is stale on both counts: the `{ℤ, ℝ}` / `Th(ℤ) ∩ Th(ℝ)` footnote is commented out in the live `def:TMplus-c`, and the class the paper now names for TM⁺_c is dense-and-complete, not complete-simpliciter. There is no gap.
 
-One question does remain open, and it is the paper's, not the tree's: `def:TMplus-c` bases BX_c on `TMP-PU` and `TMP-SEP` with **no density axiom**, whereas `FrameClass.Dedekind` admits `density` and `dense_indicator` alongside Reynolds' triple. Either the paper's BX_c should carry the density axioms, or this tree should record that `completeness_dedekind` proves a stronger-premise statement than the paper's corollary. That is an author decision and is not made here.
+One question does remain open, and it is the paper's, not the tree's: `def:TMplus-c` bases BX_c on `TMP-PU` and `TMP-SEP` with **no density axiom**, whereas `FrameClass.RTime` admits `density` and `dense_indicator` alongside Reynolds' triple. Either the paper's BX_c should carry the density axioms, or this tree should record that `completeness_rtime` proves a stronger-premise statement than the paper's corollary. That is an author decision and is not made here.
 
 ### The base language L and the stability extension L⋆
 
@@ -212,8 +212,8 @@ unless a class is named.
 | Semantic conservativity over/under L⁺ | `blValidIn_iff_validIn_tr` | `starValidIn_ofFormula_iff` |
 | Soundness | `bl_soundness_*` (TM) | `star_soundness_validIn` (TM⋆), TD discharged semantically |
 | Proof-theoretic conservativity, backward | `derivable_translate` (TM ⊆ TM⁺) | `starDerivable_of_derivable` (TM⁺ ⊆ TM⋆) |
-| Proof-theoretic conservativity, forward | **refuted** at Base/Discrete, open at Dense/Dedekind (`tmComplete_iff_forward`, `tmCompleteDiscrete_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
-| Completeness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`); TM itself is incomplete, and `TM ⊊ TMFrag` at Discrete (`tm_lt_tmFrag_discrete`) | **open** (see below) |
+| Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmComplete_iff_forward`, `tmCompleteZTime_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
+| Completeness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`); TM itself is incomplete, and `TM ⊊ TMFrag` at ZTime (`tm_lt_tmFrag_ztime`) | **open** (see below) |
 | Compactness | `blCompactBase`, `blCompactDense` for the fragment's consequence relation | not attempted |
 
 The L side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⋆ side
@@ -270,17 +270,17 @@ under `Th`/`Mod` (`Semantics/Correspondence/Galois.lean`). `galoisClosed_of_indi
 single mechanism by which closure is shown: exhibit one formula valid on precisely the class's
 members. Two positive results apply it: `galoisClosed_sat_dense` (`Sat .Dense` is Galois-closed)
 and `galoisClosed_isDiscrete` (`{F | F.IsDiscrete}`, the bare structural clause of
-`def:frame-properties` — **not** the narrower Hölder-to-ℤ class `FrameClass.Sat FrameClass.Discrete`
+`def:frame-properties` — **not** the narrower Hölder-to-ℤ class `FrameClass.Sat FrameClass.ZTime`
 — is Galois-closed), both via the indicator biconditionals `validOn_nextTop_iff` /
 `validOn_nextTop_iff_isDiscrete` (`Semantics/Correspondence/Indicator.lean`). Two negative results
-sandwich the corresponding narrowed classes instead: `sat_dedekind_ssubset_mod_axiomSet` proves
-that `Sat .Dedekind` is **not Galois-closed** — a statement about definability of the model
-class, a different property from Dedekind strong completeness (refuted — see the
+sandwich the corresponding narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves
+that `Sat .RTime` is **not Galois-closed** — a statement about definability of the model
+class, a different property from RTime strong completeness (refuted — see the
 strong-completeness discussion above, which this result does not bear on either way) — and
-`sat_discrete_ssubset_mod_axiomSet` proves the analogous fact for `Sat .Discrete`
+`sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .ZTime`
 (`Metalogic/Independence/RationalWitness.lean` and `Metalogic/Independence/LexIntWitness.lean`,
-respectively). Closed-form characterizations of `Mod (AxiomSet .Discrete)` and
-`Mod (AxiomSet .Dedekind)` remain open and are not promised.
+respectively). Closed-form characterizations of `Mod (AxiomSet .ZTime)` and
+`Mod (AxiomSet .RTime)` remain open and are not promised.
 
 **Expressive completeness (Kamp, Prior structures).** `kampPriorExpressiveCompleteness`
 (`Metalogic/WeakCanonical/Kamp/KampPrior.lean`) is sorry-free (axioms: exactly `propext`,

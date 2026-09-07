@@ -557,36 +557,51 @@ than by line number, and confirm the site count before editing.
 
 ---
 
-### Phase 8: Typst prose, docs, and the naming-convention record [NOT STARTED]
+### Phase 8: Typst prose, docs, and the naming-convention record [COMPLETED]
 
 **Goal**: Move every remaining prose reference — typst backtick spans (which are gated by
 `typst-sync-check.sh` Check 1), repository docs, and the naming-convention deviation record.
 
 **Tasks**:
-- [ ] `typst/FormalFoundations.typ:421-422` - `#leansrc("Semantics.FrameProperty",
+- [x] `typst/FormalFoundations.typ:421-422` - `#leansrc("Semantics.FrameProperty",
       "TaskFrame.IsSuccArchDiscrete")` and `"TaskFrame.IsDedekind"` -> the `IsZTime`/`IsRTime`
       forms. Leave :1278 and :1495 alone (they name the *module*
       `Metalogic.BXCanonical.CompletenessDedekind`, which is not renamed — decision 1).
-- [ ] `typst/chapters/03-proof-theory.typ` lines 14, 161, 203-242, 366 - backticked `Discrete`,
+- [x] `typst/chapters/03-proof-theory.typ` lines 14, 161, 203-242, 366 - backticked `Discrete`,
       `Dedekind` class spans, and the `#discrete-only-count`/`#dedekind-only-count` consumers if
       Phase 6 renamed the emitted variables.
-- [ ] `typst/chapters/06-notes.typ:104` - backticked `soundness_discrete`, `soundness_dedekind`.
-- [ ] `typst/chapters/ax-machine-appendix.typ:25`, `p4-dual-verification.typ:26`,
+- [x] `typst/chapters/06-notes.typ:104` - backticked `soundness_discrete`, `soundness_dedekind`.
+- [x] `typst/chapters/ax-machine-appendix.typ:25`, `p4-dual-verification.typ:26`,
       `p2-decidability-practice.typ:31`.
-- [ ] Docs sweep: `docs/project-info/known-limitations.md` (29 lines),
+- [x] Docs sweep: `docs/project-info/known-limitations.md` (29 lines),
       `docs/user-guide/architecture.md` (24), `README.md` (23),
       `docs/reference/API_REFERENCE.md` (19), `docs/reference/axiom-reference.md` (15),
       `docs/project-info/implementation-status.md` (8), `docs/reference/operators.md` (5),
       `docs/research/BIMODAL_LOGIC.md` (4), `docs/development/MODULE_ORGANIZATION.md` (3), and
       one line each in `docs/research/competitive-landscape.md`, `docs/project-info/README.md`,
       `docs/project-info/FEATURE_REGISTRY.md`, `docs/architecture/BFMCS_ARCHITECTURE.md`.
-- [ ] `specs/ROADMAP.md` - update mentions that name renamed declarations
+- [x] `specs/ROADMAP.md` - update mentions that name renamed declarations
       (`completeness_discrete`, `completeness_dedekind`, `consequence_completeness_dedekind`,
       `ValidDiscrete`, `decidableValidDiscreteFamily`, `notStrongCompletenessDiscrete`,
       `validDiscrete_iff_checkFamily`). Leave KEEP-list mentions
       (`countermodel_discrete`, `build_discrete_chronicle_over_non_archimedean_block_carrier...`,
       "Reynolds Dedekind") unchanged. Do not alter item checkboxes or structure.
-- [ ] `docs/development/NAMING_CONVENTION_DEVIATION.md` - add the z/d/r scheme table from this
+- [x] *(deviation: added — fix-forward on three `typst-sync-check.sh` Check 1 violations that were
+      already failing at HEAD, since Phase 8's and Phase 9's gate is "all three checks pass":
+      `typst/chapters/04-metalogic.typ` named two `SoundnessLemmas/` files that do not exist
+      (`Core.lean`, `DenseValidity.lean`) and now names the four that do; the bare
+      `@[aesop norm unfold]` / `@[aesop safe forward]` exposition spans in
+      `typst/chapters/p4-proof-automation.typ` are now whitelisted in
+      `typst/sync-check-whitelist.txt`, since every source occurrence carries a
+      `(rule_sets := [TMLogic])` argument and cannot literal-match.)*
+- [x] *(deviation: added — `typst/SYNC-MAP.md` and `typst/README.md` class-naming rows moved with
+      the chapters they map; the plan's file list omitted them.)*
+- [x] *(deviation: added — `docs/development/NAMING_CONVENTION_DEVIATION.md`'s pre-existing claim
+      that `scripts/nolints.json` "was deleted from the tree" corrected to say its
+      `defsWithUnderscore` entries were dropped. The file exists and Phase 3 hand-edited two
+      `docBlame` rows in it; leaving the contradiction would have misled the next reader of the
+      very file this phase is updating.)*
+- [x] `docs/development/NAMING_CONVENTION_DEVIATION.md` - add the z/d/r scheme table from this
       plan's Overview, state the surviving deviation (the *classes* take z/d/r names while the
       *conditions* keep the paper's `Discrete`/`Dense`/`Complete` names), and record the
       deferred module/file-name inconsistency from decision 1 explicitly.
@@ -619,6 +634,19 @@ module-naming (keep). A residual count is expected and correct, not a failure.
 
 ---
 
+
+#### KEEP-boundary decisions and out-of-scope residuals
+
+Every Phase 8 checklist item was completed; nothing planned was dropped. This table records the
+boundary the phase deliberately did **not** cross, which the plan's Scope Hypothesis anticipated
+("A residual count is expected and correct, not a failure").
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `typst/FormalFoundations.typ` mathematical prose ("A frame is *Discrete*", `op("Log")("Discrete")`, "DF to Discrete", "== The Discrete Branch", "== The Dedekind Branch", "*Discrete*: □X⊤ ∈ M") | Names the paper's bare *order property* and the proof-case branch named after it, not the `FrameClass` tag. The bare conditions are on the plan's KEEP list, and this file is written in the paper's own vocabulary. | `Semantics/FrameProperty.lean`'s `IsDiscrete`/`IsComplete` keep the paper's names; `typst-sync-check.sh` Check 1 is green with these spans present (they are not backticked identifier claims). |
+| `Dedekind layer` / `Dedekind-layer` / "Reynolds' Dedekind axioms" in `docs/reference/{axiom-reference,operators}.md`, `docs/research/competitive-landscape.md`, `README.md` | Names the Reynolds axiom family, whose label is the KEEP-listed `layerReynoldsDedekind`. | `Automation/MachineAppendixExport.lean:180`: `def layerReynoldsDedekind : String := "Reynolds Dedekind"`, unchanged; `typst/generated/machine-appendix.jsonl` still emits `"Reynolds Dedekind"` as the layer. |
+| Module and file names (`DedekindNonCompactness.lean`, `DiscreteNonCompactness.lean`, `CompletenessDedekind.lean`, `DedekindDerived.lean`, `DiscreteUnfolding.lean`, `DiscreteCarrierProbe.lean`) and every prose mention of them | Deferred by the plan's Overview decision 1. | Recorded explicitly in `docs/development/NAMING_CONVENTION_DEVIATION.md`'s "Deferred: module and file names" subsection, naming the residual inconsistency. |
+| `typst/FormalFoundations.typ:1339`'s `#leansrc("Metalogic.SetConsequence", "discrete_consequence_not_compact")` | Pre-existing dead reference: no such declaration exists anywhere in the tree, at HEAD or now. Out of this task's scope, and not gated (`#leansrc` arguments are not checked by `typst-sync-check.sh` Check 1). | `grep -rn 'discrete_consequence_not_compact' FormalSystem --include=*.lean` returns only a docstring mention in `Semantics/Ultraproduct/Carrier.lean:41`, no declaration. |
 ### Phase 9: Final verification gate [NOT STARTED]
 
 **Goal**: Run the complete gate set and confirm no regression in axioms, sorries, linter

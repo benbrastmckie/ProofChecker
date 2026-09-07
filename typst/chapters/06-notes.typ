@@ -13,7 +13,7 @@
 == System Overview
 
 The book's system comprises the syntax (six primitive constructors over the Since/Until basis), the task-frame semantics with strict truth conditions, and the BX proof system (#axiom-count axiom constructors in nine layers, #rule-count inference rules, frame-class parameter).
-Soundness for all four frame classes (Base, Dense, Discrete, Dedekind), the deduction theorem, and the perpetuity principles P1--P6 are carried by the anchors of @sec:metalogic; the canonical-model construction (`Metalogic/BXCanonical/`) carries the completeness theorems stated there.
+Soundness for all four frame classes (Base, Dense, ZTime, RTime), the deduction theorem, and the perpetuity principles P1--P6 are carried by the anchors of @sec:metalogic; the canonical-model construction (`Metalogic/BXCanonical/`) carries the completeness theorems stated there.
 The tableau decision procedure is presented operationally in the Decidability-in-Practice chapter.
 // CONFIRM(lean): scripts/typst-status-counts.sh --json reports sorry_total_excl_boneyard = 0
 
@@ -99,9 +99,9 @@ The irreflexive tense operators (primitive) are distinguished from their reflexi
 
 === Consequences of Strict Semantics
 
-- *Frame definability is real*: density ($G G phi.alt arrow.r G phi.alt$), discreteness (Prior/Z1), and seriality genuinely characterize frame classes, which is what makes the `Base`/`Dense`/`Discrete` frame-class parameter of the proof system meaningful.
+- *Frame definability is real*: density ($G G phi.alt arrow.r G phi.alt$), discreteness (Prior/Z1), and seriality genuinely characterize frame classes, which is what makes the `Base`/`Dense`/`ZTime` frame-class parameter of the proof system meaningful.
   Under reflexive semantics all of these collapse to trivial validity.
-- *Four completeness targets*: the base, dense, discrete, and Dedekind systems each get their own soundness statement (`soundness`, `soundness_dense`, `soundness_discrete`, `soundness_dedekind`) and their own completeness theorem, each in the strongest form its frame class admits (@sec:metalogic).
+- *Four completeness targets*: the base, dense, ZTime, and RTime systems each get their own soundness statement (`soundness`, `soundness_dense`, `soundness_ztime`, `soundness_rtime`) and their own completeness theorem, each in the strongest form its frame class admits (@sec:metalogic).
 - *Irreflexivity is not modally definable* @blackburnderijkevenema2001: no axiom forces the canonical accessibility to be irreflexive.
   The construction compensates with fresh-atom machinery --- the structured `Atom` type exists precisely so that a fresh atom is available outside any finite set --- and with the chronicle/transfer constructions of the metalogic chapter rather than a naive canonical model.
 - *Seriality is axiomatic, not automatic*: BX1/BX1$'$ ($top arrow.r F top$, $top arrow.r P top$) require every time to have a strict successor and predecessor time, which holds in every nontrivial ordered abelian group of durations.
@@ -128,5 +128,5 @@ The irreflexive tense operators (primitive) are distinguished from their reflexi
 ]
 
 #remark("The Reflexive Alternative")[
-  A reflexive convention ($lt.eq$) yields a single collapsed completeness target in which the frame classes are indistinguishable; the strict convention ($<$, the A2 guard convention) supports the Burgess-Xu axioms, replaces the temporal T-axioms with seriality axioms, and sustains four genuinely distinct frame classes (Base, Dense, Discrete, Dedekind).
+  A reflexive convention ($lt.eq$) yields a single collapsed completeness target in which the frame classes are indistinguishable; the strict convention ($<$, the A2 guard convention) supports the Burgess-Xu axioms, replaces the temporal T-axioms with seriality axioms, and sustains four genuinely distinct frame classes (Base, Dense, ZTime, RTime).
 ]

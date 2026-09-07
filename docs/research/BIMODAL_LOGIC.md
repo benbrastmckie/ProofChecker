@@ -26,7 +26,7 @@ In Bimodal, the fundamental semantic elements are **world-states**:
   (`DenselyOrdered`) and Dedekind-complete carriers (every nonempty bounded-above set has a
   least upper bound) are explicitly supported; see
   `FormalSystem/Metalogic/StrongCompleteness.lean:165-171`. The four frame classes -- Base,
-  Dense, Discrete, Dedekind -- differ exactly in which binders they impose on `D`.
+  Dense, ZTime, RTime -- differ exactly in which binders they impose on `D`.
 - **Task Relation (`R`)**: Accessibility relation over world-state/time pairs
 
 ### Interpretation
@@ -85,14 +85,14 @@ Six theorems connecting modal and temporal operators:
 | Component | Status | Details |
 |-----------|--------|---------|
 | **Syntax** | Complete | Formula, Context, derived operators |
-| **Proof System** | Complete | 45 axiom constructors (Base 37 / Dense 2 / Discrete 3 / Dedekind 3), 7 inference rules |
+| **Proof System** | Complete | 45 axiom constructors (Base 37 / Dense 2 / ZTime 3 / RTime 3), 7 inference rules |
 | **Semantics** | Complete | TaskFrame, TaskModel, Truth, Validity |
 | **Metalogic** | **Complete** | Soundness, Completeness, Deduction theorem |
 | **Automation** | Partial | Core tactics working |
 
 **Key Result**: Bimodal has fully verified soundness proofs and weak completeness proofs for
 all four frame classes. Note two qualifications: *strong* completeness (arbitrary infinite
-premise sets) is not available uniformly -- it is machine-refuted for Discrete and open for
+premise sets) is not available uniformly -- it is machine-refuted for ZTime and open for
 Base and Dense -- and the decision procedure's proved direction is soundness only. See
 [known-limitations.md](../project-info/known-limitations.md).
 

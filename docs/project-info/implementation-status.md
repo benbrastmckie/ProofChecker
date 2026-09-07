@@ -29,11 +29,11 @@ Module-by-module implementation status for the Bimodal TM logic library.
 
 | Module | Status | Notes |
 |--------|--------|-------|
-| `Axioms.lean` | ✅ | 45 axiom constructors (Base 37 / Dense 2 / Discrete 3 / Dedekind 3) |
+| `Axioms.lean` | ✅ | 45 axiom constructors (Base 37 / Dense 2 / ZTime 3 / RTime 3) |
 | `Derivation.lean` | ✅ | DerivationTree type |
 
 **Features**:
-- All 45 axiom constructors organized into base (37), dense (2), discrete (3), and Dedekind (3) layers
+- All 45 axiom constructors organized into base (37), dense (2), ZTime (3), and RTime (3) layers
 - 7 inference rule constructors
 - Computable height function
 
@@ -63,23 +63,23 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | `Metalogic/SoundnessLemmas.lean` | ✅ | Bridge lemmas |
 | `Metalogic/Soundness.lean` | ✅ | Soundness theorem |
 | `Metalogic/Core/DeductionTheorem.lean` | ✅ | Deduction theorem |
-| `Metalogic/BXCanonical/Completeness.lean` | ✅ | `completeness` (`:196`), `completeness_dense` (`:255`), `completeness_discrete` (`:296`) -- all sorryAx-free |
-| `Metalogic/StrongCompleteness.lean` | ✅ | `completeness_dedekind` (`:469`) and the four `consequence_completeness_*` theorems |
+| `Metalogic/BXCanonical/Completeness.lean` | ✅ | `completeness` (`:196`), `completeness_dense` (`:255`), `completeness_ztime` (`:296`) -- all sorryAx-free |
+| `Metalogic/StrongCompleteness.lean` | ✅ | `completeness_rtime` (`:469`) and the four `consequence_completeness_*` theorems |
 | `Metalogic/Decidability/` | 🔶 | Decision procedure implemented; sound direction proved, completeness direction open |
-| `Metalogic/DiscreteNonCompactness.lean` | ✅ | Machine-refutes Discrete strong completeness |
+| `Metalogic/DiscreteNonCompactness.lean` | ✅ | Machine-refutes ZTime strong completeness |
 | `Metalogic/SetConsequence.lean` | ✅ | Set-based consequence layer; states `CompactBase`/`CompactDense` and their strong-completeness and model-existence siblings |
 | `Metalogic/Compactness.lean` | ✅ | Discharges all six: `modelExistenceBase`/`modelExistenceDense` by ultraproduct, `compactBase`/`compactDense`, `strongCompletenessBase`/`strongCompletenessDense` -- all sorryAx-free |
 | `Metalogic/Conservativity.lean` | ✅ | Aggregator: the forward-conservativity prohibition and the CEB/CEF status record; re-exports the five modules below |
 | `Metalogic/Conservativity/Backward.lean` | ✅ | TM/TM+ backward bridge |
-| `Metalogic/Conservativity/BaseLanguageSoundness.lean` | ✅ | BL soundness at Base/Dense/Discrete/Dedekind by composition; `truthAt_tr`, the validity forms, and `bl_not_derivable_nil_bot{,_discrete}` |
-| `Metalogic/Independence/` | ✅ | Three independence results, including `sat_dedekind_ssubset_mod_axiomSet` (`Sat .Dedekind` not Galois-closed -- definability of the model class, distinct from the open Dedekind strong-completeness question above) and `sat_discrete_ssubset_mod_axiomSet` (`Sat .Discrete` not Galois-closed) |
+| `Metalogic/Conservativity/BaseLanguageSoundness.lean` | ✅ | BL soundness at Base/Dense/ZTime/RTime by composition; `truthAt_tr`, the validity forms, and `bl_not_derivable_nil_bot{,_discrete}` |
+| `Metalogic/Independence/` | ✅ | Three independence results, including `sat_rtime_ssubset_mod_axiomSet` (`Sat .RTime` not Galois-closed -- definability of the model class, distinct from the open RTime strong-completeness question above) and `sat_ztime_ssubset_mod_axiomSet` (`Sat .ZTime` not Galois-closed) |
 | `Metalogic/WeakCanonical/Kamp/` | ✅ | `kampPriorExpressiveCompleteness` -- `{U, S}` expressively complete relative to monadic first-order logic **for Prior structures**, sorry-free (`propext`, `Classical.choice`, `Quot.sound`); load-bearing via `uSExpressivelyCompleteOverPrior` |
 
 **Soundness** (✅):
 - Full soundness proof: `derivable Γ φ → SemanticConsequence Γ φ`, over all 45 axiom
-  constructors (Base 37 / Dense 2 / Discrete 3 / Dedekind 3, per `Axiom.minFrameClass` in
+  constructors (Base 37 / Dense 2 / ZTime 3 / RTime 3, per `Axiom.minFrameClass` in
   `FormalSystem/ProofSystem/Axioms.lean`)
-- Base-language soundness (`bl_soundness` and its dense / discrete / Dedekind siblings,
+- Base-language soundness (`bl_soundness` and its dense / ZTime / RTime siblings,
   `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`), stated against the native `BLTruthAt` of
   `FormalSystem/Semantics/BLTruth.lean` and obtained by composing
   `Conservativity.translate` with the four theorems above across the truth-transfer bridge
@@ -91,7 +91,7 @@ Module-by-module implementation status for the Bimodal TM logic library.
 - Canonical model structure complete
 - Truth lemma proved
 - All four weak completeness theorems -- `completeness`, `completeness_dense`,
-  `completeness_discrete`, `completeness_dedekind` -- are fully proven and sorryAx-free at
+  `completeness_ztime`, `completeness_rtime` -- are fully proven and sorryAx-free at
   exactly `[propext, Classical.choice, Quot.sound]` (check C2).
 - `countermodel_discrete` is **proved**, not dead code, at
   `FormalSystem/Metalogic/WeakCanonical/GroupModel/CountermodelBase.lean:142`.

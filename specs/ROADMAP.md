@@ -64,9 +64,9 @@ tree — report it as such.
       `WeakCanonical/Transfer.lean` no longer contains this theorem; its own header names the new
       location and confirms the `sorryAx`-free status. *(Completed: tasks 477-479, 2026-08-25)*
 - [x] **Dense weak completeness — DONE.** `completeness_dense` axiom-clean, same set, C2-confirmed.
-- [x] **Discrete weak completeness — DONE.** `completeness_discrete` axiom-clean, same set.
+- [x] **Discrete weak completeness — DONE.** `completeness_ztime` axiom-clean, same set.
 - [x] **Dedekind weak/consequence completeness — DONE.** Task 408 (completed, archived): headline
-      `completeness_dedekind` and corollary `consequence_completeness_dedekind`, both
+      `completeness_rtime` and corollary `consequence_completeness_rtime`, both
       `sorryAx`-free.
 - [x] **Consequence-completeness capstone (task 362, not_started)** — Leg A: finite-context *(Completed: Task 362)*
       consequence completeness for all four frame classes, `Derivable`-stated corollaries of the
@@ -225,11 +225,11 @@ realignment).
       computability, not choice-freedom; they are different properties (see the PROVEN-vs-
       SORRY-FREE note above), and `wlem_of_spherical` rules out any choice-free finite-carrier
       route.
-- [ ] **What remains is exactly one theorem, `fmp`**: `∀ ψ, ¬ ValidDiscrete ψ → ∃ P ∈ cands ψ, ∃
+- [ ] **What remains is exactly one theorem, `fmp`**: `∀ ψ, ¬ ValidZTime ψ → ∃ P ∈ cands ψ, ∃
       w, SatAtState P w ψ.neg`. Its crux is box-faithfulness — `box` truth is a global constant of
       its own model, so a source model's and a target presentation's box facts need not agree —
-      and it is genuinely hard. Given `fmp`, the assembly (`validDiscrete_iff_checkFamily`,
-      `decidableValidDiscreteFamily`) is already live and machine-checked.
+      and it is genuinely hard. Given `fmp`, the assembly (`validZTime_iff_checkFamily`,
+      `decidableValidZTimeFamily`) is already live and machine-checked.
 - [ ] **This qualifies a prior audit finding**: the original proof-state audit's finding F6 ("FMP
       is syntactic, not semantic") was reached from `Decidability/FMP/` without accounting for
       BiLasso; the honest picture is the one stated above, not F6 as originally framed.
@@ -356,12 +356,12 @@ does not mean zero open mathematics** — see the PROVEN-vs-SORRY-FREE note at t
 document, and Phase 2's `isValid` bridge / proof-extraction / termination-residual items, none of
 which carries a sorry today because none of them is a stated theorem yet.
 
-**C2 axiom baseline**: `BXCanonical.completeness`, `.completeness_dense`, `.completeness_discrete`,
+**C2 axiom baseline**: `BXCanonical.completeness`, `.completeness_dense`, `.completeness_ztime`,
 and `.Chronicle.countermodel_dense` all depend on exactly `[propext, Classical.choice,
 Quot.sound]` — no `sorryAx`, tree-wide, across all four flagship theorems. Those four, and only
 those four, are what C2's baseline covers (`scripts/check-module-invariants.sh`, check C2).
 
-**Outside the C2 baseline, and checked separately**: `completeness_dedekind`
+**Outside the C2 baseline, and checked separately**: `completeness_rtime`
 (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) has the same profile — SORRY-FREE
 (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). That is recorded in
 prose at `FormalSystem/Metalogic.lean:57-60` and is reproducible with `#print axioms` on the name.
@@ -483,18 +483,18 @@ MF + T + Modal 4 in `Theorems/Combinators.lean` (`Axioms.lean:281`). It is not a
 
 ### Layer 6: Prior Axioms for Integers (2) — Task 119
 
-`minFrameClass = .Discrete`.
+`minFrameClass = .ZTime`.
 
 | Axiom | File:Line | Statement | Role |
 |-------|-----------|-----------|------|
 | `prior_UZ` | Axioms.lean:330 | `F(φ) → U(φ, ¬φ)` | Nearest future φ-point is reachable (Reynolds 1992 §10, Venema 1993 axiom W) |
 | `prior_SZ` | Axioms.lean:335 | `P(φ) → S(φ, ¬φ)` | Nearest past φ-point is reachable (dual) |
 
-*These are discrete-only axioms (`isBase = False`, `isDenseCompatible = False`, `isDiscreteCompatible = True`, `frameClass = .Discrete`). Valid on all discrete orders with `IsSuccArchimedean`. Soundness proofs are sorry-free (well-founded descent via `Nat.find` on succ/pred chain). Added by task 119.*
+*These are discrete-only axioms (`isBase = False`, `isDenseCompatible = False`, `isDiscreteCompatible = True`, `frameClass = .ZTime`). Valid on all discrete orders with `IsSuccArchimedean`. Soundness proofs are sorry-free (well-founded descent via `Nat.find` on succ/pred chain). Added by task 119.*
 
 ### Layer 7: Z1 (1)
 
-`minFrameClass = .Discrete`.
+`minFrameClass = .ZTime`.
 
 | Axiom | File:Line | Statement | Role |
 |-------|-----------|-----------|------|
@@ -512,7 +512,7 @@ and `Axioms.lean:573` agrees it is 2.
 
 ### Layer 9: Reynolds Dedekind (3)
 
-`minFrameClass = .Dedekind`. Reynolds' definable-gap-freeness axioms for real flow, printed
+`minFrameClass = .RTime`. Reynolds' definable-gap-freeness axioms for real flow, printed
 p.168 of "An axiomatization for Until and Since over the reals without the IRR rule" (1992).
 `K⁺A = ¬U(⊤,¬A)` and `K⁻A = ¬S(⊤,¬A)` are defined in `Syntax/Formula.lean`.
 
@@ -523,7 +523,7 @@ p.168 of "An axiomatization for Until and Since over the reals without the IRR r
 | `sep` | Axioms.lean:452 | `K⁺φ ∧ ¬K⁺(φ ∧ U(φ,¬φ)) → K⁺(K⁺φ ∧ K⁻φ)` | Reynolds' separation axiom; turns on separability of ℝ, though it does not characterize it |
 
 ***`prior_U_gap`/`prior_S_gap` are NOT `prior_UZ`/`prior_SZ`.*** The Layer 6 pair is the integer
-well-ordering Prior axiom at `.Discrete`; this pair is the Reynolds gap form at `.Dedekind`.
+well-ordering Prior axiom at `.ZTime`; this pair is the Reynolds gap form at `.RTime`.
 Different statements, different frame classes, confusingly similar names (`Axioms.lean:428-430`).
 
 ### Irreflexive semantics and the seriality switch
@@ -641,7 +641,7 @@ theorem completeness (φ : Formula) :
 Contrapositive proof flow: assume `valid φ` and `¬derivable φ`; `{¬φ}` is consistent
 (`neg_consistent_of_not_derivable`, sorry-free); extend to an MCS `M` (`set_lindenbaum`); build a
 canonical `TaskModel`; the truth lemma gives `φ` false at `M`; contradiction. Per
-`Completeness.lean`'s own module docstring: `completeness_dense`/`completeness_discrete` are
+`Completeness.lean`'s own module docstring: `completeness_dense`/`completeness_ztime` are
 `sorryAx`-free, and (per Phase 1 above) `completeness`'s former discrete-branch debt is now closed
 too — the whole theorem is `sorryAx`-free across all branches (dense, mixed, discrete).
 

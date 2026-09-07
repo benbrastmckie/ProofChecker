@@ -18,12 +18,12 @@ For implementation status by module, see [implementation-status.md](implementati
 - **Key Files**:
   - `FormalSystem/Syntax/Formula.lean` - Formula type with all operators
   - `FormalSystem/ProofSystem/Axioms.lean` - 45 axiom constructors in four layers
-    (Base 37 / Dense 2 / Discrete 3 / Dedekind 3, per `Axiom.minFrameClass`)
+    (Base 37 / Dense 2 / ZTime 3 / RTime 3, per `Axiom.minFrameClass`)
   - `FormalSystem/ProofSystem/Derivation.lean` - `DerivationTree`, 7 inference rules
   - `FormalSystem/Metalogic/Soundness.lean` - Soundness theorem (proved)
   - `FormalSystem/Metalogic/BXCanonical/Completeness.lean` - `completeness` (`:196`),
-    `completeness_dense` (`:255`), `completeness_discrete` (`:296`)
-  - `FormalSystem/Metalogic/StrongCompleteness.lean` - `completeness_dedekind` (`:469`)
+    `completeness_dense` (`:255`), `completeness_ztime` (`:296`)
+  - `FormalSystem/Metalogic/StrongCompleteness.lean` - `completeness_rtime` (`:469`)
 
 ### Perpetuity Principles
 

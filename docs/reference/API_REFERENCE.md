@@ -229,7 +229,7 @@ Semantic validity and consequence relations for TM logic.
 **Module**: `FormalSystem/ProofSystem/Axioms.lean`
 
 The **45** axiom constructors for bimodal logic TM, in four layers: Base 37, Dense 2,
-Discrete 3, Dedekind 3. The layer of each constructor is given by `Axiom.minFrameClass`
+ZTime 3, RTime 3. The layer of each constructor is given by `Axiom.minFrameClass`
 (`Axioms.lean:588`), and the invariant `ax.minFrameClass ≤ fc` governs which may appear in a
 derivation at frame class `fc`. See
 [axiom-reference.md](axiom-reference.md) for the per-constructor breakdown.
@@ -640,7 +640,7 @@ Deduction theorem for TM logic.
 
 Completeness theorem: semantic consequence implies derivability. The chronicle
 construction under `BXCanonical/` carries the flagship results (`completeness`,
-`completeness_dense`, `completeness_discrete`); `WeakCanonical/` and `Algebraic/`
+`completeness_dense`, `completeness_ztime`); `WeakCanonical/` and `Algebraic/`
 are the two alternative routes. The former top-level `Metalogic/Completeness.lean`
 had no live importer and is archived under
 `FormalSystem/Boneyard/SupersededCompleteness/`.
@@ -652,8 +652,8 @@ exactly `[propext, Classical.choice, Quot.sound]`:
 |---------|----------|-------------|
 | `completeness` | `BXCanonical/Completeness.lean:196` | Base |
 | `completeness_dense` | `BXCanonical/Completeness.lean:255` | Dense |
-| `completeness_discrete` | `BXCanonical/Completeness.lean:296` | Discrete |
-| `completeness_dedekind` | `Metalogic/StrongCompleteness.lean:469` | Dedekind |
+| `completeness_ztime` | `BXCanonical/Completeness.lean:296` | ZTime |
+| `completeness_rtime` | `Metalogic/StrongCompleteness.lean:469` | RTime |
 
 Each has a finite-context companion `consequence_completeness_*`. **These are not strong
 completeness.** `Context` is `List Formula`, so each is inter-derivable with the weak form
@@ -705,7 +705,7 @@ The set-based consequence layer, over possibly-infinite `Γ : Set Formula`.
 | `ModelExistence` | 163 | Finite satisfiability lifts to satisfiability, at `fc` |
 | `Compact` | 174 | Semantic compactness of the `fc` consequence relation |
 | `StrongCompleteness` | 184 | The strong-completeness statement, at `fc` |
-| `SatisfiableSet.of_forall` | 260 | The single `fc`-indexed binder-shape adapter restoring the pre-collapse introduction shape (replaced the four tag-specific `base`/`dense`/`discrete`/`dedekind` copies) |
+| `SatisfiableSet.of_forall` | 260 | The single `fc`-indexed binder-shape adapter restoring the pre-collapse introduction shape (replaced the four tag-specific `base`/`dense`/`ztime`/`rtime` copies) |
 | `StrongCompletenessBase` | 446 | `StrongCompleteness .Base` (**proved** in `Compactness.lean`) |
 | `CompactBase` | 453 | `Compact .Base` (**proved**) |
 | `SatisfiableBaseSet` | 466 | `SatisfiableSet .Base` |
@@ -714,14 +714,14 @@ The set-based consequence layer, over possibly-infinite `Γ : Set Formula`.
 | `CompactDense` | 499 | `Compact .Dense` (**proved**) |
 | `SatisfiableDenseSet` | 505 | `SatisfiableSet .Dense` |
 | `ModelExistenceDense` | 517 | `ModelExistence .Dense` (**proved**) |
-| `StrongCompletenessDiscrete` | 539 | `StrongCompleteness .Discrete` (**refuted**) |
-| `SatisfiableDiscreteSet` | 559 | `SatisfiableSet .Discrete` |
-| `CompactDiscrete` | 566 | `Compact .Discrete` (**refuted**) |
+| `StrongCompletenessZTime` | 539 | `StrongCompleteness .ZTime` (**refuted**) |
+| `SatisfiableZTimeSet` | 559 | `SatisfiableSet .ZTime` |
+| `CompactZTime` | 566 | `Compact .ZTime` (**refuted**) |
 | `not_setConsistent_of_setDerivable_bot` | 416 | Bridge from set-derivability of `⊥` to inconsistency |
 
 The satisfiability / model-existence / compactness / strong-completeness row is a single
 `FrameClass`-indexed family; every per-class name above is an instantiation of it, with its
-statement unchanged. `.Dedekind` is reachable by the same instantiation and is deliberately left
+statement unchanged. `.RTime` is reachable by the same instantiation and is deliberately left
 unstated.
 
 Supporting definitions live in `FormalSystem/Metalogic/Core/MaximalConsistent.lean`:
@@ -759,16 +759,16 @@ the ultraproduct off eventual truth along that family. All six are sorryAx-free 
 
 **Module**: `FormalSystem/Metalogic/DiscreteNonCompactness.lean`
 
-A machine-checked **negative** result: the Discrete consequence relation is not compact, so
-strong completeness for `FrameClass.Discrete` is false rather than merely unproved.
+A machine-checked **negative** result: the ZTime consequence relation is not compact, so
+strong completeness for `FrameClass.ZTime` is false rather than merely unproved.
 
 | Declaration | Line | What it is |
 |-------------|------|------------|
 | `archWitness` | 102 | The witness set `{F p} ∪ {¬Xⁿ p : n ∈ ℕ}` |
 | `archWitness_finitely_satisfiable` | 194 | Every finite subset is satisfiable over `ℤ` |
 | `archWitness_not_satisfiable` | 229 | The whole set is satisfiable over no Archimedean discrete carrier |
-| `notCompactDiscrete` | 250 | Refutes `CompactDiscrete` |
-| `notStrongCompletenessDiscrete` | 280 | Refutes `StrongCompletenessDiscrete` |
+| `notCompactZTime` | 250 | Refutes `CompactZTime` |
+| `notStrongCompletenessZTime` | 280 | Refutes `StrongCompletenessZTime` |
 
 ---
 
@@ -787,11 +787,11 @@ theorem.
 | `derivable_translate` | 194 | The `Prop`-level corollary |
 | `ceb_backward` | 210 | The Base row |
 | `cef_backward` | 222 | The second row |
-| `ced_backward` | 232 | The Discrete row |
+| `ced_backward` | 232 | The ZTime row |
 | `cec_backward` | 253 | The fourth row |
 
 **Backward direction only.** The converse `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ` is **refuted** for the Base
-and Discrete rows and **open** for the other two. This is a negative result recorded in the
+and ZTime rows and **open** for the other two. This is a negative result recorded in the
 module docstring, not outstanding work.
 
 The tense-primitive source language is `FormalSystem/BaseLanguage/` -- see the entry below.
@@ -824,15 +824,15 @@ directional; the converse edge is permitted and is what these three modules use:
 | File | What it carries |
 |------|-----------------|
 | `Semantics/BLTruth.lean` | `BLTruthAt`, a native six-clause recursion on `BLFormula` per `def:BL-semantics` -- **not** `TruthAt ∘ tr` -- plus the `BLTruth.*` characterization lemmas |
-| `Semantics/BLValidity.lean` | `BLValid`, `BLSemanticConsequence`, `BLValidDense`, `BLValidDiscrete`, `BLValidDedekind`; no density-free `BLValidComplete`, which would be refutable |
+| `Semantics/BLValidity.lean` | `BLValid`, `BLSemanticConsequence`, `BLValidDense`, `BLValidZTime`, `BLValidRTime`; no density-free `BLValidComplete`, which would be refutable |
 | `Metalogic/Conservativity/BaseLanguageSoundness.lean` | `truthAt_tr` (the bridge, proved by induction), `bl_soundness{,_dense,_discrete,_dedekind}` and their validity forms, and `bl_not_derivable_nil_bot{,_discrete}` |
 
 | Result | What it says |
 |--------|--------------|
 | `truthAt_tr` | `TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ` |
 | `bl_soundness` | A BL derivation at `FrameClass.Base` makes its conclusion true wherever its context is |
-| `bl_soundness_dense` / `_discrete` / `_dedekind` | The same at the three extensions; the Dedekind one carries `ValidDedekind`'s binder set |
-| `bl_not_derivable_nil_bot` / `_discrete` | BL is consistent at `FrameClass.Base` and `FrameClass.Discrete` |
+| `bl_soundness_dense` / `_discrete` / `_dedekind` | The same at the three extensions; the RTime one carries `ValidRTime`'s binder set |
+| `bl_not_derivable_nil_bot` / `_discrete` | BL is consistent at `FrameClass.Base` and `FrameClass.ZTime` |
 
 All are sorry-free at `[propext, Classical.choice, Quot.sound]`. They are obtained by composing
 `Conservativity.translate` with `Metalogic/Soundness.lean`'s four theorems and crossing

@@ -33,7 +33,7 @@ This is the sense in which the source paper is about *constructing* possible wor
 Durations need to *add*: a task of duration $x$ followed by one of duration $y$ composes into a single task of duration $x + y$ (the *Compositionality* frame axiom, @sec:world-histories), and negative durations recover the converse of a task by the sign of its duration.
 A bare linear order has no addition to state this with, so the temporal order $D$ is required to be a nontrivial totally ordered abelian group.
 That choice pays off far downstream, and it is worth flagging early because the payoff is genuinely striking: *every* nontrivial totally ordered abelian group is either discrete (has a least positive element) or dense, and never both -- a dichotomy that *fails* for bare linear orders (a copy of $ZZ$ followed by a copy of $QQ$ is neither) and holds for ordered abelian groups only because translation invariance globalizes any local gap or density witness into a global one.
-This single algebraic fact -- stated as a standalone theorem in @sec:dichotomy -- is the reason *TM*'s frame classes split into `Dense`/`Discrete`/`Dedekind` branches (@sec:frame-classes), and it is what makes the canonical construction's case split exhaustive (@sec:metalogic).
+This single algebraic fact -- stated as a standalone theorem in @sec:dichotomy -- is the reason *TM*'s frame classes split into `Dense`/`ZTime`/`RTime` branches (@sec:frame-classes), and it is what makes the canonical construction's case split exhaustive (@sec:metalogic).
 
 *What the bimodal interaction axiom MF buys.*
 MF ($square.stroked phi.alt arrow.r square.stroked G phi.alt$: whatever is necessary is necessarily always going to be the case) is the one axiom that makes the fusion more than two logics sharing a page.
@@ -133,7 +133,7 @@ The book states the system's target end state throughout: results carried by a n
 
 The book proceeds in two parts, matching the live document's own part divisions.
 
-+ *Part I -- The Bimodal System.* Syntax (@sec:formulas); task-frame semantics; the Burgess-Xu proof system; frame classes and their extensions (@sec:frame-classes: Base, Dense, Discrete, Dedekind); the metalogic (@sec:metalogic, stating soundness and the completeness theorems in the strongest form each frame class admits); decidability in practice (the tableau procedure); the perpetuity theorems (@sec:perpetuity); and three positioning chapters closing out the part -- LTL-to-*TM* (@sec:ltl-to-tm), the Vlach/BL#super[⋆] tower (@ch:vlach-blstar), and the decidability frontier (@sec:decidability-frontier).
++ *Part I -- The Bimodal System.* Syntax (@sec:formulas); task-frame semantics; the Burgess-Xu proof system; frame classes and their extensions (@sec:frame-classes: Base, Dense, ZTime, RTime); the metalogic (@sec:metalogic, stating soundness and the completeness theorems in the strongest form each frame class admits); decidability in practice (the tableau procedure); the perpetuity theorems (@sec:perpetuity); and three positioning chapters closing out the part -- LTL-to-*TM* (@sec:ltl-to-tm), the Vlach/BL#super[⋆] tower (@ch:vlach-blstar), and the decidability frontier (@sec:decidability-frontier).
 + *Part II -- Applications.* Proof automation and the bounded proof-search engine, the dual-signal training-data pipeline (proof traces and countermodels, every output deterministically checkable), and dual-verification worked examples.
 
 Back matter closes the book: design notes and design-choice discussion (@sec:notes), and a machine-readable appendix cross-referencing every Lean declaration cited in the text.
@@ -153,8 +153,8 @@ Formal claims are typeset with their Lean identifiers in fixed-width font (e.g. 
 
 The Lean 4 implementation is in the `FormalSystem/` directory:
 - `Syntax/` -- Defines the formula language with 6 primitive constructors (atoms, $bot$, implication, $square.stroked$, Since, Until) and derived operators.
-- `ProofSystem/` -- The Burgess-Xu (BX) axiom system: #axiom-count axiom constructors in 9 layers and #rule-count inference rules forming a Hilbert-style proof system, parameterized by frame class (Base/Dense/Discrete/Dedekind).
+- `ProofSystem/` -- The Burgess-Xu (BX) axiom system: #axiom-count axiom constructors in 9 layers and #rule-count inference rules forming a Hilbert-style proof system, parameterized by frame class (Base/Dense/ZTime/RTime).
 - `Semantics/` -- Task frames model possible worlds; world histories model time (partial, then convex/world, then total -- @sec:world-histories); strict (irreflexive) truth conditions define meaning; `Extension/` runs the existence machinery (Constraint Lemma through the Extension Theorem) as a machine-checked chain.
-- `Metalogic/` -- Soundness for all four frame classes (Base, Dense, Discrete, Dedekind), the deduction theorem and Lindenbaum lemma, the canonical-model machinery carrying the completeness theorems of @sec:metalogic, and the tableau-based decision procedure.
+- `Metalogic/` -- Soundness for all four frame classes (Base, Dense, ZTime, RTime), the deduction theorem and Lindenbaum lemma, the canonical-model machinery carrying the completeness theorems of @sec:metalogic, and the tableau-based decision procedure.
 - `Theorems/` -- Perpetuity principles (P1--P6), modal and propositional theorem libraries, and derived temporal axioms.
 - `Automation/`, `Examples/` -- Proof tactics, the training-data pipeline, and worked examples, covered in Part II.

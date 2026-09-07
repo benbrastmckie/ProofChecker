@@ -947,7 +947,7 @@ A canonical model proof for TM completeness follows these steps:
    - By truth lemma, `¬φ ∈ w` means `M, w ⊨ ¬φ`, so `M, w ⊭ φ`
 
 All four weak completeness theorems -- `completeness`, `completeness_dense`,
-`completeness_discrete`, and `completeness_dedekind` -- are fully proven and sorryAx-free.
+`completeness_ztime`, and `completeness_rtime` -- are fully proven and sorryAx-free.
 *Strong* completeness (arbitrary infinite premise sets) is a separate question; see the
 limitations document below.
 

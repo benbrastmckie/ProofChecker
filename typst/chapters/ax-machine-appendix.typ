@@ -22,7 +22,7 @@ It is intended for the AI-practitioner audience of @sec:dataset-pipeline: an age
 
 Each JSONL line is one JSON object tagged by a `kind` field: one `metadata` line (generator, version, commit stamps, counts), then one line per axiom (`kind: "axiom"`), inference rule (`kind: "inference_rule"`), and derived operator (`kind: "derived_operator"`).
 // CONFIRM(lean): the machine appendix JSONL's since/until argument fields reflect guard-first constructor order
-Axiom lines carry the constructor `name`, source `layer`, schematic `params`, minimum `frame_class` (`Base`, `Dense`, `Discrete`, or `Dedekind`, per `Axiom.minFrameClass`), and the schema formula both as a display string (`schema_string`) and as a structured tree (`schema`).
+Axiom lines carry the constructor `name`, source `layer`, schematic `params`, minimum `frame_class` (`Base`, `Dense`, `ZTime`, or `RTime`, per `Axiom.minFrameClass`), and the schema formula both as a display string (`schema_string`) and as a structured tree (`schema`).
 Schemas and definitions are given over the six-constructor primitive basis, in the `Formula.toJson` tag encoding shared with the dataset pipeline:
 
 #figure(

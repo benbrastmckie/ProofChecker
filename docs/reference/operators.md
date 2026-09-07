@@ -149,7 +149,7 @@ successor.
 **Formal Definition**: `next φ := U(⊥, φ)`
 **LEAN Code**: `Formula.next` (`FormalSystem/Syntax/Formula.lean:511`)
 **Note**: This is a genuine next-step operator on discrete orders, and is what makes the
-Discrete non-compactness witness set work.
+ZTime non-compactness witness set work.
 
 ### K⁺ (kPlus) and K⁻ (kMinus)
 Reynolds's gap operators, used to state the Dedekind-layer axioms.
@@ -272,8 +272,8 @@ Semantic consequence relation - expresses validity in task frame models.
 so `consequence_completeness` (`FormalSystem/Metalogic/StrongCompleteness.lean`) is
 inter-derivable with weak completeness through the deduction theorem. The unqualified
 arbitrary-`Γ` reading -- *strong* completeness over a possibly-infinite `Γ : Set Formula` -- is
-**not** available uniformly: it is machine-refuted for Discrete, open for Base and Dense, and
-outside the primary source's scope for Dedekind. See
+**not** available uniformly: it is machine-refuted for ZTime, open for Base and Dense, and
+outside the primary source's scope for RTime. See
 `FormalSystem/Metalogic/StrongCompleteness.lean:25-41` and
 [known-limitations.md](../project-info/known-limitations.md).
 **Examples**: `⊨ □p → ◇p` means "necessary implies possible" is valid in all models

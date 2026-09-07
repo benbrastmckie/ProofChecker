@@ -12,22 +12,22 @@ which is the authoritative source -- re-derive from it rather than from this tab
 |-------|-------|-------------|
 | Base | 37 | Valid on all linear temporal frames |
 | Dense | 2 | Valid on densely ordered frames |
-| Discrete | 3 | Valid on discrete (SuccArchimedean) frames |
-| Dedekind | 3 | Valid on dense Dedekind-complete frames |
+| ZTime | 3 | Valid on discrete (SuccArchimedean) frames |
+| RTime | 3 | Valid on dense Dedekind-complete frames |
 | **Total** | **45** | |
 
-The four classes form a partial order rather than a flat list. `Dedekind` sits strictly
+The four classes form a partial order rather than a flat list. `RTime` sits strictly
 **above** `Dense` rather than being a fourth incomparable leaf: Reynolds 1992 (printed p.168)
 lists density and no-end-points axioms as part of the axiomatization US/R for real flow, so a
-Dedekind derivation must be allowed to use the density axioms. Dense and Discrete are
-incomparable, as are Discrete and Dedekind. The governing invariant is
+RTime derivation must be allowed to use the density axioms. Dense and ZTime are
+incomparable, as are ZTime and RTime. The governing invariant is
 `ax.minFrameClass ≤ fc`: an axiom may appear in a derivation parameterized by `fc` only when
 its minimum frame class is at most `fc`.
 
 ```
-              Dedekind
+              RTime
                  ↑
-    Dense --------'      Discrete
+    Dense --------'      ZTime
       ↑                     ↑
        \___________________/
                 |
@@ -62,12 +62,12 @@ theorems**, not axioms -- they are `temporalKDistDerived` and `temporal4Derived`
 | Layer | Constructors | Frame condition |
 |-------|--------------|-----------------|
 | Dense (2) | `density` (GGφ → Gφ), `dense_indicator` (¬U(⊤,⊥)) | `DenselyOrdered` |
-| Discrete (3) | `prior_UZ`, `prior_SZ`, `z1` | `SuccArchimedean` / `PredArchimedean` |
+| ZTime (3) | `prior_UZ`, `prior_SZ`, `z1` | `SuccArchimedean` / `PredArchimedean` |
 | Dedekind (3) | `prior_U_gap`, `prior_S_gap`, `sep` | dense + Dedekind-complete |
 
 The Dedekind layer is Reynolds's definable-gap axiom set (Reynolds 1992, printed p.168). Its
-soundness target is the *dense* Dedekind predicate `ValidDedekind`, not the density-free
-`ValidComplete`, because `density` and `dense_indicator` are admissible at `.Dedekind` and both
+soundness target is the *dense* RTime predicate `ValidRTime`, not the density-free
+`ValidComplete`, because `density` and `dense_indicator` are admissible at `.RTime` and both
 are false on ℤ. See `FormalSystem/ProofSystem/Axioms.lean:461-517` for the full argument.
 
 ## Propositional Axioms
@@ -244,7 +244,7 @@ of `untl` in `FormalSystem/Syntax/Formula.lean`.
 | dense_indicator : Axiom (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)).neg  -- ¬U(⊥,⊤)
 ```
 
-### Discrete (3)
+### ZTime (3)
 
 ```lean
 | prior_UZ (φ : Formula) : Axiom (φ.someFuture.imp (Formula.untl φ.neg φ))
@@ -253,7 +253,7 @@ of `untl` in `FormalSystem/Syntax/Formula.lean`.
     Axiom ((φ.allFuture.imp φ).allFuture.imp (φ.allFuture.someFuture.imp φ.allFuture))
 ```
 
-### Dedekind (3)
+### RTime (3)
 
 Reynolds's definable-gap axioms (Reynolds 1992, printed p.168):
 
@@ -265,7 +265,7 @@ Reynolds's definable-gap axioms (Reynolds 1992, printed p.168):
 | sep (φ : Formula) :         -- the separation axiom
 ```
 
-These are the axioms that make `completeness_dedekind`
+These are the axioms that make `completeness_rtime`
 (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) available for the real flow.
 
 ## Inference Rules

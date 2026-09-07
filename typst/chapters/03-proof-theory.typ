@@ -11,7 +11,7 @@
 
 
 The proof system for *TM* is the *Burgess-Xu (BX) axiom system*: a Hilbert-style calculus over the Since/Until language of @sec:formulas, with *#axiom-count axiom constructors* organized into nine layers and *#rule-count inference rules*.
-Derivations are parameterized by a *frame class* (`Base`, `Dense`, `Discrete`, or `Dedekind`), which gates the frame-dependent axiom layers.
+Derivations are parameterized by a *frame class* (`Base`, `Dense`, `ZTime`, or `RTime`), which gates the frame-dependent axiom layers.
 The system is deliberately fine-grained at the constructor level; @sec:paper-contrast records the deferred tense-primitive subsystem and the intended presentation choices of the axiomatization.
 
 == The Burgess-Xu Axiom System
@@ -158,7 +158,7 @@ They encode the *uniformity of discreteness* in ordered abelian groups --- by tr
 
 === Layers 6--7: Prior and Z1 (3, discrete-only)
 
-Valid on discrete linear orders (frame class `Discrete`), these axioms encode well-ordering for definable sets.
+Valid on discrete linear orders (frame class `ZTime`), these axioms encode well-ordering for definable sets.
 
 #figure(
   table(
@@ -202,7 +202,7 @@ DI is included alongside DN because the density schema alone provably fails to d
 
 === Layer 9: Reynolds Dedekind (3, Dedekind-only)
 
-Valid on the Dedekind frame class (dense-and-complete, real-flow orders), these axioms are Reynolds' definable-gap-freeness triple for Until/Since over the reals @reynolds1992.
+Valid on the RTime frame class (dense-and-complete, real-flow orders), these axioms are Reynolds' definable-gap-freeness triple for Until/Since over the reals @reynolds1992.
 They are stated with the recurrence abbreviations
 $ K^+ phi.alt := not (not phi.alt #untl top), quad quad K^- phi.alt := not (not phi.alt #snce top), $
 where $K^+ phi.alt$ says that $phi.alt$ recurs arbitrarily soon in the future and $K^- phi.alt$ that it recurred arbitrarily recently in the past.
@@ -231,15 +231,15 @@ The axiom CO ($triangle.stroked.t (H phi.alt arrow.r F H phi.alt) arrow.r (H phi
 Derivations are parameterized by a frame class, making frame-dependent reasoning a structural invariant rather than a side condition.
 
 #definition("Frame Class")[
-  The type `FrameClass` has four values: `Base`, `Dense`, `Discrete`, and `Dedekind`, partially ordered with `Base` below every other class, `Dedekind` above `Dense`, and `Discrete` incomparable with both `Dense` and `Dedekind`:
-  $ "Base" lt.eq "Dense" lt.eq "Dedekind", quad quad "Base" lt.eq "Discrete". $
-  Each axiom constructor is assigned a minimum frame class by `Axiom.minFrameClass`: the #base-count axioms of layers 1--5 are `Base`; Prior-UZ, Prior-SZ, and Z1 (#ztime-only-count axioms) are `Discrete`; DN and DI (#dense-only-count axioms) are `Dense`; Prior-U, its past mirror, and Sep (#rtime-only-count axioms) are `Dedekind`.
+  The type `FrameClass` has four values: `Base`, `Dense`, `ZTime`, and `RTime`, partially ordered with `Base` below every other class, `RTime` above `Dense`, and `ZTime` incomparable with both `Dense` and `RTime`:
+  $ "Base" lt.eq "Dense" lt.eq "RTime", quad quad "Base" lt.eq "ZTime". $
+  Each axiom constructor is assigned a minimum frame class by `Axiom.minFrameClass`: the #base-count axioms of layers 1--5 are `Base`; Prior-UZ, Prior-SZ, and Z1 (#ztime-only-count axioms) are `ZTime`; DN and DI (#dense-only-count axioms) are `Dense`; Prior-U, its past mirror, and Sep (#rtime-only-count axioms) are `RTime`.
 ]
 
 The axiom rule of the proof system admits an axiom into a derivation at frame class `fc` only when its minimum frame class is at most `fc`.
 Derivations are monotone along the order: `DerivationTree.lift` coerces a derivation at a lower frame class into one at any higher class.
 
-The four classes carry the book's hierarchy of proof systems: `Base` is the base system *TM* itself; `Dense` is the dense extension *TM*#sub[d] (adding DN and DI); `Discrete` is the discrete extension *TM*#sub[f] (adding UZ, its mirror, and Z1); and `Dedekind` is the complete extension *TM*#sub[c] (adding the Reynolds triple of Layer 9, for the dense-and-complete, real-flow orders).
+The four classes carry the book's hierarchy of proof systems: `Base` is the base system *TM* itself; `Dense` is the dense extension *TM*#sub[d] (adding DN and DI); `ZTime` is the discrete extension *TM*#sub[f] (adding UZ, its mirror, and Z1); and `RTime` is the complete extension *TM*#sub[c] (adding the Reynolds triple of Layer 9, for the dense-and-complete, real-flow orders).
 The frame-classes chapter of Part II develops the semantic side of this correspondence in detail.
 
 == Derived Axioms <sec:derived-axioms>
@@ -363,7 +363,7 @@ Several presentation choices of the axiomatization are *design facts*, intended 
 - *S5 is closed under theorems*: M4 and MB appear alongside MT, M5, MK --- derivable in S5 but convenient as primitives.
 - *Since/Until is the temporal engine*: with the two-place primitives, TK and T4 become derived theorems, and TB, TA, TL live inside the BX layer (@sec:derived-axioms).
 - *Past mirrors are primed constructors*: past duals are generable by the TD rule alone, but the primed mirror constructors (BX1$'$--BX13$'$) are included as primitives, which makes derivations at non-empty contexts more direct.
-- *Frame-class axioms are gated structurally*: the extensions *TM*#sub[f], *TM*#sub[d], and *TM*#sub[c] are the `Discrete`, `Dense`, and `Dedekind` frame classes of @sec:frame-classes rather than separately axiomatized systems.
+- *Frame-class axioms are gated structurally*: the extensions *TM*#sub[f], *TM*#sub[d], and *TM*#sub[c] are the `ZTime`, `Dense`, and `RTime` frame classes of @sec:frame-classes rather than separately axiomatized systems.
 
 == Notation
 

@@ -137,13 +137,13 @@ matching the live grep output as of this revision):
 
 | Scope | File | Line | What it guards |
 |-------|------|------|----------------|
-| `canonical-completeness` | `chapters/04-metalogic.typ` | 172 | `Completeness (Dense, Discrete)` theorem box (`soundness_dense`/`soundness_discrete`/`soundness_dedekind`) |
+| `canonical-completeness` | `chapters/04-metalogic.typ` | 172 | `Weak Completeness (ZTime)`/`(RTime)` theorem boxes (`soundness_dense`/`soundness_ztime`/`soundness_rtime`) |
 | `canonical-completeness` | `chapters/04-metalogic.typ` | 178 | `Completeness (Base)` theorem box and its `sorryAx` status note |
 | `canonical-completeness` | `chapters/04-metalogic.typ` | 235 | Base-frame completeness open-step paragraph (`WeakCanonical.countermodel_discrete` dependency) |
 | `canonical-completeness` | `chapters/06-notes.typ` | 75 | Completeness Status subsection's `Metalogic/BXCanonical/Completeness.lean` citation |
 | `semantic-fmp` | `chapters/p2-decidability-practice.typ` | 34 | `FMP-Based Completeness` theorem box (`fmp_completeness`) |
 | `semantic-fmp` | `chapters/p2-decidability-practice.typ` | 61 | `filtered_world_bound`/`assignmentSpace_card` sentence |
-| `co-reynolds-independence` | `chapters/p2-frame-classes.typ` | 84 | `Dedekind` row of the axiom-assignment table (`prior_U_gap`/`prior_S_gap`/`sep`) |
+| `co-reynolds-independence` | `chapters/p2-frame-classes.typ` | 84 | `RTime` row of the axiom-assignment table (`prior_U_gap`/`prior_S_gap`/`sep`) |
 
 This list is not claimed exhaustive of every citation that could plausibly move -- it covers the
 headline theorem boxes and summary claims for each scope, which is where a re-sync sweep should

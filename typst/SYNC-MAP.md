@@ -84,7 +84,7 @@ theorem completeness (φ : Formula) :
     valid φ → Nonempty (DerivationTree FrameClass.Base [] φ)
 ```
 
-with frame-class variants `completeness_dense` (`:234`) and `completeness_discrete` (`:276`),
+with frame-class variants `completeness_dense` (`:234`) and `completeness_ztime` (`:276`),
 and alternate form `completeness'` (`:177`).
 
 **Live-source evidence** (imports and theorem locations, not README/ROADMAP sentences):
@@ -100,7 +100,7 @@ and alternate form `completeness'` (`:177`).
 
 **Status**: Completeness is NOT sorry-free (leaf sorries in Chronicle/WeakCanonical
 modules; see counts below). Soundness (`soundness`, `soundness_dense`,
-`soundness_discrete`) IS sorry-free.
+`soundness_ztime`) IS sorry-free.
 
 **Active-secondary approaches** (none silently dropped): `Bundle/` (BFMCS
 infrastructure shared by all paths), `Algebraic/` (D-parametric truth lemma /
@@ -117,7 +117,7 @@ is `BXCanonical.completeness`; the old typst doc (`semantic_weak_completeness`, 
 
 IN scope for `03-proof-theory.typ`: the `FrameClass` parameter on `DerivationTree`
 (`ProofSystem/Derivation.lean:85+`, constraint `h.minFrameClass ≤ fc`) and the
-Base/Dense/Discrete axiom layers are presented in full — they are inseparable from an
+Base/Dense/ZTime axiom layers are presented in full — they are inseparable from an
 accurate 42-constructor presentation. Summary-level in `04-metalogic.typ`: per-frame-class
 soundness/completeness variants are named, not proof-sketched. No dedicated frame-class
 chapter (deferred).
@@ -160,7 +160,7 @@ Command: constructor listing of `inductive Axiom` in `ProofSystem/Axioms.lean:76
 | 8. Density | 2 | density, dense_indicator |
 
 Frame-class assignment (`Axiom.minFrameClass`, `Axioms.lean:456-462`): Base = 37
-(layers 1-5), Discrete-only = 3 (prior_UZ, prior_SZ, z1), Dense-only = 2 (density,
+(layers 1-5), ZTime-only = 3 (prior_UZ, prior_SZ, z1), Dense-only = 2 (density,
 dense_indicator).
 
 ### Inference rules
@@ -191,10 +191,10 @@ the archived `Boneyard/SoundnessVariants/` wrappers, entire `Theorems/` tree (in
 ### Frame classes
 
 `FrameClass` inductive (`ProofSystem/Axioms.lean:422-426`): `Base`, `Dense`,
-`Discrete`, partially ordered with Base ≤ Dense, Base ≤ Discrete (Dense, Discrete
+`ZTime`, `RTime`, partially ordered with Base ≤ Dense, Base ≤ ZTime (Dense, ZTime
 incomparable). What each tag denotes semantically is `FrameClass.Sat`
 (`Semantics/FrameClassValidity.lean`); the frame properties it maps onto are
-`TaskFrame.IsDense`, `TaskFrame.IsSuccArchDiscrete` and `TaskFrame.IsDedekind`
+`TaskFrame.IsDense`, `TaskFrame.IsZTime` and `TaskFrame.IsRTime`
 (`Semantics/FrameProperty.lean`), and class-relative validity is `ValidIn`
 (`Semantics/Validity.lean`).
 
@@ -429,8 +429,8 @@ for ordered abelian groups), with completeness carried instead by machine-checke
 systems; the conservative-extension theorem is deleted from the paper and every established-
 result framing was rewritten to the four-part backward-unconditional / forward-fails-for-base-
 and-discrete / forward-open-for-dense-and-complete status; decidability of *TM* and its
-extensions is open, not FMP-established; there are four frame classes (Base, Dense, Discrete,
-Dedekind), not three, with `Dedekind` sitting strictly above `Dense`; and `02-semantics.typ`'s
+extensions is open, not FMP-established; there are four frame classes (Base, Dense, ZTime,
+RTime), not three, with `RTime` sitting strictly above `Dense`; and `02-semantics.typ`'s
 task-frame axiomatization was brought up to the paper's current four-axiom `def:frame`
 (Compositionality, Seriality, Limit, Saturation) with Nullity restated as a derived lemma. The
 expository mandate added a motivated introduction, six reader-stumble remarks, and five cetz
@@ -469,7 +469,7 @@ claim guarded by a maintainer-only `CONFIRM` comment rather than status prose. C
   and the incompleteness cut were removed after per-entry citation greps (entries still cited
   by `FormalFoundations.typ`, a standalone report outside this revision's scope, were kept).
 - **Frame-class/naming alignment**: nine axiom layers (Layer 9 = Reynolds Dedekind triple),
-  four-value `FrameClass` with `Dedekind` hosting the complete extension TM_c
+  four-value `FrameClass` with `RTime` hosting the complete extension TM_c
   (dense-and-complete, real flow); short axiom names (TB, UG, UC, TA, ...) added as a
   cross-index column; the tense-primitive fragment is presented throughout as a deferred
   subsystem, with the conservativity theorem box replaced by a deferred-subsystem note.

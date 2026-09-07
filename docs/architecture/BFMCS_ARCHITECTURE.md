@@ -17,8 +17,8 @@ The TM logic completeness proof uses a **two-level bundling architecture** to mo
 **Current status**: Complete and sorry-free. The structural sorry inventory is **zero** across
 all of `FormalSystem/` (`Boneyard/` excluded), asserted by content in check C3 of
 `scripts/check-module-invariants.sh`. The four weak completeness theorems this architecture
-supports -- `completeness`, `completeness_dense`, `completeness_discrete`,
-`completeness_dedekind` -- are sorryAx-free at exactly `[propext, Classical.choice,
+supports -- `completeness`, `completeness_dense`, `completeness_ztime`,
+`completeness_rtime` -- are sorryAx-free at exactly `[propext, Classical.choice,
 Quot.sound]`, asserted by check C2.
 
 ---
@@ -273,8 +273,8 @@ theorems:
 ```
 completeness              (BXCanonical/Completeness.lean:196)
 completeness_dense        (BXCanonical/Completeness.lean:255)
-completeness_discrete     (BXCanonical/Completeness.lean:296)
-completeness_dedekind     (Metalogic/StrongCompleteness.lean:469)
+completeness_ztime     (BXCanonical/Completeness.lean:296)
+completeness_rtime     (Metalogic/StrongCompleteness.lean:469)
   |
   +-- canonical model / countermodel engines (BXCanonical/CanonicalModel.lean)
         |
@@ -296,7 +296,7 @@ check C2 of `scripts/check-module-invariants.sh`.
 | `FormalSystem/Metalogic/Bundle/WitnessSeed.lean` | 181, 290 | witness-seed consistency theorems |
 | `FormalSystem/Metalogic/Bundle/TemporalContent.lean` | 59, 69 | GContent/HContent definitions |
 | `FormalSystem/Boneyard/BundleDeadHalf/Construction.lean` | 112, 142 | Lindenbaum MCS construction (archived) |
-| `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | 196, 255, 296 | the three Base/Dense/Discrete completeness theorems |
+| `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | 196, 255, 296 | the three Base/Dense/ZTime completeness theorems |
 
 ---
 

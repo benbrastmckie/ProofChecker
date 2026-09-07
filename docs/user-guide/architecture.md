@@ -833,7 +833,7 @@ distinction between consequence completeness and *strong* completeness is made p
 | `ModelExistenceDense` | `SetConsequence.lean:517` | `ModelExistence .Dense` -- **proved**, as `modelExistenceDense` |
 
 The four statements are one `FrameClass`-indexed family; the per-class names are instantiations
-of it, with their statements unchanged. `.Dedekind` is available by the same instantiation but
+of it, with their statements unchanged. `.RTime` is available by the same instantiation but
 is deliberately left unstated.
 
 One reduction sits on top, generic in the class: `strongCompleteness_of_compact` reduces the
@@ -856,9 +856,9 @@ Everything above is relative to a **frame class**. There are four, and they form
 order rather than a flat list:
 
 ```
-              Dedekind
+              RTime
                  ↑
-    Dense --------'      Discrete
+    Dense --------'      ZTime
       ↑                     ↑
        \___________________/
                 |
@@ -867,22 +867,22 @@ order rather than a flat list:
 
 - **`Base`** is the bottom element: its 37 axioms are valid on all linear temporal orders.
 - **`Dense`** extends Base with `density` (`GGφ → Gφ`) and `dense_indicator` (`¬U(⊤,⊥)`).
-- **`Discrete`** extends Base with `prior_UZ`, `prior_SZ` and `z1`, valid on discrete
+- **`ZTime`** extends Base with `prior_UZ`, `prior_SZ` and `z1`, valid on discrete
   (successor-Archimedean) frames.
-- **`Dedekind`** extends **Dense** with Reynolds's definable-gap axioms `prior_U_gap`,
+- **`RTime`** extends **Dense** with Reynolds's definable-gap axioms `prior_U_gap`,
   `prior_S_gap` and `sep`.
 
-**Why Dedekind sits above Dense rather than being a fourth incomparable leaf.** This is a
+**Why RTime sits above Dense rather than being a fourth incomparable leaf.** This is a
 primary-source placement, not an intuition. Reynolds 1992 (printed p.168) lists axioms for
 density and no end points as part of the axiomatization US/R for real flow. Unfolding
 `K⁺⊤ = ¬U(⊤,¬⊤)` and normalising gives `¬U(⊤,⊥)` -- this tree's `dense_indicator`. So
-Reynolds's real-line axiom set genuinely contains the density axiom, and a Dedekind derivation
-must be allowed to use it. Making `Dedekind` a fresh incomparable leaf would render `density`
-and `dense_indicator` inadmissible in a `Dedekind` derivation, and so could not host Reynolds's
+Reynolds's real-line axiom set genuinely contains the density axiom, and a RTime derivation
+must be allowed to use it. Making `RTime` a fresh incomparable leaf would render `density`
+and `dense_indicator` inadmissible in a `RTime` derivation, and so could not host Reynolds's
 system at all.
 
-Dense and Discrete are incomparable (density contradicts discreteness); so are Discrete and
-Dedekind.
+Dense and ZTime are incomparable (density contradicts discreteness); so are ZTime and
+RTime.
 
 **The governing invariant** is `ax.minFrameClass ≤ fc`
 (`FormalSystem/ProofSystem/Axioms.lean:588`): an axiom may appear in a derivation parameterized
@@ -893,26 +893,26 @@ replaces the ad-hoc predicates an earlier design used.
 its models are exactly `{ℤ, ℝ}` up to order-and-group isomorphism, and its theory is
 `Th(ℤ) ∩ Th(ℝ)`. **No element of `FrameClass` picks that class out.** The two branches are
 covered separately and exhaustively: the complete-but-discrete branch is exactly `ℤ` and is
-handled by `Discrete`; the dense branch is `Dedekind`. But their *intersection* is not itself a
+handled by `ZTime`; the dense branch is `RTime`. But their *intersection* is not itself a
 frame class, and adding one would require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does
 not have. `ValidComplete` exists as a predicate matching the TM⁺_c binder set, but is
 deliberately not a soundness target.
 
-**Soundness caveat.** Because `density` and `dense_indicator` are admissible at `Dedekind` and
+**Soundness caveat.** Because `density` and `dense_indicator` are admissible at `RTime` and
 both are false on `ℤ` (which is nonetheless conditionally complete), the soundness theorem for
-that class targets the *dense* Dedekind predicate `ValidDedekind`, not `ValidComplete`.
+that class targets the *dense* RTime predicate `ValidRTime`, not `ValidComplete`.
 
 ### 4.2c Dedekind completeness and the real line
 
-`completeness_dedekind` (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) is the fourth
+`completeness_rtime` (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) is the fourth
 weak completeness theorem, and the one that reaches the real line:
 
 | Theorem | Location |
 |---------|----------|
-| `completeness_dedekind` | `StrongCompleteness.lean:469` |
-| `consequence_completeness_dedekind` | `StrongCompleteness.lean:450` |
+| `completeness_rtime` | `StrongCompleteness.lean:469` |
+| `consequence_completeness_rtime` | `StrongCompleteness.lean:450` |
 
-The semantic target is `ValidDedekind`, whose binder list is a linearly ordered
+The semantic target is `ValidRTime`, whose binder list is a linearly ordered
 `AddCommGroup` that is densely ordered, nontrivial, and Dedekind complete (every nonempty
 bounded-above set has a least upper bound). Provenance is Reynolds 1992, section 9 Theorem 7 --
 a *weak* completeness result for the real-line axiomatisation. The construction route runs
@@ -1104,7 +1104,7 @@ FormalSystem/                              # Main source directory
 │   ├── StrongCompleteness.lean            # Dedekind completeness; terminology discipline
 │   ├── SetConsequence.lean                # Set-based consequence; CompactBase/CompactDense
 │   ├── Compactness.lean                   # Their ultraproduct discharge; Base/Dense strong completeness
-│   ├── DiscreteNonCompactness.lean        # Refutation of Discrete strong completeness
+│   ├── DiscreteNonCompactness.lean        # Refutation of ZTime strong completeness
 │   ├── Conservativity.lean                # TM/TM+ backward bridge
 │   ├── BaseLanguageSoundness.lean         # BL soundness by composition; the truth-transfer bridge
 │   ├── Independence/                      # Independence results
@@ -1436,7 +1436,7 @@ The layered architecture provides clear development milestones:
 - Complete proof system: TM with 45 axiom constructors and 7 inference rules
 - Complete semantics: Task frames, world histories, truth evaluation
 - Complete metalogic: full soundness proof over all 45 axiom constructors; weak completeness
-  proven and sorryAx-free for all four frame classes (Base, Dense, Discrete, Dedekind).
+  proven and sorryAx-free for all four frame classes (Base, Dense, ZTime, RTime).
   *Strong* completeness -- consequence from an arbitrary infinite premise set -- is a separate
   question with three distinct statuses across those classes
   (see [known-limitations.md](../project-info/known-limitations.md))

@@ -26,7 +26,7 @@ It is proven separately for each frame class, matching the `FrameClass` paramete
 ]
 
 #theorem("Frame-Class Soundness")[
-  Derivability at frame class `Dense` (respectively `Discrete`, `Dedekind`) implies validity over densely ordered (respectively discrete, dense-and-complete) task frames.#footnote[`soundness_dense`, `soundness_discrete`, and `soundness_dedekind`, all in the single unified `Metalogic/Soundness.lean` module. `FrameClass.Dedekind` hosts the complete extension *TM*#sub[c] (dense-and-complete orders, i.e. the real flow); the frame-classes chapter of Part II details the correspondence.]
+  Derivability at frame class `Dense` (respectively `ZTime`, `RTime`) implies validity over densely ordered (respectively discrete, dense-and-complete) task frames.#footnote[`soundness_dense`, `soundness_ztime`, and `soundness_rtime`, all in the single unified `Metalogic/Soundness.lean` module. `FrameClass.RTime` hosts the complete extension *TM*#sub[c] (dense-and-complete orders, i.e. the real flow); the frame-classes chapter of Part II details the correspondence.]
 ]
 
 The proof proceeds by induction on the derivation structure:
@@ -38,7 +38,7 @@ The proof proceeds by induction on the derivation structure:
 - *Temporal duality*: Past-future swap preserves validity
 - *Weakening*: Adding premises preserves semantic consequence
 
-The axiom validity lemmas live in `Metalogic/SoundnessLemmas/` (with `Core.lean`, `DenseValidity.lean`, and `FrameClassVariants.lean`), and the frame-condition semantics for the Base/Dense/Discrete classes is developed in `Semantics/FrameProperty.lean` and `Semantics/FrameClassValidity.lean` (the Dedekind class's semantic side lives in `WeakCanonical/RealModel/`, per @sec:frame-classes).
+The axiom validity lemmas live in `Metalogic/SoundnessLemmas/` (with `CoValidity.lean`, `DiscreteOrder.lean`, `Separability.lean`, and `FrameClassVariants.lean`), and the frame-condition semantics for the Base/Dense/ZTime classes is developed in `Semantics/FrameProperty.lean` and `Semantics/FrameClassValidity.lean` (the RTime class's semantic side lives in `WeakCanonical/RealModel/`, per @sec:frame-classes).
 The modal-temporal interaction axiom MF uses time-shift invariance (via `timeShift` on world histories) to relate truth at different times.
 
 == Core Infrastructure
@@ -102,17 +102,17 @@ Completeness is carried by the four systems of the frame-class hierarchy, each i
 ]
 
 // LEAN-ANCHOR-MAY-MOVE: canonical-completeness -- see typst/README.md
-// CONFIRM(lean): completeness_discrete (Metalogic/BXCanonical/Completeness.lean) remains axiom-free
-#theorem("Weak Completeness (Discrete)")[
-  *TM*#sub[f] is weakly complete over $ZZ$-time: every formula valid over the integer flow is derivable at frame class `Discrete`.
+// CONFIRM(lean): completeness_ztime (Metalogic/BXCanonical/Completeness.lean) remains axiom-free
+#theorem("Weak Completeness (ZTime)")[
+  *TM*#sub[f] is weakly complete over $ZZ$-time: every formula valid over the integer flow is derivable at frame class `ZTime`.
 ]
 
-// CONFIRM(lean): completeness_dedekind (Metalogic/StrongCompleteness.lean) remains axiom-free
-#theorem("Weak Completeness (Dedekind)")[
-  *TM*#sub[c] is weakly complete over the dense-and-complete class (exactly $RR$ up to isomorphism): every formula valid over the real flow is derivable at frame class `Dedekind`.
+// CONFIRM(lean): completeness_rtime (Metalogic/StrongCompleteness.lean) remains axiom-free
+#theorem("Weak Completeness (RTime)")[
+  *TM*#sub[c] is weakly complete over the dense-and-complete class (exactly $RR$ up to isomorphism): every formula valid over the real flow is derivable at frame class `RTime`.
 ]
 
-Weak completeness is the *appropriate target* for the Discrete and Dedekind classes, because the strong form is provably false there:
+Weak completeness is the *appropriate target* for the ZTime and RTime classes, because the strong form is provably false there:
 
 #theorem("Failure of Strong Completeness over $ZZ$ and $RR$")[
   Strong completeness fails for $ZZ$-time and for the dense-and-complete class: compactness fails over both flows, so a consistent set of premises can be unsatisfiable.
@@ -207,9 +207,9 @@ The live metalogic code is organized as follows (`FormalSystem/Metalogic/`):
     [`BXCanonical/`], [`Completeness.lean` (Base/Dense/Discrete completeness), `CompletenessDedekind.lean`; `Chronicle/` (dense case), `Filtration/`, `Quasimodel/`],
     [`WeakCanonical/`], [Reynolds/Doets discrete completeness path; `Separation/`; Kamp-style expressiveness modules (`Kamp/`); `RealModel/` (Dedekind/real-flow semantics), `IntegerModel/`, `EFGames/`, `Expressiveness/`, `DenseModelSurgery/`],
     [`Decidability/`], [Tableau decision procedure; `FMP/` finite model property (discrete-only, @sec:decidability-practice); `Propositional/`, `Verified/`],
-    [`SoundnessLemmas/`], [Per-axiom validity lemmas, dense/discrete/Dedekind variants],
-    [`Soundness.lean`], [Unified soundness theorem for all four frame classes: `soundness`, `soundness_dense`, `soundness_discrete`, `soundness_dedekind`],
-    [`StrongCompleteness.lean`], [`completeness_dedekind`, `consequence_completeness_dedekind`],
+    [`SoundnessLemmas/`], [Per-axiom validity lemmas, dense/ZTime/RTime variants],
+    [`Soundness.lean`], [Unified soundness theorem for all four frame classes: `soundness`, `soundness_dense`, `soundness_ztime`, `soundness_rtime`],
+    [`StrongCompleteness.lean`], [`completeness_rtime`, `consequence_completeness_rtime`],
     [`Decidability.lean`], [Decidability interface],
     table.hline(),
   ),
@@ -230,13 +230,13 @@ Which Lean theorems carry which results of this chapter:
     table.hline(),
     table.header([*Result*], [*Lean Anchor*]),
     table.hline(),
-    [Soundness (all four frame classes)], [`soundness`, `soundness_dense`, `soundness_discrete`, `soundness_dedekind` (`Metalogic/Soundness.lean`)],
+    [Soundness (all four frame classes)], [`soundness`, `soundness_dense`, `soundness_ztime`, `soundness_rtime` (`Metalogic/Soundness.lean`)],
     [Deduction theorem], [`deductionTheorem` (`Metalogic/Core/`)],
     [Lindenbaum's lemma], [`set_lindenbaum` (`Metalogic/Core/MaximalConsistent.lean`)],
     [Weak completeness, Base], [`completeness` (`Metalogic/BXCanonical/Completeness.lean`)],
     [Weak completeness, Dense], [`completeness_dense` (`Metalogic/BXCanonical/Completeness.lean`)],
-    [Weak completeness, Discrete ($ZZ$-time)], [`completeness_discrete` (`Metalogic/BXCanonical/Completeness.lean`)],
-    [Weak completeness, Dedekind], [`completeness_dedekind` (`Metalogic/StrongCompleteness.lean`)],
+    [Weak completeness, ZTime ($ZZ$-time)], [`completeness_ztime` (`Metalogic/BXCanonical/Completeness.lean`)],
+    [Weak completeness, RTime], [`completeness_rtime` (`Metalogic/StrongCompleteness.lean`)],
     [Perpetuity principles P1--P6], [`Theorems/Perpetuity/`],
     [Decision-procedure soundness], [`decide_sound` (`Metalogic/Decidability/`)],
     table.hline(),

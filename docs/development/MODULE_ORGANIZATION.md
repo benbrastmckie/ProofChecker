@@ -284,24 +284,24 @@ The base language's **semantics** deliberately does not live here, so that the d
 
 ### Metalogic
 * `FormalSystem.Metalogic.Soundness`
-* `FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness` -- BL soundness at Base/Dense/Discrete/Dedekind,
+* `FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness` -- BL soundness at Base/Dense/ZTime/RTime,
   by composition, plus the truth-transfer bridge `truthAt_tr`
 * `FormalSystem.Metalogic.SoundnessLemmas`
 * `FormalSystem.Metalogic.Core.DeductionTheorem`
 * `FormalSystem.Metalogic.Core.MaximalConsistent` -- `SetConsistent`, `set_lindenbaum`
 * `FormalSystem.Metalogic.Bundle` -- FMCS / BFMCS bundle construction
-* `FormalSystem.Metalogic.BXCanonical` -- canonical model; the Base/Dense/Discrete
+* `FormalSystem.Metalogic.BXCanonical` -- canonical model; the Base/Dense/ZTime
   completeness theorems
 * `FormalSystem.Metalogic.WeakCanonical` -- countermodel engines, including the
   Reynolds real-line route
 * `FormalSystem.Metalogic.Algebraic` -- flow-frame infrastructure
-* `FormalSystem.Metalogic.StrongCompleteness` -- `completeness_dedekind`, and the
+* `FormalSystem.Metalogic.StrongCompleteness` -- `completeness_rtime`, and the
   terminology discipline separating consequence completeness from strong completeness
 * `FormalSystem.Metalogic.SetConsequence` -- the set-based consequence layer;
   `CompactBase` and `CompactDense` state the two compactness properties
 * `FormalSystem.Metalogic.Compactness` -- their discharge, by an ultraproduct model-existence
   construction, together with Base and Dense strong completeness
-* `FormalSystem.Metalogic.DiscreteNonCompactness` -- the machine refutation of Discrete
+* `FormalSystem.Metalogic.DiscreteNonCompactness` -- the machine refutation of ZTime
   strong completeness
 * `FormalSystem.Metalogic.Conservativity` -- the TM/TM⁺ backward bridge
 * `FormalSystem.Metalogic.Independence` -- underivability results

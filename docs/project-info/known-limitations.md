@@ -12,7 +12,7 @@ This is a **Minimum Viable Product** release with intentional scope limitations.
 
 The four weak completeness theorems are proved and sorryAx-free: `completeness`
 (`FormalSystem/Metalogic/BXCanonical/Completeness.lean:196`), `completeness_dense` (`:255`),
-`completeness_discrete` (`:296`), and `completeness_dedekind`
+`completeness_ztime` (`:296`), and `completeness_rtime`
 (`FormalSystem/Metalogic/StrongCompleteness.lean:469`). None of them carries an outstanding
 proof obligation; check C2 of `scripts/check-module-invariants.sh` asserts their axiom sets are
 exactly `[propext, Classical.choice, Quot.sound]`.
@@ -33,9 +33,9 @@ The infinitary statement has **three distinct statuses** across the four frame c
 
 | Frame class | Status of strong completeness | Anchor |
 |-------------|-------------------------------|--------|
-| `FrameClass.Discrete` | **Machine-refuted** | `DiscreteNonCompactness.lean:250` `notCompactDiscrete`, `:280` `notStrongCompletenessDiscrete` |
+| `FrameClass.ZTime` | **Machine-refuted** | `DiscreteNonCompactness.lean:250` `notCompactZTime`, `:280` `notStrongCompletenessZTime` |
 | `FrameClass.Base`, `FrameClass.Dense` | **Proved** | `Compactness.lean` `strongCompletenessBase`, `strongCompletenessDense`, `compactBase`, `compactDense`; statements at `SetConsequence.lean:446` `StrongCompletenessBase`, `:453` `CompactBase`, `:494` `StrongCompletenessDense`, `:499` `CompactDense` |
-| `FrameClass.Dedekind` | **Unavailable on the primary source's own terms** -- unproved *and* unrefuted | `StrongCompleteness.lean:74-89` |
+| `FrameClass.RTime` | **Unavailable on the primary source's own terms** -- unproved *and* unrefuted | `StrongCompleteness.lean:74-89` |
 
 For Base and Dense the missing substantive piece was a model-existence theorem, which does not
 follow from the single-formula countermodel engines. It is now supplied by `modelExistenceBase`
@@ -45,28 +45,28 @@ models its finite fragments already have. `compact_of_modelExistence` turns thos
 compactness, and `strongCompleteness_of_compact` combines compactness with the existing
 weak-completeness engines; both are single, `FrameClass`-generic reductions, instantiated once
 per class rather than written out per class. Neither class's binder list imposes
-Archimedean-ness, which is why the Discrete non-compactness counterexample does not reach
+Archimedean-ness, which is why the ZTime non-compactness counterexample does not reach
 them.
 
-For Dedekind, Reynolds 1992 (Theorem 7, section 9) is *weak* completeness for the real-line
+For RTime, Reynolds 1992 (Theorem 7, section 9) is *weak* completeness for the real-line
 axiomatisation, and the restriction there is genuine rather than an artefact of presentation.
-What the tree does **not** contain is a refutation: there is no `CompactDedekind` definition and
-no theorem refuting compactness for this class. "The Dedekind consequence relation is not
+What the tree does **not** contain is a refutation: there is no `CompactRTime` definition and
+no theorem refuting compactness for this class. "The RTime consequence relation is not
 compact" is therefore a claim resting on the source's own scope, not a machine-checked fact --
-a weaker and more accurate claim than the one Discrete supports. Reading Dedekind's status as
-sharing Discrete's would overstate the evidence.
+a weaker and more accurate claim than the one ZTime supports. Reading RTime's status as
+sharing ZTime's would overstate the evidence.
 
 ### Impact
 
 - All four weak completeness theorems, and their finite-context `consequence_completeness_*`
   companions, can be relied upon directly.
 - The statement "`Γ ⊨ φ` implies `Γ ⊢ φ` for an arbitrary infinite `Γ`" is available for Base
-  and Dense (`strongCompletenessBase`, `strongCompletenessDense`). For Discrete it is false;
-  for Dedekind it is out of the primary source's scope, and neither proved nor refuted here.
+  and Dense (`strongCompletenessBase`, `strongCompletenessDense`). For ZTime it is false;
+  for RTime it is out of the primary source's scope, and neither proved nor refuted here.
 
 ### Workaround
 
-For Discrete and Dedekind, work with finite premise sets, where the deduction theorem makes the
+For ZTime and RTime, work with finite premise sets, where the deduction theorem makes the
 finite-context results fully general (Base and Dense need no workaround — use
 `strongCompletenessBase` / `strongCompletenessDense` directly):
 
@@ -79,7 +79,7 @@ finite-context results fully general (Base and Dense need no workaround — use
 
 Base and Dense are settled positively: `CompactBase` and `CompactDense` are discharged in
 `FormalSystem/Metalogic/Compactness.lean`, so no workaround is needed for those two classes.
-Discrete is settled negatively and needs no further work. Dedekind would require going beyond
+ZTime is settled negatively and needs no further work. RTime would require going beyond
 Reynolds's Theorem 7, and remains the one open case.
 
 ## Limitation 2: ProofSearch Has Build Issues (Resolved)
@@ -223,7 +223,7 @@ answer is needed, construct a countermodel.
 The completeness direction turns on the open `valid_iff_allClosed` obligation described in
 `Correctness.lean`'s retirement section.
 
-## Limitation 7: The Discrete Consequence Relation Is Not Compact
+## Limitation 7: The ZTime Consequence Relation Is Not Compact
 
 ### Description
 
@@ -234,32 +234,32 @@ This is a genuine negative result, machine-checked rather than informal, in
 archWitness p  =  {F p} ∪ {¬Xⁿ p : n ∈ ℕ}
 ```
 
-(`archWitness`, `:102`). `ValidDiscrete` requires `IsSuccArchimedean`/`IsPredArchimedean`, and
+(`archWitness`, `:102`). `ValidZTime` requires `IsSuccArchimedean`/`IsPredArchimedean`, and
 `Formula.next φ = Formula.untl Formula.bot φ` is a genuine next-step operator on discrete
 orders, so the set is finitely satisfiable over `ℤ` -- place `p` far enough out
 (`archWitness_finitely_satisfiable`, `:194`) -- yet unsatisfiable over every Archimedean
 discrete carrier, since the `F p` witness would have to lie at some finite successor distance
 (`archWitness_not_satisfiable`, `:229`).
 
-The two conclusions are `notCompactDiscrete` (`:250`), refuting `CompactDiscrete`,
-and `notStrongCompletenessDiscrete` (`:280`), refuting `StrongCompletenessDiscrete`. All
+The two conclusions are `notCompactZTime` (`:250`), refuting `CompactZTime`,
+and `notStrongCompletenessZTime` (`:280`), refuting `StrongCompletenessZTime`. All
 are sorry-free at exactly `[propext, Classical.choice, Quot.sound]`.
 
 ### Impact
 
-- Strong completeness for `FrameClass.Discrete` is **false**, not merely unproved. No amount of
+- Strong completeness for `FrameClass.ZTime` is **false**, not merely unproved. No amount of
   further work will supply it.
-- Only weak completeness (`completeness_discrete`) and its finite-context consequence corollary
+- Only weak completeness (`completeness_ztime`) and its finite-context consequence corollary
   are available for this class. See Limitation 1.
 
 ### Workaround
 
 None is needed or possible: this is a fact about the logic, not a gap in the formalization. Work
-with finite premise sets over Discrete frames.
+with finite premise sets over ZTime frames.
 
 ### Resolution
 
-Settled. This limitation is permanent and is recorded here so that the absence of a Discrete
+Settled. This limitation is permanent and is recorded here so that the absence of a ZTime
 strong-completeness theorem is not misread as outstanding work.
 
 ## Limitation 8: TM/TM⁺ Conservativity Holds Backward Only
@@ -281,7 +281,7 @@ corollaries `ceb_backward` (`:210`), `cef_backward` (`:222`), `ced_backward` (`:
 `cec_backward` (`:253`). All are sorry-free.
 
 **The forward direction is refuted, not open.** `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ` is refuted for the Base
-and Discrete rows and open for the other two. The module docstring is the standing record of
+and ZTime rows and open for the other two. The module docstring is the standing record of
 why it must not be attempted or `sorry`-ed; see also the "Conservativity (proof-theoretic, no
 semantics)" section of `FormalSystem/Metalogic.lean`.
 
@@ -312,7 +312,7 @@ What a *machine-checked* refutation of the two settled rows would need has narro
 items to one. `Metalogic/Conservativity.lean` used to record that a BL-side semantics, a BL-side
 soundness theorem, and two countermodels were all missing. The first two now exist (see the
 Impact section above); the countermodels — the two-fibre structure for the Base row and
-`ℤ ×_lex ℤ` for the Discrete row — do not, and building them is separate work against the
+`ℤ ×_lex ℤ` for the ZTime row — do not, and building them is separate work against the
 non-Archimedean discrete carrier.
 
 ## Limitation 9: `CO` Does Not Derive Reynolds's Prior-U
@@ -341,7 +341,7 @@ both directions.
 
 ### Workaround
 
-Assume the Dedekind axioms (`prior_U_gap`, `prior_S_gap`, `sep`) where the strength is needed;
+Assume the RTime axioms (`prior_U_gap`, `prior_S_gap`, `sep`) where the strength is needed;
 `CO` alone does not suffice.
 
 ### Resolution
@@ -353,21 +353,21 @@ outstanding work.
 
 | Limitation | Severity | Workaround | Status |
 |------------|----------|------------|--------|
-| Strong completeness not uniformly available | Medium | Use finite premise sets | Base/Dense open; Discrete refuted; Dedekind out of source scope |
+| Strong completeness not uniformly available | Medium | Use finite premise sets | Base/Dense open; ZTime refuted; RTime out of source scope |
 | ProofSearch issues | Low | Use specific tactics | Resolved |
 | Example sorries | Low | Use as exercises | Resolved |
 | Test sorries | Low | Signature tests work | Resolved |
 | Modal S4 partial | Low | Manual derivation | Resolved |
 | Decision procedure completeness direction | Medium | Treat as semi-decision procedure | Open (`valid_iff_allClosed`) |
-| Discrete consequence relation not compact | Medium | None; work with finite premise sets | Settled negatively |
+| ZTime consequence relation not compact | Medium | None; work with finite premise sets | Settled negatively |
 | TM/TM⁺ conservativity backward only | Low | State results in the base language | Two rows refuted, two open |
-| `CO` does not derive Prior-U | Low | Assume the Dedekind axioms directly | Settled negatively |
+| `CO` does not derive Prior-U | Low | Assume the RTime axioms directly | Settled negatively |
 
 ## What Works Well
 
 Despite limitations, the following are fully functional:
 
-- ✅ All 45 axiom constructors (Base 37 / Dense 2 / Discrete 3 / Dedekind 3)
+- ✅ All 45 axiom constructors (Base 37 / Dense 2 / ZTime 3 / RTime 3)
 - ✅ All 7 inference rules
 - ✅ Full soundness proof
 - ✅ Task frame semantics

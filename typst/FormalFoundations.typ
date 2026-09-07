@@ -418,8 +418,8 @@ Its logic is correspondingly S5, and @sec:objective-modality takes up what else,
   $w arrow.r.double.long_(x) v$ imply $u = v$.#footnote[The first three constrain $#Dur$; the fourth constrains $arrow.r.double.long$.]
 ]
 #leansrc("Semantics.FrameProperty", "TaskFrame.IsDense")
-#leansrc("Semantics.FrameProperty", "TaskFrame.IsSuccArchDiscrete")
-#leansrc("Semantics.FrameProperty", "TaskFrame.IsDedekind")
+#leansrc("Semantics.FrameProperty", "TaskFrame.IsZTime")
+#leansrc("Semantics.FrameProperty", "TaskFrame.IsRTime")
 
 #definition("Validity and Consequence")[
   $#taskframe #satisfies phi.alt$ just in case $#model, tau, x #satisfies phi.alt$ for every model
@@ -620,8 +620,8 @@ op("Log")("Dense")$, which is a target rather than a result.
 ]
 #leansrc("Metalogic.Soundness", "soundness")
 #leansrc("Metalogic.Soundness", "soundness_dense")
-#leansrc("Metalogic.Soundness", "soundness_discrete")
-#leansrc("Metalogic.Soundness", "soundness_dedekind")
+#leansrc("Metalogic.Soundness", "soundness_ztime")
+#leansrc("Metalogic.Soundness", "soundness_rtime")
 
 The three frame properties that separate the extensions are each characterized by a single axiom.
 These correspondences are what make the extensions extensions *of a frame class* and not merely of
@@ -682,19 +682,19 @@ Axioms: exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`.
 
 #theorem("Weak completeness, discrete class")[
   Every sentence valid over $ZZ$-time, in its successor-Archimedean formulation, is derivable in
-  the Discrete frame class.
+  the ZTime frame class.
 ]
-#leansrc("Metalogic.BXCanonical", "completeness_discrete")
+#leansrc("Metalogic.BXCanonical", "completeness_ztime")
 Axioms: exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`.
 
 #theorem("Weak completeness, dense-and-complete class")[
   Every sentence valid over the dense-and-complete class, which by Hölder's theorem is exactly
-  $RR$, is derivable in the Dedekind frame class.
+  $RR$, is derivable in the RTime frame class.
 ]
-#leansrc("Metalogic.BXCanonical", "completeness_dedekind_engine")
+#leansrc("Metalogic.BXCanonical", "completeness_rtime_engine")
 Axioms: exactly `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`.
 
-The fourth result, over *all* task frames, is machine-checked on the same footing as the other three.#footnote[Its discrete branch calls `countermodel_discrete`, a live and `sorryAx`-free theorem in `WeakCanonical/GroupModel/CountermodelBase.lean`. Do not confuse it with `countermodel_discrete_reynolds_v2`, a separate theorem in `WeakCanonical/IntegerModel/ReynoldsBridge.lean`, which is what `completeness_discrete` calls (@sec:construction). Earlier revisions of this report described `countermodel_discrete` as unreachable and as carrying a `sorry`; both claims were stale.]
+The fourth result, over *all* task frames, is machine-checked on the same footing as the other three.#footnote[Its discrete branch calls `countermodel_discrete`, a live and `sorryAx`-free theorem in `WeakCanonical/GroupModel/CountermodelBase.lean`. Do not confuse it with `countermodel_discrete_reynolds_v2`, a separate theorem in `WeakCanonical/IntegerModel/ReynoldsBridge.lean`, which is what `completeness_ztime` calls (@sec:construction). Earlier revisions of this report described `countermodel_discrete` as unreachable and as carrying a `sorry`; both claims were stale.]
 
 #theorem("Weak completeness, base class")[
   Every sentence valid over every task frame is derivable in the Base frame class.
@@ -859,7 +859,7 @@ in $M$. A maximal consistent set cannot be undecided about discreteness.
       #align(center)[#text(size: 7pt)[Mixed \ eliminated by NB]]
     ])
   }),
-  caption: [The case split on $#Nxt top$. The Dedekind class needs no split: there the dense indicator is derivable unconditionally, so the branch that the Base and Discrete arguments must discharge does not arise.],
+  caption: [The case split on $#Nxt top$. The RTime class needs no split: there the dense indicator is derivable unconditionally, so the branch that the Base and ZTime arguments must discharge does not arise.],
 )
 
 == Coherent Families and the Truth Lemma
@@ -941,7 +941,7 @@ unavailable and the argument runs the other way: build a structure first, then s
 
 Transfer is sound because $k$-equivalence preserves the truth of every formula of quantifier depth
 at most $k$, and the refuted sentence has a fixed depth. The resulting countermodel over $ZZ$ is
-`countermodel_discrete_reynolds_v2`, and it is what `completeness_discrete` calls.
+`countermodel_discrete_reynolds_v2`, and it is what `completeness_ztime` calls.
 
 #remark[
   This is *not* an application of Kamp's theorem. Kamp's expressive-completeness result --- that
@@ -969,8 +969,8 @@ not arise.
 #leansrc("Metalogic.WeakCanonical", "epsDense_isContempEquiv")
 #leansrc("Metalogic.WeakCanonical", "orderIsoRealOfDedekindDenseSeparable")
 
-The engine is `completeness_dedekind_engine`.#footnote[The basis is Prior-U and Sep, with CO derived.] Its consequence form,
-`consequence_completeness_dedekind`, is what the development calls *consequence completeness*
+The engine is `completeness_rtime_engine`.#footnote[The basis is Prior-U and Sep, with CO derived.] Its consequence form,
+`consequence_completeness_rtime`, is what the development calls *consequence completeness*
 and not strong completeness: a derivation's context is a finite list, so a finite-context
 consequence result is inter-derivable with weak completeness by the deduction theorem, and the
 term *strong* is reserved for consequence from a possibly infinite premise set.
@@ -986,9 +986,9 @@ The axiom reports below were taken at commit 7aae4e51c via `scripts/typst-status
     table.header([*Declaration*], [*Module*], [*Axioms*], [*`sorryAx`*]),
     table.hline(),
     [`completeness_dense`], [`BXCanonical/Completeness.lean`], [`propext`, `Classical.choice`, `Quot.sound`], [no],
-    [`completeness_discrete`], [`BXCanonical/Completeness.lean`], [same], [no],
+    [`completeness_ztime`], [`BXCanonical/Completeness.lean`], [same], [no],
     [`countermodel_dense`], [`Chronicle/ChronicleToCountermodelBasic.lean`], [same], [no],
-    [`completeness_dedekind_engine`], [`BXCanonical/CompletenessDedekind.lean`], [same], [no],
+    [`completeness_rtime_engine`], [`BXCanonical/CompletenessDedekind.lean`], [same], [no],
     [`completeness`], [`BXCanonical/Completeness.lean`], [same], [no],
     table.hline(),
   ),
@@ -1002,7 +1002,7 @@ described as unreachable. All three claims were stale: `countermodel_discrete` l
 `WeakCanonical/GroupModel/CountermodelBase.lean`, it is `sorryAx`-free, and it is live ---
 `BXCanonical/Completeness.lean` calls it as the discrete branch of the Base-frame `completeness`.
 It is a distinct theorem from `countermodel_discrete_reynolds_v2`, in
-`WeakCanonical/IntegerModel/ReynoldsBridge.lean`, which is the theorem `completeness_discrete`
+`WeakCanonical/IntegerModel/ReynoldsBridge.lean`, which is the theorem `completeness_ztime`
 routes through. Both the zero-`sorry` inventory and the axiom reports above are re-checked
 mechanically on every invariant run, not asserted here.
 
@@ -1012,8 +1012,8 @@ the model-existence step of the Representation theorem's proof, which goes throu
 No step of the base-class route carries `sorryAx`.
 
 #remark[
-  The vocabulary above is the development's own: `FrameClass.Base`, `Dense`, `Discrete`,
-  `Dedekind`. It is not silently identified with the paper's $op("TM")^+$, $op("TM")^+_d$,
+  The vocabulary above is the development's own: `FrameClass.Base`, `Dense`, `ZTime`,
+  `RTime`. It is not silently identified with the paper's $op("TM")^+$, $op("TM")^+_d$,
   $op("TM")^+_f$, $op("TM")^+_c$. The two axiomatizations do line up in shape --- the paper states
   eleven primary Since/Until axioms and derives their past mirrors by the rule TD, while the
   development has no TD rule and states all twenty-two explicitly, one pair per paper axiom --- but
@@ -1253,8 +1253,8 @@ a point.
 ]
 #leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness")
 #leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_dense")
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_discrete")
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_dedekind")
+#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_ztime")
+#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_rtime")
 
 #lemma("Lindenbaum–Tarski")[
   The Lindenbaum algebra on a set $X$ of atoms is the free $op("TM")^+$-algebra on $X$, and its
@@ -1274,8 +1274,8 @@ a point.
   completeness results are exactly SP-representations of this shape.
 ]
 #leansrc("Metalogic.BXCanonical.Completeness", "completeness_dense")
-#leansrc("Metalogic.WeakCanonical", "completeness_discrete")
-#leansrc("Metalogic.BXCanonical.CompletenessDedekind", "completeness_dedekind_engine")
+#leansrc("Metalogic.WeakCanonical", "completeness_ztime")
+#leansrc("Metalogic.BXCanonical.CompletenessDedekind", "completeness_rtime_engine")
 
 The correspondence between ultrafilters and points above specializes Stone's theorem
 @stone1936: points of the algebra's dual space are its ultrafilters, and the operations become
@@ -1452,7 +1452,7 @@ axiom above, which is first-order.
   of $M$ mentions only finitely many atoms, renamed into the countable language --- together with
   compactness over the relevant elementary class of shift sets (Łoś, Proposition Compactness). For
   the base class this is `completeness`; for the dense class, `completeness_dense`; for the
-  discrete class, `completeness_discrete`; for the Dedekind class, `completeness_dedekind_engine`;
+  ZTime class, `completeness_ztime`; for the RTime class, `completeness_rtime_engine`;
   each instance of `StrongCompletenessBase`, `CompactBase`, and `ModelExistenceBase`. Those three
   are not merely the statements the proof would need: for the base and dense classes all three
   are theorems of the formalization, proved in `Metalogic.Compactness` by exactly this
@@ -1519,7 +1519,7 @@ axiom above, which is first-order.
   algebra has an ultrafilter, realized at no point of any model over $ZZ$, witnessed by
   `discrete_consequence_not_compact`. For $op("TM")^+_c$ there is none over $RR$-flows
   @reynolds1992. What holds over $ZZ$-flows and $RR$-flows is the SP-representation of the
-  Lindenbaum algebra --- `completeness_discrete` and `completeness_dedekind_engine` --- which is
+  Lindenbaum algebra --- `completeness_ztime` and `completeness_rtime_engine` --- which is
   weak completeness restated; what holds point-completely is the Representation theorem's per-class
   clause, over $ZZ$-groups and over divisible ordered abelian groups.
 ]
@@ -1543,7 +1543,7 @@ axiom above, which is first-order.
     table.hline(),
     [Components, free presentation, descent, factorization], [sorry-free],
     [Model existence (base class)], [`completeness`, sorry-free],
-    [Model existence (dense, discrete, Dedekind)], [sorry-free],
+    [Model existence (dense, ZTime, RTime)], [sorry-free],
     [One flow per component (saturation)], [planned; bundled-family construction sorry-free for
       finite families],
     table.hline(),

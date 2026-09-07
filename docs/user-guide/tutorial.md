@@ -404,7 +404,7 @@ theorem perpetuity_2 (φ : Formula) : ⊢ ((▽φ).imp (diamond φ)) := by
 **Status note**: The `sorry` placeholders in this section are pedagogical stand-ins for a
 from-scratch walkthrough; the library itself is sorry-free. In the actual library `soundness`
 is fully proven; all four weak completeness theorems -- `completeness` (`:196`),
-`completeness_dense` (`:255`), `completeness_discrete` (`:296`), and `completeness_dedekind`
+`completeness_dense` (`:255`), `completeness_ztime` (`:296`), and `completeness_rtime`
 (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) -- are fully proven and sorryAx-free;
 and `perpetuity_1`-`perpetuity6` are all fully proven. See
 `FormalSystem/Metalogic/Soundness.lean`,

@@ -127,7 +127,7 @@ Project status and tracking for the Bimodal TM logic implementation.
 
 - **Soundness**: Proven
 - **Completeness**: weak completeness proven and sorryAx-free for all four frame classes
-  (Base, Dense, Discrete, Dedekind). *Strong* completeness is a separate question -- see
+  (Base, Dense, ZTime, RTime). *Strong* completeness is a separate question -- see
   [known-limitations.md](known-limitations.md)
 - **Known Sorries**: 0, asserted by check C3 of `scripts/check-module-invariants.sh`
 
