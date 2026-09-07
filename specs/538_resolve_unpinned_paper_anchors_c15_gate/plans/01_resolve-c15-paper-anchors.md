@@ -1,7 +1,7 @@
 # Implementation Plan: Resolve unpinned paper anchors (C15 gate)
 
 - **Task**: 538 - resolve_unpinned_paper_anchors_c15_gate
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 1 hour
 - **Dependencies**: None
 - **Research Inputs**: specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md
@@ -99,21 +99,21 @@ named roadmap checkbox and adds none.
 
 Phases within the same wave can execute in parallel.
 
-### Phase 1: Re-measure the unresolved anchor set and confirm liveness [NOT STARTED]
+### Phase 1: Re-measure the unresolved anchor set and confirm liveness [COMPLETED]
 
 - **Goal:** Establish the current, measured unresolved-anchor set and confirm each member resolves
   to a live `\label{}` in the paper, before any file is edited.
 - **Tasks:**
-  - [ ] Run `bash scripts/check-module-invariants.sh` and capture the C15 failure line and the
+  - [x] Run `bash scripts/check-module-invariants.sh` and capture the C15 failure line and the
         enumerated unresolved anchors verbatim.
-  - [ ] Confirm C15 is still the only failing group; note any other failure for Phase 3.
-  - [ ] For each unresolved anchor, grep
+  - [x] Confirm C15 is still the only failing group; note any other failure for Phase 3.
+  - [x] For each unresolved anchor, grep
         `/home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex` for its
         `\label{}` and record the environment kind (`Lthm`/`Tthm`/`Cthm`/`\subsection`) and line.
-  - [ ] Classify each as `LIVE-UNPINNED` or `DANGLING` on that measured evidence; if any anchor
+  - [x] Classify each as `LIVE-UNPINNED` or `DANGLING` on that measured evidence; if any anchor
         does not resolve to a live label, stop and record it as `DANGLING` with the citing-site
         obligation rather than adding a live row.
-  - [ ] If the measured set differs from the four research names, carry the measured set forward —
+  - [x] If the measured set differs from the four research names, carry the measured set forward —
         it, not the report, is authoritative for Phase 2.
 - **Timing:** 20 minutes
 - **Depends on:** none
