@@ -292,12 +292,19 @@ Each field corresponds to one of the 7 constructors of `DerivationTree`:
 `temporal_necessitation`, `temporal_duality`, `weakening`.
 -/
 structure RuleProfile where
+  /-- Number of axiom invocations in the profiled derivation. -/
   axiomCount : Nat
+  /-- Number of assumption (context lookup) steps. -/
   assumptionCount : Nat
+  /-- Number of modus ponens applications. -/
   mpCount : Nat
+  /-- Number of modal necessitation applications. -/
   necessitationCount : Nat
+  /-- Number of temporal necessitation applications. -/
   temporalNecessitationCount : Nat
+  /-- Number of temporal duality applications. -/
   temporalDualityCount : Nat
+  /-- Number of weakening applications. -/
   weakeningCount : Nat
   deriving Repr, Inhabited
 

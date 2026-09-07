@@ -140,14 +140,23 @@ Fields:
 - `frameClass`: Frame class parameter of the derivation
 -/
 structure ProofStep where
+  /-- Fully qualified name of the theorem this step was extracted from. -/
   theoremName : String
+  /-- Zero-based position of this step within the theorem's extracted step list. -/
   stepIndex : Nat
+  /-- Hypotheses available at this step. -/
   context : List Formula
+  /-- Formula this step establishes. -/
   goal : Formula
+  /-- Pre-rendered JSON encoding of `goal`, cached to avoid re-serializing on export. -/
   goalFoldedJson : String
+  /-- Name of the inference rule applied at this step. -/
   rule : String
+  /-- Name of the axiom instance used, when `rule` is an axiom invocation. -/
   axiomName : Option String
+  /-- Premises the rule application discharges, in argument order. -/
   subgoals : List Formula
+  /-- Frame class the step is derived over. -/
   frameClass : String
   deriving Repr
 
@@ -344,7 +353,9 @@ Packages a theorem name with a thunk that produces a list of ProofStep records.
 The thunk pattern avoids evaluating all derivation trees at registry construction time.
 -/
 structure TheoremEntry where
+  /-- Fully qualified name of the catalogued theorem. -/
   name : String
+  /-- Thunked extraction of the theorem's proof steps, deferred until export runs. -/
   extract : Unit → List ProofStep
 
 end FormalSystem.Automation.ProofStepExtractor

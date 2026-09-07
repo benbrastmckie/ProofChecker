@@ -134,8 +134,10 @@ theorem per_val (σ : ℤ → W) {m n : ℤ} (h0 : 0 ≤ n) (h1 : n < m) : per �
 
 /-- A **minimal closed walk** through `x`: length-minimal among all closed walks at `x`. -/
 structure MinCyc (R : W → W → Prop) (x : W) where
+  /-- Period of the cycle: the least positive return time to `x`. -/
   len : ℤ
   pos : 0 < len
+  /-- The cycling walk itself, indexed by `ℤ`. -/
   walk : ℤ → W
   isWalk : IsWalk R walk
   base : walk 0 = x

@@ -326,19 +326,19 @@ the `jq | grep -v` enumeration and by locating the two anonymous `instance` decl
 
 ---
 
-### Phase 5: `docBlame` — structure field docstrings (33 of 51) [NOT STARTED]
+### Phase 5: `docBlame` — structure field docstrings (33 of 51) [COMPLETED]
 
 **Goal**: Add a `/-- … -/` docstring above each undocumented structure field flagged by
 `docBlame`. Purely mechanical, no signature or behavior change.
 
 **Tasks**:
-- [ ] Enumerate: `jq -r '.[] | select(.[0]=="docBlame") | .[1]' scripts/nolints.json` and pick out
+- [x] Enumerate: `jq -r '.[] | select(.[0]=="docBlame") | .[1]' scripts/nolints.json` and pick out
       the field-projection entries. Research's grouping: `ProofStep.*` ×9, `RuleProfile.*` ×7,
       `OperatorDistribution.*` ×6, `EnrichedCountermodel.*` ×5, `DecideCacheKey.*` ×2,
       `TheoremEntry.*` ×2, `MinCyc.*` ×2 = 33.
-- [ ] Locate each structure with `grep -rn "^structure <Name>" FormalSystem/`.
-- [ ] Add one `/-- … -/` per flagged field, stating what the field holds — not restating its type.
-- [ ] Leave `nolints.json` untouched; the category is dropped in Phase 6 after the remaining 18
+- [x] Locate each structure with `grep -rn "^structure <Name>" FormalSystem/`.
+- [x] Add one `/-- … -/` per flagged field, stating what the field holds — not restating its type.
+- [x] Leave `nolints.json` untouched; the category is dropped in Phase 6 after the remaining 18
       `docBlame` entries are handled.
 
 **Timing**: 1.25 hours

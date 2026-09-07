@@ -1262,7 +1262,9 @@ Since `searchDepth` and `tableauFuel` are deterministic functions of
 the formula, the effective cache key is just `(Formula, FrameClass)`.
 -/
 structure DecideCacheKey where
+  /-- The formula whose decision result is cached under this key. -/
   formula : Formula
+  /-- The frame class the decision was taken over. -/
   frameClass : FrameClass
   deriving BEq, Hashable
 

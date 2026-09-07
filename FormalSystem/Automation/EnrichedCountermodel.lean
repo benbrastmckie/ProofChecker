@@ -66,10 +66,15 @@ information from the saturated tableau.
 - `branchLength`: Total number of signed formulas on the branch
 -/
 structure EnrichedCountermodel where
+  /-- The underlying countermodel this record enriches. -/
   simple : SimpleCountermodel
+  /-- Every signed formula appearing on the refuting branch. -/
   branchFormulas : List SignedFormula
+  /-- The branch's signed formulas whose top-level operator is modal. -/
   modalFormulas : List SignedFormula
+  /-- The branch's signed formulas whose top-level operator is temporal. -/
   temporalFormulas : List SignedFormula
+  /-- Number of signed formulas on the refuting branch. -/
   branchLength : Nat
   deriving Repr
 

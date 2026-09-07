@@ -566,11 +566,17 @@ Operator distribution: count of each top-level constructor in a formula list.
 Includes both primitive constructors and recognized derived temporal operators.
 -/
 structure OperatorDistribution where
+  /-- Count of formulas whose top-level constructor is an atom. -/
   atomCount : Nat := 0
+  /-- Count of formulas whose top-level constructor is `⊥`. -/
   botCount : Nat := 0
+  /-- Count of formulas whose top-level constructor is implication. -/
   impCount : Nat := 0
+  /-- Count of formulas whose top-level constructor is `□`. -/
   boxCount : Nat := 0
+  /-- Count of formulas whose top-level constructor is `U` (until). -/
   untlCount : Nat := 0
+  /-- Count of formulas whose top-level constructor is `S` (since). -/
   snceCount : Nat := 0
   /-- Count of formulas matching the F (someFuture) pattern: untl(⊤, φ). -/
   allFutureCount : Nat := 0
