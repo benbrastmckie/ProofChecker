@@ -94,10 +94,6 @@ theorem getD_range_map {α : Type*} [Inhabited α] (n : ℕ) (g : ℕ → α) {i
   rw [List.getD_eq_getElem?_getD, List.getElem?_eq_getElem hlt]
   simp
 
-@[simp]
-theorem length_range_map {α : Type*} (n : ℕ) (g : ℕ → α) :
-    ((List.range n).map g).length = n := by simp
-
 /-! ## The two decodings agree under projection -/
 
 /-- The state component of a decoded datum is the decoded state. -/
@@ -226,7 +222,7 @@ theorem readout_back (Lb : ℕ) (hLb : 1 ≤ Lb) (qb : ℕ → PigeonState P φ)
     Periodic.unrollOf ((List.range Lb).map (fun i => qb (Lb - 1 - i))) mD fD T
       = qb (-1 - T).toNat := by
   rw [Periodic.unrollOf_neg _ _ _ (by omega : T < 0)]
-  simp only [Periodic.cyc, length_range_map]
+  simp only [Periodic.cyc, List.length_map, List.length_range]
   rcases (by omega : T = -(Lb : ℤ) - 1 ∨ -(Lb : ℤ) ≤ T) with rfl | h3
   · have hmod : (-(Lb : ℤ) - 1) % (Lb : ℤ) = (Lb : ℤ) - 1 := by
       have h := Periodic.emod_add_mul (-(Lb : ℤ) - 1) 2 (Lb : ℤ)
@@ -264,7 +260,7 @@ theorem readout_fwd (Lf : ℕ) (hLf : 1 ≤ Lf) (pf : ℕ → PigeonState P φ) 
     Periodic.unrollOf bD mD ((List.range Lf).map (fun i => pf i)) T
       = pf (T - (mD.length : ℤ)).toNat := by
   rw [Periodic.unrollOf_fwd _ _ _ h1]
-  simp only [Periodic.cyc, length_range_map]
+  simp only [Periodic.cyc, List.length_map, List.length_range]
   rcases (by omega : T = (mD.length : ℤ) + (Lf : ℤ) ∨ T < (mD.length : ℤ) + (Lf : ℤ)) with rfl | h3
   · have hmod : ((mD.length : ℤ) + (Lf : ℤ) - (mD.length : ℤ)) % (Lf : ℤ) = 0 := by
       rw [show (mD.length : ℤ) + (Lf : ℤ) - (mD.length : ℤ) = 0 + 1 * (Lf : ℤ) by omega,
@@ -417,9 +413,9 @@ theorem exists_annot_of_truth (hbx : BoxOracleSound P bx)
       l = (List.range nm).map (fun i => w (i + 1)) := ⟨_, rfl⟩
   obtain ⟨fD, hfD⟩ : ∃ l : List (PigeonState P φ),
       l = (List.range Lf).map (fun i => pf i) := ⟨_, rfl⟩
-  have hbDlen : bD.length = Lb := by rw [hbD, length_range_map]
-  have hmDlen : mD.length = nm := by rw [hmD, length_range_map]
-  have hfDlen : fD.length = Lf := by rw [hfD, length_range_map]
+  have hbDlen : bD.length = Lb := by rw [hbD]; simp
+  have hmDlen : mD.length = nm := by rw [hmD]; simp
+  have hfDlen : fD.length = Lf := by rw [hfD]; simp
   -- ### Reading the decoding back off the three walks
   have hback : ∀ T : ℤ, -(Lb : ℤ) - 1 ≤ T → T ≤ -1 →
       Periodic.unrollOf bD mD fD T = qb (-1 - T).toNat := by

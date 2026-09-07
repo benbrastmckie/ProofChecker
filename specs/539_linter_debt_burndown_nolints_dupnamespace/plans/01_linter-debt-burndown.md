@@ -1,7 +1,7 @@
 # Implementation Plan: Linter Debt Burndown (nolints.json, dupNamespace)
 
 - **Task**: 539 - Draw down the linter debt that the CI/linter-gates work recorded rather than fixed
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 10.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md
@@ -125,22 +125,22 @@ idealized parallelism the toolchain cannot deliver.
 
 ---
 
-### Phase 1: Delete the redundant `length_range_map` (simpNF 1 -> 0) [NOT STARTED]
+### Phase 1: Delete the redundant `length_range_map` (simpNF 1 -> 0) [COMPLETED]
 
 **Goal**: Remove the single `simpNF` finding by deleting a lemma that duplicates two Mathlib simp
 lemmas, and drop the `simpNF` row from `nolints.json`.
 
 **Tasks**:
-- [ ] `grep -n "length_range_map" FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean` to
+- [x] `grep -n "length_range_map" FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean` to
       re-derive all anchors (expected: 1 declaration + 5 use sites).
-- [ ] Delete the `@[simp] theorem length_range_map` declaration and its `@[simp]` attribute line.
-- [ ] Rewrite the two `simp only [Periodic.cyc, length_range_map]` sites as
+- [x] Delete the `@[simp] theorem length_range_map` declaration and its `@[simp]` attribute line.
+- [x] Rewrite the two `simp only [Periodic.cyc, length_range_map]` sites as
       `simp only [Periodic.cyc, List.length_map, List.length_range]`.
-- [ ] Rewrite the three `rw [h?D, length_range_map]` sites as `rw [h?D]; simp` (preserving each
+- [x] Rewrite the three `rw [h?D, length_range_map]` sites as `rw [h?D]; simp` (preserving each
       site's own hypothesis name `hbD` / `hmD` / `hfD`).
-- [ ] Confirm no reference survives anywhere:
+- [x] Confirm no reference survives anywhere:
       `grep -rn "length_range_map" FormalSystem/ Tests/` returns nothing.
-- [ ] Drop the category from `nolints.json`:
+- [x] Drop the category from `nolints.json`:
       `jq 'map(select(.[0] == "simpNF" | not))' scripts/nolints.json > /tmp/n.json && mv /tmp/n.json scripts/nolints.json`
       (the `| not` form is required by the repo's jq-escaping rule).
 
