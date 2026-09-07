@@ -580,7 +580,7 @@ reverted after review showed the regex damaged prose there.
 
 ---
 
-### Phase 11: Docstring three-register pass A [IN PROGRESS]
+### Phase 11: Docstring three-register pass A [COMPLETED]
 
 **Goal**: `Semantics/Validity.lean` and `Semantics/FrameClassValidity.lean` carry roughly half
 their current prose, with no mathematical claim lost. *(deviation: altered — prose fell 999 ->
