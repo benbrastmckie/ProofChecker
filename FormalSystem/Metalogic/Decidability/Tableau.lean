@@ -1921,7 +1921,7 @@ witness formula needed at all?
 The only event this fires on is the syntactic constant `⊤` (`Formula.top`,
 `FormalSystem/Syntax/Formula.lean:118`), reached through the two derived existential temporal
 operators: `F ⊤` is `untl ⊤ ⊤` and `P ⊤` is `snce ⊤ ⊤` (`Formula.someFuture` / `Formula.somePast`,
-`Formula.lean:131` / ). On such a trigger the test is *purely* that the ordering already has
+`Formula.lean:131` / `Formula.lean:141`). On such a trigger the test is *purely* that the ordering already has
 some strictly-later (resp. strictly-earlier) time; the branch is not consulted.
 
 **Soundness.** `⊤` is true at every label of every model. So if the ordering already puts some
