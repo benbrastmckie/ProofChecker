@@ -39,11 +39,9 @@ Two of these are the *narrowed* member of a split pair, and deliberately so — 
 would widen the frame class a soundness theorem at that tag ranges over. `Semantics/FrameProperty.lean`
 records both splits and the paper sentences that force them.
 
-**Naming deviation of record.** `def:frame-properties` calls the dense-and-complete class
-**Complete**; this tree calls it `Dedekind`, in `FrameClass.RTime`, `TaskFrame.IsRTime` and
-`ValidRTime` alike. That divergence from the definition of record is deliberate — "complete"
-is already load-bearing here for *proof-theoretic* completeness — and is recorded in full at
-`TaskFrame.IsRTime`'s definition site.
+`.RTime` is the paper's TM⁺_c / R-time class: dense and Dedekind-complete, hence exactly the
+real flow `ℝ` up to order-and-group isomorphism by Hölder. `TaskFrame.IsRTime`'s definition site
+gives the argument in full.
 
 ## Module placement, and the one import seam it introduces
 
@@ -106,8 +104,7 @@ Per-constructor anchors:
   strictly above `FrameClass.Dense`, so `density` and `dense_indicator` are admissible in a
   `.RTime` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.
   The dense-and-complete narrowing is what `cor:tm-completeness`'s TM⁺_c clause names and what
-  keeps soundness at this tag from being refutable. See the naming deviation recorded at
-  `TaskFrame.IsRTime`: the paper calls this property Complete, this tree calls it Dedekind.
+  keeps soundness at this tag from being refutable.
 
 ## Reducibility is load-bearing
 
@@ -185,7 +182,7 @@ Everything downstream — `Semantics.ValidIn.mono`, and the set-consequence mono
 `Metalogic/SetConsequence.lean` — is a corollary, which is what makes semantic monotonicity point
 in the same direction as `DerivationTree.lift` without either lemma restating the argument.
 
-The proof is a 16-case split. Four cases are reflexivity, one is the `Dense ≤ Dedekind` projection
+The proof is a 16-case split. Four cases are reflexivity, one is the `Dense ≤ RTime` projection
 `TaskFrame.isDense_of_isRTime`, four are `Sat .Base = True`, and the remaining seven have an
 absurd order hypothesis discharged by `decide` against `FrameClass`'s `DecidableRel` instance.
 -/

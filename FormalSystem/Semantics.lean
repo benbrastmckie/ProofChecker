@@ -67,8 +67,8 @@ polymorphic over temporal types.
   `IsDiscrete`, `IsComplete`, plus the two narrowings the tree's soundness targets actually need
   (`IsZTime`, `def:TMplus-f`'s Hölder narrowing to ℤ-time; `IsRTime`,
   dense-and-complete). Possible as ordinary predicates because `TaskFrame` carries `Duration` as a
-  field rather than as an index. Records the `Dedekind`-not-`Complete` naming deviation at its
-  definition site
+  field rather than as an index. Each narrowing records at its definition site why it is named
+  for its carrier rather than for the paper's clause
 - `FrameClassValidity`: the semantic interpretation of `ProofSystem.FrameClass` —
   `FrameClass.Sat : FrameClass → TaskFrame → Prop` and its antitonicity `Sat.anti`. The **only**
   module under `Semantics/` importing anything from `ProofSystem/`; the seam is confined here

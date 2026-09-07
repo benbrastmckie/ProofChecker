@@ -51,11 +51,12 @@ Neither pair is bridged by a duplicate definition: each of the five is defined o
 splits are related by the projections `isDense_of_isRTime` / `isComplete_of_isRTime` and by
 the implication from `IsZTime` to `IsDiscrete` recorded on the former's docstring.
 
-## Naming deviation of record: `Dedekind`, not `Complete`
+## The two narrowed classes: `IsZTime` and `IsRTime`
 
-`def:frame-properties` names the dense-and-complete class **Complete**. This tree deliberately
-does not, and the deviation is recorded at each definition site below rather than left implicit.
-See `TaskFrame.IsRTime`.
+`def:frame-properties`' bare Discrete and Complete clauses are `IsDiscrete` and `IsComplete`, and
+each keeps the paper's name. The two *narrowed* classes the proof side's tags denote are named
+separately: `IsZTime` for `def:TMplus-f`'s successor-Archimedean ℤ-time class and `IsRTime` for
+the dense-and-complete R-time class. See `TaskFrame.IsZTime` and `TaskFrame.IsRTime`.
 
 ## Why `IsDense` is an `abbrev`
 
@@ -76,7 +77,7 @@ buys here, and it is deliberately narrow. The strong form — restating each fra
 `IsZTime`: a `Prop`-valued structure cannot project the `Type`-valued `SuccOrder`
 field it must carry (the same reason `Nonempty` has no `.val`). The narrow fix nevertheless
 achieves the goal it was proposed for, namely that instance resolution carries the
-Dense/Dedekind inclusion at a `Sat` hypothesis.
+Dense/RTime inclusion at a `Sat` hypothesis.
 
 One consequence that does **not** follow: the eight `by decide` regression examples elsewhere in
 the tree are *not* made redundant by this. `FrameClass.Sat.anti`'s `decide` branch discharges
@@ -193,21 +194,20 @@ nothing else: by `Semantics.complete_duration_discrete_or_dense` a complete dura
 either `≃+o ℤ` or densely ordered, and by `Semantics.complete_not_dense_iso_int` those branches
 are exclusive. So up to order-and-group isomorphism this class is the real flow.
 
-## Naming deviation of record
+## Why this class is named `IsRTime`
 
-**`def:frame-properties` calls this property Complete; this tree calls it Dedekind.** That is a
-deliberate divergence from the definition of record, not an oversight and not a synonym chosen at
-random, and it is the only naming deviation sanctioned on this front. The word "complete" is
+`def:frame-properties` calls the dense-and-complete property Complete, and the word "complete" is
 already load-bearing here for *proof-theoretic* completeness — `completeness`,
 `completeness_dense`, `completeness_ztime`, `completeness_rtime`,
 `Metalogic/StrongCompleteness.lean` — so a `TaskFrame.IsComplete`-versus-`FrameClass.Complete`
 pair would collide with the tree's most-cited word at exactly the point where the two senses meet.
-"Dedekind complete" is the standard and unambiguous name for the order-theoretic property, so it
-is what the dense-and-complete class is called here, in `FrameClass.RTime`, and in
-`ValidRTime`.
+The name `IsRTime` says instead what the class *is*: R-time, the real flow, which by the
+dichotomy above is the only nontrivial model up to order-and-group isomorphism. Its ℤ-time
+counterpart is `IsZTime`, and the pair `FrameClass.ZTime` / `FrameClass.RTime` and
+`ValidZTime` / `ValidRTime` carry the same two names through the proof and validity layers.
 
-Note that the bare Complete clause above *does* keep the paper's name (`IsComplete`); only the
-dense-and-complete conjunction is renamed.
+Note that the bare Complete clause above keeps the paper's name (`IsComplete`); only the
+dense-and-complete conjunction is named for its carrier.
 -/
 def TaskFrame.IsRTime (F : TaskFrame) : Prop := F.IsDense ∧ F.IsComplete
 

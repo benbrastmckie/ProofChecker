@@ -56,7 +56,7 @@ narrowing to ℤ-time. It is strictly stronger, and it is **not** Galois-closed 
 `Sat .ZTime` would therefore contradict that witness. The corollary is over `{F | F.IsDiscrete}`
 and must stay there.
 
-The Dedekind row does not split the same way: `Sat .Dense` (the row that *is* closed) is the
+The RTime row does not split the same way: `Sat .Dense` (the row that *is* closed) is the
 paper's bare Dense clause, while `Sat .RTime` adds Dedekind completeness, which
 `RationalWitness.lean`'s static frame over `ℚ` satisfies axiomatically without satisfying
 semantically.

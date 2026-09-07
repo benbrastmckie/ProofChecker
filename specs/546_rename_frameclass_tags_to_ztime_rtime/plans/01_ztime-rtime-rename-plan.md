@@ -501,7 +501,7 @@ recorded as a Reasoned Exclusion.
 
 ---
 
-### Phase 7: Lean docstring rewrite [NOT STARTED]
+### Phase 7: Lean docstring rewrite [COMPLETED]
 
 **Goal**: Replace the naming-deviation prose — which exists only to say "the tag does not mean
 what its name says" — with plain statements of what each tag denotes.
@@ -517,13 +517,15 @@ what its name says" — with plain statements of what each tag denotes.
 - [ ] `Semantics/FrameClassValidity.lean:100-110` - keep the two `**not**` bullets' substance
       (the tags are the *narrowed* predicates, not the bare clauses); drop the second bullet's
       closing "the paper calls this property Complete, this tree calls it Dedekind" sentence.
-- [ ] Mirror sites: `Semantics/FrameProperty.lean:28-91` and :176-215 (the `IsDedekind`
+- [x] Mirror sites: `Semantics/FrameProperty.lean:28-91` and :176-215 (the `IsDedekind`
       docstring's closing "'Dedekind complete' is the standard and unambiguous name" paragraph),
       `Semantics/Validity.lean:617-622, :682, :736, :751-756, :804-813`,
       `Semantics/BLValidity.lean:211-265`,
       `Semantics/Correspondence/Indicator.lean:52,163`,
       `ProofSystem/Axioms.lean:500-528` (the long `FrameClass` docstring).
-- [ ] Confirm no docstring edit crosses out of a `/-- ... -/` region.
+- [x] Confirm no docstring edit crosses out of a `/-- ... -/` region.
+- [x] *(deviation: added — `FormalSystem/Semantics.lean:70`'s "Records the `Dedekind`-not-`Complete`
+      naming deviation" line, a mirror site the plan's list omitted, rewritten with the rest.)*
 
 **Timing**: 1.5 hours
 

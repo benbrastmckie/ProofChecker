@@ -676,12 +676,10 @@ of this predicate (Mathlib gives it a `ConditionallyCompleteLinearOrder`), so a
 `soundness_rtime` targets `ValidRTime`; this predicate is landed as the strictly weaker
 statement and as the target of the forgetful bridge from `Valid`.
 
-**Why the name still reads oddly, and why that is recorded rather than fixed.** The paper calls
-the dense-and-complete class Complete; this tree calls it Dedekind, because "complete" is already
-load-bearing here for *proof-theoretic* completeness. That naming deviation of record is stated
-in full at `TaskFrame.IsRTime` (`Semantics/FrameProperty.lean`) and is a *different* thing from
-the trap this paragraph closes: the rename removed `ValidRTime ≠ ValidIn .RTime`, it did not
-remove the paper-versus-tree deviation, which stands.
+**Why this predicate is not the one the `.RTime` tag denotes.** `ValidComplete` is
+`ValidOnFrames` at the *bare* Complete clause, which admits `ℤ`; `ValidRTime` is `ValidIn .RTime`,
+the dense-and-complete narrowing. `TaskFrame.IsRTime` (`Semantics/FrameProperty.lean`) states in
+full why the narrowed class is named for its carrier rather than for the paper's Complete clause.
 
 A formula is valid over **Dedekind-complete** temporal orders if it is true in all models
 whose temporal type `D` has the least-upper-bound property, at all total histories, and all
@@ -769,7 +767,7 @@ does not carry; the composition path and the reason it is out of scope are recor
 **This is the target of `soundness_rtime`**, not `ValidComplete`, and retargeting it at the
 weaker predicate yields a refutable theorem. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 
-The placement of `Dedekind` above `Dense` is itself primary-source: Reynolds 1992 (printed
+The placement of `RTime` above `Dense` is itself primary-source: Reynolds 1992 (printed
 p.168) includes in US/R "axioms for density and no end points: `K⁺⊤`, `K⁻⊤`, `F⊤`, `P⊤`", and
 `K⁺⊤` is `¬(¬⊤ U ⊤)` in this tree's guard-first infix, which normalises (`¬⊤ ↝ ⊥`) to
 `¬(⊥ U ⊤)`, this tree's `Axiom.dense_indicator`.

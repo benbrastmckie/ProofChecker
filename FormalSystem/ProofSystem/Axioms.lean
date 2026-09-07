@@ -65,7 +65,7 @@ requiring successor-chain constructions.
 (32 core + 5 uniformity + 2 prior + 1 Z1 + 2 density + 3 Reynolds Dedekind),
 where "core" is layers 1-4 (4 + 5 + 22 + 1). By frame class that is
 37 base (layers 1-5) + 3 discrete-only (layers 6-7) + 2 dense-only (layer 8)
-+ 3 Dedekind-only (layer 9), matching `scripts/typst-status-counts.sh`.
++ 3 RTime-only (layer 9), matching `scripts/typst-status-counts.sh`.
 Note: temp_k_dist and temp_4 are now derived theorems (`temporalKDistDerived`,
 `temporal4Derived` in TemporalDerived.lean).
 
@@ -100,11 +100,11 @@ Axiom schemata for bimodal logic TM under the Burgess-Xu (BX) system.
 - **Prior** (2): Prior-UZ/SZ for discrete well-ordering (valid on discrete orders only)
 - **Z1** (1): IsSuccArchimedean characteristic axiom (discrete-only)
 - **Density** (2): GGφ → Gφ and ¬U(⊤,⊥) (dense-only)
-- **Reynolds Dedekind** (3): Prior-U/Prior-S gap axioms and Sep (Dedekind-only)
+- **Reynolds Dedekind** (3): Prior-U/Prior-S gap axioms and Sep (RTime-only)
 
 Base axioms (37) are valid on all linear temporal orders. Prior/Z1 axioms (3) are discrete-only.
 The density axioms (2) are valid only on densely ordered frames, and the three Reynolds
-definable-gap axioms (3) only on the Dedekind class.
+definable-gap axioms (3) only on the RTime class.
 Note: temp_k_dist and temp_4 are now derived theorems (`temporalKDistDerived`,
 `temporal4Derived` in TemporalDerived.lean).
 -/
@@ -396,7 +396,7 @@ inductive Axiom : Formula → Type where
   -- axiom, CO = `△(Hφ → F(Hφ)) → (Hφ → Gφ)` (`Formula.co`), rather than on this triple.
   -- This tree keeps the Reynolds triple as the OFFICIAL basis, and CO is a derived theorem
   -- over it: see `FormalSystem.Theorems.DedekindDerived.co_derived`, which proves
-  -- `⊢[fc] Formula.co φ` for every `fc` with `Dedekind ≤ fc` using `prior_U_gap` and base
+  -- `⊢[fc] Formula.co φ` for every `fc` with `RTime ≤ fc` using `prior_U_gap` and base
   -- axioms only -- neither `prior_S_gap` nor `sep` is needed. The semantic companion is
   -- `FormalSystem.Metalogic.SoundnessLemmas.co_valid`.
   --
@@ -472,9 +472,9 @@ Frame class classification for axiom validity.
 
 The four frame classes form a partial order:
 ```
-              Dedekind
+               RTime
                  ↑
-    Dense --------'      Discrete
+    Dense --------'      ZTime
       ↑                     ↑
        \___________________/
                 |
@@ -484,17 +484,17 @@ The four frame classes form a partial order:
 - `Base` is the bottom element: all base axioms are valid on all linear orders.
 - `Dense` extends Base with the density axiom (GGφ → Gφ) and `dense_indicator` (¬U(⊤,⊥)),
   valid on densely ordered frames.
-- `Discrete` extends Base with Prior-UZ/SZ and Z1, valid on discrete (SuccArchimedean) frames.
-- `Dedekind` extends **Dense** with Reynolds' definable-gap axioms Prior-U, Prior-S and Sep,
+- `ZTime` extends Base with Prior-UZ/SZ and Z1, valid on discrete (SuccArchimedean) frames.
+- `RTime` extends **Dense** with Reynolds' definable-gap axioms Prior-U, Prior-S and Sep,
   valid on dense Dedekind-complete frames. By `Semantics.complete_duration_discrete_or_dense`
   (`Semantics/DurationClassification.lean`) that is not merely "ℝ-like": a Dedekind-complete
   duration group is either `≃+o ℤ` or densely ordered, so once the density binder is imposed
   the class contains, up to order-and-group isomorphism, only the real flow. `FrameClass.RTime`
   is therefore the paper's **TM⁺_dc** (dense complete / real flow), not TM⁺_c.
-- Dense and Discrete are incomparable: density contradicts discreteness.
-- Discrete and Dedekind are likewise incomparable, and `Dedekind ≰ Dense`.
+- Dense and ZTime are incomparable: density contradicts discreteness.
+- ZTime and RTime are likewise incomparable, and `RTime ≰ Dense`.
 
-**Why `Dedekind` sits strictly above `Dense` rather than being a fourth incomparable leaf.**
+**Why `RTime` sits strictly above `Dense` rather than being a fourth incomparable leaf.**
 This is a primary-source placement, not an intuition. Reynolds 1992 (printed p.168) lists,
 as part of the axiomatization US/R for real flow, "axioms for density and no end points:
 `K⁺⊤`, `K⁻⊤`, `F⊤`, `P⊤`". Unfolding the abbreviation `K⁺A = ¬U(⊤,¬A)` gives
@@ -503,8 +503,8 @@ as part of the axiomatization US/R for real flow, "axioms for density and no end
 normalisation, not syntactically identical: `Formula.top.neg` is `(⊥ → ⊥) → ⊥`, not `⊥`.)
 Likewise `F⊤` and `P⊤` are the tree's `serial_future` / `serial_past`. So Reynolds'
 Dedekind/real axiom set genuinely contains
-the tree's density axiom, and a Dedekind derivation must be allowed to use it. Making
-`Dedekind` a fresh incomparable leaf would render `density` and `dense_indicator`
+the tree's density axiom, and an `RTime` derivation must be allowed to use it. Making
+`RTime` a fresh incomparable leaf would render `density` and `dense_indicator`
 inadmissible in `DerivationTree .RTime` and so could not host Reynolds' system at all.
 
 **Soundness caveat.** The soundness theorem for this class must target `ValidRTime`, not the
@@ -551,7 +551,7 @@ instance : PartialOrder FrameClass where
   -- 4 constructors ⇒ le_trans is a 64-case split and le_antisymm a 16-case split.
   -- `trivial` discharges every `le_trans` case (each is either `True` or an absurd
   -- `False` hypothesis); `le_antisymm` needs `simp_all [LE.le]` for the asymmetric
-  -- `Dense`/`Dedekind` pair. `by decide` remains a total fallback for any closed
+  -- `Dense`/`RTime` pair. `by decide` remains a total fallback for any closed
   -- order goal, since `FrameClass` is finite with `DecidableEq` and the `DecidableRel`
   -- instance above.
   le_trans := by
@@ -581,15 +581,15 @@ Minimum frame class for each axiom constructor.
 This is the single source of truth for axiom-frame-class compatibility:
 - Base (37 axioms): valid on all linear temporal orders
 - Dense (2 axioms: density, dense_indicator): valid on densely ordered frames
-- Discrete (3 axioms: prior_UZ, prior_SZ, z1): valid on discrete frames
-- Dedekind (3 axioms: prior_U_gap, prior_S_gap, sep): valid on dense
+- ZTime (3 axioms: prior_UZ, prior_SZ, z1): valid on discrete frames
+- RTime (3 axioms: prior_U_gap, prior_S_gap, sep): valid on dense
   Dedekind-complete frames
 
 Total: 45 axiom constructors.
 
-Since `Dense ≤ Dedekind`, a `DerivationTree FrameClass.RTime` admits the Base axioms,
-the two Dense axioms, and the three Dedekind axioms — but not the Discrete ones
-(`Discrete` and `Dedekind` are incomparable).
+Since `Dense ≤ RTime`, a `DerivationTree FrameClass.RTime` admits the Base axioms,
+the two Dense axioms, and the three Reynolds axioms — but not the ZTime ones
+(`ZTime` and `RTime` are incomparable).
 
 The constraint `ax.minFrameClass ≤ fc` in DerivationTree's axiom constructor
 ensures that only axioms compatible with frame class `fc` can appear in a

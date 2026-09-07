@@ -21,7 +21,7 @@ Each predicate here is a **binder-for-binder mirror** of its counterpart in
 (`τ.IsTotal`, the predicate form of `H_F`), matching `def:logical-consequence`, and `Type` rather
 than `Type*` is used throughout for the same universe reason recorded on `Valid`.
 
-## The Dedekind asymmetry — read this before adding a `BLValidComplete`
+## The RTime asymmetry — read this before adding a `BLValidComplete`
 
 There is deliberately **no** density-free `BLValidComplete`, and the soundness theorem for
 `FrameClass.RTime` targets `BLValidRTime`. A density-free target would be
@@ -235,7 +235,7 @@ def BLValidZTimeSucc (φ : BLFormula) : Prop :=
     (τ : WorldHistory F), τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ
 
 /-- `BLValid` weakens to `BLValidZTimeSucc`, mirroring `BLValidity.blValid_implies_blValidZTime`
-and its dense/Dedekind siblings.
+and its dense/RTime siblings.
 
 **Documented exception to the transfer-theorem collapse.** Its three siblings are corollaries of
 `BLValidIn.mono`, and every BL/BL⁺ equivalence in `Metalogic/Conservativity/BaseLanguageSoundness.lean` is a
