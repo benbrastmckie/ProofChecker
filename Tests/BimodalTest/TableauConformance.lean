@@ -442,7 +442,7 @@ def denseRows : List Row :=
 /-- The Discrete-class successor probe. `prior_UZ` (`F φ → U(φ, ¬φ)`, the integer
 well-ordering Prior axiom) is valid at `.ZTime`: on ℤ a nonempty future φ-region has a
 least element, and everything strictly between now and it satisfies `¬φ`. -/
-def discreteExtraRows : List Row :=
+def zTimeExtraRows : List Row :=
   [ { id := "Z1 priorUZ",    formula := im (F p) (U p (nt p)), target := "CLOSED"
     , note := "prior_UZ: least future witness exists on the integers" }
   , { id := "Z2 priorSZ",    formula := im (P p) (S p (nt p)), target := "CLOSED"
@@ -450,10 +450,10 @@ def discreteExtraRows : List Row :=
   ]
 
 /-- `.ZTime`, scored against `ValidZTime φ`. -/
-def discreteRows : List Row :=
+def zTimeRows : List Row :=
   controlRows ++ [densityProbe "OPEN" "ZZ is not dense: no time strictly between t and t+1"]
     ++ serialityRows ++ seriesRows ++ counterexampleRows ++ untilSinceRows
-    ++ discreteExtraRows
+    ++ zTimeExtraRows
 
 /-- The three Dedekind axiom instances. `allRulesForFC` now has a `rTimeRules` arm
 (`priorUGap`, `priorSGap`, `sepRule`), and all three close. `kPlus`/`kMinus` are Reynolds'
@@ -464,7 +464,7 @@ persistently, so a row closes by contradiction between the added consequent and 
 consequent the row's implication puts on the branch. That is a faithful transcription of the
 axiom, not a proof of it: the admissibility burden — that the rule is derivable in the
 Hilbert system — is Track B's, deliberately deferred. -/
-def dedekindExtraRows : List Row :=
+def rTimeExtraRows : List Row :=
   [ { id := "R1 prior-U-gap"
     , formula := im (an (U tp p) (F (nt p))) (U (orr (nt p) (Formula.kPlus (nt p))) p)
     , target := "CLOSED", note := "prior_U_gap; discharged by the priorUGap rule" }
@@ -479,10 +479,10 @@ def dedekindExtraRows : List Row :=
 
 /-- `.RTime`, scored against `ValidRTime φ` — dense *and* conditionally
 complete, which is why the density probe targets CLOSED here as it does at `.Dense`. -/
-def dedekindRows : List Row :=
+def rTimeRows : List Row :=
   controlRows ++ [densityProbe "CLOSED" "ValidRTime includes density"]
     ++ serialityRows ++ seriesRows ++ counterexampleRows ++ untilSinceRows
-    ++ dedekindExtraRows
+    ++ rTimeExtraRows
 
 /-! ## Pinned verdict tables
 
@@ -580,7 +580,7 @@ Z1 priorUZ         CLOSED   target=CLOSED          prior_UZ: least future witnes
 Z2 priorSZ         CLOSED   target=CLOSED          prior_SZ: greatest past witness exists on the integers
 -/
 #guard_msgs in
-#eval IO.print (report .ZTime discreteRows)
+#eval IO.print (report .ZTime zTimeRows)
 
 /--
 info: C1 p->p            CLOSED   target=CLOSED          propositional tautology
@@ -613,7 +613,7 @@ R2 prior-S-gap     CLOSED   target=CLOSED          prior_S_gap; discharged by th
 R3 sep             CLOSED   target=CLOSED          sep; discharged by the sepRule rule
 -/
 #guard_msgs in
-#eval IO.print (report .RTime dedekindRows)
+#eval IO.print (report .RTime rTimeRows)
 
 /-! ## Defect-level regression probes
 
@@ -804,8 +804,8 @@ private def diaP : Formula := Formula.diamond p
 private def fcName : FrameClass → String
   | .Base => "Base"
   | .Dense => "Dense"
-  | .ZTime => "Discrete"
-  | .RTime => "Dedekind"
+  | .ZTime => "ZTime"
+  | .RTime => "RTime"
 
 /-- The pipeline's own certificate, reduced to what still carries information after R5.
 

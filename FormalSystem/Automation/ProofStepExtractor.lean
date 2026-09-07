@@ -204,8 +204,8 @@ Serialize a `FrameClass` to its string name.
 def frameClassToString : FrameClass → String
   | .Base => "Base"
   | .Dense => "Dense"
-  | .ZTime => "Discrete"
-  | .RTime => "Dedekind"
+  | .ZTime => "ZTime"
+  | .RTime => "RTime"
 
 /-!
 ## Step Extraction

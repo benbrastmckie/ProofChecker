@@ -435,30 +435,39 @@ word-boundary sed is unsafe and the phase must stop and re-scope.
 
 ---
 
-### Phase 6: String literals, round-trip parsers, Tests, generated artifacts [IN PROGRESS]
+### Phase 6: String literals, round-trip parsers, Tests, generated artifacts [COMPLETED]
 
 **Goal**: Move the class-naming string literals and their matched parsers, then regenerate the
 two committed generated artifacts so the byte-for-byte typst checks pass.
 
 **Tasks**:
-- [ ] `Automation/MachineAppendixExport.lean:120-121` - emit `"ZTime"`/`"RTime"`.
-- [ ] `Automation/ProofStepExtractor.lean:207-208` and `Tests/BimodalTest/TableauConformance.lean:807-808`
+- [x] `Automation/MachineAppendixExport.lean:120-121` - emit `"ZTime"`/`"RTime"`.
+- [x] `Automation/ProofStepExtractor.lean:207-208` and `Tests/BimodalTest/TableauConformance.lean:807-808`
       - tag-to-string direction.
-- [ ] `Automation/DatasetExport.lean:584-585` - tag-to-string; `:573-574` - string-to-tag,
+- [x] `Automation/DatasetExport.lean:584-585` - tag-to-string; `:573-574` - string-to-tag,
       accepting `"ztime"`/`"rtime"` plus the legacy `"discrete"`/`"dedekind"` aliases; update the
       `:505` docstring listing accepted values.
-- [ ] `Automation/ProofFirstExporter.lean:104`, `Automation/TableauBridge.lean:307`,
+- [x] `Automation/ProofFirstExporter.lean:104`, `Automation/TableauBridge.lean:307`,
       `Automation/TraceExporter.lean:197` - same accept-both treatment.
-- [ ] Rename `discreteRows`/`dedekindRows` in `Tests/BimodalTest/TableauConformance.lean`.
-- [ ] Leave the axiom-name string literals in `Automation/{AxiomNames,BenchmarkAnchors,
+- [x] Rename `discreteRows`/`dedekindRows` in `Tests/BimodalTest/TableauConformance.lean`. *(deviation: altered — `discreteExtraRows`/`dedekindExtraRows` renamed with them; they are the same family and the plan's list omitted them.)*
+- [x] Leave the axiom-name string literals in `Automation/{AxiomNames,BenchmarkAnchors,
       DatasetGenerator,ForwardProofGenerator,ProofStepExport,ProofStepExtractor,
       MachineAppendixExport}.lean` alone where they spell an *axiom* name (KEEP list); change
       them only where they spell a *class* (e.g. `fc := .Discrete` sites already handled by
       Phase 5).
-- [ ] Regenerate `typst/generated/status.typ` via `scripts/typst-status-counts.sh`.
-- [ ] Regenerate `typst/generated/machine-appendix.{jsonl,typ}` via
+- [x] Regenerate `typst/generated/status.typ` via `scripts/typst-status-counts.sh`.
+- [x] Regenerate `typst/generated/machine-appendix.{jsonl,typ}` via
       `scripts/typst-machine-appendix.sh`.
-- [ ] Run the KEEP-list guard.
+- [x] Run the KEEP-list guard.
+- [x] *(deviation: added — `scripts/typst-status-counts.sh`'s `DISCRETE_ONLY_COUNT`/`DEDEKIND_ONLY_COUNT`
+      variables and `discrete_only_count`/`dedekind_only_count` JSON keys renamed to the ZTime/RTime
+      forms, together with their `#discrete-only-count`/`#dedekind-only-count` consumers in
+      `scripts/typst-sync-check.sh`, `typst/chapters/03-proof-theory.typ` and
+      `typst/chapters/p2-frame-classes.typ` — carried forward from Phase 5 so both halves move in
+      one commit and `typst compile` never sees a dangling `#import`.)*
+- [x] *(deviation: added — `resultDiscrete`/`discreteOk` locals and the `s!"Discrete={...}"` debug
+      string in `Metalogic/Decidability/Saturation.lean` renamed to the ZTime forms; they name the
+      class and the plan's Phase 6 list did not enumerate them.)*
 
 **Timing**: 1.5 hours
 

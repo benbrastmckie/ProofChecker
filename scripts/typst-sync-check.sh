@@ -188,15 +188,15 @@ with open(sys.argv[1], encoding="utf-8") as fh:
     text = fh.read()
 
 scalar_fields = ["axiom-count", "rule-count", "base-count", "dense-only-count",
-                  "discrete-only-count", "dedekind-only-count",
+                  "ztime-only-count", "rtime-only-count",
                   "sorry-total", "sorry-total-excl-boneyard"]
 live_map = {
     "axiom-count": live["axiom_count"],
     "rule-count": live["rule_count"],
     "base-count": live["base_count"],
-    "dedekind-only-count": live["dedekind_only_count"],
+    "rtime-only-count": live["rtime_only_count"],
     "dense-only-count": live["dense_only_count"],
-    "discrete-only-count": live["discrete_only_count"],
+    "ztime-only-count": live["ztime_only_count"],
     "sorry-total": live["sorry_total"],
     "sorry-total-excl-boneyard": live["sorry_total_excl_boneyard"],
 }

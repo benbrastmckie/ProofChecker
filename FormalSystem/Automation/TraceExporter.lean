@@ -194,6 +194,7 @@ def parseFrameClass? (s : String) : Option FrameClass :=
   match s with
   | "Base"     => some .Base
   | "Dense"    => some .Dense
+  | "ZTime"    => some .ZTime
   | "Discrete" => some .ZTime
   | _          => none
 

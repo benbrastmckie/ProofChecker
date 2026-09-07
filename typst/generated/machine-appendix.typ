@@ -8,11 +8,11 @@
 // which is produced by the Lean exporter (interpreted via `lake env lean
 // --run`) with schema formulas extracted from the Axiom type index --
 // never hand-copied.
-// Stamped from live source at commit b811bc100 (2026-08-17).
+// Stamped from live source at commit 79bd1794f (2026-09-07).
 // ============================================================================
 
-#let stamp-commit = "b811bc100"
-#let stamp-date = "2026-08-17"
+#let stamp-commit = "79bd1794f"
+#let stamp-date = "2026-09-07"
 
 #let machine-axiom-count = 45
 #let machine-rule-count = 7
@@ -56,14 +56,14 @@
   ("discrete_propagate_fwd", "Uniformity", "", "Base", "(U((⊥ → ⊥), ⊥) → (U((U((⊥ → ⊥), ⊥) → ⊥), (⊥ → ⊥)) → ⊥))"),
   ("discrete_propagate_bwd", "Uniformity", "", "Base", "(U((⊥ → ⊥), ⊥) → (S((U((⊥ → ⊥), ⊥) → ⊥), (⊥ → ⊥)) → ⊥))"),
   ("discrete_box_necessity", "Uniformity", "", "Base", "(U((⊥ → ⊥), ⊥) → □U((⊥ → ⊥), ⊥))"),
-  ("prior_UZ", "Prior", "φ", "Discrete", "(U(φ, (⊥ → ⊥)) → U(φ, (φ → ⊥)))"),
-  ("prior_SZ", "Prior", "φ", "Discrete", "(S(φ, (⊥ → ⊥)) → S(φ, (φ → ⊥)))"),
-  ("z1", "Z1", "φ", "Discrete", "((U((((U((φ → ⊥), (⊥ → ⊥)) → ⊥) → φ) → ⊥), (⊥ → ⊥)) → ⊥) → (U((U((φ → ⊥), (⊥ → ⊥)) → ⊥), (⊥ → ⊥)) → (U((φ → ⊥), (⊥ → ⊥)) → ⊥)))"),
+  ("prior_UZ", "Prior", "φ", "ZTime", "(U(φ, (⊥ → ⊥)) → U(φ, (φ → ⊥)))"),
+  ("prior_SZ", "Prior", "φ", "ZTime", "(S(φ, (⊥ → ⊥)) → S(φ, (φ → ⊥)))"),
+  ("z1", "Z1", "φ", "ZTime", "((U((((U((φ → ⊥), (⊥ → ⊥)) → ⊥) → φ) → ⊥), (⊥ → ⊥)) → ⊥) → (U((U((φ → ⊥), (⊥ → ⊥)) → ⊥), (⊥ → ⊥)) → (U((φ → ⊥), (⊥ → ⊥)) → ⊥)))"),
   ("density", "Density", "φ", "Dense", "((U(((U((φ → ⊥), (⊥ → ⊥)) → ⊥) → ⊥), (⊥ → ⊥)) → ⊥) → (U((φ → ⊥), (⊥ → ⊥)) → ⊥))"),
   ("dense_indicator", "Density", "", "Dense", "(U((⊥ → ⊥), ⊥) → ⊥)"),
-  ("prior_U_gap", "Reynolds Dedekind", "φ", "Dedekind", "(((U((⊥ → ⊥), φ) → (U((φ → ⊥), (⊥ → ⊥)) → ⊥)) → ⊥) → U((((φ → ⊥) → ⊥) → (U((⊥ → ⊥), ((φ → ⊥) → ⊥)) → ⊥)), φ))"),
-  ("prior_S_gap", "Reynolds Dedekind", "φ", "Dedekind", "(((S((⊥ → ⊥), φ) → (S((φ → ⊥), (⊥ → ⊥)) → ⊥)) → ⊥) → S((((φ → ⊥) → ⊥) → (S((⊥ → ⊥), ((φ → ⊥) → ⊥)) → ⊥)), φ))"),
-  ("sep", "Reynolds Dedekind", "φ", "Dedekind", "((((U((⊥ → ⊥), (φ → ⊥)) → ⊥) → (((U((⊥ → ⊥), (((φ → (U(φ, (φ → ⊥)) → ⊥)) → ⊥) → ⊥)) → ⊥) → ⊥) → ⊥)) → ⊥) → (U((⊥ → ⊥), ((((U((⊥ → ⊥), (φ → ⊥)) → ⊥) → ((S((⊥ → ⊥), (φ → ⊥)) → ⊥) → ⊥)) → ⊥) → ⊥)) → ⊥))"),
+  ("prior_U_gap", "Reynolds Dedekind", "φ", "RTime", "(((U((⊥ → ⊥), φ) → (U((φ → ⊥), (⊥ → ⊥)) → ⊥)) → ⊥) → U((((φ → ⊥) → ⊥) → (U((⊥ → ⊥), ((φ → ⊥) → ⊥)) → ⊥)), φ))"),
+  ("prior_S_gap", "Reynolds Dedekind", "φ", "RTime", "(((S((⊥ → ⊥), φ) → (S((φ → ⊥), (⊥ → ⊥)) → ⊥)) → ⊥) → S((((φ → ⊥) → ⊥) → (S((⊥ → ⊥), ((φ → ⊥) → ⊥)) → ⊥)), φ))"),
+  ("sep", "Reynolds Dedekind", "φ", "RTime", "((((U((⊥ → ⊥), (φ → ⊥)) → ⊥) → (((U((⊥ → ⊥), (((φ → (U(φ, (φ → ⊥)) → ⊥)) → ⊥) → ⊥)) → ⊥) → ⊥) → ⊥)) → ⊥) → (U((⊥ → ⊥), ((((U((⊥ → ⊥), (φ → ⊥)) → ⊥) → ((S((⊥ → ⊥), (φ → ⊥)) → ⊥) → ⊥)) → ⊥) → ⊥)) → ⊥))"),
 )
 
 #let rule-table = (

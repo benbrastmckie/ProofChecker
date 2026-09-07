@@ -101,6 +101,7 @@ def parseForwardConfig (args : List String) : IO ForwardConfig := do
       i := i + 1
       match args[i]? with
       | some "dense" => cfg := { cfg with frameClass := .Dense }
+      | some "ztime" => cfg := { cfg with frameClass := .ZTime }
       | some "discrete" => cfg := { cfg with frameClass := .ZTime }
       | _ => cfg := { cfg with frameClass := .Base }
     | some "--max-pool-size" =>

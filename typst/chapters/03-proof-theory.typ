@@ -5,7 +5,7 @@
 // ============================================================================
 
 #import "../template.typ": *
-#import "../generated/status.typ": axiom-count, rule-count, base-count, dense-only-count, discrete-only-count, dedekind-only-count
+#import "../generated/status.typ": axiom-count, rule-count, base-count, dense-only-count, ztime-only-count, rtime-only-count
 
 = Proof Theory <sec:proof-theory>
 
@@ -233,7 +233,7 @@ Derivations are parameterized by a frame class, making frame-dependent reasoning
 #definition("Frame Class")[
   The type `FrameClass` has four values: `Base`, `Dense`, `Discrete`, and `Dedekind`, partially ordered with `Base` below every other class, `Dedekind` above `Dense`, and `Discrete` incomparable with both `Dense` and `Dedekind`:
   $ "Base" lt.eq "Dense" lt.eq "Dedekind", quad quad "Base" lt.eq "Discrete". $
-  Each axiom constructor is assigned a minimum frame class by `Axiom.minFrameClass`: the #base-count axioms of layers 1--5 are `Base`; Prior-UZ, Prior-SZ, and Z1 (#discrete-only-count axioms) are `Discrete`; DN and DI (#dense-only-count axioms) are `Dense`; Prior-U, its past mirror, and Sep (#dedekind-only-count axioms) are `Dedekind`.
+  Each axiom constructor is assigned a minimum frame class by `Axiom.minFrameClass`: the #base-count axioms of layers 1--5 are `Base`; Prior-UZ, Prior-SZ, and Z1 (#ztime-only-count axioms) are `Discrete`; DN and DI (#dense-only-count axioms) are `Dense`; Prior-U, its past mirror, and Sep (#rtime-only-count axioms) are `Dedekind`.
 ]
 
 The axiom rule of the proof system admits an axiom into a derivation at frame class `fc` only when its minimum frame class is at most `fc`.

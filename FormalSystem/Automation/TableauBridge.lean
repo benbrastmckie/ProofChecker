@@ -304,6 +304,7 @@ Unrecognized strings default to `.Base`.
 def parseFrameClass (s : String) : FrameClass :=
   match s with
   | "Dense" => .Dense
+  | "ZTime" => .ZTime
   | "Discrete" => .ZTime
   | _ => .Base
 

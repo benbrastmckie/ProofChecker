@@ -49,9 +49,9 @@ AXIOM_COUNT=$(awk '/^inductive Axiom/,/deriving Repr/' ProofSystem/Axioms.lean |
 # arms; Base is everything else (the `_ => .Base` catch-all). Every non-Base
 # tier MUST be subtracted here -- omitting one silently inflates base_count.
 DENSE_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.Dense')
-DISCRETE_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.ZTime')
-DEDEKIND_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.RTime')
-BASE_COUNT=$((AXIOM_COUNT - DENSE_ONLY_COUNT - DISCRETE_ONLY_COUNT - DEDEKIND_ONLY_COUNT))
+ZTIME_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.ZTime')
+RTIME_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.RTime')
+BASE_COUNT=$((AXIOM_COUNT - DENSE_ONLY_COUNT - ZTIME_ONLY_COUNT - RTIME_ONLY_COUNT))
 
 # ---------------------------------------------------------------------------
 # DerivationTree rule count
@@ -158,8 +158,8 @@ JSON=$(cat << EOF
   "rule_count": ${RULE_COUNT},
   "base_count": ${BASE_COUNT},
   "dense_only_count": ${DENSE_ONLY_COUNT},
-  "discrete_only_count": ${DISCRETE_ONLY_COUNT},
-  "dedekind_only_count": ${DEDEKIND_ONLY_COUNT},
+  "ztime_only_count": ${ZTIME_ONLY_COUNT},
+  "rtime_only_count": ${RTIME_ONLY_COUNT},
   "sorry_total": ${SORRY_TOTAL_INCL_BONEYARD},
   "sorry_total_excl_boneyard": ${SORRY_TOTAL_EXCL_BONEYARD},
   "sorry_algebraic": ${SORRY_ALGEBRAIC},
@@ -203,8 +203,8 @@ cat > "${OUT_TYP}" << EOF
 #let rule-count = ${RULE_COUNT}
 #let base-count = ${BASE_COUNT}
 #let dense-only-count = ${DENSE_ONLY_COUNT}
-#let discrete-only-count = ${DISCRETE_ONLY_COUNT}
-#let dedekind-only-count = ${DEDEKIND_ONLY_COUNT}
+#let ztime-only-count = ${ZTIME_ONLY_COUNT}
+#let rtime-only-count = ${RTIME_ONLY_COUNT}
 
 #let sorry-total = ${SORRY_TOTAL_INCL_BONEYARD}
 #let sorry-total-excl-boneyard = ${SORRY_TOTAL_EXCL_BONEYARD}

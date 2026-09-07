@@ -2425,17 +2425,17 @@ private def fc_p : Formula := .atom (Atom.mkBase "p")
   let φ := Formula.imp fc_p fc_p
   let resultBase := buildTableauAuto φ
   let resultDense := buildTableau φ 200 .Dense
-  let resultDiscrete := buildTableau φ 200 .ZTime
+  let resultZTime := buildTableau φ 200 .ZTime
   let baseOk := match resultBase with | some (.allClosed _) => true | _ => false
   let denseOk := match resultDense with | some (.allClosed _) => true | _ => false
-  let discreteOk := match resultDiscrete with | some (.allClosed _) => true | _ => false
-  if baseOk && denseOk && discreteOk then
+  let zTimeOk := match resultZTime with | some (.allClosed _) => true | _ => false
+  if baseOk && denseOk && zTimeOk then
     return "PASS FC8: p → p closes under all frame classes (monotonicity)"
   else
     return s!"FAIL FC8: p → p should close under all: Base={baseOk}, Dense={denseOk}, " ++
-      s!"Discrete={discreteOk}"
+      s!"ZTime={zTimeOk}"
 
--- Test FC9: ¬U(⊤,⊥) should NOT close under fc := .ZTime (Dense and Discrete are incomparable)
+-- Test FC9: ¬U(⊤,⊥) should NOT close under fc := .ZTime (Dense and ZTime are incomparable)
 #eval do
   let φ := (Formula.untl .bot Formula.top).neg
   let result := buildTableau φ 200 .ZTime

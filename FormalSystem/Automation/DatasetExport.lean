@@ -502,7 +502,8 @@ structure CLIArgs where
   mode : SamplingMode := .exhaustive
   includeDuals : Bool := false
   validSeedCount : Nat := 500
-  /-- Frame class for the decision procedure: "Base", "Dense", or "Discrete".
+  /-- Frame class for the decision procedure: "Base", "Dense", "ZTime", or "RTime"
+      (the legacy spellings "discrete" and "dedekind" are still accepted as input aliases).
       Enables multi-frame-class dataset generation. -/
   frameClass : String := "Base"
   /-- Per-complexity-level quotas for stratified sampling.
@@ -570,8 +571,8 @@ Returns `.Base` for unrecognized strings.
 def parseFrameClass (s : String) : FrameClass :=
   let lower := s.toLower
   if lower == "dense" then .Dense
-  else if lower == "discrete" then .ZTime
-  else if lower == "dedekind" then .RTime
+  else if lower == "ztime" || lower == "discrete" then .ZTime
+  else if lower == "rtime" || lower == "dedekind" then .RTime
   else .Base
 
 /--
@@ -581,8 +582,8 @@ def frameClassName (fc : FrameClass) : String :=
   match fc with
   | .Base => "Base"
   | .Dense => "Dense"
-  | .ZTime => "Discrete"
-  | .RTime => "Dedekind"
+  | .ZTime => "ZTime"
+  | .RTime => "RTime"
 
 /--
 Parse CLI arguments from a list of strings.
