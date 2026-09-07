@@ -20,38 +20,24 @@ open Lean Elab Tactic Meta
 /--
 Configuration options for proof search tactics.
 
-Controls search depth, node visit limits, and strategy weights.
+Controls search depth and the node-visit limit. Both fields are read by
+`runModalSearch`; there are no other knobs. Earlier revisions also declared five
+strategy-weight fields (`axiomWeight`, `assumptionWeight`, `mpWeight`,
+`modalKWeight`, `temporalKWeight`) and two presets built from them
+(`SearchConfig.temporal`, `SearchConfig.propositional`), but `searchProof` never
+read a weight, so the presets were behaviourally identical to the default and
+have been removed. The separate, genuinely-read weight structure lives in
+`FormalSystem.Automation.ProofSearch.Core` and is untouched by this note.
 -/
 structure SearchConfig where
   /-- Maximum search depth (default: 10) -/
   depth : Nat := 10
   /-- Maximum nodes to visit before giving up (default: 1000) -/
   visitLimit : Nat := 1000
-  /-- Weight for axiom matching (higher = try earlier, default: 100) -/
-  axiomWeight : Nat := 100
-  /-- Weight for assumption matching (higher = try earlier, default: 90) -/
-  assumptionWeight : Nat := 90
-  /-- Weight for modus ponens (higher = try earlier, default: 50) -/
-  mpWeight : Nat := 50
-  /-- Weight for modal K rule (higher = try earlier, default: 40) -/
-  modalKWeight : Nat := 40
-  /-- Weight for temporal K rule (higher = try earlier, default: 40) -/
-  temporalKWeight : Nat := 40
   deriving Repr, Inhabited
 
 /-- Default configuration for modal_search -/
 def SearchConfig.default : SearchConfig := {}
-
-/-- Configuration optimized for temporal formulas -/
-def SearchConfig.temporal : SearchConfig := {
-  temporalKWeight := 60  -- Prioritize temporal K over modal K
-}
-
-/-- Configuration optimized for propositional formulas (no modal/temporal) -/
-def SearchConfig.propositional : SearchConfig := {
-  modalKWeight := 0
-  temporalKWeight := 0
-}
 
 /-!
 ### Main Tactic Definitions
@@ -76,11 +62,8 @@ modal_search (depth := 20) (visitLimit := 2000)  -- Multiple named parameters
 - `visitLimit`: Maximum nodes to visit before aborting (default: 1000). Enforced
   via an `IO.Ref` counter threaded through `searchProof`; bounds total search
   cost independently of `depth` so pathological goals terminate promptly.
-- `axiomWeight`: Priority for axiom matching (default: 100)
-- `assumptionWeight`: Priority for assumption matching (default: 90)
-- `mpWeight`: Priority for modus ponens (default: 50)
-- `modalKWeight`: Priority for modal K rule (default: 40)
-- `temporalKWeight`: Priority for temporal K rule (default: 40)
+
+`depth` and `visitLimit` are the only parameters; any other name is ignored.
 
 **Example**:
 ```lean
@@ -137,11 +120,6 @@ def applyParams (cfg : SearchConfig) (params : List (String × Nat)) : SearchCon
     match name with
     | "depth" => { c with depth := val }
     | "visitLimit" => { c with visitLimit := val }
-    | "axiomWeight" => { c with axiomWeight := val }
-    | "assumptionWeight" => { c with assumptionWeight := val }
-    | "mpWeight" => { c with mpWeight := val }
-    | "modalKWeight" => { c with modalKWeight := val }
-    | "temporalKWeight" => { c with temporalKWeight := val }
     | _ => c  -- Ignore unknown parameters
   ) cfg
 
@@ -155,7 +133,7 @@ def runModalSearch (cfg : SearchConfig) : TacticM Unit := do
     | throwError "modal_search: goal must be a derivability relation `Γ ⊢ φ`, got {goalType}"
 
   -- Attempt recursive proof search. `visitLimit` bounds total node visits via
-  -- an `IO.Ref` counter threaded through `searchProof` (weights remain unused).
+  -- an `IO.Ref` counter threaded through `searchProof`.
   let counter ← IO.mkRef cfg.visitLimit
   let found ← searchProof counter goal cfg.depth
   if !found then
@@ -177,8 +155,9 @@ elab_rules : tactic
 /--
 `temporal_search` - Bounded proof search for temporal formulas.
 
-Same as `modal_search` but with configuration optimized for temporal formulas.
-Prioritizes temporal K rules over modal K rules.
+Behaviourally identical to `modal_search`. This tactic once carried a
+`SearchConfig.temporal` preset that raised a temporal-K weight, but `searchProof`
+never read any weight, so the preset had no effect and has been removed.
 
 **Syntax**:
 ```lean
@@ -219,19 +198,21 @@ def runTemporalSearch (cfg : SearchConfig) : TacticM Unit := do
 elab_rules : tactic
   | `(tactic| temporal_search $[$d]?) => do
     let depth := d.map (·.getNat) |>.getD 10
-    runTemporalSearch { SearchConfig.temporal with depth := depth }
+    runTemporalSearch { SearchConfig.default with depth := depth }
 
 elab_rules : tactic
   | `(tactic| temporal_search $params:modalSearchParam*) => do
     let paramList ← params.toList.mapM parseSearchParam
-    let cfg := applyParams SearchConfig.temporal paramList
+    let cfg := applyParams SearchConfig.default paramList
     runTemporalSearch cfg
 
 /--
 `propositional_search` - Bounded proof search for propositional formulas.
 
-Optimized for purely propositional formulas (no modal or temporal operators).
-Disables modal K and temporal K rules to avoid unnecessary search branches.
+Behaviourally identical to `modal_search`. This tactic once carried a
+`SearchConfig.propositional` preset that zeroed the modal-K and temporal-K
+weights, but `searchProof` never read any weight, so the preset never disabled
+anything and has been removed.
 
 **Syntax**:
 ```lean
@@ -246,14 +227,11 @@ example (p q : Formula) : [p, p.imp q] ⊢ q := by
   propositional_search
 ```
 
-**When to use**:
-- Purely propositional formulas (atoms, implications, conjunctions, etc.)
-- When you know no modal/temporal operators are involved
-- For faster search on propositional goals (fewer strategies tried)
+**When to use**: nothing distinguishes this tactic from `modal_search`; prefer
+`modal_search` directly.
 
-**Difference from modal_search**:
-- Disables modal K and temporal K rules (modalKWeight = 0, temporalKWeight = 0)
-- Otherwise identical behavior
+**Difference from modal_search**: none. Every search strategy is tried in the
+same order at the same cost.
 -/
 syntax "propositional_search" (num)? : tactic
 
@@ -282,12 +260,12 @@ def runPropositionalSearch (cfg : SearchConfig) : TacticM Unit := do
 elab_rules : tactic
   | `(tactic| propositional_search $[$d]?) => do
     let depth := d.map (·.getNat) |>.getD 10
-    runPropositionalSearch { SearchConfig.propositional with depth := depth }
+    runPropositionalSearch { SearchConfig.default with depth := depth }
 
 elab_rules : tactic
   | `(tactic| propositional_search $params:modalSearchParam*) => do
     let paramList ← params.toList.mapM parseSearchParam
-    let cfg := applyParams SearchConfig.propositional paramList
+    let cfg := applyParams SearchConfig.default paramList
     runPropositionalSearch cfg
 
 /-!

@@ -236,23 +236,28 @@ concurrent automation-triage wave.
 
 ---
 
-### Phase 3: Make SearchConfig truthful [NOT STARTED]
+### Phase 3: Make SearchConfig truthful [COMPLETED]
 
 **Goal**: delete the five write-only weight fields and the two presets that differ only in unread
 fields, and correct the three publication-facing docstrings that describe behaviour the code does
 not have.
 
 **Tasks**:
-- [ ] Delete `axiomWeight`, `assumptionWeight`, `mpWeight`, `modalKWeight`, `temporalKWeight` from
-      `SearchConfig` (`Tactics/Commands.lean:25-41`).
-- [ ] Delete `SearchConfig.temporal` and `SearchConfig.propositional` (`:46-48`, `:51-54`) and the
-      corresponding `applyParams` cases (`:140-144`).
-- [ ] Correct the false claims at `Commands.lean:182-183` ("Prioritizes temporal K rules over modal
+- [x] Delete `axiomWeight`, `assumptionWeight`, `mpWeight`, `modalKWeight`, `temporalKWeight` from
+      `SearchConfig` (`Tactics/Commands.lean:25-41`). *(completed)*
+- [x] Delete `SearchConfig.temporal` and `SearchConfig.propositional` (`:46-48`, `:51-54`) and the
+      corresponding `applyParams` cases (`:140-144`). *(completed — the three `elab_rules` that
+      built configs from the two presets now build from `SearchConfig.default`)*
+- [x] Correct the false claims at `Commands.lean:182-183` ("Prioritizes temporal K rules over modal
       K rules") and `:255` ("Disables modal K and temporal K rules"); state instead that these
-      presets were behaviourally identical to the default and have been removed.
-- [ ] Remove or retarget the in-source "weights remain unused" comment at `:157` now that no unused
-      weights exist.
-- [ ] Leave `ProofSearch/Core.lean`'s separate, actually-read weights structure untouched.
+      presets were behaviourally identical to the default and have been removed. *(completed — plus
+      the `modal_search` docstring's five-weight named-parameter list and the
+      `propositional_search` "When to use" / "Difference from modal_search" blocks, which made
+      the same false claim and the plan did not enumerate)*
+- [x] Remove or retarget the in-source "weights remain unused" comment at `:157` now that no unused
+      weights exist. *(completed — parenthetical removed)*
+- [x] Leave `ProofSearch/Core.lean`'s separate, actually-read weights structure untouched.
+      *(completed)*
 
 **Timing**: 1.5 hours
 
@@ -264,6 +269,14 @@ not have.
 `Tactics/Commands.lean`. Confirm with
 `grep -rn 'axiomWeight\|assumptionWeight\|mpWeight\|modalKWeight\|temporalKWeight' --include=*.lean FormalSystem/ Tests/ | grep -v Boneyard`
 returning zero after the edit.
+
+*Measured*: five fields, two presets and **five** false docstring claims (the plan's three plus
+the `modal_search` parameter list and `propositional_search`'s two closing blocks). The census
+command as written cannot return zero: `Automation/ProofSearch/Core.lean` declares its own,
+genuinely-read `axiomWeight`/`assumptionWeight`/`modalKWeight`/`temporalKWeight` fields, which
+this phase's non-goals explicitly protect. The assertion is therefore scoped to
+`Tactics/Commands.lean`, where the only surviving occurrences are inside the new docstring that
+records the removal.
 
 **Files to modify**:
 - `FormalSystem/Automation/Tactics/Commands.lean` - field/preset deletion, docstring correction
