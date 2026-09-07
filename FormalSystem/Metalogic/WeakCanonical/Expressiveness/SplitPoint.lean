@@ -152,10 +152,9 @@ set_option maxHeartbeats 800000 in
     condition of the forward game guarantees that c and d are compatible
     (same RankType, same gap/point status).
 
-    NOTE: Steps 2-5 are sorry'd pending full proofs of strategy_restrict_left/right
-    and the sub-interval h_pt witness (existence of an actual point in each
-    sub-interval). The construction is structurally correct — the sorry's are
-    in the strategy restriction lemma and the sub-interval point existence. -/
+    Steps 2-5 are fully proved (sorry-free), discharged via the real
+    `ghr93_strategy_restrict_left`/`ghr93_strategy_restrict_right` theorems
+    (`EFGames/CustomGame.lean`) and the sub-interval `h_pt` witness construction below. -/
 theorem obtain_split_point_props {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
     {atomMap : Formula → sig.preds} {n r : Nat}
@@ -189,9 +188,8 @@ theorem obtain_split_point_props {sig : MonadicSignature} [Fintype sig.preds]
   -- a_bwd(n) ∈ S_C. d = inf(S_C) ≤ a_bwd(n).
   -- The infimum is either a carrier point (if S_C has a point minimum)
   -- or a gap (constructed via infimumGap).
-  -- For this refactoring, we sorry-construct the infimum with its key properties.
-  -- The infrastructure for the full construction exists (infimumGap,
-  -- infimum_gap_r_definable, InfCarrierCut, etc.) and is sorry-free.
+  -- The infimum is constructed below with its key properties, sorry-free, via
+  -- infimumGap, infimum_gap_r_definable, InfCarrierCut, etc.
   -- Construct d as the infimum of S_C within [x', y'].
   -- Case split: either a_bwd(n) is the minimum of S_C, or S_C has elements
   -- strictly below a_bwd(n) (requiring gap/point infimum construction).
