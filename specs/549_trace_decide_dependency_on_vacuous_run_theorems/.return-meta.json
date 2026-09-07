@@ -1,16 +1,38 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "dispatch_seq": 2,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md",
-      "summary": "Mechanical kernel-level dependency trace: decide reaches zero MintBound constants (verdict NO DEPENDENCY, theorem-index:113 left untouched); vacuous set corrected from six to nine; disposition recommendation RETIRE."
+      "type": "plan",
+      "path": "specs/549_trace_decide_dependency_on_vacuous_run_theorems/plans/01_decide-dependency-verdict-disposition.md",
+      "summary": "6-phase, 3.75-hour read-only plan: reproduce and commit the kernel-level trace evidence, adjudicate docs/theorem-index.md:113 as accurate and leave it untouched, and deliver the RETIRE disposition plus follow-up briefs, with zero repository edits outside specs/."
     }
   ],
+  "next_steps": "Run /implement 549 to execute the plan",
   "metadata": {
     "session_id": "sess_1788824812_856447",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "task_number": 549,
+    "task_type": "lean4",
+    "phase_count": 6,
+    "estimated_hours": 3.75,
+    "complexity": "medium",
+    "dependency_waves": [[1, 2], [3, 4], [5], [6]],
+    "research_integrated": true,
+    "plan_version": 1
+  },
+  "modified_files": [
+    "specs/549_trace_decide_dependency_on_vacuous_run_theorems/plans/01_decide-dependency-verdict-disposition.md"
+  ],
+  "memory_candidates": [
+    {
+      "content": "When a research phase returns a NEGATIVE/NO-DEPENDENCY verdict on a read-only trace task, the correct plan shape is not re-litigation but three distinct jobs: (1) reproduce the mechanical check at implementation time and commit its VERBATIM output as an evidence file, so the deliverable is a re-runnable machine check rather than prose quoting one; (2) adjudicate the artifact the verdict was about column-by-column and record the mandated no-edit; (3) name the deferred work as ready-to-execute briefs with file_scope and serialization edges. The intended end state is zero repository modifications outside specs/, which must be stated as the designed outcome in the plan's Overview or the task reads as having produced nothing. Also: a plan for such a task must carry an explicit Non-Goal against landing already-proved supporting lemmas into a file owned by a concurrent task, because their cheapness (six kernel-checked lines) makes the write collision the only real cost and therefore easy to overlook.",
+      "category": "PATTERN",
+      "source_artifact": "specs/549_trace_decide_dependency_on_vacuous_run_theorems/plans/01_decide-dependency-verdict-disposition.md",
+      "confidence": 0.72,
+      "suggested_keywords": ["negative-verdict", "read-only-trace", "evidence-capture", "plan-decomposition", "file-ownership-collision", "dependency-trace"]
+    }
+  ]
 }

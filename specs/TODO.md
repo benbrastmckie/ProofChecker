@@ -60,7 +60,7 @@ next_project_number: 552
                 └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
-549 [RESEARCHED] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
+549 [PLANNED] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
 
 ### Formula Refactor
 
@@ -159,11 +159,12 @@ Dependencies: 549. If its disposition recommendation is to retire the six vacuou
 ---
 
 ### 549. Trace decide dependency on vacuous run theorems
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 463
 - **Research**: [549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md]
+- **Plan**: [549_trace_decide_dependency_on_vacuous_run_theorems/plans/01_decide-dependency-verdict-disposition.md]
 
 **Description**: Trace whether `FormalSystem.Metalogic.Decidability.decide` depends on the six now-vacuous `_run` theorems, and correct the affected status claims if it does.
 
