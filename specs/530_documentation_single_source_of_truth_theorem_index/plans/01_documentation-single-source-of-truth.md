@@ -625,20 +625,26 @@ hits.** Now 944 lines / 63.0% / **0 hits**, and 191 lines.
 
 ---
 
-### Phase 12: Docstring three-register pass B [NOT STARTED]
+### Phase 12: Docstring three-register pass B [COMPLETED]
 
 **Goal**: `StrongCompleteness.lean` and `SetConsequence.lean` carry roughly half their current
-prose; `Conservativity.lean`'s duplicated ledger rows are removed.
+prose; `Conservativity.lean`'s duplicated ledger rows are removed. *(deviation: altered — the
+same finding as Phase 11. `StrongCompleteness.lean` 1,141 -> 1,127 and `SetConsequence.lean`
+626 -> 616, a 1-2% cut, not 50%. Every archaeology hit in both files is gone and the register is
+corrected, but the remainder is register-(a) content — caller traps for the frame-condition and
+class-binder slots, the three-status discipline, the import-cycle reasons — and cutting to 50%
+would delete mathematical claims. Verified mechanically: no backticked identifier or paper
+anchor was lost from either file.)*
 
 **Tasks**:
-- [ ] Delete the 15 archaeology hits in `StrongCompleteness.lean` and the 12 in
+- [x] Delete the 15 archaeology hits in `StrongCompleteness.lean` and the 12 in
       `SetConsequence.lean`, including "before this collapse there were four byte-identical
       definitions" and "pre-collapse binder shape".
-- [ ] Rewrite remaining doc comments in the what-IS register.
-- [ ] Remove `Conservativity.lean`'s ledger rows that duplicate `Metalogic.lean`, replacing them
+- [x] Rewrite remaining doc comments in the what-IS register.
+- [x] Remove `Conservativity.lean`'s ledger rows that duplicate `Metalogic.lean`, replacing them
       with a pointer to `docs/theorem-index.md`. Do **not** halve this file: its 95.9% comment
       share is by design and its content is the CEB/CEF/CED/CEC record.
-- [ ] Extract layering-rationale passages for Phase 13's ADRs; leave one-line pointers.
+- [x] Extract layering-rationale passages for Phase 13's ADRs; leave one-line pointers.
 
 **Timing**: 2 hours
 
@@ -648,7 +654,9 @@ prose; `Conservativity.lean`'s duplicated ledger rows are removed.
 
 **Scope Hypothesis**: `StrongCompleteness.lean` 1,125 lines / 75.8% / 15 hits;
 `SetConsequence.lean` 626 / 72.7% / 12; `Conservativity.lean` 295 / 95.9% / 1. Re-measure at
-phase start.
+phase start. **Re-measured: 1,141 / 7 hits, 626 / 11 hits, 299 / 1 hit.** Now 1,127 / **0**,
+616 / **0**, 298 / 1 (the surviving hit is a live present-tense statement that
+`thm:ConservativeExtension` no longer exists in the paper — a fact, not archaeology).
 
 **Files to modify**:
 - `FormalSystem/Metalogic/StrongCompleteness.lean`

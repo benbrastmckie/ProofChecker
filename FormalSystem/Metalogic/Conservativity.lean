@@ -154,14 +154,13 @@ provenance, never as something this tree has machine-checked.
 
 Because the forward direction is refuted, TM is **not** the complete logic of `BLValidIn`. The
 logic that is — at every frame class carrying a `WeakCompleteness` engine — is the **H/G-fragment
-of TM⁺**, `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`Conservativity/Fragment.lean`): sound
-(`tmFrag_sound`), complete (`tmFrag_complete`, four rows), containing TM at every class
-(`tm_le_tmFrag`) and strictly so at `.ZTime` (`tm_lt_tmFrag_ztime`, from the CEF pair
-`z1_translate` / `not_bl_derivable_z1`). `tmComplete_iff_tmFrag_le_tm` restates the reduction
-above in fragment terms with `Forward` unfolded, never asserted. Compactness of the
-base-language consequence relation transfers along `tr` at `.Base` and `.Dense` only
-(`blCompactBase`, `blCompactDense`, `Conservativity/FragmentCompactness.lean`); the Discrete and
-Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
+of TM⁺**, `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`Conservativity/Fragment.lean`). Its soundness,
+completeness at four rows, containment of TM, and the strictness of that containment at `.ZTime`
+are rows in `docs/theorem-index.md`, which is the status of record and is not restated here.
+`tmComplete_iff_tmFrag_le_tm` restates the reduction above in fragment terms with `Forward`
+unfolded, never asserted. Compactness of the base-language consequence relation transfers along
+`tr` at `.Base` and `.Dense` **only** (`Conservativity/FragmentCompactness.lean`): the Discrete
+and Dedekind non-compactness witnesses lie outside `range tr`, so nothing transfers there.
 
 ## The stability extension L⋆ (Star)
 
@@ -169,12 +168,12 @@ The other extension direction, L⁺ ⊂ L⋆ (L⁺ plus the paper's stability mo
 `FormalSystem/StarLanguage/`), is the mirror image of L ⊂ L⁺ with the hard direction *available*:
 `Conservativity/Star.lean` (aggregating `Star/{Atomization,AxiomValidity,StarSoundness,Forward}.lean`)
 proves soundness of TM⋆ at every frame class and **proof-theoretic conservativity of TM⋆ over
-TM⁺ in both directions** — `starDerivable_ofFormula_iff : TM⋆ ⊢[fc] ofFormula φ ↔ TM⁺ ⊢[fc] φ`
-at all four classes. Backward is the embedding of derivations; forward is TM⋆ soundness plus the
-truth-transfer bridge `starValidIn_ofFormula_iff` plus the TM⁺ completeness engine — the very
-composition that fails for L ⊂ L⁺ because TM is incomplete. So `Forward⋆` holds everywhere,
-unlike `Forward`; the composed pair L ⊂ L⋆ (`star_of_tm`) inherits this module's forward status
-unchanged. TM⋆ completeness and decidability are open and not asserted anywhere.
+TM⁺ in both directions** at all four classes; both are rows in `docs/theorem-index.md`. What
+matters here is *why* the forward half is available: backward is the embedding of derivations,
+and forward is TM⋆ soundness plus the truth-transfer bridge plus the TM⁺ completeness engine —
+the very composition that fails for L ⊂ L⁺ because TM is incomplete. So `Forward⋆` holds
+everywhere, unlike `Forward`; the composed pair L ⊂ L⋆ (`star_of_tm`) inherits this module's
+forward status unchanged. TM⋆ completeness and decidability are open and not asserted anywhere.
 
 ## CED / CEC — open
 

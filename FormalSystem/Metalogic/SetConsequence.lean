@@ -65,9 +65,8 @@ the `foldr`-implication bridge between finite-context and empty-context derivabi
 pointwise currying lemma `truthAt_foldr_imp` with it, two *theorems* stated in this module's
 vocabulary live there rather than here: the strong-completeness reduction
 `strongCompleteness_of_compact` and the model-existence-to-compactness bridge
-`compact_of_modelExistence`. Both are generic in the `FrameClass`, so between them they carry
-what used to be four per-class theorems. Placing either in this module would be an import
-cycle; the reason is the same in both cases.
+`compact_of_modelExistence`. Both are generic in the `FrameClass`. Placing either in this module would be an import cycle;
+the reason is the same in both cases.
 -/
 
 namespace FormalSystem.Metalogic
@@ -87,11 +86,9 @@ def SetDerivable (fc : FrameClass) (Γ : Set Formula) (φ : Formula) : Prop :=
 /-! ## Set-based semantic consequence, defined once
 
 `SetSemanticConsequenceOn fc` sits beside `SetDerivable fc` above and is indexed by the same
-`FrameClass` tag, which is the point: before this collapse there were four byte-identical
-definitions here, each carrying a hand-maintained binder list plus a docstring citing the
-`Semantics/Validity.lean` line its list was copied from. Three of those four line citations had
-since gone stale. The frame constraint is now read off the tag by `FrameClass.Sat`
-(`Semantics/FrameClassValidity.lean`), so there is nothing left to keep in sync.
+`FrameClass` tag. The frame constraint is read off the tag by `FrameClass.Sat`
+(`Semantics/FrameClassValidity.lean`) rather than inlined as a hand-maintained binder list, so
+there is nothing to keep in sync.
 
 The four per-class names are retained as abbreviations — every existing call site still compiles
 against them — but each is now one line, and the four monotonicity-in-`Γ` copies below have
@@ -123,11 +120,9 @@ def SetSemanticConsequenceRTime (Γ : Set Formula) (φ : Formula) : Prop :=
 
 The satisfiability / model-existence / compactness / strong-completeness row, defined **once**
 and indexed by the same `FrameClass` tag that `SetDerivable` and `SetSemanticConsequenceOn`
-above already carry. Before this collapse each of the three live classes carried its own
-hand-written copy of the whole row, with the frame condition inlined into a hand-maintained
-binder list. The condition is now read off the tag by `FrameClass.Sat`
-(`Semantics/FrameClassValidity.lean`), so there is nothing left to keep in sync — and the
-`.RTime` row, absent from this layer entirely, becomes available by instantiation.
+above already carry. The frame condition is read off the tag by `FrameClass.Sat`
+(`Semantics/FrameClassValidity.lean`), and every per-class row — the `.RTime` one included — is
+available by instantiation.
 
 Nothing here is proved or refuted; these are `Prop`-valued statements only. The per-class names
 further down are instantiations of these four, and each inherits its status from where it is
@@ -252,19 +247,18 @@ and so are `SatisfiableSet .Dense = SatisfiableDenseSet` and
 abbreviations over `ValidIn`, so `ValidIn fc (…)` at a literal tag *is* the per-class predicate,
 with no transport.
 
-The two exceptions are `SatisfiableBaseSet` and `SatisfiableZTimeSet`, whose pre-collapse
-binder lists differ from `SatisfiableSet`'s by the frame-condition slot — `Sat .Base` is `True`,
-which the old Base list simply omitted, and `Sat .ZTime` nests its four class witnesses inside
-`TaskFrame.IsZTime` where the old Discrete list held them flat. Both are *stated* as
-instantiations below; the pre-collapse shape is restored at call sites by the adapters. -/
+The two exceptions are `SatisfiableBaseSet` and `SatisfiableZTimeSet`, whose explicit binder
+shapes differ from `SatisfiableSet`'s in the frame-condition slot — `Sat .Base` is `True`, and
+`Sat .ZTime` nests its four class witnesses inside `TaskFrame.IsZTime`. Both are *stated* as
+instantiations below; the explicit shape is restored at call sites by the adapters. -/
 
 /-! ### Binder-shape adapters
 
-The pre-collapse binder shapes, restored — **once, generically**, not once per tag. The frame
-condition travels as the single `fc.Sat F` argument, and a proof that needs it taken apart calls
+The explicit binder shapes — **once, generically**, not once per tag. The frame condition
+travels as the single `fc.Sat F` argument, and a proof that needs it taken apart calls
 `sat_intro` (`Semantics/FrameClassValidity.lean`), which registers the density instance at
-`.Dense`/`.RTime` and destructures `TaskFrame.IsZTime` at `.ZTime`. The four
-per-class `SetSemanticConsequence*.{of_forall, apply}` pairs that used to live here existed only
+`.Dense`/`.RTime` and destructures `TaskFrame.IsZTime` at `.ZTime`. Per-class
+`SetSemanticConsequence*.{of_forall, apply}` pairs would exist only
 because a `Sat .Dense F` hypothesis was once invisible to instance search; `FrameClass.Sat` is now
 `@[reducible]`, so they were deleted rather than maintained. -/
 
@@ -392,8 +386,7 @@ theorem setConsequence_iff_not_satisfiable {fc : FrameClass} {Γ : Set Formula} 
 /-! ## Monotonicity -/
 
 /-- **The one monotonicity-in-`Γ` lemma.** Set-consequence over any frame predicate is monotone
-in the premise set. The four per-class copies below are one-line corollaries; before the collapse
-each was a separate four-line proof differing only in how many binders its `intro` consumed. -/
+in the premise set. The four per-class copies below are one-line corollaries. -/
 theorem setConsequenceOnFrames_mono {P : TaskFrame → Prop} {Γ Δ : Set Formula} {φ : Formula}
     (h_sub : Γ ⊆ Δ) (h : SetConsequenceOnFrames P Γ φ) : SetConsequenceOnFrames P Δ φ := by
   intro F hF M τ hτ t h_all
@@ -447,12 +440,11 @@ def CompactBase : Prop := Compact FrameClass.Base
     with the conclusion generalised from a single formula to `∀ ψ ∈ Γ`; equivalently
     `SatisfiableDenseSet` with the `DenselyOrdered` binder dropped.
 
-    **One binder slot was absorbed by the collapse.** `SatisfiableSet` carries the frame
-    condition as an anonymous `fc.Sat F` binder, and `Sat .Base` is `True`, so this predicate
-    has one existential component more than its pre-collapse form did — a `∃ _ : True`. The two
-    forms are propositionally equivalent but not definitionally equal. An introduction site that
-    used to write `⟨F, M, τ, hτ, t, h⟩` should call `SatisfiableSet.of_forall` with `trivial`
-    in the frame-condition slot; an elimination site adds one `_` to its pattern. -/
+    **Caller trap: the frame-condition slot.** `SatisfiableSet` carries the frame condition as
+    an anonymous `fc.Sat F` binder, and `Sat .Base` is `True`, so this predicate has an
+    existential component `∃ _ : True` that the bare six-tuple does not. An introduction site
+    should call `SatisfiableSet.of_forall` with `trivial` in the frame-condition slot; an
+    elimination pattern carries the extra `_`. -/
 def SatisfiableBaseSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.Base Γ
 
 /-- The model-existence form, which is what an ultraproduct construction proves directly:
@@ -534,10 +526,10 @@ def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.ZTime
     of `ValidDense`'s `DenselyOrdered`, and the conclusion generalised from a single formula to
     `∀ ψ ∈ Γ`.
 
-    **The four class binders re-nested under the collapse.** `Sat .ZTime` is
+    **Caller trap: the four class binders are nested, not flat.** `Sat .ZTime` is
     `TaskFrame.IsZTime` (`Semantics/FrameProperty.lean`), a plain `def` wrapping
     `∃ (_ : SuccOrder D) (_ : PredOrder D), _ ∧ _`, and the anonymous constructor does not unfold
-    it. So the flat ten-component tuple this predicate used to accept no longer elaborates: an
+    it, so a flat ten-component tuple does not elaborate. An
     introduction site should call `SatisfiableSet.of_forall` with
     `TaskFrame.isZTime_of_instances` (`Semantics/FrameProperty.lean`) in the
     frame-condition slot, and an elimination pattern needs exactly one nesting pair,
@@ -606,9 +598,7 @@ def CompactRTime : Prop := Compact FrameClass.RTime
     `hd : F.IsDense` **is** visible to instance search: `TaskFrame.IsDense` is an `abbrev` and
     `FrameClass.Sat` is `@[reducible]`, so the whole chain down to `DenselyOrdered F.Duration`
     unfolds at reducible transparency and no `haveI : DenselyOrdered F.Duration := hd` is needed
-    before a `soundness_rtime` call. (That `haveI` was previously required and was safe here,
-    unlike in the Discrete case, because no `DenselyOrdered` instance is baked into `F`'s or
-    `M`'s type; it is now simply redundant.) -/
+    before a `soundness_rtime` call. -/
 def SatisfiableRTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.RTime Γ
 
 /-- The model-existence form at `FrameClass.RTime` — `ModelExistence` at that tag.

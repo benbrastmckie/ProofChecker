@@ -30,7 +30,7 @@ repository actually constructs, which is what `completeness_dedekind` consumes.
 - `doets_theorem_dense` (`DoetsTheorem.lean`) — section 8 Theorem 6.
 - `IsRealLike` and the order isomorphism to `ℝ` (`OrderIsoReal.lean`).
 - `ChronicleRealFlow.lean` — the instantiation that `completeness_dedekind`
-  (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) ultimately rests on.
+  (`FormalSystem/Metalogic/StrongCompleteness.lean`) ultimately rests on.
 
 ## Dependencies
 

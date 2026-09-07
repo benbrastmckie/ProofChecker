@@ -66,7 +66,7 @@ it is easy to get backwards: the engine never sees a context. It is fed the sing
   `F p` witness would lie at some finite successor distance. Only weak completeness, and its
   finite-context consequence corollary, is available for this class.
 
-  This argument is **no longer informal**. It is machine-checked in
+  This argument is machine-checked in
   `FormalSystem/Metalogic/DiscreteNonCompactness.lean`: the witness set is `archWitness`, its
   two halves are `archWitness_finitely_satisfiable` and `archWitness_not_satisfiable`, and the
   conclusions are `notCompactZTime` (refuting `CompactZTime`) and
@@ -105,11 +105,6 @@ it is easy to get backwards: the engine never sees a context. It is fed the sing
 *different* witnesses, for the reason given above. `SetConsequence.lean` models this discipline
 across all four rows of the `FrameClass` family; reading a proved class as sharing the refuted
 classes' status, or the reverse, would misstate the evidence.
-
-The third status this section used to record — "unavailable on the primary source's own terms",
-unproved but unrefuted — no longer applies to any class in the table. It was the honest reading
-while the Dedekind witness was missing; it is superseded, not softened, by
-`notCompactRTime`.
 
 ## Axiomatisability of the real-line temporal logic
 
@@ -238,13 +233,10 @@ frame-condition reasoning is involved, which is why one statement serves every t
 lemma that lets a completeness engine be single-formula: it converts the arbitrary-`Γ` target
 into a `ValidIn fc` input.
 
-Before this collapse there were four copies of this theorem in this file — one per class, at
-`SemanticConsequence`/`Valid`, `SemanticConsequenceDense`/`ValidDense`,
-`SemanticConsequenceZTime`/`ValidZTime` and `SemanticConsequenceRTime`/`ValidRTime` —
-differing only in the tag. The four per-class names below are retained as one-line
-instantiations, recovered with no transport: each per-class consequence relation is
-`SemanticConsequenceIn` at a literal tag and each per-class validity predicate is `ValidIn` at
-the same one, both definitionally (`Semantics/Validity.lean`). -/
+The four per-class names below are one-line instantiations of it, recovered with no transport:
+each per-class consequence relation is `SemanticConsequenceIn` at a literal tag and each
+per-class validity predicate is `ValidIn` at the same one, both definitionally
+(`Semantics/Validity.lean`). -/
 theorem semantic_deduction_in {fc : FrameClass} (Γ : Context) (φ : Formula) :
     SemanticConsequenceIn fc Γ φ ↔ ValidIn fc (Γ.foldr Formula.imp φ) := by
   constructor
@@ -403,8 +395,7 @@ above specifies. Compactness supplies a finite premise list; `derivable_foldr_im
 proved, and already generic in `fc` — turns the engine's empty-context derivation of the
 `foldr`-implication back into a derivation from that list.
 
-Before the `FrameClass`-indexing collapse this was two byte-identical proofs, one at `.Base` and
-one at `.Dense`. Both are recovered by instantiation with no transport: `Compact .Base` *is*
+The per-class forms are recovered by instantiation with no transport: `Compact .Base` *is*
 `CompactBase` and `StrongCompleteness .Base` *is* `StrongCompletenessBase`, definitionally
 (`Metalogic/SetConsequence.lean`), and likewise at `.Dense` and `.ZTime`.
 
@@ -516,8 +507,7 @@ that same `L`; and `truthAt_foldr_imp` turns the two into `False`.
 
 Both `notCompactZTime` (`Metalogic/DiscreteNonCompactness.lean`) and `notCompactRTime`
 (`Metalogic/DedekindNonCompactness.lean`) are one-line applications of this, at `archWitness` and
-`dedWitness` respectively. The two arguments were previously written out in full in both modules,
-differing only in the witness set and the class tag. -/
+`dedWitness` respectively. -/
 theorem not_compact_of_witness {fc : FrameClass} {W : Set Formula}
     (hfin : ∀ L : List Formula, (∀ ψ ∈ L, ψ ∈ W) → SatisfiableSet fc {ψ | ψ ∈ L})
     (hunsat : ¬ SatisfiableSet fc W) : ¬ Compact fc := by
@@ -530,12 +520,11 @@ theorem not_compact_of_witness {fc : FrameClass} {W : Set Formula}
 /-- **The shared strong-completeness refutation.** The same witness data refutes strong
 completeness, by routing through `compact_of_strongCompleteness`.
 
-**This routing changes what the per-class refutations depend on.** They no longer mention
-`soundness_ztime` or `soundness_rtime` at all: the soundness step now happens once, inside
-`compact_of_strongCompleteness`, in its class-generic `soundness_validIn` form. The per-class
-soundness corollaries remain in the tree as the guards described further down, but they are no
-longer on the refutation path — and with them go the `haveI : DenselyOrdered F.Duration := hd`
-lines that existed only to feed `soundness_rtime`'s instance binder. -/
+**What the per-class refutations depend on.** They do not mention `soundness_ztime` or
+`soundness_rtime`: the soundness step happens once, inside `compact_of_strongCompleteness`, in
+its class-generic `soundness_validIn` form. The per-class soundness corollaries are the guards
+described further down, not steps on the refutation path, so no
+`haveI : DenselyOrdered F.Duration` is needed here. -/
 theorem not_strongCompleteness_of_witness {fc : FrameClass} {W : Set Formula}
     (hfin : ∀ L : List Formula, (∀ ψ ∈ L, ψ ∈ W) → SatisfiableSet fc {ψ | ψ ∈ L})
     (hunsat : ¬ SatisfiableSet fc W) : ¬ StrongCompleteness fc :=
@@ -563,12 +552,9 @@ available. Finally, the frame condition `hF : fc.Sat F` travels as an ordinary t
 carried out of the failed validity by `ValidIn.of_not` (`Semantics/Validity.lean`), threaded back
 into the `SatisfiableSet` witness, and applied to `hcons` **directly, with no `.apply`
 adapter** — because `SetSemanticConsequenceOn fc` exposes `fc.Sat F` as an explicit argument.
-Each of the two hand-written bridges this replaces needed its own class-specific adapter at that
-step.
-
-Before the collapse this was two proofs identical apart from the class tag. Both are recovered by
-instantiation, since `ModelExistenceBase` *is* `ModelExistence .Base` and `CompactBase` *is*
-`Compact .Base` by definition, and likewise at `.Dense`.
+The per-class forms are recovered by instantiation, since `ModelExistenceBase` *is*
+`ModelExistence .Base` and `CompactBase` *is* `Compact .Base` by definition, and likewise at
+`.Dense`.
 
 Like the strong-completeness reduction above, this theorem lives here rather than in
 `FormalSystem/Metalogic/SetConsequence.lean`, which supplies the `ModelExistence` and `Compact`
@@ -1017,12 +1003,12 @@ is a genuine next-step operator on discrete orders — which is finitely satisfi
 unsatisfiable over every Archimedean discrete carrier, since `ValidZTime` requires
 `IsSuccArchimedean`/`IsPredArchimedean`.
 
-Discrete is no longer the only class where "machine-refuted" is the earned phrasing: Base and
-Dense are **proved** (`Metalogic/Compactness.lean`), while Dedekind is refuted too, by a
-different witness, in `Metalogic/DedekindNonCompactness.lean`
-(`notCompactRTime`, `notStrongCompletenessRTime`). Reynolds 1992
-Theorem 7 remains correctly cited as the *weak* completeness result for that class. The two
-remaining statuses — proved, refuted — must not be collapsed into one. -/
+Two classes are machine-refuted, not one: Dedekind is refuted by a different witness in
+`Metalogic/DedekindNonCompactness.lean` (`notCompactRTime`, `notStrongCompletenessRTime`), while
+Base and Dense are **proved** (`Metalogic/Compactness.lean`). Reynolds 1992 Theorem 7 is
+correctly cited as the *weak* completeness result for the Dedekind class. The two statuses —
+proved, refuted — must not be collapsed into one. Per-theorem status is in
+`docs/theorem-index.md`. -/
 
 /--
 Semantic consequence over discrete carriers.
