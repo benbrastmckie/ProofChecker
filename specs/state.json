@@ -134,12 +134,10 @@
       "last_updated": "2026-09-07T19:13:06Z",
       "session_id": "sess_1788807358_25f89d",
       "file_scope": [
-        "FormalSystem/Metalogic/Conservativity/ForwardDense.lean",
-        "FormalSystem/Metalogic/Conservativity/ForwardDedekind.lean",
-        "FormalSystem/Metalogic/Conservativity/Fragment.lean",
-        "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean",
-        "FormalSystem/Metalogic/BXCanonical/",
-        "FormalSystem/Metalogic/StrongCompleteness.lean"
+        "FormalSystem/Semantics/BLTruth.lean",
+        "FormalSystem/Metalogic/Algebraic/FlowFrame.lean",
+        "FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean",
+        "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean"
       ],
       "artifacts": [
         {
