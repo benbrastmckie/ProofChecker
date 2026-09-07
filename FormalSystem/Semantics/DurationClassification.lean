@@ -36,13 +36,13 @@ shows the two branches are exclusive. This is what pins down the two frame class
 repository actually cares about:
 
 * the discrete branch is *exactly* `ℤ` (not merely "ℤ-like"), which is `FrameClass.Discrete` /
-  `ValidDiscrete`;
-* the dense branch is the real flow, which is `FrameClass.Dedekind` / `ValidDedekind`.
+  `ValidZTime`;
+* the dense branch is the real flow, which is `FrameClass.Dedekind` / `ValidRTime`.
 
 ## What is deliberately *not* proved here
 
 The packaged statement "a **nontrivial dense** Dedekind-complete ordered abelian group is
-`≃+o ℝ`". It is true, and it is what would license calling `ValidDedekind` the real-flow
+`≃+o ℝ`". It is true, and it is what would license calling `ValidRTime` the real-flow
 predicate outright rather than up to the composition below, but it is a ~100-200 line
 order-topology development with no Mathlib equivalent. The composition path, recorded here so
 the omission is a scoped decision rather than a gap:
@@ -75,7 +75,7 @@ module, so the edge `Separability.lean → DurationClassification.lean` is acycl
 - `archimedean_of_succ`: `IsSuccArchimedean` ⇒ `Archimedean` (the discrete branch, the
   successor-side companion to `archimedean_of_lub`).
 - `intIso`: the packaged additive transfer `D ≃+o ℤ` for a nontrivial successor-Archimedean
-  duration group; consumed by `Semantics/IntTransfer.lean`'s `validDiscrete_iff_validInt`.
+  duration group; consumed by `Semantics/IntTransfer.lean`'s `validZTime_iff_validInt`.
 - `duration_dense_or_least_pos`: **the order-theoretic dichotomy with no lub hypothesis and no
   Archimedean hypothesis at all** — every nontrivial totally ordered abelian group is either
   densely ordered or has a least strictly positive element. This is *not* a corollary of
@@ -103,7 +103,7 @@ useless for a duration *group*. So this is a genuine new lemma, not a re-export.
 
 The hypothesis here is the least-upper-bound property, so this lemma serves
 `Semantics/Validity.lean`'s `ValidDense`/Dedekind-complete side. The **successor**-based analogue
-— the one that serves `ValidDiscrete`, whose binder bundle offers `[SuccOrder D] [PredOrder D]
+— the one that serves `ValidZTime`, whose binder bundle offers `[SuccOrder D] [PredOrder D]
 [IsSuccArchimedean D] [IsPredArchimedean D] [Nontrivial D]` and *not* a lub hypothesis — is
 `archimedean_of_succ`, further down this same file. Measured: it needs only the **successor** half
 of that bundle (`[SuccOrder D] [IsSuccArchimedean D] [Nontrivial D]`); `PredOrder D` and
@@ -112,13 +112,13 @@ of that bundle (`[SuccOrder D] [IsSuccArchimedean D] [Nontrivial D]`); `PredOrde
 What that companion lemma must produce is fixed by its consumer, and `intIso` below is where both
 halves are assembled. The transfer
 `LinearOrderedAddCommGroup.int_orderAddMonoidIso_of_isLeast_pos : D ≃+o ℤ` needs exactly two
-inputs the `ValidDiscrete` bundle does not already supply:
+inputs the `ValidZTime` bundle does not already supply:
 
 1. `Archimedean D` — which does **not** synthesize from `[IsSuccArchimedean D] [IsPredArchimedean D]`;
    those are order-successor conditions, not the additive Archimedean property; and
 2. an `IsLeast {y : D | 0 < y}` witness — which is what the successor structure is there to produce.
 
-**The recorded wrong turn**: `orderIsoIntOfLinearSuccPredArch` fits the `ValidDiscrete` bundle
+**The recorded wrong turn**: `orderIsoIntOfLinearSuccPredArch` fits the `ValidZTime` bundle
 verbatim, needs neither of the two inputs above, and is therefore the tempting reach. It yields
 only `D ≃o ℤ` — an *order* isomorphism. Durations **add**: `TaskRel`'s *Compositionality* is stated
 at `x + y`, so an order-only isomorphism cannot carry a frame across. The additive iso is the one
@@ -170,7 +170,7 @@ densely ordered is order-and-group isomorphic to the integers.
 
 Via `LinearOrderedAddCommGroup.discrete_iff_not_denselyOrdered`, again with the `Archimedean`
 instance from `archimedean_of_lub`. Together with `complete_duration_discrete_or_dense` this
-makes the dichotomy exclusive, which is why `ValidDiscrete` and `ValidDedekind` carve up
+makes the dichotomy exclusive, which is why `ValidZTime` and `ValidRTime` carve up
 the complete case with nothing left over.
 -/
 theorem complete_not_dense_iso_int {D : Type} [AddCommGroup D] [LinearOrder D]
@@ -243,7 +243,7 @@ The successor of `0` is the least strictly positive element.
 
 This is the `IsLeast {y : D | 0 < y}` witness that
 `LinearOrderedAddCommGroup.int_orderAddMonoidIso_of_isLeast_pos` demands, and it is the whole
-reason the successor structure is in the `ValidDiscrete` binder bundle: `Order.lt_succ` gives
+reason the successor structure is in the `ValidZTime` binder bundle: `Order.lt_succ` gives
 membership, `Order.succ_le_of_lt` gives lower-boundedness.
 -/
 theorem isLeast_pos_succ_zero :
@@ -281,7 +281,7 @@ theorem succ_iterate_zero (n : ℕ) :
 The successor-branch companion to `archimedean_of_lub` above. Where that lemma reads the
 Archimedean property off the least-upper-bound property (the Dedekind branch, serving
 `ValidDense`), this one reads it off `IsSuccArchimedean` (the discrete branch, serving
-`ValidDiscrete`).
+`ValidZTime`).
 
 `IsSuccArchimedean D` says every `x ≥ 0` is reached from `0` by finitely many `Order.succ`
 steps; `succ_iterate_zero` turns that iterate into `n • Order.succ 0`; and
@@ -305,7 +305,7 @@ ordered group.
 This supplies both inputs `LinearOrderedAddCommGroup.int_orderAddMonoidIso_of_isLeast_pos`
 needs — the `Archimedean D` instance from `archimedean_of_succ`, and the `IsLeast {y | 0 < y}`
 witness from `isLeast_pos_succ_zero` — and is the transfer that
-`Semantics/IntTransfer.lean`'s `validDiscrete_iff_validInt` runs on.
+`Semantics/IntTransfer.lean`'s `validZTime_iff_validInt` runs on.
 
 Note this is a `≃+o`, not a `≃o`. Durations **add** (`TaskRel`'s Compositionality is stated at
 `x + y`), so an order-only isomorphism such as the one `orderIsoIntOfLinearSuccPredArch`

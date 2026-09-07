@@ -45,7 +45,7 @@ valid by unfolding `BLTruthAt`'s clauses and nothing else.
 
 ## The Dedekind target
 
-`bl_soundness_rtime` concludes at `BLValidDedekind`, **not** at a density-free
+`bl_soundness_rtime` concludes at `BLValidRTime`, **not** at a density-free
 `BLValidComplete` — which is deliberately not defined. `Semantics/BLValidity.lean`'s module
 docstring gives the BL-native refutation: `Axiom.dn` is admissible at `FrameClass.Dedekind` and is
 false on `ℤ`, which satisfies every remaining binder. This mirrors `soundness_rtime`'s own
@@ -64,7 +64,7 @@ consistency lemma in the tree yet"), and the BL side inherits it exactly.
 
 - `truthAt_tr` — the bridge: `TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ`
 - `truthAt_trCtx`, `blValid_iff_valid_tr` — its context-level and validity-level corollaries
-- `blValidDiscrete_iff_validDiscrete_tr` — the `.Discrete` mirror of `blValid_iff_valid_tr`,
+- `blValidZTime_iff_validZTime_tr` — the `.Discrete` mirror of `blValid_iff_valid_tr`,
   consumed by `Metalogic/Conservativity/TMCompletenessReduction.lean`
 - `bl_soundness`, `bl_soundness_dense`, `bl_soundness_ztime`, `bl_soundness_rtime` — the
   four soundness theorems
@@ -193,15 +193,15 @@ theorem blValid_iff_valid_tr (φ : BLFormula) : BLValid φ ↔ Valid (tr φ) :=
 
 /--
 The **`.Discrete` mirror** of `blValid_iff_valid_tr`: BL validity over the discrete frame class
-is `TruthAt`-equivalent to `ValidDiscrete` of the translation, with the four
+is `TruthAt`-equivalent to `ValidZTime` of the translation, with the four
 `SuccOrder`/`PredOrder`/`IsSuccArchimedean`/`IsPredArchimedean` frame condition travelling as
 the single packed `Sat .Discrete F` hypothesis, so neither direction has to open it. Like
 `blValid_iff_valid_tr`, a one-line corollary of `blValidIn_iff_validIn_tr`.
 
 Consumed by `Metalogic/Conservativity/TMCompletenessReduction.lean`'s `tmCompleteZTime_iff_forwardZTime`.
 -/
-theorem blValidDiscrete_iff_validDiscrete_tr (φ : BLFormula) :
-    BLValidDiscrete φ ↔ ValidDiscrete (tr φ) :=
+theorem blValidZTime_iff_validZTime_tr (φ : BLFormula) :
+    BLValidZTime φ ↔ ValidZTime (tr φ) :=
   blValidIn_iff_validIn_tr ProofSystem.FrameClass.Discrete φ
 
 end FormalSystem.Semantics
@@ -325,12 +325,12 @@ theorem bl_soundness_dense_valid {φ : BLFormula}
 
 /-- Empty-context form of `bl_soundness_ztime`. -/
 theorem bl_soundness_ztime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidDiscrete φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidZTime φ :=
   bl_soundness_validIn d
 
-/-- Empty-context form of `bl_soundness_rtime`, at `BLValidDedekind`. -/
+/-- Empty-context form of `bl_soundness_rtime`, at `BLValidRTime`. -/
 theorem bl_soundness_rtime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Dedekind [] φ) : BLValidDedekind φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.Dedekind [] φ) : BLValidRTime φ :=
   bl_soundness_validIn d
 
 /-! ## `bl_soundness_ztime_succ` — binder-weakened discrete BL soundness
@@ -375,13 +375,13 @@ constructors by name.
 -/
 private theorem bl_derivable_valid_and_swap_valid_zTimeSucc {φ : BLFormula}
     (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) :
-    BLValidDiscreteSucc φ ∧ BLValidDiscreteSucc φ.swapBL := by
+    BLValidZTimeSucc φ ∧ BLValidZTimeSucc φ.swapBL := by
   match d with
   | .axiom _ _ h_ax h_fc =>
     by_cases hbase : h_ax.minFrameClass ≤ FrameClass.Base
-    · exact ⟨BLValidity.blValid_implies_blValidDiscreteSucc
+    · exact ⟨BLValidity.blValid_implies_blValidZTimeSucc
               (bl_soundness_valid (.axiom [] _ h_ax hbase)),
-             BLValidity.blValid_implies_blValidDiscreteSucc
+             BLValidity.blValid_implies_blValidZTimeSucc
               (bl_soundness_valid (.temporal_duality _ (.axiom [] _ h_ax hbase)))⟩
     · cases h_ax with
       | df ψ =>
@@ -459,7 +459,7 @@ theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
 
 /-- Empty-context form of `bl_soundness_ztime_succ`. -/
 theorem bl_soundness_ztime_succ_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidDiscreteSucc φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidZTimeSucc φ :=
   fun F so po M τ h_mem t => bl_soundness_ztime_succ [] φ d F M τ h_mem t (by simp)
 
 /-! ## Consistency

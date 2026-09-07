@@ -781,7 +781,7 @@ The nearest future witness where φ holds satisfies Until with ¬φ as guard.
 The order content is `DiscreteOrder.exists_nearest_gt`, at `P := fun x => TruthAt M τ x φ`;
 nothing about `Formula` enters it. -/
 theorem prior_UZ_valid (φ : Formula) :
-    ValidDiscrete (φ.someFuture.imp (Formula.untl φ.neg φ)) := by
+    ValidZTime (φ.someFuture.imp (Formula.untl φ.neg φ)) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
@@ -796,7 +796,7 @@ The past dual of `prior_UZ_valid`, and not a hand-written mirror of it: the orde
 The dualisation is of the *carrier*, exactly as `Separability.sep_order_mirror` does; no
 `Formula`-level dualisation is involved or possible. -/
 theorem prior_SZ_valid (φ : Formula) :
-    ValidDiscrete (φ.somePast.imp (Formula.snce φ.neg φ)) := by
+    ValidZTime (φ.somePast.imp (Formula.snce φ.neg φ)) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
@@ -809,7 +809,7 @@ theorem prior_SZ_valid (φ : Formula) :
 The order content is `DiscreteOrder.forall_gt_of_succ_step` — backward induction along the
 `succ` chain from the `Gφ` witness — at `P := fun x => TruthAt M τ x φ`. -/
 theorem z1_valid (φ : Formula) :
-    ValidDiscrete ((φ.allFuture.imp φ).allFuture.imp
+    ValidZTime ((φ.allFuture.imp φ).allFuture.imp
       (φ.allFuture.someFuture.imp φ.allFuture)) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
@@ -824,7 +824,7 @@ The past dual of `z1_valid`, obtained the same way: the order content is
 `DiscreteOrder.forall_lt_of_pred_step`, which is `forall_gt_of_succ_step` instantiated at `Dᵒᵈ`.
 No hand-mirrored strong induction over `Order.pred` remains. -/
 theorem z1_past_valid (φ : Formula) :
-    ValidDiscrete ((φ.allPast.imp φ).allPast.imp
+    ValidZTime ((φ.allPast.imp φ).allPast.imp
       (φ.allPast.somePast.imp φ.allPast)) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t

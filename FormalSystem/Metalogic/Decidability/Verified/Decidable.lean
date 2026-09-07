@@ -65,7 +65,7 @@ satisfied. The model `M` is *not* re-chosen by any rule.
 
 ## `CarrierProp`
 
-`Valid`, `ValidDense`, `ValidDiscrete` and `ValidDedekind` differ only in the side
+`Valid`, `ValidDense`, `ValidZTime` and `ValidRTime` differ only in the side
 conditions they impose on the temporal carrier `D`. `RuleSound` is therefore indexed by a
 `CarrierProp` — a property of the carrier — so that the frame-class-gated rules can be stated
 with the extra hypothesis they need and the base rules can be stated without one.
@@ -90,8 +90,8 @@ are 34 per-rule instances, split by the carrier property each is stated at:
   `someFuturePos`, `somePastPos`); `denseIndicatorClosure`; and all four of `untlPos`, `sncePos`,
   `untlNeg`, `snceNeg`.
 - **1 at `carrierDense`**: `densityRule`.
-- **3 at `carrierDiscrete`**: `priorUZ`, `priorSZ`, `z1Rule`.
-- **3 at `carrierDedekind`**: `priorUGap`, `priorSGap`, `sepRule`.
+- **3 at `carrierZTime`**: `priorUZ`, `priorSZ`, `z1Rule`.
+- **3 at `carrierRTime`**: `priorUGap`, `priorSGap`, `sepRule`.
 
 The sub-phase 7.2 assembly `ruleSound_of_mem_allRulesForFC` is landed too: one induction over
 `RuleSpec.mem_allRulesForFC_iff`, discharged case by case against that ledger. All of the above
@@ -2379,7 +2379,7 @@ that edge. `FrameClassVariants` is a different module with a different import cl
 `FrameClassVariants → {Semantics.Validity, ProofSystem.Derivation, ProofSystem.Axioms}` — and nothing anywhere in it imports `Decidability`, so there is no cycle.
 The cost is a heavier build edge, not a cycle.
 
-**Why `carrierDiscrete` is an `Exists` and not a conjunction of classes.** `CarrierProp` returns
+**Why `carrierZTime` is an `Exists` and not a conjunction of classes.** `CarrierProp` returns
 `Prop`, and `DenselyOrdered` is `Prop`-valued, so `carrierDense` could be written outright.
 `SuccOrder` and `PredOrder` are **data** — `Type`-valued classes — so `fun D => SuccOrder D` does
 not typecheck as a `CarrierProp`. `Exists` ranges over any `Sort`, so existentially quantifying
@@ -2392,19 +2392,19 @@ the four instances with `haveI`.
 `sep_valid`. Those three exist **only** in `FormalSystem/Metalogic/Soundness.lean` — the module
 whose import edge into this tree is refused — and `FrameClassVariants` does **not** carry them.
 So the reuse argument that unblocks the discrete three does not transfer, and no
-`carrierDedekind` is declared here: a frame-class carrier property is declared only in the step
+`carrierRTime` is declared here: a frame-class carrier property is declared only in the step
 that consumes one, and nothing consumes that one yet.
 -/
 
 /-- Discreteness of the carrier, as the three `.Discrete` rules consume it.
 
 Existentially quantified because `SuccOrder`/`PredOrder` are data; see the section docstring. -/
-def carrierDiscrete : CarrierProp := fun D =>
+def carrierZTime : CarrierProp := fun D =>
   ∃ (hs : SuccOrder D) (hp : PredOrder D), @IsSuccArchimedean D _ hs ∧ @IsPredArchimedean D _ hp
 
-/-- Land a `ValidDiscrete` conclusion where the rule-soundness proofs need it.
+/-- Land a `ValidZTime` conclusion where the rule-soundness proofs need it.
 
-`ValidDiscrete` states truth at the inert carrier `Set.univ`, which is exactly what the
+`ValidZTime` states truth at the inert carrier `Set.univ`, which is exactly what the
 rule-soundness proofs below evaluate against, so this is `ValidIn.apply_total` at `.Discrete` and
 at the frame this tree carries. It is kept as a named step so the three `.Discrete` call sites read the same as they
 did when a carrier transport was still needed; it disappears with `TruthAt`'s set parameter
@@ -2415,9 +2415,9 @@ The four discreteness instances are bound on `D` and handed to `FrameClass.Discr
 `SuccOrder` and `PredOrder` are data, so routing them back through instance synthesis at
 `F.toTaskFrame.Duration.carrier` breaks against the instances the three call sites have already
 fixed on `D` with `letI`. -/
-theorem truthAt_of_validDiscrete {F : FrameOver (TemporalOrder.of D)} {M : TaskModel F}
+theorem truthAt_of_validZTime {F : FrameOver (TemporalOrder.of D)} {M : TaskModel F}
     {φ : Formula} [so : SuccOrder D] [po : PredOrder D]
-    [hsa : IsSuccArchimedean D] [hpa : IsPredArchimedean D] (h : ValidDiscrete φ)
+    [hsa : IsSuccArchimedean D] [hpa : IsPredArchimedean D] (h : ValidZTime φ)
     (τ : WorldHistory F) (hτ : τ.IsTotal) (t : D) : TruthAt M τ t φ :=
   h F.toTaskFrame ⟨so, po, hsa, hpa⟩ M ⟨τ, hτ⟩ t
 
@@ -2425,7 +2425,7 @@ theorem truthAt_of_validDiscrete {F : FrameOver (TemporalOrder.of D)} {M : TaskM
 antecedent is the source formula. On a discrete order `F ψ` has a *nearest* `ψ`-point, and `¬ψ`
 guards the interval strictly below it; that is the whole content, and it is
 `prior_UZ_valid`. -/
-theorem ruleSound_priorUZ : RuleSound carrierDiscrete .priorUZ := by
+theorem ruleSound_priorUZ : RuleSound carrierZTime .priorUZ := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨hs, hp, ha, hb⟩ := hC
   -- `letI`, not `haveI`, for the two DATA instances: `haveI` is opaque, so the installed
@@ -2453,12 +2453,12 @@ theorem ruleSound_priorUZ : RuleSound carrierDiscrete .priorUZ := by
         rw [List.mem_singleton] at hc
         subst hc
         simpa [SatAt, SignedFormula.pos] using
-          truthAt_of_validDiscrete (SoundnessLemmas.prior_UZ_valid ψ) (hist l.world)
+          truthAt_of_validZTime (SoundnessLemmas.prior_UZ_valid ψ) (hist l.world)
             (hst.histTotal l.world) (tv l.time) hsrc
 
 /-- `T(P ψ)` gives `T(S(ψ, ¬ψ))` at the same label — Prior-SZ, the exact time reversal of
 `priorUZ`. -/
-theorem ruleSound_priorSZ : RuleSound carrierDiscrete .priorSZ := by
+theorem ruleSound_priorSZ : RuleSound carrierZTime .priorSZ := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨hs, hp, ha, hb⟩ := hC
   -- `letI`, not `haveI`, for the two DATA instances: `haveI` is opaque, so the installed
@@ -2486,7 +2486,7 @@ theorem ruleSound_priorSZ : RuleSound carrierDiscrete .priorSZ := by
         rw [List.mem_singleton] at hc
         subst hc
         simpa [SatAt, SignedFormula.pos] using
-          truthAt_of_validDiscrete (SoundnessLemmas.prior_SZ_valid ψ) (hist l.world)
+          truthAt_of_validZTime (SoundnessLemmas.prior_SZ_valid ψ) (hist l.world)
             (hst.histTotal l.world) (tv l.time) hsrc
 
 /-- `T(G(Gφ → φ))` together with `T(F(Gφ))` at the same label gives `T(Gφ)` there — Z1, the
@@ -2494,7 +2494,7 @@ discrete backward-induction axiom. Unlike the other two `.Discrete` rules this o
 its second premise is read off the branch by `branch.contains` rather than from the source
 formula, so the proof instantiates `z1_valid` and then applies it to **two** hypotheses, the
 source's `hst.sat` and the partner's. -/
-theorem ruleSound_z1Rule : RuleSound carrierDiscrete .z1Rule := by
+theorem ruleSound_z1Rule : RuleSound carrierZTime .z1Rule := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨hs, hp, ha, hb⟩ := hC
   letI := hs
@@ -2536,7 +2536,7 @@ theorem ruleSound_z1Rule : RuleSound carrierDiscrete .z1Rule := by
       rw [List.mem_singleton] at hc
       subst hc
       simpa [SatAt, SignedFormula.pos] using
-        truthAt_of_validDiscrete (SoundnessLemmas.z1_valid inner) (hist l.world)
+        truthAt_of_validZTime (SoundnessLemmas.z1_valid inner) (hist l.world)
           (hst.histTotal l.world) (tv l.time) hsrc hfgs
 
 /-!
@@ -2584,7 +2584,7 @@ private theorem exists_isGLB_of_lub' {D : Type} [LinearOrder D]
 /-- Dedekind completeness of the carrier, as the two Prior-gap rules consume it. Density is
 carried alongside because the `.Dedekind` frame class imposes both; only the least-upper-bound
 half is used below. -/
-def carrierDedekind : CarrierProp := fun D =>
+def carrierRTime : CarrierProp := fun D =>
   DenselyOrdered D ∧ ∀ s : Set D, s.Nonempty → BddAbove s → ∃ x, IsLUB s x
 
 /-- **Prior-U gap, semantic half.** `U(⊤,g) ∧ F(¬g)` at `t` gives `U(¬g ∨ K⁺(¬g), g)` at `t`.
@@ -2672,7 +2672,7 @@ private theorem truthAt_priorSGap {M : TaskModel F}
 
 /-- `T(U(⊤,g) ∧ F(¬g))` gives `T(U(¬g ∨ K⁺(¬g), g))` at the same label. Same-label
 `.persistent`, ordering untouched; the content is `truthAt_priorUGap`. -/
-theorem ruleSound_priorUGap : RuleSound carrierDedekind .priorUGap := by
+theorem ruleSound_priorUGap : RuleSound carrierRTime .priorUGap := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨-, h_lub⟩ := hC
   obtain ⟨s, φ, l⟩ := sf
@@ -2708,7 +2708,7 @@ theorem ruleSound_priorUGap : RuleSound carrierDedekind .priorUGap := by
         simpa [SatAt, SignedFormula.pos] using truthAt_priorUGap h_lub hsrc
 
 /-- `T(S(⊤,g) ∧ P(¬g))` gives `T(S(¬g ∨ K⁻(¬g), g))` at the same label — the past mirror. -/
-theorem ruleSound_priorSGap : RuleSound carrierDedekind .priorSGap := by
+theorem ruleSound_priorSGap : RuleSound carrierRTime .priorSGap := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨-, h_lub⟩ := hC
   obtain ⟨s, φ, l⟩ := sf
@@ -2821,7 +2821,7 @@ private theorem truthAt_sep {M : TaskModel F}
 
 /-- `T(K⁺ψ ∧ ¬K⁺(ψ ∧ U(ψ,¬ψ)))` gives `T(K⁺(K⁺ψ ∧ K⁻ψ))` at the same label. The third and last
 `.Dedekind` rule; with it the `.Dedekind` family is complete. -/
-theorem ruleSound_sepRule : RuleSound carrierDedekind .sepRule := by
+theorem ruleSound_sepRule : RuleSound carrierRTime .sepRule := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨hDense, h_lub⟩ := hC
   haveI := hDense
@@ -3126,7 +3126,7 @@ one projection:
 * `carrierBase` is `fun _ => True`, so *any* carrier property refines it. That is
   `ruleSound_base_mono`, and it carries 27 of the 34 rules — the 26 base rules plus
   `denseIndicatorClosure`, which is gated at `.Dense` but proved without using density.
-* `carrierDedekind` has `DenselyOrdered` as its first conjunct, deliberately (see its docstring:
+* `carrierRTime` has `DenselyOrdered` as its first conjunct, deliberately (see its docstring:
   *"density is carried alongside because the `.Dedekind` frame class imposes both"*). That is what
   lets `densityRule`, proved at `carrierDense`, discharge its `.Dedekind` obligation by `hC.1` —
   and it is the only place the redundant-looking conjunct is consumed.
@@ -3152,8 +3152,8 @@ constructor, each the weakest property that class's own rules consume. -/
 def carrierForFC : FrameClass -> CarrierProp
   | .Base => carrierBase
   | .Dense => carrierDense
-  | .Discrete => carrierDiscrete
-  | .Dedekind => carrierDedekind
+  | .Discrete => carrierZTime
+  | .Dedekind => carrierRTime
 
 /-- A rule proved at `carrierBase` is sound under every carrier property, because `carrierBase`
 is `fun _ => True`. The workhorse of the assembly: 27 of the 34 rules travel this way. -/

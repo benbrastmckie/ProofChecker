@@ -79,7 +79,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   `BLFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
   induction in `Metalogic/Conservativity/BaseLanguageSoundness.lean`. `bl_soundness_rtime` carries
-  `ValidDedekind`'s binder set and its validity form concludes at `BLValidDedekind`,
+  `ValidRTime`'s binder set and its validity form concludes at `BLValidRTime`,
   inheriting `soundness_rtime`'s target; a density-free `BLValidComplete` is deliberately not
   defined because it would be refutable
 - **Completeness** (`completeness`): SORRY-FREE (sorryAx-free; axioms: exactly `propext`,
@@ -93,7 +93,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   exactly `propext`, `Classical.choice`, `Quot.sound`)
 - **Completeness (Dedekind)** (`completeness_rtime`): SORRY-FREE (sorryAx-free; axioms:
   exactly `propext`, `Classical.choice`, `Quot.sound`). Weak completeness for
-  `FrameClass.Dedekind` against `ValidDedekind`, on the real line. It is a corollary of
+  `FrameClass.Dedekind` against `ValidRTime`, on the real line. It is a corollary of
   the consequence form below, not an independent construction.
 - **Consequence completeness (Dedekind)** (`consequence_completeness_rtime`): SORRY-FREE
   (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Finite-context

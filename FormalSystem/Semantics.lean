@@ -114,7 +114,7 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   derived-operator characterization lemmas
 - `Validity`: Semantic validity `⊨ φ` and consequence `Γ ⊨ φ` quantifying over all temporal types
 - `BLValidity`: the base-language mirrors — `BLValid`, `BLSemanticConsequence`, `BLValidDense`,
-  `BLValidDiscrete` and `BLValidDedekind`, binder for binder against `BLTruthAt`; there is
+  `BLValidZTime` and `BLValidRTime`, binder for binder against `BLTruthAt`; there is
   deliberately no density-free `BLValidComplete`, which would be refutable
 - `StarTruth`: the truth recursion for the language L⋆ (L⁺ plus the stability modal `⊡`,
   `FormalSystem/StarLanguage/Formula.lean`) — `SameStateAt` (the paper's `⟨τ⟩_x`, line 1108) and
@@ -168,7 +168,7 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
 - `IntTransfer`: carrier normalization for the discrete branch -- a generic transport of
   frames, `TaskModel`, `WorldHistory`, and `TruthAt` along any ordered-group isomorphism
   `e : D ≃+o E` (via the `HEq`-free `Aligned` relation rather than a history `Equiv`), composed
-  with `DurationClassification`'s `intIso` to give `validDiscrete_iff_validInt`: quantifying over
+  with `DurationClassification`'s `intIso` to give `validZTime_iff_validInt`: quantifying over
   every discrete duration carrier is the same as quantifying over `ℤ` alone
 
 ## Semantic Structure

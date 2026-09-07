@@ -56,7 +56,7 @@ point of the object is that it compute, and one obtained by extraction does not.
 
 The objection does **not** transfer to a setting where the classically produced presentation is
 only *quantified over* and never evaluated — as in a statement of the form
-`¬ ValidDiscrete φ → ∃ P ∈ cands φ, ∃ w, SatAtState P w φ.neg`, where the decision procedure ranges
+`¬ ValidZTime φ → ∃ P ∈ cands φ, ∃ w, SatAtState P w φ.neg`, where the decision procedure ranges
 over its own independently constructed `cands φ` and never sees the `P` the existence proof
 produced. There, `Classical.choice` sits in the proof *about* the data and computability survives
 it; `Decidability/BiLasso/Check.lean`'s `instDecidableSatAtState` is the worked instance —

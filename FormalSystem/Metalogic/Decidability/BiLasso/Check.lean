@@ -27,18 +27,18 @@ Its *input* is already a presentation — see `exists_annot_of_truth`
 whole layer is a **model checker for one given finite graph**: it compresses histories *within* a
 presentation. Producing the presentation in the first place, from an arbitrary countermodel, is a
 different theorem that lives nowhere in this directory. Any account of the decidability of
-`ValidDiscrete` that treats this layer as covering the finite-model half is mistaken about what
+`ValidZTime` that treats this layer as covering the finite-model half is mistaken about what
 `exists_annot_of_truth` quantifies over.
 
 ### The single remaining obligation, in the shape that assembles
 
-With this layer in hand, decidability of `ValidDiscrete φ` reduces to exactly one hypothesis:
+With this layer in hand, decidability of `ValidZTime φ` reduces to exactly one hypothesis:
 
-> `fmp` : `∀ ψ, ¬ ValidDiscrete ψ → ∃ P ∈ cands ψ, ∃ w : Fin P.card, SatAtState P w ψ.neg`,
+> `fmp` : `∀ ψ, ¬ ValidZTime ψ → ∃ P ∈ cands ψ, ∃ w : Fin P.card, SatAtState P w ψ.neg`,
 > for some computable `cands : Formula → List IntPresentation`.
 
-Given `fmp`, `(∀ P ∈ cands φ, ∀ w, check P w φ.neg = false) ↔ ValidDiscrete φ` follows, and
-`decidable_of_iff` reads a `Decidable (ValidDiscrete φ)` off it — the outer quantifier by
+Given `fmp`, `(∀ P ∈ cands φ, ∀ w, check P w φ.neg = false) ↔ ValidZTime φ` follows, and
+`decidable_of_iff` reads a `Decidable (ValidZTime φ)` off it — the outer quantifier by
 `List.decidableBAll`, the inner by `Fintype.decidableForallFintype`, the body by `decEq`. Both
 halves have been compiled sorry-free and are retained under
 `specs/469_eliminate_the_bridge_filtration_into_intpresentation/evidence/`. Two things follow that
@@ -47,7 +47,7 @@ are worth recording, because both were assumed otherwise before being measured:
 - **`check_correct` is the final step, not the far side of a transfer.** No bridge theorem, no
   transfer lemma, no enumeration over `Atom`, and no `Fin n`-from-`Finite` extraction appears
   anywhere in the assembly.
-- **The converse direction is free.** A countermodel presented over ℤ refutes `ValidDiscrete`
+- **The converse direction is free.** A countermodel presented over ℤ refutes `ValidZTime`
   directly, because ℤ instantiates that definition's whole binder bundle with no instance work;
   the proof is five lines.
 

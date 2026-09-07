@@ -13,11 +13,11 @@ import Mathlib.Data.Int.SuccPred
 /-!
 # Carrier Normalization: Transporting the Semantics along a Duration Isomorphism
 
-`ValidDiscrete` quantifies over *every* discrete duration carrier `D` — every nontrivial
+`ValidZTime` quantifies over *every* discrete duration carrier `D` — every nontrivial
 successor-Archimedean ordered abelian group. This module shows that quantifier is redundant:
 one carrier, `ℤ`, already decides it. The headline result is
 
-  `validDiscrete_iff_validInt : ValidDiscrete φ ↔ ValidInt φ`
+  `validZTime_iff_validInt : ValidZTime φ ↔ ValidInt φ`
 
 and the machinery that gets there is a generic transport of the whole semantic stack —
 the frame, `TaskModel`, `WorldHistory`, `TruthAt` — along an arbitrary ordered-group
@@ -27,7 +27,7 @@ isomorphism `e : D ≃+o E`. The isomorphism that specializes it to `ℤ` is
 Note the transport is stated for `≃+o`, an *additive order* isomorphism, not `≃o`. Durations
 **add** — `TaskRel`'s Compositionality is stated at `x + y` — so an order-only isomorphism
 cannot carry a frame across. This is why `orderIsoIntOfLinearSuccPredArch`, which fits the
-`ValidDiscrete` binder bundle verbatim, is not the route; see the `archimedean_of_lub` docstring
+`ValidZTime` binder bundle verbatim, is not the route; see the `archimedean_of_lub` docstring
 in `Semantics/DurationClassification.lean` for the full recorded finding.
 
 ## Design decision: `Aligned`, not `Equiv`
@@ -70,7 +70,7 @@ Two measured failures, recorded so a future editor does not re-hit them:
 - `truthAt_map`: `TruthAt M σ t φ ↔ TruthAt (M.map e) σ' (e t) φ` for aligned `σ`, `σ'` —
   `Truth.truthAt_of_truthCorr` at `alignedCorr`.
 - `ValidInt`: validity over `ℤ`-frames only.
-- `validDiscrete_iff_validInt`: **carrier normalization** — `ValidDiscrete φ ↔ ValidInt φ`.
+- `validZTime_iff_validInt`: **carrier normalization** — `ValidZTime φ ↔ ValidInt φ`.
 -/
 
 namespace FormalSystem.Semantics
@@ -328,7 +328,7 @@ def alignedCorr {F : FrameOver D} (e : ↑D ≃+o ↑E) (M : TaskModel F.toTaskF
 
 This is `Truth.truthAt_of_truthCorr` at the instance `alignedCorr e M`; the six-case induction
 lives there, generalised over both histories and the time exactly as this theorem's statement is.
-Statement unchanged (arbitrary aligned pair), so `validDiscrete_iff_validInt` is untouched.
+Statement unchanged (arbitrary aligned pair), so `validZTime_iff_validInt` is untouched.
 -/
 theorem truthAt_map {F : FrameOver D} (e : ↑D ≃+o ↑E) (M : TaskModel F.toTaskFrame) (φ : Formula) :
     ∀ (σ : WorldHistory F.toTaskFrame) (σ' : WorldHistory (FrameOver.map F e).toTaskFrame), Aligned e σ σ' →
@@ -339,8 +339,8 @@ theorem truthAt_map {F : FrameOver D} (e : ↑D ≃+o ↑E) (M : TaskModel F.toT
 A formula is **`ℤ`-valid** if it is true in every model over a `ℤ`-frame, at every total
 history, at every time.
 
-This is `ValidDiscrete` with the carrier quantifier collapsed to the single carrier `ℤ`. All
-eight instance binders of `ValidDiscrete` vanish here: `ℤ` supplies every one of them from
+This is `ValidZTime` with the carrier quantifier collapsed to the single carrier `ℤ`. All
+eight instance binders of `ValidZTime` vanish here: `ℤ` supplies every one of them from
 Mathlib with no instance work.
 -/
 def ValidInt (φ : Formula) : Prop :=
@@ -351,7 +351,7 @@ def ValidInt (φ : Formula) : Prop :=
 **Carrier normalization.** Quantifying over every discrete duration carrier is the same as
 quantifying over `ℤ` alone.
 
-The forward direction is a single instantiation: `ℤ` discharges the whole `ValidDiscrete` binder
+The forward direction is a single instantiation: `ℤ` discharges the whole `ValidZTime` binder
 bundle, so `h ℤ F M τ hτ t` is the proof.
 
 The reverse direction is where the work is. Given an arbitrary discrete carrier `D`,
@@ -360,10 +360,10 @@ The reverse direction is where the work is. Given an arbitrary discrete carrier 
 `truthAt_map` carries truth back. Note the transfer must be an *additive* order isomorphism:
 durations add, so the order-only `orderIsoIntOfLinearSuccPredArch` could not be used here.
 
-`ValidDiscrete`'s `PredOrder`/`IsPredArchimedean` binders go unused — `intIso` needs only the
+`ValidZTime`'s `PredOrder`/`IsPredArchimedean` binders go unused — `intIso` needs only the
 successor half.
 -/
-theorem validDiscrete_iff_validInt (φ : Formula) : ValidDiscrete φ ↔ ValidInt φ := by
+theorem validZTime_iff_validInt (φ : Formula) : ValidZTime φ ↔ ValidInt φ := by
   constructor
   · intro h F M τ hτ t
     exact ValidIn.apply_total h F.toTaskFrame

@@ -53,7 +53,7 @@ one negatively.
   taken verbatim from `FormalSystem/Semantics/Validity.lean`, with the premise hypothesis
   `(∀ ψ ∈ Γ, TruthAt M τ t ψ)` inserted before the conclusion — the same surgery that
   `SemanticConsequenceRTime` (`StrongCompleteness.lean:129`) performs on
-  `ValidDedekind`. `Γ : Set Formula` rather than `Γ : Context` is the only difference from
+  `ValidRTime`. `Γ : Set Formula` rather than `Γ : Context` is the only difference from
   those finite-context forms; `∀ ψ ∈ Γ` elaborates identically for `Set` and `List`.
 * Nothing here imports `FormalSystem/Metalogic/BXCanonical/`. The set layer is vocabulary; the
   chronicle machinery is a countermodel engine, and the two are deliberately kept unentangled.
@@ -219,7 +219,7 @@ quotes this one name instead; the four hypotheses were the same predicate writte
 times.
 
 **The four `BXCanonical` engines inhabit it on the nose**, with no transport and no `rfl`
-lemma: `Valid`, `ValidDense`, `ValidDiscrete` and `ValidDedekind` are all abbreviations over
+lemma: `Valid`, `ValidDense`, `ValidZTime` and `ValidRTime` are all abbreviations over
 `ValidIn` at a literal tag (`Semantics/Validity.lean`), so `completeness_base`,
 `completeness_dense`, `completeness_ztime` and `completeness_rtime`
 (`Metalogic/StrongCompleteness.lean`) *are* `WeakCompleteness .Base` / `.Dense` / `.Discrete` /
@@ -248,7 +248,7 @@ Compact .Discrete = CompactZTime             StrongCompleteness .Discrete = Stro
 and so are `SatisfiableSet .Dense = SatisfiableDenseSet` and
 `ModelExistence .Dense = ModelExistenceDense`, for eight in total. This is what
 `Semantics/Validity.lean`'s `valid := ValidIn .Base`, `ValidDense := ValidIn .Dense` and
-`ValidDiscrete := ValidIn .Discrete` bought: the per-class validity predicates are plain
+`ValidZTime := ValidIn .Discrete` bought: the per-class validity predicates are plain
 abbreviations over `ValidIn`, so `ValidIn fc (…)` at a literal tag *is* the per-class predicate,
 with no transport.
 
@@ -529,7 +529,7 @@ in scope via `SetSemanticConsequenceZTime` above.
 def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.Discrete
 
 /-- Satisfiability of a possibly-infinite set over discrete carriers — `SatisfiableSet` at
-    `FrameClass.Discrete`. This is `FormulaSatisfiable` (`Validity.lean`) with `ValidDiscrete`'s
+    `FrameClass.Discrete`. This is `FormulaSatisfiable` (`Validity.lean`) with `ValidZTime`'s
     binder list — `SuccOrder`, `PredOrder`, `IsSuccArchimedean`, `IsPredArchimedean` — in place
     of `ValidDense`'s `DenselyOrdered`, and the conclusion generalised from a single formula to
     `∀ ψ ∈ Γ`.
@@ -596,7 +596,7 @@ def CompactRTime : Prop := Compact FrameClass.Dedekind
 
 /-- Satisfiability of a possibly-infinite set over Dedekind-complete dense carriers —
     `SatisfiableSet` at `FrameClass.Dedekind`. This is `FormulaSatisfiable` (`Validity.lean`)
-    with `ValidDedekind`'s binder list — `[DenselyOrdered D]` together with the
+    with `ValidRTime`'s binder list — `[DenselyOrdered D]` together with the
     least-upper-bound hypothesis — in place of `ValidDense`'s `DenselyOrdered` alone, and the
     conclusion generalised from a single formula to `∀ ψ ∈ Γ`.
 

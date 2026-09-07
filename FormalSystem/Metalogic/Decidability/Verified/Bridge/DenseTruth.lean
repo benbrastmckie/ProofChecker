@@ -602,7 +602,7 @@ variable {b : Branch} {ord : TimeOrdering}
 
 Stated once and applied twice, because the `ℚ` and `ℝ` headline results differ only in which
 binder list the validity predicate carries — the model, the placement and the truth lemma are the
-same objects, exactly as `not_valid_of_hasOpen_int` and `not_validDiscrete_of_hasOpen_int` are at
+same objects, exactly as `not_valid_of_hasOpen_int` and `not_validZTime_of_hasOpen_int` are at
 `ℤ`.
 -/
 theorem exists_countermodel_dense (D : Type) [AddCommGroup D] [LinearOrder D]
@@ -663,20 +663,20 @@ theorem not_validDense_of_hasOpen (hV : branchOrderValid b ord = true)
 /-! ### Headline result, at `ℝ` -/
 
 /--
-**`not_validDedekind_of_hasOpen`.** The same branch refutes `ValidDedekind χ`, the
+**`not_validRTime_of_hasOpen`.** The same branch refutes `ValidRTime χ`, the
 countermodel being carried by `ℝ`.
 
 This is the real-flow result, and it is the one `soundness_rtime` targets. The extra binder
-`ValidDedekind` carries over `ValidDense` is the least-upper-bound property, discharged for
+`ValidRTime` carries over `ValidDense` is the least-upper-bound property, discharged for
 `ℝ` by `isLUB_csSup`; nothing in the truth lemma consumes it.
 -/
-theorem not_validDedekind_of_hasOpen (hV : branchOrderValid b ord = true)
+theorem not_validRTime_of_hasOpen (hV : branchOrderValid b ord = true)
     (fc : ProofSystem.FrameClass)
     (hSat : findUnexpanded b (timeOrd := ord) = none) (hOpen : findClosure b fc = none)
     (hTot : timeOrderTotal b ord = true) (hBA : boxAnchoredCheck b = true)
     (hCheck : regionLabelCheck b ord = true) (hTW : temporalWitnessCheck b ord = true)
     {χ : Formula} {l₀ : Label} (hw₀ : l₀.world ∈ b.knownWorlds)
-    (hroot : (⟨.neg, χ, l₀⟩ : SignedFormula) ∈ b) : ¬ ValidDedekind χ := by
+    (hroot : (⟨.neg, χ, l₀⟩ : SignedFormula) ∈ b) : ¬ ValidRTime χ := by
   intro hval
   obtain ⟨t, ht⟩ := exists_countermodel_dense ℝ strictMono_intCast_real hV fc hSat hOpen hTot hBA
     hCheck hTW hw₀ hroot

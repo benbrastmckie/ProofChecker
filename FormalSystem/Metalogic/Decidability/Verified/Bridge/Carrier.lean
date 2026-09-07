@@ -29,7 +29,7 @@ not a fifth copy of the truth lemma.
 ## Why `FrameConditionFor` is `Type`-valued and not `Prop`-valued
 
 The obvious design — `frame_condition : Prop` — does not work, and the reason is `Discrete`.
-`ValidDiscrete`'s binder list (`Semantics/Validity.lean`) contains `[SuccOrder D]` and
+`ValidZTime`'s binder list (`Semantics/Validity.lean`) contains `[SuccOrder D]` and
 `[PredOrder D]`, and `SuccOrder`/`PredOrder` are **data** (`SuccOrder : (α : Type u) → [Preorder α]
 → Type u`, carrying the `succ` function), not propositions. A `Prop`-valued field could at best
 carry `Nonempty (SuccOrder D)`, and every downstream use would then have to `Classical.choice`
@@ -50,21 +50,21 @@ Each arm reproduces exactly the extra binders its validity predicate adds to `Va
 |---|---|---|
 | `.Base` | `Valid` | none |
 | `.Dense` | `ValidDense` | `[DenselyOrdered D]` |
-| `.Discrete` | `ValidDiscrete` | `[SuccOrder D] [PredOrder D] [IsSuccArchimedean D] [IsPredArchimedean D]` |
-| `.Dedekind` | `ValidDedekind` | `[DenselyOrdered D]` and the explicit lub `Prop` binder |
+| `.Discrete` | `ValidZTime` | `[SuccOrder D] [PredOrder D] [IsSuccArchimedean D] [IsPredArchimedean D]` |
+| `.Dedekind` | `ValidRTime` | `[DenselyOrdered D]` and the explicit lub `Prop` binder |
 
 The `AddCommGroup` / `LinearOrder` / `IsOrderedAddMonoid` / `Nontrivial` binders are shared by all
 four predicates, so they sit on the class head rather than in `FrameConditionFor`.
 
-`.Dedekind` targets **`ValidDedekind`, not `ValidComplete`** — this matters and is not a
-simplification opportunity. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidDedekind` distinction is argued in full.
+`.Dedekind` targets **`ValidRTime`, not `ValidComplete`** — this matters and is not a
+simplification opportunity. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 
 ## The four carriers
 
 `ℚ` twice (`.Base`, `.Dense`), `ℤ` once (`.Discrete`), `ℝ` once (`.Dedekind`). `ℚ` serves `.Base`
 because the base predicate binds nothing beyond the shared binders, so the cheapest carrier that
 also serves `.Dense` serves both; `ℝ` is needed for `.Dedekind` because that is where the
-least-upper-bound property lives; `ℤ` is forced for `.Discrete` because `ValidDiscrete`'s
+least-upper-bound property lives; `ℤ` is forced for `.Discrete` because `ValidZTime`'s
 successor/predecessor binders are exactly what a dense carrier lacks.
 -/
 
@@ -76,7 +76,7 @@ open FormalSystem.ProofSystem
 /-! ## The per-class frame condition -/
 
 /--
-The least-upper-bound property, in the exact shape `ValidComplete`/`ValidDedekind` bind it —
+The least-upper-bound property, in the exact shape `ValidComplete`/`ValidRTime` bind it —
 an explicit `Prop` binder rather than a `ConditionallyCompleteLinearOrder` instance swap. Stated
 here in that shape deliberately, so a `.Dedekind` carrier's `frame_condition` can be handed to
 those predicates verbatim.
@@ -85,7 +85,7 @@ def HasLUBs (D : Type) [LinearOrder D] : Prop :=
   ∀ s : Set D, s.Nonempty → BddAbove s → ∃ x, IsLUB s x
 
 /--
-The discreteness data: `ValidDiscrete`'s four extra binders, packaged.
+The discreteness data: `ValidZTime`'s four extra binders, packaged.
 
 A structure rather than a product because the archimedean conditions are indexed by the
 successor/predecessor instances.
@@ -141,7 +141,7 @@ instance : TemporalCarrier FrameClass.Dense ℚ where
 
 /--
 `.Base` is also carried by `ℤ`, and this instance is what makes the `ℤ` milestone available to
-`Valid` and not only to `ValidDiscrete`.
+`Valid` and not only to `ValidZTime`.
 
 `Valid` (`Semantics/Validity.lean`) quantifies over *every* carrier, so **one** carrier refutes
 it — and `ℤ` is the easy one, because `finOrderEmbInt` (`Bridge/Embed.lean`) is the `Nat`-cast
@@ -219,7 +219,7 @@ example : TemporalCarrier FrameClass.Dense ℚ := inferInstance
 noncomputable example : TemporalCarrier FrameClass.Discrete ℤ := inferInstance
 example : TemporalCarrier FrameClass.Dedekind ℝ := inferInstance
 
-/-- The `.Dedekind` frame condition really does deliver the lub binder `ValidDedekind` wants. -/
+/-- The `.Dedekind` frame condition really does deliver the lub binder `ValidRTime` wants. -/
 example : HasLUBs ℝ :=
   (TemporalCarrier.frame_condition (fc := FrameClass.Dedekind) (D := ℝ)).2.down
 

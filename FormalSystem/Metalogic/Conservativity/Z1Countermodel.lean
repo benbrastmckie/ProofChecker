@@ -28,7 +28,7 @@ refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `S
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
-By Hölder (paper `def:TMplus-f`, line 4613) `ValidDiscrete` is validity over ℤ-time up to
+By Hölder (paper `def:TMplus-f`, line 4613) `ValidZTime` is validity over ℤ-time up to
 isomorphism, which is what makes Deliverable 2 the `TM_f`-vs-`TM⁺_f` completeness gap rather
 than a weaker claim.
 
@@ -37,7 +37,7 @@ than a weaker claim.
 - `z1_atom_iff` — the valuation lemma
 - `z1_gp_iff_p` — `Gp ↔ p`, pointwise
 - `not_bl_derivable_z1` — **Deliverable 1**: `¬ ⊢ᴮᴸ[Discrete] Z1 p`
-- `blValidDiscrete_z1` — **Deliverable 2**: `BLValidDiscrete (Z1 p)`, stated as the negation of
+- `blValidZTime_z1` — **Deliverable 2**: `BLValidZTime (Z1 p)`, stated as the negation of
   `TMCompleteZTime` (Phase 4's `Prop`), so the two phases visibly compose
 
 ## References
@@ -179,24 +179,24 @@ theorem not_bl_derivable_z1 (p : Atom) :
     (bl_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
 
 /--
-**Deliverable 2.** `Z1 p` is `BLValidDiscrete`: from `Conservativity.z1_translate`
+**Deliverable 2.** `Z1 p` is `BLValidZTime`: from `Conservativity.z1_translate`
 (`⊢[Discrete] tr (Z1 p)`), `soundness_ztime_valid` (BL⁺'s empty-context discrete soundness)
-gives `ValidDiscrete (tr (Z1 p))`, and `blValidDiscrete_iff_validDiscrete_tr` crosses the
+gives `ValidZTime (tr (Z1 p))`, and `blValidZTime_iff_validZTime_tr` crosses the
 bridge.
 
 Combined with `not_bl_derivable_z1`, this refutes the `.Discrete` row of Phase 4's reduction:
 **`TM_f` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
 so the two phases visibly compose.
 -/
-theorem blValidDiscrete_z1 (p : Atom) : BLValidDiscrete (Conservativity.Z1 (BLFormula.atom p)) := by
-  rw [blValidDiscrete_iff_validDiscrete_tr]
+theorem blValidZTime_z1 (p : Atom) : BLValidZTime (Conservativity.Z1 (BLFormula.atom p)) := by
+  rw [blValidZTime_iff_validZTime_tr]
   obtain ⟨d⟩ := Conservativity.z1_translate (BLFormula.atom p)
   exact soundness_ztime_valid d
 
 /-- **TM_f is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteZTime`,
-witnessed by `Z1 p`: `BLValidDiscrete (Z1 p)` holds (`blValidDiscrete_z1`) yet `Z1 p` is not
+witnessed by `Z1 p`: `BLValidZTime (Z1 p)` holds (`blValidZTime_z1`) yet `Z1 p` is not
 `TM_f`-derivable (`not_bl_derivable_z1`). -/
 theorem tmCompleteZTime_refuted (p : Atom) : ¬ TMCompleteZTime :=
-  fun h => not_bl_derivable_z1 p (h _ (blValidDiscrete_z1 p))
+  fun h => not_bl_derivable_z1 p (h _ (blValidZTime_z1 p))
 
 end FormalSystem.Metalogic

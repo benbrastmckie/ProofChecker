@@ -68,7 +68,7 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
   module strengthens
 * `FormalSystem/Metalogic/BXCanonical/Completeness.lean` — `completeness`, `completeness_ztime`
 * `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `blValid_iff_valid_tr`,
-  `blValidDiscrete_iff_validDiscrete_tr`
+  `blValidZTime_iff_validZTime_tr`
 -/
 
 namespace FormalSystem.Metalogic
@@ -155,7 +155,7 @@ theorem tmCompleteBase_iff_forwardBase : TMCompleteBase ↔ ForwardBase :=
 
 /--
 **"TM_f is complete over `FrameClass.Discrete` task frames."** `TMComplete` at `.Discrete`;
-`BLValidDiscrete` is `BLValidIn .Discrete` definitionally. **Unasserted**, exactly as
+`BLValidZTime` is `BLValidIn .Discrete` definitionally. **Unasserted**, exactly as
 `TMCompleteBase`.
 -/
 def TMCompleteZTime : Prop := TMComplete FrameClass.Discrete

@@ -1056,17 +1056,17 @@ theorem not_valid_of_hasOpen_int (hV : branchOrderValid b ord = true)
       (regionHistory f l₀.world (0 : ℤ)) (fun _ => trivial) (f i))
 
 /--
-**The `ValidDiscrete` companion.** `ℤ` carries `SuccOrder`, `PredOrder`, `IsSuccArchimedean` and
+**The `ValidZTime` companion.** `ℤ` carries `SuccOrder`, `PredOrder`, `IsSuccArchimedean` and
 `IsPredArchimedean`, which is what `.Discrete`'s binder list adds; the countermodel and the truth
 lemma are the same objects, so the two results differ only in which binder list is discharged.
 -/
-theorem not_validDiscrete_of_hasOpen_int (hV : branchOrderValid b ord = true)
+theorem not_validZTime_of_hasOpen_int (hV : branchOrderValid b ord = true)
     (fc : ProofSystem.FrameClass)
     (hSat : findUnexpanded b (timeOrd := ord) = none) (hOpen : findClosure b fc = none)
     (hTot : timeOrderTotal b ord = true) (hBA : boxAnchoredCheck b = true)
     (hCheck : regionLabelCheck b ord = true) (hTW : temporalWitnessCheck b ord = true)
     {χ : Formula} {l₀ : Label} (hw₀ : l₀.world ∈ b.knownWorlds)
-    (hroot : (⟨.neg, χ, l₀⟩ : SignedFormula) ∈ b) : ¬ ValidDiscrete χ := by
+    (hroot : (⟨.neg, χ, l₀⟩ : SignedFormula) ∈ b) : ¬ ValidZTime χ := by
   intro hval
   set f := intPlace b ord hV with hf_def
   have hf : Function.Injective f := intPlace_injective hV

@@ -51,7 +51,7 @@ synthesis from a bare bi-serial relation, and computable model checking — rest
 
 ## The Mathlib succ-Archimedean-to-ℤ transfer: binder-fit finding
 
-`Semantics/Validity.lean`'s `ValidDiscrete` quantifies over duration types carrying
+`Semantics/Validity.lean`'s `ValidZTime` quantifies over duration types carrying
 `[AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] [SuccOrder D] [PredOrder D]`
 `[IsSuccArchimedean D] [IsPredArchimedean D] [Nontrivial D]`. Two Mathlib results transfer such a
 `D` to `ℤ`, and they are **not** interchangeable. Both binder fits were machine-checked against
@@ -69,7 +69,7 @@ this repository's pinned Mathlib before anything here was written:
 The distinction is load bearing rather than cosmetic. Durations *add* — `TaskRel`'s
 *Compositionality* is stated at `x + y` — so a transfer that only preserves order is not enough to
 carry a frame across; the additive iso is the one that is actually needed. The route for the
-`ValidDiscrete`-to-ℤ transfer is therefore the second lemma, with `Archimedean D` and the
+`ValidZTime`-to-ℤ transfer is therefore the second lemma, with `Archimedean D` and the
 least-positive-element witness supplied (the successor structure is what produces the latter),
 **not** a drop-in application of the first.
 
@@ -78,7 +78,7 @@ That route has since been taken. `Semantics/DurationClassification.lean` carries
 successor-based analogue: `archimedean_of_succ` (the `Archimedean D` instance),
 `isLeast_pos_succ_zero` (the witness), and `intIso : D ≃+o ℤ` packaging both.
 `Semantics/IntTransfer.lean` transports the frame, `TaskModel`, `WorldHistory`, and `TruthAt`
-along that isomorphism, yielding `validDiscrete_iff_validInt : ValidDiscrete φ ↔ ValidInt φ`.
+along that isomorphism, yielding `validZTime_iff_validInt : ValidZTime φ ↔ ValidInt φ`.
 
 ## What buying the right to work over ℤ is worth
 

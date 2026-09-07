@@ -15,7 +15,7 @@ native `BLTruthAt` of `Semantics/BLTruth.lean`.
 
 Each predicate here is a **binder-for-binder mirror** of its counterpart in
 `Semantics/Validity.lean`: `BLValid` of `Valid`, `BLValidDense` of `ValidDense`,
-`BLValidDiscrete` of `ValidDiscrete`, `BLValidDedekind` of `ValidDedekind`, and
+`BLValidZTime` of `ValidZTime`, `BLValidRTime` of `ValidRTime`, and
 `BLSemanticConsequence` of `SemanticConsequence`. Nothing changes but `Formula ↦ BLFormula` and
 `TruthAt ↦ BLTruthAt`; in particular the histories quantified over are the **total** ones
 (`τ.IsTotal`, the predicate form of `H_F`), matching `def:logical-consequence`, and `Type` rather
@@ -24,7 +24,7 @@ than `Type*` is used throughout for the same universe reason recorded on `Valid`
 ## The Dedekind asymmetry — read this before adding a `BLValidComplete`
 
 There is deliberately **no** density-free `BLValidComplete`, and the soundness theorem for
-`FrameClass.Dedekind` targets `BLValidDedekind`. A density-free target would be
+`FrameClass.Dedekind` targets `BLValidRTime`. A density-free target would be
 **refutable**, and on the BL side one axiom suffices to refute it:
 
 - `(BaseLanguage.Axiom.dn φ).minFrameClass = FrameClass.Dense` and
@@ -46,11 +46,11 @@ since BL has no `untl`. Do not "simplify" the target.
 
 - `BLValid`, `BLSemanticConsequence` — validity and consequence over the `FrameClass.Base` binder
   set
-- `BLValidDense`, `BLValidDiscrete`, `BLValidDedekind` — the three extension binder sets
+- `BLValidDense`, `BLValidZTime`, `BLValidRTime` — the three extension binder sets
 
 ## Main Results
 
-- `BLValidity.blValid_implies_blValidDense`, `…_blValidDiscrete`, `…_blValidDedekind` — the
+- `BLValidity.blValid_implies_blValidDense`, `…_blValidZTime`, `…_blValidRTime` — the
   inclusion lemmas mirroring `Validity.valid_implies_valid_dense` and its siblings
 - `BLValidity.blValid_iff_empty_consequence` — validity is consequence from the empty context
 
@@ -207,19 +207,19 @@ def BLValidDense (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Den
 Validity over **discrete** temporal orders: `BLValid` with successor and predecessor structure
 added to the binder list, capturing the frame condition for BL's discreteness axioms.
 
-Binder-for-binder mirror of `Semantics.ValidDiscrete`, and like it now an abbreviation: the frame
+Binder-for-binder mirror of `Semantics.ValidZTime`, and like it now an abbreviation: the frame
 constraint is `FrameClass.Sat .Discrete`, i.e. `TaskFrame.IsSuccArchDiscrete` — `def:TMplus-f`'s
 Hölder narrowing to ℤ-time. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
 `sat_intro`, which destructures the `IsSuccArchDiscrete` existential into the four instances.
 -/
-def BLValidDiscrete (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Discrete φ
+def BLValidZTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Discrete φ
 
 /--
-**`BLValidDiscrete` with the two Archimedean binders dropped.**
+**`BLValidZTime` with the two Archimedean binders dropped.**
 
-Mirrors `BLValidDiscrete`'s pre-abbreviation four-instance binder shape exactly, minus
-`[IsSuccArchimedean F.Duration]` and `[IsPredArchimedean F.Duration]`. Unlike `BLValidDiscrete`,
+Mirrors `BLValidZTime`'s pre-abbreviation four-instance binder shape exactly, minus
+`[IsSuccArchimedean F.Duration]` and `[IsPredArchimedean F.Duration]`. Unlike `BLValidZTime`,
 this is stated directly in the pre-abbreviation shape rather than as an abbreviation over
 `BLValidIn`: there is no `FrameClass.Sat` variant bundling `SuccOrder`+`PredOrder` alone
 (`TaskFrame.IsSuccArchDiscrete` bundles all four), so no `.of_forall`/`.apply` pair is needed —
@@ -230,30 +230,30 @@ single prerequisite CEF was missing (report §6.1): a discrete BL soundness theo
 assume Archimedean structure, so it applies to the non-Archimedean carrier `ℚ ×ₗ ℤ`
 (`Semantics/LexCarrier.lean`) that `Metalogic/Conservativity/Z1Countermodel.lean`'s countermodel is built over.
 -/
-def BLValidDiscreteSucc (φ : BLFormula) : Prop :=
+def BLValidZTimeSucc (φ : BLFormula) : Prop :=
   ∀ (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration] (M : TaskModel F)
     (τ : WorldHistory F), τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ
 
-/-- `BLValid` weakens to `BLValidDiscreteSucc`, mirroring `BLValidity.blValid_implies_blValidDiscrete`
+/-- `BLValid` weakens to `BLValidZTimeSucc`, mirroring `BLValidity.blValid_implies_blValidZTime`
 and its dense/Dedekind siblings.
 
 **Documented exception to the transfer-theorem collapse.** Its three siblings are corollaries of
 `BLValidIn.mono`, and every BL/BL⁺ equivalence in `Metalogic/Conservativity/BaseLanguageSoundness.lean` is a
 corollary of `blValidIn_iff_validIn_tr`. This one is neither, and cannot be made either:
-`BLValidDiscreteSucc` is **not** any `BLValidIn fc` — no `FrameClass.Sat` variant bundles just
+`BLValidZTimeSucc` is **not** any `BLValidIn fc` — no `FrameClass.Sat` variant bundles just
 `SuccOrder` + `PredOrder` without the two Archimedean conditions, which is exactly the weakening
 `bl_soundness_ztime_succ` needs for the non-Archimedean carrier `ℚ ×ₗ ℤ`. Adding such a tag to
 `FrameClass` to make this a corollary would widen the proof side's class lattice to serve a
 semantic convenience. Leave it as a direct lambda. -/
-theorem BLValidity.blValid_implies_blValidDiscreteSucc {φ : BLFormula} (h : BLValid φ) :
-    BLValidDiscreteSucc φ :=
+theorem BLValidity.blValid_implies_blValidZTimeSucc {φ : BLFormula} (h : BLValid φ) :
+    BLValidZTimeSucc φ :=
   fun F _ _ M τ hτ t => h.apply F M τ hτ t
 
 /--
 Validity over **dense Dedekind-complete** temporal orders: the least-upper-bound hypothesis
 together with `[DenselyOrdered D]`.
 
-Binder-for-binder mirror of `Semantics.ValidDedekind`, and **this — not a density-free
+Binder-for-binder mirror of `Semantics.ValidRTime`, and **this — not a density-free
 `BLValidComplete` — is the target of the `FrameClass.Dedekind` soundness theorem.** The module
 docstring above gives the BL-native refutation of the density-free form: `Axiom.dn` is admissible
 at `FrameClass.Dedekind` and is false on `ℤ`, which satisfies every remaining binder. There is
@@ -265,7 +265,7 @@ Now an abbreviation: the frame constraint is `FrameClass.Sat .Dedekind`, i.e.
 `sat_intro`, which splits `IsDedekind` into the density instance and the least-upper-bound
 hypothesis.
 -/
-def BLValidDedekind (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Dedekind φ
+def BLValidRTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Dedekind φ
 
 namespace BLValidity
 
@@ -278,7 +278,7 @@ hand-written binder-discarding lambdas.
 Two members of the BL⁺ family have no mirror here, both for the same reason: they mention
 `ValidComplete`, whose BL counterpart is deliberately not defined (see the module docstring).
 Those are `Validity.valid_implies_validComplete` and
-`Validity.validDedekind_of_validComplete`. -/
+`Validity.validRTime_of_validComplete`. -/
 
 /-- `BLValid` is `BLValidIn` at the unconstrained class: `Sat .Base` is `True`. The BL mirror of
 `Validity.valid_iff_validIn_base`. -/
@@ -290,12 +290,12 @@ theorem blValid_implies_blValidDense {φ : BLFormula} (h : BLValid φ) : BLValid
   BLValidIn.mono (ProofSystem.FrameClass.base_le _) ((blValid_iff_blValidIn_base φ).mp h)
 
 /-- Validity implies validity over discrete orders. -/
-theorem blValid_implies_blValidDiscrete {φ : BLFormula} (h : BLValid φ) : BLValidDiscrete φ :=
+theorem blValid_implies_blValidZTime {φ : BLFormula} (h : BLValid φ) : BLValidZTime φ :=
   BLValidIn.mono (ProofSystem.FrameClass.base_le _) ((blValid_iff_blValidIn_base φ).mp h)
 
 /-- Validity implies validity over dense Dedekind-complete orders. -/
-theorem blValid_implies_blValidDedekind {φ : BLFormula} (h : BLValid φ) :
-    BLValidDedekind φ :=
+theorem blValid_implies_blValidRTime {φ : BLFormula} (h : BLValid φ) :
+    BLValidRTime φ :=
   BLValidIn.mono (ProofSystem.FrameClass.base_le _) ((blValid_iff_blValidIn_base φ).mp h)
 
 /-- Validity is consequence from the empty context. Mirrors

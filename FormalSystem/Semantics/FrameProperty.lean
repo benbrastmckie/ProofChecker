@@ -177,7 +177,7 @@ order-and-group isomorphism. The dense-and-complete narrowing is `TaskFrame.IsDe
 
 **Reciprocal pointer for `ValidComplete`.** `Semantics/Validity.lean`'s `ValidComplete` is
 `ValidOnFrames` at *this* bare clause, not at `IsDedekind` below, and is the one `Valid*` name
-that is not `ValidIn` at its apparent tag. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidDedekind` distinction is argued in full.
+that is not `ValidIn` at its apparent tag. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 -/
 def TaskFrame.IsComplete (F : TaskFrame) : Prop :=
   ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x
@@ -204,7 +204,7 @@ already load-bearing here for *proof-theoretic* completeness — `completeness`,
 pair would collide with the tree's most-cited word at exactly the point where the two senses meet.
 "Dedekind complete" is the standard and unambiguous name for the order-theoretic property, so it
 is what the dense-and-complete class is called here, in `FrameClass.Dedekind`, and in
-`ValidDedekind`.
+`ValidRTime`.
 
 Note that the bare Complete clause above *does* keep the paper's name (`IsComplete`); only the
 dense-and-complete conjunction is renamed.

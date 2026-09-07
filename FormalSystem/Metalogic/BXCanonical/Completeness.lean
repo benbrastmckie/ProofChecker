@@ -191,7 +191,7 @@ For the frame-class-specific results, see `completeness_dense` and `completeness
 validity notion with the axiom set that captures it. `Valid φ` (validity over *all* linear
 temporal frames) is matched by the `Base` axiom set specifically; the dense and discrete
 notions have their own statements (`completeness_dense`, `completeness_ztime`) against
-`ValidDense` / `ValidDiscrete`. There is no `{fc}`-uniform statement to generalise to.
+`ValidDense` / `ValidZTime`. There is no `{fc}`-uniform statement to generalise to.
 -/
 theorem completeness (φ : Formula) :
     Valid φ → Derivable FrameClass.Base [] φ := by
@@ -282,7 +282,7 @@ then it is derivable in the Discrete proof system.
 **Proof Strategy**: Same contrapositive + MCS construction as `completeness`,
 but using Discrete-derivability and Discrete-MCS throughout.
 - Discrete case (□(U(⊤,⊥)) ∈ M): `countermodel_discrete_reynolds_v2` produces a
-  countermodel on `ℤ` (SuccOrder, PredOrder), contradicting `ValidDiscrete`.
+  countermodel on `ℤ` (SuccOrder, PredOrder), contradicting `ValidZTime`.
 - Dense case (□(F'⊤) ∈ M): `U(⊤,⊥)` is a Discrete theorem,
   so `nextTop ∈ M`. From `□(¬U(⊤,⊥)) ∈ M` and Modal T, `¬U(⊤,⊥) ∈ M`,
   contradiction.
@@ -294,8 +294,8 @@ Axiom Audit section below). The dense-case branch closes by deriving `U(⊤,⊥)
 Discrete theorem; the mixed case is eliminated by `mcs_mixed_case_absurd`.
 -/
 theorem completeness_ztime (φ : Formula) :
-    ValidDiscrete φ → Derivable FrameClass.Discrete [] φ := by
-  intro h_valid_discrete
+    ValidZTime φ → Derivable FrameClass.Discrete [] φ := by
+  intro h_valid_ztime
   by_contra h_not_deriv
   have h_cons := neg_consistent_of_not_derivable (fc := FrameClass.Discrete) φ h_not_deriv
   obtain ⟨M, hM_sup, hM_mcs⟩ := set_lindenbaum {Formula.neg φ} h_cons
@@ -371,7 +371,7 @@ theorem completeness_ztime (φ : Formula) :
       -- `haveI`-introduced *copy* of `hsucc` is a fresh opaque fvar that `hsuccArch`'s type does
       -- not mention, and synthesis then fails to match the two.
       exact h_not_true
-        (ValidIn.apply_total h_valid_discrete F ⟨hsucc, hpred, hsuccArch, hpredArch⟩ TM τ h_tot t)
+        (ValidIn.apply_total h_valid_ztime F ⟨hsucc, hpred, hsuccArch, hpredArch⟩ TM τ h_tot t)
     · -- Mixed case: ¬□(F'T) ∧ ¬□(U(T,bot)) ∈ M — eliminated by structural axiom
       exact False.elim (Chronicle.mcs_mixed_case_absurd FrameClass.Discrete M hM_mcs
           h_not_box_dense h_not_box_discrete)

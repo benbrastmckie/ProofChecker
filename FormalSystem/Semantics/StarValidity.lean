@@ -27,7 +27,7 @@ semantics.
 ## Main Definitions
 
 - `TaskFrame.StarValidOn`, `StarValidOnFrames`, `StarValidIn`, `StarValid`
-- `StarValidDense`, `StarValidDiscrete`, `StarValidDedekind` — the per-class abbreviations
+- `StarValidDense`, `StarValidZTime`, `StarValidRTime` — the per-class abbreviations
 
 ## Main Results
 
@@ -80,11 +80,11 @@ def StarValid (φ : StarFormula) : Prop :=
 /-- Validity over dense frames. Mirror of `ValidDense`. -/
 def StarValidDense (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Dense φ
 
-/-- Validity over discrete (succ-Archimedean) frames. Mirror of `ValidDiscrete`. -/
-def StarValidDiscrete (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Discrete φ
+/-- Validity over discrete (succ-Archimedean) frames. Mirror of `ValidZTime`. -/
+def StarValidZTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Discrete φ
 
-/-- Validity over dense Dedekind-complete frames. Mirror of `ValidDedekind`. -/
-def StarValidDedekind (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Dedekind φ
+/-- Validity over dense Dedekind-complete frames. Mirror of `ValidRTime`. -/
+def StarValidRTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Dedekind φ
 
 /-! ### Monotonicity -/
 

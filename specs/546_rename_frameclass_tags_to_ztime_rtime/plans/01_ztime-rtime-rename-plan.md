@@ -277,18 +277,18 @@ and confirming every hit is either renamed or on the KEEP list.
 
 ---
 
-### Phase 3: Tier 2 — validity predicates and `nolints.json` [NOT STARTED]
+### Phase 3: Tier 2 — validity predicates and `nolints.json` [COMPLETED]
 
 **Goal**: Rename the validity-predicate layer and the decidability instances, and hand-update
 the two grandfathered `docBlame` entries so C16 does not regress.
 
 **Tasks**:
-- [ ] `Semantics/Validity.lean`: `ValidDiscrete` -> `ValidZTime`, `ValidDedekind` -> `ValidRTime`.
+- [x] `Semantics/Validity.lean`: `ValidDiscrete` -> `ValidZTime`, `ValidDedekind` -> `ValidRTime`.
       Leave `ValidComplete` alone (KEEP list).
-- [ ] `Semantics/BLValidity.lean`: `BLValidDiscrete`, `BLValidDedekind`, `BLValidDiscreteSucc`.
-- [ ] `Semantics/StarValidity.lean`: `StarValidDiscrete`, `StarValidDedekind`.
-- [ ] `Metalogic/Decidability/Verified/Decidable.lean`: `carrierDiscrete`, `carrierDedekind`.
-- [ ] Rename the dependent lemma family: `validDiscrete_iff_validIn_discrete`,
+- [x] `Semantics/BLValidity.lean`: `BLValidDiscrete`, `BLValidDedekind`, `BLValidDiscreteSucc`.
+- [x] `Semantics/StarValidity.lean`: `StarValidDiscrete`, `StarValidDedekind`.
+- [x] `Metalogic/Decidability/Verified/Decidable.lean`: `carrierDiscrete`, `carrierDedekind`.
+- [x] Rename the dependent lemma family: `validDiscrete_iff_validIn_discrete`,
       `validDedekind_iff_validIn_dedekind`, `valid_implies_valid_discrete`,
       `valid_implies_validDedekind`, `validDedekind_of_validComplete`, `isValid_validDiscrete`,
       `isValid_validDedekind`, `validDiscrete_iff_check`, `validDiscrete_iff_checkFamily`,
@@ -298,9 +298,10 @@ the two grandfathered `docBlame` entries so C16 does not regress.
       `blValidDiscrete_z1`, `blValid_implies_blValidDiscrete`, `blValid_implies_blValidDedekind`,
       `blValid_implies_blValidDiscreteSucc`, `decidableValidDiscrete`,
       `decidableValidDiscreteFamily`.
-- [ ] Hand-edit `scripts/nolints.json` lines 58 and 60 to the new fully-qualified names. Do NOT
+- [x] Hand-edit `scripts/nolints.json` lines 58 and 60 to the new fully-qualified names. Do NOT
       regenerate the file.
-- [ ] Run the KEEP-list guard.
+- [x] Run the KEEP-list guard.
+- [x] *(deviation: added — local hypothesis `h_valid_discrete` in `BXCanonical/Completeness.lean` renamed to `h_valid_ztime`; it names the class and would otherwise have been the sole lowercase `valid…discrete` residue.)*
 
 **Timing**: 2 hours
 

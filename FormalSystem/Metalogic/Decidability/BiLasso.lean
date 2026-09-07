@@ -64,9 +64,9 @@ enumeration bound is a closed arithmetic expression, and it is astronomically la
 - `Check`: `SatAtState` (the specification), `checkAt`, `check`, `check_correct`, the `Decidable`
   instance, and the discrimination theorems
 - `Assembly`: what this layer buys *given* a finite-model theorem, taken as a hypothesis `fmp`
-  and not proved here — `not_validDiscrete_of_satAtState` (the soundness direction, hypothesis-
-  free), `validDiscrete_iff_check`/`decidableValidDiscrete` for a single canonical presentation,
-  and `validDiscrete_iff_checkFamily`/`decidableValidDiscreteFamily` for a candidate list
+  and not proved here — `not_validZTime_of_satAtState` (the soundness direction, hypothesis-
+  free), `validZTime_iff_check`/`decidableValidZTime` for a single canonical presentation,
+  and `validZTime_iff_checkFamily`/`decidableValidZTimeFamily` for a candidate list
 
 ## Not re-exported here
 

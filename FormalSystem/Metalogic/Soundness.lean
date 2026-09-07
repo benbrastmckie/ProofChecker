@@ -56,7 +56,7 @@ task semantic models. The MF and TF axioms use time-shift invariance
 **Completed Proofs**:
 - Base axiom validity lemmas: prop_k, prop_s, ex_falso, peirce, MT, M4, MB, M5_collapse,
   MK_dist, TK_dist, T4, TC, TL, MF, TF, linearity (universally valid)
-- Frame-class axiom validity: density (ValidDense), discreteness_forward (ValidDiscrete)
+- Frame-class axiom validity: density (ValidDense), discreteness_forward (ValidZTime)
 - `axiom_validIn_min` (one arm per axiom constructor, each at that axiom's own
   `minFrameClass`), lifted by `ValidIn.mono` to `axiom_validIn` at an arbitrary class; the four
   `axiom_*_valid` names are one-line instances of it
@@ -428,7 +428,7 @@ Under strict semantics: if Hφ at t (∀r < t, φ(r)) and φ(t), then Hφ at suc
 since for all r < succ(t), either r < t (covered by Hφ) or r = t (covered by φ(t)).
 So F(Hφ) at t is witnessed by succ(t). -/
 theorem discreteness_forward_valid (φ : Formula) :
-    ValidDiscrete (Formula.and (Formula.bot.neg.someFuture)
+    ValidZTime (Formula.and (Formula.bot.neg.someFuture)
       (Formula.and φ (Formula.allPast φ)) |>.imp
       (Formula.allPast φ).someFuture) := by
   refine ValidIn.of_forall_total ?_
@@ -444,7 +444,7 @@ theorem discreteness_forward_valid (φ : Formula) :
 /-- Future seriality axiom validity: `⊨_discrete Gφ → Fφ`.
 Under strict semantics: Gφ → Fφ requires NoMaxOrder. -/
 theorem seriality_future_valid (φ : Formula) :
-    ValidDiscrete (φ.allFuture.imp φ.someFuture) := by
+    ValidZTime (φ.allFuture.imp φ.someFuture) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
@@ -457,7 +457,7 @@ theorem seriality_future_valid (φ : Formula) :
 /-- Past seriality axiom validity: `⊨_discrete Hφ → Pφ`.
 Under strict semantics: Hφ → Pφ requires NoMinOrder. -/
 theorem seriality_past_valid (φ : Formula) :
-    ValidDiscrete (φ.allPast.imp φ.somePast) := by
+    ValidZTime (φ.allPast.imp φ.somePast) := by
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
@@ -806,7 +806,7 @@ theorem temporal_necessitation_preserves_valid {φ : Formula} (h : ⊨ φ) : ⊨
 
 Soundness for `FrameClass.Dedekind`: Reynolds' axiomatization US/R for real flow.
 
-**The target is `ValidDedekind`, NOT `ValidComplete`, and that is deliberate.** See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidDedekind` distinction is argued in full.
+**The target is `ValidRTime`, NOT `ValidComplete`, and that is deliberate.** See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 -/
 
 /-! ### Semantic validity of the three Reynolds axioms
@@ -842,10 +842,10 @@ Note that the proof consumes only the least-upper-bound hypothesis and the linea
 no `DenselyOrdered`, `Nontrivial`, `AddCommGroup`, `IsOrderedAddMonoid`, or shift-closure
 assumption, so both Prior gap axioms are in fact valid on every Dedekind-complete linear order.
 The `DenselyOrdered` binder is present for consistency with the rest of the chain, not because
-the mathematics needs it; see the `ValidDedekind` discussion above for why the weaker binder
+the mathematics needs it; see the `ValidRTime` discussion above for why the weaker binder
 set is required here and must not be relaxed. -/
 theorem prior_U_gap_valid (φ : Formula) :
-    ValidDedekind ((Formula.and (Formula.untl φ Formula.top) φ.neg.someFuture).imp
+    ValidRTime ((Formula.and (Formula.untl φ Formula.top) φ.neg.someFuture).imp
       (Formula.untl φ (Formula.or φ.neg (Formula.kPlus φ.neg)))) := by
   refine ValidIn.of_forall_total ?_
   intro F h_lub M τ _hτ t h_ant
@@ -900,7 +900,7 @@ The trichotomy branches in the final step run in the mirror order to the Prior-U
 between `w` and `t`, the case `r < s` is handled by the refuting witness and `s < r` by the
 interval guard, because the `K⁻` interval now lies to the left of `s` rather than the right. -/
 theorem prior_S_gap_valid (φ : Formula) :
-    ValidDedekind ((Formula.and (Formula.snce φ Formula.top) φ.neg.somePast).imp
+    ValidRTime ((Formula.and (Formula.snce φ Formula.top) φ.neg.somePast).imp
       (Formula.snce φ (Formula.or φ.neg (Formula.kMinus φ.neg)))) := by
   refine ValidIn.of_forall_total ?_
   intro F h_lub M τ _hτ t h_ant
@@ -946,7 +946,7 @@ section 7 and defer proving its validity in ℝ until lemma 10 there" -- so the 
 argument below is his §7 lemma 10.
 
 **The separability input.** Sep is FALSE on an arbitrary densely ordered Dedekind-complete linear
-order: the lexicographic square `[0,1] ×ₗₑₓ [0,1]` refutes it. The `ValidDedekind` algebraic
+order: the lexicographic square `[0,1] ×ₗₑₓ [0,1]` refutes it. The `ValidRTime` algebraic
 binders are therefore load-bearing here, in sharp contrast to the two Prior gap lemmas above,
 which consume only the linear order and the least-upper-bound hypothesis. `AddCommGroup`,
 `IsOrderedAddMonoid`, `DenselyOrdered` and `Nontrivial` together with the LUB hypothesis force
@@ -975,7 +975,7 @@ development absent from this tree) and would drag `Cardinal` into the soundness 
 reader comparing this proof against Reynolds §7 should expect no `S ≅ ℚ` step and find
 `nested_core` in its place. -/
 theorem sep_valid (φ : Formula) :
-    ValidDedekind ((Formula.and (Formula.kPlus φ)
+    ValidRTime ((Formula.and (Formula.kPlus φ)
         (Formula.kPlus (Formula.and φ (Formula.untl φ.neg φ))).neg).imp
         (Formula.kPlus (Formula.and (Formula.kPlus φ) (Formula.kMinus φ)))) := by
   refine ValidIn.of_forall_total ?_
@@ -1045,7 +1045,7 @@ hence through `neg` and `and`, exchanges `U`/`S` and fixes `top`; so the swapped
 past mirror with `ψ := φ.swapTemporal`, and a single `simp only` performs the whole unfolding.
 See `sep_valid` for the separability input and the recorded fidelity deviation from Reynolds. -/
 theorem sep_swap_valid (φ : Formula) :
-    ValidDedekind (((Formula.and (Formula.kPlus φ)
+    ValidRTime (((Formula.and (Formula.kPlus φ)
         (Formula.kPlus (Formula.and φ (Formula.untl φ.neg φ))).neg).imp
         (Formula.kPlus (Formula.and (Formula.kPlus φ) (Formula.kMinus φ)))).swapTemporal) := by
   refine ValidIn.of_forall_total ?_
@@ -1356,7 +1356,7 @@ Under strict semantics, seriality requires NoMaxOrder/NoMinOrder (from SuccOrder
 Nontrivial). -/
 theorem axiom_ztime_valid {φ : Formula} (h : Axiom φ) (h_fc :
       h.minFrameClass ≤ FrameClass.Discrete) :
-    ValidDiscrete φ := by
+    ValidZTime φ := by
   exact axiom_validIn h h_fc
 
 /--
@@ -1454,7 +1454,7 @@ validity and swap-validity together at an arbitrary `fc`; the discrete swap fact
 `axiom_swap_validIn_min`'s discrete arms.
 -/
 theorem soundness_ztime_valid {phi : Formula}
-    (d : DerivationTree FrameClass.Discrete [] phi) : ValidDiscrete phi := by
+    (d : DerivationTree FrameClass.Discrete [] phi) : ValidZTime phi := by
   exact soundness_validIn d
 
 /--
@@ -1487,7 +1487,7 @@ eliminated, now by `ValidIn.mono`'s `h_fc` hypothesis being unsatisfiable at
 This theorem is itself sorry-free. -/
 theorem axiom_rtime_valid {φ : Formula} (h : Axiom φ)
     (h_fc : h.minFrameClass ≤ FrameClass.Dedekind) :
-    ValidDedekind φ := by
+    ValidRTime φ := by
   exact axiom_validIn h h_fc
 
 /--
@@ -1495,7 +1495,7 @@ theorem axiom_rtime_valid {φ : Formula} (h : Axiom φ)
 Dedekind-complete frames.
 -/
 theorem soundness_rtime_valid {phi : Formula}
-    (d : DerivationTree FrameClass.Dedekind [] phi) : ValidDedekind phi :=
+    (d : DerivationTree FrameClass.Dedekind [] phi) : ValidRTime phi :=
   soundness_validIn d
 
 /--
@@ -1506,8 +1506,8 @@ This is the Dedekind analogue of `soundness_dense` and `soundness_ztime`. Given 
 Dedekind-compatible derivation `Γ ⊢ φ`, if all formulas in `Γ` are true at some configuration
 on a dense Dedekind-complete frame, then `φ` is also true there.
 
-**The conclusion is stated over the `ValidDedekind` binder set, NOT `ValidComplete`**; dropping
-the `[DenselyOrdered D]` binder here would make this theorem refutable. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidDedekind` distinction is argued in full.
+**The conclusion is stated over the `ValidRTime` binder set, NOT `ValidComplete`**; dropping
+the `[DenselyOrdered D]` binder here would make this theorem refutable. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 -/
 theorem soundness_rtime (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.Dedekind Γ φ)
@@ -1565,10 +1565,10 @@ not import, so phrasing the statement in terms of `Derivable` keeps the result a
 this layer.
 
 The witness is again `trivialFrame` over `Int`, which is what this module's
-`Mathlib.Data.Int.SuccPred` import is for: `ValidDiscrete` binds `SuccOrder D`, `PredOrder D`,
+`Mathlib.Data.Int.SuccPred` import is for: `ValidZTime` binds `SuccOrder D`, `PredOrder D`,
 `IsSuccArchimedean D` and `IsPredArchimedean D`, and `Semantics/Validity.lean` imports those
 *classes* without importing the `ℤ` *instances*. `soundness_ztime_valid` turns a
-`FrameClass.Discrete` derivation of `⊥` from `[]` into `ValidDiscrete ⊥`; instantiating it at the
+`FrameClass.Discrete` derivation of `⊥` from `[]` into `ValidZTime ⊥`; instantiating it at the
 single total history supplied by `hF_nonempty_of_frameAxioms` contradicts `Truth.bot_false`.
 
 Without this lemma every restricted-MCS result instantiated at `FrameClass.Discrete` would be
