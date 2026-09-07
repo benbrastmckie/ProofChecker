@@ -52,7 +52,7 @@ one negatively.
 * Each `SetSemanticConsequence*` predicate is the corresponding validity predicate's binder list
   taken verbatim from `FormalSystem/Semantics/Validity.lean`, with the premise hypothesis
   `(∀ ψ ∈ Γ, TruthAt M τ t ψ)` inserted before the conclusion — the same surgery that
-  `SemanticConsequenceRTime` (`StrongCompleteness.lean:129`) performs on
+  `SemanticConsequenceRTime` (`StrongCompleteness.lean`) performs on
   `ValidRTime`. `Γ : Set Formula` rather than `Γ : Context` is the only difference from
   those finite-context forms; `∀ ψ ∈ Γ` elaborates identically for `Set` and `List`.
 * Nothing here imports `FormalSystem/Metalogic/BXCanonical/`. The set layer is vocabulary; the

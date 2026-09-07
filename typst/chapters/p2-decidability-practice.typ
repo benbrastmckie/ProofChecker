@@ -79,14 +79,14 @@ def decide (φ : Formula) (searchDepth : Nat := 10) (tableauFuel : Nat := 1000)
     (fc : FrameClass := .Base) : DecisionResult φ
 ```
 
-(`Decidability/DecisionProcedure.lean:122`). It first tries direct axiom and compositional proof shortcuts, then falls back to bounded proof search (@sec:proof-automation), then to a tableau over $F(φ)$; `DecisionResult` (`Decidability/DecisionProcedure.lean:58-64`) is one of `valid` (carries a `DerivationTree`), `invalid` (carries a `SimpleCountermodel`), or `timeout` -- the `tableauFuel` parameter (default 1000 steps) is the source of the timeout branch, guaranteeing termination without guaranteeing an answer.
-Convenience wrappers `isValid` (`Decidability/DecisionProcedure.lean:163`) and `isSatisfiable` (`Decidability/DecisionProcedure.lean:169`) reduce to booleans.
-`getProof?` (`Decidability/DecisionProcedure.lean:87`) and `getCountermodel?` (`Decidability/DecisionProcedure.lean:92`) extract the payload when present.
+(`Decidability/DecisionProcedure.lean`). It first tries direct axiom and compositional proof shortcuts, then falls back to bounded proof search (@sec:proof-automation), then to a tableau over $F(φ)$; `DecisionResult` (`Decidability/DecisionProcedure.lean:58-64`) is one of `valid` (carries a `DerivationTree`), `invalid` (carries a `SimpleCountermodel`), or `timeout` -- the `tableauFuel` parameter (default 1000 steps) is the source of the timeout branch, guaranteeing termination without guaranteeing an answer.
+Convenience wrappers `isValid` (`Decidability/DecisionProcedure.lean`) and `isSatisfiable` (`Decidability/DecisionProcedure.lean`) reduce to booleans.
+`getProof?` (`Decidability/DecisionProcedure.lean`) and `getCountermodel?` (`Decidability/DecisionProcedure.lean:92`) extract the payload when present.
 
 == Certificates and Countermodels
 
 Every `valid` result carries a genuine `DerivationTree` proof term, checkable by Lean's kernel independently of the decision procedure that produced it.
-`TraceCertificate.lean` additionally packages proof search traces: `ProofCertificate` (`Decidability/TraceCertificate.lean:108`, with an `empty` constructor at `Decidability/TraceCertificate.lean:137`) records the rule sequence, and `CertOutcome` (`Decidability/TraceCertificate.lean:89`: `validProof`/`countermodel`/`timeout`/`blocked`) classifies the outcome for downstream export (feeding Part II's dataset pipeline).
+`TraceCertificate.lean` additionally packages proof search traces: `ProofCertificate` (`Decidability/TraceCertificate.lean:108`, with an `empty` constructor at `Decidability/TraceCertificate.lean`) records the rule sequence, and `CertOutcome` (`Decidability/TraceCertificate.lean:89`: `validProof`/`countermodel`/`timeout`/`blocked`) classifies the outcome for downstream export (feeding Part II's dataset pipeline).
 Every `invalid` result carries a `SimpleCountermodel` (`Decidability/CountermodelExtraction.lean:64`: `trueAtoms`/`falseAtoms`/`formula`), extracted from the open saturated tableau branch by `extractCountermodelSimple` (`Decidability/CountermodelExtraction.lean:137`, called directly by `decide`) or, for a richer variant retaining the full saturated branch, `extractSemanticCountermodel` (`Decidability/CountermodelExtraction.lean:305`) producing a `SemanticCountermodel` (`Decidability/CountermodelExtraction.lean:170`).
 
 == Correctness Properties

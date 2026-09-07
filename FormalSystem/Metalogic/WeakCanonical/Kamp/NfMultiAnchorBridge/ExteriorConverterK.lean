@@ -16,7 +16,7 @@ realizing `σ` over `[x1, w, x, t]`, contradicting the carried non-realization h
 **Faithful F2-sidestep (NOT overcome), carried as hypotheses (report 03 pattern)**: the
 producer needs two arity-5 pinned-env inputs that the env-free content channel (`P.existF`,
 `∃env`) cannot supply, so — exactly as the frozen k=2 `bracketEndChar_kvE2_sound_two_prior_frag`
-(`OuterGate.lean:268`) carries `hrealI`/`hrealB`/`hexcl`/`hexclExt` as hypotheses discharged one
+(`OuterGate.lean`) carries `hrealI`/`hrealB`/`hexcl`/`hexclExt` as hypotheses discharged one
 level up (`KampPrior:351`) — they are CARRIED here and discharged by the outer recursion /
 exterior provider:
 

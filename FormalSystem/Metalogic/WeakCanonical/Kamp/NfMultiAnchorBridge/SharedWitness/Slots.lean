@@ -147,7 +147,7 @@ def kvE2SepLit (bit : Bool) (f : Formula) : Formula :=
   if bit then f else f.neg
 
 /-- Interior-positive 1-type enumeration for σ at zone pattern `zs`
-    (duplicate-free `Finset.univ.toList`, Fintype `NormalForm.lean:167-178`). -/
+    (duplicate-free `Finset.univ.toList`, Fintype `NormalForm.lean`). -/
 noncomputable def kvE2SepS {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (σ : NormalForm sig 1 4) (zs : ZoneSpec 4) : List (NormalForm sig 0 1) :=
   (Finset.univ.toList : List (NormalForm sig 0 1)).filter (fun χ => kvE2SepBits σ zs χ)

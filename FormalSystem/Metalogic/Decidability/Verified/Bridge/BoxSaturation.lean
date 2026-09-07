@@ -443,7 +443,7 @@ fresh world, by copying `T(Gφ)`/`T(Hφ)` only when box-derived, or by restructu
 so it does not need an anchor — is a design decision about the saturation strategy with its own
 soundness obligations, and it is deliberately left open here rather than settled by reinstating
 an unsound copy. The measurement, the full carrier list and the repair options are written up in
-`specs/418_.../artifacts/boxanchored-finding.md`; the second half of the `timeOrderTotal`
+the box-anchored finding record (`boxanchored-finding.md`); the second half of the `timeOrderTotal`
 argument (every known time is comparable to the anchor, so `sat_all_future_pos` and
 `sat_all_past_pos` sweep the world's whole row from a single anchor) is unaffected and remains
 correct *given* an anchor.
@@ -577,7 +577,7 @@ removed as unsound, and they were the only route by which `T(Gφ)`/`T(Hφ)` coul
 minted world, so `BoxAnchored` is no longer supplied by the construction on multi-world branches.
 This lemma is unaffected as a lemma — it takes `BoxAnchored` as a hypothesis and proves the grid
 from it — but a caller can no longer expect to discharge that hypothesis from a real run. See
-`specs/418_.../artifacts/boxanchored-finding.md`.
+the box-anchored finding record (`boxanchored-finding.md`).
 -/
 theorem sat_box_grid_of_anchored (b : Branch) (timeOrd : TimeOrdering)
     (hSat : findUnexpanded b (timeOrd := timeOrd) = none)

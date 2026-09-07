@@ -22,7 +22,7 @@ point of interest lands wherever the compressed mid segment puts it — not at p
 
 Demanding otherwise demands a recurrence of the *type* at the point of interest, and no such
 recurrence need exist. That is machine-checked, not conjectured:
-`specs/417_semantic_fmp_finite_worldstate_over_z/evidence/phase10-origin-anchoring-obstruction.lean`
+`phase10-origin-anchoring-obstruction.lean`
 exhibits a total history whose closure formula `prev⁵ w` has truth set exactly `{0}`, so the type
 at `0` recurs at no earlier time.
 
@@ -335,7 +335,7 @@ lasso's own coherence window, over the same state.
 
 The witness position is quantified rather than fixed at `0`, and that is forced rather than
 convenient — see the module docstring and
-`specs/417_semantic_fmp_finite_worldstate_over_z/evidence/phase10-origin-anchoring-obstruction.lean`.
+`phase10-origin-anchoring-obstruction.lean`.
 Nothing is weakened at the specification level: the predicate being decided is existential in the
 time in either shape, since the hypothesis here is truth at an arbitrary `t`.
 

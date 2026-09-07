@@ -347,7 +347,7 @@ carried
   "all order atoms false".
 
 Both loci reuse the arity-1 predicate-literal conjunction `nfDepth0CharFormula`
-(Separation/KampTranslation.lean:130) via the per-locus projection `nf2Locus`. G4: the anchor set
+(Separation/KampTranslation.lean) via the per-locus projection `nf2Locus`. G4: the anchor set
 stays `{x, t} = 2`; no arity growth. G5 N/A here (this is the atom leaf, not a chain step). -/
 
 /-- Per-locus arity-1 projection of an arity-2 depth-0 NF: fix the anchor index `i ∈ {0, 1}` and
@@ -1962,7 +1962,7 @@ The frozen §Q4 target 2/3 base-case demands a single `TemporalPred` (equivalent
 whose evaluation at the navigated witness `env 0` is biconditional to the FULL arity-`n` atom
 layer `NfEvalNf M 0 n env qnf` for an ARBITRARY, universally-quantified `env : Fin n → M.carrier`.
 By definition `TemporalPred.EvalAt tp t = TemporalTruth M atomMap t tp.formula`
-(`ExistsForallNF.lean:53`): the value depends only on the SINGLE world `t = env 0` (and `M`, and the
+(`ExistsForallNF.lean`): the value depends only on the SINGLE world `t = env 0` (and `M`, and the
 formula) — it is completely independent of `env 1 … env (n-1)`. But the RHS reads
 `AtomEval M env (.pred p ⟨j⟩) = M.interp p (env j)` at every position `j` (`NormalForm.lean:113`).
 Hence any world-local base forces `NfEvalNf M 0 n env qnf` to be invariant under changing `env`

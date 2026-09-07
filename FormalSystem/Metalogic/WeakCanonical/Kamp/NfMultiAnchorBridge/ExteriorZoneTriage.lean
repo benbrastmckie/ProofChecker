@@ -9,11 +9,11 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.SharedWitne
 /-! # Exterior Zone-Determination Triage
 
 The order-atom-only residue triage for the exterior-marked `hexclExt` obligation
-(binder: `SharedWitness.lean:12710`; sole consumption point `SharedWitness.lean:12788`).
+(binder: `SharedWitness.lean`; sole consumption point `SharedWitness.lean`).
 
 **Method** (Rabinovich 2014, Prop 4.3 re-flatten p.6-7 + Notation 5.2 interior bounding p.8;
 347 adjudication verdict (b)): a realized exterior witness's zone marking is FORCED by the
-depth-0 atom clause (`NormalForm.lean:201-202`) — the `SharedWitness.lean:12642-12649`
+depth-0 atom clause (`NormalForm.lean:201-202`) — the `SharedWitness.lean`
 transfer pattern run in reverse. Where the interior-slice lemma
 `kvE2_sepInterior_exterior_notRealizable` (SW:12627) reads zone-spec bits and derives order
 facts, the lemmas here read the TRUE order relations at a strictly-exterior `x1` and derive
@@ -45,7 +45,7 @@ open FormalSystem.Syntax
 open FormalSystem.Metalogic.WeakCanonical
 
 /-- `kvE2SepZPastX3` is the CONSTANT `(true, false)` zone spec: `x1` strictly below
-    every env point (`SharedWitness.lean:70-72`). -/
+    every env point (`SharedWitness.lean`). -/
 private theorem kvE2_sep_zPastX3_apply (i : Fin 3) :
     kvE2SepZPastX3 i = (true, false) := by
   match i with
@@ -54,7 +54,7 @@ private theorem kvE2_sep_zPastX3_apply (i : Fin 3) :
   | ⟨2, _⟩ => rfl
 
 /-- `kvE2SepZFutT3` is the CONSTANT `(false, true)` zone spec: `x1` strictly above
-    every env point (`SharedWitness.lean:94-96`). -/
+    every env point (`SharedWitness.lean`). -/
 private theorem kvE2_sep_zFutT3_apply (i : Fin 3) :
     kvE2SepZFutT3 i = (false, true) := by
   match i with

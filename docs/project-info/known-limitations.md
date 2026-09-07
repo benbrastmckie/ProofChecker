@@ -197,7 +197,7 @@ always reported valid -- is open.
 ### The `extractionFailed` caveat
 
 `isKnownValid` is **not** a substitute hypothesis for `isValid`. Quoting
-`Correctness.lean:95-99` directly:
+`Correctness.lean` directly:
 
 > `DecisionResult.isKnownValid` is also `true` on `extractionFailed`, which carries no `⊢ φ`
 > witness; getting `⊨ φ` from a closed tableau with no extracted proof is the open

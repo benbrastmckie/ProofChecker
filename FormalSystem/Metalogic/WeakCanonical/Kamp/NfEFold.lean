@@ -387,7 +387,7 @@ one-step fold engine (the only proof consuming `nf_eval_unique`); it is Prop 4.3
 ∃-step (PDF p.6) in NF form. `efoldOfNf1` transports a depth-1 NF into the fold encoding;
 `nf_eval_nf1_iff_efold` is the k=1 whole-evaluation bridge with the explicit off-fiber falsity
 conjunct (the honest bridge); `nf_quant_layer_fold_k1_gate` instantiates the engine at `n = 3`,
-env `[w,x,t]`, matching the R2 NO-GO residual (NfMultiAnchorBridge.lean:1601-1603) VERBATIM —
+env `[w,x,t]`, matching the R2 NO-GO residual (NfMultiAnchorBridge.lean) VERBATIM —
 the entry point for the downstream RHS discharge.
 
 D7 reminder: this bridge is claimed ONLY at depth-0 subs (k=1); NO depth-`k` (`k≥1`) pointwise
@@ -538,7 +538,7 @@ theorem nf_eval_nf1_iff_efold {sig : MonadicSignature} [Fintype sig.preds] [Deci
       ⟨fun zs χ => hEQ (zs, χ), hOFF⟩
 
 /-- **The gate corollary — the E[Σ]-fold DONE signal.** The exact R2 NO-GO residual
-    (NfMultiAnchorBridge.lean:1601-1603), fold-reduced: under `h_atom` (available at that proof
+    (NfMultiAnchorBridge.lean), fold-reduced: under `h_atom` (available at that proof
     point), the arity-4 quant residual is equivalent to zone-bounded MONADIC existentials over
     env `[w,x,t]` (Prop 4.3 innermost fold, PDF p.6; Lemma 3.4, PDF p.5) plus the off-fiber
     falsity of `qnf.2`. No arity-4 object remains on the RHS. A one-line instantiation of

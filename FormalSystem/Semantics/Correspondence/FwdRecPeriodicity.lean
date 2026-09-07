@@ -61,7 +61,7 @@ walk vocabulary cannot be.
 
 ## Provenance
 
-Transcribed from `specs/511_research_frame_correspondence_infrastructure/reports/03_probes.lean`
+Transcribed from the frame-correspondence research probes (`03_probes.lean`),
 Probes H and I, which are the compiled evidence of record. The `Walk` layer transcribes
 unchanged — it never mentions a frame — and the two truth-level results are restated over
 bundled `TaskFrame`s.

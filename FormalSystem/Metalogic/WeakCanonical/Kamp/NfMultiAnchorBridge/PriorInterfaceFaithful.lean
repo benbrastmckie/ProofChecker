@@ -12,7 +12,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.KPlusFaithful
 
 `PriorInterface.lean` states the bridge's two relativizing predicates —
 `ExistProviders.correct` and `BracketCarrierCorrectVPrior` — against
-`SemanticPriorUZ` / `SemanticPriorSZ` (`WeakCanonical/PriorDefs.lean:22`, `:33`). This module
+`SemanticPriorUZ` / `SemanticPriorSZ` (`WeakCanonical/PriorDefs.lean`, `:33`). This module
 restates both against `HasFaithfulDedekindINF` / `HasFaithfulDedekindSUP`
 (`Kamp/KPlusFaithful.lean:320`, `:339`), which are Rabinovich's eq (5.2) dichotomy (PDF p.8) at
 the source's own `K⁺` / `K⁻` (his Definitions (2)/(3), PDF p.3).

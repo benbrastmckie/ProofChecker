@@ -9,10 +9,10 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.ExteriorGat
 /-! # Obligation-carrying EndInterval consumer reshape
 
 The obligation-carrying reshape of the interval consumer. It replaces the unconditional
-`EndIntervalCorrect` (`CarrierK1V.lean:2179`, on a dead branch — nothing external consumed it) with
+`EndIntervalCorrect` (`CarrierK1V.lean`, on a dead branch — nothing external consumed it) with
 a
 depth-cased, obligation-carrying `EndIntervalCorrectPrior`, and fills the recursion step (the
-`⟨[]⟩` empty-disjunction placeholder `endIntervalStep`, `CarrierK1V.lean:2144`) with a depth-cased
+`⟨[]⟩` empty-disjunction placeholder `endIntervalStep`, `CarrierK1V.lean`) with a depth-cased
 body built from the two landed discharge lemmas `bracketEndChar_kv_correct_prior`
 (`InteriorGateGeneralK.lean`) and `bracketEndChar_kvExt_correct_prior`
 (`ExteriorGateAssembleK.lean`).
@@ -57,7 +57,7 @@ open FormalSystem.Metalogic.WeakCanonical.Separation
 /-! ## Phase 2 — reshaped recursion carriers (`charF` + provider family threaded) -/
 
 /-- **Reshaped depth-`k → k+1` step** (fills the `⟨[]⟩` placeholder
-    `endIntervalStep`, `CarrierK1V.lean:2144`). Depth-cased on `{k}`: `k = 0` (→ depth 1) is the
+    `endIntervalStep`, `CarrierK1V.lean`). Depth-cased on `{k}`: `k = 0` (→ depth 1) is the
     interior-only rung `bracketEndCharKv atomMap h_surj charF 1`; `k = m+1` (→ depth `m+2`) is the
     exterior-composed gate `bracketEndCharKvExt atomMap h_surj charF (Pfam m)`. The
     arity-3 IH `rec` is intentionally NOT threaded (interior-gate finding: interior content is
@@ -234,7 +234,7 @@ set_option maxHeartbeats 1600000 in
 /-- **`endInterval_step_correct` — the obligation-carrying interval consumer**.
     Assembles `EndIntervalCorrectPrior` for every `k` by cases:
     - `k = 0`: the depth-0 singleton base via `bracketEndChar_k0_correct` (reuse of the
-      `endInterval_zero_correct` argument, `CarrierK1V.lean:2199`).
+      `endInterval_zero_correct` argument, `CarrierK1V.lean`).
     - `k = 1`: the interior-only depth-1 rung `bracketEndChar_kv_correct_one_prior`
       (`PriorInterface.lean:95`), carrying only `h0`.
     - `k = m+2`: consumes the exterior-composed discharge `bracketEndChar_kvExt_correct_prior`
@@ -371,7 +371,7 @@ pre-existing hypothesis names excluded). -/
 section RecursionReductionProbes
 /- Recursion-reduction verification probes (landed as documented `example`s): the three `rfl`
    reductions of `endIntervalPrior`, confirming the recursion is genuine `Nat.rec` computation
-   and the dead `CarrierK1V` placeholder (`endIntervalStep`, `CarrierK1V.lean:2144`) is NOT on
+   and the dead `CarrierK1V` placeholder (`endIntervalStep`, `CarrierK1V.lean`) is NOT on
    the live path. -/
 variable {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)

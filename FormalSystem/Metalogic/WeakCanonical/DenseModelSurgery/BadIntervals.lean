@@ -161,7 +161,7 @@ end"*.
   to hold **throughout** `s`'s class and to fail at **every** later point outside it. Reynolds'
   `C` fails both halves: it is false at the beginning of `s`'s own class, and it is true again
   near the end of every later class in the interval.
-* `false_of_holds_throughout_class_bounded` (`Lemma5.lean:400`, Phase 19) weakens only the second
+* `false_of_holds_throughout_class_bounded` (`Lemma5.lean`, Phase 19) weakens only the second
   half. Its `hin` still demands `C` throughout the class, which `C` does not satisfy.
 
 `false_of_holds_throughout_class_from_bounded` below weakens **both** slots, and is the form
@@ -685,7 +685,7 @@ omit [Fintype sig.preds] [DecidableEq sig.preds] in
 intervals"*, right-hand half.**
 
 Where `R` holds, `R` holds on a whole stretch above, so the point is not an isolated bad point.
-This is `endsInGapOnRight_forAWhile` (`Lemma34.lean:277`) read as a statement about bad
+This is `endsInGapOnRight_forAWhile` (`Lemma34.lean`) read as a statement about bad
 points. -/
 theorem reynolds_lemma6_nonsingleton {ε : MonadicFormula sig 2} (hε : IsContempEquivDenseOn ε C)
     (M : OrderedMonadicStructure sig) [InStructureClass C M] {t : M.carrier} (ht : EndsInGapOnRight M ε t) :
@@ -720,7 +720,7 @@ theorem classMate_lt {ε : MonadicFormula sig 2} (hε : IsContempEquivDenseOn ε
 /-! ## The gap-crossing contradiction Lemma 7 actually licenses
 
 See the module header for why neither `false_of_holds_throughout_class` (`Lemma34.lean:595`) nor
-`false_of_holds_throughout_class_bounded` (`Lemma5.lean:400`) can be used here. Both slots are
+`false_of_holds_throughout_class_bounded` (`Lemma5.lean`) can be used here. Both slots are
 weakened:
 
 * `hin` only from `s` **onwards** in the class — Reynolds' *"true for a while at the end"*;
@@ -737,7 +737,7 @@ of `(s, s₁)`, where Prior-U's stretch says `P` holds. -/
 /-- **The gap-crossing contradiction, from `s` onwards and bounded.**
 
 Strictly weaker in both hypothesis slots than `false_of_holds_throughout_class_bounded`
-(`Lemma5.lean:400`), which is left in place unweakened and unrenamed together with all of its
+(`Lemma5.lean`), which is left in place unweakened and unrenamed together with all of its
 consumers. Prior-S is not needed. -/
 theorem false_of_holds_throughout_class_from_bounded {atomMap : Formula → sig.preds}
     {ε : MonadicFormula sig 2} (hε : IsContempEquivDenseOn ε C)

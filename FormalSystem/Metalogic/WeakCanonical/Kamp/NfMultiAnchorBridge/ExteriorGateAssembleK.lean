@@ -61,7 +61,7 @@ off-fiber σ is unrealizable at the pinned anchors — GIVEN the depth-0 atom-la
 `henv : NfEvalNf M 0 3 [w,x,t] qnf.1`. This helper derives `henv` for the callback's
 ARBITRARY interior witness `w` from inventory already in scope (`hInt` + the callback's
 `hptW`), replicating `bracketEndChar_kv_step_sound`'s own atom-layer block
-(`InteriorGateGeneralK.lean:1076-1113`) with the extracted witness replaced by the callback's.
+(`InteriorGateGeneralK.lean`) with the extracted witness replaced by the callback's.
 Depth-`k` analog of the k=2 gate pin `kvE2_extGate_henv` (`ExteriorBracket.lean:721`). -/
 
 private theorem kvExt_gate_henv {sig : MonadicSignature} [Fintype sig.preds]

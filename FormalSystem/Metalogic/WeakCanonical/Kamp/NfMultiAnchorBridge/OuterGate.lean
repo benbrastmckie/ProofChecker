@@ -11,7 +11,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.SharedWitne
 
 A new **leaf sibling** of `SharedWitness.lean` inside `NfMultiAnchorBridge/`. It is **purely
 additive**: nothing here re-proves or edits the faithful carrier `kvE2SepBody`
-(`SharedWitness.lean:806`) or any of its correctness lemmas. Those are treated as **verified
+(`SharedWitness.lean`) or any of its correctness lemmas. Those are treated as **verified
 INPUTS**; this file only *applies* them.
 
 ## What this file delivers
@@ -69,7 +69,7 @@ open FormalSystem.Metalogic.WeakCanonical.Separation (nfDepth0CharFormula)
 /-- **The live outer-gate carrier** (first live `def` — supersedes the
     quarantined Boneyard `:918` two-level carrier). At depth-1 providers
     `P : ExistProviders sig atomMap 1` it produces the k=2 carrier `BracketEndCharCarrierV sig 2`,
-    delegating to the **faithful** carrier `kvE2SepBody` (`SharedWitness.lean:806`) at
+    delegating to the **faithful** carrier `kvE2SepBody` (`SharedWitness.lean`) at
     the standard instantiation `charBase = nfDepth0CharFormula atomMap h_surj`,
     `charK = fun χ => P.existF 0 χ`. The carrier is a verified INPUT — only applied, never
     re-proved. -/
@@ -99,8 +99,8 @@ theorem bracketEndChar_kvE2_two_eq {sig : MonadicSignature} [Fintype sig.preds]
 The reverse (mpr) direction of the k=2 gate: an honest depth-2 evaluation of `qnf` at the bracket
 witness `w` (with `x < w < t` recovered from the atom layer) forces the carrier body `.holds`. This
 is a **consumption** of the landed completeness engine `kvE2_sepBody_holds_of_honest`
-(`SharedWitness.lean:9262`) — no new engine, no interiority hypothesis. The gate `hg` is discharged
-by the landed `kvE2_sepGate_holds_of_honest` (`SharedWitness.lean:2666`); the two char-formula
+(`SharedWitness.lean`) — no new engine, no interiority hypothesis. The gate `hg` is discharged
+by the landed `kvE2_sepGate_holds_of_honest` (`SharedWitness.lean`); the two char-formula
 bridges `hcb`/`hck` are built from `nf_depth0_char_formula_correct` (KampTranslation:141) and
 `P.correct` (the `ExistProviders` correctness field) with the `Fin 0` env collapse. -/
 
@@ -193,7 +193,7 @@ the fold's FORWARD gate conjunct `(∃ v, zoneHolds … zs v ∧ nf_eval χ) →
 = true` is false in a rich model (`σ.2` need not mark every realizable `(zs, χ)`). The fragment
 verdict
 N2 re-scopes the 309 Phase 13.4 / `KampPrior.lean:351` deliverable to the **single-positive-sub
-fragment**, where the O4 CRUX RECORD (`SharedWitness.lean:6785-6791`) states the cross-σ residue
+fragment**, where the O4 CRUX RECORD (`SharedWitness.lean`) states the cross-σ residue
 VANISHES: with one interior positive there are no cross-σ slot points, so every witness is σ0's own
 bit-true 1-type or a literal/segment-covered self-zone point.
 
@@ -214,7 +214,7 @@ sanctioned hypothesis beyond the provider shape — NOT a provider-conditional f
     INTERIOR-restricted
     singleton `kvE2SepPosI` (SW:211, above; the at-point positives zAtX/zAtW/zAtT are excluded by
     the interior filter), and Phase 2 proved the swapped predicate REALIZABLE:
-    `kvE2_sepFragment_realizable` (`SharedWitness.lean:10265`) exhibits a concrete `qnf` satisfying
+    `kvE2_sepFragment_realizable` (`SharedWitness.lean`) exhibits a concrete `qnf` satisfying
     `KvE2SepFragmentFrag qnf` (byte-identical body via the `rfl` defeq bridge below). This
     predicate
     is therefore satisfiable and safe to build on; the fold `kvE2_outer_fold_frag` (SW:12627) and
@@ -230,7 +230,7 @@ def KvE2SepFragment {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq si
 
 The symmetric gate landed (Rabinovich Cor 5.4, clause (v)): the RIGHT inner-consistency is
 now a gate consequence, so the former `hInnerR` obligation is dissolved, and the pin-anchored fold
-`kvE2_outer_fold_frag` (`SharedWitness.lean:12529`) takes only `hfrag` + `hcorrK` +
+`kvE2_outer_fold_frag` (`SharedWitness.lean`) takes only `hfrag` + `hcorrK` +
 `hexcl` beyond the provider shape. This SUPERSEDES the pre-345 four-family blocker: the interior
 gates `hgateL`/`hgateR` and the non-interior `hbdry` are now internal to the fold — discharged
 inside
@@ -273,7 +273,7 @@ Def 3.1 (p.4) and the §5 bracket assembly (pp.7-9). -/
     interior-singleton fix
     re-shaped `KvE2SepFragment` to the INTERIOR-singleton predicate (`kvE2SepPosI qnf = [σ0]`,
     OuterGate:200) and Phase 2 proved it realizable: `kvE2_sepFragment_realizable`
-    (`SharedWitness.lean:10265`) exhibits a concrete `qnf : NormalForm sig 2 3` with
+    (`SharedWitness.lean`) exhibits a concrete `qnf : NormalForm sig 2 3` with
     `KvE2SepFragmentFrag qnf` — byte-identical to `KvE2SepFragment` via the `rfl` defeq bridge
     (OuterGate:223-224). The `hfrag` premise is therefore SATISFIABLE and this theorem is
     NON-VACUOUS.

@@ -22,7 +22,7 @@ finds the correspondence instead of re-deriving it, and it is CI-protected: it i
 Cite Rabinovich by **PDF page only**:
 `~/Projects/Literature/sources/rabinovich_2014/Rabinovich_2014_Proof_of_Kamps_Theorem.pdf`.
 The companion `.md` conversion is **corrupt** — it drops displayed equations and inverts `k ≠ m`
-to `k = m`. Existing `chunk_00NN`-style citations (`OnBuilder.lean:47`, `NegFix.lean:12`) point
+to `k = m`. Existing `chunk_00NN`-style citations (`OnBuilder.lean`, `NegFix.lean:12`) point
 into that corrupt conversion and should be re-cited by page as they are touched.
 
 ## The correspondence table
@@ -136,7 +136,7 @@ Two in-tree, machine-checked facts pin this down:
   `K⁺(P₁)(z₀) ∧ Oₙ(P₂,…,Pₙ,z₀,z₁)` (p.8) unreachable whenever `P₁` occurs in `(z₀,z₁)`. Since
   `HasAttainedINF.toHasDefinableINF` (`PriorINF.lean:215`) shows `HasAttainedINF` implies
   `HasDefinableINF`, `HasAttainedINF` is *a fortiori* too strong.
-* `OnBuilder.lean:27-33` admits the deviation in its own docstring: "On Prior structures the INF
+* `OnBuilder.lean` admits the deviation in its own docstring: "On Prior structures the INF
   is always attained (`HasAttainedINF`), so the K⁺ disjunct is vacuous". The whole
   `EANegationFix/` development is built on that simplification. It is sound on Prior structures
   (`prior_hasAttainedINF`, `PriorINF.lean:224`) and is the right thing at the live-path

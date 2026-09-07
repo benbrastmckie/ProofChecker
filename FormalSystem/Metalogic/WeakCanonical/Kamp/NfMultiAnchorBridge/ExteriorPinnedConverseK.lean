@@ -53,7 +53,7 @@ hypotheses at `m := 0`, the endpoint's complete atomic profile is pinned —
 `hgap`/`hocc` are consumed by Phase 3's fiber-fold identification, which assembles the full
 `kvE_futPinned_of_end_zero` from this lemma + `nf_eval_nfk_iff_efold`.
 
-**Proof route** (three-channel factorization `nf_eval_nf0_cons_factor`, NfEFold.lean:283,
+**Proof route** (three-channel factorization `nf_eval_nf0_cons_factor`, NfEFold.lean,
 machine-validated on the probe model — ExteriorPinnedProbeK.lean, C8 GO):
 
 - **Ordering channel**: admissibility conjunct 1 pins `nf0ZoneSpec σ.1 = kvE2SepZFutT3`,

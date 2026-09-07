@@ -71,7 +71,7 @@ does not work is enumerating at a **cardinality bound**, because `IntPresentatio
 function on the `Infinite` type `Atom` — see `IntPresentation.lean`.
 
 Both points are compiled rather than argued:
-`specs/469_eliminate_the_bridge_filtration_into_intpresentation/evidence/decidability-assembly-family-probe.lean`
+`decidability-assembly-family-probe.lean`, in the bridge-filtration elimination evidence set,
 elaborates the assembly sorry-free at `[propext, Classical.choice, Quot.sound]`, alongside
 `soundness-half-probe.lean` and the single-presentation variant
 `decidability-assembly-probe.lean`. None of this weakens the objection where it applies; it fixes

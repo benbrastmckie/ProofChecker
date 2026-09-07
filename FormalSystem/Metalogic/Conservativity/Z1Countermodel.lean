@@ -42,7 +42,7 @@ than a weaker claim.
 
 ## References
 
-* `specs/495_determine_tm_completeness_status_over_task_frames/reports/01_tm-completeness-status.md` §6.1
+* The TM-completeness status report (`01_tm-completeness-status.md`), §6.1
 * `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_f half)
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteZTime`
 -/

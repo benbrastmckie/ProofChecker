@@ -121,7 +121,7 @@ def kplusOpen {sig : MonadicSignature}
     iff `t = sup({t′ | t′ < t and F holds at t′})`"*; Reynolds 1992, printed p.168: `K⁻A` for
     `¬S(⊤,¬A)`, *"`A` was true arbitrarily recently"*.
 
-    **This is `kminus` (`Kamp/PriorINF.lean:98`) minus its first conjunct**, which is again this
+    **This is `kminus` (`Kamp/PriorINF.lean`) minus its first conjunct**, which is again this
     tree's addition and not the sources'. -/
 def kminusOpen {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)
@@ -684,7 +684,7 @@ theorem hasFaithfulDedekindSUP_of_dense_window :
 
     `denseWindowFlow` satisfies both dense Prior hypotheses, satisfies the faithful carrier, and
     **refutes** `HasDedekindINF` (`hasDedekindINF_fails_on_dense_window`,
-    `DedekindINFDense.lean:526`). So the shim is not an equivalence in disguise and the re-base
+    `DedekindINFDense.lean`). So the shim is not an equivalence in disguise and the re-base
     buys something real: a structure the faithful carrier admits and the tree's carrier does not.
 
     Note that this is the *same* separation `hasGuardedDedekindINF_not_implies_hasDedekindINF`

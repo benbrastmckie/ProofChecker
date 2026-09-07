@@ -492,18 +492,18 @@ reports **14** ephemeral `specs/` path citations, one of which
 
 ---
 
-### Phase 9: Fix every provably-wrong citation [NOT STARTED]
+### Phase 9: Fix every provably-wrong citation [COMPLETED]
 
 **Goal**: C20 tier 1 is clean repo-wide, and every ephemeral `specs/NNN_slug/` path citation is
 removed from live source.
 
 **Tasks**:
-- [ ] Fix all out-of-range citations, concentrated in `Kamp/NfMultiAnchorBridge/` where fifteen
+- [x] Fix all out-of-range citations, concentrated in `Kamp/NfMultiAnchorBridge/` where fifteen
       sites cite an 87-line `SharedWitness.lean` at `:806`, `:9262`, `:12529`, `:12710`.
-- [ ] Fix all blank-line-target citations.
-- [ ] Fix `docs/development/PHASED_IMPLEMENTATION.md`'s citation of `Perpetuity.lean:139` (96
+- [x] Fix all blank-line-target citations.
+- [x] Fix `docs/development/PHASED_IMPLEMENTATION.md`'s citation of `Perpetuity.lean:139` (96
       lines).
-- [ ] Replace every `specs/NNN_slug/` path citation in live `.lean` files and live markdown with
+- [x] Replace every `specs/NNN_slug/` path citation in live `.lean` files and live markdown with
       a durable anchor (declaration name or section heading), per
       `.claude/rules/no-task-references-in-deliverables.md`.
 
@@ -515,7 +515,16 @@ removed from live source.
 
 **Scope Hypothesis**: 110 provably-wrong sites (29 out-of-range + 81 blank-line) and 23
 `specs/NNN_` citations (17 in `.lean`, 6 in markdown). The authoritative counts are C20's and
-widened-C9's own output at phase start, not these.
+widened-C9's own output at phase start, not these. **Re-derived: 116 wrong sites across 58
+files** (29 out-of-range + 87 blank-line) and **17** ephemeral `specs/` citations across 12
+files, plus one functional path in `scripts/check-evidence-probes.sh` that is excluded rather
+than rewritten.
+
+**Fix applied**: the line number is *stripped*, leaving the filename — `Foo.lean:806` becomes
+`Foo.lean`. The intended line is unrecoverable for an out-of-range citation and unknowable for a
+blank-line one, so inventing a declaration name would be a guess; a bare filename is durable and
+is what the convention asks for. Stripping a range's start (`Foo.lean:49-54`) left 24
+`Foo.lean-54` artifacts, repaired in the same pass.
 
 **Files to modify**:
 - Files named by C20 tier 1 output (concentrated in

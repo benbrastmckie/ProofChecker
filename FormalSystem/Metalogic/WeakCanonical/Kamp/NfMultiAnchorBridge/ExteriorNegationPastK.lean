@@ -314,7 +314,7 @@ theorem kvE_pastRayZone_mem : kvEPastRayZone ∈ kvEPastPossibleZones :=
   kvE2_pastPossibleZones_mem_ray
 
 /-- **Generic maximal-witness pick** (past-side descending analog of the shared
-    `kvE_minPick`, `ExteriorFiberK.lean:263`): from a nonempty list each of whose elements has
+    `kvE_minPick`, `ExteriorFiberK.lean`): from a nonempty list each of whose elements has
     some `M`-witness under `P`, extract one element with a `≤`-maximal witness dominated by a
     witness for every element. Byte-identical proof template of the frozen private
     `kvE2_pastMaxPick` (`ExteriorNegationPast.lean:484`), `{α : Type}`-generic so the past chain

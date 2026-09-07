@@ -60,14 +60,14 @@ Each exit hands downstream consumers a certificate of the corresponding kind, wh
   example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p") := by modal_search
   example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p").box.box := by modal_search
   ```
-  #footnote[`Examples/BimodalProofs.lean:211-217`; the proof-automation engine of @sec:proof-automation closes both goals within its default search depth.]
+  #footnote[`Examples/BimodalProofs.lean`; the proof-automation engine of @sec:proof-automation closes both goals within its default search depth.]
   A capstone combined example in the same file (`Examples/BimodalProofs.lean:223`) shows $square.stroked$ distributing over the derived always-future operator, $square.stroked φ arrow.r square.stroked (G φ)$#footnote[Via `allFuture`; note a commented-out BX1/reflexivity test at `Examples/BimodalProofs.lean:219` documents that the T-axiom-style test for the *temporal* operator was intentionally disabled under the strict/irreflexive semantics convention (@sec:design-choices) -- reflexive temporal T-axioms are not valid here.], proven the same way.
 ]
 
 == Worked Examples: Concrete Temporal Structures
 
 `Examples/TemporalStructures.lean` (277 lines, sorry-free) instantiates the abstract task-frame semantics of @sec:truth over concrete duration types.
-The file concretely instantiates the *discrete* case -- `intTimeFrame` (`Examples/TemporalStructures.lean:65`) and `intNatFrame` (`Examples/TemporalStructures.lean:78`) over `Int` -- alongside a fully polymorphic `genericTimeFrame` (`Examples/TemporalStructures.lean:144`) and `genericNatFrame` (`Examples/TemporalStructures.lean:156`), generic over any ordered abelian group `D`; a concrete dense ($QQ$/$RR$) instantiation requires additional Mathlib imports and is not included.
+The file concretely instantiates the *discrete* case -- `intTimeFrame` (`Examples/TemporalStructures.lean`) and `intNatFrame` (`Examples/TemporalStructures.lean:78`) over `Int` -- alongside a fully polymorphic `genericTimeFrame` (`Examples/TemporalStructures.lean:144`) and `genericNatFrame` (`Examples/TemporalStructures.lean:156`), generic over any ordered abelian group `D`; a concrete dense ($QQ$/$RR$) instantiation requires additional Mathlib imports and is not included.
 Sanity-check lemmas (`Examples/TemporalStructures.lean:217` and `Examples/TemporalStructures.lean:222`) confirm the generic frame specializes correctly to the concrete `Int` frame by `rfl`; `int_nullity_example` (`Examples/TemporalStructures.lean:229`) / `generic_nullity_example` (`Examples/TemporalStructures.lean:235`) and `int_compositionality_example` (`Examples/TemporalStructures.lean:242`) / `generic_compositionality` (`Examples/TemporalStructures.lean:257`) exercise the two task-frame axioms of @sec:truth concretely.
 
 == Reproducibility Note

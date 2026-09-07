@@ -18,11 +18,11 @@ this tree's `kplus`.
 
 ## The live carrier-consuming chain, in full
 
-`kampPriorExpressiveCompleteness` (`KampPrior.lean:672`) reaches the completeness carrier through
+`kampPriorExpressiveCompleteness` (`KampPrior.lean`) reaches the completeness carrier through
 exactly seven declarations, and this module restates all seven:
 
 ```
-kampPriorExpressiveCompleteness            (KampPrior.lean:672)
+kampPriorExpressiveCompleteness            (KampPrior.lean)
   └─ nfCharacterizableTemporalPrior        (:589)
        ├─ nf_depth0_char_formula_correct_arity1  (:182)  — carrier-free
        ├─ nf_succ_char_formula_correct           (:91)
@@ -408,7 +408,7 @@ noncomputable def nfCharacterizableTemporalPriorFaithful
           nf M h_INF h_SUP t⟩
 
 /-- **`{U,S}` expressive completeness at the faithful eq (5.2) carrier** — the faithful sibling of
-`kampPriorExpressiveCompleteness` (`KampPrior.lean:672`), and the witness that discharges
+`kampPriorExpressiveCompleteness` (`KampPrior.lean`), and the witness that discharges
 `KampFaithfulExpressiveCompleteness` (`WeakCanonical/PriorExpressivenessDense.lean:169`).
 
 Proof structure identical to the original — set `k = quantifierDepth psi`, characterize each

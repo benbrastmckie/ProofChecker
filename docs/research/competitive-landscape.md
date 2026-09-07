@@ -71,7 +71,7 @@ BMLogic covers **TM bimodal logic**, a decidable combination of:
 - **S5 modal logic**: `□` (necessity), `◇` (possibility), with equivalence-class accessibility (reflexive, symmetric, transitive frame conditions)
 - **LTL temporal logic**: `U` (Until), `S` (Since), with linear-order accessibility
 
-This combination has a Hilbert-style axiomatization with machine-verified weak completeness for all four frame classes in Lean 4. A tableau decision procedure is implemented, and its **sound direction** is proved (`sound_of_isValid`, `FormalSystem/Metalogic/Decidability/Correctness.lean:100`); the completeness direction `models φ → isValid φ fc = true` is open. The bimodal language allows 12 operators: `atom`, `bot`, `top`, `neg`, `conj`, `disj`, `imp`, `box`, `dia`, `untl`, `snce`, and derived forms.
+This combination has a Hilbert-style axiomatization with machine-verified weak completeness for all four frame classes in Lean 4. A tableau decision procedure is implemented, and its **sound direction** is proved (`sound_of_isValid`, `FormalSystem/Metalogic/Decidability/Correctness.lean`); the completeness direction `models φ → isValid φ fc = true` is open. The bimodal language allows 12 operators: `atom`, `bot`, `top`, `neg`, `conj`, `disj`, `imp`, `box`, `dia`, `untl`, `snce`, and derived forms.
 
 ### 2.2 Task Format
 

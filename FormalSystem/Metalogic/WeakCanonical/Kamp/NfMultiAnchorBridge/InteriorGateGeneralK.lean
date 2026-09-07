@@ -14,7 +14,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.ExteriorBra
 A NEW **leaf sibling** of `PriorInterface.lean` / `OuterGate.lean` inside `NfMultiAnchorBridge/`.
 It is **purely additive**: nothing here re-proves or edits the frozen carrier
 `bracketEndCharKv` (`CarrierKv.lean:238`), the provider interface `ExistProviders` /
-`BracketCarrierCorrectVPrior` (`PriorInterface.lean:38/60`), or the k=2 template family in
+`BracketCarrierCorrectVPrior` (`PriorInterface.lean/60`), or the k=2 template family in
 `OuterGate.lean`. Those are treated as verified INPUTS; this file only *applies* them.
 
 ## What this file delivers
@@ -36,7 +36,7 @@ the UNCONDITIONAL k ≥ 2 soundness direction is REFUTED (a lossy carrier cannot
 sub realized a fiber). Therefore the deliverable is the **provider-guarded** shape: the target
 predicate is `BracketCarrierCorrectVPrior` (`PriorInterface.lean:60`) — the UZ/SZ-relativized,
 provider-conditional variant — mirroring the k=2 template `bracketEndChar_kvE2_sound_two_prior_frag`
-(`OuterGate.lean:268`) / `bracketEndChar_kvE2_complete_two_prior` (`OuterGate.lean:147`) and the
+(`OuterGate.lean`) / `bracketEndChar_kvE2_complete_two_prior` (`OuterGate.lean:147`) and the
 consumer's `EndIntervalCorrectPrior`. An unconditional general-`k` statement is a
 known dead end (F1) and MUST NOT be pursued.
 
@@ -458,7 +458,7 @@ The completeness half's first milestone: from a genuine depth-`(k+1)` realizer a
 `w` (`x < w < t`), the successor carrier's gate `igGate (igOffFiber qnf) (igFoldBit qnf)` holds.
 Both
 conjuncts are the general-`k` analogs of the k=2 gate `kvE2_sepGate_holds_of_honest`
-(`SharedWitness.lean:2797`, parts i/ii):
+(`SharedWitness.lean`, parts i/ii):
 
 - **Off-fiber honesty** (`igOffFiber`) is delivered VERBATIM by the generic whole-evaluation fold
   bridge `nf_eval_nfk_iff_efold` (`NfEFold.lean`): its off-fiber conjunct
@@ -472,7 +472,7 @@ sub
   the atom-layer bridge `nf_eval_nf_atom_layer`. -/
 
 /-- **Generic seven-zone order consistency** (general-`k` restatement of
-    `kvE2_sep_zone3_consistent`, `SharedWitness.lean:2611`). Any zone realized at a point `u` over
+    `kvE2_sep_zone3_consistent`, `SharedWitness.lean`). Any zone realized at a point `u` over
     the
     bracket env `[w,x,t]` with `x < w < t` is one of the seven bracket-order-consistent zones. Pure
     order trichotomy on `u` against `x`, `w`, `t`; `k1v_bool_eq_false` converts each strict-order
@@ -1072,7 +1072,7 @@ theorem bracketEndChar_kv_step_complete {sig : MonadicSignature} [Fintype sig.pr
 The F1-critical half of the k→k+1 step. From `(bracketEndCharKv … (k+1) qnf).holds M atomMap x t`,
 under the depth-`k` PROVIDER OBLIGATIONS, reconstruct the arity-3 realizer
 `∃ w, NfEvalNf M (k+1) 3 [w,x,t] qnf`. This is the general-`k` analog of the k=2 template
-`bracketEndChar_kvE2_sound_two_prior_frag` (`OuterGate.lean:268`), one fold-layer deeper.
+`bracketEndChar_kvE2_sound_two_prior_frag` (`OuterGate.lean`), one fold-layer deeper.
 
 **The F1 information channel (`bracketEndChar_kv_factors`, `CarrierKv.lean:422`).** The successor
 carrier's fold data is fiber-EXISTENTIAL (`igFoldBit`): from the carrier's `.holds` one recovers
@@ -1082,7 +1082,7 @@ arity-4
 relational content of a fiber is NOT intrinsic to the carrier (two carriers agreeing on all
 fiber-existential fold bits are EQUAL yet may disagree on per-sub marking). Reconstructing the
 per-sub fold biconditional `∀ σ, (∃ x1, NfEvalNf M k 4 [x1,w,x,t] σ) ↔ qnf.2 σ = true`
-(`nf_eval_nfk_iff_efold`'s internal `Iff.rfl`, `NfEFold.lean:643`) therefore requires the fiber
+(`nf_eval_nfk_iff_efold`'s internal `Iff.rfl`, `NfEFold.lean`) therefore requires the fiber
 content the provider obligations supply — exactly the k=2 template's design:
 
 - `hreal` (marked → realizable): the depth-`k` provider realizes each marked sub `σ` (`qnf.2 σ =
@@ -1115,7 +1115,7 @@ set_option maxHeartbeats 1600000 in
 /-- **Inductive step ⇒ soundness**. From the
     successor carrier `.holds` at the FIXED endpoints `(x, t)`, under the depth-`k` provider
     realization/exclusion obligations, the arity-3 realizer `∃ w, NfEvalNf M (k+1) 3 [w,x,t] qnf`.
-    General-`k` analog of `bracketEndChar_kvE2_sound_two_prior_frag` (`OuterGate.lean:268`), NOT
+    General-`k` analog of `bracketEndChar_kvE2_sound_two_prior_frag` (`OuterGate.lean`), NOT
     fragment-restricted: under the named obligations the arrangement structure is not read for the
     per-sub fold biconditional, so the full `S_L`/`S_R` permutation disjunction is admissible. The
     exterior-marked residue rides `hexclExt` outward (the exterior-bracket
@@ -1199,7 +1199,7 @@ theorem bracketEndChar_kv_step_sound {sig : MonadicSignature} [Fintype sig.preds
       (iff_of_true hxt h_xt)
       (iff_of_false (lt_asymm hwt) (by simp only [h_ty]; decide))
       (iff_of_false (lt_asymm hxt) (by simp only [h_tx]; decide))
-  -- Assemble the realizer: atom layer + the per-sub fold biconditional (defeq, `NfEFold.lean:643`).
+  -- Assemble the realizer: atom layer + the per-sub fold biconditional (defeq, `NfEFold.lean`).
   refine ⟨w, h_atom, ?_⟩
   intro sub
   constructor
@@ -1403,7 +1403,7 @@ theorem bracketEndChar_kv_correct_prior {sig : MonadicSignature} [Fintype sig.pr
 The obligation-carrying interface a downstream consumer must supply to consume the
 general-`k` interior gate at successor depth `k = n+1`. The `example` below is a **documented
 shape-match, NOT the consumer wiring** (wiring `bracketEndChar_kv_correct_prior` into the
-frozen unconditional `EndIntervalCorrect` at `CarrierK1V.lean:2179` requires an obligation-carrying
+frozen unconditional `EndIntervalCorrect` at `CarrierK1V.lean` requires an obligation-carrying
 `EndIntervalCorrectPrior` reshape that edits the byte-frozen files — plan v2 follow-up (i), out
 of the interior-gate scope). It records that, once a consumer provides the seven obligations
 

@@ -22,14 +22,14 @@ subdirectories for their implementation infrastructure.
 | `AxiomNames.lean` | 57 | The canonical 45 `ProofSystem.Axiom` constructor names in `Axioms.lean` source order, extracted into a leaf module |
 | `BenchmarkAnchors.lean` | 593 | Benchmark anchor formulas: ground-truth valid/invalid formula pairs |
 | `BenchmarkOracle.lean` | 370 | Batch oracle: reads formula JSON, runs decision procedure, outputs JSONL labels |
-| `DataExport.lean` | 388 | Core data export: JSONL serialization for formula-label pairs |
+| `DataExport.lean` | 395 | Core data export: JSONL serialization for formula-label pairs |
 | `DatasetExport.lean` | 1,354 | Dataset export pipeline: formatting, splitting, output orchestration |
 | `DatasetExporter.lean` | 348 | Dataset exporter: configurable export with format options |
-| `DatasetGenerator.lean` | 2,294 | Dataset generator: runs `decide` on enumerated formulas, extracts proof traces |
+| `DatasetGenerator.lean` | 2,296 | Dataset generator: runs `decide` on enumerated formulas, extracts proof traces |
 | `DatasetValidator.lean` | 604 | Dataset validator: conformance tests, diversity metrics, feasibility gate |
-| `EnrichedCountermodel.lean` | 218 | Enriched countermodel extraction for dataset negative examples |
+| `EnrichedCountermodel.lean` | 223 | Enriched countermodel extraction for dataset negative examples |
 | `EnumBenchmark.lean` | 227 | Enumeration benchmark: performance testing for formula enumeration |
-| `FormulaEnumerator.lean` | 2,368 | Formula enumerator: depth-bounded enumeration of all TM formulas |
+| `FormulaEnumerator.lean` | 2,374 | Formula enumerator: depth-bounded enumeration of all TM formulas |
 | `FormulaMutator.lean` | 1,191 | Formula mutator: systematic mutation for dataset augmentation |
 | `ForwardProofGenerator.lean` | 400 | Forward-chaining proof generation: applies the productive inference rules from axiom instances to build a pool of `(formula, DerivationTree)` pairs |
 | `InterestingnessMetrics.lean` | 584 | Deterministic three-tier interestingness scoring for theorems and derivations |
@@ -41,7 +41,7 @@ subdirectories for their implementation infrastructure.
 | `ProofFirstBenchmark.lean` | 188 | Eight cross-corpus metrics for labeled formula datasets, plus a side-by-side comparison utility |
 | `ProofFirstExporter.lean` | 148 | CLI executable: runs the forward-chaining generator and emits `LabeledFormula` records as JSONL |
 | `ProofStepExport.lean` | 1,685 | Proof step export: serializes `DerivationTree` steps to JSONL |
-| `ProofStepExtractor.lean` | 350 | Proof step extractor: traverses derivation trees to extract steps |
+| `ProofStepExtractor.lean` | 361 | Proof step extractor: traverses derivation trees to extract steps |
 | `SuccessPatterns.lean` | 429 | Successful proof patterns: heuristic patterns for guided proof search |
 | `TableauBridge.lean` | 648 | Persistent REPL with a JSONL stdin/stdout protocol, composing the formula parser with the decision procedure for live queries |
 | `TableauProofStepPipeline.lean` | 696 | Pipeline joining `FormulaEnumerator`, `DecisionProcedure` and `ProofStepExtractor` into large-scale proof-step training data |

@@ -278,7 +278,7 @@ completeness_rtime     (Metalogic/StrongCompleteness.lean:469)
   |
   +-- canonical model / countermodel engines (BXCanonical/CanonicalModel.lean)
         |
-        +-- witness-seed consistency (Bundle/WitnessSeed.lean:181, :290)
+        +-- witness-seed consistency (Bundle/WitnessSeed.lean, :290)
               |
               +-- FMCS temporal coherence (Bundle/FMCSDef.lean:103)
               +-- BFMCS modal coherence   (Bundle/BFMCS.lean:91)

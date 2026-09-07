@@ -37,7 +37,7 @@ discipline).** The bracket range is the FIBER-compatible admissible subs:
 `kvE_{fut,past}Admissible σ && decide (nfkDropFresh σ = qnf.1)`. The slice-re-key depth-k
 rewrite had silently WIDENED the range to all admissible σ, dropping the frozen k=2 template's
 base/fiber conjunct (`kvE2FutMarked`'s `decide (nf0DropFresh σ.1 = qnf.1)`,
-ExteriorBracket.lean:127/140) — the ⇐-side honesty obligation for off-fiber σ was then FALSE
+ExteriorBracket.lean/140) — the ⇐-side honesty obligation for off-fiber σ was then FALSE
 (ℤ-doppelgänger countermodel, plan v2 Phase-5 BLOCKER record). Off-fiber σ are unrealizable at
 the pinned anchors (the fiber-forcing kernel `nf_eval_nf_atom_layer` → `nf_eval_nf0_cons_factor`
 → `nf_eval_unique`, NfEFold.lean:634-641), so narrowing is lossless for every consumer; the
@@ -109,7 +109,7 @@ noncomputable def kvEExtBracketFut {sig : MonadicSignature} [Fintype sig.preds]
     SLICE-KEYED): `Since`-navigated existence clause `kvEPastPos P σ` for
     slice-marked admissible σ (`kvEPastSliceMarked`), complement clause `kvEExtNegPast P σ`
     for slice-unmarked admissible σ. Depth-`k` analog of the frozen `kvE2ExtBracketPast`
-    (ExteriorBracket.lean:377). -/
+    (ExteriorBracket.lean). -/
 noncomputable def kvEExtBracketPast {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
     {atomMap : Formula → sig.preds} {k : Nat}

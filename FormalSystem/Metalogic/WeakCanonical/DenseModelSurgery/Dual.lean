@@ -74,7 +74,7 @@ For the record, had that bridge resisted, nothing would have been lost by droppi
 instead: repo-wide it is consumed **nowhere** — `contemporary` appears only at its own
 declaration and in the construction of the `epsTop` witness, and every §6 use of
 `IsContempEquivDense` goes through `contemp_refl` / `contemp_symm` / `contemp_trans` /
-`contemp_of_between` (`Lemma34.lean:176-199`), all of which read only clauses (i) and (ii).
+`contemp_of_between` (`Lemma34.lean`), all of which read only clauses (i) and (ii).
 
 ## Retrospective subsumption
 

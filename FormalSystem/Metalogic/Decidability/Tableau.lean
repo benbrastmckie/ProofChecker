@@ -1051,7 +1051,7 @@ def applyRule (rule : TableauRule) (sf : SignedFormula) (branch : Branch := [])
         -- direction is UNDER-closing, and it costs the `TableauConformance` rows that closed
         -- through it. Those rows are re-pinned to their regressed values with this same note
         -- attached and are NOT to be quietly restored. Authorized by the user as rank 2 of
-        -- `specs/165_*/reports/05_until-tableau-design-research.md` §6, on the verification in
+        -- the until-tableau design research report (`05_until-tableau-design-research.md`) §6, on the verification in
         -- `reports/06_rank1-design-verification.md` §8 ("Item (ii) — REFUTE as specified").
         --
         -- WHAT IT BUYS. `RuleSound carrierBase .untlNeg` becomes provable. `RuleSound` is per

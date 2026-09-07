@@ -162,7 +162,7 @@ development. Both facts are one-line unfoldings, so they
 are reproved locally under private names rather than imported. -/
 
 /-- `(P.neg).EvalAt` iff `¬(P.EvalAt)`. Local copy of `TemporalPred.eval_at_neg'`
-    (`EANegationClosure.lean:48`), which is not importable from this module. -/
+    (`EANegationClosure.lean`), which is not importable from this module. -/
 private theorem tp_neg_iff {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)
     (P : TemporalPred) (t : M.carrier) :

@@ -73,8 +73,8 @@ pedagogical examples. All tasks are independent and can run simultaneously.
 **Steps**:
 1. Add K axiom: `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))`
 2. Add S axiom: `φ → (ψ → φ)`
-3. Prove `impTrans` helper (Perpetuity.lean:88)
-4. Prove `contraposition` helper (Perpetuity.lean:139)
+3. Prove `impTrans` helper (Perpetuity.lean)
+4. Prove `contraposition` helper (Perpetuity.lean)
 5. Update ProofSystem/Derivation.lean
 6. Write tests in Tests/BimodalTest/ProofSystem/AxiomsTest.lean
 7. Update implementation-status.md axiom count (8 → 10)

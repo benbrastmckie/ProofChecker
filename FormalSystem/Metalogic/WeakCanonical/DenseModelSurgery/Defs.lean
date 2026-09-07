@@ -366,6 +366,9 @@ Only the two clauses that need it are restricted. Clause (iii) is left quantifie
 structure, because `simDense_contemporary` carries no instance hypotheses — keeping the bundle
 as strong as `epsDense` actually supports, which is what gives whoever discharges D1/D2 the most
 to work with. -/
+/-- The countable-dense bundle: Reynolds' D1/D2 clauses for `ε`, with clauses (i) and (ii)
+quantified only over countable dense flows. See the section comment above for why the
+restriction is the source-faithful reading. -/
 structure IsContempEquivDenseCD {sig : MonadicSignature} (ε : MonadicFormula sig 2) : Prop where
   /-- Clause (i), at a countable dense flow. -/
   equiv : ∀ (M : OrderedMonadicStructure sig) [Countable M.carrier] [DenselyOrdered M.carrier],
@@ -394,7 +397,7 @@ the free direction. `instInStructureClassCountableDense` turns the `[Countable _
 `[DenselyOrdered _]` binders of `IsContempEquivDenseCD`'s clauses into class membership.
 
 `IsContempEquivDenseCD` itself is untouched by the class parameterization, so `epsDense`'s witness
-(`RealModel/EpsilonDense.lean:1075`) and Doets' consumers (`RealModel/DoetsTheorem.lean:382,389`)
+(`RealModel/EpsilonDense.lean:1075`) and Doets' consumers (`RealModel/DoetsTheorem.lean,389`)
 are unaffected. -/
 theorem isContempEquivDenseCD_of_countableDense {sig : MonadicSignature}
     {ε : MonadicFormula sig 2} (hε : IsContempEquivDenseOn ε (CountableDense sig)) :

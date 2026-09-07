@@ -1337,7 +1337,7 @@ lines 9–41): from the F-chain firing at an increasing sequence of BOUND points
 by induction on the chain length, with the two-way `min`/case-split
 (`if y2 ≤ x_{i+1} then z := y2 else z := x_{i+1}`) at every Until-link — NOT an
 `inf`/`sup` global selection (report 02 §2.3). This is the bounded form that resolves the
-documented model-independent impossibility at EANegation.lean:1249 (the F-chain
+documented model-independent impossibility at EANegation.lean (the F-chain
 Until-unboundedness): the bound points `x i` cap every Until-witness, keeping the whole
 construction inside the bracket. The k=1 landed template is the base
 (`BracketFormula.fChainFrom_base`); each inductive step is exactly one Until-driven
@@ -1595,7 +1595,7 @@ theorem kampPrior_fChain_realize {sig : MonadicSignature} [Fintype sig.preds]
     `min`/case-split at the right end (`z := s` if the final Until-witness `s ≤ z1`, else
     `z := z1` by segment restriction) produces an actual within-bracket witness
     `z ∈ (z0, z1]` with `bf.holds z0 z` — the bounded resolution of the F-chain
-    Until-unboundedness obstruction recorded at EANegation.lean:1249. -/
+    Until-unboundedness obstruction recorded at EANegation.lean. -/
 theorem kampPrior_fChain_realize_bracket {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {n : Nat}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)

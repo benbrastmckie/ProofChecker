@@ -146,7 +146,7 @@ feet. Extensions to the layer go in the modules above it. The same holds in the 
 
 ## Evidence probes
 
-The machine-checked refutations in `specs/417_semantic_fmp_finite_worldstate_over_z/evidence/`
+The machine-checked refutations in the semantic-FMP evidence set
 are not tests of behaviour — they are the reasons the layer has the shape it has. Because they
 live under `specs/`, no Lake target root reaches them and `lake build` never compiles them, so
 they are guarded by `scripts/check-evidence-probes.sh`, which compile-checks each one with
@@ -201,7 +201,7 @@ finite-domain case. The two are separate theorems by design: `Finite` is a non-c
 ## The two design constraints
 
 Both are refutations, not preferences, and each is backed by a machine-checked evidence file in
-`specs/417_semantic_fmp_finite_worldstate_over_z/evidence/`.
+the semantic-FMP evidence set.
 
 **The evaluator must not recurse on the formula at a state.** A signature `check P w φ` that
 recurses on `φ` with a *world state* `w` fixed is refuted outright — the implication case of such

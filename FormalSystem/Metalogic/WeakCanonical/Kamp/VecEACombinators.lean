@@ -19,7 +19,7 @@ Already present at the `VVecEA2` layer and **reused, not reimplemented**: `disj`
 (`VecEAFormula.lean:288`/`:292`), `conjFull`/`conjFull_iff` (`VecEAConjFull.lean:498`/`:510`),
 `trivialTrue` (`VecEAConjFull.lean:549`), `enrichEndpoints`
 (`NfMultiAnchorBridge/ExteriorBracket.lean:652`), `disjList`
-(`NfMultiAnchorBridge/NavigatedSpine.lean:149`), `singleton`
+(`NfMultiAnchorBridge/NavigatedSpine.lean`), `singleton`
 (`NfMultiAnchorBridge/CarrierK1V.lean:2150`), `conjStruct` (`VecEAClosure.lean:222`), and
 `prependAllVec` (`Lemma53Faithful.lean:100`).
 

@@ -299,7 +299,7 @@ theorem agg2_zone_consistent_diag {sig : MonadicSignature} [Fintype sig.preds]
 
 /-! ## Phase 1c — the uniform-segment list bracket (interior arrangement carrier)
 
-The single-interior-zone analog of `bracketFromLists` (CarrierK1V.lean:389): point types are
+The single-interior-zone analog of `bracketFromLists` (CarrierK1V.lean): point types are
 an ordered list `l` of interior-positive complete types (one bracket WITNESS slot per positive
 fiber — §5 bracket `[α_0, …, α_n](z_0, z_1)`, PDF p.7), and EVERY segment carries the single
 uniform exclusion type `seg` (G3: the genuine per-population exclusion, never top). There is

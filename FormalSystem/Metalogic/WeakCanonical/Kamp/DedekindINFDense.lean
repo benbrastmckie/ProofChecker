@@ -175,7 +175,7 @@ structure HasGuardedDedekindINF {sig : MonadicSignature}
 
 /-- The `Since`-direction dual of `HasGuardedDedekindINF`, guarded at the **right** endpoint.
 
-    `kminus` (`PriorINF.lean:98`) carries `¬P(z₁)` in its first conjunct, so the mirror of the
+    `kminus` (`PriorINF.lean`) carries `¬P(z₁)` in its first conjunct, so the mirror of the
     guard is `¬P(z₁)`. The conclusion is `HasDedekindSUP.last_occ`'s disjunction verbatim. -/
 structure HasGuardedDedekindSUP {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds) : Prop where
@@ -506,7 +506,7 @@ theorem hasDedekindINF_fails_of_interval_witness {sig : MonadicSignature}
 
 /-- The `Since`-direction mirror of `hasDedekindINF_fails_of_interval_witness`: `HasDedekindSUP`
     fails on a densely ordered flow as soon as some formula holds at `z₁` and throughout an
-    interval below it. `kminus` (`PriorINF.lean:98`) demands `¬P(z₁)`. -/
+    interval below it. `kminus` (`PriorINF.lean`) demands `¬P(z₁)`. -/
 theorem hasDedekindSUP_fails_of_interval_witness {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)
     (hdense : ∀ x y : M.carrier, x < y → ∃ z : M.carrier, x < z ∧ z < y)

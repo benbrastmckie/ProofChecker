@@ -27,7 +27,7 @@ This module lands the **design-invariant determinacy core** of that channel:
    carrier 3 F2-immune.
 2. `nf_eval_take` — depth-GENERAL prefix-restriction soundness for `nfkTake`
    (CarrierKv.lean:70), generalizing the depth-1-only `kvE2_sepProjFresh_eval`
-   (SharedWitness.lean:7297) to symbolic `k` by induction: quant layers transport through
+   (SharedWitness.lean) to symbolic `k` by induction: quant layers transport through
    `nfCharacteristic` + `nf_eval_unique M k` — report 10's exact determinacy prescription.
    Specialization `nf_eval_projFresh` at `m = 1`.
 3. `kvESepPos` / `kvEProjFreshD` / `kvEFutAnyBit` — the depth-`k` zone-fact channel:
@@ -112,7 +112,7 @@ theorem nf_eval_truncD {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq
 
 /-- **Depth-general prefix-restriction soundness**: a realized depth-`k` arity-`n` normal
     form restricts (along `Fin.castLE`) to a realized arity-`m` form. Generalizes the
-    depth-1-only `kvE2_sepProjFresh_eval` machinery (SharedWitness.lean:7280-7345) to
+    depth-1-only `kvE2_sepProjFresh_eval` machinery (SharedWitness.lean) to
     symbolic `k`: the quant layer transports through `nfCharacteristic` +
     `nf_eval_unique M k` at every layer. -/
 theorem nf_eval_take {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
@@ -166,7 +166,7 @@ theorem nf_eval_take {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq s
 
 /-- **Depth-general fresh-projection soundness**: a realized depth-`k` sub factors through
     its fresh depth-`k` arity-1 projection at the witness point — the symbolic-`k`
-    generalization of `kvE2_sepProjFresh_eval` (SharedWitness.lean:7297). -/
+    generalization of `kvE2_sepProjFresh_eval` (SharedWitness.lean). -/
 theorem nf_eval_projFresh {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (M : OrderedMonadicStructure sig) {k n : Nat}
     (env : Fin n → M.carrier) (v : M.carrier)
@@ -186,7 +186,7 @@ theorem nf_eval_projFresh {sig : MonadicSignature} [Fintype sig.preds] [Decidabl
 /-! ## The depth-`k` zone-fact channel (`kvEFutAnyBit`) -/
 
 /-- Positive subs of a depth-`(k+2)` arity-3 normal form (the depth-`k` generalization of
-    `kvE2SepPos`, SharedWitness.lean:193). -/
+    `kvE2SepPos`, SharedWitness.lean). -/
 noncomputable def kvESepPos {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     {k : Nat}
     (qnf : NormalForm sig (k + 2) 3) : List (NormalForm sig (k + 1) 4) :=

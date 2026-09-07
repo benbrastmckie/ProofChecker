@@ -33,7 +33,7 @@ For implementation status by module, see [implementation-status.md](implementati
 - **Key Files**: `FormalSystem/Theorems/Perpetuity.lean` (aggregator) and
   `FormalSystem/Theorems/Perpetuity/` (`Principles.lean`, `Helpers.lean`,
   `MonotonicityDuality.lean`)
-- **Principles** (per `FormalSystem/Theorems.lean:49-54`):
+- **Principles** (per `FormalSystem/Theorems.lean`):
   `□φ → △φ` (P1), `▽φ → ◇φ` (P2), `□φ → □△φ` (P3), `◇▽φ → ◇φ` (P4),
   `◇▽φ → △◇φ` (P5), `▽□φ → □△φ` (P6)
 

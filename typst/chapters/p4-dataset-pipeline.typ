@@ -36,7 +36,7 @@ The pipeline comprises seven Lean modules -- `DataExport.lean`, `FormulaEnumerat
 
 === Anatomy of a Dataset Record
 
-Each exported JSONL line is a `DatasetRecord` (`Automation/DatasetExport.lean:130`), carrying the formula in several parallel encodings alongside its label and exactly one supervisory payload.
+Each exported JSONL line is a `DatasetRecord` (`Automation/DatasetExport.lean`), carrying the formula in several parallel encodings alongside its label and exactly one supervisory payload.
 A representative valid-formula record, abridged from the schema documented at the head of `DatasetExport.lean`:
 
 ```json

@@ -19,7 +19,7 @@ named saturation residue `hsat` (the depth-`k` `hexclExt` analog), and the arity
 bundle `hreal` is carried for the fiber-forward direction — both discharged one level up by the
 outer recursion / exterior provider (F2 sidestep, report 03 pattern). The atom layer is
 recovered via `kvE_pastAtom_of_bundle` (bundle route, NOT env-free saturation). Consumes the Past
-chain destructor `kvE_pastChainDestructG` (`ExteriorNegationPastK.lean:353`) via `SemanticPriorSZ`
+chain destructor `kvE_pastChainDestructG` (`ExteriorNegationPastK.lean`) via `SemanticPriorSZ`
 (last-occurrence). Purely additive NEW leaf module; no frozen file is touched. -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

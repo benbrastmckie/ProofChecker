@@ -39,7 +39,7 @@ This module opens with a measurement of the existing chain rather than an assump
 and the measurement **refuted the premise this module was chartered on**. Recorded here because
 the refutation, not the composition, is this module's principal content.
 
-**Measured**: `Kamp.kampPriorExpressiveCompleteness` (`Kamp/KampPrior.lean:672`) and
+**Measured**: `Kamp.kampPriorExpressiveCompleteness` (`Kamp/KampPrior.lean`) and
 `Kamp.nfCharacterizableTemporalPrior` (`:589`) consume `SemanticPriorUZ` / `SemanticPriorSZ`
 and **no completeness carrier at all**. `KampPrior.lean` contains zero occurrences of
 `HasDedekindINF`, `HasDedekindSUP`, `HasFaithfulDedekindINF`, `HasFaithfulDedekindSUP`,
@@ -167,7 +167,7 @@ below it — not a composition of already-landed parts. That re-base is what was
 
 /-- **Expressive completeness at the faithful eq (5.2) carrier** — the obligation this module's
 target rests on, and the faithful sibling of `Kamp.kampPriorExpressiveCompleteness`
-(`Kamp/KampPrior.lean:672`).
+(`Kamp/KampPrior.lean`).
 
 Same shape as `kampPriorExpressiveCompleteness`, with `SemanticPriorUZ` / `SemanticPriorSZ`
 replaced by `Kamp.HasFaithfulDedekindINF` / `Kamp.HasFaithfulDedekindSUP`
@@ -238,7 +238,7 @@ carrier, supplied by `Kamp.kampPriorExpressiveCompletenessFaithful`
 (`Kamp/KampPriorFaithful.lean`).
 
 **What closed it.** The obligation was a re-base of the whole `kampPriorExpressiveCompleteness`
-spine (`Kamp/KampPrior.lean:672`) from `SemanticPriorUZ` / `SemanticPriorSZ` onto
+spine (`Kamp/KampPrior.lean`) from `SemanticPriorUZ` / `SemanticPriorSZ` onto
 `Kamp.HasFaithfulDedekindINF` / `Kamp.HasFaithfulDedekindSUP`. The re-base landed in four rungs,
 each sorry-free:
 

@@ -928,11 +928,16 @@ echo
 # renumbered by vault operations and is meaningless to a future reader -- but the
 # `tasks?\s+#?[0-9]+` shape structurally cannot see one, so seventeen of them sat
 # in live `.lean` files while this check reported zero.
+#
+# `scripts/check-evidence-probes.sh` is excluded alongside this file: the path it
+# names is not a citation but the directory it exists to read, so the rule's
+# "use a durable anchor instead" remedy does not apply to it.
 # ---------------------------------------------------------------------------
 TASK_REFS=$(grep -rniE --include='*.lean' --include='*.md' --include='*.sh' \
   '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b|specs/[0-9]{3}_[A-Za-z0-9_]+' \
   FormalSystem lakefile.lean README.md scripts 2>/dev/null \
-  | grep -v '/Boneyard/' | grep -v '^scripts/check-module-invariants\.sh:')
+  | grep -v '/Boneyard/' | grep -v '^scripts/check-module-invariants\.sh:' \
+  | grep -v '^scripts/check-evidence-probes\.sh:')
 TASK_REF_COUNT=$(printf '%s' "$TASK_REFS" | grep -c . || true)
 if [ "$TASK_REF_COUNT" -eq 0 ]; then
   pass C9 "zero task-number citations under FormalSystem/, lakefile.lean, README.md, scripts/"

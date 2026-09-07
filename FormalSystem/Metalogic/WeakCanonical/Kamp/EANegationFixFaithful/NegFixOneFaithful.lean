@@ -220,7 +220,7 @@ The INF-side counterpart of `HasDedekindSUP.last_occ_tp` (`Lemma53FaithfulPast.l
     `K⁺(P)(z₀)`) or it is an eq (5.2) point strictly inside `(z₀,z₁)`.
 
     Wraps `HasDedekindINF.first_occ` (`DedekindINF.lean:140`) to accept a `TemporalPred` directly,
-    following the pattern of `HasAttainedINF.first_occ_tp` (`EANegationClosure.lean:66`) and
+    following the pattern of `HasAttainedINF.first_occ_tp` (`EANegationClosure.lean`) and
     `HasDedekindSUP.last_occ_tp` (`Lemma53FaithfulPast.lean:171`). Unlike the attained version the
     disjunction is preserved rather than collapsed: that is precisely the content the faithful
     carrier adds.

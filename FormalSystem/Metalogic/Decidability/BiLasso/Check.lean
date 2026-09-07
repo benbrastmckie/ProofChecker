@@ -40,8 +40,8 @@ With this layer in hand, decidability of `ValidZTime φ` reduces to exactly one 
 Given `fmp`, `(∀ P ∈ cands φ, ∀ w, check P w φ.neg = false) ↔ ValidZTime φ` follows, and
 `decidable_of_iff` reads a `Decidable (ValidZTime φ)` off it — the outer quantifier by
 `List.decidableBAll`, the inner by `Fintype.decidableForallFintype`, the body by `decEq`. Both
-halves have been compiled sorry-free and are retained under
-`specs/469_eliminate_the_bridge_filtration_into_intpresentation/evidence/`. Two things follow that
+halves have been compiled sorry-free and are retained in the bridge-filtration elimination
+evidence set. Two things follow that
 are worth recording, because both were assumed otherwise before being measured:
 
 - **`check_correct` is the final step, not the far side of a transfer.** No bridge theorem, no
@@ -80,7 +80,7 @@ A `BiLasso`'s origin is pinned: it decodes `back` repeated strictly left of `0`,
 pigeonhole that compresses a satisfying history puts the point of interest wherever the compressed
 mid segment lands it. Anchoring at `0` would demand a recurrence of the *type* at the point of
 interest, and
-`specs/417_semantic_fmp_finite_worldstate_over_z/evidence/phase10-origin-anchoring-obstruction.lean`
+`phase10-origin-anchoring-obstruction.lean`, in the semantic-FMP evidence set,
 exhibits a total history for which no such recurrence exists — machine-checked, sorry-free, and
 retained as a permanent regression guard against re-anchoring this definition.
 
@@ -96,7 +96,7 @@ enumerated lasso.
 
 ## Why the existential is not compositional, and why that is fine
 
-`specs/417_semantic_fmp_finite_worldstate_over_z/evidence/phase12-check-not-compositional.lean`
+`phase12-check-not-compositional.lean`, in the semantic-FMP evidence set,
 refutes a compositional reading of the `imp` case. It does not touch `check`, because the `∃ A`
 and the `∃ i` sit **outside** any recursion on `φ`: `check` never decomposes `φ`; it enumerates
 structures and reads a label. The recursion that does exist is `boxOracle`'s, and that one is on

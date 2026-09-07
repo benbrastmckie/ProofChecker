@@ -1185,7 +1185,7 @@ theorem CAggOd_clause_iff (M : OrderedMonadicStructure sig)
 
 The Rabinovich Lemma 3.4 closure under ∧ (chunk_0010): the population MATCH
 `∀ qnf, ((∃ w, NfEvalNf M 1 3 [w, x, t] qnf) ↔ sub_nf.2 qnf)` is the `conjFull`-fold
-over ALL `qnf : NormalForm sig 1 3` (Fintype at NormalForm.lean:167) of the per-qnf
+over ALL `qnf : NormalForm sig 1 3` (Fintype at NormalForm.lean) of the per-qnf
 dispatcher `CAggOd qnf` on bit-true qnf and its Prop 4.2/4.3 De Morgan negation
 `(CAggOd qnf).negFix` on bit-false qnf, with `VVecEA2.trivialTrue` as the neutral
 element. `negFix_iff` is gated on attained INF/SUP; on Prior structures these are

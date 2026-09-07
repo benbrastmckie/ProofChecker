@@ -131,7 +131,7 @@ abbrev SemanticPriorU {sig : MonadicSignature}
             ∃ r : M.carrier, s < r ∧ r < u ∧ ¬ TemporalTruth M atomMap r p))
 
 /-- **Semantic Prior-S** — Reynolds 1992, printed p.168: `S(⊤,p) ∧ P¬p → S(¬p ∨ K⁻(¬p),p)`, the
-mirror of `SemanticPriorU` in the past direction, with `K⁻` (`kminus`, `Kamp/PriorINF.lean:98`) in
+mirror of `SemanticPriorU` in the past direction, with `K⁻` (`kminus`, `Kamp/PriorINF.lean`) in
 place of `K⁺`.
 
 This is the semantic side of `Axiom.prior_S_gap` (`ProofSystem/Axioms.lean:387`), and stands to

@@ -103,7 +103,7 @@ to be dodged for such a definition to be non-vacuous.
 ## Carrier gate
 
 The four `example … := inferInstance` lines are not decoration. `FormalSystem.Semantics.Valid`
-(`Validity.lean:94`) binds its duration type under exactly `AddCommGroup`, `LinearOrder`,
+(`Validity.lean`) binds its duration type under exactly `AddCommGroup`, `LinearOrder`,
 `IsOrderedAddMonoid` and `Nontrivial`, and `SemanticConsequence` binds the same four. The four
 gate lines make *"`ℚ ×ₗ ℤ` is an admissible duration type"* a compile-time invariant of this
 module, so the frame-side construction downstream inherits it instead of re-deriving it.
@@ -127,15 +127,22 @@ example : Nontrivial (ℚ ×ₗ ℤ) := inferInstance
 
 /-! ## The target structure -/
 
+/-- A monadic structure whose carrier is fixed to the lexicographic product `ℚ ×ₗ ℤ`,
+recorded as bare interpretation data. This is the shape the Ramsey factorization argument
+produces, and `toMonadic` / `toOrdered` below package it back up as a structure. -/
 structure QZStructure (sig : MonadicSignature) [Fintype sig.preds] [DecidableEq sig.preds]
     where
+  /-- Interpretation of each predicate symbol as a subset of `ℚ ×ₗ ℤ`. -/
   interp (p : sig.preds) : ℚ ×ₗ ℤ → Prop
 
+/-- Package a `QZStructure` as a plain `MonadicStructure` on the carrier `ℚ ×ₗ ℤ`. -/
 def QZStructure.toMonadic (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (Q : QZStructure sig) : MonadicStructure sig where
   carrier := ℚ ×ₗ ℤ
   interp p x := Q.interp p x
 
+/-- Package a `QZStructure` as an `OrderedMonadicStructure`, using the lexicographic
+order on `ℚ ×ₗ ℤ`. -/
 def QZStructure.toOrdered (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (Q : QZStructure sig) : OrderedMonadicStructure sig where
   carrier := ℚ ×ₗ ℤ
@@ -148,6 +155,8 @@ theorem QZStructure.toOrdered_carrier (sig : MonadicSignature) [Fintype sig.pred
 
 /-! ## `goodGroupable` -/
 
+/-- `M` is *good groupable* at quantifier rank `k` when some `QZStructure` is `k`-equivalent
+to it — that is, when `M`'s rank-`k` monadic theory is realized on the carrier `ℚ ×ₗ ℤ`. -/
 def goodGroupable (sig : MonadicSignature) [Fintype sig.preds] [DecidableEq sig.preds] (k : Nat)
     (M : OrderedMonadicStructure sig) : Prop :=
   ∃ (Q : QZStructure sig), KEquiv sig k M (Q.toOrdered sig)

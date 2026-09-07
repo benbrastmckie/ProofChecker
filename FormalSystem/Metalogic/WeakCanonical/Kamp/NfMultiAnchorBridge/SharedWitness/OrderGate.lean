@@ -306,7 +306,7 @@ noncomputable def kvE2SepSegRAt {sig : MonadicSignature} [Fintype sig.preds]
 
 /-- Segment index dispatcher for the joint bracket: indices `≤ lL.length` are left-region
     cuts, the rest are right-region cuts (same boundary convention as `bracketFromLists`,
-    `CarrierK1V.lean:389`). -/
+    `CarrierK1V.lean`). -/
 noncomputable def kvE2SepSegs {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (charBase : NormalForm sig 0 1 → Formula) (qnf : NormalForm sig 2 3)
     (lL lR : List (KvE2SepSlot sig)) (i : Nat) : TemporalPred :=
@@ -314,7 +314,7 @@ noncomputable def kvE2SepSegs {sig : MonadicSignature} [Fintype sig.preds] [Deci
   else kvE2SepSegRAt charBase qnf lR (i - lL.length - 1)
 
 /-- **Fresh N-slot bracket builder** (plan Phase 7 O1): the `bracketFromLists`
-    (`CarrierK1V.lean:389`) shape generalized to PER-INDEX segment types — required because
+    (`CarrierK1V.lean`) shape generalized to PER-INDEX segment types — required because
     the refined-conjunction segments vary across each region's cuts (the private 2-slot
     `bracketFromLists3` cannot express this). Point types are `lL ++ ptW :: lR` — the §5
     bracket `[α_0, …, α_n](z_0, z_1)` (PDF p.7) with the two FIXED endpoints and one shared

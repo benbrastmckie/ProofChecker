@@ -52,7 +52,7 @@ section, which is the authority on that history.
 
 ## References
 
-* `specs/495_determine_tm_completeness_status_over_task_frames/reports/01_tm-completeness-status.md`
+* The TM-completeness status report (`01_tm-completeness-status.md`),
   §4.1, §4.2, §6.2
 * `FormalSystem/Metalogic/Conservativity.lean` — the CEB/CEF refutation record and the forward
   prohibition this module never approaches

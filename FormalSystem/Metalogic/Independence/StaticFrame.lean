@@ -35,7 +35,7 @@ per-axiom semantic argument. `Metalogic/Independence/RationalWitness.lean` and
 
 ## Scoping finding: the periodicity apparatus is not needed here
 
-`specs/511_research_frame_correspondence_infrastructure/reports/03_probes.lean` carries a
+The frame-correspondence research probes (`03_probes.lean`) carry a
 ~400-line `Walk`/`MinCyc`/`periodic` apparatus culminating in `truthAt_add_hist_period`, which
 exists to handle frames whose *histories have different periods*. The static frame needs none of
 it: its period is uniform across every history, so `truthAt_add_period` applies directly. The

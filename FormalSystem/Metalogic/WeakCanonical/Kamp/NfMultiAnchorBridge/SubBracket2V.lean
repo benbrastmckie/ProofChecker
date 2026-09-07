@@ -1335,7 +1335,7 @@ theorem kvE_subBracket2V_sound {sig : MonadicSignature} [Fintype sig.preds] [Dec
     full `(kvESubBracket2V σ).holds`, which the re-pointed `kvE2_body` joint channel (:8154,
     `ptSub σ = kvESubChain2V σ` = a flat `bracketFromLists3.fChainPred`) cannot supply — lifting a
     realized `fChainPred` to the nested `.holds` is the reverse Cor 5.4 direction, DOCUMENTED
-    UNPROVABLE at `EANegation.lean:1217-1234` (report 18 §10.3, interior-witness convention). This
+    UNPROVABLE at `EANegation.lean` (report 18 §10.3, interior-witness convention). This
     lemma pins down that the ONLY carrier-side data soundness truly needs is `(x1, hbelow)` — the
     fresh anchor + below-anchor reachability — so any corrected joint channel that exposes those two
     (e.g. via `kvE_subBracket2V_reaches_zXU` :7246 off a genuinely-carried `.holds`, rather than a

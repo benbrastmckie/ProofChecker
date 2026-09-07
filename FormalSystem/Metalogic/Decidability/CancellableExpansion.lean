@@ -23,7 +23,7 @@ Threading an `IO.Ref Bool` through the pure `expandBranchWithFuel` would force
 it into `IO` and break the four proof-bearing theorems that `unfold`/`simp`
 the pure definition (`expandBranchWithFuel_sound`, the two `tryBranch`
 helpers, `invalid_of_expandBranchWithFuel_open`). Instead we follow the
-established `_tracedImpl` precedent (Saturation.lean:368): mirror the
+established `_tracedImpl` precedent (Saturation.lean): mirror the
 pure recursion shape in a monad — here `IO` instead of `StateM` — leaving the
 pure functions and all their proofs byte-for-byte untouched.
 
@@ -163,13 +163,13 @@ def resolveOpenArmCancellable (abortRef : IO.Ref Bool)
               | some _ => return none  -- still not saturated: undecided, never "closed"
 
 /--
-Cancellable `IO` mirror of `expandBranchWithFuel` (Saturation.lean:228).
+Cancellable `IO` mirror of `expandBranchWithFuel` (Saturation.lean).
 
 Checks `abortRef` (and the task cancellation flag) at each recursive entry;
 returns `none` on abort, which upstream maps to `.fuelExhausted` — never to
 `.valid`/`.invalid`. The body mirrors the pure function line-for-line, with
 the split `foldl` rendered as a `for` loop with a mutable `acc` exactly as in
-`expandBranchWithFuelTracedImpl` (Saturation.lean:368).
+`expandBranchWithFuelTracedImpl` (Saturation.lean).
 
 **Mirror of** `expandBranchWithFuel`; keep the two in sync.
 -/
@@ -291,7 +291,7 @@ reuse the pure fast paths (`tryAxiomProof`, `buildCompositionalProof`,
 -/
 
 /--
-Cancellable `IO` mirror of `decide` (DecisionProcedure.lean:122).
+Cancellable `IO` mirror of `decide` (DecisionProcedure.lean).
 
 Reuses the pure fast paths unchanged and calls `buildTableauCancellable` for
 the expensive tableau leg. An aborted tableau (`none`) maps to `.fuelExhausted`.

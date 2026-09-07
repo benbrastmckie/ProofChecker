@@ -619,7 +619,7 @@ no gaps. Under this assumption, Cases III/IV (gap handling) are vacuous:
 every element of `ExtendedCarrier N atomMap r` is a point, so the
 `isPoint_or_isGap` dispatch always takes the Case II branch.
 
-This avoids the sorry at CaseAnalysis.lean:3318 (Cases III/IV gap handling)
+This avoids the sorry at CaseAnalysis.lean (Cases III/IV gap handling)
 and produces a sorry-free result for discrete structures. -/
 
 /--

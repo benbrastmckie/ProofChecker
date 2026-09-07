@@ -417,7 +417,7 @@ point carries `ψ` but need not carry the target. -/
     `BXPoint` witness through `HintikkaStepOracle` and `hintikka_chain_exists`
     collapses the chain-step seed-consistency obligation to a one-line
     subset witness, mirroring the `h_neg_in = false` branch of
-    `enriched_seed_consistent_until` in `Realization.lean:271-276`. -/
+    `enriched_seed_consistent_until` in `Realization.lean`. -/
 structure WitnessedHintikka (Sigma : Finset Formula) where
   /-- The underlying Hintikka point. -/
   point : HintikkaPoint Sigma
@@ -628,7 +628,7 @@ theorem hintikka_chain_exists
     This is the lemma that unblocks Phase 4
     (`enriched_seed_consistent_until`-style reductions against a chain
     point). It mirrors the `h_neg_in = false` branch of
-    `enriched_seed_consistent_until` in `Realization.lean:271-276`:
+    `enriched_seed_consistent_until` in `Realization.lean`:
 
         have h_L_in_w : ∀ α ∈ L, α ∈ w.formulas := ...
         exact w.is_mcs.1 L h_L_in_w ⟨d⟩

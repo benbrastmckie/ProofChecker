@@ -476,7 +476,7 @@ never unfolded.
   box-derived, or restructure the `box` case to need no anchor — is an open design decision with
   its own soundness obligations. Do **not** reinstate the removed copies. The measurement, the
   carrier list, and the repair options are written up in
-  `specs/418_.../artifacts/boxanchored-finding.md`.
+  the box-anchored finding record (`boxanchored-finding.md`).
 
 **The `sat_*` family is now complete** for the induction's propositional needs.
 `Bridge/PropSaturation.lean` adds `sat_imp_pos`, which `CountermodelExtraction.lean` did not

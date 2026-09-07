@@ -14,7 +14,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.KPlusFaithful
 `HasFaithfulDedekindINF` carrier (`KPlusFaithful.lean:320`). That module is entirely
 **future/Until-directed**: it peels the *first* point type off the chain and pins it at the
 first-occurrence infimum. This module supplies the **past/Since-directed** primitives, which the
-tree did not have at all: `kminus` (`PriorINF.lean:98`) was declared with **no object-language
+tree did not have at all: `kminus` (`PriorINF.lean`) was declared with **no object-language
 spelling and no correctness lemma anywhere**, so the `HasDedekindSUP` carrier
 (`DedekindINF.lean:153`) could be stated but none of its content could be used.
 
@@ -52,7 +52,7 @@ exactly as `kplusFormula` (`PriorINF.lean:93`) is `¬P ∧ ¬(⊤ U ¬P)`.
 * `HasDedekindSUP.last_occ_tp` and `HasFaithfulDedekindSUP.last_occ_tp` — the `TemporalPred`-level
   wrappers of the two past carriers, following the pattern of `HasAttainedSUP.last_occ_tp`
   (`EANegationFix/BoundedFix.lean:72`) and `HasAttainedINF.first_occ_tp`
-  (`EANegationClosure.lean:66`).
+  (`EANegationClosure.lean`).
 * `orderedPointsExist_combine_right` — the right-end mirror of `orderedPointsExist_combine`
   (`EANegationFix/OnBuilder.lean:95`), which only ever combined at the left end.
 * `orderedPointsExist_combine_kminusOpen` / `orderedPointsExist_combine_kminus` /
@@ -69,7 +69,7 @@ exactly as `kplusFormula` (`PriorINF.lean:93`) is `¬P ∧ ¬(⊤ U ¬P)`.
 
 **What changed, in one clause**: the boundary disjunct `K⁻(Pₙ)(z₁)` gained a second, source-exact
 spelling — `kminusOpen` (`KPlusFaithful.lean:126`), on `Formula.kMinus` — beside the tree's
-`kminus` (`PriorINF.lean:98`), which carries an extra `¬P(z₁)` conjunct that neither Rabinovich
+`kminus` (`PriorINF.lean`), which carries an extra `¬P(z₁)` conjunct that neither Rabinovich
 2014 (`K⁻` Definition (2), PDF p.3) nor Reynolds 1992 (abbreviation table §1, printed p.168:
 `K⁻A` for `¬S(⊤,¬A)`) states.
 
@@ -130,7 +130,7 @@ open FormalSystem.Metalogic.WeakCanonical
 
 /-! ## `K⁻(P)` as an object-language formula
 
-`kminus` (`PriorINF.lean:98`) was declared semantically and never given a spelling. `Formula.snce`
+`kminus` (`PriorINF.lean`) was declared semantically and never given a spelling. `Formula.snce`
 interprets Since natively (`Table.lean:198`): `snce φ ψ` at `t` is
 `∃s < t, φ(s) ∧ ∀r ∈ (s,t), ψ(r)`. So `⊤ S ¬P` at `t` reads *"there is a gap below `t` on which
 `P` never holds"*, and its negation is *"`P` occurs in every interval `(s,t)`"* — which, conjoined
@@ -214,7 +214,7 @@ theorem kminusOpenPred_eval {sig : MonadicSignature}
 
     Wraps `HasDedekindSUP.last_occ` (`DedekindINF.lean:157`) to accept a `TemporalPred` directly,
     following the pattern of `HasAttainedSUP.last_occ_tp` (`EANegationFix/BoundedFix.lean:72`) and
-    `HasAttainedINF.first_occ_tp` (`EANegationClosure.lean:66`). Unlike those two, the disjunction
+    `HasAttainedINF.first_occ_tp` (`EANegationClosure.lean`). Unlike those two, the disjunction
     is preserved rather than collapsed: that is precisely the content the faithful carrier adds.
 
     Source correspondence: Rabinovich 2014, eq (5.2), PDF p.8, mirrored. -/

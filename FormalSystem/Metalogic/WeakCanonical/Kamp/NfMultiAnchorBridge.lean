@@ -18,7 +18,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.Lemma53FaithfulPast
 import Mathlib.Data.List.Permutation
 -- NOTE: `import ...Kamp.Lemma53FaithfulPast` lands the import edge for the SINCE/`HasDedekindSUP`
 -- MIRROR of the faithful eq (5.2) primitives (Rabinovich 2014, PDF p.8, mirrored). `Lemma53Faithful`
--- above is entirely future-directed; `kminus` (`PriorINF.lean:98`) was declared with no
+-- above is entirely future-directed; `kminus` (`PriorINF.lean`) was declared with no
 -- object-language spelling and no correctness lemma anywhere in the tree, so `HasDedekindSUP`
 -- (`DedekindINF.lean:153`) could be stated but none of its content could be used. This module
 -- supplies `kminusFormula`/`kminus_formula_correct`, `kminusPred`/`kminusPred_eval`,

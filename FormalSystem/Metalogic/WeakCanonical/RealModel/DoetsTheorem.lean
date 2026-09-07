@@ -321,7 +321,7 @@ end RealModelTransfer
 
 Reynolds' hypotheses D1 and D2 are quantified over *"any contemporaneous equivalence relation
 `∼` on `M`"*; the two conclusions are `EndsInGapOnRight`/`EndsInGapOnLeft` (`Defs.lean`) and
-`QuotientDenselyOrdered → HasDenseSingletons` (`Singletons.lean:190,200`).
+`QuotientDenselyOrdered → HasDenseSingletons` (`Singletons.lean,200`).
 
 ## Which spelling of *"contemporaneous equivalence relation"*, and why it changed
 

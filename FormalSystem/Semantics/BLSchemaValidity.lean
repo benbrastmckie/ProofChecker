@@ -37,7 +37,7 @@ association is checked by elaboration against `BaseLanguage/Axioms.lean`'s own d
 
 ## References
 
-* `specs/495_determine_tm_completeness_status_over_task_frames/reports/01_tm-completeness-status.md`
+* The TM-completeness status report (`01_tm-completeness-status.md`),
   §4.1 (Lemmas B and C), §6.1 (the past-dual obligation)
 * `FormalSystem/BaseLanguage/Axioms.lean` — `Axiom.df`, `Axiom.dn`
 * `FormalSystem/Semantics/DurationClassification.lean` — `isLeast_pos_succ_zero`

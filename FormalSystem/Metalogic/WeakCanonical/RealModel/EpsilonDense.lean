@@ -1026,7 +1026,7 @@ theorem simDense_equivalence (k : Nat) (hk : 2 ≤ k) (M : OrderedMonadicStructu
 printed pp.186-187, assembled.
 
 The three components are exactly the clauses of `IsContempEquivDense`
-(`DenseModelSurgery/Defs.lean:234`), stated here for a countable densely ordered `M`. The bundled
+(`DenseModelSurgery/Defs.lean`), stated here for a countable densely ordered `M`. The bundled
 `IsContempEquivDense (epsDense sig k)` quantifies over **every** structure, and is therefore
 strictly stronger than what Lemma 12's proof supports — see the module header.
 -/

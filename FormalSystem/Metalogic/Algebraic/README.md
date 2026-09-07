@@ -152,7 +152,7 @@ G and H are **not** interior operators under strict temporal semantics: `G phi -
 is the only surviving G/H-family result, and there is **no G operator on the quotient at all** —
 the quotient carries `boxQuot` (`LindenbaumQuotient.lean:289`), `hQuot` (`:296`) and `negQuot`
 (`:261`), with no G counterpart anywhere in the tree. The module's own docstring
-(`InteriorOperators.lean:29-43`) states this and is the model this section follows.
+(`InteriorOperators.lean`) states this and is the model this section follows.
 
 ### Ultrafilter-MCS Correspondence (`UltrafilterMCS.lean`)
 

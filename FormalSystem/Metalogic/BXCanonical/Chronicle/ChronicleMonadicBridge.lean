@@ -75,7 +75,7 @@ Phase 15's first task is a gate: are `mkSigFrom`, `Formula.predFormulas`,
   `WorldHistory` and `WorldHistory.timeShift` see the same `D` and no successor structure.
 * `Formula.predFormulas` (`Syntax/Formula.lean`) is a purely syntactic recursion on
   `Formula` with no temporal parameter at all, and `mkSigFrom φ`
-  (`WeakCanonical/Transfer.lean:134`) is `Finset.cons Formula.bot φ.predFormulas _`. No
+  (`WeakCanonical/Transfer.lean`) is `Finset.cons Formula.bot φ.predFormulas _`. No
   order structure occurs in either.
 * `multiFamTaskFrame FamIdx : FrameOver intOrder` (`ReynoldsBridge.lean`) has
   `WorldState := FamIdx × ℤ` and `TaskRel p d q := p.1 = q.1 ∧ q.2 = p.2 + d`, in which
@@ -94,7 +94,7 @@ them. Phase 30 consumes the generic versions at `D := ℝ`.
 
 `mkSigFrom` lives in `WeakCanonical/Transfer.lean`, which carries this repository's single
 live `sorry` at `:1242` in an **unrelated** declaration. Importing it is normal and already
-universal in this tree. `Transfer.lean:1242` is not attempted here.
+universal in this tree. `Transfer.lean` is not attempted here.
 
 ## Main results
 
@@ -583,7 +583,7 @@ draw on Part 5 rather than on the restricted hypotheses.
 (`chronicle_temporal_truth_effective`). No source: original work, like the rest of the bridge. -/
 
 /-- The chronicle bridge's effective-formula operator: `effectiveFormula` at this structure's own
-atom maps, `mkAtomMap root` (`Transfer.lean:161`, which is `Subtype.val`) and `mkAtomMapFwd root`
+atom maps, `mkAtomMap root` (`Transfer.lean`, which is `Subtype.val`) and `mkAtomMapFwd root`
 (`:300`).
 
 On `subformulaClosure root` it is the identity in the sense that matters — `mkAtomMapFwd_section`

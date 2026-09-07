@@ -23,7 +23,7 @@ entries are formulas of the previous round, never rung-`k` brackets, per the E-v
 resolution-(a) reading of Lemma 7.8). Those formulas are the Def 4.1/7.7 canonical-expansion
 images of the fiber elements: `P.existF 4 s` is the E[Σ,TL]-atom rendering of the full-arity
 sub `s` (idempotent expansion, chunk 0011:5 / chunk 0022:5), supplied by the canonical
-`ExistProviders sig atomMap k` bundle (PriorInterface.lean:38-46) consumed VERBATIM
+`ExistProviders sig atomMap k` bundle (PriorInterface.lean) consumed VERBATIM
 (postmortem rule 11).
 
 **Why full-fiber (F2 immunity)**: the marginal channels (`kvESubBit`, `kvEFutAnyBit`,

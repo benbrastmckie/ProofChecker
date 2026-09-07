@@ -724,7 +724,7 @@ inventory only —
 
 - `kvE2_extGate_henv`: pred parts from the `EpL`/`EpR`/`ptW` endpoint 1-type heads
   (`kvE2SepProj3` projections), order parts from `hxw`/`hwt` + the six qnf order-bit
-  hypotheses (the recorded Phase-2 derivation obligation, ExteriorNegation.lean:43-47);
+  hypotheses (the recorded Phase-2 derivation obligation, ExteriorNegation.lean);
 - `kvE2_extGate_anyBit_iff`: the UNRESTRICTED zone-fact biconditional (it subsumes both
   the at-or-below-`t` `hbelow` and the at-or-above-`x` `habove` keys). Forward: a zone
   witness in the closed cone rides `hexcl` on its own depth-1 characteristic; a witness
@@ -746,7 +746,7 @@ private theorem extDis_zFutT3_not_interior :
   rintro (h | h) <;> exact absurd (congrFun h ⟨2, by omega⟩) (by decide)
 
 /-- **The `henv` pin from the gate inventory** (the SW:12788-site derivation recorded at
-    ExteriorNegation.lean:43-47): predicate parts from the three `kvE2SepProj3` head
+    ExteriorNegation.lean): predicate parts from the three `kvE2SepProj3` head
     conjuncts of `ptW`/`EpL`/`EpR`, order parts from `hxw`/`hwt` + the six qnf order-bit
     hypotheses. Body copied from the `kvE2_outer_fold_frag` atom-layer block
     (SW:12718-12775) — same inventory, exposed as a standalone pin. -/
