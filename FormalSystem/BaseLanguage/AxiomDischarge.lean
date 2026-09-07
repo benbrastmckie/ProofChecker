@@ -50,7 +50,7 @@ is `¬G¬(tr φ)`, whereas `Formula.someFuture` is a top-level `untl` — and by
 BL-side abbreviation could have closed that gap. See `BaseLanguage/Translation.lean`'s
 `tr_someFuture_ne`.
 
-What *does* close it is the derivable equivalence `¬G¬ψ ↔ Fψ` (`notGNot_imp_F` / `F_imp_notGNot`
+What *does* close it is the derivable equivalence `¬G¬ψ ↔ Fψ` (`notGNotImpF` / `fImpNotGNot`
 and their past duals), plus enough monotone congruence to apply it under `∧`, `→`, `G`, `H`, `F`
 and `△`. That machinery is the first section below; every non-exact row is then three or four
 lines.
@@ -140,22 +140,22 @@ repairs this, once, for every row that needs it. -/
 
 /-- `⊢ ¬G¬ψ → Fψ`. Unfolding `Formula.allFuture`, the antecedent is `¬¬F(¬¬ψ)`; strip the outer
 double negation classically, then push `¬¬ψ → ψ` under `F` by `fRule`. -/
-def notGNot_imp_F {fc : FrameClass} (ψ : Formula) :
+def notGNotImpF {fc : FrameClass} (ψ : Formula) :
     ⊢[fc] ((Formula.allFuture ψ.neg).neg).imp ψ.someFuture :=
   impTrans (doubleNegation (Formula.someFuture ψ.neg.neg)) (fRule (doubleNegation ψ))
 
-/-- `⊢ Fψ → ¬G¬ψ`, the converse of `notGNot_imp_F`. -/
-def F_imp_notGNot {fc : FrameClass} (ψ : Formula) :
+/-- `⊢ Fψ → ¬G¬ψ`, the converse of `notGNotImpF`. -/
+def fImpNotGNot {fc : FrameClass} (ψ : Formula) :
     ⊢[fc] ψ.someFuture.imp ((Formula.allFuture ψ.neg).neg) :=
   impTrans (fRule (notNotIntro ψ)) (notNotIntro (Formula.someFuture ψ.neg.neg))
 
-/-- `⊢ ¬H¬ψ → Pψ`, the past dual of `notGNot_imp_F`. -/
-def notHNot_imp_P {fc : FrameClass} (ψ : Formula) :
+/-- `⊢ ¬H¬ψ → Pψ`, the past dual of `notGNotImpF`. -/
+def notHNotImpP {fc : FrameClass} (ψ : Formula) :
     ⊢[fc] ((Formula.allPast ψ.neg).neg).imp ψ.somePast :=
   impTrans (doubleNegation (Formula.somePast ψ.neg.neg)) (pRule (doubleNegation ψ))
 
-/-- `⊢ Pψ → ¬H¬ψ`, the converse of `notHNot_imp_P`. -/
-def P_imp_notHNot {fc : FrameClass} (ψ : Formula) :
+/-- `⊢ Pψ → ¬H¬ψ`, the converse of `notHNotImpP`. -/
+def pImpNotHNot {fc : FrameClass} (ψ : Formula) :
     ⊢[fc] ψ.somePast.imp ((Formula.allPast ψ.neg).neg) :=
   impTrans (pRule (notNotIntro ψ)) (notNotIntro (Formula.somePast ψ.neg.neg))
 
@@ -165,75 +165,75 @@ One lemma per Base-class BL axiom, each of shape `⊢[fc] tr (<the BL axiom form
 a single application; TS, TC and TL carry the bridge. -/
 
 /-- **CPL/K**. Exact. -/
-def discharge_prop_k {fc : FrameClass} (a b c : BLFormula) :
+def dischargePropK {fc : FrameClass} (a b c : BLFormula) :
     ⊢[fc] tr ((a.imp (b.imp c)).imp ((a.imp b).imp (a.imp c))) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.prop_k (tr a) (tr b) (tr c))
     (FrameClass.base_le fc)
 
 /-- **CPL/S**. Exact. -/
-def discharge_prop_s {fc : FrameClass} (a b : BLFormula) :
+def dischargePropS {fc : FrameClass} (a b : BLFormula) :
     ⊢[fc] tr (a.imp (b.imp a)) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.prop_s (tr a) (tr b)) (FrameClass.base_le fc)
 
 /-- **CPL/EFQ**. Exact. -/
-def discharge_ex_falso {fc : FrameClass} (a : BLFormula) :
+def dischargeExFalso {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (BLFormula.bot.imp a) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.ex_falso (tr a)) (FrameClass.base_le fc)
 
 /-- **CPL/Peirce**. Exact. -/
-def discharge_peirce {fc : FrameClass} (a b : BLFormula) :
+def dischargePeirce {fc : FrameClass} (a b : BLFormula) :
     ⊢[fc] tr (((a.imp b).imp a).imp a) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.peirce (tr a) (tr b)) (FrameClass.base_le fc)
 
 /-- **MK**. Exact: `Axiom.modal_k_dist`. -/
-def discharge_modal_k {fc : FrameClass} (a b : BLFormula) :
+def dischargeModalK {fc : FrameClass} (a b : BLFormula) :
     ⊢[fc] tr ((a.imp b).box.imp (a.box.imp b.box)) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.modal_k_dist (tr a) (tr b))
     (FrameClass.base_le fc)
 
 /-- **MT**. Exact: `Axiom.modal_t`. -/
-def discharge_modal_t {fc : FrameClass} (a : BLFormula) :
+def dischargeModalT {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.box.imp a) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.modal_t (tr a)) (FrameClass.base_le fc)
 
 /-- **M5**. Exact: `Axiom.modal_5_collapse`. `tr` commutes with `◇` because BL's `◇` and BL⁺'s
 are the same abbreviation `¬□¬`. -/
-def discharge_modal_5 {fc : FrameClass} (a : BLFormula) :
+def dischargeModal5 {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.box.diamond.imp a.box) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.modal_5_collapse (tr a)) (FrameClass.base_le fc)
 
 /-- **MF**. Exact: `Axiom.modal_future`, the one genuine "exact syntactic match" the research
 report predicted that survives contact with the translation. -/
-def discharge_modal_future {fc : FrameClass} (a : BLFormula) :
+def dischargeModalFuture {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.box.imp a.allFuture.box) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.modal_future (tr a)) (FrameClass.base_le fc)
 
 /-- **TK**. Exact: `gDistribution`, a sorry-free derived theorem. -/
-def discharge_temp_k {fc : FrameClass} (a b : BLFormula) :
+def dischargeTempK {fc : FrameClass} (a b : BLFormula) :
     ⊢[fc] tr ((a.imp b).allFuture.imp (a.allFuture.imp b.allFuture)) :=
   gDistribution (tr a) (tr b)
 
 /-- **T4**. Exact: `gTransitivity`, a sorry-free derived theorem. -/
-def discharge_temp_4 {fc : FrameClass} (a : BLFormula) :
+def dischargeTemp4 {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.allFuture.imp a.allFuture.allFuture) :=
   gTransitivity (tr a)
 
 /-- **TS** (`F⊤`). `Axiom.serial_future` gives `⊤ → F⊤`; modus ponens on `⊤` gives `F⊤`; the
 `F`-bridge converts that to the `¬G¬⊤` shape `tr` produces. -/
-def discharge_temp_serial {fc : FrameClass} :
+def dischargeTempSerial {fc : FrameClass} :
     ⊢[fc] tr BLFormula.top.someFuture :=
   let serial : ⊢[fc] Formula.top.someFuture :=
     mp topThm
       (DerivationTree.axiom [] _ ProofSystem.Axiom.serial_future (FrameClass.base_le fc))
-  mp serial (F_imp_notGNot Formula.top)
+  mp serial (fImpNotGNot Formula.top)
 
 /-- **TC** (`φ → G P φ`). `Axiom.connect_future` gives `A → G(P A)`; the `P`-bridge, pushed
 under `G` by `gRule`, converts `P A` to the `¬H¬A` shape `tr` produces. -/
-def discharge_temp_connect {fc : FrameClass} (a : BLFormula) :
+def dischargeTempConnect {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.imp a.somePast.allFuture) :=
   impTrans
     (DerivationTree.axiom [] _ (ProofSystem.Axiom.connect_future (tr a)) (FrameClass.base_le fc))
-    (gRule (P_imp_notHNot (tr a)))
+    (gRule (pImpNotHNot (tr a)))
 
 /--
 **TL**, the one Base row with real friction.
@@ -246,7 +246,7 @@ Route: bridge the antecedent down to `Fφ ∧ Fψ`, apply the axiom, then `orEli
 disjuncts and re-introduce each into its paper position, bridging (and, in two cases, pushing
 the bridge under `F` with `fRule`) on the way.
 -/
-def discharge_temp_linearity {fc : FrameClass} (a b : BLFormula) :
+def dischargeTempLinearity {fc : FrameClass} (a b : BLFormula) :
     ⊢[fc] tr ((a.someFuture.and b.someFuture).imp
       (((a.someFuture.and b).someFuture).or
         (((a.and b).someFuture).or ((a.and b.someFuture).someFuture)))) := by
@@ -263,8 +263,8 @@ def discharge_temp_linearity {fc : FrameClass} (a b : BLFormula) :
   set Γ : Syntax.Context := [ant] with hΓ
   refine deductionTheorem [] ant C ?_
   have h0 : Γ ⊢[fc] ant := DerivationTree.assumption _ _ (by simp [hΓ])
-  have hFA : Γ ⊢[fc] A.someFuture := ctxMp (wk _ _ (notGNot_imp_F A)) (andFst h0)
-  have hFB : Γ ⊢[fc] B.someFuture := ctxMp (wk _ _ (notGNot_imp_F B)) (andSnd h0)
+  have hFA : Γ ⊢[fc] A.someFuture := ctxMp (wk _ _ (notGNotImpF A)) (andFst h0)
+  have hFB : Γ ⊢[fc] B.someFuture := ctxMp (wk _ _ (notGNotImpF B)) (andSnd h0)
   have hLin : Γ ⊢[fc]
       ((Formula.and A B).someFuture).or
         (((Formula.and A B.someFuture).someFuture).or
@@ -277,7 +277,7 @@ def discharge_temp_linearity {fc : FrameClass} (a b : BLFormula) :
   · -- `F(A ∧ B)` is the paper's *middle* disjunct.
     refine deductionTheorem Γ ((Formula.and A B).someFuture) C ?_
     have a1 : ((Formula.and A B).someFuture :: Γ) ⊢[fc] T2 :=
-      ctxMp (wk _ _ (F_imp_notGNot (Formula.and A B)))
+      ctxMp (wk _ _ (fImpNotGNot (Formula.and A B)))
         (DerivationTree.assumption _ _ (by simp))
     exact orIntroR _ T1 (T2.or T3) (orIntroL _ T2 T3 a1)
   · refine deductionTheorem Γ
@@ -294,8 +294,8 @@ def discharge_temp_linearity {fc : FrameClass} (a b : BLFormula) :
             ((Formula.and A.someFuture B).someFuture)) :: Γ)
         ((Formula.and A B.someFuture).someFuture) (by simp)
       have a2 := ctxMp
-        (wk _ _ (fRule (andMono (identity A) (F_imp_notGNot B)))) a1
-      have a3 := ctxMp (wk _ _ (F_imp_notGNot (Formula.and A nfB))) a2
+        (wk _ _ (fRule (andMono (identity A) (fImpNotGNot B)))) a1
+      have a3 := ctxMp (wk _ _ (fImpNotGNot (Formula.and A nfB))) a2
       exact orIntroR _ T1 (T2.or T3) (orIntroR _ T2 T3 a3)
     · -- `F(F A ∧ B)` is the paper's *first* disjunct, after bridging the inner `F A`.
       refine deductionTheorem _ ((Formula.and A.someFuture B).someFuture) C ?_
@@ -305,8 +305,8 @@ def discharge_temp_linearity {fc : FrameClass} (a b : BLFormula) :
             ((Formula.and A.someFuture B).someFuture)) :: Γ)
         ((Formula.and A.someFuture B).someFuture) (by simp)
       have a2 := ctxMp
-        (wk _ _ (fRule (andMono (F_imp_notGNot A) (identity B)))) a1
-      have a3 := ctxMp (wk _ _ (F_imp_notGNot (Formula.and nfA B))) a2
+        (wk _ _ (fRule (andMono (fImpNotGNot A) (identity B)))) a1
+      have a3 := ctxMp (wk _ _ (fImpNotGNot (Formula.and nfA B))) a2
       exact orIntroL _ T1 (T2.or T3) a3
 
 /-! ## Extension rows
@@ -315,7 +315,7 @@ DN, CO and DF, each at its own frame class, each consuming the BL-side `h_fc` un
 
 /-- **DN** at `Dense`. Exact: `Axiom.density` is literally the same formula, and the BL-side
 side condition `Dense ≤ fc` is exactly the one `Axiom.density` needs. -/
-def discharge_dn {fc : FrameClass} (h_fc : FrameClass.Dense ≤ fc) (a : BLFormula) :
+def dischargeDn {fc : FrameClass} (h_fc : FrameClass.Dense ≤ fc) (a : BLFormula) :
     ⊢[fc] tr (a.allFuture.allFuture.imp a.allFuture) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.density (tr a)) h_fc
 
@@ -325,16 +325,16 @@ by `impMono` and then under `△` by `alwaysMono`.
 
 Because this repository's `Dedekind` admits the dense axioms, the row lands at the paper's
 **TM_dc**, not TM_c; see `Metalogic/Conservativity/Backward.lean`'s `cec_backward`. -/
-def discharge_co {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : BLFormula) :
+def dischargeCo {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : BLFormula) :
     ⊢[fc] tr ((a.allPast.imp a.allPast.someFuture).always.imp (a.allPast.imp a.allFuture)) :=
   impTrans
-    (alwaysMono (impMono (identity (tr a).allPast) (notGNot_imp_F (tr a).allPast)))
+    (alwaysMono (impMono (identity (tr a).allPast) (notGNotImpF (tr a).allPast)))
     (FormalSystem.Theorems.DedekindDerived.co_derived h_fc (tr a))
 
 /-- **DF** at `Discrete`. `Theorems.DiscreteUnfolding.dfSchema` is the Route-A syntactic
 derivation; it is stated at `FrameClass.ZTime` and lifted here by the BL-side side condition.
 Both the antecedent's `F⊤` and the consequent's `F(Hφ)` cross the bridge. -/
-def discharge_df {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : BLFormula) :
+def dischargeDf {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : BLFormula) :
     ⊢[fc] tr (((a.allPast.and a).and BLFormula.top.someFuture).imp a.allPast.someFuture) :=
   let core : ⊢[fc]
       (((tr a).allPast.and (tr a)).and Formula.top.someFuture).imp
@@ -342,9 +342,9 @@ def discharge_df {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : BLFormu
     DerivationTree.lift h_fc (FormalSystem.Theorems.DiscreteUnfolding.dfSchema (tr a))
   impTrans
     (impTrans
-      (andMono (identity ((tr a).allPast.and (tr a))) (notGNot_imp_F Formula.top))
+      (andMono (identity ((tr a).allPast.and (tr a))) (notGNotImpF Formula.top))
       core)
-    (F_imp_notGNot (tr a).allPast)
+    (fImpNotGNot (tr a).allPast)
 
 /-! ## The table -/
 
@@ -359,22 +359,22 @@ asset requires, and on the Base rows it is discarded in favour of `FrameClass.ba
 def dischargeAxiom {fc : FrameClass} {φ : BLFormula} (h : Axiom φ)
     (h_fc : h.minFrameClass ≤ fc) : ⊢[fc] tr φ := by
   cases h with
-  | prop_k a b c => exact discharge_prop_k a b c
-  | prop_s a b => exact discharge_prop_s a b
-  | ex_falso a => exact discharge_ex_falso a
-  | peirce a b => exact discharge_peirce a b
-  | modal_k a b => exact discharge_modal_k a b
-  | modal_t a => exact discharge_modal_t a
-  | modal_5 a => exact discharge_modal_5 a
-  | modal_future a => exact discharge_modal_future a
-  | temp_k a b => exact discharge_temp_k a b
-  | temp_4 a => exact discharge_temp_4 a
-  | temp_serial => exact discharge_temp_serial
-  | temp_connect a => exact discharge_temp_connect a
-  | temp_linearity a b => exact discharge_temp_linearity a b
-  | df a => exact discharge_df h_fc a
-  | dn a => exact discharge_dn h_fc a
-  | co a => exact discharge_co h_fc a
+  | prop_k a b c => exact dischargePropK a b c
+  | prop_s a b => exact dischargePropS a b
+  | ex_falso a => exact dischargeExFalso a
+  | peirce a b => exact dischargePeirce a b
+  | modal_k a b => exact dischargeModalK a b
+  | modal_t a => exact dischargeModalT a
+  | modal_5 a => exact dischargeModal5 a
+  | modal_future a => exact dischargeModalFuture a
+  | temp_k a b => exact dischargeTempK a b
+  | temp_4 a => exact dischargeTemp4 a
+  | temp_serial => exact dischargeTempSerial
+  | temp_connect a => exact dischargeTempConnect a
+  | temp_linearity a b => exact dischargeTempLinearity a b
+  | df a => exact dischargeDf h_fc a
+  | dn a => exact dischargeDn h_fc a
+  | co a => exact dischargeCo h_fc a
 
 end -- noncomputable section
 

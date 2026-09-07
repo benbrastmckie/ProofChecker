@@ -230,20 +230,20 @@ in a file that does `open FormalSystem.Metalogic.BXCanonical.Chronicle` without 
 
 ---
 
-### Phase 3: `defsWithUnderscore` — the `FormalSystem.BaseLanguage` group (20 of 33) [NOT STARTED]
+### Phase 3: `defsWithUnderscore` — the `FormalSystem.BaseLanguage` group (20 of 33) [COMPLETED]
 
 **Goal**: Rename the 20 `BaseLanguage` declarations to lowerCamelCase, per the project's own
 settled rule in `docs/development/NAMING_CONVENTION_DEVIATION.md` (data-producing declarations,
 explicitly including `DerivationTree`-valued results, take lowerCamelCase).
 
 **Tasks**:
-- [ ] Enumerate the group:
+- [x] Enumerate the group:
       `jq -r '.[] | select(.[0]=="defsWithUnderscore") | .[1]' scripts/nolints.json | grep '^FormalSystem\.BaseLanguage\.'`
-- [ ] For each declaration, find every token occurrence across `FormalSystem/` and `Tests/` with an
+- [x] For each declaration, find every token occurrence across `FormalSystem/` and `Tests/` with an
       exact-token grep (`grep -rnw`), then rename declaration and call sites together.
-- [ ] Do **not** touch `nolints.json` in this phase — the category is dropped in Phase 4, once all
+- [x] Do **not** touch `nolints.json` in this phase — the category is dropped in Phase 4, once all
       33 are done, so a single green `runLinter` proves the whole category at once.
-- [ ] Spot-check each edited file with `lake env lean <file>` (~2-3 s each) before paying for a
+- [x] Spot-check each edited file with `lake env lean <file>` (~2-3 s each) before paying for a
       build.
 
 **Timing**: 1.25 hours

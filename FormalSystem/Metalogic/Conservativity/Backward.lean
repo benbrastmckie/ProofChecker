@@ -84,6 +84,8 @@ noncomputable def translate {fc : FrameClass} {Γ : BaseLanguage.Context} {φ : 
 /--
 The `Prop`-level backward bridge: TM-derivability implies TM⁺-derivability of the translation,
 at the same frame class.
+
+Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem derivable_translate {fc : FrameClass} {Γ : BaseLanguage.Context} {φ : BLFormula}
     (h : BaseLanguage.Derivable fc Γ φ) :
@@ -100,6 +102,8 @@ bookkeeping appears in the statements. -/
 **CEB**: `TM ⊢ φ ⟹ TM⁺ ⊢ tr φ`, at `FrameClass.Base`.
 
 The base row: no extension axiom is available on either side.
+
+Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem ceb_backward {φ : BLFormula}
     (h : BaseLanguage.Derivable FrameClass.Base [] φ) :
@@ -112,6 +116,8 @@ theorem ceb_backward {φ : BLFormula}
 `TM_f` is TM + **DF**; its translation is discharged by
 `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, derived syntactically (Route A) with no
 appeal to the completeness machinery.
+
+Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem cef_backward {φ : BLFormula}
     (h : BaseLanguage.Derivable FrameClass.ZTime [] φ) :
@@ -122,6 +128,8 @@ theorem cef_backward {φ : BLFormula}
 **CED**: `TM_d ⊢ φ ⟹ TM⁺_d ⊢ tr φ`, at `FrameClass.Dense`.
 
 `TM_d` is TM + **DN** (`GGφ → Gφ`), whose translation is literally `Axiom.density`.
+
+Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem ced_backward {φ : BLFormula}
     (h : BaseLanguage.Derivable FrameClass.Dense [] φ) :
@@ -143,6 +151,8 @@ TM_c row.
 
 The BL-side CO axiom's translation is discharged by
 `FormalSystem.Theorems.DedekindDerived.co_derived`, itself sorry-free over the Reynolds triple.
+
+Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem cec_backward {φ : BLFormula}
     (h : BaseLanguage.Derivable FrameClass.RTime [] φ) :
@@ -176,7 +186,7 @@ def Z1 (φ : BLFormula) : BLFormula :=
 `⊢[Discrete] tr (Z1 φ)` — the translation of the BL-side Z1 schema is a `TM⁺_f` theorem.
 
 Two steps: `ProofSystem.Axiom.z1` at `FrameClass.ZTime`, then
-`BaseLanguage.notGNot_imp_F` pushed into the antecedent of the consequent by
+`BaseLanguage.notGNotImpF` pushed into the antecedent of the consequent by
 `BaseLanguage.impMono`, converting the axiom's `F(Gφ)` into the `¬G¬(Gφ)` shape `tr` produces.
 
 **This is not the forward direction and does not approach it.** It is one half of the CEF
@@ -191,7 +201,7 @@ theorem z1_translate (φ : BLFormula) :
     (ProofSystem.DerivationTree.axiom [] _ (ProofSystem.Axiom.z1 (tr φ))
       (show FrameClass.ZTime ≤ FrameClass.ZTime from le_refl _))
     (BaseLanguage.impMono
-      (BaseLanguage.notGNot_imp_F (tr φ).allFuture)
+      (BaseLanguage.notGNotImpF (tr φ).allFuture)
       (FormalSystem.Theorems.Combinators.identity (tr φ).allFuture))⟩
 
 end FormalSystem.Metalogic.Conservativity
