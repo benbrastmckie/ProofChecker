@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Metalogic.SoundnessLemmas.CoValidity
+import FormalSystem.Metalogic.SoundnessLemmas.DiscreteOrder
 import FormalSystem.Metalogic.SoundnessLemmas.FrameClassVariants
 import FormalSystem.Metalogic.SoundnessLemmas.Separability
 
@@ -19,6 +20,8 @@ theorem; keeping them separate stops that file from growing without bound.
 
 - `CoValidity` — `co_valid`, the semantic validity of the paper's CO principle (not a
   soundness case: CO is derived here, not primitive)
+- `DiscreteOrder` — the order cores of the four discrete-frame validity proofs, stated over an
+  abstract predicate `P : D → Prop` and mentioning neither `Formula` nor `TruthAt`
 - `FrameClassVariants` — per-axiom validity and swap-validity across the frame-class variants
 - `Separability` — the order-theoretic input to Reynolds' separability axiom
 

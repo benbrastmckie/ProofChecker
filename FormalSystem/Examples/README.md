@@ -19,3 +19,7 @@ These files demonstrate:
 
 - [Parent README](../README.md)
 - [Metalogic Results](../Metalogic/README.md) - Soundness, completeness, decidability
+
+---
+
+*Last verified: 2026-09-07*

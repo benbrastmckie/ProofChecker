@@ -80,3 +80,7 @@ instead.
 - [Syntax README](../Syntax/README.md) — the L⁺ side being embedded
 - [Semantics README](../Semantics/README.md) — where the `Star*.lean` semantics modules live
 - [Metalogic README](../Metalogic/README.md) — where `Conservativity/Star/` lives
+
+---
+
+*Last verified: 2026-09-07*

@@ -41,4 +41,4 @@ derivations), organized by topic. These are distinguished from metalogical resul
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

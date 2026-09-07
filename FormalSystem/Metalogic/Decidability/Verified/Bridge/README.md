@@ -59,3 +59,7 @@ level up; the three modules here named `*Saturation.lean` supply the facts it do
 ---
 
 **Last verified**: 2026-08-25
+
+---
+
+*Last verified: 2026-09-07*

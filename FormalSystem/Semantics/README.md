@@ -80,4 +80,4 @@ directed graph — the presentation `Metalogic/Decidability/IntPresentation.lean
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

@@ -35,4 +35,4 @@ implement the `apply_axiom`, `modal_t`, `tm_auto`, and related tactics.
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

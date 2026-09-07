@@ -820,20 +820,27 @@ Phase 11; `SoundnessLemmas/Core.lean` indeed no longer exists.
 
 ---
 
-### Phase 16: README completeness and stamps [NOT STARTED]
+### Phase 16: README completeness and stamps [COMPLETED]
 
 **Goal**: `bash scripts/readme-lint.sh` exits 0.
 
 **Tasks**:
-- [ ] Create the five missing READMEs: `ForMathlib/Order/`,
+- [x] Create the five missing READMEs: `ForMathlib/Order/`,
       `FormalSystem/Metalogic/Conservativity/` (12 files, 2,508 lines),
       `FormalSystem/Metalogic/Conservativity/Star/`, `FormalSystem/Semantics/Frames/`,
       `FormalSystem/Semantics/Ultraproduct/`, using `Semantics/README.md` as the quality model
       and the Phase 1 generator for their count tables.
-- [ ] Refresh the 9 stale and add the 7 missing `Last verified` stamps across the 47 READMEs.
-- [ ] Regenerate `Automation/README.md`'s module list: 15 wrong line counts, 16 missing loose
-      modules, and 2 phantom entries (`Automation.lean`, `EFGameTactics.lean`).
-- [ ] Add `DiscreteOrder.lean` to `SoundnessLemmas.lean`'s Contents **and** its imports — the
+- [x] Refresh the 9 stale and add the 7 missing `Last verified` stamps across the 47 READMEs.
+      *(deviation: altered — 29 refreshed and **18** added across **52** READMEs, the five new
+      ones included. Note the standing tension: a `Last verified` stamp is hand-maintained
+      metadata of exactly the kind this task exists to remove, and every stamp goes stale again
+      on the next edit to its directory. `readme-lint.sh` reports staleness rather than gating
+      it, which is the right treatment; the stamps are not load-bearing for any claim.)*
+- [x] Regenerate `Automation/README.md`'s module list: 15 wrong line counts, 16 missing loose
+      modules, and 2 phantom entries (`Automation.lean`, `EFGameTactics.lean`). *(landed in
+      Phase 2, when the table became a generated block; the 16 missing modules got hand-written
+      descriptions there)*
+- [x] Add `DiscreteOrder.lean` to `SoundnessLemmas.lean`'s Contents **and** its imports — the
       identical defect A-10 recorded for `Separability.lean`.
 
 **Timing**: 2 hours
@@ -843,7 +850,8 @@ Phase 11; `SoundnessLemmas/Core.lean` indeed no longer exists.
 **Verification Tier**: full
 
 **Scope Hypothesis**: 5 missing READMEs, 9 stale + 7 missing stamps across 47 READMEs, 15 wrong
-Automation counts. `readme-lint.sh`'s own output at phase start is authoritative.
+Automation counts. `readme-lint.sh`'s own output at phase start is authoritative. **Re-derived:
+5 missing READMEs (confirmed), 29 stale + 18 missing stamps across 52 READMEs.**
 
 **Files to modify**:
 - Five new `README.md` files

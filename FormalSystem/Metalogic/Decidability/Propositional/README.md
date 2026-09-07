@@ -28,3 +28,7 @@ decision procedure is usable without the completeness development.
 
 - [Decidability README](../README.md)
 - [Metalogic architecture map](../../README.md)
+
+---
+
+*Last verified: 2026-09-07*

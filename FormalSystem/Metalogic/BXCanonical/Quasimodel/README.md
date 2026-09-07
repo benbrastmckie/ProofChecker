@@ -35,4 +35,4 @@ Quasimodels are used as an intermediate step before the full chronicle construct
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

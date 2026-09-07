@@ -35,4 +35,4 @@ between Base, Dense, and Discrete TM.
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

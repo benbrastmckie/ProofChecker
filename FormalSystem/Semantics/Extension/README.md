@@ -49,3 +49,7 @@ over a finite carrier both must eventually repeat.
 ---
 
 **Last verified**: 2026-08-25
+
+---
+
+*Last verified: 2026-09-07*

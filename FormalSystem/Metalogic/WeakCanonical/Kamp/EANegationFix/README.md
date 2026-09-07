@@ -39,3 +39,7 @@ directory that re-exports it.
 ## References
 
 - Rabinovich 2014, Propositions 4.2 and 4.3 — the source these modules transcribe
+
+---
+
+*Last verified: 2026-09-07*

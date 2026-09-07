@@ -76,3 +76,7 @@ deliberate; see the extensive import notes at the top of `NfMultiAnchorBridge.le
 - Kamp 1968 — separation and expressive completeness
 - Reynolds 1994, Theorems 14–18 — the discrete completeness route
 - Rabinovich 2014 — the separation transcription this subtree follows
+
+---
+
+*Last verified: 2026-09-07*

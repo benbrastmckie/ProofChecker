@@ -38,3 +38,7 @@ subtree; nothing outside `NfMultiAnchorBridge/` imports it directly.
 - [NfMultiAnchorBridge README](../README.md)
 - [Kamp README](../../README.md)
 - [Metalogic architecture map](../../../../../README.md)
+
+---
+
+*Last verified: 2026-09-07*

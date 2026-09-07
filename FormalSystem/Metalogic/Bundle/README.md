@@ -227,3 +227,7 @@ import FormalSystem.Metalogic.Bundle.WitnessSeed
 ---
 
 *Last updated: 2026-09-02 (retirement of the canonical-frame half to `Boneyard/BundleDeadHalf/`)*
+
+---
+
+*Last verified: 2026-09-07*

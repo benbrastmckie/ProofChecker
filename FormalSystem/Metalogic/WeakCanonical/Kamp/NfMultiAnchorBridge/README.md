@@ -39,3 +39,7 @@ build graph deliberately).
 - [Kamp README](../README.md)
 - [SharedWitness README](SharedWitness/README.md)
 - [Metalogic architecture map](../../../../README.md)
+
+---
+
+*Last verified: 2026-09-07*

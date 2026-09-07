@@ -122,4 +122,4 @@ lake run FormalSystem.Automation.BenchmarkOracle -- formulas.jsonl results.jsonl
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*

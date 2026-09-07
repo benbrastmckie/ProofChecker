@@ -36,4 +36,4 @@ Core syntactic definitions for TM bimodal logic formulas.
 
 ---
 
-*Last verified: 2026-05-29*
+*Last verified: 2026-09-07*
