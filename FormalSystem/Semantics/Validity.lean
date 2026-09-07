@@ -30,30 +30,22 @@ This module defines semantic validity and consequence for TM formulas.
 
 ## Implementation Notes
 
-- Validity quantifies over all temporal types `D : Type*` with `LinearOrderedAddCommGroup D`
-- Validity and consequence quantify over the **total** histories: `τ.IsTotal`, i.e. `∀ t, τ.domain t`.
-  There is no admissible-history parameter and no shift-closure side condition anywhere in this
-  module, and `TruthAt` itself no longer carries a set argument to supply.
-- No shift-closure hypothesis is needed in the *statement* of validity or consequence, because
-  totality is trivially preserved by `timeShift` (`WorldHistory.isTotal_timeShift`), so
-  time-shift invariance no longer has a side condition to carry.
+- Validity quantifies over every temporal type `D` with `LinearOrderedAddCommGroup D`, and over
+  the **total** histories: `τ.IsTotal`, i.e. `∀ t, τ.domain t`. There is no admissible-history
+  parameter and no shift-closure side condition; `TruthAt` takes no set argument.
+- The statement needs no shift-closure hypothesis because `timeShift` preserves totality
+  (`WorldHistory.isTotal_timeShift`), so time-shift invariance carries no side condition.
 - Satisfiability existentially quantifies over a total witness history.
-- Semantic consequence: truth in all models where premises true
-- Used in soundness theorem: `Γ ⊢ φ → Γ ⊨ φ`
-- Temporal types include Int, Rat, Real, and custom bounded types
+- Caller trap: `Valid` and `SemanticConsequence` are `ValidIn` / `SemanticConsequenceIn` at
+  `FrameClass.Base`. Their pre-abbreviation binder shape is reachable through the `.of_forall`
+  and `.apply` adapters below, never by `unfold`.
 
 ## Paper Alignment
 
-`def:logical-consequence` reads verbatim:
-
-> A conclusion phi is a *logical consequence* of a set of premises Gamma --- written
-> Gamma |= phi --- just in case for all models M, possible worlds tau in H_F, and times x in D,
-> if M,tau,x |= gamma for all premises gamma in Gamma, then M,tau,x |= phi. A sentence phi is
-> *valid* just in case |= phi.
-
-`H_F` is the set of total histories of the frame `F`, so `τ ∈ H_F` is rendered as `τ.IsTotal`.
-Our polymorphic quantification over `LinearOrderedAddCommGroup D` renders "for all models M"
-and "times x in D".
+`def:logical-consequence` is quoted verbatim at `SemanticConsequence` below, which is the
+definition of record for this module. `H_F` is the set of total histories of the frame, so
+`τ ∈ H_F` is `τ.IsTotal`; the polymorphic quantification over `LinearOrderedAddCommGroup D`
+renders "for all models M" and "times x in D".
 
 ## References
 
@@ -127,7 +119,7 @@ notation:50 Γ:50 " ⊨ " φ:50 => SemanticConsequence Γ φ
 
 /-! ### Binder-shape adapters
 
-The pre-collapse binder shapes, restored. `ConsequenceOnFrames` already quantifies over the
+The explicit binder shapes. `ConsequenceOnFrames` already quantifies over the
 unbundled `(τ : WorldHistory F) (_ : τ.IsTotal)` pair, so — unlike `ValidOnFrames`, which bundles
 the history into `TaskFrame.HF` — no history-shape adapter is needed at the generic layer. What
 each `of_forall` restores is the *frame condition*, putting it back into the local context in the
@@ -346,13 +338,11 @@ underneath; nothing here duplicates it.
 ### Why the primitive takes a bare predicate rather than a tag
 
 `ValidOnFrames` is stated over an arbitrary `P : TaskFrame → Prop`, and `ValidIn fc` is its
-instance at `fc.Sat`. This is not generality for its own sake — it is what lets **one**
-monotonicity lemma cover every validity bridge in the tree. `ValidComplete` is
-`ValidOnFrames TaskFrame.IsComplete`, `def:frame-properties`' bare Complete clause, and no
-`FrameClass` constructor denotes that class (see the `FrameClass` docstring in
-`ProofSystem/Axioms.lean`), so it cannot be `ValidIn`-anything. Against a tag-only primitive it,
-and the bridge from it to `ValidRTime`, would have to stay hand-written outside the
-collapse.
+instance at `fc.Sat`. The generality is load-bearing: it is what lets **one** monotonicity lemma
+cover every validity bridge in the tree, including `ValidComplete`, which is
+`ValidOnFrames TaskFrame.IsComplete` and cannot be `ValidIn`-anything because no `FrameClass`
+constructor denotes `def:frame-properties`' bare Complete clause (see the `FrameClass` docstring
+in `ProofSystem/Axioms.lean`).
 -/
 
 /--
@@ -402,16 +392,14 @@ Validity also quantifies over all `x ∈ D` (all times in the temporal order), n
 
 Note: Uses `Type` (not `Type*`) to avoid universe level issues in proofs.
 
-**`Valid` is `ValidIn` at the unconstrained class.** The binder list above is no longer written
-out here: `Sat FrameClass.Base` is `True`, so `ValidIn .Base` quantifies over every task frame
-with no frame condition attached, which is exactly what `def:logical-consequence`'s closing
-clause asks for. This completes the symmetry the `FrameClass` index exists to express — `Valid`
-stands to `Derivable .Base` as `ValidIn fc` stands to `Derivable fc`, with the class tag carried
-in the same place on both sides.
+**`Valid` is `ValidIn` at the unconstrained class.** `Sat FrameClass.Base` is `True`, so
+`ValidIn .Base` quantifies over every task frame with no frame condition attached — exactly
+`def:logical-consequence`'s closing clause. `Valid` stands to `Derivable .Base` as `ValidIn fc`
+stands to `Derivable fc`, with the class tag in the same place on both sides.
 
-The pre-abbreviation binder shape — `∀ (F) (M) (τ : WorldHistory F), τ.IsTotal → ∀ t` — is
-reachable through `Valid.of_forall_total` and `Valid.apply` below, which discharge the `True`
-argument so that no call site has to write `trivial`.
+Caller trap: the explicit binder shape `∀ (F) (M) (τ : WorldHistory F), τ.IsTotal → ∀ t` is
+reachable through `Valid.of_forall_total` and `Valid.apply`, which discharge the `True` argument
+so no call site writes `trivial`.
 -/
 def Valid (φ : Formula) : Prop :=
   ValidIn ProofSystem.FrameClass.Base φ
@@ -421,25 +409,25 @@ Notation for validity: `⊨ φ` means `Valid φ`.
 -/
 notation:50 "⊨ " φ:50 => Valid φ
 
-/-- Introduce `Valid` from the binder shape it carried before it became an abbreviation over
-`ValidIn`. The `.Base` class imposes no frame condition, so this is `ValidIn.of_forall_total`
-with the `Sat .Base` argument (`True`) discharged here rather than at each call site. -/
+/-- Introduce `Valid` from its explicit binder shape. The `.Base` class imposes no frame
+condition, so this is `ValidIn.of_forall_total` with the `Sat .Base` argument (`True`)
+discharged here rather than at each call site. -/
 theorem Valid.of_forall_total {φ : Formula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F),
            τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ) :
     Valid φ :=
   fun F _ M τ t => h F M τ.val τ.property t
 
-/-- Eliminate `Valid` into the pre-abbreviation binder shape; the `Sat .Base` argument is
-discharged here, not at the call site. -/
+/-- Eliminate `Valid` into its explicit binder shape; the `Sat .Base` argument is discharged
+here, not at the call site. -/
 theorem Valid.apply {φ : Formula} (h : Valid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : TruthAt M τ t φ :=
   h F trivial M ⟨τ, hτ⟩ t
 
-/-- The contrapositive of `Valid.of_forall_total`, in the shape a countermodel extraction wants:
-from a failure of `Valid` it hands back a failure of the pre-abbreviation ∀-statement, which
-`push Not` can then take apart. This replaces the `unfold Valid` that used to open the definition
-directly — there is no longer a binder list there to open. The `.Base` instance of
+/-- The contrapositive of `Valid.of_forall_total`, in the shape a countermodel extraction
+wants: from a failure of `Valid` it hands back a failure of the explicit ∀-statement, which
+`push Not` takes apart. Caller trap: use this rather than `unfold Valid` — `Valid` is an
+abbreviation over `ValidIn` and has no binder list to open. The `.Base` instance of
 `ValidIn.of_not`, with the `True` frame condition discharged here. -/
 theorem Valid.of_not {φ : Formula} (h : ¬ Valid φ) :
     ¬ ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F),
@@ -519,13 +507,10 @@ elaborate against the other. The lemmas below are the shape adapters: a goal sit
 **Two triples, and no more than two.** Every adapter in this file is indexed either by a bare
 frame predicate `P : TaskFrame → Prop` (`ValidOnFrames.{of_forall_total, apply_total, of_not}`)
 or by a `FrameClass` tag (`ValidIn.{of_forall_total, apply_total, of_not}`), and the second is
-literally the first at `fc.Sat`. There was, until this pass, a third and fourth family: a
-per-class copy of the triple at each of `.Dense`, `.ZTime` and `.RTime`, plus a `.Complete`
-pair, twelve declarations existing only because `FrameClass.Sat` was a non-reducible `def` and a
-`Sat .Dense F` hypothesis was therefore invisible to instance search. `FrameClass.Sat` is now
-`@[reducible]` and `TaskFrame.IsDense` an `abbrev`, so the hypothesis registers itself on `intro`
-and the tag-specific copies were deleted. **Do not reintroduce one.** If a tag needs its frame
-condition taken apart, that is what the `sat_intro` tactic
+literally the first at `fc.Sat`. **Do not add a per-class third.** `FrameClass.Sat` is
+`@[reducible]` and `TaskFrame.IsDense` an `abbrev`, so a `Sat .Dense F` hypothesis registers
+itself with instance search on `intro` and a tag-specific copy buys nothing. If a tag needs its
+frame condition taken apart, that is what the `sat_intro` tactic
 (`Semantics/FrameClassValidity.lean`) is for; a new `ValidX.of_forall` is the thing this layer
 exists to make unnecessary.
 
@@ -577,11 +562,9 @@ theorem ValidOnFrames.of_not {P : TaskFrame → Prop} {φ : Formula} (h : ¬ Val
 wants: from a failure of `ValidIn fc` it hands back a failure of the unbundled ∀-statement,
 which `push Not` can then take apart.
 
-This **is** the countermodel-extraction adapter for every tag. Three per-class contrapositives
-used to sit beside it, one at each of `.Dense`, `.ZTime` and `.RTime`; each was this lemma
-at a fixed tag with `fc.Sat F` unfolded to that class's frame condition, and all three were
-deleted in favour of it. Only `Valid.of_not` survives, because it discharges `Sat .Base = True`
-rather than restating a frame condition. -/
+This is the countermodel-extraction adapter for every tag; there is no per-class variant.
+`Valid.of_not` is the one sibling, and only because it discharges `Sat .Base = True` rather than
+restating a frame condition. -/
 theorem ValidIn.of_not {fc : ProofSystem.FrameClass} {φ : Formula} (h : ¬ ValidIn fc φ) :
     ¬ ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : WorldHistory F),
         τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ :=
@@ -594,13 +577,12 @@ densely ordered, at all total histories, and all times.
 This restricts `Valid` to temporal types with `DenselyOrdered D`, capturing the
 frame condition for the density axiom DN: `F(phi) -> F(F(phi))`.
 
-**Now an abbreviation over `ValidIn`.** The frame constraint is no longer inlined here: it is
-`FrameClass.Sat .Dense`, which is `TaskFrame.IsDense`, `def:frame-properties`' Dense clause. The
-binder shape this definition used to have is recovered by the generic
-`ValidIn.of_forall_total` / `ValidIn.apply_total`, and the density witness reaches typeclass
-resolution directly: `Sat` is `@[reducible]` and `TaskFrame.IsDense` is an `abbrev`, so a
-`Sat .Dense F` hypothesis registers as a `DenselyOrdered` instance the moment it is introduced.
-No class-specific adapter is needed, and none exists.
+**An abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .Dense`, which is
+`TaskFrame.IsDense`, `def:frame-properties`' Dense clause. The explicit binder shape is
+recovered by the generic `ValidIn.of_forall_total` / `ValidIn.apply_total`, and the density
+witness reaches typeclass resolution directly: `Sat` is `@[reducible]` and `TaskFrame.IsDense`
+is an `abbrev`, so a `Sat .Dense F` hypothesis registers as a `DenselyOrdered` instance the
+moment it is introduced. No class-specific adapter is needed.
 
 **Notation**: `⊨_dense φ`
 -/
@@ -653,86 +635,54 @@ def ValidZTime (φ : Formula) : Prop := ValidIn ProofSystem.FrameClass.ZTime φ
 
 /--
 **THE `ValidComplete` CAVEAT — canonical statement; every other site in the tree points here.**
+If you are about to write a second copy of this argument, write a pointer instead.
+
+A formula is `ValidComplete` if it is true in every model whose temporal type `D` has the
+least-upper-bound property, at every total history and every time.
 
 `ValidComplete` is the **only** `Valid*` name in this development that is not `ValidIn` at the
-tag its name suggests, and this paragraph is the only place that fact is argued. Every other
-module that needs it carries a one-line pointer to here rather than a copy of the argument; if
-you are about to write a second copy, write a pointer instead.
-
-Since the rename pass, `ValidDense = ValidIn .Dense`, `ValidZTime = ValidIn .ZTime`,
-`ValidRTime = ValidIn .RTime` and `Valid = ValidIn .Base` all hold definitionally. This
-predicate is the sole exception: it is `ValidOnFrames TaskFrame.IsComplete` —
-`def:frame-properties`' *bare* Complete clause, which `ℤ` satisfies — and it is deliberately not
-a `ValidIn` tag, because no `FrameClass` constructor denotes the bare Complete class (see the
+tag its name suggests. `Valid`, `ValidDense`, `ValidZTime` and `ValidRTime` are `ValidIn` at
+`.Base`, `.Dense`, `.ZTime`, `.RTime` definitionally; this one is
+`ValidOnFrames TaskFrame.IsComplete` — `def:frame-properties`' **bare** Complete clause, which
+`ℤ` satisfies — because no `FrameClass` constructor denotes the bare Complete class (see the
 `FrameClass` docstring in `ProofSystem/Axioms.lean`).
 
-**Do not retarget `soundness_rtime` at it.** `FrameClass.RTime` sits strictly above
+**Caller trap: do not retarget `soundness_rtime` at it.** `FrameClass.RTime` sits strictly above
 `FrameClass.Dense`, so `Axiom.density` (`GGφ → Gφ`) and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are
-admissible in a `.RTime` derivation. Both are FALSE on `ℤ`: for `density`, take `φ` true
-exactly at times `≥ t + 2`, so `GGφ` holds at `t` while `Gφ` fails; for `dense_indicator`,
-`⊥ U ⊤` is true on `ℤ` because every point has an immediate successor. `ℤ` satisfies every binder
-of this predicate (Mathlib gives it a `ConditionallyCompleteLinearOrder`), so a
+admissible in a `.RTime` derivation. Both are false on `ℤ`: for `density`, take `φ` true exactly
+at times `≥ t + 2`, so `GGφ` holds at `t` while `Gφ` fails; for `dense_indicator`, `⊥ U ⊤` is
+true on `ℤ` because every point has an immediate successor. Mathlib gives `ℤ` a
+`ConditionallyCompleteLinearOrder`, so `ℤ` satisfies every binder of this predicate, and a
 `soundness_rtime : DerivationTree .RTime … → ValidComplete` would be **refutable**.
 `soundness_rtime` targets `ValidRTime`; this predicate is landed as the strictly weaker
-statement and as the target of the forgetful bridge from `Valid`.
+statement and as the target of the forgetful bridge from `Valid`. The trap is structural, not
+merely documented: the two are built from different frame predicates
+(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .RTime`, i.e. `TaskFrame.IsRTime`), so
+writing the refutable version means naming a different predicate, not dropping a binder.
 
-**Why this predicate is not the one the `.RTime` tag denotes.** `ValidComplete` is
-`ValidOnFrames` at the *bare* Complete clause, which admits `ℤ`; `ValidRTime` is `ValidIn .RTime`,
-the dense-and-complete narrowing. `TaskFrame.IsRTime` (`Semantics/FrameProperty.lean`) states in
-full why the narrowed class is named for its carrier rather than for the paper's Complete clause.
+**`DenselyOrdered` is deliberately absent.** Including it would silently narrow the predicate to
+real flow alone; the density-carrying variant is `ValidRTime` below, and `TaskFrame.IsRTime`
+(`Semantics/FrameProperty.lean`) states why the narrowed class is named for its carrier.
 
-A formula is valid over **Dedekind-complete** temporal orders if it is true in all models
-whose temporal type `D` has the least-upper-bound property, at all total histories, and all
-times.
-
-**Now an abbreviation, not a hand-written binder list.** The class is named once, as
-`TaskFrame.IsComplete`, and this predicate is `ValidOnFrames` at it. The generic
-`ValidOnFrames.{of_forall_total, apply_total, of_not}` triple adapts between this shape and the
-explicit-hypothesis shape the definition used to have — this predicate is exactly why that triple
-must exist at the bare-predicate layer and not only at a `FrameClass` tag.
-
-Dedekind completeness is expressed by the explicit Prop-valued hypothesis
+Dedekind completeness is expressed by the explicit `Prop`-valued hypothesis
 
   `∀ s : Set D, s.Nonempty → BddAbove s → ∃ x, IsLUB s x`
 
 rather than by swapping the tree's `[LinearOrder D]` binder for
-`[ConditionallyCompleteLinearOrder D]`. This is deliberate and strictly less invasive: every
-downstream `[LinearOrder D]`-indexed lemma continues to apply with no instance-unification
-risk.
+`[ConditionallyCompleteLinearOrder D]`: every downstream `[LinearOrder D]`-indexed lemma then
+continues to apply with no instance-unification risk. The generic
+`ValidOnFrames.{of_forall_total, apply_total, of_not}` triple adapts between this shape and the
+explicit-hypothesis shape — this predicate is why that triple exists at the bare-predicate layer
+and not only at a `FrameClass` tag.
 
-**`DenselyOrdered` is deliberately ABSENT from this binder list.** The integers carry a
-Mathlib `ConditionallyCompleteLinearOrder` instance
-(`Mathlib/Data/Int/ConditionallyCompleteOrder.lean`), so `ℤ` satisfies every binder of
-`ValidComplete`. Including density here would silently narrow the predicate to real flow
-alone; the density-carrying variant is the separate `ValidRTime` below.
-
-That "ℤ satisfies every binder" observation is not an isolated curiosity: it is the **discrete
-branch of the Hölder dichotomy**. By `FormalSystem.Semantics.complete_duration_discrete_or_dense`
+**The model class.** That `ℤ` satisfies every binder is the discrete branch of the Hölder
+dichotomy: by `complete_duration_discrete_or_dense`
 (`Semantics/DurationClassification.lean`) a duration group with the least-upper-bound hypothesis
-is either `≃+o ℤ` or densely ordered, and by
-`FormalSystem.Semantics.complete_not_dense_iso_int` the non-dense case is `≃+o ℤ` on the nose.
-So this predicate's binder set is exactly the paper's **TM⁺_c** (complete simpliciter), whose
-model class is `{ℤ, ℝ}` up to isomorphism and whose theory is `Th(ℤ) ∩ Th(ℝ)`. No `FrameClass`
-element corresponds to it — see the `FrameClass` docstring in
-`FormalSystem/ProofSystem/Axioms.lean`.
-
-**This predicate is NOT the target of `soundness_rtime`, and that is not an oversight.**
-`FrameClass.RTime` sits strictly above `FrameClass.Dense` (see the `FrameClass` docstring
-in `FormalSystem/ProofSystem/Axioms.lean`), so `Axiom.density` (`GGφ → Gφ`) and
-`Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are admissible in `DerivationTree FrameClass.RTime`.
-Both are FALSE on `ℤ`: for `density`, take `φ` true exactly at times `≥ t + 2`, so `GGφ` holds
-at `t` while `Gφ` fails; for `dense_indicator`, `⊥ U ⊤` is true on `ℤ` because every point has
-an immediate successor. Since `ℤ` also satisfies `TaskFrame.IsComplete`, a
-`soundness_rtime : DerivationTree .RTime … → ValidComplete` would be refutable.
-`soundness_rtime` therefore targets `ValidRTime`. This predicate is landed as the
-strictly weaker statement and as the target of the forgetful bridge from `Valid`.
-
-**The trap is now structural rather than merely documented.** Before this predicate became an
-abbreviation, the wrong target differed from the right one by *one binder in an inlined list* —
-delete `[DenselyOrdered F.Duration]` and the refutable statement typechecks, with nothing but this
-docstring to say so. The two are now built from different frame predicates entirely
-(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .RTime`, i.e. `TaskFrame.IsRTime`), so
-writing the refutable version requires naming a different predicate rather than dropping a binder.
+is either `≃+o ℤ` or densely ordered, and by `complete_not_dense_iso_int` the non-dense case is
+`≃+o ℤ` on the nose. So this predicate's model class is `{ℤ, ℝ}` up to isomorphism and its
+theory is `Th(ℤ) ∩ Th(ℝ)`. It is **not** the paper's TM⁺_c: under the paper's current
+`cor:tm-completeness`, TM⁺_c is weak completeness over the dense-and-complete class, which is
+`FrameClass.RTime`.
 
 **Source.** Reynolds 1992 (printed p.169) observes that the Prior axioms enforce only a
 *definably* Dedekind-complete model: "there may be gaps in the order but ... you wouldn't know
@@ -913,10 +863,11 @@ unsatisfiable in every temporal type, then it implies anything.
 Note: For the weaker statement that unsatisfiability in a SPECIFIC type implies
 consequence in that type, see `unsatisfiable_implies_all_fixed`.
 
-The hypothesis now carries `[Nontrivial D]`, matching both `satisfiable` and the binder list of
-`SemanticConsequence`. Without it the two sides would range over different classes of temporal
-type and the statement would be quantifying the antecedent over strictly more types than the
-conclusion can use.
+The hypothesis carries `[Nontrivial D]`, matching `satisfiable`. Without it the two sides
+would range over different classes of temporal type and the statement would quantify the
+antecedent over strictly more types than the conclusion can use. (`SemanticConsequence` itself
+binds no `D` — it is `SemanticConsequenceIn .Base`, whose frame quantification is inside
+`ValidIn`; the class to match is `satisfiable`'s.)
 -/
 theorem unsatisfiable_implies_all {Γ : Context} {φ : Formula} :
     (∀ D : TemporalOrder, ¬satisfiable D Γ) → (Γ ⊨ φ) :=
@@ -980,12 +931,6 @@ Proof: □φ at `(τ, t)` means `∀ σ, σ.IsTotal → TruthAt φ at (σ, t)` p
 `τ.IsTotal` — which is precisely the hypothesis `Valid` now binds. So the step is the identity
 move: feed `τ`'s own totality witness back in as the box witness.
 
-**Formerly a strategic sorry; discharged by the validity-layer binder delta.** Before that delta,
-`Valid` bound its history as `τ ∈ Omega` while `TruthAt`'s box clause already bound `σ.IsTotal`,
-and those two binders did not meet — `τ ∈ Omega` yielded `τ.IsTotal` under no hypothesis then in
-scope, so the statement was not provable as written and no local tactic could rescue it. That was
-a seam between the truth layer and the validity layer, not a gap in the argument, and the delta
-closed it by construction: no new mathematical content was needed, only the corrected binder.
 -/
 theorem valid_of_valid_box {φ : Formula} (h : Valid (Formula.box φ)) :
     Valid φ := by

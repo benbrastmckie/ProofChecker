@@ -52,22 +52,14 @@ layers need to meet.
 
 **Acyclicity, verified rather than assumed.** `FormalSystem/ProofSystem/Axioms.lean` imports only
 `FormalSystem.Syntax.Formula`, and no file anywhere under `FormalSystem/ProofSystem/` imports
-`FormalSystem.Semantics` or any of its submodules. So the `Semantics → ProofSystem.Axioms` edge
-added here closes no cycle. Relocating `inductive FrameClass` into a shared low-level module would
-remove the seam entirely, but would move a namespace carrying ~45 axiom constructors along with
-every `DerivationTree`/`Derivable` signature that names them; that is deliberately out of scope.
+`FormalSystem.Semantics` or any of its submodules, so this edge closes no cycle.
 
-**Why `Sat` lives here and `ValidIn` does not.** `ValidIn` is defined through `TaskFrame.ValidOn`
-(`def:frame-validity`), which is declared in `Semantics/Validity.lean`; and `Validity.lean`'s own
-class-restricted predicates (`ValidDense`, `ValidZTime`, `ValidComplete`, `ValidRTime`)
-are in turn defined as instances of `ValidIn`/`ValidOnFrames`. Those two facts cannot both be
-satisfied with `ValidIn` downstream of `Validity.lean`. Of the two acceptable resolutions, this
-tree takes the second: `Sat` — which is about frames alone and needs no validity notion — stays in
-this module, and the validity layer built on it (`ValidOnFrames`, `ValidIn`, and the monotonicity
-and migration lemmas) is declared in `Semantics/Validity.lean`, which imports this module. The
-alternative, relocating the four class-restricted predicates into this module and re-exporting,
-would have forced a new import line into every one of the ~27 files that consume them today for no
-gain in layering.
+`Sat` is about frames alone and needs no validity notion, so it lives here; the validity layer
+built on it (`ValidOnFrames`, `ValidIn`, and the monotonicity and migration lemmas) is declared
+in `Semantics/Validity.lean`, which imports this module. Two alternatives were considered and
+rejected — relocating `inductive FrameClass` into a shared low-level module, and relocating the
+four class-restricted predicates into this module. Both are recorded, with their costs, in
+`docs/architecture/ADR-008-frameclass-validity-seam.md`.
 
 ## References
 

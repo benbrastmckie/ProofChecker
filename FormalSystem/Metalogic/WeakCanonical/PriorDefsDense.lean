@@ -152,7 +152,7 @@ abbrev SemanticPriorS {sig : MonadicSignature}
 /-! ## Flow completeness as an explicit hypothesis
 
 Stated as a `Prop` on the structure's own order, in the idiom of `ValidRTime`
-(`Semantics/Validity.lean:255`) and `real_lub_of_bddAbove`
+(`Semantics/Validity.lean`) and `real_lub_of_bddAbove`
 (`BXCanonical/CompletenessDedekind.lean:127`), so that no typeclass has to be transported along
 `OrderedMonadicStructure.carrierOrder`. -/
 
