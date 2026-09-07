@@ -20,8 +20,8 @@ Automation layer to find derivations up to a given depth bound.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.ProofSystem`, `Bimodal.Automation.AesopRules`
-- **Used by**: `Bimodal.Automation.Tactics` (provides `tm_auto` infrastructure)
+- **Imports from**: `FormalSystem.ProofSystem`, `FormalSystem.Automation.AesopRules`
+- **Used by**: `FormalSystem.Automation.Tactics` (provides `tm_auto` infrastructure)
 
 ## Related Documentation
 

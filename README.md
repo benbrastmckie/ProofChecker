@@ -18,7 +18,7 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 | Metric | Count |
 |--------|-------|
 | Live `.lean` files | 459 |
-| Live lines | 281,402 |
+| Live lines | 281,414 |
 | Archived `.lean` files | 164 |
 | Archived lines | 90,890 |
 <!-- END GENERATED -->
@@ -149,7 +149,7 @@ curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf 
 
 # Clone and build (first build downloads Mathlib cache, ~30 minutes)
 git clone https://github.com/benbrastmckie/BimodalLogic.git
-cd ProofChecker
+cd BimodalLogic
 lake build
 ```
 
@@ -334,10 +334,10 @@ If you use this project in your research, please cite:
   url       = {https://benbrastmckie.com/publications/possible_worlds.pdf}
 }
 
-@software{proofchecker2025,
-  title     = {ProofChecker: Lean 4 Formalization of Bimodal Logic TM},
+@software{brastmckie2026bimodallogic,
+  title     = {BimodalLogic: A Lean 4 Formalization of the Bimodal Logic TM},
   author    = {Brast-McKie, Benjamin},
-  year      = {2025},
+  year      = {2026},
   url       = {https://github.com/benbrastmckie/BimodalLogic}
 }
 ```

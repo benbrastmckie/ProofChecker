@@ -23,8 +23,8 @@ finite model property.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Syntax.Formula`, `Bimodal.Syntax.Subformulas`
-- **Imported by**: `Bimodal.Metalogic.Core.RestrictedMCS`, `Bimodal.Metalogic.Decidability.FMP`
+- **Imports from**: `FormalSystem.Syntax.Formula`, `FormalSystem.Syntax.Subformulas`
+- **Imported by**: `FormalSystem.Metalogic.Core.RestrictedMCS`, `FormalSystem.Metalogic.Decidability.FMP`
 
 ## Related Documentation
 

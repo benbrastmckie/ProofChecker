@@ -24,8 +24,8 @@ between Base, Dense, and Discrete TM.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.WeakCanonical.EFGames`, `Bimodal.Metalogic.WeakCanonical.NEquivalence`
-- **Imported by**: `Bimodal.Metalogic.WeakCanonical` (top level)
+- **Imports from**: `FormalSystem.Metalogic.WeakCanonical.EFGames`, `FormalSystem.Metalogic.WeakCanonical.NEquivalence`
+- **Imported by**: `FormalSystem.Metalogic.WeakCanonical` (top level)
 
 ## Related Documentation
 

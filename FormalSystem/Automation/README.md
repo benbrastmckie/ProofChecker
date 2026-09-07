@@ -17,7 +17,7 @@ subdirectories for their implementation infrastructure.
 | File | Lines | Description |
 |------|-------|-------------|
 | `AesopRuleSet.lean` | 31 | Declares the `TMLogic` Aesop rule set that `AesopRules.lean` registers its axiom, forward-chaining and normalization rules into |
-| `AesopRules.lean` | 288 | Aesop rule set for TM logic: TMLogic declaration, forward chaining, normalization |
+| `AesopRules.lean` | 291 | Aesop rule set for TM logic: TMLogic declaration, forward chaining, normalization |
 | `AtomCanonicalization.lean` | 147 | Canonical form for formulas under atom permutation, so formulas identical up to atom renaming collapse to one dataset entry |
 | `AxiomNames.lean` | 57 | The canonical 45 `ProofSystem.Axiom` constructor names in `Axioms.lean` source order, extracted into a leaf module |
 | `BenchmarkAnchors.lean` | 593 | Benchmark anchor formulas: ground-truth valid/invalid formula pairs |

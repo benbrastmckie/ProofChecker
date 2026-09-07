@@ -270,14 +270,12 @@ For detailed documentation standards, see:
 
 ### Building Documentation
 
-Generate LEAN API documentation with doc-gen4:
-
-```bash
-# Generate documentation
-lake build :docs
-
-# Documentation will be in .lake/build/doc/
-```
+There is **no** generated API documentation target. `doc-gen4` is not a dependency of this
+project — it appears in neither `lakefile.lean` nor `lake-manifest.json` — so `lake build :docs`
+does not exist and does not work. The declaration docstrings in the tree are the API reference;
+[`reference/API_REFERENCE.md`](reference/API_REFERENCE.md) is the hand-maintained reading guide
+over them, and [`theorem-index.md`](theorem-index.md) is the per-theorem ledger. Adding
+`doc-gen4` would be a real change to the build graph, not a documentation fix.
 
 ## External Resources
 

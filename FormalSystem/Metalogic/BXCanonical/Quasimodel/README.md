@@ -25,8 +25,8 @@ Quasimodels are used as an intermediate step before the full chronicle construct
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.Core`, `Bimodal.Syntax.SubformulaClosure`
-- **Imported by**: `Bimodal.Metalogic.BXCanonical.Chronicle`
+- **Imports from**: `FormalSystem.Metalogic.Core`, `FormalSystem.Syntax.SubformulaClosure`
+- **Imported by**: `FormalSystem.Metalogic.BXCanonical.Chronicle`
 
 ## Related Documentation
 

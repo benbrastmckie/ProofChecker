@@ -19,8 +19,8 @@ equivalence to produce a finite model that preserves truth of relevant formulas.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.BXCanonical.Chronicle`, `Bimodal.Syntax.SubformulaClosure`
-- **Imported by**: `Bimodal.Metalogic.BXCanonical.Completeness`
+- **Imports from**: `FormalSystem.Metalogic.BXCanonical.Chronicle`, `FormalSystem.Syntax.SubformulaClosure`
+- **Imported by**: `FormalSystem.Metalogic.BXCanonical.Completeness`
 
 ## Related Documentation
 

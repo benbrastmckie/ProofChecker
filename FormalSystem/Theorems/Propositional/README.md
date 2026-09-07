@@ -24,8 +24,8 @@ that higher-level proofs rely on.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.ProofSystem`
-- **Imported by**: `Bimodal.Metalogic.Core`, `Bimodal.Theorems.Combinators`
+- **Imports from**: `FormalSystem.ProofSystem`
+- **Imported by**: `FormalSystem.Metalogic.Core`, `FormalSystem.Theorems.Combinators`
 
 ## Related Documentation
 

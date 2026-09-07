@@ -149,7 +149,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 62 | 52,672 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 2,993 | Axiom-independence models |
-| [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,458 | Per-axiom validity lemmas feeding `Soundness.lean` |
+| [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,457 | Per-axiom validity lemmas feeding `Soundness.lean` |
 | [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,128 | Kamp/Reynolds route, including all of `Kamp/` |
 <!-- END GENERATED -->
 
@@ -298,7 +298,7 @@ Decidability/TraceExport.lean        → FormalSystem.Automation.DataExport
 ```
 
 These are upward edges: `Automation/` is a consumer layer that itself imports
-`Bimodal.Metalogic.Decidability.*`. The decision procedure reuses the proof-search
+`FormalSystem.Metalogic.Decidability.*`. The decision procedure reuses the proof-search
 engine, so the boundary between the two is genuinely blurred. Recorded here as a
 known wrinkle rather than silently tolerated; resolving it means relocating the
 proof-search / decision-procedure boundary, which is separate work.

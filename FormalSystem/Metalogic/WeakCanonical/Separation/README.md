@@ -33,8 +33,8 @@ bisimulation-invariant properties expressible in the language.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.WeakCanonical.EFGames`, `Bimodal.Metalogic.WeakCanonical.IntegerModel`
-- **Imported by**: `Bimodal.Metalogic.WeakCanonical.Expressiveness`
+- **Imports from**: `FormalSystem.Metalogic.WeakCanonical.EFGames`, `FormalSystem.Metalogic.WeakCanonical.IntegerModel`
+- **Imported by**: `FormalSystem.Metalogic.WeakCanonical.Expressiveness`
 
 ## Related Documentation
 

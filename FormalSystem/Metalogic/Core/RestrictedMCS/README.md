@@ -21,8 +21,8 @@ set constrained to contain only formulas from a fixed finite subformula closure.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.Core.MaximalConsistent`, `Bimodal.Syntax.SubformulaClosure`
-- **Imported by**: `Bimodal.Metalogic.Decidability.FMP`, `Bimodal.Metalogic.BXCanonical`
+- **Imports from**: `FormalSystem.Metalogic.Core.MaximalConsistent`, `FormalSystem.Syntax.SubformulaClosure`
+- **Imported by**: `FormalSystem.Metalogic.Decidability.FMP`, `FormalSystem.Metalogic.BXCanonical`
 
 ## Related Documentation
 

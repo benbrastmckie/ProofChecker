@@ -244,7 +244,7 @@ invariant check allowlists it by name (check C8).
 | `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
-| `Semantics.lean` | 236 | Re-export for Semantics submodule |
+| `Semantics.lean` | 246 | Re-export for Semantics submodule |
 | `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |
 | `Theorems.lean` | 90 | Re-export for Theorems submodule |

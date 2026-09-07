@@ -28,8 +28,8 @@ the Burgess (1982) approach.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Metalogic.Core`, `Bimodal.Metalogic.BXCanonical.Quasimodel`
-- **Imported by**: `Bimodal.Metalogic.BXCanonical.CanonicalModel`
+- **Imports from**: `FormalSystem.Metalogic.Core`, `FormalSystem.Metalogic.BXCanonical.Quasimodel`
+- **Imported by**: `FormalSystem.Metalogic.BXCanonical.CanonicalModel`
 
 ## Related Documentation
 

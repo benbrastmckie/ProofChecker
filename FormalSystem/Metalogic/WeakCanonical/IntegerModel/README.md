@@ -22,8 +22,8 @@ and provides the basis for "shift-and-glue" constructions used in completeness p
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Semantics`, `Bimodal.Metalogic.WeakCanonical.NEquivalence`
-- **Imported by**: `Bimodal.Metalogic.WeakCanonical.Separation`
+- **Imports from**: `FormalSystem.Semantics`, `FormalSystem.Metalogic.WeakCanonical.NEquivalence`
+- **Imported by**: `FormalSystem.Metalogic.WeakCanonical.Separation`
 
 ## Related Documentation
 

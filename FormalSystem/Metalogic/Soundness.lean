@@ -72,8 +72,8 @@ Validity and semantic consequence quantify over the frame's **total** histories
 (`τ.IsTotal`, the predicate form of `H_F` membership), matching `def:logical-consequence`.
 There is no admissible-history parameter and no shift-closure side condition: totality is
 preserved by `timeShift` (`WorldHistory.isTotal_timeShift`), so time-shift invariance carries
-no hypothesis to quantify over. `TruthAt`'s remaining set argument is inert and is supplied
-as `Set.univ`.
+no hypothesis to quantify over. `TruthAt` takes four arguments — `TruthAt M τ t φ` — and no set
+argument at all.
 
 ## Full Derivation Soundness
 

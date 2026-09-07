@@ -30,8 +30,8 @@ combinatorial core of the expressive completeness proof.
 
 ## Dependencies
 
-- **Imports from**: `Bimodal.Syntax`, `Bimodal.Semantics`, `Bimodal.Metalogic.WeakCanonical.NEquivalence`
-- **Imported by**: `Bimodal.Metalogic.WeakCanonical.Expressiveness`, `Bimodal.Metalogic.WeakCanonical.Separation`
+- **Imports from**: `FormalSystem.Syntax`, `FormalSystem.Semantics`, `FormalSystem.Metalogic.WeakCanonical.NEquivalence`
+- **Imported by**: `FormalSystem.Metalogic.WeakCanonical.Expressiveness`, `FormalSystem.Metalogic.WeakCanonical.Separation`
 
 ## Related Documentation
 

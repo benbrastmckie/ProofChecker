@@ -762,30 +762,37 @@ same passage and fixed: `Metalogic.lean` called Dedekind strong completeness "un
 
 ---
 
-### Phase 15: Verifiable-mismatch sweep [NOT STARTED]
+### Phase 15: Verifiable-mismatch sweep [COMPLETED]
 
 **Goal**: Every remaining verified factual mismatch outside the inventory and citation systems is
 fixed.
 
 **Tasks**:
-- [ ] `Semantics.lean` truth-clause block: correct the three-tuple frame to the four-axiom
+- [x] `Semantics.lean` truth-clause block: correct the three-tuple frame to the four-axiom
       `(W, D, R)` form, remove Nullity from the frame-axiom list (README calls it derived),
       correct the five-argument `TruthAt` to four, correct the `□` clause from `σ.domain t` to
       `σ.IsTotal`, delete the non-existent `H`/`G` clauses, and fix or delete the ` ```lean `
       `#check` example that would not compile.
-- [ ] `Soundness.lean`: delete the claim that `TruthAt`'s remaining set argument is supplied as
+- [x] `Soundness.lean`: delete the claim that `TruthAt`'s remaining set argument is supplied as
       `Set.univ` (`TruthAt` takes four arguments).
-- [ ] `Semantics/Truth.lean`: delete the pointer to a module-hierarchy-restructuring detail that
+- [x] `Semantics/Truth.lean`: delete the pointer to a module-hierarchy-restructuring detail that
       `SoundnessLemmas.lean` does not carry.
-- [ ] `SoundnessLemmas/FrameClassVariants.lean`: delete the "resolves the 3 `temporal_duality`
+- [x] `SoundnessLemmas/FrameClassVariants.lean`: delete the "resolves the 3 `temporal_duality`
       sorries" claim with its three wrong line numbers (zero sorries exist; C3 asserts it).
-- [ ] `Automation/AesopRules.lean`: delete the "excluded pending soundness proofs: TL, MF"
+- [x] `Automation/AesopRules.lean`: delete the "excluded pending soundness proofs: TL, MF"
       claim; both are proved.
-- [ ] `README.md`: fix `cd ProofChecker` after cloning `BimodalLogic`; reconcile the BibTeX
-      `year = {2025}` against `year = {2026}`.
-- [ ] Replace the 26 `Bimodal.*` references across 14 READMEs (the namespace does not exist).
-- [ ] `docs/README.md`: fix or remove the `lake build :docs` recipe — `doc-gen4` is in neither
-      `lakefile.lean` nor `lake-manifest.json`.
+- [x] `README.md`: fix `cd ProofChecker` after cloning `BimodalLogic`; reconcile the BibTeX
+      `year = {2025}` against `year = {2026}`. *(the software entry was also renamed from
+      `proofchecker2025` to `brastmckie2026bimodallogic` and retitled, so the key, the title and
+      the repository name agree — E-17's one-name requirement)*
+- [x] Replace the 26 `Bimodal.*` references across 14 READMEs (the namespace does not exist).
+      *(deviation: altered — **42** references across 14 READMEs, not 26. They were rewritten to
+      `FormalSystem.*` rather than deleted, which additionally brings them inside C5's scope:
+      C5 resolves module-shaped `FormalSystem.*` paths and now checks all 42, where a
+      `Bimodal.*` path was structurally invisible to it. All 42 resolve.)*
+- [x] `docs/README.md`: fix or remove the `lake build :docs` recipe — `doc-gen4` is in neither
+      `lakefile.lean` nor `lake-manifest.json`. *(removed, and replaced with a statement that
+      there is no generated-API target and why, pointing at the two hand-maintained surfaces)*
 
 **Timing**: 2 hours
 
@@ -795,7 +802,9 @@ fixed.
 
 **Scope Hypothesis**: 26 `Bimodal.*` references across 14 READMEs; five A-10 stale claims of
 which one site (`SoundnessLemmas/Core.lean`) no longer exists and one (`Validity.lean:918`) is
-Phase 11's territory. Re-derive both greps at phase start.
+Phase 11's territory. Re-derive both greps at phase start. **Re-derived: 42 `Bimodal.*`
+references across 14 READMEs.** The `Validity.lean` binder-list claim was indeed fixed in
+Phase 11; `SoundnessLemmas/Core.lean` indeed no longer exists.
 
 **Files to modify**:
 - `FormalSystem/Semantics.lean`, `FormalSystem/Semantics/Truth.lean`,

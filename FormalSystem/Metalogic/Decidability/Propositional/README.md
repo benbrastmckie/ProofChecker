@@ -16,7 +16,7 @@ the bimodal decision procedure depend on a completeness result it does not need.
 ## Position in the Layering
 
 Inside `Metalogic/Decidability/`, beneath the full tableau procedure. `Decidable.lean`
-imports `Bimodal.Metalogic.Soundness` — the one place this fragment reaches outside
+imports `FormalSystem.Metalogic.Soundness` — the one place this fragment reaches outside
 `Decidability/` — and all three modules are re-exported by the `Decidability.lean`
 sibling aggregator.
 

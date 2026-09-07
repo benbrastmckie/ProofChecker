@@ -696,10 +696,9 @@ without requiring `[DenselyOrdered ↑D]` or `[Nontrivial D]`. These general ver
 remove frame constraints from the swap/locally-valid lemmas, enabling soundness proofs
 for the base frame class without unnecessary hypotheses.
 
-This resolves the 3 `temporal_duality` sorries in Soundness.lean:
-- `soundness` (general, line ~877)
-- `soundness_ztime_valid` (line ~1094)
-- `soundness_ztime` (line ~1151)
+These are what the `temporal_duality` case of `soundness`, `soundness_ztime_valid` and
+`soundness_ztime` (`Metalogic/Soundness.lean`) discharge against. The tree carries zero
+structural sorries; check C3 asserts that by content.
 -/
 
 /-- All base axiom swaps are valid without DenselyOrdered constraints.

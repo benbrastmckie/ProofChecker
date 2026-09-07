@@ -38,10 +38,13 @@ rules takes an explicit `aesop (rule_sets := [TMLogic])`; plain `aesop` no longe
 
 ## Excluded Axioms
 
-The following axioms are excluded pending soundness proofs:
-- TL (temp_l): Temporal introspection - soundness incomplete
-- MF (modal_future): Modal-future interaction - soundness incomplete
-- TF (temporalFutureDerived): Now derived from MF + T + Modal 4
+The following axioms carry no `@[aesop]` rule here:
+- TL (`temp_l`): temporal introspection
+- MF (`modal_future`): modal-future interaction
+- TF (`temporalFutureDerived`): derived from MF + T + Modal 4, so a rule would be redundant
+
+Their soundness is **proved** (`Metalogic/Soundness.lean`); the exclusion is a search-space
+decision, not an outstanding obligation.
 
 ## Usage
 

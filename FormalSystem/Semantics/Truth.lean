@@ -133,9 +133,9 @@ in.
 
 ## Note on Bridge Theorems
 
-Bridge theorems connecting the proof system to semantics (temporal duality infrastructure)
-have been moved to `Metalogic/SoundnessLemmas.lean` to resolve circular dependencies.
-See SoundnessLemmas.lean for details on the module hierarchy restructuring.
+The bridge theorems connecting the proof system to semantics — the temporal-duality
+infrastructure — live under `Metalogic/SoundnessLemmas/`, not here, so that this module depends
+on no proof-system notion.
 
 ## Implementation Notes
 
