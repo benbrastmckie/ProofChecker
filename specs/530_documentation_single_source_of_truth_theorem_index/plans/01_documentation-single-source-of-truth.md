@@ -271,23 +271,29 @@ since the review.
 
 ---
 
-### Phase 4: Extend the C14 axiom baseline [NOT STARTED]
+### Phase 4: Extend the C14 axiom baseline [COMPLETED]
 
 **Goal**: Every SORRY-FREE claim in `Metalogic.lean` is machine-pinned. The 35 unpinned
 declarations from report §4.1(a) are added to `C14_BASELINE` with matching `#print axioms` lines.
 
 **Tasks**:
-- [ ] Add the 35 declarations to the `C14_BASELINE` heredoc and the corresponding
-      `#print axioms` directives, following the existing row shape exactly.
-- [ ] Expand `tmFrag_complete_*` into its four member declarations by name; it is a family, not
+- [x] Add the 35 declarations to the `C14_BASELINE` heredoc and the corresponding
+      `#print axioms` directives, following the existing row shape exactly. *(deviation:
+      altered — the re-derived unpinned set is **47**, not 35: the tree uses `ztime`/`rtime`
+      naming and carries declarations the report's list predates. C14 now pins 99 and C2 four,
+      103 in total)*
+- [x] Expand `tmFrag_complete_*` into its four member declarations by name; it is a family, not
       a declaration.
-- [ ] Decide and record whether `decide` (a `def`, not a theorem) belongs in the flagship pinned
+- [x] Decide and record whether `decide` (a `def`, not a theorem) belongs in the flagship pinned
       set; if excluded, remove its SORRY-FREE claim from `Metalogic.lean` rather than leaving it
-      prose-only.
-- [ ] Record the axiom value for each new row (`pcq` for
+      prose-only. *(decided: included. `Metalogic.lean` makes a SORRY-FREE claim about it, and
+      pinning is what makes that claim machine-checked; `#print axioms` is well-defined on a
+      `def`. `Conservativity.TMFrag`, also a `def`, is pinned for the same reason)*
+- [x] Record the axiom value for each new row (`pcq` for
       `[propext, Classical.choice, Quot.sound]`, the literal list otherwise) so Phase 5 can
-      populate the index's Axioms column without a second build.
-- [ ] Batch all additions into one build cycle.
+      populate the index's Axioms column without a second build. *(seven declarations carry the
+      strict subset `[propext]` or `[propext, Quot.sound]`, recorded literally)*
+- [x] Batch all additions into one build cycle.
 
 **Timing**: 2 hours
 
