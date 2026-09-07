@@ -11,17 +11,16 @@ next_project_number: 549
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,476,481,502,504,506,530,534,535,540,541,542,544,545,547 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,463,497,531,537,548 | 193,298,433,502,530,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,498,499,500 | 231,463,497 | algebraic-representation, dataset-enhancement, decidability |
-| 4 | 125,465,543 | 464,498,499,500 | algebraic-representation, decidability, metalogic |
-| 5 | 428,501 | 125,465 | algebraic-representation, decidability |
-| 6 | 429 | 428 | decidability |
-| 7 | 410 | 429 | decidability |
-| 8 | 411 | 410 | decidability |
-| 9 | 430 | 411 | decidability |
-| 10 | 177,412 | 193,430,530 | decidability, formula-refactor |
-| 11 | 482 | 412 | decidability |
+| 1 | 127,128,193,257,298,463,476,481,502,504,506,530,534,535,540,541,542,544,545,547 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,464,497,531,537,548 | 193,298,463,502,530,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,465,498,499,500 | 231,464,497 | algebraic-representation, dataset-enhancement, decidability |
+| 4 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
+| 5 | 429,501 | 125,428 | algebraic-representation, decidability |
+| 6 | 410 | 429 | decidability |
+| 7 | 411 | 410 | decidability |
+| 8 | 430 | 411 | decidability |
+| 9 | 177,412 | 193,430,530 | decidability, formula-refactor |
+| 10 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
 
@@ -51,17 +50,16 @@ next_project_number: 549
 
 ### Decidability
 
-433 [PARTIAL] — Discharge `PostBlockingSettles fc`, defined at FormalSystem/Metal
-  └─ 463 [NOT STARTED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
-    └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
-      └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
-        └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
-          └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2 and 
-            └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program (parent: t
-              └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program (parent: t
-                └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
-                  └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
-                    └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
+463 [NOT STARTED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
+  └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
+    └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
+      └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
+        └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2 and 
+          └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program (parent: t
+            └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program (parent: t
+              └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
+                └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
+                  └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
 
@@ -651,7 +649,7 @@ Dependencies: 462, as a file_scope SERIALIZATION edge only (both tasks edit Mint
 
 ### 433. Discharge postblockingsettles residual
 - **Effort**: 6-10 hours
-- **Status**: [PARTIAL]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 432, Task 434

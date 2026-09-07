@@ -1,7 +1,7 @@
 # Implementation Plan: Discharge the `PostBlockingSettles` residual
 
 - **Task**: 433 - Discharge `PostBlockingSettles fc`, one of the four residual hypotheses on the totality terminus `buildTableauAt_isSome_of_budget`
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 13 hours
 - **Dependencies**: None blocking. Consumes (does not re-author) what tasks 432, 434 and 436 landed in `MintBound.lean`.
 - **Research Inputs**: `specs/433_discharge_postblockingsettles_residual/reports/01_spawn-inherited-research.md` (inherited stub); `specs/428_engine_totality_at_a_quantified_branch_budget/reports/05_spawn-analysis.md` (source blocker analysis)

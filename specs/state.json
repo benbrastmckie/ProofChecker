@@ -848,7 +848,7 @@
     {
       "project_number": 433,
       "project_name": "discharge_postblockingsettles_residual",
-      "status": "partial",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Discharge `PostBlockingSettles fc`, defined at FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean:4344, one of the four residual hypotheses on the totality terminus `buildTableauAt_isSome_of_budget` (MintBound.lean:4416). It states that the post-blocking pass leaves a branch the blocking-aware saturation test certifies -- i.e. `findUnexpandedUnblockedWith satBr satOrd fc (blockedTimes satBr satOrd fc (armTracker satBr)) = none` whenever `saturateBlocked ob fuel oOrd fc = some (.inr (satBr, satOrd))`. It subsumes `resolveOpenArm`'s own `none` arm via `armSettlement_of_postBlockingSettles` (MintBound.lean:4354) -- `ArmSettlement` alone is proved strictly too weak (`resolveOpenArm` tests `findClosure satBr` before its saturation test; `buildTableauAt` does not), so do not attempt to discharge via `ArmSettlement` instead. The relevant definitions are frozen (md5-pinned) in Saturation.lean (`saturateBlocked`, :431) and Tableau.lean (`blockedTimes`, :2104; `findUnexpandedUnblockedWith`, :2115) -- do not edit either file; the residual's own docstring states the gap ('whether the fuel-vs-condition gap can be closed by fuel alone') is exactly what Saturation.lean leaves open using only its existing public interface. Done means: either (a) a proof of `PostBlockingSettles fc` for the frame classes the terminus is meant to be used at, using only the public interface of the frozen files, landed sorry-free and axiom-free with `lake build` green; or (b), if (a) turns out to be genuinely impossible without touching the frozen files, a return to [BLOCKED] with the specific counterexample or obstruction found, analogous to the parent task's own refutation-driven repairs (e.g. `ordTimes_identifyTime_arm3_false`, MintBound.lean:1217) -- do not paper over with a vacuous definition (`lean4.md`'s Vacuous Definitions prohibition applies). This task's own residual work -- deciding PostBlockingSettlesRun at the terminus's own fuel figure, and completing the terminus restatement family -- has moved downstream to tasks 463 and 465 respectively; do not re-attempt those here.",
       "effort": "6-10 hours",
@@ -862,7 +862,7 @@
         "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean"
       ],
       "created": "2026-08-06T16:01:52Z",
-      "last_updated": "2026-08-19T01:35:06Z",
+      "last_updated": "2026-09-07T21:05:51Z",
       "artifacts": [
         {
           "type": "research",
@@ -885,7 +885,8 @@
           "summary": "PostBlockingSettles refuted at every fuel; PostBlockingSettlesAt holds outright; PostBlockingSettlesRun narrowed repair carried with termini restated"
         }
       ],
-      "session_id": "sess_1787103184_075b59_433"
+      "session_id": "sess_1788814874_88ef2b",
+      "completion_summary": "PostBlockingSettles fc refuted at every frame class and every fuel, answering the residual docstring's open question in the negative. The plan's pre-declared output-branch repair was landed with its direction lemma and then rejected by the anti-weakening gate on decided evidence (labelFreeSaturatedExit_not_of_saturateBlocked_inr, postBlockingExitSettled_false, noUnblockedFreshWork_iff_of_labelFreeSaturatedExit). Under explicit orchestrator ruling, the narrowed repair PostBlockingSettlesRun fc fuel was then landed -- the residual restricted to a branch some expandBranchWithFuel call returned open, at that call's own fuel, the same narrowing ArmSettlement already uses. Its Phase 6 gate PASSED: buildTableauAt_isSome_of_settlesRun is the bridge the output-branch design could not build, eight terminus restatements land on it, and buildTableauAt_isSome_of_budget_of_run certifies each is a strengthening. Non-vacuity is proved for the pass doing real work and #guard_msgs-checked for the full antecedent on seed runs. C9 entries 22, 23 and 24."
     },
     {
       "project_number": 461,

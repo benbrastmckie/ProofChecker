@@ -1,9 +1,16 @@
 # Implementation Summary: Discharge the `PostBlockingSettles` residual
 
 - **Task**: 433
+- **Status**: `[COMPLETED]`
+- **Started**: 2026-08-18
+- **Completed**: 2026-09-07
+- **Artifacts**: `reports/01_spawn-inherited-research.md`, `plans/01_postblockingsettles-refute-or-prove.md`, `summaries/01_postblockingsettles-summary.md`
+- **Standards**: `lean4.md` (no vacuous definitions, no `sorry`, no added axioms), `plan-compliance.md`, frozen-file constraint on `Saturation.lean` / `Tableau.lean`
 - **Plan**: `specs/433_discharge_postblockingsettles_residual/plans/01_postblockingsettles-refute-or-prove.md`
-- **Outcome**: `[PARTIAL]` — outcome (b) in full: refutation, repaired predicate with its direction
-  lemma, terminus restated at it, and a non-vacuous instantiation
+- **Outcome**: outcome (b) in full: refutation, repaired predicate with its direction
+  lemma, terminus restated at it, and a non-vacuous instantiation. Closed `[COMPLETED]`: the
+  carried residual (`PostBlockingSettlesRun` at the terminus fuel) and the remaining fourteen
+  terminus restatements are owned downstream and are not work this task still owes.
 - **Phases**: 8 of 8 closed (6 `[COMPLETED]`, 2 `[COMPLETED WITH EXCLUSIONS]`)
 - **Files modified**: `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean`
   (1166 insertions, 4 deletions; all four deletions are docstring text)
