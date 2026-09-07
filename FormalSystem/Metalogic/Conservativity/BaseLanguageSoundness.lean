@@ -253,6 +253,8 @@ theorem bl_soundness_validIn {fc : FrameClass} {φ : BLFormula}
 model, **total** history and time at which every formula of `Γ` is true.
 
 `bl_soundness_in` at `fc = .Base`; `Sat .Base` is `True`, so the witness is `trivial`.
+
+Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
 theorem bl_soundness (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.Base Γ φ)
@@ -266,6 +268,8 @@ theorem bl_soundness (Γ : BaseLanguage.Context) (φ : BLFormula)
 **Soundness of BL at `FrameClass.Dense`.** `bl_soundness_in` at `fc = .Dense`, with the
 `[DenselyOrdered D]` instance supplied as the `Sat .Dense` witness; the binder bundle is
 `soundness_dense`'s.
+
+Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
 theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.Dense Γ φ)
@@ -279,6 +283,8 @@ theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
 **Soundness of BL at `FrameClass.ZTime`.** `bl_soundness_in` at `fc = .ZTime`, with the
 four order instances bundled into the `Sat .ZTime` witness; the binder bundle is
 `soundness_ztime`'s.
+
+Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
 theorem bl_soundness_ztime (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
@@ -300,6 +306,8 @@ hypothesis `h_lub` in its original position.
 
 The `[DenselyOrdered D]` binder is load-bearing, not decorative — see the module docstring and
 `Semantics/BLValidity.lean`.
+
+Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
 theorem bl_soundness_rtime (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.RTime Γ φ)
@@ -475,6 +483,8 @@ import-graph reason `not_derivable_nil_bot` records on the BL⁺ side. -/
 The witness is `trivialFrame` over `Int`, exactly as in `not_derivable_nil_bot`. The step across
 the bridge is invisible here because `tr BLFormula.bot` is `Formula.bot` definitionally, so
 `TaskFrame.not_validOn_bot` applies unchanged.
+
+Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL consistency corollary)
 -/
 theorem bl_not_derivable_nil_bot :
     ¬ BaseLanguage.Derivable FrameClass.Base ([] : BaseLanguage.Context) BLFormula.bot := by

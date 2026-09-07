@@ -264,7 +264,10 @@ satisfiable over `ℤ`, and satisfiable over no Archimedean discrete carrier at 
 The argument the skeleton runs — `archWitness p ⊨ ⊥` holds vacuously, compactness hands back a
 finite `L` with `L.foldr imp ⊥` Discrete-valid, and `truthAt_foldr_imp` contradicts that against
 a Discrete model of the same `L` — used to be written out here in full, and again in
-`Metalogic/DedekindNonCompactness.lean` with a different witness. It is now written once. -/
+`Metalogic/DedekindNonCompactness.lean` with a different witness. It is now written once.
+
+Paper: — (formalization-native refutation; the paper states no compactness claim to refute)
+-/
 theorem notCompactZTime : ¬ CompactZTime :=
   not_compact_of_witness (archWitness_finitely_satisfiable ⟨"p", none⟩)
     (archWitness_not_satisfiable ⟨"p", none⟩)
@@ -283,7 +286,10 @@ need, since it no longer destructures a `SatisfiableZTimeSet` witness itself —
 `archWitness_not_satisfiable` above still does, and still documents the discipline.
 
 This is the theorem behind the module docstring claim in `Metalogic/StrongCompleteness.lean`
-that only weak completeness is available for this class. -/
+that only weak completeness is available for this class.
+
+Paper: — (formalization-native refutation; the paper states weak completeness only)
+-/
 theorem notStrongCompletenessZTime : ¬ StrongCompletenessZTime :=
   not_strongCompleteness_of_witness (archWitness_finitely_satisfiable ⟨"p", none⟩)
     (archWitness_not_satisfiable ⟨"p", none⟩)

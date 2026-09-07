@@ -586,6 +586,8 @@ Contrapositive, four steps, no case split:
    `ValidIn.apply_total`: `ValidRTime` is `ValidIn FrameClass.RTime`, whose frame
    hypothesis is the packed `TaskFrame.IsRTime`, supplied as `⟨inferInstance, hlub⟩` — density
    is found by search because `IsDense` is an `abbrev` and `Sat` is `@[reducible]`.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_rtime_engine (ψ : Formula) :
     ValidRTime ψ → Derivable FrameClass.RTime [] ψ := by

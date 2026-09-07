@@ -97,6 +97,8 @@ frame-class-relative corollaries below are therefore weakenings, obtained via th
 `true` on `extractionFailed`, which carries no `⊢ φ` witness; getting `⊨ φ` from a closed tableau
 with no extracted proof is the open `valid_iff_allClosed` obligation described in the retirement
 section below, not a consequence of anything proved in this file.
+
+Paper: — (the paper's `cor:tm-decidability` is commented out and carries no live label)
 -/
 theorem sound_of_isValid {φ : Formula} (r : DecisionResult φ) (h : r.isValid = true) : ⊨ φ := by
   cases r with

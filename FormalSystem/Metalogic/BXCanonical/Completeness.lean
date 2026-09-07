@@ -192,6 +192,8 @@ validity notion with the axiom set that captures it. `Valid φ` (validity over *
 temporal frames) is matched by the `Base` axiom set specifically; the dense and discrete
 notions have their own statements (`completeness_dense`, `completeness_ztime`) against
 `ValidDense` / `ValidZTime`. There is no `{fc}`-uniform statement to generalise to.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness (φ : Formula) :
     Valid φ → Derivable FrameClass.Base [] φ := by
@@ -251,6 +253,8 @@ but using Dense-derivability and Dense-MCS throughout.
 `Classical.choice`, `Quot.sound`). The
 non-dense branch closes via the `dense_indicator` axiom: `¬U(⊤,⊥)` is a Dense theorem,
 so `□(¬U(⊤,⊥))` is in every Dense-MCS, contradicting `¬□(F'T) ∈ M`.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_dense (φ : Formula) :
     ValidDense φ → Derivable FrameClass.Dense [] φ := by
@@ -292,6 +296,8 @@ but using Discrete-derivability and Discrete-MCS throughout.
 `Classical.choice`, `Quot.sound` — see the
 Axiom Audit section below). The dense-case branch closes by deriving `U(⊤,⊥)` as a
 Discrete theorem; the mixed case is eliminated by `mcs_mixed_case_absurd`.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_ztime (φ : Formula) :
     ValidZTime φ → Derivable FrameClass.ZTime [] φ := by

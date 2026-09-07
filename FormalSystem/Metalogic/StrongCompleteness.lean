@@ -745,6 +745,8 @@ held apart there. In particular this is **not** strong completeness: the infinit
 *machine-refuted* for this class, by `notStrongCompletenessRTime`
 (`Metalogic/DedekindNonCompactness.lean`) — the same status `FrameClass.ZTime` has, though
 reached by a different witness — and `Context := List Formula` cannot express it in any case.
+
+Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak completeness only)
 -/
 theorem consequence_completeness_rtime (Γ : Context) (φ : Formula)
     (h : SemanticConsequenceRTime Γ φ) : Derivable FrameClass.RTime Γ φ :=
@@ -771,6 +773,8 @@ transport, no `rfl` lemma, and no change at any application site, since `WeakCom
 unfolds to exactly the `(φ) (h) : Derivable fc [] φ` shape this theorem used to spell out. It is
 in that form that `consequence_completeness_rtime` above and `tmComplete_iff_forward`
 (`Metalogic/Conservativity/TMCompletenessReduction.lean`) consume it.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_rtime : WeakCompleteness FrameClass.RTime :=
   fun φ h => consequence_completeness_rtime [] φ
@@ -839,6 +843,8 @@ infinitary statement over `Γ : Set Formula` is `StrongCompletenessBase`
 (`SetConsequence.lean`), which is **proved** for this class, as `strongCompletenessBase` in
 `Metalogic/Compactness.lean` — but it is not reached by anything in this file, which
 supplies only the reduction it is built from.
+
+Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak completeness only)
 -/
 theorem consequence_completeness_base (Γ : Context) (φ : Formula)
     (h : SemanticConsequence Γ φ) : Derivable FrameClass.Base Γ φ :=
@@ -875,6 +881,8 @@ that form that `strongCompletenessBase` (`Metalogic/Compactness.lean`) and
 (`Metalogic/Conservativity/TMCompletenessReduction.lean`) consume it. Application sites are
 unaffected: `WeakCompleteness fc` unfolds to exactly the `(φ) (h) : Derivable fc [] φ` shape
 this theorem used to spell out.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_base : WeakCompleteness FrameClass.Base :=
   fun φ h => consequence_completeness_base [] φ
@@ -947,6 +955,8 @@ this statement is inter-derivable with weak completeness through the deduction t
 infinitary statement over `Γ : Set Formula` is `StrongCompletenessDense`, which is **proved**
 for this class, as `strongCompletenessDense` in `Metalogic/Compactness.lean` — reached
 only through `CompactDense`, via `strongCompleteness_of_compact` at `fc := .Dense`.
+
+Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak completeness only)
 -/
 theorem consequence_completeness_dense (Γ : Context) (φ : Formula)
     (h : SemanticConsequenceDense Γ φ) : Derivable FrameClass.Dense Γ φ :=
@@ -983,6 +993,8 @@ that form that `strongCompletenessDense` (`Metalogic/Compactness.lean`) consumes
 On the short name it shares with `BXCanonical.completeness_dense`, see the note in the module
 docstring: the enclosing-namespace declaration wins at `open` sites, and it still has the same
 applied shape, so the shadowing remains inert.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_dense : WeakCompleteness FrameClass.Dense :=
   fun φ h => consequence_completeness_dense [] φ
@@ -1058,6 +1070,8 @@ single-formula engine for `ValidZTime`, so there is no `_of_engine` layer here.
 `Context := List Formula`, so every `Γ` here is finite. The infinitary statement
 `StrongCompletenessZTime` is refuted by `notStrongCompletenessZTime`; this theorem is
 the strongest consequence-shaped result the class admits.
+
+Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak completeness only)
 -/
 theorem consequence_completeness_ztime (Γ : Context) (φ : Formula)
     (h : SemanticConsequenceZTime Γ φ) : Derivable FrameClass.ZTime Γ φ :=
@@ -1097,6 +1111,8 @@ witness is real; the class still has no strong completeness.
 
 On the short name it shares with `BXCanonical.completeness_ztime`, see the note in the module
 docstring: the shadowing is inert.
+
+Paper: `cor:tm-completeness`
 -/
 theorem completeness_ztime : WeakCompleteness FrameClass.ZTime :=
   fun φ h => consequence_completeness_ztime [] φ

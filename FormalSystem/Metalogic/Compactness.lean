@@ -179,10 +179,16 @@ theorem modelExistenceDense : ModelExistenceDense :=
 
 /-- **Compactness for `FrameClass.Base`**, from model existence via the class-generic bridge
 `compact_of_modelExistence`. `ModelExistenceBase` *is* `ModelExistence .Base` and `CompactBase`
-*is* `Compact .Base`, definitionally, so the bridge applies with no transport. -/
+*is* `Compact .Base`, definitionally, so the bridge applies with no transport.
+
+Paper: — (formalization-native; the paper states no compactness theorem)
+-/
 theorem compactBase : CompactBase := compact_of_modelExistence modelExistenceBase
 
-/-- **Compactness for `FrameClass.Dense`**, by the same route as `compactBase`. -/
+/-- **Compactness for `FrameClass.Dense`**, by the same route as `compactBase`.
+
+Paper: — (formalization-native; the paper states no compactness theorem)
+-/
 theorem compactDense : CompactDense := compact_of_modelExistence modelExistenceDense
 
 /--
@@ -192,6 +198,8 @@ theorem compactDense : CompactDense := compact_of_modelExistence modelExistenceD
 Obtained from the class-generic reduction `strongCompleteness_of_compact` by supplying
 `compactBase` and the weak-completeness engine `completeness_base`. The reduction's `engine`
 parameter is instantiated here, not eliminated.
+
+Paper: — (formalization-native; the paper states weak completeness only)
 -/
 theorem strongCompletenessBase : StrongCompletenessBase :=
   strongCompleteness_of_compact compactBase completeness_base
@@ -199,6 +207,8 @@ theorem strongCompletenessBase : StrongCompletenessBase :=
 /--
 **Strong completeness for `FrameClass.Dense`**, unconditionally, by the same route as
 `strongCompletenessBase` with `compactDense` and `completeness_dense`.
+
+Paper: — (formalization-native; the paper states weak completeness only)
 -/
 theorem strongCompletenessDense : StrongCompletenessDense :=
   strongCompleteness_of_compact compactDense completeness_dense

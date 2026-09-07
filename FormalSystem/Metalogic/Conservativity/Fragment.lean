@@ -77,12 +77,18 @@ def TMFrag (fc : FrameClass) (φ : BLFormula) : Prop :=
   ProofSystem.Derivable fc [] (tr φ)
 
 /-- **Soundness of the fragment.** A fragment theorem at `fc` is `BLValidIn fc`: TM⁺ soundness
-(`soundness_validIn`) on the translation, crossed back through `blValidIn_iff_validIn_tr`. -/
+(`soundness_validIn`) on the translation, crossed back through `blValidIn_iff_validIn_tr`.
+
+Paper: — (formalization-native; the H/G-fragment is this tree's construction)
+-/
 theorem tmFrag_sound {fc : FrameClass} (φ : BLFormula) (h : TMFrag fc φ) : BLValidIn fc φ :=
   (blValidIn_iff_validIn_tr fc φ).mpr (h.elim soundness_validIn)
 
 /-- **Completeness of the fragment**, given a weak-completeness engine at `fc`: a `BLValidIn fc`
-formula's translation is `ValidIn fc` (`blValidIn_iff_validIn_tr`), hence TM⁺-derivable. -/
+formula's translation is `ValidIn fc` (`blValidIn_iff_validIn_tr`), hence TM⁺-derivable.
+
+Paper: — (formalization-native; the H/G-fragment is this tree's construction)
+-/
 theorem tmFrag_complete {fc : FrameClass} (engine : WeakCompleteness fc) (φ : BLFormula)
     (h : BLValidIn fc φ) : TMFrag fc φ :=
   engine (tr φ) ((blValidIn_iff_validIn_tr fc φ).mp h)
@@ -119,7 +125,10 @@ theorem tmFrag_complete_rtime (φ : BLFormula) (h : BLValidIn FrameClass.RTime �
 /-! ### `TM ⊆ TMFrag`, and the strict inclusion at `.ZTime` -/
 
 /-- **`TM ⊆ TMFrag` at every class.** The `Γ = []` instance of `derivable_translate`
-(`Conservativity/Backward.lean`); `trCtx [] = []` definitionally, so no context bookkeeping. -/
+(`Conservativity/Backward.lean`); `trCtx [] = []` definitionally, so no context bookkeeping.
+
+Paper: — (formalization-native; the H/G-fragment is this tree's construction)
+-/
 theorem tm_le_tmFrag {fc : FrameClass} (φ : BLFormula)
     (h : BaseLanguage.Derivable fc [] φ) : TMFrag fc φ :=
   derivable_translate h
@@ -136,6 +145,8 @@ contains a formula — `Z1 p` — that TM_f does not derive (`not_bl_derivable_z
 
 This is the fragment-logic reading of the CEF refutation: the H/G-fragment of TM⁺_f is
 strictly larger than TM_f.
+
+Paper: — (formalization-native; the H/G-fragment is this tree's construction)
 -/
 theorem tm_lt_tmFrag_ztime :
     (∀ φ : BLFormula, BaseLanguage.Derivable FrameClass.ZTime [] φ →

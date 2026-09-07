@@ -180,6 +180,8 @@ theorem sat_ztime_subset_mod_axiomSet :
 
 Equivalently: `Sat .ZTime` — the ℤ-time narrowing — is **not** Galois-closed. Contrast
 `Semantics.galoisClosed_isDiscrete`, which shows that the paper's bare Discrete class *is*.
+
+Paper: `app:discrete`
 -/
 theorem sat_ztime_ssubset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.ZTime F} ⊂

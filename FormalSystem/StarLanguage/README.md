@@ -24,7 +24,7 @@ atomization transfer rely on.
 |------|-------------|
 | `Formula.lean` | `StarFormula`, the derived operators (with `Formula`'s right-hand sides), the `⊡`-specific `dstab`/`Will`/`will`/`Could`/`could`, `swapTemporal` (`stab ↦ stab`), the purity predicates `IsPureFuture`/`IsPurePast` with their `swapTemporal` exchange lemmas, and the embedding `ofFormula`/`ofCtx` with `ofFormula_injective`, `ofFormula_ne_stab`, `ofFormula_swapTemporal` |
 | `Axioms.lean` | `StarAxiom`, the **closed** inductive of TM⋆ schemata: the 45 TM⁺ schemata re-declared with `StarFormula` parameters, plus eight `⊡` schemata — SK, ST, S4, S5 (S5 for `⊡`), MS `□φ → ⊡φ`, AS `p → ⊡p` for atoms, and the two pasting schemata PS `⟐φ⁺ → (⟐ψ⁻ → ⟐(φ⁺ ∧ ψ⁻))` and US `(α⁻ U ⟐φ⁺) → ⟐(α⁻ U φ⁺)` with pure-future/pure-past side conditions; `StarAxiom.minFrameClass` |
-| `Derivation.lean` | `StarDerivationTree` (the seven rules of TM⁺, constructor for constructor), `StarDerivable`, `⊢⋆[fc]` notation, the derived `⊡`-necessitation rule `stab_necessitation`, and the backward conservativity bridge `StarAxiom.ofPlus` / `StarDerivationTree.ofPlus` / `starDerivable_of_derivable`: `TM⁺ ⊢[fc] φ ⟹ TM⋆ ⊢[fc] ofFormula φ` |
+| `Derivation.lean` | `StarDerivationTree` (the seven rules of TM⁺, constructor for constructor), `StarDerivable`, `⊢⋆[fc]` notation, the derived `⊡`-necessitation rule `stabNecessitation`, and the backward conservativity bridge `StarAxiom.ofPlus` / `StarDerivationTree.ofPlus` / `starDerivable_of_derivable`: `TM⁺ ⊢[fc] φ ⟹ TM⋆ ⊢[fc] ofFormula φ` |
 
 The sibling aggregator is `FormalSystem/StarLanguage.lean`.
 

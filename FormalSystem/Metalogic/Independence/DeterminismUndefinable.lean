@@ -172,6 +172,8 @@ would then be validated by `F°`; and `F°` is not deterministic.
 
 This is *elimination by indistinguishability*, not separation: the two frames **agree** on every
 L⋆ sentence, which is precisely why no such sentence set can tell determinism apart.
+
+Paper: `app:deterministic`
 -/
 theorem deterministic_not_starDefinable :
     ¬ ∃ Γ : Set StarFormula, ∀ F : TaskFrame, F.Deterministic ↔ ∀ φ ∈ Γ, F.StarValidOn φ := by

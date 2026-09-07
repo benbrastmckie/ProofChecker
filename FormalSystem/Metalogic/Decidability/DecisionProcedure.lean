@@ -166,6 +166,8 @@ Decide validity of a TM bimodal logic formula.
 - `invalid counter`: Formula is invalid with countermodel
 - `fuelExhausted`: Tableau fuel ran out before any verdict
 - `extractionFailed`: Tableau closed (formula valid) but no proof term recovered
+
+Paper: — (the paper's `cor:tm-decidability` is commented out and carries no live label)
 -/
 def decide (φ : Formula) (searchDepth : Nat := 10) (tableauFuel : Nat := 1000)
     (fc : FrameClass := .Base) : DecisionResult φ :=

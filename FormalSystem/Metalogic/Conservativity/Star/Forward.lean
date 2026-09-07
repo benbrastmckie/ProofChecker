@@ -85,7 +85,10 @@ theorem forward_star_rtime (φ : Formula)
 
 /-- **TM⋆ is a conservative extension of TM⁺**: at any class with an engine, an L⁺ formula is a
 TM⋆ theorem iff it is a TM⁺ theorem. Backward by the embedding of derivations, forward by
-soundness plus completeness. -/
+soundness plus completeness.
+
+Paper: — (formalization-native; the stability extension L-star is not in the paper)
+-/
 theorem starDerivable_ofFormula_iff {fc : FrameClass} (engine : WeakCompleteness fc)
     (φ : Formula) : StarDerivable fc [] (ofFormula φ) ↔ ProofSystem.Derivable fc [] φ :=
   ⟨forward_star engine φ, fun h => starDerivable_of_derivable h⟩

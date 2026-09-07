@@ -1373,6 +1373,8 @@ used to be written out here lives in `soundness_in` and is shared with the three
 **Note**: Prior-UZ/SZ and z1 are excluded structurally — their `minFrameClass` is
 `Discrete`, which is incomparable to `Base` in the partial order. Use
 `soundness_ztime` for derivations containing these axioms.
+
+Paper: `thm:TM-soundness`
 -/
 theorem soundness (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.Base Γ φ)
@@ -1426,6 +1428,8 @@ is incomparable with `.Dense`.
 
 **Constructor coverage**: this induction cases on all seven `DerivationTree` constructors and no
 others. There is no IRR rule in the proof system, so no IRR case appears here.
+
+Paper: `thm:TM-soundness`
 -/
 theorem soundness_dense (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.Dense Γ φ)
@@ -1463,6 +1467,8 @@ theorem soundness_ztime_valid {phi : Formula}
 This is the discrete analogue of `soundness_dense`. Given a discrete-compatible
 derivation `Γ ⊢ φ`, if all formulas in `Γ` are true at some configuration on a
 discrete frame, then `φ` is also true there.
+
+Paper: `thm:TM-soundness`
 -/
 theorem soundness_ztime (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.ZTime Γ φ)
@@ -1508,6 +1514,8 @@ on a dense Dedekind-complete frame, then `φ` is also true there.
 
 **The conclusion is stated over the `ValidRTime` binder set, NOT `ValidComplete`**; dropping
 the `[DenselyOrdered D]` binder here would make this theorem refutable. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
+
+Paper: `thm:TM-soundness`
 -/
 theorem soundness_rtime (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.RTime Γ φ)

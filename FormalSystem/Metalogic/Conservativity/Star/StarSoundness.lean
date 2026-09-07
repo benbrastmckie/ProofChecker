@@ -103,7 +103,10 @@ decreasing_by
     | omega
     | simp only [StarDerivationTree.height]; omega
 
-/-- **Soundness of TM⋆ at `fc`**, empty-context validity form. -/
+/-- **Soundness of TM⋆ at `fc`**, empty-context validity form.
+
+Paper: — (formalization-native; the stability extension L-star is not in the paper)
+-/
 theorem star_soundness_validIn {fc : FrameClass} {φ : StarFormula}
     (h : StarDerivable fc [] φ) : StarValidIn fc φ :=
   h.elim fun d => (star_derivable_valid_and_swap_validIn d).1
@@ -171,7 +174,7 @@ theorem star_soundness_rtime {φ : StarFormula}
 is derivable. -/
 example {fc : FrameClass} {φ : StarFormula} (d : ⊢⋆[fc] φ) :
     StarValidIn fc (StarFormula.stab φ) :=
-  star_soundness_validIn ⟨stab_necessitation d⟩
+  star_soundness_validIn ⟨stabNecessitation d⟩
 
 /-- **TM⋆ is consistent at `.Base`**: `⊥` is not a theorem. (Consistency at the wider classes is
 not a corollary, since derivability lifts upward; each would need its own witness frame.) Witness: the trivial frame over `ℤ` with the all-false valuation, mirroring

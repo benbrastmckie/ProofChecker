@@ -148,6 +148,8 @@ that the two-argument form would need.
 translation between the two spellings is needed. Note that no proof theory enters: that `¬X⊤` is
 also `Axiom.dense_indicator` (whose `minFrameClass` is `.Dense` by `rfl`) is rhetorically apt but
 plays no role in the argument.
+
+Paper: `app:dense`
 -/
 theorem galoisClosed_sat_dense :
     GaloisClosed {F : TaskFrame | FrameClass.Sat FrameClass.Dense F} :=
@@ -164,6 +166,8 @@ One application of `galoisClosed_of_indicator_iff` at `φ := X⊤`, handed
 narrowing, and it is *not* Galois-closed: `Metalogic/Independence/LexIntWitness.lean` exhibits a
 frame over `ℤ ×ₗ ℤ` that models every `.ZTime` axiom without being successor-Archimedean.
 Restating this corollary over `Sat .ZTime` would contradict that witness.
+
+Paper: `app:discrete`
 -/
 theorem galoisClosed_isDiscrete :
     GaloisClosed {F : TaskFrame | F.IsDiscrete} :=

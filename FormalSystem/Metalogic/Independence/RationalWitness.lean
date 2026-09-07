@@ -177,6 +177,8 @@ theorem sat_rtime_subset_mod_axiomSet :
 
 Equivalently: `Sat .RTime` is not Galois-closed, since its `Mod (Th ·)` closure contains the
 witness.
+
+Paper: `app:complete`
 -/
 theorem sat_rtime_ssubset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.RTime F} ⊂

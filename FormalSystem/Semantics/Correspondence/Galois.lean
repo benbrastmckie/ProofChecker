@@ -206,7 +206,10 @@ definitionally equal.
 -/
 abbrev GaloisClosed : Set TaskFrame → Prop := Order.IsExtent validOnRel
 
-/-- Every model class is Galois-closed; this is `mod_th_mod` read as a closure statement. -/
+/-- Every model class is Galois-closed; this is `mod_th_mod` read as a closure statement.
+
+Paper: — (formalization-native organizing equivalence behind the three correspondence theorems)
+-/
 theorem galoisClosed_mod (S : Set Formula) : GaloisClosed (Mod S) := Order.isExtent_lowerPolar
 
 /--
@@ -248,6 +251,8 @@ are single applications of this lemma at `(Formula.next Formula.top).neg` and
 Note that no proof theory is involved: `φ` need not be an axiom, and the fact that
 `Axiom.dense_indicator` happens to be the dense case's indicator is rhetorical rather than
 load-bearing.
+
+Paper: — (formalization-native; the indicator mechanism is this tree's, not the paper's)
 -/
 theorem galoisClosed_of_indicator {K : Set TaskFrame} (φ : Formula)
     (hmem : φ ∈ Th K) (hback : ∀ F : TaskFrame, F.ValidOn φ → F ∈ K) : GaloisClosed K :=

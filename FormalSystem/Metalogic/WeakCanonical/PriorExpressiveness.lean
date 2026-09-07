@@ -353,6 +353,8 @@ and it now uses `kampPriorExpressiveCompleteness` instead.
 References:
 - Rabinovich 2014, "A Proof of Kamp's Theorem", Sections 3-5
 - Reynolds 1994, Theorem 5, p.123
+
+Paper: — (external result (Kamp 1968, Reynolds 1992), not a theorem of this paper)
 -/
 noncomputable def uSExpressivelyCompleteOverPrior
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]

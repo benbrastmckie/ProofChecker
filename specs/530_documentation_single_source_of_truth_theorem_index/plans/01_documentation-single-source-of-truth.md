@@ -362,23 +362,28 @@ Re-verify every name resolves and every file path exists before writing the row.
 
 ---
 
-### Phase 6: Paper anchors at the flagship declarations [NOT STARTED]
+### Phase 6: Paper anchors at the flagship declarations [COMPLETED]
 
 **Goal**: Each of the 20 flagship declarations carries a one-line `Paper:` anchor in its own
 `/--` block, or `Paper: —` with a one-clause reason.
 
 **Tasks**:
-- [ ] Add a `/--` doc comment to `FormalSystem.Metalogic.BXCanonical.completeness`, which
-      currently has none.
-- [ ] Add `Paper: thm:TM-soundness` to the four soundness rows and `Paper: cor:tm-completeness`
+- [x] Add a `/--` doc comment to `FormalSystem.Metalogic.BXCanonical.completeness`, which
+      currently has none. *(deviation: skipped — the finding is stale. It has a 20-line `/--`
+      block at `Completeness.lean`; the research measurement found the *quoted copy* of the
+      theorem inside the module `/-!` docstring's ```lean fence, not the declaration. The
+      inserter was made comment-aware so a fenced quotation is never mistaken for a declaration)*
+- [x] Add `Paper: thm:TM-soundness` to the four soundness rows and `Paper: cor:tm-completeness`
       to the four weak-completeness rows, using anchors pinned in
-      `specs/paper-definitions-of-record.md`.
-- [ ] Add `Paper: —` plus a one-clause reason ("formalization-native result; no paper anchor") to
+      `specs/paper-definitions-of-record.md`. *(deviation: altered — eight weak-completeness
+      rows carry `cor:tm-completeness`, not four: the four `BXCanonical` engines and the four
+      `WeakCompleteness` termini are distinct declarations)*
+- [x] Add `Paper: —` plus a one-clause reason ("formalization-native result; no paper anchor") to
       the compactness, non-compactness and consequence-completeness rows — eight of the twelve
       have no anchor to add and this is the correct deliverable, not a gap.
-- [ ] Copy the placement model from `Semantics/TaskFrame.lean` (`def:frame#Spherical`) and
+- [x] Copy the placement model from `Semantics/TaskFrame.lean` (`def:frame#Spherical`) and
       `Semantics/Correspondence/DurationFrames.lean` verbatim.
-- [ ] Cross-check each site against its `docs/theorem-index.md` row.
+- [x] Cross-check each site against its `docs/theorem-index.md` row.
 
 **Timing**: 1.5 hours
 
@@ -388,7 +393,8 @@ Re-verify every name resolves and every file path exists before writing the row.
 
 **Scope Hypothesis**: 20 flagship declaration sites, 0 of which currently carry an anchor in
 their own `/--` block. Re-derive the site list from `docs/theorem-index.md`'s rows at phase
-start rather than from this plan.
+start rather than from this plan. **Re-derived: 52 sites across 22 files**, 0 carrying an
+anchor. 16 carry a real anchor, 36 carry `Paper: —` with a one-clause reason.
 
 **Files to modify**:
 - `FormalSystem/Metalogic/StrongCompleteness.lean`

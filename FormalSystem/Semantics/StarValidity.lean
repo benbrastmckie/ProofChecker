@@ -200,6 +200,8 @@ theorem starValidOnFrames_ofFormula_iff (P : TaskFrame → Prop) (φ : Formula) 
 /--
 **Semantic conservativity of L⋆ over L⁺, at every frame class.** An L⁺ formula is L⋆-valid over
 the frames of `fc` iff it is L⁺-valid over them. `starValidOnFrames_ofFormula_iff` at `fc.Sat`.
+
+Paper: — (formalization-native; the stability extension L-star is not in the paper)
 -/
 theorem starValidIn_ofFormula_iff (fc : ProofSystem.FrameClass) (φ : Formula) :
     StarValidIn fc (ofFormula φ) ↔ ValidIn fc φ :=

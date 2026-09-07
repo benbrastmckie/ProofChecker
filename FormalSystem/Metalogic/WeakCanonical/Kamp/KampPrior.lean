@@ -668,7 +668,10 @@ noncomputable def nfCharacterizableTemporalPrior
     3. A NF is "good" if some (M, t) satisfies both the NF and psi
     4. Result = disjunction of characteristic formulas of good NFs
     5. Forward: if psi holds, the characteristic NF of (M, t) is good
-    6. Backward: if some good NF's formula holds, use `doets_lemma_1_1` to transfer psi -/
+    6. Backward: if some good NF's formula holds, use `doets_lemma_1_1` to transfer psi
+
+    Paper: — (external result (Kamp 1968, Reynolds 1992), not a theorem of this paper)
+    -/
 noncomputable def kampPriorExpressiveCompleteness
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)

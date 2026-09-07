@@ -452,7 +452,10 @@ The `haveI : DenselyOrdered F.Duration := hd` this proof used to carry is gone w
 supported. It existed to feed an instance binder further down the old hand-written argument; the
 skeleton destructures no satisfiability witness here, so there is no `hd` to reinstall.
 
-Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below. -/
+Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below.
+
+Paper: — (formalization-native refutation; the paper states no compactness claim to refute)
+-/
 theorem notCompactRTime : ¬ CompactRTime :=
   not_compact_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
@@ -469,7 +472,10 @@ scope.
 `haveI : DenselyOrdered F.Duration := hd` that fed its instance binder: the skeleton's soundness
 step is the class-generic `soundness_validIn`, inside `compact_of_strongCompleteness`.
 
-Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below. -/
+Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below.
+
+Paper: — (formalization-native refutation; the paper states weak completeness only)
+-/
 theorem notStrongCompletenessRTime : ¬ StrongCompletenessRTime :=
   not_strongCompleteness_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
