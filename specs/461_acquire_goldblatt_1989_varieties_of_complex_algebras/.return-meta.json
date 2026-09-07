@@ -1,8 +1,46 @@
 {
-  "status": "in_progress",
-  "agent_type": "general-implementation-agent",
-  "delegation_path": ["orchestrator", "implement", "general-implementation-agent"],
-  "session_id": "sess_1788809122_cefddd",
+  "status": "implemented",
   "dispatch_seq": 5,
-  "task_number": 461
+  "artifacts": [
+    {
+      "type": "summary",
+      "path": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/summaries/01_goldblatt-1989-zotero-closeout-summary.md",
+      "summary": "Records completion of the Zotero closeout: item MJEB25VU created (DOI-only, no PDF attached due to documented storage-quota overage), verified via authenticated Web-API GET; both corpus index entries linked with zotero_key; the stale first report annotated as superseded; specs/state.json's blocker text corrected; the duplicate PDF left in place pending a non-blocking user decision."
+    }
+  ],
+  "completion_data": {
+    "completion_summary": "Created Zotero item MJEB25VU for Goldblatt 1989 (DOI-only, no PDF attach due to documented ~9.2x storage-quota overage), verified via authenticated Web-API GET, linked zotero_key on both corpus index entries, annotated the stale first report as superseded, and corrected specs/state.json's blocker text to reflect that acquisition and Zotero steps are both complete."
+  },
+  "modified_files": [
+    "/home/benjamin/Projects/Literature/index.json",
+    "specs/literature-index.json",
+    "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-feasibility.md",
+    "specs/state.json",
+    "specs/TODO.md",
+    "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/summaries/01_goldblatt-1989-zotero-closeout-summary.md",
+    "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/.return-meta.json"
+  ],
+  "memory_candidates": [
+    {
+      "content": "The zotero-cli-cc `zot` binary resolved by $PATH via a Nix/home-manager profile can fail all subcommands with ModuleNotFoundError: No module named 'httpx' (import-time failure in zotero_cli_cc/cli.py's add-chain), while a separately-installed uv tool binary (~/.local/share/uv/tools/zotero-cli-cc/bin/zot) works correctly. Since zotero-write.sh resolves zot via `command -v`, a dispatch-scoped PATH prefix (PATH=\"$HOME/.local/share/uv/tools/zotero-cli-cc/bin:$PATH\") routes around the defect without any script edit or Nix/home-manager change. Also: `zot`'s read commands (read/search) query local SQLite only, so an item created via the Web API is invisible to them until a desktop client syncs -- verification of a freshly-created Zotero item must use an authenticated Web-API GET, never zot read/search.",
+      "category": "TECHNIQUE",
+      "source_artifact": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/summaries/01_goldblatt-1989-zotero-closeout-summary.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["zotero", "zot-cli", "httpx", "PATH-prefix", "web-api-verification", "sync-lag"]
+    }
+  ],
+  "user_decision": {
+    "question": "specs/literature/1-s2.0-0168007289900328-main.pdf is a redundant duplicate download of Goldblatt 1989 -- the same paper already lives durably in the corpus at ~/Projects/Literature/sources/goldblatt_1989/. It is gitignored and untracked, so deleting it is not git-recoverable. Should it be deleted or left in place?",
+      "options": ["Leave in place", "Delete"],
+      "recommended": "Leave in place",
+      "blocking": false
+  },
+  "metadata": {
+    "session_id": "sess_1788809122_cefddd",
+    "agent_type": "general-implementation-agent",
+    "delegation_depth": 2,
+    "delegation_path": ["orchestrator", "implement", "general-implementation-agent"],
+    "phases_completed": 5,
+    "phases_total": 5
+  }
 }

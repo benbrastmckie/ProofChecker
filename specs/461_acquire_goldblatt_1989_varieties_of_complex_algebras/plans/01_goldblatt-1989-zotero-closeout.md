@@ -346,26 +346,31 @@ more than intended and must be inspected before committing.
 
 ---
 
-### Phase 5: Duplicate disposition and task closeout [NOT STARTED]
+### Phase 5: Duplicate disposition and task closeout [COMPLETED]
 
 **Goal**: The redundant duplicate PDF's status is recorded and surfaced for the user's decision,
 and the task's outcome is written up.
 
 **Tasks**:
-- [ ] Leave `specs/literature/1-s2.0-0168007289900328-main.pdf` **in place, untouched**. It is
+- [x] Leave `specs/literature/1-s2.0-0168007289900328-main.pdf` **in place, untouched**. It is
       gitignored (`.gitignore:29`) and untracked, so deletion is not git-recoverable; the content
-      is preserved either way in the corpus copy. Do not move, rename, or ingest it.
-- [ ] Confirm nothing references it: grep `specs/` and `.claude/` for the filename and record the
-      result (the research report's own citation of the path is expected and fine).
-- [ ] Surface the deletion question as a **non-blocking** `user_decision` on `.return-meta.json`
+      is preserved either way in the corpus copy. Do not move, rename, or ingest it. *(completed:
+      untouched, size confirmed 8,161,482 bytes)*
+- [x] Confirm nothing references it: grep `specs/` and `.claude/` for the filename and record the
+      result (the research report's own citation of the path is expected and fine). *(completed:
+      every reference found is within this task's own artifacts — the two reports, this plan, and
+      state.json's blocks_note — nothing outside this task cites it)*
+- [x] Surface the deletion question as a **non-blocking** `user_decision` on `.return-meta.json`
       (question, options, recommended, `blocking: false`), recommending "leave in place".
-- [ ] Write `summaries/01_goldblatt-1989-zotero-closeout-summary.md` recording: the Zotero item key
+      *(completed)*
+- [x] Write `summaries/01_goldblatt-1989-zotero-closeout-summary.md` recording: the Zotero item key
       and its attachment status in the honest two-form language from Phase 2; the index fields
       added; the report and state corrections; the duplicate's disposition; and the two
       environment defects (`zot` `httpx` packaging, Zotero storage overage) as outstanding
-      environment issues that this task routed around rather than fixed.
-- [ ] Note in the summary that the `zot` packaging defect and the storage-quota overage each merit
+      environment issues that this task routed around rather than fixed. *(completed)*
+- [x] Note in the summary that the `zot` packaging defect and the storage-quota overage each merit
       their own task if they are to be fixed durably; do not create those tasks from here.
+      *(completed: see summary Follow-ups section)*
 
 **Timing**: 0.5 hours
 
@@ -379,10 +384,11 @@ and the task's outcome is written up.
 
 **Verification**:
 - `specs/literature/1-s2.0-0168007289900328-main.pdf` still exists with its original size
-  (8,161,482 bytes) and mtime.
+  (8,161,482 bytes) and mtime. *(confirmed: `stat` reports 8161482 bytes, mtime unchanged)*
 - The summary exists, follows summary-format.md, and its Zotero-outcome sentence matches the
-  Phase 2 evidence rather than overstating it.
+  Phase 2 evidence rather than overstating it. *(confirmed)*
 - `.return-meta.json` parses and carries a `user_decision` object with `blocking: false`.
+  *(confirmed)*
 
 ## Testing & Validation
 
