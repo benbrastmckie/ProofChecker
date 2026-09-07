@@ -1,16 +1,29 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "dispatch_seq": 4,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/531_docgen_publication_and_automation_suite_triage/reports/01_docgen-publication-automation-triage.md",
-      "summary": "Measured current state of all seven WAVE 5 work items: task 530 already landed references.bib/CITATION.cff/ARCHITECTURE.md and 105 pinned axiom sets; docgen-action supplies doc-gen4 without a lakefile require but its homepage default collides with docs/; SearchConfig weights are write-only so three search tactics are behaviourally identical to modal_search; the claimed fully-qualified-name duplication is private-resolved and not a defect; 17 shadowing pairs, 107 Uppercase_x names (only ~30 renameable), 88 live lemma declarations."
+      "type": "plan",
+      "path": "specs/531_docgen_publication_and_automation_suite_triage/plans/01_docgen-publication-automation-triage.md",
+      "summary": "17-phase, 27.5-hour plan across four independent workstreams (publication, bibliography, automation triage, naming), built on the research report's eight corrections to the dispatch's stale anchors."
     }
   ],
   "metadata": {
     "session_id": "sess_1788808508_a5588d_531",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 17,
+    "estimated_hours": 27.5,
+    "dependency_waves": [[1,3,9],[2,4,10],[5,11],[6,12],[7,13],[8],[14],[15],[16],[17]]
+  },
+  "memory_candidates": [
+    {
+      "content": "When a repository already pins a machine-checked baseline (e.g. an axiom-set baseline diffed on every CI run), a new navigation or summary artifact that restates a subset of the pinned declarations should be guarded by a SUBSET ASSERTION against the existing baseline, not by introducing a second parallel baseline. The subset assertion (~15 lines: extract the names the artifact mentions, assert each appears in the existing pin) makes it impossible for the artifact to advertise an unpinned result, while a second baseline doubles the drift surface and creates two sources of truth that can disagree. Detection cue: a task description asking for a 'summary page wired into the existing check so drift fails the build' often reads as 'add a baseline' when the correct reading is 'assert containment in the baseline that already exists'.",
+      "category": "PATTERN",
+      "source_artifact": "specs/531_docgen_publication_and_automation_suite_triage/plans/01_docgen-publication-automation-triage.md",
+      "confidence": 0.75,
+      "suggested_keywords": ["subset-assertion", "baseline-drift", "invariant-check", "anti-drift", "navigation-artifact", "single-source-of-truth"]
+    }
+  ]
 }

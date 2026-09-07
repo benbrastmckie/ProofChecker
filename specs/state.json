@@ -1232,7 +1232,7 @@
     {
       "project_number": 531,
       "project_name": "docgen_publication_and_automation_suite_triage",
-      "status": "researched",
+      "status": "planned",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -1261,12 +1261,17 @@
         "FormalSystem/Metalogic/Algebraic/FlowFrame.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-07T21:24:00Z",
+      "last_updated": "2026-09-07T21:32:49Z",
       "artifacts": [
         {
           "path": "specs/531_docgen_publication_and_automation_suite_triage/reports/01_docgen-publication-automation-triage.md",
           "type": "report",
           "summary": "Measured current state of all seven WAVE 5 work items: task 530 already landed references.bib/CITATION.cff/ARCHITECTURE.md and 105 pinned axiom sets; docgen-action supplies doc-gen4 without a lakefile require but its homepage default collides with docs/; SearchConfig weights are write-only so three search tactics are behaviourally identical to modal_search; the claimed fully-qualified-name duplication is private-resolved and not a defect; 17 shadowing pairs, 107 Uppercase_x names (only ~30 renameable), 88 live lemma declarations."
+        },
+        {
+          "path": "specs/531_docgen_publication_and_automation_suite_triage/plans/01_docgen-publication-automation-triage.md",
+          "type": "plan",
+          "summary": "17-phase, 27.5-hour plan across four independent workstreams (publication, bibliography, automation triage, naming), built on the research report's eight corrections to the dispatch's stale anchors."
         }
       ],
       "session_id": "sess_1788808508_a5588d",
