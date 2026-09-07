@@ -50,6 +50,26 @@ re-derives every hash below directly from the live paper file on every run.
 <!-- FILE_CHECKSUM: 7303bc9e8529b84f881b17b6f0ef3027f104a6c9ab91315c573a15e00bac0143 -->
 <!-- LINE_COUNT: 4867 -->
 
+### Anchor classification (2026-09-07): four `LIVE-UNPINNED` rows for the C15 gate
+
+`scripts/check-module-invariants.sh`'s **C15** was the sole failing check group, reporting four
+paper-anchor citations resolving to nothing here. All four were re-measured against the live
+`.tex` and against the paper repository's `HEAD`, and all four resolve to live, non-commented
+`\label{}` targets in both — so all four are recorded `LIVE-UNPINNED`, none `DANGLING`, and no
+citation site needed correcting:
+
+| Anchor | Paper environment | Cited by | Why unpinned |
+|---|---|---|---|
+| `app:ObjectiveModality` | `\subsection{Objective Modality}%` with the label on the following line | `FormalSystem/BaseLanguage/Axioms.lean` | **Structurally unpinnable.** `resolve_env` reads the environment name off the same line as the `\label{}`, so a sectioning label on its own line can never resolve. Same shape as the already-recorded `app:TaskSemantics`. |
+| `app:drift` | `Tthm` | `Independence/DriftFrame.lean`, `Independence/RealTranslationFrame.lean` | Pinnable in principle, useless in practice: the `Tthm` block carries only the statement, while the text `DriftFrame.lean` actually engages with — the `λ ≔ (v − w)/(x + y)` interpolation and the compactness/finite-intersection *Saturation* argument — sits in the `\begin{proof}` block *after* `\end{Tthm}`, which `resolve_env` does not capture. A pin would hash text the tree never quotes. |
+| `cor:no-characterization` | `Cthm` | `Independence/README.md`, `Independence/DriftFrame.lean`, `Independence/StateSetTruth.lean`, `Independence/RealTranslationFrame.lean` | Cited by name only. |
+| `lem:deterministic-singleton` | `Lthm` | `Independence/RealTranslationFrame.lean`, `Independence/StateSetTruth.lean` | Cited by name only; `StateSetTruth.lean` names its choice-free (⇒) direction but quotes no text. |
+
+`app:ObjectiveModality` entered the cited set with the `Axioms.lean` paper-name correspondence
+table; the other three entered with the `Metalogic/Independence/` frames. No manifest row, no
+`FILE_CHECKSUM` sentinel, and no `PINNED_COMMIT` sentinel is touched by this wave — nothing
+drifted, so there is nothing to re-pin.
+
 ### Rename absorption (2026-09-02): `Spherical` → `Saturation`
 
 The paper renamed its fourth task-frame axiom from *Spherical* to *Saturation*, moving both
@@ -1472,14 +1492,18 @@ Two statuses:
 <!-- KNOWN-ANCHORS:BEGIN -->
 ```
 # anchor_id|status|note
+app:ObjectiveModality|LIVE-UNPINNED|section label for the objective-modality appendix; cited as a pointer. STRUCTURALLY UNPINNABLE: resolve_env reads the environment name off the same line as the \label{}, and this label sits on its own line under a \subsection{...}% — the app:TaskSemantics precedent
 app:TaskSemantics|LIVE-UNPINNED|section label for the task-semantics appendix; cited as a pointer
 app:auto_existence|LIVE-UNPINNED|automorphism existence; cited as a pointer, text never quoted
 app:deterministic|LIVE-UNPINNED|determinism CORRESPONDENCE theorem, not the definition; the definition is def:deterministic, which IS pinned
+app:drift|LIVE-UNPINNED|the non-deterministic drift frame theorem (Tthm); DriftFrame.lean discusses its PROOF (the interpolation and the compactness/finite-intersection Saturation argument), which lives in the \begin{proof} block outside the Tthm and so is not what a pin would hash; the statement itself is cited as a pointer
 app:topology-r0|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
 app:topology-t1|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
+cor:no-characterization|LIVE-UNPINNED|the no-characterization corollary (Cthm); cited as a pointer, text never quoted
 cor:perpetuity-valid|LIVE-UNPINNED|perpetuity principles valid; the live anchor that replaced the never-existent app:valid
 def:BL-language|LIVE-UNPINNED|the BL language; cited as a pointer alongside the pinned def:BLplus-language
 def:task-topology|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
+lem:deterministic-singleton|LIVE-UNPINNED|deterministic-frame singleton fibers (Lthm); cited as a pointer (StateSetTruth.lean names its choice-free direction but quotes no text)
 lem:history-time-shift-preservation|LIVE-UNPINNED|time-shift preservation; cited as a pointer
 app:nonempty|DANGLING|merged by the paper into cor:occurrence; cited only where the tree records the merge
 app:valid|DANGLING|NEVER EXISTED; earlier revisions cited it at a bogus line number, corrected to cor:perpetuity-valid

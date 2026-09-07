@@ -131,23 +131,23 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 2: Add the LIVE-UNPINNED rows and the dated narrative line [NOT STARTED]
+### Phase 2: Add the LIVE-UNPINNED rows and the dated narrative line [COMPLETED]
 
 - **Goal:** Record the measured anchors in `specs/paper-definitions-of-record.md` so C15 resolves.
 - **Tasks:**
-  - [ ] Insert one row per anchor inside `<!-- KNOWN-ANCHORS:BEGIN -->` / `<!-- KNOWN-ANCHORS:END -->`,
+  - [x] Insert one row per anchor inside `<!-- KNOWN-ANCHORS:BEGIN -->` / `<!-- KNOWN-ANCHORS:END -->`,
         in the block's existing ASCII-sorted LIVE-UNPINNED-then-DANGLING ordering, format
         `anchor_id|status|note`:
         - `app:ObjectiveModality` before `app:TaskSemantics`
         - `app:drift` between `app:deterministic` and `app:topology-r0`
         - `cor:no-characterization` before `cor:perpetuity-valid`
         - `lem:deterministic-singleton` before `lem:history-time-shift-preservation`
-  - [ ] Write each note to state *why* the anchor is unpinned rather than manifest-pinned — cited
+  - [x] Write each note to state *why* the anchor is unpinned rather than manifest-pinned — cited
         by name only, or (for `app:ObjectiveModality`) structurally unpinnable because
         `resolve_env` requires `\begin{...}` on the `\label{}` line.
-  - [ ] Add a dated line to the record's prose narrative recording the classification decision,
+  - [x] Add a dated line to the record's prose narrative recording the classification decision,
         matching the format of earlier waves.
-  - [ ] Confirm no manifest row, `FILE_CHECKSUM`, or `PINNED_COMMIT` sentinel was touched
+  - [x] Confirm no manifest row, `FILE_CHECKSUM`, or `PINNED_COMMIT` sentinel was touched
         (`git diff` on the record shows changes only inside `KNOWN-ANCHORS` and the narrative).
 - **Timing:** 20 minutes
 - **Depends on:** 1
