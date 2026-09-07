@@ -1247,7 +1247,7 @@
     {
       "project_number": 539,
       "project_name": "linter_debt_burndown_nolints_dupnamespace",
-      "status": "researching",
+      "status": "researched",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1261,9 +1261,16 @@
         "FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T19:26:07Z",
-      "artifacts": [],
-      "session_id": "sess_1788809122_cefddd_539"
+      "last_updated": "2026-09-07T19:41:35Z",
+      "artifacts": [
+        {
+          "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
+          "type": "report",
+          "summary": "Measured linter-debt baseline (307 nolints + 14 dupNamespace); both concrete fixes prototyped and compile-verified then reverted; recommends nolints.json 307 -> 217 with unusedArguments permanently grandfathered on 95.4%-instance-argument evidence."
+        }
+      ],
+      "session_id": "sess_1788809122_cefddd",
+      "next_artifact_number": 2
     },
     {
       "project_number": 540,

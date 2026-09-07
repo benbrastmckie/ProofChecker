@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
+      "summary": "Measured linter-debt baseline (307 nolints + 14 dupNamespace); both concrete fixes prototyped and compile-verified then reverted; recommends nolints.json 307 -> 217 with unusedArguments permanently grandfathered on 95.4%-instance-argument evidence."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788809122_cefddd_539",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

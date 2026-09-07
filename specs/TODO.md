@@ -111,7 +111,7 @@ next_project_number: 549
 
 ### Infrastructure
 
-539 [RESEARCHING] — Draw down the linter debt that the CI/linter-gates work recorded 
+539 [RESEARCHED] — Draw down the linter debt that the CI/linter-gates work recorded 
 541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
@@ -213,10 +213,11 @@ next_project_number: 549
 ---
 
 ### 539. Linter debt burndown nolints dupnamespace
-- **Status**: [RESEARCHING]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529
+- **Research**: [539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md]
 
 **Description**: Draw down the linter debt that the CI/linter-gates work recorded rather than fixed. MEASURED STATE: `lint: true` is live in CI via scripts/nolints.json, Batteries' standard grandfathering mechanism -- the full env_linter batch runs and fails only on NEW findings, while 307 pre-existing findings are suppressed by that checked-in file. The 307 break down as unusedArguments=217, docBlame=51, defsWithUnderscore=33, tacticDocs=4, simpNF=1, structureInType=1. Separately, dupNamespace (a Lean-core syntax linter, architecturally distinct from the Batteries env_linter family and unreachable by the driver, so nolints.json cannot cover it) reports 14 findings, all in FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean, where `structure Chronicle` is declared inside `namespace ...Chronicle` so every field projection and the `.mk` constructor double-namespaces (Chronicle.Chronicle.dom, .f, .g, .c0..c5', etc.). C16 in check-module-invariants.sh reports the dupNamespace count via a live textual scan and does not gate on it. WORK: (1) fix the single simpNF finding, `length_range_map` in FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean (a 'simp can prove this' duplicate-lemma notice). (2) Fix the 14 dupNamespace findings by renaming the Chronicle structure out of its same-named namespace, updating every projection site. (3) Decide and record a policy for the remaining nolints.json entries: either burn down whole linter categories (docBlame's 51 and defsWithUnderscore's 33 are the tractable ones; unusedArguments' 217 is the bulk and may be largely legitimate for instance-argument-heavy signatures), or document explicitly which categories are permanently grandfathered and why. After any fix, regenerate nolints.json with `lake exe runLinter --update FormalSystem` -- but only after confirming every remaining entry is intentional, since --update grandfathers everything currently reported including a genuine regression. ACCEPTANCE: simpNF and dupNamespace both report zero findings; scripts/nolints.json shrinks by at least the categories the recorded policy commits to; plain `lake lint` still exits 0; C16 reports zero dupNamespace findings via its textual scan.
 
