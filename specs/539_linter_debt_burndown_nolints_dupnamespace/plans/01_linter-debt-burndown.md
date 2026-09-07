@@ -365,13 +365,13 @@ Confirm by re-running the `jq` enumeration and classifying each entry at impleme
 
 ---
 
-### Phase 6: `docBlame` residue + `tacticDocs`, and drop both categories [NOT STARTED]
+### Phase 6: `docBlame` residue + `tacticDocs`, and drop both categories [COMPLETED]
 
 **Goal**: Clear the remaining 18 `docBlame` findings and all 4 `tacticDocs` findings, then remove
 both categories from `nolints.json`.
 
 **Tasks**:
-- [ ] **Tactic-syntax docstrings (5 entries, also clears all 4 `tacticDocs`)**: in
+- [x] **Tactic-syntax docstrings (5 entries, also clears all 4 `tacticDocs`)**: in
       `FormalSystem/Automation/Tactics/Commands.lean`, each search tactic is declared twice — a
       bare-`num` form and a named-parameter form. Only the first of each pair inherits the
       preceding `/-- … -/`; the second gets an auto-disambiguated name
@@ -379,15 +379,15 @@ both categories from `nolints.json`.
       `tacticTm_auto_`, plus `modalSearchParam`) and no docstring. Add a docstring to the second
       `syntax` command of each pair. Re-derive the declaration sites with
       `grep -n "syntax" FormalSystem/Automation/Tactics/Commands.lean`.
-- [ ] **`QZStructure` + `.interp` / `.toMonadic` / `.toOrdered` (4)**: add docstrings.
-- [ ] **Plain defs (6)**: add docstrings to `decidableValidZTime`, `decidableValidZTimeFamily`,
+- [x] **`QZStructure` + `.interp` / `.toMonadic` / `.toOrdered` (4)**: add docstrings.
+- [x] **Plain defs (6)**: add docstrings to `decidableValidZTime`, `decidableValidZTimeFamily`,
       `goodGroupable`, `nextConj`, `noBlockingTriple`, `IsContempEquivDenseCD`.
-- [ ] **`where`-clause auto-helpers (3)**: `bestFirstSearch.searchLoop`, `iddfsSearch.iterate`,
+- [x] **`where`-clause auto-helpers (3)**: `bestFirstSearch.searchLoop`, `iddfsSearch.iterate`,
       `PriorityQueue.insert.insertSorted` cannot carry a docstring at all. Add an in-source
       `attribute [nolint docBlame] <name>` at the enclosing declaration, with the reason stated in
       a comment at the site. (Research verified with `lean_run_code` that Lean accepts this
       attribute form on a `where`-generated name.)
-- [ ] Drop both categories:
+- [x] Drop both categories:
       `jq 'map(select(.[0] == "docBlame" | not)) | map(select(.[0] == "tacticDocs" | not))' scripts/nolints.json > /tmp/n.json && mv /tmp/n.json scripts/nolints.json`
 
 **Timing**: 1.5 hours

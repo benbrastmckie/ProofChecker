@@ -80,6 +80,8 @@ theorem validZTime_iff_check
     · exact absurd hv (not_validZTime_of_satAtState _ w φ ((check_correct _ _ _).mp h))
     · exact h
 
+/-- Decision procedure for `ValidZTime`, given a canonical presentation `canon` and a
+finite-model-property witness `fmp` supplying a refuting state whenever validity fails. -/
 def decidableValidZTime
     (canon : Formula → IntPresentation)
     (fmp : ∀ ψ : Formula, ¬ ValidZTime ψ → ∃ w, SatAtState (canon ψ) w ψ.neg)
@@ -104,6 +106,8 @@ theorem validZTime_iff_checkFamily
     · exact absurd hv (not_validZTime_of_satAtState P w φ ((check_correct _ _ _).mp h))
     · exact h
 
+/-- Decision procedure for `ValidZTime` against a *family* of candidate presentations:
+the finite-model-property witness may name any presentation in `cands ψ`. -/
 def decidableValidZTimeFamily
     (cands : Formula → List IntPresentation)
     (fmp : ∀ ψ : Formula, ¬ ValidZTime ψ →

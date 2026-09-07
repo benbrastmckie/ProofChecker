@@ -224,6 +224,7 @@ def unfoldBackward (e g : Formula) :
 Needed to move between the schema's `X (g ∧ U(e,g))` and handoff §4.4's table shape
 `g ∈ u ∧ U(e,g) ∈ u`.  The `←` direction is event monotonicity; the `→` direction below is
 the functionality of the successor, and it is derivable at `Base` from `Axiom.linear_until`. -/
+/-- `⊢ (XA ∧ XB) → X(A ∧ B)`: the next-operator distributes over conjunction. -/
 def nextConj {fc : FrameClass} (A B : Formula) :
     ⊢[fc] ((Formula.next A).and (Formula.next B)).imp (Formula.next (Formula.and A B)) := by
   set T := Formula.next (Formula.and A B) with hT
@@ -323,6 +324,8 @@ successor carry `p` or carry `q` together with `U(p,q)`, and the other two forbi
 At `FrameClass.ZTime` that pattern is *derivably* inconsistent, so no such `w` exists.  At
 `FrameClass.Base` — where the closure MCS layer actually lives — this derivation is unavailable,
 because `unfoldForward` is. -/
+/-- `⊢ U(q,p) → (U(r,p) ∨ U(s,q))` at `ZTime`: the blocking pattern that would obstruct a
+Lindenbaum-style construction of `filteredStep_fwd` is derivably inconsistent. -/
 def noBlockingTriple (p q r s : Formula) :
     ⊢[FrameClass.ZTime]
       (Formula.untl q p).imp ((Formula.untl r p).or (Formula.untl s q)) := by

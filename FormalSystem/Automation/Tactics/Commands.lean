@@ -115,7 +115,12 @@ terms directly via `mkAppM` rather than returning proof witnesses.
 syntax "modal_search" (num)? : tactic
 
 -- Named parameters syntax
+/-- A named search parameter, written `(name := value)`, as accepted by the
+`modal_search` / `temporal_search` / `propositional_search` tactics. -/
 syntax modalSearchParam := "(" ident " := " num ")"
+
+/-- `modal_search (depth := n) (visitLimit := m) …` — the named-parameter form of
+`modal_search`, overriding individual fields of the default `SearchConfig`. -/
 syntax "modal_search" modalSearchParam* : tactic
 
 /-- Parse named parameter value from TSyntax -/
@@ -189,6 +194,9 @@ example (p : Formula) : ⊢ (p.imp (p.somePast.allFuture)) := by
 ```
 -/
 syntax "temporal_search" (num)? : tactic
+
+/-- `temporal_search (depth := n) (visitLimit := m) …` — the named-parameter form of
+`temporal_search`, overriding individual fields of the temporal `SearchConfig`. -/
 syntax "temporal_search" modalSearchParam* : tactic
 
 /-- Run temporal_search with given configuration -/
@@ -248,6 +256,9 @@ example (p q : Formula) : [p, p.imp q] ⊢ q := by
 - Otherwise identical behavior
 -/
 syntax "propositional_search" (num)? : tactic
+
+/-- `propositional_search (depth := n) (visitLimit := m) …` — the named-parameter form of
+`propositional_search`, overriding individual fields of the propositional `SearchConfig`. -/
 syntax "propositional_search" modalSearchParam* : tactic
 
 /-- Run propositional_search with given configuration -/
@@ -302,6 +313,8 @@ configuration (depth, visitLimit, etc.), users can use `modal_search` directly w
 named parameters like `modal_search (depth := 20)`.
 -/
 
+/-- `tm_auto` / `tm_auto n` — alias for `modal_search` at default depth 10, or at depth `n`.
+Kept as a separate entry point for migration from the previous Aesop-based implementation. -/
 syntax "tm_auto" (num)? : tactic
 
 elab_rules : tactic

@@ -1271,5 +1271,9 @@ def iddfsSearch (Γ : Context) (φ : Formula) (maxDepth : Nat := 100)
   termination_by maxDepth - depth
   iterate 0 ProofCache.empty {} 0
 
+-- `iterate` is a `let rec`-generated auxiliary of `iddfsSearch`; Lean synthesizes the
+-- declaration, so no docstring can be attached at its (nonexistent) source position.
+attribute [nolint docBlame] iddfsSearch.iterate
+
 
 end FormalSystem.Automation

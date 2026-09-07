@@ -61,6 +61,11 @@ def insert (q : PriorityQueue) (node : SearchNode) : PriorityQueue :=
         else h :: insertSorted t
   insertSorted q
 
+-- `insertSorted` is a `where`/`let rec`-generated auxiliary of `PriorityQueue.insert`. Lean
+-- generates the declaration itself, so there is no source position at which a docstring could
+-- be attached; the exemption is recorded here instead of in `scripts/nolints.json`.
+attribute [nolint docBlame] PriorityQueue.insert.insertSorted
+
 /-- Extract the minimum f-score node. -/
 def extractMin (q : PriorityQueue) : Option (SearchNode × PriorityQueue) :=
   match q with
@@ -181,6 +186,10 @@ def bestFirstSearch (Γ : Context) (φ : Formula)
 
   -- Use maxExpansions * 10 as fuel (allows for skipped visited nodes)
   searchLoop initQueue ProofCache.empty Visited.empty {} 0 (maxExpansions * 10)
+
+-- `searchLoop` is a `let rec`-generated auxiliary of `bestFirstSearch`; the declaration is
+-- synthesized by Lean, so no docstring can be attached at its (nonexistent) source position.
+attribute [nolint docBlame] bestFirstSearch.searchLoop
 
 /-!
 ## Search Strategy Configuration

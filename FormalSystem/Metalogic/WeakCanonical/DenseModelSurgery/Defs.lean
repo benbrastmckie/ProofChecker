@@ -152,7 +152,7 @@ introduced; `ContempEquivDense` is the §6 notion, parameterized by `ε`.
 - Reynolds 1992, §5, printed p.176 (the uniformity remark)
 - `uSExpressivelyCompleteOverDensePrior` (`PriorExpressivenessDense.lean:302`) — Reynolds §5
   Theorem 3, the input to Lemma 2
-- `MonadicFormula.rename` / `eval_rename` (`Kamp/Prop43Translate.lean:109`, `:130`) — the variable
+- `MonadicFormula.rename` / `eval_rename` (`Kamp/Prop43Translate.lean:109`) — the variable
   reindexing `ρ` and `λ` are assembled with
 -/
 
@@ -282,8 +282,8 @@ printed p.176, all three clauses.
 
 Clause (i) is split into `refl` / `symm` / `trans` with the class restriction riding on `trans`
 alone. That is not a convenience: it is measured against the only `ε` §8 produces. `simDense_refl`
-(`RealModel/EpsilonDense.lean:136`), `simDense_symm` (`:140`), `simDense_convex` (`:199`) and
-`simDense_contemporary` (`:673`) carry **no** instance hypotheses, and `simDense_trans` (`:988`) is
+(`RealModel/EpsilonDense.lean:136`), `simDense_symm`, `simDense_convex` and
+`simDense_contemporary` carry **no** instance hypotheses, and `simDense_trans` is
 the sole one that does. Transitivity is exactly what fails away from a countable dense flow — the
 `(0,1]` counterexample in `EpsilonDense`'s module header. So `refl` and `symm` are left free of the
 class entirely, which is what keeps the dual transport's own `refl`/`symm` branches from needing
@@ -414,7 +414,7 @@ hypotheses are exactly the gap: `IsContempEquivDenseCD` bundles clause (i) as a 
 recovered.
 
 For the one `ε` §8 produces both are available and neither is an extra assumption:
-`simDense_refl` (`RealModel/EpsilonDense.lean:136`) and `simDense_symm` (`:140`) carry no instance
+`simDense_refl` (`RealModel/EpsilonDense.lean:136`) and `simDense_symm` carry no instance
 hypotheses. So `epsDense` satisfies
 `IsContempEquivDenseOn (epsDense sig k) (CountableDense sig)` outright; assembling that witness
 belongs with `epsDense_isContempEquivDenseCD` in `EpsilonDense.lean` and is deliberately left to

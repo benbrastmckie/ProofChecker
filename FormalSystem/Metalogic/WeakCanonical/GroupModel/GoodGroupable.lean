@@ -51,12 +51,12 @@ section); this module consumes that transcription rather than repeating it.
 Two sibling modules, both **read, not edited**, by this one:
 
 * `FormalSystem/Metalogic/WeakCanonical/IntegerModel/GoodStructures.lean` — the `ℤ` analogue:
-  `ZIntervalStructure` (`:35`), `ZIntervalStructure.toOrdered` (`:65`), `good` (`:78`),
-  `VeryGood` (`:86`), for Reynolds' *discrete* development (Lemma 14, printed p.190).
+  `ZIntervalStructure`, `ZIntervalStructure.toOrdered`, `good`,
+  `VeryGood`, for Reynolds' *discrete* development (Lemma 14, printed p.190).
 * `FormalSystem/Metalogic/WeakCanonical/RealModel/GoodDense.lean` — the `ℝ` analogue:
-  `RIntervalStructure` (`:175`), `goodDense` (`:237`), `veryGoodDense` (`:251`), for §8's dense
-  development (Lemma 11, printed pp.185-186). `noMaxOrder_of_kEquiv` (`:469`) and
-  `noMinOrder_of_kEquiv` (`:485`) are proved there and used here.
+  `RIntervalStructure`, `goodDense`, `veryGoodDense`, for §8's dense
+  development (Lemma 11, printed pp.185-186). `noMaxOrder_of_kEquiv` and
+  `noMinOrder_of_kEquiv` are proved there and used here.
 
 What is mirrored from them is the **API shape** — the `structure`/`toMonadic`/`toOrdered`
 triple, the `∃`-shaped `good…` predicate with the target on the right of the `KEquiv`, the
