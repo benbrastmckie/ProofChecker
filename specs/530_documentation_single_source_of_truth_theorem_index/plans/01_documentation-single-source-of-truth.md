@@ -719,19 +719,23 @@ convention), and their source sites carry pointers instead of duplicated rationa
 
 ---
 
-### Phase 14: Sentence-level duplication detection [NOT STARTED]
+### Phase 14: Sentence-level duplication detection [COMPLETED]
 
 **Goal**: C18 gains a sentence-level shingle pass, and the two surviving cross-file duplicates
 are removed.
 
 **Tasks**:
-- [ ] Add a sentence-boundary shingle pass (minimum 15 words) to C18 over `README.md`,
+- [x] Add a sentence-boundary shingle pass (minimum 15 words) to C18 over `README.md`,
       `FormalSystem/Metalogic.lean`, and the other status surfaces; widen C18, do not add a C21.
-- [ ] Remove the duplicate at `README.md:270` / `Metalogic.lean:153` ("single mechanism by which
-      closure is shown").
-- [ ] Remove the duplicate at `README.md:283` / `Metalogic.lean:164` ("`Mod (AxiomSet .Discrete)`
+- [x] Remove the duplicate at `README.md:270` / `Metalogic.lean:153` ("single mechanism by which
+      closure is shown"). *(deviation: altered — the sentence pass does **not** see this one: the
+      two copies sit inside sentences with different openings, so no 15-word shingle matches.
+      Removed by inspection, together with the whole duplicated Galois essay in
+      `Metalogic.lean`, which now carries the claim plus a pointer to `README.md`'s exposition
+      and `docs/theorem-index.md`'s status.)*
+- [x] Remove the duplicate at `README.md:283` / `Metalogic.lean:164` ("`Mod (AxiomSet .Discrete)`
       and `Mod (AxiomSet .Dedekind)` remain open").
-- [ ] Confirm the paragraph-level pass is retained unchanged; it is still the right detector for
+- [x] Confirm the paragraph-level pass is retained unchanged; it is still the right detector for
       wholesale copy-paste.
 
 **Timing**: 1.5 hours
@@ -742,6 +746,10 @@ are removed.
 
 **Scope Hypothesis**: exactly two sentence-level duplicates survive (research §3.1 found two of
 the description's four). The widened C18's own output at phase start is authoritative.
+**Re-derived: the widened C18 sees exactly one** of the two; the other is a near-duplicate
+below the shingle's resolution and was removed by inspection. A stale claim was found in the
+same passage and fixed: `Metalogic.lean` called Dedekind strong completeness "unresolved" when
+`notStrongCompletenessRTime` refutes it.
 
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - C18 sentence pass

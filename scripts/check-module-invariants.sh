@@ -34,8 +34,9 @@
 #   C17 Dead-declaration scan: base identifiers with zero occurrences outside their
 #       own declaring line, across FormalSystem/ + Tests/ + repo-wide markdown
 #       (REPORTED, not gated)
-#   C18 Duplicated paragraphs across README.md, FormalSystem/README.md,
-#       FormalSystem/Metalogic/README.md and FormalSystem/Metalogic.lean
+#   C18 Duplicated prose across README.md, FormalSystem/README.md,
+#       FormalSystem/Metalogic/README.md and FormalSystem/Metalogic.lean, at two
+#       granularities: whole paragraphs, and sentences of 15+ words
 #       (REPORTED, not gated)
 #   C19 Docstring-coverage floor (90%), G-12 heuristic refined with a /-!
 #       section-comment credit (REPORTED, not gated; 90% floor, never fails)
@@ -2061,7 +2062,9 @@ echo
 # and horizontal rules are excluded (they are structure, not prose), and
 # paragraphs under 40 normalised characters are excluded to keep the census
 # aimed at substantial copy-paste duplication rather than short, legitimately
-# repeated phrases. No ENFORCE_C18 flag -- reporting-only per the delegation.
+# repeated phrases. A second pass, at sentence granularity, follows it; see the
+# comment there for why the paragraph pass alone is not enough. No ENFORCE_C18
+# flag -- reporting-only per the delegation.
 # ---------------------------------------------------------------------------
 python3 - <<'PYEOF'
 import re
@@ -2115,6 +2118,52 @@ else:
         print(f"            {loc_str}: {norm[:80]!r}")
     if len(dups) > 20:
         print(f"            ... and {len(dups) - 20} more")
+
+# --- sentence granularity -------------------------------------------------
+#
+# The paragraph pass is the right detector for wholesale copy-paste, and it is
+# retained above unchanged. It is structurally blind to the duplication these
+# four surfaces actually accumulate: a claim copied as a SENTENCE into a block
+# with different bounds -- a `/-!` docstring bullet in `Metalogic.lean` against a
+# markdown paragraph in `README.md`, each with different surrounding text. No
+# normalised paragraph is byte-identical, so the paragraph pass reported PASS
+# while two such duplicates stood. This second pass shingles on sentence
+# boundaries instead.
+#
+# A "sentence" here is a run ending at `. `, `.\n` or end-of-block; a shingle is
+# reported only at 15 words or more, which is long enough that an identical run
+# is a copied claim rather than a coincidence of ordinary English.
+
+SENT_SPLIT = re.compile(r"(?<=[.!?])\s+")
+MIN_WORDS = 15
+
+def sentences(norm):
+    for raw in SENT_SPLIT.split(norm):
+        t = raw.strip()
+        if len(t.split()) >= MIN_WORDS:
+            yield t
+
+sent_occ = {}
+for path in FILES:
+    for lineno, raw in paragraphs(path):
+        norm = normalize(raw)
+        if re.match(r"^#{1,6}\s", norm) or re.match(r"^[-*_]{3,}$", norm):
+            continue
+        for t in sentences(norm):
+            sent_occ.setdefault(t, []).append((path, lineno))
+
+sent_dups = [(t, locs) for t, locs in sent_occ.items() if len(locs) > 1]
+if not sent_dups:
+    print("PASS  C18  zero duplicated sentence(s) (>= %d words) across the same four files"
+          % MIN_WORDS)
+else:
+    print("INFO  C18  %d duplicated sentence(s) (>= %d words) across the same four files "
+          "(never affects FAILURES)" % (len(sent_dups), MIN_WORDS))
+    for t, locs in sent_dups[:20]:
+        loc_str = ", ".join(f"{f}:{l}" for f, l in locs)
+        print(f"            {loc_str}: {t[:80]!r}")
+    if len(sent_dups) > 20:
+        print(f"            ... and {len(sent_dups) - 20} more")
 PYEOF
 echo
 

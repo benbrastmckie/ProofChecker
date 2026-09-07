@@ -18,7 +18,7 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 | Metric | Count |
 |--------|-------|
 | Live `.lean` files | 459 |
-| Live lines | 281,410 |
+| Live lines | 281,402 |
 | Archived `.lean` files | 164 |
 | Archived lines | 90,890 |
 <!-- END GENERATED -->
@@ -275,8 +275,8 @@ and `galoisClosed_isDiscrete` (`{F | F.IsDiscrete}`, the bare structural clause 
 `validOn_nextTop_iff_isDiscrete` (`Semantics/Correspondence/Indicator.lean`). Two negative results
 sandwich the corresponding narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves
 that `Sat .RTime` is **not Galois-closed** — a statement about definability of the model
-class, a different property from RTime strong completeness (refuted — see the
-strong-completeness discussion above, which this result does not bear on either way) — and
+class, a different property from RTime strong completeness, which is machine-refuted and on
+which this result does not bear either way — and
 `sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .ZTime`
 (`Metalogic/Independence/RationalWitness.lean` and `Metalogic/Independence/LexIntWitness.lean`,
 respectively). Closed-form characterizations of `Mod (AxiomSet .ZTime)` and

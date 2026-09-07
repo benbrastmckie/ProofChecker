@@ -148,21 +148,13 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   (`completeness_ztime`) appears above.
 - **Decidability** (`decide`): SORRY-FREE
 - **Characterization / definability** (`galoisClosed_mod`, `galoisClosed_of_indicator`,
-  `galoisClosed_sat_dense`, `galoisClosed_isDiscrete`): SORRY-FREE. `galoisClosed_mod` is the
-  organizing equivalence — a frame class is axiomatizable iff it is Galois-closed under the
-  `Th`/`Mod` connection (`Semantics/Correspondence/Galois.lean`) — and `galoisClosed_of_indicator`
-  is the single mechanism by which closure is shown: exhibit one formula valid on precisely the
-  class's members. `galoisClosed_sat_dense` (`Sat .Dense`) and `galoisClosed_isDiscrete`
-  (`{F | F.IsDiscrete}`, the bare structural clause, **not** the Hölder-to-`ℤ` narrowing
-  `FrameClass.Sat FrameClass.ZTime`) are the two positive results, via the indicator
-  biconditionals `validOn_nextTop_iff` / `validOn_nextTop_iff_isDiscrete`
-  (`Semantics/Correspondence/Indicator.lean`). Two negative results sandwich the corresponding
-  narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves `Sat .RTime` is **not
-  Galois-closed** — a statement about definability of the model class, a different property from
-  Dedekind strong completeness (unresolved; see the consequence-completeness entry above) — and
-  `sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .ZTime`
-  (`Metalogic/Independence/{RationalWitness,LexIntWitness}.lean`). Closed-form characterizations
-  of `Mod (AxiomSet .ZTime)` and `Mod (AxiomSet .RTime)` remain open and are not promised.
+  `galoisClosed_sat_dense`, `galoisClosed_isDiscrete`): SORRY-FREE, with the two negative
+  results `sat_rtime_ssubset_mod_axiomSet` and `sat_ztime_ssubset_mod_axiomSet`
+  (`Metalogic/Independence/{RationalWitness,LexIntWitness}.lean`). Non-Galois-closure of a
+  narrowing is a statement about definability of the model class, a **different** property from
+  strong completeness at that class — do not read one off the other. The exposition is in
+  `README.md`'s "Characterization and Definability" section and is not repeated here;
+  per-theorem status is in `docs/theorem-index.md`.
 - **Non-definability of determinism** (`deterministic_not_starDefinable`,
   `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `StarFormula`s
   defines the class of frames satisfying `TaskFrame.Deterministic`, witnessed by the
