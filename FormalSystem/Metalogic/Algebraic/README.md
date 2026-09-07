@@ -143,15 +143,14 @@ structure InteriorOp (alpha : Type*) [PartialOrder alpha] where
   idempotent : ∀ a, toFun (toFun a) = toFun a
 ```
 
-`boxInterior` (`InteriorOperators.lean:142`) is the only `InteriorOp` built here. It is
-assembled from `box_le_self` (`:101`), `box_monotone` (`:112`) and `box_idempotent` (`:130`),
+`boxInterior` (`InteriorOperators.lean`) is the only `InteriorOp` built here. It is
+assembled from `box_le_self`, `box_monotone` and `box_idempotent`,
 which hold because the modal T-axiom `Box phi -> phi` is valid under S5 accessibility.
 
 G and H are **not** interior operators under strict temporal semantics: `G phi -> phi` and
-`H phi -> phi` fail when G and H quantify over strictly future/past times. `H_monotone` (`:80`)
+`H phi -> phi` fail when G and H quantify over strictly future/past times. `H_monotone`
 is the only surviving G/H-family result, and there is **no G operator on the quotient at all** —
-the quotient carries `boxQuot` (`LindenbaumQuotient.lean:289`), `hQuot` (`:296`) and `negQuot`
-(`:261`), with no G counterpart anywhere in the tree. The module's own docstring
+the quotient carries `boxQuot` (`LindenbaumQuotient.lean`), `hQuot` and `negQuot`, with no G counterpart anywhere in the tree. The module's own docstring
 (`InteriorOperators.lean`) states this and is the model this section follows.
 
 ### Ultrafilter-MCS Correspondence (`UltrafilterMCS.lean`)

@@ -1,10 +1,13 @@
-# ProofChecker API Reference
+# API Reference
 
-**Version**: 1.1.0
-**Last Updated**: 2026-01-11
-**Status**: Complete
+**Version**: 1.2.0
+**Last Updated**: 2026-09-07
+**Status**: Hand-maintained; the declaration docstrings in the tree are the authority
 
-This document provides a centralized API reference for all Bimodal modules, generated from inline docstrings.
+This document is a centralized reading guide to the modules of `FormalSystem/`. It cites
+declaration names, never `file:line` — a name survives every edit a line number does not, and
+check C20 enforces that here. For per-theorem status (statement, frame class, machine-pinned
+axiom set) see [`../theorem-index.md`](../theorem-index.md), which is the single ledger.
 
 ## Table of Contents
 
@@ -230,7 +233,7 @@ Semantic validity and consequence relations for TM logic.
 
 The **45** axiom constructors for bimodal logic TM, in four layers: Base 37, Dense 2,
 ZTime 3, RTime 3. The layer of each constructor is given by `Axiom.minFrameClass`
-(`Axioms.lean:588`), and the invariant `ax.minFrameClass ≤ fc` governs which may appear in a
+(`Axioms.lean`), and the invariant `ax.minFrameClass ≤ fc` governs which may appear in a
 derivation at frame class `fc`. See
 [axiom-reference.md](axiom-reference.md) for the per-constructor breakdown.
 
@@ -620,7 +623,7 @@ Soundness theorem: derivability implies semantic consequence.
 
 Derivability carries a **frame-class parameter** `fc`, and soundness is relative to it: an
 axiom may appear in the derivation only when `ax.minFrameClass ≤ fc`
-(`FormalSystem/ProofSystem/Axioms.lean:588`).
+(`FormalSystem/ProofSystem/Axioms.lean`).
 
 ---
 
@@ -650,10 +653,10 @@ exactly `[propext, Classical.choice, Quot.sound]`:
 
 | Theorem | Location | Frame class |
 |---------|----------|-------------|
-| `completeness` | `BXCanonical/Completeness.lean:196` | Base |
-| `completeness_dense` | `BXCanonical/Completeness.lean:255` | Dense |
-| `completeness_ztime` | `BXCanonical/Completeness.lean:296` | ZTime |
-| `completeness_rtime` | `Metalogic/StrongCompleteness.lean:469` | RTime |
+| `completeness` | `BXCanonical/Completeness.lean` | Base |
+| `completeness_dense` | `BXCanonical/Completeness.lean` | Dense |
+| `completeness_ztime` | `BXCanonical/Completeness.lean` | ZTime |
+| `completeness_rtime` | `Metalogic/StrongCompleteness.lean` | RTime |
 
 Each has a finite-context companion `consequence_completeness_*`. **These are not strong
 completeness.** `Context` is `List Formula`, so each is inter-derivable with the weak form
@@ -684,7 +687,7 @@ carries `⊢ φ` at `FrameClass.Base` regardless of which `fc` was passed in.
 **The `extractionFailed` caveat.** `isKnownValid` is **not** a substitute hypothesis for
 `isValid`: it is also `true` on `extractionFailed`, which carries no `⊢ φ` witness. Getting
 `⊨ φ` from a closed tableau with no extracted proof is the open `valid_iff_allClosed`
-obligation, not a consequence of anything proved in `Correctness.lean` (see `:95-99`). Use
+obligation, not a consequence of anything proved in `Correctness.lean`. Use
 `isValid`.
 
 The **completeness direction** -- `models φ → isValid φ fc = true` -- is open. A non-`true`
@@ -725,8 +728,8 @@ statement unchanged. `.RTime` is reachable by the same instantiation and is deli
 unstated.
 
 Supporting definitions live in `FormalSystem/Metalogic/Core/MaximalConsistent.lean`:
-`SetConsistent` (`:96`, correctly finitary), `SetMaximalConsistent` (`:103`), and
-`set_lindenbaum` (`:303`).
+`SetConsistent` (correctly finitary), `SetMaximalConsistent`, and
+`set_lindenbaum`.
 
 `strongCompleteness_of_compact` (`StrongCompleteness.lean`) reduces the strong-completeness
 statement to its compactness hypothesis alone, at any class; `Compactness.lean` below discharges
@@ -812,7 +815,7 @@ rather than derived:
 | File | What it carries |
 |------|-----------------|
 | `BaseLanguage/Formula.lean` | `BLFormula`, the tense-primitive language |
-| `BaseLanguage/Axioms.lean` | A second `inductive Axiom` (`:73`), TM's schemata over BL |
+| `BaseLanguage/Axioms.lean` | A second `inductive Axiom`, TM's schemata over BL |
 | `BaseLanguage/Derivation.lean` | A constructor-for-constructor mirror of `DerivationTree` |
 | `BaseLanguage/Translation.lean` | `tr : BLFormula → Formula` and `trCtx` |
 | `BaseLanguage/AxiomDischarge.lean` | `dischargeAxiom`, the per-axiom discharge table |

@@ -21,9 +21,9 @@ For implementation status by module, see [implementation-status.md](implementati
     (Base 37 / Dense 2 / ZTime 3 / RTime 3, per `Axiom.minFrameClass`)
   - `FormalSystem/ProofSystem/Derivation.lean` - `DerivationTree`, 7 inference rules
   - `FormalSystem/Metalogic/Soundness.lean` - Soundness theorem (proved)
-  - `FormalSystem/Metalogic/BXCanonical/Completeness.lean` - `completeness` (`:196`),
-    `completeness_dense` (`:255`), `completeness_ztime` (`:296`)
-  - `FormalSystem/Metalogic/StrongCompleteness.lean` - `completeness_rtime` (`:469`)
+  - `FormalSystem/Metalogic/BXCanonical/Completeness.lean` - `completeness`,
+    `completeness_dense`, `completeness_ztime`
+  - `FormalSystem/Metalogic/StrongCompleteness.lean` - `completeness_rtime`
 
 ### Perpetuity Principles
 

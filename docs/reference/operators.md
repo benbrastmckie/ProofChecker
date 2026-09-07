@@ -117,7 +117,7 @@ Modal possibility operator from S5 modal logic - expresses metaphysical possibil
 ## Primitive Temporal Operators
 
 `untl` and `snce` are the **only** primitive temporal constructors of `Formula`
-(`FormalSystem/Syntax/Formula.lean:96` and `:106`). Every H/P/G/F entry in the next section is a
+(`FormalSystem/Syntax/Formula.lean`). Every H/P/G/F entry in the next section is a
 *derived* form defined from them. Documenting only the derived forms would misrepresent the
 language.
 
@@ -132,7 +132,7 @@ Binary primitive - **argument 1 is the guard, argument 2 is the event**.
 `absorb_until`, `linear_until`, `until_F`, `F_until_equiv`
 **Note**: the argument order is guard-first. Written with the arguments swapped, definitions
 built on it silently never fire -- see the guard-first warning at
-`FormalSystem/Metalogic/DiscreteNonCompactness.lean:102` and following.
+`FormalSystem/Metalogic/DiscreteNonCompactness.lean` and following.
 
 ### S (snce / since)
 Binary primitive - the past mirror image of `untl`.
@@ -147,7 +147,7 @@ Derived from `untl` with a `⊥` guard: the guard condition is vacuous exactly o
 successor.
 
 **Formal Definition**: `next φ := U(⊥, φ)`
-**LEAN Code**: `Formula.next` (`FormalSystem/Syntax/Formula.lean:511`)
+**LEAN Code**: `Formula.next` (`FormalSystem/Syntax/Formula.lean`)
 **Note**: This is a genuine next-step operator on discrete orders, and is what makes the
 ZTime non-compactness witness set work.
 
@@ -155,7 +155,7 @@ ZTime non-compactness witness set work.
 Reynolds's gap operators, used to state the Dedekind-layer axioms.
 
 **Formal Definition**: `K⁺φ := ¬U(¬φ, ⊤)`, `K⁻φ := ¬S(¬φ, ⊤)`
-**LEAN Code**: `Formula.kPlus` (`:196`), `Formula.kMinus` (`:209`)
+**LEAN Code**: `Formula.kPlus`, `Formula.kMinus`
 **Meaning**: "φ holds arbitrarily soon" / "φ held arbitrarily recently"
 **Used by**: `Axiom.prior_U_gap`, `Axiom.prior_S_gap`, `Axiom.sep`
 
@@ -167,10 +167,10 @@ Every operator in this section is **derived** from `untl`/`snce`, not primitive:
 
 | Operator | Definition | Source |
 |----------|-----------|--------|
-| `someFuture` (F) | `U(⊤, φ)` | `Formula.lean:147` |
-| `somePast` (P) | `S(⊤, φ)` | `Formula.lean:157` |
-| `allFuture` (G) | `¬F¬φ` | `Formula.lean:167` |
-| `allPast` (H) | `¬P¬φ` | `Formula.lean:177` |
+| `someFuture` (F) | `U(⊤, φ)` | `Formula.lean` |
+| `somePast` (P) | `S(⊤, φ)` | `Formula.lean` |
+| `allFuture` (G) | `¬F¬φ` | `Formula.lean` |
+| `allPast` (H) | `¬P¬φ` | `Formula.lean` |
 
 ### H (allPast / universal past)
 Universal past operator - expresses that a formula held at all past times.
@@ -200,7 +200,7 @@ Universal future operator - expresses that a formula will hold at all future tim
 **LEAN Code**: `Formula.allFuture φ`
 **Alternative Notation**: `G` (from "Globally" or "Going to always be")
 **Semantics**: `M,h,t ⊨ G φ` iff for all times t' > t in domain(h), `M,h,t' ⊨ φ`
-**Formal Definition**: `G φ := ¬F¬φ` (`FormalSystem/Syntax/Formula.lean:167`) -- derived, not primitive
+**Formal Definition**: `G φ := ¬F¬φ` (`FormalSystem/Syntax/Formula.lean`) -- derived, not primitive
 **Axioms**: `connect_future` (`φ → G P φ`). Note that `G φ → G G φ` is the *derived* theorem `temporal4Derived` (`FormalSystem/Theorems/TemporalDerived.lean`), not an axiom
 **See also**: [F (someFuture)](#f-someFuture--existential-future), [H (allPast)](#h-allPast--universal-past)
 **Examples**: `G p` means "p will always be true (in the future)"
@@ -208,7 +208,7 @@ Universal future operator - expresses that a formula will hold at all future tim
 ### F (someFuture / existential future)
 Existential future operator - expresses that a formula will hold at some future time.
 
-**Formal Definition**: `F φ := U(⊤, φ)` (`FormalSystem/Syntax/Formula.lean:147`). The duality
+**Formal Definition**: `F φ := U(⊤, φ)` (`FormalSystem/Syntax/Formula.lean`). The duality
 `F φ ↔ ¬G¬φ` holds, but the *definitional* direction runs the other way: `allFuture` is defined
 from `someFuture`, which is defined from `untl`.
 **LEAN Code**: `Formula.someFuture`
@@ -252,7 +252,7 @@ Syntactic provability relation - expresses derivability in the TM proof system.
 
 **Formal Definition**: `Γ ⊢ φ` means φ is derivable from premises Γ using TM axioms and rules
 **LEAN Code**: `Derivable (fc : FrameClass) (G : Context) (p : Formula)`
-(`FormalSystem/ProofSystem/Derivable.lean:69`) -- note the **frame-class parameter**: derivability
+(`FormalSystem/ProofSystem/Derivable.lean`) -- note the **frame-class parameter**: derivability
 is always relative to a frame class, and the invariant `ax.minFrameClass ≤ fc` governs which
 axioms may appear.
 **Rules**: the 7 `DerivationTree` constructors -- `axiom`, `assumption`, `modus_ponens`,
@@ -274,7 +274,7 @@ inter-derivable with weak completeness through the deduction theorem. The unqual
 arbitrary-`Γ` reading -- *strong* completeness over a possibly-infinite `Γ : Set Formula` -- is
 **not** available uniformly: it is machine-refuted for ZTime, open for Base and Dense, and
 outside the primary source's scope for RTime. See
-`FormalSystem/Metalogic/StrongCompleteness.lean:25-41` and
+`FormalSystem/Metalogic/StrongCompleteness.lean` and
 [known-limitations.md](../project-info/known-limitations.md).
 **Examples**: `⊨ □p → ◇p` means "necessary implies possible" is valid in all models
 

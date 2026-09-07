@@ -99,7 +99,7 @@ The decision procedure is implemented in Lean 4 with a machine-checked sound dir
 - Valid fraction: 46.8% (stratified sampling; targeted inclusion of axiom instances)
 
 **Anchor coverage**: 14 of **45** axiom constructors (31%) represented in benchmark anchors.
-The denominator is `Axiom.minFrameClass` (`FormalSystem/ProofSystem/Axioms.lean:588`); an
+The denominator is `Axiom.minFrameClass` (`FormalSystem/ProofSystem/Axioms.lean`); an
 earlier figure of 42 came from a stale docstring that omits the Dedekind layer. The numerator
 is this benchmark's own measurement and has not been re-derived here.
 

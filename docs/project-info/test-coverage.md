@@ -122,12 +122,12 @@ Run `./scripts/coverage-analysis.sh --verbose` for the complete list.
 
 **Blocked by Infrastructure (3)**:
 Cannot be resolved until source implementation completes:
-- `CompletenessTest.lean:51,65,83` - Completeness proofs require `FormalSystem/Metalogic/BXCanonical/Completeness.lean` implementation
+- `CompletenessTest.lean,65,83` - Completeness proofs require `FormalSystem/Metalogic/BXCanonical/Completeness.lean` implementation
 
 **Could Be Completed (2)**:
 Could be resolved with additional proof work:
-- `PerpetuityTest.lean:76` - `boxConjIntro` proof construction
-- `PropositionalTest.lean:193` - Requires deduction theorem
+- `PerpetuityTest.lean` - `boxConjIntro` proof construction
+- `PropositionalTest.lean` - Requires deduction theorem
 
 ### Total: 5 sorry placeholders
 

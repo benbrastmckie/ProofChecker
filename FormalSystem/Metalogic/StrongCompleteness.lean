@@ -435,7 +435,7 @@ with a dead antecedent. The three statuses must not be collapsed into one.
 That the route runs through an ultraproduct rather than through this file's own machinery is
 forced, not incidental. The `BXCanonical` chronicle machinery **structurally cannot** be
 extended to reach `CompactBase`, because every countermodel there routes through
-`bundleFlow_completeness_from_neg_membership` (`Metalogic/Algebraic/FlowFrame.lean:781`), whose
+`bundleFlow_completeness_from_neg_membership` (`Metalogic/Algebraic/FlowFrame.lean`), whose
 single bundled coherence hypothesis `BFMCS.CanonicalCoherence` — combining
 `BFMCS.RestrictedTemporallyCoherent`, `…RestrictedForwardUntilSinceCoherent`, and
 `…RestrictedBackwardUntilSinceCoherent` — is relative to a single `root : Formula` and quantifies
@@ -833,7 +833,7 @@ theorem semantic_deduction_base (Γ : Context) (φ : Formula) :
 /--
 **Finite-context consequence completeness for `FrameClass.Base`, unconditional.**
 
-`BXCanonical.completeness` (`BXCanonical/Completeness.lean:196`) already exists as the
+`BXCanonical.completeness` (`BXCanonical/Completeness.lean`) already exists as the
 single-formula engine for `Valid`, so there is no `_of_engine` layer here: the engine is
 consumed directly.
 
@@ -909,7 +909,7 @@ Semantic consequence over densely ordered carriers.
 The binder list is that of `ValidDense` (`Semantics/Validity.lean`) verbatim, with the context
 hypothesis `∀ ψ ∈ Γ, TruthAt M τ t ψ` inserted before the conclusion — the same surgery
 `SemanticConsequenceRTime` performs on `ValidRTime`. It is therefore exactly
-the hypothesis-and-conclusion shape of `soundness_dense` (`Metalogic/Soundness.lean:1254`),
+the hypothesis-and-conclusion shape of `soundness_dense` (`Metalogic/Soundness.lean`),
 packaged as a definition so that the completeness converse can be stated against the same
 relation.
 
@@ -946,7 +946,7 @@ theorem semantic_deduction_dense (Γ : Context) (φ : Formula) :
 /--
 **Finite-context consequence completeness for `FrameClass.Dense`, unconditional.**
 
-`BXCanonical.completeness_dense` (`BXCanonical/Completeness.lean:255`) already exists as the
+`BXCanonical.completeness_dense` (`BXCanonical/Completeness.lean`) already exists as the
 single-formula engine for `ValidDense`, so there is no `_of_engine` layer here: the engine is
 consumed directly.
 
@@ -1031,7 +1031,7 @@ The binder list is that of `ValidZTime` (`Semantics/Validity.lean`) verbatim —
 `PredOrder`, `IsSuccArchimedean`, `IsPredArchimedean` in place of Dense's `DenselyOrdered` —
 with the context hypothesis `∀ ψ ∈ Γ, TruthAt M τ t ψ` inserted before the conclusion. It is
 therefore exactly the hypothesis-and-conclusion shape of `soundness_ztime`
-(`Metalogic/Soundness.lean:1400`), packaged as a definition.
+(`Metalogic/Soundness.lean`), packaged as a definition.
 
 This is `SetSemanticConsequenceZTime` (`SetConsequence.lean`) with `Γ : Set Formula` changed
 to `Γ : Context` and nothing else. The set form is the vocabulary the *refutation* is stated in;
@@ -1063,7 +1063,7 @@ theorem semantic_deduction_ztime (Γ : Context) (φ : Formula) :
 /--
 **Finite-context consequence completeness for `FrameClass.ZTime`, unconditional.**
 
-`BXCanonical.completeness_ztime` (`BXCanonical/Completeness.lean:296`) already exists as the
+`BXCanonical.completeness_ztime` (`BXCanonical/Completeness.lean`) already exists as the
 single-formula engine for `ValidZTime`, so there is no `_of_engine` layer here.
 
 **This is not strong completeness, and for this class it cannot be strengthened into one.**

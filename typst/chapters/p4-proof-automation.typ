@@ -20,13 +20,13 @@
 Three user-facing tactics automate common derivation patterns; `apply_axiom` and `modal_t` live in `Automation/Tactics/Helpers.lean`, and `tm_auto` in `Tactics/Commands.lean`.
 
 #items[
-  #item[`apply_axiom` (`Tactics/Helpers.lean:96`) -- expands to `apply DerivationTree.axiom; refine ?_`, unifying the goal with an axiom schema and letting Lean infer the axiom's formula parameters via `refine`.]
-  #item[`modal_t` (`Tactics/Helpers.lean:113`) -- named for the T axiom $square.stroked φ arrow.r φ$; its macro body expands identically to `apply_axiom`'s (`apply DerivationTree.axiom; refine ?_`), so it applies to any axiom-shaped goal.]
-  #item[`tm_auto` (`Tactics/Commands.lean:284`) -- delegates to `runModalSearch` with `SearchConfig.default` (search depth 10, overridable: `tm_auto 5`). It is implemented directly over the bounded search engine below, not over Aesop.]
+  #item[`apply_axiom` (`Tactics/Helpers.lean`) -- expands to `apply DerivationTree.axiom; refine ?_`, unifying the goal with an axiom schema and letting Lean infer the axiom's formula parameters via `refine`.]
+  #item[`modal_t` (`Tactics/Helpers.lean`) -- named for the T axiom $square.stroked φ arrow.r φ$; its macro body expands identically to `apply_axiom`'s (`apply DerivationTree.axiom; refine ?_`), so it applies to any axiom-shaped goal.]
+  #item[`tm_auto` (`Tactics/Commands.lean`) -- delegates to `runModalSearch` with `SearchConfig.default` (search depth 10, overridable: `tm_auto 5`). It is implemented directly over the bounded search engine below, not over Aesop.]
 ]
 
 A typical invocation: given a goal of the shape "$square.stroked φ arrow.r square.stroked square.stroked φ$" (the M4 pattern), `tm_auto` searches up to depth 10 via bounded proof search (@sec:proof-search-engine below) and closes the goal if a derivation exists within that bound.
-Related tactics `modal_search` (`Tactics/Commands.lean:105`), `temporal_search` (`Tactics/Commands.lean:177`), and `propositional_search` (`Tactics/Commands.lean:233`) restrict the search to a single operator family.
+Related tactics `modal_search` (`Tactics/Commands.lean`), `temporal_search` (`Tactics/Commands.lean`), and `propositional_search` (`Tactics/Commands.lean`) restrict the search to a single operator family.
 
 == Aesop Integration
 
@@ -40,9 +40,9 @@ Reach for plain `aesop` (default rule set) when a goal is a short chain of the s
 == Bounded Proof Search <sec:proof-search-engine>
 
 `ProofSearch/Core.lean` (1,195 lines, sorry-free) is the search engine `tm_auto` and its variants call into.
-`boundedSearch` (`ProofSearch/Core.lean:958`) is a depth-limited, memoized DFS (default visit limit 500) with several heuristic-ordering functions (`heuristicScore` at `ProofSearch/Core.lean`, `advancedHeuristicScore` at `ProofSearch/Core.lean:865`, `patternAwareScore` at `ProofSearch/Core.lean:914`) that reorder subgoals to prefer promising branches; `boundedSearchWithProof` (`ProofSearch/Core.lean:1064`) is the proof-carrying variant that actually produces a `DerivationTree`.
-`iddfsSearch` (`ProofSearch/Core.lean:1168`, default max depth 100, default visit limit 10000) iteratively deepens `boundedSearch`, and is documented as complete and optimal (shortest proof) within the max-depth bound.
-`ProofSearch/Strategies.lean` (379 lines, sorry-free) adds a priority-queue best-first search (`bestFirstSearch`, `ProofSearch/Strategies.lean:90`) and a `SearchStrategy` dispatcher (`ProofSearch/Strategies.lean:187`: `BoundedDFS`/`IDDFS`/`BestFirst`, default IDDFS depth 100) that `search` (`ProofSearch/Strategies.lean:219`) selects between, plus a learning variant (`searchWithLearning`, `ProofSearch/Strategies.lean:304`) that records success patterns (below) across calls.
+`boundedSearch` (`ProofSearch/Core.lean`) is a depth-limited, memoized DFS (default visit limit 500) with several heuristic-ordering functions (`heuristicScore` at `ProofSearch/Core.lean`, `advancedHeuristicScore` at `ProofSearch/Core.lean`, `patternAwareScore` at `ProofSearch/Core.lean`) that reorder subgoals to prefer promising branches; `boundedSearchWithProof` (`ProofSearch/Core.lean`) is the proof-carrying variant that actually produces a `DerivationTree`.
+`iddfsSearch` (`ProofSearch/Core.lean`, default max depth 100, default visit limit 10000) iteratively deepens `boundedSearch`, and is documented as complete and optimal (shortest proof) within the max-depth bound.
+`ProofSearch/Strategies.lean` (379 lines, sorry-free) adds a priority-queue best-first search (`bestFirstSearch`, `ProofSearch/Strategies.lean`) and a `SearchStrategy` dispatcher (`ProofSearch/Strategies.lean`: `BoundedDFS`/`IDDFS`/`BestFirst`, default IDDFS depth 100) that `search` (`ProofSearch/Strategies.lean`) selects between, plus a learning variant (`searchWithLearning`, `ProofSearch/Strategies.lean`) that records success patterns (below) across calls.
 Relationship to the tableau (@sec:decidability-practice): this is a *different* algorithm on the *same* underlying proof system -- the tableau builds a refutation tree over signed subformulas of a single target formula and is what `decide` ultimately falls back to, while this search engine explores `DerivationTree` construction directly and is what the tactics above call; `decide` itself also tries this engine first, as a fast path, before falling back to the tableau (@sec:decidability-practice).
 
 === The Search Space

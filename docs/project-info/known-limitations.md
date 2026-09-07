@@ -11,9 +11,9 @@ This is a **Minimum Viable Product** release with intentional scope limitations.
 ### Description
 
 The four weak completeness theorems are proved and sorryAx-free: `completeness`
-(`FormalSystem/Metalogic/BXCanonical/Completeness.lean:196`), `completeness_dense` (`:255`),
-`completeness_ztime` (`:296`), and `completeness_rtime`
-(`FormalSystem/Metalogic/StrongCompleteness.lean:469`). None of them carries an outstanding
+(`FormalSystem/Metalogic/BXCanonical/Completeness.lean`), `completeness_dense`,
+`completeness_ztime`, and `completeness_rtime`
+(`FormalSystem/Metalogic/StrongCompleteness.lean`). None of them carries an outstanding
 proof obligation; check C2 of `scripts/check-module-invariants.sh` asserts their axiom sets are
 exactly `[propext, Classical.choice, Quot.sound]`.
 
@@ -21,7 +21,7 @@ exactly `[propext, Classical.choice, Quot.sound]`.
 completeness**, and the two must not be read as one. `Context` is `List Formula`
 (`FormalSystem/Syntax/Context.lean`), so every `consequence_completeness_*` theorem in the tree
 is a *finite*-context result, inter-derivable with the corresponding weak (single-formula) form
-through the deduction theorem. As `StrongCompleteness.lean:25-41` puts it, calling a statement
+through the deduction theorem. As `StrongCompleteness.lean` puts it, calling a statement
 that is inter-derivable with weak completeness "strong completeness" would misrepresent it. The
 reserved name applies only to `Γ ⊨_X φ → Γ ⊢_X φ` with `Γ : Set Formula` and a finitary
 set-derivability relation. For a finitary proof system that entails compactness of the class
@@ -29,13 +29,13 @@ consequence relation, so it is available exactly for the frame classes whose con
 relation is compact.
 
 The infinitary statement has **three distinct statuses** across the four frame classes, which
-`FormalSystem/Metalogic.lean:98-116` warns explicitly must not be collapsed into one:
+`FormalSystem/Metalogic.lean` warns explicitly must not be collapsed into one:
 
 | Frame class | Status of strong completeness | Anchor |
 |-------------|-------------------------------|--------|
-| `FrameClass.ZTime` | **Machine-refuted** | `DiscreteNonCompactness.lean:250` `notCompactZTime`, `:280` `notStrongCompletenessZTime` |
-| `FrameClass.Base`, `FrameClass.Dense` | **Proved** | `Compactness.lean` `strongCompletenessBase`, `strongCompletenessDense`, `compactBase`, `compactDense`; statements at `SetConsequence.lean:446` `StrongCompletenessBase`, `:453` `CompactBase`, `:494` `StrongCompletenessDense`, `:499` `CompactDense` |
-| `FrameClass.RTime` | **Unavailable on the primary source's own terms** -- unproved *and* unrefuted | `StrongCompleteness.lean:74-89` |
+| `FrameClass.ZTime` | **Machine-refuted** | `DiscreteNonCompactness.lean`: `notCompactZTime`, `notStrongCompletenessZTime` |
+| `FrameClass.Base`, `FrameClass.Dense` | **Proved** | `Compactness.lean`: `strongCompletenessBase`, `strongCompletenessDense`, `compactBase`, `compactDense`; statements at `SetConsequence.lean` `StrongCompletenessBase` `CompactBase` `StrongCompletenessDense` `CompactDense` |
+| `FrameClass.RTime` | **Unavailable on the primary source's own terms** -- unproved *and* unrefuted | `StrongCompleteness.lean` |
 
 For Base and Dense the missing substantive piece was a model-existence theorem, which does not
 follow from the single-formula countermodel engines. It is now supplied by `modelExistenceBase`
@@ -234,15 +234,15 @@ This is a genuine negative result, machine-checked rather than informal, in
 archWitness p  =  {F p} ∪ {¬Xⁿ p : n ∈ ℕ}
 ```
 
-(`archWitness`, `:102`). `ValidZTime` requires `IsSuccArchimedean`/`IsPredArchimedean`, and
+(`archWitness`). `ValidZTime` requires `IsSuccArchimedean`/`IsPredArchimedean`, and
 `Formula.next φ = Formula.untl Formula.bot φ` is a genuine next-step operator on discrete
 orders, so the set is finitely satisfiable over `ℤ` -- place `p` far enough out
-(`archWitness_finitely_satisfiable`, `:194`) -- yet unsatisfiable over every Archimedean
+(`archWitness_finitely_satisfiable`) -- yet unsatisfiable over every Archimedean
 discrete carrier, since the `F p` witness would have to lie at some finite successor distance
-(`archWitness_not_satisfiable`, `:229`).
+(`archWitness_not_satisfiable`).
 
-The two conclusions are `notCompactZTime` (`:250`), refuting `CompactZTime`,
-and `notStrongCompletenessZTime` (`:280`), refuting `StrongCompletenessZTime`. All
+The two conclusions are `notCompactZTime`, refuting `CompactZTime`,
+and `notStrongCompletenessZTime`, refuting `StrongCompletenessZTime`. All
 are sorry-free at exactly `[propext, Classical.choice, Quot.sound]`.
 
 ### Impact
@@ -276,9 +276,9 @@ TM ⊢ φ   ⟹   TM⁺ ⊢ tr φ
 
 `FormalSystem/Metalogic/Conservativity/Backward.lean` proves this by structural recursion over TM
 derivations, parameterized by frame class so that the paper's four rows are four instantiations
-of one theorem: `translate` (`:170`), `derivable_translate` (`:194`), and the four row
-corollaries `ceb_backward` (`:210`), `cef_backward` (`:222`), `ced_backward` (`:232`),
-`cec_backward` (`:253`). All are sorry-free.
+of one theorem: `translate`, `derivable_translate`, and the four row
+corollaries `ceb_backward`, `cef_backward`, `ced_backward`,
+`cec_backward`. All are sorry-free.
 
 **The forward direction is refuted, not open.** `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ` is refuted for the Base
 and ZTime rows and open for the other two. The module docstring is the standing record of

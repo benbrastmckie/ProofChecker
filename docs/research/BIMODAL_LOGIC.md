@@ -25,7 +25,7 @@ In Bimodal, the fundamental semantic elements are **world-states**:
   `AddCommGroup` with `IsOrderedAddMonoid` -- not fixed to the integers. Dense carriers
   (`DenselyOrdered`) and Dedekind-complete carriers (every nonempty bounded-above set has a
   least upper bound) are explicitly supported; see
-  `FormalSystem/Metalogic/StrongCompleteness.lean:165-171`. The four frame classes -- Base,
+  `FormalSystem/Metalogic/StrongCompleteness.lean`. The four frame classes -- Base,
   Dense, ZTime, RTime -- differ exactly in which binders they impose on `D`.
 - **Task Relation (`R`)**: Accessibility relation over world-state/time pairs
 
@@ -45,7 +45,7 @@ A sentence letter `p` is true at world `w` iff `w` is a member of `V(p)`.
 | --------------- | ---------------------------------------------------------------------------------- | --------------------------- |
 | **Extensional** | not, and, or, implies, iff, bottom, top                                            | Boolean connectives         |
 | **Modal**       | necessity (box), possibility (diamond)                                             | S5 historical modality      |
-| **Temporal (primitive)** | `untl` (until, U), `snce` (since, S) | The only primitive temporal constructors (`FormalSystem/Syntax/Formula.lean:96`, `:106`) |
+| **Temporal (primitive)** | `untl` (until, U), `snce` (since, S) | The only primitive temporal constructors (`FormalSystem/Syntax/Formula.lean`) |
 | **Temporal (derived)** | H (always past), G (always future), P (sometime past), F (sometime future), X (next), K⁺/K⁻, triangle (always), nabla (sometimes) | All defined from `untl`/`snce` |
 
 ### Axiom Schemas

@@ -188,7 +188,7 @@ def generalizedModalK : (Γ : Context) → (φ : Formula) →
 ```
 
 **Dependency Chain**:
-1. `deductionTheorem` (DeductionTheorem.lean:332) is `noncomputable`
+1. `deductionTheorem` (DeductionTheorem.lean) is `noncomputable`
 2. `generalizedModalK` calls `deductionTheorem` at line 71
 3. `generalizedTemporalK` calls `deductionTheorem` at line 105
 4. Both functions inherit the non-computability

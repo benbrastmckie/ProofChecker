@@ -77,23 +77,23 @@ input to Phase 4's `scripts/typst-sync-check.sh` (Checks 2 and 4).
 ### D1. Primary completeness wiring (verified from live source)
 
 **Primary completeness theorem**: `FormalSystem.Metalogic.BXCanonical.completeness`
-(`FormalSystem/Metalogic/BXCanonical/Completeness.lean:135`):
+(`FormalSystem/Metalogic/BXCanonical/Completeness.lean`):
 
 ```
 theorem completeness (φ : Formula) :
     valid φ → Nonempty (DerivationTree FrameClass.Base [] φ)
 ```
 
-with frame-class variants `completeness_dense` (`:234`) and `completeness_ztime` (`:276`),
-and alternate form `completeness'` (`:177`).
+with frame-class variants `completeness_dense` and `completeness_ztime`,
+and alternate form `completeness'`.
 
 **Live-source evidence** (imports and theorem locations, not README/ROADMAP sentences):
 - `Metalogic.lean` imports `FormalSystem.Metalogic.Soundness`,
   `FormalSystem.Metalogic.Decidability`, `FormalSystem.Metalogic.BXCanonical`,
   `FormalSystem.Metalogic.WeakCanonical` — BXCanonical is the wired entry point.
-- `BXCanonical/Completeness.lean:4-8` imports `Chronicle.ChronicleToCountermodel`,
+- `BXCanonical/Completeness.lean` imports `Chronicle.ChronicleToCountermodel`,
   `Chronicle.MCSMixedCase`, and `WeakCanonical` — the proof is wired through
-  `countermodel_dense` (`Chronicle/ChronicleToCountermodelBasic.lean:792`, Burgess 1982
+  `countermodel_dense` (`Chronicle/ChronicleToCountermodelBasic.lean`, Burgess 1982
   chronicle construction over ℚ, dense case) and the WeakCanonical Reynolds/Doets
   pipeline (`WeakCanonical/Transfer.lean`, discrete case over ℤ), with the mixed case
   eliminated by `mcs_mixed_case_absurd`.
@@ -116,7 +116,7 @@ is `BXCanonical.completeness`; the old typst doc (`semantic_weak_completeness`, 
 ### D2. Frame-class parametrization scope
 
 IN scope for `03-proof-theory.typ`: the `FrameClass` parameter on `DerivationTree`
-(`ProofSystem/Derivation.lean:85+`, constraint `h.minFrameClass ≤ fc`) and the
+(`ProofSystem/Derivation.lean`, constraint `h.minFrameClass ≤ fc`) and the
 Base/Dense/ZTime axiom layers are presented in full — they are inseparable from an
 accurate 42-constructor presentation. Summary-level in `04-metalogic.typ`: per-frame-class
 soundness/completeness variants are named, not proof-sketched. No dedicated frame-class
@@ -144,7 +144,7 @@ Regenerated from source at 2026-07-06, commit `a883361bf` (do not copy forward).
 
 ### Axiom constructors
 
-Command: constructor listing of `inductive Axiom` in `ProofSystem/Axioms.lean:76-400`.
+Command: constructor listing of `inductive Axiom` in `ProofSystem/Axioms.lean`.
 
 **42 constructors in 8 layers** (source's own layer comments):
 
@@ -159,7 +159,7 @@ Command: constructor listing of `inductive Axiom` in `ProofSystem/Axioms.lean:76
 | 7. Z1 | 1 | z1 |
 | 8. Density | 2 | density, dense_indicator |
 
-Frame-class assignment (`Axiom.minFrameClass`, `Axioms.lean:456-462`): Base = 37
+Frame-class assignment (`Axiom.minFrameClass`, `Axioms.lean`): Base = 37
 (layers 1-5), ZTime-only = 3 (prior_UZ, prior_SZ, z1), Dense-only = 2 (density,
 dense_indicator).
 
@@ -190,7 +190,7 @@ the archived `Boneyard/SoundnessVariants/` wrappers, entire `Theorems/` tree (in
 
 ### Frame classes
 
-`FrameClass` inductive (`ProofSystem/Axioms.lean:422-426`): `Base`, `Dense`,
+`FrameClass` inductive (`ProofSystem/Axioms.lean`): `Base`, `Dense`,
 `ZTime`, `RTime`, partially ordered with Base ≤ Dense, Base ≤ ZTime (Dense, ZTime
 incomparable). What each tag denotes semantically is `FrameClass.Sat`
 (`Semantics/FrameClassValidity.lean`); the frame properties it maps onto are
@@ -208,7 +208,7 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
-| 119 | `semantic_weak_completeness` | stale (Boneyard only) | replace with `completeness` (ML/BXCanonical/Completeness.lean:135) |
+| 119 | `semantic_weak_completeness` | stale (Boneyard only) | replace with `completeness` (ML/BXCanonical/Completeness.lean) |
 
 ### 00-introduction.typ
 
@@ -216,7 +216,7 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 |------|-------|---------|------------------------------|
 | 85 | `Bimodal/` | verified | FormalSystem/ |
 | 86 | `Syntax/` | verified | dir exists |
-| 87 | `ProofSystem/` + "14 schemata" | stale count | 42 constructors (Axioms.lean:76) |
+| 87 | `ProofSystem/` + "14 schemata" | stale count | 42 constructors (Axioms.lean) |
 | 88 | `Semantics/` | verified | dir exists |
 | 89 | `Metalogic/` + "completeness via semantic canonical model" | stale narrative | BXCanonical completeness, not sorry-free |
 | 90 | `Theorems/` | verified | dir exists |
@@ -225,21 +225,21 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
-| 15 | `Formula` | verified | Syntax/Formula.lean:76 |
-| 16 | primitives {atom,⊥,→,□,H,G} | stale | {atom, bot, imp, box, untl, snce} (Formula.lean:76-92) |
+| 15 | `Formula` | verified | Syntax/Formula.lean |
+| 16 | primitives {atom,⊥,→,□,H,G} | stale | {atom, bot, imp, box, untl, snce} (Formula.lean) |
 | 17 | `String` atoms | stale | `Atom` structured type (Syntax/Atom.lean); `atomS` helper for strings |
-| 29-34 | `atom s`,`bot`,`imp`,`box`,`allPast`,`allFuture` as primitives | partly stale | allPast/allFuture are derived defs (Formula.lean:141-155) |
+| 29-34 | `atom s`,`bot`,`imp`,`box`,`allPast`,`allFuture` as primitives | partly stale | allPast/allFuture are derived defs (Formula.lean) |
 | 61-63 | `neg`,`and`,`or` | verified | Formula.lean |
 | 84 | `pos` | stale name | `diamond` (Formula.lean, def diamond) |
-| 108-111 | `somePast`,`someFuture`,`always`,`sometimes` | verified | Formula.lean:118-132, 157+ |
-| 119 | `swapTemporal` | verified | Formula.lean:570 (defined on untl/snce) |
+| 108-111 | `somePast`,`someFuture`,`always`,`sometimes` | verified | Formula.lean, 157+ |
+| 119 | `swapTemporal` | verified | Formula.lean (defined on untl/snce) |
 
 ### 02-semantics.typ
 
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
-| 34-38 | Task frame: Nullity + Compositionality (2 constraints) | stale | 3 fields: nullity_identity, forward_comp, converse (SEM/TaskFrame.lean:93-131); paper: Nullity/Reflection/Compositionality (possible_worlds.tex:902-907) |
-| 85-90 | strict `<` truth conditions for H/G | verified (preserve) | SEM/Truth.lean:10-17, 120-131 |
+| 34-38 | Task frame: Nullity + Compositionality (2 constraints) | stale | 3 fields: nullity_identity, forward_comp, converse (SEM/TaskFrame.lean); paper: Nullity/Reflection/Compositionality (possible_worlds.tex:902-907) |
+| 85-90 | strict `<` truth conditions for H/G | verified (preserve) | SEM/Truth.lean, 120-131 |
 | — | missing untl/snce truth clauses | gap | added from Truth.lean (guard-first: `untl ψ φ` reads guard `ψ`, event `φ`) |
 
 ### 03-proof-theory.typ
@@ -247,21 +247,21 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
 | 12 | "14 axiom schemata" | stale | 42 constructors, 8 layers |
-| 91-99 | `Axiom.prop_k/prop_s/ex_falso/peirce/modal_t/modal_4/modal_b/modal_5_collapse/modal_k_dist` | verified | PS/Axioms.lean:80-108 |
-| 100 | `Axiom.temp_k_dist` | stale | derived: `temporalKDistDerived` (TH/TemporalDerived.lean:184) |
-| 101 | `Axiom.temp_4` | stale | derived: `temporal4Derived` (TH/TemporalDerived.lean:239) |
-| 102 | `Axiom.temp_a` | stale | axiom renamed: `connect_future` (BX4, Axioms.lean:152) |
-| 103 | `Axiom.temp_l` (stated as △φ→GHφ) | stale (name and formula) | `temp_linearity` (BX11, Axioms.lean:262); paper TL is future-linearity (possible_worlds.tex:1103) |
-| 104 | `Axiom.modal_future` | verified | Axioms.lean:297 |
-| 105 | `Axiom.temp_future` | stale | derived: `temporalFutureDerived` (TH/Combinators.lean:661) |
+| 91-99 | `Axiom.prop_k/prop_s/ex_falso/peirce/modal_t/modal_4/modal_b/modal_5_collapse/modal_k_dist` | verified | PS/Axioms.lean |
+| 100 | `Axiom.temp_k_dist` | stale | derived: `temporalKDistDerived` (TH/TemporalDerived.lean) |
+| 101 | `Axiom.temp_4` | stale | derived: `temporal4Derived` (TH/TemporalDerived.lean) |
+| 102 | `Axiom.temp_a` | stale | axiom renamed: `connect_future` (BX4, Axioms.lean) |
+| 103 | `Axiom.temp_l` (stated as △φ→GHφ) | stale (name and formula) | `temp_linearity` (BX11, Axioms.lean); paper TL is future-linearity (possible_worlds.tex:1103) |
+| 104 | `Axiom.modal_future` | verified | Axioms.lean |
+| 105 | `Axiom.temp_future` | stale | derived: `temporalFutureDerived` (TH/Combinators.lean) |
 | 165-171 | `DerivationTree.*` 7 rule constructors | verified | PS/Derivation.lean (axiom rule now takes `h_fc : h.minFrameClass ≤ fc`) |
-| 182 | `DerivationTree Gamma phi` | stale signature | `DerivationTree fc Γ φ` with FrameClass parameter (Derivation.lean:85) |
+| 182 | `DerivationTree Gamma phi` | stale signature | `DerivationTree fc Γ φ` with FrameClass parameter (Derivation.lean) |
 
 ### 04-metalogic.typ (pre-rewrite; all stale refs deleted in rewrite)
 
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
-| 12,119,246,304,337,420,478,489,558,574 | `semantic_weak_completeness` | stale (Boneyard only) | `completeness` (BXCanonical/Completeness.lean:135) |
+| 12,119,246,304,337,420,478,489,558,574 | `semantic_weak_completeness` | stale (Boneyard only) | `completeness` (BXCanonical/Completeness.lean) |
 | 118,334,477 | `Representation/` | stale (deleted; not even in Boneyard under that path) | removed |
 | 304,337,420,443,478 | `FMP/SemanticCanonicalModel.lean` | stale (Boneyard only) | removed; NOTE live `Decidability/FMP/` is a different module (tableau FMP) |
 | 137 | `SemanticTaskRelV2` | not-found | removed |
@@ -284,7 +284,7 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 | 488-509 | "20 sorries, all deprecated" | stale | 43 genuine sorries (see counts), NOT all deprecated |
 | 552 | `soundness` | verified | ML/Soundness.lean |
 | 25,436,476 | "15 axiom schemata" | stale | 42 constructors |
-| 154 | reflexive-semantics design note | stale | strict/irreflexive is current (Truth.lean:10-17) |
+| 154 | reflexive-semantics design note | stale | strict/irreflexive is current (Truth.lean) |
 
 ### 05-theorems.typ
 
@@ -307,7 +307,7 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 | 83 | `semantic_truth_lemma_v2` | not-found | removed |
 | 84 | `semantic_weak_completeness` | stale (Boneyard) | `completeness` |
 | 85 | `main_provable_iff_valid` | not-found | removed |
-| 118-126 | "Reflexive Temporal Semantics (Current)" | stale (contradicts 02-semantics) | strict/irreflexive current (Truth.lean:10-17) |
+| 118-126 | "Reflexive Temporal Semantics (Current)" | stale (contradicts 02-semantics) | strict/irreflexive current (Truth.lean) |
 | 162-163 | `temp_t_future`, `temp_t_past` | not-found (T-axioms invalid under strict) | removed |
 | 301-311 | "TM uses reflexive semantics" history table | stale conclusion | rewritten: strict/irreflexive landed |
 
@@ -324,7 +324,7 @@ consolidated into `FormalSystem/Boneyard/Kamp/KampWeakCanonical/`). Zero `stale`
 
 Count re-derivation at gate time: `inductive Axiom` constructor count = 42
 (`awk '/^inductive Axiom/,/deriving Repr/' ProofSystem/Axioms.lean | grep -c '^  | '`);
-`DerivationTree` rule constructors = 7 (Derivation.lean:92-164); sorry counts as
+`DerivationTree` rule constructors = 7 (Derivation.lean); sorry counts as
 tabulated above. Chapter text matches. `typst compile BimodalReference.typ
 build/BimodalReference.pdf` exits 0 (font-substitution warnings only).
 
@@ -358,7 +358,7 @@ elsewhere in the repository during Phase 5, see the Phase-5 handoff's transient-
 present at the first-revision baseline; introduced by over-attribution in that revision's own
 drafting, caught by per-result re-verification against live source rather than assumed):
 
-1. The `FrameClass` inductive and its partial order live in `ProofSystem/Axioms.lean:422-442`.
+1. The `FrameClass` inductive and its partial order live in `ProofSystem/Axioms.lean`.
    The now-deleted top-level frame-condition directory held a *separate* marker-typeclass
    hierarchy that was frequently mistaken for them; that layer has since been removed and
    `chapters/p2-frame-classes.typ` now describes the live interpretation

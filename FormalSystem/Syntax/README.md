@@ -18,7 +18,7 @@ Core syntactic definitions for TM bimodal logic formulas.
 ## Key Definitions
 
 - `Formula`: The inductive type for TM bimodal logic formulas:
-  - Constructors (six, `Formula.lean:76-105`): `atom`, `bot`, `imp`, `box`, `untl`, `snce`.
+  - Constructors (six, `Formula.lean`): `atom`, `bot`, `imp`, `box`, `untl`, `snce`.
     `untl`/`snce` are guard-first — `untl guard event` — so `untl` is Until and `snce` is Since.
   - Derived (definitions, not constructors): `neg`, `top`, `or`, `and`, `diamond`, `someFuture`,
     `somePast`, `allFuture`, `allPast`, `always`, `sometimes`. The temporal four are camelCase;

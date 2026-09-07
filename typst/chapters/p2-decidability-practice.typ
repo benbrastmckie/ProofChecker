@@ -51,7 +51,7 @@ The tableau calculus itself is semantically sound rule by rule: `Decidability/Ve
 === The Filtration Construction
 
 The finiteness argument follows the classical filtration pattern, specialized to closure MCSs.
-Everything is relativized to the input formula $φ$: the *subformula closure* of $φ$ collects its subformulas and their negations, a finite set; a *closure MCS* is a maximal consistent set restricted to that closure (`ClosureMCS`, with the bundled form `ClosureMCSBundle` pairing a carrier set with its maximality witness, `Filtration.lean:114`).
+Everything is relativized to the input formula $φ$: the *subformula closure* of $φ$ collects its subformulas and their negations, a finite set; a *closure MCS* is a maximal consistent set restricted to that closure (`ClosureMCS`, with the bundled form `ClosureMCSBundle` pairing a carrier set with its maximality witness, `Filtration.lean`).
 Two closure MCSs are *filtration-equivalent* when they agree on every closure formula, and the quotient of bundles by this equivalence is the finite world type:
 
 #leansrc("FormalSystem.Metalogic.Decidability.FMP", "FilteredWorld")
@@ -79,15 +79,15 @@ def decide (φ : Formula) (searchDepth : Nat := 10) (tableauFuel : Nat := 1000)
     (fc : FrameClass := .Base) : DecisionResult φ
 ```
 
-(`Decidability/DecisionProcedure.lean`). It first tries direct axiom and compositional proof shortcuts, then falls back to bounded proof search (@sec:proof-automation), then to a tableau over $F(φ)$; `DecisionResult` (`Decidability/DecisionProcedure.lean:58-64`) is one of `valid` (carries a `DerivationTree`), `invalid` (carries a `SimpleCountermodel`), or `timeout` -- the `tableauFuel` parameter (default 1000 steps) is the source of the timeout branch, guaranteeing termination without guaranteeing an answer.
+(`Decidability/DecisionProcedure.lean`). It first tries direct axiom and compositional proof shortcuts, then falls back to bounded proof search (@sec:proof-automation), then to a tableau over $F(φ)$; `DecisionResult` (`Decidability/DecisionProcedure.lean`) is one of `valid` (carries a `DerivationTree`), `invalid` (carries a `SimpleCountermodel`), or `timeout` -- the `tableauFuel` parameter (default 1000 steps) is the source of the timeout branch, guaranteeing termination without guaranteeing an answer.
 Convenience wrappers `isValid` (`Decidability/DecisionProcedure.lean`) and `isSatisfiable` (`Decidability/DecisionProcedure.lean`) reduce to booleans.
-`getProof?` (`Decidability/DecisionProcedure.lean`) and `getCountermodel?` (`Decidability/DecisionProcedure.lean:92`) extract the payload when present.
+`getProof?` (`Decidability/DecisionProcedure.lean`) and `getCountermodel?` (`Decidability/DecisionProcedure.lean`) extract the payload when present.
 
 == Certificates and Countermodels
 
 Every `valid` result carries a genuine `DerivationTree` proof term, checkable by Lean's kernel independently of the decision procedure that produced it.
-`TraceCertificate.lean` additionally packages proof search traces: `ProofCertificate` (`Decidability/TraceCertificate.lean:108`, with an `empty` constructor at `Decidability/TraceCertificate.lean`) records the rule sequence, and `CertOutcome` (`Decidability/TraceCertificate.lean:89`: `validProof`/`countermodel`/`timeout`/`blocked`) classifies the outcome for downstream export (feeding Part II's dataset pipeline).
-Every `invalid` result carries a `SimpleCountermodel` (`Decidability/CountermodelExtraction.lean:64`: `trueAtoms`/`falseAtoms`/`formula`), extracted from the open saturated tableau branch by `extractCountermodelSimple` (`Decidability/CountermodelExtraction.lean:137`, called directly by `decide`) or, for a richer variant retaining the full saturated branch, `extractSemanticCountermodel` (`Decidability/CountermodelExtraction.lean:305`) producing a `SemanticCountermodel` (`Decidability/CountermodelExtraction.lean:170`).
+`TraceCertificate.lean` additionally packages proof search traces: `ProofCertificate` (`Decidability/TraceCertificate.lean`, with an `empty` constructor at `Decidability/TraceCertificate.lean`) records the rule sequence, and `CertOutcome` (`Decidability/TraceCertificate.lean`: `validProof`/`countermodel`/`timeout`/`blocked`) classifies the outcome for downstream export (feeding Part II's dataset pipeline).
+Every `invalid` result carries a `SimpleCountermodel` (`Decidability/CountermodelExtraction.lean`: `trueAtoms`/`falseAtoms`/`formula`), extracted from the open saturated tableau branch by `extractCountermodelSimple` (`Decidability/CountermodelExtraction.lean`, called directly by `decide`) or, for a richer variant retaining the full saturated branch, `extractSemanticCountermodel` (`Decidability/CountermodelExtraction.lean`) producing a `SemanticCountermodel` (`Decidability/CountermodelExtraction.lean`).
 
 == Correctness Properties
 
@@ -99,7 +99,7 @@ Every `invalid` result carries a `SimpleCountermodel` (`Decidability/Countermode
 == A Worked Tableau Run
 
 The tableau operates on *signed formulas*: each node of a branch is a formula tagged with a sign ($T$ for "true here", $F$ for "false here") and a label recording the world and time of evaluation (`SignedFormula`, `Metalogic/Decidability/SignedFormula.lean`).
-Expansion rules (`TableauRule`, `Metalogic/Decidability/Tableau.lean:67`) come in two shapes: *linear* rules add formulas to the current branch, and *branching* rules split it.
+Expansion rules (`TableauRule`, `Metalogic/Decidability/Tableau.lean`) come in two shapes: *linear* rules add formulas to the current branch, and *branching* rules split it.
 The modal and temporal rules follow the S5 and strict-linear-order semantics directly: a true $square.stroked$-formula propagates to every world label on the branch (universal, persistent), a false $square.stroked$-formula introduces a fresh witness world, a false $G$-formula introduces a fresh strictly-future time, and a true $square.stroked$-formula additionally yields $G$ and $H$ versions at the same label -- the tableau image of the interaction principles $square.stroked phi.alt arrow.r G phi.alt$ and $square.stroked phi.alt arrow.r H phi.alt$.
 A branch *closes* when it contains both $T(phi.alt)$ and $F(phi.alt)$ at the same label (or $T(bot)$); the tableau proves validity when every branch closes.
 

@@ -211,7 +211,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | Directory | Files | Lines | Role |
 |-----------|------:|------:|------|
 | [`Algebraic/`](Algebraic/README.md) | 5 | 2,425 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
-| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,144 | Chronicle completeness route; the wired entry point |
+| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,142 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
 | `Conservativity/` | 12 | 2,545 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
@@ -236,7 +236,7 @@ Loose modules:
 | `CanonicalChain.lean` | 115 |
 | `CanonicalModel.lean` | 846 |
 | `Completeness.lean` | 449 |
-| `CompletenessDedekind.lean` | 615 |
+| `CompletenessDedekind.lean` | 614 |
 | `DiscreteCarrierProbe.lean` | 96 |
 | `Frame.lean` | 718 |
 | `OrderedSeedConsistency.lean` | 257 |
@@ -248,7 +248,7 @@ Subdirectories:
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/BXCanonical rows=subdirs cols=files-lines desc=no sort=lines-desc -->
 | Subdirectory | Files | Lines |
 |--------------|------:|------:|
-| `Chronicle/` | 14 | 17,931 |
+| `Chronicle/` | 14 | 17,930 |
 | `Quasimodel/` | 5 | 1,685 |
 | `Filtration/` | 1 | 134 |
 <!-- END GENERATED -->

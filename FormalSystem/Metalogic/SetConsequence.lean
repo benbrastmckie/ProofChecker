@@ -226,7 +226,7 @@ lemma: `Valid`, `ValidDense`, `ValidZTime` and `ValidRTime` are all abbreviation
 `.RTime` by type rather than by convention.
 
 Stating it here rather than in `Metalogic/StrongCompleteness.lean` costs nothing: its two
-ingredients `ValidIn` and `Derivable` are already imported by this module (`:8`, `:10`), and
+ingredients `ValidIn` and `Derivable` are already imported by this module, and
 placing it beside `StrongCompleteness` keeps the whole `Prop`-valued vocabulary of the
 completeness programme in one layer. The `strongCompleteness_iff_compact` bridge that consumes
 it must still live downstream, for the same import-cycle reason recorded under `## Downstream`
@@ -478,7 +478,7 @@ collects the result.
 -/
 
 /-- **Strong completeness for `FrameClass.Dense`** — the reserved statement. Note that
-    `FrameClass` (`ProofSystem/Axioms.lean:519`) has constructors `Base | Dense | Discrete |
+    `FrameClass` (`ProofSystem/Axioms.lean`) has constructors `Base | Dense | Discrete |
     Dedekind`; there is no `.DedekindDense` constructor, and `FrameClass.Dense` is the correct
     target for the `SetSemanticConsequenceOn .Dense` relation. -/
 def StrongCompletenessDense : Prop := StrongCompleteness FrameClass.Dense
@@ -489,7 +489,7 @@ def StrongCompletenessDense : Prop := StrongCompleteness FrameClass.Dense
 def CompactDense : Prop := Compact FrameClass.Dense
 
 /-- Satisfiability of a possibly-infinite set over dense carriers. This is
-    `FormulaSatisfiable` (`Validity.lean:190`) with `(_ : DenselyOrdered D)` inserted in
+    `FormulaSatisfiable` (`Validity.lean`) with `(_ : DenselyOrdered D)` inserted in
     `ValidDense`'s binder position and the conclusion generalised from a single formula to
     `∀ ψ ∈ Γ`. -/
 def SatisfiableDenseSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.Dense Γ

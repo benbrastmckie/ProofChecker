@@ -403,9 +403,9 @@ theorem perpetuity_2 (φ : Formula) : ⊢ ((▽φ).imp (diamond φ)) := by
 
 **Status note**: The `sorry` placeholders in this section are pedagogical stand-ins for a
 from-scratch walkthrough; the library itself is sorry-free. In the actual library `soundness`
-is fully proven; all four weak completeness theorems -- `completeness` (`:196`),
-`completeness_dense` (`:255`), `completeness_ztime` (`:296`), and `completeness_rtime`
-(`FormalSystem/Metalogic/StrongCompleteness.lean:469`) -- are fully proven and sorryAx-free;
+is fully proven; all four weak completeness theorems -- `completeness`,
+`completeness_dense`, `completeness_ztime`, and `completeness_rtime`
+(`FormalSystem/Metalogic/StrongCompleteness.lean`) -- are fully proven and sorryAx-free;
 and `perpetuity_1`-`perpetuity6` are all fully proven. See
 `FormalSystem/Metalogic/Soundness.lean`,
 `FormalSystem/Metalogic/BXCanonical/Completeness.lean`, and
@@ -415,7 +415,7 @@ and `perpetuity_1`-`perpetuity6` are all fully proven. See
 `Context` is `List Formula`, so it is a finite-context result, inter-derivable with weak
 completeness through the deduction theorem. The reserved name "strong completeness" applies
 only to consequence from a possibly-infinite `Γ : Set Formula` -- see
-`FormalSystem/Metalogic/StrongCompleteness.lean:25-41` and
+`FormalSystem/Metalogic/StrongCompleteness.lean` and
 [known-limitations.md](../project-info/known-limitations.md).
 
 ### Extension Layers

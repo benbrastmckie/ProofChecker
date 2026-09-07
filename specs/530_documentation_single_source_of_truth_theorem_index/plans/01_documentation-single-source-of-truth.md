@@ -539,7 +539,7 @@ is what the convention asks for. Stripping a range's start (`Foo.lean:49-54`) le
 
 ---
 
-### Phase 10: Convert publication-scope citations [NOT STARTED]
+### Phase 10: Convert publication-scope citations [IN PROGRESS]
 
 **Goal**: The 184 publication-scope `file.lean:NNN` citations are replaced by declaration names,
 and `docs/reference/API_REFERENCE.md` is brought current.

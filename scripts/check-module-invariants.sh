@@ -443,8 +443,9 @@ ENFORCE_C9_DOCS=${ENFORCE_C9_DOCS:-0} # no task-number citations under docs/ (NO
 # outset because nolints.json makes it genuinely green today, unlike C8/C9/C10 above.
 ENFORCE_C16=${ENFORCE_C16:-1} # env_linter batch has no un-nolisted finding (enforced)
 # C20 tier 2 asks every publication-facing surface to cite declaration names rather
-# than file:line. Reported from the outset; flip to 1 once that scope is clean.
-ENFORCE_C20=${ENFORCE_C20:-0} # no file:line citations in publication scope (NOT yet enforced)
+# than file:line. The scope is clean, so this is enforced. Never flip it back to 0 to
+# quiet a new citation; remove the citation instead.
+ENFORCE_C20=${ENFORCE_C20:-1} # no file:line citations in publication scope (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }

@@ -297,7 +297,7 @@ git log --all -S "sorry" -- FormalSystem/Semantics/Truth.lean
 
 9. Commit with clear message:
    ```bash
-   git commit -m "Resolve sorry at File.lean:123 - [description]"
+   git commit -m "Resolve sorry at File.lean - [description]"
    ```
 
 ### Blocker Resolution
@@ -421,7 +421,7 @@ Summary: specs/NNN_task_name/summaries/summary.md
 ### Sorry Resolution
 
 ```
-Resolve sorry at File.lean:123 - [description]
+Resolve sorry at File.lean - [description]
 
 - Implemented [proof/function]
 - [Any related changes]

@@ -24,7 +24,7 @@ quotients. `TruthAt`'s `box` clause quantifies over all *total world histories* 
 sort with no direct ultraproduct presentation; attacking it head-on would require a fresh
 choice-function argument over total histories. That argument already exists, once, inside
 `ShiftSet.forward_repr` (`Semantics/ShiftSet.lean:278`ff), whose own `box` case reconciles the two
-quantifiers via `hist_isTotal` (`:226`) and `total_eq_orbit` (`:245`). So `los_truthAt` is
+quantifiers via `hist_isTotal` and `total_eq_orbit`. So `los_truthAt` is
 obtained by *reuse*: conjugate `los` with `forward_repr` on both sides. No new choice argument
 over histories is introduced anywhere in this file.
 
@@ -149,7 +149,7 @@ theorem los (S : ∀ i, ShiftSet (T i)) (χ : Formula) :
 This is the statement the task asked for. It is obtained WITHOUT any choice-function argument
 over total world-histories: `forward_repr`'s own `box` case already reconciles `TruthAt`'s
 quantifier over all total histories with `ShiftTruth`'s quantifier over the carrier, via
-`hist_isTotal` (`Semantics/ShiftSet.lean:226`) and `total_eq_orbit` (`:245`). Attacking `TruthAt`
+`hist_isTotal` (`Semantics/ShiftSet.lean:226`) and `total_eq_orbit`. Attacking `TruthAt`
 directly would re-open that argument on the ultraproduct; conjugating discharges it by reuse. -/
 theorem los_truthAt (S : ∀ i, ShiftSet (T i)) (f : ∀ i, (S i).Carrier) (x : ∀ i, ↑(T i))
     (χ : Formula) :

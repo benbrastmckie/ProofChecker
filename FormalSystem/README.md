@@ -79,7 +79,7 @@ terms of those primitives.
 
 The Lean names for the derived operators are **camelCase**: `neg`, `top`, `and`, `or`, `diamond`,
 `someFuture`, `somePast`, `allFuture`, `allPast`, `always`, `sometimes`
-(`Syntax/Formula.lean:134-616`). The snake_case spellings that earlier revisions of this table
+(`Syntax/Formula.lean`). The snake_case spellings that earlier revisions of this table
 used are not identifiers in this tree; use the camelCase names above.
 
 **Argument order.** `untl` and `snce` are *guard-first* (`untl guard event`); the top-level

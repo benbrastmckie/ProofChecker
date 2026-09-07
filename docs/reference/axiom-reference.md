@@ -5,7 +5,7 @@ Complete reference for TM (Tense and Modality) axiom schemas.
 ## Axiom Categories
 
 TM logic uses **45 axiom constructors** organized into **four layers**. The layer of each
-constructor is given by `Axiom.minFrameClass` (`FormalSystem/ProofSystem/Axioms.lean:588`),
+constructor is given by `Axiom.minFrameClass` (`FormalSystem/ProofSystem/Axioms.lean`),
 which is the authoritative source -- re-derive from it rather than from this table:
 
 | Layer | Count | Description |
@@ -52,10 +52,10 @@ its minimum frame class is at most `fc`.
 | Discrete-shaped, Base-valid | 5 | `discrete_symm_fwd`, `discrete_symm_bwd`, `discrete_propagate_fwd`, `discrete_propagate_bwd`, `discrete_box_necessity` |
 
 **The temporal layer is Burgess-Xu until/since**, not a T4/TA/TL/TK basis. `untl` and `snce`
-are the primitive binary temporal constructors (`FormalSystem/Syntax/Formula.lean:96`, `:106`);
+are the primitive binary temporal constructors (`FormalSystem/Syntax/Formula.lean`);
 G, H, F, and P are all *derived* forms. Note also that `temp_k_dist` and `temp_4` are **derived
 theorems**, not axioms -- they are `temporalKDistDerived` and `temporal4Derived` in
-`FormalSystem/Theorems/TemporalDerived.lean` (see `Axioms.lean:96-98`).
+`FormalSystem/Theorems/TemporalDerived.lean` (see `Axioms.lean`).
 
 ### Extension Axioms
 
@@ -68,7 +68,7 @@ theorems**, not axioms -- they are `temporalKDistDerived` and `temporal4Derived`
 The Dedekind layer is Reynolds's definable-gap axiom set (Reynolds 1992, printed p.168). Its
 soundness target is the *dense* RTime predicate `ValidRTime`, not the density-free
 `ValidComplete`, because `density` and `dense_indicator` are admissible at `.RTime` and both
-are false on ℤ. See `FormalSystem/ProofSystem/Axioms.lean:461-517` for the full argument.
+are false on ℤ. See `FormalSystem/ProofSystem/Axioms.lean` for the full argument.
 
 ## Propositional Axioms
 
@@ -206,7 +206,7 @@ Both have `snce` mirror images (`self_accum_since`, `absorb_since`).
 **`P_since_equiv`**: `⊢ Pφ → S(⊤,φ)`
 
 The last two are why F and P are *derived* rather than primitive: `someFuture` and `somePast`
-are definable from `untl`/`snce` (`FormalSystem/Syntax/Formula.lean:147`, `:157`).
+are definable from `untl`/`snce` (`FormalSystem/Syntax/Formula.lean`).
 
 ### Seriality
 
@@ -266,7 +266,7 @@ Reynolds's definable-gap axioms (Reynolds 1992, printed p.168):
 ```
 
 These are the axioms that make `completeness_rtime`
-(`FormalSystem/Metalogic/StrongCompleteness.lean:469`) available for the real flow.
+(`FormalSystem/Metalogic/StrongCompleteness.lean`) available for the real flow.
 
 ## Inference Rules
 

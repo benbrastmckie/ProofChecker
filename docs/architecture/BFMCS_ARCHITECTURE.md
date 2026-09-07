@@ -68,7 +68,7 @@ structure FMCS (fc : FrameClass := FrameClass.Base) where
 Note that the structure carries **only** the two universal (G/H) coherence fields. Existential
 F/P witness obligations are *not* structure fields; they are discharged by the witness-seed
 infrastructure (`WitnessSeed.lean`) at the point of construction. Earlier `forward_F` and
-`backward_P` fields were removed -- see the design note at `FMCSDef.lean:58`.
+`backward_P` fields were removed -- see the design note at `FMCSDef.lean`.
 
 **Visual representation**:
 ```
@@ -163,15 +163,15 @@ This axiom ensures that if G(phi) is in MCS_t:
 **Proven anchors** (both archived with the rest of the canonical-frame half of `Bundle/`; see
 `FormalSystem/Boneyard/BundleDeadHalf/README.md`):
 ```lean
--- FormalSystem/Boneyard/BundleDeadHalf/SuccRelation.lean:78 (archived)
+-- FormalSystem/Boneyard/BundleDeadHalf/SuccRelation.lean (archived)
 theorem Succ.g_persistence {u v : Set Formula} (h : Succ u v) : GContent u ⊆ v
 
--- FormalSystem/Boneyard/BundleDeadHalf/CanonicalFrame.lean:77 (archived)
+-- FormalSystem/Boneyard/BundleDeadHalf/CanonicalFrame.lean (archived)
 @[simp] lemma ExistsTask_def {M M' : Set Formula} : ExistsTask M M' = (GContent M ⊆ M')
 ```
 
 Step (5) -- that the propagation continues to all future times, not just the next -- is the
-`forward_G` field of `FMCS` itself (`FormalSystem/Metalogic/Bundle/FMCSDef.lean:103`), which any
+`forward_G` field of `FMCS` itself (`FormalSystem/Metalogic/Bundle/FMCSDef.lean`), which any
 constructed family must discharge.
 
 ### 2.2 F-Obligations Require Tracking
@@ -231,7 +231,7 @@ Where `ForwardTemporalWitnessSeed M psi = {psi} ∪ GContent(M)`.
 4. Since each `G(chi) ∈ M` and M is closed under derivation: `G(¬psi) ∈ M`
 5. But `F(psi) = ¬G(¬psi) ∈ M` (by hypothesis), contradicting MCS consistency
 
-**Symmetric lemma** (from `FormalSystem/Metalogic/Bundle/WitnessSeed.lean:290`):
+**Symmetric lemma** (from `FormalSystem/Metalogic/Bundle/WitnessSeed.lean`):
 ```lean
 theorem past_temporal_witness_seed_consistent {fc : FrameClass} (M : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) M)
@@ -271,17 +271,17 @@ The bundle infrastructure described above feeds the canonical-model construction
 theorems:
 
 ```
-completeness              (BXCanonical/Completeness.lean:196)
-completeness_dense        (BXCanonical/Completeness.lean:255)
-completeness_ztime     (BXCanonical/Completeness.lean:296)
-completeness_rtime     (Metalogic/StrongCompleteness.lean:469)
+completeness              (BXCanonical/Completeness.lean)
+completeness_dense        (BXCanonical/Completeness.lean)
+completeness_ztime     (BXCanonical/Completeness.lean)
+completeness_rtime     (Metalogic/StrongCompleteness.lean)
   |
   +-- canonical model / countermodel engines (BXCanonical/CanonicalModel.lean)
         |
         +-- witness-seed consistency (Bundle/WitnessSeed.lean, :290)
               |
-              +-- FMCS temporal coherence (Bundle/FMCSDef.lean:103)
-              +-- BFMCS modal coherence   (Bundle/BFMCS.lean:91)
+              +-- FMCS temporal coherence (Bundle/FMCSDef.lean)
+              +-- BFMCS modal coherence   (Bundle/BFMCS.lean)
 ```
 
 All four are sorryAx-free at exactly `[propext, Classical.choice, Quot.sound]`, asserted by
@@ -309,4 +309,4 @@ The bundle layer reached its present shape through several rounds of simplificat
 - Temporal backward properties were added to the family structure.
 - `FMCS` was renamed from `IndexedMCSFamily`; `BFMCS` names the bundle over it.
 - The existential `forward_F`/`backward_P` structure fields were removed in favour of the
-  witness-seed infrastructure -- see the design note at `FormalSystem/Metalogic/Bundle/FMCSDef.lean:58`.
+  witness-seed infrastructure -- see the design note at `FormalSystem/Metalogic/Bundle/FMCSDef.lean`.

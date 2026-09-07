@@ -57,7 +57,7 @@ This registry provides a high-level view of tactic implementation status across 
 
 | Rule Set | Purpose | Status |
 |----------|---------|--------|
-| `TMLogic` | TM-specific automation rules | No separate `TMLogic` rule set is declared; `AesopRules.lean` registers its rules directly into Aesop's default rule set (evidence: `Automation/AesopRules.lean:51-53`). |
+| `TMLogic` | TM-specific automation rules | No separate `TMLogic` rule set is declared; `AesopRules.lean` registers its rules directly into Aesop's default rule set (evidence: `Automation/AesopRules.lean`). |
 
 ### Registered Rules
 

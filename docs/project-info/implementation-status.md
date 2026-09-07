@@ -63,8 +63,8 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | `Metalogic/SoundnessLemmas.lean` | ✅ | Bridge lemmas |
 | `Metalogic/Soundness.lean` | ✅ | Soundness theorem |
 | `Metalogic/Core/DeductionTheorem.lean` | ✅ | Deduction theorem |
-| `Metalogic/BXCanonical/Completeness.lean` | ✅ | `completeness` (`:196`), `completeness_dense` (`:255`), `completeness_ztime` (`:296`) -- all sorryAx-free |
-| `Metalogic/StrongCompleteness.lean` | ✅ | `completeness_rtime` (`:469`) and the four `consequence_completeness_*` theorems |
+| `Metalogic/BXCanonical/Completeness.lean` | ✅ | `completeness`, `completeness_dense`, `completeness_ztime` -- all sorryAx-free |
+| `Metalogic/StrongCompleteness.lean` | ✅ | `completeness_rtime` and the four `consequence_completeness_*` theorems |
 | `Metalogic/Decidability/` | 🔶 | Decision procedure implemented; sound direction proved, completeness direction open |
 | `Metalogic/DiscreteNonCompactness.lean` | ✅ | Machine-refutes ZTime strong completeness |
 | `Metalogic/SetConsequence.lean` | ✅ | Set-based consequence layer; states `CompactBase`/`CompactDense` and their strong-completeness and model-existence siblings |
@@ -94,7 +94,7 @@ Module-by-module implementation status for the Bimodal TM logic library.
   `completeness_ztime`, `completeness_rtime` -- are fully proven and sorryAx-free at
   exactly `[propext, Classical.choice, Quot.sound]` (check C2).
 - `countermodel_discrete` is **proved**, not dead code, at
-  `FormalSystem/Metalogic/WeakCanonical/GroupModel/CountermodelBase.lean:142`.
+  `FormalSystem/Metalogic/WeakCanonical/GroupModel/CountermodelBase.lean`.
 - **Strong** completeness (arbitrary infinite `Γ : Set Formula`) is a separate question with
   three distinct statuses across the frame classes -- see
   [Known Limitations](known-limitations.md).

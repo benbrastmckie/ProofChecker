@@ -764,7 +764,7 @@ theorem set_lindenbaum (S : Set Formula) (hS : SetConsistent S) :
   -- Instantiate exists_maximal_of_chainClosed at SetConsistent
   -- Chain union consistency: consistent_chain_union
   -- Upper bound exists for every chain
-  -- Proven in FormalSystem/Metalogic/Core/MaximalConsistent.lean:303,
+  -- Proven in FormalSystem/Metalogic/Core/MaximalConsistent.lean,
 -- via consistent_chain_union (:264). NOT in an archived Completeness.lean.
 
 -- Truth lemma for canonical model (key completeness lemma, set-based)
@@ -805,8 +805,8 @@ theorem strong_completeness (Γ : Context) (φ : Formula) :
 ```
 
 **Key Implementation Note**: The `set_lindenbaum` theorem is fully proven using Zorn's lemma
-from Mathlib, at `FormalSystem/Metalogic/Core/MaximalConsistent.lean:303`. The proof relies on
-`consistent_chain_union` (`:264`), which shows that the union of a chain of consistent sets is
+from Mathlib, at `FormalSystem/Metalogic/Core/MaximalConsistent.lean`. The proof relies on
+`consistent_chain_union`, which shows that the union of a chain of consistent sets is
 consistent.
 
 ### 4.2a The set-based consequence layer
@@ -817,20 +817,20 @@ distinction between consequence completeness and *strong* completeness is made p
 
 | Item | Location | What it is |
 |------|----------|------------|
-| `SetConsistent` | `Core/MaximalConsistent.lean:96` | Consistency of a possibly-infinite set, **finitary**: no finite sublist derives `⊥` |
-| `SetMaximalConsistent` | `Core/MaximalConsistent.lean:103` | Maximality of such a set |
-| `set_lindenbaum` | `Core/MaximalConsistent.lean:303` | Every `SetConsistent` set extends to a `SetMaximalConsistent` one |
-| `not_setConsistent_of_setDerivable_bot` | `SetConsequence.lean:416` | The bridge from set-derivability of `⊥` back to inconsistency |
-| `SatisfiableSet` | `SetConsequence.lean:153` | Satisfiability of a premise set over the frames of a class -- the `FrameClass`-indexed primitive |
-| `ModelExistence` | `SetConsequence.lean:163` | Finite satisfiability lifts to satisfiability, at a class |
-| `Compact` | `SetConsequence.lean:174` | Semantic compactness of a class's consequence relation |
-| `StrongCompleteness` | `SetConsequence.lean:184` | The strong-completeness statement, at a class |
-| `StrongCompletenessBase` | `SetConsequence.lean:446` | `StrongCompleteness .Base` -- **proved**, as `Compactness.lean`'s `strongCompletenessBase` |
-| `CompactBase` | `SetConsequence.lean:453` | `Compact .Base` -- **proved**, as `compactBase` |
-| `ModelExistenceBase` | `SetConsequence.lean:478` | `ModelExistence .Base` -- **proved**, as `modelExistenceBase` |
-| `StrongCompletenessDense` | `SetConsequence.lean:494` | `StrongCompleteness .Dense` -- **proved**, as `strongCompletenessDense` |
-| `CompactDense` | `SetConsequence.lean:499` | `Compact .Dense` -- **proved**, as `compactDense` |
-| `ModelExistenceDense` | `SetConsequence.lean:517` | `ModelExistence .Dense` -- **proved**, as `modelExistenceDense` |
+| `SetConsistent` | `Core/MaximalConsistent.lean` | Consistency of a possibly-infinite set, **finitary**: no finite sublist derives `⊥` |
+| `SetMaximalConsistent` | `Core/MaximalConsistent.lean` | Maximality of such a set |
+| `set_lindenbaum` | `Core/MaximalConsistent.lean` | Every `SetConsistent` set extends to a `SetMaximalConsistent` one |
+| `not_setConsistent_of_setDerivable_bot` | `SetConsequence.lean` | The bridge from set-derivability of `⊥` back to inconsistency |
+| `SatisfiableSet` | `SetConsequence.lean` | Satisfiability of a premise set over the frames of a class -- the `FrameClass`-indexed primitive |
+| `ModelExistence` | `SetConsequence.lean` | Finite satisfiability lifts to satisfiability, at a class |
+| `Compact` | `SetConsequence.lean` | Semantic compactness of a class's consequence relation |
+| `StrongCompleteness` | `SetConsequence.lean` | The strong-completeness statement, at a class |
+| `StrongCompletenessBase` | `SetConsequence.lean` | `StrongCompleteness .Base` -- **proved**, as `Compactness.lean`'s `strongCompletenessBase` |
+| `CompactBase` | `SetConsequence.lean` | `Compact .Base` -- **proved**, as `compactBase` |
+| `ModelExistenceBase` | `SetConsequence.lean` | `ModelExistence .Base` -- **proved**, as `modelExistenceBase` |
+| `StrongCompletenessDense` | `SetConsequence.lean` | `StrongCompleteness .Dense` -- **proved**, as `strongCompletenessDense` |
+| `CompactDense` | `SetConsequence.lean` | `Compact .Dense` -- **proved**, as `compactDense` |
+| `ModelExistenceDense` | `SetConsequence.lean` | `ModelExistence .Dense` -- **proved**, as `modelExistenceDense` |
 
 The four statements are one `FrameClass`-indexed family; the per-class names are instantiations
 of it, with their statements unchanged. `.RTime` is available by the same instantiation but
@@ -885,7 +885,7 @@ Dense and ZTime are incomparable (density contradicts discreteness); so are ZTim
 RTime.
 
 **The governing invariant** is `ax.minFrameClass ≤ fc`
-(`FormalSystem/ProofSystem/Axioms.lean:588`): an axiom may appear in a derivation parameterized
+(`FormalSystem/ProofSystem/Axioms.lean`): an axiom may appear in a derivation parameterized
 by frame class `fc` only when its minimum frame class is at most `fc`. This single constraint
 replaces the ad-hoc predicates an earlier design used.
 
@@ -904,13 +904,13 @@ that class targets the *dense* RTime predicate `ValidRTime`, not `ValidComplete`
 
 ### 4.2c Dedekind completeness and the real line
 
-`completeness_rtime` (`FormalSystem/Metalogic/StrongCompleteness.lean:469`) is the fourth
+`completeness_rtime` (`FormalSystem/Metalogic/StrongCompleteness.lean`) is the fourth
 weak completeness theorem, and the one that reaches the real line:
 
 | Theorem | Location |
 |---------|----------|
-| `completeness_rtime` | `StrongCompleteness.lean:469` |
-| `consequence_completeness_rtime` | `StrongCompleteness.lean:450` |
+| `completeness_rtime` | `StrongCompleteness.lean` |
+| `consequence_completeness_rtime` | `StrongCompleteness.lean` |
 
 The semantic target is `ValidRTime`, whose binder list is a linearly ordered
 `AddCommGroup` that is densely ordered, nontrivial, and Dedekind complete (every nonempty

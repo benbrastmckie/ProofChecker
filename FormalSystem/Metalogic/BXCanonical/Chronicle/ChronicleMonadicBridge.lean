@@ -93,7 +93,7 @@ them. Phase 30 consumes the generic versions at `D := ℝ`.
 ## Note for the record
 
 `mkSigFrom` lives in `WeakCanonical/Transfer.lean`, which carries this repository's single
-live `sorry` at `:1242` in an **unrelated** declaration. Importing it is normal and already
+live `sorry` in an **unrelated** declaration. Importing it is normal and already
 universal in this tree. `Transfer.lean` is not attempted here.
 
 ## Main results
@@ -527,7 +527,7 @@ subformulas of the root. Part 4's truth correspondence is closure-bounded, so Pa
 re-runs it unrestricted; that needs unrestricted Until/Since coherence.
 
 It is available for free. `cantor_bfmcs_dense_restricted_fuc` / `_buc`
-(`ChronicleToCountermodelBasic.lean:755` / `:680`) are polymorphic in `root` and **discard**
+(`ChronicleToCountermodelBasic.lean:755` / ) are polymorphic in `root` and **discard**
 their closure-membership argument (their proofs open with `intro t φ ψ _`), so instantiating at
 `root := Formula.untl α β` — respectively `Formula.snce α β` — and discharging with
 `self_mem_subformulaClosure` recovers the unrestricted statement. This is the same **self-root
@@ -583,8 +583,7 @@ draw on Part 5 rather than on the restricted hypotheses.
 (`chronicle_temporal_truth_effective`). No source: original work, like the rest of the bridge. -/
 
 /-- The chronicle bridge's effective-formula operator: `effectiveFormula` at this structure's own
-atom maps, `mkAtomMap root` (`Transfer.lean`, which is `Subtype.val`) and `mkAtomMapFwd root`
-(`:300`).
+atom maps, `mkAtomMap root` (`Transfer.lean`, which is `Subtype.val`) and `mkAtomMapFwd root`.
 
 On `subformulaClosure root` it is the identity in the sense that matters — `mkAtomMapFwd_section`
 makes the round trip identity on `root.predFormulas`, and Part 2 puts every closure atom and
@@ -767,7 +766,7 @@ instances of the other axioms hold everywhere"*, executed in Lean:
 2. `theorem_in_mcs` (`Core/MaximalConsistent.lean:491`) puts it in the family's MCS at *every*
    rational — Reynolds' "hold everywhere";
 3. Part 6 reads it back semantically, and `kPlus_formula_correct` / `kMinus_formula_correct`
-   (`Kamp/KPlusFaithful.lean:150` / `:170`) read the `K⁺` / `K⁻` the axioms are stated with.
+   (`Kamp/KPlusFaithful.lean:150` / ) read the `K⁺` / `K⁻` the axioms are stated with.
 
 Step 3's bridge lemma is the one the plan names: `Axiom.prior_U_gap` is stated with
 `Formula.kPlus` (`Axioms.lean:377`; `Syntax/Formula.lean:180`), and `kPlus_formula_correct` is
@@ -1023,7 +1022,7 @@ Phases 17-22 consume it in exactly this form.
 `kampDedekindExpressiveCompleteness`. **No declaration of that name exists in the tree.** The
 landed names are `KampFaithfulExpressiveCompleteness` (the obligation type,
 `PriorExpressivenessDense.lean:170`) and `kampFaithfulExpressiveCompletenessOpen` (its
-inhabitant, `:277`), composed into `uSExpressivelyCompleteOverDensePrior` (`:302`), which is what
+inhabitant), composed into `uSExpressivelyCompleteOverDensePrior`, which is what
 is used here. -/
 
 /-- **Expressive completeness at the chronicle bridge** — `uSExpressivelyCompleteOverDensePrior`

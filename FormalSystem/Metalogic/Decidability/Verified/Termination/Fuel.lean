@@ -1592,7 +1592,7 @@ and it corrects the residual's "orthogonal to the fuel figure" framing. Source:
 
 * `estimateBranchDifficulty` (`Saturation.lean:360-364`) is `1 + 3*tempCount + 2*modCount + len/4`,
   so it is **always ≥ 1** — no arm is ever starved to `0` by a zero difficulty.
-* `allocateFuelProportionally (fuel+1) branches` (`:378-388`) hands each arm
+* `allocateFuelProportionally (fuel+1) branches` hands each arm
   `min (max 1 (fuel.succ * d / max 1 totalDifficulty)) fuel` — a **proportional share**, and the
   arms' difficulties sum to `totalDifficulty`, so `k` arms of equal difficulty each receive about
   `fuel / k`, not `fuel`.

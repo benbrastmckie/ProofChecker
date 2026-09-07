@@ -232,7 +232,7 @@ definitions rather than as prose.
    `branch.boxPosAtWorldTime l.world l.time` — the `T(□B)` sitting at the *triggering* label, not
    at every label. A `T(□φ)` at a different world is not copied to the fresh time.
 2. *World-minting does not copy box formulas at all — it copies their contents.* `boxNeg` and
-   `diamondPos` (`Tableau.lean:535`, `:577`) run `branch.boxPosFormulas.filterMap` with the arm
+   `diamondPos` (`Tableau.lean:535`) run `branch.boxPosFormulas.filterMap` with the arm
    `| .box inner => SignedFormula.pos inner { world := freshWorld, time := bsf.label.time }`, so
    the fresh world receives `T(B)`, never `T(□B)`. `BoxContextClosed` therefore fails at the
    first minted world whenever any `T(□φ)` is on the branch — which is exactly the case it was

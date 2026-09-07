@@ -240,10 +240,10 @@ noncomputable def de (Γ : Context) (A B C : Formula) (h1 : (A :: Γ) ⊢ C) (h2
 
 ```
 Classical.propDecidable (Classical Axiom)
-└── deduction_with_mem (DeductionTheorem.lean:206)
-    └── deductionTheorem (DeductionTheorem.lean:332)
-        ├── generalizedModalK (GeneralizedNecessitation.lean:66) ⚠️ NEEDS FIX
-        ├── generalizedTemporalK (GeneralizedNecessitation.lean:101) ⚠️ NEEDS FIX
+└── deduction_with_mem (DeductionTheorem.lean)
+    └── deductionTheorem (DeductionTheorem.lean)
+        ├── generalizedModalK (GeneralizedNecessitation.lean) ⚠️ NEEDS FIX
+        ├── generalizedTemporalK (GeneralizedNecessitation.lean) ⚠️ NEEDS FIX
         └── Propositional.lean (noncomputable section)
             ├── lceImp (line 737)
             ├── rceImp (line 755)
