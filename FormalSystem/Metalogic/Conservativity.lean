@@ -92,7 +92,7 @@ machine-checked**, not merely documented.
 **One correction to the research report.** The report asserted `z1 φ = tr (Z1 φ')` as a
 syntactic identity. It is not, and cannot be: `Formula.someFuture` is a top-level `untl`, and
 by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. The bridge
-`BaseLanguage.notGNot_imp_F` closes the gap derivably instead — see `z1_translate`.
+`BaseLanguage.notGNotImpF` closes the gap derivably instead — see `z1_translate`.
 
 ## CEB / `FrameClass.Base` — refuted in the source; TM⁺ half machine-checked, TM half not machine-checkable here
 
