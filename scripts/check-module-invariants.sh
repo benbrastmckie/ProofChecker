@@ -438,9 +438,11 @@ ENFORCE_C10=${ENFORCE_C10:-1} # no stale docs/latex/typst paths (enforced)
 ENFORCE_C9_DOCS=${ENFORCE_C9_DOCS:-0} # no task-number citations under docs/ (NOT yet enforced)
 # C16 gates the Batteries env_linter batch (defsWithUnderscore, docBlame, simpNF,
 # structureInType, tacticDocs, unusedArguments -- everything `lake exe runLinter`/the
-# configured `lintDriver` checks). scripts/nolints.json grandfathers the 307 findings
-# that existed when it was generated, so a clean run here means "no NEW finding", not
-# "the tree has zero findings" -- exactly CI's own `lake lint` gate. Enforced from the
+# configured `lintDriver` checks). scripts/nolints.json grandfathers 217 findings, all
+# of them `unusedArguments` (the sole permanently-grandfathered category; every other
+# category was burned down to genuine conformance rather than suppressed). A clean run
+# here therefore means "no NEW finding", not "the tree has zero findings" -- exactly
+# CI's own `lake lint` gate. Enforced from the
 # outset because nolints.json makes it genuinely green today, unlike C8/C9/C10 above.
 ENFORCE_C16=${ENFORCE_C16:-1} # env_linter batch has no un-nolisted finding (enforced)
 # C20 tier 2 asks every publication-facing surface to cite declaration names rather
@@ -1787,13 +1789,15 @@ echo
 # `lake exe runLinter FormalSystem` runs Batteries' full env_linter suite -- the same
 # one `lintDriver := "batteries/runLinter"` wires into `lake lint`/CI -- and reads
 # scripts/nolints.json unconditionally, filtering out every declaration recorded
-# there before deciding pass/fail. nolints.json grandfathers the 307 findings that
-# existed when it was generated (`lake exe runLinter --update FormalSystem`), so a
-# clean run here means "no NEW finding since the grandfather baseline", mirroring
-# CI's own `lake lint` gate exactly -- this is the local equivalent of that check.
-# Never regenerate nolints.json to make a genuine regression disappear; confirm
-# every new finding is intentional (or itself grandfather-worthy) before running
-# `--update` again.
+# there before deciding pass/fail. nolints.json grandfathers 217 findings, all of them
+# `unusedArguments` -- the sole permanently-grandfathered category, on the measured
+# evidence recorded in docs/development/NAMING_CONVENTION_DEVIATION.md. A clean run
+# here therefore means "no NEW finding since the grandfather baseline", mirroring CI's
+# own `lake lint` gate exactly -- this is the local equivalent of that check. Never
+# regenerate nolints.json to make a genuine regression disappear: `--update` rewrites
+# the file wholesale from current findings and would grandfather the regression along
+# with everything else. To retire a category, fix it and remove its rows with a `jq`
+# filter, then prove the removal with a green `lake exe runLinter FormalSystem`.
 #
 # `dupNamespace` is deliberately NOT part of this batch (it is a separate Lean-core
 # text linter, not a Batteries @[env_linter], and never appears in runLinter's
@@ -1812,9 +1816,13 @@ echo
 # linter's verdict closely, in milliseconds, with no build. This is intentionally
 # an approximation (it will miss `to_additive`-style generated names, and
 # multi-line/attribute-heavy declarations are best-effort) -- acceptable because
-# this half is reporting-only. Validated against ChronicleTypes.lean: finds
-# exactly the same 14 declarations `lake lint --builtin-only --lint-only
-# .dupNamespace` reports, at the same lines. A HARDCODED count was deliberately
+# this half is reporting-only. For a cheap cross-check against the REAL linter,
+# `lake env lean <file>` re-elaborates a single file against the existing oleans in
+# roughly two seconds, runs `dupNamespace` for real, and writes no oleans -- a
+# different route entirely from the ~10-minute full-rebuild
+# `lake lint --builtin-only --lint-only .dupNamespace` path described above, and the
+# one to reach for when this scanner's verdict on a file needs confirming. A
+# HARDCODED count was deliberately
 # rejected here: this script exists in part to catch hand-typed numbers drifting
 # from the tree (see C14, and the two documents Phase 6 of this task corrects),
 # so freezing dupNamespace's count would be the same defect class in miniature.

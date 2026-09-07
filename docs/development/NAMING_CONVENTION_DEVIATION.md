@@ -18,22 +18,62 @@ operational warning about what does and does not count as evidence for this lint
 
 ## Outcome
 
-| Measure | Before | After |
-|---|---|---|
-| `defsWithUnderscore`, unmasked | **861** | **0** |
-| `scripts/nolints.json` `defsWithUnderscore` entries | 860 | **0** (the file survives, carrying only the grandfathered `docBlame` rows) |
-| Inline `@[nolint defsWithUnderscore]` attributes | 0 | **7**, all on auto-generated `tactic*` names |
-| `unusedArguments` | 124 | 124 |
-| `LINTER FAILED` | 115 | 115 |
-| `docBlame` | 39 | 39 |
-| `tacticDocs` | 4 | 4 |
-| `structureInType` | 1 | 1 |
+The table below is the **linter-debt burndown**, measured live at the end of that work. "Before"
+is the state `scripts/nolints.json` recorded when the CI linter gate was first turned on;
+"after" is the current tree, re-measured with `jq -r '.[][0]' scripts/nolints.json | sort |
+uniq -c` and a green `lake exe runLinter FormalSystem`.
 
-Every sibling category is unchanged to the unit, which is the evidence that the count fell by
-conformance rather than by silencing something.
+| Category | Before | After | How it was cleared |
+|---|---|---|---|
+| `unusedArguments` | 217 | **217** | permanently grandfathered on measured evidence — see below |
+| `docBlame` | 51 | **0** | 48 by docstring, 3 by in-source `@[nolint docBlame]` on `let rec` auxiliaries |
+| `defsWithUnderscore` | 33 | **0** | renamed to lowerCamelCase; 2 anonymous instances given explicit names |
+| `tacticDocs` | 4 | **0** | docstrings on the second `syntax` command of each tactic pair |
+| `simpNF` | 1 | **0** | the duplicate `length_range_map` deleted; its 5 use sites rewritten onto the Mathlib lemmas |
+| `structureInType` | 1 | **0** in the JSON | migrated to an in-source `@[nolint structureInType]` with the large-elimination reason at the site |
+| **`scripts/nolints.json` total** | **307** | **217** | a 90-entry (29%) reduction, all of it by conformance |
+| `dupNamespace` (Lean core, not in the JSON) | 14 | **0** | `structure Chronicle` relocated out of its same-named namespace |
 
-Alongside the renames, the library root moved from `Theories/Bimodal/` to `FormalSystem/` and the
-root namespace `Bimodal` became `FormalSystem`.
+Nothing in this table was cleared by regenerating the suppression file. `lake exe runLinter
+--update` was deliberately never run: it rewrites `nolints.json` wholesale from current findings
+and would grandfather a genuine regression along with everything else. Each category was instead
+fixed, then removed from the JSON with a `jq` filter, and the removal proved by a green
+`lake exe runLinter FormalSystem`.
+
+Alongside the earlier renames, the library root moved from `Theories/Bimodal/` to `FormalSystem/`
+and the root namespace `Bimodal` became `FormalSystem`.
+
+## `unusedArguments` — permanently grandfathered, on evidence
+
+`unusedArguments` is the one category that is **not** burned down, and the decision is recorded
+here rather than left implicit in a JSON file nobody re-reads.
+
+Of the 217 findings, **207 (95.4%) have *only* instance-implicit arguments unused**, dominated by:
+
+| Unused instance argument | Findings |
+|---|---|
+| `[DecidableEq sig.preds]` | 130 |
+| `[Fintype sig.preds]` | 122 |
+| `[Nontrivial D]` | 41 |
+| `[IsDualClosed C]` | 23 |
+| `[IsOrderedAddMonoid D]` | 8 |
+
+(The rows overlap: one declaration can carry several unused instance binders.) The findings are
+concentrated **167 of 217 in `Metalogic.WeakCanonical`** — re-measured against the current tree,
+not quoted from the original audit.
+
+These are typeclass parameters retained for **signature uniformity** across families of
+declarations sharing one interface. The linter's own advice — delete the argument — is wrong for
+such a family: dropping `[Fintype sig.preds]` from the members that happen not to use it would
+make the family's signatures diverge and force every call site to know which member it is
+calling. The uniform signature is the point.
+
+**The 10 non-instance findings are a different matter and are a named future item.** These are
+genuine dead hypotheses: `branchTruthAt_untl` / `_snce`, `regionFrame` / `regionHistory`,
+`StepD.badComp_isBadInterval`, `ghr93_strategy_compose.compose_wc` / `_right`,
+`exists_singleton_class_between`, `kEquiv_classBlock`, `goodDense_unionClasses`. Removing them is
+a real signature change with call-site fallout, deliberately out of scope for the burndown; it is
+recorded here so it is not mistaken for part of the grandfathering rationale.
 
 ## The naming rule now in force
 
@@ -84,17 +124,28 @@ mathematical layer.
 This remains the single most important operational fact in this document, and deleting
 `nolints.json` did not change it.
 
-`defsWithUnderscore` is an *environment* linter. It emits **nothing** during `lake build`, and CI
-runs `lean-action` with `lint: false`. A green build therefore carries **no information** about
-this category. The only gate that observes it is an explicit:
+`defsWithUnderscore` is an *environment* linter. It emits **nothing** during `lake build`, so a
+green build carries **no information** about this category. What has changed since this section
+was first written is CI: `lean-action` now runs with **`lint: true`**, so `lake lint` gates every
+push against `scripts/nolints.json`'s grandfathered baseline. A green *build* still proves
+nothing here; a green *CI run* now does, but only in the "no NEW finding" sense the baseline
+allows.
+
+Locally the gate is:
 
 ```
-lake exe batteries/runLinter FormalSystem
+lake exe runLinter FormalSystem
 ```
 
-Plain `lake exe runLinter` fails — the package declares no `lintDriver`. Expect
-`defsWithUnderscore` to be absent from the output, and the sibling categories to remain live and
-unchanged at the counts tabulated above.
+This now works directly — the package declares `lintDriver := "batteries/runLinter"`, which is
+also what `lake lint` and CI invoke. Expect `defsWithUnderscore` to be absent from the output,
+and `unusedArguments` to be the only category still carried in `scripts/nolints.json`.
+
+`dupNamespace` is not part of this batch at all: it is a Lean-core syntax linter, not a Batteries
+`@[env_linter]`, and never appears in `runLinter`'s output regardless of its true count. To check
+one file against the real linter cheaply, `lake env lean <file>` re-elaborates it against the
+existing oleans in about two seconds and writes none. `scripts/check-module-invariants.sh`'s C16
+also reports it via a live textual scan.
 
 > **Trap when parsing the output.** batteries pretty-prints `@Name` for declarations with
 > implicit arguments. A parser that does not strip the leading `@` silently loses **425 of 861**
@@ -125,6 +176,23 @@ because `isBadNameWithUnderscore` (`Mathlib/Tactic/Linter/Style.lean`) whitelist
 `Mathlib.Tactic` namespace prefix outright. This repository's tactics live under
 `FormalSystem.Automation`, so they are not covered by that whitelist.
 
+Four further in-source exemptions were added by the linter-debt burndown, each with its reason
+stated at the declaration:
+
+```lean
+attribute [nolint docBlame] PriorityQueue.insert.insertSorted  -- `let rec` auxiliary
+attribute [nolint docBlame] bestFirstSearch.searchLoop         -- `let rec` auxiliary
+attribute [nolint docBlame] iddfsSearch.iterate                -- `let rec` auxiliary
+@[nolint structureInType] structure MembershipWitness          -- large elimination is load-bearing
+```
+
+The three `docBlame` exemptions are forced: a `let rec` auxiliary is a declaration Lean
+synthesizes, with no source position at which a docstring could be attached — there is no way to
+satisfy the linter, only to exempt it. The `structureInType` exemption is the `DerivationTree`
+argument in miniature: `findMembershipWitness` returns `Option (MembershipWitness Γ φ)` and the
+proof-search layer eliminates that option in *data* position, which a `Prop`-valued structure
+could not support.
+
 The seven exempted tokens are the ones referenced from `docs/`, where renaming would be a
 user-facing API break. Internal-only tokens were renamed instead rather than exempted:
 `modal_norm`, `prop_norm`, `modal_op_norm`, `temporal_norm`, `modal_norm_all`, `modal_norm_at`,
@@ -145,6 +213,17 @@ Nothing about the naming rule itself; full Mathlib conformance is now the settle
 is recorded in [`LEAN_STYLE_GUIDE.md`](LEAN_STYLE_GUIDE.md). The remaining live question is
 narrower: if Mathlib's linter ever stops whitelisting the `Mathlib.Tactic` prefix and starts
 requiring camelCase tactic tokens, the seven exemptions above become renames.
+
+**It has already reopened once.** This section declared `defsWithUnderscore` closed at 0; by the
+time the CI linter gate was turned on, 33 findings had accumulated again — 20 of them in
+`FormalSystem.BaseLanguage`, which did not exist when the original migration ran. They were
+grandfathered into `scripts/nolints.json` rather than fixed, which is precisely the silent-drift
+failure mode the section below on suppression files describes. The burndown re-closed the
+category at 0 and removed its rows from the JSON. The lesson is the operational one already
+stated above: "CLOSED" is a statement about a measurement taken at a moment, and only a standing
+gate keeps it true. That gate now exists (`lint: true` in CI, plus C16 in
+`scripts/check-module-invariants.sh`), so a third reopening should surface as a failing check
+rather than as a quietly-growing JSON file.
 
 ## The frame-class tag names: `ZTime` / `RTime`
 

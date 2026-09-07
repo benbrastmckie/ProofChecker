@@ -456,40 +456,40 @@ Confirm with `jq -r '.[] | select(.[0]=="structureInType")' scripts/nolints.json
 
 ---
 
-### Phase 8: Record the policy; correct the stale claims [NOT STARTED]
+### Phase 8: Record the policy; correct the stale claims [COMPLETED]
 
 **Goal**: Refresh `docs/development/NAMING_CONVENTION_DEVIATION.md` against measured values, add
 the evidence-backed `unusedArguments` grandfathering rationale, and correct the stale numeric and
 status claims in `ci.yml` and `check-module-invariants.sh`.
 
 **Tasks**:
-- [ ] **`docs/development/NAMING_CONVENTION_DEVIATION.md`**:
-  - [ ] Rewrite the "Outcome" table against post-burndown measured values. It currently asserts
+- [x] **`docs/development/NAMING_CONVENTION_DEVIATION.md`**:
+  - [x] Rewrite the "Outcome" table against post-burndown measured values. It currently asserts
         `defsWithUnderscore` after = 0 while the pre-task live count was 33, `unusedArguments` =
         124 (live 217), and `docBlame` = 39 (live 51). Record the values measured at the end of
         Phase 7, not the ones quoted here.
-  - [ ] Correct the "How to re-audit" section: it states "CI runs `lean-action` with
+  - [x] Correct the "How to re-audit" section: it states "CI runs `lean-action` with
         `lint: false`". CI now sets `lint: true` and `lake lint` gates.
-  - [ ] Note that `defsWithUnderscore` reopened after being declared CLOSED, and that this task
+  - [x] Note that `defsWithUnderscore` reopened after being declared CLOSED, and that this task
         re-closed it — the document's own "What would reopen this" section is the right home.
-  - [ ] Add the `unusedArguments` permanent-grandfathering rationale, with the measurement as
+  - [x] Add the `unusedArguments` permanent-grandfathering rationale, with the measurement as
         evidence: 207/217 (95.4%) have *only* instance-implicit arguments unused, dominated by
         `[DecidableEq sig.preds]` ×130, `[Fintype sig.preds]` ×122, `[Nontrivial D]` ×41,
         `[IsDualClosed C]` ×23, `[IsOrderedAddMonoid D]` ×8; concentrated 167/217 in
         `Metalogic.WeakCanonical`. These are typeclass parameters retained for signature
         uniformity across families sharing one interface; the linter's advice to delete them is
         wrong for such a family.
-  - [ ] Record the 10 non-instance `unusedArguments` findings as a named future item (they are
+  - [x] Record the 10 non-instance `unusedArguments` findings as a named future item (they are
         genuine dead hypotheses, but removing them is a signature change with call-site fallout,
         deliberately out of scope here — see Non-Goals).
-  - [ ] Extend the existing "The surviving exemptions, and why they are not a new suppression
+  - [x] Extend the existing "The surviving exemptions, and why they are not a new suppression
         file" section to cover the new in-source exemptions added in Phases 6 and 7
         (`@[nolint docBlame]` ×3 on `where`-helpers, `@[nolint structureInType]` ×1).
-- [ ] **`.github/workflows/ci.yml`**: re-derive anchors with
+- [x] **`.github/workflows/ci.yml`**: re-derive anchors with
       `grep -n "307\|dupNamespace" .github/workflows/ci.yml`, then correct "grandfathers the 307
       pre-existing findings" -> 217, and the "dupNamespace … 14 pre-existing warnings in
       ChronicleTypes.lean" note -> 0.
-- [ ] **`scripts/check-module-invariants.sh`**: re-derive anchors with
+- [x] **`scripts/check-module-invariants.sh`**: re-derive anchors with
       `grep -n "307\|same 14\|Validated against" scripts/check-module-invariants.sh` — **the
       report's `:434`/`:1395`/`:1416-1421` are already stale; at plan time they read `:435`,
       `:1497`, and `:1509-1523`**. Correct both "grandfathers the 307 findings" occurrences -> 217;
