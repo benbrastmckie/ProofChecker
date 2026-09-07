@@ -583,18 +583,24 @@ reverted after review showed the regex damaged prose there.
 ### Phase 11: Docstring three-register pass A [IN PROGRESS]
 
 **Goal**: `Semantics/Validity.lean` and `Semantics/FrameClassValidity.lean` carry roughly half
-their current prose, with no mathematical claim lost.
+their current prose, with no mathematical claim lost. *(deviation: altered — prose fell 999 ->
+944 lines in `Validity.lean` and 199 -> 191 in `FrameClassValidity.lean`, a 6% cut, not 50%.
+Every archaeology hit is gone, the triplicated `soundness_rtime` caveat is stated once, and the
+register is corrected throughout; what remains is register-(a) content — definitions of record,
+paper alignment, caller traps — and cutting to 50% would delete mathematical claims, which the
+phase's own acceptance forbids. Verified mechanically: the set of backticked identifiers and
+paper anchors in each file is unchanged except for those relocated to the ADR-008 extract.)*
 
 **Tasks**:
-- [ ] Delete archaeology from `Validity.lean` (19 hits: "formerly a sorry", "before this delta",
+- [x] Delete archaeology from `Validity.lean` (19 hits: "formerly a sorry", "before this delta",
       "earlier revisions of this docstring", "used to live").
-- [ ] Rewrite remaining doc comments in the present tense stating what IS, with a paper anchor
+- [x] Rewrite remaining doc comments in the present tense stating what IS, with a paper anchor
       and caller traps where applicable.
-- [ ] Fix `Validity.lean`'s claim that `SemanticConsequence` has a binder list (it is an
+- [x] Fix `Validity.lean`'s claim that `SemanticConsequence` has a binder list (it is an
       abbreviation with none).
-- [ ] Extract `FrameClassValidity.lean`'s rejected-refactoring passage (the `FrameClass`
+- [x] Extract `FrameClassValidity.lean`'s rejected-refactoring passage (the `FrameClass`
       relocation rationale) for relocation to an ADR in Phase 13; leave a one-line pointer.
-- [ ] Verify no mathematical claim was dropped by diffing the claim set before and after.
+- [x] Verify no mathematical claim was dropped by diffing the claim set before and after.
 
 **Timing**: 2 hours
 
@@ -604,6 +610,8 @@ their current prose, with no mathematical claim lost.
 
 **Scope Hypothesis**: `Validity.lean` is 1,001 lines at 71.3% comment share with 19 archaeology
 hits; `FrameClassValidity.lean` is 202 lines at 83.2% with 0. Re-measure both at phase start.
+**Re-measured: `Validity.lean` 999 lines / 65.1% / 7 hits; `FrameClassValidity.lean` 199 / 0
+hits.** Now 944 lines / 63.0% / **0 hits**, and 191 lines.
 
 **Files to modify**:
 - `FormalSystem/Semantics/Validity.lean`
