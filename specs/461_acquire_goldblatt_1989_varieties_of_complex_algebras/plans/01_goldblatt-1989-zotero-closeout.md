@@ -1,7 +1,7 @@
 # Implementation Plan: Task #461
 
 - **Task**: 461 - Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 2 hours
 - **Dependencies**: 460 (per task metadata; not blocking — the acquisition it gated is already complete)
 - **Research Inputs**: specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md
