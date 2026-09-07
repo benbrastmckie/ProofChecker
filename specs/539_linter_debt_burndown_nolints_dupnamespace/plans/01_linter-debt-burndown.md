@@ -272,28 +272,28 @@ confirm each declaration's true call-site count with `grep -rnw` rather than ass
 
 ---
 
-### Phase 4: `defsWithUnderscore` — the remaining 13, and drop the category [NOT STARTED]
+### Phase 4: `defsWithUnderscore` — the remaining 13, and drop the category [COMPLETED]
 
 **Goal**: Rename the remaining 13 `defsWithUnderscore` declarations (including giving explicit
 lowerCamelCase names to two anonymous instances), then remove the whole category from
 `nolints.json` and prove the removal with a green `runLinter`.
 
 **Tasks**:
-- [ ] Enumerate the remainder:
+- [x] Enumerate the remainder:
       `jq -r '.[] | select(.[0]=="defsWithUnderscore") | .[1]' scripts/nolints.json | grep -v '^FormalSystem\.BaseLanguage\.'`
       (expected 13, spread across `Metalogic.WeakCanonical` ×5, `Theorems.TemporalDerived` ×2, and
       one each in `Theorems.DedekindDerived`, `StarLanguage`, `Semantics`,
       `Metalogic.Independence`, `Metalogic.Decidability.Verified.Bridge.TemporalCarrier`,
       `Metalogic.BXCanonical.Chronicle`).
-- [ ] Rename each declaration and its call sites (exact-token grep across `FormalSystem/` and
+- [x] Rename each declaration and its call sites (exact-token grep across `FormalSystem/` and
       `Tests/`).
-- [ ] Handle the two Lean-generated instance names specially:
+- [x] Handle the two Lean-generated instance names specially:
       `instSuccOrderLexProdRatInt_formalSystem` and `instPredOrderLexProdRatInt_formalSystem` have
       zero references and come from anonymous instances in
       `FormalSystem/Metalogic/WeakCanonical/GroupModel/RamseyFactorization.lean`. Fix by giving
       those two instances explicit lowerCamelCase names. (Mathlib's linter whitelists a `_mathlib`
       suffix but not `_formalSystem`, so no whitelist route exists.)
-- [ ] Drop the category:
+- [x] Drop the category:
       `jq 'map(select(.[0] == "defsWithUnderscore" | not))' scripts/nolints.json > /tmp/n.json && mv /tmp/n.json scripts/nolints.json`
 
 **Timing**: 1.5 hours

@@ -36,7 +36,7 @@ for an arbitrary `TemporalOrder`. Both are supplied by the hypothesis under whic
 * `NoMaxOrder D` is free from `Nontrivial` plus the ordered-group structure, via
   `TaskFrame.exists_pos_of_nontrivial` (`noMaxOrder_of_duration`);
 * `SuccOrder D` comes from `Semantics.duration_dense_or_least_pos`'s non-dense branch fed into
-  `SuccOrder.ofSuccLeIff (· + p)` (`succOrder_of_isLeast_pos`).
+  `SuccOrder.ofSuccLeIff (· + p)` (`succOrderOfIsLeastPos`).
 
 Both are plain lemmas returning the structure, **not** global instances: `SuccOrder` and
 `NoMaxOrder` on an arbitrary duration carrier have tree-wide elaboration surface, and the frame
@@ -62,7 +62,7 @@ adjudication of record is `specs/paper-definitions-of-record.md`'s reading note 
 ## Main results
 
 * `translationFrame`, `permissiveFrame` — the two witness frames
-* `noMaxOrder_of_duration`, `succOrder_of_isLeast_pos` — the glue
+* `noMaxOrder_of_duration`, `succOrderOfIsLeastPos` — the glue
 * `translationHF`, `permissiveHF` — each witness frame's reference total history, bundled
 * `translation_realizes`, `translation_realizes_allPast`, `translation_realizes_allFuture`,
   `permissive_realizes` — the atom-realisation step, named once instead of rebuilt inline
@@ -91,7 +91,7 @@ with (→) from `x < x + p` and (←) from `p ≤ y - x`.
 Combined with `Semantics.duration_dense_or_least_pos`, this is exactly the `SuccOrder` a
 *non-densely-ordered* duration group carries. A plain lemma rather than a global instance.
 -/
-@[instance_reducible] noncomputable def succOrder_of_isLeast_pos {D : TemporalOrder} {p : ↑D}
+@[instance_reducible] noncomputable def succOrderOfIsLeastPos {D : TemporalOrder} {p : ↑D}
     (hp : IsLeast {x : ↑D | 0 < x} p) : SuccOrder ↑D :=
   SuccOrder.ofSuccLeIff (fun x => x + p) (by
     intro a b
@@ -278,7 +278,7 @@ theorem validOn_dn_iff_denselyOrdered (D : TemporalOrder) :
           rwa [add_comm] at this
         exact absurd hlt (not_lt.mpr h3)
       have hap : a < a + p := lt_add_of_pos_right a hp.1
-      letI so := succOrder_of_isLeast_pos hp
+      letI so := succOrderOfIsLeastPos hp
       letI nm := noMaxOrder_of_duration D
       -- The realising data: the "blip" assignment, false exactly at `a + p`.
       set f : ↑D → Bool := fun t => decide (t ≠ a + p) with hf

@@ -395,7 +395,7 @@ inductive Axiom : Formula → Type where
   -- The JPL paper's `def:TMplus-c` bases its complete-order extension BX_c on a single extra
   -- axiom, CO = `△(Hφ → F(Hφ)) → (Hφ → Gφ)` (`Formula.co`), rather than on this triple.
   -- This tree keeps the Reynolds triple as the OFFICIAL basis, and CO is a derived theorem
-  -- over it: see `FormalSystem.Theorems.DedekindDerived.co_derived`, which proves
+  -- over it: see `FormalSystem.Theorems.DedekindDerived.coDerived`, which proves
   -- `⊢[fc] Formula.co φ` for every `fc` with `RTime ≤ fc` using `prior_U_gap` and base
   -- axioms only -- neither `prior_S_gap` nor `sep` is needed. The semantic companion is
   -- `FormalSystem.Metalogic.SoundnessLemmas.co_valid`.

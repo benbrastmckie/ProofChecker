@@ -169,7 +169,7 @@ theorem f_content_iff_not_neg_in_g_content {M : Set Formula}
     -- h_sf_in : someFuture phi ∈ M, h_af_in : (someFuture (phi.neg.neg)).neg ∈ M
     -- Derive ⊢ someFuture phi → someFuture (phi.neg.neg) via DNI + BX3
     have h_sf_impl : [] ⊢ (Formula.someFuture phi).imp (Formula.someFuture phi.neg.neg) :=
-      FormalSystem.Theorems.TemporalDerived.someFuture_mono (Combinators.notNotIntro phi)
+      FormalSystem.Theorems.TemporalDerived.someFutureMono (Combinators.notNotIntro phi)
     have h_sf_nn_in : Formula.someFuture phi.neg.neg ∈ M :=
       SetMaximalConsistent.mp_of_theorem h_mcs h_sf_impl h_sf_in
     exact set_consistent_not_both h_mcs.1 (Formula.someFuture phi.neg.neg) h_sf_nn_in h_af_in
@@ -181,7 +181,7 @@ theorem f_content_iff_not_neg_in_g_content {M : Set Formula}
     | inl h_in =>
       -- Derive ⊢ someFuture (phi.neg.neg) → someFuture phi via DNE + BX3
       have h_sf_impl : [] ⊢ (Formula.someFuture phi.neg.neg).imp (Formula.someFuture phi) :=
-        FormalSystem.Theorems.TemporalDerived.someFuture_mono (Propositional.doubleNegation phi)
+        FormalSystem.Theorems.TemporalDerived.someFutureMono (Propositional.doubleNegation phi)
       exact SetMaximalConsistent.mp_of_theorem h_mcs h_sf_impl h_in
     | inr h_neg_in => exact absurd h_neg_in h_af_not_in
 
@@ -206,9 +206,9 @@ theorem p_content_iff_not_neg_in_h_content {M : Set Formula}
   constructor
   · intro h_sp_in h_ap_in
     rw [h_ap_eq] at h_ap_in
-    -- Derive ⊢ somePast phi → somePast (phi.neg.neg) via DNI + somePast_mono
+    -- Derive ⊢ somePast phi → somePast (phi.neg.neg) via DNI + somePastMono
     have h_sp_impl : [] ⊢ (Formula.somePast phi).imp (Formula.somePast phi.neg.neg) :=
-      FormalSystem.Theorems.TemporalDerived.somePast_mono (Combinators.notNotIntro phi)
+      FormalSystem.Theorems.TemporalDerived.somePastMono (Combinators.notNotIntro phi)
     have h_sp_nn_in : Formula.somePast phi.neg.neg ∈ M :=
       SetMaximalConsistent.mp_of_theorem h_mcs h_sp_impl h_sp_in
     exact set_consistent_not_both h_mcs.1 (Formula.somePast phi.neg.neg) h_sp_nn_in h_ap_in
@@ -218,7 +218,7 @@ theorem p_content_iff_not_neg_in_h_content {M : Set Formula}
     | inl h_in =>
       -- Derive ⊢ somePast (phi.neg.neg) → somePast phi via DNE + BX3'
       have h_sp_impl : [] ⊢ (Formula.somePast phi.neg.neg).imp (Formula.somePast phi) :=
-        FormalSystem.Theorems.TemporalDerived.somePast_mono (Propositional.doubleNegation phi)
+        FormalSystem.Theorems.TemporalDerived.somePastMono (Propositional.doubleNegation phi)
       exact SetMaximalConsistent.mp_of_theorem h_mcs h_sp_impl h_in
     | inr h_neg_in => exact absurd h_neg_in h_ap_not_in
 

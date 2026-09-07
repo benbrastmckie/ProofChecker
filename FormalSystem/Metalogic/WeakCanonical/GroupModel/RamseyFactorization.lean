@@ -171,7 +171,7 @@ end Ramsey
 /-! ## Successor and predecessor structure on the lexicographic carriers -/
 
 /-- `succ (q, z) = (q, z + 1)`: within a fiber, `ℤ`-steps are covering steps of `ℚ ×ₗ ℤ`. -/
-noncomputable instance : SuccOrder (ℚ ×ₗ ℤ) :=
+noncomputable instance succOrderLexProdRatInt : SuccOrder (ℚ ×ₗ ℤ) :=
   SuccOrder.ofSuccLeIff (fun x => toLex ((ofLex x).1, (ofLex x).2 + 1)) (by
     intro a b
     rw [Prod.Lex.le_iff, Prod.Lex.lt_iff]
@@ -185,7 +185,7 @@ noncomputable instance : SuccOrder (ℚ ×ₗ ℤ) :=
       · exact Or.inr ⟨h1, by omega⟩)
 
 /-- `pred (q, z) = (q, z - 1)`. -/
-noncomputable instance : PredOrder (ℚ ×ₗ ℤ) :=
+noncomputable instance predOrderLexProdRatInt : PredOrder (ℚ ×ₗ ℤ) :=
   PredOrder.ofPredLeIff (fun x => toLex ((ofLex x).1, (ofLex x).2 - 1)) (by
     intro a b
     rw [Prod.Lex.le_iff, Prod.Lex.lt_iff]

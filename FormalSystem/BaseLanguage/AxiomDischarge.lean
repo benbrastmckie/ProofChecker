@@ -41,7 +41,7 @@ is a single `DerivationTree.axiom` or a single named theorem.
 | TC | `Axiom.connect_future` | **no** — `P`-bridge under `G` |
 | TL | `Axiom.temp_linearity` | **no** — `F`-bridge *and* a disjunct reshuffle |
 | DF | `Theorems.DiscreteUnfolding.dfSchema` | **no** — `F`-bridge on both sides |
-| CO | `Theorems.DedekindDerived.co_derived` | **no** — `F`-bridge under `△` |
+| CO | `Theorems.DedekindDerived.coDerived` | **no** — `F`-bridge under `△` |
 
 The research report predicted "exact syntactic match" for TC and TS. That is **refuted**, and
 structurally so rather than by accident: BL's `F`/`P` are *derived* (`Fφ = ¬G¬φ`), so `tr (Fφ)`
@@ -60,7 +60,7 @@ lines.
 Each extension row consumes the BL-side `h_fc` directly rather than re-deriving it: for `df` it
 is exactly `Discrete ≤ fc`, which is what `DerivationTree.lift` wants for `dfSchema`; for `dn`
 it is `Dense ≤ fc`, which is what `Axiom.density`'s own side condition wants; for `co` it is
-`Dedekind ≤ fc`, which is `co_derived`'s hypothesis. Base rows use `FrameClass.base_le fc`.
+`Dedekind ≤ fc`, which is `coDerived`'s hypothesis. Base rows use `FrameClass.base_le fc`.
 
 ## Module Invariant
 
@@ -319,7 +319,7 @@ def dischargeDn {fc : FrameClass} (h_fc : FrameClass.Dense ≤ fc) (a : BLFormul
     ⊢[fc] tr (a.allFuture.allFuture.imp a.allFuture) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.density (tr a)) h_fc
 
-/-- **CO** at `Dedekind`. `Theorems.DedekindDerived.co_derived` proves `Formula.co A`; `tr` of
+/-- **CO** at `Dedekind`. `Theorems.DedekindDerived.coDerived` proves `Formula.co A`; `tr` of
 BL's CO differs from it only in the inner `F(HA)`, which the bridge repairs — pushed under `→`
 by `impMono` and then under `△` by `alwaysMono`.
 
@@ -329,7 +329,7 @@ def dischargeCo {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : BLFormul
     ⊢[fc] tr ((a.allPast.imp a.allPast.someFuture).always.imp (a.allPast.imp a.allFuture)) :=
   impTrans
     (alwaysMono (impMono (identity (tr a).allPast) (notGNotImpF (tr a).allPast)))
-    (FormalSystem.Theorems.DedekindDerived.co_derived h_fc (tr a))
+    (FormalSystem.Theorems.DedekindDerived.coDerived h_fc (tr a))
 
 /-- **DF** at `Discrete`. `Theorems.DiscreteUnfolding.dfSchema` is the Route-A syntactic
 derivation; it is stated at `FrameClass.ZTime` and lifted here by the BL-side side condition.

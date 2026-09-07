@@ -191,7 +191,7 @@ variable {D : Type} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]
 Two shared order lemmas, carried at the **weakest** hypotheses that support them:
 `[AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]` and nothing else — no `Nontrivial`, no
 `Archimedean`, no `SuccOrder`. That matters, because the three call sites they replace each
-supply the `IsLeast` witness from a *different* source (`succOrder_of_isLeast_pos` from the
+supply the `IsLeast` witness from a *different* source (`succOrderOfIsLeastPos` from the
 duration dichotomy, the two `LexInt` lemmas from a hand-built witness at `ℤ ×ₗ ℤ`) and none of
 them has a successor structure available at the point of use — that is what they are building.
 

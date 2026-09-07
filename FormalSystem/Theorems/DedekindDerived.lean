@@ -14,7 +14,7 @@ import FormalSystem.Theorems.Propositional.Connectives
 # Derived Theorems of the Dedekind Frame Class
 
 Hilbert-side companion to `FormalSystem/Metalogic/SoundnessLemmas/CoValidity.lean`. The
-headline result is `co_derived`: the paper's **CO** principle
+headline result is `coDerived`: the paper's **CO** principle
 
   `CO(φ) := △(Hφ → F(Hφ)) → (Hφ → Gφ)`
 
@@ -24,7 +24,7 @@ No `Axiom.co` constructor is added; the official Dedekind-class basis remains
 
 ## Scaffolding
 
-Everything before `co_derived` is frame-class-generic base machinery, provable at
+Everything before `coDerived` is frame-class-generic base machinery, provable at
 `FrameClass.Base`:
 
 - `alwaysElimPast` / `alwaysElimHere` / `alwaysElimFuture` — `fc`-generic wrappers around the
@@ -41,7 +41,7 @@ Everything before `co_derived` is frame-class-generic base machinery, provable a
 
 ## Main result
 
-- `co_derived {fc} (h_fc : FrameClass.RTime ≤ fc) (φ) : ⊢[fc] Formula.co φ`.
+- `coDerived {fc} (h_fc : FrameClass.RTime ≤ fc) (φ) : ⊢[fc] Formula.co φ`.
 
 ## Direction of the result
 
@@ -282,7 +282,7 @@ noncomputable def snceAllPastAndImp {fc : FrameClass} (ψ : Formula) :
 
 `⊢[fc] (Hφ → F(Hφ)) → (((¬φ ∨ K⁺(¬φ)) ∧ S(Hφ ∧ φ, φ)) → ⊥)`.
 
-This is the whole content of the `co_derived` endgame, packaged as a *theorem* (empty context)
+This is the whole content of the `coDerived` endgame, packaged as a *theorem* (empty context)
 so that it can be pushed under `G` by `gDistribution` and fed to BX3 at the Prior-U witness.
 
 At the witness `s`, the `Since` conjunct — supplied by BX13 (`enrichment_until`) from the fact
@@ -369,7 +369,7 @@ modal and temporal necessitation, and temporal duality
 `ValidRTime (Formula.co φ)` by an independent least-upper-bound argument, so soundness
 applied to this derivation lands on a statement already established semantically.
 -/
-noncomputable def co_derived {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc)
+noncomputable def coDerived {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc)
     (φ : Formula) : ⊢[fc] Formula.co φ :=
   let χ := φ.allPast
   let tri := Formula.always (χ.imp χ.someFuture)

@@ -53,7 +53,7 @@ its possible pasts and its possible futures — and they are exactly what makes,
 SS `(α⁺ S ⟐φ⁻) → ⟐(α⁺ S φ⁻)`) are obtained by the temporal-duality rule, since `swapTemporal`
 exchanges `IsPureFuture` and `IsPurePast`. `⊡`-necessitation is likewise a derived rule
 (necessitation for `□` followed by `box_stab`; `StarLanguage/Derivation.lean`,
-`stab_necessitation`).
+`stabNecessitation`).
 
 **Refuted, hence absent.** `⊡φ → □⊡φ`, `G⊡p → ⊡Gp`, `⊡GPp → G⊡Pp`, *Determined* `φ → ⊡φ` (over
 non-deterministic frames), and `P⊡p → ⊡Pp` are all refuted in

@@ -28,7 +28,7 @@ to say "the one result carried here", which stopped being true three witnesses a
 
 1. The paper's `CO` principle does not derive Reynolds' `Axiom.prior_U_gap` over the dense base.
    The converse direction — Reynolds' triple *does* derive `CO` — is
-   `FormalSystem.Theorems.DedekindDerived.co_derived`, so the two settle the relationship in both
+   `FormalSystem.Theorems.DedekindDerived.coDerived`, so the two settle the relationship in both
    directions.
 2. `Sat .RTime ⊊ Mod (AxiomSet .RTime)`, witnessed by the static frame over `ℚ`.
 3. `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.

@@ -24,7 +24,7 @@ This repository's official Dedekind-class axiom basis is the Reynolds triple
 `Axiom.prior_U_gap` / `Axiom.prior_S_gap` / `Axiom.sep`; CO is **not** an `Axiom`
 constructor here. `co_valid` is therefore not a soundness case — nothing in the soundness
 induction consumes it. It is an *independent semantic check* on the formalization: the
-proof-theoretic companion `FormalSystem.Theorems.DedekindDerived.co_derived` derives CO from
+proof-theoretic companion `FormalSystem.Theorems.DedekindDerived.coDerived` derives CO from
 the Reynolds basis, and soundness applied to that derivation must land on exactly the statement
 proved here. Agreement of the two routes is the intended consistency check; a mismatch would
 mean `Formula.co` transcribes the paper formula incorrectly.
@@ -69,7 +69,7 @@ because the mathematics needs it.
 
 **Status of CO in this repository.** CO is a derived object, not a primitive: the official
 Dedekind-class basis remains `Axiom.prior_U_gap` / `Axiom.prior_S_gap` / `Axiom.sep`, and the
-Hilbert-side companion is `FormalSystem.Theorems.DedekindDerived.co_derived`. See
+Hilbert-side companion is `FormalSystem.Theorems.DedekindDerived.coDerived`. See
 `Formula.co` for the source citation and the operator-resolution warning.
 -/
 theorem co_valid (φ : Formula) : ValidRTime (Formula.co φ) := by

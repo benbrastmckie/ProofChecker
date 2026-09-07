@@ -67,7 +67,7 @@ discipline's rollout — `TemporalContent.lean`'s `f_content_iff_not_neg_in_g_co
 `p_content_iff_not_neg_in_h_content`, `TemporalCoherence.lean`'s
 `restricted_temporal_backward_{G,H}[_strict]`, and `WitnessSeed.lean`'s two `_absurd` /
 `_to_all_*_neg` helper pairs — all fall on this side of the boundary: each direction already
-calls its own pre-existing, independently-defined primitive (`someFuture_mono`/`somePast_mono`,
+calls its own pre-existing, independently-defined primitive (`someFutureMono`/`somePastMono`,
 `dneTheorem`), so there is no isolable closed syntactic step left to dualize, and building the
 general MCS-image-transport machinery to cross the boundary was judged disproportionate to the
 size of these four pairs. See the implementation plan's Phase 5 Reasoned Exclusions table for the

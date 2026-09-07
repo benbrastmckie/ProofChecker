@@ -29,7 +29,7 @@ rule, and what lets the soundness companion recursion
 
 **There is no `⊡`-necessitation rule.** `⊢ φ ⟹ ⊢ ⊡φ` is derivable — `necessitation` gives
 `⊢ □φ`, then `box_stab` (`□φ → ⊡φ`) and modus ponens — and is provided as
-`stab_necessitation` below. Adding it as an eighth constructor would break the exact seven-rule
+`stabNecessitation` below. Adding it as an eighth constructor would break the exact seven-rule
 mirror that `ofPlus` and the soundness recursion rely on.
 
 ## Backward conservativity
@@ -176,7 +176,7 @@ theorem StarDerivable.mono {fc₁ fc₂ : FrameClass} (h : fc₁ ≤ fc₂) {Γ 
 
 /-- **`⊡`-necessitation is derived**: `⊢ φ ⟹ ⊢ ⊡φ`, by `necessitation` to `⊢ □φ` and then
 `box_stab` (`□φ → ⊡φ`). This is why `StarDerivationTree` carries no `⊡` rule of its own. -/
-def stab_necessitation {fc : FrameClass} {φ : StarFormula}
+def stabNecessitation {fc : FrameClass} {φ : StarFormula}
     (d : ⊢⋆[fc] φ) : ⊢⋆[fc] StarFormula.stab φ :=
   .modus_ponens [] _ _
     (.axiom [] _ (StarAxiom.box_stab φ) (FrameClass.base_le fc))

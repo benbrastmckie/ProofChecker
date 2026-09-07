@@ -63,7 +63,7 @@ measurement as it stood when this module was written, and are kept as the record
 refutation. They are superseded on one point: `Kamp/ZetaUniformExtractFaithful.lean` now carries
 `Kamp.kampArm_zeta_faithful`, the ζ wire at `HasFaithfulDedekindINF` / `HasFaithfulDedekindSUP`,
 sorry-free. What remains open is the spine *above* the wire; see
-`kampFaithfulExpressiveCompleteness_open`'s docstring for the measured remaining inventory.
+`kampFaithfulExpressiveCompletenessOpen`'s docstring for the measured remaining inventory.
 
 **And the obstruction is strictly worse than a missing composition.** The tree already
 machine-checks that the dense hypotheses do not supply the integer ones:
@@ -86,7 +86,7 @@ unavailability as a claim about this module's own target.
   (`Kamp/ZetaUniformExtractFaithful.lean`), `Kamp.aggOdPopFold_iff_faithful`
   (`Kamp/NfMultiAnchorBridge/AggregateOffDiagK1Faithful.lean`), the bridge and trichotomy files
   under `Kamp/NfMultiAnchorBridge/`, and the spine `Kamp/KampPriorFaithful.lean`.
-* `uSExpressivelyCompleteOverDensePrior_of_faithful` — **sorry-free**. The composition the plan
+* `uSExpressivelyCompleteOverDensePriorOfFaithful` — **sorry-free**. The composition the plan
   chartered, discharged in full: the obligation plus `prior_hasFaithfulDedekindINF_dense` /
   `prior_hasFaithfulDedekindSUP_dense` (Phase 10.1, `Kamp/KPlusFaithful.lean:474`, `:524`) gives
   the dense target. Every step of the intended composition that *can* be taken is taken here.
@@ -94,7 +94,7 @@ unavailability as a claim about this module's own target.
   by discharging the obligation. **This module is sorry-free**, as is the whole of
   `FormalSystem/` outside `Boneyard/` — check C3 of `scripts/check-module-invariants.sh` pins
   the structural-`sorry` inventory at zero by content.
-  `kampFaithfulExpressiveCompleteness_open` is a retained alias for
+  `kampFaithfulExpressiveCompletenessOpen` is a retained alias for
   `kampFaithfulExpressiveCompleteness` at the same type with no weakening, contributing no
   `sorryAx` downstream. Because the target is now **unconditional**, it is Reynolds' Theorem 3
   outright rather than Theorem 3 modulo an obligation.
@@ -112,7 +112,7 @@ Nothing in this module reaches arity `≥ 2`.
 
 ## Honesty charter
 
-`uSExpressivelyCompleteOverDensePrior_of_faithful`, the anti-vacuity block and the measurement
+`uSExpressivelyCompleteOverDensePriorOfFaithful`, the anti-vacuity block and the measurement
 corollary are **original glue**: no source states them, because no source works with this tree's
 separation of `SemanticPriorU` from `SemanticPriorUZ`. The *statement* being aimed at is
 Reynolds'; the route to it is this tree's.
@@ -192,7 +192,7 @@ def KampFaithfulExpressiveCompleteness {sig : MonadicSignature} [Fintype sig.pre
 
 /-! ## The composition — sorry-free
 
-This is the chartered composition piece — the `uSExpressivelyCompleteOverDensePrior_of_faithful`
+This is the chartered composition piece — the `uSExpressivelyCompleteOverDensePriorOfFaithful`
 bullet of "What this module lands" above — discharged in full. Every step of the chartered
 composition that the tree supports is taken here; the only thing standing between this and an
 unconditional `uSExpressivelyCompleteOverDensePrior` is the obligation above. -/
@@ -210,7 +210,7 @@ dense target, with the *same* witness formula `A`.
 Mirrors `uSExpressivelyCompleteOverPrior`'s shape exactly, `h_surj` binder included. Original
 glue on a sourced statement: Reynolds states the theorem, but not at this tree's separation of
 `SemanticPriorU` from `SemanticPriorUZ`, so the composition itself has no source. -/
-noncomputable def uSExpressivelyCompleteOverDensePrior_of_faithful
+noncomputable def uSExpressivelyCompleteOverDensePriorOfFaithful
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
@@ -285,7 +285,7 @@ noncomputable def kampFaithfulExpressiveCompleteness
 `kampFaithfulExpressiveCompleteness` under its former name, at the same type and with no
 weakening. It is kept so that every consumer written against the obligation under its former
 name continues to typecheck unchanged, and it contributes no `sorryAx` to anything downstream. -/
-noncomputable def kampFaithfulExpressiveCompleteness_open
+noncomputable def kampFaithfulExpressiveCompletenessOpen
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p) :
@@ -305,10 +305,10 @@ stronger `SemanticPriorUZ` / `SemanticPriorSZ`, is not — see this module's hea
 is real (its witness is `semanticPriorU_not_implies_semanticPriorUZ`, `PriorDefsDense.lean`,
 exhibiting `denseRayFlow`), so this is not a restatement of the landed theorem.
 
-**Unconditional and sorry-free.** It routes through `kampFaithfulExpressiveCompleteness_open`,
+**Unconditional and sorry-free.** It routes through `kampFaithfulExpressiveCompletenessOpen`,
 which is now a retained alias for the proved `kampFaithfulExpressiveCompleteness` at the same
 type and with no weakening; the composition itself,
-`uSExpressivelyCompleteOverDensePrior_of_faithful`, was always sorry-free. Being unconditional is
+`uSExpressivelyCompleteOverDensePriorOfFaithful`, was always sorry-free. Being unconditional is
 what makes this Reynolds' Theorem 3 outright rather than Theorem 3 modulo an obligation.
 
 Obtained by Rabinovich's method relativized to the faithful eq (5.2) carrier, **not** by
@@ -326,8 +326,8 @@ noncomputable def uSExpressivelyCompleteOverDensePrior
         (t : M.carrier),
         eval M (fun _ => t) psi ↔
         TemporalTruth M atomMap t A } :=
-  uSExpressivelyCompleteOverDensePrior_of_faithful atomMap h_surj
-    (kampFaithfulExpressiveCompleteness_open atomMap h_surj) psi
+  uSExpressivelyCompleteOverDensePriorOfFaithful atomMap h_surj
+    (kampFaithfulExpressiveCompletenessOpen atomMap h_surj) psi
 
 /-! ## Anti-vacuity
 
@@ -360,7 +360,7 @@ neither the target's hypothesis pair nor the intermediate carrier is empty.
 
 The carrier facts are Phase 13's `Kamp.hasFaithfulDedekindINF_of_dense_window` and its dual
 (`Kamp/KPlusFaithful.lean:672`, `:678`); listing them alongside the Prior hypotheses records that
-`uSExpressivelyCompleteOverDensePrior_of_faithful`'s *internal* step is inhabited here too, not
+`uSExpressivelyCompleteOverDensePriorOfFaithful`'s *internal* step is inhabited here too, not
 only its premise. -/
 theorem densePrior_target_hypotheses_inhabited :
     SemanticPriorU denseWindowFlow densePriorAtomMap ∧
@@ -392,19 +392,19 @@ hypotheses discharged from `densePrior_target_hypotheses_inhabited` rather than 
 
 **Sorry-free**, and stated parametrically in `H` rather than applying
 `kampFaithfulExpressiveCompleteness` internally: it consumes
-`uSExpressivelyCompleteOverDensePrior_of_faithful` rather than
+`uSExpressivelyCompleteOverDensePriorOfFaithful` rather than
 `uSExpressivelyCompleteOverDensePrior`, so what it exhibits is independent of *how* the
 expressive-completeness obligation is met. That was originally a way of staying honest while the
 obligation was open; now that `kampFaithfulExpressiveCompleteness` proves it, the parametric form
 is simply the stronger statement. It shows the target's conclusion is *reachable* at a dense
 structure, and that the route from the hypotheses to the carrier actually fires there. -/
-noncomputable def uSExpressivelyCompleteOverDensePrior_at_denseWindow
+noncomputable def uSExpressivelyCompleteOverDensePriorAtDenseWindow
     (H : KampFaithfulExpressiveCompleteness densePriorAtomMap densePriorAtomMap_surj) :
     { A : Formula //
       ∀ t : denseWindowFlow.carrier,
         eval denseWindowFlow (fun _ => t) denseTestPsi ↔
         TemporalTruth denseWindowFlow densePriorAtomMap t A } :=
-  let R := uSExpressivelyCompleteOverDensePrior_of_faithful densePriorAtomMap
+  let R := uSExpressivelyCompleteOverDensePriorOfFaithful densePriorAtomMap
     densePriorAtomMap_surj H denseTestPsi
   ⟨R.val, fun t => R.property denseWindowFlow
     semanticPriorU_of_dense_window semanticPriorS_of_dense_window t⟩

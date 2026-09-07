@@ -19,7 +19,7 @@ Two fields, matching the two things the bridge actually does with `D`:
 
 * `embed_finite` — the branch's finite time order has to be *placed* in `D`
   (`Bridge/Embed.lean`);
-* `frame_condition` — the countermodel has to refute the class's own validity predicate, so `D`
+* `frameCondition` — the countermodel has to refute the class's own validity predicate, so `D`
   has to satisfy that predicate's extra binders.
 
 Confining the divergence to four instance declarations is the "base development plus modular
@@ -28,7 +28,7 @@ not a fifth copy of the truth lemma.
 
 ## Why `FrameConditionFor` is `Type`-valued and not `Prop`-valued
 
-The obvious design — `frame_condition : Prop` — does not work, and the reason is `Discrete`.
+The obvious design — `frameCondition : Prop` — does not work, and the reason is `Discrete`.
 `ValidZTime`'s binder list (`Semantics/Validity.lean`) contains `[SuccOrder D]` and
 `[PredOrder D]`, and `SuccOrder`/`PredOrder` are **data** (`SuccOrder : (α : Type u) → [Preorder α]
 → Type u`, carrying the `succ` function), not propositions. A `Prop`-valued field could at best
@@ -78,7 +78,7 @@ open FormalSystem.ProofSystem
 /--
 The least-upper-bound property, in the exact shape `ValidComplete`/`ValidRTime` bind it —
 an explicit `Prop` binder rather than a `ConditionallyCompleteLinearOrder` instance swap. Stated
-here in that shape deliberately, so a `.RTime` carrier's `frame_condition` can be handed to
+here in that shape deliberately, so a `.RTime` carrier's `frameCondition` can be handed to
 those predicates verbatim.
 -/
 def HasLUBs (D : Type) [LinearOrder D] : Prop :=
@@ -125,19 +125,19 @@ class TemporalCarrier (fc : FrameClass) (D : Type)
   /-- Any finite linear order embeds monotonically into the carrier. -/
   embed_finite : ∀ (T : Type) [LinearOrder T] [Finite T], Nonempty (T ↪o D)
   /-- The class-specific frame condition, in the shape `Validity.lean` demands. -/
-  frame_condition : FrameConditionFor fc D
+  frameCondition : FrameConditionFor fc D
 
 /-! ## The four instances -/
 
 /-- `.Base` needs nothing beyond the shared binders; `ℚ` is the cheapest carrier that has them. -/
 instance : TemporalCarrier FrameClass.Base ℚ where
   embed_finite T := embed_finite_to_dense T ℚ
-  frame_condition := PUnit.unit
+  frameCondition := PUnit.unit
 
 /-- `.Dense` adds `DenselyOrdered`, which `ℚ` has. -/
 instance : TemporalCarrier FrameClass.Dense ℚ where
   embed_finite T := embed_finite_to_dense T ℚ
-  frame_condition := PLift.up inferInstance
+  frameCondition := PLift.up inferInstance
 
 /--
 `.Base` is also carried by `ℤ`, and this instance is what makes the `ℤ` milestone available to
@@ -156,7 +156,7 @@ routes through `Fintype.ofFinite`.
 -/
 noncomputable instance : TemporalCarrier FrameClass.Base ℤ where
   embed_finite T := embed_finite_to_int T
-  frame_condition := PUnit.unit
+  frameCondition := PUnit.unit
 
 /--
 `.ZTime` is carried by `ℤ`, and this is the instance that cannot reuse the dense embedding:
@@ -166,7 +166,7 @@ noncomputable instance : TemporalCarrier FrameClass.Base ℤ where
 -/
 instance : TemporalCarrier FrameClass.ZTime ℤ where
   embed_finite T := embed_finite_to_int T
-  frame_condition :=
+  frameCondition :=
     { succOrder := inferInstance
       predOrder := inferInstance
       succArch := inferInstance
@@ -179,7 +179,7 @@ instance : TemporalCarrier FrameClass.ZTime ℤ where
 -/
 instance : TemporalCarrier FrameClass.RTime ℝ where
   embed_finite T := embed_finite_to_dense T ℝ
-  frame_condition :=
+  frameCondition :=
     ⟨PLift.up inferInstance, PLift.up (fun _s hne hbdd => ⟨sSup _s, isLUB_csSup hne hbdd⟩)⟩
 
 /-! ## Placing a branch's times in a carrier
@@ -221,15 +221,15 @@ example : TemporalCarrier FrameClass.RTime ℝ := inferInstance
 
 /-- The `.RTime` frame condition really does deliver the lub binder `ValidRTime` wants. -/
 example : HasLUBs ℝ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.RTime) (D := ℝ)).2.down
+  (TemporalCarrier.frameCondition (fc := FrameClass.RTime) (D := ℝ)).2.down
 
 /-- …and the density binder alongside it. -/
 example : DenselyOrdered ℝ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.RTime) (D := ℝ)).1.down
+  (TemporalCarrier.frameCondition (fc := FrameClass.RTime) (D := ℝ)).1.down
 
 /-- The `.ZTime` frame condition delivers a successor operation on `ℤ`. -/
 noncomputable example : SuccOrder ℤ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.ZTime) (D := ℤ)).succOrder
+  (TemporalCarrier.frameCondition (fc := FrameClass.ZTime) (D := ℤ)).succOrder
 
 end Checks
 

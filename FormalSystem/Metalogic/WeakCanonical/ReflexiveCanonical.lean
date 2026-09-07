@@ -299,7 +299,7 @@ theorem reflCanR_linear (x y z : ReflCanDomain)
       have h_γ_to_γ₀ : [] ⊢ γ.imp γ₀ :=
         Combinators.impTrans (lceImp _ δ.neg) (lceImp γ₀ _)
       have h_Fγ_to_Fγ₀ : [] ⊢ (Formula.someFuture γ).imp (Formula.someFuture γ₀) :=
-        FormalSystem.Theorems.TemporalDerived.someFuture_mono h_γ_to_γ₀
+        FormalSystem.Theorems.TemporalDerived.someFutureMono h_γ_to_γ₀
       have h_β_to_nFγ₀ : [] ⊢ β.imp (Formula.someFuture γ₀).neg :=
         Combinators.impTrans (lceImp _ δ) (rceImp β₀ _)
       have h_l : [] ⊢ (Formula.and β (Formula.someFuture γ)).imp (Formula.someFuture γ₀).neg :=
@@ -318,7 +318,7 @@ theorem reflCanR_linear (x y z : ReflCanDomain)
       have h_β_to_β₀ : [] ⊢ β.imp β₀ :=
         Combinators.impTrans (lceImp _ δ) (lceImp β₀ _)
       have h_Fβ_to_Fβ₀ : [] ⊢ (Formula.someFuture β).imp (Formula.someFuture β₀) :=
-        FormalSystem.Theorems.TemporalDerived.someFuture_mono h_β_to_β₀
+        FormalSystem.Theorems.TemporalDerived.someFutureMono h_β_to_β₀
       have h_γ_to_nFβ₀ : [] ⊢ γ.imp (Formula.someFuture β₀).neg :=
         Combinators.impTrans (lceImp _ δ.neg) (rceImp γ₀ _)
       have h_l : [] ⊢ (Formula.and (Formula.someFuture β) γ).imp (Formula.someFuture β₀) :=
@@ -385,7 +385,7 @@ theorem reflCanR_linear (x y z : ReflCanDomain)
     · -- F(β∧Fγ): Fγ→Fγ₀, β→¬Fγ₀ → inconsistent
       have h_γ_to_γ₀ : [] ⊢ γ.imp γ₀ :=
         Combinators.impTrans (lceImp _ δ) (lceImp γ₀ _)
-      have h_Fγ_to_Fγ₀ := FormalSystem.Theorems.TemporalDerived.someFuture_mono h_γ_to_γ₀
+      have h_Fγ_to_Fγ₀ := FormalSystem.Theorems.TemporalDerived.someFutureMono h_γ_to_γ₀
       have h_β_to_nFγ₀ : [] ⊢ β.imp (Formula.someFuture γ₀).neg :=
         Combinators.impTrans (lceImp _ δ.neg) (rceImp β₀ _)
       have h_l : [] ⊢ (Formula.and β (Formula.someFuture γ)).imp (Formula.someFuture γ₀).neg :=
@@ -403,7 +403,7 @@ theorem reflCanR_linear (x y z : ReflCanDomain)
     · -- F(Fβ∧γ): Fβ→Fβ₀, γ→¬Fβ₀ → inconsistent
       have h_β_to_β₀ : [] ⊢ β.imp β₀ :=
         Combinators.impTrans (lceImp _ δ.neg) (lceImp β₀ _)
-      have h_Fβ_to_Fβ₀ := FormalSystem.Theorems.TemporalDerived.someFuture_mono h_β_to_β₀
+      have h_Fβ_to_Fβ₀ := FormalSystem.Theorems.TemporalDerived.someFutureMono h_β_to_β₀
       have h_γ_to_nFβ₀ : [] ⊢ γ.imp (Formula.someFuture β₀).neg :=
         Combinators.impTrans (lceImp _ δ) (rceImp γ₀ _)
       have h_l : [] ⊢ (Formula.and (Formula.someFuture β) γ).imp (Formula.someFuture β₀) :=

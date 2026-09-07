@@ -74,7 +74,7 @@ lemma some_future_all_future_neg_absurd {fc : FrameClass} {M : Set Formula}
   -- Contradiction with (someFuture psi.neg.neg).neg = allFuture (neg psi) ∈ M
   have h_sf_nn : Formula.someFuture psi.neg.neg ∈ M :=
     SetMaximalConsistent.mp_of_theorem h_mcs
-      (FormalSystem.Theorems.TemporalDerived.someFuture_mono (Combinators.notNotIntro psi)) h_F
+      (FormalSystem.Theorems.TemporalDerived.someFutureMono (Combinators.notNotIntro psi)) h_F
   exact set_consistent_not_both h_mcs.1 (Formula.someFuture psi.neg.neg) h_sf_nn h_G_neg
 
 open FormalSystem.ProofSystem FormalSystem.Theorems in
@@ -85,7 +85,7 @@ lemma some_past_all_past_neg_absurd {fc : FrameClass} {M : Set Formula}
     (h_H_neg : Formula.allPast (Formula.neg psi) ∈ M) : False := by
   have h_sp_nn : Formula.somePast psi.neg.neg ∈ M :=
     SetMaximalConsistent.mp_of_theorem h_mcs
-      (FormalSystem.Theorems.TemporalDerived.somePast_mono (Combinators.notNotIntro psi)) h_P
+      (FormalSystem.Theorems.TemporalDerived.somePastMono (Combinators.notNotIntro psi)) h_P
   exact set_consistent_not_both h_mcs.1 (Formula.somePast psi.neg.neg) h_sp_nn h_H_neg
 
 /-! ## Duality Conversions
@@ -103,7 +103,7 @@ lemma neg_some_future_to_all_future_neg {fc : FrameClass} {M : Set Formula}
     Formula.allFuture (Formula.neg phi) ∈ M := by
   -- Build derivation chain at Base level, then lift to fc
   have h_F_mono : [] ⊢ (Formula.someFuture phi.neg.neg).imp (Formula.someFuture phi) :=
-    FormalSystem.Theorems.TemporalDerived.someFuture_mono (Propositional.doubleNegation _)
+    FormalSystem.Theorems.TemporalDerived.someFutureMono (Propositional.doubleNegation _)
   have h_contra : [] ⊢ (Formula.someFuture phi).neg.imp (Formula.someFuture phi.neg.neg).neg :=
     Propositional.contraposition h_F_mono
   exact SetMaximalConsistent.mp_of_theorem h_mcs
@@ -117,7 +117,7 @@ lemma neg_some_past_to_all_past_neg {fc : FrameClass} {M : Set Formula}
     (h_neg_P : Formula.neg (Formula.somePast phi) ∈ M) :
     Formula.allPast (Formula.neg phi) ∈ M := by
   have h_P_mono : [] ⊢ (Formula.somePast phi.neg.neg).imp (Formula.somePast phi) :=
-    FormalSystem.Theorems.TemporalDerived.somePast_mono (Propositional.doubleNegation _)
+    FormalSystem.Theorems.TemporalDerived.somePastMono (Propositional.doubleNegation _)
   have h_contra : [] ⊢ (Formula.somePast phi).neg.imp (Formula.somePast phi.neg.neg).neg :=
     Propositional.contraposition h_P_mono
   exact SetMaximalConsistent.mp_of_theorem h_mcs

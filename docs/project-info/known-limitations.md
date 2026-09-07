@@ -331,7 +331,7 @@ content: any frame carrying a *looping duration* has periodic histories, hence p
 hence validates every instance of `CO`.
 
 The converse direction is a **positive** result: Reynolds's triple *does* derive `CO`, as
-`FormalSystem.Theorems.DedekindDerived.co_derived`. The two together settle the relationship in
+`FormalSystem.Theorems.DedekindDerived.coDerived`. The two together settle the relationship in
 both directions.
 
 ### Impact

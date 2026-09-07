@@ -1022,7 +1022,7 @@ Phases 17-22 consume it in exactly this form.
 **Naming note.** The plan cites this development's expressive-completeness result as
 `kampDedekindExpressiveCompleteness`. **No declaration of that name exists in the tree.** The
 landed names are `KampFaithfulExpressiveCompleteness` (the obligation type,
-`PriorExpressivenessDense.lean:170`) and `kampFaithfulExpressiveCompleteness_open` (its
+`PriorExpressivenessDense.lean:170`) and `kampFaithfulExpressiveCompletenessOpen` (its
 inhabitant, `:277`), composed into `uSExpressivelyCompleteOverDensePrior` (`:302`), which is what
 is used here. -/
 
@@ -1032,7 +1032,7 @@ with its two hypotheses discharged by Part 7.
 For every monadic formula `psi` of one free variable over the finite signature `mkSigFrom root`
 there is a temporal formula `A` true at exactly the points where `psi` is satisfied, *in the
 chronicle structure itself*. This is the form Reynolds' §6 Lemma 2 applies to `rhoFormula ε`. -/
-noncomputable def chronicleMonadic_expressiveCompleteness {fc : FrameClass}
+noncomputable def chronicleMonadicExpressiveCompleteness {fc : FrameClass}
     (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)

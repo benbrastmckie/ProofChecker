@@ -856,7 +856,7 @@ target fails.
 
 The result: `CO` does **not** derive `Axiom.prior_U_gap` over the dense base. The converse --
 Reynolds's triple *does* derive `CO` -- is
-`FormalSystem.Theorems.DedekindDerived.co_derived`, so the two together settle the relationship
+`FormalSystem.Theorems.DedekindDerived.coDerived`, so the two together settle the relationship
 in both directions.
 
 ---

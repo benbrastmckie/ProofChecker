@@ -14,7 +14,7 @@ import Mathlib.Algebra.Order.Archimedean.Real.Basic
 # `CO` does not derive Prior-U
 
 The paper's `CO` principle (`Formula.co`, `△(Hφ → F(Hφ)) → (Hφ → Gφ)`) is a *theorem* over the
-Reynolds Dedekind triple — that direction is `FormalSystem.Theorems.DedekindDerived.co_derived`.
+Reynolds Dedekind triple — that direction is `FormalSystem.Theorems.DedekindDerived.coDerived`.
 This file establishes the converse **failure**: over the dense base, `CO` does not derive
 `Axiom.prior_U_gap`.
 
@@ -204,7 +204,7 @@ def priorUGapFormula (φ : Formula) : Formula :=
 
 /-- The transcription **is** the axiom's formula: `Axiom.prior_U_gap` elaborates at it directly,
 which is the acceptance test for the transcription being character-for-character. -/
-def priorUGapFormula_isAxiom (φ : Formula) : Axiom (priorUGapFormula φ) := Axiom.prior_U_gap φ
+def priorUGapFormulaIsAxiom (φ : Formula) : Axiom (priorUGapFormula φ) := Axiom.prior_U_gap φ
 
 /-! ## The three membership facts -/
 

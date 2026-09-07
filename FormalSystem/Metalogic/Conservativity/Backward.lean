@@ -150,7 +150,7 @@ that is a genuine gap rather than an omission. Do not read `cec_backward` as est
 TM_c row.
 
 The BL-side CO axiom's translation is discharged by
-`FormalSystem.Theorems.DedekindDerived.co_derived`, itself sorry-free over the Reynolds triple.
+`FormalSystem.Theorems.DedekindDerived.coDerived`, itself sorry-free over the Reynolds triple.
 
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
