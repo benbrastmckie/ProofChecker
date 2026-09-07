@@ -691,10 +691,10 @@ theorem kvE_pastSliceId_of_end_zero {sig : MonadicSignature} [Fintype sig.preds]
         rw [hzs] at hzone
         have hzx1 : z < x1 := (hzone 0).1.mpr rfl
         have hnf := hrayC (Formula.snce Formula.top (kvEPastRayD P σ).neg).neg (by simp)
-        rw [temporal_truth_neg] at hnf
+        rw [temporalTruth_neg_iff] at hnf
         have hDz : TemporalTruth M atomMap z (kvEPastRayD P σ) := by
           by_contra hnD
-          exact hnf ⟨z, hzx1, (temporal_truth_neg M atomMap z _).mpr hnD,
+          exact hnf ⟨z, hzx1, (temporalTruth_neg_iff M atomMap z _).mpr hnD,
             fun r _ _ => id⟩
         rw [kvEPastRayD, kvE_fiberPosOnShift_correct P _ M h_UZ h_SZ z] at hDz
         obtain ⟨s', hmem', env', hev'⟩ := hDz

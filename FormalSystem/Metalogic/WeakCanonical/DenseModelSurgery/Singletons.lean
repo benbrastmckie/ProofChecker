@@ -399,7 +399,7 @@ theorem not_leftEnd_and_untl (hε : IsContempEquivDenseOn ε C) [InStructureClas
     {C : Formula} (hC : ∀ s : M.carrier, TemporalTruth M atomMap s C ↔ IsLeftEndPoint M ε s)
     (x : M.carrier) :
     ¬ TemporalTruth M atomMap x (Formula.and C (Formula.untl C.neg C)) := by
-  rw [Kamp.temporal_truth_and]
+  rw [Kamp.temporalTruth_and_iff]
   rintro ⟨hCx, y, hxy, hCy, hmid⟩
   have hxend : IsLeftEndPoint M ε x := (hC x).mp hCx
   have hyend : IsLeftEndPoint M ε y := (hC y).mp hCy
@@ -423,7 +423,7 @@ theorem not_leftEnd_and_untl (hε : IsContempEquivDenseOn ε C) [InStructureClas
     by_contra hcon
     exact hncy (contemp_of_between hε M hcy.le (not_lt.mp hcon) hcl)
   -- But then `C` holds at `l`, strictly between `x` and `y`.
-  exact ((Kamp.temporal_truth_neg M atomMap l C).mp (hmid l hxl hly)) ((hC l).mpr hlend)
+  exact ((Kamp.temporalTruth_neg_iff M atomMap l C).mp (hmid l hxl hly)) ((hC l).mpr hlend)
 
 /-- **A formula that never holds is not `K⁺`-true anywhere with a point above it** — printed
 p.184's *"so it certainly does not hold soon after `c`"*. -/
@@ -558,7 +558,7 @@ theorem reynolds_theorem5 (atomMap : Formula → sig.preds)
   have h3 := h_sep c' (classLeftEndFormula atomMap h_surj ε) h1 h2
   -- *"Certainly `K⁺C ∧ K⁻C` must hold at some `e` between `c` and `d` …"*
   obtain ⟨e, hce, hed, he⟩ := h3 d hc'd
-  rw [Kamp.temporal_truth_and, Kamp.kPlus_formula_correct, Kamp.kMinus_formula_correct] at he
+  rw [Kamp.temporalTruth_and_iff, Kamp.kPlus_formula_correct, Kamp.kMinus_formula_correct] at he
   -- *"… but clearly `e` must be in a class of its own."*
   exact ⟨e, lt_of_le_of_lt hcc'le hce, hed,
     isSingletonClass_of_kplus_kminus hε hC he.1 he.2⟩

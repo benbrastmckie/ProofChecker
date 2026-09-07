@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
+import FormalSystem.Automation.Tactics.UserTactics
 import FormalSystem.Automation.Tactics.Commands
 import FormalSystem.Automation.Tactics.PropDecide
 import FormalSystem.Automation.ProofSearch.Core
 import FormalSystem.Automation.ProofSearch.Strategies
 import FormalSystem.Automation.SuccessPatterns
-import FormalSystem.Automation.AesopRules
 import FormalSystem.Metalogic.WeakCanonical.EFGameTactics
 import FormalSystem.Automation.FormulaEnumerator
 import FormalSystem.Automation.DatasetGenerator
@@ -46,7 +46,6 @@ Aggregates all Automation components for the Core TM logic layer.
   - `PatternDatabase`: Records successful proof patterns
   - `PatternKey`: Formula structural features for pattern matching
   - `ProofStrategy`: Strategy types (Axiom, Assumption, ModusPonens, etc.)
-- `AesopRules`: Aesop rule set for TM logic automation
 
 ## Usage
 
@@ -98,5 +97,4 @@ Search strategies (in order):
 * [Tactics.lean](Automation/Tactics.lean) - Custom proof tactics
 * [ProofSearch.lean](Automation/ProofSearch.lean) - Native search functions
 * [SuccessPatterns.lean](Automation/SuccessPatterns.lean) - Pattern learning database
-* [AesopRules.lean](Automation/AesopRules.lean) - Aesop rule configuration
 -/

@@ -2,22 +2,32 @@
 
 Proof automation tactics and ML dataset generation pipeline for TM bimodal logic.
 
-This directory serves two complementary purposes:
-1. **Proof automation**: Custom Lean 4 tactics and Aesop rule sets for TM logic proofs
-2. **ML dataset pipeline**: Formula enumeration, labeling, validation, and export for ML benchmarks
+This directory serves two purposes, and they are very unequal in size:
+1. **Proof automation**: custom Lean 4 tactics for TM derivability goals
+2. **ML dataset pipeline**: formula enumeration, labelling, validation and export for ML
+   benchmarks
 
-The proof automation tools (AesopRules, SuccessPatterns) are used
-throughout the library. The ML pipeline (DatasetGenerator, FormulaEnumerator, etc.)
-produces the BMLogic benchmark datasets. Both rely on the ProofSearch/ and Tactics/
-subdirectories for their implementation infrastructure.
+**The ML pipeline is the larger half by an order of magnitude**, and it is what most of the
+files here are. It rests on `ProofSearch/` and on the decision procedure in `Metalogic/`.
+
+**`modal_search` is the pedagogical entry point, not library infrastructure.** It is the only
+proof-search tactic — `tm_auto`, `temporal_search` and `propositional_search` were removed
+after measurement showed they differed from it only in `SearchConfig` weight fields that the
+search never read — and it has **three call sites in the whole repository, all in
+`Examples/`**. Nothing in `Metalogic/`, `Theorems/` or `Semantics/` is proved by it. Reach for
+it to demonstrate that a formula is derivable; do not build a proof on it. The one genuinely
+load-bearing tactic in this directory is `propDecide`, and the six EF-game tactics in
+`Metalogic/WeakCanonical/EFGameTactics.lean` — which are not here — carry 68 call sites
+between them.
+
+There is no Aesop rule set. One existed and was retired for having zero consumers; see
+[`Boneyard/RetiredTactics/README.md`](../Boneyard/RetiredTactics/README.md).
 
 ## Modules
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Automation -->
 | File | Lines | Description |
 |------|-------|-------------|
-| `AesopRuleSet.lean` | 31 | Declares the `TMLogic` Aesop rule set that `AesopRules.lean` registers its axiom, forward-chaining and normalization rules into |
-| `AesopRules.lean` | 291 | Aesop rule set for TM logic: TMLogic declaration, forward chaining, normalization |
 | `AtomCanonicalization.lean` | 147 | Canonical form for formulas under atom permutation, so formulas identical up to atom renaming collapse to one dataset entry |
 | `AxiomNames.lean` | 57 | The canonical 45 `ProofSystem.Axiom` constructor names in `Axioms.lean` source order, extracted into a leaf module |
 | `BenchmarkAnchors.lean` | 593 | Benchmark anchor formulas: ground-truth valid/invalid formula pairs |
@@ -35,7 +45,7 @@ subdirectories for their implementation infrastructure.
 | `InterestingnessMetrics.lean` | 584 | Deterministic three-tier interestingness scoring for theorems and derivations |
 | `LemmaDB.lean` | 47 | Declares the `@[tmLemma]` label attribute the `modal_search` tactic family uses to enumerate derived theorems |
 | `MachineAppendixExport.lean` | 498 | Exports the complete TM axiomatization — 45 schemata, 7 rules, derived-operator definitions — as the JSONL machine appendix shipped with BimodalReference |
-| `Normalization.lean` | 1,325 | Bidirectional normalization for derived operators: the unfold direction reduces them to primitives, the fold direction restores them |
+| `Normalization.lean` | 1,271 | Bidirectional normalization for derived operators: the unfold direction reduces them to primitives, the fold direction restores them |
 | `NormalizationAttr.lean` | 43 | Declares the two simp sets `Normalization.lean` tags its unfold and fold lemmas with |
 | `PrefilterSoundness.lean` | 174 | Soundness proofs for each invalid-pattern recognizer in `DatasetGenerator.lean` |
 | `ProofFirstBenchmark.lean` | 188 | Eight cross-corpus metrics for labeled formula datasets, plus a side-by-side comparison utility |
@@ -55,9 +65,8 @@ subdirectories for their implementation infrastructure.
 
 | File | Purpose |
 |------|---------|
-| `AesopRules.lean` | `@[aesop]` rule set; use via `tm_auto` tactic |
 | `SuccessPatterns.lean` | Heuristic proof patterns for `ProofSearch/` |
-| `Tactics/` | Tactic elaboration (`apply_axiom`, `modal_t`, `tm_auto`) |
+| `Tactics/` | Tactic elaboration (`modal_search`, `propDecide`, `deduction`, `apply_axiom`, `modal_t`) |
 | `ProofSearch/` | Depth-limited proof search engine |
 
 `EFGameTactics.lean` is **not** in this directory, despite `Automation.lean` re-exporting it.

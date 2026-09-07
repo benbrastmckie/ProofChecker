@@ -25,7 +25,7 @@ faithful carrier:
 
 | this module's leaf consumer | landed faithful leaf it consumes |
 |---|---|
-| `CAggInt_clause_iff_faithful` | `bracketEndChar_kv_correct_one_prior_faithful` (`PriorInterfaceFaithful.lean:196`) |
+| `CAggInt.clause_iff_faithful` | `bracketEndChar_kv_correct_one_prior_faithful` (`PriorInterfaceFaithful.lean:196`) |
 | `aggPop1_correct_faithful`, `aggPop1F_correct_faithful` | `aggOdPopFold_iff_faithful` (`AggregateOffDiagK1Faithful.lean:89`) |
 | the three `k = 0` arms | *nothing* — their attained originals never touch the carrier (see below) |
 
@@ -279,15 +279,15 @@ theorem kampArm_diag_k1_correct_faithful (sub_nf : NormalForm sig 2 2) :
 
 /-! ## 3. The dispatcher clause iffs
 
-`CAggOd_clause_iff` (`AggregateOffDiagK1.lean:1164`) touches the carrier in exactly one of its six
+`CAggOd.clause_iff` (`AggregateOffDiagK1.lean:1164`) touches the carrier in exactly one of its six
 branches — the interior channel, which delegates to `bracketEndChar_kv_correct_one_prior`. The
 other five (`CExtPast`, `CAggPtX`, `CAggPtT`, `CExtFut`, and the 3-bot channel) are carrier-free
 in their originals. -/
 
 /-- **Interior clause iff at the faithful carrier** — the faithful sibling of
-`CAggInt_clause_iff` (`AggregateOffDiagK1.lean:1097`), delegating to the landed
+`CAggInt.clause_iff` (`AggregateOffDiagK1.lean:1097`), delegating to the landed
 `bracketEndChar_kv_correct_one_prior_faithful` (`PriorInterfaceFaithful.lean:196`). -/
-theorem CAggInt_clause_iff_faithful (M : OrderedMonadicStructure sig)
+theorem CAggInt.clause_iff_faithful (M : OrderedMonadicStructure sig)
     (qnf : NormalForm sig 1 3) (hrow : aggOdRowInt qnf)
     (h_INF : HasFaithfulDedekindINF M atomMap) (h_SUP : HasFaithfulDedekindSUP M atomMap)
     (x t : M.carrier) :
@@ -298,8 +298,8 @@ theorem CAggInt_clause_iff_faithful (M : OrderedMonadicStructure sig)
     M h_INF h_SUP x t
 
 /-- **The master clause iff at the faithful carrier** — the faithful sibling of
-`CAggOd_clause_iff` (`AggregateOffDiagK1.lean:1164`). Only the interior branch changes. -/
-theorem CAggOd_clause_iff_faithful (M : OrderedMonadicStructure sig)
+`CAggOd.clause_iff` (`AggregateOffDiagK1.lean:1164`). Only the interior branch changes. -/
+theorem CAggOd.clause_iff_faithful (M : OrderedMonadicStructure sig)
     (qnf : NormalForm sig 1 3)
     (h_INF : HasFaithfulDedekindINF M atomMap) (h_SUP : HasFaithfulDedekindSUP M atomMap)
     (x t : M.carrier) (hxt : x < t) :
@@ -307,11 +307,11 @@ theorem CAggOd_clause_iff_faithful (M : OrderedMonadicStructure sig)
       ∃ w : M.carrier, NfEvalNf M 1 3 (Fin.cons w (Fin.cons x (fun _ => t))) qnf := by
   unfold CAggOd
   split_ifs with h1 h2 h3 h4 h5
-  · exact CExtPast_clause_iff atomMap h_surj M qnf h1 x t hxt
-  · exact CAggPtX_clause_iff atomMap h_surj M qnf h2 x t hxt
-  · exact CAggInt_clause_iff_faithful atomMap h_surj M qnf h3 h_INF h_SUP x t
-  · exact CAggPtT_clause_iff atomMap h_surj M qnf h4 x t hxt
-  · exact CExtFut_clause_iff atomMap h_surj M qnf h5 x t hxt
+  · exact CExtPast.clause_iff atomMap h_surj M qnf h1 x t hxt
+  · exact CAggPtX.clause_iff atomMap h_surj M qnf h2 x t hxt
+  · exact CAggInt.clause_iff_faithful atomMap h_surj M qnf h3 h_INF h_SUP x t
+  · exact CAggPtT.clause_iff atomMap h_surj M qnf h4 x t hxt
+  · exact CExtFut.clause_iff atomMap h_surj M qnf h5 x t hxt
   · constructor
     · rintro ⟨vea, hmem, -⟩
       exact (List.not_mem_nil hmem).elim
@@ -329,7 +329,7 @@ theorem CAggOdSwap_clause_iff_faithful (M : OrderedMonadicStructure sig)
         M atomMap t x ↔
       ∃ w : M.carrier,
         NfEvalNf M 1 3 (Fin.cons w (Fin.cons x (fun _ => t))) qnf :=
-  (CAggOd_clause_iff_faithful atomMap h_surj M (renameNF aggOdSwap12 aggOdSwap12 qnf)
+  (CAggOd.clause_iff_faithful atomMap h_surj M (renameNF aggOdSwap12 aggOdSwap12 qnf)
       h_INF h_SUP t x htx).trans
     (exists_congr fun w => aggOdSwap12_eval_iff M qnf w x t)
 
@@ -350,7 +350,7 @@ noncomputable def aggPop1Faithful (sub_nf : NormalForm sig 2 2) : VVecEA2 :=
 
 /-- **Correctness of `aggPop1Faithful`** — the faithful sibling of `aggPop1_correct`
 (`AggregateOffDiagK1.lean:1277`). Fold induction by `aggOdPopFold_iff_faithful`; per-`qnf` clause
-by `CAggOd_clause_iff_faithful`. -/
+by `CAggOd.clause_iff_faithful`. -/
 theorem aggPop1_correct_faithful (M : OrderedMonadicStructure sig)
     (sub_nf : NormalForm sig 2 2)
     (h_INF : HasFaithfulDedekindINF M atomMap) (h_SUP : HasFaithfulDedekindSUP M atomMap)
@@ -365,10 +365,10 @@ theorem aggPop1_correct_faithful (M : OrderedMonadicStructure sig)
       (CAggOd atomMap h_surj) sub_nf.2 x t h_lt]
   constructor
   · intro h qnf
-    exact (CAggOd_clause_iff_faithful atomMap h_surj M qnf h_INF h_SUP x t h_lt).symm.trans
+    exact (CAggOd.clause_iff_faithful atomMap h_surj M qnf h_INF h_SUP x t h_lt).symm.trans
       (h qnf (Finset.mem_toList.mpr (Finset.mem_univ qnf)))
   · intro h qnf _
-    exact (CAggOd_clause_iff_faithful atomMap h_surj M qnf h_INF h_SUP x t h_lt).trans (h qnf)
+    exact (CAggOd.clause_iff_faithful atomMap h_surj M qnf h_INF h_SUP x t h_lt).trans (h qnf)
 
 /-- **The future-arm k=1 population carrier at the faithful carrier** — `aggPop1F`
 (`AggregateOffDiagK1.lean:1359`) with `negFix` replaced by `negFixFaithful`. -/

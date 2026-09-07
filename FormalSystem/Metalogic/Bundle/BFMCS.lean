@@ -174,7 +174,7 @@ theorem BFMCS.transitivity (B : BFMCS D) (fam : FMCS D) (hfam : fam ∈ B.famili
 -- These were thin wrappers around FMCS fields that were never used.
 
 /-- The MCS at any family and time is consistent (used by BFMCS.diamond_witness) -/
-lemma BFMCS.consistent (B : BFMCS D) (fam : FMCS D) (_hfam : fam ∈ B.families) (t : D) :
+theorem BFMCS.consistent (B : BFMCS D) (fam : FMCS D) (_hfam : fam ∈ B.families) (t : D) :
     SetConsistent (fc := FormalSystem.ProofSystem.FrameClass.Base) (fam.mcs t) :=
   (fam.is_mcs t).1
 

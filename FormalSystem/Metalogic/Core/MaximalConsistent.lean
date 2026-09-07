@@ -112,7 +112,7 @@ def ConsistentExtensions {fc : FrameClass} (base : Set Formula) : Set (Set Formu
 /--
 The base set is in its own consistent extensions (given it's consistent).
 -/
-lemma base_mem_consistent_extensions {fc : FrameClass} {base : Set Formula}
+theorem base_mem_consistent_extensions {fc : FrameClass} {base : Set Formula}
     (h : SetConsistent (fc := fc) base) :
     base ∈ ConsistentExtensions (fc := fc) base :=
   ⟨Set.Subset.refl base, h⟩
@@ -125,7 +125,7 @@ def contextToSet (Γ : Context) : Set Formula := {φ | φ ∈ Γ}
 /--
 List-based consistency implies set-based consistency for the corresponding set.
 -/
-lemma consistent_implies_set_consistent {fc : FrameClass} {Γ : Context}
+theorem consistent_implies_set_consistent {fc : FrameClass} {Γ : Context}
     (h : Consistent (fc := fc) Γ) :
     SetConsistent (fc := fc) (contextToSet Γ) := by
   intro L hL ⟨d⟩
@@ -163,7 +163,7 @@ def usedFormulas {fc : FrameClass} {Γ : Context} {φ : Formula} : DerivationTre
 /--
 All formulas used in a derivation come from the context.
 -/
-lemma usedFormulas_subset {fc : FrameClass} {Γ : Context} {φ : Formula}
+theorem usedFormulas_subset {fc : FrameClass} {Γ : Context} {φ : Formula}
     (d : DerivationTree fc Γ φ) : ∀ ψ ∈ usedFormulas d, ψ ∈ Γ := by
   induction d with
   | «axiom» => simp [usedFormulas]
@@ -226,7 +226,7 @@ of a chain, then all formulas come from some single member (by chain property).
 Note: If the chain is empty or the list is empty, we only need C.Nonempty.
 The case C = ∅ is handled by the caller (consistent_chain_union).
 -/
-lemma finite_list_in_chain_member {C : Set (Set Formula)}
+theorem finite_list_in_chain_member {C : Set (Set Formula)}
     (hchain : IsChain (· ⊆ ·) C) (L : List Formula) (hL : ∀ φ ∈ L, φ ∈ ⋃₀ C) :
     C.Nonempty → ∃ S ∈ C, ∀ φ ∈ L, φ ∈ S := by
   intro hCne
@@ -331,7 +331,7 @@ If a context is inconsistent, it derives bottom.
 
 This is essentially the definition of inconsistency unwrapped into a derivation.
 -/
-lemma inconsistent_derives_bot {fc : FrameClass} {Γ : Context}
+theorem inconsistent_derives_bot {fc : FrameClass} {Γ : Context}
     (h : ¬Consistent (fc := fc) Γ) :
     Derivable fc Γ Formula.bot := by
   unfold Consistent at h
@@ -344,7 +344,7 @@ context derives ¬φ (i.e., φ → ⊥).
 
 This is a key lemma for proving MCS closure properties. It uses the deduction theorem.
 -/
-lemma derives_neg_from_inconsistent_extension {fc : FrameClass} {Γ : Context} {φ : Formula}
+theorem derives_neg_from_inconsistent_extension {fc : FrameClass} {Γ : Context} {φ : Formula}
     (h_incons : ¬Consistent (fc := fc) (φ :: Γ)) :
     Derivable fc Γ (Formula.neg φ) := by
   -- Get the derivation of ⊥ from φ :: Γ
@@ -372,7 +372,7 @@ For maximal consistent sets, if φ ∉ Γ then the extension φ :: Γ is inconsi
 
 This is one direction of the maximality definition, made into a lemma for convenience.
 -/
-lemma maximal_extends_inconsistent {fc : FrameClass} {Γ : Context} {φ : Formula}
+theorem maximal_extends_inconsistent {fc : FrameClass} {Γ : Context} {φ : Formula}
     (h_max : MaximalConsistent (fc := fc) Γ) (h_not_mem : φ ∉ Γ) :
     ¬Consistent (fc := fc) (φ :: Γ) :=
   h_max.2 φ h_not_mem
@@ -384,7 +384,7 @@ subset.
 For any list L whose elements are all in a SetMaximalConsistent (fc := fc) set S,
 the list L is Consistent.
 -/
-lemma SetMaximalConsistent.finite_subset_consistent {fc : FrameClass} {S : Set Formula}
+theorem SetMaximalConsistent.finite_subset_consistent {fc : FrameClass} {S : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) S) (L : List Formula) (h_sub : ∀ φ ∈ L, φ ∈ S) :
     Consistent (fc := fc) L :=
   h_mcs.1 L h_sub

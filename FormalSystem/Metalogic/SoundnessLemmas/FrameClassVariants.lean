@@ -596,7 +596,7 @@ s1 = s2 (giving F(φ ∧ ψ)), or s2 < s1 (take r = s2, giving F(F(φ) ∧ ψ)).
 
 This is the `ValidIn .Base` form of the `⊨`-shaped `Metalogic.temp_linearity_valid` (`Metalogic/Soundness.lean`); the two are equated by `Validity.valid_iff_validIn_base`.
 -/
-theorem temp_linearity_valid (φ ψ : Formula) :
+theorem temp_linearity_validIn (φ ψ : Formula) :
     ValidIn FrameClass.Base (Formula.and (Formula.someFuture φ) (Formula.someFuture ψ) |>.imp
       (Formula.or (Formula.someFuture (Formula.and φ ψ))
         (Formula.or (Formula.someFuture (Formula.and φ (Formula.someFuture ψ)))
@@ -628,10 +628,10 @@ theorem temp_linearity_valid (φ ψ : Formula) :
 
 /-- Past temporal linearity axiom validity (BX11'):
 `P(φ) ∧ P(ψ) → P(φ ∧ ψ) ∨ P(φ ∧ P(ψ)) ∨ P(P(φ) ∧ ψ)` is locally valid.
-Mirror of `temp_linearity_valid` for the past direction.
+Mirror of `temp_linearity_validIn` for the past direction.
 
 This is the `ValidIn .Base` form of the `⊨`-shaped `Metalogic.temp_linearity_past_valid` (`Metalogic/Soundness.lean`); the two are equated by `Validity.valid_iff_validIn_base`. -/
-theorem temp_linearity_past_valid (φ ψ : Formula) :
+theorem temp_linearity_past_validIn (φ ψ : Formula) :
     ValidIn FrameClass.Base (Formula.and (Formula.somePast φ) (Formula.somePast ψ) |>.imp
       (Formula.or (Formula.somePast (Formula.and φ ψ))
         (Formula.or (Formula.somePast (Formula.and φ (Formula.somePast ψ)))
@@ -667,7 +667,7 @@ If there exists s ≥ t with φ(s), then ⊤ U φ holds at t (take witness s, gu
 satisfied).
 
 This is the `ValidIn .Base` form of the `⊨`-shaped `Metalogic.F_until_equiv_valid` (`Metalogic/Soundness.lean`); the two are equated by `Validity.valid_iff_validIn_base`. -/
-theorem F_until_equiv_valid (φ : Formula) :
+theorem F_until_equiv_validIn (φ : Formula) :
     ValidIn FrameClass.Base ((Formula.someFuture φ).imp
       (Formula.untl (Formula.bot.imp Formula.bot) φ)) := by
   refine ValidIn.of_forall_total ?_
@@ -680,7 +680,7 @@ theorem F_until_equiv_valid (φ : Formula) :
 `P(φ) → (⊤ S φ)` is locally valid. Past dual of F-Until equivalence.
 
 This is the `ValidIn .Base` form of the `⊨`-shaped `Metalogic.P_since_equiv_valid` (`Metalogic/Soundness.lean`); the two are equated by `Validity.valid_iff_validIn_base`. -/
-theorem P_since_equiv_valid (φ : Formula) :
+theorem P_since_equiv_validIn (φ : Formula) :
     ValidIn FrameClass.Base ((Formula.somePast φ).imp
       (Formula.snce (Formula.bot.imp Formula.bot) φ)) := by
   refine ValidIn.of_forall_total ?_
@@ -743,10 +743,10 @@ theorem axiom_swap_valid_general (φ : Formula) (h : Axiom φ) (h_fc :
   -- open-guard refactor)
   | until_F φ ψ => exact until_F_swap_valid φ ψ
   | since_P φ ψ => exact since_P_swap_valid φ ψ
-  | temp_linearity φ ψ => exact temp_linearity_past_valid φ.swapTemporal ψ.swapTemporal
-  | temp_linearity_past φ ψ => exact temp_linearity_valid φ.swapTemporal ψ.swapTemporal
-  | F_until_equiv φ => exact P_since_equiv_valid φ.swapTemporal
-  | P_since_equiv φ => exact F_until_equiv_valid φ.swapTemporal
+  | temp_linearity φ ψ => exact temp_linearity_past_validIn φ.swapTemporal ψ.swapTemporal
+  | temp_linearity_past φ ψ => exact temp_linearity_validIn φ.swapTemporal ψ.swapTemporal
+  | F_until_equiv φ => exact P_since_equiv_validIn φ.swapTemporal
+  | P_since_equiv φ => exact F_until_equiv_validIn φ.swapTemporal
   -- NOTE: until_guard / since_guard match arms removed (constructors deleted in the
   -- open-guard refactor)
   | modal_future ψ => exact mf_swap_valid ψ

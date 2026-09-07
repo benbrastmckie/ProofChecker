@@ -180,8 +180,8 @@ theorem temporalTruth_untl_top (t : M.carrier) (p : Formula) :
 theorem temporalTruth_someFuture_neg (t : M.carrier) (p : Formula) :
     TemporalTruth M atomMap t (.untl .top p.neg) ↔
       ∃ u : M.carrier, t < u ∧ ¬ TemporalTruth M atomMap u p :=
-  ⟨fun ⟨u, htu, hu, _⟩ => ⟨u, htu, (Kamp.temporal_truth_neg M atomMap u p).mp hu⟩,
-    fun ⟨u, htu, hu⟩ => ⟨u, htu, (Kamp.temporal_truth_neg M atomMap u p).mpr hu,
+  ⟨fun ⟨u, htu, hu, _⟩ => ⟨u, htu, (Kamp.temporalTruth_neg_iff M atomMap u p).mp hu⟩,
+    fun ⟨u, htu, hu⟩ => ⟨u, htu, (Kamp.temporalTruth_neg_iff M atomMap u p).mpr hu,
       fun r _ _ => Kamp.temporal_truth_top M atomMap r⟩⟩
 
 /-- `K⁺(¬p)` at `s`: *"`¬p` holds arbitrarily soon after `s`"*, through the landed
@@ -192,7 +192,7 @@ theorem temporalTruth_kPlus_neg (s : M.carrier) (p : Formula) :
   rw [Kamp.kPlus_formula_correct]
   exact forall_congr' fun u => forall_congr' fun _ =>
     exists_congr fun r => and_congr_right fun _ => and_congr_right fun _ =>
-      Kamp.temporal_truth_neg M atomMap r p
+      Kamp.temporalTruth_neg_iff M atomMap r p
 
 /-- `U(¬p ∨ K⁺(¬p), p)` at `t`, in the form `SemanticPriorU`'s consequent is written.
 
@@ -212,7 +212,7 @@ theorem temporalTruth_untl_stop (t : M.carrier) (p : Formula) :
   · rintro ⟨s, hts, hs, hbelow⟩
     refine ⟨s, hts, hbelow, ?_⟩
     rcases (Kamp.temporal_truth_or M atomMap s p.neg (Formula.kPlus p.neg)).mp hs with hns | hk
-    · exact Or.inl ((Kamp.temporal_truth_neg M atomMap s p).mp hns)
+    · exact Or.inl ((Kamp.temporalTruth_neg_iff M atomMap s p).mp hns)
     · by_cases hp : TemporalTruth M atomMap s p
       · exact Or.inr ⟨hp, (temporalTruth_kPlus_neg s p).mp hk⟩
       · exact Or.inl hp
@@ -220,7 +220,7 @@ theorem temporalTruth_untl_stop (t : M.carrier) (p : Formula) :
     refine ⟨s, hts, ?_, hbelow⟩
     refine (Kamp.temporal_truth_or M atomMap s p.neg (Formula.kPlus p.neg)).mpr ?_
     rcases hcase with hns | ⟨_, hk⟩
-    · exact Or.inl ((Kamp.temporal_truth_neg M atomMap s p).mpr hns)
+    · exact Or.inl ((Kamp.temporalTruth_neg_iff M atomMap s p).mpr hns)
     · exact Or.inr ((temporalTruth_kPlus_neg s p).mpr hk)
 
 /-- **The `priorUFormula` transcription is correct**: its truth at `t` is exactly the body of
@@ -240,7 +240,7 @@ theorem temporalTruth_priorUFormula (t : M.carrier) (p : Formula) :
               ∀ u : M.carrier, s < u →
                 ∃ r : M.carrier, s < r ∧ r < u ∧ ¬ TemporalTruth M atomMap r p))) := by
   show (TemporalTruth M atomMap t _ → TemporalTruth M atomMap t _) ↔ _
-  rw [Kamp.temporal_truth_and, temporalTruth_untl_top, temporalTruth_someFuture_neg,
+  rw [Kamp.temporalTruth_and_iff, temporalTruth_untl_top, temporalTruth_someFuture_neg,
     temporalTruth_untl_stop]
   exact ⟨fun h h₁ h₂ => h ⟨h₁, h₂⟩, fun h ⟨h₁, h₂⟩ => h h₁ h₂⟩
 
@@ -276,8 +276,8 @@ theorem temporalTruth_snce_top (t : M.carrier) (p : Formula) :
 theorem temporalTruth_somePast_neg (t : M.carrier) (p : Formula) :
     TemporalTruth M atomMap t (.snce .top p.neg) ↔
       ∃ u : M.carrier, u < t ∧ ¬ TemporalTruth M atomMap u p :=
-  ⟨fun ⟨u, hut, hu, _⟩ => ⟨u, hut, (Kamp.temporal_truth_neg M atomMap u p).mp hu⟩,
-    fun ⟨u, hut, hu⟩ => ⟨u, hut, (Kamp.temporal_truth_neg M atomMap u p).mpr hu,
+  ⟨fun ⟨u, hut, hu, _⟩ => ⟨u, hut, (Kamp.temporalTruth_neg_iff M atomMap u p).mp hu⟩,
+    fun ⟨u, hut, hu⟩ => ⟨u, hut, (Kamp.temporalTruth_neg_iff M atomMap u p).mpr hu,
       fun r _ _ => Kamp.temporal_truth_top M atomMap r⟩⟩
 
 /-- `K⁻(¬p)` at `s`, through the landed `kMinus_formula_correct` and `kminusOpen`. -/
@@ -287,7 +287,7 @@ theorem temporalTruth_kMinus_neg (s : M.carrier) (p : Formula) :
   rw [Kamp.kMinus_formula_correct]
   exact forall_congr' fun u => forall_congr' fun _ =>
     exists_congr fun r => and_congr_right fun _ => and_congr_right fun _ =>
-      Kamp.temporal_truth_neg M atomMap r p
+      Kamp.temporalTruth_neg_iff M atomMap r p
 
 /-- `S(¬p ∨ K⁻(¬p), p)` at `t`, in the form `SemanticPriorS`'s consequent is written. -/
 theorem temporalTruth_snce_stop (t : M.carrier) (p : Formula) :
@@ -303,7 +303,7 @@ theorem temporalTruth_snce_stop (t : M.carrier) (p : Formula) :
   · rintro ⟨s, hst, hs, hbelow⟩
     refine ⟨s, hst, hbelow, ?_⟩
     rcases (Kamp.temporal_truth_or M atomMap s p.neg (Formula.kMinus p.neg)).mp hs with hns | hk
-    · exact Or.inl ((Kamp.temporal_truth_neg M atomMap s p).mp hns)
+    · exact Or.inl ((Kamp.temporalTruth_neg_iff M atomMap s p).mp hns)
     · by_cases hp : TemporalTruth M atomMap s p
       · exact Or.inr ⟨hp, (temporalTruth_kMinus_neg s p).mp hk⟩
       · exact Or.inl hp
@@ -311,7 +311,7 @@ theorem temporalTruth_snce_stop (t : M.carrier) (p : Formula) :
     refine ⟨s, hst, ?_, hbelow⟩
     refine (Kamp.temporal_truth_or M atomMap s p.neg (Formula.kMinus p.neg)).mpr ?_
     rcases hcase with hns | ⟨_, hk⟩
-    · exact Or.inl ((Kamp.temporal_truth_neg M atomMap s p).mpr hns)
+    · exact Or.inl ((Kamp.temporalTruth_neg_iff M atomMap s p).mpr hns)
     · exact Or.inr ((temporalTruth_kMinus_neg s p).mpr hk)
 
 /-- **The `priorSFormula` transcription is correct** — the past mirror of
@@ -327,7 +327,7 @@ theorem temporalTruth_priorSFormula (t : M.carrier) (p : Formula) :
               ∀ u : M.carrier, u < s →
                 ∃ r : M.carrier, u < r ∧ r < s ∧ ¬ TemporalTruth M atomMap r p))) := by
   show (TemporalTruth M atomMap t _ → TemporalTruth M atomMap t _) ↔ _
-  rw [Kamp.temporal_truth_and, temporalTruth_snce_top, temporalTruth_somePast_neg,
+  rw [Kamp.temporalTruth_and_iff, temporalTruth_snce_top, temporalTruth_somePast_neg,
     temporalTruth_snce_stop]
   exact ⟨fun h h₁ h₂ => h ⟨h₁, h₂⟩, fun h ⟨h₁, h₂⟩ => h h₁ h₂⟩
 

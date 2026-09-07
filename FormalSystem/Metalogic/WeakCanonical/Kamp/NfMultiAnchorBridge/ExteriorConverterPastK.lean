@@ -138,7 +138,7 @@ theorem kvE_extNegPast_complete {sig : MonadicSignature} [Fintype sig.preds] [De
       ¬ NfEvalNf M (k + 1) 4
         (Fin.cons x1 (Fin.cons w (Fin.cons x (fun _ => t)))) σ) :
     TemporalTruth M atomMap x (kvEExtNegPast P σ) := by
-  rw [kvEExtNegPast, temporal_truth_neg]
+  rw [kvEExtNegPast, temporalTruth_neg_iff]
   intro hpos
   have hpos0 := hpos
   by_cases hadm : kvEPastAdmissible σ = true

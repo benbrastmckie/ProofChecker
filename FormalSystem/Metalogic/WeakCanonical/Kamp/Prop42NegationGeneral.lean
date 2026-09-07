@@ -105,11 +105,11 @@ theorem negLeftClauseFin_holds {sig : MonadicSignature} {F : Finset Formula}
   simp only [Matrix.cons_val_zero] at hcorr
   constructor
   · rintro ⟨hL, _, _⟩
-    rw [TemporalPred.EvalAt, temporal_truth_neg] at hL
+    rw [TemporalPred.EvalAt, temporalTruth_neg_iff] at hL
     exact fun hsat => hL (hcorr.mp hsat)
   · intro hneg
     refine ⟨?_, TemporalPred.eval_at_top N atomMap z1, ?_⟩
-    · rw [TemporalPred.EvalAt, temporal_truth_neg]
+    · rw [TemporalPred.EvalAt, temporalTruth_neg_iff]
       exact fun htt => hneg (hcorr.mpr htt)
     · rw [BracketFormula.trivial_holds]
       exact fun y _ _ => TemporalPred.eval_at_top N atomMap y
@@ -139,11 +139,11 @@ theorem negRightClauseFin_holds {sig : MonadicSignature} {F : Finset Formula}
   simp only [Matrix.cons_val_zero] at hcorr
   constructor
   · rintro ⟨_, hR, _⟩
-    rw [TemporalPred.EvalAt, temporal_truth_neg] at hR
+    rw [TemporalPred.EvalAt, temporalTruth_neg_iff] at hR
     exact fun hsat => hR (hcorr.mp hsat)
   · intro hneg
     refine ⟨TemporalPred.eval_at_top N atomMap z0, ?_, ?_⟩
-    · rw [TemporalPred.EvalAt, temporal_truth_neg]
+    · rw [TemporalPred.EvalAt, temporalTruth_neg_iff]
       exact fun htt => hneg (hcorr.mpr htt)
     · rw [BracketFormula.trivial_holds]
       exact fun y _ _ => TemporalPred.eval_at_top N atomMap y
@@ -219,11 +219,11 @@ theorem negLeftClauseTLFin_holds {sig : MonadicSignature} {F : Finset Formula}
   rw [VecEA2.holds]
   constructor
   · rintro ⟨hL, _, _⟩
-    rw [TemporalPred.EvalAt, temporal_truth_neg] at hL
+    rw [TemporalPred.EvalAt, temporalTruth_neg_iff] at hL
     exact hL
   · intro hneg
     refine ⟨?_, TemporalPred.eval_at_top N atomMap z1, ?_⟩
-    · rw [TemporalPred.EvalAt, temporal_truth_neg]; exact hneg
+    · rw [TemporalPred.EvalAt, temporalTruth_neg_iff]; exact hneg
     · rw [BracketFormula.trivial_holds]
       exact fun y _ _ => TemporalPred.eval_at_top N atomMap y
 
@@ -251,11 +251,11 @@ theorem negRightClauseTLFin_holds {sig : MonadicSignature} {F : Finset Formula}
   rw [VecEA2.holds]
   constructor
   · rintro ⟨_, hR, _⟩
-    rw [TemporalPred.EvalAt, temporal_truth_neg] at hR
+    rw [TemporalPred.EvalAt, temporalTruth_neg_iff] at hR
     exact hR
   · intro hneg
     refine ⟨TemporalPred.eval_at_top N atomMap z0, ?_, ?_⟩
-    · rw [TemporalPred.EvalAt, temporal_truth_neg]; exact hneg
+    · rw [TemporalPred.EvalAt, temporalTruth_neg_iff]; exact hneg
     · rw [BracketFormula.trivial_holds]
       exact fun y _ _ => TemporalPred.eval_at_top N atomMap y
 
@@ -292,7 +292,7 @@ theorem belowFormulaFin_of_efSatFin {sig : MonadicSignature} {F : Finset Formula
   simp only [belowFormulaFin]
   set k : Fin (ψ.n + 1) := ψ.pin 0 with hk_def
   have hpin0 : env 0 = x k := hpin 0
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   refine ⟨?_, ?_⟩
   · change (efPointTPFin atomMap nameOf (ψ.pointType k)).EvalAt N atomMap (env 0)
     rw [efPointTPFin_eval (hName := hName), hpin0]
@@ -363,7 +363,7 @@ theorem aboveFormulaFin_of_efSatFin {sig : MonadicSignature} {F : Finset Formula
   simp only [aboveFormulaFin]
   set k : Fin (ψ.n + 1) := ψ.pin 1 with hk_def
   have hpin1 : env 1 = x k := hpin 1
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   refine ⟨?_, ?_⟩
   · change (efPointTPFin atomMap nameOf (ψ.pointType k)).EvalAt N atomMap (env 1)
     rw [efPointTPFin_eval (hName := hName), hpin1]
@@ -604,7 +604,7 @@ theorem efSatFin_of_decompose_tl {sig : MonadicSignature} {F : Finset Formula}
   have hkn : (ψ.pin 1).val ≤ ψ.n := by have := (ψ.pin 1).isLt; omega
   -- Below chain xb (antitone, pinned at env 0 = x_m).
   simp only [belowFormulaFin] at hb
-  rw [temporal_truth_and] at hb
+  rw [temporalTruth_and_iff] at hb
   obtain ⟨hb_pt, hb_chain⟩ := hb
   rw [buildLeft_correct] at hb_chain
   set alphaL : Nat → TemporalPred :=
@@ -625,7 +625,7 @@ theorem efSatFin_of_decompose_tl {sig : MonadicSignature} {F : Finset Formula}
   obtain ⟨xb, hxb0, hxb_anti, hxb_alpha, hxb_beta, hxb_cap⟩ := hb_chain
   -- Above chain xa (monotone, pinned at env 1 = x_k).
   simp only [aboveFormulaFin] at ha
-  rw [temporal_truth_and] at ha
+  rw [temporalTruth_and_iff] at ha
   obtain ⟨ha_pt, ha_chain⟩ := ha
   rw [buildRight_correct] at ha_chain
   set alphaR : Nat → TemporalPred :=

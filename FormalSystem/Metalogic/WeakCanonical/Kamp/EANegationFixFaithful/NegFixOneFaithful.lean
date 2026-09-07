@@ -833,7 +833,7 @@ theorem negFixOneR_not_holds : ¬(negFixOne s0R pR s1R).holds MR atomMapR 0 10 :
     keeps its force. Weakening the statement to match the new carrier would have discarded a
     theorem to gain nothing. In any case the proof takes `Or.inr`, so the left disjunct is not
     what is being exhibited. -/
-theorem MR_dedekind_shape_at_pR :
+theorem MR.dedekind_shape_at_pR :
     kplus MR atomMapR pR.formula 0 ∨
       (∃ r0 : ℝ, 0 < r0 ∧ r0 < 10 ∧
         (∀ y : ℝ, 0 < y → y < r0 → ¬TemporalTruth MR atomMapR y pR.formula) ∧
@@ -857,7 +857,7 @@ theorem MR_dedekind_shape_at_pR :
 /-- **The attained carrier's obligation is REFUTED here.** `p`'s first occurrence in `(0,10)` has
     infimum `2`, and `p` does not hold at `2`; no attained first-occurrence point exists. Hence
     the failure of `negFixOne`'s disjunct list above is located exactly at attainment. -/
-theorem MR_not_hasAttainedINF : ¬HasAttainedINF MR atomMapR := by
+theorem MR.not_hasAttainedINF : ¬HasAttainedINF MR atomMapR := by
   intro h
   obtain ⟨r0, hr00, hr01, hnone, hPr0⟩ :=
     h.first_occ pR.formula 0 10 (by norm_num)
@@ -878,7 +878,7 @@ theorem negFixOne_not_a_cover_without_attainment :
     ¬(bracketOne s0R pR s1R).holds MR atomMapR 0 10 ∧
     ¬(negFixOne s0R pR s1R).holds MR atomMapR 0 10 ∧
     ¬HasAttainedINF MR atomMapR :=
-  ⟨bracketOneR_not_holds, negFixOneR_not_holds, MR_not_hasAttainedINF⟩
+  ⟨bracketOneR_not_holds, negFixOneR_not_holds, MR.not_hasAttainedINF⟩
 
 end NegFixOneFaithfulGateProbe
 

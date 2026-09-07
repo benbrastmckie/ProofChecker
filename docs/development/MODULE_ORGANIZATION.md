@@ -102,6 +102,44 @@ end Formula
 end FormalSystem.Syntax
 ```
 
+### Declaration names: `Prefix.rest`, not `Prefix_rest`
+
+A declaration *about* a named thing is a member of that thing's namespace, written with a dot:
+`SubformulaClosure.G_closed`, not `SubformulaClosure_G_closed`. The dotted form buys real
+things — dot-notation at use sites, and a name that C17's dead-declaration census can attribute
+to the right owner — where the underscore form is merely a name that happens to start with a
+capital letter.
+
+The convention has **three recorded exceptions**, and a census that reports them is reporting
+correct code:
+
+**1. Tense-operator prefixes are not namespaces.** `F_`, `P_`, `G_`, `H_`, `A_`, `FF_` and
+`HF...` name the paper's own temporal operators. `F_until_equiv_valid` is a fact *about the
+operator* `F`, and `F.until_equiv_valid` would invent a namespace `F` that does not exist and
+should not: `F` is notation, not a type. These are the largest class by far.
+
+**2. A prefix that names no live declaration.** `CAggOdSwap_clause_iff` and `O_zero_correct`
+look dotted-shaped but there is no `CAggOdSwap` and no `O` to be a member of, so the dotted
+form would name a namespace with exactly one inhabitant and no owner.
+
+**3. A suffix that would capture a live name.** This one bites, and it is not a matter of taste.
+Declaring `Prefix.rest` puts `rest` in scope — as `Prefix.rest` — inside *every other*
+`Prefix.*` declaration. If a live declaration is already called `rest`, a sibling whose body
+mentions it now resolves to the wrong one, silently where the types happen to line up and
+loudly where they do not. Renaming `BurgessR3Maximal_burgessR3` to
+`BurgessR3Maximal.burgessR3` did exactly this: `BurgessR3Maximal.extension_fails`'s reference to
+the standalone `burgessR3` definition started resolving to the theorem, and the build failed
+with an application type mismatch. Thirteen names have this shape — the
+`FiniteFilteredTaskFrame_*` and `RefinedFilteredTaskFrame_*` frame-property families among them,
+whose suffixes `serial`, `limit`, `saturation` and `interpolates` are all live frame conditions —
+and all thirteen stay underscored.
+
+The test is mechanical, and has two halves: split at the first underscore, then dot-namespace
+the name **if and only if** the prefix is itself a live declaration *and* the suffix is not.
+`scripts/check-module-invariants.sh`'s C23 assertion applies exactly that test and carries all
+three exception classes, so the population cannot regrow without the exception being written
+down.
+
 ## 3. Module Dependencies
 
 ### Layered Architecture

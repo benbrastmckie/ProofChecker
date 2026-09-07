@@ -15,6 +15,7 @@ import FormalSystem.Metalogic
 import FormalSystem.Theorems
 import FormalSystem.Automation
 import FormalSystem.Examples
+import FormalSystem.MainResults
 
 /-!
 # Bimodal - TM Logic Library
@@ -48,6 +49,8 @@ validity
   them). See `Boneyard/README.md` before grepping either tree for identifier usage
 - `FormalSystem.Theorems`: Derived theorems (Combinators, Propositional, ModalS5, ModalS4,
   Perpetuity, GeneralizedNecessitation, TemporalDerived, ContextualProofs)
+- `FormalSystem.MainResults`: the headline metatheory on one page, each result followed
+  by `#print axioms`
 - `FormalSystem.Automation`: Proof tactics (modal_search), native proof search,
   and the ML dataset-generation pipeline
 - `FormalSystem.Examples`: Pedagogical examples and proof strategies

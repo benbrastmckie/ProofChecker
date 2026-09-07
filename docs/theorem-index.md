@@ -12,7 +12,7 @@ page is right and the other is stale.
 |--------|---------|
 | Paper label | The `\label{}` in ["The Construction of Possible Worlds"](https://benbrastmckie.com/publications/possible_worlds.pdf), pinned in [`specs/paper-definitions-of-record.md`](../specs/paper-definitions-of-record.md) and checked by C15. `—` means the result is the formalization's own, with no paper counterpart — compactness, non-compactness and consequence completeness are all in that category. |
 | Statement | One line. The Lean statement itself is the authority. |
-| Lean name | **Fully qualified, always.** `completeness_dense` and `completeness_ztime` each name two distinct live theorems — one in `FormalSystem.Metalogic.BXCanonical`, one in `FormalSystem.Metalogic` — and the File column alone does not disambiguate them. |
+| Lean name | **Fully qualified, always.** A bare base identifier is not a row key: it can name declarations in more than one namespace, and the File column alone does not disambiguate them. `completeness_dense` and `completeness_ztime` used to do exactly that — the `BXCanonical` engines have since been renamed `derivable_of_validDense` / `derivable_of_validZTime`, but the convention stands for every row. |
 | File | Path only. **No line numbers**: cite declaration names, never `file:line`. |
 | Frame class | The `FrameClass` the result is stated at: `Base`, `Dense`, `ZTime`, `RTime`. `—` where the result is class-generic. |
 | Axioms | `pcq` abbreviates exactly `[propext, Classical.choice, Quot.sound]`; anything else is written out literally. `pinned:C2` / `pinned:C14` names the check in `scripts/check-module-invariants.sh` that asserts the value on every build — the column is generated from those baselines, never typed. `claimed` would mean prose-only; no row currently reads that. |
@@ -66,8 +66,8 @@ the mapping.
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
 |-------------|-----------|-----------|------|-------------|--------|
 | `cor:tm-completeness` | Weak completeness over all task frames, by the chronicle construction | `FormalSystem.Metalogic.BXCanonical.completeness` | `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | Base | pcq pinned:C2 |
-| `cor:tm-completeness` | Weak completeness over the dense class, by the chronicle construction | `FormalSystem.Metalogic.BXCanonical.completeness_dense` | `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | Dense | pcq pinned:C2 |
-| `cor:tm-completeness` | Weak completeness over ℤ-time, by the chronicle construction | `FormalSystem.Metalogic.BXCanonical.completeness_ztime` | `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | ZTime | pcq pinned:C2 |
+| `cor:tm-completeness` | Weak completeness over the dense class, by the chronicle construction | `FormalSystem.Metalogic.BXCanonical.derivable_of_validDense` | `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | Dense | pcq pinned:C2 |
+| `cor:tm-completeness` | Weak completeness over ℤ-time, by the chronicle construction | `FormalSystem.Metalogic.BXCanonical.derivable_of_validZTime` | `FormalSystem/Metalogic/BXCanonical/Completeness.lean` | ZTime | pcq pinned:C2 |
 | `cor:tm-completeness` | Weak completeness over the dense Dedekind-complete class, on the real line | `FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine` | `FormalSystem/Metalogic/BXCanonical/CompletenessDedekind.lean` | RTime | pcq pinned:C14 |
 
 ### Weak completeness — the `WeakCompleteness` termini

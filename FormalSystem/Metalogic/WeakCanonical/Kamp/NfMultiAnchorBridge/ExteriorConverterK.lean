@@ -164,7 +164,7 @@ theorem kvE_extNegFut_complete {sig : MonadicSignature} [Fintype sig.preds] [Dec
       ¬ NfEvalNf M (k + 1) 4
         (Fin.cons x1 (Fin.cons w (Fin.cons x (fun _ => t)))) σ) :
     TemporalTruth M atomMap t (kvEExtNegFut P σ) := by
-  rw [kvEExtNegFut, temporal_truth_neg]
+  rw [kvEExtNegFut, temporalTruth_neg_iff]
   intro hpos
   have hpos0 := hpos
   by_cases hadm : kvEFutAdmissible σ = true

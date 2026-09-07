@@ -269,7 +269,7 @@ theorem kvE_futPos_of_realizer {sig : MonadicSignature} [Fintype sig.preds] [Dec
     TemporalTruth M atomMap t (kvEFutPos P σ) := by
   by_contra hnp
   exact kvE_extNegFut_sound P M h_UZ h_SZ σ w x t hxw hwt
-    (by rw [kvEExtNegFut, temporal_truth_neg]; exact hnp) x1 htx1 hσ
+    (by rw [kvEExtNegFut, temporalTruth_neg_iff]; exact hnp) x1 htx1 hσ
 
 /-- **Gap guard from a realizer**: a pinned exterior realizer of `σ` renders the gap
     disjunction `kvEFutGapD P σ` uniformly on `(t, x1)`. The `hD` step of
@@ -1055,10 +1055,10 @@ theorem kvE_futSliceId_of_end_zero {sig : MonadicSignature} [Fintype sig.preds]
         rw [hzs] at hzone
         have hx1z : x1 < z := (hzone 0).2.mpr rfl
         have hnf := hrayC (Formula.untl Formula.top (kvEFutRayD P σ).neg).neg (by simp)
-        rw [temporal_truth_neg] at hnf
+        rw [temporalTruth_neg_iff] at hnf
         have hDz : TemporalTruth M atomMap z (kvEFutRayD P σ) := by
           by_contra hnD
-          exact hnf ⟨z, hx1z, (temporal_truth_neg M atomMap z _).mpr hnD,
+          exact hnf ⟨z, hx1z, (temporalTruth_neg_iff M atomMap z _).mpr hnD,
             fun r _ _ => id⟩
         rw [kvEFutRayD, kvE_fiberPosOnShift_correct P _ M h_UZ h_SZ z] at hDz
         obtain ⟨s', hmem', env', hev'⟩ := hDz

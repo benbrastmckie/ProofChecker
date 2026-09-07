@@ -824,9 +824,9 @@ theorem chronicleMonadic_semanticPriorU {fc : FrameClass} (hfc : FrameClass.RTim
   -- The antecedent `U(⊤,p) ∧ F¬p`, semantically.
   have h_ant : TemporalTruth (chronicleMonadicStructureOf root fam) (mkAtomMapFwd root) t
       (Formula.and (Formula.untl p Formula.top) p.neg.someFuture) := by
-    rw [Kamp.temporal_truth_and]
+    rw [Kamp.temporalTruth_and_iff]
     refine ⟨⟨s₀, hts₀, Kamp.temporal_truth_top _ _ _, h_p_on⟩,
-      ⟨u₀, htu₀, (Kamp.temporal_truth_neg _ _ _ _).mpr h_np_u₀,
+      ⟨u₀, htu₀, (Kamp.temporalTruth_neg_iff _ _ _ _).mpr h_np_u₀,
         fun r _ _ => Kamp.temporal_truth_top _ _ _⟩⟩
   -- ... transported to the MCS at `t`.
   have h_ant_mcs : Formula.and (Formula.untl (chronicleEff root p) Formula.top)
@@ -847,14 +847,14 @@ theorem chronicleMonadic_semanticPriorU {fc : FrameClass} (hfc : FrameClass.RTim
   obtain ⟨s, hts, h_disj, h_guard⟩ := h_truth
   refine ⟨s, hts, h_guard, ?_⟩
   rcases (Kamp.temporal_truth_or _ _ _ _ _).mp h_disj with h_neg | h_kp
-  · exact Or.inl ((Kamp.temporal_truth_neg _ _ _ _).mp h_neg)
+  · exact Or.inl ((Kamp.temporalTruth_neg_iff _ _ _ _).mp h_neg)
   · -- `K⁺(¬p)(s)`: `¬p` accumulates from above at `s`. Split on whether `p` holds at `s`.
     have h_open : Kamp.kplusOpen (chronicleMonadicStructureOf root fam)
         (mkAtomMapFwd root) p.neg s := (Kamp.kPlus_formula_correct _ _ _ _).mp h_kp
     by_cases h_ps : TemporalTruth (chronicleMonadicStructureOf root fam) (mkAtomMapFwd root) s p
     · refine Or.inr ⟨h_ps, fun u hsu => ?_⟩
       obtain ⟨r, hsr, hru, hr⟩ := h_open u hsu
-      exact ⟨r, hsr, hru, (Kamp.temporal_truth_neg _ _ _ _).mp hr⟩
+      exact ⟨r, hsr, hru, (Kamp.temporalTruth_neg_iff _ _ _ _).mp hr⟩
     · exact Or.inl h_ps
 
 /-- **The bridge structure satisfies Prior-S** — Reynolds §4 Corollary 1 clause 3, second
@@ -872,9 +872,9 @@ theorem chronicleMonadic_semanticPriorS {fc : FrameClass} (hfc : FrameClass.RTim
   obtain ⟨u₀, hu₀t, h_np_u₀⟩ := h_past
   have h_ant : TemporalTruth (chronicleMonadicStructureOf root fam) (mkAtomMapFwd root) t
       (Formula.and (Formula.snce p Formula.top) p.neg.somePast) := by
-    rw [Kamp.temporal_truth_and]
+    rw [Kamp.temporalTruth_and_iff]
     refine ⟨⟨s₀, hs₀t, Kamp.temporal_truth_top _ _ _, h_p_on⟩,
-      ⟨u₀, hu₀t, (Kamp.temporal_truth_neg _ _ _ _).mpr h_np_u₀,
+      ⟨u₀, hu₀t, (Kamp.temporalTruth_neg_iff _ _ _ _).mpr h_np_u₀,
         fun r _ _ => Kamp.temporal_truth_top _ _ _⟩⟩
   have h_ant_mcs : Formula.and (Formula.snce (chronicleEff root p) Formula.top)
       (chronicleEff root p).neg.somePast ∈ fam.mcs t := by
@@ -892,13 +892,13 @@ theorem chronicleMonadic_semanticPriorS {fc : FrameClass} (hfc : FrameClass.RTim
   obtain ⟨s, hst, h_disj, h_guard⟩ := h_truth
   refine ⟨s, hst, h_guard, ?_⟩
   rcases (Kamp.temporal_truth_or _ _ _ _ _).mp h_disj with h_neg | h_km
-  · exact Or.inl ((Kamp.temporal_truth_neg _ _ _ _).mp h_neg)
+  · exact Or.inl ((Kamp.temporalTruth_neg_iff _ _ _ _).mp h_neg)
   · have h_open : Kamp.kminusOpen (chronicleMonadicStructureOf root fam)
         (mkAtomMapFwd root) p.neg s := (Kamp.kMinus_formula_correct _ _ _ _).mp h_km
     by_cases h_ps : TemporalTruth (chronicleMonadicStructureOf root fam) (mkAtomMapFwd root) s p
     · refine Or.inr ⟨h_ps, fun u hus => ?_⟩
       obtain ⟨r, hur, hrs, hr⟩ := h_open u hus
-      exact ⟨r, hur, hrs, (Kamp.temporal_truth_neg _ _ _ _).mp hr⟩
+      exact ⟨r, hur, hrs, (Kamp.temporalTruth_neg_iff _ _ _ _).mp hr⟩
     · exact Or.inl h_ps
 
 /-- **The bridge structure satisfies Sep** — Reynolds §4 Corollary 1 clause 3, third conjunct:
@@ -920,9 +920,9 @@ theorem chronicleMonadic_semanticSep {fc : FrameClass} (hfc : FrameClass.RTime �
   have h_ant : TemporalTruth (chronicleMonadicStructureOf root fam) (mkAtomMapFwd root) t
       (Formula.and (Formula.kPlus p)
         (Formula.kPlus (Formula.and p (Formula.untl p.neg p))).neg) := by
-    rw [Kamp.temporal_truth_and]
+    rw [Kamp.temporalTruth_and_iff]
     refine ⟨(Kamp.kPlus_formula_correct _ _ _ _).mpr h_kp, ?_⟩
-    rw [Kamp.temporal_truth_neg]
+    rw [Kamp.temporalTruth_neg_iff]
     exact fun h => h_not_kp ((Kamp.kPlus_formula_correct _ _ _ _).mp h)
   have h_ant_mcs : Formula.and (Formula.kPlus (chronicleEff root p))
       (Formula.kPlus (Formula.and (chronicleEff root p)

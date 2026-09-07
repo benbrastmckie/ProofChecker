@@ -126,8 +126,8 @@ the tableau contributes the derivation, not the soundness.
   `soundness_dense` and `soundness_ztime` the frame-class variants. Its corollary at the empty
   context is `decide_sound` (`Correctness.lean`), `⊢ φ → ⊨ φ`, which is what consumes the
   derivation `decide` returns in its `.valid` constructor.
-- Completeness: `BXCanonical.completeness`, `BXCanonical.completeness_dense` and
-  `BXCanonical.completeness_ztime` (`BXCanonical/Completeness.lean`) are all proved *and*
+- Completeness: `BXCanonical.completeness`, `BXCanonical.derivable_of_validDense` and
+  `BXCanonical.derivable_of_validZTime` (`BXCanonical/Completeness.lean`) are all proved *and*
   sorry-free. The `.Base` one closed last, when its discrete branch
   `WeakCanonical.countermodel_discrete` was proved at the `ℚ ×ₗ ℤ` carrier
   (`WeakCanonical/GroupModel/CountermodelBase.lean`). Check C2 of

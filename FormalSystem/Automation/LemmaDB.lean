@@ -11,7 +11,7 @@ import Lean
 
 This leaf module declares the `@[tmLemma]` label attribute used by the
 `modal_search` family of tactics to enumerate derived theorems for
-backward chaining (see `FormalSystem.Automation.Tactics.Helpers.tryLemmaMatch`).
+backward chaining (see `FormalSystem.Automation.Tactics.Search.tryLemmaMatch`).
 
 **Import discipline**: this module imports ONLY `Lean`. Theorem modules
 under `FormalSystem.Theorems.*` import this module to tag their declarations,

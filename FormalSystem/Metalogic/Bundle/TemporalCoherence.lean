@@ -66,7 +66,7 @@ Transform neg(G phi) membership to F(neg phi) membership in an MCS.
 Since F(neg phi) = neg(G(neg(neg phi))), we use gDneTheorem contrapositively:
   neg(G phi) in MCS -> neg(G(neg neg phi)) in MCS = F(neg phi) in MCS
 -/
-lemma neg_all_future_to_some_future_neg (M : Set Formula)
+theorem neg_all_future_to_some_future_neg (M : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) M)
     (phi : Formula) (h_neg_G : Formula.neg (Formula.allFuture phi) ∈ M) :
     Formula.someFuture (Formula.neg phi) ∈ M := by
@@ -85,7 +85,7 @@ Transform neg(H phi) membership to P(neg phi) membership in an MCS.
 Since P(neg phi) = neg(H(neg(neg phi))), we use hDneTheorem contrapositively.
 Past analog of neg_all_future_to_some_future_neg.
 -/
-lemma neg_all_past_to_some_past_neg (M : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) M)
+theorem neg_all_past_to_some_past_neg (M : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) M)
     (phi : Formula) (h_neg_H : Formula.neg (Formula.allPast phi) ∈ M) :
     Formula.somePast (Formula.neg phi) ∈ M := by
   have h_eq : Formula.neg (Formula.allPast phi) =
@@ -102,7 +102,7 @@ Double negation elimination in MCS: if neg(neg phi) in MCS, then phi in MCS.
 
 Uses dneTheorem and MCS closure under derivation.
 -/
-lemma SetMaximalConsistent.double_neg_elim {M : Set Formula}
+theorem SetMaximalConsistent.double_neg_elim {M : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) M)
     (phi : Formula) (h_neg_neg : Formula.neg (Formula.neg phi) ∈ M) : phi ∈ M := by
   have h_dne : DerivationTree fc [] ((Formula.neg (Formula.neg phi)).imp phi) :=

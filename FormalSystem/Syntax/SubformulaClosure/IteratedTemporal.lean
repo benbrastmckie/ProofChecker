@@ -62,11 +62,11 @@ def iterF : Nat → Formula → Formula
 
 /-- iterF 0 is identity. -/
 @[simp]
-lemma iter_F_zero (phi : Formula) : iterF 0 phi = phi := rfl
+theorem iter_F_zero (phi : Formula) : iterF 0 phi = phi := rfl
 
 /-- iterF (n+1) is F applied to iterF n. -/
 @[simp]
-lemma iter_F_succ (n : Nat) (phi : Formula) :
+theorem iter_F_succ (n : Nat) (phi : Formula) :
     iterF (n + 1) phi = Formula.someFuture (iterF n phi) := rfl
 
 /-!
@@ -81,7 +81,7 @@ strictly increasing complexity. These are used to prove f_nesting_boundary.
 With pattern-aware complexity, `someFuture phi = untl top phi` is recognized
 as a derived temporal operator with overhead 1 (matching box).
 -/
-lemma some_future_complexity (phi : Formula) :
+theorem some_future_complexity (phi : Formula) :
     Formula.complexity (Formula.someFuture phi) = 1 + Formula.complexity phi := by
   rfl
 
@@ -89,7 +89,7 @@ lemma some_future_complexity (phi : Formula) :
 
 `complexity (iterF n phi) = n + complexity phi`
 -/
-lemma iter_F_complexity (n : Nat) (phi : Formula) :
+theorem iter_F_complexity (n : Nat) (phi : Formula) :
     Formula.complexity (iterF n phi) = n + Formula.complexity phi := by
   induction n with
   | zero => simp [iter_F_zero]
@@ -98,13 +98,13 @@ lemma iter_F_complexity (n : Nat) (phi : Formula) :
     omega
 
 /-- iterF strictly increases complexity for positive iterations. -/
-lemma iter_F_complexity_strictly_increasing (n : Nat) (phi : Formula) :
+theorem iter_F_complexity_strictly_increasing (n : Nat) (phi : Formula) :
     Formula.complexity (iterF (n + 1) phi) > Formula.complexity (iterF n phi) := by
   simp only [iter_F_complexity]
   omega
 
 /-- iterF is injective: distinct iteration depths give distinct formulas. -/
-lemma iter_F_injective (phi : Formula) (m n : Nat) (h : iterF m phi = iterF n phi) : m = n := by
+theorem iter_F_injective (phi : Formula) (m n : Nat) (h : iterF m phi = iterF n phi) : m = n := by
   -- Proof by complexity: if iterF m phi = iterF n phi, then their complexities are equal
   have h_cmplx : Formula.complexity (iterF m phi) = Formula.complexity (iterF n phi) :=
     congrArg Formula.complexity h
@@ -112,7 +112,7 @@ lemma iter_F_injective (phi : Formula) (m n : Nat) (h : iterF m phi = iterF n ph
   omega
 
 /-- iterF 1 equals someFuture. -/
-lemma iter_F_one_eq_some_future (phi : Formula) :
+theorem iter_F_one_eq_some_future (phi : Formula) :
     iterF 1 phi = Formula.someFuture phi := rfl
 
 /-!
@@ -128,7 +128,7 @@ This is the key lemma connecting iterF iteration count to fNestingDepth.
 Since fNestingDepth counts consecutive outermost F applications, and iterF
 applies F n times at the outermost level, the depth increases by n.
 -/
-lemma iter_F_f_nesting_depth (n : Nat) (phi : Formula) :
+theorem iter_F_f_nesting_depth (n : Nat) (phi : Formula) :
     FormalSystem.Syntax.fNestingDepth (iterF n phi) = n + FormalSystem.Syntax.fNestingDepth
         phi := by
   induction n with
@@ -150,7 +150,7 @@ def closureFBound (phi : Formula) : Nat :=
 If n >= closureFBound(phi), then the fNestingDepth of iterF n phi
 exceeds max(maxFDepthInClosure(phi), 1) -- the deferralClosure bound.
 -/
-lemma iter_F_exceeds_max_depth (phi : Formula) (n : Nat) (h : n ≥ closureFBound phi) :
+theorem iter_F_exceeds_max_depth (phi : Formula) (n : Nat) (h : n ≥ closureFBound phi) :
     FormalSystem.Syntax.fNestingDepth (iterF n phi) > max
         (FormalSystem.Syntax.maxFDepthInClosure phi)
         1 := by
@@ -183,7 +183,7 @@ theorem iter_F_leaves_closure (phi : Formula) :
 /--
 Helper lemma: iterF (k+1) is F applied to iterF k.
 -/
-lemma iter_F_succ_eq (k : Nat) (phi : Formula) :
+theorem iter_F_succ_eq (k : Nat) (phi : Formula) :
     iterF (k + 1) phi = Formula.someFuture (iterF k phi) := rfl
 
 /--
@@ -200,17 +200,17 @@ def iterP : Nat → Formula → Formula
 
 /-- iterP 0 is identity. -/
 @[simp]
-lemma iter_P_zero (phi : Formula) : iterP 0 phi = phi := rfl
+theorem iter_P_zero (phi : Formula) : iterP 0 phi = phi := rfl
 
 /-- iterP (n+1) is P applied to iterP n. -/
 @[simp]
-lemma iter_P_succ (n : Nat) (phi : Formula) :
+theorem iter_P_succ (n : Nat) (phi : Formula) :
     iterP (n + 1) phi = Formula.somePast (iterP n phi) := rfl
 
 /--
 Helper: iterP k (P(φ)) = iterP (k+1) φ = P(iterP k φ).
 -/
-lemma iter_P_some_past (k : Nat) (phi : Formula) :
+theorem iter_P_some_past (k : Nat) (phi : Formula) :
     iterP k (Formula.somePast phi) = iterP (k + 1) phi := by
   induction k with
   | zero => rfl
@@ -219,7 +219,7 @@ lemma iter_P_some_past (k : Nat) (phi : Formula) :
 /--
 Helper lemma: iterP (k+1) is P applied to iterP k.
 -/
-lemma iter_P_succ_eq (k : Nat) (phi : Formula) :
+theorem iter_P_succ_eq (k : Nat) (phi : Formula) :
     iterP (k + 1) phi = Formula.somePast (iterP k phi) := rfl
 
 /-!
@@ -234,7 +234,7 @@ strictly increasing complexity. Symmetric to iterF lemmas.
 With pattern-aware complexity, `somePast phi = snce top phi` is recognized
 as a derived temporal operator with overhead 1 (matching box).
 -/
-lemma some_past_complexity (phi : Formula) :
+theorem some_past_complexity (phi : Formula) :
     Formula.complexity (Formula.somePast phi) = 1 + Formula.complexity phi := by
   rfl
 
@@ -242,7 +242,7 @@ lemma some_past_complexity (phi : Formula) :
 
 `complexity (iterP n phi) = n + complexity phi`
 -/
-lemma iter_P_complexity (n : Nat) (phi : Formula) :
+theorem iter_P_complexity (n : Nat) (phi : Formula) :
     Formula.complexity (iterP n phi) = n + Formula.complexity phi := by
   induction n with
   | zero => simp [iter_P_zero]
@@ -251,20 +251,20 @@ lemma iter_P_complexity (n : Nat) (phi : Formula) :
     omega
 
 /-- iterP strictly increases complexity for positive iterations. -/
-lemma iter_P_complexity_strictly_increasing (n : Nat) (phi : Formula) :
+theorem iter_P_complexity_strictly_increasing (n : Nat) (phi : Formula) :
     Formula.complexity (iterP (n + 1) phi) > Formula.complexity (iterP n phi) := by
   simp only [iter_P_complexity]
   omega
 
 /-- iterP is injective: distinct iteration depths give distinct formulas. -/
-lemma iter_P_injective (phi : Formula) (m n : Nat) (h : iterP m phi = iterP n phi) : m = n := by
+theorem iter_P_injective (phi : Formula) (m n : Nat) (h : iterP m phi = iterP n phi) : m = n := by
   have h_cmplx : Formula.complexity (iterP m phi) = Formula.complexity (iterP n phi) :=
     congrArg Formula.complexity h
   simp only [iter_P_complexity] at h_cmplx
   omega
 
 /-- iterP 1 equals somePast. -/
-lemma iter_P_one_eq_some_past (phi : Formula) :
+theorem iter_P_one_eq_some_past (phi : Formula) :
     iterP 1 phi = Formula.somePast phi := rfl
 
 /-!
@@ -281,7 +281,7 @@ This is the key lemma connecting iterP iteration count to pNestingDepth.
 Since pNestingDepth counts consecutive outermost P applications, and iterP
 applies P n times at the outermost level, the depth increases by n.
 -/
-lemma iter_P_p_nesting_depth (n : Nat) (phi : Formula) :
+theorem iter_P_p_nesting_depth (n : Nat) (phi : Formula) :
     FormalSystem.Syntax.pNestingDepth (iterP n phi) = n + FormalSystem.Syntax.pNestingDepth
         phi := by
   induction n with
@@ -303,7 +303,7 @@ def closurePBound (phi : Formula) : Nat :=
 If n >= closurePBound(phi), then the pNestingDepth of iterP n phi
 exceeds max(maxPDepthInClosure(phi), 1) -- the deferralClosure bound.
 -/
-lemma iter_P_exceeds_max_depth (phi : Formula) (n : Nat) (h : n ≥ closurePBound phi) :
+theorem iter_P_exceeds_max_depth (phi : Formula) (n : Nat) (h : n ≥ closurePBound phi) :
     FormalSystem.Syntax.pNestingDepth (iterP n phi) > max
         (FormalSystem.Syntax.maxPDepthInClosure phi)
         1 := by

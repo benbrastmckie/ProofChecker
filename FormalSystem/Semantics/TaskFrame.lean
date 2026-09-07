@@ -1144,13 +1144,13 @@ theorem saturation_of_subsingleton {W : Type} [Subsingleton W] {R : W → D → 
 
 omit [LinearOrder D] [IsOrderedAddMonoid D] in
 /-- Zero-duration fibers of a permissive relation are singletons. -/
-theorem Fib_permissive_zero {W : Type} {R : W → D → W → Prop}
+theorem Fib.permissive_zero {W : Type} {R : W → D → W → Prop}
     (hR : ∀ w d u, R w d u ↔ (d ≠ 0 ∨ w = u)) (w : W) : Fib R w 0 = {w} := by
   ext u; simp [Fib, hR, eq_comm]
 
 omit [LinearOrder D] [IsOrderedAddMonoid D] in
 /-- Nonzero-duration fibers of a permissive relation are the whole carrier. -/
-theorem Fib_permissive_ne {W : Type} {R : W → D → W → Prop}
+theorem Fib.permissive_ne {W : Type} {R : W → D → W → Prop}
     (hR : ∀ w d u, R w d u ↔ (d ≠ 0 ∨ w = u)) (w : W) {x : D} (hx : x ≠ 0) :
     Fib R w x = Set.univ := by
   ext u; simp [Fib, hR, hx]
@@ -1267,8 +1267,8 @@ theorem univ_or_singleton_of_permissive {W : Type} {R : W → D → W → Prop}
     s = Set.univ ∨ ∃ a, s = {a} := by
   rcases hcls with ⟨w, x, rfl⟩ | ⟨w, v, x, y, _, _, rfl⟩
   · by_cases hx : x = 0
-    · subst hx; exact Or.inr ⟨w, Fib_permissive_zero hR w⟩
-    · exact Or.inl (Fib_permissive_ne hR w hx)
+    · subst hx; exact Or.inr ⟨w, Fib.permissive_zero hR w⟩
+    · exact Or.inl (Fib.permissive_ne hR w hx)
   · by_cases hx : x = 0
     · by_cases hy : y = 0
       · subst hx; subst hy
@@ -1279,18 +1279,18 @@ theorem univ_or_singleton_of_permissive {W : Type} {R : W → D → W → Prop}
         have hvc : v = c := by
           have := (hR v (-0) c).mp hc.2; simpa using this
         refine Or.inr ⟨c, ?_⟩
-        rw [Seg, neg_zero, hwc, hvc, Fib_permissive_zero hR c, Set.inter_self]
+        rw [Seg, neg_zero, hwc, hvc, Fib.permissive_zero hR c, Set.inter_self]
       · subst hx
         refine Or.inr ⟨w, ?_⟩
-        rw [Seg, Fib_permissive_zero hR w,
-          Fib_permissive_ne hR v (by simpa using hy), Set.inter_univ]
+        rw [Seg, Fib.permissive_zero hR w,
+          Fib.permissive_ne hR v (by simpa using hy), Set.inter_univ]
     · by_cases hy : y = 0
       · subst hy
         refine Or.inr ⟨v, ?_⟩
-        rw [Seg, Fib_permissive_ne hR w hx, neg_zero, Fib_permissive_zero hR v,
+        rw [Seg, Fib.permissive_ne hR w hx, neg_zero, Fib.permissive_zero hR v,
           Set.univ_inter]
       · exact Or.inl (by
-          rw [Seg, Fib_permissive_ne hR w hx, Fib_permissive_ne hR v (by simpa using hy),
+          rw [Seg, Fib.permissive_ne hR w hx, Fib.permissive_ne hR v (by simpa using hy),
             Set.inter_self])
 
 omit [IsOrderedAddMonoid D] in
@@ -1309,7 +1309,7 @@ theorem saturation_of_permissive {W : Type} {R : W → D → W → Prop}
 
 omit [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] in
 /-- Every fiber of an equality relation is the singleton of its base point. -/
-theorem Fib_eq_singleton {W : Type} {R : W → D → W → Prop}
+theorem Fib.eq_singleton {W : Type} {R : W → D → W → Prop}
     (hR : ∀ w d u, R w d u ↔ w = u) (w : W) (x : D) : Fib R w x = {w} := by
   ext u; simp [Fib, hR, eq_comm]
 
@@ -1355,13 +1355,13 @@ theorem saturation_of_eq {W : Type} {R : W → D → W → Prop}
     (fun s hs => ?_)
   obtain ⟨hcl, hne⟩ := hmem s hs
   rcases hcl with ⟨w, x, rfl⟩ | ⟨w, v, x, y, _, _, rfl⟩
-  · exact Or.inr ⟨w, Fib_eq_singleton hR w x⟩
+  · exact Or.inr ⟨w, Fib.eq_singleton hR w x⟩
   · obtain ⟨c, hc⟩ := hne
     rw [mem_Seg] at hc
     have hwc : w = c := (hR w x c).mp hc.1
     have hvc : v = c := (hR v (-y) c).mp hc.2
     refine Or.inr ⟨c, ?_⟩
-    rw [Seg, hwc, hvc, Fib_eq_singleton hR c x, Fib_eq_singleton hR c (-y), Set.inter_self]
+    rw [Seg, hwc, hvc, Fib.eq_singleton hR c x, Fib.eq_singleton hR c (-y), Set.inter_self]
 
 /-! ### Helper D — the deterministic class: every fibre is a subsingleton
 

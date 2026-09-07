@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Automation.Tactics.Helpers
+import FormalSystem.Automation.Tactics.Meta
+import FormalSystem.Automation.Tactics.Search
 import FormalSystem.Automation.Tactics.Deduction
 
 namespace FormalSystem.Automation

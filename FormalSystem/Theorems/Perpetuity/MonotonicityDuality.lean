@@ -179,7 +179,7 @@ def pastMono {fc : FrameClass} {A B : Formula} (h : ⊢[fc] A.imp B) : ⊢[fc] A
     simp only [Formula.swapTemporal, Formula.swap_temporal_all_future,
       Formula.swap_temporal_involution] at past_raw
     exact past_raw
-  have pk : ⊢[fc] (A.imp B).allPast.imp (A.allPast.imp B.allPast) := pastKDist A B
+  have pk : ⊢[fc] (A.imp B).allPast.imp (A.allPast.imp B.allPast) := pastKDistFromFuture A B
   exact DerivationTree.modus_ponens [] _ _ pk h_past
 
 /-!
@@ -261,7 +261,7 @@ From `always φ → always (¬¬φ)`, we can derive the temporal analog of doubl
 **Derivation Strategy**:
 1. Decompose `△φ` into `Hφ ∧ φ ∧ Gφ`
 2. Apply `notNotIntro` to `φ`: `φ → ¬¬φ`
-3. Apply `pastKDist` and `futureKDist` to get `Hφ → H(¬¬φ)` and `Gφ → G(¬¬φ)`
+3. Apply `pastKDistFromFuture` and `futureKDist` to get `Hφ → H(¬¬φ)` and `Gφ → G(¬¬φ)`
 4. Recombine: `H(¬¬φ) ∧ ¬¬φ ∧ G(¬¬φ) = △(¬¬φ)`
 -/
 def alwaysDni {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.always.imp φ.neg.neg.always := by
@@ -270,7 +270,7 @@ def alwaysDni {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.always.imp φ.neg.ne
   -- Step 2: Lift through past operator
   have past_lift : ⊢[fc] φ.allPast.imp φ.neg.neg.allPast := by
     have pk : ⊢[fc] (φ.imp φ.neg.neg).allPast.imp (φ.allPast.imp φ.neg.neg.allPast) :=
-      pastKDist φ φ.neg.neg
+      pastKDistFromFuture φ φ.neg.neg
     have past_dni : ⊢[fc] (φ.imp φ.neg.neg).allPast := by
       have h_swap : ⊢[fc] (φ.imp φ.neg.neg).swapTemporal := DerivationTree.temporal_duality _ dni_phi
       have g_swap : ⊢[fc] (φ.imp φ.neg.neg).swapTemporal.allFuture :=
@@ -368,7 +368,7 @@ def alwaysDne {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.neg.neg.always.imp �
   -- Step 2: Lift through past operator
   have past_lift : ⊢[fc] φ.neg.neg.allPast.imp φ.allPast := by
     have pk : ⊢[fc] (φ.neg.neg.imp φ).allPast.imp (φ.neg.neg.allPast.imp φ.allPast) :=
-      pastKDist φ.neg.neg φ
+      pastKDistFromFuture φ.neg.neg φ
     have past_dne : ⊢[fc] (φ.neg.neg.imp φ).allPast := by
       have h_swap : ⊢[fc] (φ.neg.neg.imp φ).swapTemporal := DerivationTree.temporal_duality _ dne_phi
       have g_swap : ⊢[fc] (φ.neg.neg.imp φ).swapTemporal.allFuture :=

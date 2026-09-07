@@ -355,10 +355,12 @@ theorem modal_t_valid (φ : Formula) : valid (Formula.box φ).imp φ := by
 
 Create a TM-specific rule set to group modal/temporal automation:
 
-**Status note**: this hypothetical `TMLogic` rule set is illustrative; the real `AesopRules.lean`
-registers its rules directly into Aesop's default rule set (no separate `TMLogic` rule set
-exists), and does not currently include the perpetuity theorems, which are proven but not
-Aesop-registered — see `tactic-registry.md`.
+**Status note**: this `TMLogic` rule set is illustrative only. A real one existed in this
+repository and was retired: it had zero consumers, because rules in a dedicated rule set are
+reachable only through an explicit `aesop (rule_sets := [TMLogic])` and no call site ever
+wrote one. The underlying obstacle is that Aesop's proof reconstruction does not work over
+`Type`-valued `DerivationTree` goals. Read
+`FormalSystem/Boneyard/RetiredTactics/README.md` before building another one.
 
 ```lean
 -- Declare custom rule set for TM logic

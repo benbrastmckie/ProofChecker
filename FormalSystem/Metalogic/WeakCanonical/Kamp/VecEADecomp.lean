@@ -490,7 +490,7 @@ theorem sinceWitnessPred_correct {sig : MonadicSignature} [Fintype sig.preds]
     (NfEvalNf M 0 1 (fun _ => z) pointNf ∧
      ∃ y : M.carrier, y < z ∧ NfEvalNf M 0 1 (fun _ => y) witNf) := by
   simp only [sinceWitnessPred, TemporalPred.EvalAt]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   simp only [TemporalTruth]
   constructor
   · intro ⟨h_pt, y, hy, h_wit, _⟩
@@ -523,7 +523,7 @@ theorem untilWitnessPred_correct {sig : MonadicSignature} [Fintype sig.preds]
     (NfEvalNf M 0 1 (fun _ => z) pointNf ∧
      ∃ y : M.carrier, z < y ∧ NfEvalNf M 0 1 (fun _ => y) witNf) := by
   simp only [untilWitnessPred, TemporalPred.EvalAt]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   simp only [TemporalTruth]
   constructor
   · intro ⟨h_pt, y, hy, h_wit, _⟩

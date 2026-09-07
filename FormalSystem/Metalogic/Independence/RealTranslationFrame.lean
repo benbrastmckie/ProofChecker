@@ -18,7 +18,7 @@ deterministic in the sense of `def:deterministic`. Its partner `F°` — the *dr
 
 ## Main Definitions
 
-- `realOrder` — `ℝ` as a `TemporalOrder`
+- `realTemporalOrder` — `ℝ` as a `TemporalOrder`
 - `oneShift` — the shift set `(ℝ, +)` acting on itself
 - `F1` — the induced task frame, `oneShift.frame`
 
@@ -33,20 +33,20 @@ deterministic in the sense of `def:deterministic`. Its partner `F°` — the *dr
 ## Why `ShiftSet` and not `translationFrame`
 
 `Semantics/Frames/Standard.lean` already carries `translationFrame D`, which is this frame at
-`D = realOrder`. It is nevertheless **not** the route taken here, and the reason is a
+`D = realTemporalOrder`. It is nevertheless **not** the route taken here, and the reason is a
 reducibility barrier that bites late rather than early.
 
 `translationFrame` is a plain `def`, not `@[reducible]`, so
-`(translationFrame realOrder).WorldState` does not reduce to `ℝ` at the transparency instance
+`(translationFrame realTemporalOrder).WorldState` does not reduce to `ℝ` at the transparency instance
 synthesis and unification work at. There are two distinct symptoms:
 
 1. **At the frame level**, `example (w x u : ℝ) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl` fails
    with "`w` has type `ℝ` but is expected to have type `F1.WorldState`" and a failed
-   `HAdd ℝ ℝ ?m` synthesis. This one *is* repairable: type the variables at `↑realOrder` instead
-   of at `ℝ`, since `realOrder` is `@[reducible]` and `↑realOrder` does reduce.
+   `HAdd ℝ ℝ ?m` synthesis. This one *is* repairable: type the variables at `↑realTemporalOrder` instead
+   of at `ℝ`, since `realTemporalOrder` is `@[reducible]` and `↑realTemporalOrder` does reduce.
 2. **At the history level**, the world-set characterization
    `τ.states r _ = τ.states 0 _ + r` fails with a failed
-   `HAdd (translationFrame realOrder).toTaskFrame.WorldState realOrder.carrier ?m` synthesis,
+   `HAdd (translationFrame realTemporalOrder).toTaskFrame.WorldState realTemporalOrder.carrier ?m` synthesis,
    because `τ.states` *returns* a value in the unreduced `WorldState`. This one is **not**
    repairable by a type ascription or by a `@[reducible]` alias: the barrier sits inside
    `translationFrame`'s own body, and neither reaches it.
@@ -56,13 +56,13 @@ route. `ShiftSet.fibre` and `ShiftSet.frame` are both `@[reducible]`, so the car
 transparent all the way through — and the route additionally hands over `total_eq_orbit`, which
 *is* the world-set characterization, already proved generically.
 
-A bespoke `FrameOver realOrder` with a hand-written `foneRel` and six hand-discharged axiom
+A bespoke `FrameOver realTemporalOrder` with a hand-written `foneRel` and six hand-discharged axiom
 fields was also built during research and is **deliberately not promoted**: it duplicates
 `ShiftSet.fibre` for no gain. It should not be restored.
 
-## `realOrder` is defined here rather than imported
+## `realTemporalOrder` is defined here rather than imported
 
-`Metalogic/DedekindNonCompactness.lean` already defines a `realOrder`, with `@[reducible]` and
+`Metalogic/DedekindNonCompactness.lean` already defines a `realTemporalOrder`, with `@[reducible]` and
 `noncomputable` both load-bearing for exactly the reasons recorded at that declaration; this is a
 second copy of that two-line definition rather than an import, and the duplication is deliberate:
 
@@ -96,7 +96,7 @@ open FormalSystem.StarLanguage
 /-- The temporal order `ℝ`. Both annotations are load-bearing, exactly as at
 `Metalogic/DedekindNonCompactness.lean`'s copy: without `@[reducible]`, `(0 : F1.WorldState)`
 fails to elaborate and order instances on `F1.Duration` fail to synthesize. -/
-@[reducible] noncomputable def realOrder : TemporalOrder := ⟨ℝ⟩
+@[reducible] noncomputable def realTemporalOrder : TemporalOrder := ⟨ℝ⟩
 
 /--
 `(ℝ, +)` acting on itself by translation, as a `ShiftSet`.
@@ -106,7 +106,7 @@ within every positive distance of `w`, instantiate the hypothesis at `x := |u - 
 witness `y` is forced to be `u - w`, giving `|u - w| < |u - w|`. The same three lines as
 `rShift`'s `sep`.
 -/
-@[reducible] noncomputable def oneShift : ShiftSet realOrder where
+@[reducible] noncomputable def oneShift : ShiftSet realTemporalOrder where
   Carrier := ℝ
   carrier_nonempty := ⟨0⟩
   sh := fun w d => w + d
@@ -131,7 +131,7 @@ the point of the route — see the module docstring.
 @[reducible] noncomputable def F1 : TaskFrame := oneShift.frame
 
 /-- `F¹`'s task relation is translation, definitionally. -/
-theorem f1_taskRel_iff (w x u : ↑realOrder) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl
+theorem f1_taskRel_iff (w x u : ↑realTemporalOrder) : F1.TaskRel w x u ↔ u = w + x := Iff.rfl
 
 /-- **F¹ is deterministic** (`def:deterministic`): the relation is functional, so every fibre is
 a subsingleton. -/
@@ -150,14 +150,14 @@ theorem f1_total_eq_orbit (τ : WorldHistory F1) (hτ : τ.IsTotal) :
   oneShift.total_eq_orbit τ hτ
 
 /-- The pointwise form: a total history of `F¹` is `t ↦ τ(0) + t`. -/
-theorem f1_states_eq (τ : WorldHistory F1) (hτ : τ.IsTotal) (r : ↑realOrder) :
+theorem f1_states_eq (τ : WorldHistory F1) (hτ : τ.IsTotal) (r : ↑realTemporalOrder) :
     τ.states r (hτ r) = τ.states 0 (hτ 0) + r := by
   have h := τ.respects_task 0 r (hτ 0) (hτ r)
   rw [sub_zero] at h
   exact h
 
 /-- The two-point form: a total history of `F¹` moves by exactly the elapsed duration. -/
-theorem f1_states_sub (τ : WorldHistory F1) (hτ : τ.IsTotal) (s r : ↑realOrder) :
+theorem f1_states_sub (τ : WorldHistory F1) (hτ : τ.IsTotal) (s r : ↑realTemporalOrder) :
     τ.states r (hτ r) = τ.states s (hτ s) + (r - s) := by
   have h := τ.respects_task s r (hτ s) (hτ r)
   exact h
@@ -168,7 +168,7 @@ Two total histories of `F¹` agreeing at one time are **equal** — the `⟨τ�
 `ShiftSet.wh_ext`.
 -/
 theorem f1_eq_of_states_eq {τ σ : WorldHistory F1} (hτ : τ.IsTotal) (hσ : σ.IsTotal)
-    {t : ↑realOrder} (h : SameStateAt τ σ t) : τ = σ := by
+    {t : ↑realTemporalOrder} (h : SameStateAt τ σ t) : τ = σ := by
   refine ShiftSet.wh_ext (funext fun z => propext ⟨fun _ => hσ z, fun _ => hτ z⟩) ?_
   intro r _ _
   exact states_eq_of_deterministic f1_deterministic hτ hσ h r

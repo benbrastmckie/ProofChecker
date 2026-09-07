@@ -175,7 +175,7 @@ theorem is in any CUD set). From burgessRSet(A, B, C): untl(⊤, φ.neg) ∈ A. 
 (until_F), F(φ.neg) ∈ A. But G(φ) ∈ A gives ¬F(φ.neg) ∈ A (by G = ¬F¬ equivalence
 in MCS), contradicting consistency of A.
 -/
-theorem BurgessR3Maximal_g_content_sub {fc : FrameClass} {A B C : Set Formula}
+theorem BurgessR3Maximal.g_content_sub {fc : FrameClass} {A B C : Set Formula}
     (h_r3m : BurgessR3Maximal fc A B C)
     (h_mcs_A : SetMaximalConsistent (fc := fc) A) (h_mcs_C : SetMaximalConsistent (fc := fc) C) :
     GContent A ⊆ C := by
@@ -232,7 +232,7 @@ theorem BurgessR3Maximal_g_content_sub {fc : FrameClass} {A B C : Set Formula}
 **BurgessR3Maximal fc implies SetDeductivelyClosed** when some formula is not in B.
 Since B is CUD (from BurgessR3Maximal) and phi not in B, B is not Set.univ, hence consistent.
 -/
-theorem BurgessR3Maximal_sdc {fc : FrameClass} {A B C : Set Formula}
+theorem BurgessR3Maximal.sdc {fc : FrameClass} {A B C : Set Formula}
     (h_r3m : BurgessR3Maximal fc A B C)
     {phi : Formula} (h_not_mem : phi ∉ B) :
     SetDeductivelyClosed fc B :=
@@ -251,7 +251,7 @@ chronicle construction in ChronicleConstruction.lean.
 See Burgess 1982, Section 2: "g is a function from {(x,y) : x,y ∈ dom f,
 x < y} to the set of all DCSs" where DCS = deductively closed set
 (consistent + CUD). -/
-theorem BurgessR3Maximal_bot_not_mem {fc : FrameClass} {A B C : Set Formula}
+theorem BurgessR3Maximal.bot_not_mem {fc : FrameClass} {A B C : Set Formula}
     (_h_r3m : BurgessR3Maximal fc A B C)
     (h_cons : SetConsistent (fc := fc) B) :
     Formula.bot ∉ B := by
@@ -977,7 +977,7 @@ private noncomputable def c5_forward_walk (fc : FrameClass)
         fun w hw hsw hwx' => absurd ⟨hsw, hwx'⟩ (h_adj_sx'.2.2.2 w hw)⟩⟩
     -- Get BurgessR3Maximal fc facts for (pt, x')
     have h_r3m_adj := h_c2' pt x' h_adj_sx'
-    have h_gc_adj := BurgessR3Maximal_g_content_sub h_r3m_adj h_mcs_start h_mcs_x'
+    have h_gc_adj := BurgessR3Maximal.g_content_sub h_r3m_adj h_mcs_start h_mcs_x'
     -- Check condition (i): conj ∈ f(x') AND ξ ∈ g(pt, x')
     by_cases h_cond_i : Formula.and ξ (Formula.untl ξ η) ∈ χ.f x' ∧ ξ ∈ χ.g pt x'
     · -- **Condition (i)**: recurse at x'
@@ -1691,7 +1691,7 @@ private noncomputable def c5_backward_walk (fc : FrameClass)
         fun w hw hx''w hws => absurd ⟨hx''w, hws⟩ (h_adj_x''s.2.2.2 w hw)⟩⟩
     -- Get BurgessR3Maximal fc facts for (x'', pt)
     have h_r3m_adj := h_c2' x'' pt h_adj_x''s
-    have h_gc_adj := BurgessR3Maximal_g_content_sub h_r3m_adj h_mcs_x'' h_mcs_start
+    have h_gc_adj := BurgessR3Maximal.g_content_sub h_r3m_adj h_mcs_x'' h_mcs_start
     -- Check condition (i): conj ∈ f(x'') AND ξ ∈ g(x'', pt)
     by_cases h_cond_i : Formula.and ξ (Formula.snce ξ η) ∈ χ.f x'' ∧ ξ ∈ χ.g x'' pt
     · -- **Condition (i)**: recurse at x''
@@ -2324,7 +2324,7 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
             fun w hw hsw hwx' => absurd ⟨hsw, hwx'⟩ (h_adj_xx'.2.2.2 w hw)⟩⟩
         -- Get BurgessR3Maximal fc for the adjacent pair (pc.x, x') from c2'
         have h_r3m_adj := h_c2' pc.x x' h_adj_xx'
-        have h_gc_adj := BurgessR3Maximal_g_content_sub h_r3m_adj h_mcs_x h_mcs_x'
+        have h_gc_adj := BurgessR3Maximal.g_content_sub h_r3m_adj h_mcs_x h_mcs_x'
         -- Burgess 2.10: check condition (i) — does the conjunction persist into f(x')
         -- AND is the guard in g(x, x')? Both parts are needed for the forward walk.
         -- If condition (i) holds, splitting at (pc.x, x') fails; use forward walk.
@@ -2891,7 +2891,7 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
             fun w hw hx''w hwx => absurd ⟨hx''w, hwx⟩ (h_adj_x''x.2.2.2 w hw)⟩⟩
         -- Get BurgessR3Maximal fc for the adjacent pair (x'', pc.x)
         have h_r3m_adj := h_c2' x'' pc.x h_adj_x''x
-        have h_gc_adj := BurgessR3Maximal_g_content_sub h_r3m_adj h_mcs_x'' h_mcs_x
+        have h_gc_adj := BurgessR3Maximal.g_content_sub h_r3m_adj h_mcs_x'' h_mcs_x
         -- Backward condition (i) check: xi ∧ snce(xi, eta) ∈ f(x'') AND xi ∈ g(x'', pc.x)?
         -- Both parts needed for backward walk (Burgess 2.10 mirror).
         -- If yes, the Since counterexample persists backward. We walk backward.
@@ -3364,8 +3364,8 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
           exact absurd h_untl_eta
             (SetMaximalConsistent.neg_excludes h_mcs_w (Formula.untl pc.ξ pc.η) hw_neg_until)
       -- Now: ξ ∉ g(w, w_next). Apply lemma_2_6_splitting with β = ξ.
-      have h_B_sdc_w := BurgessR3Maximal_sdc h_r3m_w h_xi_not_g
-      have h_gc_w := BurgessR3Maximal_g_content_sub h_r3m_w h_mcs_w h_mcs_wn
+      have h_B_sdc_w := BurgessR3Maximal.sdc h_r3m_w h_xi_not_g
+      have h_gc_w := BurgessR3Maximal.g_content_sub h_r3m_w h_mcs_w h_mcs_wn
       have h_split := lemma_2_6_splitting fc h_mcs_w h_mcs_wn h_r3m_w h_B_sdc_w.2 h_gc_w
         pc.ξ h_xi_not_g
       let B' := h_split.choose
@@ -3674,8 +3674,8 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
           exact absurd h_snce_eta
             (SetMaximalConsistent.neg_excludes h_mcs_w (Formula.snce pc.ξ pc.η) hw_neg_since)
       -- Now: ξ ∉ g(w_prev, w). Apply lemma_2_6_splitting with β = ξ.
-      have h_B_sdc_w := BurgessR3Maximal_sdc h_r3m_w h_xi_not_g
-      have h_gc_w := BurgessR3Maximal_g_content_sub h_r3m_w h_mcs_wp h_mcs_w
+      have h_B_sdc_w := BurgessR3Maximal.sdc h_r3m_w h_xi_not_g
+      have h_gc_w := BurgessR3Maximal.g_content_sub h_r3m_w h_mcs_wp h_mcs_w
       have h_split := lemma_2_6_splitting fc h_mcs_wp h_mcs_w h_r3m_w h_B_sdc_w.2 h_gc_w
         pc.ξ h_xi_not_g
       let B' := h_split.choose

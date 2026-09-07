@@ -46,8 +46,8 @@ let hints := db'.queryPatterns newGoal context
 
 ## References
 
-- "Learning to Prove Theorems via Interacting with Proof Assistants" (Yang et al., 2019)
-- "Reinforcement Learning for Theorem Proving" (Kaliszyk et al., 2018)
+- [yang2019]
+- [kaliszyk2018]
 -/
 
 namespace FormalSystem.Automation

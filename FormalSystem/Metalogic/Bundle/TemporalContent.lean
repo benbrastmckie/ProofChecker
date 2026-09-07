@@ -116,27 +116,27 @@ def SContent (M : Set Formula) : Set (Formula × Formula) :=
 /-! ## Membership Lemmas -/
 
 @[simp]
-lemma mem_g_content_iff {M : Set Formula} {phi : Formula} :
+theorem mem_g_content_iff {M : Set Formula} {phi : Formula} :
     phi ∈ GContent M ↔ Formula.allFuture phi ∈ M := Iff.rfl
 
 @[simp]
-lemma mem_h_content_iff {M : Set Formula} {phi : Formula} :
+theorem mem_h_content_iff {M : Set Formula} {phi : Formula} :
     phi ∈ HContent M ↔ Formula.allPast phi ∈ M := Iff.rfl
 
 @[simp]
-lemma mem_f_content_iff {M : Set Formula} {phi : Formula} :
+theorem mem_f_content_iff {M : Set Formula} {phi : Formula} :
     phi ∈ FContent M ↔ Formula.someFuture phi ∈ M := Iff.rfl
 
 @[simp]
-lemma mem_p_content_iff {M : Set Formula} {phi : Formula} :
+theorem mem_p_content_iff {M : Set Formula} {phi : Formula} :
     phi ∈ PContent M ↔ Formula.somePast phi ∈ M := Iff.rfl
 
 @[simp]
-lemma mem_u_content_iff {M : Set Formula} {p : Formula × Formula} :
+theorem mem_u_content_iff {M : Set Formula} {p : Formula × Formula} :
     p ∈ UContent M ↔ Formula.untl p.2 p.1 ∈ M := Iff.rfl
 
 @[simp]
-lemma mem_s_content_iff {M : Set Formula} {p : Formula × Formula} :
+theorem mem_s_content_iff {M : Set Formula} {p : Formula × Formula} :
     p ∈ SContent M ↔ Formula.snce p.2 p.1 ∈ M := Iff.rfl
 
 /-! ## Duality Lemmas -/

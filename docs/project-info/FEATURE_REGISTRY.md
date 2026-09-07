@@ -70,10 +70,14 @@ For implementation status by module, see [implementation-status.md](implementati
 
 ### Aesop Integration
 
-- **Status**: Active
-- **Description**: Aesop rule registration for TM automation with forward chaining and
-  safe apply rules.
-- **Key File**: `FormalSystem/Automation/AesopRules.lean`
+- **Status**: Retired
+- **Description**: A `TMLogic` Aesop rule set with forward-chaining and safe-apply rules for
+  the TM axioms. It was retired on measurement: because the rules lived in a dedicated rule
+  set, reaching them required an explicit `aesop (rule_sets := [TMLogic])`, and no such
+  invocation existed anywhere in the library or the test suite. Aesop's proof reconstruction
+  does not work over `Type`-valued `DerivationTree` goals, which is why the tactic it was
+  built for stopped using it in the first place.
+- **Key File**: `FormalSystem/Boneyard/RetiredTactics/AesopRules.lean` (archived, not compiled)
 
 ## Testing Features
 

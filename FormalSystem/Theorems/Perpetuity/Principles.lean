@@ -661,7 +661,7 @@ at all past times and A holds at all past times, then B must hold at all past ti
 
 **Derivation**: This follows from `futureKDist` applied with temporal duality.
 -/
-noncomputable def pastKDist {fc : FrameClass} (A B : Formula) :
+noncomputable def pastKDistFromFuture {fc : FrameClass} (A B : Formula) :
     ⊢[fc] (A.imp B).allPast.imp (A.allPast.imp B.allPast) := by
   -- Apply futureKDist to swapped formulas
   have fk : ⊢[fc] (A.swapTemporal.imp B.swapTemporal).allFuture.imp
@@ -761,7 +761,7 @@ noncomputable def persistence {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.diam
     -- Use past K distribution: H(□◇φ → ◇φ) → (H□◇φ → H◇φ)
     have pk : ⊢[fc] (φ.diamond.box.imp φ.diamond).allPast.imp
                  (φ.diamond.box.allPast.imp φ.diamond.allPast) :=
-      pastKDist φ.diamond.box φ.diamond
+      pastKDistFromFuture φ.diamond.box φ.diamond
     have past_bridge : ⊢[fc] φ.diamond.box.allPast.imp φ.diamond.allPast :=
       DerivationTree.modus_ponens [] _ _ pk past_mt
     exact impTrans chain1 past_bridge

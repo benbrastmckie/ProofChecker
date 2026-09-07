@@ -128,7 +128,7 @@ existence given C3. In particular `G_backward_mcs` and `H_backward_mcs` (`TruthL
 all proved.
 
 **Both consumer-facing completeness results are sorry-free.**
-`BXCanonical.completeness_ztime` reaches its countermodel via
+`BXCanonical.derivable_of_validZTime` reaches its countermodel via
 `countermodel_discrete_reynolds_v2` (`IntegerModel/ReynoldsBridge.lean`); `BXCanonical.completeness`
 at `.Base` reaches its discrete branch via `countermodel_discrete`
 (`GroupModel/CountermodelBase.lean`). Check C2 records both as depending on

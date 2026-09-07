@@ -236,12 +236,13 @@ invariant check allowlists it by name (check C8).
 | File | Lines | Description |
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
-| `Automation.lean` | 102 | Re-export for Automation submodule |
+| `Automation.lean` | 100 | Re-export for Automation submodule |
 | `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
-| `FormalSystem.lean` | 106 | Library aggregator: imports all submodules for unified access |
+| `FormalSystem.lean` | 109 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
+| `MainResults.lean` | 254 | <!-- TODO: add description --> |
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 246 | Re-export for Semantics submodule |

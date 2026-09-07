@@ -44,7 +44,7 @@ open FormalSystem.Metalogic.WeakCanonical
 /-! ## Helper lemmas for temporal truth of derived connectives -/
 
 /-- `TemporalTruth` for `Formula.neg` is classical negation. -/
-theorem temporal_truth_neg {sig : MonadicSignature}
+theorem temporalTruth_neg_iff {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)
     (t : M.carrier) (φ : Formula) :
     TemporalTruth M atomMap t φ.neg ↔ ¬TemporalTruth M atomMap t φ := by
@@ -58,7 +58,7 @@ theorem temporal_truth_top {sig : MonadicSignature}
   simp only [Formula.top, TemporalTruth]; intro h; exact h
 
 /-- `TemporalTruth` for `Formula.and` is conjunction. -/
-theorem temporal_truth_and {sig : MonadicSignature}
+theorem temporalTruth_and_iff {sig : MonadicSignature}
     (M : OrderedMonadicStructure sig) (atomMap : Formula → sig.preds)
     (t : M.carrier) (φ ψ : Formula) :
     TemporalTruth M atomMap t (Formula.and φ ψ) ↔
@@ -82,16 +82,16 @@ theorem temporal_truth_all_future {sig : MonadicSignature}
     TemporalTruth M atomMap t φ.allFuture ↔
     ∀ s : M.carrier, t < s → TemporalTruth M atomMap s φ := by
   simp only [Formula.allFuture, Formula.someFuture]
-  rw [temporal_truth_neg]
+  rw [temporalTruth_neg_iff]
   simp only [TemporalTruth]
   constructor
   · intro h s h_lt
     by_contra h_neg
     apply h
-    exact ⟨s, h_lt, (temporal_truth_neg M atomMap s φ).mpr h_neg,
+    exact ⟨s, h_lt, (temporalTruth_neg_iff M atomMap s φ).mpr h_neg,
            fun _ _ _ => temporal_truth_top M atomMap _⟩
   · intro h ⟨s, h_lt, h_neg, _⟩
-    exact (temporal_truth_neg M atomMap s φ).mp h_neg (h s h_lt)
+    exact (temporalTruth_neg_iff M atomMap s φ).mp h_neg (h s h_lt)
 
 /-- `TemporalTruth` for H(φ) = allPast φ = ¬P(¬φ). -/
 theorem temporal_truth_all_past {sig : MonadicSignature}
@@ -100,16 +100,16 @@ theorem temporal_truth_all_past {sig : MonadicSignature}
     TemporalTruth M atomMap t φ.allPast ↔
     ∀ s : M.carrier, s < t → TemporalTruth M atomMap s φ := by
   simp only [Formula.allPast, Formula.somePast]
-  rw [temporal_truth_neg]
+  rw [temporalTruth_neg_iff]
   simp only [TemporalTruth]
   constructor
   · intro h s h_lt
     by_contra h_neg
     apply h
-    exact ⟨s, h_lt, (temporal_truth_neg M atomMap s φ).mpr h_neg,
+    exact ⟨s, h_lt, (temporalTruth_neg_iff M atomMap s φ).mpr h_neg,
            fun _ _ _ => temporal_truth_top M atomMap _⟩
   · intro h ⟨s, h_lt, h_neg, _⟩
-    exact (temporal_truth_neg M atomMap s φ).mp h_neg (h s h_lt)
+    exact (temporalTruth_neg_iff M atomMap s φ).mp h_neg (h s h_lt)
 
 /-! ## Semantic specification of buildRight -/
 
@@ -176,10 +176,10 @@ theorem buildRight_correct {sig : MonadicSignature}
     · intro h s h_lt
       by_contra h_neg
       apply h
-      exact ⟨s, h_lt, (temporal_truth_neg M atomMap s rightmost.formula).mpr h_neg,
+      exact ⟨s, h_lt, (temporalTruth_neg_iff M atomMap s rightmost.formula).mpr h_neg,
              fun _ _ _ => temporal_truth_top M atomMap _⟩
     · intro h ⟨s, h_lt, h_neg_s, _⟩
-      exact (temporal_truth_neg M atomMap s rightmost.formula).mp h_neg_s (h s h_lt)
+      exact (temporalTruth_neg_iff M atomMap s rightmost.formula).mp h_neg_s (h s h_lt)
   | cons pair rest ih =>
     -- Step case: buildRight (pair :: rest) rightmost = beta Until (alpha ∧ buildRight rest
     -- rightmost)
@@ -192,13 +192,13 @@ theorem buildRight_correct {sig : MonadicSignature}
     constructor
     · -- Forward: ∃ s > t, (alpha(s) ∧ (buildRight rest)(s)) ∧ guard
       intro ⟨s, h_lt, h_event, h_guard⟩
-      have h_and := (temporal_truth_and M atomMap s alpha.formula (buildRight rest rightmost)).mp
+      have h_and := (temporalTruth_and_iff M atomMap s alpha.formula (buildRight rest rightmost)).mp
           h_event
       exact ⟨s, h_lt, h_and.1, h_guard, (ih s).mp h_and.2⟩
     · -- Backward: ∃ x > t, alpha(x) ∧ guard ∧ rest_at_x
       intro ⟨x, h_lt, h_alpha, h_guard, h_rest⟩
       exact ⟨x, h_lt,
-        (temporal_truth_and M atomMap x alpha.formula (buildRight rest rightmost)).mpr
+        (temporalTruth_and_iff M atomMap x alpha.formula (buildRight rest rightmost)).mpr
           ⟨h_alpha, (ih x).mpr h_rest⟩,
         h_guard⟩
 
@@ -220,10 +220,10 @@ theorem buildLeft_correct {sig : MonadicSignature}
     · intro h s h_lt
       by_contra h_neg
       apply h
-      exact ⟨s, h_lt, (temporal_truth_neg M atomMap s leftmost.formula).mpr h_neg,
+      exact ⟨s, h_lt, (temporalTruth_neg_iff M atomMap s leftmost.formula).mpr h_neg,
              fun _ _ _ => temporal_truth_top M atomMap _⟩
     · intro h ⟨s, h_lt, h_neg_s, _⟩
-      exact (temporal_truth_neg M atomMap s leftmost.formula).mp h_neg_s (h s h_lt)
+      exact (temporalTruth_neg_iff M atomMap s leftmost.formula).mp h_neg_s (h s h_lt)
   | cons pair rest ih =>
     -- Step case: buildLeft (pair :: rest) leftmost = beta Since (alpha ∧ buildLeft rest leftmost)
     obtain ⟨alpha, beta⟩ := pair
@@ -232,13 +232,13 @@ theorem buildLeft_correct {sig : MonadicSignature}
     constructor
     · -- Forward: ∃ s < t, (alpha(s) ∧ (buildLeft rest)(s)) ∧ guard
       intro ⟨s, h_lt, h_event, h_guard⟩
-      have h_and := (temporal_truth_and M atomMap s alpha.formula (buildLeft rest leftmost)).mp
+      have h_and := (temporalTruth_and_iff M atomMap s alpha.formula (buildLeft rest leftmost)).mp
           h_event
       exact ⟨s, h_lt, h_and.1, h_guard, (ih s).mp h_and.2⟩
     · -- Backward: ∃ x < t, alpha(x) ∧ guard ∧ rest_at_x
       intro ⟨x, h_lt, h_alpha, h_guard, h_rest⟩
       exact ⟨x, h_lt,
-        (temporal_truth_and M atomMap x alpha.formula (buildLeft rest leftmost)).mpr
+        (temporalTruth_and_iff M atomMap x alpha.formula (buildLeft rest leftmost)).mpr
           ⟨h_alpha, (ih x).mpr h_rest⟩,
         h_guard⟩
 
@@ -269,16 +269,16 @@ theorem translateEF1_correct {sig : MonadicSignature}
         (alpha ⟨idx, by omega⟩, beta ⟨idx + 1, by omega⟩))
       (beta ⟨0, by omega⟩) t := by
   simp only [translateEF1]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   constructor
   · intro ⟨h_ak, h_rl⟩
     refine ⟨h_ak, ?_⟩
-    rw [temporal_truth_and] at h_rl
+    rw [temporalTruth_and_iff] at h_rl
     exact ⟨(buildRight_correct M atomMap _ _ t).mp h_rl.1,
            (buildLeft_correct M atomMap _ _ t).mp h_rl.2⟩
   · intro ⟨h_ak, h_right, h_left⟩
     refine ⟨h_ak, ?_⟩
-    rw [temporal_truth_and]
+    rw [temporalTruth_and_iff]
     exact ⟨(buildRight_correct M atomMap _ _ t).mpr h_right,
            (buildLeft_correct M atomMap _ _ t).mpr h_left⟩
 

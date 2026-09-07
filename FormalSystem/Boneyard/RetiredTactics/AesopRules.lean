@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import Aesop
-import FormalSystem.Automation.AesopRuleSet
+import FormalSystem.Boneyard.RetiredTactics.AesopRuleSet
 import FormalSystem.ProofSystem
 import FormalSystem.Syntax.Formula
 import FormalSystem.Syntax.Context

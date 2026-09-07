@@ -38,7 +38,7 @@ theorem completeness (φ : Formula) :
 
 ## Status
 
-`completeness`, `completeness_dense` and `completeness_ztime` are all sorryAx-free (see
+`completeness`, `derivable_of_validDense` and `derivable_of_validZTime` are all sorryAx-free (see
 the Axiom Audit section at the end of this file; axioms: exactly `propext`,
 `Classical.choice`, `Quot.sound` — the former `native_decide` dependency was eliminated by
 swapping the Syntax-layer sites to `rfl`/`decide`). The general Base-frame `completeness` was
@@ -130,7 +130,7 @@ open FormalSystem.Metalogic.Algebraic in
 Enriched dense countermodel: constructs the same countermodel as `countermodel_dense`
 but with `Rat` explicit throughout, so `DenselyOrdered` is available for `ValidDense`.
 This is the single canonical dense countermodel used by both `completeness` and
-`completeness_dense`. The countermodel lives on the bundle flow frame
+`derivable_of_validDense`. The countermodel lives on the bundle flow frame
 (`Metalogic/Algebraic/FlowFrame.lean`), and the witness history is exhibited by its
 **totality** (`bundleFlowHistory_total`) — `def:world-history`'s `H_F` — matching the
 `def:BL-semantics` box clause and the totality binder of `Valid`/`ValidDense` directly, with
@@ -189,12 +189,12 @@ archived to `Boneyard/DeadChronicleGapElimination/`. The branch now calls
 takes the third route: build the countermodel directly over the non-Archimedean discrete
 carrier `ℚ ×ₗ ℤ`, off `companionChronicle` — `FrameClass.Base` imposes no Archimedean
 condition, so that carrier is admissible. The dense and mixed branches are sorryAx-free too.
-For the frame-class-specific results, see `completeness_dense` and `completeness_ztime`.
+For the frame-class-specific results, see `derivable_of_validDense` and `derivable_of_validZTime`.
 
 **Why `FrameClass.Base` is essential here**: completeness is a per-frame-class fact — it pairs a
 validity notion with the axiom set that captures it. `Valid φ` (validity over *all* linear
 temporal frames) is matched by the `Base` axiom set specifically; the dense and discrete
-notions have their own statements (`completeness_dense`, `completeness_ztime`) against
+notions have their own statements (`derivable_of_validDense`, `derivable_of_validZTime`) against
 `ValidDense` / `ValidZTime`. There is no `{fc}`-uniform statement to generalise to.
 
 Paper: `cor:tm-completeness`
@@ -260,7 +260,7 @@ so `□(¬U(⊤,⊥))` is in every Dense-MCS, contradicting `¬□(F'T) ∈ M`.
 
 Paper: `cor:tm-completeness`
 -/
-theorem completeness_dense (φ : Formula) :
+theorem derivable_of_validDense (φ : Formula) :
     ValidDense φ → Derivable FrameClass.Dense [] φ := by
   intro h_valid_dense
   by_contra h_not_deriv
@@ -303,7 +303,7 @@ Discrete theorem; the mixed case is eliminated by `mcs_mixed_case_absurd`.
 
 Paper: `cor:tm-completeness`
 -/
-theorem completeness_ztime (φ : Formula) :
+theorem derivable_of_validZTime (φ : Formula) :
     ValidZTime φ → Derivable FrameClass.ZTime [] φ := by
   intro h_valid_ztime
   by_contra h_not_deriv
@@ -387,8 +387,8 @@ theorem completeness_ztime (φ : Formula) :
           h_not_box_dense h_not_box_discrete)
 
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness
-#print axioms FormalSystem.Metalogic.BXCanonical.completeness_dense
-#print axioms FormalSystem.Metalogic.BXCanonical.completeness_ztime
+#print axioms FormalSystem.Metalogic.BXCanonical.derivable_of_validDense
+#print axioms FormalSystem.Metalogic.BXCanonical.derivable_of_validZTime
 
 /-! ## Axiom Audit
 
@@ -406,10 +406,10 @@ the mixed one (`mcs_mixed_case_absurd`, vacuous), and the discrete one
 `FormalSystem/` outside `Boneyard/` contains no structural `sorry` at all — asserted by check
 C3 of `scripts/check-module-invariants.sh`, and pinned for this theorem by check C2.
 
-### completeness_ztime
+### derivable_of_validZTime
 
 ```
-#print axioms completeness_ztime
+#print axioms derivable_of_validZTime
 -- depends on: [propext, Classical.choice, Quot.sound]
 ```
 
@@ -427,13 +427,13 @@ The `chronicle_gap_contradiction` sorry was dead code — not on any live call p
 since been archived out of live code entirely, together with its whole closure, to
 `Boneyard/DeadChronicleGapElimination/ChronicleGapChainExcision.lean`. It no longer resides in
 `ChronicleToCountermodel.lean`. `mcs_mixed_case_absurd` (sorry-free, moved to MCSMixedCase.lean)
-is the only Chronicle symbol used by `completeness_ztime`.
+is the only Chronicle symbol used by `derivable_of_validZTime`.
 
 ### Axiom Classification
 
 - `propext`, `Classical.choice`, `Quot.sound` — standard Lean 4 axioms (acceptable);
-  this is the COMPLETE axiom set of `completeness`, `completeness_dense` and
-  `completeness_ztime` alike (kernel-verified via `#print axioms` against fresh oleans)
+  this is the COMPLETE axiom set of `completeness`, `derivable_of_validDense` and
+  `derivable_of_validZTime` alike (kernel-verified via `#print axioms` against fresh oleans)
 - `Lean.ofReduceBool`/`Lean.trustCompiler` — NO LONGER PRESENT. Adjudication outcome: all
   7 in-cone `native_decide` sites were swapped (`Syntax/Formula.lean` `beq_refl` bot arm
   → `rfl`; four `le_max_of_le_right` bounds in

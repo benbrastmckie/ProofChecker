@@ -8,7 +8,7 @@ dead-end approaches, and potential future consultation.
 
 **`Formula.untl` and `Formula.snce` in the live tree take the GUARD first and the EVENT
 second.** Every file in this directory predates that change and reads them the **other way
-round** — event first, guard second, with one named exception below.
+round** — event first, guard second, with two named exceptions below.
 
 Nothing here was migrated, deliberately. This tree is not compiled: no built `.olean` lies under
 any `Boneyard` path, no live module imports one, and `lakefile.lean`'s `lean_lib FormalSystem`
@@ -24,7 +24,7 @@ compiles and silently means something different. Cross-check the result against
 `FormalSystem/Semantics/Truth.lean`'s clauses, and note that the prefix rendering `U(event, guard)`
 emitted by `Formula.prettyPrint` is still event-first and is *not* the constructor order.
 
-### The one exception: `BundleDeadHalf/`
+### The first exception: `BundleDeadHalf/`
 
 [`BundleDeadHalf/`](BundleDeadHalf/README.md) is **guard-first**, like the live tree, and needs
 **no** argument swap on resurrection. Its six modules were live-tree files at the moment they were
@@ -33,6 +33,16 @@ archived, long after the migration, so they already read the current way round. 
 2. Applying the banner's swap to them would silently invert their meaning while still compiling,
 which is exactly the failure the banner exists to prevent. Check a directory's own README before
 swapping anything.
+
+### The second exception: `RetiredTactics/`
+
+[`RetiredTactics/`](RetiredTactics/README.md) is **guard-first** for the same reason
+`BundleDeadHalf/` is: its contents were live-tree files at the moment they were archived, long
+after the migration. No argument swap on resurrection.
+
+Both files there are **excerpts** rather than whole archived modules — the tactic declarations
+lifted out of `Automation/Normalization.lean` and `Automation/Tactics/Helpers.lean`, whose
+surviving halves are still live — plus the two Aesop modules, which were moved whole.
 
 See `specs/decisions/untl-snce-argument-order.md` for the full record.
 

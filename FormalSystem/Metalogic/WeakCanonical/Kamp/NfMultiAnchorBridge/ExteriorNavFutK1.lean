@@ -42,8 +42,8 @@ fallback prescribes.
    row `navROrderRow`, and **`navDistribRight`**.
 4. **Carrier (E4 mirror)**: the gate `navRGate`, the dite carrier `CExtFut`
    (`agg2Past`/`CExtPast` pattern; empty disjunction off-gate), the ∃w pin glue
-   **`CExtFut_correct`**, and the 3-bot falsity trio `navR_inconsistent_eval_false` /
-   `CExtFut_offGate_false` / `CExtFut_inconsistent_false`.
+   **`CExtFut.correct`**, and the 3-bot falsity trio `navR_inconsistent_eval_false` /
+   `CExtFut.offGate_false` / `CExtFut.inconsistent_false`.
 
 ## Devices (per fiber class — the Phase 15 record, mirroring Phase 14a)
 
@@ -568,7 +568,7 @@ private theorem navR_bitGroup_iff (M : OrderedMonadicStructure sig) (u : M.carri
     · rw [if_pos hb] at hφ
       exact iff_of_true ((hlit χ).mp hφ) hb
     · rw [if_neg hb] at hφ
-      exact iff_of_false (fun hP => (temporal_truth_neg M atomMap u (lit χ)).mp hφ
+      exact iff_of_false (fun hP => (temporalTruth_neg_iff M atomMap u (lit χ)).mp hφ
         ((hlit χ).mpr hP)) hb
   · intro h φ hmem
     obtain ⟨χ, -, rfl⟩ := List.mem_map.mp hmem
@@ -576,7 +576,7 @@ private theorem navR_bitGroup_iff (M : OrderedMonadicStructure sig) (u : M.carri
     · rw [if_pos hb]
       exact (hlit χ).mpr ((h χ).mpr hb)
     · rw [if_neg hb]
-      exact (temporal_truth_neg M atomMap u (lit χ)).mpr
+      exact (temporalTruth_neg_iff M atomMap u (lit χ)).mpr
         (fun hφ => hb ((h χ).mp ((hlit χ).mp hφ)))
 
 omit [DecidableEq sig.preds] in
@@ -641,7 +641,7 @@ private theorem navR_atWPack_iff (M : OrderedMonadicStructure sig)
          (∃ v : M.carrier, w < v ∧ NfEvalNf M 0 1 (fun _ => v) χ) ↔
            σ.2 (nf0Assemble extFZAboveW χ σ.1) = true)) := by
   simp only [navRAtWPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap w Formula.top := temporal_truth_top M atomMap w
   constructor
   · rintro ⟨h1, h2, h3, -⟩
@@ -738,7 +738,7 @@ private theorem navR_chain_sound (M : OrderedMonadicStructure sig)
     intro u h
     simp only [navRChain, TemporalTruth] at h
     obtain ⟨s, hus, hand, hguard⟩ := h
-    rw [temporal_truth_and] at hand
+    rw [temporalTruth_and_iff] at hand
     obtain ⟨hχ1s, hrest⟩ := hand
     obtain ⟨w, hsw, hpack, hwit, hseg⟩ := ih s hrest
     refine ⟨w, hus.trans hsw, hpack, ?_, ?_⟩
@@ -852,7 +852,7 @@ private theorem navR_chain_complete (M : OrderedMonadicStructure sig)
     · -- The chain holds at u with bottom witness v1.
       simp only [navRChain, TemporalTruth]
       refine ⟨v1, huv1, ?_, fun r hur hrv1 => hguard r hur (hrv1.trans hv1w)⟩
-      rw [temporal_truth_and]
+      rw [temporalTruth_and_iff]
       exact ⟨(navR_char_correct atomMap h_surj M χ1 v1).mpr hχ1v1, hL'chain⟩
 
 /-! ## The E5 package deliverable: `navPackRight` + the fold iff -/
@@ -970,7 +970,7 @@ theorem navR_atXPack_iff (M : OrderedMonadicStructure sig)
          (∃ v : M.carrier, v < x ∧ NfEvalNf M 0 1 (fun _ => v) χ) ↔
            σ.2 (nf0Assemble extFZBelowX χ σ.1) = true)) := by
   simp only [navRAtXPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap x Formula.top := temporal_truth_top M atomMap x
   constructor
   · rintro ⟨h1, h2, h3, -⟩
@@ -1011,7 +1011,7 @@ theorem navR_atTPack_iff (M : OrderedMonadicStructure sig)
        (∀ χ : NormalForm sig 0 1,
          NfEvalNf M 0 1 (fun _ => t) χ ↔ σ.2 (nf0Assemble extFZAtT χ σ.1) = true)) := by
   simp only [navRAtTPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap t Formula.top := temporal_truth_top M atomMap t
   constructor
   · rintro ⟨h1, h2, -⟩
@@ -1345,7 +1345,7 @@ private theorem navR_atomLayer_iff (M : OrderedMonadicStructure sig)
       σ-conditions.
 
     Phase-15 carrier assembly consumes this iff directly for the ∃w glue of
-    `CExtFut_correct`. -/
+    `CExtFut.correct`. -/
 theorem navDistribRight (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (x t : M.carrier) (hxt : x < t) :
     (∃ w : M.carrier, t < w ∧
@@ -1427,14 +1427,14 @@ noncomputable def CExtFut (σ : NormalForm sig 1 3) : VVecEA2 :=
              bracket := navRXTBracket atomMap h_surj σ L }⟩) })
     (fun _ => { disjuncts := [] })
 
-/-- **The E5 correctness iff `CExtFut_correct`** (the ∃w glue across the pin at `t`,
+/-- **The E5 correctness iff `CExtFut.correct`** (the ∃w glue across the pin at `t`,
     Rabinovich Lemma 7.6, time-reversed; Lemma 7.8(2) TL(Until,K⁻) by duplication):
     under the ambient `x < t`, the carrier's 2-pin semantics at `(x, t)` is exactly the
     `∃ w > t` future-exterior evaluation of `σ` at `[w, x, t]`. Pure plumbing against
     `navDistribRight`: the shared endpoints distribute over the arrangement disjunction,
     and the three gate conjuncts are exactly the pure σ-conditions of the distribution
     RHS. -/
-theorem CExtFut_correct (M : OrderedMonadicStructure sig)
+theorem CExtFut.correct (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (x t : M.carrier) (hxt : x < t) :
     (CExtFut atomMap h_surj σ).holds M atomMap x t ↔
       ∃ w : M.carrier, t < w ∧
@@ -1450,13 +1450,13 @@ theorem CExtFut_correct (M : OrderedMonadicStructure sig)
       obtain ⟨L, hLperm, rfl⟩ := hmem
       obtain ⟨hepL, hepR, hbr⟩ := hv
       simp only [TemporalPred.EvalAt] at hepL hepR
-      rw [temporal_truth_and] at hepR
+      rw [temporalTruth_and_iff] at hepR
       exact ⟨hepR.1, hepR.2, ⟨L, hLperm, hbr⟩, hepL, hrow, hbad, hoff⟩
     · rintro ⟨hpack, hT, ⟨L, hLperm, hbr⟩, hX, -, -, -⟩
       have hepR : TemporalTruth M atomMap t
           (Formula.and (navPackRight atomMap h_surj σ).formula
             (navRAtTPack atomMap h_surj σ)) :=
-        (temporal_truth_and M atomMap t _ _).mpr ⟨hpack, hT⟩
+        (temporalTruth_and_iff M atomMap t _ _).mpr ⟨hpack, hT⟩
       exact ⟨_, List.mem_map.mpr ⟨L, hLperm, rfl⟩, hX, hepR, hbr⟩
   case isFalse hg =>
     constructor
@@ -1481,7 +1481,7 @@ theorem navR_inconsistent_eval_false (M : OrderedMonadicStructure sig)
 /-- **Carrier-side 3-bot falsity (off-gate)**: off the gate the carrier is the empty
     disjunction, so its 2-pin semantics is `False` at EVERY pin pair — no ambient
     hypothesis needed. -/
-theorem CExtFut_offGate_false (M : OrderedMonadicStructure sig)
+theorem CExtFut.offGate_false (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (hg : ¬ navRGate σ) (x t : M.carrier) :
     ¬ (CExtFut atomMap h_surj σ).holds M atomMap x t := by
   unfold CExtFut
@@ -1492,11 +1492,11 @@ theorem CExtFut_offGate_false (M : OrderedMonadicStructure sig)
 /-- **Carrier-side 3-bot falsity (order-channel-inconsistent `σ`)**: a `σ` whose
     order-channel row does not match `x < t < w` fails the gate, so the carrier's
     semantics is `False` everywhere — the two falsity readings agree with
-    `CExtFut_correct` (both sides `False`). -/
-theorem CExtFut_inconsistent_false (M : OrderedMonadicStructure sig)
+    `CExtFut.correct` (both sides `False`). -/
+theorem CExtFut.inconsistent_false (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (hrow : ¬ navROrderRow σ) (x t : M.carrier) :
     ¬ (CExtFut atomMap h_surj σ).holds M atomMap x t :=
-  CExtFut_offGate_false atomMap h_surj M σ (fun hg => hrow hg.1) x t
+  CExtFut.offGate_false atomMap h_surj M σ (fun hg => hrow hg.1) x t
 
 end ExteriorNavFut
 

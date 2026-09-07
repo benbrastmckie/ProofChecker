@@ -108,7 +108,7 @@ sibling directory. The list is generated, so a file that moves out (four of them
 | `DiscreteNonCompactness.lean` | 329 | Non-compactness of the discrete frame class |
 | `SetConsequence.lean` | 615 | Set-indexed consequence relation, and the `FrameClass`-indexed satisfiability / model-existence / compactness / strong-completeness family, instantiated at all four class tags including the `.Dedekind` row (`CompactDedekind`, `StrongCompletenessDedekind`, `SatisfiableDedekindSet`, `ModelExistenceDedekind`) |
 | `Soundness.lean` | 1,598 | The soundness theorem itself |
-| `StrongCompleteness.lean` | 1,130 | Strong/consequence completeness, including `completeness_dedekind`, and the two `FrameClass`-generic compactness reductions `strongCompleteness_of_compact` and `compact_of_modelExistence` |
+| `StrongCompleteness.lean` | 1,147 | Strong/consequence completeness, including `completeness_dedekind`, and the two `FrameClass`-generic compactness reductions `strongCompleteness_of_compact` and `compact_of_modelExistence` |
 <!-- END GENERATED -->
 
 Plus the directory's own root `Metalogic.lean`, which sits one level up, beside `Metalogic/`;
@@ -147,7 +147,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
 | [`Conservativity/`](Conservativity/README.md) | 12 | 2,565 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
-| [`Decidability/`](Decidability/README.md) | 62 | 52,679 | Tableau decision procedure and countermodel extraction |
+| [`Decidability/`](Decidability/README.md) | 62 | 53,186 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 3,005 | Axiom-independence models |
 | [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,457 | Per-axiom validity lemmas feeding `Soundness.lean` |
 | [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,136 | Kamp/Reynolds route, including all of `Kamp/` |

@@ -38,6 +38,6 @@ register_simp_attr formula_unfold
 `FormalSystem/Automation/Normalization.lean`, the `rfl` inverses of the `formula_unfold` family.
 Use as `simp only [formula_fold]`. Note this family is a strict subset of the unfold family: six
 operators (`weakFuture`, `weakPast`, `always`, `sometimes`, `strongRelease`, `strongTrigger`)
-have an unfold lemma but no fold lemma, which is why `modalFold` reverses the unfold lemmas
+have an unfold lemma but no fold lemma, which is why a fold pass reverses the unfold lemmas
 rather than using this set. -/
 register_simp_attr formula_fold

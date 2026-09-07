@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
+import FormalSystem.Automation.Tactics.UserTactics
 import FormalSystem.Automation.Tactics.Commands
 import FormalSystem.Automation.ProofSearch.Core
 import FormalSystem.ProofSystem
@@ -544,9 +545,11 @@ example : DerivationTree FrameClass.Base []
   exact DerivationTree.axiom _ _ (Axiom.connect_future _) trivial
 
 /-!
-## Phase 6: Tests for modal_k_tactic and temporal_k_tactic
+## Phase 6: Tests for the modal K and temporal K inference rules
 
-Tests for inference rule tactics with positive and negative cases.
+Positive and negative cases for the K rules. These exercise the rules through
+`DerivationTree` directly; the `modal_k_tactic`/`temporal_k_tactic` wrappers that once
+fronted them were retired to `Boneyard/RetiredTactics/` for having no invocations.
 -/
 
 /-- Test 78: Basic modal K rule -/
@@ -582,31 +585,31 @@ example (p : Formula) : DerivationTree FrameClass.Base [p.allFuture.allFuture]
 /-!
 ## Phase 7: Tests for Axiom Tactics
 
-Tests for modal_4_tactic, modal_b_tactic, temp_4_tactic, temp_a_tactic.
+Tests for the modal 4, modal B, temporal 4 and temporal A axioms, applied directly.
 -/
 
-/-- Test 84: modal_4_tactic basic application -/
+/-- Test 84: modal 4 axiom, basic application -/
 example (p : Formula) : DerivationTree FrameClass.Base [] (p.box.imp p.box.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
-/-- Test 85: modal_4_tactic with compound formula -/
+/-- Test 85: modal 4 axiom with compound formula -/
 example (p q : Formula) : DerivationTree FrameClass.Base [] ((p.imp q).box.imp (p.imp q).box.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
-/-- Test 86: modal_4_tactic with atom -/
+/-- Test 86: modal 4 axiom with atom -/
 example : DerivationTree FrameClass.Base []
     ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
-/-- Test 87: modal_b_tactic basic application -/
+/-- Test 87: modal B axiom, basic application -/
 example (p : Formula) : DerivationTree FrameClass.Base [] (p.imp p.diamond.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_b _) trivial
 
-/-- Test 88: modal_b_tactic with compound formula -/
+/-- Test 88: modal B axiom with compound formula -/
 example (p q : Formula) : DerivationTree FrameClass.Base [] ((p.imp q).imp (p.imp q).diamond.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_b _) trivial
 
-/-- Test 89: modal_b_tactic with atom -/
+/-- Test 89: modal B axiom with atom -/
 example : DerivationTree FrameClass.Base []
     ((Formula.atomS "p").imp (Formula.atomS "p").diamond.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_b _) trivial

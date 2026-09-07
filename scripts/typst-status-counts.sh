@@ -202,8 +202,8 @@ echo "${JSON}"
 # ---------------------------------------------------------------------------
 AXIOM_DECLS=(
   FormalSystem.Metalogic.BXCanonical.completeness
-  FormalSystem.Metalogic.BXCanonical.completeness_dense
-  FormalSystem.Metalogic.BXCanonical.completeness_ztime
+  FormalSystem.Metalogic.BXCanonical.derivable_of_validDense
+  FormalSystem.Metalogic.BXCanonical.derivable_of_validZTime
   FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine
   FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense
 )

@@ -1,531 +1,56 @@
 /-
-Copyright (c) 2025 Benjamin Brast-McKie. All rights reserved.
+Copyright (c) 2026 Benjamin Brast-McKie. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.ProofSystem
-import FormalSystem.Automation.AesopRules
+import FormalSystem.Automation.Tactics.Meta
 import FormalSystem.Theorems.GeneralizedNecessitation
 import FormalSystem.Theorems.Propositional.Reasoning
 import FormalSystem.Theorems.TemporalDerived
 import FormalSystem.Theorems.ModalS5
 import FormalSystem.Theorems.Perpetuity
+import FormalSystem.Automation.LemmaDB
 import Lean
 
 /-!
-# Custom Tactics for Modal and Temporal Reasoning
+# The bounded proof-search engine
 
-This module defines custom tactics to automate common proof patterns in the TM
-bimodal logic system.
+`searchProof` and the five strategies it tries: axiom matching, tagged-lemma matching,
+assumption lookup, modus-ponens decomposition, and the modal and temporal K rules. This is what
+the `modal_search` tactic in [`Commands.lean`](Commands.lean) runs.
 
-## Main Tactics
+It works at the meta level in `TacticM`, constructing proof terms with `mkAppM` rather than
+returning proof witnesses. That is not a stylistic choice: `Axiom` is `Prop`-valued while
+`DerivationTree` is `Type`-valued, so a `find_axiom_witness : Formula → Option (Axiom φ)`
+cannot be written, and the same mismatch is why Aesop's proof reconstruction does not work over
+these goals.
 
-- `apply_axiom`: Apply a specific axiom by name
-- `modal_t`: Apply modal T axiom (`□φ → φ`) automatically
-- `tm_auto`: Comprehensive TM automation with Aesop (Phase 5)
-- `assumption_search`: Search for formula in context (Phase 6)
+This is the third of the three files that replaced the 1,210-line `Tactics/Helpers.lean`,
+alongside [`UserTactics.lean`](UserTactics.lean) and [`Meta.lean`](Meta.lean). It imports
+`Meta.lean` and nothing else from the trio.
 
-## Proof Search Coverage
+**Open question, recorded rather than acted on.** `FormalSystem/Automation/ProofSearch/` is a
+second, larger search engine with its own strategies, its own weights (which it actually reads)
+and its own configuration. Whether these two should be one engine is a real question that this
+split does not answer, and merging them is out of scope here: the engines have different
+interfaces, and only this one is reachable from a tactic.
 
-The `searchProof` function uses five strategies in order:
+## Main declarations
 
-1. **Axiom matching** (`tryAxiomMatch`): 42 of the tree's 45 axiom constructors,
-   drawn from eight of its nine layers:
-   - Propositional (4): prop_k, prop_s, ex_falso, peirce
-   - S5 Modal (5): modal_t, modal_4, modal_b, modal_5_collapse, modal_k_dist
-   - BX Temporal (22): seriality, monotonicity, connectedness, enrichment,
-     accumulation, absorption, linearity, eventuality, F/P-Until/Since equivalence
-   - Modal-Temporal (1): modal_future
-   - Uniformity (5): discrete_symm_fwd/bwd, discrete_propagate_fwd/bwd, discrete_box_necessity
-   - Discrete (3): prior_UZ, prior_SZ, z1
-   - Dense (2): density, dense_indicator
+- `searchProof` — the entry point: bounded depth-first search under a visit counter
+- `tryAxiomMatch`, `tryLemmaMatch`, `tryAssumptionMatch`, `tryModusPonens`, `tryModalK`,
+  `tryTemporalK` — the strategies, tried in that order
 
-   Not covered: the three Layer-9 Reynolds Dedekind axioms (`prior_U_gap`, `prior_S_gap`, `sep`),
-   which are
-   Dedekind-only. A Dedekind-class goal needing one of them will not be closed by
-   `tryAxiomMatch` and must be discharged another way.
+## Tags
 
-2. **Lemma database matching** (`tryLemmaMatch`): empty-context derived theorems
-   registered via the `@[tmLemma]` label attribute (declared in
-   `FormalSystem.Automation.LemmaDB`), applied with backward chaining: remaining
-   `DerivationTree` premises are proven recursively via `searchProof`, and side
-   goals (frame-class `≤`, context membership) are discharged by
-   `trivial | decide | simp`. Tag a theorem `@[tmLemma]` at its definition
-   site to add it to the search (see the tagging policy in `LemmaDB.lean`).
-
-3. **Assumption matching** (`tryAssumptionMatch`)
-4. **Modus ponens decomposition** (`tryModusPonens`)
-5. **Modal/Temporal K rules** (`tryModalK`, `tryTemporalK`)
-
-## References
-
-* LEAN 4 Metaprogramming: https://github.com/leanprover-community/lean4-metaprogramming-book
-* Tactic Development Guide: docs/user-guide/tactic-development.md
-
-## Example Usage
-
-```lean
--- Apply axiom by name
-example : ⊢ (Formula.box (Formula.atomS "p")).imp (Formula.atomS "p") := by
-  apply_axiom modal_t
-
--- Modal T application (automatic)
-example (p : Formula) : [p.box] ⊢ p := by
-  modal_t
-  assumption
-```
+proof-search · tactics · meta · modal-k · temporal-k
 -/
 
 open FormalSystem.Syntax FormalSystem.ProofSystem
 open Lean Elab Tactic Meta
 
 namespace FormalSystem.Automation
-
-/-!
-## Phase 4: Basic Tactics Implementation
--/
-
-/--
-`apply_axiom` tactic applies a TM axiom by matching the goal against axiom patterns.
-
-Attempts to unify the goal with each axiom schema and applies the matching axiom.
-
-**Example**:
-```lean
-example : ⊢ (Formula.box p |>.imp p) := by
-  apply_axiom  -- Finds and applies Axiom.modal_t
-```
-
-**Supported Axioms**:
-- `prop_k`, `prop_s` - Propositional axioms
-- `modal_t`, `modal_4`, `modal_b` - S5 modal axioms
-- `temp_4`, `temp_a`, `temp_l` - Temporal axioms
-- `modal_future` - Bimodal axiom
-- `temporalFutureDerived` - Derived from MF + T + Modal 4
-
-**Implementation**: Uses `refine` to let Lean infer formula parameters from the goal.
--/
-macro "apply_axiom" : tactic =>
-  `(tactic| (apply DerivationTree.axiom; refine ?_))
-
-/--
-`modal_t` tactic automatically applies modal T axiom (`□φ → φ`).
-
-Detects goals of form `Γ ⊢ φ` where `□φ ∈ Γ`, applies modal T axiom and modus ponens.
-
-**Example**:
-```lean
-example (p : Formula) : [p.box] ⊢ p := by
-  modal_t  -- Applies: □p → p (from modal_t axiom)
-  assumption
-```
-
-**Implementation**: Applies Axiom.modal_t directly.
--/
-macro "modal_t" : tactic =>
-  `(tactic| (apply DerivationTree.axiom; refine ?_))
-
-/-!
-## Phase 4: tm_auto (modal_search Integration)
-
-**IMPLEMENTATION NOTE**: The `tm_auto` tactic now delegates to `modal_search` instead of Aesop.
-
-**Previous Issue**: Aesop had proof reconstruction errors on derivability goals:
-```
-error: aesop: internal error during proof reconstruction: goal 501 was not normalised
-```
-
-**Current Implementation**: `tm_auto` now uses `modal_search` which provides reliable
-proof search without Aesop's reconstruction issues. The tactic is defined later in this
-file after `modal_search` is available (see line ~1260).
-
-**Legacy Note**: Aesop rules are defined in AesopRules.lean but are no longer used by
-`tm_auto`. The file is preserved for potential future use.
--/
-
-/-!
-## Phase 6: assumption_search Tactic
--/
-
-/--
-`assumption_search` tactic searches the local context for an assumption matching the goal.
-
-Similar to built-in `assumption`, but with explicit error messages for debugging.
-
-**Example**:
-```lean
-example (h1 : p → q) (h2 : p) : q := by
-  have : q := h1 h2
-  assumption_search  -- Finds and applies `this : q`
-```
-
-**Implementation**: Uses TacticM to iterate through local context with isDefEq checking.
--/
-elab "assumption_search" : tactic => do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-  let lctx ← getLCtx
-
-  -- Iterate through local declarations
-  for decl in lctx do
-    if !decl.isImplementationDetail then
-      -- Check if declaration type matches goal via definitional equality
-      if ← isDefEq decl.type goalType then
-        -- Found a match! Assign the goal to this local hypothesis
-        goal.assign (mkFVar decl.fvarId)
-        return ()
-
-  -- No matching assumption found
-  throwError "assumption_search failed: no assumption matches goal {goalType}"
-
-/-!
-## Helper Functions
-
-These helpers support tactic implementation and formula pattern matching.
--/
-
-/--
-Check if a formula is a box (necessity) formula.
-
-Returns `true` if the formula has the form `□φ` for some inner formula `φ`,
-`false` otherwise.
-
-## Parameters
-- Formula to check (implicit pattern match parameter)
-
-## Returns
-`true` if formula is `□φ`, `false` otherwise
-
-## Usage
-Used by modal tactics to identify necessity formulas before applying modal-specific
-inference rules or axioms.
-
-## Example
-```lean
-#eval isBoxFormula (Formula.box (Formula.atomS "p"))  -- true
-#eval isBoxFormula (Formula.atomS "p")                -- false
-#eval isBoxFormula (Formula.diamond (Formula.atomS "p"))  -- false
-```
--/
-def isBoxFormula : Formula → Bool
-  | .box _ => true
-  | _ => false
-
-/--
-Check if a formula is a future (temporal) formula.
-
-Returns `true` if the formula has the form `Fφ` (allFuture φ) for some inner
-formula `φ`, `false` otherwise.
-
-## Parameters
-- Formula to check (implicit pattern match parameter)
-
-## Returns
-`true` if formula is `Fφ`, `false` otherwise
-
-## Usage
-Used by temporal tactics to identify future formulas before applying temporal-specific
-inference rules or axioms.
-
-## Example
-```lean
-#eval isFutureFormula (Formula.allFuture (Formula.atomS "p"))  -- true
-#eval isFutureFormula (Formula.atomS "p")                       -- false
-#eval isFutureFormula (Formula.box (Formula.atomS "p"))         -- false
-```
--/
-def isFutureFormula : Formula → Bool
-  | .allFuture _ => true
-  | _ => false
-
-/--
-Extract the inner formula from a box (necessity) formula.
-
-Given a formula of the form `□φ`, returns `some φ`. For any other formula,
-returns `none`.
-
-## Parameters
-- Formula to extract from (implicit pattern match parameter)
-
-## Returns
-- `some φ` if input is `□φ`
-- `none` if input is not a box formula
-
-## Usage
-Used by modal elimination tactics to access the inner formula when applying
-rules like modal T (`□φ → φ`) or modal 4 (`□φ → □□φ`).
-
-## Example
-```lean
-#eval extractFromBox (Formula.box (Formula.atomS "p"))  -- some (Formula.atomS "p")
-#eval extractFromBox (Formula.atomS "p")                -- none
-#eval extractFromBox (Formula.diamond (Formula.atomS "p"))  -- none
-```
--/
-def extractFromBox : Formula → Option Formula
-  | .box φ => some φ
-  | _ => none
-
-/--
-Extract the inner formula from a future (temporal) formula.
-
-Given a formula of the form `Fφ` (allFuture φ), returns `some φ`. For any other
-formula, returns `none`.
-
-## Parameters
-- Formula to extract from (implicit pattern match parameter)
-
-## Returns
-- `some φ` if input is `Fφ`
-- `none` if input is not a future formula
-
-## Usage
-Used by temporal elimination tactics to access the inner formula when applying
-rules like temporal 4 (`Fφ → FFφ`) or temporal A (`φ → F(somePast φ)`).
-
-## Example
-```lean
-#eval extractFromFuture (Formula.allFuture (Formula.atomS "p"))  -- some (Formula.atomS "p")
-#eval extractFromFuture (Formula.atomS "p")                       -- none
-#eval extractFromFuture (Formula.box (Formula.atomS "p"))         -- none
-```
--/
-def extractFromFuture : Formula → Option Formula
-  | .allFuture φ => some φ
-  | _ => none
-
-/-!
-## Tactic Factory Functions
-
-Factory functions for creating operator-specific tactics with reduced code duplication.
--/
-
-/--
-Factory function for operator K inference rule tactics.
-
-Creates tactics that apply modal K or temporal K rules to goals of form `Γ ⊢ ◯φ`.
-
-**Parameters**:
-- `tacticName`: Name of tactic (for error messages)
-- `operatorConst`: Formula operator constructor (e.g., ``Formula.box``)
-- `ruleConst`: Derivable inference rule (e.g., ``Theorems.generalizedModalK``)
-- `operatorSymbol`: Unicode symbol for error messages (e.g., "□")
-
-**Returns**: TacticM action that applies the K rule for the specified operator.
-
-**Example Usage**:
-```lean
-elab "modal_k_tactic" : tactic =>
-  mkOperatorKTactic "modal_k_tactic" ``Formula.box ``Theorems.generalizedModalK "□"
-```
--/
-def mkOperatorKTactic (tacticName : String) (operatorConst : Name)
-    (ruleConst : Name) (operatorSymbol : String) : TacticM Unit := do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-
-  match goalType with
-  | .app (.app (.app (.const ``DerivationTree _) _fc) _context) formula =>
-    match formula with
-    | .app (.const opConst _) _innerFormula =>
-      if opConst == operatorConst then
-        let ruleConstExpr := mkConst ruleConst
-        let newGoals ← goal.apply ruleConstExpr
-        replaceMainGoal newGoals
-      else
-        throwError "{tacticName}: expected goal formula to be {operatorSymbol}φ, got {formula}"
-    | _ =>
-      throwError "{tacticName}: expected goal formula to be {operatorSymbol}φ, got {formula}"
-  | _ =>
-    throwError "{tacticName}: goal must be derivability relation Γ ⊢ φ, got {goalType}"
-
-/-!
-## Phase 1: Inference Rule Tactics (modal_k_tactic, temporal_k_tactic)
-
-Tactics for applying modal K and temporal K inference rules with context transformation.
-
-**Implementation Note**: These tactics now use the `mkOperatorKTactic` factory function
-to eliminate code duplication. The factory pattern reduces 52 lines to ~30 lines while
-preserving all functionality.
--/
-
-/--
-`modal_k_tactic` applies the modal K inference rule.
-
-Given a goal `Derivable (□Γ) (□φ)`, creates subgoal `Derivable Γ φ`
-and applies `Theorems.generalizedModalK`.
-
-**Example**:
-```lean
-example (p : Formula) : [p.box] ⊢ (p.box) := by
-  -- Goal: [□p] ⊢ □p
-  -- After modal_k_tactic: subgoal [p] ⊢ p
-  modal_k_tactic
-  assumption
-```
-
-**Implementation**: Uses `mkOperatorKTactic` factory for modal operator.
--/
-elab "modal_k_tactic" : tactic =>
-  mkOperatorKTactic "modal_k_tactic" ``Formula.box ``Theorems.generalizedModalK "□"
-
-/--
-`temporal_k_tactic` applies the temporal K inference rule.
-
-Given a goal `Derivable (FΓ) (Fφ)`, creates subgoal `Derivable Γ φ`
-and applies `Derivable.temporal_k`.
-
-**Example**:
-```lean
-example (p : Formula) : [p.allFuture] ⊢ (p.allFuture) := by
-  -- Goal: [Fp] ⊢ Fp
-  -- After temporal_k_tactic: subgoal [p] ⊢ p
-  temporal_k_tactic
-  assumption
-```
-
-**Implementation**: Uses `mkOperatorKTactic` factory for temporal operator.
--/
-elab "temporal_k_tactic" : tactic =>
-  mkOperatorKTactic "temporal_k_tactic" ``Formula.allFuture ``Theorems.generalizedTemporalK "F"
-
-/-!
-## Phase 2: Modal Axiom Tactics (modal_4_tactic, modal_b_tactic)
-
-Tactics for applying modal 4 and modal B axioms with formula pattern matching.
--/
-
-/--
-`modal_4_tactic` applies the modal 4 axiom `□φ → □□φ`.
-
-Automatically applies the axiom when the goal matches the pattern.
-
-**Example**:
-```lean
-example (p : Formula) : ⊢ ((p.box).imp (p.box.box)) := by
-  modal_4_tactic
-```
-
-**Implementation**: Uses `elab` following modal_t template.
--/
-elab "modal_4_tactic" : tactic => do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-
-  match goalType with
-  | .app (.app (.app (.const ``DerivationTree _) _fc) _context) formula =>
-
-    match formula with
-    | .app (.app (.const ``Formula.imp _) lhs) rhs =>
-
-      match lhs with
-      | .app (.const ``Formula.box _) innerFormula =>
-
-        match rhs with
-        | .app (.const ``Formula.box _) (.app (.const ``Formula.box _) innerFormula2) =>
-
-          if ← isDefEq innerFormula innerFormula2 then
-            let axiomProof ← mkAppM ``Axiom.modal_4 #[innerFormula]
-            -- modal_4 is a base axiom so h_fc = trivial
-            let hfc ← mkAppM ``trivial #[]
-            let proof ← mkAppM ``DerivationTree.axiom #[axiomProof, hfc]
-            goal.assign proof
-          else
-            throwError (
-              "modal_4_tactic: expected □φ → □□φ pattern with same φ, " ++
-              "got □{innerFormula} → □□{innerFormula2}")
-
-        | _ =>
-          throwError "modal_4_tactic: expected □□φ on right side, got {rhs}"
-
-      | _ =>
-        throwError "modal_4_tactic: expected □φ on left side, got {lhs}"
-
-    | _ =>
-      throwError "modal_4_tactic: expected implication, got {formula}"
-
-  | _ =>
-    throwError "modal_4_tactic: goal must be derivability relation, got {goalType}"
-
-/--
-`modal_b_tactic` applies the modal B axiom `φ → □◇φ`.
-
-Automatically applies the axiom when the goal matches the pattern.
-
-**Example**:
-```lean
-example (p : Formula) : ⊢ (p.imp (p.diamond.box)) := by
-  modal_b_tactic
-```
-
-**Implementation**: Uses `elab` with derived operator handling for `diamond`.
--/
-elab "modal_b_tactic" : tactic => do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-
-  match goalType with
-  | .app (.app (.app (.const ``DerivationTree _) _fc) _context) formula =>
-
-    match formula with
-    | .app (.app (.const ``Formula.imp _) lhs) rhs =>
-
-      match rhs with
-      | .app (.const ``Formula.box _) diamondPart =>
-
-        -- diamond is a derived operator, check if it matches Formula.diamond pattern
-        -- diamond φ = imp (box (imp φ bot)) bot
-        let lhsMatches ← isDefEq lhs diamondPart
-        if !lhsMatches then
-          -- Try alternate: check structure of diamondPart
-          let axiomProof ← mkAppM ``Axiom.modal_b #[lhs]
-          -- modal_b is a base axiom so h_fc = trivial
-          let hfc ← mkAppM ``trivial #[]
-          let proof ← mkAppM ``DerivationTree.axiom #[axiomProof, hfc]
-          goal.assign proof
-        else
-          throwError "modal_b_tactic: pattern mismatch in □◇φ structure"
-
-      | _ =>
-        throwError "modal_b_tactic: expected □(...) on right side, got {rhs}"
-
-    | _ =>
-      throwError "modal_b_tactic: expected implication, got {formula}"
-
-  | _ =>
-    throwError "modal_b_tactic: goal must be derivability relation, got {goalType}"
-
-/-!
-## Phase 1: Proof Search Tactics (modal_search, temporal_search)
-
-Bounded depth-first recursive proof search for modal and temporal formulas.
-This implements the Axiom Prop vs Type blocker resolution.
-
-**Design**: The tactic works at the meta-level in TacticM monad, avoiding the
-Prop vs Type issue by directly constructing proof terms via Lean's elaboration.
-Instead of returning `Option (Axiom φ)` (impossible since Axiom is Prop),
-we construct proof terms directly using `mkAppM` and `goal.assign`.
-
-**Key Insight**: By working in TacticM and using `mkAppM` to construct
-`DerivationTree.axiom` proof terms, we bypass the need for a computable
-`find_axiom_witness : Formula → Option (Axiom φ)` function.
--/
-
-/-!
-### Helper: Extract DerivationTree goal components
--/
-
-/--
-Extract context and formula from a `DerivationTree Γ φ` goal type.
-
-Returns `some (Γ, φ)` if the goal is a derivability goal, `none` otherwise.
--/
-def extractDerivationGoal (goalType : Expr) : MetaM (Option (Expr × Expr × Expr)) := do
-  match goalType with
-  | .app (.app (.app (.const ``DerivationTree _) fc) ctx) formula =>
-    return some (fc, ctx, formula)
-  | _ => return none
 
 /-!
 ### Helper: Check axiom matching at meta-level
@@ -648,39 +173,6 @@ def tryAxiomMatch (goal : MVarId) (_ctx _formula : Expr) : TacticM Bool := do
   return result.isSome
 
 /--
-Head constant of a `Formula` expression (e.g. `Formula.imp` for `A → B`).
-Returns `none` when the head is not a constant (a bound/free variable
-conclusion), which the pre-filter treats as a wildcard.
--/
-def formulaHead (formula : Expr) : Option Name :=
-  match formula.getAppFn with
-  | .const n _ => some n
-  | _ => none
-
-/--
-Head constant of a labelled lemma's conclusion `Formula`, obtained by
-telescoping the lemma type's binders and reading the `DerivationTree` goal.
-Returns `none` for non-derivability conclusions or variable heads (wildcard).
--/
-def lemmaConclusionHead (lemmaName : Name) : MetaM (Option Name) := do
-  let info ← getConstInfo lemmaName
-  forallTelescope info.type fun _ concl => do
-    match ← extractDerivationGoal concl with
-    | some (_, _, formula) => return formulaHead formula
-    | none => return none
-
-/--
-Is `ctx` the literal empty context `([] : Context)`? Used to avoid a
-non-terminating weakening fallback (weakening `[] ⊆ []` would recurse on the
-same goal). A `cons` or variable context is treated as potentially non-empty.
--/
-def isNilContext (ctx : Expr) : Bool :=
-  match ctx with
-  | .app (.const ``List.nil _) _ => true
-  | .const ``List.nil _ => true
-  | _ => false
-
-/--
 Try to prove the goal by applying derived-theorem lemmas from an explicit
 name list, recursing into derivability premises via `searchFn` (backward
 chaining).
@@ -765,7 +257,7 @@ def tryLemmaMatchCore (lemmas : Array Name) (goal : MVarId) (fc _ctx formula : E
       return true
   -- Weakening fallback: a closed lemma `⊢[fc] φ` still applies under a
   -- non-empty context `Γ ⊢[fc] φ` via `DerivationTree.weakening`. Reduce to
-  -- the empty-context goal and recurse. Recipe from `AesopRules.axiomTemp4`.
+  -- the empty-context goal and recurse.
   -- Skipped for a literal empty context to guarantee termination.
   unless isNilContext _ctx do
     let wkSuccess ← observing? do
@@ -973,16 +465,6 @@ def extractUnfuturedContext (ctx : Expr) : MetaM (Option (List Expr)) := do
   return some unfutured.reverse
 
 /--
-Build a List expression from a list of formula expressions.
--/
-def buildContextExpr (formulas : List Expr) : MetaM Expr := do
-  let formulaType := mkConst ``Formula
-  let mut result ← mkAppM ``List.nil #[formulaType]
-  for f in formulas.reverse do
-    result ← mkAppM ``List.cons #[f, result]
-  return result
-
-/--
 Try to prove the goal using generalized modal K rule.
 
 Given a goal `□Γ ⊢ □φ` (where Γ = [□ψ₁, □ψ₂, ...] and formula = □χ),
@@ -1171,40 +653,5 @@ partial def searchProof (counter : IO.Ref Nat) (goal : MVarId) (depth : Nat) : T
       return true
 
   return false
-
-/-!
-## Naming-convention exemptions for user-facing tactic tokens
-
-Each `macro`/`elab` below declares a *tactic token*, and Lean auto-generates a declaration whose
-name is derived from that token (`modal_t` becomes `tacticModal_t`). Those generated names carry
-the token's underscores, so Mathlib's `defsWithUnderscore` linter flags them.
-
-**These seven tokens keep their snake_case spelling.** Every Lean tactic token is snake_case
-(`simp_all`, `norm_num`, `push_neg`, `field_simp`), and Mathlib's own `tactic*` declarations
-escape this linter not by being camelCased but because `isBadNameWithUnderscore`
-(`Mathlib/Tactic/Linter/Style.lean`) whitelists the `Mathlib.Tactic` namespace prefix outright.
-Renaming a tactic token to camelCase would satisfy the linter while making the tactic surface
-*less* conformant with Lean and Mathlib practice.
-
-Each token here is referenced from `docs/`, so renaming it is a user-facing API break rather
-than a naming cleanup. Tokens that are internal-only were renamed instead — `modal_norm`,
-`prop_norm`, `modal_op_norm`, `temporal_norm`, `modal_norm_all`, `modal_norm_at`, `modal_fold`,
-`prop_decide`, `order_refl`, `order_rev`, `same_order_type_grid`, `same_order_type_grid_uh`, and
-the `tm_lemma` label attribute.
-
-A per-declaration, in-source exemption on an auto-generated name is a **documented exemption**,
-naming the token it derives from and the reason. It is categorically different from the
-861-entry `scripts/nolints.json` this migration deleted, which suppressed hand-written
-declaration names in bulk with no per-site justification.
--/
-
-attribute [nolint defsWithUnderscore]
-  tacticApply_axiom          -- from the `apply_axiom` tactic token
-  tacticModal_t              -- from the `modal_t` tactic token
-  tacticAssumption_search    -- from the `assumption_search` tactic token
-  tacticModal_k_tactic       -- from the `modal_k_tactic` tactic token
-  tacticTemporal_k_tactic    -- from the `temporal_k_tactic` tactic token
-  tacticModal_4_tactic       -- from the `modal_4_tactic` tactic token
-  tacticModal_b_tactic       -- from the `modal_b_tactic` tactic token
 
 end FormalSystem.Automation

@@ -403,7 +403,7 @@ private theorem ghEnrichment_mem_cases {S : Finset Formula} {f : Formula}
   · exact Or.inr (Or.inr ⟨g, hg, rfl⟩)
 
 /-- Classify membership in `SubformulaClosure`. -/
-private theorem SubformulaClosure_mem_cases {target f : Formula}
+private theorem SubformulaClosure.mem_cases {target f : Formula}
     (h : f ∈ SubformulaClosure target) :
     f ∈ ghEnrichment (subformulas target) ∨
     (∃ g ∈ ghEnrichment (subformulas target), f = Formula.neg g) := by
@@ -412,10 +412,10 @@ private theorem SubformulaClosure_mem_cases {target f : Formula}
   · exact Or.inl h_base
   · exact Or.inr ⟨g, hg, rfl⟩
 
-theorem SubformulaClosure_G_closed {target χ : Formula}
+theorem SubformulaClosure.G_closed {target χ : Formula}
     (h : Formula.allFuture χ ∈ SubformulaClosure target) :
     χ ∈ SubformulaClosure target := by
-  rcases SubformulaClosure_mem_cases h with h_base | ⟨g, hg_base, hg_eq⟩
+  rcases SubformulaClosure.mem_cases h with h_base | ⟨g, hg_base, hg_eq⟩
   · rcases ghEnrichment_mem_cases h_base with h_sub | ⟨f, hf, hfeq⟩ | ⟨f, _, hfeq⟩
     · exact subformula_mem (subformulas_G_unwrap h_sub)
     · -- allFuture χ = allFuture f: extract χ = f via unfolding
@@ -452,10 +452,10 @@ theorem SubformulaClosure_G_closed {target χ : Formula}
       exact absurd hfeq (by intro h'; exact Formula.noConfusion h')
 
 /-- If `H(χ) ∈ SubformulaClosure target`, then `χ ∈ SubformulaClosure target`. -/
-theorem SubformulaClosure_H_closed {target χ : Formula}
+theorem SubformulaClosure.H_closed {target χ : Formula}
     (h : Formula.allPast χ ∈ SubformulaClosure target) :
     χ ∈ SubformulaClosure target := by
-  rcases SubformulaClosure_mem_cases h with h_base | ⟨g, hg_base, hg_eq⟩
+  rcases SubformulaClosure.mem_cases h with h_base | ⟨g, hg_base, hg_eq⟩
   · rcases ghEnrichment_mem_cases h_base with h_sub | ⟨f, _, hfeq⟩ | ⟨f, hf, hfeq⟩
     · exact subformula_mem (subformulas_H_unwrap h_sub)
     · -- allPast χ = allFuture f: impossible (snce ≠ untl)
@@ -487,10 +487,10 @@ theorem SubformulaClosure_H_closed {target χ : Formula}
       exact absurd hfeq (by intro h'; exact Formula.noConfusion h')
 
 /-- If `(φ U ψ) ∈ SubformulaClosure target`, then `φ, ψ ∈ SubformulaClosure target`. -/
-theorem SubformulaClosure_untl_closed {target φ ψ : Formula}
+theorem SubformulaClosure.untl_closed {target φ ψ : Formula}
     (h : Formula.untl φ ψ ∈ SubformulaClosure target) :
     φ ∈ SubformulaClosure target ∧ ψ ∈ SubformulaClosure target := by
-  rcases SubformulaClosure_mem_cases h with h_base | ⟨g, _, hg_eq⟩
+  rcases SubformulaClosure.mem_cases h with h_base | ⟨g, _, hg_eq⟩
   · rcases ghEnrichment_mem_cases h_base with h_sub | ⟨f, _, hfeq⟩ | ⟨f, _, hfeq⟩
     · obtain ⟨l, r⟩ := subformulas_untl_unwrap h_sub
       exact ⟨subformula_mem l, subformula_mem r⟩

@@ -259,7 +259,7 @@ theorem kvE_extBracketFut_complete {sig : MonadicSignature} [Fintype sig.preds]
     exact kvE_futPos_of_realizer P M h_UZ h_SZ σ' w x t x1 hxw hwt htx1 hr
   | false =>
     rw [if_neg (by simp)]
-    rw [kvEExtNegFut, temporal_truth_neg]
+    rw [kvEExtNegFut, temporalTruth_neg_iff]
     intro hposT
     obtain ⟨σ', hadm', hsl, hmark⟩ := hslice σ hadm hfib hposT
     have hcontra : kvEFutSliceMarked qnf σ = true :=
@@ -296,11 +296,11 @@ theorem kvE_extBracketPast_complete {sig : MonadicSignature} [Fintype sig.preds]
     obtain ⟨x1, hx1x, hr⟩ := hpos σ' hadm' hmark
     by_contra hno
     have hnegcl : TemporalTruth M atomMap x (kvEExtNegPast P σ') := by
-      rw [kvEExtNegPast, temporal_truth_neg]; exact hno
+      rw [kvEExtNegPast, temporalTruth_neg_iff]; exact hno
     exact kvE_extNegPast_sound P M h_UZ h_SZ σ' w x t hxw hwt hnegcl x1 hx1x hr
   | false =>
     rw [if_neg (by simp)]
-    rw [kvEExtNegPast, temporal_truth_neg]
+    rw [kvEExtNegPast, temporalTruth_neg_iff]
     intro hposT
     obtain ⟨σ', hadm', hsl, hmark⟩ := hslice σ hadm hfib hposT
     have hcontra : kvEPastSliceMarked qnf σ = true :=

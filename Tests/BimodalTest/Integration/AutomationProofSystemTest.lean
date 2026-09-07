@@ -33,7 +33,7 @@ This test suite covers:
 Tests are organized by tactic:
 - modal_search Tests (Aesop-powered automation)
 - apply_axiom Tests (axiom application)
-- Specific Tactic Tests (modal_t, modal_4_tactic, etc.)
+- Specific Tactic Tests (modal_t, and the modal/temporal axioms applied directly)
 - Soundness Integration Tests (automation → validity)
 - Performance Tests
 - Error Handling Tests
@@ -41,7 +41,7 @@ Tests are organized by tactic:
 ## References
 
 * [Tactics.lean](../../../Logos/Core/Automation/Tactics.lean) - Tactic implementations
-* [AesopRules.lean](../../../Logos/Core/Automation/AesopRules.lean) - Aesop rules
+* [Commands.lean](../../../FormalSystem/Automation/Tactics/Commands.lean) - the `modal_search` tactic
 * [Soundness.lean](../../../Logos/Core/Metalogic/Soundness.lean) - Soundness theorem
 -/
 
@@ -242,17 +242,17 @@ end ApplyAxiomTests
 section SpecificTacticTests
 
 /--
-Test 21: modal_4_tactic applies Modal 4 axiom.
+Test 21: the Modal 4 axiom applies.
 
-The modal_4_tactic should automatically apply the Modal 4 axiom.
+`Axiom.modal_4` discharges the goal directly.
 -/
 example (p : Formula) : ⊢ (p.box.imp p.box.box) := by
   exact DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
 /--
-Test 22: modal_b_tactic applies Modal B axiom.
+Test 22: the Modal B axiom applies.
 
-The modal_b_tactic should automatically apply the Modal B axiom.
+`Axiom.modal_b` discharges the goal directly.
 -/
 example (p : Formula) : ⊢ (p.imp p.diamond.box) := by
   exact DerivationTree.axiom _ _ (Axiom.modal_b _) trivial
@@ -339,7 +339,7 @@ example : [] ⊨ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by
   exact soundness_in [] _ deriv
 
 /--
-Test 31: modal_4_tactic produces sound derivations.
+Test 31: the Modal 4 axiom produces sound derivations.
 
 Specific tactic applications should be valid via soundness.
 -/
@@ -348,7 +348,7 @@ example (p : Formula) : [] ⊨ (p.box.imp p.box.box) := by
   exact soundness_in [] _ deriv
 
 /--
-Test 32: modal_b_tactic produces sound derivations.
+Test 32: the Modal B axiom produces sound derivations.
 
 Specific tactic applications should be valid via soundness.
 -/
@@ -447,7 +447,7 @@ end CombinedAutomationTests
 -- Aesop Rule Integration Tests
 -- ============================================================
 
-section AesopRuleIntegrationTests
+section AxiomIntegrationTests
 
 -- /--
 -- Test 41: Aesop forward rule for Modal T.
@@ -547,7 +547,7 @@ example (φ ψ : Formula) : ⊢ (φ.imp (ψ.imp φ)) := by
 -- example (p : Formula) : [p.box] ⊢ p := by
 --   modal_search
 
-end AesopRuleIntegrationTests
+end AxiomIntegrationTests
 
 -- ============================================================
 -- Performance and Completeness Tests

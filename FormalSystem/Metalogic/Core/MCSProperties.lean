@@ -44,7 +44,7 @@ open FormalSystem.ProofSystem
 /--
 Helper: If `A ∈ Γ'`, then `A :: Γ'.filter (fun x => decide (x ≠ A))` has the same elements as `Γ'`.
 -/
-lemma cons_filter_neq_perm {A : Formula} {Γ' : Context}
+theorem cons_filter_neq_perm {A : Formula} {Γ' : Context}
     (h_mem : A ∈ Γ') : ∀ x, x ∈ A :: Γ'.filter (fun y => decide (y ≠ A)) ↔ x ∈ Γ' := by
   intro x
   constructor
@@ -79,7 +79,7 @@ For set-based MCS, derivable formulas are in the set.
 
 If S is SetMaximalConsistent (fc := fc) and L ⊆ S derives φ, then φ ∈ S.
 -/
-lemma SetMaximalConsistent.closed_under_derivation {fc : FrameClass} {S : Set Formula} {φ : Formula}
+theorem SetMaximalConsistent.closed_under_derivation {fc : FrameClass} {S : Set Formula} {φ : Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) S)
     (L : List Formula) (h_sub : ∀ ψ ∈ L, ψ ∈ S)
     (h_deriv : DerivationTree fc L φ) : φ ∈ S := by
@@ -417,7 +417,7 @@ Contraposition helper: if ⊢ A → B and B → ⊥ ∈ S, then A → ⊥ ∈ S 
 
 This is used to transfer implications contrapositively through MCS membership.
 -/
-lemma SetMaximalConsistent.contrapositive {fc : FrameClass} {S : Set Formula}
+theorem SetMaximalConsistent.contrapositive {fc : FrameClass} {S : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) S)
     {A B : Formula} (h_impl : DerivationTree fc [] (A.imp B)) (h_negB : B.neg ∈ S) : A.neg ∈ S := by
   -- We have ⊢ A → B and ¬B ∈ S
@@ -454,7 +454,7 @@ If ¬□φ is in an MCS, then □(¬□φ) is also in that MCS.
 
 This follows from axiom 5 and deductive closure of MCS.
 -/
-lemma SetMaximalConsistent.neg_box_implies_box_neg_box {fc : FrameClass} {S : Set Formula}
+theorem SetMaximalConsistent.neg_box_implies_box_neg_box {fc : FrameClass} {S : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) S)
     (phi : Formula) (h_neg_box : (Formula.box phi).neg ∈ S) :
     Formula.box (Formula.box phi).neg ∈ S := by

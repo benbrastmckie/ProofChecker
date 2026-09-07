@@ -419,13 +419,16 @@ def handleUntil : TacticM Unit := do
 The ProofChecker project already has:
 - `FormalSystem/Automation/ProofSearch/` - extend this
 - `FormalSystem/Automation/Tactics/` - add modal-specific tactics
-- `FormalSystem/Automation/AesopRules.lean` - register new rules
 
 **Suggested additions**:
 1. Create `FormalSystem/Automation/ProofSearch/` for modal-specific search
 2. Create `FormalSystem/Automation/ProofSearch/` for temporal operators
-3. Extend `AesopRules.lean` with modal/temporal rules
-4. Add configuration system for search parameters
+3. Add configuration system for search parameters
+
+An Aesop rule set is **not** among these suggestions. One existed and was retired: Aesop's
+proof reconstruction does not work over `Type`-valued `DerivationTree` goals, which is the
+whole reason the search tactics construct proof terms in `TacticM` instead. See
+`FormalSystem/Boneyard/RetiredTactics/README.md`.
 
 ## Conclusion
 

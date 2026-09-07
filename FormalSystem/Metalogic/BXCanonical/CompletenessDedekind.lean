@@ -13,7 +13,7 @@ import Mathlib.Algebra.Order.Archimedean.Real.Basic
 # Dedekind Completeness: carrier probe and the box-dense branch
 
 This module hosts the `FrameClass.RTime` completeness branch. It is the Dedekind analogue
-of the `completeness_dense` material in the sibling module `Completeness.lean`, built on the
+of the `derivable_of_validDense` material in the sibling module `Completeness.lean`, built on the
 real line rather than on `Rat`.
 
 ## Scope of the Dedekind axioms
@@ -144,13 +144,13 @@ theorem real_lub_of_bddAbove :
 /--
 Every `FrameClass.RTime`-MCS contains `□(¬U(⊤,⊥))`.
 
-This is the Dedekind analogue of the non-dense branch of `completeness_dense`
+This is the Dedekind analogue of the non-dense branch of `derivable_of_validDense`
 (sibling module `Completeness.lean`): `Axiom.dense_indicator` states `¬U(⊤,⊥)`, whose
 `minFrameClass` is `.Dense`, and `FrameClass.Dense ≤ FrameClass.RTime`, so the axiom is
 admissible in a `.RTime` derivation. Necessitation then puts the box in every Dedekind-MCS
 via `theorem_in_mcs`.
 
-Consequence: the case split that `completeness_dense` performs on `□(¬U(⊤,⊥)) ∈ M` collapses at
+Consequence: the case split that `derivable_of_validDense` performs on `□(¬U(⊤,⊥)) ∈ M` collapses at
 `.RTime` — there is no non-dense branch to discharge, and the countermodel construction may
 assume the box-dense hypothesis unconditionally.
 
@@ -200,7 +200,7 @@ Stavi development and is **not** what §9 needs; the plain `table` layer is.
 
 **ADAPTED-FROM**: `countermodel_discrete_reynolds_v2`
 (`WeakCanonical/IntegerModel/ReynoldsBridge.lean:739`), statement-for-statement with
-`ℤ → ℝ`. The `ℤ` original is untouched and still consumed by `completeness_ztime`. Three
+`ℤ → ℝ`. The `ℤ` original is untouched and still consumed by `derivable_of_validZTime`. Three
 things change beyond the carrier: the per-family monadic structure is the chronicle bridge
 rather than the limit-domain structure, so the truth correspondence is
 `Chronicle.chronicleMonadic_truth_correspondence_eval` rather than the
@@ -582,7 +582,7 @@ Contrapositive, four steps, no case split:
 3. `dedekind_box_dense_mem` supplies `□(¬U(⊤,⊥)) ∈ M` *unconditionally* — this is where the
    Dedekind route is simpler than the Base and Discrete ones: `FrameClass.Dense ≤
    FrameClass.RTime`, so `Axiom.dense_indicator` is admissible and the non-dense branch that
-   `completeness` and `completeness_ztime` must discharge does not exist here.
+   `completeness` and `derivable_of_validZTime` must discharge does not exist here.
 4. `countermodel_dedekind_dense` at `ℝ` produces the countermodel, with `by decide` discharging
    `FrameClass.RTime ≤ FrameClass.RTime` and `real_lub_of_bddAbove` discharging the
    least-upper-bound binder of `ValidRTime`. That binder is reached through the generic

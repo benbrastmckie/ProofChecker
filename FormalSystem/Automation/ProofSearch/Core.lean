@@ -177,10 +177,8 @@ let finalResult := batchSearchWithLearning benchmarks
 
 ## References
 
-* Korf, R.E. (1985). Depth-first iterative-deepening: An optimal admissible
-  tree search. Artificial Intelligence, 27(1), 97-109.
-* Yang et al. (2019). Learning to Prove Theorems via Interacting with
-  Proof Assistants. ICML.
+* [korf1985] — the IDDFS strategy below
+* [yang2019] — design provenance for the pattern-learning layer
 * Automated Theorem Proving: https://www.cs.cmu.edu/~fp/courses/atp/
 * LEAN Proof Search: Mathlib's `solve_by_elim` tactic
 -/

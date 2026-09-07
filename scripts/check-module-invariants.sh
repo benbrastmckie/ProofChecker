@@ -46,6 +46,10 @@
 #   C21 Every declaration named in FormalSystem/MainResults.lean is axiom-pinned by
 #       C2 or C14 -- a subset assertion over the two existing baselines, NOT a third
 #       baseline
+#   C22 The two deliberately-duplicated `allAxiomNames` lists agree
+#   C23 Naming regressions: zero live `lemma`, no Uppercase_x name outside the two
+#       recorded classes, no new outer-shadows-inner bare-declaration pair. Computed
+#       by EXTENDING C16's namespace walker, not by a fourth scanner
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
@@ -457,6 +461,12 @@ ENFORCE_C20=${ENFORCE_C20:-1} # no file:line citations in publication scope (enf
 # written, so this is enforced from the outset. Never flip it back to 0 to quiet a new name;
 # either pin the declaration in the C14 baseline pair or take it off the page.
 ENFORCE_C21=${ENFORCE_C21:-1} # MainResults.lean names are all axiom-pinned (enforced)
+# C23 gates the three naming classes this repository burned down: `lemma` declarations,
+# Uppercase_x names whose prefix is a real declaration, and outer-shadows-inner base
+# identifier collisions. All three are at zero outside their recorded exception sets, so
+# this is enforced. Never flip it to 0; add a reasoned entry to the in-scanner exception
+# set instead, where the reason is read alongside the name it exempts.
+ENFORCE_C23=${ENFORCE_C23:-1} # naming regressions (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -527,8 +537,8 @@ echo
 # ---------------------------------------------------------------------------
 read -r -d '' AXIOM_BASELINE <<'BASELINE'
 'FormalSystem.Metalogic.BXCanonical.completeness' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.BXCanonical.completeness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.BXCanonical.completeness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.BXCanonical.derivable_of_validDense' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.BXCanonical.derivable_of_validZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 BASELINE
 
@@ -537,8 +547,8 @@ if [ "$RUN_BUILD" -eq 1 ]; then
   cat >"$AX_SRC" <<'LEAN'
 import FormalSystem
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness
-#print axioms FormalSystem.Metalogic.BXCanonical.completeness_dense
-#print axioms FormalSystem.Metalogic.BXCanonical.completeness_ztime
+#print axioms FormalSystem.Metalogic.BXCanonical.derivable_of_validDense
+#print axioms FormalSystem.Metalogic.BXCanonical.derivable_of_validZTime
 #print axioms FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense
 LEAN
   # The pretty-printer wraps at a fixed width, and `FormalSystem.` is longer than the
@@ -1850,9 +1860,11 @@ if [ "$RUN_BUILD" -eq 1 ]; then
 else
   info C16 "env_linter batch skipped (--no-build)"
 fi
-# dupNamespace: live textual check, runs regardless of --no-build (no build needed).
+# dupNamespace, and the C23 naming-regression assertions: one live textual pass over the tree,
+# sharing the namespace walk. Runs regardless of --no-build (no build needed). Exits non-zero
+# only for C23; dupNamespace itself stays reporting-only.
 python3 - <<'PYEOF'
-import os, re
+import os, re, sys
 
 def live_lean_files(base):
     out = []
@@ -1952,7 +1964,164 @@ else:
         print(f"            {p}:{l}: {ident} (duplicated component: {dup})")
     if len(findings) > 20:
         print(f"            ... and {len(findings) - 20} more")
+
+# --- C23 additions: the three naming-regression assertions -------------------
+# These reuse the namespace walk above rather than adding a fourth scanner, with the
+# five corrections a naive reuse needs: `lemma` in the declaration keyword set; an
+# identifier class that survives `?`, `'` and unicode suffixes (a bare
+# `[A-Za-z0-9_'.]*` truncates `asAnd?` to `asAnd` and manufactures ~30 false
+# positives); `private` declarations excluded; `/- ... -/` and `/-! ... -/` blocks
+# skipped; and structure-member namesakes never flagged -- which the
+# outer-shadows-inner test gives for free, since neither namespace is a prefix of
+# the other for `Syntax.Atom.beq_refl` vs `Syntax.Formula.beq_refl`.
+
+DECL2 = re.compile(
+    r"^\s*(?:@\[[^\]]*\]\s*)?(?:(private)\s+|protected\s+|noncomputable\s+|scoped\s+"
+    r"|local\s+|partial\s+|unsafe\s+)*"
+    r"(theorem|lemma|def|abbrev|instance|structure|inductive|class|opaque)\s+"
+    r"([^\s\(\{\[:]+)")
+LEMMA = re.compile(r"^\s*(?:@\[[^\]]*\]\s*)?(?:private |protected |noncomputable |scoped "
+                   r"|local )*lemma\s")
+UPPER = re.compile(r"^[A-Z][A-Za-z0-9']*_")
+# The recorded leave-alone classes. A tense-operator prefix is one of the paper's own
+# operators, not a namespace: `F_until_equiv_valid` is a fact about `F`, and
+# `F.until_equiv_valid` would invent a namespace `F` that does not and should not exist.
+TENSE_PREFIX = re.compile(r"^(F|P|G|H|A|FF|HF)_")
+# Prefixes that name no live declaration, so dot-namespacing them would invent one.
+UPPER_ALLOW = {"CAggOdSwap_clause_iff", "CAggOdSwap_clause_iff_faithful", "O_zero_correct"}
+
+decls2 = []      # (ns, base, private, path, line)
+lemmas = []
+for path in live_lean_files("FormalSystem"):
+    stack, frames, depth = [], [], 0
+    try:
+        lines = open(path, encoding="utf-8", errors="replace").readlines()
+    except OSError:
+        continue
+    for i, raw in enumerate(lines, 1):
+        opens = raw.count("/-"); closes = raw.count("-/")
+        in_comment = depth > 0
+        depth += opens - closes
+        if depth < 0:
+            depth = 0
+        if in_comment:
+            continue
+        line = raw.strip()
+        if line.startswith("--"):
+            continue
+        m = ns_open_re.match(line)
+        if m:
+            segs = m.group(1).split(".")
+            stack.extend(segs); frames.append(len(segs)); continue
+        if section_re.match(line):
+            frames.append(0); continue
+        if end_re.match(line):
+            if frames:
+                n = frames.pop()
+                if n:
+                    stack = stack[:-n] if n <= len(stack) else []
+            continue
+        if LEMMA.match(raw):
+            lemmas.append((path, i))
+        m = DECL2.match(line)
+        if m:
+            name = m.group(3)
+            if "." in name:
+                continue                       # already dot-qualified: not a bare declaration
+            decls2.append((".".join(stack), name, m.group(1) is not None, path, i))
+
+c23_fail = []
+
+# (1) zero live `lemma` declarations
+if lemmas:
+    print(f"FAIL  C23  {len(lemmas)} live `lemma` declaration(s); the convention is `theorem`")
+    for p, l in lemmas[:10]:
+        print(f"            {p}:{l}")
+    c23_fail.append("lemma")
+else:
+    print("PASS  C23  zero live `lemma` declarations (both C17 and C19 can see every declaration)")
+
+# (2) no new Uppercase_x name outside the recorded leave-alone classes.
+#
+# THIRD EXEMPTION, and it is not a style preference: dot-namespacing `Prefix_rest` when a live
+# declaration is already called `rest` CAPTURES that name. Declaring `Prefix.rest` puts `rest`
+# in scope, as `Prefix.rest`, inside every other `Prefix.*` declaration -- so a sibling whose
+# body mentions the standalone `rest` silently resolves to the wrong declaration. Measured, not
+# theorised: renaming `BurgessR3Maximal_burgessR3` to `BurgessR3Maximal.burgessR3` made
+# `BurgessR3Maximal.extension_fails`'s reference to the standalone `burgessR3` resolve to the
+# theorem instead of the definition, and the build failed with an application type mismatch.
+# Thirteen of the fifty-one candidate renames had this shape and were left underscored.
+LIVE_BASES = {n for _, n, _, _, _ in decls2}
+upper_bad = [(ns, n, p, l) for ns, n, priv, p, l in decls2
+             if UPPER.match(n) and not TENSE_PREFIX.match(n) and n not in UPPER_ALLOW
+             and n.split("_", 1)[1] not in LIVE_BASES]
+if upper_bad:
+    print(f"FAIL  C23  {len(upper_bad)} Uppercase_x name(s) outside the recorded leave-alone classes")
+    for ns, n, p, l in upper_bad[:10]:
+        print(f"            {p}:{l}: {n} (use `{n.split('_',1)[0]}.{n.split('_',1)[1]}`)")
+    c23_fail.append("Uppercase_x")
+else:
+    print("PASS  C23  no Uppercase_x name outside the tense-operator, no-such-prefix and\n            name-capture classes")
+
+# (3) no new outer-shadows-inner bare-declaration pair
+by_base = {}
+for ns, n, priv, p, l in decls2:
+    if priv or not ns:
+        continue
+    by_base.setdefault(n, []).append((ns, p, l))
+# Pairs that are accepted and recorded, with the reason, rather than renamed.
+SHADOW_ALLOW = {
+    # structure-member namesakes on distinct types: legitimate dot-notation
+    "isValid",
+    # a deliberate, documented duplication -- `ProofStepExport.lean` is a `lean_exe` root
+    # with its own `main` and cannot import the leaf module holding the canonical list.
+    # C22 asserts the two lists agree, which is the only thing worth checking about them.
+    "allAxiomNames",
+    # (the frozen-module exemption is applied by path below, not by name)
+    # two genuinely different operations sharing a name; resolving it needs a per-site
+    # arity analysis across 14 files, recorded as follow-up rather than done blind
+    "insertEnv",
+}
+# SCOPED, REMOVABLE EXEMPTION. Declarations under this path are owned by a separate,
+# in-flight workstream that has the module md5-pinned, so the outer member of any pair
+# rooted there cannot be renamed from here -- and renaming the inner member alone would
+# leave the two base identifiers colliding, which is the thing C17 actually trips over.
+# Such a pair is therefore neither fixable nor meaningfully half-fixable right now.
+# DELETE THIS EXEMPTION once that workstream lands, and resolve whatever it reports.
+FROZEN_PREFIX = os.path.join("FormalSystem", "Metalogic", "Decidability", "Verified",
+                             "Termination") + os.sep
+
+shadow = []
+for base, rows in by_base.items():
+    if base in SHADOW_ALLOW:
+        continue
+    for a in rows:
+        for b in rows:
+            if a is b:
+                continue
+            if b[0].startswith(a[0] + "."):
+                if a[1].startswith(FROZEN_PREFIX) or b[1].startswith(FROZEN_PREFIX):
+                    continue
+                shadow.append((base, a, b))
+if shadow:
+    print(f"FAIL  C23  {len(shadow)} outer-shadows-inner bare-declaration pair(s)")
+    for base, a, b in shadow[:10]:
+        print(f"            {base}: outer {a[0]} ({a[1]}:{a[2]})")
+        print(f"            {' ' * len(base)}  inner {b[0]} ({b[1]}:{b[2]})")
+    c23_fail.append("shadowing")
+else:
+    print("PASS  C23  no outer-shadows-inner bare-declaration pair outside the recorded set")
+
+if c23_fail:
+    print("            C17's dead-declaration census keys on the last dot-segment, so any two")
+    print("            declarations sharing a base name mask each other and neither can ever be")
+    print("            reported dead. That is the tooling ground these three assertions protect.")
+    sys.exit(1)
 PYEOF
+C23_STATUS=$?
+if [ "$C23_STATUS" -ne 0 ] && [ "$ENFORCE_C23" -eq 1 ]; then
+  FAILURES=$((FAILURES + 1))
+fi
 echo
 
 # ---------------------------------------------------------------------------
@@ -2008,7 +2177,7 @@ def prose_files():
 decl_re = re.compile(
     r"^(?:@\[[^\]]*\]\s*)*"
     r"(?:private\s+|protected\s+|noncomputable\s+|scoped\s+|local\s+|mutual\s+)*"
-    r"(structure|inductive|def|abbrev|theorem|instance|class)\s+"
+    r"(structure|inductive|def|abbrev|theorem|lemma|instance|class)\s+"
     r"([A-Za-z_][A-Za-z0-9_'.]*)"
 )
 token_re = re.compile(r"[A-Za-z_][A-Za-z0-9_']*")
@@ -2351,6 +2520,56 @@ else
     if [ "$ENFORCE_C21" -eq 1 ]; then fail C21 "$MSG"; else soft C21 "$MSG (not yet enforced)"; fi
     printf '%s\n' "$C21_MISSING" | while IFS= read -r l; do note "$l"; done
     note "add the declaration to the C14 baseline pair, or take it off the main-results page"
+  fi
+fi
+echo
+
+# ---------------------------------------------------------------------------
+# C22: the two `allAxiomNames` lists agree
+#
+# `Automation/AxiomNames.lean` and `Automation/ProofStepExport.lean` both declare a list
+# called `allAxiomNames`, and the duplication is DELIBERATE and documented at the second
+# site: `ProofStepExport.lean` is a `lean_exe` root that declares its own `main`, so it
+# cannot import the leaf module that owns the canonical list. The names are therefore not
+# renamed apart -- renaming one would hide the fact that they must agree, which is the only
+# thing worth checking about them.
+#
+# What can go wrong is the two lists drifting when a constructor is added to `inductive
+# Axiom`. Nothing noticed before this check: neither file imports the other, so the compiler
+# cannot compare them, and each list is internally consistent whatever it contains.
+#
+# The comparison is on the SET of quoted strings, not on order or layout: the two lists are
+# formatted differently on purpose (one groups by axiom layer with comments, the other runs
+# in source order), and requiring byte equality would fail on that cosmetic difference alone.
+# ---------------------------------------------------------------------------
+ENFORCE_C22=${ENFORCE_C22:-1} # the two allAxiomNames lists agree (enforced)
+C22_A="FormalSystem/Automation/AxiomNames.lean"
+C22_B="FormalSystem/Automation/ProofStepExport.lean"
+if [ ! -f "$C22_A" ] || [ ! -f "$C22_B" ]; then
+  fail C22 "one of the two allAxiomNames modules is missing"
+else
+  c22_names() {
+    awk '/^def allAxiomNames/,/^[[:space:]]*\][[:space:]]*$/' "$1" \
+      | grep -oE '"[a-zA-Z_][a-zA-Z0-9_]*"' | tr -d '"' | sort -u
+  }
+  C22_NA=$(c22_names "$C22_A")
+  C22_NB=$(c22_names "$C22_B")
+  C22_CA=$(printf '%s' "$C22_NA" | grep -c . || true)
+  C22_CB=$(printf '%s' "$C22_NB" | grep -c . || true)
+  C22_ONLY_A=$(comm -23 <(printf '%s\n' "$C22_NA") <(printf '%s\n' "$C22_NB") | grep . || true)
+  C22_ONLY_B=$(comm -13 <(printf '%s\n' "$C22_NA") <(printf '%s\n' "$C22_NB") | grep . || true)
+  if [ "$C22_CA" -eq 0 ] || [ "$C22_CB" -eq 0 ]; then
+    fail C22 "could not extract an allAxiomNames list from one of the two modules"
+  elif [ -z "$C22_ONLY_A" ] && [ -z "$C22_ONLY_B" ]; then
+    pass C22 "the two allAxiomNames lists agree ($C22_CA names each)"
+  else
+    MSG="the two allAxiomNames lists disagree ($C22_CA vs $C22_CB names)"
+    if [ "$ENFORCE_C22" -eq 1 ]; then fail C22 "$MSG"; else soft C22 "$MSG (not yet enforced)"; fi
+    [ -n "$C22_ONLY_A" ] && printf '%s\n' "$C22_ONLY_A" \
+      | while IFS= read -r l; do note "only in AxiomNames.lean: $l"; done
+    [ -n "$C22_ONLY_B" ] && printf '%s\n' "$C22_ONLY_B" \
+      | while IFS= read -r l; do note "only in ProofStepExport.lean: $l"; done
+    note "both lists must be updated in the same change; neither file imports the other"
   fi
 fi
 echo

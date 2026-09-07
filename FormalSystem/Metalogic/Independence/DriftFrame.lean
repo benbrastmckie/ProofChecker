@@ -26,7 +26,7 @@ functional, so `F°` is **not** deterministic (`fzero_not_deterministic`) — an
 ## Main Definitions
 
 - `fzeroRel` — the drift relation
-- `fzeroFrame : FrameOver realOrder` — `F°` as a fibre, all six axioms discharged
+- `fzeroFrame : FrameOver realTemporalOrder` — `F°` as a fibre, all six axioms discharged
 - `F0 : TaskFrame` — its inclusion into the total space
 
 ## Main Results
@@ -90,7 +90,7 @@ carrier.
 ## References
 
 * JPL paper `app:drift`, `def:deterministic`, `cor:no-characterization`
-* `FormalSystem/Metalogic/Independence/RealTranslationFrame.lean` — `realOrder`, and `F°`'s
+* `FormalSystem/Metalogic/Independence/RealTranslationFrame.lean` — `realTemporalOrder`, and `F°`'s
   indistinguishable partner
 -/
 
@@ -112,11 +112,11 @@ theorem fzeroRel_iff (w d u : ℝ) :
 /-! ### Fibres are closed bounded intervals -/
 
 theorem mem_fib_iff (w d u : ℝ) :
-    u ∈ TaskFrame.Fib (D := realOrder) fzeroRel w d ↔ fzeroRel w d u := Iff.rfl
+    u ∈ TaskFrame.Fib (D := realTemporalOrder) fzeroRel w d ↔ fzeroRel w d u := Iff.rfl
 
 /-- At a nonnegative duration the fibre is `[w + d, w + 2d]`. -/
 theorem fib_eq_Icc (w d : ℝ) (h : 0 ≤ d) :
-    TaskFrame.Fib (D := realOrder) fzeroRel w d = Set.Icc (w + d) (w + 2 * d) := by
+    TaskFrame.Fib (D := realTemporalOrder) fzeroRel w d = Set.Icc (w + d) (w + 2 * d) := by
   ext u
   rw [mem_fib_iff, fzeroRel_iff, Set.mem_Icc]
   constructor
@@ -125,19 +125,19 @@ theorem fib_eq_Icc (w d : ℝ) (h : 0 ≤ d) :
 
 /-- At a nonpositive duration the fibre is the reflected interval `[w + 2d, w + d]`. -/
 theorem fib_eq_Icc' (w d : ℝ) (h : d ≤ 0) :
-    TaskFrame.Fib (D := realOrder) fzeroRel w d = Set.Icc (w + 2 * d) (w + d) := by
+    TaskFrame.Fib (D := realTemporalOrder) fzeroRel w d = Set.Icc (w + 2 * d) (w + d) := by
   ext u
   rw [mem_fib_iff, fzeroRel_iff, Set.mem_Icc]
   constructor
   · rintro (⟨h1, h2⟩ | ⟨h1, h2⟩) <;> exact ⟨by linarith, by linarith⟩
   · rintro ⟨h1, h2⟩; right; exact ⟨by linarith, by linarith⟩
 
-theorem isCompact_fib (w d : ℝ) : IsCompact (TaskFrame.Fib (D := realOrder) fzeroRel w d) := by
+theorem isCompact_fib (w d : ℝ) : IsCompact (TaskFrame.Fib (D := realTemporalOrder) fzeroRel w d) := by
   rcases le_total 0 d with h | h
   · rw [fib_eq_Icc w d h]; exact isCompact_Icc
   · rw [fib_eq_Icc' w d h]; exact isCompact_Icc
 
-theorem isClosed_fib (w d : ℝ) : IsClosed (TaskFrame.Fib (D := realOrder) fzeroRel w d) := by
+theorem isClosed_fib (w d : ℝ) : IsClosed (TaskFrame.Fib (D := realTemporalOrder) fzeroRel w d) := by
   rcases le_total 0 d with h | h
   · rw [fib_eq_Icc w d h]; exact isClosed_Icc
   · rw [fib_eq_Icc' w d h]; exact isClosed_Icc
@@ -161,7 +161,7 @@ theorem fzero_converse (w d u : ℝ) : fzeroRel w d u ↔ fzeroRel u (-d) w := b
     · left; constructor <;> linarith
 
 /-- *Seriality*: `w + x` and `w - x` are the two witnesses. -/
-theorem fzero_serial : TaskFrame.Serial (D := realOrder) fzeroRel := by
+theorem fzero_serial : TaskFrame.Serial (D := realTemporalOrder) fzeroRel := by
   intro w x _
   refine ⟨⟨w + x, ?_⟩, ⟨w - x, ?_⟩⟩ <;> rw [fzeroRel_iff]
   · rcases le_total 0 x with h | h
@@ -173,7 +173,7 @@ theorem fzero_serial : TaskFrame.Serial (D := realOrder) fzeroRel := by
 
 /-- *Compositionality*, on the axiom's own `0 ≤ x, 0 ≤ y` scope. Interpolation splits on
 `le_total (w + x) (v - 2 * y)` — see the module docstring's deviation 1. -/
-theorem fzero_comp : TaskFrame.Compositional (D := realOrder) fzeroRel := by
+theorem fzero_comp : TaskFrame.Compositional (D := realTemporalOrder) fzeroRel := by
   intro w v x y hx hy
   constructor
   · intro h
@@ -205,7 +205,7 @@ theorem fzero_limit (w u : ℝ)
   · rcases abs_cases (u - w) with ⟨he, _⟩ | ⟨he, _⟩ <;> rw [he] at hy1 hy2 <;> linarith
 
 /-- *Saturation*, by compactness — see the module docstring's deviation 2. -/
-theorem fzero_saturation : TaskFrame.Saturation (D := realOrder) fzeroRel := by
+theorem fzero_saturation : TaskFrame.Saturation (D := realTemporalOrder) fzeroRel := by
   intro S hdir hmem
   have hne : Nonempty S := ⟨⟨hdir.1.choose, hdir.1.choose_spec⟩⟩
   refine IsCompact.nonempty_sInter_of_directed_nonempty_isCompact_isClosed
@@ -220,9 +220,9 @@ theorem fzero_saturation : TaskFrame.Saturation (D := realOrder) fzeroRel := by
     · exact (isClosed_fib w x).inter (isClosed_fib v (-y))
 
 /-- **F° is a task frame.** All six axioms above; `@[reducible]` is load-bearing for exactly the
-reason recorded at `realOrder` — without it `F0.WorldState` does not reduce to `ℝ` and neither
+reason recorded at `realTemporalOrder` — without it `F0.WorldState` does not reduce to `ℝ` and neither
 the order instances nor the state-set recursion can be stated. -/
-@[reducible] noncomputable def fzeroFrame : FrameOver realOrder where
+@[reducible] noncomputable def fzeroFrame : FrameOver realTemporalOrder where
   WorldState := ℝ
   TaskRel := fzeroRel
   nullity_identity := fzero_nullity
@@ -236,7 +236,7 @@ the order instances nor the state-set recursion can be stated. -/
 @[reducible] noncomputable def F0 : TaskFrame := fzeroFrame.toTaskFrame
 
 /-- `F°`'s task relation, definitionally. -/
-theorem f0_taskRel_iff (w x u : ↑realOrder) : F0.TaskRel w x u ↔ fzeroRel w x u := Iff.rfl
+theorem f0_taskRel_iff (w x u : ↑realTemporalOrder) : F0.TaskRel w x u ↔ fzeroRel w x u := Iff.rfl
 
 /-! ### F° is not deterministic -/
 

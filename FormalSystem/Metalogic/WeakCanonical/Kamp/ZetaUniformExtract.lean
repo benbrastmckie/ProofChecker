@@ -80,7 +80,7 @@ theorem efSat_negation_diagonal_uniformFin
       exact ⟨τ, hτ, (pointEF1Fin_efSat N τ env).mp hsat⟩
     · rintro ⟨τ, hτ, hu⟩
       exact ⟨pointEF1Fin τ, ⟨τ, hτ, rfl⟩, (pointEF1Fin_efSat N τ env).mpr hu⟩
-  rw [hveeLHS, hS (env 0), temporal_truth_neg,
+  rw [hveeLHS, hS (env 0), temporalTruth_neg_iff,
     translateProp35Fin_correct N atomMap nameOf hName env ξ]
 
 /-- **Uniform arity-0 negation object.** `∃Φ`-outside-`∀N` form of `efSat_negation_existenceFin`:
@@ -114,7 +114,7 @@ theorem efSat_negation_existence_uniformFin
     apply forall_congr'
     intro z
     rw [translateProp35Fin_correct N atomMap nameOf hName ![z] (pinFirstFin ξ), ←
-        temporal_truth_neg,
+        temporalTruth_neg_iff,
       ← hS (![z] 0)]
     simp
   have hLHS : veeSatFin N ![] (S.toList.map (fun τ => univSentenceFin τ S)) ↔

@@ -364,14 +364,14 @@ noncomputable def RefinedFilteredTaskFrame [SuccOrder ↑D] [NoMaxOrder ↑D]
 
 `refinedFilteredTaskRel` — `if d = 0 then w = u else True` — is the *permissive* relation class
 of `TaskFrame.lean`'s Helper B, spelled with an `if` rather than a disjunction. Once that is
-recorded (`RefinedFilteredTaskFrame_rel_iff`), all four axioms follow from the reusable helpers:
+recorded (`RefinedFilteredTaskFrame.rel_iff`), all four axioms follow from the reusable helpers:
 *Seriality*, interpolation, and *Saturation* unconditionally, and *Limit* from this frame's
 `[SuccOrder ↑D] [NoMaxOrder ↑D]` restriction. -/
 
 /-- The refined filtered relation is the permissive class: the `if`-form
 `if d = 0 then w = u else True` and the disjunctive form `d ≠ 0 ∨ w = u` are the same
 proposition. -/
-theorem RefinedFilteredTaskFrame_rel_iff [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
+theorem RefinedFilteredTaskFrame.rel_iff [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
     ∀ w d u, (RefinedFilteredTaskFrame D phi).TaskRel w d u ↔ (d ≠ 0 ∨ w = u) := by
   intro w d u
   by_cases hd : d = 0 <;> simp [RefinedFilteredTaskFrame, refinedFilteredTaskRel, hd]
@@ -380,14 +380,14 @@ theorem RefinedFilteredTaskFrame_rel_iff [SuccOrder ↑D] [NoMaxOrder ↑D] (phi
 for some $u, v \in W$") for the refined filtered frame, via the `w = u` disjunct. -/
 theorem RefinedFilteredTaskFrame_serial [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
     TaskFrame.Serial (RefinedFilteredTaskFrame D phi).TaskRel :=
-  TaskFrame.serial_of_permissive (RefinedFilteredTaskFrame_rel_iff D phi)
+  TaskFrame.serial_of_permissive (RefinedFilteredTaskFrame.rel_iff D phi)
 
 /-- The interpolation half of *Compositionality* (`def:frame#Compositionality`, verbatim:
 "$w \Rightarrow_{x + y} v$ if and only if $w \Rightarrow_x u$ and $u \Rightarrow_y v$ for some
 $u \in W$") for the refined filtered frame. -/
 theorem RefinedFilteredTaskFrame_interpolates [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
     TaskFrame.Interpolates (RefinedFilteredTaskFrame D phi).TaskRel :=
-  TaskFrame.interpolates_of_permissive (RefinedFilteredTaskFrame_rel_iff D phi)
+  TaskFrame.interpolates_of_permissive (RefinedFilteredTaskFrame.rel_iff D phi)
 
 /-- *Limit* (`def:frame#Limit`, verbatim: "$\bigcap\limits_{x > 0} (w)_x = \set{w}$") for the
 refined filtered frame, in the literal transcribed shape. This is the axiom the frame's
@@ -395,7 +395,7 @@ refined filtered frame, in the literal transcribed shape. This is the axiom the 
 for why the restriction is not removable. -/
 theorem RefinedFilteredTaskFrame_limit [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
     ∀ w u, (∀ x, 0 < x → ∃ y, |y| < x ∧ (RefinedFilteredTaskFrame D phi).TaskRel w y u) → u = w :=
-  TaskFrame.limit_of_permissive (RefinedFilteredTaskFrame_rel_iff D phi)
+  TaskFrame.limit_of_permissive (RefinedFilteredTaskFrame.rel_iff D phi)
 
 /-- *Saturation* (`def:frame#Saturation`, verbatim: "$\bigcap \mathcal{S} \neq \emptyset$ for any
 $\supseteq$-directed family $\mathcal{S}$ of nonempty fibers and segments") for the refined
@@ -404,7 +404,7 @@ singleton (at zero), and a directed family cannot contain two distinct singleton
 *Limit*, this needs no restriction on `D`. -/
 theorem RefinedFilteredTaskFrame_saturation [SuccOrder ↑D] [NoMaxOrder ↑D] (phi : Formula) :
     TaskFrame.Saturation (RefinedFilteredTaskFrame D phi).TaskRel :=
-  TaskFrame.saturation_of_permissive (RefinedFilteredTaskFrame_rel_iff D phi)
+  TaskFrame.saturation_of_permissive (RefinedFilteredTaskFrame.rel_iff D phi)
 
 /-!
 ## Equivalence Class Representatives

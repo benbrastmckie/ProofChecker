@@ -4,7 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Automation.Tactics.Helpers
+import FormalSystem.ProofSystem
+import FormalSystem.Metalogic.Core.DeductionTheorem
+import Lean
 
 /-!
 # Deduction Theorem Tactics
@@ -33,17 +35,47 @@ used only to produce a good error message on non-derivability goals.
 `deductionTheorem` is `noncomputable` (it uses classical case analysis in its
 well-founded recursion). Consequently, any `def`/`example` whose proof term is
 produced by `deduction` or `undischarge` must be marked `noncomputable`. This
-matches established codebase practice for `modal_k_tactic` and friends. For
+matches the established codebase practice for tactic elaborators. For
 `Prop`-valued derivability statements, use `Derivable.deduction`
 (`FormalSystem.Metalogic.Core`) instead — `Prop` proofs never need the marker.
 
 The converse direction (`deductionConverse`) is computable; it is a term-level
 lemma, not a tactic, and can be used directly.
 
+## Adoption verdict: DECLINED for `Metalogic/Core/DeductionTheorem.lean`
+
+These two tactics have **zero** invocations in the library and 16 in the test suite
+(`Tests/BimodalTest/Automation/DeductionTest.lean`: 14 `deduction`, 2 `undischarge`). A
+time-boxed trial asked whether they should be adopted in
+`Metalogic/Core/DeductionTheorem.lean`, the obvious candidate, since that file is where
+`Γ ⊢[fc] A.imp B` goals are densest. The answer is no, and the reason is stronger than the
+`noncomputable` cost recorded above.
+
+**The blocker is circularity, not noncomputability.** Every `Γ ⊢[fc] A.imp B` goal in that
+file belongs to one of the four case lemmas — `deductionAxiom`, `deductionAssumptionSame`,
+`deductionAssumptionOther`, `deductionMp` — and all four sit *above* `deductionTheorem` in the
+file, because they are the cases `deductionTheorem`'s own well-founded recursion dispatches to.
+`deduction` is a wrapper around `deductionTheorem`. Using it in any of them would ask the
+theorem to prove its own cases. The only two declarations below `deductionTheorem` are
+`deductionConverse`, which runs the other direction and is already a three-line term, and
+`Derivable.deduction`, which is `Prop`-valued and has no goal of this shape.
+
+So there is no site in that file where the tactic form could apply, at any cost. The
+`noncomputable` infection is real and is documented above, but it never gets to be the
+deciding factor here.
+
+**What to use instead, so this is not re-litigated.** `Derivable.deduction` (11 uses) is the
+route for `Prop`-valued derivability, and carries no `noncomputable` marker. The
+`deductionTheorem` term form (186 uses) is the route when the derivation tree itself is wanted.
+Between them they cover every case in the tree. These tactics are kept as a convenience for
+interactive `Type`-valued work and as the subject of their own test file; they are not
+library infrastructure, and a future census finding them unused in the library should read
+this note rather than repeat the trial.
+
 ## References
 
 * [DeductionTheorem.lean](../../Metalogic/Core/DeductionTheorem.lean) — the theorem applied
-* [Helpers.lean](./Helpers.lean) — the `mkOperatorKTactic` template this follows
+* [UserTactics.lean](./UserTactics.lean) — the tactic-elaborator infrastructure this follows
 -/
 
 namespace FormalSystem.Automation

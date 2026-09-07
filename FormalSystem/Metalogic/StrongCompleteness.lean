@@ -122,15 +122,33 @@ however read directly and does corroborate the attribution as paraphrased above.
 here is paraphrase, not quotation. Nothing in this file depends on it: the claim is orientation
 for the reader, and no declaration below cites it.
 
-## A note on the `completeness_dense` / `completeness_ztime` short names
+## A note on the `completeness_dense` / `completeness_ztime` short names, and why the engines
+were renamed
 
-Re-exposing the weak forms as `FormalSystem.Metalogic.completeness_dense` and
-`FormalSystem.Metalogic.completeness_ztime` shadows
-`FormalSystem.Metalogic.BXCanonical.completeness_dense` / `…completeness_ztime` at sites that
-`open FormalSystem.Metalogic.BXCanonical`: the enclosing-namespace declaration wins. This is
-harmless — the shadowing and shadowed forms have identical types, so re-pointing any call site
-from one to the other would be semantically inert — and every out-of-file occurrence of either
-short name in this tree is docstring prose rather than a call site.
+`FormalSystem.Metalogic.completeness_dense` and `…completeness_ztime` used to share their base
+identifiers with the `BXCanonical` engines they consume. This note used to record that the
+sharing was **harmless**, and on the reading it was making — semantics — it was right: the two
+forms have the same content, so re-pointing a call site from one to the other would have been
+semantically inert, and every out-of-file occurrence of either short name was docstring prose
+rather than a call site.
+
+The engines were nonetheless renamed, to
+`FormalSystem.Metalogic.BXCanonical.derivable_of_validDense` and `…derivable_of_validZTime`,
+on a **tooling** ground the earlier note did not consider. `scripts/check-module-invariants.sh`'s
+C17 dead-declaration census keys on a declaration's last dot-segment. Two live declarations
+sharing a base identifier therefore mask each other's occurrences, and *neither* can ever be
+reported dead however long it goes unused — so the collision was not inert after all: it was
+silently disabling a check over both. The same reasoning is why `docs/theorem-index.md`
+requires fully-qualified names in every row.
+
+The rename went to the engines, not to these four. `completeness_base`, `completeness_dense`,
+`completeness_ztime` and `completeness_rtime` are a four-member family whose uniformity is the
+more valuable pattern, and renaming two of the four to dodge a collision would have damaged it.
+The engine names are more self-describing for the change: `derivable_of_validDense` states the
+implication it proves, in Mathlib's `conclusion_of_hypothesis` form, where `completeness_dense`
+merely named the theorem it feeds. The cost, recorded rather than hidden, is that the engine
+family is now mixed: `BXCanonical.completeness` and `BXCanonical.completeness_rtime_engine`
+keep their names, because neither collides with anything and renaming them would be churn.
 
 ## Contents
 
@@ -410,7 +428,7 @@ there would be an import cycle.
 
 **The `engine` hypothesis is live, deliberately.** `BXCanonical.completeness`
 (`BXCanonical/Completeness.lean`) has exactly the `.Base` shape,
-`Valid φ → Derivable FrameClass.Base [] φ`, and `BXCanonical.completeness_dense` the `.Dense`
+`Valid φ → Derivable FrameClass.Base [] φ`, and `BXCanonical.derivable_of_validDense` the `.Dense`
 one; both are sorry-free, so the hypothesis is dischargeable at either class. It is nevertheless
 not discharged *here*: keeping the statement engine-generic records in the type that compactness
 is the whole of the gap between weak and strong completeness. The engines are supplied at the
@@ -936,7 +954,7 @@ theorem semantic_deduction_dense (Γ : Context) (φ : Formula) :
 /--
 **Finite-context consequence completeness for `FrameClass.Dense`, unconditional.**
 
-`BXCanonical.completeness_dense` (`BXCanonical/Completeness.lean`) already exists as the
+`BXCanonical.derivable_of_validDense` (`BXCanonical/Completeness.lean`) already exists as the
 single-formula engine for `ValidDense`, so there is no `_of_engine` layer here: the engine is
 consumed directly.
 
@@ -951,7 +969,7 @@ Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak 
 theorem consequence_completeness_dense (Γ : Context) (φ : Formula)
     (h : SemanticConsequenceDense Γ φ) : Derivable FrameClass.Dense Γ φ :=
   (derivable_foldr_imp_iff Γ φ).mpr
-    (BXCanonical.completeness_dense _ ((semantic_deduction_dense Γ φ).mp h))
+    (BXCanonical.derivable_of_validDense _ ((semantic_deduction_dense Γ φ).mp h))
 
 /--
 **Soundness, restated against `SemanticConsequenceDense`.**
@@ -970,7 +988,7 @@ theorem soundness_dense_consequence (Γ : Context) (φ : Formula)
 /--
 **Weak completeness for `FrameClass.Dense`, as the `Γ = []` instance of the consequence form.**
 
-Definitionally `BXCanonical.completeness_dense` routed through the deduction theorem in both
+Definitionally `BXCanonical.derivable_of_validDense` routed through the deduction theorem in both
 directions; recorded here so that the dense class carries the same four-layer shape as the
 others, and so that the weak form is visibly a corollary rather than a parallel construction.
 The vacuous `∀ ψ ∈ [], _` premise binder is discharged by `simpa`.
@@ -980,9 +998,8 @@ definitionally (`Semantics/Validity.lean`), so this declaration inhabits
 `WeakCompleteness FrameClass.Dense` (`Metalogic/SetConsequence.lean`) on the nose, and it is in
 that form that `strongCompletenessDense` (`Metalogic/Compactness.lean`) consumes it.
 
-On the short name it shares with `BXCanonical.completeness_dense`, see the note in the module
-docstring: the enclosing-namespace declaration wins at `open` sites, and it still has the same
-applied shape, so the shadowing remains inert.
+On why the engine it consumes is called `BXCanonical.derivable_of_validDense` rather than
+sharing this theorem's base identifier, see the note in the module docstring.
 
 Paper: `cor:tm-completeness`
 -/
@@ -1053,7 +1070,7 @@ theorem semantic_deduction_ztime (Γ : Context) (φ : Formula) :
 /--
 **Finite-context consequence completeness for `FrameClass.ZTime`, unconditional.**
 
-`BXCanonical.completeness_ztime` (`BXCanonical/Completeness.lean`) already exists as the
+`BXCanonical.derivable_of_validZTime` (`BXCanonical/Completeness.lean`) already exists as the
 single-formula engine for `ValidZTime`, so there is no `_of_engine` layer here.
 
 **This is not strong completeness, and for this class it cannot be strengthened into one.**
@@ -1066,7 +1083,7 @@ Paper: — (formalization-native; the paper's `cor:tm-completeness` states weak 
 theorem consequence_completeness_ztime (Γ : Context) (φ : Formula)
     (h : SemanticConsequenceZTime Γ φ) : Derivable FrameClass.ZTime Γ φ :=
   (derivable_foldr_imp_iff Γ φ).mpr
-    (BXCanonical.completeness_ztime _ ((semantic_deduction_ztime Γ φ).mp h))
+    (BXCanonical.derivable_of_validZTime _ ((semantic_deduction_ztime Γ φ).mp h))
 
 /--
 **Soundness, restated against `SemanticConsequenceZTime`.**
@@ -1089,7 +1106,7 @@ form.**
 Weak completeness is the strongest completeness statement available for this class: the class
 consequence relation is provably not compact (`notCompactZTime`), so the
 genuine strong form is refuted rather than open. Definitionally
-`BXCanonical.completeness_ztime` routed through the deduction theorem in both directions; the
+`BXCanonical.derivable_of_validZTime` routed through the deduction theorem in both directions; the
 vacuous `∀ ψ ∈ [], _` premise binder is discharged by `simpa`.
 
 **Stated as a `WeakCompleteness .ZTime` witness.** `ValidZTime` is `ValidIn .ZTime`
@@ -1099,8 +1116,8 @@ that does *not* buy: `WeakCompleteness` is the single-formula statement, and
 `strongCompleteness_of_compact` needs `Compact .ZTime` alongside it — which is refuted. The
 witness is real; the class still has no strong completeness.
 
-On the short name it shares with `BXCanonical.completeness_ztime`, see the note in the module
-docstring: the shadowing is inert.
+On why the engine it consumes is called `BXCanonical.derivable_of_validZTime` rather than
+sharing this theorem's base identifier, see the note in the module docstring.
 
 Paper: `cor:tm-completeness`
 -/

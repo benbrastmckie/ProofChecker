@@ -365,7 +365,7 @@ theorem BranchOrder_lt_iff (i j : BranchTime b) :
     (BranchOrder b ord h).lt i j ↔ branchLT b ord i j := Iff.rfl
 
 /-- `≤` in the packaged order is "equal or strictly before", definitionally. -/
-theorem BranchOrder_le_iff (i j : BranchTime b) :
+theorem BranchOrder.le_iff (i j : BranchTime b) :
     (BranchOrder b ord h).le i j ↔ (i = j ∨ branchLT b ord i j) := Iff.rfl
 
 /--

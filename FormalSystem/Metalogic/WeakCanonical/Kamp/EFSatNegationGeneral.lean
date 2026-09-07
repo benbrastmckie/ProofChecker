@@ -234,7 +234,7 @@ needs the Fin lift wrappers (`liftPairV`/`liftSingleV`/`liftSentence`) and the F
 
 /-- Fin-variant of `efSat_negation_diagonal` (arity-1 negation object). For a one-free-variable
 per-formula `∃∀`-object `ξ`, a `VeeExistsForallFin sig F 1` realizing `¬ efSatFin N env ξ`:
-translate forward (`translateProp35Fin_correct`), negate (`temporal_truth_neg`), capture the
+translate forward (`translateProp35Fin_correct`), negate (`temporalTruth_neg_iff`), capture the
 negated truth-set `M`-relatively, and disjoin the degenerate single-point objects
 `pointEF1Fin τ` over the admissible partial completions `τ ∈ S` — an `M`-relative enumeration,
 never alphabet-sized. -/
@@ -261,7 +261,7 @@ theorem efSat_negation_diagonalFin
       exact ⟨τ, hτ, (pointEF1Fin_efSat N τ env).mp hsat⟩
     · rintro ⟨τ, hτ, hu⟩
       exact ⟨pointEF1Fin τ, ⟨τ, hτ, rfl⟩, (pointEF1Fin_efSat N τ env).mpr hu⟩
-  rw [hveeLHS, hS (env 0), temporal_truth_neg,
+  rw [hveeLHS, hS (env 0), temporalTruth_neg_iff,
     translateProp35Fin_correct N atomMap nameOf hName env ξ]
 
 /-- Fin-variant of `efSat_negation_existence` (arity-0 negation object). The
@@ -291,7 +291,7 @@ theorem efSat_negation_existenceFin
     apply forall_congr'
     intro z
     rw [translateProp35Fin_correct N atomMap nameOf hName ![z] (pinFirstFin ξ), ←
-        temporal_truth_neg,
+        temporalTruth_neg_iff,
       ← hS (![z] 0)]
     simp
   have hLHS : veeSatFin N ![] (S.toList.map (fun τ => univSentenceFin τ S)) ↔

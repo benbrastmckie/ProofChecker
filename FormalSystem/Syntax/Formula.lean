@@ -785,22 +785,22 @@ def needsPositiveHypotheses : Formula → Bool
   | Formula.imp _ _ => false  -- All imp cases
   | _ => true  -- atom, bot, box, G, H, until, since
 
-@[simp] lemma needsPositiveHypotheses_atom (s : Atom) :
+@[simp] theorem needsPositiveHypotheses_atom (s : Atom) :
     (Formula.atom s).needsPositiveHypotheses = true := rfl
 
-@[simp] lemma needsPositiveHypotheses_bot :
+@[simp] theorem needsPositiveHypotheses_bot :
     Formula.bot.needsPositiveHypotheses = true := rfl
 
-@[simp] lemma needsPositiveHypotheses_box (psi : Formula) :
+@[simp] theorem needsPositiveHypotheses_box (psi : Formula) :
     (Formula.box psi).needsPositiveHypotheses = true := rfl
 
-@[simp] lemma needsPositiveHypotheses_untl (p q : Formula) :
+@[simp] theorem needsPositiveHypotheses_untl (p q : Formula) :
     (Formula.untl q p).needsPositiveHypotheses = true := rfl
 
-@[simp] lemma needsPositiveHypotheses_snce (p q : Formula) :
+@[simp] theorem needsPositiveHypotheses_snce (p q : Formula) :
     (Formula.snce q p).needsPositiveHypotheses = true := rfl
 
-@[simp] lemma needsPositiveHypotheses_imp (p q : Formula) :
+@[simp] theorem needsPositiveHypotheses_imp (p q : Formula) :
     (Formula.imp p q).needsPositiveHypotheses = false := rfl
 
 /-!

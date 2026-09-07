@@ -228,11 +228,11 @@ theorem bracketBuildRight_iff_chainHolds {sig : MonadicSignature} {n : Nat}
     simp only [bracketBuildRight, chainHolds, TemporalTruth]
     constructor
     · intro ⟨x, hx, h_event, h_guard⟩
-      rw [temporal_truth_and] at h_event
+      rw [temporalTruth_and_iff] at h_event
       exact ⟨x, hx, h_event.1, h_guard, (ih _ x).mp h_event.2⟩
     · intro ⟨x, hx, hpt, hseg, hchain⟩
       refine ⟨x, hx, ?_, hseg⟩
-      rw [temporal_truth_and]
+      rw [temporalTruth_and_iff]
       exact ⟨hpt, (ih _ x).mpr hchain⟩
 
 /-! ## Main correctness theorems -/
@@ -497,11 +497,11 @@ theorem bracketBuildLeft_iff_chainHoldsLeft {sig : MonadicSignature} {n : Nat}
     simp only [TemporalTruth]
     constructor
     · intro ⟨x, hx, h_event, h_guard⟩
-      rw [temporal_truth_and] at h_event
+      rw [temporalTruth_and_iff] at h_event
       exact ⟨x, hx, h_event.1, h_guard, (ih _ x).mp h_event.2⟩
     · intro ⟨x, hx, hpt, hseg, hchain⟩
       refine ⟨x, hx, ?_, hseg⟩
-      rw [temporal_truth_and]
+      rw [temporalTruth_and_iff]
       exact ⟨hpt, (ih _ x).mpr hchain⟩
 
 /-! ## Main correctness theorem (leftward) -/
@@ -538,7 +538,7 @@ theorem VecEA2.translateLeft_correct {sig : MonadicSignature} {n : Nat}
     (t : M.carrier) :
     TemporalTruth M atomMap t vea.translateLeft ↔ vea.holdsLeft M atomMap t := by
   simp only [translateLeft, holdsLeft]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   exact Iff.intro
     (fun ⟨h1, h2⟩ => ⟨h1, (bracketBuildRight_correct _ _ M atomMap t).mp h2⟩)
     (fun ⟨h1, h2⟩ => ⟨h1, (bracketBuildRight_correct _ _ M atomMap t).mpr h2⟩)

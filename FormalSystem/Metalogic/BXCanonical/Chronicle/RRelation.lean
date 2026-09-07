@@ -778,7 +778,7 @@ theorem burgessR3Maximal_extension_exists (fc : FrameClass) {A C : Set Formula}
 /--
 **BurgessR3Maximal implies CUD** (trivial from definition).
 -/
-theorem BurgessR3Maximal_cud (fc : FrameClass) {A B C : Set Formula}
+theorem BurgessR3Maximal.cud (fc : FrameClass) {A B C : Set Formula}
     (h : BurgessR3Maximal fc A B C) :
     ClosedUnderDerivation fc B := h.1
 

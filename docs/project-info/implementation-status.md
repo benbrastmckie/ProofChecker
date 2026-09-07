@@ -129,7 +129,6 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | Module | Status | Notes |
 |--------|--------|-------|
 | `Tactics.lean` | ✅ | Core tactics working |
-| `AesopRules.lean` | ✅ | Rule set defined |
 | `Automation/ProofSearch/Core.lean` | ✅ | Builds cleanly |
 | `Automation/ProofSearch/Strategies.lean` | ✅ | Builds cleanly |
 

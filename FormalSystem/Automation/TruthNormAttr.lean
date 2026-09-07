@@ -31,9 +31,14 @@ only**, no lemmas and no definitions.
 
 **Why these sets exist at all.** `truth_norm` gives the truth layer an on-demand handle on the
 whole characterization family, so a proof can open the normal form with `simp only [truth_norm]`
-(or the `truth_simp` macro below) without naming ten lemmas. `swap_norm` collects the
-`swap_temporal_*` family, only four of which carry `@[simp]`, so the complete eleven-lemma family
-is reachable as one set at every use site.
+without naming ten lemmas. `swap_norm` collects the `swap_temporal_*` family, only four of which
+carry `@[simp]`, so the complete eleven-lemma family is reachable as one set at every use site.
+
+**There is no wrapper tactic, deliberately.** A `truth_simp` macro expanding to
+`simp only [truth_norm]` lived here and was retired to `Boneyard/RetiredTactics/` on the same
+measurement that retired the seven normalization wrappers: zero invocations anywhere in the
+library or the test suite, its only occurrences being its own docstring. Write the `simp only`
+out; it is the same length and says what it does.
 -/
 
 /-- Simp set for the truth-layer characterization lemmas of
@@ -41,7 +46,7 @@ is reachable as one set at every use site.
 `Truth.*_iff` lemma (`neg_iff`, `and_iff`, `or_iff`, `imp_iff`, `box_iff`, `diamond_iff`,
 `untl_iff`, `snce_iff`, `always_iff`, `future_iff`, `past_iff`, …). Rewrites a `TruthAt`-headed
 goal about a compound formula into the corresponding meta-level connective. Use as
-`simp only [truth_norm]`, or via the `truth_simp` macro. -/
+`simp only [truth_norm]`. -/
 register_simp_attr truth_norm
 
 /-- Simp set for the eleven `Formula.swap_temporal_*` lemmas of
@@ -49,8 +54,3 @@ register_simp_attr truth_norm
 Four of the eleven also carry `@[simp]`; this set makes the whole family reachable at once. Use
 as `simp only [swap_norm]`. -/
 register_simp_attr swap_norm
-
-/-- `truth_simp` opens the truth-layer normal form: shorthand for `simp only [truth_norm]`,
-optionally at a location (`truth_simp at h`). -/
-macro "truth_simp" loc?:(Lean.Parser.Tactic.location)? : tactic =>
-  `(tactic| simp only [truth_norm] $(loc?)?)

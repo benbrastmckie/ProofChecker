@@ -805,12 +805,12 @@ theorem r3Relation_subset {A B B' C : Set Formula}
 
 /-- R3Maximal implies rMaximal (weakening, R3-maximal sets are at least R-maximal
     within the class of DCS satisfying the three-argument constraint). -/
-theorem R3Maximal_dcs {fc : FrameClass} {A B C : Set Formula}
+theorem R3Maximal.dcs {fc : FrameClass} {A B C : Set Formula}
     (h : R3Maximal fc A B C) :
     SetDeductivelyClosed fc B := h.1
 
 /-- R3Maximal implies r3Relation. -/
-theorem R3Maximal_r3 {fc : FrameClass} {A B C : Set Formula}
+theorem R3Maximal.r3 {fc : FrameClass} {A B C : Set Formula}
     (h : R3Maximal fc A B C) :
     r3Relation A B C := h.2.1
 
@@ -854,7 +854,7 @@ theorem dcs_inter_mcs {fc : FrameClass} {S₁ S₂ : Set Formula}
 A subset of a consistent set is consistent (for derivation-based consistency).
 If S ⊆ T and T is consistent, then S is consistent.
 -/
-theorem SetConsistent_of_subset {fc : FrameClass} {S T : Set Formula}
+theorem SetConsistent.of_subset {fc : FrameClass} {S T : Set Formula}
     (h_sub : S ⊆ T) (h_cons : SetConsistent (fc := fc) T) : SetConsistent (fc := fc) S := by
   intro L hL hd
   exact h_cons L (fun ψ hψ => h_sub (hL ψ hψ)) hd
@@ -866,7 +866,7 @@ a subset of a consistent set (e.g., B).
 theorem three_way_inter_consistent {fc : FrameClass} {S₁ S₂ S₃ : Set Formula}
     (h₃_cons : SetConsistent (fc := fc) S₃) :
     SetConsistent (fc := fc) (S₁ ∩ S₂ ∩ S₃) :=
-  SetConsistent_of_subset (fun _ h => h.2) h₃_cons
+  SetConsistent.of_subset (fun _ h => h.2) h₃_cons
 
 /--
 The three-way intersection of two DCS and an MCS is deductively closed.

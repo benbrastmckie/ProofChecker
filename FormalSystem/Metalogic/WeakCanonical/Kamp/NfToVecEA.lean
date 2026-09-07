@@ -429,7 +429,7 @@ theorem VecEA2.translateRight_correct_zero {sig : MonadicSignature}
     (t : M.carrier) :
     TemporalTruth M atomMap t vea.translateRight ↔ vea.holdsRight M atomMap t := by
   simp only [translateRight, holdsRight]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   constructor
   · intro ⟨h1, h2⟩
     exact ⟨h1, (bracketBuildLeft_correct _ _ M atomMap t).mp h2⟩
@@ -443,7 +443,7 @@ theorem VecEA2.translateRight_correct {sig : MonadicSignature} {n : Nat}
     (t : M.carrier) :
     TemporalTruth M atomMap t vea.translateRight ↔ vea.holdsRight M atomMap t := by
   simp only [translateRight, holdsRight]
-  rw [temporal_truth_and]
+  rw [temporalTruth_and_iff]
   constructor
   · intro ⟨h1, h2⟩
     exact ⟨h1, (bracketBuildLeft_correct _ _ M atomMap t).mp h2⟩
@@ -540,7 +540,7 @@ theorem nf_2var_exist_depth0_tl
     exact ⟨Formula.and (nfPred atomMap h_surj (nfXProj' sub_nf)).formula
                         (nfPred atomMap h_surj (nfTProj sub_nf)).formula,
            fun M t => by
-      rw [temporal_truth_and]
+      rw [temporalTruth_and_iff]
       constructor
       · -- Formula → existential
         intro ⟨h_x_form, h_t_form⟩

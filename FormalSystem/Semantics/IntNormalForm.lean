@@ -316,7 +316,7 @@ def HFofStepPath (F : FrameOver intOrder) (f : ℤ → F.WorldState) (h : IsStep
   TaskFrame.HF.ofTotal F.toTaskFrame f (respects_of_isStepPath h)
 
 @[simp]
-theorem HFofStepPath_path (F : FrameOver intOrder) (f : ℤ → F.WorldState) (h : IsStepPath F f) :
+theorem HFofStepPath.path (F : FrameOver intOrder) (f : ℤ → F.WorldState) (h : IsStepPath F f) :
     (HFofStepPath F f h).path = f := rfl
 
 /-- Every total world history over ℤ is a bi-infinite step-path. -/

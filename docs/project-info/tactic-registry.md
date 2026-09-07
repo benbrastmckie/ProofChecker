@@ -57,7 +57,7 @@ This registry provides a high-level view of tactic implementation status across 
 
 | Rule Set | Purpose | Status |
 |----------|---------|--------|
-| `TMLogic` | TM-specific automation rules | No separate `TMLogic` rule set is declared; `AesopRules.lean` registers its rules directly into Aesop's default rule set (evidence: `Automation/AesopRules.lean`). |
+| `TMLogic` | TM-specific automation rules | **Retired.** The rule set and its rules were archived to `FormalSystem/Boneyard/RetiredTactics/` on measurement: rules in a dedicated set are reachable only through an explicit `aesop (rule_sets := [TMLogic])`, and no such call site existed in the library or the tests. Aesop's proof reconstruction does not work over `Type`-valued `DerivationTree` goals. |
 
 ### Registered Rules
 
@@ -154,7 +154,7 @@ This registry provides a high-level view of tactic implementation status across 
 ### 2025-12-28
 - Codebase review completed (sess_1766969902_lx): Verified 10 complete tactics, 2 in progress (modal_search/temporal_search infrastructure ready)
 - Tactic count corrected: 10 complete (not 12) - apply_axiom, modal_t, tm_auto, assumption_search, modal_k_tactic, temporal_k_tactic, modal_4_tactic, modal_b_tactic, temp_4_tactic, temp_a_tactic
-- Build errors identified: 2 noncomputable errors in AesopRules.lean affecting Aesop integration
+- Build errors identified: 2 noncomputable errors in the Aesop rule module affecting Aesop integration
 - Documentation coverage: All implemented tactics have comprehensive docstrings and examples
 - Undocumented tactics: 0 (all implemented tactics fully documented)
 

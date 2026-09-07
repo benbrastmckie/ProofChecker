@@ -25,7 +25,7 @@ network training.
 - `runConformanceTests`: Run both valid and invalid tests, report results
 
 ### Diversity Metrics
-- `DiversityReport`: Comprehensive diversity metrics for a labeled dataset
+- `ValidationDiversityReport`: Comprehensive diversity metrics for a labeled dataset
 - `computeDiversityReport`: Compute diversity metrics from labeled formulas
 
 ### Feasibility Gate
@@ -257,7 +257,7 @@ Captures:
 - Modal and temporal depth distributions
 - Proof height statistics (mean, variance, max) for valid formulas
 -/
-structure DiversityReport where
+structure ValidationDiversityReport where
   /-- Total formulas in the set. -/
   totalFormulas : Nat
   /-- Number decided valid. -/
@@ -326,7 +326,7 @@ Iterates through all labeled formulas, collecting:
 - Modal and temporal depth histograms
 - Proof height statistics (mean, variance, max) for valid formulas
 -/
-def computeDiversityReport (labeled : List LabeledFormula) : DiversityReport :=
+def computeDiversityReport (labeled : List LabeledFormula) : ValidationDiversityReport :=
   -- Collect counts and distributions
   let init : (Nat × Nat × Nat × Nat × List (String × Nat) × List (Nat × Nat) ×
               List (Nat × Nat) × List Nat) :=
@@ -384,7 +384,7 @@ where
 /--
 Display a diversity report as a human-readable string.
 -/
-def DiversityReport.display (r : DiversityReport) : String :=
+def ValidationDiversityReport.display (r : ValidationDiversityReport) : String :=
   let opLines := r.operatorDistribution.map fun (cat, n) =>
     s!"    {cat}: {n}"
   let modalLines := r.modalDepthDistribution.map fun (d, n) =>
@@ -466,7 +466,7 @@ Evaluate feasibility gate criteria against a diversity report.
 - >90% same decision (all valid or all invalid)
 - Total formulas < `hardMinFormulas`
 -/
-def evaluateGate (report : DiversityReport) (minFormulas : Nat := 10000)
+def evaluateGate (report : ValidationDiversityReport) (minFormulas : Nat := 10000)
     (hardMinFormulas : Nat := 1000) : FeasibilityResult :=
   let total := report.totalFormulas.toFloat
   -- Compute category distribution as percentages

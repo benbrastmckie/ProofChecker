@@ -65,7 +65,7 @@ we need helpers that derive contradictions between `someFuture psi ∈ M` and
 
 open FormalSystem.ProofSystem FormalSystem.Theorems in
 /-- In an MCS, `someFuture psi ∈ M` and `allFuture (neg psi) ∈ M` is contradictory. -/
-lemma some_future_all_future_neg_absurd {fc : FrameClass} {M : Set Formula}
+theorem some_future_all_future_neg_absurd {fc : FrameClass} {M : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) M) (psi : Formula)
     (h_F : Formula.someFuture psi ∈ M)
     (h_G_neg : Formula.allFuture (Formula.neg psi) ∈ M) : False := by
@@ -79,7 +79,7 @@ lemma some_future_all_future_neg_absurd {fc : FrameClass} {M : Set Formula}
 
 open FormalSystem.ProofSystem FormalSystem.Theorems in
 /-- In an MCS, `somePast psi ∈ M` and `allPast (neg psi) ∈ M` is contradictory. -/
-lemma some_past_all_past_neg_absurd {fc : FrameClass} {M : Set Formula}
+theorem some_past_all_past_neg_absurd {fc : FrameClass} {M : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) M) (psi : Formula)
     (h_P : Formula.somePast psi ∈ M)
     (h_H_neg : Formula.allPast (Formula.neg psi) ∈ M) : False := by
@@ -97,7 +97,7 @@ dual, these conversions go through the proof system (BX3/BX3' + DNE/DNI). -/
 open FormalSystem.ProofSystem FormalSystem.Theorems in
 /-- In an MCS, `¬F(φ) ∈ M` implies `G(¬φ) ∈ M`.
     Proof: `¬P(φ) → ¬P(φ.neg.neg)` via contrapositive of BX3'+DNE, which equals `G(¬φ)`. -/
-lemma neg_some_future_to_all_future_neg {fc : FrameClass} {M : Set Formula}
+theorem neg_some_future_to_all_future_neg {fc : FrameClass} {M : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) M) (phi : Formula)
     (h_neg_F : Formula.neg (Formula.someFuture phi) ∈ M) :
     Formula.allFuture (Formula.neg phi) ∈ M := by
@@ -112,7 +112,7 @@ lemma neg_some_future_to_all_future_neg {fc : FrameClass} {M : Set Formula}
 open FormalSystem.ProofSystem FormalSystem.Theorems in
 /-- In an MCS, `¬P(φ) ∈ M` implies `H(¬φ) ∈ M`.
     Past dual of `neg_some_future_to_all_future_neg`. -/
-lemma neg_some_past_to_all_past_neg {fc : FrameClass} {M : Set Formula}
+theorem neg_some_past_to_all_past_neg {fc : FrameClass} {M : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) M) (phi : Formula)
     (h_neg_P : Formula.neg (Formula.somePast phi) ∈ M) :
     Formula.allPast (Formula.neg phi) ∈ M := by
@@ -132,12 +132,12 @@ def ForwardTemporalWitnessSeed (M : Set Formula) (psi : Formula) : Set Formula :
   {psi} ∪ GContent M
 
 /-- psi is in its own ForwardTemporalWitnessSeed. -/
-lemma psi_mem_forward_temporal_witness_seed (M : Set Formula) (psi : Formula) :
+theorem psi_mem_forward_temporal_witness_seed (M : Set Formula) (psi : Formula) :
     psi ∈ ForwardTemporalWitnessSeed M psi :=
   Set.mem_union_left _ (Set.mem_singleton psi)
 
 /-- GContent is a subset of ForwardTemporalWitnessSeed. -/
-lemma g_content_subset_forward_temporal_witness_seed (M : Set Formula) (psi : Formula) :
+theorem g_content_subset_forward_temporal_witness_seed (M : Set Formula) (psi : Formula) :
     GContent M ⊆ ForwardTemporalWitnessSeed M psi :=
   Set.subset_union_right
 
@@ -292,12 +292,12 @@ def PastTemporalWitnessSeed (M : Set Formula) (psi : Formula) : Set Formula :=
   {psi} ∪ HContent M
 
 /-- psi is in its own PastTemporalWitnessSeed. -/
-lemma psi_mem_past_temporal_witness_seed (M : Set Formula) (psi : Formula) :
+theorem psi_mem_past_temporal_witness_seed (M : Set Formula) (psi : Formula) :
     psi ∈ PastTemporalWitnessSeed M psi :=
   Set.mem_union_left _ (Set.mem_singleton psi)
 
 /-- HContent is a subset of PastTemporalWitnessSeed. -/
-lemma h_content_subset_past_temporal_witness_seed (M : Set Formula) (psi : Formula) :
+theorem h_content_subset_past_temporal_witness_seed (M : Set Formula) (psi : Formula) :
     HContent M ⊆ PastTemporalWitnessSeed M psi :=
   Set.subset_union_right
 

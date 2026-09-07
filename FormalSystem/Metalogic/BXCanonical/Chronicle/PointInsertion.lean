@@ -56,7 +56,7 @@ Local definitions used for point insertion lemmas.
 - `lemma_2_5b`: Composition of GContent ordering (transitivity)
 - `lemma_2_6`: Counterexample insertion (delta not in C -> insert D with neg delta)
 - `dc_delta_B_burgessR3`: Extension of B by delta preserves burgessR3
-- `BurgessR3Maximal_extension_fails`: Maximality prevents consistent proper extensions
+- `BurgessR3Maximal.extension_fails`: Maximality prevents consistent proper extensions
 
 ### Withdrawn (Phase 3) / Re-assessed (Phase 5)
 
@@ -526,7 +526,7 @@ theorem r3Maximal_neg_of_not_mem (fc : FrameClass) {A B C : Set Formula}
   exact h_R3.2.2 _ h_dc_dcs h_proper h_r3
 
 /-- R3Maximal forces MCS (via monotonicity of r3Relation). -/
-theorem R3Maximal_is_mcs (fc : FrameClass) {A B C : Set Formula}
+theorem R3Maximal.is_mcs (fc : FrameClass) {A B C : Set Formula}
     (h_R3 : R3Maximal fc A B C) : SetMaximalConsistent (fc := fc) B := by
   refine ⟨h_R3.1.1, ?_⟩
   intro φ h_not_φ h_cons_insert
@@ -621,7 +621,7 @@ theorem dc_delta_B_controlled (fc : FrameClass) {B : Set Formula}
 No consistency requirement: the maximality clause in BurgessR3Maximal
 quantifies over `ClosedUnderDerivation` sets, which includes
 `deductiveClosure ({delta} ∪ B)` regardless of consistency. -/
-theorem BurgessR3Maximal_extension_fails (fc : FrameClass) {A B C : Set Formula}
+theorem BurgessR3Maximal.extension_fails (fc : FrameClass) {A B C : Set Formula}
     (h_R3M : BurgessR3Maximal fc A B C)
     {delta : Formula} (h_delta_not : delta ∉ B) :
     ¬burgessR3 A (deductiveClosure fc ({delta} ∪ B)) C := by
@@ -676,7 +676,7 @@ then apply burgessR_implies_burgessRSince fc for the Since direction.
 /-- Xu Lemma 2.3 (i): If R(A, B, C) then snce(top, alpha) ∈ B for all alpha ∈ A.
 
 Proof by contradiction: if snce(top, alpha) ∉ B, then
-BurgessR3Maximal_extension_fails gives ¬burgessR3(A, DC({snce(top, alpha)}∪B), C).
+BurgessR3Maximal.extension_fails gives ¬burgessR3(A, DC({snce(top, alpha)}∪B), C).
 But dc_delta_B_burgessR3 fc shows both Until and Since conditions hold, using
 left_mono_until_G with G(snce(top, alpha)) ∈ A (derived from alpha ∈ A via BX4 + BX12'). -/
 theorem xu_lemma_2_3_since_top (fc : FrameClass) {A B C : Set Formula}
@@ -689,8 +689,8 @@ theorem xu_lemma_2_3_since_top (fc : FrameClass) {A B C : Set Formula}
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Suppose snce(top, alpha) ∉ B, derive contradiction
   by_contra h_not_in_B
-  -- Step 1: BurgessR3Maximal_extension_fails gives ¬burgessR3 for extension
-  have h_fails := BurgessR3Maximal_extension_fails fc h_r3m h_not_in_B
+  -- Step 1: BurgessR3Maximal.extension_fails gives ¬burgessR3 for extension
+  have h_fails := BurgessR3Maximal.extension_fails fc h_r3m h_not_in_B
   -- Step 2: Derive G(snce(top, alpha)) ∈ A from alpha ∈ A
   -- BX4: alpha → G(P(alpha))
   have h_bx4 : DerivationTree fc [] (alpha.imp (alpha.somePast.allFuture)) :=
@@ -746,7 +746,7 @@ theorem xu_lemma_2_3_since_top (fc : FrameClass) {A B C : Set Formula}
     exact burgessR_implies_burgessRSince fc h_mcs_A h_mcs_C h_burgessR alpha' h_alpha'
   -- Step 4: Apply dc_delta_B_burgessR3 to get burgessR3 for extension
   have h_r3_ext := dc_delta_B_burgessR3 fc h_mcs_A h_mcs_C h_dcs h_r3 h_until_all h_since_all
-  -- Step 5: Contradiction with BurgessR3Maximal_extension_fails
+  -- Step 5: Contradiction with BurgessR3Maximal.extension_fails
   exact absurd h_r3_ext h_fails
 
 /-- Xu Lemma 2.3 (ii): If R(A, B, C) then untl(top, gamma) ∈ B for all gamma ∈ C.
@@ -762,7 +762,7 @@ theorem xu_lemma_2_3_until_top (fc : FrameClass) {A B C : Set Formula}
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Suppose untl(top, gamma) ∉ B, derive contradiction
   by_contra h_not_in_B
-  have h_fails := BurgessR3Maximal_extension_fails fc h_r3m h_not_in_B
+  have h_fails := BurgessR3Maximal.extension_fails fc h_r3m h_not_in_B
   -- Step 2: Derive H(untl(top, gamma)) ∈ C from gamma ∈ C
   -- BX4': gamma → H(F(gamma))
   have h_bx4' : DerivationTree fc [] (gamma.imp (gamma.someFuture.allPast)) :=
@@ -920,14 +920,14 @@ private theorem neg_mem_of_inconsistent_union (fc : FrameClass) {B : Set Formula
 EITHER delta.neg ∈ B (when {delta}∪B is inconsistent)
 OR ¬burgessR3(A, DC({delta}∪B), C).
 
-The second disjunct always holds (BurgessR3Maximal_extension_fails). The first
+The second disjunct always holds (BurgessR3Maximal.extension_fails). The first
 disjunct holds additionally when {delta}∪B is inconsistent. -/
-theorem BurgessR3Maximal_neg_or_ext_fails (fc : FrameClass) {A B C : Set Formula}
+theorem BurgessR3Maximal.neg_or_ext_fails (fc : FrameClass) {A B C : Set Formula}
     (h_R3M : BurgessR3Maximal fc A B C)
     {delta : Formula} (h_delta_not : delta ∉ B) :
     delta.neg ∈ B ∨ ¬burgessR3 A (deductiveClosure fc ({delta} ∪ B)) C := by
   by_cases h_cons : SetConsistent (fc := fc) ({delta} ∪ B)
-  · exact Or.inr (BurgessR3Maximal_extension_fails fc h_R3M h_delta_not)
+  · exact Or.inr (BurgessR3Maximal.extension_fails fc h_R3M h_delta_not)
   · exact Or.inl (neg_mem_of_inconsistent_union fc h_R3M.1 h_cons)
 
 
@@ -969,7 +969,7 @@ every φ ∈ GContent(A) (i.e., G(φ) ∈ A) must also be in B.
 **Proof** (Phase 5b v31, corrected v32):
 - **Consistent case** ({φ}∪B consistent): `dc_delta_B_burgessR3` shows
   burgessR3(A, DC({φ}∪B), C) using left_mono_until_G/since_H. But
-  `BurgessR3Maximal_extension_fails` gives ¬burgessR3. Contradiction.
+  `BurgessR3Maximal.extension_fails` gives ¬burgessR3. Contradiction.
 - **Inconsistent case** ({φ}∪B inconsistent): φ.neg ∈ B (by DCS closure).
   `burgessR3_univ_of_inconsistent_ext` gives burgessR3(A, Set.univ, C).
   Set.univ is ClosedUnderDerivation. B ⊂ Set.univ (B is consistent).
@@ -1084,7 +1084,7 @@ Lemma 2.7 (Until-formula splitting): given `BurgessR3Maximal(A, B, C)` with
 
 ## Proof Strategy (Burgess 1982, direct seed)
 
-From `eta ∉ B` and maximality of B: `BurgessR3Maximal_extension_fails` gives
+From `eta ∉ B` and maximality of B: `BurgessR3Maximal.extension_fails` gives
 `¬burgessR3(A, DC({eta}∪B), C)` (when {eta}∪B consistent). This means some
 formula `phi ∈ DC({eta}∪B)` with some `gamma ∈ C` has `¬U(phi, gamma) ∈ A`.
 By `dc_delta_B_controlled`, either `phi ∈ B` (impossible since burgessR3(A,B,C)
@@ -1304,7 +1304,7 @@ private theorem consistent_of_F_mem (fc : FrameClass) {A : Set Formula}
     SetConsistent (fc := fc) ({φ} : Set Formula) := by
   -- {φ} ⊆ {φ} ∪ GContent(A), and the latter is consistent
   have h_seed := forward_temporal_witness_seed_consistent A h_mcs φ h_F
-  exact SetConsistent_of_subset (Set.subset_union_left) h_seed
+  exact SetConsistent.of_subset (Set.subset_union_left) h_seed
 
 /-- If {φ} is consistent and [φ] ⊢ ⊥, then False. -/
 private theorem inconsistent_singleton_false (fc : FrameClass) {φ : Formula}
@@ -1375,7 +1375,7 @@ private theorem consistent_of_P_mem (fc : FrameClass) {C : Set Formula}
     (φ : Formula) (h_P : Formula.somePast φ ∈ C) :
     SetConsistent (fc := fc) ({φ} : Set Formula) := by
   have h_seed := past_temporal_witness_seed_consistent C h_mcs φ h_P
-  exact SetConsistent_of_subset (Set.subset_union_left) h_seed
+  exact SetConsistent.of_subset (Set.subset_union_left) h_seed
 
 /-- P-monotonicity at MCS level: If ⊢ phi → psi and P(phi) ∈ C, then P(psi) ∈ C.
 Mirror of F_mono_mcs fc using H instead of G. -/
@@ -1505,7 +1505,7 @@ for the key self-accumulation step, then BX2G+BX3 monotonicity for the
 contradiction. No BX14 (separation_until) is needed.
 
 The proof follows the same contradiction pattern as xu_lemma_2_3:
-if the formula is not in B, BurgessR3Maximal_extension_fails gives
+if the formula is not in B, BurgessR3Maximal.extension_fails gives
 ¬burgessR3(A, DC(delta ∪ B), C). We extract a neg-until witness and derive
 a contradiction using BX5 + monotonicity.
 -/
@@ -1529,8 +1529,8 @@ theorem xu_lemma_3_2_1_until (fc : FrameClass) {A B C : Set Formula}
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Suppose untl(beta, gamma) ∉ B, derive contradiction
   by_contra h_not_in_B
-  -- Step 1: BurgessR3Maximal_extension_fails gives ¬burgessR3 for extension
-  have h_fails := BurgessR3Maximal_extension_fails fc h_r3m h_not_in_B
+  -- Step 1: BurgessR3Maximal.extension_fails gives ¬burgessR3 for extension
+  have h_fails := BurgessR3Maximal.extension_fails fc h_r3m h_not_in_B
   -- Step 2: Extract neg-until witness
   -- If ∀ beta' ∈ B, ∀ gamma' ∈ C, untl(beta' ∧ untl(beta, gamma), gamma') ∈ A,
   -- then burgessR3(A, DC({untl(beta, gamma)} ∪ B), C) would hold, contradiction.
@@ -1673,8 +1673,8 @@ theorem xu_lemma_3_2_1_since (fc : FrameClass) {A B C : Set Formula}
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Suppose snce(beta, alpha) ∉ B, derive contradiction
   by_contra h_not_in_B
-  -- Step 1: BurgessR3Maximal_extension_fails gives ¬burgessR3 for extension
-  have h_fails := BurgessR3Maximal_extension_fails fc h_r3m h_not_in_B
+  -- Step 1: BurgessR3Maximal.extension_fails gives ¬burgessR3 for extension
+  have h_fails := BurgessR3Maximal.extension_fails fc h_r3m h_not_in_B
   -- Step 2: Extract neg-since witness
   -- Since condition in burgessR3: ∀ beta' ∈ B, ∀ alpha' ∈ A, snce(beta', alpha') ∈ C
   -- If ∀ beta' ∈ B, ∀ alpha' ∈ A, snce(beta' ∧ snce(beta, alpha), alpha') ∈ C,
@@ -2039,7 +2039,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
     SetConsistent (fc := fc) (lemma_2_7_seed fc A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Step 1: Extract neg-until witness from xi ∉ B + BurgessR3Maximal
-  have h_not_r3_xi := BurgessR3Maximal_extension_fails fc h_r3m h_xi_not_B
+  have h_not_r3_xi := BurgessR3Maximal.extension_fails fc h_r3m h_xi_not_B
   have h_neg_until_exists : ∃ beta0 ∈ B, ∃ gamma0 ∈ C,
       Formula.untl (Formula.and beta0 xi) gamma0 ∉ A := by
     by_contra h_all_until
@@ -2746,7 +2746,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
     (h_xi_not_B : xi ∉ B) :
     SetConsistent (fc := fc) (lemma_2_7_since_seed A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
-  have h_not_r3_xi := BurgessR3Maximal_extension_fails fc h_r3m h_xi_not_B
+  have h_not_r3_xi := BurgessR3Maximal.extension_fails fc h_r3m h_xi_not_B
   have h_neg_since_exists : ∃ beta0 ∈ B, ∃ alpha0 ∈ A,
       Formula.snce (Formula.and beta0 xi) alpha0 ∉ C := by
     by_contra h_all_since

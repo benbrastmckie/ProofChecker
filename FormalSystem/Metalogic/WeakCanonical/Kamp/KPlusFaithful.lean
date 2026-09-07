@@ -154,15 +154,15 @@ theorem kPlus_formula_correct {sig : MonadicSignature}
   constructor
   · intro h s hs
     by_contra h_none
-    refine (temporal_truth_neg M atomMap t (Formula.untl P.neg Formula.top)).mp h ?_
+    refine (temporalTruth_neg_iff M atomMap t (Formula.untl P.neg Formula.top)).mp h ?_
     refine ⟨s, hs, temporal_truth_top M atomMap s, fun r hr hrs => ?_⟩
-    rw [temporal_truth_neg]
+    rw [temporalTruth_neg_iff]
     exact fun hP => h_none ⟨r, hr, hrs, hP⟩
   · intro h
-    rw [Formula.kPlus, temporal_truth_neg]
+    rw [Formula.kPlus, temporalTruth_neg_iff]
     rintro ⟨s, hs, -, h_neg⟩
     obtain ⟨r, hr, hrs, hPr⟩ := h s hs
-    exact (temporal_truth_neg M atomMap r P).mp (h_neg r hr hrs) hPr
+    exact (temporalTruth_neg_iff M atomMap r P).mp (h_neg r hr hrs) hPr
 
 /-- **The bridge, mirrored: `Formula.kMinus` is `kminusOpen`.**
 
@@ -176,15 +176,15 @@ theorem kMinus_formula_correct {sig : MonadicSignature}
   constructor
   · intro h s hs
     by_contra h_none
-    refine (temporal_truth_neg M atomMap t (Formula.snce P.neg Formula.top)).mp h ?_
+    refine (temporalTruth_neg_iff M atomMap t (Formula.snce P.neg Formula.top)).mp h ?_
     refine ⟨s, hs, temporal_truth_top M atomMap s, fun r hr hrs => ?_⟩
-    rw [temporal_truth_neg]
+    rw [temporalTruth_neg_iff]
     exact fun hP => h_none ⟨r, hr, hrs, hP⟩
   · intro h
-    rw [Formula.kMinus, temporal_truth_neg]
+    rw [Formula.kMinus, temporalTruth_neg_iff]
     rintro ⟨s, hs, -, h_neg⟩
     obtain ⟨r, hr, hrs, hPr⟩ := h s hs
-    exact (temporal_truth_neg M atomMap r P).mp (h_neg r hr hrs) hPr
+    exact (temporalTruth_neg_iff M atomMap r P).mp (h_neg r hr hrs) hPr
 
 /-! ## Relating the two `Prop`-level spellings
 
@@ -485,19 +485,19 @@ theorem prior_hasFaithfulDedekindINF_dense {sig : MonadicSignature}
       simp only [kplusOpen, not_forall, not_exists] at h_k
       obtain ⟨s, hs_lt, h_none⟩ := h_k
       refine ⟨s, hs_lt, fun r hr hrs => ?_⟩
-      rw [temporal_truth_neg]
+      rw [temporalTruth_neg_iff]
       intro hPr
       exact h_none r ⟨hr, hrs, hPr⟩
     -- Step 3: the occurrence of `P` inside `(z₀,z₁)` is `F¬¬P(z₀)`.
     obtain ⟨x, h_z0x, h_xz1, h_Px⟩ := h_occ
     have h_F : ∃ u : M.carrier, z0 < u ∧ ¬TemporalTruth M atomMap u P.neg :=
-      ⟨x, h_z0x, by rw [temporal_truth_neg]; exact fun h => h h_Px⟩
+      ⟨x, h_z0x, by rw [temporalTruth_neg_iff]; exact fun h => h h_Px⟩
     -- Step 4: Prior-U at `p := ¬P`.
     obtain ⟨s, h_z0s, h_on, h_end⟩ := h_U z0 P.neg h_gap h_F
     have h_none : ∀ y : M.carrier, z0 < y → y < s → ¬TemporalTruth M atomMap y P := by
       intro y hy hys
       have hy' := h_on y hy hys
-      rw [temporal_truth_neg] at hy'
+      rw [temporalTruth_neg_iff] at hy'
       exact hy'
     -- Step 5: `r₀ < z₁`, from the occurrence at `x` and `¬P` on `(z₀,r₀)`.
     have h_sz1 : s < z1 :=
@@ -505,13 +505,13 @@ theorem prior_hasFaithfulDedekindINF_dense {sig : MonadicSignature}
     -- Step 6: eq (5.2) verbatim.
     refine ⟨s, h_z0s, h_sz1, h_none, ?_⟩
     rcases h_end with h_notneg | ⟨h_neg, h_acc⟩
-    · rw [temporal_truth_neg] at h_notneg
+    · rw [temporalTruth_neg_iff] at h_notneg
       exact Or.inl (not_not.mp h_notneg)
-    · rw [temporal_truth_neg] at h_neg
+    · rw [temporalTruth_neg_iff] at h_neg
       refine Or.inr ⟨h_neg, ?_⟩
       intro u hu
       obtain ⟨r, hsr, hru, hr⟩ := h_acc u hu
-      rw [temporal_truth_neg] at hr
+      rw [temporalTruth_neg_iff] at hr
       exact ⟨r, hsr, hru, not_not.mp hr⟩
 
 /-- **`SemanticPriorS` yields the faithful eq (5.2) dichotomy, mirrored and hypothesis-free**
@@ -533,29 +533,29 @@ theorem prior_hasFaithfulDedekindSUP_dense {sig : MonadicSignature}
       simp only [kminusOpen, not_forall, not_exists] at h_k
       obtain ⟨s, hs_lt, h_none⟩ := h_k
       refine ⟨s, hs_lt, fun r hr hrz => ?_⟩
-      rw [temporal_truth_neg]
+      rw [temporalTruth_neg_iff]
       intro hPr
       exact h_none r ⟨hr, hrz, hPr⟩
     obtain ⟨x, h_z0x, h_xz1, h_Px⟩ := h_occ
     have h_P : ∃ u : M.carrier, u < z1 ∧ ¬TemporalTruth M atomMap u P.neg :=
-      ⟨x, h_xz1, by rw [temporal_truth_neg]; exact fun h => h h_Px⟩
+      ⟨x, h_xz1, by rw [temporalTruth_neg_iff]; exact fun h => h h_Px⟩
     obtain ⟨s, h_sz1, h_on, h_end⟩ := h_S z1 P.neg h_gap h_P
     have h_none : ∀ y : M.carrier, s < y → y < z1 → ¬TemporalTruth M atomMap y P := by
       intro y hy hyz
       have hy' := h_on y hy hyz
-      rw [temporal_truth_neg] at hy'
+      rw [temporalTruth_neg_iff] at hy'
       exact hy'
     have h_z0s : z0 < s :=
       lt_of_lt_of_le h_z0x (not_lt.mp fun hsx => h_none x hsx h_xz1 h_Px)
     refine ⟨s, h_z0s, h_sz1, h_none, ?_⟩
     rcases h_end with h_notneg | ⟨h_neg, h_acc⟩
-    · rw [temporal_truth_neg] at h_notneg
+    · rw [temporalTruth_neg_iff] at h_notneg
       exact Or.inl (not_not.mp h_notneg)
-    · rw [temporal_truth_neg] at h_neg
+    · rw [temporalTruth_neg_iff] at h_neg
       refine Or.inr ⟨h_neg, ?_⟩
       intro u hu
       obtain ⟨r, hur, hrs, hr⟩ := h_acc u hu
-      rw [temporal_truth_neg] at hr
+      rw [temporalTruth_neg_iff] at hr
       exact ⟨r, hur, hrs, not_not.mp hr⟩
 
 /-! ## THE PROBE: does the interval-witness refutation survive the conjunct-free antecedent?

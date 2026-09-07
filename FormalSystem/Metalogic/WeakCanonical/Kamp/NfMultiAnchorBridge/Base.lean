@@ -1378,7 +1378,7 @@ correctness hypothesis `h_quant` (the depth-`k` IH: at each past witness `x < t`
 quant layer of `sub_nf` at `[x, t]`, one depth down), the past-arm formula holds at `t` iff there
 is a
 past witness `x < t` where `sub_nf` evaluates on the two-anchor env `[x, t]`. Assembled from
-`temporal_truth_and` (origin factor split) + `A_past_correct` (Phase 1 outer bracket) +
+`temporalTruth_and_iff` (origin factor split) + `A_past_correct` (Phase 1 outer bracket) +
 `nf_char2_atom_offdiag_correct` (Phase 2 atom locus) + the depth-`(k+1)` `NfEvalNf` unfolding,
 with
 the quant layer routed through `h_quant`. `zoneEnv3 w x t = Fin.cons w (Fin.cons x (fun _ => t))`
@@ -1417,8 +1417,8 @@ k=1 past arm is DELIVERED (the off-diagonal-aggregate blocker is CLOSED — the
   `BracketFormula.negFix(_iff)` (`NegFix`), `VecEA2.negFix_iff` / `VVecEA2.negFix_iff`
   (`VecEANegFix`)
 - P3 point merge: `NfMultiAnchorBridge/AggregatePointMergeK1.lean`; exterior fiber kit/nav:
-  `ExteriorFiberKitK1.lean`, `ExteriorNavPastK1.lean` (`CExtPast_correct`),
-  `ExteriorNavFutK1.lean` (`CExtFut_correct`); off-diagonal population: `aggPop1_correct`
+  `ExteriorFiberKitK1.lean`, `ExteriorNavPastK1.lean` (`CExtPast.correct`),
+  `ExteriorNavFutK1.lean` (`CExtFut.correct`); off-diagonal population: `aggPop1_correct`
   (`AggregateOffDiagK1.lean`). -/
 theorem nf_char2_past_formula_correct {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
@@ -1442,7 +1442,7 @@ theorem nf_char2_past_formula_correct {sig : MonadicSignature} [Fintype sig.pred
         a.EvalAt M atomMap z ∧ b.EvalAt M atomMap z := by
     intro a b z
     simp only [TemporalPred.conj, TemporalPred.EvalAt]
-    exact temporal_truth_and M atomMap z a.formula b.formula
+    exact temporalTruth_and_iff M atomMap z a.formula b.formula
   -- Per-witness decomposition of the depth-(k+1) evaluation at [x, t].
   have key : ∀ x : M.carrier, x < t →
       (NfEvalNf M (k + 1) 2 (Fin.cons x (fun _ => t)) sub_nf ↔
@@ -1460,7 +1460,7 @@ theorem nf_char2_past_formula_correct {sig : MonadicSignature} [Fintype sig.pred
     rw [hunf, ← nf_char2_atom_offdiag_correct M atomMap h_surj
           (sub_nf.1 : NormalForm sig 0 2) x t hx, ← h_quant x hx]
   simp only [nfChar2PastFormula]
-  rw [temporal_truth_and, A_past_correct]
+  rw [temporalTruth_and_iff, A_past_correct]
   simp only [conj_eval]
   constructor
   · rintro ⟨horig, z0, hz0, ⟨hend, hqe⟩, hseg⟩
@@ -1633,7 +1633,7 @@ depth-`k` IH: at each future witness `x > t`, the hook's `.EvalAt x` conjoined w
 `seg`
 holding on `(t, x)` characterizes the coupled arity-3 quant layer of `sub_nf` at `[x, t]`, one depth
 down), the future-arm formula holds at `t` iff there is a future witness `t < x` where `sub_nf`
-evaluates on the two-anchor env `[x, t]`. Assembled from `temporal_truth_and` (origin factor split)
+evaluates on the two-anchor env `[x, t]`. Assembled from `temporalTruth_and_iff` (origin factor split)
 +
 `A_future_correct` (Phase 1 outer bracket) + `nf_char2_atom_offdiag_correct_future` (Phase 5 flipped
 atom locus) + the depth-`(k+1)` `NfEvalNf` unfolding, with the quant layer routed through
@@ -1675,7 +1675,7 @@ theorem nf_char2_future_formula_correct {sig : MonadicSignature} [Fintype sig.pr
         a.EvalAt M atomMap z ∧ b.EvalAt M atomMap z := by
     intro a b z
     simp only [TemporalPred.conj, TemporalPred.EvalAt]
-    exact temporal_truth_and M atomMap z a.formula b.formula
+    exact temporalTruth_and_iff M atomMap z a.formula b.formula
   -- Per-witness decomposition of the depth-(k+1) evaluation at [x, t] (t < x).
   have key : ∀ x : M.carrier, t < x →
       (NfEvalNf M (k + 1) 2 (Fin.cons x (fun _ => t)) sub_nf ↔
@@ -1693,7 +1693,7 @@ theorem nf_char2_future_formula_correct {sig : MonadicSignature} [Fintype sig.pr
     rw [hunf, ← nf_char2_atom_offdiag_correct_future M atomMap h_surj
           (sub_nf.1 : NormalForm sig 0 2) x t hx, ← h_quant x hx]
   simp only [nfChar2FutureFormula]
-  rw [temporal_truth_and, A_future_correct]
+  rw [temporalTruth_and_iff, A_future_correct]
   simp only [conj_eval]
   constructor
   · rintro ⟨horig, z1, hz1, ⟨hend, hqe⟩, hseg⟩

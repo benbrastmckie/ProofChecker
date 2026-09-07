@@ -77,9 +77,9 @@ theorem Soundness ...           -- UpperCamelCase for a theorem
 > **Full Mathlib conformance, reached and enforced.** `lake exe batteries/runLinter FormalSystem`
 > reports `defsWithUnderscore = 0` by genuine conformance. There is no `scripts/nolints.json` —
 > the curated 860-entry suppression file that formerly held this category at zero was deleted,
-> not filtered or emptied. The only surviving exemptions are seven in-source
+> not filtered or emptied. The only surviving exemptions are three in-source
 > `@[nolint defsWithUnderscore]` attributes in
-> [`Automation/Tactics/Helpers.lean`](../../FormalSystem/Automation/Tactics/Helpers.lean), each
+> [`Automation/Tactics/UserTactics.lean`](../../FormalSystem/Automation/Tactics/UserTactics.lean), each
 > on an auto-generated `tactic*` declaration and each naming the user-facing tactic token it
 > derives from.
 >

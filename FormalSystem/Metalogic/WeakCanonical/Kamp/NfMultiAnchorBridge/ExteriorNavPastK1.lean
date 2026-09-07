@@ -178,7 +178,7 @@ private theorem navL_bitGroup_iff (M : OrderedMonadicStructure sig) (u : M.carri
     · rw [if_pos hb] at hφ
       exact iff_of_true ((hlit χ).mp hφ) hb
     · rw [if_neg hb] at hφ
-      exact iff_of_false (fun hP => (temporal_truth_neg M atomMap u (lit χ)).mp hφ
+      exact iff_of_false (fun hP => (temporalTruth_neg_iff M atomMap u (lit χ)).mp hφ
         ((hlit χ).mpr hP)) hb
   · intro h φ hmem
     obtain ⟨χ, -, rfl⟩ := List.mem_map.mp hmem
@@ -186,7 +186,7 @@ private theorem navL_bitGroup_iff (M : OrderedMonadicStructure sig) (u : M.carri
     · rw [if_pos hb]
       exact (hlit χ).mpr ((h χ).mpr hb)
     · rw [if_neg hb]
-      exact (temporal_truth_neg M atomMap u (lit χ)).mpr
+      exact (temporalTruth_neg_iff M atomMap u (lit χ)).mpr
         (fun hφ => hb ((h χ).mp ((hlit χ).mp hφ)))
 
 /-- **The w-point package**: atoms at `w` (position-0 projection characteristic), the
@@ -218,7 +218,7 @@ private theorem navL_atWPack_iff (M : OrderedMonadicStructure sig)
          (∃ v : M.carrier, v < w ∧ NfEvalNf M 0 1 (fun _ => v) χ) ↔
            σ.2 (nf0Assemble extZBelowW χ σ.1) = true)) := by
   simp only [navLAtWPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap w Formula.top := temporal_truth_top M atomMap w
   constructor
   · rintro ⟨h1, h2, h3, -⟩
@@ -317,7 +317,7 @@ private theorem navL_chain_sound (M : OrderedMonadicStructure sig)
     intro u h
     simp only [navLChain, TemporalTruth] at h
     obtain ⟨s, hsu, hand, hguard⟩ := h
-    rw [temporal_truth_and] at hand
+    rw [temporalTruth_and_iff] at hand
     obtain ⟨hχ1s, hrest⟩ := hand
     obtain ⟨w, hws, hpack, hwit, hseg⟩ := ih s hrest
     refine ⟨w, hws.trans hsu, hpack, ?_, ?_⟩
@@ -429,7 +429,7 @@ private theorem navL_chain_complete (M : OrderedMonadicStructure sig)
     · -- The chain holds at u with top witness v1.
       simp only [navLChain, TemporalTruth]
       refine ⟨v1, hv1u, ?_, fun r hv1r hru => hguard r (hwv1.trans hv1r) hru⟩
-      rw [temporal_truth_and]
+      rw [temporalTruth_and_iff]
       exact ⟨(navL_char_correct atomMap h_surj M χ1 v1).mpr hχ1v1, hL'chain⟩
 
 /-! ## The E2 deliverable: `navPackLeft` + the fold iff -/
@@ -579,7 +579,7 @@ theorem navD_atXPack_iff (M : OrderedMonadicStructure sig)
        (∀ χ : NormalForm sig 0 1,
          NfEvalNf M 0 1 (fun _ => x) χ ↔ σ.2 (nf0Assemble extZAtX χ σ.1) = true)) := by
   simp only [navDAtXPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap x Formula.top := temporal_truth_top M atomMap x
   constructor
   · rintro ⟨h1, h2, -⟩
@@ -626,7 +626,7 @@ theorem navD_atTPack_iff (M : OrderedMonadicStructure sig)
          (∃ v : M.carrier, t < v ∧ NfEvalNf M 0 1 (fun _ => v) χ) ↔
            σ.2 (nf0Assemble extZAboveT χ σ.1) = true)) := by
   simp only [navDAtTPack, formulaConjList]
-  rw [temporal_truth_and, temporal_truth_and, temporal_truth_and]
+  rw [temporalTruth_and_iff, temporalTruth_and_iff, temporalTruth_and_iff]
   have htop : TemporalTruth M atomMap t Formula.top := temporal_truth_top M atomMap t
   constructor
   · rintro ⟨h1, h2, h3, -⟩
@@ -941,7 +941,7 @@ private theorem navD_atomLayer_iff (M : OrderedMonadicStructure sig)
     This is the peeling that avoids both refutations: the joint depth-1 content is
     never re-fibered monadically (F1), and no single predicate carries reads at more
     than one pin (world-locality). Phase 14c consumes this iff directly for the ∃w glue
-    of `CExtPast_correct`. -/
+    of `CExtPast.correct`. -/
 theorem navDistribLeft (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (x t : M.carrier) (hxt : x < t) :
     (∃ w : M.carrier, w < x ∧
@@ -1026,13 +1026,13 @@ noncomputable def CExtPast (σ : NormalForm sig 1 3) : VVecEA2 :=
              bracket := navDXTBracket atomMap h_surj σ L }⟩) })
     (fun _ => { disjuncts := [] })
 
-/-- **The E4 correctness iff `CExtPast_correct`** (the ∃w glue across the pin at `x`,
+/-- **The E4 correctness iff `CExtPast.correct`** (the ∃w glue across the pin at `x`,
     Rabinovich Lemma 7.6): under the ambient `x < t`, the carrier's 2-pin semantics at
     `(x, t)` is exactly the `∃ w < x` past-exterior evaluation of `σ` at `[w, x, t]`.
     Pure plumbing against `navDistribLeft`: the shared endpoints distribute over the
     arrangement disjunction, and the three gate conjuncts are exactly the pure
     σ-conditions of the distribution RHS. -/
-theorem CExtPast_correct (M : OrderedMonadicStructure sig)
+theorem CExtPast.correct (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (x t : M.carrier) (hxt : x < t) :
     (CExtPast atomMap h_surj σ).holds M atomMap x t ↔
       ∃ w : M.carrier, w < x ∧
@@ -1048,13 +1048,13 @@ theorem CExtPast_correct (M : OrderedMonadicStructure sig)
       obtain ⟨L, hLperm, rfl⟩ := hmem
       obtain ⟨hepL, hepR, hbr⟩ := hv
       simp only [TemporalPred.EvalAt] at hepL hepR
-      rw [temporal_truth_and] at hepL
+      rw [temporalTruth_and_iff] at hepL
       exact ⟨hepL.1, hepL.2, ⟨L, hLperm, hbr⟩, hepR, hrow, hbad, hoff⟩
     · rintro ⟨hpack, hX, ⟨L, hLperm, hbr⟩, hT, -, -, -⟩
       have hepL : TemporalTruth M atomMap x
           (Formula.and (navPackLeft atomMap h_surj σ).formula
             (navDAtXPack atomMap h_surj σ)) :=
-        (temporal_truth_and M atomMap x _ _).mpr ⟨hpack, hX⟩
+        (temporalTruth_and_iff M atomMap x _ _).mpr ⟨hpack, hX⟩
       exact ⟨_, List.mem_map.mpr ⟨L, hLperm, rfl⟩, hepL, hT, hbr⟩
   case isFalse hg =>
     constructor
@@ -1080,7 +1080,7 @@ theorem navD_inconsistent_eval_false (M : OrderedMonadicStructure sig)
 /-- **Carrier-side 3-bot falsity (off-gate)**: off the gate the carrier is the empty
     disjunction, so its 2-pin semantics is `False` at EVERY pin pair — no ambient
     hypothesis needed. -/
-theorem CExtPast_offGate_false (M : OrderedMonadicStructure sig)
+theorem CExtPast.offGate_false (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (hg : ¬ navDGate σ) (x t : M.carrier) :
     ¬ (CExtPast atomMap h_surj σ).holds M atomMap x t := by
   unfold CExtPast
@@ -1091,11 +1091,11 @@ theorem CExtPast_offGate_false (M : OrderedMonadicStructure sig)
 /-- **Carrier-side 3-bot falsity (order-channel-inconsistent `σ`)**: a `σ` whose
     order-channel row does not match `w < x < t` fails the gate, so the carrier's
     semantics is `False` everywhere — the two falsity readings agree with
-    `CExtPast_correct` (both sides `False`). -/
-theorem CExtPast_inconsistent_false (M : OrderedMonadicStructure sig)
+    `CExtPast.correct` (both sides `False`). -/
+theorem CExtPast.inconsistent_false (M : OrderedMonadicStructure sig)
     (σ : NormalForm sig 1 3) (hrow : ¬ navDOrderRow σ) (x t : M.carrier) :
     ¬ (CExtPast atomMap h_surj σ).holds M atomMap x t :=
-  CExtPast_offGate_false atomMap h_surj M σ (fun hg => hrow hg.1) x t
+  CExtPast.offGate_false atomMap h_surj M σ (fun hg => hrow hg.1) x t
 
 end ExteriorNavPast
 

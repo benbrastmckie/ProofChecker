@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Metalogic.Decidability.Propositional.Kalmar
-import FormalSystem.Automation.Tactics.Helpers
+import FormalSystem.Automation.Tactics.Meta
 
 /-!
 # PropDecide - Reflective Propositional Tautology Tactic

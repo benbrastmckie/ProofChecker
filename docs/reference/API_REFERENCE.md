@@ -507,19 +507,6 @@ match db'.queryPatterns φ with
 
 ---
 
-### AesopRules (`FormalSystem.Automation.AesopRules`)
-
-**Module**: `FormalSystem/Automation/AesopRules.lean`
-
-Aesop rule registration for TM automation.
-
-**Rules Registered**:
-- Forward chaining for proven axioms (MT, M4, MB, T4, TA, prop_k, prop_s)
-- Safe apply rules for core inference (modus_ponens, modal_k, temporal_k)
-- Normalization for derived operators (diamond, always, sometimes)
-
----
-
 ## Theorems
 
 ### Propositional (`FormalSystem.Theorems.Propositional`)

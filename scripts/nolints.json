@@ -201,15 +201,15 @@
   ],
   [
     "unusedArguments",
-    "FormalSystem.Semantics.TaskFrame.Fib_eq_singleton"
+    "FormalSystem.Semantics.TaskFrame.Fib.eq_singleton"
   ],
   [
     "unusedArguments",
-    "FormalSystem.Semantics.TaskFrame.Fib_permissive_ne"
+    "FormalSystem.Semantics.TaskFrame.Fib.permissive_ne"
   ],
   [
     "unusedArguments",
-    "FormalSystem.Semantics.TaskFrame.Fib_permissive_zero"
+    "FormalSystem.Semantics.TaskFrame.Fib.permissive_zero"
   ],
   [
     "unusedArguments",

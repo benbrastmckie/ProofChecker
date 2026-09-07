@@ -189,7 +189,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.ExteriorNav
 -- NOTE: thread the E5 future-exterior mirror (the t<w channel: the
 -- future zone kit `extZoneFiberFut_k1`, the Until-navigated w-package `navPackRight` +
 -- fold iff, the distribution `navDistribRight`, and the carrier `CExtFut` +
--- `CExtFut_correct` + 3-bot falsity trio; E6 `extDuality` NOT landed — duplication
+-- `CExtFut.correct` + 3-bot falsity trio; E6 `extDuality` NOT landed — duplication
 -- fallback recorded in the module docstring) into the root build for the Phase-16a
 -- dispatcher's t<w channel. Cycle-free: `ExteriorNavFutK1` is an acyclic leaf importing
 -- only `ExteriorNavPastK1` (above); nothing in that closure imports this aggregator.
@@ -198,7 +198,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.ExteriorNav
 -- dispatcher (the 6-way row classification `aggOdClassify` + mirror `aggOdClassifyF`,
 -- the routing totality `aggOdZone3_route_of_eval`, the two-pin reading
 -- `agg2Past_holds_pin_iff`, the point/interior channel carriers `CAggPtX`/`CAggPtT`/
--- `CAggInt`, and the dispatcher `CAggOd` + master clause iff `CAggOd_clause_iff`) into
+-- `CAggInt`, and the dispatcher `CAggOd` + master clause iff `CAggOd.clause_iff`) into
 -- the root build for the Phase-16b `aggPop1` fold. Cycle-free: `AggregateOffDiagK1` is
 -- an acyclic leaf importing only `VecEAConjFull`, `EANegationFix`,
 -- `AggregatePointMergeK1`, `ExteriorNavPastK1`, `ExteriorNavFutK1`, and
