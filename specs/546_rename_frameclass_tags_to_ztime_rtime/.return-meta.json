@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md",
+      "summary": "Scoped inventory for renaming FrameClass.Discrete/.Dedekind to .ZTime/.RTime: naming scheme, tiered in-scope identifier list, explicit KEEP list separating the Dedekind-INF/SUP API and discrete-order lemmas from the frame-class sense, coupled script/typst/generated artifacts, leaf-first execution order, and verification gates."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788795069_3d83b2_546",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

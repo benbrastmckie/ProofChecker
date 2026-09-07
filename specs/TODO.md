@@ -101,7 +101,7 @@ next_project_number: 549
 
 ### Semantics
 
-546 [NOT STARTED] — Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.
+546 [RESEARCHED] — Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.
 
 ### Documentation
 
@@ -142,10 +142,11 @@ next_project_number: 549
 ---
 
 ### 546. Rename frameclass tags to ztime rtime
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: semantics
 - **Dependencies**: None
+- **Research**: [546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md]
 
 **Description**: Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.ZTime and FrameClass.RTime, with the frame predicates IsSuccArchDiscrete and IsDedekind renamed IsZTime and IsRTime, so that the Lean class tags say what they mean and match the paper's new system naming. PAPER CONVENTION (now implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, Extensions subsection and Appendix): each extension of TM is named by the class over which it is complete -- TM (all task frames), TM_z (Z-time, weakly complete), TM_d (dense task frames, strongly complete), TM_r (R-time, weakly complete), with the same subscripts on the Burgess-Xu cores BX_z, BX_d, BX_r and on the Past/Future fragments. R-time is defined there as the dense and complete temporal orders, which by Holder are exactly R; the complete temporal orders are exactly Z and R up to isomorphism. The frame CONDITIONS keep their names Discrete, Dense, Complete with correspondents DF, DN, CO. MEASURED STATE: `inductive FrameClass | Base | Dense | Discrete | Dedekind` at FormalSystem/ProofSystem/Axioms.lean:529 with the partial order Dense <= Dedekind at :536-543; `FrameClass.Sat` at FormalSystem/Semantics/FrameClassValidity.lean interprets `.Discrete` as `TaskFrame.IsSuccArchDiscrete` and `.Dedekind` as `TaskFrame.IsDedekind`, and its docstring records in bold that neither tag means the bare condition its name suggests -- that is the confusion this rename removes. Occurrence counts under FormalSystem/: `.Discrete` 494 lines in 70 files, `.Dedekind` 345 lines in 54 files, `IsSuccArchDiscrete` 32 lines in 9 files, `IsDedekind` 29 lines in 8 files; derived names `soundness_discrete` 58 lines in 18 files, `soundness_dedekind` 44 lines in 9 files, `ValidDiscrete` 135 lines in 26 files, `ValidDedekind` 103 lines in 24 files, plus `TMCompleteDiscrete` in Metalogic/Conservativity/TMCompletenessReduction.lean and the string literals in Automation/ProofStepExport.lean and Automation/BenchmarkAnchors.lean that name classes (`fc := .Discrete`). WORK: rename the two constructors and two predicates; rename the derived identifiers consistently (soundness_ztime, soundness_rtime, ValidZTime, ValidRTime, TMCompleteZTime, and so on -- pick one scheme and apply it everywhere, recording it in the naming-convention docs); leave `TaskFrame.IsDiscrete` and `TaskFrame.IsComplete` as the bare conditions; update the FrameClass.Sat docstring so the naming-deviation paragraphs become plain statements of what each tag denotes; update every string literal and any JSON or benchmark fixture that names a class. Do not change any semantics or proof content. lake build FormalSystem must stay green with no new sorry, and scripts/check-module-invariants.sh must not regress. This is the first of three tasks pressing the paper's z/d/r convention into this repository; the docstring system-name replacement and the paper-anchor re-pinning are separate follow-on tasks.
 
