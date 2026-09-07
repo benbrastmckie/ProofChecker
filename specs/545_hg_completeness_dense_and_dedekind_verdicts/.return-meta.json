@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/545_hg_completeness_dense_and_dedekind_verdicts/reports/01_hg-completeness-dense-dedekind.md",
+      "summary": "Verdicts for the two open H/G rows: Dense expected complete with a fully de-risked route (no obstruction found); Dedekind OPEN with the obstruction named at declaration granularity (Doets D1/D2 are discharged only from the BL-plus-only prior_U_gap/prior_S_gap/sep axioms, which have no H/G counterpart). Includes two machine-checked probes."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788807358_25f89d_545",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
