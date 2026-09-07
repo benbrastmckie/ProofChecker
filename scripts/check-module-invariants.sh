@@ -39,6 +39,9 @@
 #       (REPORTED, not gated)
 #   C19 Docstring-coverage floor (90%), G-12 heuristic refined with a /-!
 #       section-comment credit (REPORTED, not gated; 90% floor, never fails)
+#   C20 file.lean:NNN citations: tier 1 gates any that is out of range or lands
+#       on a blank line (repo-wide); tier 2 reports any at all in
+#       publication-facing scope, gated by ENFORCE_C20=1
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
@@ -439,6 +442,9 @@ ENFORCE_C9_DOCS=${ENFORCE_C9_DOCS:-0} # no task-number citations under docs/ (NO
 # "the tree has zero findings" -- exactly CI's own `lake lint` gate. Enforced from the
 # outset because nolints.json makes it genuinely green today, unlike C8/C9/C10 above.
 ENFORCE_C16=${ENFORCE_C16:-1} # env_linter batch has no un-nolisted finding (enforced)
+# C20 tier 2 asks every publication-facing surface to cite declaration names rather
+# than file:line. Reported from the outset; flip to 1 once that scope is clean.
+ENFORCE_C20=${ENFORCE_C20:-0} # no file:line citations in publication scope (NOT yet enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -916,9 +922,15 @@ echo
 # documented exemption -- and this script's own path is excluded (self-match:
 # widening the scan to scripts/ would otherwise catch this file's own header
 # examples the moment one is added, the same reason C10 self-excludes below).
+#
+# The regex also matches an ephemeral `specs/NNN_slug/` PATH citation. The rule
+# forbids these for the same reason it forbids "task 42" -- a task directory is
+# renumbered by vault operations and is meaningless to a future reader -- but the
+# `tasks?\s+#?[0-9]+` shape structurally cannot see one, so seventeen of them sat
+# in live `.lean` files while this check reported zero.
 # ---------------------------------------------------------------------------
 TASK_REFS=$(grep -rniE --include='*.lean' --include='*.md' --include='*.sh' \
-  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b' \
+  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b|specs/[0-9]{3}_[A-Za-z0-9_]+' \
   FormalSystem lakefile.lean README.md scripts 2>/dev/null \
   | grep -v '/Boneyard/' | grep -v '^scripts/check-module-invariants\.sh:')
 TASK_REF_COUNT=$(printf '%s' "$TASK_REFS" | grep -c . || true)
@@ -1603,6 +1615,165 @@ C15B_STATUS=$?
 echo
 
 # ---------------------------------------------------------------------------
+# C20: file.lean:NNN citations -- two tiers
+#
+# WHY THIS EXISTS: a `Foo.lean:123` citation is a pointer that rots the moment
+# anything above line 123 is edited, and nothing noticed. Measured when this check
+# was written: 1,354 such citations in live scope, of which 118 point at a line that
+# does not exist or at a blank line. The standing convention is to cite the
+# DECLARATION NAME, never file:line -- a name survives every edit that a line number
+# does not.
+#
+# Two tiers, because the two halves have very different costs:
+#
+#   Tier 1 (GATED, repo-wide live scope). A citation whose target line is out of
+#   range, or lands on a blank line, is provably wrong. Machine-detectable, so
+#   machine-fixable, so gated everywhere.
+#
+#   Tier 2 (reported; gated only under ENFORCE_C20=1). ANY file:line citation in
+#   publication-facing scope -- README.md, docs/, typst/, every README.md under
+#   FormalSystem/, and the aggregators and top-level modules of FormalSystem/,
+#   Metalogic/ and Semantics/. These are the surfaces a paper reader and doc-gen4
+#   actually land on. `FormalSystem/Metalogic/WeakCanonical/**` is deliberately
+#   EXCLUDED from tier 2: its ~1,080 citations are internal proof-engineering
+#   navigation notes between files a referee never opens, and gating them would turn
+#   a documentation nicety into a thousand-site refactor with real regression risk.
+#   They are still covered by tier 1.
+#
+# A citation whose filename resolves to several live files, or to none (an archived
+# path, say), is reported as unverifiable rather than failed: the check will not
+# guess which file was meant.
+# ---------------------------------------------------------------------------
+export ENFORCE_C20
+python3 - <<'PYEOF'
+import os, re, sys
+
+ENFORCE = os.environ.get("ENFORCE_C20") == "1"
+
+def pas(m): print("PASS  C20  %s" % m)
+def bad(m): print("FAIL  C20  %s" % m)
+def inf(m): print("INFO  C20  %s" % m)
+def soft(m): print("TODO  C20  %s" % m)
+def note(m): print("            %s" % m)
+
+CITE = re.compile(r'\b((?:[A-Za-z0-9_]+/)*[A-Za-z0-9_]+\.lean):(\d+)\b')
+
+live = []
+for root, dirs, fs in os.walk("."):
+    dirs[:] = [d for d in dirs if d not in (".git", ".lake", "Boneyard", "__pycache__", "specs")]
+    for f in fs:
+        if f.endswith(".lean"):
+            live.append(os.path.normpath(os.path.join(root, f)))
+by_base = {}
+for p in live:
+    by_base.setdefault(os.path.basename(p), []).append(p)
+
+def resolve(ref):
+    """Return (path, None) when the citation names exactly one live file."""
+    if "/" in ref:
+        c = [p for p in live if p == ref or p.endswith(os.sep + ref.replace("/", os.sep))]
+    else:
+        c = by_base.get(ref, [])
+    if len(c) == 1:
+        return c[0], None
+    return None, ("ambiguous" if len(c) > 1 else "unresolved")
+
+SCAN_ROOTS = ["FormalSystem", "docs", "typst", "Tests", "scripts", "README.md"]
+SELF = os.path.join("scripts", "check-module-invariants.sh")
+files = []
+for r in SCAN_ROOTS:
+    if os.path.isfile(r):
+        files.append(r)
+        continue
+    for root, dirs, fs in os.walk(r):
+        dirs[:] = [d for d in dirs if d not in ("Boneyard", ".lake", "__pycache__")]
+        for f in fs:
+            if f.endswith((".lean", ".md", ".typ", ".sh")):
+                files.append(os.path.normpath(os.path.join(root, f)))
+files = sorted(f for f in files if f != SELF)
+
+WEAKCANON = os.path.join("FormalSystem", "Metalogic", "WeakCanonical") + os.sep
+
+def publication_scope(p):
+    """The surfaces a paper reader or doc-gen4 lands on."""
+    if p.startswith(WEAKCANON):
+        return False
+    if p == "README.md" or p.startswith("docs" + os.sep) or p.startswith("typst" + os.sep):
+        return True
+    if os.path.basename(p) == "README.md" and p.startswith("FormalSystem" + os.sep):
+        return True
+    d = os.path.dirname(p)
+    return p.endswith(".lean") and d in ("FormalSystem",
+                                         os.path.join("FormalSystem", "Metalogic"),
+                                         os.path.join("FormalSystem", "Semantics"))
+
+cache = {}
+wrong, unverifiable, pub = [], [], []
+total = 0
+for p in files:
+    for i, l in enumerate(open(p, encoding="utf-8", errors="replace").read().split("\n"), 1):
+        for ref, num in CITE.findall(l):
+            total += 1
+            if publication_scope(p):
+                pub.append((p, i, ref, num))
+            target, why = resolve(ref)
+            if target is None:
+                unverifiable.append((p, i, ref, num, why))
+                continue
+            if target not in cache:
+                cache[target] = open(target, encoding="utf-8", errors="replace").read().split("\n")
+            tl = cache[target]
+            n = int(num)
+            if n < 1 or n > len(tl):
+                wrong.append((p, i, ref, num, "line %s does not exist; %s has %d lines"
+                              % (num, target, len(tl))))
+            elif tl[n - 1].strip() == "":
+                wrong.append((p, i, ref, num, "line %s of %s is blank" % (num, target)))
+
+status = 0
+if wrong:
+    bad("tier 1: %d of %d file.lean:NNN citation(s) point at a line that does not exist "
+        "or is blank" % (len(wrong), total))
+    for p, i, ref, num, why in wrong[:15]:
+        note("%s:%d  ->  %s:%s  (%s)" % (p, i, ref, num, why))
+    if len(wrong) > 15:
+        note("... and %d more" % (len(wrong) - 15))
+    note("replace each with the declaration name at the intended site")
+    status = 1
+else:
+    pas("tier 1: all %d resolvable file.lean:NNN citation(s) land on a real, non-blank line"
+        % (total - len(unverifiable)))
+
+if unverifiable:
+    inf("%d citation(s) name a filename that is ambiguous or resolves to no live file "
+        "(not checkable, not failed)" % len(unverifiable))
+    for p, i, ref, num, why in unverifiable[:5]:
+        note("%s:%d  ->  %s:%s  (%s)" % (p, i, ref, num, why))
+
+if pub:
+    msg = ("tier 2: %d file.lean:NNN citation(s) in publication-facing scope across %d file(s) "
+           "(cite the declaration name instead)" % (len(pub), len({p for p, _, _, _ in pub})))
+    if ENFORCE:
+        bad(msg)
+        status = 1
+    else:
+        soft(msg + " (not yet enforced)")
+    seen = {}
+    for p, i, ref, num in pub:
+        seen[p] = seen.get(p, 0) + 1
+    for p in sorted(seen, key=lambda x: -seen[x])[:10]:
+        note("%4d  %s" % (seen[p], p))
+    if not ENFORCE:
+        note("set ENFORCE_C20=1 to make this exit-code-affecting once the scope is clean")
+else:
+    pas("tier 2: zero file.lean:NNN citations in publication-facing scope")
+
+sys.exit(status)
+PYEOF
+C20_STATUS=$?
+[ "$C20_STATUS" -ne 0 ] && FAILURES=$((FAILURES + 1))
+echo
+# ---------------------------------------------------------------------------
 # C16: environment linters (defsWithUnderscore, docBlame, simpNF, structureInType,
 # tacticDocs, unusedArguments, ...) via the configured lintDriver
 #
@@ -2077,7 +2248,7 @@ echo
 # to 0 once it is 1. Clear the citations instead.
 # ---------------------------------------------------------------------------
 DOCS_TASK_REFS=$(grep -rniE --include='*.md' \
-  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b' docs 2>/dev/null || true)
+  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b|specs/[0-9]{3}_[A-Za-z0-9_]+' docs 2>/dev/null || true)
 DOCS_TASK_REF_COUNT=$(printf '%s' "$DOCS_TASK_REFS" | grep -c . || true)
 if [ "$DOCS_TASK_REF_COUNT" -eq 0 ]; then
   pass C9D "zero task-number citations under docs/"

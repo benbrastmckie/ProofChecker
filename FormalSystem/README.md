@@ -32,6 +32,26 @@ It also verifies the build, the flagship axiom sets, the structural-`sorry` inve
 module paths in markdown, and the aggregator convention. It is the correct answer to
 "is this tree still consistent".
 
+## Standing Conventions
+
+Two rules bind every docstring and README under this tree. Both are machine-checked.
+
+**Cite declaration names, never `file:line`.** A `Foo.lean:<line>` pointer rots the moment anything
+above that line is edited, and nothing notices: when check **C20** was written, 118 of the 1,354
+such citations in live scope pointed at a line that did not exist or at a blank line. A
+declaration name survives every edit a line number does not. C20 has two tiers — it fails
+repo-wide on any citation whose target line is out of range or blank, and reports (under
+`ENFORCE_C20=1`, fails) any `file:line` citation at all on a publication-facing surface:
+`README.md`, `docs/`, `typst/`, every `README.md` here, and the aggregators and top-level modules
+of `FormalSystem/`, `Metalogic/` and `Semantics/`. `Metalogic/WeakCanonical/**` is exempt from
+the second tier only: its citations are internal navigation notes between files a referee never
+opens.
+
+**Cite durable anchors, never task numbers or ephemeral task-directory paths.** Task directories are
+renumbered by vault operations and mean nothing to a future reader. Check **C9** enforces this
+across `FormalSystem/`, `lakefile.lean`, `README.md` and `scripts/`; **C9D** reports it for
+`docs/`. Both patterns match a `specs/<number>_<slug>/` path as well as a bare task-number citation.
+
 ## About Bimodal Logic
 
 Bimodal is a **complete propositional intensional logic** implementing TM (Tense and Modality) with verified metalogic.

@@ -448,22 +448,22 @@ declaration carries either the row's anchor or the literal `Paper: —` in its d
 
 ---
 
-### Phase 8: C20 citation check and C9 widening [NOT STARTED]
+### Phase 8: C20 citation check and C9 widening [COMPLETED]
 
 **Goal**: A two-tier C20 exists (FAIL on out-of-range or blank-line citations repo-wide;
 report-only on any `file.lean:NNN` citation in publication-facing scope, gated by
 `ENFORCE_C20=1`), and C9's regex is widened to see `specs/NNN_` paths.
 
 **Tasks**:
-- [ ] Implement C20 tier 1: resolve every `file.lean:NNN` citation in live scope; FAIL on
+- [x] Implement C20 tier 1: resolve every `file.lean:NNN` citation in live scope; FAIL on
       out-of-range or blank-line targets.
-- [ ] Implement C20 tier 2: report (do not gate) any citation in the publication-facing scope —
+- [x] Implement C20 tier 2: report (do not gate) any citation in the publication-facing scope —
       `README.md`, `docs/**`, `typst/**`, every `README.md` under `FormalSystem/**`, and
       `FormalSystem/*.lean` + `FormalSystem/Metalogic/*.lean` + `FormalSystem/Semantics/*.lean`.
-- [ ] Follow the existing `ENFORCE_C8`/`C9`/`C10` flag pattern for the tier-2 gate.
-- [ ] Explicitly exclude `FormalSystem/Metalogic/WeakCanonical/**` from tier 2.
-- [ ] Widen C9's regex with `specs/[0-9]{3}_` so ephemeral report-path citations are visible.
-- [ ] Record the convention (cite declaration names, never `file:line`) in the standing
+- [x] Follow the existing `ENFORCE_C8`/`C9`/`C10` flag pattern for the tier-2 gate.
+- [x] Explicitly exclude `FormalSystem/Metalogic/WeakCanonical/**` from tier 2.
+- [x] Widen C9's regex with `specs/[0-9]{3}_` so ephemeral report-path citations are visible.
+- [x] Record the convention (cite declaration names, never `file:line`) in the standing
       conventions section of `FormalSystem/README.md`.
 
 **Timing**: 2 hours
@@ -475,6 +475,11 @@ report-only on any `file.lean:NNN` citation in publication-facing scope, gated b
 **Scope Hypothesis**: 1,354 live citations, 29 out of range, 81 on blank lines, 184 in
 publication scope across 32 files, 1,083 in `WeakCanonical/**`. Re-derive all five numbers with
 the new checker at phase start; the checker's own output supersedes every number in this plan.
+**Re-derived by C20 itself**: 1,354 citations; **29** out of range and **89** on blank lines
+(118 gated, not 110); **180** in publication scope across **29** files; 64 name a filename that
+is ambiguous or archived and are reported unverifiable rather than failed. The widened C9
+reports **14** ephemeral `specs/` path citations, one of which
+(`scripts/check-evidence-probes.sh`) is a functional path a script reads, not a citation.
 
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - C20, C9 regex
