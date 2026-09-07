@@ -144,33 +144,34 @@ had exactly one source, so one relocation removed the whole cycle.
 Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside*
 `X/`, never inside it as `X/X.lean`.
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=aggregators -->
 | Aggregator | Lines | Aggregates |
 |------------|------:|-----------|
 | `Algebraic.lean` | 40 | `Algebraic/` |
-| `Bundle.lean` | 47 | `Bundle/` |
 | `BXCanonical.lean` | 43 | `BXCanonical/` |
+| `Bundle.lean` | 47 | `Bundle/` |
+| `Conservativity.lean` | 294 | `Conservativity/` |
 | `Core.lean` | 37 | `Core/` |
 | `Decidability.lean` | 168 | `Decidability/` |
-| `Independence.lean` | 57 | `Independence/` |
+| `Independence.lean` | 90 | `Independence/` |
 | `SoundnessLemmas.lean` | 32 | `SoundnessLemmas/` |
 | `WeakCanonical.lean` | 144 | `WeakCanonical/` |
+<!-- END GENERATED -->
 
 **Ten** loose files in `Metalogic/` are not aggregators — they have no same-named
 sibling directory:
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=non-aggregators -->
 | Loose non-aggregator | Lines | Role |
 |----------------------|------:|------|
-| `Soundness.lean` | 2,108 | The soundness theorem itself |
-| `StrongCompleteness.lean` | 1,002 | Strong/consequence completeness, including `completeness_dedekind`, and the two `FrameClass`-generic compactness reductions `strongCompleteness_of_compact` and `compact_of_modelExistence` |
-| `SetConsequence.lean` | 638 | Set-indexed consequence relation, and the `FrameClass`-indexed satisfiability / model-existence / compactness / strong-completeness family, instantiated at all four class tags including the `.Dedekind` row (`CompactDedekind`, `StrongCompletenessDedekind`, `SatisfiableDedekindSet`, `ModelExistenceDedekind`) |
-| `DiscreteNonCompactness.lean` | 331 | Non-compactness of the discrete frame class |
-| `DedekindNonCompactness.lean` | 516 | Non-compactness of the Dedekind frame class — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤}` witness, finitely satisfiable over `ℝ` and unsatisfiable over every Dedekind-complete carrier, refuting `CompactDedekind` and `StrongCompletenessDedekind` |
-| `BaseLanguageSoundness.lean` | 482 | Soundness for the base language BL, by composing `Conservativity.translate` with `Soundness.lean` across the truth-transfer bridge `truthAt_tr`; also `bl_soundness_discrete_succ`, the binder-weakened discrete soundness theorem proved directly by induction rather than by composition |
-| `Conservativity.lean` | 382 | Conservativity of the extension |
-| `Compactness.lean` | 179 | Compactness and strong completeness for Base and Dense, by ultraproduct model existence |
-| `TMCompletenessReduction.lean` | 155 | `TMCompleteBase ↔ ForwardBase` and its `.Discrete` mirror — an equivalence between two unasserted `Prop`s pinning "TM complete over task frames" and "forward conservativity" as the same claim |
-| `SpWitness.lean` | 128 | The `(Sp)` validity witness and its TM⁺ translation, the CEB row's TM⁺ half |
-| `Z1Countermodel.lean` | 194 | The `Z1` countermodel over `ℚ ×ₗ ℤ`, closing CEF with both halves machine-checked and refuting `TM_f`'s weak completeness over ℤ-time |
+| `Conservativity.lean` | 294 | Conservativity of the extension |
+| `Compactness.lean` | 218 | Compactness and strong completeness for Base and Dense, by ultraproduct model existence |
+| `DedekindNonCompactness.lean` | 525 | Non-compactness of the Dedekind frame class — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤}` witness, finitely satisfiable over `ℝ` and unsatisfiable over every Dedekind-complete carrier, refuting `CompactDedekind` and `StrongCompletenessDedekind` |
+| `DiscreteNonCompactness.lean` | 319 | Non-compactness of the discrete frame class |
+| `SetConsequence.lean` | 625 | Set-indexed consequence relation, and the `FrameClass`-indexed satisfiability / model-existence / compactness / strong-completeness family, instantiated at all four class tags including the `.Dedekind` row (`CompactDedekind`, `StrongCompletenessDedekind`, `SatisfiableDedekindSet`, `ModelExistenceDedekind`) |
+| `Soundness.lean` | 1,587 | The soundness theorem itself |
+| `StrongCompleteness.lean` | 1,124 | Strong/consequence completeness, including `completeness_dedekind`, and the two `FrameClass`-generic compactness reductions `strongCompleteness_of_compact` and `compact_of_modelExistence` |
+<!-- END GENERATED -->
 
 Plus the directory's own root `Metalogic.lean` (227 lines), which sits one level up,
 beside `Metalogic/`.
@@ -199,16 +200,19 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 
 ## Directory Inventory
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=subdirs cols=files-lines link=yes -->
 | Directory | Files | Lines | Role |
 |-----------|------:|------:|------|
-| [`Algebraic/`](Algebraic/README.md) | 5 | 2,899 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
-| [`Bundle/`](Bundle/README.md) | 9 | 3,299 | Bundled families of MCSs and their coherence conditions |
-| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,271 | Chronicle completeness route; the wired entry point |
-| [`Core/`](Core/README.md) | 4 | 2,101 | MCS machinery shared by all three routes |
-| [`Decidability/`](Decidability/README.md) | 62 | 52,690 | Tableau decision procedure and countermodel extraction |
-| `Independence/` | 6 | 1,883 | Axiom-independence models |
-| [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 3 | 1,457 | Per-axiom validity lemmas feeding `Soundness.lean` |
-| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,175 | Kamp/Reynolds route, including all of `Kamp/` |
+| [`Algebraic/`](Algebraic/README.md) | 5 | 2,425 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
+| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,120 | Chronicle completeness route; the wired entry point |
+| [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
+| `Conservativity/` | 12 | 2,508 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
+| [`Decidability/`](Decidability/README.md) | 62 | 52,668 | Tableau decision procedure and countermodel extraction |
+| [`Independence/`](Independence/README.md) | 12 | 2,987 | Axiom-independence models |
+| [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,458 | Per-axiom validity lemmas feeding `Soundness.lean` |
+| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,111 | Kamp/Reynolds route, including all of `Kamp/` |
+<!-- END GENERATED -->
 
 The eight directories total 296 files. C7's `Metalogic 315` rollup is 19 higher because it also
 counts the loose modules sitting directly in `Metalogic/` — the sibling aggregators plus
@@ -226,16 +230,18 @@ Subdirectories: `Chronicle/` (14 files), `Quasimodel/` (5), `Filtration/` (1).
 `WeakCanonical/` holds 19 loose modules plus **eight** subdirectories. One of them
 dominates everything else in the repository:
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/WeakCanonical rows=subdirs cols=files-lines desc=no sort=lines-desc -->
 | Subdirectory | Files | Lines |
 |--------------|------:|------:|
 | `Kamp/` | 116 | 77,619 |
 | `EFGames/` | 8 | 11,872 |
-| `Expressiveness/` | 5 | 9,503 |
+| `Expressiveness/` | 5 | 9,501 |
 | `DenseModelSurgery/` | 9 | 7,568 |
 | `RealModel/` | 7 | 6,643 |
-| `IntegerModel/` | 6 | 5,700 |
-| `GroupModel/` | 6 | 3,357 |
+| `IntegerModel/` | 6 | 5,664 |
+| `GroupModel/` | 6 | 3,355 |
 | `Separation/` | 3 | 926 |
+<!-- END GENERATED -->
 
 `GroupModel/` is where `theorem countermodel_discrete` — the Base-frame discrete branch of
 `completeness` — is proved, in `WeakCanonical/GroupModel/CountermodelBase.lean`. See
@@ -245,11 +251,13 @@ dominates everything else in the repository:
 sub-subtrees. It no longer carries a local `Boneyard/`; its archived work is in
 [`FormalSystem/Boneyard/Kamp/`](../Boneyard/Kamp/README.md).
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/WeakCanonical/Kamp rows=subdirs cols=files-lines desc=no sort=lines-desc -->
 | Under `Kamp/` | Files | Lines |
 |---------------|------:|------:|
 | `NfMultiAnchorBridge/` | 47 | 41,345 |
 | `EANegationFix/` | 7 | 3,227 |
 | `EANegationFixFaithful/` | 5 | 2,661 |
+<!-- END GENERATED -->
 
 `Kamp/` alone is larger than every other directory in `Metalogic/` combined. Any
 description of this repository's shape that omits it is wrong about the repository.

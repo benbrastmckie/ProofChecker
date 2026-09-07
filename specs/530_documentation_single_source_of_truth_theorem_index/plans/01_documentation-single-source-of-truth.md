@@ -1,7 +1,7 @@
 # Implementation Plan: Documentation Single Source of Truth and Theorem Index
 
 - **Task**: 530 - Documentation single source of truth, theorem index, publication packaging
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 33 hours
 - **Dependencies**: None (this task is itself a dependency of task 177)
 - **Research Inputs**: specs/530_documentation_single_source_of_truth_theorem_index/reports/01_documentation-single-source-of-truth.md
@@ -136,24 +136,24 @@ construction: no two same-wave phases name the same file under **Files to modify
 
 ---
 
-### Phase 1: Inventory generator mechanism [NOT STARTED]
+### Phase 1: Inventory generator mechanism [COMPLETED]
 
 **Goal**: `scripts/check-module-invariants.sh` gains `--emit-inventory` (writes in place) and
 `--emit-inventory --check` (exits non-zero if a rewrite would change a byte), reusing C7's
 Boneyard-excluding walk, with one pilot target converted.
 
 **Tasks**:
-- [ ] Add `--emit-inventory` mode reusing C7's existing traversal; do not duplicate the walk.
-- [ ] Emit `<!-- BEGIN GENERATED: inventory -->` / `<!-- END GENERATED -->` blocks containing
-      File and Lines columns only.
-- [ ] Implement description carry-across: key on file name, preserve the existing Description
+- [x] Add `--emit-inventory` mode reusing C7's existing traversal; do not duplicate the walk. *(deviation: altered — the walk was extracted to `scripts/lib/live_walk.py` and imported by both C4-C11 and the new mode, rather than the new mode calling into C7's heredoc)*
+- [x] Emit `<!-- BEGIN GENERATED: inventory -->` / `<!-- END GENERATED -->` blocks containing
+      File and Lines columns only. *(deviation: altered — the marker also accepts `rows=`, `filter=`, `cols=`, `desc=`, `link=` and `sort=` options, because the pilot target's five count tables have four distinct shapes, not one)*
+- [x] Implement description carry-across: key on file name, preserve the existing Description
       cell verbatim, emit `<!-- TODO: add description -->` for a new file, drop a row whose file
       no longer exists.
-- [ ] Add `--check` sub-mode; wire only `--check` into the CI path, never the writer.
-- [ ] Convert one pilot target (`FormalSystem/Metalogic/README.md`) and confirm its Description
+- [x] Add `--check` sub-mode; wire only `--check` into the CI path, never the writer.
+- [x] Convert one pilot target (`FormalSystem/Metalogic/README.md`) and confirm its Description
       column is byte-identical before and after.
-- [ ] Reduce `scripts/readme-inventory.sh` to a thin `exec` shim or delete it, updating any
-      caller.
+- [x] Reduce `scripts/readme-inventory.sh` to a thin `exec` shim or delete it, updating any
+      caller. *(deviation: altered — the shim reports the replacement and exits 2 rather than `exec`-ing, since the replacement takes a README not a directory)*
 
 **Timing**: 2 hours
 

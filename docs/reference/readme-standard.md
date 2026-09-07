@@ -20,7 +20,8 @@ Every README in a Lean-containing directory MUST include:
 2. **Scope description** — 1-3 sentences describing what this directory contains and its role in the overall library
 3. **Module inventory table** — Table listing every `.lean` file and subdirectory:
    - Columns: File/Directory | Lines | Description
-   - Generate with `scripts/readme-inventory.sh <dir>`
+   - Generated: wrap the table in `<!-- BEGIN GENERATED: inventory dir=<path> -->` /
+     `<!-- END GENERATED -->` and run `bash scripts/check-module-invariants.sh --emit-inventory`
 4. **Key definitions and results** — Bullet list of the most important definitions, theorems, and types
 5. **Cross-links** — Navigation footer (see template below)
 6. **Last verified date** — `*Last verified: YYYY-MM-DD*` at the bottom
@@ -84,11 +85,27 @@ Optional: 1-2 additional sentences on context or significance.
 The inventory table must be exhaustive: every `.lean` file and every subdirectory
 that contains `.lean` files must appear as a row.
 
-**Generating the table**: Use `scripts/readme-inventory.sh <directory>` to produce a
-draft table. Review and annotate the descriptions before committing.
+**Generating the table**: wrap the table in the generated-block markers
 
-**Line counts**: Use `wc -l` for accurate counts. The `readme-inventory.sh` script
-computes these automatically.
+```markdown
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Automation -->
+| File | Lines | Description |
+|------|------:|-------------|
+<!-- END GENERATED -->
+```
+
+and run `bash scripts/check-module-invariants.sh --emit-inventory`. Every column
+except the trailing Description is machine-owned; the Description is hand-written
+and is carried across regeneration by file name. A file that has just appeared
+gets `<!-- TODO: add description -->`; a row whose file no longer exists is
+dropped. The marker accepts `rows=`, `filter=`, `cols=`, `desc=`, `link=` and
+`sort=` options — see the `--emit-inventory` header comment in
+`scripts/check-module-invariants.sh`.
+
+**Line counts**: never typed by hand. The INV check in
+`scripts/check-module-invariants.sh` fails if any generated block has drifted
+from the tree, so a stale count is caught at the gate rather than read by a
+paper reader.
 
 **Subdirectory entries**: Use `DirName/` (trailing slash) in the File column.
 Use `—` in the Lines column. Describe the subdirectory's purpose in one phrase.

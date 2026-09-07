@@ -37,6 +37,7 @@
 #   C19 Docstring-coverage floor (90%), G-12 heuristic refined with a /-!
 #       section-comment credit (REPORTED, not gated; 90% floor, never fails)
 #   C9D Task-number citations under docs/ (computed always, soft by default)
+#   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
 # Every filesystem traversal excludes the archive via `-not -path '*/Boneyard/*'`.
 # The archive was consolidated into a single tree at `FormalSystem/Boneyard/`; the
@@ -50,6 +51,8 @@
 # Usage:
 #   bash scripts/check-module-invariants.sh            # all checks
 #   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16 (fast structural pass)
+#   bash scripts/check-module-invariants.sh --emit-inventory          # rewrite generated inventory blocks
+#   bash scripts/check-module-invariants.sh --emit-inventory --check  # fail if a rewrite would change a byte
 #
 # Companion files:
 #   scripts/module-invariants-manifest.txt   known-unreachable live modules (C6)
@@ -71,8 +74,275 @@ WAIVERS="scripts/boneyard-import-waivers.txt"
 SLASH_ALLOWLIST="scripts/markdown-slash-path-allowlist.txt"
 LINK_ALLOWLIST="scripts/markdown-link-allowlist.txt"
 
+# scripts/lib/ is on sys.path for the python passes below; keep the tree clean.
+export PYTHONDONTWRITEBYTECODE=1
+
 RUN_BUILD=1
 [ "${1:-}" = "--no-build" ] && RUN_BUILD=0
+
+# ---------------------------------------------------------------------------
+# --emit-inventory: the generated-count owner
+#
+# Hand-maintained module inventory tables drift the moment a file is added,
+# split or renamed, and nothing in the tree noticed: 40 of 72 per-file line
+# counts were wrong when this mode was written, and one README listed five files
+# that had moved to another directory. Counts are therefore machine-owned. A
+# markdown file opts in by wrapping its table in
+#
+#     <!-- BEGIN GENERATED: inventory dir=FormalSystem/Automation -->
+#     ... table ...
+#     <!-- END GENERATED -->
+#
+# and this mode rewrites every column except the hand-written trailing one.
+#
+# Marker options (all optional except dir=):
+#   dir=<path>              directory the inventory covers, repo-relative
+#   rows=loose|subdirs|both which rows to emit (default both)
+#   filter=all|aggregators|non-aggregators
+#                           restrict the loose rows; an aggregator is a loose
+#                           `X.lean` with a sibling directory `X/` (default all)
+#   cols=lines|files-lines  one numeric column (lines) or two (file count then
+#                           line count, for directory-shaped tables)
+#   desc=yes|no             emit the trailing hand-written column (default yes)
+#   link=yes|no             render a subdirectory row as a link to its README
+#                           when one exists (default no)
+#   sort=name|lines-desc    row order (default name)
+#
+# The trailing column is HAND-WRITTEN and survives regeneration: rows are keyed
+# on the file or directory name, so an existing description is carried across
+# verbatim. A newly-appeared file gets `<!-- TODO: add description -->`; a row
+# whose file no longer exists is dropped. A row naming a file outside the
+# scanned directory (`../FormalSystem.lean`) is kept as a pinned row with its
+# numbers refreshed, as long as the path still resolves.
+#
+# Two modes:
+#   --emit-inventory           rewrite every registered block in place
+#   --emit-inventory --check   exit non-zero if a rewrite would change a byte
+#
+# Only --check belongs in CI. The writer is a developer command.
+if [ "${1:-}" = "--emit-inventory" ]; then
+  EMIT_CHECK=0
+  if [ "${2:-}" = "--check" ]; then EMIT_CHECK=1; fi
+  export EMIT_CHECK
+  python3 - <<'PYEOF'
+import os, re, sys
+
+sys.path.insert(0, os.path.join("scripts", "lib"))
+from live_walk import live_loose_files, live_subdirs, live_files, line_count
+
+CHECK = os.environ.get("EMIT_CHECK") == "1"
+
+BEGIN_RE = re.compile(r'^<!--\s*BEGIN GENERATED:\s*inventory\s*(?P<opts>[^>]*?)\s*-->\s*$')
+END_RE = re.compile(r'^<!--\s*END GENERATED\s*-->\s*$')
+SEP_CELL_RE = re.compile(r'^:?-{2,}:?$')
+LINK_RE = re.compile(r'^\[(?P<label>.*)\]\((?P<href>[^)]*)\)$')
+TODO_DESC = "<!-- TODO: add description -->"
+
+
+def markdown_targets():
+    out = []
+    for root, dirs, files in os.walk("."):
+        dirs[:] = [d for d in dirs
+                   if d not in (".git", "specs", ".claude", ".lake", "node_modules", "Boneyard")]
+        for f in files:
+            if f.endswith(".md"):
+                out.append(os.path.normpath(os.path.join(root, f)))
+    return sorted(out)
+
+
+def parse_opts(raw):
+    opts = {}
+    for tok in raw.split():
+        if "=" in tok:
+            k, v = tok.split("=", 1)
+            opts[k] = v
+    return opts
+
+
+def split_row(line):
+    body = line.strip()
+    if not body.startswith("|"):
+        return None
+    body = body[1:]
+    if body.endswith("|"):
+        body = body[:-1]
+    return [c.strip() for c in body.split("|")]
+
+
+def row_key(cell):
+    cell = cell.strip()
+    m = LINK_RE.match(cell)
+    if m:
+        cell = m.group("label").strip()
+    return cell.strip("`").strip()
+
+
+def is_separator(cells):
+    return bool(cells) and all(SEP_CELL_RE.match(c.replace(" ", "")) for c in cells if c != "")
+
+
+def scan(directory, opts):
+    """Return [(key, [numeric cells...], link_target_or_None)] for `directory`."""
+    rows = opts.get("rows", "both")
+    filt = opts.get("filter", "all")
+    cols = opts.get("cols", "lines")
+    want_link = opts.get("link", "no") == "yes"
+
+    subdir_names = {os.path.basename(p) for p in live_subdirs(directory)}
+    out = []
+    if rows in ("loose", "both"):
+        for path in live_loose_files(directory, ".lean"):
+            name = os.path.basename(path)
+            stem = name[:-len(".lean")]
+            is_agg = stem in subdir_names
+            if filt == "aggregators" and not is_agg:
+                continue
+            if filt == "non-aggregators" and is_agg:
+                continue
+            nums = ["{:,}".format(line_count(path))]
+            if cols == "files-lines":
+                nums = ["1"] + nums
+            out.append((name, nums, None))
+    if rows in ("subdirs", "both"):
+        for sub in live_subdirs(directory):
+            members = live_files(sub, ".lean")
+            if not members:
+                continue
+            key = os.path.basename(sub) + "/"
+            total = sum(line_count(m) for m in members)
+            if cols == "files-lines":
+                nums = [str(len(members)), "{:,}".format(total)]
+            else:
+                nums = ["—"]
+            link = None
+            if want_link and os.path.isfile(os.path.join(sub, "README.md")):
+                link = os.path.basename(sub) + "/README.md"
+            out.append((key, nums, link))
+    return out
+
+
+def render_block(opts, existing_lines):
+    directory = opts.get("dir")
+    if not directory:
+        raise SystemExit("emit-inventory: BEGIN marker has no dir= option")
+    if not os.path.isdir(directory):
+        raise SystemExit("emit-inventory: dir=%s does not exist" % directory)
+    cols = opts.get("cols", "lines")
+    want_desc = opts.get("desc", "yes") != "no"
+    ncols = (2 if cols == "files-lines" else 1) + 1 + (1 if want_desc else 0)
+
+    header = None
+    sep = None
+    descriptions = {}
+    order = []
+    for ln in existing_lines:
+        cells = split_row(ln)
+        if cells is None or len(cells) < 2:
+            continue
+        if is_separator(cells):
+            sep = ln.rstrip()
+            continue
+        if header is None and not order:
+            header = ln.rstrip()
+            continue
+        key = row_key(cells[0])
+        if want_desc:
+            descriptions[key] = cells[-1].strip() if len(cells) >= ncols else TODO_DESC
+        order.append(key)
+    if header is None:
+        header = "| File | Lines |" + (" Description |" if want_desc else "")
+    if sep is None:
+        sep = "|------|------:|" + ("-------------|" if want_desc else "")
+
+    scanned = scan(directory, opts)
+    scan_keys = {k for k, _, _ in scanned}
+
+    # Pinned rows: an existing row naming a path outside the scan that still
+    # resolves (e.g. `../FormalSystem.lean`) is kept, with its numbers refreshed.
+    pinned = []
+    for key in order:
+        if key in scan_keys or key.endswith("/"):
+            continue
+        resolved = os.path.normpath(os.path.join(directory, key))
+        if os.path.isfile(resolved):
+            nums = ["{:,}".format(line_count(resolved))]
+            if cols == "files-lines":
+                nums = ["1"] + nums
+            pinned.append((key, nums, None))
+
+    rows = pinned + scanned
+    if opts.get("sort") == "lines-desc":
+        def size_of(r):
+            raw = r[1][-1].replace(",", "")
+            return int(raw) if raw.isdigit() else -1
+        rows = sorted(rows, key=lambda r: (-size_of(r), r[0]))
+
+    out = [header, sep]
+    for key, nums, link in rows:
+        label = "[`%s`](%s)" % (key, link) if link else "`%s`" % key
+        cells = [label] + nums
+        if want_desc:
+            cells.append(descriptions.get(key, TODO_DESC))
+        out.append("| " + " | ".join(cells) + " |")
+    return out
+
+
+changed = []
+for target in markdown_targets():
+    with open(target, encoding="utf-8") as fh:
+        lines = fh.read().split("\n")
+    out = []
+    i = 0
+    touched = False
+    in_fence = False
+    while i < len(lines):
+        if lines[i].lstrip().startswith("```"):
+            in_fence = not in_fence
+        m = None if in_fence else BEGIN_RE.match(lines[i])
+        if not m:
+            out.append(lines[i]); i += 1; continue
+        begin = lines[i]
+        j = i + 1
+        body = []
+        while j < len(lines) and not END_RE.match(lines[j]):
+            body.append(lines[j]); j += 1
+        if j >= len(lines):
+            raise SystemExit("emit-inventory: %s has an unterminated BEGIN GENERATED block" % target)
+        new_body = render_block(parse_opts(m.group("opts")), body)
+        out.append(begin)
+        out.extend(new_body)
+        out.append(lines[j])
+        if new_body != body:
+            touched = True
+        i = j + 1
+    if not touched:
+        continue
+    changed.append(target)
+    if not CHECK:
+        with open(target, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(out))
+
+if CHECK:
+    if changed:
+        print("FAIL  INV  %d file(s) carry a stale generated inventory block" % len(changed))
+        for t in changed:
+            print("            %s" % t)
+        print("            run: bash scripts/check-module-invariants.sh --emit-inventory")
+        sys.exit(1)
+    print("PASS  INV  every generated inventory block is current")
+    sys.exit(0)
+
+if changed:
+    print("rewrote %d file(s):" % len(changed))
+    for t in changed:
+        print("  %s" % t)
+else:
+    print("no generated inventory block needed a rewrite")
+sys.exit(0)
+PYEOF
+  exit $?
+fi
+
 
 # Enforcement flags. C8/C9/C10 describe end-state invariants that the tree does
 # not satisfy until the corresponding reorganization work lands. Each is computed
@@ -246,14 +516,11 @@ def note(m):   print(f"            {m}")
 
 BONEYARD = os.sep + "Boneyard"
 
-def live_files(base, ext):
-    out = []
-    for root, dirs, files in os.walk(base):
-        dirs[:] = [d for d in dirs if d != "Boneyard"]
-        for f in files:
-            if f.endswith(ext):
-                out.append(os.path.join(root, f))
-    return sorted(out)
+# The Boneyard-excluding walk lives in scripts/lib/live_walk.py and is shared
+# with the --emit-inventory generator, so the inventory tables and C7's rollup
+# can never disagree about what "live" means.
+sys.path.insert(0, os.path.join("scripts", "lib"))
+from live_walk import live_files  # noqa: E402
 
 def mod_to_path(m):
     base = "Tests" if m.split(".")[0] == "BimodalTest" else "."
@@ -545,6 +812,20 @@ PYEOF
 PY_STATUS=$?
 [ "$PY_STATUS" -ne 0 ] && FAILURES=$((FAILURES + 1))
 echo
+
+# ---------------------------------------------------------------------------
+# INV: generated inventory blocks are current
+#
+# The CI path runs the --check sub-mode only, never the writer: a stale block is
+# a failure a developer resolves with `--emit-inventory`, not something a gate
+# silently rewrites underneath them.
+# ---------------------------------------------------------------------------
+INV_OUT=$(bash "$0" --emit-inventory --check 2>&1)
+INV_STATUS=$?
+printf '%s\n' "$INV_OUT"
+[ "$INV_STATUS" -ne 0 ] && FAILURES=$((FAILURES + 1))
+echo
+
 
 # ---------------------------------------------------------------------------
 # C9: no task-number citations under FormalSystem/, lakefile.lean, README.md,

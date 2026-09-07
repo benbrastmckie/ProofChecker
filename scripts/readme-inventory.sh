@@ -1,41 +1,34 @@
 #!/usr/bin/env bash
-# readme-inventory.sh -- Generate a Markdown module inventory table for a directory
+# readme-inventory.sh -- deprecated shim.
 #
-# Usage: ./scripts/readme-inventory.sh <directory>
+# Module inventory tables are no longer pasted in by hand. A README opts into a
+# machine-owned table by wrapping it in
 #
-# Output: Markdown table listing each .lean file and subdirectory with line count.
-# Paste the output into the README.md Module Inventory section.
+#     <!-- BEGIN GENERATED: inventory dir=<path> -->
+#     ... table ...
+#     <!-- END GENERATED -->
+#
+# after which `check-module-invariants.sh --emit-inventory` rewrites every
+# column except the hand-written trailing description, and the INV check in the
+# same script fails if any block has gone stale. See that script's
+# `--emit-inventory` header comment for the full marker-option list.
+#
+# This shim exists so an old invocation reports the replacement rather than
+# emitting a table nobody will keep in sync.
 
 set -euo pipefail
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 <directory>" >&2
-  exit 1
-fi
+cat >&2 <<'MSG'
+scripts/readme-inventory.sh is deprecated.
 
-DIR="$1"
+Module inventories are generated in place. Wrap the table in a README with
 
-if [ ! -d "$DIR" ]; then
-  echo "Error: Directory '$DIR' does not exist." >&2
-  exit 1
-fi
+    <!-- BEGIN GENERATED: inventory dir=<path> -->
+    <!-- END GENERATED -->
 
-echo "| File | Lines | Description |"
-echo "|------|-------|-------------|"
+and then run:
 
-# List .lean files directly in the directory (not in subdirectories)
-find "$DIR" -maxdepth 1 -name "*.lean" | sort | while read -r file; do
-  basename=$(basename "$file")
-  lines=$(wc -l < "$file")
-  echo "| \`$basename\` | $lines | <!-- TODO: add description --> |"
-done
-
-# List subdirectories that contain .lean files
-find "$DIR" -maxdepth 1 -mindepth 1 -type d | sort | while read -r subdir; do
-  subdirname=$(basename "$subdir")
-  # Check if this subdirectory contains any .lean files (recursively)
-  lean_count=$(find "$subdir" -name "*.lean" | wc -l)
-  if [ "$lean_count" -gt 0 ]; then
-    echo "| \`$subdirname/\` | — | <!-- TODO: subdirectory description --> |"
-  fi
-done
+    bash scripts/check-module-invariants.sh --emit-inventory          # write
+    bash scripts/check-module-invariants.sh --emit-inventory --check  # verify
+MSG
+exit 2
