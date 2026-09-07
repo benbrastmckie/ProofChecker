@@ -42,6 +42,10 @@ The procedure decides whether a formula is valid, returning either:
 
 * Gore, R. (1999). Tableau Methods for Modal and Temporal Logics
 * Wu, M. Verified Decision Procedures for Modal Logics
+
+## Tags
+
+decidability · tableau · decision-procedure · countermodel
 -/
 
 namespace FormalSystem.Metalogic.Decidability

@@ -100,6 +100,10 @@ built from lives in `TaskFrame.lean`, transcribed there from `def:task-relation`
   two existing discharge helpers be passed directly.
 - Segments are written in the paper's bracket form `[w, v]_x^y` only; the retired `\Seg`
   function-application notation is gone from the paper preamble and must not be reintroduced.
+
+## Tags
+
+task-frame · nullity · compositionality · reflection · def:frame
 -/
 
 namespace FormalSystem.Semantics

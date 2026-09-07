@@ -71,6 +71,10 @@ independently of this module's instantiation of it.
   `FormalSystem/Metalogic/DedekindNonCompactness.lean`, by a different witness (`archWitness`
   does not port: `Formula.next` is vacuous on a densely ordered carrier). Reynolds 1992
   Theorem 7 remains the *weak* completeness result for the class.
+
+## Tags
+
+compactness · strong-completeness · model-existence · ultraproduct · base · dense
 -/
 
 open Filter FormalSystem.Syntax FormalSystem.Semantics

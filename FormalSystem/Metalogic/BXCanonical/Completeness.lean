@@ -52,6 +52,10 @@ is unavailable there. Its dense branch (`countermodel_dense_enriched`, on ℚ) a
 ## References
 
 - Burgess 1984, Goldblatt 1992 (completeness for tense logics)
+
+## Tags
+
+completeness · chronicle · canonical-model · countermodel · cor:tm-completeness
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical

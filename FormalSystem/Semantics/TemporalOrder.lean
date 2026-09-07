@@ -62,6 +62,10 @@ for an abstract `(D : TemporalOrder)` with no further ceremony.
 The projections are safe as instances: `⟨ℤ⟩.addCommGroup` and `ℤ`'s own `AddCommGroup` instance
 unify by `rfl` at reducible transparency, so a concretely-carried temporal order does not fork
 the instance graph.
+
+## Tags
+
+duration-group · temporal-order · def:temporal-order
 -/
 
 namespace FormalSystem.Semantics

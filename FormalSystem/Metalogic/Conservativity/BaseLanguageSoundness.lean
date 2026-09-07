@@ -84,6 +84,10 @@ consistency lemma in the tree yet"), and the BL side inherits it exactly.
 * `FormalSystem/Metalogic/Conservativity/Backward.lean` — `translate`, the proof-theoretic half
 * `FormalSystem/Semantics/BLTruth.lean`, `FormalSystem/Semantics/BLValidity.lean` — the BL
   semantics this is stated against
+
+## Tags
+
+soundness · base-language · truth-transfer · def:BL-semantics
 -/
 
 namespace FormalSystem.Semantics

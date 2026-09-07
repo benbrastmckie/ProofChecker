@@ -39,7 +39,7 @@ INPUTS**; this file only *applies* them.
    the fragment-restricted, interior+boundary-scoped `holds ↔ ∃ w` gate combining 3 (⇐,
    unconditional) with 4 (⇒), mirroring `bracketEndChar_kv_correct_one_prior`
    (`PriorInterface.lean:95`). The k=2 interior+boundary GO gate consumed by the KampPrior provider
-   instantiation at `KampPrior.lean:351`; exterior arrangements ride the adjacent
+   instantiation at `KampPrior.lean`; exterior arrangements ride the adjacent
    brackets composed at the anchors `x, t`.
 
 ## Scope decisions (recorded in the file, resolved in the plan)
@@ -53,7 +53,7 @@ INPUTS**; this file only *applies* them.
   (`SharedWitness.lean`) machine-certifies that any such hypothesis is inconsistent with every
   honest evaluation, which is why none may return. Non-interior positive owners ride the atomic
   `E[Σ]` endpoint/pivot literals (Rabinovich §5, p.7, via Prop 3.5) rather than the interleaving.
-- **R-B (KampPrior wiring) → FOLLOW-ON.** The gate is NOT wired into `KampPrior.lean:351`
+- **R-B (KampPrior wiring) → FOLLOW-ON.** The gate is NOT wired into `KampPrior.lean`
   (threading `ExistProviders` through `nf_nvar_exist_all_depths`'s `Nat.rec`/`n=1` case) — that
   integration is a distinct downstream task, out of scope here.
 -/
@@ -192,7 +192,7 @@ The plan-v4 unconditional four-family discharge is REFUTED (report 04): over an 
 the fold's FORWARD gate conjunct `(∃ v, zoneHolds … zs v ∧ nf_eval χ) → σ.2 (nf0Assemble zs χ σ.1)
 = true` is false in a rich model (`σ.2` need not mark every realizable `(zs, χ)`). The fragment
 verdict
-N2 re-scopes the 309 Phase 13.4 / `KampPrior.lean:351` deliverable to the **single-positive-sub
+N2 re-scopes the 309 Phase 13.4 / `KampPrior.lean` deliverable to the **single-positive-sub
 fragment**, where the O4 CRUX RECORD (`SharedWitness.lean`) states the cross-σ residue
 VANISHES: with one interior positive there are no cross-σ slot points, so every witness is σ0's own
 bit-true 1-type or a literal/segment-covered self-zone point.
@@ -291,7 +291,7 @@ Def 3.1 (p.4) and the §5 bracket assembly (pp.7-9). -/
     the
     exterior-arrangement gap is quarantined by the narrowed `hexclExt` binder, not a sorry.
     Consumers
-    (the KampPrior provider instantiation at `KampPrior.lean:351`, and the Phase-D assembly) supply
+    (the KampPrior provider instantiation at `KampPrior.lean`, and the Phase-D assembly) supply
     the cone `hexcl` + `hreal`
     and carry the narrowed `hexclExt` as the successor obligation. -/
 theorem bracketEndChar_kvE2_sound_two_prior_frag {sig : MonadicSignature} [Fintype sig.preds]
@@ -389,7 +389,7 @@ restriction gates only ⇒). Provider conditionality enters exactly as the named
     adjacent exterior brackets composed at the anchors, NEVER discharged on this bracket).
     Mirrors `bracketEndChar_kv_correct_one_prior` (PriorInterface.lean:95). Consumed by the
     KampPrior provider
-    instantiation at `KampPrior.lean:351` under `KvE2SepFragment qnf`. -/
+    instantiation at `KampPrior.lean` under `KvE2SepFragment qnf`. -/
 theorem bracketEndChar_kvE2_correct_two_prior_frag {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)

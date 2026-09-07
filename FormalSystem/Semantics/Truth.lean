@@ -155,6 +155,10 @@ on no proof-system notion.
   `\label` (pinned verbatim in `specs/paper-definitions-of-record.md`)
 * `specs/decisions/total-history-validity-decisions.md` — Decision A, the arbitrary-history
   encoding of the atom clause
+
+## Tags
+
+truth · TruthAt · until · since · box · def:BL-semantics
 -/
 
 namespace FormalSystem.Semantics

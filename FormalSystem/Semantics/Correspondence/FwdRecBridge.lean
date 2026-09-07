@@ -59,6 +59,10 @@ candidate counterexample is the sum of `ℤ` and `nℤ` over `ℤ ×ₗ ℤ`, th
 * `allRec_of_fwdRec`, `hist_periodic`, `hist_deterministic` — recurrence forces periodicity
 * `density_schema_iff_fwdRec` — full-schema exactness at `ℤ`
 * `mod_densitySchema_int` — `Mod densitySchema` on the `ℤ` fibre is exactly the `FwdRec` frames
+
+## Tags
+
+correspondence · forward-recursion · bridge
 -/
 
 namespace FormalSystem.Semantics

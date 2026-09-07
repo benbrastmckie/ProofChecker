@@ -1097,7 +1097,7 @@ private theorem kvE2_extGate_anyBit_iff {sig : MonadicSignature} [Fintype sig.pr
     qnf (`hq.1` and `kvE2_futAnyBit_correct`), positive witnesses positioned exterior by
     the marking's own zone bits, negative exclusion from the raw `NfEvalNf` semantics.
 
-    Consumed by the KampPrior provider instantiation at `KampPrior.lean:351` (which
+    Consumed by the KampPrior provider instantiation at `KampPrior.lean` (which
     additionally discharges the remaining provider obligations `hrealI`/`hrealB`/`hexcl` —
     the R1 scope split settled for the adjacent-bracket enrichment). -/
 theorem bracketEndChar_kvE2Ext_correct_two_prior_frag {sig : MonadicSignature} [Fintype sig.preds]

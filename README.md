@@ -18,7 +18,7 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 | Metric | Count |
 |--------|-------|
 | Live `.lean` files | 459 |
-| Live lines | 281,417 |
+| Live lines | 281,611 |
 | Archived `.lean` files | 164 |
 | Archived lines | 90,890 |
 <!-- END GENERATED -->
@@ -408,3 +408,7 @@ or cites by name.
 ## License
 
 This project is licensed under Apache-2.0. See [LICENSE](LICENSE) for details.
+
+## Tags
+
+bimodal-logic · TM-plus · soundness · completeness · compactness · decidability · lean4

@@ -79,6 +79,10 @@ have no "gaps" in time.
 * [TaskFrame.lean](TaskFrame.lean) - Task frame structure
 * JPL Paper anchor `def:world-history` — cited by `\label` anchor with the verbatim quote
   above, never by raw line number
+
+## Tags
+
+world-history · possible-world · totality · def:world-history
 -/
 
 namespace FormalSystem.Semantics

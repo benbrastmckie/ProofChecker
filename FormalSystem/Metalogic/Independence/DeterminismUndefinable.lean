@@ -82,6 +82,10 @@ collapse theorems still report `[propext]` alone.
 
 * JPL paper `cor:no-characterization`, `app:deterministic`, `app:drift`
 * `FormalSystem/Semantics/StarDeterminism.lean` — the positive half whose converse fails here
+
+## Tags
+
+independence · definability · determinism · star-language · app:deterministic
 -/
 
 namespace FormalSystem.Metalogic.Independence

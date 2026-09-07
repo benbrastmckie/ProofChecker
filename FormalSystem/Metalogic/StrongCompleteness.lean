@@ -162,6 +162,10 @@ short name in this tree is docstring prose rather than a call site.
 * `soundness_rtime_consequence` — the matching soundness direction, which pins the
   consequence relation to `soundness_rtime` and rules out a vacuous target.
 * `completeness_rtime_of_engine` — weak completeness, exhibited as the `Γ = []` instance.
+
+## Tags
+
+completeness · consequence-completeness · strong-completeness · compactness · frame-class · cor:tm-completeness
 -/
 
 namespace FormalSystem.Metalogic

@@ -210,6 +210,10 @@ routes are `limit_of_succOrder` and `limit_of_shift` below.
   `def:frame#Seriality`, `def:frame#Limit`, `def:frame#Saturation`), `def:task-relation`,
   `def:directed`, `def:temporal-order`, and `lem:nullity` — cited by `\label` anchor with
   verbatim quotes above, never by raw line number
+
+## Tags
+
+task-frame · task-relation · def:frame · saturation · nullity
 -/
 
 namespace FormalSystem.Semantics

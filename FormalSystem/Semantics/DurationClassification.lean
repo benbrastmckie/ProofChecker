@@ -84,6 +84,10 @@ module, so the edge `Separability.lean → DurationClassification.lean` is acycl
   validity argument on an arbitrary `TaskFrame.Duration` — no completeness is available there.
   It is also not `isLeast_pos_succ_zero`, which assumes `[SuccOrder D]` outright rather than
   deriving the least-positive witness from bare linearity.
+
+## Tags
+
+duration-group · holder · dichotomy · discrete · dense
 -/
 
 namespace FormalSystem.Semantics

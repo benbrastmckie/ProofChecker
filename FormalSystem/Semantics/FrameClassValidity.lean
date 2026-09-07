@@ -67,6 +67,10 @@ four class-restricted predicates into this module. Both are recorded, with their
 * [Validity.lean](Validity.lean) — `ValidOnFrames`, `ValidIn`, and the class-restricted predicates
 * [Axioms.lean](../ProofSystem/Axioms.lean) — `FrameClass`, its `PartialOrder`, and
   `Axiom.minFrameClass`
+
+## Tags
+
+frame-class · validity · seam · base · dense · ztime · rtime
 -/
 
 namespace FormalSystem.ProofSystem

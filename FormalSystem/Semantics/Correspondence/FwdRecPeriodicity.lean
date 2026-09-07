@@ -72,6 +72,10 @@ bundled `TaskFrame`s.
 * `Walk.succ_unique`, `Walk.det` — the determinism that periodicity rests on
 * `truthAt_add_hist_period` — truth periodicity from a per-history period
 * `density_of_hist_periodic` — periodic histories validate the full density schema
+
+## Tags
+
+correspondence · forward-recursion · periodicity
 -/
 
 namespace FormalSystem.Semantics

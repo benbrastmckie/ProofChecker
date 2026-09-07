@@ -80,6 +80,10 @@ about the converse; see `FormalSystem/BaseLanguage.lean`'s "Module Invariant" se
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:BL-language`
 * `FormalSystem/Semantics/Truth.lean` — the BL⁺ truth definition this mirrors
 * `FormalSystem/BaseLanguage/Formula.lean` — `BLFormula` and its derived operators
+
+## Tags
+
+truth · base-language · BLTruthAt · def:BL-semantics
 -/
 
 namespace FormalSystem.Semantics

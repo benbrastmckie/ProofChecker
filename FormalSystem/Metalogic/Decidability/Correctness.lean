@@ -40,6 +40,10 @@ The `FrameClass.Base` parameter structurally excludes axioms with
 
 * Wu, M. Verified Decision Procedures for Modal Logics
 * Gore, R. (1999). Tableau Methods for Modal and Temporal Logics
+
+## Tags
+
+decidability · tableau · soundness · one-directional
 -/
 
 namespace FormalSystem.Metalogic.Decidability

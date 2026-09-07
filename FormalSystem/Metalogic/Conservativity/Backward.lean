@@ -35,6 +35,10 @@ Nothing here — nor anything under `FormalSystem/BaseLanguage/`, transitively �
 touches no truth definition, frame, or validity predicate. The semantics-facing half of the
 story lives in the sibling `Conservativity/BaseLanguageSoundness.lean`, which is where the
 `FormalSystem.Semantics` import enters.
+
+## Tags
+
+conservativity · base-language · translation · CEB · CEF · CED · CEC
 -/
 
 namespace FormalSystem.Metalogic.Conservativity

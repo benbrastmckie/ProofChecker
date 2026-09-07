@@ -86,7 +86,7 @@ at a dense flow, and the dense siblings must be built beside them rather than by
 Dedekind completeness of the flow is threaded as an explicit `Prop` (`FlowGLB` / `FlowLUB`) rather
 than as a typeclass, matching the treatment of the least-upper-bound property in
 `Semantics/Validity.lean`'s `ValidRTime` and `real_lub_of_bddAbove`
-(`BXCanonical/CompletenessDedekind.lean:127`).
+(`BXCanonical/CompletenessDedekind.lean`).
 
 Completeness of the flow is a *sufficient* condition here, not a necessary one: the countable dense
 Prior structures this development ultimately consumes are Prior structures because the axioms are
@@ -153,7 +153,7 @@ abbrev SemanticPriorS {sig : MonadicSignature}
 
 Stated as a `Prop` on the structure's own order, in the idiom of `ValidRTime`
 (`Semantics/Validity.lean`) and `real_lub_of_bddAbove`
-(`BXCanonical/CompletenessDedekind.lean:127`), so that no typeclass has to be transported along
+(`BXCanonical/CompletenessDedekind.lean`), so that no typeclass has to be transported along
 `OrderedMonadicStructure.carrierOrder`. -/
 
 /-- The flow of `M` has greatest lower bounds for nonempty bounded-below sets. -/
@@ -310,7 +310,7 @@ theorem realFlowStructure_flowGLB (S : ℝ → Prop) : FlowGLB (realFlowStructur
   fun _ hne hbdd => ⟨_, isGLB_csInf hne hbdd⟩
 
 /-- The real flow has least upper bounds (Mathlib's `ConditionallyCompleteLinearOrder ℝ`);
-the same fact as `real_lub_of_bddAbove` (`BXCanonical/CompletenessDedekind.lean:127`). -/
+the same fact as `real_lub_of_bddAbove` (`BXCanonical/CompletenessDedekind.lean`). -/
 theorem realFlowStructure_flowLUB (S : ℝ → Prop) : FlowLUB (realFlowStructure S) :=
   fun _ hne hbdd => ⟨_, isLUB_csSup hne hbdd⟩
 

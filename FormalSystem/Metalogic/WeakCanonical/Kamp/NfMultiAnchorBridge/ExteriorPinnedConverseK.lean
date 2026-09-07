@@ -1231,7 +1231,7 @@ theorem kvE_futSliceUnique_zero {sig : MonadicSignature} [Fintype sig.preds] [De
 /-! ### Phase 5 — the m=0 supply theorems for the slice-keyed exterior interface (Future)
 
 The Phase-5 discharges of the carried exterior obligations that the realization recursion's
-`KampPrior.lean:361` arm and the depth-`k` exterior assembly consume through
+`KampPrior.lean` arm and the depth-`k` exterior assembly consume through
 `EndIntervalCorrectPrior`'s `m + 2` arm (EndIntervalConsumerK.lean:139-164) at `m := 0`.
 Statements are the 3b binder types at `k := 0`, signature-locked (copied verbatim from
 EndIntervalConsumerK), plus the AMBIENT interior obligation `hreal` — itself a carried binder

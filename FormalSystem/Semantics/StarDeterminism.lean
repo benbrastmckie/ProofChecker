@@ -77,6 +77,10 @@ All four report `[propext]` only — in particular **no `Classical.choice`**.
 * `FormalSystem/Semantics/FrameProperty.lean` — `TaskFrame.Deterministic`
 * `FormalSystem/Semantics/StarNonValidities.lean` — `refute_determined`, the negative half of
   `app:deterministic`
+
+## Tags
+
+star-language · determinism · stability-modal · app:deterministic
 -/
 
 namespace FormalSystem.Semantics

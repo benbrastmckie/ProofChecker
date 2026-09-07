@@ -103,6 +103,10 @@ open-ended piece of work are measuring the `D`-polymorphic case; they do not tra
 
 * `Semantics/TaskFrame.lean` — the `FrameOver` structure and its four axiom fields
 * `Semantics/DurationClassification.lean` — the Hölder discrete-or-dense dichotomy
+
+## Tags
+
+ztime · normal-form · one-step-relation
 -/
 
 namespace FormalSystem.Semantics

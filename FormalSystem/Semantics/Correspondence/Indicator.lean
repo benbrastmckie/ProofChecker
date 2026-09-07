@@ -68,6 +68,10 @@ semantically.
 * `validOn_nextTop_iff_isDiscrete` — the same, against the paper's guarded predicate
 * `galoisClosed_sat_dense` — `Sat .Dense` is Galois-closed
 * `galoisClosed_isDiscrete` — `{F | F.IsDiscrete}` is Galois-closed
+
+## Tags
+
+correspondence · galois · indicator · dense · discrete · app:dense · app:discrete
 -/
 
 namespace FormalSystem.Semantics

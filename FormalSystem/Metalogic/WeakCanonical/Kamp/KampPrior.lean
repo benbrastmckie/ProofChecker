@@ -53,6 +53,10 @@ are all sorry-free and reused directly.
 
 - Rabinovich 2014, "A Proof of Kamp's Theorem", Sections 3-5
 - Reynolds 1994, Theorem 5
+
+## Tags
+
+expressiveness · kamp · prior-structures · until · since
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

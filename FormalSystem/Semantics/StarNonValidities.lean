@@ -48,6 +48,10 @@ Transcription of Part D of the compiled stability-modal probes recorded with the
 
 * JPL paper line 1426 (*Determined*), `app:deterministic` (whose second half is the non-deterministic refutation)
 * `FormalSystem/Semantics/TaskFrame.lean` — `natFrame`
+
+## Tags
+
+star-language · refutation · stability-modal · upper-bound
 -/
 
 namespace FormalSystem.Semantics

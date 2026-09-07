@@ -44,6 +44,10 @@ is the L ⊂ L⁺ forward direction and is **not asserted**.
 * `FormalSystem/Metalogic/StrongCompleteness.lean` — the four `WeakCompleteness` engines
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — why the L ⊂ L⁺ forward
   direction is a different matter
+
+## Tags
+
+conservativity · star-language · stability-modal · both-directions
 -/
 
 namespace FormalSystem.Metalogic.Conservativity

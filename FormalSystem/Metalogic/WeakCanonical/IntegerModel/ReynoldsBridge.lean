@@ -33,9 +33,9 @@ This eliminates the sorry chain
 
 The bypass is what made that archival possible: because `completeness_ztime` routes through
 `countermodel_discrete_reynolds_v2` below rather than through the chain, the whole chain was
-dead and could be excised. Note that `countermodel_discrete_reynolds_v2` (this file, sorry-free)
-is a different theorem from the archived, `sorryAx`-tainted `countermodel_discrete_reynolds`
-that used to live in `WeakCanonical/Transfer.lean`.
+dead and could be excised. **Caller trap.** `countermodel_discrete_reynolds_v2` (this file, sorry-free) is a different
+theorem from the archived, `sorryAx`-tainted `countermodel_discrete_reynolds`; the two names
+differ only in a suffix.
 
 ## Key Theorems
 

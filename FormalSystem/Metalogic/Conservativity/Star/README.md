@@ -23,8 +23,8 @@ on them `⊡` is the identity and none of the engines transfers to L⋆.
 |------|------:|-------------|
 | `Atomization.lean` | 241 | <!-- TODO: add description --> |
 | `AxiomValidity.lean` | 276 | <!-- TODO: add description --> |
-| `Forward.lean` | 167 | <!-- TODO: add description --> |
-| `StarSoundness.lean` | 189 | <!-- TODO: add description --> |
+| `Forward.lean` | 171 | <!-- TODO: add description --> |
+| `StarSoundness.lean` | 193 | <!-- TODO: add description --> |
 <!-- END GENERATED -->
 
 ## Key Results

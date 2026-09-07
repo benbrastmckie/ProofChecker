@@ -52,6 +52,10 @@ file); proofs are unchanged.
 * JPL paper `possible_worlds.tex` lines 1108, 1114, 1118-1119, 1121
 * `FormalSystem/Semantics/Truth.lean` — the six L⁺ clauses being mirrored
 * `FormalSystem/Semantics/BLTruth.lean` — the sibling native recursion for the base language
+
+## Tags
+
+truth · star-language · stability-modal
 -/
 
 namespace FormalSystem.Semantics

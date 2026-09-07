@@ -52,6 +52,10 @@ renders "for all models M" and "times x in D".
 * [architecture.md](../../../docs/user-guide/architecture.md) - Validity specification
 * [Truth.lean](Truth.lean) - Truth evaluation
 * [Context.lean](../Syntax/Context.lean) - Proof contexts
+
+## Tags
+
+validity · semantic-consequence · frame-class · def:logical-consequence · def:frame-validity
 -/
 
 namespace FormalSystem.Semantics

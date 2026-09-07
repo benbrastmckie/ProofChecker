@@ -48,6 +48,10 @@ anyway. See `Semantics/Correspondence/Galois.lean`'s "Reified sets" section.
   off-the-shelf statement of it in this form
 * `ratStaticFrame` — the witness frame, and `ratStaticFrame_mem_mod` / `ratStaticFrame_not_sat`
 * `sat_rtime_ssubset_mod_axiomSet` and `mod_axiomSet_rtime_subset_sat_dense` — the sandwich
+
+## Tags
+
+independence · definability · galois · rtime · dedekind · app:complete
 -/
 
 namespace FormalSystem.Metalogic.Independence

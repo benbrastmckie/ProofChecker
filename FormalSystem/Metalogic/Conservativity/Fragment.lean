@@ -53,6 +53,10 @@ honest, complete logic of `BLValidIn` at every frame class, which TM itself is n
   `Forward`, `tmComplete_iff_forward`
 * `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — `not_bl_derivable_z1`
 * `FormalSystem/Metalogic/StrongCompleteness.lean` — the four `WeakCompleteness` engines
+
+## Tags
+
+conservativity · fragment · base-language · completeness · compactness
 -/
 
 namespace FormalSystem.Metalogic.Conservativity

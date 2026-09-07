@@ -27,11 +27,11 @@ from here a cycle. Its fully-qualified name is unchanged.
 calls, and it is `sorryAx`-free. (`countermodel_discrete`, the Base-frame branch of
 `completeness`, is a separate theorem and is likewise `sorryAx`-free.)
 
-Do not confuse it with `countermodel_discrete_reynolds`, which used to live in this file. That
-theorem was `sorryAx`-tainted (via `cantor_bfmcs_discrete_restricted_tc`/`_fuc`, through
-`succ_embed_surjective`) despite an in-file claim to the contrary, had zero consumers, and has
-been archived to `Boneyard/DeadChronicleGapElimination/ChronicleGapChainExcision.lean` together
-with the rest of the `chronicle_gap_contradiction` closure.
+**Caller trap.** Do not confuse it with `countermodel_discrete_reynolds`, which is archived at
+`Boneyard/DeadChronicleGapElimination/ChronicleGapChainExcision.lean` together with the rest of
+the `chronicle_gap_contradiction` closure. That theorem is `sorryAx`-tainted — via
+`cantor_bfmcs_discrete_restricted_tc`/`_fuc`, through `succ_embed_surjective` — despite an
+in-file claim to the contrary, and has no consumers.
 
 The file also provides:
 - Signature and atom map construction (`mkSigFrom`, `mkAtomMap`, `mkAtomMapFwd`)

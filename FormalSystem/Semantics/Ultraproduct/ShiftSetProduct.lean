@@ -42,7 +42,7 @@ docstring in `Semantics/ShiftSet.lean`.
 `uSep` and `uShiftSet` mention `∀ i, AddCommGroup ↑(T i)`, `LinearOrder ↑(T i)` and
 `IsOrderedAddMonoid ↑(T i)` implicitly, through `UD` and `mk_abs`. None of these needs an
 instance binder: `TemporalOrder`'s four algebra projections are registered as instances
-(`Semantics/TemporalOrder.lean:91`), so they synthesize pointwise from `T i` itself.
+(`Semantics/TemporalOrder.lean`), so they synthesize pointwise from `T i` itself.
 
 ## What is deliberately not here
 

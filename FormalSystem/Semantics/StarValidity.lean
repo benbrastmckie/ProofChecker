@@ -44,6 +44,10 @@ semantics.
 * JPL paper `def:frame-validity`, `def:logical-consequence`, `cor:tm-completeness`
 * `FormalSystem/Semantics/Validity.lean` — the L⁺ predicates these mirror
 * `FormalSystem/Semantics/BLValidity.lean` — the base-language mirror, the same shape
+
+## Tags
+
+validity · star-language · conservativity · stability-modal
 -/
 
 namespace FormalSystem.Semantics

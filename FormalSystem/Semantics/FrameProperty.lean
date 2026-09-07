@@ -90,6 +90,10 @@ theory that instance resolution now covers them.
   ordinary predicates on a frame
 * [DurationClassification.lean](DurationClassification.lean) — the Hölder dichotomy that makes the
   `IsComplete` / `IsRTime` split exactly the `ℤ` / `ℝ` split
+
+## Tags
+
+frame-class · frame-properties · dense · discrete · complete · def:frame-properties
 -/
 
 namespace FormalSystem.Semantics

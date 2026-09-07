@@ -100,6 +100,10 @@ but not definitionally equal, so a consumer that needs the equation goes through
 * `galoisClosed_iInter`, `galoisClosed_inter`, `galoisClosed_univ` — closure under intersections
 * `mod_union`, `mod_iUnion`, `mod_empty`, `th_empty` — `Mod` and `Th` on unions and the empty set
 * `AxiomSet`, `densitySchema` — the two reified formula sets
+
+## Tags
+
+correspondence · galois · axiomatizability · Th · Mod
 -/
 
 namespace FormalSystem.Semantics

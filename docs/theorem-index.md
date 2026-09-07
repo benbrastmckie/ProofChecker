@@ -185,3 +185,7 @@ Three of the rows above are negative results, and they are easy to misread as un
   every SORRY-FREE claim is pinned by C2 or C14
 - [`specs/paper-definitions-of-record.md`](../specs/paper-definitions-of-record.md) — the pinned
   paper anchors C15 resolves against
+
+## Tags
+
+theorem-index · soundness · completeness · compactness · non-compactness · decidability · conservativity · correspondence · expressiveness

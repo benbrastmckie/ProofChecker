@@ -63,6 +63,10 @@ is proved with it.
   `PartialHistory.nonempty_domain` is a **field**: the union of the empty chain has empty domain
   and is therefore not a partial history at all. Zorn's `zorn_le_nonempty_Ici₀` supplies exactly
   the needed witness (`∀ y ∈ c`), so this costs nothing at the only call site.
+
+## Tags
+
+world-history · partial-history · order
 -/
 
 namespace FormalSystem.Semantics

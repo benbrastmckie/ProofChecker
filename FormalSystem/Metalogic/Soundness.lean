@@ -139,6 +139,10 @@ in the tree.
 * [Validity.lean](../../Semantics/Validity.lean) - Semantic validity
 * [SoundnessLemmas.lean](./SoundnessLemmas.lean) - Axiom validity and swap preservation
 * JPL Paper `cor:perpetuity-valid` - Perpetuity principle validity proofs
+
+## Tags
+
+soundness · frame-class · TM-plus · thm:TM-soundness
 -/
 
 namespace FormalSystem.Metalogic
@@ -1319,12 +1323,11 @@ theorem soundness_validIn {fc : FrameClass} {φ : Formula}
 
 /-! ## Per-class corollaries of `soundness_in`
 
-Every theorem below keeps the exact statement it had before the collapse; only its proof
-changed, from a hand-written induction (or a 45-arm axiom dispatch) to a single application of
-`soundness_in` / `soundness_validIn` / `axiom_validIn` at the class in question. The class
-condition each one used to carry as a binder list is now supplied as that class's
-`FrameClass.Sat` witness: `trivial` at `.Base`, the `DenselyOrdered` instance at `.Dense`, the
-four order instances at `.ZTime`, and the density-plus-LUB pair at `.RTime`.
+Each theorem below is a single application of `soundness_in` / `soundness_validIn` /
+`axiom_validIn` at one class; none carries its own induction or 45-arm axiom dispatch. The class
+condition travels as that class's `FrameClass.Sat` witness rather than as a binder list:
+`trivial` at `.Base`, the `DenselyOrdered` instance at `.Dense`, the four order instances at
+`.ZTime`, and the density-plus-LUB pair at `.RTime`.
 
 They are gathered here, after the parameterized family, because they now depend on it. The
 per-axiom validity lemmas they used to dispatch over are unchanged and still live above.

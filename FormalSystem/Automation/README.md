@@ -60,10 +60,10 @@ subdirectories for their implementation infrastructure.
 | `Tactics/` | Tactic elaboration (`apply_axiom`, `modal_t`, `tm_auto`) |
 | `ProofSearch/` | Depth-limited proof search engine |
 
-`EFGameTactics.lean` used to live here. It declares `namespace
-FormalSystem.Metalogic.WeakCanonical` and its only consumer is the EF-game development,
-so it now lives at `Metalogic/WeakCanonical/EFGameTactics.lean`, where its path and
-its namespace agree. `Automation.lean` still re-exports it.
+`EFGameTactics.lean` is **not** in this directory, despite `Automation.lean` re-exporting it.
+It declares `namespace FormalSystem.Metalogic.WeakCanonical` and its only consumer is the EF-game
+development, so it lives at `Metalogic/WeakCanonical/EFGameTactics.lean`, where its path and its
+namespace agree.
 
 ## ML Dataset Pipeline
 

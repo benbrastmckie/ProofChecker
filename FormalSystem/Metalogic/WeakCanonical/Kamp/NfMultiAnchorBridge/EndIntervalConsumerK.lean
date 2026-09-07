@@ -315,7 +315,7 @@ instantiation (with row 1) |
 | 4 | `h_SZ : SemanticPriorSZ M atomMap` (:117) | hypothesis-side | Prior-guarded by design (with
 row 3) |
 | 5 | `hreal` — interior realization, FULL arity 4, restricted to fiber-CONSISTENT marked σ |
-hypothesis-side | the general-m realization recursion at the `KampPrior.lean:361/364` seam (the
+hypothesis-side | the general-m realization recursion at the `KampPrior.lean/364` seam (the
 in-source `:352-360` fencing note also binds the provider instantiation; the two are complementary
 inputs to the same retirement) |
 | 6 | `hexcl` — within-`[x,t]` exclusion, arity 4, restricted to fiber-CONSISTENT σ (inconsistent σ

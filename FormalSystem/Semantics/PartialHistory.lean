@@ -73,6 +73,10 @@ they are not re-litigated here or in the four-axiom frame alignment work.
   onto it in a subsequent step.
 - The type-parameter discipline (`D` with `AddCommGroup`, `LinearOrder`, `IsOrderedAddMonoid`)
   matches `WorldHistory` exactly, so the re-basing is a structural change only.
+
+## Tags
+
+world-history · partial-history · convexity
 -/
 
 namespace FormalSystem.Semantics

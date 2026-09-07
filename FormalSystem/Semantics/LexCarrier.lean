@@ -71,6 +71,10 @@ moves, since the first component has no successor structure to advance along. Bu
 * `LexInt.isLeast_pos` — `toLex (0, 1)` is the least strictly positive element
 * `LexInt.not_isSuccArchimedean`, `LexInt.not_isPredArchimedean`, `LexInt.not_archimedean` — the
   three non-Archimedean facts, as **citable theorems** rather than `example`s
+
+## Tags
+
+duration-group · non-archimedean · lexicographic · ztime
 -/
 
 namespace FormalSystem.Semantics

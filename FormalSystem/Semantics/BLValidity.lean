@@ -59,6 +59,10 @@ since BL has no `untl`. Do not "simplify" the target.
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:logical-consequence`
 * `FormalSystem/Semantics/Validity.lean` — the BL⁺ predicates these mirror
 * `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — the soundness theorems targeting these
+
+## Tags
+
+validity · base-language · frame-class
 -/
 
 namespace FormalSystem.Semantics

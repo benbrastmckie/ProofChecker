@@ -41,6 +41,10 @@ association is checked by elaboration against `BaseLanguage/Axioms.lean`'s own d
   §4.1 (Lemmas B and C), §6.1 (the past-dual obligation)
 * `FormalSystem/BaseLanguage/Axioms.lean` — `Axiom.df`, `Axiom.dn`
 * `FormalSystem/Semantics/DurationClassification.lean` — `isLeast_pos_succ_zero`
+
+## Tags
+
+validity · base-language · density · discreteness
 -/
 
 namespace FormalSystem.Semantics

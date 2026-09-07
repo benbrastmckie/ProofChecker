@@ -59,6 +59,10 @@ proper stabiliser. That is what the `sep` field is for — see its own docstring
 Zorn-based, and which the reverse direction uses only to witness that the carrier `F.HF` is
 nonempty. This is not a defect: choice is ordinary mathematics here, and the standard this
 module is held to forbids unproved placeholders, not `Classical.choice`.
+
+## Tags
+
+shift-set · representation · task-model · truth
 -/
 
 namespace FormalSystem.Semantics

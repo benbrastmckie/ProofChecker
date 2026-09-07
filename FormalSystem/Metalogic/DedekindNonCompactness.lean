@@ -91,6 +91,10 @@ density.
 Reynolds 1992 §9 Theorem 7 is a *weak* completeness result for this class and remains correctly
 cited as such. This module does not contradict it; it explains why only the weak form is
 available.
+
+## Tags
+
+non-compactness · refutation · rtime · strong-completeness
 -/
 
 namespace FormalSystem.Metalogic

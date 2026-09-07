@@ -9,7 +9,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfToVecEA
 
 /-! # Aggregate quantEnd/seg construction + arm-correctness hook discharge at k=0/k=1
 
-Builds the aggregate ∀-qnf population encoding for the `KampPrior.lean:361` `| 1 =>` arm and
+Builds the aggregate ∀-qnf population encoding for the `KampPrior.lean` `| 1 =>` arm and
 discharges the three arm-correctness hooks (past / diagonal / future) as separate green citable
 lemmas at match arms k=0 (`sub_nf : NormalForm sig 1 2`) and k=1 (`sub_nf : NormalForm sig 2 2`),
 each concluding in the `kampPrior_case1_trichotomy_assemble` skeleton shape

@@ -1,42 +1,15 @@
 {
-  "status": "planned",
-  "artifacts": [
-    {
-      "type": "plan",
-      "path": "specs/530_documentation_single_source_of_truth_theorem_index/plans/01_documentation-single-source-of-truth.md",
-      "summary": "19-phase, 33-hour plan making documentation counts and status machine-owned, creating docs/theorem-index.md, and purging archaeology prose from publication-facing docstrings."
-    }
-  ],
-  "dispatch_seq": 1,
-  "next_steps": "Run /implement 530 to execute the plan",
+  "status": "in_progress",
+  "started_at": "2026-09-07T00:00:00Z",
+  "artifacts": [],
+  "partial_progress": {
+    "stage": "initializing",
+    "details": "Agent started, parsing delegation context"
+  },
   "metadata": {
-    "session_id": "sess_1788808508_a5588d_530",
-    "agent_type": "planner-agent",
+    "session_id": "sess_1788808508_a5588d",
+    "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 19,
-    "estimated_hours": 33,
-    "dependency_waves": [[1],[2,4],[3,5,17],[6,18],[7],[8],[9],[10],[11,12,15],[13],[14],[16],[19]]
-  },
-  "user_decision": {
-    "question": "Three paper anchors cited from FormalSystem/Metalogic/Independence (app:drift, cor:no-characterization, lem:deterministic-singleton) have no row in specs/paper-definitions-of-record.md and are the sole reason check-module-invariants.sh's C15 is red; classifying each as LIVE-UNPINNED or DANGLING requires the paper, which the repository cannot see.",
-    "options": [
-      "Carry the three anchors as an explicit non-goal — Phase 7 delivers C15's new assertion only, and C15's pre-existing failure stays red and separately tracked",
-      "Classify the three anchors now from the paper and fold the KNOWN-ANCHORS rows into Phase 7, ending the task with a fully green invariants run"
-    ],
-    "recommended": "Carry the three anchors as an explicit non-goal — Phase 7 delivers C15's new assertion only, and C15's pre-existing failure stays red and separately tracked",
-    "blocking": false
-  },
-  "memory_candidates": [
-    {
-      "content": "Documentation-drift tasks converge fastest under a three-owner policy: (1) machine-checkable facts (axiom sets, sorry-freeness) owned by the invariant checker's pinned baseline; (2) counts owned by a generator that writes BEGIN/END GENERATED blocks in place, keyed on filename so hand-written Description columns survive regeneration; (3) per-item status owned by exactly one ledger file, with every other surface reduced to a pointer plus a <=5-row highlights table. The non-obvious constraint is the description carry-across: a naive regenerator destroys the best documentation in the tree, so the generator must regenerate mechanical columns only. A second recurring finding: every grep-derived count in a stale-documentation task description came out HIGHER when re-derived (one by 85x), so plan phases should treat any inherited count as a lower bound and re-derive at phase start.",
-      "category": "PATTERN",
-      "source_artifact": "specs/530_documentation_single_source_of_truth_theorem_index/plans/01_documentation-single-source-of-truth.md",
-      "confidence": 0.8,
-      "suggested_keywords": ["documentation-drift", "generated-blocks", "single-source-of-truth", "scope-hypothesis", "theorem-index", "invariant-checks"]
-    }
-  ],
-  "modified_files": [
-    "specs/530_documentation_single_source_of_truth_theorem_index/plans/01_documentation-single-source-of-truth.md"
-  ]
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+  }
 }

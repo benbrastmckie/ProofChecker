@@ -68,6 +68,10 @@ adjudication of record is `specs/paper-definitions-of-record.md`'s reading note 
   `permissive_realizes` — the atom-realisation step, named once instead of rebuilt inline
 * `validOn_df_iff_isDiscrete`, `validOn_dn_iff_denselyOrdered`, `validOn_co_iff_isComplete` —
   the three (T1) biconditionals
+
+## Tags
+
+correspondence · duration-group · app:dense · app:discrete · app:complete
 -/
 
 namespace FormalSystem.Semantics

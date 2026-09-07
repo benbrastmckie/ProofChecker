@@ -39,6 +39,10 @@ candidate counterexample.
 
 * `TaskFrame.FwdRec` — the frame condition, over bundled frames
 * `validOn_atomic_density_iff_fwdRec` — the atomic correspondence, at arbitrary `D`
+
+## Tags
+
+correspondence · forward-recursion
 -/
 
 namespace FormalSystem.Semantics

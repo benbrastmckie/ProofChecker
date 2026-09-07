@@ -47,6 +47,10 @@ is their only consumer — promotion is the right move once a second consumer ap
 
 They are deliberately **not** `@[simp]`: were they promoted upstream, a simp-normal `next`
 rewrite would fire inside the proof-theoretic reasoning in `Theorems/DiscreteUnfolding.lean`.
+
+## Tags
+
+non-compactness · refutation · ztime · strong-completeness
 -/
 
 namespace FormalSystem.Metalogic

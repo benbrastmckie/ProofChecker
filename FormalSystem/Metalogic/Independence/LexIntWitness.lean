@@ -60,6 +60,10 @@ require a single-frame `F.ValidOn φ → F.ValidOn φ.swapTemporal` closure lemm
 * `lexIntStaticFrame`, `lexIntStaticFrame_mem_mod`, `lexIntStaticFrame_not_sat` — the witness
 * `validOn_nextTop_of_mem_mod_discrete` — the semantic upper-bound engine
 * `sat_ztime_ssubset_mod_axiomSet`, `mod_axiomSet_discrete_subset_isDiscrete` — the sandwich
+
+## Tags
+
+independence · definability · galois · ztime · non-archimedean · app:discrete
 -/
 
 namespace FormalSystem.Metalogic.Independence

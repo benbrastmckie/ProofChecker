@@ -71,6 +71,10 @@ Two measured failures, recorded so a future editor does not re-hit them:
   `Truth.truthAt_of_truthCorr` at `alignedCorr`.
 - `ValidInt`: validity over `ℤ`-frames only.
 - `validZTime_iff_validInt`: **carrier normalization** — `ValidZTime φ ↔ ValidInt φ`.
+
+## Tags
+
+ztime · transfer · normal-form
 -/
 
 namespace FormalSystem.Semantics

@@ -956,16 +956,16 @@ provenance stamp is unified.
 
 ---
 
-### Phase 19: Tags lines [NOT STARTED]
+### Phase 19: Tags lines [COMPLETED]
 
 **Goal**: The files a reader would search carry a `## Tags` line.
 
 **Tasks**:
-- [ ] Derive the target set from `docs/theorem-index.md`'s File column plus the `Semantics/` and
+- [x] Derive the target set from `docs/theorem-index.md`'s File column plus the `Semantics/` and
       `Correspondence/` layer files; record the derived list in the phase's commit message.
-- [ ] Add a `## Tags` line to each, using a consistent vocabulary drawn from the index's
+- [x] Add a `## Tags` line to each, using a consistent vocabulary drawn from the index's
       Notation-and-naming table.
-- [ ] Add `## Tags` to `docs/theorem-index.md`, `docs/ARCHITECTURE.md` and `README.md`.
+- [x] Add `## Tags` to `docs/theorem-index.md`, `docs/ARCHITECTURE.md` and `README.md`.
 
 **Timing**: 1.5 hours
 
@@ -975,7 +975,10 @@ provenance stamp is unified.
 
 **Scope Hypothesis**: the description estimates ~30 files and the tree currently has zero
 `## Tags` lines. The target set is derived, not assumed — confirm the derived count before
-editing and record it.
+editing and record it. **Derived: 52 targets** — the 22 files named by `docs/theorem-index.md`'s
+File column, the 24 loose modules of `FormalSystem/Semantics/`, the 6 of
+`Semantics/Correspondence/`, and `README.md`, `docs/theorem-index.md`, `docs/ARCHITECTURE.md`.
+The full list is in the phase's commit message.
 
 **Files to modify**:
 - The derived target set (files named by `docs/theorem-index.md` plus the `Semantics/` and

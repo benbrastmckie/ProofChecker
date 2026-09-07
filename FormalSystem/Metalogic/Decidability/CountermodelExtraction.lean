@@ -852,9 +852,8 @@ the branch is *checked* against, not one inferred from an arm that should not ha
 /-!
 ## Branch Truth Lemma — Retired
 
-The `branchTruthLemma` that used to live here was retired rather than repaired, and the
-recursive `branchTruth` evaluator it ran on — together with its only consumer,
-`signedTruthInModel` — has now been **deleted**.
+`branchTruthLemma` is retired rather than repaired, and the recursive `branchTruth` evaluator it
+ran on — together with its only consumer, `signedTruthInModel` — is **deleted**.
 
 The deletion is recorded rather than done silently, because the justification for the
 intermediate state (keep the evaluator, retire only the lemma) turned out not to hold. That

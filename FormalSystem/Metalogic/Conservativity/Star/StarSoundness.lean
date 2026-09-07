@@ -33,6 +33,10 @@ per-schema swap-validity, which `starAxiom_swap_validIn_min` supplies for every 
 
 * `FormalSystem/Metalogic/Soundness.lean` — `derivable_valid_and_swap_validIn`, `soundness_in`,
   the theorems mirrored arm for arm
+
+## Tags
+
+soundness · star-language · stability-modal · atomization
 -/
 
 namespace FormalSystem.Metalogic.Conservativity

@@ -23,9 +23,9 @@ than deferred debt.
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/Conservativity -->
 | File | Lines | Description |
 |------|------:|-------------|
-| `Backward.lean` | 208 | <!-- TODO: add description --> |
-| `BaseLanguageSoundness.lean` | 547 | <!-- TODO: add description --> |
-| `Fragment.lean` | 180 | <!-- TODO: add description --> |
+| `Backward.lean` | 212 | <!-- TODO: add description --> |
+| `BaseLanguageSoundness.lean` | 551 | <!-- TODO: add description --> |
+| `Fragment.lean` | 184 | <!-- TODO: add description --> |
 | `FragmentCompactness.lean` | 150 | <!-- TODO: add description --> |
 | `SpWitness.lean` | 128 | <!-- TODO: add description --> |
 | `Star.lean` | 65 | <!-- TODO: add description --> |

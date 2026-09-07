@@ -56,6 +56,10 @@ stability-modal probes recorded with the research on the `⊡` axiomatization; `
 * JPL paper `def:frame` — *Compositionality* and the converse convention
   (`Semantics/TaskFrame.lean`)
 * `FormalSystem/Semantics/StarTruth.lean` — `SameStateAt`, `StarTruthAt`
+
+## Tags
+
+star-language · pasting · stability-modal
 -/
 
 namespace FormalSystem.Semantics

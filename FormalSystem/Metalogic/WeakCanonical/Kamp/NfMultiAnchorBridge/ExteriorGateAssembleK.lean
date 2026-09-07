@@ -38,7 +38,7 @@ This is a purely additive leaf. Every composition input is landed sorry-free:
    biconditional carrying only `P`, `hcharK`, `Pbr`, `h_UZ`, `h_SZ`, `hreal`, `hexcl` (+ order
    bits), with `hexclExt` discharged internally.
 
-**Scope fence (this module only)**: KampPrior.lean:351 wiring, aggregator import threading, and the
+**Scope fence (this module only)**: KampPrior.lean wiring, aggregator import threading, and the
 site-certificate reshape belong to the KampPrior provider instantiation, which also discharges the
 threaded `hreal`/`hexcl`. No interior-gate mathematics. -/
 
@@ -240,7 +240,7 @@ set_option maxHeartbeats 1600000 in
     `hreal`/`hexcl` and discharged at m = 0 via `kvE_{fut,past}SliceId_of_end_zero` /
     `kvE_{fut,past}SliceUnique_zero` + `hreal` (plan v2 Phase 5).
 
-    Consumed by the KampPrior provider instantiation at `KampPrior.lean:351` (which discharges the
+    Consumed by the KampPrior provider instantiation at `KampPrior.lean` (which discharges the
     remaining
     provider obligations `hreal`/`hexcl` and the slice-keyed exterior interface). -/
 theorem bracketEndChar_kvExt_correct_prior {sig : MonadicSignature} [Fintype sig.preds]
