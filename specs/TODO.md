@@ -1,5 +1,5 @@
 ---
-next_project_number: 550
+next_project_number: 552
 ---
 
 # TODO
@@ -11,8 +11,8 @@ next_project_number: 550
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,549 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537,548 | 193,298,464,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,549,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,548,550 | 193,298,464,502,535,547,549 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
@@ -90,6 +90,11 @@ next_project_number: 550
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
+550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+
+### Repo Hygiene
+
+551 [NOT STARTED] — Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 line
 
 ### Documentation
 
@@ -107,6 +112,51 @@ next_project_number: 550
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 551. Boneyard disposition for publication
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: repo-hygiene
+- **Dependencies**: None
+
+**Description**: Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 lines, roughly a quarter of the repository, carrying every `sorry` in the tree.
+
+MEASURED, not estimated. `FormalSystem/Boneyard/` is 168 Lean files totalling 91,539 lines, against 373,234 lines for `FormalSystem/` as a whole. It is genuinely excluded from the build, not merely nominally: a full `lake build` produces ZERO Boneyard `.olean` files. A sorry census over the live tree (`Metalogic`, `Syntax`, `Semantics`, `ProofSystem`, `Theorems`, `Automation`) reports `sorry_count: 0`, while 39 Boneyard files contain sorries in proof position. The quarantine works exactly as designed.
+
+THE DECISION, and it is a judgement call rather than a cleanup. Boneyard doubles the apparent size of what a reviewer must navigate and contains the only unfinished proofs in the repository, yet retired-attempt provenance has real scholarly value -- it is evidence of what was tried and why it failed, which is often the most useful part of a formalization for a subsequent researcher. Both keeping and cutting are defensible; what is not defensible is shipping it undecided and unexplained.
+
+DELIVER A REASONED RECOMMENDATION, with the evidence to act on it:
+1. Characterize what is actually in there. The two Boneyard trees are already distinguished in `FormalSystem/FormalSystem.lean` and `Boneyard/README.md` (there is a documented "two-Boneyard counting caveat") -- start from those rather than re-deriving. Which subtrees are genuinely superseded, which record refuted approaches still cited elsewhere, and which are merely unfinished?
+2. Check for live references before proposing any removal. `scripts/audit-deletion-references.sh` exists for this; a subtree cited by live documentation or by a C9-style register is not free to delete even though nothing imports it.
+3. Recommend one of: KEEP AS-IS with a clearer top-level framing of what the tree is and why it ships; SPLIT, retaining the subtrees with provenance value and cutting the rest; or CUT ENTIRELY, with the history preserved in git and a pointer recorded. State the reasoning, not just the verdict.
+4. Only if the recommendation is to cut, and only after it is accepted: execute, and verify a full green `lake build` plus an unchanged live-tree sorry census of 0.
+
+CONSTRAINTS. Do not delete anything in the characterization or recommendation stages -- steps 1 through 3 are read-only, and step 4 is gated on acceptance of the recommendation rather than following automatically from it. Removal must go through git history preservation, never an untracked deletion. The live tree's sorry-free status is a headline property of this repository and must be preserved and re-verified by census, not assumed.
+
+---
+
+### 550. Decompose mintbound for publication legibility
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: publication-quality
+- **Dependencies**: Task 549
+
+**Description**: Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.
+
+MEASURED, not estimated: `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean` is 15,759 lines. The next-largest file under `FormalSystem/` that is actually built is `GapDetection.lean` at 5,090; the only larger file anywhere in the tree is retired Boneyard code. The file also carries the C9 register (entries through 25), a running record of refuted approaches interleaved with the live development.
+
+WHY THIS MATTERS FOR PUBLICATION. This is a legibility problem, not a correctness one -- the file builds green, is sorry-free and axiom-free. But a single file of this size is effectively unreviewable, and the interleaving of live results with a register of refuted attempts means a reader cannot tell, locally, which of the two they are reading. The concrete failure mode is already on record: the six `_run` theorems are vacuous, and the only statement of that fact sits roughly 12,700 lines into the file, far from the declarations it invalidates.
+
+SCOPE:
+1. Characterize the file's actual composition before proposing any split -- live definitions and theorems, the C9 register, probe/measurement blocks, and long-form prose notes. Report the line budget of each. A split proposed without this measurement is guesswork.
+2. Propose a decomposition into modules with a stated organizing principle (by development layer, by frame class, or register-vs-live -- pick one and justify it against the alternatives). The C9 register is the strongest candidate for extraction: it is documentation of what did not work and need not sit inside the module carrying what did.
+3. Execute the split additively and verifiably: the public interface must be preserved exactly, every downstream importer must build unchanged, and the full `lake build` must stay green. Sorry-free, axiom-free.
+
+CONSTRAINTS. Preserve every existing declaration name -- this is a decomposition, not a rename or a cull; removing declarations is a separate decision and belongs to the disposition task. Do not weaken or drop C9 register content while relocating it; the register's value is that it prevents re-attempting refuted approaches, and a lossy move destroys exactly that. Expect expensive builds: this module has cost 5-25 minutes per pass under concurrent load, so batch verification rather than rebuilding per edit.
+
+Dependencies: 549. If its disposition recommendation is to retire the six vacuous `_run` theorems, that removes a section of this file, and decomposing before knowing so is wasted work.
+
+---
 
 ### 549. Trace decide dependency on vacuous run theorems
 - **Status**: [NOT STARTED]
@@ -132,6 +182,12 @@ CONTEXT ALREADY ESTABLISHED -- consume, do not re-derive. A concurrent search of
 CONSTRAINTS. Read-only with respect to `FormalSystem/**` -- this task traces, it does not repair; if the trace finds a real break, the repair is a separate task and must be named, not attempted here. The only file this task may edit is `docs/theorem-index.md`, and only on the DEPENDS branch. Do not edit `MintBound.lean` (task 463 owns it and both tasks would collide on the same file). No `sorry`, no axiom additions, full `lake build` green.
 
 Dependencies: 463, both mathematically (its verdict is this task's premise) and as a file_scope serialization edge on MintBound.lean.
+ADDED DELIVERABLE -- disposition recommendation (publication-driven). Beyond the trace verdict above, this task MUST also deliver a recommended DISPOSITION for the six vacuous `_run` theorems, because it will hold exactly the evidence the decision needs and no other task will. This remains READ-ONLY: recommend and justify, do not execute. The three dispositions are mutually exclusive and the trace result selects among them:
+- NO DEPENDENCY anywhere -> recommend RETIRING the six. They read as headline results ("the tableau construction succeeds") while establishing nothing, which is worse than absent in a publication-facing library: a reader meeting `buildTableauAt_isSome_of_budget_fixed_run` at its declaration site gets no local signal that its hypothesis is unsatisfiable, the refutation being recorded ~12,700 lines away in C9 entry 25. Name what else would have to move with them.
+- DEPENDS, at `.Base`/`.Dense`/`.RTime` -> recommend marking vacuity AT THE DECLARATION SITE (not only in the register), and name the dependent that needs repair as its own task.
+- DEPENDS, at `.ZTime` -> the fourth frame class is load-bearing after all; recommend completing it. The mechanical recipe is already recorded in MintBound.lean's scoped note: add the `priorUZ`/`priorSZ` conclusions to the witness at `<0,0>`, `<0,1>`, `<1,0>`, `<1,1>`, then re-run the same three `rfl` obligations at `.ZTime`.
+
+WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in exactly one of these three outcomes. Deciding it before the trace is a coin-flip on expensive build time, and in the RETIRE branch it would mean polishing code that is then deleted. State the recommendation plainly enough that a follow-up task can execute it without re-deriving the reasoning.
 
 ---
 
