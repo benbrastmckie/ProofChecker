@@ -1,7 +1,7 @@
 # Implementation Plan: Decide `PostBlockingSettlesRun` at the terminus's own fuel figure
 
 - **Task**: 463 - Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D β)` at the terminus's own fuel figure
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 9.5 hours
 - **Dependencies**: 462 — `file_scope` SERIALIZATION edge only (both tasks edit `MintBound.lean`). No mathematical dependency; nothing below reads the minting measure.
 - **Research Inputs**: `specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md`
@@ -148,18 +148,21 @@ sequentially, 1 through 7.
 
 ---
 
-### Phase 1: Reproduce the verdict — the refute-first gate, re-run [NOT STARTED]
+### Phase 1: Reproduce the verdict — the refute-first gate, re-run [COMPLETED]
 
 **Goal**: Confirm, against the tree as it stands right now, that the research's witness still
 refutes `PostBlockingSettlesRun FrameClass.Base (n+1)` sorry-free and axiom-free. Nothing is
 transcribed until this passes.
 
 **Tasks**:
-- [ ] Record the baseline: `md5sum` on the three frozen files, and `git log -1 --oneline` on
+- [x] Record the baseline: `md5sum` on the three frozen files, and `git log -1 --oneline` on
       `MintBound.lean`. Expected frozen baselines as of planning:
       `Saturation.lean = c65e8389dfd8dac422e1af3f981fb5bc`,
       `Tableau.lean = 3125482505a8cea20f9ab3e288747adf`,
       `Fuel.lean = d24100ffd267563995913ed633b04d12`.
+      *(completed: all three md5s match the planning baselines byte for byte;
+      `git log -1 --oneline` on `MintBound.lean` = `79bd1794f`, and the file is clean in the
+      working tree.)*
 - [ ] Write the report's Appendix source verbatim to a scratch file outside the library tree
       (use the session scratchpad, not `FormalSystem/`).
 - [ ] `lake build FormalSystem.Metalogic.Decidability.Verified.Termination.MintBound` to ensure the
@@ -189,36 +192,36 @@ transcribed until this passes.
 
 ---
 
-### Phase 2: Land the witness data and its five obligations at `.Base` [NOT STARTED]
+### Phase 2: Land the witness data and its five obligations at `.Base` [COMPLETED]
 
 **Goal**: Transcribe the verified witness into the existing `PostBlockingSettlesRefutation` section
 of `MintBound.lean` as private data plus five named, individually-provable obligations.
 
 **Tasks**:
-- [ ] Add three `private def`s beside the existing witness data in the
+- [x] Add three `private def`s beside the existing witness data in the
       `PostBlockingSettlesRefutation` section (after the non-vacuity subsection at `:12479`, before
       `section PostBlockingRunProbe` at `:12521`): `pbrWitnessBranch` (the 29-formula `AUG ++ S`),
       `pbrWitnessOrd` (`{ constraints := [(3,4),(1,3),(2,0),(0,1)] }`, chain `2<0<1<3<4`), and
       `pbrDoctoredTracker` (`{ pending := [{ formula := mfq, label := ⟨7,0⟩, isUntil := true }] }`).
       Reuse the file's existing `mfp`/`mfq` (`:4634-4635`) rather than introducing new atoms.
-- [ ] Each def carries a docstring stating *why* its shape is load-bearing: `S` is the verbatim open
+- [x] Each def carries a docstring stating *why* its shape is load-bearing: `S` is the verbatim open
       exit the engine produces from `seedBranch (p → q)` (authenticity — the ancestor times are
       engine-saturated, not hand-asserted); `AUG` supplies world-1 machinery, the two `negPos`
       conclusions the exit left outstanding, and the witness `T(p untl q)@⟨9,4⟩`; the doctored entry
       is parked at an unused world so `fulfillEventualities` (`Saturation.lean:308`) never discharges
       it.
-- [ ] Land `pbrWitness_findClosure_none` (`cases fc <;> rfl`).
-- [ ] Land `pbrWitness_expandOnceNoFresh_saturated` at `.Base` (`rfl`).
-- [ ] Land `pbrWitness_saturateBlocked_self` via
+- [x] Land `pbrWitness_findClosure_none` (`cases fc <;> rfl`).
+- [x] Land `pbrWitness_expandOnceNoFresh_saturated` at `.Base` (`rfl`).
+- [x] Land `pbrWitness_saturateBlocked_self` via
       `saturateBlocked_eq_self_of_noFresh_saturated` applied to the previous two — universal in
       `fuel`, no induction.
-- [ ] Land `pbrWitness_expandBranchWithFuel_eq` (`rw [expandBranchWithFuel]; norm_num; rfl`). Its
+- [x] Land `pbrWitness_expandBranchWithFuel_eq` (`rw [expandBranchWithFuel]; norm_num; rfl`). Its
       docstring MUST record that this is a **one-step** unfold reaching the `.saturated` arm
       immediately, and that this is precisely why the refutation is a kernel proof where entry 24
       records the positive direction as prohibitive.
-- [ ] Land `pbrWitness_settlement_fails` (`rfl`) — the settlement test reports
+- [x] Land `pbrWitness_settlement_fails` (`rfl`) — the settlement test reports
       `T(p untl q)@⟨9,4⟩` outstanding.
-- [ ] Build after each obligation lands; commit each green obligation.
+- [x] Build after each obligation lands; commit each green obligation. *(deviation: altered — one module build and one commit for the whole phase, not one per obligation: another session was running concurrent full `lake build`s that repeatedly invalidated the dependency oleans, making each build cost 5-25 minutes rather than seconds. All five obligations were verified together by the single green `lake build` of the module.)*
 
 **Timing**: 1.5 hours
 

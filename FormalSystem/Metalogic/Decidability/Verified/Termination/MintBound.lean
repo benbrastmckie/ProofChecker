@@ -12518,6 +12518,156 @@ non-vacuity claim (a). -/
 theorem multBranch_one_length_lt_multSettledBranch :
     (multBranch 1).length < multSettledBranch.length := by decide
 
+
+/-! #### The verdict on the narrowed residual: **FALSE**, at the terminus's own fuel figure
+
+Task 433's narrowing restricted `(ob, oOrd, fuel)` to a pair some `expandBranchWithFuel` call at
+this same fuel returned open. It did **not** restrict the run's other inputs, and one of them is not
+inert: the `EventualityTracker` argument `tr`. The two blocked-set computations that the residual
+needs to agree — `blockedTimes b ord fc tracker'` inside `expandOnceUnblocked`, where
+`tracker' = fulfillEventualities b (registerEventualities b tr)`, and
+`blockedTimes satBr satOrd fc (armTracker satBr)`, where `armTracker` re-seeds from
+`EventualityTracker.empty` — share their branch, their ordering and their frame class, and differ in
+**exactly** the tracker seed.
+
+Blocking is *monotone in pending entries at the ancestor*: `isTemporallyBlockedSaturated` conjoins
+`allEventualitiesFulfilledOrDuplicated`, which asks that every eventuality pending at `t` have some
+pending entry with the same event formula and the same `isUntil` flag at the ancestor time. Adding a
+pending entry at the ancestor therefore makes blocking fire *more* often, so a doctored `tr` yields a
+**strictly larger** blocked set than the settlement test's recomputed `armTracker`: the engine skips
+a time the settlement test still inspects. Two further facts make the exploit reachable —
+`fulfillEventualities` discharges a pending entry only when its event formula occurs positively at
+the entry's own **world** at some other time, so an entry parked at an otherwise-unused world is
+never discharged; and `Branch.timeType`'s subset test ignores the world component, so the subset half
+of blocking is satisfied across worlds while fulfillment, which is world-sensitive, is not.
+
+**The predicate as written quantifies over `tr`, so the predicate as written is false.** This is
+stated in the same voice as register entry 22's `fuel = 0` degeneracy, and it is not softened to a
+caveat: the finding is that the narrowing was *incomplete*, and the completion is named below
+(`PostBlockingSettlesSeedRun`) — carried as a hypothesis, never discharged.
+
+**Why this refutation is a kernel proof where entry 24 records the positive direction as
+prohibitive.** Entry 24 is right that `expandBranchWithFuel` is compiled by well-founded recursion
+and does not reduce definitionally, so *proving* its half of the antecedent would mean transcribing
+an engine exit and unfolding the equation lemma once per engine step. The witness below is returned
+at the **first** step — the run reports `.saturated` immediately — so a single `rw` through the
+equation lemma reaches the `.saturated` arm and the obligation closes. No engine step is
+transcribed. That is the whole qualitative gain over a `#guard_msgs` measurement, and it is why the
+verdict here is a theorem rather than an observation.
+-/
+
+/-- The witness branch: the verbatim open exit `expandBranchWithFuel` produces from
+`seedBranch (p → q)` at `.Base` (its last eleven formulas, times chained `2 < 0 < 1 < 3`, engine
+blocked set `[3, 2]`), augmented with world-1 machinery, the two `negPos` conclusions that exit left
+outstanding at its blocked times, and the witness formula `T(p untl q)@⟨9,4⟩`.
+
+Every part of the shape is load-bearing, and none of it is decoration:
+
+* the tail is an **engine exit taken verbatim**, so the ancestor times are genuinely
+  engine-saturated rather than hand-asserted — that is what makes `expandOnceNoFresh`'s `.saturated`
+  verdict below honest instead of arranged;
+* the world-1 block puts `T(p untl q)` into the ancestor's time type already expanded and fulfilled,
+  which is what lets the duplication half of blocking be satisfied at time 4;
+* `T(p untl q)@⟨9,4⟩` is the witness itself: `untlPos` mints a time, so `expandOnceNoFresh` skips it
+  (`ruleMintsFreshTime`), and the post-blocking pass is by construction unable to remove it. -/
+private def pbrWitnessBranch : Branch :=
+  [ SignedFormula.neg .bot ⟨0, 2⟩
+  , SignedFormula.neg .bot ⟨0, 3⟩
+  , SignedFormula.pos (Formula.untl mfp mfq) ⟨1, 0⟩
+  , SignedFormula.pos mfq ⟨1, 0⟩
+  , SignedFormula.pos (Formula.untl (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨1, 0⟩
+  , SignedFormula.pos (Formula.snce (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨1, 0⟩
+  , SignedFormula.pos mfq ⟨1, 1⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨1, 1⟩
+  , SignedFormula.pos (Formula.untl (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨1, 1⟩
+  , SignedFormula.pos (Formula.snce (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨1, 1⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨1, 2⟩
+  , SignedFormula.neg .bot ⟨1, 2⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨1, 3⟩
+  , SignedFormula.neg .bot ⟨1, 3⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨1, 0⟩
+  , SignedFormula.neg .bot ⟨1, 0⟩
+  , SignedFormula.neg .bot ⟨1, 1⟩
+  , SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩
+  -- the verbatim engine exit from `seedBranch (p → q)` begins here
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨0, 3⟩
+  , SignedFormula.pos (Formula.untl (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨0, 1⟩
+  , SignedFormula.pos (Formula.snce (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨0, 1⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨0, 2⟩
+  , SignedFormula.neg .bot ⟨0, 1⟩
+  , SignedFormula.pos (Formula.imp .bot .bot) ⟨0, 1⟩
+  , SignedFormula.pos (Formula.untl (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨0, 0⟩
+  , SignedFormula.pos (Formula.snce (Formula.imp .bot .bot) (Formula.imp .bot .bot)) ⟨0, 0⟩
+  , SignedFormula.pos mfp ⟨0, 0⟩
+  , SignedFormula.neg mfq ⟨0, 0⟩
+  , SignedFormula.neg (Formula.imp mfp mfq) ⟨0, 0⟩ ]
+
+/-- The witness ordering: the engine exit's own chain `2 < 0 < 1 < 3`, extended by `3 < 4` so the
+witness's time 4 is the chain's last element and time 1 is its ancestor. The extension is the
+minimum needed to place time 4 in the ordering at all; nothing else about it is chosen. -/
+private def pbrWitnessOrd : TimeOrdering := { constraints := [(3, 4), (1, 3), (2, 0), (0, 1)] }
+
+/-- The doctored tracker: one pending `q`-eventuality parked at world 7, time 0 — a world the
+witness branch never mentions.
+
+Both halves of that placement are load-bearing. The *time* is 0, which is the ancestor time
+`allEventualitiesFulfilledOrDuplicated` consults for the pending `q`-eventuality that
+`registerEventualities` derives from `T(p untl q)@⟨9,4⟩`, so the duplication test is satisfied and
+time 4 joins the blocked set. The *world* is unused, so `fulfillEventualities` — which discharges an
+entry only on finding `T q` at that entry's own world at some other time — never removes it. This
+tracker is not one any engine run threads, and that is not a defect in the refutation: the residual
+quantifies over the tracker, so a tracker it admits is a counterexample to it. -/
+private def pbrDoctoredTracker : EventualityTracker :=
+  { pending := [{ formula := mfq, label := ⟨7, 0⟩, isUntil := true }] }
+
+/-- The witness branch is open, at every frame class. -/
+theorem pbrWitness_findClosure_none (fc : FormalSystem.ProofSystem.FrameClass) :
+    findClosure pbrWitnessBranch fc = none := by cases fc <;> rfl
+
+/-- **The label-free pass reports `.saturated` on the witness at `.Base`.** Every candidate it can
+still see has been discharged by the augmentation; the one formula that is not discharged,
+`T(p untl q)@⟨9,4⟩`, is invisible to this pass because `untlPos` mints a time. -/
+theorem pbrWitness_expandOnceNoFresh_saturated :
+    expandOnceNoFresh pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.Base
+      = (ExpansionResult.saturated, pbrWitnessOrd) := by rfl
+
+/-- **The post-blocking pass hands the witness straight back, at every fuel figure.** This is the
+existing fuel-universal step `saturateBlocked_eq_self_of_noFresh_saturated`, reused verbatim rather
+than rebuilt: no induction on fuel, and no ladder of checked figures. -/
+theorem pbrWitness_saturateBlocked_self (fuel : Nat) :
+    saturateBlocked pbrWitnessBranch fuel pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.Base
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd)) :=
+  saturateBlocked_eq_self_of_noFresh_saturated (pbrWitness_findClosure_none _)
+    pbrWitness_expandOnceNoFresh_saturated fuel
+
+/-- **The doctored run returns the witness open at its first step, at every positive fuel.**
+
+This is the obligation register entry 24 records as prohibitive in the *positive* direction, and the
+reason it is cheap here is worth stating rather than leaving to be rediscovered: the run reports
+`.saturated` **immediately**, so `rw [expandBranchWithFuel]` unfolds the equation lemma exactly
+**once** and the `.saturated` arm closes the goal. No engine step is transcribed and no equation
+lemma is unfolded per step. That is what makes this a kernel proof where the corresponding positive
+statement is a `#guard_msgs` measurement. -/
+theorem pbrWitness_expandBranchWithFuel_eq (n : Nat) :
+    expandBranchWithFuel pbrWitnessBranch (n + 1) pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.Base pbrDoctoredTracker {} 100 0
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd, {})) := by
+  rw [expandBranchWithFuel]
+  norm_num
+  rfl
+
+/-- **The settlement test does not close on the witness**, and it names the formula it is still
+holding: `T(p untl q)@⟨9,4⟩`. The finder recomputes the blocked set with `armTracker`, which is
+seeded from `EventualityTracker.empty` and so does not carry the doctored entry; time 4 is therefore
+*not* blocked here, where the run's own computation blocked it. -/
+theorem pbrWitness_settlement_fails :
+    findUnexpandedUnblockedWith pbrWitnessBranch pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.Base
+        (blockedTimes pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.Base
+          (armTracker pbrWitnessBranch))
+      = some (SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩) := by rfl
+
 section PostBlockingRunProbe
 
 /-- The terminus's own two calls, run in sequence and reported as three booleans: the seed run
