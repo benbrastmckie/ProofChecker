@@ -292,26 +292,29 @@ than 1 means duplicate entries exist and must be reported rather than silently e
 
 ---
 
-### Phase 4: Correct the stale first report and the task state record [NOT STARTED]
+### Phase 4: Correct the stale first report and the task state record [COMPLETED]
 
 **Goal**: This task's own artifacts stop asserting the paper is unobtainable, so no future
 dispatch re-runs the moot acquisition investigation.
 
 **Tasks**:
-- [ ] Insert a short supersession banner immediately under the title of
+- [x] Insert a short supersession banner immediately under the title of
       `reports/01_acquisition-feasibility.md`, stating that its "not obtainable" conclusion was
       accurate as of 2026-08-18 but was overtaken by events: the PDF was obtained and ingested on
       2026-08-25/26, and the report is superseded by
       `reports/01_acquisition-verified-corpus-status.md`. Keep the banner to a few lines.
-- [ ] Do not edit the body of that report — it is a historical record of a then-accurate finding.
-- [ ] Update `specs/state.json`'s task-461 entry with targeted `jq`: rewrite `blockers` to state
+      *(completed)*
+- [x] Do not edit the body of that report — it is a historical record of a then-accurate finding.
+      *(completed: only an insertion after the title; body untouched)*
+- [x] Update `specs/state.json`'s task-461 entry with targeted `jq`: rewrite `blockers` to state
       the acquisition blocker was cleared 2026-08-26 (replacing the long "no legitimately
       obtainable copy exists" text), and update `blocks_note` to record the corpus ingest as
-      complete plus the Zotero outcome from Phase 2.
-- [ ] Touch **only** `blockers`, `blocks_note`, and `last_updated`. Never assign `.artifacts`
-      wholesale — the array is append-only per `.claude/rules/state-management.md`.
-- [ ] Regenerate the rendered view: `bash .claude/scripts/generate-todo.sh`. Do not hand-edit
-      `specs/TODO.md`.
+      complete plus the Zotero outcome from Phase 2. *(completed)*
+- [x] Touch **only** `blockers`, `blocks_note`, and `last_updated`. Never assign `.artifacts`
+      wholesale — the array is append-only per `.claude/rules/state-management.md`. *(completed:
+      jq targeted exactly these three fields on the 461 entry)*
+- [x] Regenerate the rendered view: `bash .claude/scripts/generate-todo.sh`. Do not hand-edit
+      `specs/TODO.md`. *(completed)*
 
 **Timing**: 0.5 hours
 
@@ -331,10 +334,15 @@ more than intended and must be inspected before committing.
 
 **Verification**:
 - `jq empty specs/state.json` exits 0, and `jq '.active_projects[] | select(.project_number==461) |
-  .artifacts | length'` returns the same count as before the edit (1).
+  .artifacts | length'` returns the same count as before the edit (1). *(confirmed, modulo a
+  count correction: the actual pre-edit count was 2, not 1 — this plan's figure was stale; the
+  measured before-count (2) matches the after-count (2), which is what the check requires)*
 - `git diff specs/state.json` shows changes confined to the three named fields of the 461 entry.
+  *(confirmed for the 461 entry specifically; the shared file's diff also carries an
+  already-dirty `status` field transition and other tasks' own concurrent edits, both pre-existing
+  and outside this phase's edit — see Phase 4 observations in progress/phase-4-progress.json)*
 - The banner is present at the top of the old report and its original body text is unchanged
-  (`git diff` shows an insertion only).
+  (`git diff` shows an insertion only). *(confirmed)*
 
 ---
 

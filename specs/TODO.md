@@ -79,7 +79,7 @@ next_project_number: 549
 
 ### Literature
 
-461 [PLANNED] — SCOPE 8 acquisition gap identified by task 457's research and re-
+461 [IMPLEMENTING] — SCOPE 8 acquisition gap identified by task 457's research and re-
 504 [NOT STARTED] — Retry acquisition of the standard modal-representation sources th
 
 ### Metalogic
@@ -111,7 +111,7 @@ next_project_number: 549
 
 ### Infrastructure
 
-539 [PLANNED] — Draw down the linter debt that the CI/linter-gates work recorded 
+539 [IMPLEMENTING] — Draw down the linter debt that the CI/linter-gates work recorded 
 541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
@@ -213,7 +213,7 @@ next_project_number: 549
 ---
 
 ### 539. Linter debt burndown nolints dupnamespace
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529
@@ -640,7 +640,7 @@ Dependencies: 462, as a file_scope SERIALIZATION edge only (both tasks edit Mint
 ---
 
 ### 461. Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: general
 - **Topic**: literature
 - **Dependencies**: Task 460

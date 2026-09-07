@@ -1,5 +1,13 @@
 # Research Report: Task #461
 
+> **SUPERSEDED.** This report's "not obtainable" conclusion was accurate as of 2026-08-18, the
+> date it was written. It was overtaken by events: the PDF was obtained and fully ingested into
+> the corpus on 2026-08-25/26. It is superseded by
+> `reports/01_acquisition-verified-corpus-status.md`, which confirms the corpus entry and
+> completes the one step that remained genuinely open (the Zotero add). Do not re-derive this
+> report's acquisition-blocked conclusion; the body below is preserved unchanged as a historical
+> record.
+
 **Task**: 461 - Acquire Goldblatt 1989, "Varieties of Complex Algebras", Annals of Pure and
 Applied Logic 44, pp. 173-242
 **Started**: 2026-08-18T23:00:00Z

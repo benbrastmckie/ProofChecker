@@ -890,12 +890,12 @@
     {
       "project_number": 461,
       "project_name": "acquire_goldblatt_1989_varieties_of_complex_algebras",
-      "status": "planned",
+      "status": "implementing",
       "task_type": "general",
       "topic": "literature",
       "priority": "medium",
       "created": "2026-08-18T20:25:41Z",
-      "last_updated": "2026-09-07T19:48:09Z",
+      "last_updated": "2026-09-07T19:55:34Z",
       "title": "Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)",
       "description": "SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.",
       "artifacts": [
@@ -919,8 +919,8 @@
         "specs/literature-index.json"
       ],
       "session_id": "sess_1788809122_cefddd",
-      "blockers": "Acquisition blocked on user action -- no legitimately obtainable copy exists in this environment. VERIFIED 2026-08-18: absent from the Literature corpus (362 entries) and from Zotero (4044 items, queried read-only). Identity confirmed against Goldblatt's own VUW paperlist.pdf item 22 (Annals of Pure and Applied Logic 44, 1989, pp. 173-242). NOT the same paper as goldblatt_2003 already in the corpus (Erdos Graphs Resolve Fine's Canonicity Problem); the corpus sub-index already flags Goldblatt's 2003/2006 evolution survey as a partial substitute for this missing item. Semantic Scholar reports the ScienceDirect copy as Bronze OA, but every derived URL (curl with browser headers, WebFetch, DOI resolver chain) returns HTTP 403 behind a Cloudflare bot challenge; not self-archived (author's online-papers page starts ~2000); VUW repository search inconclusive (302, no positive evidence). No PDF obtained, so the pdffonts/pdftotext extractability check was recorded as not-applicable rather than fabricated. UNBLOCK BY: institutional ScienceDirect access, interlibrary loan, or a direct request to Robert Goldblatt (active VUW emeritus). Then re-run the extractability check before ingest -- if the copy is a scan, expect the same sentence-boundary-glue quality-gate failure documented in specs/460_acquire_gabbay_2003_many_dimensional_modal_logics/reports/03_phase5-fusion-site-analysis.md. Full acquisition path in reports/01_acquisition-feasibility.md.",
-      "blocks_note": "Acquisition blocker CLEARED 2026-08-26: user obtained the PDF (doi 10.1016/0168-0072(89)90032-8, 70pp). Two residual steps: (1) the file currently sits in specs/literature/, which DEPRECATED.md marks read-only fallback with do-not-add-new-entries -- ingest belongs in ~/Projects/Literature via /literature with LITERATURE_DIR set; (2) it is an Acrobat 3.0 Capture scan whose OCR text layer is unreliable on math, so any conversion must be flagged as image-read-only, not treated as a faithful text source."
+      "blockers": "Acquisition blocker CLEARED 2026-08-26: user obtained the PDF (doi 10.1016/0168-0072(89)90032-8, 70pp), fully ingested into the corpus at ~/Projects/Literature/sources/goldblatt_1989/ and indexed in both the global index and specs/literature-index.json. The single remaining step from the task description, adding the paper to Zotero, was completed 2026-09-07: Zotero item key MJEB25VU (DOI-only create, no PDF attached due to a documented ~9.2x storage-quota overage on this account -- the PDF already lives durably in the corpus). See reports/01_acquisition-verified-corpus-status.md and summaries/01_goldblatt-1989-zotero-closeout-summary.md for the full record.",
+      "blocks_note": "All acquisition and Zotero steps complete as of 2026-09-07. Corpus ingest: done 2026-08-25/26 (zotero_key MJEB25VU now recorded on both index entries). Zotero: item MJEB25VU created via Web API, DOI-only (no PDF attach -- storage quota overage). Outstanding environment issues routed around, not fixed, by this task: (1) the zot CLI on $PATH fails all subcommands with a missing httpx import (a working install exists at ~/.local/share/uv/tools/zotero-cli-cc/bin/zot); (2) this Zotero account is ~9.2x over its storage allotment. Each merits its own task if a durable fix is wanted. specs/literature/1-s2.0-0168007289900328-main.pdf (a duplicate download) left in place pending user decision -- see .return-meta.json user_decision."
     },
     {
       "project_number": 463,
@@ -1252,7 +1252,7 @@
     {
       "project_number": 539,
       "project_name": "linter_debt_burndown_nolints_dupnamespace",
-      "status": "planned",
+      "status": "implementing",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1266,7 +1266,7 @@
         "FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T19:48:25Z",
+      "last_updated": "2026-09-07T19:48:57Z",
       "artifacts": [
         {
           "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
