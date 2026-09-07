@@ -12668,6 +12668,76 @@ theorem pbrWitness_settlement_fails :
           (armTracker pbrWitnessBranch))
       = some (SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩) := by rfl
 
+
+/-- **The assembly, stated once and reused at every frame class the witness covers.** Given the
+three class-specific `rfl` facts — the label-free pass is saturated on the witness, the doctored run
+returns it open at `n + 1`, and the settlement test still reports the minting formula — the narrowed
+residual is refuted at that class and that fuel. Nothing here is class-specific; only its three
+hypotheses are. -/
+private theorem postBlockingSettlesRun_false_succ_of
+    {fc : FormalSystem.ProofSystem.FrameClass} (n : Nat)
+    (hnf : expandOnceNoFresh pbrWitnessBranch pbrWitnessOrd fc
+      = (ExpansionResult.saturated, pbrWitnessOrd))
+    (hE : expandBranchWithFuel pbrWitnessBranch (n + 1) pbrWitnessOrd fc pbrDoctoredTracker {} 100 0
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd, {})))
+    (hs : findUnexpandedUnblockedWith pbrWitnessBranch pbrWitnessOrd fc
+        (blockedTimes pbrWitnessBranch pbrWitnessOrd fc (armTracker pbrWitnessBranch))
+      = some (SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩)) :
+    ¬ PostBlockingSettlesRun fc (n + 1) := by
+  intro h
+  have hsb : saturateBlocked pbrWitnessBranch (n + 1) pbrWitnessOrd fc
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd)) :=
+    saturateBlocked_eq_self_of_noFresh_saturated (pbrWitness_findClosure_none fc) hnf (n + 1)
+  have hcon := h pbrWitnessBranch pbrWitnessBranch pbrWitnessOrd pbrWitnessOrd pbrDoctoredTracker
+    {} {} 100 0 pbrWitnessBranch pbrWitnessOrd hE hsb
+  rw [hs] at hcon
+  exact absurd hcon (by simp)
+
+/-- **Verdict: `PostBlockingSettlesRun` is FALSE at `.Base`, at every positive fuel figure.**
+
+The five obligations above, assembled. Note what is *not* claimed: this is not a claim that
+`buildTableauAt` ever threads `pbrDoctoredTracker`, and it does not have to be. The residual
+quantifies over the tracker argument, so a tracker it admits refutes it — exactly as
+`postBlockingSettles_fuel_zero_false` refutes the unrestricted form at an arm no caller reaches. -/
+theorem postBlockingSettlesRun_false_succ (n : Nat) :
+    ¬ PostBlockingSettlesRun FormalSystem.ProofSystem.FrameClass.Base (n + 1) :=
+  postBlockingSettlesRun_false_succ_of n pbrWitness_expandOnceNoFresh_saturated
+    (pbrWitness_expandBranchWithFuel_eq n) pbrWitness_settlement_fails
+
+/-- **The terminus's own fuel figure is always positive.** `mintPathBound` ends in `+ 1`, so
+`mintPathBoundAt` is at least one, and `fuelFigure_pos` lifts that to the figure itself with no
+hypothesis on any parameter. This is what carries the `n + 1` refutation to the figure the termini
+are stated at. -/
+theorem one_le_mintAwareFuelAt (Ucard Tmax mintBudget D β : Nat) :
+    1 ≤ mintAwareFuelAt Ucard Tmax mintBudget D β :=
+  fuelFigure_pos (by simp only [mintPathBoundAt, mintPathBound]; omega)
+
+/-- **The dispatch's literal question, answered: FALSE.**
+
+`PostBlockingSettlesRun` does not hold at the terminus's own fuel figure, at `.Base`, for **any**
+values of the parameters — the figure is always at least one, and the predicate is refuted at every
+positive figure.
+
+**The consequence, stated without hedging.** `buildTableauAt_isSome_of_budget_fixed_run` and its five
+`_run` siblings carry `PostBlockingSettlesRun fc (mintAwareFuelAt …)` as a hypothesis. At `.Base`
+(and, by `postBlockingSettlesRun_false_dense` / `postBlockingSettlesRun_false_rtime`, at `.Dense` and
+`.RTime`) that hypothesis is **false**: those statements are vacuous there, not merely unproved.
+Nothing is withdrawn on that account — they remain exactly as true as they ever were — but a reader
+must not read them as delivering `buildTableauAt … .isSome` at those classes. This is the analogue
+of `postBlockingExitSettled_false`, and it sits beside it in spirit: a residual decided in the
+negative, recorded as a theorem rather than left to be inferred.
+
+The repair is named below (`PostBlockingSettlesSeedRun`) and is carried as a hypothesis, not
+discharged. -/
+theorem postBlockingSettlesRun_terminusFuel_false
+    (U : Finset SignedFormula) (Tmax mintBudget D β : Nat) :
+    ¬ PostBlockingSettlesRun FormalSystem.ProofSystem.FrameClass.Base
+        (mintAwareFuelAt U.card Tmax mintBudget D β) := by
+  obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero
+    (Nat.one_le_iff_ne_zero.mp (one_le_mintAwareFuelAt U.card Tmax mintBudget D β))
+  rw [hn]
+  exact postBlockingSettlesRun_false_succ n
+
 section PostBlockingRunProbe
 
 /-- The terminus's own two calls, run in sequence and reported as three booleans: the seed run

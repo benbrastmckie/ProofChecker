@@ -246,28 +246,28 @@ fallback is used, say which and why in the summary rather than silently substitu
 
 ---
 
-### Phase 3: The refutation, and the verdict at the terminus's own fuel figure [NOT STARTED]
+### Phase 3: The refutation, and the verdict at the terminus's own fuel figure [COMPLETED]
 
 **Goal**: Assemble the obligations into `¬ PostBlockingSettlesRun .Base (n+1)`, prove the fuel
 figure is always positive, and land the theorem that answers the dispatch's literal question.
 
 **Tasks**:
-- [ ] Land `postBlockingSettlesRun_false_succ`: instantiate the hypothesis at the witness
+- [x] Land `postBlockingSettlesRun_false_succ`: instantiate the hypothesis at the witness *(deviation: altered — the assembly is factored through a new `private theorem postBlockingSettlesRun_false_succ_of`, which takes the three class-specific `rfl` facts as hypotheses, so Phase 4's `.Dense`/`.RTime` verdicts reuse it instead of triplicating the argument.)*
       (`h W W ordW ordW trBad {} {} 100 0 W ordW`), rewrite by `pbrWitness_settlement_fails`,
       close by `absurd _ (by simp)`.
-- [ ] Land `one_le_mintAwareFuelAt`: `1 ≤ mintPathBoundAt Ucard Tmax mintBudget` by
+- [x] Land `one_le_mintAwareFuelAt`: `1 ≤ mintPathBoundAt Ucard Tmax mintBudget` by
       `simp only [mintPathBoundAt, mintPathBound]; omega` (the `+ 1` at the end of `mintPathBound`,
       `:4976`), then `fuelFigure_pos`.
-- [ ] Land `postBlockingSettlesRun_terminusFuel_false`, stated with `(U : Finset SignedFormula)` and
+- [x] Land `postBlockingSettlesRun_terminusFuel_false`, stated with `(U : Finset SignedFormula)` and
       `U.card` so it reads literally as the terminus's own hypothesis. Convert the figure to
       successor form via `Nat.exists_eq_succ_of_ne_zero` (or `Nat.succ_pred_eq_of_pos`) off
       `one_le_mintAwareFuelAt`, then apply `postBlockingSettlesRun_false_succ`.
-- [ ] Docstring on `postBlockingSettlesRun_terminusFuel_false` states the consequence in one
+- [x] Docstring on `postBlockingSettlesRun_terminusFuel_false` states the consequence in one
       sentence and without hedging: `buildTableauAt_isSome_of_budget_fixed_run` (`:12438`) and its
       five `_run` siblings carry a hypothesis that is **false** at `.Base` — they are vacuous there,
       not merely unproved. This is the analogue of `postBlockingExitSettled_false` and sits beside
       it in spirit.
-- [ ] Commit each green theorem.
+- [x] Commit each green theorem. *(deviation: altered — one commit for the phase, one module build; see the Phase 2 note on concurrent-build cost.)*
 
 **Timing**: 1.5 hours
 
@@ -288,7 +288,7 @@ figure is always positive, and land the theorem that answers the dispatch's lite
 
 ---
 
-### Phase 4: Extend to `.Dense` and `.RTime`; record `.ZTime` as a scoped sub-case [NOT STARTED]
+### Phase 4: Extend to `.Dense` and `.RTime`; record `.ZTime` as a scoped sub-case [IN PROGRESS]
 
 **Goal**: Complete the frame-class record for the classes research verified, and record `.ZTime`
 honestly rather than leaving it implicit.
