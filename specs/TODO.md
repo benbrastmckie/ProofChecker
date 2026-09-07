@@ -79,7 +79,7 @@ next_project_number: 549
 
 ### Literature
 
-461 [RESEARCHED] — SCOPE 8 acquisition gap identified by task 457's research and re-
+461 [PLANNED] — SCOPE 8 acquisition gap identified by task 457's research and re-
 504 [NOT STARTED] — Retry acquisition of the standard modal-representation sources th
 
 ### Metalogic
@@ -111,7 +111,7 @@ next_project_number: 549
 
 ### Infrastructure
 
-539 [RESEARCHED] — Draw down the linter debt that the CI/linter-gates work recorded 
+539 [PLANNING] — Draw down the linter debt that the CI/linter-gates work recorded 
 541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
@@ -213,7 +213,7 @@ next_project_number: 549
 ---
 
 ### 539. Linter debt burndown nolints dupnamespace
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529
@@ -639,11 +639,12 @@ Dependencies: 462, as a file_scope SERIALIZATION edge only (both tasks edit Mint
 ---
 
 ### 461. Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: general
 - **Topic**: literature
 - **Dependencies**: Task 460
 - **Research**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md]
+- **Plan**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/plans/01_goldblatt-1989-zotero-closeout.md]
 
 **Description**: SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.
 

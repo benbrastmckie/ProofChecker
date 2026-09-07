@@ -890,12 +890,12 @@
     {
       "project_number": 461,
       "project_name": "acquire_goldblatt_1989_varieties_of_complex_algebras",
-      "status": "researched",
+      "status": "planned",
       "task_type": "general",
       "topic": "literature",
       "priority": "medium",
       "created": "2026-08-18T20:25:41Z",
-      "last_updated": "2026-09-07T19:41:22Z",
+      "last_updated": "2026-09-07T19:48:09Z",
       "title": "Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)",
       "description": "SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.",
       "artifacts": [
@@ -903,6 +903,11 @@
           "path": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md",
           "type": "report",
           "summary": "Verifies (from the PDF's own masthead, TOC, dedication, references, and pdfinfo metadata, not from filename/user claim alone) that specs/literature/1-s2.0-0168007289900328-main.pdf is Goldblatt 1989 'Varieties of Complex Algebras' (APAL 44, 173-242, doi 10.1016/0168-0072(89)90032-8). Discovers the paper was ALREADY acquired and fully ingested into the global corpus on 2026-08-25/26 (~/Projects/Literature/sources/goldblatt_1989/, indexed in both the global index and specs/literature-index.json, already cited as acquired by downstream task 502) -- a fact recorded in this task's own state.json blocks_note but not reflected in its stale [RESEARCHING] status. The specs/literature/ file the user pointed at is a redundant duplicate download, not a new acquisition. Confirms via a freshly-regenerated (non-stale) Zotero export that the paper is genuinely still absent from Zotero -- the one task-description step still outstanding -- and flags two environment risks for the plan phase: the zot CLI is currently broken for all subcommands (missing httpx in the venv the Nix-wrapped binary resolves to), and this Zotero account has a previously-documented storage-quota overage (2745.6/300 MB) that risks rejecting a new PDF attachment."
+        },
+        {
+          "path": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/plans/01_goldblatt-1989-zotero-closeout.md",
+          "type": "plan",
+          "summary": "5-phase, 2-hour plan scoping only the genuinely remaining work: establish a working zot route around the httpx packaging defect, create the Zotero item (DOI-only by default given the documented storage-quota overage, with orphaned-attachment cleanup if an attach is attempted), record the zotero_key on both corpus index entries, annotate the stale first report and correct state.json's blocker text, and leave the redundant duplicate PDF in place pending a non-blocking user decision."
         }
       ],
       "dependencies": [
@@ -1247,7 +1252,7 @@
     {
       "project_number": 539,
       "project_name": "linter_debt_burndown_nolints_dupnamespace",
-      "status": "researched",
+      "status": "planning",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1261,7 +1266,7 @@
         "FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T19:41:35Z",
+      "last_updated": "2026-09-07T19:42:05Z",
       "artifacts": [
         {
           "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
@@ -1269,7 +1274,7 @@
           "summary": "Measured linter-debt baseline (307 nolints + 14 dupNamespace); both concrete fixes prototyped and compile-verified then reverted; recommends nolints.json 307 -> 217 with unusedArguments permanently grandfathered on 95.4%-instance-argument evidence."
         }
       ],
-      "session_id": "sess_1788809122_cefddd",
+      "session_id": "sess_1788809122_cefddd_539",
       "next_artifact_number": 2
     },
     {
