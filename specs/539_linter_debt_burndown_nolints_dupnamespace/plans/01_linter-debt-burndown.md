@@ -170,27 +170,27 @@ outside `Extraction.lean` appears, stop and re-scope the phase rather than proce
 
 ---
 
-### Phase 2: Relocate `structure Chronicle` (dupNamespace 14 -> 0) [NOT STARTED]
+### Phase 2: Relocate `structure Chronicle` (dupNamespace 14 -> 0) [COMPLETED]
 
 **Goal**: Move `structure Chronicle` out of `namespace FormalSystem.Metalogic.BXCanonical.Chronicle`
 and into the parent `FormalSystem.Metalogic.BXCanonical`, so `…BXCanonical.Chronicle` becomes the
 structure's own namespace (the standard Lean/Mathlib idiom) rather than a sibling of it.
 
 **Tasks**:
-- [ ] Re-derive anchors:
+- [x] Re-derive anchors:
       `grep -n "^namespace \|^end \|^structure Chronicle\|^def Chronicle\.c" FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean`
       (expected shape: namespace opens near the top, `structure Chronicle where` mid-file, nine
       `def Chronicle.cN`, namespace closes near the end).
-- [ ] Close the `…BXCanonical.Chronicle` namespace immediately before the structure, declare the
+- [x] Close the `…BXCanonical.Chronicle` namespace immediately before the structure, declare the
       structure inside `namespace FormalSystem.Metalogic.BXCanonical`, then reopen
       `namespace FormalSystem.Metalogic.BXCanonical.Chronicle` immediately after it. Note the Lean
       constraint: a namespace opened with a dotted path must be closed by the same dotted `end`,
       so this is an `end …Chronicle` / `namespace …BXCanonical` / structure / `end …BXCanonical` /
       `namespace …BXCanonical.Chronicle` sandwich, not a one-segment `end Chronicle`.
-- [ ] Rename the nine `def Chronicle.cN` to `def cN` (`c0`, `c1`, `c2`, `c2'`, `c3`, `c4`, `c4'`,
+- [x] Rename the nine `def Chronicle.cN` to `def cN` (`c0`, `c1`, `c2`, `c2'`, `c3`, `c4`, `c4'`,
       `c5`, `c5'`) — they now sit inside the structure's own namespace, so the prefix would
       re-introduce the duplication.
-- [ ] Make **no other edit**. The change is reference-transparent: bare `Chronicle`, `χ.f`/`.g`/
+- [x] Make **no other edit**. The change is reference-transparent: bare `Chronicle`, `χ.f`/`.g`/
       `.dom`, `χ.cN` dot notation, explicit `Chronicle.cN`, `⟨…⟩` anonymous constructors,
       `{ f := … }` structure instances, and `structure ValidChronicle extends Chronicle` all
       resolve to the same referents before and after.

@@ -536,6 +536,12 @@ def BurgessR3Maximal (fc : FrameClass) (A B C : Set Formula) : Prop :=
 
 /-! ## Chronicle Structure -/
 
+end FormalSystem.Metalogic.BXCanonical.Chronicle
+
+namespace FormalSystem.Metalogic.BXCanonical
+
+open FormalSystem.Syntax
+
 /--
 A **Chronicle** is a triple `(f, g, dom)` representing a finite temporal
 model over the rationals, as defined in Burgess 1982 Section 2.
@@ -553,10 +559,20 @@ structure Chronicle where
   /-- Finite domain of time points -/
   dom : Finset Rat
 
+end FormalSystem.Metalogic.BXCanonical
+
+namespace FormalSystem.Metalogic.BXCanonical.Chronicle
+
+open FormalSystem.Syntax
+open FormalSystem.ProofSystem
+open FormalSystem.Metalogic.Core
+open FormalSystem.Metalogic.Bundle
+open FormalSystem.Theorems
+
 /-! ## Chronicle Conditions -/
 
 /-- **C0**: Every point in the domain maps to an MCS. -/
-def Chronicle.c0 (fc : FrameClass) (χ : Chronicle) : Prop :=
+def c0 (fc : FrameClass) (χ : Chronicle) : Prop :=
   ∀ x ∈ χ.dom, SetMaximalConsistent (fc := fc) (χ.f x)
 
 /-- **C1**: Every pair x < y in the domain maps to a CUD set
@@ -564,12 +580,12 @@ def Chronicle.c0 (fc : FrameClass) (χ : Chronicle) : Prop :=
 exactly: interval sets g(x,y) are DCS = deductively closed, which does NOT
 require consistency. At finite stages, g-values can be Set.univ (inconsistent)
 when the interval is vacuous (adjacent points with no intermediate witnesses). -/
-def Chronicle.c1 (fc : FrameClass) (χ : Chronicle) : Prop :=
+def c1 (fc : FrameClass) (χ : Chronicle) : Prop :=
   ∀ x y : Rat, x ∈ χ.dom → y ∈ χ.dom → x < y → ClosedUnderDerivation fc (χ.g x y)
 
 /-- **C2**: The three-argument r-relation holds for all pairs x < y in the domain.
 For x < y in dom, r3Relation(f(x), g(x,y), f(y)) holds. -/
-def Chronicle.c2 (χ : Chronicle) : Prop :=
+def c2 (χ : Chronicle) : Prop :=
   ∀ x y : Rat, x ∈ χ.dom → y ∈ χ.dom → x < y → r3Relation (χ.f x) (χ.g x y) (χ.f y)
 
 /-- **C2'**: BurgessR3Maximal for adjacent pairs (Burgess Definition 2.5).
@@ -585,7 +601,7 @@ formulas as possible while maintaining the r-relation, which is needed for:
 At the limit, the domain is dense (no adjacent pairs), so c2' is vacuously true.
 The `burgessR3Maximal_exists_from_seed` theorem in RRelation.lean produces maximal
 DCS from seed elements. -/
-def Chronicle.c2' (fc : FrameClass) (χ : Chronicle) : Prop :=
+def c2' (fc : FrameClass) (χ : Chronicle) : Prop :=
   ∀ x y : Rat, Adjacent χ.dom x y →
     BurgessR3Maximal fc (χ.f x) (χ.g x y) (χ.f y)
 
@@ -596,7 +612,7 @@ This is the CORRECT C3 from Burgess. The three-way intersection including f(y)
 is essential: it gives g(x,z) ⊆ f(y) immediately, which is the key property
 for the truth lemma. The earlier two-way version (omitting f(y)) was a
 transcription error that blocked 21 research rounds. -/
-def Chronicle.c3 (χ : Chronicle) : Prop :=
+def c3 (χ : Chronicle) : Prop :=
   ∀ x y z : Rat, x ∈ χ.dom → y ∈ χ.dom → z ∈ χ.dom →
     x < y → y < z → χ.g x z = χ.g x y ∩ χ.f y ∩ χ.g y z
 
@@ -614,7 +630,7 @@ otherwise γ would hold throughout [x,y) and δ at y, satisfying Until.
 Note: Burgess C4a applies to ALL pairs x < y in the domain, not just adjacent
 pairs. The adjacency restriction was a transcription error that made C4
 vacuously true at the dense limit (where no adjacent pairs exist). -/
-def Chronicle.c4 (χ : Chronicle) : Prop :=
+def c4 (χ : Chronicle) : Prop :=
   ∀ x y : Rat, x ∈ χ.dom → y ∈ χ.dom → x < y →
     ∀ (γ δ : Formula),
       (Formula.untl γ δ).neg ∈ χ.f x →
@@ -629,7 +645,7 @@ In `snce γ δ`: γ is the GUARD, δ is the EVENT.
 Checks EVENT (δ) at f(y), negates GUARD (γ) at f(z).
 
 Note: Like C4, this applies to ALL pairs y < x, not just adjacent pairs. -/
-def Chronicle.c4' (χ : Chronicle) : Prop :=
+def c4' (χ : Chronicle) : Prop :=
   ∀ x y : Rat, x ∈ χ.dom → y ∈ χ.dom → y < x →
     ∀ (γ δ : Formula),
       (Formula.snce γ δ).neg ∈ χ.f x →
@@ -640,7 +656,7 @@ def Chronicle.c4' (χ : Chronicle) : Prop :=
 For x in dom: if `gamma U delta in f(x)`, then there exists y in dom
 with x < y such that delta in f(y) and the guard gamma holds at all
 intermediate domain points. -/
-def Chronicle.c5 (χ : Chronicle) : Prop :=
+def c5 (χ : Chronicle) : Prop :=
   ∀ x ∈ χ.dom,
     ∀ (γ δ : Formula),
       Formula.untl γ δ ∈ χ.f x →
@@ -649,7 +665,7 @@ def Chronicle.c5 (χ : Chronicle) : Prop :=
           γ ∈ χ.f z ∧ Formula.untl γ δ ∈ χ.f z
 
 /-- **C5'**: Backward Since witness condition (mirror of C5). -/
-def Chronicle.c5' (χ : Chronicle) : Prop :=
+def c5' (χ : Chronicle) : Prop :=
   ∀ x ∈ χ.dom,
     ∀ (γ δ : Formula),
       Formula.snce γ δ ∈ χ.f x →
