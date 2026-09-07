@@ -11,9 +11,9 @@ next_project_number: 549
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,539,540,541,542,544,545,546 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,537,547 | 193,298,433,461,530,535,546 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497,548 | 231,463,502,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,539,540,541,542,544,545,547 | -- | automation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,463,502,531,537,548 | 193,298,433,461,530,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
@@ -99,10 +99,6 @@ next_project_number: 549
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
 
-### Semantics
-
-546 [IMPLEMENTING] — Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.
-
 ### Documentation
 
 540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
@@ -110,8 +106,8 @@ next_project_number: 549
 ### Incompleteness
 
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
-544 [NOT STARTED] — Machine-check the failing half of CEB: no instance of the boxed d
-545 [NOT STARTED] — Decide, with machine-checked proof, whether the two H/G-language 
+544 [RESEARCHING] — Machine-check the failing half of CEB: no instance of the boxed d
+545 [RESEARCHING] — Decide, with machine-checked proof, whether the two H/G-language 
 
 ### Infrastructure
 
@@ -142,19 +138,20 @@ next_project_number: 549
 ---
 
 ### 546. Rename frameclass tags to ztime rtime
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: semantics
 - **Dependencies**: None
 - **Research**: [546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md]
 - **Plan**: [546_rename_frameclass_tags_to_ztime_rtime/plans/01_ztime-rtime-rename-plan.md]
+- **Summary**: [546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md]
 
 **Description**: Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.ZTime and FrameClass.RTime, with the frame predicates IsSuccArchDiscrete and IsDedekind renamed IsZTime and IsRTime, so that the Lean class tags say what they mean and match the paper's new system naming. PAPER CONVENTION (now implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, Extensions subsection and Appendix): each extension of TM is named by the class over which it is complete -- TM (all task frames), TM_z (Z-time, weakly complete), TM_d (dense task frames, strongly complete), TM_r (R-time, weakly complete), with the same subscripts on the Burgess-Xu cores BX_z, BX_d, BX_r and on the Past/Future fragments. R-time is defined there as the dense and complete temporal orders, which by Holder are exactly R; the complete temporal orders are exactly Z and R up to isomorphism. The frame CONDITIONS keep their names Discrete, Dense, Complete with correspondents DF, DN, CO. MEASURED STATE: `inductive FrameClass | Base | Dense | Discrete | Dedekind` at FormalSystem/ProofSystem/Axioms.lean:529 with the partial order Dense <= Dedekind at :536-543; `FrameClass.Sat` at FormalSystem/Semantics/FrameClassValidity.lean interprets `.Discrete` as `TaskFrame.IsSuccArchDiscrete` and `.Dedekind` as `TaskFrame.IsDedekind`, and its docstring records in bold that neither tag means the bare condition its name suggests -- that is the confusion this rename removes. Occurrence counts under FormalSystem/: `.Discrete` 494 lines in 70 files, `.Dedekind` 345 lines in 54 files, `IsSuccArchDiscrete` 32 lines in 9 files, `IsDedekind` 29 lines in 8 files; derived names `soundness_discrete` 58 lines in 18 files, `soundness_dedekind` 44 lines in 9 files, `ValidDiscrete` 135 lines in 26 files, `ValidDedekind` 103 lines in 24 files, plus `TMCompleteDiscrete` in Metalogic/Conservativity/TMCompletenessReduction.lean and the string literals in Automation/ProofStepExport.lean and Automation/BenchmarkAnchors.lean that name classes (`fc := .Discrete`). WORK: rename the two constructors and two predicates; rename the derived identifiers consistently (soundness_ztime, soundness_rtime, ValidZTime, ValidRTime, TMCompleteZTime, and so on -- pick one scheme and apply it everywhere, recording it in the naming-convention docs); leave `TaskFrame.IsDiscrete` and `TaskFrame.IsComplete` as the bare conditions; update the FrameClass.Sat docstring so the naming-deviation paragraphs become plain statements of what each tag denotes; update every string literal and any JSON or benchmark fixture that names a class. Do not change any semantics or proof content. lake build FormalSystem must stay green with no new sorry, and scripts/check-module-invariants.sh must not regress. This is the first of three tasks pressing the paper's z/d/r convention into this repository; the docstring system-name replacement and the paper-anchor re-pinning are separate follow-on tasks.
 
 ---
 
 ### 545. Hg completeness dense and dedekind verdicts
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: incompleteness
 - **Dependencies**: None
@@ -164,7 +161,7 @@ next_project_number: 549
 ---
 
 ### 544. Machine check sp underivable native bl soundness
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: incompleteness
 - **Dependencies**: None

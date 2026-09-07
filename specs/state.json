@@ -83,13 +83,13 @@
     {
       "project_number": 546,
       "project_name": "rename_frameclass_tags_to_ztime_rtime",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Rename FrameClass.Discrete and FrameClass.Dedekind to FrameClass.ZTime and FrameClass.RTime, with the frame predicates IsSuccArchDiscrete and IsDedekind renamed IsZTime and IsRTime, so that the Lean class tags say what they mean and match the paper's new system naming. PAPER CONVENTION (now implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex, Extensions subsection and Appendix): each extension of TM is named by the class over which it is complete -- TM (all task frames), TM_z (Z-time, weakly complete), TM_d (dense task frames, strongly complete), TM_r (R-time, weakly complete), with the same subscripts on the Burgess-Xu cores BX_z, BX_d, BX_r and on the Past/Future fragments. R-time is defined there as the dense and complete temporal orders, which by Holder are exactly R; the complete temporal orders are exactly Z and R up to isomorphism. The frame CONDITIONS keep their names Discrete, Dense, Complete with correspondents DF, DN, CO. MEASURED STATE: `inductive FrameClass | Base | Dense | Discrete | Dedekind` at FormalSystem/ProofSystem/Axioms.lean:529 with the partial order Dense <= Dedekind at :536-543; `FrameClass.Sat` at FormalSystem/Semantics/FrameClassValidity.lean interprets `.Discrete` as `TaskFrame.IsSuccArchDiscrete` and `.Dedekind` as `TaskFrame.IsDedekind`, and its docstring records in bold that neither tag means the bare condition its name suggests -- that is the confusion this rename removes. Occurrence counts under FormalSystem/: `.Discrete` 494 lines in 70 files, `.Dedekind` 345 lines in 54 files, `IsSuccArchDiscrete` 32 lines in 9 files, `IsDedekind` 29 lines in 8 files; derived names `soundness_discrete` 58 lines in 18 files, `soundness_dedekind` 44 lines in 9 files, `ValidDiscrete` 135 lines in 26 files, `ValidDedekind` 103 lines in 24 files, plus `TMCompleteDiscrete` in Metalogic/Conservativity/TMCompletenessReduction.lean and the string literals in Automation/ProofStepExport.lean and Automation/BenchmarkAnchors.lean that name classes (`fc := .Discrete`). WORK: rename the two constructors and two predicates; rename the derived identifiers consistently (soundness_ztime, soundness_rtime, ValidZTime, ValidRTime, TMCompleteZTime, and so on -- pick one scheme and apply it everywhere, recording it in the naming-convention docs); leave `TaskFrame.IsDiscrete` and `TaskFrame.IsComplete` as the bare conditions; update the FrameClass.Sat docstring so the naming-deviation paragraphs become plain statements of what each tag denotes; update every string literal and any JSON or benchmark fixture that names a class. Do not change any semantics or proof content. lake build FormalSystem must stay green with no new sorry, and scripts/check-module-invariants.sh must not regress. This is the first of three tasks pressing the paper's z/d/r convention into this repository; the docstring system-name replacement and the paper-anchor re-pinning are separate follow-on tasks.",
       "topic": "semantics",
       "dependencies": [],
       "created": "2026-09-07T04:24:05Z",
-      "last_updated": "2026-09-07T16:09:08Z",
+      "last_updated": "2026-09-07T19:11:34Z",
       "file_scope": [
         "FormalSystem/",
         "Tests/BimodalTest/",
@@ -114,28 +114,54 @@
           "path": "specs/546_rename_frameclass_tags_to_ztime_rtime/plans/01_ztime-rtime-rename-plan.md",
           "type": "plan",
           "summary": "Nine-phase leaf-first plan renaming FrameClass.Discrete/.Dedekind to .ZTime/.RTime with an isolated atomic-batch constructor pass and per-phase KEEP-list guards."
+        },
+        {
+          "path": "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md",
+          "type": "summary",
+          "summary": "FrameClass.Discrete/.Dedekind renamed to .ZTime/.RTime across 152 files; all gates green"
         }
-      ]
+      ],
+      "completion_summary": "Renamed FrameClass.Discrete/.Dedekind to .ZTime/.RTime and every derived identifier that names the frame class -- frame predicates, validity predicates, soundness/completeness families, tableau rule sets, string literals and their round-trip parsers -- across 152 files, while leaving the bare order conditions, the axiom constructors, the 560-occurrence Dedekind-INF/SUP API and layerReynoldsDedekind untouched. All nine phases closed green: lake build, lake build BimodalTest, full check-module-invariants.sh, and typst-sync-check.sh all pass, with the structural sorry inventory unchanged at zero and no new axioms. typst-sync-check.sh was failing before this task and is now green, three of its four pre-existing violations having been fixed forward in Phase 8."
     },
     {
       "project_number": 545,
       "project_name": "hg_completeness_dense_and_dedekind_verdicts",
-      "status": "not_started",
+      "status": "researching",
       "task_type": "lean4",
       "description": "Decide, with machine-checked proof, whether the two H/G-language (Past/Future) systems that the paper leaves open are weakly complete: TM_d := TM + DN over the Dense frame class, and TM_dc := TM + DN + CO over the Dedekind (dense-and-complete, i.e. R-time) class, where TM is the BaseLanguage proof system (the paper's TM^-). These are the two remaining open rows of the paper's rmk:fragment; the Base row is the CEB task (Sp underivability) and the Discrete row is closed (tmCompleteDiscrete_refuted). A negative verdict with a machine-checked separating H/G-validity, or a positive verdict with a completeness proof, are both complete outcomes; an honest OPEN verdict must name the precise obstruction. EXPECTED VERDICT (to be tested, not assumed): both complete. Reasoning: unlike Base and Discrete, neither class splits into two H/G-definable subclasses, so no (Sp)/Z1-style dichotomy witness is available; every dense unbounded chain has the H/G logic of Q by downward Lowenheim-Skolem, and R is a single frame up to isomorphism. SUGGESTED ROUTE FOR DENSE: (1) Kripke-style completeness of TM + DN over frames whose Box-classes are R-closed unions of dense unbounded chains, via the Sahlqvist/canonical-model argument for the fusion S5 (x) Kt4.3 + seriality + density with the MF interaction (MF and its TD-mirror force each Box-class to be closed under R-successors and R-predecessors; the TM-completeness-status report section 5(i) records this as the Kripke-level answer, unformalized); bulldoze clusters into dense chains; (2) replace each chain by a countable elementary substructure, order-isomorphic to Q by Mathlib's Order.iso_of_countable_dense; (3) transform into a Dense task frame: world states := chain points, durations := Q, task relation := translation along each chain (a disjoint union of translation task frames, each satisfying Compositionality, Seriality, Limit, Saturation with singleton fibres), histories := all translates; show BL truth is preserved since Box over H_F at a time equals truth at every point of the class under translation closure. SUGGESTED ROUTE FOR DEDEKIND: the temporal part of TM_dc is Bull 1968 / Goldblatt's axiomatization of the H/G logic of R (CO is exactly the Dedekind axiom of that literature), so the target is Bull's completeness theorem for R plus the same product/translation transfer; NOTE that CO is not Sahlqvist, so the canonical-model route of the Dense case does not apply and a Bull/Burgess-style step-by-step or Dedekind-completion construction is required, making this the substantially harder half. EXISTING ASSETS: BL-side semantics and soundness (Semantics/BLTruth.lean, BLValidity.lean, Metalogic/Conservativity/BaseLanguageSoundness.lean), the Fragment theorem (Conservativity/Fragment.lean), the reduction tmComplete_iff_forward and its Dense/Dedekind rows (Conservativity/TMCompletenessReduction.lean), the BX-side canonical model and completeness_dense / completeness_dedekind (Metalogic/BXCanonical/), and LexCarrier.lean. RELATION TO OTHER TASKS: settling these two rows settles the Sigma_fc = empty case of the Hg-fragment finite-axiomatizability task at Dense and Dedekind, and is independent of the CEB task at Base. HARD CONSTRAINT inherited from Conservativity.lean: never state a completeness or forward-conservativity theorem and discharge it with sorry.",
       "topic": "incompleteness",
       "created": "2026-09-07T03:57:13Z",
-      "last_updated": "2026-09-07T03:57:13Z"
+      "last_updated": "2026-09-07T18:56:38Z",
+      "session_id": "sess_1788807358_25f89d_545",
+      "file_scope": [
+        "FormalSystem/Metalogic/Conservativity/ForwardDense.lean",
+        "FormalSystem/Metalogic/Conservativity/ForwardDedekind.lean",
+        "FormalSystem/Metalogic/Conservativity/Fragment.lean",
+        "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean",
+        "FormalSystem/Metalogic/BXCanonical/",
+        "FormalSystem/Metalogic/StrongCompleteness.lean"
+      ]
     },
     {
       "project_number": 544,
       "project_name": "machine_check_sp_underivable_native_bl_soundness",
-      "status": "not_started",
+      "status": "researching",
       "task_type": "lean4",
       "description": "Machine-check the failing half of CEB: no instance of the boxed dichotomy (Sp) := Box(DF phi) or Box(DN psi) is a theorem of TM, the BaseLanguage Past/Future proof system (the paper's TM^-). SpWitness.lean already records (Sp) as BL-valid (blValid_sp) and TM+-derivable (sp_translate); its TM-underivability is the one claim in the paper's fragment-system discussion (possible_worlds.tex, sub:Logic, second footnote of the TM^- paragraph) that is stated as NOT verified, and the paper wants to cite this repository for it. WHY IT IS UNAVAILABLE TODAY: (Sp) is valid on every task frame, so no TaskFrame-bound refutation exists; a countermodel must be a structure OUTSIDE the task-frame class on which every TM schema remains sound but whose temporal order is neither discrete nor dense (e.g. the lexicographic sum Z + Q, or the two-fibre structure named in Metalogic/Conservativity.lean). SCOPE, following the follow-up proposed but not created by the TM-completeness-status task: (1) a native BL frame notion not bound to TaskFrame; (2) a native BL truth definition over it; (3) a native BL soundness theorem verifying all TM axiom schemata directly (MK, MT, M5, MF, TD, TK, T4, TB, TA, TL) plus MP, MN, and temporal necessitation, via swap-strengthened induction for TD; (4) the concrete countermodel instance and the evaluation of some (Sp) instance as false there; (5) the theorem not_derivable_sp and its corollary tmCompleteBase_refuted : not TMCompleteBase, mirroring Z1Countermodel.tmCompleteDiscrete_refuted. HARD CONSTRAINT inherited from Conservativity.lean: never state a forward-conservativity theorem and discharge it with sorry; it is refuted, not open. OUT OF SCOPE: whether TM^-_d and TM^-_dc are complete over the dense and dense-and-complete classes remains a separate open question.",
       "topic": "incompleteness",
       "created": "2026-09-07T03:41:50Z",
-      "last_updated": "2026-09-07T03:41:50Z"
+      "last_updated": "2026-09-07T18:56:30Z",
+      "session_id": "sess_1788807358_25f89d_544",
+      "file_scope": [
+        "FormalSystem/Semantics/BLFrame.lean",
+        "FormalSystem/Semantics.lean",
+        "FormalSystem/Metalogic/Conservativity/SpCountermodel.lean",
+        "FormalSystem/Metalogic/Conservativity/SpWitness.lean",
+        "FormalSystem/Metalogic/Conservativity.lean",
+        "FormalSystem/README.md",
+        "FormalSystem/Metalogic/README.md",
+        "scripts/check-module-invariants.sh"
+      ]
     },
     {
       "project_number": 537,
