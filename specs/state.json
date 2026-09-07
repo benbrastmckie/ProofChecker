@@ -1153,7 +1153,7 @@
     {
       "project_number": 530,
       "project_name": "documentation_single_source_of_truth_theorem_index",
-      "status": "researched",
+      "status": "planned",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -1193,15 +1193,20 @@
         "FormalSystem/Metalogic/BaseLanguageSoundness.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-04T09:31:30Z",
+      "last_updated": "2026-09-07T19:23:23Z",
       "artifacts": [
         {
           "path": "specs/530_documentation_single_source_of_truth_theorem_index/reports/01_documentation-single-source-of-truth.md",
           "type": "report",
           "summary": "Re-derived every measured-state claim at HEAD f6ce84139: 9 of 16 wrong, 5 findings already fixed, 4 new defects; specifies the --emit-inventory mechanism, the corrected theorem-index seed, the C15/C18/C20 gate work, and an 11-phase decomposition."
+        },
+        {
+          "path": "specs/530_documentation_single_source_of_truth_theorem_index/plans/01_documentation-single-source-of-truth.md",
+          "type": "plan",
+          "summary": "19-phase, 33-hour plan making documentation counts and status machine-owned, creating docs/theorem-index.md, and purging archaeology prose from publication-facing docstrings."
         }
       ],
-      "session_id": "sess_1788503051_6873ef_530"
+      "session_id": "sess_1788808508_a5588d"
     },
     {
       "project_number": 531,
