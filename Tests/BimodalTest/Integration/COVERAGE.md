@@ -30,7 +30,7 @@
 
 | Scenario | Status | Test File | Test Name |
 |----------|--------|-----------|-----------|
-| tm_auto basic usage | ✓ | AutomationProofSystemTest.lean | Tests 1-10 |
+| modal_search basic usage | ✓ | AutomationProofSystemTest.lean | Tests 1-10 |
 | apply_axiom basic usage | ✓ | AutomationProofSystemTest.lean | Tests 11-20 |
 | Specific tactic usage | ✓ | AutomationProofSystemTest.lean | Tests 21-25 |
 | Soundness of automated proofs | ✓ | AutomationProofSystemTest.lean | Tests 26-35 |

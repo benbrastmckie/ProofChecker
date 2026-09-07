@@ -47,13 +47,13 @@ example : ⊢ p.imp (Formula.box p.diamond) := by modal_search
 -- Temporal axioms with empty context
 -- Note: Gp → GGp is now resolved by tryDerivedMatch (temporal4Derived), which is noncomputable
 noncomputable example : ⊢ (Formula.allFuture p).imp (Formula.allFuture (Formula.allFuture p)) := by
-    temporal_search
-example : ⊢ p.imp (Formula.allFuture (Formula.somePast p)) := by temporal_search
+    modal_search
+example : ⊢ p.imp (Formula.allFuture (Formula.somePast p)) := by modal_search
 
 -- Propositional axioms with empty context
-example : ⊢ p.imp (q.imp p) := by propositional_search
-example : ⊢ (p.imp (q.imp r)).imp ((p.imp q).imp (p.imp r)) := by propositional_search
-example : ⊢ Formula.bot.imp p := by propositional_search
+example : ⊢ p.imp (q.imp p) := by modal_search
+example : ⊢ (p.imp (q.imp r)).imp ((p.imp q).imp (p.imp r)) := by modal_search
+example : ⊢ Formula.bot.imp p := by modal_search
 
 #eval do
   IO.println "=== Empty Context Tests ==="
@@ -132,7 +132,7 @@ example : ⊢ (Formula.box (Formula.box (Formula.box p))).imp (Formula.box (Form
 -- Deep temporal nesting with tactics
 -- Note: GGp → GGGp is now resolved by tryDerivedMatch (temporal4Derived), which is noncomputable
 noncomputable example : ⊢ (Formula.allFuture (Formula.allFuture p)).imp
-    (Formula.allFuture (Formula.allFuture (Formula.allFuture p))) := by temporal_search
+    (Formula.allFuture (Formula.allFuture (Formula.allFuture p))) := by modal_search
 
 /-!
 ## Section 3: Large Context Tests
@@ -263,16 +263,16 @@ Test edge cases with special formula structures.
 -/
 
 -- Self-referential patterns (valid axiom instances)
-example : ⊢ p.imp (p.imp p) := by propositional_search  -- prop_s instance
-example : ⊢ (p.imp p).imp (p.imp (p.imp p)) := by propositional_search
+example : ⊢ p.imp (p.imp p) := by modal_search  -- prop_s instance
+example : ⊢ (p.imp p).imp (p.imp (p.imp p)) := by modal_search
 
 -- Double negation patterns (via ex falso and Peirce)
-example : ⊢ Formula.bot.imp (Formula.bot.imp p) := by propositional_search
+example : ⊢ Formula.bot.imp (Formula.bot.imp p) := by modal_search
 
 -- Nested implications (using prop_s pattern)
 -- Note: p → (q → (r → p)) is NOT a direct prop_s instance since prop_s is φ → (ψ → φ)
 -- We test valid nested implications that ARE axiom instances
-example : ⊢ (p.imp q).imp (r.imp (p.imp q)) := by propositional_search
+example : ⊢ (p.imp q).imp (r.imp (p.imp q)) := by modal_search
 
 #eval do
   IO.println "=== Special Pattern Tests ==="

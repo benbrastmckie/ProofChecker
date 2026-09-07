@@ -48,7 +48,7 @@ validity
   them). See `Boneyard/README.md` before grepping either tree for identifier usage
 - `FormalSystem.Theorems`: Derived theorems (Combinators, Propositional, ModalS5, ModalS4,
   Perpetuity, GeneralizedNecessitation, TemporalDerived, ContextualProofs)
-- `FormalSystem.Automation`: Proof tactics (modal_search, temporal_search), native proof search,
+- `FormalSystem.Automation`: Proof tactics (modal_search), native proof search,
   and the ML dataset-generation pipeline
 - `FormalSystem.Examples`: Pedagogical examples and proof strategies
 

@@ -16,7 +16,7 @@ Tests for proof automation tactics.
 
 - apply_axiom tactic
 - modal_t tactic
-- tm_auto automation
+- modal_search automation
 - Proof search algorithms
 - Edge cases and failure modes
 

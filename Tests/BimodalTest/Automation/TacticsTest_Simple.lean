@@ -18,7 +18,7 @@ open FormalSystem.Syntax FormalSystem.ProofSystem
 
 -- NOTE (Task 365): quarantined — the `apply_axiom`, `modal_t`, and `assumption_search`
 -- tactic macros were removed in a prior automation refactor. The current search tactics are
--- `modal_search`, `temporal_search`, `propositional_search`, and `tm_auto` (see
+-- `modal_search` (see
 -- Bimodal/Automation/Tactics/Commands.lean). The helper-function checks below remain valid.
 -- #check (@apply_axiom : Lean.ParserDescr)
 -- #check (@modal_t : Lean.ParserDescr)

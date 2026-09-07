@@ -89,7 +89,7 @@ Use theorems as integration tests where type-checking serves as assertion:
 
 ```lean
 example : ⊨ ((Formula.atom "p").box.imp (Formula.atom "p")) := by
-  let deriv : ⊢ ((Formula.atom "p").box.imp (Formula.atom "p")) := by tm_auto
+  let deriv : ⊢ ((Formula.atom "p").box.imp (Formula.atom "p")) := by modal_search
   exact soundness [] _ deriv
 ```
 
@@ -185,7 +185,7 @@ Tests verifying tactics produce valid derivations:
 
 - **Files**: `AutomationProofSystemTest.lean`
 - **Focus**: Tactic → Derivation → Soundness workflow
-- **Coverage**: `tm_auto`, `apply_axiom`, specific tactics, Aesop rules
+- **Coverage**: `modal_search`, `apply_axiom`, specific tactics, Aesop rules
 
 ### 3. Full Workflow Integration
 

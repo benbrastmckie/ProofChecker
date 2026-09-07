@@ -31,10 +31,10 @@ Aggregates all Automation components for the Core TM logic layer.
 ## Submodules
 
 - `Tactics`: Custom tactics including:
-  - `modal_search`: Bounded proof search for TM derivability goals (RECOMMENDED)
-  - `temporal_search`: Proof search optimized for temporal formulas
-  - `propositional_search`: Proof search for purely propositional formulas
-  - `tm_auto`: Alias for `modal_search` (previously Aesop-powered, now uses modal_search)
+  - `modal_search`: Bounded proof search for TM derivability goals -- the single
+    proof-search entry point. It replaced `temporal_search`, `propositional_search`
+    and `tm_auto`, which differed from it only in `SearchConfig` weight fields that
+    `searchProof` never read, and which have been removed.
   - `apply_axiom`, `modal_t`: Basic axiom application tactics
   - `assumption_search`: Context assumption search
 - `ProofSearch`: Native proof search functions with multiple strategies:
@@ -65,21 +65,20 @@ example (p q : Formula) : [p, p.imp q] ⊢ q := by
 example (p : Formula) : ⊢ p.box.imp p := by
   modal_search (depth := 5)
 
--- Temporal formulas (use temporal_search)
+-- Temporal formulas
 example (p : Formula) : ⊢ p.allFuture.imp p.allFuture.allFuture := by
-  temporal_search
+  modal_search
 
--- Propositional formulas (use propositional_search)
+-- Propositional formulas
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search
+  modal_search
 ```
 
 ## Tactic Selection Guide
 
-- `modal_search`: General purpose, works on all TM derivability goals
-- `temporal_search`: Prioritizes temporal rules, use for Fφ/Gφ formulas
-- `propositional_search`: Disables modal/temporal K, use for purely propositional goals
-- `tm_auto`: Alias for `modal_search` (recommended for general use)
+- `modal_search`: general purpose, and the only proof-search tactic. It works on all
+  TM derivability goals, temporal and propositional ones included; there is no
+  formula shape for which a different search tactic would do better.
 
 ## Implementation
 

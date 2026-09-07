@@ -99,7 +99,7 @@ syntax "modal_search" (num)? : tactic
 
 -- Named parameters syntax
 /-- A named search parameter, written `(name := value)`, as accepted by the
-`modal_search` / `temporal_search` / `propositional_search` tactics. -/
+`modal_search` tactic. -/
 syntax modalSearchParam := "(" ident " := " num ")"
 
 /-- `modal_search (depth := n) (visitLimit := m) …` — the named-parameter form of
@@ -152,154 +152,6 @@ elab_rules : tactic
     let cfg := applyParams SearchConfig.default paramList
     runModalSearch cfg
 
-/--
-`temporal_search` - Bounded proof search for temporal formulas.
-
-Behaviourally identical to `modal_search`. This tactic once carried a
-`SearchConfig.temporal` preset that raised a temporal-K weight, but `searchProof`
-never read any weight, so the preset had no effect and has been removed.
-
-**Syntax**:
-```lean
-temporal_search                -- Default temporal config
-temporal_search 5              -- Custom depth
-temporal_search (depth := 20)  -- Named parameter
-```
-
-**Example**:
-```lean
-example (p : Formula) : ⊢ (p.imp (p.somePast.allFuture)) := by
-  temporal_search
-```
--/
-syntax "temporal_search" (num)? : tactic
-
-/-- `temporal_search (depth := n) (visitLimit := m) …` — the named-parameter form of
-`temporal_search`, overriding individual fields of the temporal `SearchConfig`. -/
-syntax "temporal_search" modalSearchParam* : tactic
-
-/-- Run temporal_search with given configuration -/
-def runTemporalSearch (cfg : SearchConfig) : TacticM Unit := do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-
-  -- Validate goal type
-  let some (_fc, _ctx, _formula) ← extractDerivationGoal goalType
-    | throwError "temporal_search: goal must be a derivability relation `Γ ⊢ φ`, got {goalType}"
-
-  -- Attempt recursive proof search (visitLimit-bounded)
-  let counter ← IO.mkRef cfg.visitLimit
-  let found ← searchProof counter goal cfg.depth
-  if !found then
-    throwError
-        "temporal_search: no proof found within depth {cfg.depth} (visitLimit {cfg.visitLimit}) \
-            for goal {goalType}"
-
-elab_rules : tactic
-  | `(tactic| temporal_search $[$d]?) => do
-    let depth := d.map (·.getNat) |>.getD 10
-    runTemporalSearch { SearchConfig.default with depth := depth }
-
-elab_rules : tactic
-  | `(tactic| temporal_search $params:modalSearchParam*) => do
-    let paramList ← params.toList.mapM parseSearchParam
-    let cfg := applyParams SearchConfig.default paramList
-    runTemporalSearch cfg
-
-/--
-`propositional_search` - Bounded proof search for propositional formulas.
-
-Behaviourally identical to `modal_search`. This tactic once carried a
-`SearchConfig.propositional` preset that zeroed the modal-K and temporal-K
-weights, but `searchProof` never read any weight, so the preset never disabled
-anything and has been removed.
-
-**Syntax**:
-```lean
-propositional_search              -- Default propositional config
-propositional_search 5            -- Custom depth
-propositional_search (depth := 20)  -- Named parameter
-```
-
-**Example**:
-```lean
-example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search
-```
-
-**When to use**: nothing distinguishes this tactic from `modal_search`; prefer
-`modal_search` directly.
-
-**Difference from modal_search**: none. Every search strategy is tried in the
-same order at the same cost.
--/
-syntax "propositional_search" (num)? : tactic
-
-/-- `propositional_search (depth := n) (visitLimit := m) …` — the named-parameter form of
-`propositional_search`, overriding individual fields of the propositional `SearchConfig`. -/
-syntax "propositional_search" modalSearchParam* : tactic
-
-/-- Run propositional_search with given configuration -/
-def runPropositionalSearch (cfg : SearchConfig) : TacticM Unit := do
-  let goal ← getMainGoal
-  let goalType ← goal.getType
-
-  -- Validate goal type
-  let some (_fc, _ctx, _formula) ← extractDerivationGoal goalType
-    | throwError
-        "propositional_search: goal must be a derivability relation `Γ ⊢ φ`, got {goalType}"
-
-  -- Attempt recursive proof search (visitLimit-bounded)
-  let counter ← IO.mkRef cfg.visitLimit
-  let found ← searchProof counter goal cfg.depth
-  if !found then
-    throwError
-        "propositional_search: no proof found within depth {cfg.depth} (visitLimit \
-            {cfg.visitLimit}) for goal {goalType}"
-
-elab_rules : tactic
-  | `(tactic| propositional_search $[$d]?) => do
-    let depth := d.map (·.getNat) |>.getD 10
-    runPropositionalSearch { SearchConfig.default with depth := depth }
-
-elab_rules : tactic
-  | `(tactic| propositional_search $params:modalSearchParam*) => do
-    let paramList ← params.toList.mapM parseSearchParam
-    let cfg := applyParams SearchConfig.default paramList
-    runPropositionalSearch cfg
-
-/-!
-### tm_auto Tactic Implementation
-
-Implements `tm_auto` as an alias for `modal_search` with the same syntax.
-This replaces the previous Aesop-based implementation to avoid proof reconstruction issues.
-
-**Syntax**:
-```lean
-tm_auto        -- Default depth 10
-tm_auto 5      -- Custom depth 5
-```
-
-**Implementation Note**: `tm_auto` now directly calls `runModalSearch`, making it
-functionally identical to `modal_search`. This ensures:
-- No proof reconstruction errors with DerivationTree
-- Consistent behavior across all automation tactics
-- Easy migration from old Aesop-based code
-
-**Migration**: All existing `tm_auto` usage should work without changes. For advanced
-configuration (depth, visitLimit, etc.), users can use `modal_search` directly with
-named parameters like `modal_search (depth := 20)`.
--/
-
-/-- `tm_auto` / `tm_auto n` — alias for `modal_search` at default depth 10, or at depth `n`.
-Kept as a separate entry point for migration from the previous Aesop-based implementation. -/
-syntax "tm_auto" (num)? : tactic
-
-elab_rules : tactic
-  | `(tactic| tm_auto $[$d]?) => do
-    let depth := d.map (·.getNat) |>.getD 10
-    runModalSearch { SearchConfig.default with depth := depth }
-
 /-!
 ### Phase 1.1 Tests: Verify tactic syntax and basic infrastructure
 -/
@@ -314,9 +166,9 @@ example (p : Formula) : ⊢ (p.box).imp (p.box.box) := by
 
 -- Test 3: Temporal search parses (connect_future: φ → G(P(φ)))
 -- Under irreflexive semantics, BX1 (G(φ) → φ) is removed.
--- Test disabled: temporal_search depth may be insufficient for connect_future.
+-- Test disabled: modal_search depth may be insufficient for connect_future.
 -- example (p : Formula) : ⊢ (p.imp (p.somePast.allFuture)) := by
---   temporal_search
+--   modal_search
 example : True := trivial
 
 -- Test 4: Error on non-derivability goal (commented - would fail compilation)
@@ -400,40 +252,40 @@ example (p : Formula) : ⊢ (p.box).imp (p.box.box) := by
 example (p : Formula) : ⊢ (p.box).imp p := by
   modal_search (depth := 5) (visitLimit := 500)
 
--- Test 20: temporal_search with named parameter
+-- Test 20: modal_search with named parameter on a temporal goal
 -- Disabled under irreflexive semantics (BX1 removed).
 -- example (p : Formula) : ⊢ (p.imp (p.somePast.allFuture)) := by
---   temporal_search (depth := 5)
+--   modal_search (depth := 5)
 example : True := trivial
 
 /-!
 ### Phase 1.8 Tests: Specialized Tactics
 -/
 
--- Test 22: propositional_search on simple modus ponens
+-- Test 22: modal_search on simple modus ponens
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search
+  modal_search
 
--- Test 23: propositional_search with chained implications
+-- Test 23: modal_search with chained implications
 example (p q r : Formula) : [p, p.imp q, q.imp r] ⊢ r := by
-  propositional_search 5
+  modal_search 5
 
--- Test 24: propositional_search with named parameter
+-- Test 24: modal_search with named parameter
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search (depth := 5)
+  modal_search (depth := 5)
 
--- Test 25: propositional_search on assumption
+-- Test 25: modal_search on assumption
 example (p : Formula) : [p] ⊢ p := by
-  propositional_search
+  modal_search
 
--- Test 26: propositional_search on propositional axiom (prop_s)
+-- Test 26: modal_search on propositional axiom (prop_s)
 example (p q : Formula) : ⊢ p.imp (q.imp p) := by
-  propositional_search
+  modal_search
 
--- Test 27: temporal_search on temporal axiom
+-- Test 27: modal_search on temporal axiom
 -- Disabled under irreflexive semantics (BX1 removed).
 -- example (p : Formula) : ⊢ (p.imp (p.somePast.allFuture)) := by
---   temporal_search
+--   modal_search
 example : True := trivial
 
 -- Test 28: modal_search on modal axiom (modal_4)

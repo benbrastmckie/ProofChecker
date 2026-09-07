@@ -288,21 +288,34 @@ records the removal.
 
 ---
 
-### Phase 4: Retire the three search aliases [NOT STARTED]
+### Phase 4: Retire the three search aliases [COMPLETED]
 
 **Goal**: remove `tm_auto`, `temporal_search` and `propositional_search`, which Phase 3 established
 are behaviourally identical to `modal_search`, and migrate their test call sites.
 
 **Tasks**:
-- [ ] Migrate test call sites to `modal_search`: `tm_auto` (~65), `temporal_search` (~16),
+- [x] Migrate test call sites to `modal_search`: `tm_auto` (~65), `temporal_search` (~16),
       `propositional_search` (~24), across `Tests/BimodalTest/Automation/` and
-      `Tests/BimodalTest/Integration/`.
-- [ ] Run the test suite after migration and **before** deleting the declarations; any test whose
+      `Tests/BimodalTest/Integration/`. *(completed — measured 169 whole-word occurrences across
+      the four test files: TacticsTest.lean 69, AutomationProofSystemTest.lean 87,
+      EdgeCaseTest.lean 10, TacticsTest_Simple.lean 3. The plan's ~105 counted invocations;
+      docstring and section-heading mentions are the remainder, and were rewritten too)*
+- [x] Run the test suite after migration and **before** deleting the declarations; any test whose
       outcome changes is a genuine behavioural finding — stop, record it, and do not adjust the
-      test to make it pass.
-- [ ] Delete the three tactic declarations from `Tactics/Commands.lean`.
-- [ ] Update the prose references to them in `Tests/BimodalTest/Automation/README.md`,
+      test to make it pass. *(completed — `lake test` green, 45 `[test] PASS`/`OK` lines before
+      and after the migration, identical to the pre-phase baseline. No test outcome changed,
+      confirming the three aliases were behaviourally identical to `modal_search`)*
+- [x] Delete the three tactic declarations from `Tactics/Commands.lean`. *(completed — the three
+      `syntax`/`def run*Search`/`elab_rules` blocks and the `tm_auto` section docstring, 148
+      lines, plus the in-file example tests that invoked them)*
+- [x] Update the prose references to them in `Tests/BimodalTest/Automation/README.md`,
       `Tests/BimodalTest/Integration/README.md` and `Tests/BimodalTest/Integration/COVERAGE.md`.
+      *(completed — plus `FormalSystem/Automation.lean`'s submodule list, usage block and Tactic
+      Selection Guide, `FormalSystem/FormalSystem.lean:51` and
+      `FormalSystem/Examples/BimodalProofs.lean:227`, which the plan did not enumerate but which
+      named the deleted tactics in publication-facing docstrings. The remaining live mentions
+      are in `AesopRules.lean`/`AesopRuleSet.lean` (retired by Phase 5) and `Helpers.lean`
+      (split by Phase 6))*
 
 **Timing**: 2 hours
 

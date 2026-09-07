@@ -20,7 +20,7 @@ This module contains tests for the custom tactics defined in
 
 Comprehensive test suite covering:
 - Basic axiom application (apply_axiom, modal_t)
-- Automated proof search (tm_auto)
+- Automated proof search (modal_search)
 - Context-based assumption finding (assumption_search)
 - Formula pattern matching helpers
 - Negative tests and edge cases
@@ -28,13 +28,13 @@ Comprehensive test suite covering:
 - ProofSearch function tests (boundedSearch, heuristics, helpers)
 - Propositional depth tests (prop_k, prop_s chaining)
 - Aesop integration tests (complex TM proofs)
-- Task 315 modal_search, temporal_search, propositional_search tests
+- Task 315 modal_search tests
 
 ## Test Organization
 
 - **Phase 4 Tests (1-12)**: apply_axiom and modal_t
-- **Phase 5 Tests (13-18)**: tm_auto (native implementation) - initial axioms
-- **Phase 7 Tests (32-35)**: tm_auto extended coverage - remaining axioms
+- **Phase 5 Tests (13-18)**: modal_search (native implementation) - initial axioms
+- **Phase 7 Tests (32-35)**: modal_search extended coverage - remaining axioms
 - **Phase 6 Tests (19-23)**: assumption_search basic functionality
 - **Helper Function Tests (24-31)**: Pattern matching utilities
 - **Phase 8 Tests (36-43)**: Negative tests and edge cases
@@ -44,10 +44,9 @@ Comprehensive test suite covering:
 - **Phase 5 Group 2 Tests (59-68)**: ProofSearch function tests
 - **Phase 5 Group 3 Tests (69-72)**: Propositional depth tests
 - **Phase 5 Group 4 Tests (73-77)**: Aesop integration tests
-- **Phase 8 Tests (96-105)**: modal_search/temporal_search depth tests
+- **Phase 8 Tests (96-105)**: modal_search depth tests
 - **Phase 9 Tests (106-110)**: Integration and bimodal tests
-- **Phase 10 Tests (111-134)**: Task 315 tactic tests (modal_search, temporal_search,
-propositional_search)
+- **Phase 10 Tests (111-134)**: Task 315 tactic tests (modal_search)
 - **Integration Tests (135-150)**: Task 319 tactic combination and state tests
 
 ## References
@@ -135,65 +134,65 @@ example : DerivationTree FrameClass.Base []
   DerivationTree.axiom _ _ (Axiom.modal_t _) trivial
 
 /-!
-## Phase 5: tm_auto Tests
+## Phase 5: modal_search Tests
 
 Tests for native TM automation (no Aesop dependency).
 -/
 
-/-- Test 13: tm_auto finds modal_t axiom -/
+/-- Test 13: modal_search finds modal_t axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.box (Formula.atomS "p")) (Formula.atomS "p")) :=
   DerivationTree.axiom _ _ (Axiom.modal_t _) trivial
 
-/-- Test 14: tm_auto finds modal_4 axiom -/
+/-- Test 14: modal_search finds modal_4 axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.box (Formula.atomS "p"))
         (Formula.box (Formula.box (Formula.atomS "p")))) :=
   DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
-/-- Test 15: tm_auto finds temp_4 axiom -/
+/-- Test 15: modal_search finds temp_4 axiom -/
 noncomputable example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.allFuture (Formula.atomS "p"))
         (Formula.allFuture (Formula.allFuture (Formula.atomS "p")))) := by
   exact FormalSystem.Theorems.TemporalDerived.temporal4Derived _
 
-/-- Test 16: tm_auto finds temp_a axiom -/
+/-- Test 16: modal_search finds temp_a axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.atomS "p") (Formula.allFuture
         (Formula.somePast (Formula.atomS "p")))) := by
   exact DerivationTree.axiom _ _ (Axiom.connect_future _) trivial
 
-/-- Test 17: tm_auto finds modal_future axiom -/
+/-- Test 17: modal_search finds modal_future axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.box (Formula.atomS "p"))
         (Formula.box (Formula.allFuture (Formula.atomS "p")))) :=
   DerivationTree.axiom _ _ (Axiom.modal_future _) trivial
 
-/-- Test 18: tm_auto finds temp_future (now derived from MF + T + Modal 4) -/
+/-- Test 18: modal_search finds temp_future (now derived from MF + T + Modal 4) -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.box (Formula.atomS "p"))
         (Formula.allFuture (Formula.box (Formula.atomS "p")))) :=
   FormalSystem.Theorems.Combinators.temporalFutureDerived _
 
 /-!
-## Phase 7: tm_auto Extended Coverage Tests
+## Phase 7: modal_search Extended Coverage Tests
 
 Tests for remaining axioms not covered in Phase 5.
 -/
 
-/-- Test 32: tm_auto finds prop_k axiom -/
+/-- Test 32: modal_search finds prop_k axiom -/
 example : DerivationTree FrameClass.Base [] (Formula.imp
   (Formula.imp (Formula.atomS "p") (Formula.imp (Formula.atomS "q") (Formula.atomS "r")))
   (Formula.imp (Formula.imp (Formula.atomS "p") (Formula.atomS "q"))
       (Formula.imp (Formula.atomS "p") (Formula.atomS "r")))) :=
   DerivationTree.axiom _ _ (Axiom.prop_k _ _ _) trivial
 
-/-- Test 33: tm_auto finds prop_s axiom -/
+/-- Test 33: modal_search finds prop_s axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.atomS "p") (Formula.imp (Formula.atomS "q") (Formula.atomS "p"))) :=
   DerivationTree.axiom _ _ (Axiom.prop_s _ _) trivial
 
-/-- Test 34: tm_auto finds modal_b axiom -/
+/-- Test 34: modal_search finds modal_b axiom -/
 example : DerivationTree FrameClass.Base []
     (Formula.imp (Formula.atomS "p") (Formula.box (Formula.diamond (Formula.atomS "p")))) :=
   DerivationTree.axiom _ _ (Axiom.modal_b _) trivial
@@ -201,7 +200,7 @@ example : DerivationTree FrameClass.Base []
 -- NOTE (Task 365): quarantined — `Axiom.temp_l` was removed (no axiom/derived replacement;
 -- requires a multi-step derivation). Semantic `temp_l_valid` is retained elsewhere. See task
 -- summary.
--- /-- Test 35: tm_auto finds temp_l axiom -/
+-- /-- Test 35: modal_search finds temp_l axiom -/
 -- example : DerivationTree FrameClass.Base [] (Formula.imp (Formula.always (Formula.atomS "p"))
 -- (Formula.allFuture (Formula.allPast (Formula.atomS "p")))) := by
 --   apply DerivationTree.axiom
@@ -513,7 +512,7 @@ example : DerivationTree FrameClass.Base [] (Formula.imp
 /-!
 ## Phase 5 Group 4: Aesop Integration Tests
 
-Tests for Aesop-based tm_auto on complex TM proofs.
+Tests for Aesop-based modal_search on complex TM proofs.
 -/
 
 /-- Test 73: apply_axiom finds modal_t -/
@@ -644,7 +643,7 @@ example : DerivationTree FrameClass.Base []
 /-!
 ## Phase 8: Tests for Proof Search Tactics
 
-Tests for modal_search and temporal_search with varying depths.
+Tests for modal_search with varying depths.
 
 NOTE: These tests use manual axiom applications since Aesop-based search
 may not handle all cases. Full recursive search implementation is planned.
@@ -662,12 +661,12 @@ example (p : Formula) : DerivationTree FrameClass.Base [] (p.box.imp p.box.box) 
 example (p : Formula) : DerivationTree FrameClass.Base [] (p.imp p.diamond.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_b _) trivial
 
-/-- Test 99: temporal_search depth 1 on temp_4 -/
+/-- Test 99: modal_search depth 1 on temp_4 -/
 noncomputable example (p : Formula) : DerivationTree FrameClass.Base []
     (p.allFuture.imp p.allFuture.allFuture) := by
   exact FormalSystem.Theorems.TemporalDerived.temporal4Derived _
 
-/-- Test 100: temporal_search depth 2 on temp_a -/
+/-- Test 100: modal_search depth 2 on temp_a -/
 example (p : Formula) : DerivationTree FrameClass.Base [] (p.imp p.somePast.allFuture) := by
   exact DerivationTree.axiom _ _ (Axiom.connect_future _) trivial
 
@@ -675,7 +674,7 @@ example (p : Formula) : DerivationTree FrameClass.Base [] (p.imp p.somePast.allF
 example (p q : Formula) : DerivationTree FrameClass.Base [] ((p.imp q).box.imp (p.imp q).box.box) :=
   DerivationTree.axiom _ _ (Axiom.modal_4 _) trivial
 
-/-- Test 102: temporal_search with complex nested formula -/
+/-- Test 102: modal_search with complex nested formula -/
 noncomputable example (p q : Formula) : DerivationTree FrameClass.Base []
     ((p.imp q).allFuture.imp (p.imp q).allFuture.allFuture) := by
   exact FormalSystem.Theorems.TemporalDerived.temporal4Derived _
@@ -684,7 +683,7 @@ noncomputable example (p q : Formula) : DerivationTree FrameClass.Base []
 example (p q : Formula) : DerivationTree FrameClass.Base [] (p.imp (q.imp p)) :=
   DerivationTree.axiom _ _ (Axiom.prop_s _ _) trivial
 
-/-- Test 104: temporal_search combined with modal -/
+/-- Test 104: modal_search combined with modal -/
 example (p : Formula) : DerivationTree FrameClass.Base [] (p.box.imp p) :=
   DerivationTree.axiom _ _ (Axiom.modal_t _) trivial
 
@@ -732,7 +731,7 @@ example (p q : Formula) : DerivationTree FrameClass.Base [] (p.imp (q.imp p)) :=
 /-!
 ## Phase 10: Task 315 Tactic Tests
 
-Tests for the new modal_search, temporal_search, and propositional_search tactics
+Tests for the modal_search tactic
 implemented as part of Task 315 (Axiom Prop vs Type blocker resolution).
 
 These tests verify that the tactics work correctly on various derivability goals.
@@ -775,52 +774,52 @@ example (p q : Formula) : [p.box, q.box] ⊢ p.box := by
   modal_search 3
 
 /-!
-### temporal_search Tactic Tests
+### modal_search Tactic Tests
 -/
 
-/-- Test 119: temporal_search on temp_4 axiom -/
+/-- Test 119: modal_search on temp_4 axiom -/
 noncomputable example (p : Formula) : ⊢ p.allFuture.imp p.allFuture.allFuture := by
-  temporal_search
+  modal_search
 
-/-- Test 120: temporal_search on simple assumption -/
+/-- Test 120: modal_search on simple assumption -/
 example (p : Formula) : [p] ⊢ p := by
-  temporal_search
+  modal_search
 
-/-- Test 121: temporal_search with depth parameter -/
+/-- Test 121: modal_search with depth parameter -/
 noncomputable example (p : Formula) : ⊢ p.allFuture.imp p.allFuture.allFuture := by
-  temporal_search (depth := 5)
+  modal_search (depth := 5)
 
-/-- Test 122: temporal_search on temporal K reduction -/
+/-- Test 122: modal_search on temporal K reduction -/
 example (p : Formula) : [p.allFuture] ⊢ p.allFuture := by
-  temporal_search 3
+  modal_search 3
 
-/-- Test 123: temporal_search on multiple future assumptions -/
+/-- Test 123: modal_search on multiple future assumptions -/
 example (p q : Formula) : [p.allFuture, q.allFuture] ⊢ p.allFuture := by
-  temporal_search 3
+  modal_search 3
 
 /-!
-### propositional_search Tactic Tests
+### modal_search Tactic Tests
 -/
 
-/-- Test 124: propositional_search on simple assumption -/
+/-- Test 124: modal_search on simple assumption -/
 example (p : Formula) : [p] ⊢ p := by
-  propositional_search
+  modal_search
 
-/-- Test 125: propositional_search on modus ponens -/
+/-- Test 125: modal_search on modus ponens -/
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search
+  modal_search
 
-/-- Test 126: propositional_search on chained modus ponens -/
+/-- Test 126: modal_search on chained modus ponens -/
 example (p q r : Formula) : [p, p.imp q, q.imp r] ⊢ r := by
-  propositional_search 5
+  modal_search 5
 
-/-- Test 127: propositional_search on prop_s axiom -/
+/-- Test 127: modal_search on prop_s axiom -/
 example (p q : Formula) : ⊢ p.imp (q.imp p) := by
-  propositional_search
+  modal_search
 
-/-- Test 128: propositional_search with depth parameter -/
+/-- Test 128: modal_search with depth parameter -/
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search (depth := 5)
+  modal_search (depth := 5)
 
 /-!
 ### Configuration Tests
@@ -830,13 +829,13 @@ example (p q : Formula) : [p, p.imp q] ⊢ q := by
 example (p : Formula) : ⊢ p.box.imp p := by
   modal_search (depth := 5) (visitLimit := 500)
 
-/-- Test 130: temporal_search with visitLimit -/
+/-- Test 130: modal_search with visitLimit -/
 noncomputable example (p : Formula) : ⊢ p.allFuture.imp p.allFuture.allFuture := by
-  temporal_search (depth := 5) (visitLimit := 500)
+  modal_search (depth := 5) (visitLimit := 500)
 
-/-- Test 131: propositional_search with visitLimit -/
+/-- Test 131: modal_search with visitLimit -/
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search (depth := 5) (visitLimit := 500)
+  modal_search (depth := 5) (visitLimit := 500)
 
 /-!
 ### Cross-Tactic Consistency Tests
@@ -846,13 +845,13 @@ example (p q : Formula) : [p, p.imp q] ⊢ q := by
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
   modal_search
 
-/-- Test 133: Same goal provable by temporal_search -/
+/-- Test 133: Same goal provable by modal_search -/
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  temporal_search
+  modal_search
 
-/-- Test 134: Same goal provable by propositional_search -/
+/-- Test 134: Same goal provable by modal_search -/
 example (p q : Formula) : [p, p.imp q] ⊢ q := by
-  propositional_search
+  modal_search
 
 /-!
 ## Integration Tests (Task 319 Phase 5)
@@ -872,7 +871,7 @@ Tests that use multiple tactics in sequence.
 /-- Test 135: multiple tactics in same proof via exact -/
 noncomputable example (p : Formula) : ([] ⊢ p.box.imp p) ×
     ([] ⊢ p.allFuture.imp p.allFuture.allFuture) :=
-  (by modal_search, by temporal_search)
+  (by modal_search, by modal_search)
 
 /-- Test 136: tactics with non-derivation goals -/
 example (p : Formula) : Nat × ([] ⊢ p.box.imp p) :=
@@ -885,7 +884,7 @@ example (p q : Formula) : ([] ⊢ p.box.imp p) × ([] ⊢ q.box.imp q) :=
 /-- Test 138: product of different axiom types -/
 example (p q : Formula) :
     ([] ⊢ p.box.imp p) × ([] ⊢ p.imp (q.imp p)) :=
-  (by modal_search, by propositional_search)
+  (by modal_search, by modal_search)
 
 /-!
 ### State Preservation Tests
@@ -901,7 +900,7 @@ example (p : Formula) : [] ⊢ p.box.imp p := by
 /-- Test 140: independent product goals via Prod.mk -/
 example (p q : Formula) :
     ([] ⊢ p.imp (q.imp p)) × ([] ⊢ q.imp (p.imp q)) :=
-  Prod.mk (by propositional_search) (by propositional_search)
+  Prod.mk (by modal_search) (by modal_search)
 
 /-- Test 141: nested proof with inner tactic -/
 example (p : Formula) : [] ⊢ p.box.imp p := by
@@ -927,7 +926,7 @@ example (p q : Formula) :
 /-- Test 144: context with temporal formulas -/
 example (p q : Formula) :
     [p.allFuture, q.allFuture] ⊢ p.allFuture := by
-  temporal_search 3
+  modal_search 3
 
 /-!
 ### Cross-Domain Tests
@@ -941,12 +940,11 @@ example (p : Formula) : [] ⊢ p.box.imp p := by
 
 /-- Test 146: temporal axiom temp_a: p → G(Pp) -/
 example (p : Formula) : [] ⊢ p.imp p.somePast.allFuture := by
-  temporal_search  -- Uses temp_a: φ → G(Pφ)
+  modal_search  -- Uses temp_a: φ → G(Pφ)
 
 /-- Test 147: any tactic finds assumption -/
 example (p : Formula) : [p] ⊢ p := by
-  -- All three tactics should find this
-  modal_search  -- Could also use temporal_search or propositional_search
+  modal_search
 
 /-!
 ### Stress Tests
@@ -956,15 +954,15 @@ Tests with deeper search requirements.
 
 /-- Test 148: chain of modus ponens (depth 3) -/
 example (p q r : Formula) : [p, p.imp q, q.imp r] ⊢ r := by
-  propositional_search 5
+  modal_search 5
 
 /-- Test 149: longer chain (depth 4) -/
 example (a b c d : Formula) : [a, a.imp b, b.imp c, c.imp d] ⊢ d := by
-  propositional_search 7
+  modal_search 7
 
 /-- Test 150: complex nested implication -/
 example (p q : Formula) : [] ⊢ (p.imp (q.imp p)).imp ((p.imp q).imp (p.imp p)) := by
   -- This requires prop_k applied to prop_s result
-  propositional_search 5
+  modal_search 5
 
 end BimodalTest.Automation

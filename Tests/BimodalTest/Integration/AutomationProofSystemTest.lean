@@ -18,8 +18,8 @@ interact with the proof system and produce sound derivations.
 ## Test Coverage
 
 This test suite covers:
-1. `tm_auto` tactic solves basic modal theorems
-2. `tm_auto` tactic solves basic temporal theorems
+1. `modal_search` tactic solves basic modal theorems
+2. `modal_search` tactic solves basic temporal theorems
 3. `apply_axiom` macro works for all axiom types
 4. `modal_t` tactic applies Modal T correctly
 5. Tactic failures on non-matching goals
@@ -31,7 +31,7 @@ This test suite covers:
 ## Organization
 
 Tests are organized by tactic:
-- tm_auto Tests (Aesop-powered automation)
+- modal_search Tests (Aesop-powered automation)
 - apply_axiom Tests (axiom application)
 - Specific Tactic Tests (modal_t, modal_4_tactic, etc.)
 - Soundness Integration Tests (automation → validity)
@@ -54,93 +54,93 @@ open FormalSystem.Metalogic
 open FormalSystem.Automation
 
 -- ============================================================
--- tm_auto Tactic Tests (Aesop-powered automation)
+-- modal_search Tactic Tests (Aesop-powered automation)
 -- ============================================================
 
 section TmAutoTests
 
 /--
-Test 1: tm_auto solves Modal T axiom.
+Test 1: modal_search solves Modal T axiom.
 
-The tm_auto tactic should automatically derive □p → p.
+The modal_search tactic should automatically derive □p → p.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by
-  tm_auto
+  modal_search
 
 /--
-Test 2: tm_auto solves Modal 4 axiom.
+Test 2: modal_search solves Modal 4 axiom.
 
-The tm_auto tactic should automatically derive □p → □□p.
+The modal_search tactic should automatically derive □p → □□p.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by
-  tm_auto
+  modal_search
 
 /--
-Test 3: tm_auto solves Modal B axiom.
+Test 3: modal_search solves Modal B axiom.
 
-The tm_auto tactic should automatically derive p → □◇p.
+The modal_search tactic should automatically derive p → □◇p.
 -/
 example : ⊢ ((Formula.atomS "p").imp ((Formula.atomS "p").diamond.box)) := by
-  tm_auto
+  modal_search
 
 /--
-Test 4: tm_auto solves Temporal 4 axiom.
+Test 4: modal_search solves Temporal 4 axiom.
 
-The tm_auto tactic should automatically derive Fp → FFp.
+The modal_search tactic should automatically derive Fp → FFp.
 -/
 noncomputable example : ⊢ ((Formula.atomS "p").allFuture.imp 
              (Formula.atomS "p").allFuture.allFuture) := by
-  tm_auto
+  modal_search
 
 /--
-Test 5: tm_auto solves Temporal A axiom.
+Test 5: modal_search solves Temporal A axiom.
 
-The tm_auto tactic should automatically derive p → F(somePast p).
+The modal_search tactic should automatically derive p → F(somePast p).
 -/
 example : ⊢ ((Formula.atomS "p").imp 
              (Formula.allFuture (Formula.atomS "p").somePast)) := by
-  tm_auto
+  modal_search
 
 /--
-Test 6: tm_auto solves Propositional K axiom.
+Test 6: modal_search solves Propositional K axiom.
 
-The tm_auto tactic should automatically derive the distribution axiom.
+The modal_search tactic should automatically derive the distribution axiom.
 -/
 example (φ ψ χ : Formula) : 
     ⊢ ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ))) := by
-  tm_auto
+  modal_search
 
 /--
-Test 7: tm_auto solves Propositional S axiom.
+Test 7: modal_search solves Propositional S axiom.
 
-The tm_auto tactic should automatically derive the weakening axiom.
+The modal_search tactic should automatically derive the weakening axiom.
 -/
 example (φ ψ : Formula) : ⊢ (φ.imp (ψ.imp φ)) := by
-  tm_auto
+  modal_search
 
 /--
-Test 8: tm_auto solves simple modus ponens.
+Test 8: modal_search solves simple modus ponens.
 
-Given assumptions, tm_auto should derive the conclusion.
+Given assumptions, modal_search should derive the conclusion.
 -/
 example (p q : Formula) : [p.imp q, p] ⊢ q := by
-  tm_auto
+  modal_search
 
 /--
-Test 9: tm_auto solves assumption goals.
+Test 9: modal_search solves assumption goals.
 
-The tm_auto tactic should handle simple assumption cases.
+The modal_search tactic should handle simple assumption cases.
 -/
 example (φ : Formula) : [φ] ⊢ φ := by
-  tm_auto
+  modal_search
 
 /--
-Test 10: tm_auto with multiple assumptions.
+Test 10: modal_search with multiple assumptions.
 
-The tm_auto tactic should work with multiple assumptions.
+The modal_search tactic should work with multiple assumptions.
 -/
 example (φ ψ : Formula) : [φ, ψ] ⊢ φ := by
-  tm_auto
+  modal_search
 
 end TmAutoTests
 
@@ -291,41 +291,41 @@ end SpecificTacticTests
 section SoundnessIntegrationTests
 
 /--
-Test 26: tm_auto produces sound derivations (Modal T).
+Test 26: modal_search produces sound derivations (Modal T).
 
 Automated proofs should be valid via soundness.
 -/
 example : [] ⊨ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by
-  have deriv : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by tm_auto
+  have deriv : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by modal_search
   exact soundness_in [] _ deriv
 
 /--
-Test 27: tm_auto produces sound derivations (Modal 4).
+Test 27: modal_search produces sound derivations (Modal 4).
 
 Automated proofs should be valid via soundness.
 -/
 example : [] ⊨ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by
-  have deriv : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by tm_auto
+  have deriv : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by modal_search
   exact soundness_in [] _ deriv
 
 /--
-Test 28: tm_auto produces sound derivations (Temporal 4).
+Test 28: modal_search produces sound derivations (Temporal 4).
 
 Automated proofs should be valid via soundness.
 -/
 example : [] ⊨ ((Formula.atomS "p").allFuture.imp 
              (Formula.atomS "p").allFuture.allFuture) := by
   have deriv : ⊢ ((Formula.atomS "p").allFuture.imp 
-                  (Formula.atomS "p").allFuture.allFuture) := by tm_auto
+                  (Formula.atomS "p").allFuture.allFuture) := by modal_search
   exact soundness_in [] _ deriv
 
 /--
-Test 29: tm_auto with modus ponens produces sound derivations.
+Test 29: modal_search with modus ponens produces sound derivations.
 
 Complex automated proofs should be valid via soundness.
 -/
 example (p q : Formula) : [p.imp q, p] ⊨ q := by
-  have deriv : [p.imp q, p] ⊢ q := by tm_auto
+  have deriv : [p.imp q, p] ⊢ q := by modal_search
   exact soundness_in [p.imp q, p] q deriv
 
 /--
@@ -395,32 +395,32 @@ end SoundnessIntegrationTests
 section CombinedAutomationTests
 
 -- /--
--- Test 36: tm_auto with Modal T and modus ponens.
+-- Test 36: modal_search with Modal T and modus ponens.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
 -- Automation should handle combined reasoning.
 -- -/
 -- example (p : String) : [(Formula.atomS p).box] ⊢ (Formula.atomS p) := by
---   tm_auto
+--   modal_search
 
 /--
-Test 37: tm_auto with multiple modal operators.
+Test 37: modal_search with multiple modal operators.
 
 Automation should handle nested modal operators.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by
-  tm_auto
+  modal_search
 
 /--
-Test 38: tm_auto with temporal operators.
+Test 38: modal_search with temporal operators.
 
 Automation should handle temporal reasoning.
 -/
 noncomputable example : ⊢ ((Formula.atomS "p").allFuture.imp 
              (Formula.atomS "p").allFuture.allFuture) := by
-  tm_auto
+  modal_search
 
 /--
 Test 39: Combining apply_axiom with manual steps.
@@ -452,73 +452,73 @@ section AesopRuleIntegrationTests
 -- /--
 -- Test 41: Aesop forward rule for Modal T.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
--- The modalTForward rule should work with tm_auto.
+-- The modalTForward rule should work with modal_search.
 -- -/
 -- example (φ : Formula) : [φ.box] ⊢ φ := by
---   tm_auto
+--   modal_search
 
 -- /--
 -- Test 42: Aesop forward rule for Modal 4.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
--- The modal4Forward rule should work with tm_auto.
+-- The modal4Forward rule should work with modal_search.
 -- -/
 -- example (φ : Formula) : [φ.box] ⊢ φ.box.box := by
---   tm_auto
+--   modal_search
 
 -- /--
 -- Test 43: Aesop forward rule for Modal B.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
--- The modalBForward rule should work with tm_auto.
+-- The modalBForward rule should work with modal_search.
 -- -/
 -- example (φ : Formula) : [φ] ⊢ φ.diamond.box := by
---   tm_auto
+--   modal_search
 
 -- /--
 -- Test 44: Aesop forward rule for Temporal 4.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
--- The temporal4Forward rule should work with tm_auto.
+-- The temporal4Forward rule should work with modal_search.
 -- -/
 -- example (φ : Formula) : [φ.allFuture] ⊢ φ.allFuture.allFuture := by
---   tm_auto
+--   modal_search
 
 -- /--
 -- Test 45: Aesop forward rule for Temporal A.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
--- The temporalAForward rule should work with tm_auto.
+-- The temporalAForward rule should work with modal_search.
 -- -/
 -- example (φ : Formula) : [φ] ⊢ (Formula.allFuture φ.somePast) := by
---   tm_auto
+--   modal_search
 
 /--
 Test 46: Aesop apply rule for modus ponens.
 
-The applyModusPonensRule rule should work with tm_auto.
+The applyModusPonensRule rule should work with modal_search.
 -/
 example (p q : Formula) : [p.imp q, p] ⊢ q := by
-  tm_auto
+  modal_search
 
 /--
 Test 47: Aesop safe apply for axioms.
 
-Direct axiom rules should work with tm_auto.
+Direct axiom rules should work with modal_search.
 -/
 example (Γ : Context) (φ : Formula) : Γ ⊢ (φ.box.imp φ) := by
-  tm_auto
+  modal_search
 
 /--
 Test 48: Multiple Aesop rules in sequence.
@@ -526,7 +526,7 @@ Test 48: Multiple Aesop rules in sequence.
 Aesop should chain multiple rules together.
 -/
 example (p q : Formula) : [p.box, p.box.imp q] ⊢ q := by
-  tm_auto
+  modal_search
 
 /--
 Test 49: Aesop with propositional reasoning.
@@ -534,18 +534,18 @@ Test 49: Aesop with propositional reasoning.
 Aesop should handle propositional axioms.
 -/
 example (φ ψ : Formula) : ⊢ (φ.imp (ψ.imp φ)) := by
-  tm_auto
+  modal_search
 
 -- /--
 -- Test 50: Aesop with complex goal.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
 -- Aesop should handle moderately complex goals.
 -- -/
 -- example (p : Formula) : [p.box] ⊢ p := by
---   tm_auto
+--   modal_search
 
 end AesopRuleIntegrationTests
 
@@ -556,20 +556,20 @@ end AesopRuleIntegrationTests
 section PerformanceTests
 
 /--
-Test 51: tm_auto completes quickly on simple goals.
+Test 51: modal_search completes quickly on simple goals.
 
 Automation should be fast for simple cases.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by
-  tm_auto
+  modal_search
 
 /--
-Test 52: tm_auto completes on moderately complex goals.
+Test 52: modal_search completes on moderately complex goals.
 
 Automation should handle moderate complexity.
 -/
 example (p q : Formula) : [p.box, p.box.imp q] ⊢ q := by
-  tm_auto
+  modal_search
 
 /--
 Test 53: Multiple axiom applications.
@@ -577,7 +577,7 @@ Test 53: Multiple axiom applications.
 Automation should handle multiple axiom applications.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by
-  tm_auto
+  modal_search
 
 /--
 Test 54: Nested modal operators.
@@ -585,7 +585,7 @@ Test 54: Nested modal operators.
 Automation should handle nested operators efficiently.
 -/
 example : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p").box.box) := by
-  tm_auto
+  modal_search
 
 /--
 Test 55: Temporal operator chains.
@@ -594,7 +594,7 @@ Automation should handle temporal chains efficiently.
 -/
 noncomputable example : ⊢ ((Formula.atomS "p").allFuture.imp 
              (Formula.atomS "p").allFuture.allFuture) := by
-  tm_auto
+  modal_search
 
 end PerformanceTests
 
@@ -611,7 +611,7 @@ Demonstrates the full automation pipeline.
 -/
 example : True := by
   -- Step 1: Automated derivation
-  have proof : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by tm_auto
+  have proof : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by modal_search
   
   -- Step 2: Apply soundness
   have valid_from_soundness : [] ⊨ ((Formula.atomS "p").box.imp (Formula.atomS "p")) :=
@@ -626,13 +626,13 @@ example : True := by
 -- /--
 -- Test 57: Automation with context.
 
--- NOTE (Task 365): quarantined — `tm_auto`/`modal_search` cannot discharge this context-requiring
+-- NOTE (Task 365): quarantined — `modal_search` cannot discharge this context-requiring
 -- goal (forward modus-ponens from a hypothesis is beyond the current search capability). Not a
 -- sorry; the underlying axioms/derivations remain tested elsewhere.
 -- Automation should work with non-empty contexts.
 -- -/
 -- example : True := by
---   have proof : [(Formula.atomS "p").box] ⊢ (Formula.atomS "p") := by tm_auto
+--   have proof : [(Formula.atomS "p").box] ⊢ (Formula.atomS "p") := by modal_search
 --
 --   have valid : [(Formula.atomS "p").box] ⊨ (Formula.atomS "p") :=
 --     soundness [(Formula.atomS "p").box] (Formula.atomS "p") proof
@@ -646,7 +646,7 @@ Automation should handle inference rules.
 -/
 example : True := by
   have proof : [Formula.atomS "p", (Formula.atomS "p").imp (Formula.atomS "q")] ⊢ 
-               Formula.atomS "q" := by tm_auto
+               Formula.atomS "q" := by modal_search
   
   have valid : [Formula.atomS "p", (Formula.atomS "p").imp (Formula.atomS "q")] ⊨ 
                Formula.atomS "q" :=
@@ -661,7 +661,7 @@ Test 59: Multiple automation tactics in sequence.
 Different tactics should work together in a proof.
 -/
 example (p : Formula) : ⊢ (p.box.imp p) := by
-  tm_auto
+  modal_search
 
 /--
 Test 60: Automation produces verifiable results.
@@ -670,10 +670,10 @@ All automated proofs should be verifiable via soundness.
 -/
 example : True := by
   -- Test multiple axioms
-  have t1 : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by tm_auto
-  have t2 : ⊢ ((Formula.atomS "q").box.imp (Formula.atomS "q").box.box) := by tm_auto
+  have t1 : ⊢ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := by modal_search
+  have t2 : ⊢ ((Formula.atomS "q").box.imp (Formula.atomS "q").box.box) := by modal_search
   have t3 : ⊢ ((Formula.atomS "r").allFuture.imp 
-               (Formula.atomS "r").allFuture.allFuture) := by tm_auto
+               (Formula.atomS "r").allFuture.allFuture) := by modal_search
   
   -- All should be valid
   have v1 : [] ⊨ ((Formula.atomS "p").box.imp (Formula.atomS "p")) := soundness_in [] _ t1
