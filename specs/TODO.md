@@ -1,5 +1,5 @@
 ---
-next_project_number: 548
+next_project_number: 549
 ---
 
 # TODO
@@ -13,7 +13,7 @@ next_project_number: 548
 |------|-------|------------|--------|
 | 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,538,539,540,541,542,544,545,546 | -- | automation, dataset-enhancement, decidability, ... |
 | 2 | 178,231,282,296,463,502,531,537,547 | 193,298,433,461,530,535,546 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
+| 3 | 219,464,497,548 | 231,463,502,547 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
 | 5 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
@@ -94,6 +94,7 @@ next_project_number: 548
 ### Paper Refactor
 
 547 [NOT STARTED] — Replace the historical system names TM⁺, TM⁺_f, TM_f, TM_c, TM_dc
+  └─ 548 [NOT STARTED] — Re-pin the paper anchors renamed by the paper's z/d/r refactor --
 
 ### Publication Quality
 
@@ -120,6 +121,16 @@ next_project_number: 548
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 548. Repin renamed paper anchors bx z d r
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: paper-refactor
+- **Dependencies**: Task 547
+
+**Description**: Re-pin the paper anchors renamed by the paper's z/d/r refactor -- def:TMplus-f, def:TMplus-d, def:TMplus-c are now def:BX-z, def:BX-d, def:BX-r -- and update every citing docstring and the definitions-of-record so that check-module-invariants.sh C15 resolves them. MEASURED STATE: specs/paper-definitions-of-record.md pins `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` with content hashes in the machine-readable manifest (rows near line 1431) and carries their full-text entries at lines 993, 1014, 1032, alongside `def:TMplus` (line 1056, label unchanged, still names TM) and `cor:tm-completeness` (line 1175); C15 resolves anchors against the record, not the paper. `def:TMplus` is cited in 20 lines across 13 Lean files, and the -f/-d/-c variants among them. The paper's new text is at /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex: def:BX-z (Discrete Burgess-Xu logic BX_z, axioms UZ and Z1, Z-time footnote), def:BX-d (dense logic BX_d, axioms DN and NN), def:BX-r (Dense and Complete Burgess-Xu logic BX_r, now defined as the extension of BX_d by PU and SP, CO derived), def:TMplus (TM_z, TM_d, TM_r as the extensions of TM by the axioms distinguishing BX_z, BX_d, BX_r), and cor:tm-completeness, which now lists TM strongly complete over all task frames, TM_d strongly over dense task frames, TM_z weakly over Z-time, and TM_r weakly over R-time. The Semantics/FrameClassValidity.lean docstring quotes the closing sentence of the old def:TMplus-f verbatim ('the successor-Archimedean discrete class to which BX_f and TM⁺_f are sound and complete is exactly Z-time'); that sentence now reads BX_z and TM_z and the quotation must be refreshed. WORK: follow the record's own 'How to extend this record' procedure to retire the three old anchors and pin the three new ones with fresh hashes, refresh the def:TMplus and cor:tm-completeness entries whose text changed, update every citing docstring to the new label names, and re-run scripts/check-module-invariants.sh until C15 reports no unresolved anchor from this rename. The three unrelated unresolved anchors (app:drift, cor:no-characterization, lem:deterministic-singleton) belong to a separate open task and must not be conflated with this one.
+
+---
 
 ### 547. Replace historical system names in docstrings
 - **Status**: [NOT STARTED]

@@ -4,8 +4,21 @@
     "total_tasks": 42,
     "last_sync": "2026-08-24T21:34:14Z"
   },
-  "next_project_number": 548,
+  "next_project_number": 549,
   "active_projects": [
+    {
+      "project_number": 548,
+      "project_name": "repin_renamed_paper_anchors_bx_z_d_r",
+      "status": "not_started",
+      "task_type": "lean4",
+      "description": "Re-pin the paper anchors renamed by the paper's z/d/r refactor -- def:TMplus-f, def:TMplus-d, def:TMplus-c are now def:BX-z, def:BX-d, def:BX-r -- and update every citing docstring and the definitions-of-record so that check-module-invariants.sh C15 resolves them. MEASURED STATE: specs/paper-definitions-of-record.md pins `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` with content hashes in the machine-readable manifest (rows near line 1431) and carries their full-text entries at lines 993, 1014, 1032, alongside `def:TMplus` (line 1056, label unchanged, still names TM) and `cor:tm-completeness` (line 1175); C15 resolves anchors against the record, not the paper. `def:TMplus` is cited in 20 lines across 13 Lean files, and the -f/-d/-c variants among them. The paper's new text is at /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex: def:BX-z (Discrete Burgess-Xu logic BX_z, axioms UZ and Z1, Z-time footnote), def:BX-d (dense logic BX_d, axioms DN and NN), def:BX-r (Dense and Complete Burgess-Xu logic BX_r, now defined as the extension of BX_d by PU and SP, CO derived), def:TMplus (TM_z, TM_d, TM_r as the extensions of TM by the axioms distinguishing BX_z, BX_d, BX_r), and cor:tm-completeness, which now lists TM strongly complete over all task frames, TM_d strongly over dense task frames, TM_z weakly over Z-time, and TM_r weakly over R-time. The Semantics/FrameClassValidity.lean docstring quotes the closing sentence of the old def:TMplus-f verbatim ('the successor-Archimedean discrete class to which BX_f and TM⁺_f are sound and complete is exactly Z-time'); that sentence now reads BX_z and TM_z and the quotation must be refreshed. WORK: follow the record's own 'How to extend this record' procedure to retire the three old anchors and pin the three new ones with fresh hashes, refresh the def:TMplus and cor:tm-completeness entries whose text changed, update every citing docstring to the new label names, and re-run scripts/check-module-invariants.sh until C15 reports no unresolved anchor from this rename. The three unrelated unresolved anchors (app:drift, cor:no-characterization, lem:deterministic-singleton) belong to a separate open task and must not be conflated with this one.",
+      "topic": "paper-refactor",
+      "dependencies": [
+        547
+      ],
+      "created": "2026-09-07T04:24:21Z",
+      "last_updated": "2026-09-07T04:24:21Z"
+    },
     {
       "project_number": 547,
       "project_name": "replace_historical_system_names_in_docstrings",
