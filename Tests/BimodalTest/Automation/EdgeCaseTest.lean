@@ -352,7 +352,7 @@ allow unification-based matching in tryAxiomMatch and tryDerivedMatch.
 
 -- 9a: Non-base frame class axioms (empty context)
 -- Prior-UZ (Discrete): F(φ) → U(φ, ¬φ)
-example (φ : Formula) : ⊢[FrameClass.Discrete] φ.someFuture.imp (Formula.untl φ.neg φ) := by
+example (φ : Formula) : ⊢[FrameClass.ZTime] φ.someFuture.imp (Formula.untl φ.neg φ) := by
   modal_search
 
 -- Density (Dense): GGφ → Gφ
@@ -364,7 +364,7 @@ example : ⊢[FrameClass.Dense] (Formula.untl Formula.bot (Formula.bot.imp Formu
   modal_search
 
 -- Z1 (Discrete): G(Gφ→φ) → (FGφ→Gφ)
-example (φ : Formula) : ⊢[FrameClass.Discrete]
+example (φ : Formula) : ⊢[FrameClass.ZTime]
     (φ.allFuture.imp φ).allFuture.imp (φ.allFuture.someFuture.imp φ.allFuture) := by
   modal_search
 

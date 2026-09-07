@@ -438,7 +438,7 @@ inductive Axiom : Formula → Type where
   **Source**: Reynolds 1992, printed p.168, axiom "Prior-U" of the system US/R.
 
   **THIS IS NOT `prior_UZ`.** `Axiom.prior_UZ` (above) is the *integer well-ordering* Prior
-  axiom `F(φ) → U(φ,¬φ)` at `FrameClass.Discrete`. Different statement, different frame
+  axiom `F(φ) → U(φ,¬φ)` at `FrameClass.ZTime`. Different statement, different frame
   class, confusingly similar name. Do not reuse, rename, generalize, or "unify" them. -/
   | prior_U_gap (φ : Formula) :
       Axiom ((Formula.and (Formula.untl φ Formula.top) φ.neg.someFuture).imp
@@ -449,7 +449,7 @@ inductive Axiom : Formula → Type where
   **Source**: Reynolds 1992, printed p.168, axiom "Prior-S" of the system US/R.
 
   **THIS IS NOT `prior_SZ`**, which is the integer well-ordering axiom
-  `P(φ) → S(φ,¬φ)` at `FrameClass.Discrete`. See the caveat on `prior_U_gap`. -/
+  `P(φ) → S(φ,¬φ)` at `FrameClass.ZTime`. See the caveat on `prior_U_gap`. -/
   | prior_S_gap (φ : Formula) :
       Axiom ((Formula.and (Formula.snce φ Formula.top) φ.neg.somePast).imp
         (Formula.snce φ (Formula.or φ.neg (Formula.kMinus φ.neg))))
@@ -489,7 +489,7 @@ The four frame classes form a partial order:
   valid on dense Dedekind-complete frames. By `Semantics.complete_duration_discrete_or_dense`
   (`Semantics/DurationClassification.lean`) that is not merely "ℝ-like": a Dedekind-complete
   duration group is either `≃+o ℤ` or densely ordered, so once the density binder is imposed
-  the class contains, up to order-and-group isomorphism, only the real flow. `FrameClass.Dedekind`
+  the class contains, up to order-and-group isomorphism, only the real flow. `FrameClass.RTime`
   is therefore the paper's **TM⁺_dc** (dense complete / real flow), not TM⁺_c.
 - Dense and Discrete are incomparable: density contradicts discreteness.
 - Discrete and Dedekind are likewise incomparable, and `Dedekind ≰ Dense`.
@@ -505,7 +505,7 @@ Likewise `F⊤` and `P⊤` are the tree's `serial_future` / `serial_past`. So Re
 Dedekind/real axiom set genuinely contains
 the tree's density axiom, and a Dedekind derivation must be allowed to use it. Making
 `Dedekind` a fresh incomparable leaf would render `density` and `dense_indicator`
-inadmissible in `DerivationTree .Dedekind` and so could not host Reynolds' system at all.
+inadmissible in `DerivationTree .RTime` and so could not host Reynolds' system at all.
 
 **Soundness caveat.** The soundness theorem for this class must target `ValidRTime`, not the
 density-free `ValidComplete`. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
@@ -516,7 +516,7 @@ TM⁺_c is completeness *simpliciter*: no density binder, so by
 order-and-group isomorphism, and its theory is `Th(ℤ) ∩ Th(ℝ)`. No element of `FrameClass`
 picks that class out. The two branches are covered separately and exhaustively — the
 complete-but-discrete branch is *exactly* `ℤ` by `Semantics.complete_not_dense_iso_int`, and is
-handled by `FrameClass.Discrete` / `ValidZTime`; the dense branch is `FrameClass.Dedekind` /
+handled by `FrameClass.ZTime` / `ValidZTime`; the dense branch is `FrameClass.RTime` /
 `ValidRTime` — but their intersection is not itself a frame class, and adding one would
 require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does not have. `ValidComplete` exists as
 a predicate matching the TM⁺_c binder set, but is deliberately not a soundness target; its own
@@ -529,17 +529,17 @@ This replaces the ad-hoc predicates `isBase`, `isDenseCompatible`, `isDiscreteCo
 inductive FrameClass where
   | Base
   | Dense
-  | Discrete
-  | Dedekind
+  | ZTime
+  | RTime
   deriving Repr, DecidableEq, Inhabited, BEq, Hashable
 
 instance : LE FrameClass where
   le a b := match a, b with
     | .Base, _ => True
     | .Dense, .Dense => True
-    | .Dense, .Dedekind => True
-    | .Dedekind, .Dedekind => True
-    | .Discrete, .Discrete => True
+    | .Dense, .RTime => True
+    | .RTime, .RTime => True
+    | .ZTime, .ZTime => True
     | _, _ => False
 
 instance : DecidableRel (LE.le : FrameClass → FrameClass → Prop) :=
@@ -566,14 +566,14 @@ instance : PartialOrder FrameClass where
 These `example`s pin the exact shape of the `FrameClass` order so that a future edit to the
 `LE` instance cannot silently change which axioms are admissible in which derivations. -/
 
-example : FrameClass.Base ≤ FrameClass.Dedekind := by decide
-example : FrameClass.Dense ≤ FrameClass.Dedekind := by decide
-example : FrameClass.Dedekind ≤ FrameClass.Dedekind := by decide
-example : ¬(FrameClass.Dedekind ≤ FrameClass.Dense) := by decide
-example : ¬(FrameClass.Dedekind ≤ FrameClass.Discrete) := by decide
-example : ¬(FrameClass.Discrete ≤ FrameClass.Dedekind) := by decide
-example : ¬(FrameClass.Dense ≤ FrameClass.Discrete) := by decide
-example : ¬(FrameClass.Discrete ≤ FrameClass.Dense) := by decide
+example : FrameClass.Base ≤ FrameClass.RTime := by decide
+example : FrameClass.Dense ≤ FrameClass.RTime := by decide
+example : FrameClass.RTime ≤ FrameClass.RTime := by decide
+example : ¬(FrameClass.RTime ≤ FrameClass.Dense) := by decide
+example : ¬(FrameClass.RTime ≤ FrameClass.ZTime) := by decide
+example : ¬(FrameClass.ZTime ≤ FrameClass.RTime) := by decide
+example : ¬(FrameClass.Dense ≤ FrameClass.ZTime) := by decide
+example : ¬(FrameClass.ZTime ≤ FrameClass.Dense) := by decide
 
 /--
 Minimum frame class for each axiom constructor.
@@ -587,7 +587,7 @@ This is the single source of truth for axiom-frame-class compatibility:
 
 Total: 45 axiom constructors.
 
-Since `Dense ≤ Dedekind`, a `DerivationTree FrameClass.Dedekind` admits the Base axioms,
+Since `Dense ≤ Dedekind`, a `DerivationTree FrameClass.RTime` admits the Base axioms,
 the two Dense axioms, and the three Dedekind axioms — but not the Discrete ones
 (`Discrete` and `Dedekind` are incomparable).
 
@@ -598,12 +598,12 @@ derivation tree parameterized by `fc`.
 def Axiom.minFrameClass {φ : Formula} : Axiom φ → FrameClass
   | density _ => .Dense
   | dense_indicator => .Dense
-  | prior_UZ _ => .Discrete
-  | prior_SZ _ => .Discrete
-  | z1 _ => .Discrete
-  | prior_U_gap _ => .Dedekind
-  | prior_S_gap _ => .Dedekind
-  | sep _ => .Dedekind
+  | prior_UZ _ => .ZTime
+  | prior_SZ _ => .ZTime
+  | z1 _ => .ZTime
+  | prior_U_gap _ => .RTime
+  | prior_S_gap _ => .RTime
+  | sep _ => .RTime
   | _ => .Base
 
 /-- Base is the minimum frame class: `FrameClass.Base ≤ fc` for all `fc`.

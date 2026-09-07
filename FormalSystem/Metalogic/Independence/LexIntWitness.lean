@@ -16,7 +16,7 @@ import Mathlib.Algebra.Order.Group.Int
 /-!
 # Witness (b): the static frame over `ℤ ×ₗ ℤ`, and the Discrete sandwich
 
-`FrameClass.Sat FrameClass.Discrete` is **not** Galois-closed. `Sat .Discrete` is
+`FrameClass.Sat FrameClass.ZTime` is **not** Galois-closed. `Sat .ZTime` is
 `TaskFrame.IsZTime`, `def:TMplus-f`'s Hölder narrowing to ℤ-time, and the witness that
 it is strictly smaller than the model class of its axiom set is the static frame over
 `ℤ ×ₗ ℤ`: a discrete carrier — every point has an immediate successor, `toLex (0, 1)` above it —
@@ -26,7 +26,7 @@ All four `TemporalOrder` components (`AddCommGroup`, `LinearOrder`, `IsOrderedAd
 `Nontrivial`) synthesize for `ℤ ×ₗ ℤ` with no help, exactly as they do for `ℚ ×ₗ ℤ` in
 `Semantics/LexCarrier.lean`; this file declares **no** new instance.
 
-Membership in `Mod (AxiomSet .Discrete)` goes *through the constant-truth calculus* of
+Membership in `Mod (AxiomSet .ZTime)` goes *through the constant-truth calculus* of
 `Metalogic/Independence/StaticFrame.lean`. Writing `b(φ)` for the constant truth value of `φ`,
 discreteness gives `b(U(ψ, φ)) = b(φ)` and hence `b(Fφ) = b(Gφ) = b(φ)`, so:
 
@@ -36,13 +36,13 @@ discreteness gives `b(U(ψ, φ)) = b(φ)` and hence `b(Fφ) = b(Gφ) = b(φ)`, s
 
 ## The upper bound is `{F | F.IsDiscrete}`, and it is obtained semantically
 
-`Mod (AxiomSet .Discrete) ⊆ {F | F.IsDiscrete}` — the **paper's** bare Discrete clause, not
-`Sat .Discrete`. The two are different classes, and this file is the proof that they are:
+`Mod (AxiomSet .ZTime) ⊆ {F | F.IsDiscrete}` — the **paper's** bare Discrete clause, not
+`Sat .ZTime`. The two are different classes, and this file is the proof that they are:
 `lexIntStaticFrame` is in the first and not the second.
 
 The inclusion is proved by `validOn_nextTop_of_mem_mod_discrete`, which replays
 `Theorems/DiscreteUnfolding.succIndicatorAt`'s route at the *semantic* level:
-`Axiom.prior_UZ ⊤` is a member of `AxiomSet .Discrete`, its antecedent `F⊤` holds on every frame
+`Axiom.prior_UZ ⊤` is a member of `AxiomSet .ZTime`, its antecedent `F⊤` holds on every frame
 (a nontrivial ordered duration group has no maximum), and its consequent `U(¬⊤, ⊤)` has exactly
 the truth condition of `U(⊥, ⊤) = X⊤`, since `¬⊤` and `⊥` are both false everywhere. This route
 is deliberately **independent of the `Derivable`-level `succIndicatorAt`**: no proof theory is
@@ -77,7 +77,7 @@ instantiations — the other is `ℚ ×ₗ ℤ` in `Metalogic/Conservativity/Z1C
 of it. In particular the four-`example` instance-pinning ritual that used to sit here is gone;
 `LexCarrier.lean` carries the single surviving copy.
 
-The immediate-successor and immediate-predecessor facts this module's `.Discrete` dispatch needs
+The immediate-successor and immediate-predecessor facts this module's `.ZTime` dispatch needs
 are `DurationClassification.isLeast_succ_of_isLeast_pos` and `isGreatest_pred_of_isLeast_pos`
 applied to `LexInt.isLeast_pos`, at `α := ℤ`.
 -/
@@ -91,9 +91,9 @@ duration. Its duration group is discrete but not Archimedean, hence not successo
 def lexIntStaticFrame : TaskFrame := (FrameOver.staticFrame Bool (D := ℤ ×ₗ ℤ)).toTaskFrame
 
 /--
-**The witness is not in `Sat .Discrete`.**
+**The witness is not in `Sat .ZTime`.**
 
-`Sat .Discrete` is `TaskFrame.IsZTime`, whose successor half — a `SuccOrder` together
+`Sat .ZTime` is `TaskFrame.IsZTime`, whose successor half — a `SuccOrder` together
 with `IsSuccArchimedean` — is exactly what `Semantics.archimedean_of_succ` converts into
 `Archimedean`, and `LexInt.not_archimedean` refutes that.
 
@@ -102,19 +102,19 @@ The existential's `PredOrder` and `IsPredArchimedean` components are simply unus
 successor half.
 -/
 theorem lexIntStaticFrame_not_sat :
-    lexIntStaticFrame ∉ {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} := by
+    lexIntStaticFrame ∉ {F : TaskFrame | FrameClass.Sat FrameClass.ZTime F} := by
   rintro ⟨so, _, hsa, _⟩
   exact LexInt.not_archimedean (@archimedean_of_succ (ℤ ×ₗ ℤ) _ _ _ so _ hsa)
 
 /--
-**The witness models every `.Discrete` axiom instance.**
+**The witness models every `.ZTime` axiom instance.**
 
 Dispatch: everything at `minFrameClass ≤ .Base` is sound on every task frame; `prior_UZ` and
 `prior_SZ` are the discrete `untl`/`snce` calculus; `z1` is `static_validates_z1`; the two Dense
 and three Dedekind axioms are eliminated by `Dense ≰ Discrete` and `Dedekind ≰ Discrete`.
 -/
 theorem lexIntStaticFrame_mem_mod :
-    lexIntStaticFrame ∈ Semantics.Mod (AxiomSet FrameClass.Discrete) := by
+    lexIntStaticFrame ∈ Semantics.Mod (AxiomSet FrameClass.ZTime) := by
   have hdisc : ∀ x : ℤ ×ₗ ℤ, ∃ y, IsLeast {z : ℤ ×ₗ ℤ | x < z} y :=
     fun x => ⟨_, isLeast_succ_of_isLeast_pos LexInt.isLeast_pos x⟩
   have hpred : ∀ x : ℤ ×ₗ ℤ, ∃ y, IsGreatest {z : ℤ ×ₗ ℤ | z < x} y :=
@@ -135,13 +135,13 @@ theorem lexIntStaticFrame_mem_mod :
         intro M τ x
         exact static_validates_z1 (D := ℤ ×ₗ ℤ) Bool M τ.val τ.property ψ x
     | _ => first
-        | exact absurd (show FrameClass.Dense ≤ FrameClass.Discrete from hax) (by decide)
+        | exact absurd (show FrameClass.Dense ≤ FrameClass.ZTime from hax) (by decide)
         | exact absurd (FrameClass.base_le FrameClass.Base) hb
 
 /-! ## The semantic upper-bound engine -/
 
 /--
-**Every model of `AxiomSet .Discrete` validates `X⊤`.**
+**Every model of `AxiomSet .ZTime` validates `X⊤`.**
 
 The semantic replay of `Theorems.DiscreteUnfolding.succIndicatorAt`'s three steps, and
 deliberately independent of it — no proof theory is used, so the sandwich below does not inherit
@@ -149,13 +149,13 @@ a `Derivable`-level dependency.
 
 1. `F⊤` holds at every point: a nontrivial ordered duration group has a positive element, so
    every time has a strictly later one.
-2. `Axiom.prior_UZ ⊤` is a member of `AxiomSet .Discrete`, so `F⊤ → U(¬⊤, ⊤)` holds on `F`.
+2. `Axiom.prior_UZ ⊤` is a member of `AxiomSet .ZTime`, so `F⊤ → U(¬⊤, ⊤)` holds on `F`.
 3. `U(¬⊤, ⊤)` and `U(⊥, ⊤) = X⊤` have the same truth condition, since `¬⊤` and `⊥` are both
    false everywhere. This is the step the `Derivable`-level route discharges with
    `Combinators.guardMono`.
 -/
 theorem validOn_nextTop_of_mem_mod_discrete {F : TaskFrame}
-    (hF : F ∈ Semantics.Mod (AxiomSet FrameClass.Discrete)) :
+    (hF : F ∈ Semantics.Mod (AxiomSet FrameClass.ZTime)) :
     F.ValidOn (Formula.next Formula.top) := by
   intro M τ x
   obtain ⟨p, hp⟩ := TaskFrame.exists_pos_of_nontrivial (D := F.Duration.carrier)
@@ -168,33 +168,33 @@ theorem validOn_nextTop_of_mem_mod_discrete {F : TaskFrame}
 
 /-! ## The Discrete sandwich -/
 
-/-- `Sat .Discrete ⊆ Mod (AxiomSet .Discrete)`: soundness of the `.Discrete` axioms. -/
+/-- `Sat .ZTime ⊆ Mod (AxiomSet .ZTime)`: soundness of the `.ZTime` axioms. -/
 theorem sat_ztime_subset_mod_axiomSet :
-    {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} ⊆
-      Semantics.Mod (AxiomSet FrameClass.Discrete) :=
+    {F : TaskFrame | FrameClass.Sat FrameClass.ZTime F} ⊆
+      Semantics.Mod (AxiomSet FrameClass.ZTime) :=
   fun F hF _ ⟨ax, hax⟩ => axiom_ztime_valid ax hax F hF
 
 /--
-**The lower half of the sandwich is strict**: `Sat .Discrete ⊊ Mod (AxiomSet .Discrete)`, with
+**The lower half of the sandwich is strict**: `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)`, with
 `lexIntStaticFrame` the separating frame.
 
-Equivalently: `Sat .Discrete` — the ℤ-time narrowing — is **not** Galois-closed. Contrast
+Equivalently: `Sat .ZTime` — the ℤ-time narrowing — is **not** Galois-closed. Contrast
 `Semantics.galoisClosed_isDiscrete`, which shows that the paper's bare Discrete class *is*.
 -/
 theorem sat_ztime_ssubset_mod_axiomSet :
-    {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} ⊂
-      Semantics.Mod (AxiomSet FrameClass.Discrete) :=
+    {F : TaskFrame | FrameClass.Sat FrameClass.ZTime F} ⊂
+      Semantics.Mod (AxiomSet FrameClass.ZTime) :=
   ⟨sat_ztime_subset_mod_axiomSet,
     fun hrev => lexIntStaticFrame_not_sat (hrev lexIntStaticFrame_mem_mod)⟩
 
 /--
-**The upper half of the sandwich**: `Mod (AxiomSet .Discrete) ⊆ {F | F.IsDiscrete}`.
+**The upper half of the sandwich**: `Mod (AxiomSet .ZTime) ⊆ {F | F.IsDiscrete}`.
 
-The upper bound is the **paper's** Discrete class, not `Sat .Discrete`; the two are different,
+The upper bound is the **paper's** Discrete class, not `Sat .ZTime`; the two are different,
 and `sat_ztime_ssubset_mod_axiomSet` is the proof that they are.
 -/
 theorem mod_axiomSet_discrete_subset_isDiscrete :
-    Semantics.Mod (AxiomSet FrameClass.Discrete) ⊆ {F : TaskFrame | F.IsDiscrete} :=
+    Semantics.Mod (AxiomSet FrameClass.ZTime) ⊆ {F : TaskFrame | F.IsDiscrete} :=
   fun _ hF => (validOn_nextTop_iff_isDiscrete _).mp (validOn_nextTop_of_mem_mod_discrete hF)
 
 end FormalSystem.Metalogic.Independence

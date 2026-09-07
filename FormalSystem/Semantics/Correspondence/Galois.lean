@@ -65,7 +65,7 @@ The `sep` half of that evidence is recorded at the axiom itself: `ProofSystem/Ax
 `sep` docstring quotes Reynolds (printed p.169) to the effect that the Reynolds triple enforces
 only a *definably* Dedekind-complete model — "there may be gaps in the order but ... you wouldn't
 know that just looking at the behaviour of temporal formulas". A closed-form characterization of
-`Mod (AxiomSet .Dedekind)` would have to contradict that. The `ℤ`-versus-`ℤ ×ₗ ℤ` half is
+`Mod (AxiomSet .RTime)` would have to contradict that. The `ℤ`-versus-`ℤ ×ₗ ℤ` half is
 witnessed in `Metalogic/Independence/LexIntWitness.lean`, and the `ℚ`-versus-`ℝ` half in
 `Metalogic/Independence/RationalWitness.lean`: in each case the witness frame is a member of the
 `Mod` side that the `Sat` side excludes, so the two classes are provably distinct without either

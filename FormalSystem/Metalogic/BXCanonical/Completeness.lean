@@ -177,7 +177,7 @@ The contrapositive: if φ is not derivable, then φ is not valid.
 **Sorry Status — sorryAx-free.** The Base-MCS discrete branch was the last debt and is
 discharged. The case □(U(⊤,⊥)) ∈ w₀ requires a discrete countermodel built from a *Base*-MCS.
 The Reynolds pipeline (`countermodel_discrete_reynolds_v2`) requires
-`SetMaximalConsistent (fc := FrameClass.Discrete)`, and a Base-MCS is not automatically
+`SetMaximalConsistent (fc := FrameClass.ZTime)`, and a Base-MCS is not automatically
 Discrete-consistent, so it cannot be reused here; the earlier BX-pipeline route was
 irreparably sorried (`succ_cofinal` is provably unfixable — ℤ+ℤ counterexample) and is
 archived to `Boneyard/DeadChronicleGapElimination/`. The branch now calls
@@ -294,10 +294,10 @@ Axiom Audit section below). The dense-case branch closes by deriving `U(⊤,⊥)
 Discrete theorem; the mixed case is eliminated by `mcs_mixed_case_absurd`.
 -/
 theorem completeness_ztime (φ : Formula) :
-    ValidZTime φ → Derivable FrameClass.Discrete [] φ := by
+    ValidZTime φ → Derivable FrameClass.ZTime [] φ := by
   intro h_valid_ztime
   by_contra h_not_deriv
-  have h_cons := neg_consistent_of_not_derivable (fc := FrameClass.Discrete) φ h_not_deriv
+  have h_cons := neg_consistent_of_not_derivable (fc := FrameClass.ZTime) φ h_not_deriv
   obtain ⟨M, hM_sup, hM_mcs⟩ := set_lindenbaum {Formula.neg φ} h_cons
   have h_neg_in : Formula.neg φ ∈ M := hM_sup (Set.mem_singleton _)
   rcases SetMaximalConsistent.negation_complete hM_mcs
@@ -306,47 +306,47 @@ theorem completeness_ztime (φ : Formula) :
     -- Derive nextTop (= U(T,bot)) in the Discrete system, then from
     -- □(neg(nextTop)) ∈ M extract neg(nextTop) ∈ M via Modal T, contradiction.
     -- Step 1: T = bot → bot
-    have h_top : ⊢[FrameClass.Discrete] Chronicle.topFormula :=
+    have h_top : ⊢[FrameClass.ZTime] Chronicle.topFormula :=
       FormalSystem.Theorems.Combinators.identity Formula.bot
     -- Steps 2-3: F(T) from seriality + MP
-    have h_ft : ⊢[FrameClass.Discrete] Chronicle.topFormula.someFuture :=
+    have h_ft : ⊢[FrameClass.ZTime] Chronicle.topFormula.someFuture :=
       DerivationTree.modus_ponens [] _ _
         (DerivationTree.axiom [] _ Axiom.serial_future (FrameClass.base_le _)) h_top
     -- Steps 4-5: U(T, ¬T) from prior_UZ + MP
-    have h_ut_negT : ⊢[FrameClass.Discrete]
+    have h_ut_negT : ⊢[FrameClass.ZTime]
         (Formula.untl Chronicle.topFormula.neg Chronicle.topFormula) :=
       DerivationTree.modus_ponens [] _ _
         (DerivationTree.axiom [] _ (Axiom.prior_UZ Chronicle.topFormula) (by trivial)) h_ft
     -- Step 6: ¬T → ⊥ via deduction theorem (assume T→⊥, derive T from identity, MP gives ⊥)
-    have h_negT_bot : ⊢[FrameClass.Discrete] (Chronicle.topFormula.neg.imp Formula.bot) := by
-      change ⊢[FrameClass.Discrete] ((Chronicle.topFormula.imp Formula.bot).imp Formula.bot)
+    have h_negT_bot : ⊢[FrameClass.ZTime] (Chronicle.topFormula.neg.imp Formula.bot) := by
+      change ⊢[FrameClass.ZTime] ((Chronicle.topFormula.imp Formula.bot).imp Formula.bot)
       exact deductionTheorem [] (Chronicle.topFormula.imp Formula.bot) Formula.bot
         (DerivationTree.modus_ponens [Chronicle.topFormula.imp Formula.bot] Chronicle.topFormula
             Formula.bot
           (DerivationTree.assumption _ _ (by simp))
           (DerivationTree.weakening [] [Chronicle.topFormula.imp Formula.bot] _ h_top (by simp)))
     -- Step 7: G(¬T → ⊥) via temporal necessitation
-    have h_G_negT_bot : ⊢[FrameClass.Discrete]
+    have h_G_negT_bot : ⊢[FrameClass.ZTime]
         (Chronicle.topFormula.neg.imp Formula.bot).allFuture :=
       DerivationTree.temporal_necessitation _ h_negT_bot
     -- Step 8: left_mono_until_G: G(¬T→⊥) → (U(T,¬T) → U(T,⊥))
-    have h_mono : ⊢[FrameClass.Discrete]
+    have h_mono : ⊢[FrameClass.ZTime]
         ((Chronicle.topFormula.neg.imp Formula.bot).allFuture.imp
           ((Formula.untl Chronicle.topFormula.neg Chronicle.topFormula).imp
             (Formula.untl Formula.bot Chronicle.topFormula))) :=
       DerivationTree.axiom [] _ (Axiom.left_mono_until_G Chronicle.topFormula.neg Formula.bot
           Chronicle.topFormula) (FrameClass.base_le _)
     -- Step 9: U(T,¬T) → U(T,⊥)
-    have h_imp_next : ⊢[FrameClass.Discrete]
+    have h_imp_next : ⊢[FrameClass.ZTime]
         ((Formula.untl Chronicle.topFormula.neg Chronicle.topFormula).imp Chronicle.nextTop) :=
       DerivationTree.modus_ponens [] _ _ h_mono h_G_negT_bot
     -- Step 10: U(T,⊥) = nextTop
-    have h_next_top : ⊢[FrameClass.Discrete] Chronicle.nextTop :=
+    have h_next_top : ⊢[FrameClass.ZTime] Chronicle.nextTop :=
       DerivationTree.modus_ponens [] _ _ h_imp_next h_ut_negT
     -- Place nextTop in M
     have h_in_next : Chronicle.nextTop ∈ M := theorem_in_mcs hM_mcs h_next_top
     -- Extract ¬(nextTop) from □(¬(nextTop)) via Modal T
-    have h_modal_t : ⊢[FrameClass.Discrete]
+    have h_modal_t : ⊢[FrameClass.ZTime]
         (Chronicle.nextTop.neg.box.imp Chronicle.nextTop.neg) :=
       DerivationTree.axiom [] _ (Axiom.modal_t Chronicle.nextTop.neg) (FrameClass.base_le _)
     have h_in_neg_next : Chronicle.nextTop.neg ∈ M :=
@@ -361,7 +361,7 @@ theorem completeness_ztime (φ : Formula) :
         FormalSystem.Metalogic.WeakCanonical.countermodel_discrete_reynolds_v2
           M hM_mcs φ h_neg_in h_box_discrete
       -- The four CARRIER side conditions arrive as ordinary hypotheses out of the existential;
-      -- `ValidIn.apply_total` takes the frame condition as the single `Sat .Discrete F` slot, so
+      -- `ValidIn.apply_total` takes the frame condition as the single `Sat .ZTime F` slot, so
       -- the four are packaged back into the existential they came from. The four ALGEBRA binders
       -- the tuple used to carry are gone -- they are the `TemporalOrder` the frame now has as its
       -- `Duration` field.
@@ -373,7 +373,7 @@ theorem completeness_ztime (φ : Formula) :
       exact h_not_true
         (ValidIn.apply_total h_valid_ztime F ⟨hsucc, hpred, hsuccArch, hpredArch⟩ TM τ h_tot t)
     · -- Mixed case: ¬□(F'T) ∧ ¬□(U(T,bot)) ∈ M — eliminated by structural axiom
-      exact False.elim (Chronicle.mcs_mixed_case_absurd FrameClass.Discrete M hM_mcs
+      exact False.elim (Chronicle.mcs_mixed_case_absurd FrameClass.ZTime M hM_mcs
           h_not_box_dense h_not_box_discrete)
 
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness

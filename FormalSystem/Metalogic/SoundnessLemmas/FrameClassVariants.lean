@@ -770,9 +770,9 @@ theorem axiom_swap_valid_general (φ : Formula) (h : Axiom φ) (h_fc :
 /-! ## Discrete Frame Versions
 
 The following theorems provide validity and swap-validity for all axioms on discrete
-frames. Prior-UZ/SZ have `minFrameClass = .Discrete` and are only valid on discrete orders,
+frames. Prior-UZ/SZ have `minFrameClass = .ZTime` and are only valid on discrete orders,
 so these theorems handle all axioms including Prior-UZ/SZ. The discrete frame class
-constraint `h.minFrameClass ≤ .Discrete` structurally excludes the density axiom.
+constraint `h.minFrameClass ≤ .ZTime` structurally excludes the density axiom.
 -/
 
 /-- Prior-UZ is valid on discrete orders: F(φ) → U(φ, ¬φ).

@@ -57,7 +57,7 @@ def DiscreteHypothesis (fc : FrameClass) (A : Set Formula)
 Prior-UZ holds at every point in the limit domain: for any MCS in the domain,
 the Prior-UZ axiom instance (for any formula ψ) is in that MCS.
 -/
-theorem prior_UZ_in_limit_domain {fc : FrameClass} (h_fc : FrameClass.Discrete ≤ fc)
+theorem prior_UZ_in_limit_domain {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (x : Rat) (hx : x ∈ LimitDom fc A h_mcs) (ψ : Formula) :
     Formula.imp (Formula.someFuture ψ) (Formula.untl ψ.neg ψ) ∈ LimitF fc A h_mcs x :=
@@ -67,7 +67,7 @@ theorem prior_UZ_in_limit_domain {fc : FrameClass} (h_fc : FrameClass.Discrete �
 /--
 Prior-SZ holds at every point in the limit domain.
 -/
-theorem prior_SZ_in_limit_domain {fc : FrameClass} (h_fc : FrameClass.Discrete ≤ fc)
+theorem prior_SZ_in_limit_domain {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (x : Rat) (hx : x ∈ LimitDom fc A h_mcs) (ψ : Formula) :
     Formula.imp (Formula.somePast ψ) (Formula.snce ψ.neg ψ) ∈ LimitF fc A h_mcs x :=

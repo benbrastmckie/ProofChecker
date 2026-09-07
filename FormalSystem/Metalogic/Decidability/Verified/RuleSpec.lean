@@ -184,13 +184,13 @@ def ruleFrameClass : TableauRule → FrameClass
   | .denseIndicatorClosure => .Dense
   | .densityRule => .Dense
   -- Discrete (3)
-  | .priorUZ => .Discrete
-  | .priorSZ => .Discrete
-  | .z1Rule => .Discrete
+  | .priorUZ => .ZTime
+  | .priorSZ => .ZTime
+  | .z1Rule => .ZTime
   -- Dedekind (3)
-  | .priorUGap => .Dedekind
-  | .priorSGap => .Dedekind
-  | .sepRule => .Dedekind
+  | .priorUGap => .RTime
+  | .priorSGap => .RTime
+  | .sepRule => .RTime
   -- Scheduled outside `allRulesForFC` (2) — base rules nonetheless
   | .serialityRule => .Base
   | .timeLinearity => .Base
@@ -244,7 +244,7 @@ def ruleAxioms : TableauRule → List AxiomInstance
   | .priorSZ => [⟨_, .prior_SZ pA⟩]
   | .z1Rule => [⟨_, .z1 pA⟩]
   -- Dedekind (3). NOT `prior_UZ`/`prior_SZ`: those are the integer well-ordering axioms at
-  -- `.Discrete`, and the similarity of the names is a known trap.
+  -- `.ZTime`, and the similarity of the names is a known trap.
   | .priorUGap => [⟨_, .prior_U_gap pA⟩]
   | .priorSGap => [⟨_, .prior_S_gap pA⟩]
   | .sepRule => [⟨_, .sep pA⟩]
@@ -292,7 +292,7 @@ constructor (per constructor pair, for GATE 2) and `decide` evaluates it.
 **GATE 1.** A rule is never available at a frame class that cannot admit the axioms justifying
 it: every axiom grounding `r` has `minFrameClass ≤ ruleFrameClass r`.
 
-Read contrapositively, this is the check that matters: grounding a rule in a `.Dedekind` axiom
+Read contrapositively, this is the check that matters: grounding a rule in a `.RTime` axiom
 while gating the rule at `.Base` is a build failure.
 -/
 theorem ruleAxioms_minFrameClass_le (r : TableauRule) :
@@ -319,7 +319,7 @@ own frame class.
 
 This is what makes an empty `ruleAxioms` entry safe. An empty list is a licit statement of "no
 frame-class-sensitive justification" at `.Base`, and by this gate it can never be anything else:
-moving such a rule to `.Dense`, `.Discrete` or `.Dedekind` without supplying a correspondingly
+moving such a rule to `.Dense`, `.ZTime` or `.RTime` without supplying a correspondingly
 gated axiom breaks the build.
 -/
 theorem ruleAxioms_covers_ruleFrameClass (r : TableauRule) :
@@ -361,14 +361,14 @@ engine actually runs cannot pass unnoticed just because the gates above happen t
 
 example : (allRulesForFC .Base).length = 26 := by decide
 example : (allRulesForFC .Dense).length = 28 := by decide
-example : (allRulesForFC .Discrete).length = 29 := by decide
-example : (allRulesForFC .Dedekind).length = 31 := by decide
+example : (allRulesForFC .ZTime).length = 29 := by decide
+example : (allRulesForFC .RTime).length = 31 := by decide
 
 /-- `Discrete` and `Dedekind` are incomparable, so the Dedekind arm never picks up the Discrete
 rules and vice versa. Pinned here because it is the fact that makes the gating correct rather
 than a defect (report 02, contradiction C3). -/
-example : TableauRule.priorUZ ∉ allRulesForFC .Dedekind := by decide
+example : TableauRule.priorUZ ∉ allRulesForFC .RTime := by decide
 
-example : TableauRule.priorUGap ∉ allRulesForFC .Discrete := by decide
+example : TableauRule.priorUGap ∉ allRulesForFC .ZTime := by decide
 
 end FormalSystem.Metalogic.Decidability.Verified

@@ -35,9 +35,9 @@ order-and-group isomorphic to `ℤ` **or** densely ordered — and `complete_not
 shows the two branches are exclusive. This is what pins down the two frame classes the
 repository actually cares about:
 
-* the discrete branch is *exactly* `ℤ` (not merely "ℤ-like"), which is `FrameClass.Discrete` /
+* the discrete branch is *exactly* `ℤ` (not merely "ℤ-like"), which is `FrameClass.ZTime` /
   `ValidZTime`;
-* the dense branch is the real flow, which is `FrameClass.Dedekind` / `ValidRTime`.
+* the dense branch is the real flow, which is `FrameClass.RTime` / `ValidRTime`.
 
 ## What is deliberately *not* proved here
 
@@ -153,7 +153,7 @@ order-and-group isomorphic to `ℤ`, or densely ordered.
 (`AddCommGroup` + `LinearOrder` + `IsOrderedAddMonoid` + `Archimedean`), so no adapter is
 required.
 
-This is the statement that makes `FrameClass.Dedekind`'s density binder substantive rather than
+This is the statement that makes `FrameClass.RTime`'s density binder substantive rather than
 decorative: without density the class would also admit `ℤ`, on which `Axiom.density` and
 `Axiom.dense_indicator` are both false.
 -/

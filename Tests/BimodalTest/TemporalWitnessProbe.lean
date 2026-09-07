@@ -577,12 +577,12 @@ contain.
 #guard_msgs in
 #eval probe (.imp (.untl q p) q) 200 .Dense
 
--- N. Row I under `.Discrete`. `regionLabelCheck` reports `false` here where it reported `true`
+-- N. Row I under `.ZTime`. `regionLabelCheck` reports `false` here where it reported `true`
 -- at `.Base`, and four candidate rows go with it — the frame class changes the branch, not the
 -- relationship between the gate and the bundle.
 /-- info: "OPEN |T|=4 gen=true check=false U[dich=true wit=true gw=true rdG=false nStr=false nCo=false rP=false rN=false] S[dich=false wit=true gw=false ruG=false nStr=true nCo=true rP=false rN=true]" -/
 #guard_msgs in
-#eval probe (.imp p (.untl q p)) 200 .Discrete
+#eval probe (.imp p (.untl q p)) 200 .ZTime
 
 /-! ## A candidate that is refuted: the region labels are not uniformly negative
 
@@ -785,7 +785,7 @@ def probe3 (φ : Formula) (fuel : Nat := 200) (fc : FrameClass := .Base) : Strin
 -- weak one anywhere in the corpus.
 /-- info: "N gen=true check=false uRL=false uRLs=false sRU=true sRUs=true" -/
 #guard_msgs in
-#eval "N " ++ probe3 (.imp p (.untl q p)) 200 .Discrete
+#eval "N " ++ probe3 (.imp p (.untl q p)) 200 .ZTime
 
 /-! ## The positive rows, in the exact form the proof consumes them
 
@@ -940,7 +940,7 @@ def probe4 (φ : Formula) (fuel : Nat := 200) (fc : FrameClass := .Base) : Strin
 -- from `gw` either, since `wit` is `true` on all twelve rows.
 /-- info: "N gen=true check=false uGW=true [gw=true wit=true] sGW=false [gw=false wit=true] uRD=false [rdG=false] sRU=false [ruG=false]" -/
 #guard_msgs in
-#eval "N " ++ probe4 (.imp p (.untl q p)) 200 .Discrete
+#eval "N " ++ probe4 (.imp p (.untl q p)) 200 .ZTime
 
 /-! ## The interior-region negative demand — the dense carrier's residual, measured
 
@@ -1090,7 +1090,7 @@ def probe5 (φ : Formula) (fuel : Nat := 200) (fc : FrameClass := .Base) : Strin
 -- `j = 0` to an arbitrary `j` costs **nothing** over row 5 anywhere in the corpus.
 /-- info: "N gen=true check=false uNRU=false [k=false r=false uRL=false] sNRD=true [k=true r=true sRU=true]" -/
 #guard_msgs in
-#eval "N " ++ probe5 (.imp p (.untl q p)) 200 .Discrete
+#eval "N " ++ probe5 (.imp p (.untl q p)) 200 .ZTime
 
 /-! ## The interior-region positive demand — the dense carrier's other residual, measured
 
@@ -1252,6 +1252,6 @@ def probe6 (φ : Formula) (fuel : Nat := 200) (fc : FrameClass := .Base) : Strin
 -- the acceptance standard rows 1-10 met.
 /-- info: "N gen=true check=false uPR=false [self=false uRD=false] sPR=false [self=false sRU=false]" -/
 #guard_msgs in
-#eval "N " ++ probe6 (.imp p (.untl q p)) 200 .Discrete
+#eval "N " ++ probe6 (.imp p (.untl q p)) 200 .ZTime
 
 end BimodalTest.TemporalWitnessProbe

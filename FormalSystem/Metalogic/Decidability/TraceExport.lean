@@ -70,8 +70,8 @@ def frameClassToJsonString (fc : FrameClass) : String :=
   match fc with
   | .Base     => "\"Base\""
   | .Dense    => "\"Dense\""
-  | .Discrete => "\"Discrete\""
-  | .Dedekind => "\"Dedekind\""
+  | .ZTime => "\"Discrete\""
+  | .RTime => "\"Dedekind\""
 
 /-- String name of a `CertOutcome`. -/
 def certOutcomeToJsonString (o : CertOutcome) : String :=

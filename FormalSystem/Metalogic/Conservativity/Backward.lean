@@ -17,7 +17,7 @@ whole narrative this file's declarations sit inside — in particular the
 theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
 ```
 
-is refuted at `fc := .Base` and `fc := .Discrete`, and that a `sorry`-ed proof of it would be an
+is refuted at `fc := .Base` and `fc := .ZTime`, and that a `sorry`-ed proof of it would be an
 unsound placeholder rather than deferred debt. Nothing in this file states or approaches
 `forward`.
 
@@ -107,15 +107,15 @@ theorem ceb_backward {φ : BLFormula}
   derivable_translate h
 
 /--
-**CEF**: `TM_f ⊢ φ ⟹ TM⁺_f ⊢ tr φ`, at `FrameClass.Discrete`.
+**CEF**: `TM_f ⊢ φ ⟹ TM⁺_f ⊢ tr φ`, at `FrameClass.ZTime`.
 
 `TM_f` is TM + **DF**; its translation is discharged by
 `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, derived syntactically (Route A) with no
 appeal to the completeness machinery.
 -/
 theorem cef_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.Discrete [] φ) :
-    ProofSystem.Derivable FrameClass.Discrete [] (tr φ) :=
+    (h : BaseLanguage.Derivable FrameClass.ZTime [] φ) :
+    ProofSystem.Derivable FrameClass.ZTime [] (tr φ) :=
   derivable_translate h
 
 /--
@@ -129,11 +129,11 @@ theorem ced_backward {φ : BLFormula}
   derivable_translate h
 
 /--
-**CEC**: `TM_dc ⊢ φ ⟹ TM⁺_dc ⊢ tr φ`, at `FrameClass.Dedekind`.
+**CEC**: `TM_dc ⊢ φ ⟹ TM⁺_dc ⊢ tr φ`, at `FrameClass.RTime`.
 
 **Fidelity caveat — this row is TM_dc, not the paper's TM_c.** This repository's
-`FrameClass.Dedekind` sits strictly *above* `FrameClass.Dense` (`Dense ≤ Dedekind`, see
-`ProofSystem/Axioms.lean`), so a `.Dedekind` derivation may use `Axiom.density` and
+`FrameClass.RTime` sits strictly *above* `FrameClass.Dense` (`Dense ≤ Dedekind`, see
+`ProofSystem/Axioms.lean`), so a `.RTime` derivation may use `Axiom.density` and
 `Axiom.dense_indicator` as well as the Reynolds gap axioms. The row therefore reads
 `TM_dc ⟶ TM⁺_dc` — the dense complete / real-flow system — and **not** the paper's TM_c,
 which is completeness *simpliciter* with no density binder. There is no repository frame class
@@ -145,8 +145,8 @@ The BL-side CO axiom's translation is discharged by
 `FormalSystem.Theorems.DedekindDerived.co_derived`, itself sorry-free over the Reynolds triple.
 -/
 theorem cec_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.Dedekind [] φ) :
-    ProofSystem.Derivable FrameClass.Dedekind [] (tr φ) :=
+    (h : BaseLanguage.Derivable FrameClass.RTime [] φ) :
+    ProofSystem.Derivable FrameClass.RTime [] (tr φ) :=
   derivable_translate h
 
 /-! ## The CEF forward-direction witness
@@ -175,7 +175,7 @@ def Z1 (φ : BLFormula) : BLFormula :=
 /--
 `⊢[Discrete] tr (Z1 φ)` — the translation of the BL-side Z1 schema is a `TM⁺_f` theorem.
 
-Two steps: `ProofSystem.Axiom.z1` at `FrameClass.Discrete`, then
+Two steps: `ProofSystem.Axiom.z1` at `FrameClass.ZTime`, then
 `BaseLanguage.notGNot_imp_F` pushed into the antecedent of the consequent by
 `BaseLanguage.impMono`, converting the axiom's `F(Gφ)` into the `¬G¬(Gφ)` shape `tr` produces.
 
@@ -186,10 +186,10 @@ witness, and it is the half proved *here*; the other half is `not_bl_derivable_z
 CEF being discharged, since `forward` is refuted rather than open.
 -/
 theorem z1_translate (φ : BLFormula) :
-    ProofSystem.Derivable FrameClass.Discrete [] (tr (Z1 φ)) :=
+    ProofSystem.Derivable FrameClass.ZTime [] (tr (Z1 φ)) :=
   ⟨FormalSystem.Theorems.Combinators.impTrans
     (ProofSystem.DerivationTree.axiom [] _ (ProofSystem.Axiom.z1 (tr φ))
-      (show FrameClass.Discrete ≤ FrameClass.Discrete from le_refl _))
+      (show FrameClass.ZTime ≤ FrameClass.ZTime from le_refl _))
     (BaseLanguage.impMono
       (BaseLanguage.notGNot_imp_F (tr φ).allFuture)
       (FormalSystem.Theorems.Combinators.identity (tr φ).allFuture))⟩

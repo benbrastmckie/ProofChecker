@@ -27,7 +27,7 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
 - `TaskFrame.IsDiscrete` — `def:frame-properties`' Discrete clause, verbatim
 - `TaskFrame.IsZTime` — `def:TMplus-f`'s Hölder narrowing of the discrete class to
   `ℤ`-time; strictly stronger than `IsDiscrete`, and the predicate the proof side's
-  `FrameClass.Discrete` actually admits axioms for
+  `FrameClass.ZTime` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
 - `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM⁺_c target
 - `TaskFrame.Deterministic` — `def:deterministic`: every fibre of the task relation is a
@@ -42,7 +42,7 @@ split would silently widen a soundness target:
   `def:TMplus-f` narrows the class its axioms are sound over — "the successor-Archimedean discrete
   class to which BX_f and TM⁺_f are sound and complete is exactly `ℤ`-time" — and that narrowed
   class is `IsZTime`. Only the narrowed one is a sound interpretation of the proof
-  side's `FrameClass.Discrete`.
+  side's `FrameClass.ZTime`.
 - **Complete splits.** `def:frame-properties`' bare Complete clause is `IsComplete`, which `ℤ`
   satisfies. `IsRTime` adds density, deleting exactly the `ℤ` branch of the Hölder dichotomy
   (`Semantics/DurationClassification.lean`'s `complete_duration_discrete_or_dense`).
@@ -116,7 +116,7 @@ clause pointwise at an arbitrary `x`, not at `0`, and the two agree only after t
 translation-invariance of the duration group is invoked. Recording the clause as stated keeps that
 invocation a proof step rather than a definitional assumption.
 
-**This is not the predicate `FrameClass.Discrete` is interpreted by.** See
+**This is not the predicate `FrameClass.ZTime` is interpreted by.** See
 `TaskFrame.IsZTime`, which is strictly stronger.
 -/
 def TaskFrame.IsDiscrete (F : TaskFrame) : Prop :=
@@ -130,10 +130,10 @@ discrete Archimedean totally ordered abelian group is isomorphic to `ℤ`, and s
 successor-Archimedean discrete class to which **BX**`_f` and **TM**⁺`_f` are sound and complete is
 exactly `ℤ`-time."
 
-**It is this predicate, not `TaskFrame.IsDiscrete`, that `FrameClass.Discrete` admits axioms
-for.** `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` all carry `.Discrete` as their
+**It is this predicate, not `TaskFrame.IsDiscrete`, that `FrameClass.ZTime` admits axioms
+for.** `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` all carry `.ZTime` as their
 `minFrameClass`, and by the sentence above they are sound over `ℤ`-time rather than over every
-frame satisfying `def:frame-properties`' bare Discrete clause. Interpreting `FrameClass.Discrete`
+frame satisfying `def:frame-properties`' bare Discrete clause. Interpreting `FrameClass.ZTime`
 by `IsDiscrete` would silently widen the class under `soundness_ztime` — the defect that the
 retired marker-typeclass frame-condition layer carried, and part of why that layer was removed.
 
@@ -186,7 +186,7 @@ def TaskFrame.IsComplete (F : TaskFrame) : Prop :=
 The **dense and Dedekind-complete** class: `def:frame-properties`' Dense clause conjoined with its
 Complete clause. This is `cor:tm-completeness`'s TM⁺_c target — that corollary states TM⁺_c
 complete over "the dense-and-complete class" — and the semantic interpretation of the proof side's
-`FrameClass.Dedekind`.
+`FrameClass.RTime`.
 
 Adding density to `IsComplete` deletes precisely the `ℤ` branch of the Hölder dichotomy and
 nothing else: by `Semantics.complete_duration_discrete_or_dense` a complete duration group is
@@ -203,7 +203,7 @@ already load-bearing here for *proof-theoretic* completeness — `completeness`,
 `Metalogic/StrongCompleteness.lean` — so a `TaskFrame.IsComplete`-versus-`FrameClass.Complete`
 pair would collide with the tree's most-cited word at exactly the point where the two senses meet.
 "Dedekind complete" is the standard and unambiguous name for the order-theoretic property, so it
-is what the dense-and-complete class is called here, in `FrameClass.Dedekind`, and in
+is what the dense-and-complete class is called here, in `FrameClass.RTime`, and in
 `ValidRTime`.
 
 Note that the bare Complete clause above *does* keep the paper's name (`IsComplete`); only the

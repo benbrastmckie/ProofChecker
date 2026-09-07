@@ -570,8 +570,8 @@ Returns `.Base` for unrecognized strings.
 def parseFrameClass (s : String) : FrameClass :=
   let lower := s.toLower
   if lower == "dense" then .Dense
-  else if lower == "discrete" then .Discrete
-  else if lower == "dedekind" then .Dedekind
+  else if lower == "discrete" then .ZTime
+  else if lower == "dedekind" then .RTime
   else .Base
 
 /--
@@ -581,8 +581,8 @@ def frameClassName (fc : FrameClass) : String :=
   match fc with
   | .Base => "Base"
   | .Dense => "Dense"
-  | .Discrete => "Discrete"
-  | .Dedekind => "Dedekind"
+  | .ZTime => "Discrete"
+  | .RTime => "Dedekind"
 
 /--
 Parse CLI arguments from a list of strings.

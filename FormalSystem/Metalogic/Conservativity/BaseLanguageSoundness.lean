@@ -47,7 +47,7 @@ valid by unfolding `BLTruthAt`'s clauses and nothing else.
 
 `bl_soundness_rtime` concludes at `BLValidRTime`, **not** at a density-free
 `BLValidComplete` — which is deliberately not defined. `Semantics/BLValidity.lean`'s module
-docstring gives the BL-native refutation: `Axiom.dn` is admissible at `FrameClass.Dedekind` and is
+docstring gives the BL-native refutation: `Axiom.dn` is admissible at `FrameClass.RTime` and is
 false on `ℤ`, which satisfies every remaining binder. This mirrors `soundness_rtime`'s own
 target on the BL⁺ side.
 
@@ -55,7 +55,7 @@ target on the BL⁺ side.
 
 Consistency is a per-frame-class fact read off a soundness theorem together with a *witness
 frame* for that class. The tree carries `trivialFrame` over `Int`, which serves `FrameClass.Base`
-and `FrameClass.Discrete`; it carries no dense or Dedekind-complete witness frame. The BL⁺ side
+and `FrameClass.ZTime`; it carries no dense or Dedekind-complete witness frame. The BL⁺ side
 records the same asymmetry in `Metalogic/Soundness.lean`'s docstring for `not_derivable_nil_bot`
 ("there is no `{fc}`-uniform statement, because `Dense` and `Dedekind` have no corresponding
 consistency lemma in the tree yet"), and the BL side inherits it exactly.
@@ -64,18 +64,18 @@ consistency lemma in the tree yet"), and the BL side inherits it exactly.
 
 - `truthAt_tr` — the bridge: `TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ`
 - `truthAt_trCtx`, `blValid_iff_valid_tr` — its context-level and validity-level corollaries
-- `blValidZTime_iff_validZTime_tr` — the `.Discrete` mirror of `blValid_iff_valid_tr`,
+- `blValidZTime_iff_validZTime_tr` — the `.ZTime` mirror of `blValid_iff_valid_tr`,
   consumed by `Metalogic/Conservativity/TMCompletenessReduction.lean`
 - `bl_soundness`, `bl_soundness_dense`, `bl_soundness_ztime`, `bl_soundness_rtime` — the
   four soundness theorems
 - `bl_soundness_valid`, `bl_soundness_dense_valid`, `bl_soundness_ztime_valid`,
   `bl_soundness_rtime_valid` — their empty-context validity forms
 - `bl_soundness_ztime_succ`, `bl_soundness_ztime_succ_valid` — a **fifth** soundness
-  theorem, at `FrameClass.Discrete` with the two Archimedean binders dropped. Unlike the four
+  theorem, at `FrameClass.ZTime` with the two Archimedean binders dropped. Unlike the four
   above, it is **not** a composition (`Soundness.soundness_ztime` itself carries the binders
   being dropped); it is proved directly against `BLTruthAt`. See its own docstring section below.
 - `bl_not_derivable_nil_bot`, `bl_not_derivable_nil_bot_ztime` — consistency of BL at
-  `FrameClass.Base` and `FrameClass.Discrete`
+  `FrameClass.Base` and `FrameClass.ZTime`
 
 ## References
 
@@ -192,17 +192,17 @@ theorem blValid_iff_valid_tr (φ : BLFormula) : BLValid φ ↔ Valid (tr φ) :=
   blValidIn_iff_validIn_tr ProofSystem.FrameClass.Base φ
 
 /--
-The **`.Discrete` mirror** of `blValid_iff_valid_tr`: BL validity over the discrete frame class
+The **`.ZTime` mirror** of `blValid_iff_valid_tr`: BL validity over the discrete frame class
 is `TruthAt`-equivalent to `ValidZTime` of the translation, with the four
 `SuccOrder`/`PredOrder`/`IsSuccArchimedean`/`IsPredArchimedean` frame condition travelling as
-the single packed `Sat .Discrete F` hypothesis, so neither direction has to open it. Like
+the single packed `Sat .ZTime F` hypothesis, so neither direction has to open it. Like
 `blValid_iff_valid_tr`, a one-line corollary of `blValidIn_iff_validIn_tr`.
 
 Consumed by `Metalogic/Conservativity/TMCompletenessReduction.lean`'s `tmCompleteZTime_iff_forwardZTime`.
 -/
 theorem blValidZTime_iff_validZTime_tr (φ : BLFormula) :
     BLValidZTime φ ↔ ValidZTime (tr φ) :=
-  blValidIn_iff_validIn_tr ProofSystem.FrameClass.Discrete φ
+  blValidIn_iff_validIn_tr ProofSystem.FrameClass.ZTime φ
 
 end FormalSystem.Semantics
 
@@ -276,12 +276,12 @@ theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
   bl_soundness_in Γ φ d F ‹DenselyOrdered F.Duration› M τ h_mem t h_ctx
 
 /--
-**Soundness of BL at `FrameClass.Discrete`.** `bl_soundness_in` at `fc = .Discrete`, with the
-four order instances bundled into the `Sat .Discrete` witness; the binder bundle is
+**Soundness of BL at `FrameClass.ZTime`.** `bl_soundness_in` at `fc = .ZTime`, with the
+four order instances bundled into the `Sat .ZTime` witness; the binder bundle is
 `soundness_ztime`'s.
 -/
 theorem bl_soundness_ztime (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete Γ φ)
+    (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration]
     [IsSuccArchimedean F.Duration] [IsPredArchimedean F.Duration] (M : TaskModel F)
     (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
@@ -293,8 +293,8 @@ theorem bl_soundness_ztime (Γ : BaseLanguage.Context) (φ : BLFormula)
     M τ h_mem t h_ctx
 
 /--
-**Soundness of BL at `FrameClass.Dedekind`.** `bl_soundness_in` at `fc = .Dedekind`, with the
-density instance and `h_lub` paired into the `Sat .Dedekind` witness; the binder bundle is
+**Soundness of BL at `FrameClass.RTime`.** `bl_soundness_in` at `fc = .RTime`, with the
+density instance and `h_lub` paired into the `Sat .RTime` witness; the binder bundle is
 `soundness_rtime`'s, including the `[DenselyOrdered D]` binder and the least-upper-bound
 hypothesis `h_lub` in its original position.
 
@@ -302,7 +302,7 @@ The `[DenselyOrdered D]` binder is load-bearing, not decorative — see the modu
 `Semantics/BLValidity.lean`.
 -/
 theorem bl_soundness_rtime (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.Dedekind Γ φ)
+    (d : BaseLanguage.DerivationTree FrameClass.RTime Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration]
     (h_lub : ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x)
     (M : TaskModel F)
@@ -325,17 +325,17 @@ theorem bl_soundness_dense_valid {φ : BLFormula}
 
 /-- Empty-context form of `bl_soundness_ztime`. -/
 theorem bl_soundness_ztime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidZTime φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTime φ :=
   bl_soundness_validIn d
 
 /-- Empty-context form of `bl_soundness_rtime`, at `BLValidRTime`. -/
 theorem bl_soundness_rtime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Dedekind [] φ) : BLValidRTime φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.RTime [] φ) : BLValidRTime φ :=
   bl_soundness_validIn d
 
 /-! ## `bl_soundness_ztime_succ` — binder-weakened discrete BL soundness
 
-The single missing prerequisite for CEF (report §6.1): BL soundness at `FrameClass.Discrete`
+The single missing prerequisite for CEF (report §6.1): BL soundness at `FrameClass.ZTime`
 under `[SuccOrder] [PredOrder]` only, dropping `[IsSuccArchimedean] [IsPredArchimedean]`, so that
 it applies to the non-Archimedean carrier `ℚ ×ₗ ℤ` (`Semantics/LexCarrier.lean`) the CEF
 countermodel is built over.
@@ -344,7 +344,7 @@ countermodel is built over.
 `bl_soundness_rtime` above, `bl_soundness_ztime_succ` cannot be obtained by translating and
 invoking `Soundness.soundness_ztime`, because that theorem's own binder bundle carries the very
 two Archimedean instances being dropped here. It is proved instead by induction on
-`BaseLanguage.DerivationTree FrameClass.Discrete`, directly against `BLTruthAt`.
+`BaseLanguage.DerivationTree FrameClass.ZTime`, directly against `BLTruthAt`.
 
 The only genuinely new semantic content is `Semantics.BLSchemaValidity`'s DF lemma
 (`df_valid_of_succOrder`) and its `PredOrder` past-dual (`swapBL_df_valid_of_predOrder`), needed
@@ -353,17 +353,17 @@ Every other axiom — the twelve with `minFrameClass = .Base` — is discharged 
 semantic argument at all**: `bl_derivable_valid_and_swap_valid_zTimeSucc` re-derives each one
 (and its swap) proof-theoretically, by composing `bl_soundness_valid` with the `TD` rule itself
 (`⊢[Base] φ ⟹ ⊢[Base] φ.swapBL`), never touching `BLTruthAt` directly for those twelve. `dn`/`co`
-are eliminated structurally: `FrameClass.Dense` and `FrameClass.Dedekind` are each incomparable
-with `FrameClass.Discrete`, so their axiom leaves are unreachable under the `h_fc` side
+are eliminated structurally: `FrameClass.Dense` and `FrameClass.RTime` are each incomparable
+with `FrameClass.ZTime`, so their axiom leaves are unreachable under the `h_fc` side
 condition. -/
 
 /--
 Combined validity and swap-validity, on `[SuccOrder] [PredOrder]` frames (no Archimedean
-binders), for BL theorems (empty-context derivations) at `FrameClass.Discrete`. The companion
+binders), for BL theorems (empty-context derivations) at `FrameClass.ZTime`. The companion
 `bl_soundness_ztime_succ`'s `temporal_duality` case needs exactly the swap half of this, as an
 external fact — mirroring `Metalogic/Soundness.lean`'s `derivable_valid_and_swap_validIn` (the
 BL⁺ sibling this parallels), but over BL's own 15-constructor `Axiom` rather than BL⁺'s 45, and
-without the `FrameClass` parameter, since the binder-weakened `.Discrete` frames this is stated
+without the `FrameClass` parameter, since the binder-weakened `.ZTime` frames this is stated
 over are not a `FrameClass.Sat` variant.
 
 The `axiom` case's `by_cases hbase : h_ax.minFrameClass ≤ FrameClass.Base` split is the same
@@ -374,7 +374,7 @@ composed with the `TD` proof rule — from the three that are not, without enume
 constructors by name.
 -/
 private theorem bl_derivable_valid_and_swap_valid_zTimeSucc {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) :
+    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) :
     BLValidZTimeSucc φ ∧ BLValidZTimeSucc φ.swapBL := by
   match d with
   | .axiom _ _ h_ax h_fc =>
@@ -387,8 +387,8 @@ private theorem bl_derivable_valid_and_swap_valid_zTimeSucc {φ : BLFormula}
       | df ψ =>
           exact ⟨fun F _ _ M τ _hτ t => df_valid_of_succOrder M τ t ψ,
                  fun F _ _ M τ _hτ t => swapBL_df_valid_of_predOrder M τ t ψ.swapBL⟩
-      | dn _ => exact absurd h_fc (show ¬ (FrameClass.Dense ≤ FrameClass.Discrete) by decide)
-      | co _ => exact absurd h_fc (show ¬ (FrameClass.Dedekind ≤ FrameClass.Discrete) by decide)
+      | dn _ => exact absurd h_fc (show ¬ (FrameClass.Dense ≤ FrameClass.ZTime) by decide)
+      | co _ => exact absurd h_fc (show ¬ (FrameClass.RTime ≤ FrameClass.ZTime) by decide)
       | _ => exact absurd trivial hbase
   | .assumption _ _ h_mem => exact absurd h_mem (by simp)
   | .modus_ponens _ ψ' _ d1 d2 =>
@@ -417,7 +417,7 @@ decreasing_by
     | (simp only [BaseLanguage.DerivationTree.height]; omega)
 
 /--
-**Soundness of BL at `FrameClass.Discrete`, binder-weakened.** A BL derivation of `φ` from `Γ`
+**Soundness of BL at `FrameClass.ZTime`, binder-weakened.** A BL derivation of `φ` from `Γ`
 makes `φ` true at every model, **total** history and time at which every formula of `Γ` is true —
 on any `TaskFrame` carrying `[SuccOrder] [PredOrder]`, with **no** `IsSuccArchimedean` /
 `IsPredArchimedean` requirement.
@@ -427,7 +427,7 @@ cannot be a composition). The `axiom` case's `by_cases` split and the `temporal_
 call into `bl_derivable_valid_and_swap_valid_zTimeSucc` mirror that lemma's own proof exactly.
 -/
 theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete Γ φ)
+    (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration] (M : TaskModel F)
     (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
@@ -438,8 +438,8 @@ theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
     · exact (bl_soundness_valid (.axiom [] _ h_ax hbase)).apply F M τ h_mem t
     · cases h_ax with
       | df ψ => exact df_valid_of_succOrder M τ t ψ
-      | dn _ => exact absurd h_fc (show ¬ (FrameClass.Dense ≤ FrameClass.Discrete) by decide)
-      | co _ => exact absurd h_fc (show ¬ (FrameClass.Dedekind ≤ FrameClass.Discrete) by decide)
+      | dn _ => exact absurd h_fc (show ¬ (FrameClass.Dense ≤ FrameClass.ZTime) by decide)
+      | co _ => exact absurd h_fc (show ¬ (FrameClass.RTime ≤ FrameClass.ZTime) by decide)
       | _ => exact absurd trivial hbase
   | assumption Γ' φ' h_in => exact h_ctx φ' h_in
   | modus_ponens Γ' φ' ψ' d1 d2 ih1 ih2 =>
@@ -459,12 +459,12 @@ theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
 
 /-- Empty-context form of `bl_soundness_ztime_succ`. -/
 theorem bl_soundness_ztime_succ_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Discrete [] φ) : BLValidZTimeSucc φ :=
+    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTimeSucc φ :=
   fun F so po M τ h_mem t => bl_soundness_ztime_succ [] φ d F M τ h_mem t (by simp)
 
 /-! ## Consistency
 
-Two corollaries only, at `FrameClass.Base` and `FrameClass.Discrete`; the module docstring
+Two corollaries only, at `FrameClass.Base` and `FrameClass.ZTime`; the module docstring
 explains why the dense and Dedekind cases are deliberately absent. Both are phrased as
 `¬ BaseLanguage.Derivable …` rather than through `Metalogic.Core.Consistent`, for the same
 import-graph reason `not_derivable_nil_bot` records on the BL⁺ side. -/
@@ -485,14 +485,14 @@ theorem bl_not_derivable_nil_bot :
     τ.property x (by simp)
 
 /--
-**BL at `FrameClass.Discrete` is consistent**: `⊥` is not derivable from the empty context in the
+**BL at `FrameClass.ZTime` is consistent**: `⊥` is not derivable from the empty context in the
 system extended by the discreteness axioms.
 
 The witness is again `trivialFrame` over `ℤ`, with the single total history supplied by
 `TaskFrame.hF_nonempty_of_frameAxioms` and the valuation by `TaskModel.allFalse`.
 -/
 theorem bl_not_derivable_nil_bot_ztime :
-    ¬ BaseLanguage.Derivable FrameClass.Discrete ([] : BaseLanguage.Context) BLFormula.bot := by
+    ¬ BaseLanguage.Derivable FrameClass.ZTime ([] : BaseLanguage.Context) BLFormula.bot := by
   rintro ⟨d⟩
   obtain ⟨τ⟩ := TaskFrame.hF_nonempty_of_frameAxioms (FrameOver.trivialFrame (D := ℤ))
   exact BLValidIn.apply_total (bl_soundness_ztime_valid d) (FrameOver.trivialFrame (D := ℤ))

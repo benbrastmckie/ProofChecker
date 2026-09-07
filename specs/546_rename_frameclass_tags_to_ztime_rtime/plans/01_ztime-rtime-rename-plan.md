@@ -379,23 +379,27 @@ was drawn wrong and must be re-checked before proceeding.
 
 ---
 
-### Phase 5: Tier 1 constructors — the atomic pass [NOT STARTED]
+### Phase 5: Tier 1 constructors — the atomic pass [COMPLETED]
 
 **Goal**: Rename `FrameClass.Discrete` -> `FrameClass.ZTime` and `FrameClass.Dedekind` ->
 `FrameClass.RTime` across the whole live tree in one pass, and move
 `scripts/typst-status-counts.sh`'s grep patterns with them.
 
 **Tasks**:
-- [ ] Edit `ProofSystem/Axioms.lean:529` — the `inductive FrameClass | Base | Dense | Discrete |
+- [x] Edit `ProofSystem/Axioms.lean:529` — the `inductive FrameClass | Base | Dense | Discrete |
       Dedekind` declaration — plus the `LE` instance at :536-543, the eight order-shape
       `example`s, and `Axiom.minFrameClass`.
-- [ ] Apply `s/\.Discrete\b/.ZTime/g` and `s/\.Dedekind\b/.RTime/g` to every live `.lean` file
+- [x] Apply `s/\.Discrete\b/.ZTime/g` and `s/\.Dedekind\b/.RTime/g` to every live `.lean` file
       (`FormalSystem/` excluding `Boneyard/`, plus `Tests/`). String literals
       (`"Discrete"`/`"Dedekind"`, no leading dot) are deliberately untouched by this sed and are
       handled in Phase 6.
-- [ ] Update `scripts/typst-status-counts.sh:52-53`: the greps `'=> \.Discrete'` and
-      `'=> \.Dedekind'` become `'=> \.ZTime'` and `'=> \.RTime'`.
-- [ ] Run the KEEP-list guard.
+- [x] Update `scripts/typst-status-counts.sh:52-53`: the greps `'=> \.Discrete'` and
+      `'=> \.Dedekind'` become `'=> \.ZTime'` and `'=> \.RTime'`. *(deviation: altered — the
+      shell variables and JSON keys `DISCRETE_ONLY_COUNT`/`discrete_only_count` and
+      `DEDEKIND_ONLY_COUNT`/`dedekind_only_count` keep their names in this phase; renaming them
+      also moves the `#discrete-only-count`/`#dedekind-only-count` typst consumers, so both
+      halves are done together in Phase 6 rather than split across a phase boundary.)*
+- [x] Run the KEEP-list guard.
 
 **Timing**: 1.5 hours
 

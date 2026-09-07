@@ -93,8 +93,8 @@ noncomputable example (p q : Formula) : ⊢[FrameClass.Dense] p.imp (q.imp p) :=
   exact DerivationTree.assumption _ _ (List.Mem.tail _ (List.Mem.head _))
 
 /-- Test 8: negation defeq at the non-Base frame class `Discrete`. -/
-noncomputable example (p : Formula) (h : [p] ⊢[FrameClass.Discrete] Formula.bot) :
-    ⊢[FrameClass.Discrete] p.neg := by
+noncomputable example (p : Formula) (h : [p] ⊢[FrameClass.ZTime] Formula.bot) :
+    ⊢[FrameClass.ZTime] p.neg := by
   deduction
   exact h
 

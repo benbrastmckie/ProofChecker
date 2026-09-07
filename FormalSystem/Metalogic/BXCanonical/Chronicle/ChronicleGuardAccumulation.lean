@@ -412,7 +412,7 @@ excluded by `NoGuardAccumulation`, so an insertion discipline that produced the 
 detected rather than silently tolerated.
 
 Note what is and is not shown. The invariant *excludes the pattern* — that is the whole claim. It
-is emphatically **not** shown that the pattern is unrealizable at `FrameClass.Dedekind`; that
+is emphatically **not** shown that the pattern is unrealizable at `FrameClass.RTime`; that
 question needs Ehrenfeucht-Fraïssé / modal-depth machinery, is out of scope, and remains open.
 
 **No source.** Original work.
@@ -498,7 +498,7 @@ invariant from that data alone is unsound.
 
 What this leaves open is stated exactly. The refuting family is a bare `Rat → Set Formula`; it is
 **not** claimed to be a family of maximal consistent sets, and nothing here settles whether the
-shape is realizable at `FrameClass.Dedekind` — that is the Ehrenfeucht-Fraïssé/modal-depth
+shape is realizable at `FrameClass.RTime` — that is the Ehrenfeucht-Fraïssé/modal-depth
 question the module docstring already records as out of scope and open. What is settled is the
 *route*: the invariant cannot be obtained from the limit chronicle's order-and-interval data, so
 establishing it requires content about the maximal-consistent-set values the construction assigns

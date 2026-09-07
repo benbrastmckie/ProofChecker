@@ -59,8 +59,8 @@ statement implies it pointwise, so nothing proved in Phase 6 is lost.
 
 The `untl`/`snce` cases carry `[DenselyOrdered D] [NoMaxOrder D] [NoMinOrder D]` for exactly the
 reason `Interpolate.lean` records: "an open region has a member strictly above any of its members"
-is false on `ℤ` (`not_exists_gt_sameRegion_int`). `.Base ℚ`, `.Dense ℚ` and `.Dedekind ℝ` are
-served here; `.Discrete ℤ` needs its own route and does not get one from this file.
+is false on `ℤ` (`not_exists_gt_sameRegion_int`). `.Base ℚ`, `.Dense ℚ` and `.RTime ℝ` are
+served here; `.ZTime ℤ` needs its own route and does not get one from this file.
 -/
 
 namespace FormalSystem.Metalogic.Decidability.Verified.Bridge

@@ -1057,7 +1057,7 @@ theorem not_valid_of_hasOpen_int (hV : branchOrderValid b ord = true)
 
 /--
 **The `ValidZTime` companion.** `ℤ` carries `SuccOrder`, `PredOrder`, `IsSuccArchimedean` and
-`IsPredArchimedean`, which is what `.Discrete`'s binder list adds; the countermodel and the truth
+`IsPredArchimedean`, which is what `.ZTime`'s binder list adds; the countermodel and the truth
 lemma are the same objects, so the two results differ only in which binder list is discharged.
 -/
 theorem not_validZTime_of_hasOpen_int (hV : branchOrderValid b ord = true)

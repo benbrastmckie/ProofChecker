@@ -43,8 +43,8 @@ soundness composed with the truth-transfer bridge `starValidIn_ofFormula_iff` an
 completeness engine at `fc`. No TM⋆ completeness is used. Semantic conservativity,
 `StarValidIn fc (ofFormula φ) ↔ ValidIn fc φ`, is `Semantics/StarValidity.lean`'s
 `starValidIn_ofFormula_iff`. The composed pair L ⊂ L⋆ inherits the L ⊂ L⁺ status exactly:
-backward at every class (`star_of_tm`), forward not asserted (refuted at `.Base` and `.Discrete`,
-open at `.Dense` and `.Dedekind` — `Metalogic/Conservativity.lean`).
+backward at every class (`star_of_tm`), forward not asserted (refuted at `.Base` and `.ZTime`,
+open at `.Dense` and `.RTime` — `Metalogic/Conservativity.lean`).
 
 ## What is open, and is not promised here
 

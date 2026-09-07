@@ -76,7 +76,7 @@ are discharged here by `chronicleIsDensePriorSepStructure`.
 
 `IsContempEquivDense ε` remains a hypothesis, and is the one condition of the three that this
 tree cannot yet supply non-trivially. -/
-theorem chronicleMonadic_no_gaps {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_no_gaps {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {C : OrderedMonadicStructure (mkSigFrom root) → Prop} [IsDualClosed C] [IsSurgeryClosed C]
@@ -91,7 +91,7 @@ theorem chronicleMonadic_no_gaps {fc : FrameClass} (hfc : FrameClass.Dedekind �
 
 *"The classes do not end at gaps"* covers both ends; this is `no_gaps_dense_prior_left` with the
 same two Prior hypotheses discharged. -/
-theorem chronicleMonadic_no_gaps_left {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_no_gaps_left {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {C : OrderedMonadicStructure (mkSigFrom root) → Prop} [IsDualClosed C] [IsSurgeryClosed C]
@@ -118,7 +118,7 @@ machine-checked identity the module header describes.
 
 `IsContempEquivDense ε` and the density of `M/∼` remain hypotheses; the former is the one
 condition of the three that this tree cannot yet supply non-trivially. -/
-theorem chronicleMonadic_dense_singletons {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_dense_singletons {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {C : OrderedMonadicStructure (mkSigFrom root) → Prop} [IsDualClosed C] [IsSurgeryClosed C]
@@ -233,7 +233,7 @@ end NoWeakening
 
 /-- The chronicle-bridge form of Theorem 4's right-hand end at the unrestricted reading — the
 pre-parameterization signature of `chronicleMonadic_no_gaps`, verbatim. -/
-theorem chronicleMonadic_no_gaps_unrestricted {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_no_gaps_unrestricted {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {ε : MonadicFormula (mkSigFrom root) 2} (hε : IsContempEquivDense ε)
@@ -244,7 +244,7 @@ theorem chronicleMonadic_no_gaps_unrestricted {fc : FrameClass} (hfc : FrameClas
 /-- The chronicle-bridge form of Theorem 4's left-hand end at the unrestricted reading — the
 pre-parameterization signature of `chronicleMonadic_no_gaps_left`, verbatim. -/
 theorem chronicleMonadic_no_gaps_left_unrestricted {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc)
+    (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {ε : MonadicFormula (mkSigFrom root) 2} (hε : IsContempEquivDense ε)
@@ -255,7 +255,7 @@ theorem chronicleMonadic_no_gaps_left_unrestricted {fc : FrameClass}
 /-- The chronicle-bridge form of Theorem 5 at the unrestricted reading — the
 pre-parameterization signature of `chronicleMonadic_dense_singletons`, verbatim. -/
 theorem chronicleMonadic_dense_singletons_unrestricted {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc)
+    (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     {ε : MonadicFormula (mkSigFrom root) 2} (hε : IsContempEquivDense ε)

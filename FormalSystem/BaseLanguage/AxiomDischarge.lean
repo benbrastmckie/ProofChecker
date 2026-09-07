@@ -325,16 +325,16 @@ by `impMono` and then under `△` by `alwaysMono`.
 
 Because this repository's `Dedekind` admits the dense axioms, the row lands at the paper's
 **TM_dc**, not TM_c; see `Metalogic/Conservativity/Backward.lean`'s `cec_backward`. -/
-def discharge_co {fc : FrameClass} (h_fc : FrameClass.Dedekind ≤ fc) (a : BLFormula) :
+def discharge_co {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : BLFormula) :
     ⊢[fc] tr ((a.allPast.imp a.allPast.someFuture).always.imp (a.allPast.imp a.allFuture)) :=
   impTrans
     (alwaysMono (impMono (identity (tr a).allPast) (notGNot_imp_F (tr a).allPast)))
     (FormalSystem.Theorems.DedekindDerived.co_derived h_fc (tr a))
 
 /-- **DF** at `Discrete`. `Theorems.DiscreteUnfolding.dfSchema` is the Route-A syntactic
-derivation; it is stated at `FrameClass.Discrete` and lifted here by the BL-side side condition.
+derivation; it is stated at `FrameClass.ZTime` and lifted here by the BL-side side condition.
 Both the antecedent's `F⊤` and the consequent's `F(Hφ)` cross the bridge. -/
-def discharge_df {fc : FrameClass} (h_fc : FrameClass.Discrete ≤ fc) (a : BLFormula) :
+def discharge_df {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : BLFormula) :
     ⊢[fc] tr (((a.allPast.and a).and BLFormula.top.someFuture).imp a.allPast.someFuture) :=
   let core : ⊢[fc]
       (((tr a).allPast.and (tr a)).and Formula.top.someFuture).imp

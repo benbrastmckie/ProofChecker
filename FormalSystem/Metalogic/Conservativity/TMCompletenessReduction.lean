@@ -18,7 +18,7 @@ proves the tree must never state or `sorry`, the **forward-conservativity prohib
 theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
 ```
 
-is refuted at `fc := .Base` and `fc := .Discrete`, and a `sorry`-ed proof of it would be an
+is refuted at `fc := .Base` and `fc := .ZTime`, and a `sorry`-ed proof of it would be an
 unsound placeholder, not deferred debt.
 
 **This module strengthens that prohibition by exposing a second phrasing of the forbidden
@@ -29,7 +29,7 @@ two-line composition of results already in this tree, with **neither side assert
 here proves TM-completeness, and nothing here proves forward conservativity; the point is that a
 future dispatch attempting either one, in good faith, is thereby attempting the other, and is
 covered by the same prohibition. No `sorry` occurs anywhere in this file, and neither
-`TMCompleteBase` nor `ForwardBase` (nor their `.Discrete` siblings) appears as the conclusion of
+`TMCompleteBase` nor `ForwardBase` (nor their `.ZTime` siblings) appears as the conclusion of
 any `theorem` below — both are `def`s, referenced only as the *statement* being related, never
 discharged.
 
@@ -83,8 +83,8 @@ open FormalSystem.Metalogic.Conservativity
 
 Both propositions and the equivalence between them, stated once and indexed by the `FrameClass`
 tag. The four per-tag rows below are instantiations; before this collapse the `.Base` and
-`.Discrete` rows were two hand-written copies of the same two-line composition, and the `.Dense`
-and `.Dedekind` rows did not exist. -/
+`.ZTime` rows were two hand-written copies of the same two-line composition, and the `.Dense`
+and `.RTime` rows did not exist. -/
 
 /--
 **"TM is complete over the frames of `fc`."** Every `fc`-BL-valid formula is derivable in TM at
@@ -151,41 +151,41 @@ def ForwardBase : Prop := Forward FrameClass.Base
 theorem tmCompleteBase_iff_forwardBase : TMCompleteBase ↔ ForwardBase :=
   tmComplete_iff_forward completeness_base
 
-/-! ## `FrameClass.Discrete` -/
+/-! ## `FrameClass.ZTime` -/
 
 /--
-**"TM_f is complete over `FrameClass.Discrete` task frames."** `TMComplete` at `.Discrete`;
-`BLValidZTime` is `BLValidIn .Discrete` definitionally. **Unasserted**, exactly as
+**"TM_f is complete over `FrameClass.ZTime` task frames."** `TMComplete` at `.ZTime`;
+`BLValidZTime` is `BLValidIn .ZTime` definitionally. **Unasserted**, exactly as
 `TMCompleteBase`.
 -/
-def TMCompleteZTime : Prop := TMComplete FrameClass.Discrete
+def TMCompleteZTime : Prop := TMComplete FrameClass.ZTime
 
 /--
-**"Forward conservativity holds at `FrameClass.Discrete`."** `Forward` at `.Discrete`.
+**"Forward conservativity holds at `FrameClass.ZTime`."** `Forward` at `.ZTime`.
 **Unasserted**, exactly as `ForwardBase`.
 -/
-def ForwardZTime : Prop := Forward FrameClass.Discrete
+def ForwardZTime : Prop := Forward FrameClass.ZTime
 
-/-- **The `.Discrete` mirror**, with `completeness_ztime` as the engine. -/
+/-- **The `.ZTime` mirror**, with `completeness_ztime` as the engine. -/
 theorem tmCompleteZTime_iff_forwardZTime : TMCompleteZTime ↔ ForwardZTime :=
   tmComplete_iff_forward completeness_ztime
 
 /-! ## The two rows the generalization yields
 
-`FrameClass.Dense` and `FrameClass.Dedekind` carry weak-completeness engines of their own
+`FrameClass.Dense` and `FrameClass.RTime` carry weak-completeness engines of their own
 (`completeness_dense` and `completeness_rtime`, the latter being Reynolds 1992 §9 Theorem 7 as
 formalized in this tree), so the same equivalence holds at those tags. Neither row existed before
 the collapse, and neither costs anything beyond naming it. Both sides remain **unasserted** at
-both tags, exactly as at `.Base` and `.Discrete`. -/
+both tags, exactly as at `.Base` and `.ZTime`. -/
 
 /-- **The `.Dense` row.** `tmComplete_iff_forward completeness_dense`. -/
 theorem tmCompleteDense_iff_forwardDense :
     TMComplete FrameClass.Dense ↔ Forward FrameClass.Dense :=
   tmComplete_iff_forward completeness_dense
 
-/-- **The `.Dedekind` row.** `tmComplete_iff_forward completeness_rtime`. -/
+/-- **The `.RTime` row.** `tmComplete_iff_forward completeness_rtime`. -/
 theorem tmCompleteRTime_iff_forwardRTime :
-    TMComplete FrameClass.Dedekind ↔ Forward FrameClass.Dedekind :=
+    TMComplete FrameClass.RTime ↔ Forward FrameClass.RTime :=
   tmComplete_iff_forward completeness_rtime
 
 

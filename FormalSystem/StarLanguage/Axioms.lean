@@ -308,12 +308,12 @@ Minimum frame class of each TM⋆ schema. The TM⁺ arms are `Axiom.minFrameClas
 def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
   | .density _ => .Dense
   | .dense_indicator => .Dense
-  | .prior_UZ _ => .Discrete
-  | .prior_SZ _ => .Discrete
-  | .z1 _ => .Discrete
-  | .prior_U_gap _ => .Dedekind
-  | .prior_S_gap _ => .Dedekind
-  | .sep _ => .Dedekind
+  | .prior_UZ _ => .ZTime
+  | .prior_SZ _ => .ZTime
+  | .z1 _ => .ZTime
+  | .prior_U_gap _ => .RTime
+  | .prior_S_gap _ => .RTime
+  | .sep _ => .RTime
   | _ => .Base
 
 /-! ### Pins -/

@@ -32,13 +32,13 @@ different semantic target (`FormalSystem/Semantics/Validity.lean`):
 |---|---|---|
 | `.Base` | `⊨ φ` (`Valid`, all linear TM frames) | ℚ |
 | `.Dense` | `ValidDense φ` | ℚ |
-| `.Discrete` | `ValidZTime φ` | ℤ |
-| `.Dedekind` | `ValidRTime φ` (dense *and* conditionally complete) | ℝ |
+| `.ZTime` | `ValidZTime φ` | ℤ |
+| `.RTime` | `ValidRTime φ` (dense *and* conditionally complete) | ℝ |
 
 Consequently the same formula can legitimately carry different targets in different
 tables: `F p → F F p` is invalid over an arbitrary linear order and over ℤ, but valid
-over any dense order, so it targets OPEN at `.Base`/`.Discrete` and CLOSED at
-`.Dense`/`.Dedekind`.
+over any dense order, so it targets OPEN at `.Base`/`.ZTime` and CLOSED at
+`.Dense`/`.RTime`.
 
 ## Verdict vocabulary
 
@@ -219,9 +219,9 @@ formula-dependent bound would not.
 states its own. `expandBranchWithFuel` splits its fuel proportionally across the branches
 of a split, so `orderTrichotomy`'s three-way split divides the budget available to
 everything below it, and counterexample B needs a large budget to close: `10000` at
-`.Base`/`.Discrete`, and `100000` in the two dense classes, where `densityRule` interpolates
+`.Base`/`.ZTime`, and `100000` in the two dense classes, where `densityRule` interpolates
 extra times before the closure is reached (measured at `.Dense`: `STALLED` at 30000 and 50000,
-`CLOSED` at 70000 and 100000; the row is pinned at 100000 so `.Dedekind` clears it too). The
+`CLOSED` at 70000 and 100000; the row is pinned at 100000 so `.RTime` clears it too). The
 run costs well under a second per class despite the bound, because the fuel is a *step* budget
 and the proportional allocator hands most sub-branches a small share of it. Raising the
 *corpus-wide* bound instead was tried and rejected: several rows that answer `OPEN` today
@@ -361,12 +361,12 @@ ordinary `someFutureNeg`/conjunction machinery, which is why a single orientatio
 pair suffices even though row B's disjuncts are a permutation drawn from both orientations.
 Row B carries a raised `fuel`; see `conformanceFuel`.
 
-**Row B at `.Dense` and `.Dedekind`: the regression and its repair.** Row B briefly read
+**Row B at `.Dense` and `.RTime`: the regression and its repair.** Row B briefly read
 `STALLED` in the two dense classes while branch-guarded non-destructive expansion was landing.
 Two separate defects were involved, and the bisection that separated them is worth keeping:
 
 1. *Not* the expansion guards. Restoring source destruction while keeping the guards made row B
-   stall in all four classes, so non-destructive expansion is what recovers `.Base`/`.Discrete`.
+   stall in all four classes, so non-destructive expansion is what recovers `.Base`/`.ZTime`.
    Widening `orderTrichotomy`'s first-witnesses-only restriction from one witness to two changed
    nothing, and neither did fuel at 20000/40000/120000.
 2. *Blocking halting the branch rather than the time.* At `.Dense` the halted branch had ordering
@@ -440,7 +440,7 @@ def denseRows : List Row :=
     ++ serialityRows ++ seriesRows ++ counterexampleRows ++ untilSinceRows
 
 /-- The Discrete-class successor probe. `prior_UZ` (`F φ → U(φ, ¬φ)`, the integer
-well-ordering Prior axiom) is valid at `.Discrete`: on ℤ a nonempty future φ-region has a
+well-ordering Prior axiom) is valid at `.ZTime`: on ℤ a nonempty future φ-region has a
 least element, and everything strictly between now and it satisfies `¬φ`. -/
 def discreteExtraRows : List Row :=
   [ { id := "Z1 priorUZ",    formula := im (F p) (U p (nt p)), target := "CLOSED"
@@ -449,7 +449,7 @@ def discreteExtraRows : List Row :=
     , note := "prior_SZ: greatest past witness exists on the integers" }
   ]
 
-/-- `.Discrete`, scored against `ValidZTime φ`. -/
+/-- `.ZTime`, scored against `ValidZTime φ`. -/
 def discreteRows : List Row :=
   controlRows ++ [densityProbe "OPEN" "ZZ is not dense: no time strictly between t and t+1"]
     ++ serialityRows ++ seriesRows ++ counterexampleRows ++ untilSinceRows
@@ -477,7 +477,7 @@ def dedekindExtraRows : List Row :=
     , target := "CLOSED", note := "sep; discharged by the sepRule rule" }
   ]
 
-/-- `.Dedekind`, scored against `ValidRTime φ` — dense *and* conditionally
+/-- `.RTime`, scored against `ValidRTime φ` — dense *and* conditionally
 complete, which is why the density probe targets CLOSED here as it does at `.Dense`. -/
 def dedekindRows : List Row :=
   controlRows ++ [densityProbe "CLOSED" "ValidRTime includes density"]
@@ -580,7 +580,7 @@ Z1 priorUZ         CLOSED   target=CLOSED          prior_UZ: least future witnes
 Z2 priorSZ         CLOSED   target=CLOSED          prior_SZ: greatest past witness exists on the integers
 -/
 #guard_msgs in
-#eval IO.print (report .Discrete discreteRows)
+#eval IO.print (report .ZTime discreteRows)
 
 /--
 info: C1 p->p            CLOSED   target=CLOSED          propositional tautology
@@ -613,7 +613,7 @@ R2 prior-S-gap     CLOSED   target=CLOSED          prior_S_gap; discharged by th
 R3 sep             CLOSED   target=CLOSED          sep; discharged by the sepRule rule
 -/
 #guard_msgs in
-#eval IO.print (report .Dedekind dedekindRows)
+#eval IO.print (report .RTime dedekindRows)
 
 /-! ## Defect-level regression probes
 
@@ -804,8 +804,8 @@ private def diaP : Formula := Formula.diamond p
 private def fcName : FrameClass → String
   | .Base => "Base"
   | .Dense => "Dense"
-  | .Discrete => "Discrete"
-  | .Dedekind => "Dedekind"
+  | .ZTime => "Discrete"
+  | .RTime => "Dedekind"
 
 /-- The pipeline's own certificate, reduced to what still carries information after R5.
 

@@ -599,17 +599,17 @@ example : ⊢ (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)).imp
     (Formula.box (Formula.untl Formula.bot (Formula.bot.imp Formula.bot))) := by
   modal_search
 
--- Layer 6: Prior axioms — discrete (FrameClass.Discrete)
--- Test 54: prior_UZ: F(φ) → U(φ, ¬φ) (requires FrameClass.Discrete)
-example (p : Formula) : ⊢[FrameClass.Discrete] p.someFuture.imp (Formula.untl p.neg p) := by
+-- Layer 6: Prior axioms — discrete (FrameClass.ZTime)
+-- Test 54: prior_UZ: F(φ) → U(φ, ¬φ) (requires FrameClass.ZTime)
+example (p : Formula) : ⊢[FrameClass.ZTime] p.someFuture.imp (Formula.untl p.neg p) := by
   modal_search
 
--- Test 55: prior_SZ: P(φ) → S(φ, ¬φ) (requires FrameClass.Discrete)
-example (p : Formula) : ⊢[FrameClass.Discrete] p.somePast.imp (Formula.snce p.neg p) := by
+-- Test 55: prior_SZ: P(φ) → S(φ, ¬φ) (requires FrameClass.ZTime)
+example (p : Formula) : ⊢[FrameClass.ZTime] p.somePast.imp (Formula.snce p.neg p) := by
   modal_search
 
--- Test 56: z1: G(Gφ→φ) → (FGφ→Gφ) (requires FrameClass.Discrete)
-example (p : Formula) : ⊢[FrameClass.Discrete]
+-- Test 56: z1: G(Gφ→φ) → (FGφ→Gφ) (requires FrameClass.ZTime)
+example (p : Formula) : ⊢[FrameClass.ZTime]
     (p.allFuture.imp p).allFuture.imp (p.allFuture.someFuture.imp p.allFuture) := by
   modal_search
 

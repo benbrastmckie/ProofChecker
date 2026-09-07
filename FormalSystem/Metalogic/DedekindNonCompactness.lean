@@ -8,10 +8,10 @@ import FormalSystem.Metalogic.StrongCompleteness
 import FormalSystem.Semantics.ShiftSet
 
 /-!
-# Non-compactness of the `FrameClass.Dedekind` consequence relation
+# Non-compactness of the `FrameClass.RTime` consequence relation
 
 The Dedekind sibling of `Metalogic/DiscreteNonCompactness.lean`: the set-based semantic
-consequence relation for `FrameClass.Dedekind` is **not compact**, so genuine strong
+consequence relation for `FrameClass.RTime` is **not compact**, so genuine strong
 completeness is unavailable for that class too. This settles the fourth and last row of the
 `FrameClass` table, whose statements are named in `Metalogic/SetConsequence.lean`
 (`CompactRTime`, `StrongCompletenessRTime`, `SatisfiableRTimeSet`).
@@ -74,7 +74,7 @@ density binder at all: density is never used. So the witness is unsatisfiable ov
 Dedekind-complete frame, `ℤ` included — the headline `dedWitness_not_satisfiable` merely states
 that general fact at `SatisfiableRTimeSet`, where the compactness refutation consumes it.
 Density is needed only for the *finite*-satisfiability half, and only because
-`FrameClass.Dedekind` requires it of the witnessing frame.
+`FrameClass.RTime` requires it of the witnessing frame.
 
 Together these refute `CompactRTime` (`notCompactRTime`) and, by way of
 `soundness_rtime`, `StrongCompletenessRTime` itself
@@ -121,7 +121,7 @@ def qGap (q : Atom) : Formula := (Formula.snce (Formula.atom q).neg Formula.top)
 /-- `F(G ¬q)` — the `q`-points are bounded above. -/
 def qBound (q : Atom) : Formula := ((Formula.atom q).neg.allFuture).someFuture
 
-/-- The non-compactness witness for `FrameClass.Dedekind`:
+/-- The non-compactness witness for `FrameClass.RTime`:
 `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤ : n ∈ ℕ}`. Finitely satisfiable over `ℝ`
 (`dedWitness_finitely_satisfiable`), unsatisfiable over every Dedekind-complete frame
 (`dedWitness_core`). -/
@@ -260,7 +260,7 @@ theorem exists_strictMono_qPoints (q : Atom) (M : TaskModel F) (τ : WorldHistor
 
 /-- **The witness has no model over any Dedekind-complete frame.** Stated at
 `TaskFrame.IsComplete` with **no density binder**: density is never invoked, so this covers `ℤ`
-as well as `ℝ`-like carriers, and `FrameClass.Dedekind`'s density requirement plays no part
+as well as `ℝ`-like carriers, and `FrameClass.RTime`'s density requirement plays no part
 here.
 
 The argument, now that the chain construction lives in `exists_strictMono_qPoints` above. The
@@ -292,8 +292,8 @@ theorem dedWitness_core (q : Atom) (M : TaskModel F) (τ : WorldHistory F) (t : 
     exact absurd (heq ▸ hmono (Nat.lt_succ_self n)) (not_lt.mpr hub)
   exact hu (ch n) huy (lt_of_le_of_ne hyz hne) (hQ n)
 
-/-- **The witness is not `FrameClass.Dedekind`-satisfiable.** `dedWitness_core` at the Dedekind
-class: the `Sat .Dedekind` slot is `IsDense ∧ IsComplete`, and only its second component is
+/-- **The witness is not `FrameClass.RTime`-satisfiable.** `dedWitness_core` at the Dedekind
+class: the `Sat .RTime` slot is `IsDense ∧ IsComplete`, and only its second component is
 used. -/
 theorem dedWitness_not_satisfiable (q : Atom) :
     ¬ SatisfiableRTimeSet (dedWitness q) := by
@@ -408,12 +408,12 @@ theorem rTruth_alpha (q : Atom) (N : ℕ) :
           exact_mod_cast hc
         omega
 
-/-- **Every finite sublist of the witness is `FrameClass.Dedekind`-satisfiable.** The bound
+/-- **Every finite sublist of the witness is `FrameClass.RTime`-satisfiable.** The bound
 `N = (L.map qDepth).sum` dominates every index `n` with `qAlpha q n ∈ L`, because `qDepth` reads
 that index back off the formula (`qDepth_qAlpha`) and a single summand is at most the sum. The
 model is `ℝ` with `q` at the integers `1, …, N`, evaluated at `0`.
 
-This is the half that needs density, and it needs it only because `FrameClass.Dedekind` demands
+This is the half that needs density, and it needs it only because `FrameClass.RTime` demands
 it of the witnessing frame; the unsatisfiable half (`dedWitness_core`) uses completeness alone.
 
 Note that a *finite* unsatisfiable set would refute nothing about compactness — compactness may
@@ -423,7 +423,7 @@ theorem dedWitness_finitely_satisfiable (q : Atom) (L : List Formula)
     (hL : ∀ ψ ∈ L, ψ ∈ dedWitness q) : SatisfiableRTimeSet {ψ | ψ ∈ L} := by
   classical
   set N : ℕ := (L.map qDepth).sum with hNdef
-  refine SatisfiableSet.of_forall (fc := FrameClass.Dedekind) (rShift q N).frame
+  refine SatisfiableSet.of_forall (fc := FrameClass.RTime) (rShift q N).frame
     ⟨inferInstance, fun _ hne hbd => Real.exists_isLUB hne hbd⟩ (rM q N) (rH q N)
     (ShiftSet.hist_isTotal _ _) 0 ?_
   intro ψ hψ
@@ -441,7 +441,7 @@ theorem dedWitness_finitely_satisfiable (q : Atom) (L : List Formula)
 
 /-! ## The two refutations -/
 
-/-- **The `FrameClass.Dedekind` set-based consequence relation is not compact.** Refutes
+/-- **The `FrameClass.RTime` set-based consequence relation is not compact.** Refutes
 `CompactRTime` (`Metalogic/SetConsequence.lean`).
 
 `not_compact_of_witness` (`Metalogic/StrongCompleteness.lean`) at `dedWitness ⟨"q", none⟩`, on
@@ -457,7 +457,7 @@ theorem notCompactRTime : ¬ CompactRTime :=
   not_compact_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
 
-/-- **Strong completeness fails for `FrameClass.Dedekind`.** Refutes
+/-- **Strong completeness fails for `FrameClass.RTime`.** Refutes
 `StrongCompletenessRTime` (`Metalogic/SetConsequence.lean`).
 
 `not_strongCompleteness_of_witness` at the same witness. This is the outright refutation that
@@ -474,7 +474,7 @@ theorem notStrongCompletenessRTime : ¬ StrongCompletenessRTime :=
   not_strongCompleteness_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
 
-/-- **Model existence fails for `FrameClass.Dedekind`.** Refutes `ModelExistenceRTime`
+/-- **Model existence fails for `FrameClass.RTime`.** Refutes `ModelExistenceRTime`
 (`Metalogic/SetConsequence.lean`).
 
 The corollary that `Metalogic/SetConsequence.lean` used to describe as "simply not drawn here":

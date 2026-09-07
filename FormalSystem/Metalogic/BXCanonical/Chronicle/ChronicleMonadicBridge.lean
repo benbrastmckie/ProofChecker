@@ -56,7 +56,7 @@ one. Only the sentence quoted above is Reynolds'.
 
 **ADAPTED-FROM**: `FormalSystem/Metalogic/WeakCanonical/IntegerModel/ReynoldsBridge.lean`.
 The bimodal dimension is encoded here exactly as `ReynoldsBridge.lean` already encodes it
-at `.Discrete`: `Formula.box ψ` is a *predicate symbol* of the monadic signature (it is in
+at `.ZTime`: `Formula.box ψ` is a *predicate symbol* of the monadic signature (it is in
 `predFormulas`), so `TemporalTruth` reads box as an opaque unary predicate lookup rather
 than as a quantification. The modal content is carried by the chronicle's `BFMCS` modal
 coherence, not by the monadic language.
@@ -203,7 +203,7 @@ theorem atom_mem_predFormulas_of_mem_subformulas (a : Atom) (root : Formula)
 
 /-- Every box-formula occurring among the subformulas of `root` is a predicate symbol of
 `mkSigFrom root`. This is what makes the bimodal dimension an opaque predicate lookup, as
-`ReynoldsBridge.lean` already has it at `.Discrete`. -/
+`ReynoldsBridge.lean` already has it at `.ZTime`. -/
 theorem box_mem_predFormulas_of_mem_subformulas (ψ root : Formula)
     (h : Formula.box ψ ∈ root.subformulas) : Formula.box ψ ∈ root.predFormulas := by
   induction root with
@@ -285,7 +285,7 @@ This is the structure Reynolds' step 2 hands to Doets' theorem: `cantorBfmcsDens
 `evalFamily` — the family rooted at `A` — read over the finite language `mkSigFrom root`.
 The bundle's `families` set carries the modal dimension (via `BFMCS.modal_forward` /
 `modal_backward`); the monadic language sees box only as an opaque predicate, exactly as
-`ReynoldsBridge.lean` has it at `.Discrete`.
+`ReynoldsBridge.lean` has it at `.ZTime`.
 -/
 noncomputable def chronicleMonadicStructure (fc : FrameClass) (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
@@ -333,7 +333,7 @@ The five cases divide as follows.
 * **Atom** and **box**: `TemporalTruth` reads them through `atomMap`, and
   `mkAtomMapFwd_on_predFormulas` makes the atom map the identity on `root.predFormulas`.
   Part 2 puts every closure atom and closure box-formula there. The box case needs **no**
-  inductive hypothesis — that is precisely the `.Discrete` encoding being reused: the modal
+  inductive hypothesis — that is precisely the `.ZTime` encoding being reused: the modal
   dimension is not unfolded by the monadic language.
 * **Bot**: MCS consistency.
 * **Imp**: MCS implication-closure and negation-completeness, as in
@@ -761,8 +761,8 @@ Reynolds' own one-sentence justification, *"Because it says so in `Γ`, all the 
 instances of the other axioms hold everywhere"*, executed in Lean:
 
 1. `Axiom.prior_U_gap`, `Axiom.prior_S_gap` and `Axiom.sep` each have
-   `minFrameClass = FrameClass.Dedekind` (`Axioms.lean:524-526`), so under
-   `hfc : FrameClass.Dedekind ≤ fc` every substitution instance is a `DerivationTree fc []`
+   `minFrameClass = FrameClass.RTime` (`Axioms.lean:524-526`), so under
+   `hfc : FrameClass.RTime ≤ fc` every substitution instance is a `DerivationTree fc []`
    theorem;
 2. `theorem_in_mcs` (`Core/MaximalConsistent.lean:491`) puts it in the family's MCS at *every*
    rational — Reynolds' "hold everywhere";
@@ -812,7 +812,7 @@ Every substitution instance of `Axiom.prior_U_gap` is an `fc`-theorem for `fc �
 in `fam.mcs t` for every rational `t`; Part 6 reads it back as `SemanticPriorU`. The instance is
 taken at the **effective** formula `chronicleEff root p`, which is what makes the statement hold
 for every `p` rather than only for `p ∈ subformulaClosure root`. -/
-theorem chronicleMonadic_semanticPriorU {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_semanticPriorU {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_fuc : B.ForwardUntilSinceCoherent)
     (h_buc : B.BackwardUntilSinceCoherent)
@@ -861,7 +861,7 @@ theorem chronicleMonadic_semanticPriorU {fc : FrameClass} (hfc : FrameClass.Dede
 /-- **The bridge structure satisfies Prior-S** — Reynolds §4 Corollary 1 clause 3, second
 conjunct. The past mirror of `chronicleMonadic_semanticPriorU`, at `Axiom.prior_S_gap` and
 `kMinus_formula_correct`. -/
-theorem chronicleMonadic_semanticPriorS {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_semanticPriorS {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_fuc : B.ForwardUntilSinceCoherent)
     (h_buc : B.BackwardUntilSinceCoherent)
@@ -909,7 +909,7 @@ Same route as Prior-U and Prior-S. `Axiom.sep`'s soundness is already landed
 (`Axioms.lean:398`, `minFrameClass = Dedekind`); Reynolds' Lemma 10 (printed p.184) is **not**
 re-derived — this obtains Sep from the axiom's membership in the MCS, exactly as Corollary 1
 does. -/
-theorem chronicleMonadic_semanticSep {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_semanticSep {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_fuc : B.ForwardUntilSinceCoherent)
     (h_buc : B.BackwardUntilSinceCoherent)
@@ -982,9 +982,9 @@ correspondence at `q = 0` and is not repeated here.
 
 The Until/Since coherence hypotheses are discharged at the chronicle by Part 5, so this
 statement's only hypotheses are the ones `cantorBfmcsDense` itself needs plus
-`hfc : FrameClass.Dedekind ≤ fc`, which is exactly the frame class at which the three axioms
+`hfc : FrameClass.RTime ≤ fc`, which is exactly the frame class at which the three axioms
 become available. -/
-theorem chronicleIsDensePriorSepStructure {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleIsDensePriorSepStructure {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     IsDensePriorSepStructure
@@ -1033,7 +1033,7 @@ For every monadic formula `psi` of one free variable over the finite signature `
 there is a temporal formula `A` true at exactly the points where `psi` is satisfied, *in the
 chronicle structure itself*. This is the form Reynolds' §6 Lemma 2 applies to `rhoFormula ε`. -/
 noncomputable def chronicleMonadic_expressiveCompleteness {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc)
+    (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula)
     (psi : MonadicFormula (mkSigFrom root) 1) :

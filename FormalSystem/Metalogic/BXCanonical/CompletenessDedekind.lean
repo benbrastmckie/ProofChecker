@@ -12,7 +12,7 @@ import Mathlib.Algebra.Order.Archimedean.Real.Basic
 /-!
 # Dedekind Completeness: carrier probe and the box-dense branch
 
-This module hosts the `FrameClass.Dedekind` completeness branch. It is the Dedekind analogue
+This module hosts the `FrameClass.RTime` completeness branch. It is the Dedekind analogue
 of the `completeness_dense` material in the sibling module `Completeness.lean`, built on the
 real line rather than on `Rat`.
 
@@ -34,7 +34,7 @@ therefore no order-theoretic bridge to build.
 ## Contents
 
 * `real_lub_of_bddAbove` — `ℝ` discharges the lub hypothesis of `ValidRTime`.
-* `dedekind_box_dense_mem` — every `FrameClass.Dedekind`-MCS contains `□(¬U(⊤,⊥))`.
+* `dedekind_box_dense_mem` — every `FrameClass.RTime`-MCS contains `□(¬U(⊤,⊥))`.
 * `chronicle_eval_family_zero_eq_root` — the root placement: the chronicle bundle's evaluation
   family takes the value `A` at time `0`.
 * `countermodel_dedekind_dense` — Reynolds §9 Theorem 7's countermodel, on `ℝ`.
@@ -135,30 +135,30 @@ theorem real_lub_of_bddAbove :
     ∀ s : Set ℝ, s.Nonempty → BddAbove s → ∃ x, IsLUB s x :=
   fun _ hne hbd => ⟨_, isLUB_csSup hne hbd⟩
 
-/-! ## The box-dense branch at `FrameClass.Dedekind` -/
+/-! ## The box-dense branch at `FrameClass.RTime` -/
 
 /--
-Every `FrameClass.Dedekind`-MCS contains `□(¬U(⊤,⊥))`.
+Every `FrameClass.RTime`-MCS contains `□(¬U(⊤,⊥))`.
 
 This is the Dedekind analogue of the non-dense branch of `completeness_dense`
 (sibling module `Completeness.lean`): `Axiom.dense_indicator` states `¬U(⊤,⊥)`, whose
-`minFrameClass` is `.Dense`, and `FrameClass.Dense ≤ FrameClass.Dedekind`, so the axiom is
-admissible in a `.Dedekind` derivation. Necessitation then puts the box in every Dedekind-MCS
+`minFrameClass` is `.Dense`, and `FrameClass.Dense ≤ FrameClass.RTime`, so the axiom is
+admissible in a `.RTime` derivation. Necessitation then puts the box in every Dedekind-MCS
 via `theorem_in_mcs`.
 
 Consequence: the case split that `completeness_dense` performs on `□(¬U(⊤,⊥)) ∈ M` collapses at
-`.Dedekind` — there is no non-dense branch to discharge, and the countermodel construction may
+`.RTime` — there is no non-dense branch to discharge, and the countermodel construction may
 assume the box-dense hypothesis unconditionally.
 
 The placement of `Dedekind` above `Dense` is primary-source: Reynolds 1992 (printed p.168)
 includes density axioms in US/R, and `K⁺⊤` normalises to this tree's `Axiom.dense_indicator`.
 -/
 theorem dedekind_box_dense_mem {A : Set Formula}
-    (h_mcs : SetMaximalConsistent (fc := FrameClass.Dedekind) A) :
+    (h_mcs : SetMaximalConsistent (fc := FrameClass.RTime) A) :
     Formula.box Chronicle.nextTop.neg ∈ A := by
-  have h_ax : DerivationTree FrameClass.Dedekind [] Chronicle.nextTop.neg :=
+  have h_ax : DerivationTree FrameClass.RTime [] Chronicle.nextTop.neg :=
     DerivationTree.axiom [] _ Axiom.dense_indicator (by trivial)
-  have h_box : DerivationTree FrameClass.Dedekind [] Chronicle.nextTop.neg.box :=
+  have h_box : DerivationTree FrameClass.RTime [] Chronicle.nextTop.neg.box :=
     DerivationTree.necessitation _ h_ax
   exact theorem_in_mcs h_mcs h_box
 
@@ -298,7 +298,7 @@ open FormalSystem.Metalogic.Algebraic in
 /--
 **Reynolds §9 Theorem 7, the countermodel half** (printed p.189).
 
-For any frame class `fc` above `FrameClass.Dedekind` and any `fc`-MCS `A` containing `¬φ` and
+For any frame class `fc` above `FrameClass.RTime` and any `fc`-MCS `A` containing `¬φ` and
 the box-dense indicator `□(¬U(⊤,⊥))`, there is a task model **over the real line** in which
 `φ` fails.
 
@@ -316,7 +316,7 @@ condition appears, because none is needed — the carrier is `ℝ`, and the lub 
 `ValidRTime` demands of the *semantic* side is discharged separately by
 `real_lub_of_bddAbove`.
 -/
-theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_dense : Formula.box Chronicle.nextTop.neg ∈ A) :
@@ -560,7 +560,7 @@ theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.Dedekind
         show (sc.val : ℝ) < w₀ + r
         linarith
 
-/-! ## The completeness engine for `FrameClass.Dedekind`
+/-! ## The completeness engine for `FrameClass.RTime`
 
 Reynolds 1992, §2, printed p.169, fixes the notion of completeness this discharges: a formula
 valid over the class is derivable in the system for that class — the *single-formula* (weak)
@@ -574,24 +574,24 @@ second construction. -/
 
 Contrapositive, four steps, no case split:
 
-1. `neg_consistent_of_not_derivable` (`Completeness.lean:72`) makes `{¬ψ}` `.Dedekind`-consistent.
-2. `set_lindenbaum` extends it to a `.Dedekind`-MCS `M` with `¬ψ ∈ M`.
+1. `neg_consistent_of_not_derivable` (`Completeness.lean:72`) makes `{¬ψ}` `.RTime`-consistent.
+2. `set_lindenbaum` extends it to a `.RTime`-MCS `M` with `¬ψ ∈ M`.
 3. `dedekind_box_dense_mem` supplies `□(¬U(⊤,⊥)) ∈ M` *unconditionally* — this is where the
    Dedekind route is simpler than the Base and Discrete ones: `FrameClass.Dense ≤
-   FrameClass.Dedekind`, so `Axiom.dense_indicator` is admissible and the non-dense branch that
+   FrameClass.RTime`, so `Axiom.dense_indicator` is admissible and the non-dense branch that
    `completeness` and `completeness_ztime` must discharge does not exist here.
 4. `countermodel_dedekind_dense` at `ℝ` produces the countermodel, with `by decide` discharging
-   `FrameClass.Dedekind ≤ FrameClass.Dedekind` and `real_lub_of_bddAbove` discharging the
+   `FrameClass.RTime ≤ FrameClass.RTime` and `real_lub_of_bddAbove` discharging the
    least-upper-bound binder of `ValidRTime`. That binder is reached through the generic
-   `ValidIn.apply_total`: `ValidRTime` is `ValidIn FrameClass.Dedekind`, whose frame
+   `ValidIn.apply_total`: `ValidRTime` is `ValidIn FrameClass.RTime`, whose frame
    hypothesis is the packed `TaskFrame.IsRTime`, supplied as `⟨inferInstance, hlub⟩` — density
    is found by search because `IsDense` is an `abbrev` and `Sat` is `@[reducible]`.
 -/
 theorem completeness_rtime_engine (ψ : Formula) :
-    ValidRTime ψ → Derivable FrameClass.Dedekind [] ψ := by
+    ValidRTime ψ → Derivable FrameClass.RTime [] ψ := by
   intro h_valid
   by_contra h_not_deriv
-  have h_cons := neg_consistent_of_not_derivable (fc := FrameClass.Dedekind) ψ h_not_deriv
+  have h_cons := neg_consistent_of_not_derivable (fc := FrameClass.RTime) ψ h_not_deriv
   obtain ⟨M, hM_sup, hM_mcs⟩ := set_lindenbaum {Formula.neg ψ} h_cons
   have h_neg_in : Formula.neg ψ ∈ M := hM_sup (Set.mem_singleton _)
   have h_box_dense : Formula.box Chronicle.nextTop.neg ∈ M := dedekind_box_dense_mem hM_mcs

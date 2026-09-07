@@ -117,8 +117,8 @@ def strListJson (ss : List String) : String :=
 def frameClassToString : FrameClass → String
   | .Base => "Base"
   | .Dense => "Dense"
-  | .Discrete => "Discrete"
-  | .Dedekind => "Dedekind"
+  | .ZTime => "Discrete"
+  | .RTime => "Dedekind"
 
 /-!
 ## Axiom Entries (implicit-index extraction)

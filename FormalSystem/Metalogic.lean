@@ -48,7 +48,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Because the forward
   direction is refuted, TM is not the complete logic of base-language validity; the fragment
   `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
-  (`tmFrag_complete_*`), containing TM everywhere (`tm_le_tmFrag`) and strictly at `.Discrete`
+  (`tmFrag_complete_*`), containing TM everywhere (`tm_le_tmFrag`) and strictly at `.ZTime`
   (`tm_lt_tmFrag_ztime`). Its consequence relation is compact at `.Base` and `.Dense`
   (`blCompactBase`, `blCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
   Discrete/Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
@@ -93,7 +93,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   exactly `propext`, `Classical.choice`, `Quot.sound`)
 - **Completeness (Dedekind)** (`completeness_rtime`): SORRY-FREE (sorryAx-free; axioms:
   exactly `propext`, `Classical.choice`, `Quot.sound`). Weak completeness for
-  `FrameClass.Dedekind` against `ValidRTime`, on the real line. It is a corollary of
+  `FrameClass.RTime` against `ValidRTime`, on the real line. It is a corollary of
   the consequence form below, not an independent construction.
 - **Consequence completeness (Dedekind)** (`consequence_completeness_rtime`): SORRY-FREE
   (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Finite-context
@@ -123,7 +123,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   relation. The infinitary statement has **three distinct statuses** across the four classes,
   which must not be collapsed into one:
 
-  * `FrameClass.Discrete` — **machine-refuted**. `notCompactZTime` and
+  * `FrameClass.ZTime` — **machine-refuted**. `notCompactZTime` and
     `notStrongCompletenessZTime` (entry below) settle it negatively.
   * `FrameClass.Base` and `FrameClass.Dense` — **proved**. `strongCompletenessBase` and
     `strongCompletenessDense` (`Metalogic/Compactness.lean`) inhabit the
@@ -133,13 +133,13 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
     `compactDense` and the weak-completeness engines. Compactness itself comes from
     `modelExistenceBase`/`modelExistenceDense` by an ultraproduct construction over the finite
     sublists of the premise set.
-  * `FrameClass.Dedekind` — **refuted**, like Discrete. Reynolds 1992 Theorem 7 is weak-only,
+  * `FrameClass.RTime` — **refuted**, like Discrete. Reynolds 1992 Theorem 7 is weak-only,
     and this tree now explains why: `CompactRTime` and `StrongCompletenessRTime` are
     stated in `Metalogic/SetConsequence.lean` and refuted in
     `Metalogic/DedekindNonCompactness.lean` by `notCompactRTime` and
     `notStrongCompletenessRTime`.
 - **Non-compactness (discrete)** (`notCompactZTime`): SORRY-FREE (sorryAx-free;
-  axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). The `FrameClass.Discrete`
+  axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). The `FrameClass.ZTime`
   set-based consequence relation is **not** compact: the premise set `{F p} ∪ {¬Xⁿ p : n ∈ ℕ}`
   is finitely satisfiable over `ℤ` yet has no model on any Archimedean discrete carrier. The
   companion `notStrongCompletenessZTime` (same axiom set) converts this into an outright
@@ -153,15 +153,15 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   is the single mechanism by which closure is shown: exhibit one formula valid on precisely the
   class's members. `galoisClosed_sat_dense` (`Sat .Dense`) and `galoisClosed_isDiscrete`
   (`{F | F.IsDiscrete}`, the bare structural clause, **not** the Hölder-to-`ℤ` narrowing
-  `FrameClass.Sat FrameClass.Discrete`) are the two positive results, via the indicator
+  `FrameClass.Sat FrameClass.ZTime`) are the two positive results, via the indicator
   biconditionals `validOn_nextTop_iff` / `validOn_nextTop_iff_isDiscrete`
   (`Semantics/Correspondence/Indicator.lean`). Two negative results sandwich the corresponding
-  narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves `Sat .Dedekind` is **not
+  narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves `Sat .RTime` is **not
   Galois-closed** — a statement about definability of the model class, a different property from
   Dedekind strong completeness (unresolved; see the consequence-completeness entry above) — and
-  `sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .Discrete`
+  `sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .ZTime`
   (`Metalogic/Independence/{RationalWitness,LexIntWitness}.lean`). Closed-form characterizations
-  of `Mod (AxiomSet .Discrete)` and `Mod (AxiomSet .Dedekind)` remain open and are not promised.
+  of `Mod (AxiomSet .ZTime)` and `Mod (AxiomSet .RTime)` remain open and are not promised.
 - **Non-definability of determinism** (`deterministic_not_starDefinable`,
   `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `StarFormula`s
   defines the class of frames satisfying `TaskFrame.Deterministic`, witnessed by the
@@ -187,7 +187,7 @@ The completeness proof uses a three-way case split based on MCS membership:
    (WeakCanonical/Transfer.lean)
 3. **Mixed case**: Eliminated by `mcs_mixed_case_absurd`
 
-The `FrameClass.Dedekind` route has no case split. `Dense <= Dedekind`, so
+The `FrameClass.RTime` route has no case split. `Dense <= Dedekind`, so
 `Axiom.dense_indicator` is admissible in a Dedekind derivation and `dedekind_box_dense_mem`
 (`BXCanonical/CompletenessDedekind.lean`) puts `Box(F'T)` in every Dedekind-MCS
 unconditionally: only the dense branch exists. Its countermodel is on the **reals**

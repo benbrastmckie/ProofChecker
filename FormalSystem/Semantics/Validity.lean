@@ -520,7 +520,7 @@ elaborate against the other. The lemmas below are the shape adapters: a goal sit
 frame predicate `P : TaskFrame → Prop` (`ValidOnFrames.{of_forall_total, apply_total, of_not}`)
 or by a `FrameClass` tag (`ValidIn.{of_forall_total, apply_total, of_not}`), and the second is
 literally the first at `fc.Sat`. There was, until this pass, a third and fourth family: a
-per-class copy of the triple at each of `.Dense`, `.Discrete` and `.Dedekind`, plus a `.Complete`
+per-class copy of the triple at each of `.Dense`, `.ZTime` and `.RTime`, plus a `.Complete`
 pair, twelve declarations existing only because `FrameClass.Sat` was a non-reducible `def` and a
 `Sat .Dense F` hypothesis was therefore invisible to instance search. `FrameClass.Sat` is now
 `@[reducible]` and `TaskFrame.IsDense` an `abbrev`, so the hypothesis registers itself on `intro`
@@ -578,7 +578,7 @@ wants: from a failure of `ValidIn fc` it hands back a failure of the unbundled �
 which `push Not` can then take apart.
 
 This **is** the countermodel-extraction adapter for every tag. Three per-class contrapositives
-used to sit beside it, one at each of `.Dense`, `.Discrete` and `.Dedekind`; each was this lemma
+used to sit beside it, one at each of `.Dense`, `.ZTime` and `.RTime`; each was this lemma
 at a fixed tag with `fc.Sat F` unfolded to that class's frame condition, and all three were
 deleted in favour of it. Only `Valid.of_not` survives, because it discharges `Sat .Base = True`
 rather than restating a frame condition. -/
@@ -613,7 +613,7 @@ has successor and predecessor structure, at all total histories, and all times.
 This restricts `Valid` to temporal types with `SuccOrder D` and `PredOrder D`,
 capturing the frame condition for the discreteness axioms DF/DP.
 
-**Now an abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .Discrete`, which
+**Now an abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .ZTime`, which
 is `TaskFrame.IsZTime` — `def:TMplus-f`'s Hölder narrowing to ℤ-time, *not*
 `def:frame-properties`' bare Discrete clause. Recording the narrowing in the tag's interpretation
 rather than in a binder list here is what keeps `soundness_ztime` from silently widening its
@@ -649,7 +649,7 @@ witness, and `intIso : D ≃+o ℤ` packages both into the additive transfer. Th
 closes this direction outright: establishing `ValidZTime φ` from a statement about ℤ-frames
 alone is now a single rewrite.
 -/
-def ValidZTime (φ : Formula) : Prop := ValidIn ProofSystem.FrameClass.Discrete φ
+def ValidZTime (φ : Formula) : Prop := ValidIn ProofSystem.FrameClass.ZTime φ
 
 /--
 **THE `ValidComplete` CAVEAT — canonical statement; every other site in the tree points here.**
@@ -659,20 +659,20 @@ tag its name suggests, and this paragraph is the only place that fact is argued.
 module that needs it carries a one-line pointer to here rather than a copy of the argument; if
 you are about to write a second copy, write a pointer instead.
 
-Since the rename pass, `ValidDense = ValidIn .Dense`, `ValidZTime = ValidIn .Discrete`,
-`ValidRTime = ValidIn .Dedekind` and `Valid = ValidIn .Base` all hold definitionally. This
+Since the rename pass, `ValidDense = ValidIn .Dense`, `ValidZTime = ValidIn .ZTime`,
+`ValidRTime = ValidIn .RTime` and `Valid = ValidIn .Base` all hold definitionally. This
 predicate is the sole exception: it is `ValidOnFrames TaskFrame.IsComplete` —
 `def:frame-properties`' *bare* Complete clause, which `ℤ` satisfies — and it is deliberately not
 a `ValidIn` tag, because no `FrameClass` constructor denotes the bare Complete class (see the
 `FrameClass` docstring in `ProofSystem/Axioms.lean`).
 
-**Do not retarget `soundness_rtime` at it.** `FrameClass.Dedekind` sits strictly above
+**Do not retarget `soundness_rtime` at it.** `FrameClass.RTime` sits strictly above
 `FrameClass.Dense`, so `Axiom.density` (`GGφ → Gφ`) and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are
-admissible in a `.Dedekind` derivation. Both are FALSE on `ℤ`: for `density`, take `φ` true
+admissible in a `.RTime` derivation. Both are FALSE on `ℤ`: for `density`, take `φ` true
 exactly at times `≥ t + 2`, so `GGφ` holds at `t` while `Gφ` fails; for `dense_indicator`,
 `⊥ U ⊤` is true on `ℤ` because every point has an immediate successor. `ℤ` satisfies every binder
 of this predicate (Mathlib gives it a `ConditionallyCompleteLinearOrder`), so a
-`soundness_rtime : DerivationTree .Dedekind … → ValidComplete` would be **refutable**.
+`soundness_rtime : DerivationTree .RTime … → ValidComplete` would be **refutable**.
 `soundness_rtime` targets `ValidRTime`; this predicate is landed as the strictly weaker
 statement and as the target of the forgetful bridge from `Valid`.
 
@@ -680,7 +680,7 @@ statement and as the target of the forgetful bridge from `Valid`.
 the dense-and-complete class Complete; this tree calls it Dedekind, because "complete" is already
 load-bearing here for *proof-theoretic* completeness. That naming deviation of record is stated
 in full at `TaskFrame.IsRTime` (`Semantics/FrameProperty.lean`) and is a *different* thing from
-the trap this paragraph closes: the rename removed `ValidRTime ≠ ValidIn .Dedekind`, it did not
+the trap this paragraph closes: the rename removed `ValidRTime ≠ ValidIn .RTime`, it did not
 remove the paper-versus-tree deviation, which stands.
 
 A formula is valid over **Dedekind-complete** temporal orders if it is true in all models
@@ -719,13 +719,13 @@ element corresponds to it — see the `FrameClass` docstring in
 `FormalSystem/ProofSystem/Axioms.lean`.
 
 **This predicate is NOT the target of `soundness_rtime`, and that is not an oversight.**
-`FrameClass.Dedekind` sits strictly above `FrameClass.Dense` (see the `FrameClass` docstring
+`FrameClass.RTime` sits strictly above `FrameClass.Dense` (see the `FrameClass` docstring
 in `FormalSystem/ProofSystem/Axioms.lean`), so `Axiom.density` (`GGφ → Gφ`) and
-`Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are admissible in `DerivationTree FrameClass.Dedekind`.
+`Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are admissible in `DerivationTree FrameClass.RTime`.
 Both are FALSE on `ℤ`: for `density`, take `φ` true exactly at times `≥ t + 2`, so `GGφ` holds
 at `t` while `Gφ` fails; for `dense_indicator`, `⊥ U ⊤` is true on `ℤ` because every point has
 an immediate successor. Since `ℤ` also satisfies `TaskFrame.IsComplete`, a
-`soundness_rtime : DerivationTree .Dedekind … → ValidComplete` would be refutable.
+`soundness_rtime : DerivationTree .RTime … → ValidComplete` would be refutable.
 `soundness_rtime` therefore targets `ValidRTime`. This predicate is landed as the
 strictly weaker statement and as the target of the forgetful bridge from `Valid`.
 
@@ -733,7 +733,7 @@ strictly weaker statement and as the target of the forgetful bridge from `Valid`
 abbreviation, the wrong target differed from the right one by *one binder in an inlined list* —
 delete `[DenselyOrdered F.Duration]` and the refutable statement typechecks, with nothing but this
 docstring to say so. The two are now built from different frame predicates entirely
-(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .Dedekind`, i.e. `TaskFrame.IsRTime`), so
+(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .RTime`, i.e. `TaskFrame.IsRTime`), so
 writing the refutable version requires naming a different predicate rather than dropping a binder.
 
 **Source.** Reynolds 1992 (printed p.169) observes that the Prior axioms enforce only a
@@ -748,9 +748,9 @@ A formula is valid over **dense Dedekind-complete** temporal orders. This is the
 predicate, and sharply so: up to order-and-group isomorphism `ℝ` is the *only* nontrivial model,
 not merely a paradigm one.
 
-**This is `ValidIn .Dedekind`** — `FrameClass.Sat .Dedekind` is `TaskFrame.IsRTime`, the
+**This is `ValidIn .RTime`** — `FrameClass.Sat .RTime` is `TaskFrame.IsRTime`, the
 conjunction of `def:frame-properties`' Dense and Complete clauses — and it is therefore the
-predicate the `.Dedekind` tag denotes, whatever its name may suggest about `ValidComplete`. The
+predicate the `.RTime` tag denotes, whatever its name may suggest about `ValidComplete`. The
 binder shape this definition used to have is recovered by the generic
 `ValidIn.of_forall_total` / `ValidIn.apply_total` followed by `sat_intro`, which splits
 `IsRTime` into the density instance and the least-upper-bound hypothesis.
@@ -774,7 +774,7 @@ p.168) includes in US/R "axioms for density and no end points: `K⁺⊤`, `K⁻�
 `K⁺⊤` is `¬(¬⊤ U ⊤)` in this tree's guard-first infix, which normalises (`¬⊤ ↝ ⊥`) to
 `¬(⊥ U ⊤)`, this tree's `Axiom.dense_indicator`.
 -/
-def ValidRTime (φ : Formula) : Prop := ValidIn ProofSystem.FrameClass.Dedekind φ
+def ValidRTime (φ : Formula) : Prop := ValidIn ProofSystem.FrameClass.RTime φ
 
 namespace Validity
 
@@ -786,7 +786,7 @@ are kept as named lemmas so that a call site can cite the correspondence explici
 future edit which pulls the two apart fails here rather than somewhere downstream.
 `valid_iff_validIn_base` is the one that still carries a proof: `Valid` is not yet an abbreviation.
 
-Note the shape of the last one: `ValidComplete` is **not** `ValidIn .Dedekind`. See its own
+Note the shape of the last one: `ValidComplete` is **not** `ValidIn .RTime`. See its own
 docstring, and `TaskFrame.IsComplete`'s. -/
 
 /-- `Valid` is `ValidIn` at the unconstrained class: `Sat .Base` is `True`, so the tag imposes
@@ -800,20 +800,20 @@ theorem valid_iff_validIn_base (φ : Formula) :
 theorem validDense_iff_validIn_dense (φ : Formula) :
     ValidDense φ ↔ ValidIn ProofSystem.FrameClass.Dense φ := Iff.rfl
 
-/-- `ValidZTime` is `ValidIn .Discrete`: its four-instance binder bundle is exactly the
-existential `TaskFrame.IsZTime` that `Sat .Discrete` returns.
+/-- `ValidZTime` is `ValidIn .ZTime`: its four-instance binder bundle is exactly the
+existential `TaskFrame.IsZTime` that `Sat .ZTime` returns.
 
 The forward direction destructures that existential and passes the witnesses **positionally with
 `@`**, never with `haveI`: `F`'s and `M`'s types already carry instances, and re-introducing
 `SuccOrder`/`PredOrder` through the instance cache would break definitional equality against them. -/
 theorem validZTime_iff_validIn_ztime (φ : Formula) :
-    ValidZTime φ ↔ ValidIn ProofSystem.FrameClass.Discrete φ := Iff.rfl
+    ValidZTime φ ↔ ValidIn ProofSystem.FrameClass.ZTime φ := Iff.rfl
 
-/-- `ValidRTime` is `ValidIn .Dedekind`: its density binder together with its
+/-- `ValidRTime` is `ValidIn .RTime`: its density binder together with its
 least-upper-bound hypothesis is exactly the conjunction `TaskFrame.IsRTime` that
-`Sat .Dedekind` returns. This is the `soundness_rtime` target. -/
+`Sat .RTime` returns. This is the `soundness_rtime` target. -/
 theorem validRTime_iff_validIn_rtime (φ : Formula) :
-    ValidRTime φ ↔ ValidIn ProofSystem.FrameClass.Dedekind φ := Iff.rfl
+    ValidRTime φ ↔ ValidIn ProofSystem.FrameClass.RTime φ := Iff.rfl
 
 /-- `ValidComplete` is `ValidOnFrames TaskFrame.IsComplete` — and therefore **not** any `ValidIn`.
 

@@ -44,7 +44,7 @@ Three substitutions carry the `ℤ` body to `ℚ ×ₗ ℤ`:
 * `multiFamTaskFrame` / `multiFamHistory` / `multiFam_total_eq` →
   `multiFamTaskFrameGen (TemporalOrder.of (ℚ ×ₗ ℤ))` / `multiFamHistoryGen` / `multiFamGen_total_eq`
   (`Algebraic/FlowFrame.lean`).
-* `FrameClass.Discrete` → `FrameClass.Base` throughout. Every remaining step is already
+* `FrameClass.ZTime` → `FrameClass.Base` throughout. Every remaining step is already
   `{fc : FrameClass}`-generic; in particular `Axiom.modal_t` is a `.Base` axiom, so its
   `trivial` membership proof survives.
 

@@ -71,16 +71,16 @@ theorem forward_star_dense (φ : Formula) (h : StarDerivable FrameClass.Dense []
     ProofSystem.Derivable FrameClass.Dense [] φ :=
   forward_star completeness_dense φ h
 
-/-- Forward conservativity at `.Discrete`, via `completeness_ztime`. -/
+/-- Forward conservativity at `.ZTime`, via `completeness_ztime`. -/
 theorem forward_star_ztime (φ : Formula)
-    (h : StarDerivable FrameClass.Discrete [] (ofFormula φ)) :
-    ProofSystem.Derivable FrameClass.Discrete [] φ :=
+    (h : StarDerivable FrameClass.ZTime [] (ofFormula φ)) :
+    ProofSystem.Derivable FrameClass.ZTime [] φ :=
   forward_star completeness_ztime φ h
 
-/-- Forward conservativity at `.Dedekind`, via `completeness_rtime`. -/
+/-- Forward conservativity at `.RTime`, via `completeness_rtime`. -/
 theorem forward_star_rtime (φ : Formula)
-    (h : StarDerivable FrameClass.Dedekind [] (ofFormula φ)) :
-    ProofSystem.Derivable FrameClass.Dedekind [] φ :=
+    (h : StarDerivable FrameClass.RTime [] (ofFormula φ)) :
+    ProofSystem.Derivable FrameClass.RTime [] φ :=
   forward_star completeness_rtime φ h
 
 /-- **TM⋆ is a conservative extension of TM⁺**: at any class with an engine, an L⁺ formula is a
@@ -101,16 +101,16 @@ theorem starDerivable_ofFormula_iff_dense (φ : Formula) :
       ProofSystem.Derivable FrameClass.Dense [] φ :=
   starDerivable_ofFormula_iff completeness_dense φ
 
-/-- Conservativity at `.Discrete`. -/
+/-- Conservativity at `.ZTime`. -/
 theorem starDerivable_ofFormula_iff_ztime (φ : Formula) :
-    StarDerivable FrameClass.Discrete [] (ofFormula φ) ↔
-      ProofSystem.Derivable FrameClass.Discrete [] φ :=
+    StarDerivable FrameClass.ZTime [] (ofFormula φ) ↔
+      ProofSystem.Derivable FrameClass.ZTime [] φ :=
   starDerivable_ofFormula_iff completeness_ztime φ
 
-/-- Conservativity at `.Dedekind`. -/
+/-- Conservativity at `.RTime`. -/
 theorem starDerivable_ofFormula_iff_rtime (φ : Formula) :
-    StarDerivable FrameClass.Dedekind [] (ofFormula φ) ↔
-      ProofSystem.Derivable FrameClass.Dedekind [] φ :=
+    StarDerivable FrameClass.RTime [] (ofFormula φ) ↔
+      ProofSystem.Derivable FrameClass.RTime [] φ :=
   starDerivable_ofFormula_iff completeness_rtime φ
 
 /-! ## The composed pair L ⊂ L⋆
@@ -118,8 +118,8 @@ theorem starDerivable_ofFormula_iff_rtime (φ : Formula) :
 Backward: `derivable_translate` (`Conservativity/Backward.lean`) composed with
 `starDerivable_of_derivable`. The **forward** direction for this pair,
 `TM⋆ ⊢ ofFormula (tr φ) ⟹ TM ⊢ φ`, is by `starDerivable_ofFormula_iff` exactly the L ⊂ L⁺
-forward direction `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ`, which is refuted at `.Base` and `.Discrete` and open
-at `.Dense` and `.Dedekind` (`Metalogic/Conservativity.lean`); it is **not asserted**. -/
+forward direction `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ`, which is refuted at `.Base` and `.ZTime` and open
+at `.Dense` and `.RTime` (`Metalogic/Conservativity.lean`); it is **not asserted**. -/
 
 /-- **L ⊂ L⋆, backward**: a TM theorem embeds, through `tr` and `ofFormula`, into a TM⋆ theorem
 at the same class. -/
@@ -137,16 +137,16 @@ theorem star_of_tm_dense (φ : BLFormula) (h : BaseLanguage.Derivable FrameClass
     StarDerivable FrameClass.Dense [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
-/-- L ⊂ L⋆ backward at `.Discrete`. -/
+/-- L ⊂ L⋆ backward at `.ZTime`. -/
 theorem star_of_tm_ztime (φ : BLFormula)
-    (h : BaseLanguage.Derivable FrameClass.Discrete [] φ) :
-    StarDerivable FrameClass.Discrete [] (ofFormula (tr φ)) :=
+    (h : BaseLanguage.Derivable FrameClass.ZTime [] φ) :
+    StarDerivable FrameClass.ZTime [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
-/-- L ⊂ L⋆ backward at `.Dedekind`. -/
+/-- L ⊂ L⋆ backward at `.RTime`. -/
 theorem star_of_tm_rtime (φ : BLFormula)
-    (h : BaseLanguage.Derivable FrameClass.Dedekind [] φ) :
-    StarDerivable FrameClass.Dedekind [] (ofFormula (tr φ)) :=
+    (h : BaseLanguage.Derivable FrameClass.RTime [] φ) :
+    StarDerivable FrameClass.RTime [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
 /-- **The H/G-fragment is the same seen from TM⋆**: `TMFrag fc φ` (`Conservativity/Fragment.lean`)

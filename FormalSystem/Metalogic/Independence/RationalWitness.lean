@@ -13,11 +13,11 @@ import Mathlib.Algebra.Order.Archimedean.Real.Basic
 /-!
 # Witness (a): the static frame over `ℚ`, and the Dedekind sandwich
 
-`FrameClass.Sat FrameClass.Dedekind` is **not** Galois-closed. The witness is the static frame
-over the rationals: it models every axiom instance permitted at `FrameClass.Dedekind`, yet its
-duration group is not Dedekind-complete, so it is not in `Sat .Dedekind`.
+`FrameClass.Sat FrameClass.RTime` is **not** Galois-closed. The witness is the static frame
+over the rationals: it models every axiom instance permitted at `FrameClass.RTime`, yet its
+duration group is not Dedekind-complete, so it is not in `Sat .RTime`.
 
-`ratStaticFrame ∈ Mod (AxiomSet .Dedekind)` is obtained *through the constant-truth calculus* of
+`ratStaticFrame ∈ Mod (AxiomSet .RTime)` is obtained *through the constant-truth calculus* of
 `Metalogic/Independence/StaticFrame.lean`, not axiom by axiom. Writing `b(φ)` for the constant
 truth value of `φ`, the dense-carrier calculus gives `b(U(ψ, φ)) = b(φ) ∧ b(ψ)` and hence
 `b(Gφ) = b(Fφ) = b(K⁺φ) = b(K⁻φ) = b(φ)`, and then:
@@ -30,8 +30,8 @@ truth value of `φ`, the dense-carrier calculus gives `b(U(ψ, φ)) = b(φ) ∧ 
 * `sep`'s inner `U(¬φ, φ)` reduces to `b(φ) ∧ ¬b(φ) = ⊥`, so the second conjunct of its
   antecedent is `⊤` and the whole axiom collapses to `b(φ) → b(φ)`.
 
-The upper bound `Mod (AxiomSet .Dedekind) ⊆ Sat .Dense` is semantic, not proof-theoretic:
-`Axiom.dense_indicator` lies in `AxiomSet .Dedekind` (its `minFrameClass` is `.Dense ≤ .Dedekind`),
+The upper bound `Mod (AxiomSet .RTime) ⊆ Sat .Dense` is semantic, not proof-theoretic:
+`Axiom.dense_indicator` lies in `AxiomSet .RTime` (its `minFrameClass` is `.Dense ≤ .RTime`),
 so `Semantics.validOn_neg_nextTop_iff` applies directly.
 
 ## Both sandwiches are over `AxiomSet`, and deliberately so
@@ -109,14 +109,14 @@ theorem ratStaticFrame_isDense : ratStaticFrame.IsDense :=
   inferInstanceAs (DenselyOrdered ℚ)
 
 /--
-**The witness models every `.Dedekind` axiom instance.**
+**The witness models every `.RTime` axiom instance.**
 
 Dispatch: everything at `minFrameClass ≤ .Dense` is `axiom_dense_valid` applied at the
 dense frame; the three Reynolds axioms are the calculus computations described in the module
-docstring; the three `.Discrete` axioms are eliminated by `Discrete ≰ Dedekind`.
+docstring; the three `.ZTime` axioms are eliminated by `Discrete ≰ Dedekind`.
 -/
 theorem ratStaticFrame_mem_mod :
-    ratStaticFrame ∈ Semantics.Mod (AxiomSet FrameClass.Dedekind) := by
+    ratStaticFrame ∈ Semantics.Mod (AxiomSet FrameClass.RTime) := by
   have andE : ∀ {P Q : Prop}, ((P → Q → False) → False) → P ∧ Q := by
     intro P Q hpq
     by_contra hn
@@ -146,53 +146,53 @@ theorem ratStaticFrame_mem_mod :
         exact hc ((static_kPlus_iff_dense (D := ℚ) Bool M τ.val τ.property ψ x).mpr hψ)
           ((static_kMinus_iff_dense (D := ℚ) Bool M τ.val τ.property ψ x).mpr hψ)
     | prior_UZ _ =>
-        exact absurd (show FrameClass.Discrete ≤ FrameClass.Dedekind from hax) (by decide)
+        exact absurd (show FrameClass.ZTime ≤ FrameClass.RTime from hax) (by decide)
     | prior_SZ _ =>
-        exact absurd (show FrameClass.Discrete ≤ FrameClass.Dedekind from hax) (by decide)
+        exact absurd (show FrameClass.ZTime ≤ FrameClass.RTime from hax) (by decide)
     | z1 _ =>
-        exact absurd (show FrameClass.Discrete ≤ FrameClass.Dedekind from hax) (by decide)
+        exact absurd (show FrameClass.ZTime ≤ FrameClass.RTime from hax) (by decide)
     | _ => exact absurd (FrameClass.base_le FrameClass.Dense) hb
 
 /--
-**The witness is not in `Sat .Dedekind`.**
+**The witness is not in `Sat .RTime`.**
 
-`Sat .Dedekind` is `TaskFrame.IsRTime`, the conjunction of `IsDense` and `IsComplete`;
+`Sat .RTime` is `TaskFrame.IsRTime`, the conjunction of `IsDense` and `IsComplete`;
 `rat_not_complete` kills the second conjunct.
 -/
 theorem ratStaticFrame_not_sat :
-    ratStaticFrame ∉ {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} :=
+    ratStaticFrame ∉ {F : TaskFrame | FrameClass.Sat FrameClass.RTime F} :=
   fun h => rat_not_complete h.2
 
 /-! ## The Dedekind sandwich -/
 
-/-- `Sat .Dedekind ⊆ Mod (AxiomSet .Dedekind)`: soundness of the `.Dedekind` axioms. -/
+/-- `Sat .RTime ⊆ Mod (AxiomSet .RTime)`: soundness of the `.RTime` axioms. -/
 theorem sat_rtime_subset_mod_axiomSet :
-    {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} ⊆
-      Semantics.Mod (AxiomSet FrameClass.Dedekind) :=
+    {F : TaskFrame | FrameClass.Sat FrameClass.RTime F} ⊆
+      Semantics.Mod (AxiomSet FrameClass.RTime) :=
   fun F hF _ ⟨ax, hax⟩ => axiom_rtime_valid ax hax F hF
 
 /--
-**The lower half of the sandwich is strict**: `Sat .Dedekind ⊊ Mod (AxiomSet .Dedekind)`, with
+**The lower half of the sandwich is strict**: `Sat .RTime ⊊ Mod (AxiomSet .RTime)`, with
 `ratStaticFrame` the separating frame.
 
-Equivalently: `Sat .Dedekind` is not Galois-closed, since its `Mod (Th ·)` closure contains the
+Equivalently: `Sat .RTime` is not Galois-closed, since its `Mod (Th ·)` closure contains the
 witness.
 -/
 theorem sat_rtime_ssubset_mod_axiomSet :
-    {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} ⊂
-      Semantics.Mod (AxiomSet FrameClass.Dedekind) :=
+    {F : TaskFrame | FrameClass.Sat FrameClass.RTime F} ⊂
+      Semantics.Mod (AxiomSet FrameClass.RTime) :=
   ⟨sat_rtime_subset_mod_axiomSet,
     fun hrev => ratStaticFrame_not_sat (hrev ratStaticFrame_mem_mod)⟩
 
 /--
-**The upper half of the sandwich**: `Mod (AxiomSet .Dedekind) ⊆ Sat .Dense`.
+**The upper half of the sandwich**: `Mod (AxiomSet .RTime) ⊆ Sat .Dense`.
 
 Semantic, not proof-theoretic: `Axiom.dense_indicator` is itself a member of
-`AxiomSet .Dedekind` (its `minFrameClass` is `.Dense`, and `Dense ≤ Dedekind`), so every frame in
+`AxiomSet .RTime` (its `minFrameClass` is `.Dense`, and `Dense ≤ Dedekind`), so every frame in
 the model class validates `¬X⊤` and `Semantics.validOn_neg_nextTop_iff` converts that to density.
 -/
 theorem mod_axiomSet_rtime_subset_sat_dense :
-    Semantics.Mod (AxiomSet FrameClass.Dedekind) ⊆
+    Semantics.Mod (AxiomSet FrameClass.RTime) ⊆
       {F : TaskFrame | FrameClass.Sat FrameClass.Dense F} :=
   fun F hF => (validOn_neg_nextTop_iff F).mp
     (hF ⟨Axiom.dense_indicator, by decide⟩)

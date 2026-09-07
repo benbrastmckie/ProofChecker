@@ -262,7 +262,7 @@ Proof: use the effective formula bridge and the MCS-level Prior-UZ axiom.
 -/
 theorem limitdom_semantic_prior_UZ {fc : FrameClass} (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
-    (h_fc : FrameClass.Discrete ≤ fc) (φ : Formula) :
+    (h_fc : FrameClass.ZTime ≤ fc) (φ : Formula) :
     SemanticPriorUZ (limitdomMonadicStructure A h_mcs φ) (mkAtomMapFwd φ) := by
   intro t ψ' ⟨s, hts, h_ψ_s⟩
   let eff_ψ := limitdomEffectiveFormula φ ψ'
@@ -308,7 +308,7 @@ Mirror of `limitdom_semantic_prior_UZ`.
 -/
 theorem limitdom_semantic_prior_SZ {fc : FrameClass} (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
-    (h_fc : FrameClass.Discrete ≤ fc) (φ : Formula) :
+    (h_fc : FrameClass.ZTime ≤ fc) (φ : Formula) :
     SemanticPriorSZ (limitdomMonadicStructure A h_mcs φ) (mkAtomMapFwd φ) := by
   intro t ψ' ⟨s, hst, h_ψ_s⟩
   let eff_ψ := limitdomEffectiveFormula φ ψ'
@@ -361,7 +361,7 @@ This does NOT require `IsSuccArchimedean` for `LimitDomSubtype`.
 -/
 theorem limitdom_is_good {fc : FrameClass} (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
-    (h_fc : FrameClass.Discrete ≤ fc)
+    (h_fc : FrameClass.ZTime ≤ fc)
     (h_box_discrete : Formula.box nextTop ∈ A)
     (φ : Formula) (k : Nat) :
     good (mkSigFrom φ) k (limitdomMonadicStructure A h_mcs φ) := by
@@ -904,7 +904,7 @@ box predicate lookup.
 -/
 theorem countermodel_discrete_reynolds_v2
     (A : Set Formula)
-    (h_mcs : SetMaximalConsistent (fc := FrameClass.Discrete) A)
+    (h_mcs : SetMaximalConsistent (fc := FrameClass.ZTime) A)
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_discrete : Formula.box nextTop ∈ A) :
     ∃ (F : TaskFrame) (_ : SuccOrder ↑F.Duration) (_ : PredOrder ↑F.Duration)
@@ -914,7 +914,7 @@ theorem countermodel_discrete_reynolds_v2
   -- === Multi-Family Z-Interval Approach (bypasses chronicle_gap_contradiction) ===
   --
   -- FamIdx: type of box-equivalent MCSes (one per S5 accessibility class)
-  let FamIdx := {N : Set Formula // SetMaximalConsistent (fc := FrameClass.Discrete) N ∧
+  let FamIdx := {N : Set Formula // SetMaximalConsistent (fc := FrameClass.ZTime) N ∧
     Formula.box nextTop ∈ N ∧ (∀ ψ, Formula.box ψ ∈ A ↔ Formula.box ψ ∈ N)}
   -- Root family: A itself
   let f₀ : FamIdx := ⟨A, h_mcs, h_box_discrete, fun _ => Iff.rfl⟩
@@ -957,12 +957,12 @@ theorem countermodel_discrete_reynolds_v2
         (getZ w.1).interp (mkAtomMapFwd φ (.atom atom)) w.2 }
   -- Get TemporalTruth(φ.neg) at root on limitdom, then transfer to Z-interval
   have h_root_neg : TemporalTruth (limitdomMonadicStructure A h_mcs φ) (mkAtomMapFwd φ)
-      ⟨0, zero_mem_limit_dom FrameClass.Discrete A h_mcs⟩ φ.neg :=
+      ⟨0, zero_mem_limit_dom FrameClass.ZTime A h_mcs⟩ φ.neg :=
     limitdom_root_neg_truth A h_mcs φ h_neg_in
   have h_k_bound : operatorDepth φ.neg + 1 ≤ k := by
     simp only [k, Formula.neg, operatorDepth]; omega
   obtain ⟨s₀, h_neg_s₀⟩ := truth_transfer (mkAtomMapFwd φ) (h_k_equiv f₀) φ.neg
-    h_k_bound ⟨0, zero_mem_limit_dom FrameClass.Discrete A h_mcs⟩ h_root_neg
+    h_k_bound ⟨0, zero_mem_limit_dom FrameClass.ZTime A h_mcs⟩ h_root_neg
   -- Truth correspondence: TruthAt on multi-family ↔ TemporalTruth on Z_f
   -- Proved by structural induction on formula, restricted to formulas whose
   -- predFormulas are contained in φ.predFormulas (needed for the box case)
@@ -1054,13 +1054,13 @@ theorem countermodel_discrete_reynolds_v2
         simp only [eval] at h_all_table_lim
         -- Step A4: At the root point 0, get ψ ∈ LimitF(0) = N_{f'}
         have h_tt_root : TemporalTruth (limitdomMonadicStructure f'.val f'.property.1 φ)
-            (mkAtomMapFwd φ) ⟨0, zero_mem_limit_dom FrameClass.Discrete f'.val f'.property.1⟩
+            (mkAtomMapFwd φ) ⟨0, zero_mem_limit_dom FrameClass.ZTime f'.val f'.property.1⟩
                 ψ := by
-          have h_eval := h_all_table_lim ⟨0, zero_mem_limit_dom FrameClass.Discrete f'.val
+          have h_eval := h_all_table_lim ⟨0, zero_mem_limit_dom FrameClass.ZTime f'.val
               f'.property.1⟩
-          have h_env : Fin.cons ⟨0, zero_mem_limit_dom FrameClass.Discrete f'.val f'.property.1⟩
+          have h_env : Fin.cons ⟨0, zero_mem_limit_dom FrameClass.ZTime f'.val f'.property.1⟩
               Fin.elim0 =
-              (fun (_ : Fin 1) => (⟨0, zero_mem_limit_dom FrameClass.Discrete f'.val
+              (fun (_ : Fin 1) => (⟨0, zero_mem_limit_dom FrameClass.ZTime f'.val
                   f'.property.1⟩ :
                 (limitdomMonadicStructure f'.val f'.property.1 φ).carrier)) := by
             funext i; fin_cases i; rfl
@@ -1073,7 +1073,7 @@ theorem countermodel_discrete_reynolds_v2
             (mkAtomMapFwd φ) _ ψ).mp h_eval
         -- Step A5: By limitdom_temporal_truth_effective + effectiveFormula_id
         have h_eff_mem : limitdomEffectiveFormula φ ψ ∈
-            LimitF FrameClass.Discrete f'.val f'.property.1 0 :=
+            LimitF FrameClass.ZTime f'.val f'.property.1 0 :=
           (limitdom_temporal_truth_effective f'.val f'.property.1 φ ψ _).mp h_tt_root
         simp only [limitdomEffectiveFormula] at h_eff_mem
         rw [effectiveFormula_id_of_sub h_sub_ψ, limit_f_zero] at h_eff_mem
@@ -1085,7 +1085,7 @@ theorem countermodel_discrete_reynolds_v2
           (SetMaximalConsistent.negation_complete h_mcs (Formula.box ψ)).resolve_left h_not_box
         have h_diamond_neg : (Formula.neg ψ).diamond ∈ A :=
           FormalSystem.Metalogic.Core.SetMaximalConsistent.contrapositive h_mcs
-            (liftBase FrameClass.Discrete (FormalSystem.Theorems.ModalDerived.boxDneTheorem ψ)) h_neg_box
+            (liftBase FrameClass.ZTime (FormalSystem.Theorems.ModalDerived.boxDneTheorem ψ)) h_neg_box
         obtain ⟨v, h_v_mcs, h_v_equiv, h_neg_ψ_v⟩ :=
           bx_modal_witness_fc h_mcs (Formula.neg ψ) h_diamond_neg
         -- v is box-equiv to A, so □(nextTop) ∈ v
@@ -1126,12 +1126,12 @@ theorem countermodel_discrete_reynolds_v2
         -- By mkAtomMapFwd_section (if .box ψ ∈ φ.predFormulas): = .box ψ
         -- So goal is: .box ψ ∈ LimitF fc f.val f.property.1 q
         -- Which follows from box_stable_in_limit_f + h_box_in_N
-        change (mkAtomMap φ (mkAtomMapFwd φ (.box ψ))) ∈ LimitF FrameClass.Discrete f.val
+        change (mkAtomMap φ (mkAtomMapFwd φ (.box ψ))) ∈ LimitF FrameClass.ZTime f.val
             f.property.1 q
         have h_box_pred_mem : Formula.box ψ ∈ φ.predFormulas :=
           h_sub (Finset.mem_union.mpr (Or.inl (Finset.mem_singleton.mpr rfl)))
         rw [mkAtomMapFwd_section φ (.box ψ) h_box_pred_mem]
-        exact (box_stable_in_limit_f FrameClass.Discrete f.val f.property.1 ψ q hq).mpr h_box_in_N
+        exact (box_stable_in_limit_f FrameClass.ZTime f.val f.property.1 ψ q hq).mpr h_box_in_N
       -- Transfer ∀x.P_{.box ψ}(x) from limitdom to Z via k-equiv
       have h_all_pred_Z : ∀ (x : ((getZ f).toOrdered sig).carrier),
           ((getZ f).toOrdered sig).interp (mkAtomMapFwd φ (.box ψ)) x := by
@@ -1184,13 +1184,13 @@ theorem countermodel_discrete_reynolds_v2
       -- h_pred_q : (limitdomMonadicStructure ...).interp p ⟨q, hq⟩
       -- = mkAtomMap φ (mkAtomMapFwd φ (.box ψ)) ∈ LimitF fc f.val f.property.1 q
       -- By mkAtomMapFwd_section: = .box ψ ∈ LimitF(q)
-      have h_box_q : Formula.box ψ ∈ LimitF FrameClass.Discrete f.val f.property.1 q := by
+      have h_box_q : Formula.box ψ ∈ LimitF FrameClass.ZTime f.val f.property.1 q := by
         have : (mkAtomMap φ (mkAtomMapFwd φ (.box ψ))) ∈
-            LimitF FrameClass.Discrete f.val f.property.1 q := h_pred_q
+            LimitF FrameClass.ZTime f.val f.property.1 q := h_pred_q
         rwa [mkAtomMapFwd_section φ (.box ψ) h_box_pred_mem] at this
       -- Step 3: box_stable → .box ψ ∈ N_f
       have h_box_N : Formula.box ψ ∈ f.val :=
-        (box_stable_in_limit_f FrameClass.Discrete f.val f.property.1 ψ q hq).mp h_box_q
+        (box_stable_in_limit_f FrameClass.ZTime f.val f.property.1 ψ q hq).mp h_box_q
       -- Step 4: Box-equiv → .box ψ ∈ A → .box ψ ∈ N_{f'}
       have h_box_A : Formula.box ψ ∈ A := (f.property.2.2 ψ).mpr h_box_N
       have h_box_N' : Formula.box ψ ∈ f'.val := (f'.property.2.2 ψ).mp h_box_A
@@ -1201,11 +1201,11 @@ theorem countermodel_discrete_reynolds_v2
             (mkAtomMapFwd φ) x ψ := by
         intro ⟨q, hq⟩
         -- .box ψ ∈ LimitF(q) by box stability
-        have h_box_q : Formula.box ψ ∈ LimitF FrameClass.Discrete f'.val f'.property.1 q :=
-          (box_stable_in_limit_f FrameClass.Discrete f'.val f'.property.1 ψ q hq).mpr h_box_N'
+        have h_box_q : Formula.box ψ ∈ LimitF FrameClass.ZTime f'.val f'.property.1 q :=
+          (box_stable_in_limit_f FrameClass.ZTime f'.val f'.property.1 ψ q hq).mpr h_box_N'
         -- Modal T: □ψ → ψ
-        have h_ψ_q : ψ ∈ LimitF FrameClass.Discrete f'.val f'.property.1 q :=
-          SetMaximalConsistent.mp_of_theorem (limit_c0 FrameClass.Discrete f'.val f'.property.1 q hq)
+        have h_ψ_q : ψ ∈ LimitF FrameClass.ZTime f'.val f'.property.1 q :=
+          SetMaximalConsistent.mp_of_theorem (limit_c0 FrameClass.ZTime f'.val f'.property.1 q hq)
             (DerivationTree.axiom [] _ (Axiom.modal_t ψ) trivial) h_box_q
         -- Convert to TemporalTruth via effectiveFormula bridge
         rw [← effectiveFormula_id_of_sub h_sub_ψ] at h_ψ_q

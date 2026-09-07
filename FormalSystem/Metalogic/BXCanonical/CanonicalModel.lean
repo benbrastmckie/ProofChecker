@@ -421,7 +421,7 @@ theorem box_stable_in_shifted_fmcs (M₀ : Set Formula)
 
 The existing chain (FwdSucc, BwdPred, IntChain, etc.) is hardcoded to FrameClass.Base.
 For completeness_ztime we need chains parametric over fc, since the BFMCS must be
-typed at the same fc as the MCS input (e.g., FrameClass.Discrete).
+typed at the same fc as the MCS input (e.g., FrameClass.ZTime).
 
 The fc-parametric versions use:
 - `forward_temporal_witness_seed_consistent` (fc-parametric, from WitnessSeed.lean)

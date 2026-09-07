@@ -38,7 +38,7 @@ The construction, in outline:
 * That construction is written **once**, as `modelExistence_of_satPreserved`, parameterized by a
   single hypothesis `hpres` saying that `fc.Sat` survives the ultraproduct. `modelExistenceBase`
   and `modelExistenceDense` are its two instantiations; they used to be two copies of the body.
-  `hpres` is false at `.Discrete` and `.Dedekind`, which is why only two rows of the table are
+  `hpres` is false at `.ZTime` and `.RTime`, which is why only two rows of the table are
   proved here — see that theorem's docstring.
 * Łoś's theorem for this construction, `Ultraproduct.los_truthAt`, transports truth at the
   ultraproduct back to eventual truth along the family. `ShiftSet.forward_repr` and
@@ -64,10 +64,10 @@ independently of this module's instantiation of it.
 
 ## Status of the four `FrameClass` cases
 
-* `FrameClass.Discrete` — compactness and strong completeness are **refuted**, in
+* `FrameClass.ZTime` — compactness and strong completeness are **refuted**, in
   `FormalSystem/Metalogic/DiscreteNonCompactness.lean`.
 * `FrameClass.Base` and `FrameClass.Dense` — **proved**, here.
-* `FrameClass.Dedekind` — compactness and strong completeness are **refuted** too, in
+* `FrameClass.RTime` — compactness and strong completeness are **refuted** too, in
   `FormalSystem/Metalogic/DedekindNonCompactness.lean`, by a different witness (`archWitness`
   does not port: `Formula.next` is vacuous on a densely ordered carrier). Reynolds 1992
   Theorem 7 remains the *weak* completeness result for the class.
@@ -109,7 +109,7 @@ a family of shift sets each of whose frames satisfies `fc`, the ultraproduct's f
 `fc` too. Nothing else about `fc` enters: the index type, the ultrafilter, the choice of
 witnesses and the Łoś transport are all uniform in the tag.
 
-**`hpres` is false at `.Discrete` and at `.Dedekind`, and that is not a gap in this proof.** An
+**`hpres` is false at `.ZTime` and at `.RTime`, and that is not a gap in this proof.** An
 ultraproduct of Archimedean orders need not be Archimedean, and an ultraproduct of
 Dedekind-complete orders need not be Dedekind-complete — the standard nonstandard-analysis
 phenomenon, in both cases. So this route is unavailable at those two tags, and no reformulation

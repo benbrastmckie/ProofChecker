@@ -61,8 +61,8 @@ placed point nor an interval with room to move. `not_exists_gt_sameRegion_int` p
 obstruction is on record rather than a suspicion.
 
 Consequently the temporal cases carry `[DenselyOrdered D] [NoMaxOrder D] [NoMinOrder D]`. Three of
-the four frame classes are unaffected — `.Base ℚ`, `.Dense ℚ` and `.Dedekind ℝ` all have densely
-ordered carriers with no endpoints. **`.Discrete ℤ` is not covered by these lemmas** and needs a
+the four frame classes are unaffected — `.Base ℚ`, `.Dense ℚ` and `.RTime ℝ` all have densely
+ordered carriers with no endpoints. **`.ZTime ℤ` is not covered by these lemmas** and needs a
 separate route; that is a genuine finding about the bridge's shape, not a gap in these proofs.
 
 ## "Total on `D` — never an island"
@@ -377,7 +377,7 @@ end Regions
 /-! ## The measured obstruction at `ℤ`
 
 `exists_gt_sameRegion` is not an artefact of the proof: its conclusion is genuinely false on a
-discrete carrier, so the density hypothesis cannot be dropped and the `.Discrete` frame class
+discrete carrier, so the density hypothesis cannot be dropped and the `.ZTime` frame class
 cannot be served by these lemmas.
 -/
 

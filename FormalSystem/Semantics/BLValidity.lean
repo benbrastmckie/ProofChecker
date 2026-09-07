@@ -24,13 +24,13 @@ than `Type*` is used throughout for the same universe reason recorded on `Valid`
 ## The Dedekind asymmetry — read this before adding a `BLValidComplete`
 
 There is deliberately **no** density-free `BLValidComplete`, and the soundness theorem for
-`FrameClass.Dedekind` targets `BLValidRTime`. A density-free target would be
+`FrameClass.RTime` targets `BLValidRTime`. A density-free target would be
 **refutable**, and on the BL side one axiom suffices to refute it:
 
 - `(BaseLanguage.Axiom.dn φ).minFrameClass = FrameClass.Dense` and
-  `FrameClass.Dense ≤ FrameClass.Dedekind` (pinned by an `example` in
+  `FrameClass.Dense ≤ FrameClass.RTime` (pinned by an `example` in
   `FormalSystem/BaseLanguage/Axioms.lean`), so `dn` — the density axiom `GGφ → Gφ` — is
-  admissible in any `FrameClass.Dedekind` BL derivation.
+  admissible in any `FrameClass.RTime` BL derivation.
 - `dn` is false on `ℤ`: take `φ` true exactly at the times `≥ t + 2`. Then `GGφ` holds at `t`
   while `Gφ` fails at `t`, because `t + 1` is strictly future and `φ` is false there.
 - `ℤ` satisfies every binder of a density-free `BLValidComplete` — it is Dedekind-complete
@@ -208,12 +208,12 @@ Validity over **discrete** temporal orders: `BLValid` with successor and predece
 added to the binder list, capturing the frame condition for BL's discreteness axioms.
 
 Binder-for-binder mirror of `Semantics.ValidZTime`, and like it now an abbreviation: the frame
-constraint is `FrameClass.Sat .Discrete`, i.e. `TaskFrame.IsZTime` — `def:TMplus-f`'s
+constraint is `FrameClass.Sat .ZTime`, i.e. `TaskFrame.IsZTime` — `def:TMplus-f`'s
 Hölder narrowing to ℤ-time. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
 `sat_intro`, which destructures the `IsZTime` existential into the four instances.
 -/
-def BLValidZTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Discrete φ
+def BLValidZTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.ZTime φ
 
 /--
 **`BLValidZTime` with the two Archimedean binders dropped.**
@@ -254,18 +254,18 @@ Validity over **dense Dedekind-complete** temporal orders: the least-upper-bound
 together with `[DenselyOrdered D]`.
 
 Binder-for-binder mirror of `Semantics.ValidRTime`, and **this — not a density-free
-`BLValidComplete` — is the target of the `FrameClass.Dedekind` soundness theorem.** The module
+`BLValidComplete` — is the target of the `FrameClass.RTime` soundness theorem.** The module
 docstring above gives the BL-native refutation of the density-free form: `Axiom.dn` is admissible
-at `FrameClass.Dedekind` and is false on `ℤ`, which satisfies every remaining binder. There is
+at `FrameClass.RTime` and is false on `ℤ`, which satisfies every remaining binder. There is
 deliberately no `BLValidComplete` in this file.
 
-Now an abbreviation: the frame constraint is `FrameClass.Sat .Dedekind`, i.e.
+Now an abbreviation: the frame constraint is `FrameClass.Sat .RTime`, i.e.
 `TaskFrame.IsRTime`. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
 `sat_intro`, which splits `IsRTime` into the density instance and the least-upper-bound
 hypothesis.
 -/
-def BLValidRTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Dedekind φ
+def BLValidRTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.RTime φ
 
 namespace BLValidity
 

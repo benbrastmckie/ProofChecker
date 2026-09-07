@@ -30,8 +30,8 @@ to say "the one result carried here", which stopped being true three witnesses a
    The converse direction — Reynolds' triple *does* derive `CO` — is
    `FormalSystem.Theorems.DedekindDerived.co_derived`, so the two settle the relationship in both
    directions.
-2. `Sat .Dedekind ⊊ Mod (AxiomSet .Dedekind)`, witnessed by the static frame over `ℚ`.
-3. `Sat .Discrete ⊊ Mod (AxiomSet .Discrete)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.
+2. `Sat .RTime ⊊ Mod (AxiomSet .RTime)`, witnessed by the static frame over `ℚ`.
+3. `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.
 4. `TaskFrame.Deterministic` is **not L⋆-definable** (`cor:no-characterization`), witnessed by
    the indistinguishable pair `F°`/`F¹` over `ℝ`. The same pair refutes the converse of the
    deterministic collapse (`Semantics/StarDeterminism.lean`): `F°` validates *Determined*
@@ -53,9 +53,9 @@ Galois-closed, in contrast with the paper's bare classes.
   time-invariance from `LoopingDuration`, and the constant-truth `untl`/`snce` calculus that
   turns every later axiom check into a rewrite.
 * `Independence/RationalWitness.lean` — `rat_not_complete`, the static frame over `ℚ` as a member
-  of `Mod (AxiomSet .Dedekind)` outside `Sat .Dedekind`, and the Dedekind sandwich.
+  of `Mod (AxiomSet .RTime)` outside `Sat .RTime`, and the Dedekind sandwich.
 * `Independence/LexIntWitness.lean` — the discrete, non-Archimedean carrier `ℤ ×ₗ ℤ`, the static
-  frame over it as a member of `Mod (AxiomSet .Discrete)` outside `Sat .Discrete`, and the
+  frame over it as a member of `Mod (AxiomSet .ZTime)` outside `Sat .ZTime`, and the
   Discrete sandwich with its semantic upper bound.
 * `Independence/RealTranslationFrame.lean` — `realOrder`, and `F¹`, the deterministic
   translation flow over `ℝ`, built through `ShiftSet` so that its world-set characterization

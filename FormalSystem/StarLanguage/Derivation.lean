@@ -287,16 +287,16 @@ theorem star_backward_dense {φ : Formula} (h : ProofSystem.Derivable FrameClass
     StarDerivable FrameClass.Dense [] (ofFormula φ) :=
   starDerivable_of_derivable h
 
-/-- Backward conservativity at `.Discrete`. -/
+/-- Backward conservativity at `.ZTime`. -/
 theorem star_backward_ztime {φ : Formula}
-    (h : ProofSystem.Derivable FrameClass.Discrete [] φ) :
-    StarDerivable FrameClass.Discrete [] (ofFormula φ) :=
+    (h : ProofSystem.Derivable FrameClass.ZTime [] φ) :
+    StarDerivable FrameClass.ZTime [] (ofFormula φ) :=
   starDerivable_of_derivable h
 
-/-- Backward conservativity at `.Dedekind`. -/
+/-- Backward conservativity at `.RTime`. -/
 theorem star_backward_rtime {φ : Formula}
-    (h : ProofSystem.Derivable FrameClass.Dedekind [] φ) :
-    StarDerivable FrameClass.Dedekind [] (ofFormula φ) :=
+    (h : ProofSystem.Derivable FrameClass.RTime [] φ) :
+    StarDerivable FrameClass.RTime [] (ofFormula φ) :=
   starDerivable_of_derivable h
 
 /-! ### Smoke tests -/

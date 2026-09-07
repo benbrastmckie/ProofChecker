@@ -50,8 +50,8 @@ arbitrary `D` — and nothing in `FwdRec.lean`'s atomic correspondence needs it 
 Whether forward recurrence gives the full schema over a general non-dense `D` — with "periodic"
 weakened to shift-recurrence under a history-preserving order automorphism — is **open**. The
 candidate counterexample is the sum of `ℤ` and `nℤ` over `ℤ ×ₗ ℤ`, the same carrier
-`Metalogic/Independence/LexIntWitness.lean` uses to separate `Sat .Discrete` from
-`Mod (AxiomSet .Discrete)`.
+`Metalogic/Independence/LexIntWitness.lean` uses to separate `Sat .ZTime` from
+`Mod (AxiomSet .ZTime)`.
 
 ## Main results
 

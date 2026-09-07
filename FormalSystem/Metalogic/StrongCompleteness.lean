@@ -16,7 +16,7 @@ import FormalSystem.Metalogic.SetConsequence
 This module hosts the finite-context *consequence completeness* statements of the bimodal
 system — completeness for `Γ : Context` semantic consequence — together with the
 class-specific semantic consequence relations they are stated against. All four frame classes
-now carry the layer: `FrameClass.Dedekind` is the instance developed first, and the Base, Dense
+now carry the layer: `FrameClass.RTime` is the instance developed first, and the Base, Dense
 and Discrete instances have the same four-layer shape (semantic deduction theorem, consequence
 terminus, soundness guard, weak corollary) in the sections below. It is also the intended home
 of the genuine *strong* completeness statements (arbitrary `Set Formula` premise sets) for the
@@ -58,7 +58,7 @@ it is easy to get backwards: the engine never sees a context. It is fed the sing
   both instantiations of the one generic `modelExistence_of_satPreserved`. The set-based MCS
   layer (`SetConsistent` — correctly finitary, `SetMaximalConsistent`, `set_lindenbaum` in
   `Metalogic/Core/MaximalConsistent.lean`) remains in place but is not the route that closed it.
-* **`FrameClass.Discrete`**: strong completeness is provably FALSE — the consequence relation
+* **`FrameClass.ZTime`**: strong completeness is provably FALSE — the consequence relation
   is not compact. `ValidZTime` requires `IsSuccArchimedean`/`IsPredArchimedean`, and
   `Formula.next φ = Formula.untl Formula.bot φ` is a genuine next-step operator on discrete
   orders, so the premise set `{F p} ∪ {(¬Xⁿ p) : n ∈ ℕ}` is finitely satisfiable over `ℤ`
@@ -72,10 +72,10 @@ it is easy to get backwards: the engine never sees a context. It is fed the sing
   conclusions are `notCompactZTime` (refuting `CompactZTime`) and
   `notStrongCompletenessZTime` (refuting `StrongCompletenessZTime`). All are
   sorry-free at exactly `[propext, Classical.choice, Quot.sound]`.
-* **`FrameClass.Dedekind`**: strong completeness is **refuted**, on the same footing as
+* **`FrameClass.RTime`**: strong completeness is **refuted**, on the same footing as
   Discrete. Reynolds 1992 (Theorem 7, §9, printed p.189) is *weak* completeness for the
   real-line axiomatisation, and the restriction there is genuine rather than an artefact of
-  presentation — this class now says *why*. The `FrameClass.Dedekind` set-based consequence
+  presentation — this class now says *why*. The `FrameClass.RTime` set-based consequence
   relation is not compact: the premise set `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤ : n ∈ ℕ}`, where
   `Xq φ = untl ¬q (q ∧ φ)`, is finitely satisfiable over `ℝ` (put `q` at the integers `1, …, N`)
   yet unsatisfiable over every Dedekind-complete carrier: the `q`-points climb without bound
@@ -189,9 +189,9 @@ over *all* carriers `D` with no order-theoretic side conditions, so it cannot ex
 consequence restricted to the Dedekind class; a completeness theorem stated against it would be
 a different (and false) statement.
 
-**Why the `[DenselyOrdered D]` binder stays.** `FrameClass.Dedekind` lies above
+**Why the `[DenselyOrdered D]` binder stays.** `FrameClass.RTime` lies above
 `FrameClass.Dense`, so `Axiom.density` and `Axiom.dense_indicator` are admissible in a
-`.Dedekind` derivation. Both are false on `ℤ`, which is Dedekind-complete, so dropping density
+`.RTime` derivation. Both are false on `ℤ`, which is Dedekind-complete, so dropping density
 here would make the matching soundness direction refutable. See the `ValidRTime`
 docstring for the primary-source placement of `Dedekind` above `Dense`.
 
@@ -199,7 +199,7 @@ docstring for the primary-source placement of `Dedekind` above `Dense`.
 binder list by hand, and `soundness_rtime_consequence` below was its guard: that theorem held
 only because the two lists were kept character-for-character in step, and would break if they
 drifted. The guard has not been dropped — it has moved somewhere it cannot drift. The class
-condition is `FrameClass.Sat .Dedekind` (`Semantics/FrameClassValidity.lean`), the *same*
+condition is `FrameClass.Sat .RTime` (`Semantics/FrameClassValidity.lean`), the *same*
 expression `ValidRTime` and `soundness_in` are indexed by, so there is now one source of
 truth rather than two hand-copied lists. `soundness_rtime_consequence` remains as the
 non-vacuity witness it also always was. The pre-abbreviation binder shape is recovered by the
@@ -207,7 +207,7 @@ generic `SemanticConsequenceIn.of_forall_total` / `.apply_total` (`Semantics/Val
 proof consumes the frame condition.
 -/
 def SemanticConsequenceRTime (Γ : Context) (φ : Formula) : Prop :=
-  SemanticConsequenceIn FrameClass.Dedekind Γ φ
+  SemanticConsequenceIn FrameClass.RTime Γ φ
 
 /-! ## The semantic deduction theorem -/
 
@@ -257,7 +257,7 @@ theorem semantic_deduction_in {fc : FrameClass} (Γ : Context) (φ : Formula) :
 
 /--
 **Semantic deduction theorem for the Dedekind class.** `semantic_deduction_in` at
-`fc := .Dedekind`; `SemanticConsequenceRTime` and `ValidRTime` are that tag's
+`fc := .RTime`; `SemanticConsequenceRTime` and `ValidRTime` are that tag's
 instantiations of the two relations, so the recovery is on the nose.
 -/
 theorem semantic_deduction_rtime (Γ : Context) (φ : Formula) :
@@ -406,7 +406,7 @@ proved, and already generic in `fc` — turns the engine's empty-context derivat
 Before the `FrameClass`-indexing collapse this was two byte-identical proofs, one at `.Base` and
 one at `.Dense`. Both are recovered by instantiation with no transport: `Compact .Base` *is*
 `CompactBase` and `StrongCompleteness .Base` *is* `StrongCompletenessBase`, definitionally
-(`Metalogic/SetConsequence.lean`), and likewise at `.Dense` and `.Discrete`.
+(`Metalogic/SetConsequence.lean`), and likewise at `.Dense` and `.ZTime`.
 
 This theorem lives here rather than in `FormalSystem/Metalogic/SetConsequence.lean`, which
 supplies the `Compact` and `StrongCompleteness` vocabulary it is stated against, because
@@ -428,7 +428,7 @@ call sites, in `Metalogic/Compactness.lean`, where `strongCompletenessBase` and
 `CompactDense` are **proved**, by `compactBase` and `compactDense` in
 `Metalogic/Compactness.lean`, through an ultraproduct construction: an ultraproduct carrier, a
 Łoś lemma for `TruthAt`, and the model-existence statements, from which `compact_of_modelExistence`
-below derives compactness. `Compact .Discrete` is instead **refuted**
+below derives compactness. `Compact .ZTime` is instead **refuted**
 (`Metalogic/DiscreteNonCompactness.lean`), so at that class this reduction is a live implication
 with a dead antecedent. The three statuses must not be collapsed into one.
 
@@ -497,7 +497,7 @@ The first of the two named iffs this layer was missing. The `mpr` direction is
 `strongCompleteness_of_compact` and needs the engine; the `mp` direction is
 `compact_of_strongCompleteness` and does not. Stated at an arbitrary `fc`, so it applies at all
 four tags — positively at `.Base` and `.Dense`, where both sides hold, and contrapositively at
-`.Discrete` and `.Dedekind`, where the refutation of either side refutes the other.
+`.ZTime` and `.RTime`, where the refutation of either side refutes the other.
 
 The engine is a hypothesis rather than a side condition discharged here because it is genuinely
 independent: `WeakCompleteness fc` is inhabited at all four tags (`completeness_base`,
@@ -633,14 +633,14 @@ refutation of either side be read off from a refutation of the other, which is h
 theorem compact_iff_modelExistence {fc : FrameClass} : Compact fc ↔ ModelExistence fc :=
   ⟨modelExistence_of_compact, compact_of_modelExistence⟩
 
-/-! ## Consequence completeness for `FrameClass.Dedekind` -/
+/-! ## Consequence completeness for `FrameClass.RTime` -/
 
 /--
 **Finite-context consequence completeness over dense Dedekind-complete frames, modulo the
 engine.**
 
 Given a single-formula completeness engine for `ValidRTime`, semantic consequence from
-an arbitrary finite context is derivable at `FrameClass.Dedekind`.
+an arbitrary finite context is derivable at `FrameClass.RTime`.
 
 **This is *not* strong completeness, and the gap is not one of degree.** Infinitary strong
 completeness — `Γ ⊨ φ → Γ ⊢ φ` for an arbitrary, possibly infinite `Γ : Set Formula` — is a
@@ -657,11 +657,11 @@ completeness — `Γ ⊨ φ → Γ ⊢ φ` for an arbitrary, possibly infinite `
    reformulation of this theorem, supplies that compactness. Beyond that structural point the
    evidence for the two classes differs sharply, and the difference matters:
 
-   * At `FrameClass.Discrete` the infinitary statement is **machine-refuted**:
+   * At `FrameClass.ZTime` the infinitary statement is **machine-refuted**:
      `notCompactZTime` refutes `CompactZTime` and
      `notStrongCompletenessZTime` refutes `StrongCompletenessZTime`, both in
      `Metalogic/DiscreteNonCompactness.lean`, both sorry-free.
-   * At `FrameClass.Dedekind` the infinitary statement is **machine-refuted** as well:
+   * At `FrameClass.RTime` the infinitary statement is **machine-refuted** as well:
      `notCompactRTime` refutes `CompactRTime` and
      `notStrongCompletenessRTime` refutes `StrongCompletenessRTime`, both in
      `Metalogic/DedekindNonCompactness.lean`, both sorry-free. The two refutations use
@@ -687,15 +687,15 @@ the headline result for this class — is the `Γ := []` instance (via
 `derivable_foldr_imp_iff`); the weak form is never proved separately.
 -/
 theorem consequence_completeness_rtime_of_engine
-    (engine : WeakCompleteness FrameClass.Dedekind)
+    (engine : WeakCompleteness FrameClass.RTime)
     (Γ : Context) (φ : Formula) (h : SemanticConsequenceRTime Γ φ) :
-    Derivable FrameClass.Dedekind Γ φ :=
+    Derivable FrameClass.RTime Γ φ :=
   consequence_completeness_of_engine engine Γ φ h
 
 /--
 **Soundness, restated against `SemanticConsequenceRTime`.**
 
-`soundness_consequence` at `fc := .Dedekind`. It remains the guard that keeps the completeness
+`soundness_consequence` at `fc := .RTime`. It remains the guard that keeps the completeness
 target honest — if a later edit weakens the consequence relation, say by retargeting it to a
 class whose `Sat` drops the density conjunct, this instantiation stops typechecking and the
 build fails before a mis-stated completeness terminus can be proved against it. What the
@@ -705,25 +705,25 @@ particular it still establishes that the terminus is not vacuous: its hypothesis
 for every derivable pair `(Γ, φ)`.
 -/
 theorem soundness_rtime_consequence (Γ : Context) (φ : Formula)
-    (h : Derivable FrameClass.Dedekind Γ φ) : SemanticConsequenceRTime Γ φ :=
+    (h : Derivable FrameClass.RTime Γ φ) : SemanticConsequenceRTime Γ φ :=
   soundness_consequence Γ φ h
 
 /--
 **Weak completeness — the headline result for the Dedekind class — as the `Γ = []` instance
 of the consequence form.**
 
-Weak completeness is the strongest completeness statement available for `FrameClass.Dedekind`:
+Weak completeness is the strongest completeness statement available for `FrameClass.RTime`:
 the genuine strong (infinite-premise) form is **refuted**, by
 `notStrongCompletenessRTime` in `Metalogic/DedekindNonCompactness.lean` — the same
-status as at `FrameClass.Discrete`, reached by a different witness (see the module docstring).
+status as at `FrameClass.ZTime`, reached by a different witness (see the module docstring).
 Recorded here so that the weak form has exactly
 one proof in the tree, and that proof is a corollary rather than a parallel construction —
 proving it independently would duplicate the countermodel engine; this declaration makes that
 redundancy visible in the type.
 -/
 theorem completeness_rtime_of_engine
-    (engine : WeakCompleteness FrameClass.Dedekind)
-    (φ : Formula) (h : ValidRTime φ) : Derivable FrameClass.Dedekind [] φ :=
+    (engine : WeakCompleteness FrameClass.RTime)
+    (φ : Formula) (h : ValidRTime φ) : Derivable FrameClass.RTime [] φ :=
   consequence_completeness_rtime_of_engine engine [] φ
     ((semantic_deduction_rtime [] φ).mpr (by simpa using h))
 
@@ -743,16 +743,16 @@ p.189. The engine hypothesis is discharged; everything the docstring of the `_of
 says about what this statement is and is not carries over verbatim, including the three facts
 held apart there. In particular this is **not** strong completeness: the infinitary statement is
 *machine-refuted* for this class, by `notStrongCompletenessRTime`
-(`Metalogic/DedekindNonCompactness.lean`) — the same status `FrameClass.Discrete` has, though
+(`Metalogic/DedekindNonCompactness.lean`) — the same status `FrameClass.ZTime` has, though
 reached by a different witness — and `Context := List Formula` cannot express it in any case.
 -/
 theorem consequence_completeness_rtime (Γ : Context) (φ : Formula)
-    (h : SemanticConsequenceRTime Γ φ) : Derivable FrameClass.Dedekind Γ φ :=
+    (h : SemanticConsequenceRTime Γ φ) : Derivable FrameClass.RTime Γ φ :=
   consequence_completeness_rtime_of_engine
     FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine Γ φ h
 
 /--
-**Weak completeness for `FrameClass.Dedekind` — the headline result — unconditional.**
+**Weak completeness for `FrameClass.RTime` — the headline result — unconditional.**
 
 Reynolds 1992, §2, printed p.169, is where the notion being discharged is fixed: validity over
 the class implies derivability in the system for the class. The finite-context form falls out
@@ -764,15 +764,15 @@ countermodel construction. Proving it separately would duplicate
 
 This agrees definitionally with `completeness_rtime_of_engine` at the same engine; the
 `_of_engine` form is retained unmodified as the pinned interface.
-**Stated as a `WeakCompleteness .Dedekind` witness**, which is what it is: `ValidRTime` is
-`ValidIn .Dedekind` definitionally (`Semantics/Validity.lean`), so this declaration inhabits
-`WeakCompleteness FrameClass.Dedekind` (`Metalogic/SetConsequence.lean`) on the nose — no
+**Stated as a `WeakCompleteness .RTime` witness**, which is what it is: `ValidRTime` is
+`ValidIn .RTime` definitionally (`Semantics/Validity.lean`), so this declaration inhabits
+`WeakCompleteness FrameClass.RTime` (`Metalogic/SetConsequence.lean`) on the nose — no
 transport, no `rfl` lemma, and no change at any application site, since `WeakCompleteness fc`
 unfolds to exactly the `(φ) (h) : Derivable fc [] φ` shape this theorem used to spell out. It is
 in that form that `consequence_completeness_rtime` above and `tmComplete_iff_forward`
 (`Metalogic/Conservativity/TMCompletenessReduction.lean`) consume it.
 -/
-theorem completeness_rtime : WeakCompleteness FrameClass.Dedekind :=
+theorem completeness_rtime : WeakCompleteness FrameClass.RTime :=
   fun φ h => consequence_completeness_rtime [] φ
     ((semantic_deduction_in [] φ).mpr (by simpa using h))
 
@@ -988,7 +988,7 @@ theorem completeness_dense : WeakCompleteness FrameClass.Dense :=
   fun φ h => consequence_completeness_dense [] φ
     ((semantic_deduction_in [] φ).mpr (by simpa using h))
 
-/-! ## Consequence completeness for `FrameClass.Discrete`
+/-! ## Consequence completeness for `FrameClass.ZTime`
 
 The finite-context consequence layer for the discrete class, in the same four-layer shape as the
 Base and Dense sections above, against the `ValidZTime` binder list.
@@ -1028,7 +1028,7 @@ perfectly available even though the infinite one is false — that is precisely 
 non-compactness means.
 
 **Where the binder guard now lives.** As for the two classes above: the four-instance list is no
-longer reproduced here by hand but read off `FrameClass.Sat .Discrete`
+longer reproduced here by hand but read off `FrameClass.Sat .ZTime`
 (`TaskFrame.IsZTime`), the same expression `ValidZTime` and `soundness_in` are
 indexed by. `soundness_ztime_consequence`'s warning about dropping `[IsSuccArchimedean D]`
 still holds and is now enforced at that one definition rather than by keeping two lists in step.
@@ -1036,11 +1036,11 @@ The pre-abbreviation binder shape is recovered by the
 generic `SemanticConsequenceIn.of_forall_total` / `.apply_total` (`Semantics/Validity.lean`), followed by `sat_intro`.
 -/
 def SemanticConsequenceZTime (Γ : Context) (φ : Formula) : Prop :=
-  SemanticConsequenceIn FrameClass.Discrete Γ φ
+  SemanticConsequenceIn FrameClass.ZTime Γ φ
 
 /--
 **Semantic deduction theorem for the discrete class.** `semantic_deduction_in` at
-`fc := .Discrete`. Note that this lemma is *not* in tension with non-compactness: it is the
+`fc := .ZTime`. Note that this lemma is *not* in tension with non-compactness: it is the
 finite-context statement, and the deduction theorem it embodies is exactly what fails to extend
 to infinite premise sets.
 -/
@@ -1049,7 +1049,7 @@ theorem semantic_deduction_ztime (Γ : Context) (φ : Formula) :
   semantic_deduction_in Γ φ
 
 /--
-**Finite-context consequence completeness for `FrameClass.Discrete`, unconditional.**
+**Finite-context consequence completeness for `FrameClass.ZTime`, unconditional.**
 
 `BXCanonical.completeness_ztime` (`BXCanonical/Completeness.lean:296`) already exists as the
 single-formula engine for `ValidZTime`, so there is no `_of_engine` layer here.
@@ -1060,14 +1060,14 @@ single-formula engine for `ValidZTime`, so there is no `_of_engine` layer here.
 the strongest consequence-shaped result the class admits.
 -/
 theorem consequence_completeness_ztime (Γ : Context) (φ : Formula)
-    (h : SemanticConsequenceZTime Γ φ) : Derivable FrameClass.Discrete Γ φ :=
+    (h : SemanticConsequenceZTime Γ φ) : Derivable FrameClass.ZTime Γ φ :=
   (derivable_foldr_imp_iff Γ φ).mpr
     (BXCanonical.completeness_ztime _ ((semantic_deduction_ztime Γ φ).mp h))
 
 /--
 **Soundness, restated against `SemanticConsequenceZTime`.**
 
-`soundness_consequence` at `fc := .Discrete`. It remains the guard that keeps the completeness
+`soundness_consequence` at `fc := .ZTime`. It remains the guard that keeps the completeness
 target honest — if a later edit weakens the relation, say by retargeting it to a class whose
 `Sat` drops `IsSuccArchimedean`, on which the non-compactness witness turns, this instantiation
 stops typechecking and the build fails before a mis-stated terminus can be proved against it. In
@@ -1075,11 +1075,11 @@ particular it still establishes that `consequence_completeness_ztime` is not vac
 hypothesis is inhabited for every derivable pair `(Γ, φ)`.
 -/
 theorem soundness_ztime_consequence (Γ : Context) (φ : Formula)
-    (h : Derivable FrameClass.Discrete Γ φ) : SemanticConsequenceZTime Γ φ :=
+    (h : Derivable FrameClass.ZTime Γ φ) : SemanticConsequenceZTime Γ φ :=
   soundness_consequence Γ φ h
 
 /--
-**Weak completeness for `FrameClass.Discrete`, as the `Γ = []` instance of the consequence
+**Weak completeness for `FrameClass.ZTime`, as the `Γ = []` instance of the consequence
 form.**
 
 Weak completeness is the strongest completeness statement available for this class: the class
@@ -1088,17 +1088,17 @@ genuine strong form is refuted rather than open. Definitionally
 `BXCanonical.completeness_ztime` routed through the deduction theorem in both directions; the
 vacuous `∀ ψ ∈ [], _` premise binder is discharged by `simpa`.
 
-**Stated as a `WeakCompleteness .Discrete` witness.** `ValidZTime` is `ValidIn .Discrete`
+**Stated as a `WeakCompleteness .ZTime` witness.** `ValidZTime` is `ValidIn .ZTime`
 definitionally (`Semantics/Validity.lean`), so this declaration inhabits
-`WeakCompleteness FrameClass.Discrete` (`Metalogic/SetConsequence.lean`) on the nose. Note what
+`WeakCompleteness FrameClass.ZTime` (`Metalogic/SetConsequence.lean`) on the nose. Note what
 that does *not* buy: `WeakCompleteness` is the single-formula statement, and
-`strongCompleteness_of_compact` needs `Compact .Discrete` alongside it — which is refuted. The
+`strongCompleteness_of_compact` needs `Compact .ZTime` alongside it — which is refuted. The
 witness is real; the class still has no strong completeness.
 
 On the short name it shares with `BXCanonical.completeness_ztime`, see the note in the module
 docstring: the shadowing is inert.
 -/
-theorem completeness_ztime : WeakCompleteness FrameClass.Discrete :=
+theorem completeness_ztime : WeakCompleteness FrameClass.ZTime :=
   fun φ h => consequence_completeness_ztime [] φ
     ((semantic_deduction_in [] φ).mpr (by simpa using h))
 

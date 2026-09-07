@@ -41,7 +41,7 @@ Everything before `co_derived` is frame-class-generic base machinery, provable a
 
 ## Main result
 
-- `co_derived {fc} (h_fc : FrameClass.Dedekind ≤ fc) (φ) : ⊢[fc] Formula.co φ`.
+- `co_derived {fc} (h_fc : FrameClass.RTime ≤ fc) (φ) : ⊢[fc] Formula.co φ`.
 
 ## Direction of the result
 
@@ -326,7 +326,7 @@ private noncomputable def coEventBot {fc : FrameClass} (φ : Formula) :
 /--
 **CO is a derived theorem of the Dedekind class.**
 
-`⊢[fc] △(Hφ → F(Hφ)) → (Hφ → Gφ)` whenever `FrameClass.Dedekind ≤ fc`.
+`⊢[fc] △(Hφ → F(Hφ)) → (Hφ → Gφ)` whenever `FrameClass.RTime ≤ fc`.
 
 **Source of the formula**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside
 `def:TMplus-c`; displayed key CO), verbatim:
@@ -369,7 +369,7 @@ modal and temporal necessitation, and temporal duality
 `ValidRTime (Formula.co φ)` by an independent least-upper-bound argument, so soundness
 applied to this derivation lands on a statement already established semantically.
 -/
-noncomputable def co_derived {fc : FrameClass} (h_fc : FrameClass.Dedekind ≤ fc)
+noncomputable def co_derived {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc)
     (φ : Formula) : ⊢[fc] Formula.co φ :=
   let χ := φ.allPast
   let tri := Formula.always (χ.imp χ.someFuture)

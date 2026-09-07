@@ -33,7 +33,7 @@ pairing, notNotIntro)
 - `GeneralizedNecessitation`: Generalized modal and temporal K rules (derived theorems)
 - `DedekindDerived`: Dedekind-class derived theorems -- the point-shifting scaffolding and
 `co_derived`, which derives the paper's CO principle from the Reynolds gap basis
-- `DiscreteUnfolding`: the Z-exact one-step unfolding of `untl` at `FrameClass.Discrete`
+- `DiscreteUnfolding`: the Z-exact one-step unfolding of `untl` at `FrameClass.ZTime`
 (`succIndicator` and its `{fc}`-guarded form `succIndicatorAt`, `unfoldForward`/`unfoldBackward`,
 `nextConj`, the table-shaped variants, and
 `noBlockingTriple`)

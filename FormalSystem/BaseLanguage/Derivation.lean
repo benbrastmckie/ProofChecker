@@ -40,8 +40,8 @@ than asserting it.
 ## Frame-class parameterization
 
 Exactly as on the BL⁺ side: `axiom` carries `ax.minFrameClass ≤ fc`, and `lift` moves a
-derivation up the `FrameClass` order. TM, TM_f, TM_d and TM_dc are `fc := .Base`, `.Discrete`,
-`.Dense`, `.Dedekind`.
+derivation up the `FrameClass` order. TM, TM_f, TM_d and TM_dc are `fc := .Base`, `.ZTime`,
+`.Dense`, `.RTime`.
 
 ## Notation
 
@@ -200,15 +200,15 @@ example (φ : BLFormula) : ⊢ᴮᴸ[FrameClass.Base] φ.imp φ :=
     .axiom [] _ (Axiom.prop_s φ φ) (FrameClass.base_le _)
   .modus_ponens [] _ _ (.modus_ponens [] _ _ k s1) s2
 
-/-- `DF` is available at `.Discrete` and its `minFrameClass` side condition discharges by
+/-- `DF` is available at `.ZTime` and its `minFrameClass` side condition discharges by
 `decide` once the frame class is concrete. -/
 example (φ : BLFormula) :
-    ⊢ᴮᴸ[FrameClass.Discrete]
+    ⊢ᴮᴸ[FrameClass.ZTime]
       (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) :=
-  .axiom [] _ (Axiom.df φ) (show FrameClass.Discrete ≤ FrameClass.Discrete by decide)
+  .axiom [] _ (Axiom.df φ) (show FrameClass.ZTime ≤ FrameClass.ZTime by decide)
 
 /-- Lifting a `Base` theorem into `TM_f`. -/
-example (φ : BLFormula) : ⊢ᴮᴸ[FrameClass.Discrete] φ.box.imp φ :=
+example (φ : BLFormula) : ⊢ᴮᴸ[FrameClass.ZTime] φ.box.imp φ :=
   DerivationTree.lift (fc₁ := FrameClass.Base) (by decide)
     (.axiom [] _ (Axiom.modal_t φ) (FrameClass.base_le _))
 

@@ -50,21 +50,21 @@ Each arm reproduces exactly the extra binders its validity predicate adds to `Va
 |---|---|---|
 | `.Base` | `Valid` | none |
 | `.Dense` | `ValidDense` | `[DenselyOrdered D]` |
-| `.Discrete` | `ValidZTime` | `[SuccOrder D] [PredOrder D] [IsSuccArchimedean D] [IsPredArchimedean D]` |
-| `.Dedekind` | `ValidRTime` | `[DenselyOrdered D]` and the explicit lub `Prop` binder |
+| `.ZTime` | `ValidZTime` | `[SuccOrder D] [PredOrder D] [IsSuccArchimedean D] [IsPredArchimedean D]` |
+| `.RTime` | `ValidRTime` | `[DenselyOrdered D]` and the explicit lub `Prop` binder |
 
 The `AddCommGroup` / `LinearOrder` / `IsOrderedAddMonoid` / `Nontrivial` binders are shared by all
 four predicates, so they sit on the class head rather than in `FrameConditionFor`.
 
-`.Dedekind` targets **`ValidRTime`, not `ValidComplete`** — this matters and is not a
+`.RTime` targets **`ValidRTime`, not `ValidComplete`** — this matters and is not a
 simplification opportunity. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 
 ## The four carriers
 
-`ℚ` twice (`.Base`, `.Dense`), `ℤ` once (`.Discrete`), `ℝ` once (`.Dedekind`). `ℚ` serves `.Base`
+`ℚ` twice (`.Base`, `.Dense`), `ℤ` once (`.ZTime`), `ℝ` once (`.RTime`). `ℚ` serves `.Base`
 because the base predicate binds nothing beyond the shared binders, so the cheapest carrier that
-also serves `.Dense` serves both; `ℝ` is needed for `.Dedekind` because that is where the
-least-upper-bound property lives; `ℤ` is forced for `.Discrete` because `ValidZTime`'s
+also serves `.Dense` serves both; `ℝ` is needed for `.RTime` because that is where the
+least-upper-bound property lives; `ℤ` is forced for `.ZTime` because `ValidZTime`'s
 successor/predecessor binders are exactly what a dense carrier lacks.
 -/
 
@@ -78,7 +78,7 @@ open FormalSystem.ProofSystem
 /--
 The least-upper-bound property, in the exact shape `ValidComplete`/`ValidRTime` bind it —
 an explicit `Prop` binder rather than a `ConditionallyCompleteLinearOrder` instance swap. Stated
-here in that shape deliberately, so a `.Dedekind` carrier's `frame_condition` can be handed to
+here in that shape deliberately, so a `.RTime` carrier's `frame_condition` can be handed to
 those predicates verbatim.
 -/
 def HasLUBs (D : Type) [LinearOrder D] : Prop :=
@@ -108,8 +108,8 @@ def FrameConditionFor (fc : FrameClass) (D : Type) [LinearOrder D] : Type :=
   match fc with
   | FrameClass.Base => PUnit
   | FrameClass.Dense => PLift (DenselyOrdered D)
-  | FrameClass.Discrete => DiscreteStructure D
-  | FrameClass.Dedekind => PLift (DenselyOrdered D) × PLift (HasLUBs D)
+  | FrameClass.ZTime => DiscreteStructure D
+  | FrameClass.RTime => PLift (DenselyOrdered D) × PLift (HasLUBs D)
 
 /-! ## The carrier class -/
 
@@ -151,7 +151,7 @@ has no integers strictly between consecutive placed points, so its interior gap 
 interior gaps; these are different problems, and treating all four `Decidable` instances as one
 milestone is on this plan's do-not-re-attempt register.
 
-Noncomputable for the same reason the `.Discrete ℤ` instance below is: `embed_finite_to_int`
+Noncomputable for the same reason the `.ZTime ℤ` instance below is: `embed_finite_to_int`
 routes through `Fintype.ofFinite`.
 -/
 noncomputable instance : TemporalCarrier FrameClass.Base ℤ where
@@ -159,12 +159,12 @@ noncomputable instance : TemporalCarrier FrameClass.Base ℤ where
   frame_condition := PUnit.unit
 
 /--
-`.Discrete` is carried by `ℤ`, and this is the instance that cannot reuse the dense embedding:
+`.ZTime` is carried by `ℤ`, and this is the instance that cannot reuse the dense embedding:
 `ℤ` is not densely ordered, so `embed_finite` here comes from the hand-rolled `Fin n ↪o ℤ`
 (`Bridge/Embed.lean`). The four discreteness components are Mathlib instances
 (`Mathlib.Data.Int.SuccPred`).
 -/
-instance : TemporalCarrier FrameClass.Discrete ℤ where
+instance : TemporalCarrier FrameClass.ZTime ℤ where
   embed_finite T := embed_finite_to_int T
   frame_condition :=
     { succOrder := inferInstance
@@ -173,11 +173,11 @@ instance : TemporalCarrier FrameClass.Discrete ℤ where
       predArch := inferInstance }
 
 /--
-`.Dedekind` is carried by `ℝ`: dense **and** least-upper-bound complete. The lub component is
+`.RTime` is carried by `ℝ`: dense **and** least-upper-bound complete. The lub component is
 `isLUB_csSup` at the conditionally complete lattice `ℝ` (`Real.isLUB_sSup` does not exist — see
 `Embed.lean`'s verification note).
 -/
-instance : TemporalCarrier FrameClass.Dedekind ℝ where
+instance : TemporalCarrier FrameClass.RTime ℝ where
   embed_finite T := embed_finite_to_dense T ℝ
   frame_condition :=
     ⟨PLift.up inferInstance, PLift.up (fun _s hne hbdd => ⟨sSup _s, isLUB_csSup hne hbdd⟩)⟩
@@ -216,20 +216,20 @@ section Checks
 example : TemporalCarrier FrameClass.Base ℚ := inferInstance
 noncomputable example : TemporalCarrier FrameClass.Base ℤ := inferInstance
 example : TemporalCarrier FrameClass.Dense ℚ := inferInstance
-noncomputable example : TemporalCarrier FrameClass.Discrete ℤ := inferInstance
-example : TemporalCarrier FrameClass.Dedekind ℝ := inferInstance
+noncomputable example : TemporalCarrier FrameClass.ZTime ℤ := inferInstance
+example : TemporalCarrier FrameClass.RTime ℝ := inferInstance
 
-/-- The `.Dedekind` frame condition really does deliver the lub binder `ValidRTime` wants. -/
+/-- The `.RTime` frame condition really does deliver the lub binder `ValidRTime` wants. -/
 example : HasLUBs ℝ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.Dedekind) (D := ℝ)).2.down
+  (TemporalCarrier.frame_condition (fc := FrameClass.RTime) (D := ℝ)).2.down
 
 /-- …and the density binder alongside it. -/
 example : DenselyOrdered ℝ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.Dedekind) (D := ℝ)).1.down
+  (TemporalCarrier.frame_condition (fc := FrameClass.RTime) (D := ℝ)).1.down
 
-/-- The `.Discrete` frame condition delivers a successor operation on `ℤ`. -/
+/-- The `.ZTime` frame condition delivers a successor operation on `ℤ`. -/
 noncomputable example : SuccOrder ℤ :=
-  (TemporalCarrier.frame_condition (fc := FrameClass.Discrete) (D := ℤ)).succOrder
+  (TemporalCarrier.frame_condition (fc := FrameClass.ZTime) (D := ℤ)).succOrder
 
 end Checks
 

@@ -23,7 +23,7 @@ compactness, satisfiability and model existence.
 and reading its frame condition off it through `FrameClass.Sat`. The per-class names this module
 used to define by hand — `StrongCompletenessBase` / `CompactBase` / `SatisfiableBaseSet` /
 `ModelExistenceBase`, their Dense siblings, and the three Discrete ones — are retained, with
-their statements unchanged, as instantiations of that family. **The `.Dedekind` row is now named
+their statements unchanged, as instantiations of that family. **The `.RTime` row is now named
 here too**, by the same instantiation: `StrongCompletenessRTime`, `CompactRTime`,
 `SatisfiableRTimeSet` and `ModelExistenceRTime` at the end of this module. All four rows of
 the family are therefore stated in this layer; none of the four required a new adapter or a new
@@ -109,15 +109,15 @@ set: the semantic mirror of `SetDerivable fc` above, indexed by the same tag. -/
 def SetSemanticConsequenceOn (fc : FrameClass) (Γ : Set Formula) (φ : Formula) : Prop :=
   SetConsequenceOnFrames fc.Sat Γ φ
 
-/-- Set-based semantic consequence over `FrameClass.Discrete`. Stated for completeness of the
+/-- Set-based semantic consequence over `FrameClass.ZTime`. Stated for completeness of the
 layer; strong completeness at this class is refuted by non-compactness. -/
 def SetSemanticConsequenceZTime (Γ : Set Formula) (φ : Formula) : Prop :=
-  SetSemanticConsequenceOn FrameClass.Discrete Γ φ
+  SetSemanticConsequenceOn FrameClass.ZTime Γ φ
 
 /-- Set-based semantic consequence over dense Dedekind-complete frames — the
 `soundness_rtime` target class. Non-compact. -/
 def SetSemanticConsequenceRTime (Γ : Set Formula) (φ : Formula) : Prop :=
-  SetSemanticConsequenceOn FrameClass.Dedekind Γ φ
+  SetSemanticConsequenceOn FrameClass.RTime Γ φ
 
 /-! ## The `FrameClass`-indexed compactness family
 
@@ -127,7 +127,7 @@ above already carry. Before this collapse each of the three live classes carried
 hand-written copy of the whole row, with the frame condition inlined into a hand-maintained
 binder list. The condition is now read off the tag by `FrameClass.Sat`
 (`Semantics/FrameClassValidity.lean`), so there is nothing left to keep in sync — and the
-`.Dedekind` row, absent from this layer entirely, becomes available by instantiation.
+`.RTime` row, absent from this layer entirely, becomes available by instantiation.
 
 Nothing here is proved or refuted; these are `Prop`-valued statements only. The per-class names
 further down are instantiations of these four, and each inherits its status from where it is
@@ -146,7 +146,7 @@ compiles against the old pattern unchanged. What the structure buys is the *othe
 proof that wants one component can now write `P.time` or `P.inClass` instead of destructuring
 seven binders to reach it, and a docstring can name a field instead of counting positions.
 
-The `inClass` field holds the frame condition. At `.Discrete` that is
+The `inClass` field holds the frame condition. At `.ZTime` that is
 `TaskFrame.IsZTime Frame` (`Semantics/FrameProperty.lean`), itself a four-component
 nested existential which neither the structure nor the anonymous constructor unfolds, so a
 destructuring pattern still needs exactly one nesting pair there. -/
@@ -222,8 +222,8 @@ times.
 lemma: `Valid`, `ValidDense`, `ValidZTime` and `ValidRTime` are all abbreviations over
 `ValidIn` at a literal tag (`Semantics/Validity.lean`), so `completeness_base`,
 `completeness_dense`, `completeness_ztime` and `completeness_rtime`
-(`Metalogic/StrongCompleteness.lean`) *are* `WeakCompleteness .Base` / `.Dense` / `.Discrete` /
-`.Dedekind` by type rather than by convention.
+(`Metalogic/StrongCompleteness.lean`) *are* `WeakCompleteness .Base` / `.Dense` / `.ZTime` /
+`.RTime` by type rather than by convention.
 
 Stating it here rather than in `Metalogic/StrongCompleteness.lean` costs nothing: its two
 ingredients `ValidIn` and `Derivable` are already imported by this module (`:8`, `:10`), and
@@ -242,19 +242,19 @@ by `rfl`:
 ```
 Compact .Base = CompactBase                     StrongCompleteness .Base = StrongCompletenessBase
 Compact .Dense = CompactDense                   StrongCompleteness .Dense = StrongCompletenessDense
-Compact .Discrete = CompactZTime             StrongCompleteness .Discrete = StrongCompletenessZTime
+Compact .ZTime = CompactZTime             StrongCompleteness .ZTime = StrongCompletenessZTime
 ```
 
 and so are `SatisfiableSet .Dense = SatisfiableDenseSet` and
 `ModelExistence .Dense = ModelExistenceDense`, for eight in total. This is what
 `Semantics/Validity.lean`'s `valid := ValidIn .Base`, `ValidDense := ValidIn .Dense` and
-`ValidZTime := ValidIn .Discrete` bought: the per-class validity predicates are plain
+`ValidZTime := ValidIn .ZTime` bought: the per-class validity predicates are plain
 abbreviations over `ValidIn`, so `ValidIn fc (…)` at a literal tag *is* the per-class predicate,
 with no transport.
 
 The two exceptions are `SatisfiableBaseSet` and `SatisfiableZTimeSet`, whose pre-collapse
 binder lists differ from `SatisfiableSet`'s by the frame-condition slot — `Sat .Base` is `True`,
-which the old Base list simply omitted, and `Sat .Discrete` nests its four class witnesses inside
+which the old Base list simply omitted, and `Sat .ZTime` nests its four class witnesses inside
 `TaskFrame.IsZTime` where the old Discrete list held them flat. Both are *stated* as
 instantiations below; the pre-collapse shape is restored at call sites by the adapters. -/
 
@@ -263,7 +263,7 @@ instantiations below; the pre-collapse shape is restored at call sites by the ad
 The pre-collapse binder shapes, restored — **once, generically**, not once per tag. The frame
 condition travels as the single `fc.Sat F` argument, and a proof that needs it taken apart calls
 `sat_intro` (`Semantics/FrameClassValidity.lean`), which registers the density instance at
-`.Dense`/`.Dedekind` and destructures `TaskFrame.IsZTime` at `.Discrete`. The four
+`.Dense`/`.RTime` and destructures `TaskFrame.IsZTime` at `.ZTime`. The four
 per-class `SetSemanticConsequence*.{of_forall, apply}` pairs that used to live here existed only
 because a `Sat .Dense F` hypothesis was once invisible to instance search; `FrameClass.Sat` is now
 `@[reducible]`, so they were deleted rather than maintained. -/
@@ -506,7 +506,7 @@ def SatisfiableDenseSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.D
     anticipates. -/
 def ModelExistenceDense : Prop := ModelExistence FrameClass.Dense
 
-/-! ## Strong completeness, satisfiability and compactness for `FrameClass.Discrete`
+/-! ## Strong completeness, satisfiability and compactness for `FrameClass.ZTime`
 
 These three definitions are **statements, not results** — and unlike their Base and Dense
 counterparts above they are settled *negatively*. Both `CompactZTime` and
@@ -521,20 +521,20 @@ No import change is required for these: `IsSuccArchimedean` and `IsPredArchimede
 in scope via `SetSemanticConsequenceZTime` above.
 -/
 
-/-- **Strong completeness for `FrameClass.Discrete`** — the `StrongCompletenessDense` statement
+/-- **Strong completeness for `FrameClass.ZTime`** — the `StrongCompletenessDense` statement
     with `SetSemanticConsequenceZTime` in place of `SetSemanticConsequenceOn .Dense`.
 
     **This statement is false.** See `notStrongCompletenessZTime`. It is stated here so
     that the refutation has something to name; it is not a reserved obligation. -/
-def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.Discrete
+def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.ZTime
 
 /-- Satisfiability of a possibly-infinite set over discrete carriers — `SatisfiableSet` at
-    `FrameClass.Discrete`. This is `FormulaSatisfiable` (`Validity.lean`) with `ValidZTime`'s
+    `FrameClass.ZTime`. This is `FormulaSatisfiable` (`Validity.lean`) with `ValidZTime`'s
     binder list — `SuccOrder`, `PredOrder`, `IsSuccArchimedean`, `IsPredArchimedean` — in place
     of `ValidDense`'s `DenselyOrdered`, and the conclusion generalised from a single formula to
     `∀ ψ ∈ Γ`.
 
-    **The four class binders re-nested under the collapse.** `Sat .Discrete` is
+    **The four class binders re-nested under the collapse.** `Sat .ZTime` is
     `TaskFrame.IsZTime` (`Semantics/FrameProperty.lean`), a plain `def` wrapping
     `∃ (_ : SuccOrder D) (_ : PredOrder D), _ ∧ _`, and the anonymous constructor does not unfold
     it. So the flat ten-component tuple this predicate used to accept no longer elaborates: an
@@ -544,17 +544,17 @@ def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.Discrete
     `⟨F, ⟨_, _, _, _⟩, M, τ, hτ, t, h⟩` — or a single `hF` passed straight back to
     `ValidIn.apply_total`.
  -/
-def SatisfiableZTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.Discrete Γ
+def SatisfiableZTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.ZTime Γ
 
 /-- Semantic compactness of the Discrete consequence relation, in the same shape as
     `CompactDense`: a set-consequence yields a *finite* premise list whose `foldr`-implication
     into the conclusion is Discrete-valid.
 
     **This statement is false.** See `notCompactZTime`. -/
-def CompactZTime : Prop := Compact FrameClass.Discrete
+def CompactZTime : Prop := Compact FrameClass.ZTime
 
 /-! ## Strong completeness, compactness, satisfiability and model existence for
-`FrameClass.Dedekind`
+`FrameClass.RTime`
 
 The fourth and last row of the `FrameClass`-indexed family, completing the table. Like the
 Discrete block above, these are **statements, not results**, and two of them are settled
@@ -575,16 +575,16 @@ No import change is required: `DenselyOrdered` is already in scope via
 `SetSemanticConsequenceRTime` above.
 -/
 
-/-- **Strong completeness for `FrameClass.Dedekind`** — the `StrongCompletenessDense` statement
+/-- **Strong completeness for `FrameClass.RTime`** — the `StrongCompletenessDense` statement
     with `SetSemanticConsequenceRTime` in place of `SetSemanticConsequenceOn .Dense` and
-    `FrameClass.Dedekind` as the derivability target.
+    `FrameClass.RTime` as the derivability target.
 
     **This statement is false.** See `notStrongCompletenessRTime` in
     `Metalogic/DedekindNonCompactness.lean`. It is stated here so that the refutation has
     something to name; it is not a reserved obligation. Reynolds 1992 §9 Theorem 7 remains
     correctly cited elsewhere as the *weak* completeness result for this class — the refutation
     does not contradict it, it explains why only weak completeness is available. -/
-def StrongCompletenessRTime : Prop := StrongCompleteness FrameClass.Dedekind
+def StrongCompletenessRTime : Prop := StrongCompleteness FrameClass.RTime
 
 /-- Semantic compactness of the Dedekind consequence relation, in the same shape as
     `CompactDense`: a set-consequence yields a *finite* premise list whose `foldr`-implication
@@ -592,15 +592,15 @@ def StrongCompletenessRTime : Prop := StrongCompleteness FrameClass.Dedekind
 
     **This statement is false.** See `notCompactRTime` in
     `Metalogic/DedekindNonCompactness.lean`. -/
-def CompactRTime : Prop := Compact FrameClass.Dedekind
+def CompactRTime : Prop := Compact FrameClass.RTime
 
 /-- Satisfiability of a possibly-infinite set over Dedekind-complete dense carriers —
-    `SatisfiableSet` at `FrameClass.Dedekind`. This is `FormulaSatisfiable` (`Validity.lean`)
+    `SatisfiableSet` at `FrameClass.RTime`. This is `FormulaSatisfiable` (`Validity.lean`)
     with `ValidRTime`'s binder list — `[DenselyOrdered D]` together with the
     least-upper-bound hypothesis — in place of `ValidDense`'s `DenselyOrdered` alone, and the
     conclusion generalised from a single formula to `∀ ψ ∈ Γ`.
 
-    `Sat .Dedekind` is `TaskFrame.IsRTime`, i.e. `IsDense ∧ IsComplete`, so a destructuring
+    `Sat .RTime` is `TaskFrame.IsRTime`, i.e. `IsDense ∧ IsComplete`, so a destructuring
     pattern needs exactly one nesting pair here, `⟨F, ⟨hd, hlub⟩, M, τ, hτ, t, h⟩`, and an
     introduction site should call `SatisfiableSet.of_forall` above. The destructured
     `hd : F.IsDense` **is** visible to instance search: `TaskFrame.IsDense` is an `abbrev` and
@@ -609,9 +609,9 @@ def CompactRTime : Prop := Compact FrameClass.Dedekind
     before a `soundness_rtime` call. (That `haveI` was previously required and was safe here,
     unlike in the Discrete case, because no `DenselyOrdered` instance is baked into `F`'s or
     `M`'s type; it is now simply redundant.) -/
-def SatisfiableRTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.Dedekind Γ
+def SatisfiableRTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.RTime Γ
 
-/-- The model-existence form at `FrameClass.Dedekind` — `ModelExistence` at that tag.
+/-- The model-existence form at `FrameClass.RTime` — `ModelExistence` at that tag.
 
     **This statement is false.** See `modelExistenceRTime_refuted` in
     `Metalogic/DedekindNonCompactness.lean`, which draws it as the immediate corollary it always
@@ -620,6 +620,6 @@ def SatisfiableRTimeSet (Γ : Set Formula) : Prop := SatisfiableSet FrameClass.D
     proof at this class would yield the very compactness `notCompactRTime`
     denies. The refutation lives in that module rather than beside this definition because it
     consumes `notCompactRTime`, and that module imports this one. -/
-def ModelExistenceRTime : Prop := ModelExistence FrameClass.Dedekind
+def ModelExistenceRTime : Prop := ModelExistence FrameClass.RTime
 
 end FormalSystem.Metalogic

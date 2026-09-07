@@ -194,7 +194,7 @@ def parseFrameClass? (s : String) : Option FrameClass :=
   match s with
   | "Base"     => some .Base
   | "Dense"    => some .Dense
-  | "Discrete" => some .Discrete
+  | "Discrete" => some .ZTime
   | _          => none
 
 /-- Parse the `--fuel N` and `--frame-class X` flags from CLI args. -/

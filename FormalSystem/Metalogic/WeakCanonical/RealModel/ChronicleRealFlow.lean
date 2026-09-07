@@ -87,7 +87,7 @@ Prior-S supplied by `chronicleIsDensePriorSepStructure`. The class membership
 `InStructureClass (CountableDense _) _` that §6's surgery constructions need is resolved by
 instance search from the bridge's own `countable` and `denselyOrdered` fields; it cannot be a
 global instance because `h_mcs` and `h_box_dense` are non-class explicit arguments. -/
-theorem chronicleMonadic_doetsD1 {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_doetsD1 {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     DoetsD1 (mkSigFrom root) (chronicleMonadicStructure fc A h_mcs h_box_dense root) := by
@@ -102,7 +102,7 @@ singletons"*, for every contemporaneous equivalence relation on the countable de
 
 `DoetsD2` discharged from `chronicleMonadic_dense_singletons`, §7 Theorem 5, with Prior-U, Prior-S
 and Sep all supplied by `chronicleIsDensePriorSepStructure`. -/
-theorem chronicleMonadic_doetsD2 {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleMonadic_doetsD2 {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     DoetsD2 (mkSigFrom root) (chronicleMonadicStructure fc A h_mcs h_box_dense root) := by
@@ -120,7 +120,7 @@ Every hypothesis of `doets_theorem_dense` is discharged: the four order conditio
 `chronicleIsDensePriorSepStructure`, `Nonempty` from the carrier `ℚ`, and D1/D2 from §6 Theorem 4
 and §7 Theorem 5 at this structure. Nothing is left as an assumption but `hfc`, `h_mcs`,
 `h_box_dense` and `hk : 2 ≤ k`, which are the chronicle's own. -/
-theorem exists_chronicleRealFlow {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem exists_chronicleRealFlow {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) (k : Nat) (hk : 2 ≤ k) :
     ∃ R : RIntervalStructure (mkSigFrom root), R.IsRealFlow ∧
@@ -145,14 +145,14 @@ two defining properties.
 
 Noncomputable, and irreducibly so: the structure is extracted from Theorem 6's existential, whose
 proof chooses a minimal `γ`-palette and a shuffle. -/
-noncomputable def chronicleRealFlow {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+noncomputable def chronicleRealFlow {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) (k : Nat) (hk : 2 ≤ k) :
     RIntervalStructure (mkSigFrom root) :=
   (exists_chronicleRealFlow hfc A h_mcs h_box_dense root k hk).choose
 
 /-- **`chronicleRealFlow`'s flow of time is `ℝ`** — the first half of Theorem 6's conclusion. -/
-theorem chronicleRealFlow_isRealFlow {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleRealFlow_isRealFlow {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) (k : Nat) (hk : 2 ≤ k) :
     (chronicleRealFlow hfc A h_mcs h_box_dense root k hk).IsRealFlow :=
@@ -160,7 +160,7 @@ theorem chronicleRealFlow_isRealFlow {fc : FrameClass} (hfc : FrameClass.Dedekin
 
 /-- **`chronicleRealFlow` satisfies the same depth-`k` monadic sentences as the chronicle model** —
 the second half of Theorem 6's conclusion, and the property Reynolds' §9 consumes. -/
-theorem chronicleRealFlow_kEquiv {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem chronicleRealFlow_kEquiv {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) (k : Nat) (hk : 2 ≤ k) :
     KEquiv (mkSigFrom root) k (chronicleMonadicStructure fc A h_mcs h_box_dense root)

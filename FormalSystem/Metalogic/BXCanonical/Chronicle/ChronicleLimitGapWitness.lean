@@ -47,8 +47,8 @@ or a first point of `¬R`" — here neither exists, since the endpoint is the un
 Irrationality of `r` (i.e. its unselectedness) is used exactly twice: in Step A, to upgrade
 `(s : ℝ) ≤ r` to `(s : ℝ) < r`, and in Step D, to exclude `(u : ℝ) = r`.
 
-`Axiom.prior_U_gap` has `minFrameClass = .Dedekind` (`ProofSystem/Axioms.lean`), so both theorems
-below carry `(hfc : FrameClass.Dedekind ≤ fc)`. This is the first point in the real-extension
+`Axiom.prior_U_gap` has `minFrameClass = .RTime` (`ProofSystem/Axioms.lean`), so both theorems
+below carry `(hfc : FrameClass.RTime ≤ fc)`. This is the first point in the real-extension
 route at which the Dedekind axiom layer is consumed; everything upstream is `fc`-generic.
 
 ## The self-root instantiation
@@ -83,7 +83,7 @@ The proof is Reynolds 1992's Theorem 3 argument (printed p.176) applied at `χ :
 than at `φ`, which is what makes the Prior-U antecedent `U(⊤, χ)` available. See the module
 docstring. `Axiom.prior_U_gap` is consumed at `χ`, whence the hypothesis `hfc`.
 -/
-theorem limitFutureWitness_of_priorU {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem limitFutureWitness_of_priorU {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (m : Rat → Set Formula) (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q))
     (hUf : ∀ (t : Rat) (α β : Formula), Formula.untl β α ∈ m t →
       ∃ s : Rat, t < s ∧ α ∈ m s ∧ ∀ p : Rat, t < p → p < s → β ∈ m p)
@@ -191,7 +191,7 @@ theorem limitFutureWitness_of_priorU {fc : FrameClass} (hfc : FrameClass.Dedekin
 **The chronicle instantiation.**
 
 `cantorBfmcsDense` satisfies `BFMCS.LimitFutureWitness` for every root, at any frame class
-above `FrameClass.Dedekind`.
+above `FrameClass.RTime`.
 
 The unrestricted Until coherence hypotheses of `limitFutureWitness_of_priorU` are obtained by
 **self-root instantiation** of `cantor_bfmcs_dense_restricted_fuc` / `_buc`: those theorems are
@@ -200,7 +200,7 @@ polymorphic in `root` and discard their closure-membership argument, so instanti
 unrestricted statement. No chronicle declaration is modified.
 -/
 theorem cantor_bfmcs_dense_limit_future_witness (fc : FrameClass)
-    (hfc : FrameClass.Dedekind ≤ fc) (A : Set Formula)
+    (hfc : FrameClass.RTime ≤ fc) (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     (cantorBfmcsDense fc A h_mcs h_box_dense).LimitFutureWitness root := by

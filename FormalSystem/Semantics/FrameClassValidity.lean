@@ -31,16 +31,16 @@ below.
 |-------------|-------|--------|
 | `.Base` | `True` | — (unconstrained: `def:logical-consequence`'s own class) |
 | `.Dense` | `TaskFrame.IsDense` | `def:frame-properties`, Dense clause |
-| `.Discrete` | `TaskFrame.IsZTime` | `def:TMplus-f` (Hölder narrowing to ℤ-time) |
-| `.Dedekind` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_c clause |
+| `.ZTime` | `TaskFrame.IsZTime` | `def:TMplus-f` (Hölder narrowing to ℤ-time) |
+| `.RTime` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_c clause |
 
 Two of these are the *narrowed* member of a split pair, and deliberately so — interpreting
-`.Discrete` by the bare `TaskFrame.IsDiscrete`, or `.Dedekind` by the bare `TaskFrame.IsComplete`,
+`.ZTime` by the bare `TaskFrame.IsDiscrete`, or `.RTime` by the bare `TaskFrame.IsComplete`,
 would widen the frame class a soundness theorem at that tag ranges over. `Semantics/FrameProperty.lean`
 records both splits and the paper sentences that force them.
 
 **Naming deviation of record.** `def:frame-properties` calls the dense-and-complete class
-**Complete**; this tree calls it `Dedekind`, in `FrameClass.Dedekind`, `TaskFrame.IsRTime` and
+**Complete**; this tree calls it `Dedekind`, in `FrameClass.RTime`, `TaskFrame.IsRTime` and
 `ValidRTime` alike. That divergence from the definition of record is deliberate — "complete"
 is already load-bearing here for *proof-theoretic* completeness — and is recorded in full at
 `TaskFrame.IsRTime`'s definition site.
@@ -97,14 +97,14 @@ Per-constructor anchors:
   here.
 * `.Dense ↦ TaskFrame.IsDense`. `def:frame-properties`' Dense clause. `Axiom.density` (`GGφ → Gφ`)
   and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) carry `.Dense`.
-* `.Discrete ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:TMplus-f`'s
+* `.ZTime ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:TMplus-f`'s
   closing sentence states that "the successor-Archimedean discrete class to which BX_f and TM⁺_f
   are sound and complete is exactly ℤ-time", and it is that narrowed class `Axiom.prior_UZ`,
-  `Axiom.prior_SZ` and `Axiom.z1` are sound over. Interpreting `.Discrete` by the bare Discrete
+  `Axiom.prior_SZ` and `Axiom.z1` are sound over. Interpreting `.ZTime` by the bare Discrete
   clause would silently widen the class under `soundness_ztime`.
-* `.Dedekind ↦ TaskFrame.IsRTime`, **not** `TaskFrame.IsComplete`. `FrameClass.Dedekind` sits
+* `.RTime ↦ TaskFrame.IsRTime`, **not** `TaskFrame.IsComplete`. `FrameClass.RTime` sits
   strictly above `FrameClass.Dense`, so `density` and `dense_indicator` are admissible in a
-  `.Dedekind` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.
+  `.RTime` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.
   The dense-and-complete narrowing is what `cor:tm-completeness`'s TM⁺_c clause names and what
   keeps soundness at this tag from being refutable. See the naming deviation recorded at
   `TaskFrame.IsRTime`: the paper calls this property Complete, this tree calls it Dedekind.
@@ -124,8 +124,8 @@ this declaration.
 def FrameClass.Sat : FrameClass → TaskFrame → Prop
   | .Base, _ => True
   | .Dense, F => F.IsDense
-  | .Discrete, F => F.IsZTime
-  | .Dedekind, F => F.IsRTime
+  | .ZTime, F => F.IsZTime
+  | .RTime, F => F.IsRTime
 
 /--
 `sat_intro h` normalises a `FrameClass.Sat fc F` hypothesis named `h` into whatever the tag
@@ -138,30 +138,30 @@ Per tag, with `Sat` reducible (see the docstring above):
 * `.Dense` — `Sat .Dense F` is `TaskFrame.IsDense F` is `DenselyOrdered ↑F.Duration`, and the
   whole reducible chain exists so that `intro h` alone already registers `h` in the local
   instance cache. The `skip` branch fires and `exists_between` is available.
-* `.Discrete` — `Sat .Discrete F` is `TaskFrame.IsZTime F`, a four-component
+* `.ZTime` — `Sat .ZTime F` is `TaskFrame.IsZTime F`, a four-component
   existential; `obtain ⟨_, _, _, _⟩` lands `SuccOrder`, `PredOrder`, `IsSuccArchimedean` and
   `IsPredArchimedean` in the instance cache.
-* `.Dedekind` — `Sat .Dedekind F` is `TaskFrame.IsRTime F`, i.e. `IsDense F ∧ IsComplete F`;
+* `.RTime` — `Sat .RTime F` is `TaskFrame.IsRTime F`, i.e. `IsDense F ∧ IsComplete F`;
   `obtain ⟨_, h⟩` registers the density instance and rebinds the *completeness* conjunct under
   the caller's own name `h`, so it stays reachable under the spelling the caller wrote.
 
 **Two constraints on this macro, both load-bearing.**
 
 1. It must destructure with `obtain`, and must **never** re-introduce an instance with
-   `have`/`haveI`/`letI` in the `.Discrete` case. `IsSuccArchimedean α [Preorder α] [SuccOrder α]`
+   `have`/`haveI`/`letI` in the `.ZTime` case. `IsSuccArchimedean α [Preorder α] [SuccOrder α]`
    is *indexed by* the `SuccOrder` instance, so a fresh opaque local introduced by `haveI` shadows
    the obtained `SuccOrder` witness and the `IsSuccArchimedean` hypothesis then mentions a
    different instance than the goal does — unification fails, with an error that points nowhere
    near the cause. This is the mechanism behind the "use `@`, never `haveI`" warnings recorded in
    `Semantics/Validity.lean`.
 2. There is deliberately no `clear $h` alternative. `clear` succeeds on *any* unused hypothesis,
-   so a `clear` branch would fire at `.Discrete`/`.Dedekind` whenever the preceding branches were
+   so a `clear` branch would fire at `.ZTime`/`.RTime` whenever the preceding branches were
    reordered or failed, silently discarding the frame condition instead of using it.
 
 The caller's `h` is passed back explicitly (rather than the macro inventing a name) because macro
 hygiene would otherwise make a macro-introduced binder inaccessible at the call site.
 
-**Where to write it, and where not to.** At `.Discrete` and `.Dedekind` it does real work and is
+**Where to write it, and where not to.** At `.ZTime` and `.RTime` it does real work and is
 required. At `.Base` and `.Dense` it reduces to `skip` — the frame condition is either `True` or
 already an instance the moment it is `intro`ed — and `linter.unusedTactic` reports
 `'sat_intro h' tactic does nothing` at `.Dense`. The convention adopted across this development is

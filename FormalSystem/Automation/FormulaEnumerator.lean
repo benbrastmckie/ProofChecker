@@ -1271,7 +1271,7 @@ partial def instantiateAxiom (atoms : List Atom) (maxParamSize : Nat) : IO Formu
 /-- Return the minimum FrameClass for each schema index (0-41). -/
 def schemaMinFrameClass (idx : Nat) : FrameClass :=
   match idx with
-  | 37 | 38 | 39 => .Discrete
+  | 37 | 38 | 39 => .ZTime
   | 40 | 41 => .Dense
   | _ => .Base
 
@@ -1437,10 +1437,10 @@ def pickSchemaIdx (_atoms : List Atom) (_maxParamSize : Nat) (fc : FrameClass) :
     match fc with
     | .Base => List.range 37  -- indices 0-36 are Base
     | .Dense => (List.range 37) ++ [40, 41]
-    | .Discrete => (List.range 37) ++ [37, 38, 39]
+    | .ZTime => (List.range 37) ++ [37, 38, 39]
     -- `Dedekind` sits strictly above `Dense`, so it admits the Base and Dense schemas,
     -- plus its own three Reynolds schemas at indices 42-44.
-    | .Dedekind => (List.range 37) ++ [40, 41, 42, 43, 44]
+    | .RTime => (List.range 37) ++ [40, 41, 42, 43, 44]
   let idx ← IO.rand 0 (allowed.length - 1)
   match allowed[idx]? with
   | some i => return i

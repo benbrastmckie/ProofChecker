@@ -136,7 +136,7 @@ for rational `q`. Fix an irrational `T`, rationals `t_n ↗ T` and `α_n ∈ (t_
 mirror them above: rationals `u_n ↘ T` and `α'_n ↘ T` interleaved as
 `α'_{n+1} < u_{n+1} < α'_n`. Let `V(φ) = {α_n} ∪ {α'_n}` and let `V(ψ)` omit exactly the points
 `{t_n} ∪ {u_n}`. All boundary points are rational, so both directions of *unrestricted* rational
-Until coherence hold, and each `m q` is maximal consistent at `FrameClass.Dedekind` for free.
+Until coherence hold, and each `m q` is maximal consistent at `FrameClass.RTime` for free.
 
 *The hypothesis holds, conditionally on the ultrafilter.* `untl φ ψ ∈ m q` exactly for
 `q ∈ ⋃ (t_n, α_n)` below `T`: at such a `q` the witness `α_n` works and `ψ` guards `(q, α_n)`,
@@ -190,8 +190,8 @@ counterexample families are recorded below. Both are built the same way — take
 `M` over the flow `ℝ`, set `m q := {χ | M, q ⊨ χ}` for rational `q`, and observe that the real
 bundle's value at a gap is a limit **from below** and so disagrees with `M`'s own theory at that
 gap. Taking theories of a real model makes every `m q` maximal consistent at
-`FrameClass.Dedekind` for free, and makes `forward_G`/`backward_H` hold semantically, so each
-family really is an `FMCS (fc := FrameClass.Dedekind) Rat`; the one-family bundle over it has
+`FrameClass.RTime` for free, and makes `forward_G`/`backward_H` hold semantically, so each
+family really is an `FMCS (fc := FrameClass.RTime) Rat`; the one-family bundle over it has
 both modal fields, with `□χ ↔ χ` at a single modal world.
 
 ### Refutation 1 — backward `snce`, at a *selected* target
@@ -835,10 +835,10 @@ The composition of `BFMCS.toRealBundle_restricted_temporally_coherent` with the 
 
 `cantor_bfmcs_dense_restricted_tc` carries an unnamed closure-containment hypothesis, discharged
 at the call site by `deferralClosure_subset_extendedDeferralClosure`; it is threaded through
-unchanged. The `hfc : FrameClass.Dedekind ≤ fc` hypothesis comes from the gap discharge and is
+unchanged. The `hfc : FrameClass.RTime ≤ fc` hypothesis comes from the gap discharge and is
 likewise threaded rather than discharged here.
 -/
-theorem cantor_bfmcs_dense_real_restricted_tc (fc : FrameClass) (hfc : FrameClass.Dedekind ≤ fc)
+theorem cantor_bfmcs_dense_real_restricted_tc (fc : FrameClass) (hfc : FrameClass.RTime ≤ fc)
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     ((cantorBfmcsDense fc A h_mcs h_box_dense).toRealBundle).RestrictedTemporallyCoherent root :=
@@ -860,11 +860,11 @@ instance `cantor_bfmcs_dense_restricted_buc` and the guard-reach discharge
 The transport's guard-free form is refuted (see this module's `Refutations` section); what makes
 the instance nonetheless available is that the chronicle bundle *does* satisfy
 `BFMCS.LimitGuardBelow`, discharged from `Axiom.prior_S_gap`. As with
-`cantor_bfmcs_dense_real_restricted_tc`, the `hfc : FrameClass.Dedekind ≤ fc` hypothesis comes
+`cantor_bfmcs_dense_real_restricted_tc`, the `hfc : FrameClass.RTime ≤ fc` hypothesis comes
 from the gap discharge and is threaded rather than discharged here.
 -/
 theorem cantor_bfmcs_dense_real_restricted_buc (fc : FrameClass)
-    (hfc : FrameClass.Dedekind ≤ fc) (A : Set Formula)
+    (hfc : FrameClass.RTime ≤ fc) (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) (root : Formula) :
     ((cantorBfmcsDense fc A h_mcs h_box_dense).toRealBundle).RestrictedBackwardUntilSinceCoherent
@@ -915,7 +915,7 @@ Accordingly `cantor_bfmcs_dense_real_restricted_fuc` is **not** stated in this m
 guard-supplying predicate is hypothesised in its place.
 -/
 theorem forward_until_unselected_eventuality_of_priorU {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc)
+    (hfc : FrameClass.RTime ≤ fc)
     (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_rfuc : B.RestrictedForwardUntilSinceCoherent root)
     (fam : FMCS (fc := fc) Rat) (hfam : fam ∈ B.families)
@@ -971,7 +971,7 @@ the cofinal hypothesis puts a `φ`-point. Maximal consistency at that point is t
 guard. Here the bound is precisely what makes the guard interval finite, and it is bought with the
 Since-side gap axiom rather than assumed.
 -/
-theorem boundedWitness_of_limitGuardBelow {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem boundedWitness_of_limitGuardBelow {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (m : Rat → Set Formula) (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q))
     (hSf : ∀ (t : Rat) (α β : Formula), Formula.snce β α ∈ m t →
       ∃ s : Rat, s < t ∧ α ∈ m s ∧ ∀ p : Rat, s < p → p < t → β ∈ m p)
@@ -1016,7 +1016,7 @@ discharge is `cantor_bfmcs_dense_limit_guard_above`, and the module owning that 
 extended here.
 -/
 theorem toRealBundle_forward_until_unselected {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc) (B : BFMCS (fc := fc) Rat) (root : Formula)
+    (hfc : FrameClass.RTime ≤ fc) (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_rfuc : B.RestrictedForwardUntilSinceCoherent root)
     (fam : FMCS (fc := fc) Rat) (hfam : fam ∈ B.families)
     (hSf : ∀ (t : Rat) (α β : Formula), Formula.snce β α ∈ fam.mcs t →
@@ -1126,7 +1126,7 @@ backward transport needs none of them because its guard obligations are consumed
 produced.
 -/
 theorem BFMCS.toRealBundle_restricted_forward_until_since {fc : FrameClass}
-    (hfc : FrameClass.Dedekind ≤ fc) (B : BFMCS (fc := fc) Rat) (root : Formula)
+    (hfc : FrameClass.RTime ≤ fc) (B : BFMCS (fc := fc) Rat) (root : Formula)
     (h_rfuc : B.RestrictedForwardUntilSinceCoherent root)
     (hSf : ∀ fam ∈ B.families, ∀ (t : Rat) (α β : Formula), Formula.snce β α ∈ fam.mcs t →
       ∃ s : Rat, s < t ∧ α ∈ fam.mcs s ∧ ∀ p : Rat, s < p → p < t → β ∈ fam.mcs p)

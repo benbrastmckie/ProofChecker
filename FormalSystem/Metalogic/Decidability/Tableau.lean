@@ -139,18 +139,18 @@ inductive TableauRule : Type where
       Captures density: between any two time points there is another. Only when fc >= .Dense. -/
   | densityRule
   /-- Discrete: when T(F(φ)) at (w,t), add T(U(φ, ¬φ)) at (w,t).
-      Captures "nearest future φ-point reachable by Until". Only when fc >= .Discrete. -/
+      Captures "nearest future φ-point reachable by Until". Only when fc >= .ZTime. -/
   | priorUZ
   /-- Discrete: when T(P(φ)) at (w,t), add T(S(φ, ¬φ)) at (w,t).
-      Captures "nearest past φ-point reachable by Since". Only when fc >= .Discrete. -/
+      Captures "nearest past φ-point reachable by Since". Only when fc >= .ZTime. -/
   | priorSZ
   /-- Discrete: when both T(G(G(φ) → φ)) and T(F(G(φ))) at same label,
-      add T(G(φ)). Z1 backward induction axiom. Only when fc >= .Discrete. -/
+      add T(G(φ)). Z1 backward induction axiom. Only when fc >= .ZTime. -/
   | z1Rule
   /-- Dedekind: Prior-U (gap form). When `T(U(⊤,φ) ∧ F(¬φ))` at `(w,t)`, add
       `T(U(¬φ ∨ K⁺(¬φ), φ))` at `(w,t)` — the φ-region has a definable right endpoint.
-      Tableau counterpart of `Axiom.prior_U_gap`. Only when `fc >= .Dedekind`.
-      NOT `priorUZ`, which is the integer well-ordering axiom at `.Discrete`. -/
+      Tableau counterpart of `Axiom.prior_U_gap`. Only when `fc >= .RTime`.
+      NOT `priorUZ`, which is the integer well-ordering axiom at `.ZTime`. -/
   | priorUGap
   /-- Dedekind: Prior-S (gap form). Past dual of `priorUGap`: from
       `T(S(⊤,φ) ∧ P(¬φ))` add `T(S(¬φ ∨ K⁻(¬φ), φ))`.
@@ -382,10 +382,10 @@ def isApplicable (rule : TableauRule) (sf : SignedFormula)
       decide (FrameClass.Dense ≤ fc)
   | .densityRule, .pos, .allFuture _ =>
       decide (FrameClass.Dense ≤ fc)
-  -- Discrete-specific rules (gated by fc >= .Discrete)
-  | .priorUZ, .pos, φ => decide (FrameClass.Discrete ≤ fc) && (asSomeFuture? φ).isSome
-  | .priorSZ, .pos, φ => decide (FrameClass.Discrete ≤ fc) && (asSomePast? φ).isSome
-  | .z1Rule, .pos, .allFuture _ => decide (FrameClass.Discrete ≤ fc)
+  -- Discrete-specific rules (gated by fc >= .ZTime)
+  | .priorUZ, .pos, φ => decide (FrameClass.ZTime ≤ fc) && (asSomeFuture? φ).isSome
+  | .priorSZ, .pos, φ => decide (FrameClass.ZTime ≤ fc) && (asSomePast? φ).isSome
+  | .z1Rule, .pos, .allFuture _ => decide (FrameClass.ZTime ≤ fc)
   -- Dedekind (R6). All three trigger on the axiom's *antecedent conjunction* rather than on
   -- one of its conjuncts. Triggering on a conjunct loses a race: the conjuncts of
   -- `U(⊤,φ) ∧ F(¬φ)` are produced one expansion step apart, and the base rule that owns the
@@ -393,9 +393,9 @@ def isApplicable (rule : TableauRule) (sf : SignedFormula)
   -- before the other conjunct exists. The conjunction itself is what the branch actually
   -- carries at a single moment, and matching it makes each rule a 1:1 transcription of its
   -- axiom.
-  | .priorUGap, .pos, φ => decide (FrameClass.Dedekind ≤ fc) && (asAnd? φ).isSome
-  | .priorSGap, .pos, φ => decide (FrameClass.Dedekind ≤ fc) && (asAnd? φ).isSome
-  | .sepRule, .pos, φ => decide (FrameClass.Dedekind ≤ fc) && (asAnd? φ).isSome
+  | .priorUGap, .pos, φ => decide (FrameClass.RTime ≤ fc) && (asAnd? φ).isSome
+  | .priorSGap, .pos, φ => decide (FrameClass.RTime ≤ fc) && (asAnd? φ).isSome
+  | .sepRule, .pos, φ => decide (FrameClass.RTime ≤ fc) && (asAnd? φ).isSome
   -- Seriality: keyed on the label, not on the formula. `T(F⊤)` and `T(P⊤)` are wanted at every
   -- label of every branch regardless of what formula carries that label, so there is no shape
   -- to gate on and no frame class to gate on either. The real suppression is in `applyRule`,
@@ -1362,8 +1362,8 @@ def applyRule (rule : TableauRule) (sf : SignedFormula) (branch : Branch := [])
       -- some *other* rule mints a new witness time, and those rules carry their own guards.
       --
       -- **Measured.** Counterexample row B
-      -- (`(F p ∧ F q) → (F(p ∧ F q) ∨ F(p ∧ q) ∨ F(q ∧ F p))`) read `CLOSED` at `.Base`/`.Discrete`
-      -- and `STALLED` at `.Dense`/`.Dedekind`. Deleting `densityRule` from `denseRules` made all
+      -- (`(F p ∧ F q) → (F(p ∧ F q) ∨ F(p ∧ q) ∨ F(q ∧ F p))`) read `CLOSED` at `.Base`/`.ZTime`
+      -- and `STALLED` at `.Dense`/`.RTime`. Deleting `densityRule` from `denseRules` made all
       -- four read `CLOSED`, isolating this rule as the sole cause; the fix keeps the rule and
       -- bounds its gap selection.
       let futureTimes := timeOrd.futureOf l.time
@@ -1624,7 +1624,7 @@ def denseRules : List TableauRule := [
 ]
 
 /--
-Discrete-specific rules, included only when fc >= .Discrete.
+Discrete-specific rules, included only when fc >= .ZTime.
 -/
 def zTimeRules : List TableauRule := [
   .priorUZ, .priorSZ,
@@ -1632,7 +1632,7 @@ def zTimeRules : List TableauRule := [
 ]
 
 /--
-Dedekind-specific rules (R6), included only when fc >= .Dedekind.
+Dedekind-specific rules (R6), included only when fc >= .RTime.
 
 The tableau counterparts of `Axiom.prior_U_gap`, `Axiom.prior_S_gap` and `Axiom.sep`
 (`Axioms.lean:377,387,398`) — the three axioms whose gap/separation content no other rule
@@ -1652,8 +1652,8 @@ when the frame class supports them.
 def allRulesForFC (fc : FrameClass := .Base) : List TableauRule :=
   let base := allRules
   let dense := if decide (FrameClass.Dense ≤ fc) then denseRules else []
-  let discrete := if decide (FrameClass.Discrete ≤ fc) then zTimeRules else []
-  let dedekind := if decide (FrameClass.Dedekind ≤ fc) then rTimeRules else []
+  let discrete := if decide (FrameClass.ZTime ≤ fc) then zTimeRules else []
+  let dedekind := if decide (FrameClass.RTime ≤ fc) then rTimeRules else []
   -- The Dedekind rules come FIRST, ahead of the base rules. They are persistent, they fire
   -- at most once per label (each checks `branch.contains` on its own conclusion), and they
   -- trigger on a conjunction that the consumable propositional rules destroy on their very
@@ -2049,7 +2049,7 @@ Consuming that decision as "treat the whole branch as a saturated open branch"
 outstanding, so a branch that would have closed instead reports open, or stalls.
 
 **Measured instance.** Counterexample row B (`(F p ∧ F q) → (F(p ∧ F q) ∨ F(p ∧ q) ∨
-F(q ∧ F p))`) at `.Dense`/`.Dedekind`: `densityRule` interpolates times 3 and 4 into `0 < 2`,
+F(q ∧ F p))`) at `.Dense`/`.RTime`: `densityRule` interpolates times 3 and 4 into `0 < 2`,
 giving ordering `[(4,3),(0,4),(3,2),(0,3),(0,2),(0,1)]`. The interpolated times carry types that
 are subsets of their ancestors' *because the ancestors have not finished expanding* —
 `findUnexpanded` still points at `T(G ¬(p ∧ F q)) @ (0,0)`, i.e. at the root, which is an

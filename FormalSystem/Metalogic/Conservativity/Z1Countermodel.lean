@@ -173,7 +173,7 @@ against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 with both halves machine-checked.
 -/
 theorem not_bl_derivable_z1 (p : Atom) :
-    ¬ BaseLanguage.Derivable FrameClass.Discrete [] (Conservativity.Z1 (BLFormula.atom p)) := by
+    ¬ BaseLanguage.Derivable FrameClass.ZTime [] (Conservativity.Z1 (BLFormula.atom p)) := by
   rintro ⟨d⟩
   exact z1_not_true_at_zero p
     (bl_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
@@ -184,7 +184,7 @@ theorem not_bl_derivable_z1 (p : Atom) :
 gives `ValidZTime (tr (Z1 p))`, and `blValidZTime_iff_validZTime_tr` crosses the
 bridge.
 
-Combined with `not_bl_derivable_z1`, this refutes the `.Discrete` row of Phase 4's reduction:
+Combined with `not_bl_derivable_z1`, this refutes the `.ZTime` row of Phase 4's reduction:
 **`TM_f` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
 so the two phases visibly compose.
 -/

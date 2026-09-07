@@ -155,14 +155,14 @@ theorem star_soundness_dense {φ : StarFormula} (h : StarDerivable FrameClass.De
     StarValidDense φ :=
   star_soundness_validIn h
 
-/-- Soundness of TM⋆ at `.Discrete`. -/
+/-- Soundness of TM⋆ at `.ZTime`. -/
 theorem star_soundness_ztime {φ : StarFormula}
-    (h : StarDerivable FrameClass.Discrete [] φ) : StarValidZTime φ :=
+    (h : StarDerivable FrameClass.ZTime [] φ) : StarValidZTime φ :=
   star_soundness_validIn h
 
-/-- Soundness of TM⋆ at `.Dedekind`. -/
+/-- Soundness of TM⋆ at `.RTime`. -/
 theorem star_soundness_rtime {φ : StarFormula}
-    (h : StarDerivable FrameClass.Dedekind [] φ) : StarValidRTime φ :=
+    (h : StarDerivable FrameClass.RTime [] φ) : StarValidRTime φ :=
   star_soundness_validIn h
 
 /-! ## Acceptance checks -/

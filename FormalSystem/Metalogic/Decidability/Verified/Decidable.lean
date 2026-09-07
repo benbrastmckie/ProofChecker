@@ -391,8 +391,8 @@ def RuleSound (C : CarrierProp) (r : TableauRule) : Prop :=
       SatResult M b (applyRule r sf b ord).1 (applyRule r sf b ord).2
 
 /-- A rule sound under a weaker carrier property is sound under a stronger one. This is what lets
-the base family be proved once at `carrierBase` and reused verbatim at `.Dense`, `.Discrete` and
-`.Dedekind`, and it is why no frame-class carrier property needs declaring until a rule actually
+the base family be proved once at `carrierBase` and reused verbatim at `.Dense`, `.ZTime` and
+`.RTime`, and it is why no frame-class carrier property needs declaring until a rule actually
 consumes it. -/
 theorem RuleSound.mono {C C' : CarrierProp} {r : TableauRule}
     (hle : ∀ (D : Type) [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D] [Nontrivial D], C' D → C D)
@@ -2362,7 +2362,7 @@ theorem ruleSound_densityRule : RuleSound carrierDense .densityRule := by
       · exact satAt_update_nextTime_of_mem hb (hst.sat g hb)
 
 /-!
-### The `.Discrete` family: `priorUZ`, `priorSZ`, `z1Rule`
+### The `.ZTime` family: `priorUZ`, `priorSZ`, `z1Rule`
 
 All three are *same-label* `.persistent [newSf]` rules that return `timeOrd` **unchanged**, so
 none of them consumes `OrdWithin` and none has an ordering obligation at all. What each emits is
@@ -2388,7 +2388,7 @@ goal, `SatResult`, is itself a `Prop`. Each proof below opens by destructuring i
 the four instances with `haveI`.
 
 **The other three frame-class rules are NOT landed, and the reason is not budget.** `priorUGap`,
-`priorSGap` and `sepRule` (`.Dedekind`) would need `prior_U_gap_valid`, `prior_S_gap_valid` and
+`priorSGap` and `sepRule` (`.RTime`) would need `prior_U_gap_valid`, `prior_S_gap_valid` and
 `sep_valid`. Those three exist **only** in `FormalSystem/Metalogic/Soundness.lean` — the module
 whose import edge into this tree is refused — and `FrameClassVariants` does **not** carry them.
 So the reuse argument that unblocks the discrete three does not transfer, and no
@@ -2396,7 +2396,7 @@ So the reuse argument that unblocks the discrete three does not transfer, and no
 that consumes one, and nothing consumes that one yet.
 -/
 
-/-- Discreteness of the carrier, as the three `.Discrete` rules consume it.
+/-- Discreteness of the carrier, as the three `.ZTime` rules consume it.
 
 Existentially quantified because `SuccOrder`/`PredOrder` are data; see the section docstring. -/
 def carrierZTime : CarrierProp := fun D =>
@@ -2405,12 +2405,12 @@ def carrierZTime : CarrierProp := fun D =>
 /-- Land a `ValidZTime` conclusion where the rule-soundness proofs need it.
 
 `ValidZTime` states truth at the inert carrier `Set.univ`, which is exactly what the
-rule-soundness proofs below evaluate against, so this is `ValidIn.apply_total` at `.Discrete` and
-at the frame this tree carries. It is kept as a named step so the three `.Discrete` call sites read the same as they
+rule-soundness proofs below evaluate against, so this is `ValidIn.apply_total` at `.ZTime` and
+at the frame this tree carries. It is kept as a named step so the three `.ZTime` call sites read the same as they
 did when a carrier transport was still needed; it disappears with `TruthAt`'s set parameter
 itself.
 
-The four discreteness instances are bound on `D` and handed to `FrameClass.Discrete.Sat`
+The four discreteness instances are bound on `D` and handed to `FrameClass.ZTime.Sat`
 **positionally**, exactly as `TaskFrame.isZTime_of_instances` and `sat_intro` do:
 `SuccOrder` and `PredOrder` are data, so routing them back through instance synthesis at
 `F.toTaskFrame.Duration.carrier` breaks against the instances the three call sites have already
@@ -2490,7 +2490,7 @@ theorem ruleSound_priorSZ : RuleSound carrierZTime .priorSZ := by
             (hst.histTotal l.world) (tv l.time) hsrc
 
 /-- `T(G(Gφ → φ))` together with `T(F(Gφ))` at the same label gives `T(Gφ)` there — Z1, the
-discrete backward-induction axiom. Unlike the other two `.Discrete` rules this one is *binary*:
+discrete backward-induction axiom. Unlike the other two `.ZTime` rules this one is *binary*:
 its second premise is read off the branch by `branch.contains` rather than from the source
 formula, so the proof instantiates `z1_valid` and then applies it to **two** hypotheses, the
 source's `hst.sat` and the partner's. -/
@@ -2540,7 +2540,7 @@ theorem ruleSound_z1Rule : RuleSound carrierZTime .z1Rule := by
           (hst.histTotal l.world) (tv l.time) hsrc hfgs
 
 /-!
-### The `.Dedekind` family: `priorUGap` and `priorSGap`
+### The `.RTime` family: `priorUGap` and `priorSGap`
 
 These two consume a *different* carrier property and, unlike the discrete three, their semantic
 content is **not** reusable from `SoundnessLemmas`. `prior_U_gap_valid` and `prior_S_gap_valid`
@@ -2556,14 +2556,14 @@ soundness inside the decidability tree is several hundred lines of duplicated Ma
 estimate is right for the *discrete* `SuccOrder`/`PredOrder` descent, which is exactly why those
 three were reused rather than re-proved; it is not right for these two.)
 
-`sepRule`, the third `.Dedekind` rule, is a different matter, and it is landed by a different
+`sepRule`, the third `.RTime` rule, is a different matter, and it is landed by a different
 route — see `truthAt_sep` below. Its validity genuinely needs `exists_countable_order_dense`,
 which is a substantial order-theoretic development and not a thirty-line argument, so it is
 **reused** from `SoundnessLemmas/Separability.lean` rather than re-proved. That reuse is
 available precisely because `Separability.lean` mentions neither formulas nor truth and its only
 non-Mathlib import is `Semantics/DurationClassification.lean`, itself pure order/group theory,
 which keeps the import edge acyclic; the refused edge is the one into
-`Metalogic/Soundness.lean`, and it stays refused. With `sepRule` proved the `.Dedekind`
+`Metalogic/Soundness.lean`, and it stays refused. With `sepRule` proved the `.RTime`
 family is complete.
 -/
 
@@ -2582,7 +2582,7 @@ private theorem exists_isGLB_of_lub' {D : Type} [LinearOrder D]
   exact ⟨x, isLUB_lowerBounds.mp hx⟩
 
 /-- Dedekind completeness of the carrier, as the two Prior-gap rules consume it. Density is
-carried alongside because the `.Dedekind` frame class imposes both; only the least-upper-bound
+carried alongside because the `.RTime` frame class imposes both; only the least-upper-bound
 half is used below. -/
 def carrierRTime : CarrierProp := fun D =>
   DenselyOrdered D ∧ ∀ s : Set D, s.Nonempty → BddAbove s → ∃ x, IsLUB s x
@@ -2820,7 +2820,7 @@ private theorem truthAt_sep {M : TaskModel F}
       exact hns ⟨v, hvu, fun w hvw hwu => hw w hvw hwu⟩
 
 /-- `T(K⁺ψ ∧ ¬K⁺(ψ ∧ U(ψ,¬ψ)))` gives `T(K⁺(K⁺ψ ∧ K⁻ψ))` at the same label. The third and last
-`.Dedekind` rule; with it the `.Dedekind` family is complete. -/
+`.RTime` rule; with it the `.RTime` family is complete. -/
 theorem ruleSound_sepRule : RuleSound carrierRTime .sepRule := by
   intro D _ _ _ _ hC F M hist tv b sf ord hmem hst _
   obtain ⟨hDense, h_lub⟩ := hC
@@ -3127,13 +3127,13 @@ one projection:
   `ruleSound_base_mono`, and it carries 27 of the 34 rules — the 26 base rules plus
   `denseIndicatorClosure`, which is gated at `.Dense` but proved without using density.
 * `carrierRTime` has `DenselyOrdered` as its first conjunct, deliberately (see its docstring:
-  *"density is carried alongside because the `.Dedekind` frame class imposes both"*). That is what
-  lets `densityRule`, proved at `carrierDense`, discharge its `.Dedekind` obligation by `hC.1` —
+  *"density is carried alongside because the `.RTime` frame class imposes both"*). That is what
+  lets `densityRule`, proved at `carrierDense`, discharge its `.RTime` obligation by `hC.1` —
   and it is the only place the redundant-looking conjunct is consumed.
 
-**Why `.Discrete` is not a superclass of `.Dense`.** `FrameClass`'s order
+**Why `.ZTime` is not a superclass of `.Dense`.** `FrameClass`'s order
 (`ProofSystem/Axioms.lean`) has `Base ≤ everything`, `Dense ≤ Dedekind`, and `Discrete`
-comparable only to itself. So `allRulesForFC .Discrete` is the 26 base rules plus the three
+comparable only to itself. So `allRulesForFC .ZTime` is the 26 base rules plus the three
 Prior-Z rules and does **not** contain `densityRule` — a discrete order is not dense, and the
 partial (not linear) order on frame classes is what records that.
 
@@ -3152,8 +3152,8 @@ constructor, each the weakest property that class's own rules consume. -/
 def carrierForFC : FrameClass -> CarrierProp
   | .Base => carrierBase
   | .Dense => carrierDense
-  | .Discrete => carrierZTime
-  | .Dedekind => carrierRTime
+  | .ZTime => carrierZTime
+  | .RTime => carrierRTime
 
 /-- A rule proved at `carrierBase` is sound under every carrier property, because `carrierBase`
 is `fun _ => True`. The workhorse of the assembly: 27 of the 34 rules travel this way. -/

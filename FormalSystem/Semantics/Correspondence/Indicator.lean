@@ -41,23 +41,23 @@ The two corollaries below are the **closed** half of a four-part picture; the ot
 |---|---|---|
 | `FrameClass.Sat FrameClass.Dense` | yes | `galoisClosed_sat_dense`, below |
 | `{F \| F.IsDiscrete}` (the paper's bare clause) | yes | `galoisClosed_isDiscrete`, below |
-| `FrameClass.Sat FrameClass.Discrete` | **no** | `LexIntWitness.lean`'s `sat_ztime_ssubset_mod_axiomSet` |
-| `FrameClass.Sat FrameClass.Dedekind` | **no** | `RationalWitness.lean`'s `sat_rtime_ssubset_mod_axiomSet` |
+| `FrameClass.Sat FrameClass.ZTime` | **no** | `LexIntWitness.lean`'s `sat_ztime_ssubset_mod_axiomSet` |
+| `FrameClass.Sat FrameClass.RTime` | **no** | `RationalWitness.lean`'s `sat_rtime_ssubset_mod_axiomSet` |
 
 ### Why the Discrete row splits
 
 `TaskFrame.IsDiscrete` — `def:frame-properties`' bare Discrete clause, guarded by `(∃ y, x < y)` —
 is the class `X⊤` indicates, and it *is* Galois-closed (`galoisClosed_isDiscrete`).
 
-`FrameClass.Sat FrameClass.Discrete` is `TaskFrame.IsZTime`, `def:TMplus-f`'s Hölder
+`FrameClass.Sat FrameClass.ZTime` is `TaskFrame.IsZTime`, `def:TMplus-f`'s Hölder
 narrowing to ℤ-time. It is strictly stronger, and it is **not** Galois-closed —
 `Metalogic/Independence/LexIntWitness.lean` exhibits a frame over `ℤ ×ₗ ℤ` inside
-`Mod (AxiomSet .Discrete)` and outside it. Stating the closure corollary below over
-`Sat .Discrete` would therefore contradict that witness. The corollary is over `{F | F.IsDiscrete}`
+`Mod (AxiomSet .ZTime)` and outside it. Stating the closure corollary below over
+`Sat .ZTime` would therefore contradict that witness. The corollary is over `{F | F.IsDiscrete}`
 and must stay there.
 
 The Dedekind row does not split the same way: `Sat .Dense` (the row that *is* closed) is the
-paper's bare Dense clause, while `Sat .Dedekind` adds Dedekind completeness, which
+paper's bare Dense clause, while `Sat .RTime` adds Dedekind completeness, which
 `RationalWitness.lean`'s static frame over `ℚ` satisfies axiomatically without satisfying
 semantically.
 
@@ -160,10 +160,10 @@ One application of `galoisClosed_of_indicator_iff` at `φ := X⊤`, handed
 `validOn_nextTop_iff_isDiscrete` whole.
 
 **This is `TaskFrame.IsDiscrete`, the paper's bare Discrete clause — NOT
-`FrameClass.Sat FrameClass.Discrete`.** The latter is `TaskFrame.IsZTime`, the ℤ-time
+`FrameClass.Sat FrameClass.ZTime`.** The latter is `TaskFrame.IsZTime`, the ℤ-time
 narrowing, and it is *not* Galois-closed: `Metalogic/Independence/LexIntWitness.lean` exhibits a
-frame over `ℤ ×ₗ ℤ` that models every `.Discrete` axiom without being successor-Archimedean.
-Restating this corollary over `Sat .Discrete` would contradict that witness.
+frame over `ℤ ×ₗ ℤ` that models every `.ZTime` axiom without being successor-Archimedean.
+Restating this corollary over `Sat .ZTime` would contradict that witness.
 -/
 theorem galoisClosed_isDiscrete :
     GaloisClosed {F : TaskFrame | F.IsDiscrete} :=

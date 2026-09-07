@@ -36,15 +36,15 @@ model-existence form: the witness list pulls back along `tr` by a straightforwar
 (`exists_preimage_list`), because every member of the BL⁺ witness lies in `tr '' Γ` and `tr`
 commutes with `imp` definitionally.
 
-## The `.Discrete` and `.Dedekind` rows do NOT transfer
+## The `.ZTime` and `.RTime` rows do NOT transfer
 
-BL⁺'s non-compactness at `.Discrete` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
-`.Dedekind` (`notCompactRTime`, witness built from `K⁺`-shaped `untl` guards) uses formulas
+BL⁺'s non-compactness at `.ZTime` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
+`.RTime` (`notCompactRTime`, witness built from `K⁺`-shaped `untl` guards) uses formulas
 **outside the range of `tr`**: `Formula.next` is `untl bot _` and `K⁺` is a top-level `untl`,
 while by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
 refutation transfers to the base language, and no BL non-compactness claim is made at those two
-classes here. Only the two positive rows are delivered; whether `BLCompact .Discrete` or
-`BLCompact .Dedekind` holds is left open.
+classes here. Only the two positive rows are delivered; whether `BLCompact .ZTime` or
+`BLCompact .RTime` holds is left open.
 
 ## References
 

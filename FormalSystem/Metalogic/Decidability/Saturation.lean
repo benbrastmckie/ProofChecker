@@ -2342,7 +2342,7 @@ end BudgetedTableauProbes
 
 These tests verify that the FrameClass parameter correctly gates axiom closure:
 - Dense axioms close only when fc >= .Dense
-- Discrete axioms close only when fc >= .Discrete
+- Discrete axioms close only when fc >= .ZTime
 - Base axioms close under all frame classes (monotonicity)
 - Dense and Discrete are incomparable: Dense axioms don't close under Discrete and vice versa
 -/
@@ -2392,10 +2392,10 @@ private def fc_p : Formula := .atom (Atom.mkBase "p")
   | some (.hasOpen _ _ _ _) => return "PASS FC4: ¬U(⊤,⊥) correctly open under Base"
   | none => return "PASS FC4: ¬U(⊤,⊥) correctly non-closing under Base (fuel exhausted)"
 
--- Test FC5: F(p) → U(p, ¬p) (prior_UZ axiom) should close under fc := .Discrete
+-- Test FC5: F(p) → U(p, ¬p) (prior_UZ axiom) should close under fc := .ZTime
 #eval do
   let φ := fc_p.someFuture.imp (Formula.untl fc_p.neg fc_p)
-  let result := buildTableau φ 500 .Discrete
+  let result := buildTableau φ 500 .ZTime
   match result with
   | some (.allClosed _) => return "PASS FC5: F(p) → U(p, ¬p) closes under Discrete"
   | some (.hasOpen _ _ _ _) =>
@@ -2425,7 +2425,7 @@ private def fc_p : Formula := .atom (Atom.mkBase "p")
   let φ := Formula.imp fc_p fc_p
   let resultBase := buildTableauAuto φ
   let resultDense := buildTableau φ 200 .Dense
-  let resultDiscrete := buildTableau φ 200 .Discrete
+  let resultDiscrete := buildTableau φ 200 .ZTime
   let baseOk := match resultBase with | some (.allClosed _) => true | _ => false
   let denseOk := match resultDense with | some (.allClosed _) => true | _ => false
   let discreteOk := match resultDiscrete with | some (.allClosed _) => true | _ => false
@@ -2435,10 +2435,10 @@ private def fc_p : Formula := .atom (Atom.mkBase "p")
     return s!"FAIL FC8: p → p should close under all: Base={baseOk}, Dense={denseOk}, " ++
       s!"Discrete={discreteOk}"
 
--- Test FC9: ¬U(⊤,⊥) should NOT close under fc := .Discrete (Dense and Discrete are incomparable)
+-- Test FC9: ¬U(⊤,⊥) should NOT close under fc := .ZTime (Dense and Discrete are incomparable)
 #eval do
   let φ := (Formula.untl .bot Formula.top).neg
-  let result := buildTableau φ 200 .Discrete
+  let result := buildTableau φ 200 .ZTime
   match result with
   | some (.allClosed _) => return "FAIL FC9: ¬U(⊤,⊥) should NOT close under Discrete"
   | some (.hasOpen _ _ _ _) => return "PASS FC9: ¬U(⊤,⊥) correctly open under Discrete"

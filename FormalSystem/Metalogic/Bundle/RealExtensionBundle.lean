@@ -282,7 +282,7 @@ U(¬χ ∨ K⁺(¬χ), χ)` — excludes exactly such configurations (Reynolds 1
 axiom; printed p.176 for the "no definable gaps" argument). Applying it at `χ := F φ` rather
 than at `φ` is what makes the antecedent `U(⊤, χ)` free, since `χ`'s truth region below the gap
 is an interval rather than an accumulating set. The discharge is therefore
-**`fc`-conditional**: it needs `FrameClass.Dedekind ≤ fc`, and it is carried out in
+**`fc`-conditional**: it needs `FrameClass.RTime ≤ fc`, and it is carried out in
 `BXCanonical/Chronicle/ChronicleLimitGapWitness.lean` as `limitFutureWitness_of_priorU`.
 The obligation itself is Burgess 1984's prophecy-at-a-gap claim, printed pp.109-110.
 -/
@@ -306,7 +306,7 @@ Reynolds' sense: `γ⁻(ψ)` would hold at a point whose `ψ`-stretch runs down 
 configuration. Applying it to the **guard** `ψ` rather than to a witness is what makes the
 antecedent `S(⊤, ψ)` free: the hypothesis of this predicate supplies `ψ` uninterruptedly on a whole
 interval abutting `r`. The discharge is therefore **`fc`-conditional**, requiring
-`FrameClass.Dedekind ≤ fc`, and is carried out in
+`FrameClass.RTime ≤ fc`, and is carried out in
 `BXCanonical/Chronicle/ChronicleLimitGuardWitness.lean` as `limitGuardBelow_of_priorS`.
 
 *Why there is no closure hypothesis, and no `root` argument.* Its sibling `LimitFutureWitness`

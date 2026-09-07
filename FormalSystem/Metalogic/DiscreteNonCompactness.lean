@@ -7,10 +7,10 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Metalogic.StrongCompleteness
 
 /-!
-# Non-compactness of the `FrameClass.Discrete` consequence relation
+# Non-compactness of the `FrameClass.ZTime` consequence relation
 
 This module discharges the informal argument recorded in `Metalogic/StrongCompleteness.lean`'s
-module docstring: the set-based semantic consequence relation for `FrameClass.Discrete` is **not
+module docstring: the set-based semantic consequence relation for `FrameClass.ZTime` is **not
 compact**, so genuine strong completeness is unavailable for that class.
 
 ## The witness
@@ -205,7 +205,7 @@ theorem succ_iterate_zero_int (n : ℕ) : Order.succ^[n] (0:ℤ) = (n : ℤ) := 
 theorem archWitness_finitely_satisfiable (p : Atom) (L : List Formula)
     (hL : ∀ ψ ∈ L, ψ ∈ archWitness p) : SatisfiableZTimeSet {ψ | ψ ∈ L} := by
   classical
-  refine SatisfiableSet.of_forall (fc := FrameClass.Discrete) (FrameOver.natFrame (D := ℤ))
+  refine SatisfiableSet.of_forall (fc := FrameClass.ZTime) (FrameOver.natFrame (D := ℤ))
     (TaskFrame.isZTime_of_instances _) zModel
     (zHistory ((L.map witIdx).sum : ℕ)) (zHistory_total _) 0 ?_
   set N : ℕ := (L.map witIdx).sum with hNdef
@@ -255,7 +255,7 @@ theorem archWitness_not_satisfiable (p : Atom) : ¬ SatisfiableZTimeSet (archWit
     exact h _ (mem_archWitness_iff.mpr (Or.inr ⟨n + 1, rfl⟩))
   exact hneg hX
 
-/-- **The `FrameClass.Discrete` consequence relation is not compact.**
+/-- **The `FrameClass.ZTime` consequence relation is not compact.**
 
 `not_compact_of_witness` (`Metalogic/StrongCompleteness.lean`) at `archWitness ⟨"p", none⟩`. The
 two halves it consumes are the two acceptance theorems directly above: `archWitness` is finitely
@@ -269,9 +269,9 @@ theorem notCompactZTime : ¬ CompactZTime :=
   not_compact_of_witness (archWitness_finitely_satisfiable ⟨"p", none⟩)
     (archWitness_not_satisfiable ⟨"p", none⟩)
 
-/-! ## Strong completeness for `FrameClass.Discrete` is refuted -/
+/-! ## Strong completeness for `FrameClass.ZTime` is refuted -/
 
-/-- **Strong completeness fails for `FrameClass.Discrete`.**
+/-- **Strong completeness fails for `FrameClass.ZTime`.**
 
 `not_strongCompleteness_of_witness` at the same witness, on the same two acceptance theorems.
 

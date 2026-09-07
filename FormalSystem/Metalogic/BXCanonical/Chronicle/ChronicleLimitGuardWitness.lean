@@ -58,8 +58,8 @@ Unselectedness of `r` is used exactly **once**, to exclude `(w : ℝ) = r`. Ther
 `by_contra`: the argument is a direct two-case split on whether `P(¬ψ)` holds at `t`, and the
 first case needs no axiom at all.
 
-`Axiom.prior_S_gap` (`ProofSystem/Axioms.lean`) has `minFrameClass = .Dedekind`, so both theorems
-below carry `(hfc : FrameClass.Dedekind ≤ fc)`. The axiom was present in the tree and proved sound
+`Axiom.prior_S_gap` (`ProofSystem/Axioms.lean`) has `minFrameClass = .RTime`, so both theorems
+below carry `(hfc : FrameClass.RTime ≤ fc)`. The axiom was present in the tree and proved sound
 (`Metalogic/Soundness.lean`) but was **consumed nowhere on the completeness route** before this
 module; `Axiom.prior_U_gap` alone was in use, by `ChronicleLimitGapWitness.lean`.
 
@@ -102,7 +102,7 @@ The proof is the past mirror of Reynolds 1992's Theorem 3 argument (printed p.17
 available. See the module docstring. `Axiom.prior_S_gap` is consumed at `ψ`, whence the hypothesis
 `hfc`.
 -/
-theorem limitGuardBelow_of_priorS {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem limitGuardBelow_of_priorS {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (m : Rat → Set Formula) (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q))
     (hSf : ∀ (t : Rat) (α β : Formula), Formula.snce β α ∈ m t →
       ∃ s : Rat, s < t ∧ α ∈ m s ∧ ∀ p : Rat, s < p → p < t → β ∈ m p)
@@ -188,7 +188,7 @@ theorem limitGuardBelow_of_priorS {fc : FrameClass} (hfc : FrameClass.Dedekind �
 **The chronicle instantiation.**
 
 `cantorBfmcsDense` satisfies `BFMCS.LimitGuardBelow`, at any frame class above
-`FrameClass.Dedekind`.
+`FrameClass.RTime`.
 
 The unrestricted Since coherence hypotheses of `limitGuardBelow_of_priorS` are obtained by
 **self-root instantiation** of `cantor_bfmcs_dense_restricted_fuc` / `_buc`: those theorems are
@@ -197,7 +197,7 @@ polymorphic in `root` and discard their closure-membership argument, so instanti
 unrestricted statement. No chronicle declaration is modified.
 -/
 theorem cantor_bfmcs_dense_limit_guard_below (fc : FrameClass)
-    (hfc : FrameClass.Dedekind ≤ fc) (A : Set Formula)
+    (hfc : FrameClass.RTime ≤ fc) (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) :
     (cantorBfmcsDense fc A h_mcs h_box_dense).LimitGuardBelow := by

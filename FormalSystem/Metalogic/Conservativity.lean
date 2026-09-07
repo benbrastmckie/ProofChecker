@@ -50,20 +50,20 @@ theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage
 ```
 
 and discharging it with `sorry` would place a `sorry` on a statement that is **provably
-false** at `fc := .Base` and `fc := .Discrete`. That is an unsound placeholder, not deferred
+false** at `fc := .Base` and `fc := .ZTime`. That is an unsound placeholder, not deferred
 debt, and the repository's zero-debt policy forbids it. Do not state the theorem; do not state
 an approximation of it.
 
 **Cross-reference**: `Metalogic/Conservativity/TMCompletenessReduction.lean` pins "TM (resp. TM_f) is complete
 over task frames" as *the same proposition* as `forward` above, restricted to `fc := .Base`
-(resp. `.Discrete`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteZTime_iff_forwardZTime`
+(resp. `.ZTime`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteZTime_iff_forwardZTime`
 are equivalences between two unasserted `Prop`s, proving neither side. A future dispatch
 attempting to prove TM-completeness directly is thereby attempting `forward` under a different
 name, and falls under this same prohibition.
 
-## CEF / `FrameClass.Discrete` — refuted, and **both halves are now machine-checked**
+## CEF / `FrameClass.ZTime` — refuted, and **both halves are now machine-checked**
 
-`ProofSystem.Axiom.z1` (`ProofSystem/Axioms.lean`, `minFrameClass = .Discrete`) is
+`ProofSystem.Axiom.z1` (`ProofSystem/Axioms.lean`, `minFrameClass = .ZTime`) is
 
 ```
 G(Gφ → φ) → (F(Gφ) → Gφ)
@@ -152,7 +152,7 @@ Because the forward direction is refuted, TM is **not** the complete logic of `B
 logic that is — at every frame class carrying a `WeakCompleteness` engine — is the **H/G-fragment
 of TM⁺**, `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`Conservativity/Fragment.lean`): sound
 (`tmFrag_sound`), complete (`tmFrag_complete`, four rows), containing TM at every class
-(`tm_le_tmFrag`) and strictly so at `.Discrete` (`tm_lt_tmFrag_ztime`, from the CEF pair
+(`tm_le_tmFrag`) and strictly so at `.ZTime` (`tm_lt_tmFrag_ztime`, from the CEF pair
 `z1_translate` / `not_bl_derivable_z1`). `tmComplete_iff_tmFrag_le_tm` restates the reduction
 above in fragment terms with `Forward` unfolded, never asserted. Compactness of the
 base-language consequence relation transfers along `tr` at `.Base` and `.Dense` only
@@ -189,7 +189,7 @@ A BL-side semantics and a BL-side soundness theorem now exist tree-wide
 still needs beyond that differs, and reading it as one shared "countermodels alone" gap is no
 longer accurate for either row:
 
-- **CEF (`FrameClass.Discrete`) — done, both halves machine-checked.** The missing prerequisite
+- **CEF (`FrameClass.ZTime`) — done, both halves machine-checked.** The missing prerequisite
   was a *binder-weakened* BL soundness theorem — `bl_soundness_ztime_succ`
   (`Metalogic/Conservativity/BaseLanguageSoundness.lean`), dropping `IsSuccArchimedean`/`IsPredArchimedean` so
   it applies to a non-Archimedean carrier — plus the countermodel itself, assembled over
@@ -216,7 +216,7 @@ module's own `forward` schema, for every frame class) exactly as forbidden as be
 `Metalogic/Conservativity/TMCompletenessReduction.lean`, whose `tmCompleteBase_iff_forwardBase` /
 `tmCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_f) complete over task frames" as the
 *same proposition* as this module's forward-conservativity prohibition, at `.Base` and
-`.Discrete` respectively — so a future dispatch attempting TM-completeness directly is thereby
+`.ZTime` respectively — so a future dispatch attempting TM-completeness directly is thereby
 attempting the forbidden claim, under a different name.
 
 ## Provenance of the source claim — historical, not a live anchor
@@ -277,7 +277,7 @@ and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺
 | `Conservativity/TMCompletenessReduction.lean` | `TMComplete` / `Forward` and their equivalence |
 | `Conservativity/SpWitness.lean` | the reconstructed `(Sp)` witness for the CEB row |
 | `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteZTime_refuted` |
-| `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.Discrete` |
+| `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.ZTime` |
 | `Conservativity/FragmentCompactness.lean` | `BLCompact`, `blCompactBase`, `blCompactDense` — base-language compactness transferred along `tr` |
 | `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`starDerivable_ofFormula_iff`) |
 

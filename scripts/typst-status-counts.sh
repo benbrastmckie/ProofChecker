@@ -49,8 +49,8 @@ AXIOM_COUNT=$(awk '/^inductive Axiom/,/deriving Repr/' ProofSystem/Axioms.lean |
 # arms; Base is everything else (the `_ => .Base` catch-all). Every non-Base
 # tier MUST be subtracted here -- omitting one silently inflates base_count.
 DENSE_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.Dense')
-DISCRETE_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.Discrete')
-DEDEKIND_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.Dedekind')
+DISCRETE_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.ZTime')
+DEDEKIND_ONLY_COUNT=$(awk '/^def Axiom.minFrameClass/,/^theorem FrameClass.base_le/' ProofSystem/Axioms.lean | grep -c '=> \.RTime')
 BASE_COUNT=$((AXIOM_COUNT - DENSE_ONLY_COUNT - DISCRETE_ONLY_COUNT - DEDEKIND_ONLY_COUNT))
 
 # ---------------------------------------------------------------------------

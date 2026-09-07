@@ -81,10 +81,10 @@ def StarValid (φ : StarFormula) : Prop :=
 def StarValidDense (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Dense φ
 
 /-- Validity over discrete (succ-Archimedean) frames. Mirror of `ValidZTime`. -/
-def StarValidZTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Discrete φ
+def StarValidZTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.ZTime φ
 
 /-- Validity over dense Dedekind-complete frames. Mirror of `ValidRTime`. -/
-def StarValidRTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.Dedekind φ
+def StarValidRTime (φ : StarFormula) : Prop := StarValidIn ProofSystem.FrameClass.RTime φ
 
 /-! ### Monotonicity -/
 

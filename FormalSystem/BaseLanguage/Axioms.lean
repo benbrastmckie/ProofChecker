@@ -20,9 +20,9 @@ their frame classes by `Axiom.minFrameClass`:
 
 | Key | Schema | Frame class | Paper system |
 |---|---|---|---|
-| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.Discrete` | `TM_f` |
+| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.ZTime` | `TM_f` |
 | DN | `GGφ → Gφ` | `.Dense` | `TM_d` |
-| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.Dedekind` | `TM_c` (see the caveat below) |
+| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.RTime` | `TM_c` (see the caveat below) |
 
 ## Paper Name Correspondence
 
@@ -117,7 +117,7 @@ developments. Only `FrameClass`, its order, and `FrameClass.base_le` are used fr
 `ProofSystem.Axioms`; no BL⁺ `Axiom` constructor is referenced here.
 
 **CEC fidelity caveat.** This repository's `Dedekind` class satisfies `Dense ≤ Dedekind`, so a
-`.Dedekind` derivation admits the dense axioms too. `Axiom.co ↦ .Dedekind` therefore lands the
+`.RTime` derivation admits the dense axioms too. `Axiom.co ↦ .RTime` therefore lands the
 CO row at the paper's **TM_dc**, not at TM_c; there is no repository frame class for "complete
 but not dense". See `FormalSystem/Metalogic/Conservativity/Backward.lean`'s `cec_backward`.
 
@@ -222,13 +222,13 @@ Minimum frame class for each BL axiom constructor.
 Only the three extension axioms are non-`Base`; every TM axiom proper falls through the
 catch-all, exactly as in `ProofSystem.Axiom.minFrameClass`. The invariant
 `ax.minFrameClass ≤ fc` in `BaseLanguage.DerivationTree`'s `axiom` constructor is what makes
-`TM`, `TM_f`, `TM_d` and `TM_dc` the four instantiations `fc := .Base`, `.Discrete`, `.Dense`,
-`.Dedekind` of a single derivation type.
+`TM`, `TM_f`, `TM_d` and `TM_dc` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
+`.RTime` of a single derivation type.
 -/
 def Axiom.minFrameClass {φ : BLFormula} : Axiom φ → FrameClass
-  | df _ => .Discrete
+  | df _ => .ZTime
   | dn _ => .Dense
-  | co _ => .Dedekind
+  | co _ => .RTime
   | _ => .Base
 
 /-! ### Frame-class regression checks
@@ -236,21 +236,21 @@ def Axiom.minFrameClass {φ : BLFormula} : Axiom φ → FrameClass
 These pin the three non-`Base` assignments and one `Base` representative, so that a future edit
 to the catch-all cannot silently move an extension axiom into the base system. -/
 
-example (φ : BLFormula) : (Axiom.df φ).minFrameClass = FrameClass.Discrete := rfl
+example (φ : BLFormula) : (Axiom.df φ).minFrameClass = FrameClass.ZTime := rfl
 example (φ : BLFormula) : (Axiom.dn φ).minFrameClass = FrameClass.Dense := rfl
-example (φ : BLFormula) : (Axiom.co φ).minFrameClass = FrameClass.Dedekind := rfl
+example (φ : BLFormula) : (Axiom.co φ).minFrameClass = FrameClass.RTime := rfl
 example (φ : BLFormula) : (Axiom.modal_future φ).minFrameClass = FrameClass.Base := rfl
 
 -- The `≤` side conditions the `axiom` rule demands. `decide` cannot act on a goal carrying the
 -- free `φ`, so each is routed through `show` at the already-reduced frame class first — the
 -- same shape `BaseLanguage/AxiomDischarge.lean` uses at every discharge site.
-example (φ : BLFormula) : (Axiom.df φ).minFrameClass ≤ FrameClass.Discrete :=
-  show FrameClass.Discrete ≤ FrameClass.Discrete by decide
+example (φ : BLFormula) : (Axiom.df φ).minFrameClass ≤ FrameClass.ZTime :=
+  show FrameClass.ZTime ≤ FrameClass.ZTime by decide
 example (φ : BLFormula) : ¬ ((Axiom.df φ).minFrameClass ≤ FrameClass.Base) :=
-  show ¬ (FrameClass.Discrete ≤ FrameClass.Base) by decide
-example (φ : BLFormula) : (Axiom.dn φ).minFrameClass ≤ FrameClass.Dedekind :=
-  show FrameClass.Dense ≤ FrameClass.Dedekind by decide
-example (φ : BLFormula) : (Axiom.co φ).minFrameClass ≤ FrameClass.Dedekind :=
-  show FrameClass.Dedekind ≤ FrameClass.Dedekind by decide
+  show ¬ (FrameClass.ZTime ≤ FrameClass.Base) by decide
+example (φ : BLFormula) : (Axiom.dn φ).minFrameClass ≤ FrameClass.RTime :=
+  show FrameClass.Dense ≤ FrameClass.RTime by decide
+example (φ : BLFormula) : (Axiom.co φ).minFrameClass ≤ FrameClass.RTime :=
+  show FrameClass.RTime ≤ FrameClass.RTime by decide
 
 end FormalSystem.BaseLanguage

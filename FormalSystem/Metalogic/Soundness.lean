@@ -91,8 +91,8 @@ The induction over `DerivationTree` is written **once**, in `soundness_in`, at a
 
 The `temporal_duality` case is where the four per-class proofs used to diverge, each reaching
 for its own swap-validity recursion — one in `SoundnessLemmas/FrameClassVariants.lean` for
-`.Base`, one there for `.Discrete`, a third for `.Dense` in a dense-specific module of its own,
-and a fourth written out in this file for `.Dedekind`. Carrying the class as a parameter rather
+`.Base`, one there for `.ZTime`, a third for `.Dense` in a dense-specific module of its own,
+and a fourth written out in this file for `.RTime`. Carrying the class as a parameter rather
 than baking it into the statement collapses all four into the one arm above, and the four
 superseded recursions have been removed.
 
@@ -105,16 +105,16 @@ There is one soundness proof, `soundness_in`, indexed by `fc : FrameClass`. The 
 are its instances and keep their original statements exactly:
 - `soundness`: derivations at `.Base`, on arbitrary frames
 - `soundness_dense`: derivations at `.Dense`, on densely ordered frames
-- `soundness_ztime`: derivations at `.Discrete`, on discrete frames
-- `soundness_rtime`: derivations at `.Dedekind`, on dense Dedekind-complete frames
+- `soundness_ztime`: derivations at `.ZTime`, on discrete frames
+- `soundness_rtime`: derivations at `.RTime`, on dense Dedekind-complete frames
 
 Each supplies its class's `FrameClass.Sat` witness and nothing else: `trivial` at `.Base`, the
-`DenselyOrdered` instance at `.Dense`, the four order instances at `.Discrete`, and the
-density-plus-least-upper-bound pair at `.Dedekind`. All are sorry-free.
+`DenselyOrdered` instance at `.Dense`, the four order instances at `.ZTime`, and the
+density-plus-least-upper-bound pair at `.RTime`. All are sorry-free.
 
 The class index is what keeps the axiom sets apart. Prior-UZ/SZ are excluded from dense
 derivations by the `h.minFrameClass ≤ .Dense` gate on the axiom rule, their
-`minFrameClass = .Discrete` being incomparable with `.Dense`; their validity on discrete frames
+`minFrameClass = .ZTime` being incomparable with `.Dense`; their validity on discrete frames
 comes from `SoundnessLemmas`' well-founded descent on succ/pred chains, reached through
 `axiom_validIn`.
 
@@ -804,7 +804,7 @@ theorem temporal_necessitation_preserves_valid {φ : Formula} (h : ⊨ φ) : ⊨
 
 /-! ## Dedekind Frame Soundness Theorems
 
-Soundness for `FrameClass.Dedekind`: Reynolds' axiomatization US/R for real flow.
+Soundness for `FrameClass.RTime`: Reynolds' axiomatization US/R for real flow.
 
 **The target is `ValidRTime`, NOT `ValidComplete`, and that is deliberate.** See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 -/
@@ -1324,7 +1324,7 @@ changed, from a hand-written induction (or a 45-arm axiom dispatch) to a single 
 `soundness_in` / `soundness_validIn` / `axiom_validIn` at the class in question. The class
 condition each one used to carry as a binder list is now supplied as that class's
 `FrameClass.Sat` witness: `trivial` at `.Base`, the `DenselyOrdered` instance at `.Dense`, the
-four order instances at `.Discrete`, and the density-plus-LUB pair at `.Dedekind`.
+four order instances at `.ZTime`, and the density-plus-LUB pair at `.RTime`.
 
 They are gathered here, after the parameterized family, because they now depend on it. The
 per-axiom validity lemmas they used to dispatch over are unchanged and still live above.
@@ -1355,7 +1355,7 @@ This covers all base axioms (universally valid, hence valid on discrete frames) 
 Under strict semantics, seriality requires NoMaxOrder/NoMinOrder (from SuccOrder/PredOrder +
 Nontrivial). -/
 theorem axiom_ztime_valid {φ : Formula} (h : Axiom φ) (h_fc :
-      h.minFrameClass ≤ FrameClass.Discrete) :
+      h.minFrameClass ≤ FrameClass.ZTime) :
     ValidZTime φ := by
   exact axiom_validIn h h_fc
 
@@ -1421,7 +1421,7 @@ If `Γ ⊢ φ` with a dense-compatible derivation, then `Γ ⊨_dense φ`.
 
 **Frame Class Constraint** (`fc = .Dense`):
 The `DerivationTree .Dense` parameterization structurally ensures no discrete-specific axioms
-(prior_UZ, prior_SZ, z1) appear in the derivation, since their `minFrameClass = .Discrete`
+(prior_UZ, prior_SZ, z1) appear in the derivation, since their `minFrameClass = .ZTime`
 is incomparable with `.Dense`.
 
 **Constructor coverage**: this induction cases on all seven `DerivationTree` constructors and no
@@ -1437,7 +1437,7 @@ theorem soundness_dense (Γ : Context) (φ : Formula)
 
 /-! ### Discrete-frame instances
 
-Analogous to the dense pair above, at `FrameClass.Sat .Discrete` — the bundle of `SuccOrder`,
+Analogous to the dense pair above, at `FrameClass.Sat .ZTime` — the bundle of `SuccOrder`,
 `PredOrder`, `IsSuccArchimedean` and `IsPredArchimedean` these theorems take as instances.
 -/
 
@@ -1447,14 +1447,14 @@ Analogous to the dense pair above, at `FrameClass.Sat .Discrete` — the bundle 
 For discrete-compatible derivations from empty context, the derived formula is
 valid on all discrete frames.
 
-**Note on temporal_duality**: this is `soundness_validIn` at `.Discrete`. The
+**Note on temporal_duality**: this is `soundness_validIn` at `.ZTime`. The
 `temporal_duality` case is handled inside `derivable_valid_and_swap_validIn`, which carries
 validity and swap-validity together at an arbitrary `fc`; the discrete swap facts it needs
 (Prior-SZ for Prior-UZ and vice versa, `z1_past` for `z1`) enter through
 `axiom_swap_validIn_min`'s discrete arms.
 -/
 theorem soundness_ztime_valid {phi : Formula}
-    (d : DerivationTree FrameClass.Discrete [] phi) : ValidZTime phi := by
+    (d : DerivationTree FrameClass.ZTime [] phi) : ValidZTime phi := by
   exact soundness_validIn d
 
 /--
@@ -1465,7 +1465,7 @@ derivation `Γ ⊢ φ`, if all formulas in `Γ` are true at some configuration o
 discrete frame, then `φ` is also true there.
 -/
 theorem soundness_ztime (Γ : Context) (φ : Formula)
-    (d : DerivationTree FrameClass.Discrete Γ φ)
+    (d : DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration]
     [IsSuccArchimedean F.Duration] [IsPredArchimedean F.Duration] (M : TaskModel F)
     (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
@@ -1478,15 +1478,15 @@ theorem soundness_ztime (Γ : Context) (φ : Formula)
 
 /-- All Dedekind-compatible axioms are valid on dense Dedekind-complete frames.
 
-`axiom_validIn` at `.Dedekind`. The dispatch it used to write out by hand is now
+`axiom_validIn` at `.RTime`. The dispatch it used to write out by hand is now
 `axiom_validIn_min` plus `ValidIn.mono`: each axiom is proved valid once, at its own
-`minFrameClass`, and monotonicity carries it to `.Dedekind`. The 3 Discrete axioms are still
+`minFrameClass`, and monotonicity carries it to `.RTime`. The 3 Discrete axioms are still
 eliminated, now by `ValidIn.mono`'s `h_fc` hypothesis being unsatisfiable at
 `Discrete ≰ Dedekind`, rather than by three explicit `absurd` arms.
 
 This theorem is itself sorry-free. -/
 theorem axiom_rtime_valid {φ : Formula} (h : Axiom φ)
-    (h_fc : h.minFrameClass ≤ FrameClass.Dedekind) :
+    (h_fc : h.minFrameClass ≤ FrameClass.RTime) :
     ValidRTime φ := by
   exact axiom_validIn h h_fc
 
@@ -1495,7 +1495,7 @@ theorem axiom_rtime_valid {φ : Formula} (h : Axiom φ)
 Dedekind-complete frames.
 -/
 theorem soundness_rtime_valid {phi : Formula}
-    (d : DerivationTree FrameClass.Dedekind [] phi) : ValidRTime phi :=
+    (d : DerivationTree FrameClass.RTime [] phi) : ValidRTime phi :=
   soundness_validIn d
 
 /--
@@ -1510,7 +1510,7 @@ on a dense Dedekind-complete frame, then `φ` is also true there.
 the `[DenselyOrdered D]` binder here would make this theorem refutable. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 -/
 theorem soundness_rtime (Γ : Context) (φ : Formula)
-    (d : DerivationTree FrameClass.Dedekind Γ φ)
+    (d : DerivationTree FrameClass.RTime Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration]
     (h_lub : ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x)
     (M : TaskModel F)
@@ -1544,7 +1544,7 @@ derivation of `⊥` from `[]` into `trivialFrame.ValidOn ⊥`, which
 
 **Why `FrameClass.Base` is essential here**: consistency is a per-frame-class fact, read off a
 soundness theorem for that class. This is the `Base` instance; `not_derivable_nil_bot_ztime`
-below is the `FrameClass.Discrete` one. There is no `{fc}`-uniform statement, because `Dense`
+below is the `FrameClass.ZTime` one. There is no `{fc}`-uniform statement, because `Dense`
 and `Dedekind` have no corresponding consistency lemma in the tree yet.
 -/
 theorem not_derivable_nil_bot : ¬ Derivable FrameClass.Base ([] : Context) Formula.bot := by
@@ -1558,8 +1558,8 @@ theorem not_derivable_nil_bot : ¬ Derivable FrameClass.Base ([] : Context) Form
 **The Discrete system is consistent**: `⊥` is not derivable from the empty context in the
 system extended by the discreteness axioms DF/DP.
 
-Stated as `¬ Derivable FrameClass.Discrete [] ⊥` rather than
-`Consistent (fc := FrameClass.Discrete) []` for the same import-graph reason as
+Stated as `¬ Derivable FrameClass.ZTime [] ⊥` rather than
+`Consistent (fc := FrameClass.ZTime) []` for the same import-graph reason as
 `not_derivable_nil_bot`: `Consistent` lives in `Metalogic/Core/`, which `Soundness.lean` does
 not import, so phrasing the statement in terms of `Derivable` keeps the result available at
 this layer.
@@ -1568,14 +1568,14 @@ The witness is again `trivialFrame` over `Int`, which is what this module's
 `Mathlib.Data.Int.SuccPred` import is for: `ValidZTime` binds `SuccOrder D`, `PredOrder D`,
 `IsSuccArchimedean D` and `IsPredArchimedean D`, and `Semantics/Validity.lean` imports those
 *classes* without importing the `ℤ` *instances*. `soundness_ztime_valid` turns a
-`FrameClass.Discrete` derivation of `⊥` from `[]` into `ValidZTime ⊥`; instantiating it at the
+`FrameClass.ZTime` derivation of `⊥` from `[]` into `ValidZTime ⊥`; instantiating it at the
 single total history supplied by `hF_nonempty_of_frameAxioms` contradicts `Truth.bot_false`.
 
-Without this lemma every restricted-MCS result instantiated at `FrameClass.Discrete` would be
+Without this lemma every restricted-MCS result instantiated at `FrameClass.ZTime` would be
 vacuous, since a `Discrete`-inconsistent system has no consistent sets at all.
 -/
 theorem not_derivable_nil_bot_ztime :
-    ¬ Derivable FrameClass.Discrete ([] : Context) Formula.bot := by
+    ¬ Derivable FrameClass.ZTime ([] : Context) Formula.bot := by
   rintro ⟨d⟩
   obtain ⟨τ⟩ := TaskFrame.hF_nonempty_of_frameAxioms (FrameOver.trivialFrame (D := ℤ))
   exact Truth.bot_false

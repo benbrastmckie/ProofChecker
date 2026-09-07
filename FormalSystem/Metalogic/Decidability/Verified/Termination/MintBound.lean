@@ -4715,7 +4715,7 @@ theorem findApplicableRule_multWitness (b : Branch)
     exact hnot (mem_of_branch_contains (h (SignedFormula.pos mfp Label.initial)
       (by simp [multEmitted])))
   simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
-  by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
+  by_cases hd : FormalSystem.ProofSystem.FrameClass.RTime ≤ fc
   · simp [hd, hg, List.findSome?]
   · simp [hd, hg, List.findSome?]
 
@@ -5877,7 +5877,7 @@ theorem findApplicableRule_freshWorldWitness (fc : FormalSystem.ProofSystem.Fram
     findApplicableRule freshWorldWitness freshWorldBranch TimeOrdering.empty fc
       = some (TableauRule.boxNeg, RuleResult.linear freshWorldEmitted, TimeOrdering.empty) := by
   simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
-  by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
+  by_cases hd : FormalSystem.ProofSystem.FrameClass.RTime ≤ fc
   · simp [hd, List.findSome?]
   · simp [hd, List.findSome?]
 
@@ -7727,7 +7727,7 @@ a working repair.
 
 **Obligation map — the density coordinate is a second, independent gap.** Even setting the σ-hit
 verdict aside, this predicate carrying only the `selfGuardPotential` disjunct is separately
-refutable at `.Dense` / `.Dedekind` by a `densityRule` vehicle: `densityRule` returns `.persistent`
+refutable at `.Dense` / `.RTime` by a `densityRule` vehicle: `densityRule` returns `.persistent`
 (`Tableau.lean:1385`), which `expandOnceUnblocked` maps to `.extended` (`MintBound.lean:1071`), so
 it is inside this predicate's scope, and it mints a fresh time while lying outside **both**
 `freshLabelRules` and `selfGuardRules` — no disjunct moves at all. The intended component is
@@ -7941,7 +7941,7 @@ not. This subsection states precisely which coordinate remains, why it is a sepa
 than another disjunct fitted to the same ledger, and that nothing here is implemented or assumed.
 
 *The exposure the verdict does not cover.* `MintPaysForTimeAt` carrying only the
-`selfGuardPotential` disjunct is separately refutable at `.Dense` / `.Dedekind` by a `densityRule`
+`selfGuardPotential` disjunct is separately refutable at `.Dense` / `.RTime` by a `densityRule`
 vehicle, on grounds that have nothing to do with the σ-hit hazard. `densityRule` is inside the
 predicate's scope — it returns `.persistent` (`Tableau.lean:1385`), which `expandOnceUnblocked` maps
 to `.extended` (`MintBound.lean:1071`) — and it mints a fresh time while sitting outside **both**
@@ -7956,7 +7956,7 @@ ledger transcribes the rule's own `gapTargets` filter (`Tableau.lean:1364-1366`)
 `(timeOrd.futureOf t').isEmpty`, together with `t'` lying below no other future time of the trigger
 — rather than any per-rule discharge test. It is therefore quadratic in `|U|` where
 `selfGuardPotential` is linear, and it is gated on `denseRules` (`Tableau.lean:1593`), so it
-contributes nothing at `.Base` / `.Discrete`.
+contributes nothing at `.Base` / `.ZTime`.
 
 *That it has to be a separate clause is not this development's invention.* In the mosaic
 decidability argument whose residual structure this file follows, density is `(SVDns)`, listed among
@@ -10160,7 +10160,7 @@ component is `gapPotential`, indexed by `U ×ˢ U` and gated on `denseRules`, an
 nowhere and assumed by nothing.
 
 `densityRule` is `denseRules`-gated, so it cannot fire at a frame class outside `.Dense` /
-`.Dedekind`; a discharge restricted to the other classes is therefore not refuted. What it needs is
+`.RTime`; a discharge restricted to the other classes is therefore not refuted. What it needs is
 a rule-by-rule census showing that every remaining rule either mints no time (disjunct 1), is
 witness-guarded (disjunct 2) or is self-guarded (disjunct 3). That census is the parent plan's
 time-minting-census work read in the other direction, and it is **not attempted here** — stated as
@@ -10373,7 +10373,7 @@ not inert, and the sense in which it is not is a proved implication rather than 
 **What is not bought.** The density coordinate, unchanged. `densityRule` mints a fresh time while
 lying outside both `freshLabelRules` and `selfGuardRules`, so no disjunct moves at a `densityRule`
 step whatever σ is; it is `denseRules`-gated, so a discharge restricted to the frame classes outside
-`.Dense` / `.Dedekind` is not refuted, and what such a discharge needs is the rule-by-rule census
+`.Dense` / `.RTime` is not refuted, and what such a discharge needs is the rule-by-rule census
 register entry 19 names. That census is **not** attempted here. See register entry 20. -/
 
 /-- **`rhoSF` is the identity on a formula away from the retired index** — not merely on its time.
@@ -10539,7 +10539,7 @@ discharged at the seed by `sigmaFormulaFixed_id` and at the identification arm b
 **What it does not touch.** The density coordinate. At a `densityRule` step disjunct 1 fails (the
 mint raises `knownTimes`), disjunct 2 cannot move (`densityRule ∉ freshLabelRules`) and disjunct 3
 cannot move (`densityRule ∉ selfGuardRules`), for every σ whatsoever — so this predicate is
-separately refutable at `.Dense` / `.Dedekind` by a `densityRule` vehicle, and a discharge at the
+separately refutable at `.Dense` / `.RTime` by a `densityRule` vehicle, and a discharge at the
 other frame classes needs the rule-by-rule census register entries 19 and 20 name. That census is
 not attempted here, and `gapPotential` remains implemented nowhere and assumed by nothing. -/
 def MintPaysForTimeFixed (fc : FormalSystem.ProofSystem.FrameClass) (U : Finset SignedFormula)
@@ -11478,7 +11478,7 @@ theorem findApplicableRule_freshWorldWitnessAt
     findApplicableRule (freshWorldWitnessAt l) (freshWorldBranchAt l) TimeOrdering.empty fc
       = some (TableauRule.boxNeg, RuleResult.linear (freshWorldEmittedAt l), TimeOrdering.empty) := by
   simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
-  by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
+  by_cases hd : FormalSystem.ProofSystem.FrameClass.RTime ≤ fc
   · simp [hd, List.findSome?]
   · simp [hd, List.findSome?]
 
@@ -12549,11 +12549,11 @@ private def postBlockingRunProbe (phi : Formula) (fuel : Nat)
 
 /-- info: (true, true, true) -/
 #guard_msgs in
-#eval postBlockingRunProbe (Formula.imp mfp mfq) 40 FormalSystem.ProofSystem.FrameClass.Discrete
+#eval postBlockingRunProbe (Formula.imp mfp mfq) 40 FormalSystem.ProofSystem.FrameClass.ZTime
 
 /-- info: (true, true, true) -/
 #guard_msgs in
-#eval postBlockingRunProbe (Formula.imp mfp mfq) 40 FormalSystem.ProofSystem.FrameClass.Dedekind
+#eval postBlockingRunProbe (Formula.imp mfp mfq) 40 FormalSystem.ProofSystem.FrameClass.RTime
 
 -- The temporal seed `F p = ⊤ U p`, so the witness set is not purely propositional.
 /-- info: (true, true, true) -/
@@ -12564,7 +12564,7 @@ private def postBlockingRunProbe (phi : Formula) (fuel : Nat)
 /-- info: (true, true, true) -/
 #guard_msgs in
 #eval postBlockingRunProbe (Formula.untl (Formula.imp .bot .bot) mfp) 40
-  FormalSystem.ProofSystem.FrameClass.Dedekind
+  FormalSystem.ProofSystem.FrameClass.RTime
 
 -- `□p`, whose expansion mints a fresh world — the shape whose *unrestricted* counterexample
 -- `freshWorldBranch` is. The engine never hands that branch to the pass, and the run settles.
@@ -12601,7 +12601,7 @@ mint*, and in this fragment no time is ever minted at all:
   `sf.formula` to match `.allFuture _`, and `Formula.allFuture φ` is
   `((⊥ → ⊥) untl (φ → ⊥)) → ⊥` — an `untl` node. So the shape gate rejects it before the
   `Dense ≤ fc` gate is ever consulted, and the discharge below carries **no frame-class
-  restriction**. That is strictly better than the "every frame class except `.Dense`/`.Dedekind`"
+  restriction**. That is strictly better than the "every frame class except `.Dense`/`.RTime`"
   outcome D2's blocker anticipated.
 
 **The shape of the argument, in one line.** Every one of the nine members of `freshTimeRules` is
@@ -13803,8 +13803,8 @@ touched. At the concrete universe the seed-level termini consume it reads
 and `snce` nodes included.
 
 **The frame restriction is one condition, and it is written in the statement.** `¬ (FrameClass.Dense
-≤ fc)` excludes `.Dense` and `.Dedekind` together, because `Dense ≤ Dedekind` holds in the
-`FrameClass` order, and it admits exactly `.Base` and `.Discrete`. It is not hidden behind a
+≤ fc)` excludes `.Dense` and `.RTime` together, because `Dense ≤ Dedekind` holds in the
+`FrameClass` order, and it admits exactly `.Base` and `.ZTime`. It is not hidden behind a
 definition, a `variable`, or a typeclass: a reader of `mintPaysForTimeFixed_of_not_dense` alone sees
 it. What it buys is the exclusion of `densityRule` — the one rule that mints a fresh time while
 sitting outside both `freshLabelRules` and `selfGuardRules`, and therefore outside every disjunct —
@@ -13831,7 +13831,7 @@ generalizes section D3's `mintPaysForTimeFixed_signedUniverse_untlSnceFree` off 
 fragment onto arbitrary `C` — the case entry 20 itself calls the hard one, and the case
 `mintPaysForTime_untlNeg_false` refutes the *unrepaired* predicate at. Neither D3's discharge nor
 `mintPaysForTimeFixed_signedUniverse_empty` is deleted or altered; both are superseded in prose
-only, and D3's remains the statement to reach for at `.Dense` and `.Dedekind`, where this section is
+only, and D3's remains the statement to reach for at `.Dense` and `.RTime`, where this section is
 silent. The discharge here is satisfiable rather than vacuous: `signedUniverse_nonempty` makes the
 universe nonempty as soon as `C` and `L` are, and the hypothesis discharged is a *theorem* there.
 
@@ -13930,10 +13930,10 @@ carries `Dense ≤ fc` as a decided fact; denying that fact excludes the rule ou
 through `findApplicableRule_isApplicable`, which is what makes this ten lines rather than a walk
 over `findApplicableRule`'s arm list.
 
-**One hypothesis, not two.** `¬ (FrameClass.Dense ≤ fc)` excludes `.Dense` and `.Dedekind`
+**One hypothesis, not two.** `¬ (FrameClass.Dense ≤ fc)` excludes `.Dense` and `.RTime`
 *together*: `Dense ≤ Dedekind` holds in the `FrameClass` order, so a `fc` above `.Dense` is
 excluded whether it is `.Dense` itself or anything above it. What it admits is exactly `.Base` and
-`.Discrete`. Stating it as a pair of disequalities would be both weaker in form and redundant, and
+`.ZTime`. Stating it as a pair of disequalities would be both weaker in form and redundant, and
 it is deliberately not hidden behind a definition: a reader of the discharge below sees the
 restriction in the statement.
 
@@ -14403,7 +14403,7 @@ class the density rule cannot fire at.
 
 **The one restriction, in the statement.** `¬ (FrameClass.Dense ≤ fc)` is a single hypothesis and
 it is written here rather than hidden behind a definition, a `variable`, or a typeclass. It covers
-`.Dense` and `.Dedekind` together and admits exactly `.Base` and `.Discrete`, and it is what buys
+`.Dense` and `.RTime` together and admits exactly `.Base` and `.ZTime`, and it is what buys
 the exclusion of the density coordinate — register entry 20's item (b) — rather than closing it.
 `gapPotential` is still implemented nowhere and assumed by nothing.
 
@@ -14427,7 +14427,7 @@ and generalizes `mintPaysForTimeFixed_signedUniverse_untlSnceFree` off its synta
 here may carry `untl` and `snce` nodes freely, which is the case register entry 20 itself calls the
 hard one. Neither of those two is deleted or altered; they are superseded in prose only, and
 `mintPaysForTimeFixed_signedUniverse_untlSnceFree` remains the statement to reach for at `.Dense`
-and `.Dedekind`, where this one is silent.
+and `.RTime`, where this one is silent.
 
 **Satisfiable rather than vacuous.** `signedUniverse_nonempty` makes the universe nonempty as soon
 as `C` and `L` are, and the discharged hypothesis is a *theorem* there rather than a condition
@@ -14864,7 +14864,7 @@ already been here.
     coordinate, unchanged since entry 17 named it: `densityRule` mints a fresh time and lies outside
     both `freshLabelRules` and `selfGuardRules`, so at a `densityRule` step disjunct 1 fails and
     neither of the other two can move. `densityRule` is `denseRules`-gated, so a discharge
-    restricted to frame classes outside `.Dense` / `.Dedekind` is not refuted; what it needs is a
+    restricted to frame classes outside `.Dense` / `.RTime` is not refuted; what it needs is a
     rule-by-rule census showing every remaining rule either mints no time, is witness-guarded, or is
     self-guarded. That census is not attempted here, and `gapPotential` — indexed by `U ×ˢ U`,
     `denseRules`-gated — remains implemented nowhere and assumed by nothing.
@@ -14944,7 +14944,7 @@ already been here.
     stock `C` including one carrying `untl` and `snce` — the case this entry calls the hard one, and
     the case section D3's syntactic fragment excludes. **(b)** The density coordinate, exactly as
     entry 19 describes it and untouched by any of this, is what remains. The frame-class hypothesis
-    excludes `densityRule` rather than paying for it; a discharge at `.Dense` and `.Dedekind` still
+    excludes `densityRule` rather than paying for it; a discharge at `.Dense` and `.RTime` still
     needs `gapPotential`, which remains implemented nowhere and assumed by nothing.
 
     *And the scope of (a), stated so it is not overread.* Landing the assembly makes **no** terminus
@@ -14961,7 +14961,7 @@ already been here.
     *And what neither (a) nor (b) is needed for.* Both are obligations on a **time mint**, so both
     are vacuous on a universe where no rule can mint. Section D3 discharges `MintPaysForTime`
     itself — not `MintPaysForTimeFixed`, and not a further repair — at every universe of
-    `untl`/`snce`-free formulas, at **every** frame class including `.Dense` and `.Dedekind`:
+    `untl`/`snce`-free formulas, at **every** frame class including `.Dense` and `.RTime`:
     all nine members of `freshTimeRules` are gated by `isApplicable` on a shape containing an
     `untl` or `snce` node, `densityRule` among them through `Formula.allFuture`'s expansion, and
     the engine's other two stages run only `serialityRule` and `timeLinearity`. So the reading to

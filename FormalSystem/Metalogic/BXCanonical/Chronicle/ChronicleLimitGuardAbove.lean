@@ -51,8 +51,8 @@ Unselectedness of `r` is used exactly **once**, to exclude `(e : ℝ) = r`. Ther
 `by_contra`: the argument is a direct two-case split on whether `F(¬ψ)` holds at `x`, and the
 first case needs no axiom at all.
 
-`Axiom.prior_U_gap` (`ProofSystem/Axioms.lean`) has `minFrameClass = .Dedekind`, so both theorems
-below carry `(hfc : FrameClass.Dedekind ≤ fc)`. This is the third place on the route where the
+`Axiom.prior_U_gap` (`ProofSystem/Axioms.lean`) has `minFrameClass = .RTime`, so both theorems
+below carry `(hfc : FrameClass.RTime ≤ fc)`. This is the third place on the route where the
 Dedekind axiom layer is consumed, after `ChronicleLimitGapWitness.lean` (`prior_U_gap`, at a
 witness) and `ChronicleLimitGuardWitness.lean` (`prior_S_gap`, at a guard).
 
@@ -105,7 +105,7 @@ The proof is Reynolds 1992's Theorem 3 argument (printed p.176), applied to the 
 rather than to a witness, which is what makes the Prior-U antecedent `U(⊤, ψ)` available. See the
 module docstring. `Axiom.prior_U_gap` is consumed at `ψ`, whence the hypothesis `hfc`.
 -/
-theorem limitGuardAbove_of_priorU {fc : FrameClass} (hfc : FrameClass.Dedekind ≤ fc)
+theorem limitGuardAbove_of_priorU {fc : FrameClass} (hfc : FrameClass.RTime ≤ fc)
     (m : Rat → Set Formula) (hm : ∀ q : Rat, SetMaximalConsistent (fc := fc) (m q))
     (hUf : ∀ (t : Rat) (α β : Formula), Formula.untl β α ∈ m t →
       ∃ s : Rat, t < s ∧ α ∈ m s ∧ ∀ p : Rat, t < p → p < s → β ∈ m p)
@@ -193,7 +193,7 @@ theorem limitGuardAbove_of_priorU {fc : FrameClass} (hfc : FrameClass.Dedekind �
 **The chronicle instantiation.**
 
 The Cantor dense chronicle's families satisfy the guard-reach property above every unselected
-real, at any frame class above `FrameClass.Dedekind`.
+real, at any frame class above `FrameClass.RTime`.
 
 The unrestricted Until coherence hypotheses of `limitGuardAbove_of_priorU` are obtained by
 **self-root instantiation** of `cantor_bfmcs_dense_restricted_fuc` / `_buc`: those theorems are
@@ -202,7 +202,7 @@ polymorphic in `root` and discard their closure-membership argument, so instanti
 unrestricted statement. No chronicle declaration is modified.
 -/
 theorem cantor_bfmcs_dense_limit_guard_above (fc : FrameClass)
-    (hfc : FrameClass.Dedekind ≤ fc) (A : Set Formula)
+    (hfc : FrameClass.RTime ≤ fc) (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (h_box_dense : Formula.box nextTop.neg ∈ A) :
     ∀ fam ∈ (cantorBfmcsDense fc A h_mcs h_box_dense).families, ∀ r : ℝ,

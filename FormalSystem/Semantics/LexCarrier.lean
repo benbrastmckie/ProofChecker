@@ -21,7 +21,7 @@ Supplies the `SuccOrder` and `PredOrder` instances the pinned Mathlib lacks for 
 that a lexicographic product over `ℤ` can serve as a duration carrier — at `ℚ ×ₗ ℤ` for
 `Metalogic/Conservativity/Z1Countermodel.lean`'s CEF-closing countermodel (discharging
 `bl_soundness_ztime_succ`'s `[SuccOrder] [PredOrder]` binders, report §6.1), and at `ℤ ×ₗ ℤ`
-for `Metalogic/Independence/LexIntWitness.lean`'s `Sat .Discrete` separation.
+for `Metalogic/Independence/LexIntWitness.lean`'s `Sat .ZTime` separation.
 
 ## The first factor is arbitrary; only the second must be `ℤ`
 
@@ -135,7 +135,7 @@ instance instPredOrder : PredOrder (α ×ₗ ℤ) where
 New content rather than a move: this file builds `SuccOrder`/`PredOrder` from hand-written
 `succ`/`pred` functions and never had an `IsLeast {x | 0 < x}` theorem at all.
 `DurationClassification.isLeast_succ_of_isLeast_pos` and `isGreatest_pred_of_isLeast_pos` turn
-this one fact into the immediate-neighbour statements a `.Discrete` frame-class membership
+this one fact into the immediate-neighbour statements a `.ZTime` frame-class membership
 argument needs, so a consumer never has to redo the coordinate bookkeeping.
 -/
 theorem isLeast_pos :
