@@ -50,7 +50,7 @@ next_project_number: 549
 
 ### Decidability
 
-463 [RESEARCHING] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
+463 [RESEARCHED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
   └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
     └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
       └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
@@ -79,7 +79,7 @@ next_project_number: 549
 
 ### Metalogic
 
-531 [PLANNED] — WAVE 5 (publication infrastructure). Publish the API documentatio
+531 [IMPLEMENTING] — WAVE 5 (publication infrastructure). Publish the API documentatio
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
@@ -251,7 +251,7 @@ next_project_number: 549
 ---
 
 ### 531. Docgen publication and automation suite triage
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 529, Task 530
@@ -610,10 +610,11 @@ Dependencies: 462 is a REAL SEMANTIC dependency -- the engine-level assembly is 
 ---
 
 ### 463. Postblockingsettlesrun verdict at terminus fuel
-- **Status**: [RESEARCHING]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 462, Task 433
+- **Research**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md]
 
 **Description**: Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D beta)` -- the narrowed settlement residual task 433 landed -- at the terminus's OWN fuel figure. Nothing currently decides it in either direction, and task 433's C9 register entry 24 exists precisely so the narrowing is not mistaken for a proof.
 

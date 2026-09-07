@@ -1,0 +1,21 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md",
+      "summary": "Verdict FALSE: PostBlockingSettlesRun is refutable at every positive fuel (hence at mintAwareFuelAt) via an over-quantified EventualityTracker argument; machine-checked, sorry-free, axiom-free witness plus the named minimal further narrowing."
+    },
+    {
+      "type": "reference",
+      "path": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_verified-refutation-witness.lean",
+      "summary": "The verified refutation witness source, compiling against the built MintBound.olean with zero errors and zero sorries."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788816036_26092a",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
