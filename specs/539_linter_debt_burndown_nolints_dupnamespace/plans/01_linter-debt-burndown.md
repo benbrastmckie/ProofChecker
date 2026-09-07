@@ -1,7 +1,7 @@
 # Implementation Plan: Linter Debt Burndown (nolints.json, dupNamespace)
 
 - **Task**: 539 - Draw down the linter debt that the CI/linter-gates work recorded rather than fixed
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 10.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md
@@ -532,15 +532,15 @@ one asserted here, the hypothesis is falsified and the true set governs.
 
 ---
 
-### Phase 9: Acceptance gate [NOT STARTED]
+### Phase 9: Acceptance gate [COMPLETED]
 
 **Goal**: Prove every acceptance criterion from the task description in one clean pass, on a tree
 with all prior phases landed.
 
 **Tasks**:
-- [ ] Run the full guarded build from a clean state.
-- [ ] Run the complete gate set and record each result.
-- [ ] If any gate fails, do not paper over it — reopen the owning phase.
+- [x] Run the full guarded build from a clean state.
+- [x] Run the complete gate set and record each result.
+- [x] If any gate fails, do not paper over it — reopen the owning phase.
 
 **Timing**: 0.75 hours
 
@@ -578,17 +578,17 @@ duplicates two Mathlib simp lemmas. No `sorry` and no new axiom is introduced at
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0 (guarded, detached) after each of Phases 1, 2, 4, 6, and 9.
-- [ ] `lake lint` exits 0 at Phase 9.
-- [ ] `lake exe runLinter FormalSystem` exits 0 after every phase that edits `nolints.json`
+- [x] `lake build` exits 0 (guarded, detached) after each of Phases 1, 2, 4, 6, and 9.
+- [x] `lake lint` exits 0 at Phase 9.
+- [x] `lake exe runLinter FormalSystem` exits 0 after every phase that edits `nolints.json`
       (1, 4, 6, 7) and at Phase 9.
-- [ ] `lake env lean <file>` reports zero diagnostics for each directly edited Lean file.
-- [ ] `scripts/nolints.json` = 217 entries, all `unusedArguments`.
-- [ ] `dupNamespace` = 0, confirmed independently by the real linter (`lake env lean`) and by
+- [x] `lake env lean <file>` reports zero diagnostics for each directly edited Lean file.
+- [x] `scripts/nolints.json` = 217 entries, all `unusedArguments`.
+- [x] `dupNamespace` = 0, confirmed independently by the real linter (`lake env lean`) and by
       C16's textual scanner.
-- [ ] `simpNF` = 0 and no `length_range_map` reference survives.
-- [ ] `bash scripts/check-module-invariants.sh` passes both C16 halves.
-- [ ] `lake exe runLinter --update` was never run (verifiable from the command log and from the
+- [x] `simpNF` = 0 and no `length_range_map` reference survives.
+- [x] `bash scripts/check-module-invariants.sh` passes both C16 halves.
+- [x] `lake exe runLinter --update` was never run (verifiable from the command log and from the
       fact that `nolints.json` diffs are per-category removals, not wholesale rewrites).
 
 ## Artifacts & Outputs
