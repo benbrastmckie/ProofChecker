@@ -227,25 +227,25 @@ lower bound.
 
 ---
 
-### Phase 3: Delete the Metalogic census block [NOT STARTED]
+### Phase 3: Delete the Metalogic census block [COMPLETED]
 
 **Goal**: `FormalSystem/Metalogic.lean`'s Module Structure census is deleted and replaced with
 three sentences plus pointers; `Metalogic/README.md`'s loose-file section is repaired.
 
 **Tasks**:
-- [ ] Delete `Metalogic.lean`'s Module Structure block (at `:253-286` as of research
+- [x] Delete `Metalogic.lean`'s Module Structure block (at `:253-286` as of research
       measurement; locate by content, not line number) and replace it with a short narrative
       pointing at `FormalSystem/Metalogic/README.md` and
       `scripts/check-module-invariants.sh`.
-- [ ] Confirm the deletion removes the "exclude BOTH Boneyards (there are two)" claim and the
+- [x] Confirm the deletion removes the "exclude BOTH Boneyards (there are two)" claim and the
       Kamp-has-its-own-Boneyard claim in the same edit; B0 asserts exactly one.
-- [ ] Repair `Metalogic/README.md`'s "**Ten** loose files" section: the correct count is 6, and
+- [x] Repair `Metalogic/README.md`'s "**Ten** loose files" section: the correct count is 6, and
       five of the eleven table rows are phantoms (`BaseLanguageSoundness.lean`,
       `TMCompletenessReduction.lean`, `SpWitness.lean`, `Z1Countermodel.lean` moved into
       `Metalogic/Conservativity/`; `Conservativity.lean` is now that directory's aggregator).
-- [ ] Fix the dangling edit fragment in `Metalogic.lean` (at `:131-132` as of measurement:
+- [x] Fix the dangling edit fragment in `Metalogic.lean` (at `:131-132` as of measurement:
       "obtained by instantiating the reductions / the single `FrameClass`-generic reduction").
-- [ ] Reconcile the four-row status ledger copy in `Metalogic.lean` (at `:46`: "the two
+- [x] Reconcile the four-row status ledger copy in `Metalogic.lean` (at `:46`: "the two
       countermodels remain outstanding") against `Conservativity.lean`'s "refuted with both
       halves machine-checked"; the ledger's owner is `docs/theorem-index.md` (Phase 5), so leave
       a pointer here, not a fifth copy.

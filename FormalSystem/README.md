@@ -222,7 +222,7 @@ invariant check allowlists it by name (check C8).
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `FormalSystem.lean` | 106 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
-| `Metalogic.lean` | 286 | Re-export for Metalogic submodule |
+| `Metalogic.lean` | 265 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 236 | Re-export for Semantics submodule |
 | `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |

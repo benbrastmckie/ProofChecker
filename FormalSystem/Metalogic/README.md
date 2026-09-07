@@ -163,8 +163,9 @@ Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside
 | `WeakCanonical.lean` | 144 | `WeakCanonical/` |
 <!-- END GENERATED -->
 
-**Ten** loose files in `Metalogic/` are not aggregators — they have no same-named
-sibling directory:
+The remaining loose files in `Metalogic/` are not aggregators — they have no same-named
+sibling directory. The list is generated, so a file that moves out (four of them moved into
+`Conservativity/`) leaves it automatically:
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=non-aggregators -->
 | Loose non-aggregator | Lines | Role |

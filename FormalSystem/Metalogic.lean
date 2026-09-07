@@ -41,9 +41,10 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   TM⁺ ⊢ tr φ` over the tense-primitive base language of `FormalSystem/BaseLanguage/`. The
   **forward** direction is refuted for the Base and Discrete rows and open for the other two;
   `Metalogic/Conservativity.lean`'s module docstring is the standing record of why it must not
-  be attempted or `sorry`-ed. That record's list of prerequisites a machine-checked refutation
-  would need has narrowed: the BL-side semantics and soundness theorem now exist
-  (`Metalogic/Conservativity/BaseLanguageSoundness.lean`), and the two countermodels remain outstanding.
+  be attempted or `sorry`-ed. That record is row-dependent and is not restated here: CEF is
+  refuted with both halves machine-checked, CEB is refuted in the source with only its TM⁺ half
+  machine-checkable in this tree, and CED/CEC are open. Per-row status lives in
+  `docs/theorem-index.md`; the standing prohibition lives in `Conservativity.lean`.
 - **The H/G-fragment of TM⁺** (`Conservativity.TMFrag`, `Metalogic/Conservativity/Fragment.lean`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Because the forward
   direction is refuted, TM is not the complete logic of base-language validity; the fragment
@@ -128,9 +129,9 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   * `FrameClass.Base` and `FrameClass.Dense` — **proved**. `strongCompletenessBase` and
     `strongCompletenessDense` (`Metalogic/Compactness.lean`) inhabit the
     `StrongCompletenessBase`/`StrongCompletenessDense` statements of
-    `Metalogic/SetConsequence.lean`, obtained by instantiating the reductions
-    the single `FrameClass`-generic reduction `strongCompleteness_of_compact` with `compactBase`/
-    `compactDense` and the weak-completeness engines. Compactness itself comes from
+    `Metalogic/SetConsequence.lean`, obtained by instantiating the single `FrameClass`-generic
+    reduction `strongCompleteness_of_compact` with `compactBase`/`compactDense` and the
+    weak-completeness engines. Compactness itself comes from
     `modelExistenceBase`/`modelExistenceDense` by an ultraproduct construction over the finite
     sublists of the premise set.
   * `FrameClass.RTime` — **refuted**, like Discrete. Reynolds 1992 Theorem 7 is weak-only,
@@ -252,35 +253,13 @@ those three axioms.
 
 ## Module Structure
 
-Every subdirectory carries exactly one sibling aggregator `X.lean` beside `X/`.
-File and line counts exclude BOTH Boneyards (there are two -- see
-`Metalogic/README.md`); run `scripts/check-module-invariants.sh` to re-derive them.
+Every subdirectory carries exactly one sibling aggregator `X.lean` beside `X/`, which check C8
+asserts. `SoundnessLemmas` is a directory with such an aggregator, not a loose file, and there
+is no top-level `Completeness.lean` — it had no live importer and is archived under
+`Boneyard/SupersededCompleteness/`; the completeness results live on the three routes.
 
-```
-Metalogic/
-├── Core/                    4 files   # MCS theory, Lindenbaum, deduction theorem
-├── Bundle/                 12 files   # BFMCS canonical-frame construction
-├── Algebraic/               5 files   # Quotient algebra + flow-frame countermodel engine
-├── BXCanonical/            20 files   # Chronicle completeness route -- the wired entry point
-│   ├── Chronicle/           8 files   # Burgess chronicle construction
-│   ├── Quasimodel/          5 files   # Hintikka points, realization
-│   └── Filtration/          1 file    # Sigma ordering
-├── WeakCanonical/         135 files   # Kamp/Reynolds route; largest subtree in the repository
-│   ├── Kamp/               99 files   # Separation machinery; has its OWN local Boneyard/
-│   ├── EFGames/             8 files   # Ehrenfeucht-Fraisse game engine
-│   ├── IntegerModel/        6 files   # Integer model construction
-│   ├── Expressiveness/      5 files   # Expressiveness separation results
-│   └── Separation/          3 files   # Separation theorem
-├── Decidability/           19 files   # Tableau decision procedure
-│   └── Propositional/       3 files   # Propositional fragment (Kalmar)
-├── Soundness.lean                     # Soundness theorem, incl. dense/discrete variants
-├── SoundnessLemmas/         3 files   # Per-axiom validity lemmas feeding Soundness.lean
-└── {Core,Bundle,Algebraic,BXCanonical,WeakCanonical,Decidability,SoundnessLemmas}.lean
-                                       # sibling aggregators
-```
-
-`SoundnessLemmas` is a DIRECTORY with a sibling aggregator, not a loose file.
-There is no top-level `Completeness.lean`: it had no live importer and is archived
-under `Boneyard/SupersededCompleteness/`. The completeness results live on the three
-routes above.
+The per-directory file and line counts are not restated here. They are generated into
+`Metalogic/README.md` by `scripts/check-module-invariants.sh --emit-inventory`, and the `INV`
+check fails if they drift. There is exactly **one** archive in the tree,
+`FormalSystem/Boneyard/`, and B0 asserts that; every count excludes it by directory name.
 -/
