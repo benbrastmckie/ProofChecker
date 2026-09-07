@@ -1165,7 +1165,7 @@
     {
       "project_number": 530,
       "project_name": "documentation_single_source_of_truth_theorem_index",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -1205,7 +1205,7 @@
         "FormalSystem/Metalogic/BaseLanguageSoundness.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-07T19:23:49Z",
+      "last_updated": "2026-09-07T21:07:56Z",
       "artifacts": [
         {
           "path": "specs/530_documentation_single_source_of_truth_theorem_index/reports/01_documentation-single-source-of-truth.md",
@@ -1216,9 +1216,18 @@
           "path": "specs/530_documentation_single_source_of_truth_theorem_index/plans/01_documentation-single-source-of-truth.md",
           "type": "plan",
           "summary": "19-phase, 33-hour plan making documentation counts and status machine-owned, creating docs/theorem-index.md, and purging archaeology prose from publication-facing docstrings."
+        },
+        {
+          "path": "specs/530_documentation_single_source_of_truth_theorem_index/summaries/01_documentation-single-source-of-truth-summary.md",
+          "type": "summary",
+          "summary": "All 19 phases: counts, axiom sets and per-theorem status are machine-owned; docs/theorem-index.md, C20, four ADRs and the publication packaging landed; full invariant suite green."
         }
       ],
-      "session_id": "sess_1788808508_a5588d"
+      "session_id": "sess_1788808508_a5588d",
+      "completion_summary": "Documentation status and counts are now machine-owned by three checked owners rather than six drifting hand-maintained copies: C2/C14 pin 105 declarations' axiom sets (up from 56, covering every SORRY-FREE claim in Metalogic.lean), a new check-module-invariants.sh --emit-inventory owns every file and line count with an INV gate, and docs/theorem-index.md is the single per-theorem ledger with 52 machine-verified rows. A new two-tier C20 citation check is enforced, C15 gained an independent theorem-index assertion, C18 gained a sentence-level pass, and C9 was widened to see ephemeral specs/ paths; 116 provably-wrong and 161 publication-scope citations were fixed. Archaeology prose is at zero on live surfaces, four rationale narratives moved to docs/architecture/ADR-005..008, and CITATION.cff, docs/ARCHITECTURE.md, references.bib, a README '## Verifying the main theorems' section and 52 '## Tags' lines were added. lake build is green at 2591 jobs; check-module-invariants.sh, readme-lint.sh, typst-sync-check.sh and check-metalogic-cycles.sh all exit 0.",
+      "roadmap_items": [
+        "Phase 5: Publication and Documentation - the un-gated metalogic half of task 177 is discharged"
+      ]
     },
     {
       "project_number": 531,
