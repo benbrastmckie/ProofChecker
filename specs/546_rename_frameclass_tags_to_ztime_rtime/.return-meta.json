@@ -1,6 +1,23 @@
 {
-  "status": "in_progress",
-  "started_at": "2026-09-07T09:10:00Z",
+  "status": "implemented",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 7,
+    "axiom_count_baseline": 7,
+    "build_passed": true,
+    "gates": {
+      "lake_build": "green (2591 jobs)",
+      "lake_build_bimodaltest": "green (2642 jobs)",
+      "check_module_invariants": "ALL CHECKS PASSED (C1 C2 C3 C11 C14 C15 C16)",
+      "typst_sync_check": "PASS all three checks",
+      "typst_status_counts": "ztime_only_count=3 rtime_only_count=3",
+      "keep_list_guard": "clean (560 / 43 / 45)",
+      "boneyard": "zero Boneyard paths in the 152-file task set",
+      "cli_round_trip": "--frame-class ztime and discrete both accepted; both emit frame_class ZTime"
+    }
+  },
   "artifacts": [
     {
       "type": "plan",
@@ -11,16 +28,60 @@
       "type": "report",
       "path": "specs/546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md",
       "summary": "Scoped inventory for the rename: naming scheme, tiered in-scope list, explicit KEEP list, coupled script/typst artifacts, leaf-first order, verification gates."
+    },
+    {
+      "type": "summary",
+      "path": "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md",
+      "summary": "Nine phases complete: FrameClass tags and every class-naming identifier renamed to ZTime/RTime across 152 files, all five gates green, sorry inventory and axiom count unchanged."
     }
   ],
-  "partial_progress": {
-    "stage": "initializing",
-    "details": "Agent started, parsing delegation context"
+  "completion_data": {
+    "completion_summary": "Renamed FrameClass.Discrete/.Dedekind to .ZTime/.RTime and every derived identifier that names the frame class -- frame predicates, validity predicates, soundness/completeness families, tableau rule sets, string literals and their round-trip parsers -- across 152 files, while leaving the bare order conditions, the axiom constructors, the 560-occurrence Dedekind-INF/SUP API and layerReynoldsDedekind untouched. All nine phases closed green: lake build, lake build BimodalTest, full check-module-invariants.sh, and typst-sync-check.sh all pass, with the structural sorry inventory unchanged at zero and no new axioms. typst-sync-check.sh was failing before this task and is now green, three of its four pre-existing violations having been fixed forward in Phase 8.",
+    "roadmap_items": []
   },
+  "memory_candidates": [
+    {
+      "content": "A repo's shared build-guard wrapper can silently no-op: `lake-build-guard.sh build --timeout 1800 --` with NO lake args after the `--` exits 77 (usage error) and prints help, and if the call is piped through `tail`, the pipeline still reports exit 0. Four phases of 'green builds' were actually usage errors before this was caught. The correct form passes the lake subcommand after the separator: `-- build`, `-- build BimodalTest`, `-- exe runLinter FormalSystem`. When a wrapper script guards an expensive operation, assert on a positive success marker in its output (here: 'Build completed successfully (N jobs)'), never on the pipeline's exit code alone.",
+      "category": "TECHNIQUE",
+      "source_artifact": "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md",
+      "confidence": 0.9,
+      "suggested_keywords": ["lake-build-guard", "exit-77", "pipeline-exit-code", "false-green", "build-verification"]
+    },
+    {
+      "content": "Large Lean identifier renames must be planned leaf-first (derived statements -> validity predicates -> frame predicates -> the inductive constructors last), because renaming a constructor first breaks every dependent file at once and leaves no green intermediate state. Equally important: enumerate the coupled NON-Lean artifacts that hardcode fully-qualified declaration names before planning phases, and pin each one to the phase that breaks it. In this repo those are check-module-invariants.sh's C14 axiom baselines AND its matched `#print axioms` probe block (both must move together, and a name renamed in a later phase must NOT be moved early or C14 fails in the earlier phase), typst-status-counts.sh's greps into a def body (which silently return 0 after a rename), the byte-for-byte-compared typst/generated/ artifacts, round-trip string parser/emitter pairs in Automation/, and scripts/nolints.json docBlame grandfather entries (hand-edit, never regenerate). A rename that only builds green has not been verified.",
+      "category": "PATTERN",
+      "source_artifact": "specs/546_rename_frameclass_tags_to_ztime_rtime/plans/01_ztime-rtime-rename-plan.md",
+      "confidence": 0.9,
+      "suggested_keywords": ["lean-rename", "leaf-first", "coupled-artifacts", "check-module-invariants", "typst-sync-check", "nolints"]
+    },
+    {
+      "content": "When a repo-wide gate script is slow (BimodalLogic's check-module-invariants.sh takes ~40 min cold: it runs `lake build`, `lake build BimodalTest`, and `lake exe runLinter`), extract its individual expensive checks into standalone scratch re-runs for per-phase verification and reserve the full script for the phases whose Verification Tier is 'full'. The C14 axiom-probe half in particular can be re-run alone in ~1 min by awk-extracting the script's own C14BASE and C14LEAN heredocs and diffing `lake env lean` output against the baseline -- this catches a renamed-but-not-rebuilt declaration ('Unknown constant') that a plain `lake build` cannot, because the probe file is not part of any build target.",
+      "category": "TECHNIQUE",
+      "source_artifact": "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["slow-gate", "c14-probe", "print-axioms", "per-phase-verification", "lake-env-lean"]
+    },
+    {
+      "content": "A word can carry two senses in one codebase, and a global rename destroys the sense you did not mean. In BimodalLogic 'Discrete'/'Dedekind' named both a FrameClass tag (rename target) and the paper's bare order conditions plus the Dedekind-INF/SUP API (560 occurrences, must not move). The defense that worked: a KEEP-list guard script asserting exact expected counts for each protected family, run after every phase, plus word-boundary- and dot-anchored substitutions (`s/\\.Discrete\\b/.ZTime/g`) rather than bare `s/Discrete/ZTime/g`. Before the atomic pass, a qualifier survey (`grep -rhoE '[A-Za-z_.]*\\.(Discrete|Dedekind)\\b' | sort -u`) confirmed the only qualifier was `FrameClass.`, which is what makes the anchored sed safe. When a guard count legitimately moves (prose added a reference), verify the DECLARATIONS are unmoved rather than rebaselining blindly.",
+      "category": "PATTERN",
+      "source_artifact": "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["two-senses", "keep-list-guard", "word-boundary-sed", "qualifier-survey", "rename-safety"]
+    }
+  ],
+  "modified_files": [
+    "specs/546_rename_frameclass_tags_to_ztime_rtime/plans/01_ztime-rtime-rename-plan.md",
+    "specs/546_rename_frameclass_tags_to_ztime_rtime/summaries/01_ztime-rtime-rename-summary.md"
+  ],
   "metadata": {
     "session_id": "sess_1788795069_3d83b2",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed",
+    "phases_completed": 9,
+    "phases_total": 9,
+    "files_touched": 152,
+    "commits": ["7e304b6e9", "cfb5288a9", "af845ac39", "85cd34da0", "79bd1794f", "d055fce03", "e30ea6bc6", "fb608a8a9"]
   }
 }

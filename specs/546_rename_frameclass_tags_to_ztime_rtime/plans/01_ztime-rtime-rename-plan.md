@@ -1,7 +1,7 @@
 # Implementation Plan: Rename FrameClass tags to ZTime/RTime
 
 - **Task**: 546 - Rename frameclass tags to ztime rtime
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 13.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md
@@ -337,8 +337,8 @@ and confirm afterwards that the same count now matches `\bValid(ZTime|RTime)\b` 
 constructors themselves.
 
 **Tasks**:
-- [ ] `Semantics/FrameProperty.lean:161`: `TaskFrame.IsSuccArchDiscrete` -> `TaskFrame.IsZTime`.
-- [ ] `Semantics/FrameProperty.lean:212`: `TaskFrame.IsDedekind` -> `TaskFrame.IsRTime`.
+- [x] `Semantics/FrameProperty.lean:161`: `TaskFrame.IsSuccArchDiscrete` -> `TaskFrame.IsZTime`.
+- [x] `Semantics/FrameProperty.lean:212`: `TaskFrame.IsDedekind` -> `TaskFrame.IsRTime`.
 - [x] Satellites: `isSuccArchDiscrete_of_instances` -> `isZTime_of_instances`,
       `IsSuccArchDiscrete.elim` -> `IsZTime.elim`, `isDense_of_isDedekind` ->
       `isDense_of_isRTime`, `isComplete_of_isDedekind` -> `isComplete_of_isRTime`.
@@ -507,14 +507,14 @@ recorded as a Reasoned Exclusion.
 what its name says" — with plain statements of what each tag denotes.
 
 **Tasks**:
-- [ ] `Semantics/FrameClassValidity.lean:33-35` - interpretation-of-record table rows become
+- [x] `Semantics/FrameClassValidity.lean:33-35` - interpretation-of-record table rows become
       `.ZTime | TaskFrame.IsZTime` and `.RTime | TaskFrame.IsRTime`. Keep the "Two of these are
       the *narrowed* member of a split pair" paragraph at :37-40; it remains true of `IsZTime`
       vs the bare `IsDiscrete`.
-- [ ] `Semantics/FrameClassValidity.lean:42-46` - delete the "**Naming deviation of record**"
+- [x] `Semantics/FrameClassValidity.lean:42-46` - delete the "**Naming deviation of record**"
       passage; replace with one line stating that `.RTime` is the paper's `TM_r` / R-time class,
       dense and complete, exactly `R` by Holder.
-- [ ] `Semantics/FrameClassValidity.lean:100-110` - keep the two `**not**` bullets' substance
+- [x] `Semantics/FrameClassValidity.lean:100-110` - keep the two `**not**` bullets' substance
       (the tags are the *narrowed* predicates, not the bare clauses); drop the second bullet's
       closing "the paper calls this property Complete, this tree calls it Dedekind" sentence.
 - [x] Mirror sites: `Semantics/FrameProperty.lean:28-91` and :176-215 (the `IsDedekind`
@@ -647,22 +647,23 @@ boundary the phase deliberately did **not** cross, which the plan's Scope Hypoth
 | `Dedekind layer` / `Dedekind-layer` / "Reynolds' Dedekind axioms" in `docs/reference/{axiom-reference,operators}.md`, `docs/research/competitive-landscape.md`, `README.md` | Names the Reynolds axiom family, whose label is the KEEP-listed `layerReynoldsDedekind`. | `Automation/MachineAppendixExport.lean:180`: `def layerReynoldsDedekind : String := "Reynolds Dedekind"`, unchanged; `typst/generated/machine-appendix.jsonl` still emits `"Reynolds Dedekind"` as the layer. |
 | Module and file names (`DedekindNonCompactness.lean`, `DiscreteNonCompactness.lean`, `CompletenessDedekind.lean`, `DedekindDerived.lean`, `DiscreteUnfolding.lean`, `DiscreteCarrierProbe.lean`) and every prose mention of them | Deferred by the plan's Overview decision 1. | Recorded explicitly in `docs/development/NAMING_CONVENTION_DEVIATION.md`'s "Deferred: module and file names" subsection, naming the residual inconsistency. |
 | `typst/FormalFoundations.typ:1339`'s `#leansrc("Metalogic.SetConsequence", "discrete_consequence_not_compact")` | Pre-existing dead reference: no such declaration exists anywhere in the tree, at HEAD or now. Out of this task's scope, and not gated (`#leansrc` arguments are not checked by `typst-sync-check.sh` Check 1). | `grep -rn 'discrete_consequence_not_compact' FormalSystem --include=*.lean` returns only a docstring mention in `Semantics/Ultraproduct/Carrier.lean:41`, no declaration. |
-### Phase 9: Final verification gate [NOT STARTED]
+
+### Phase 9: Final verification gate [COMPLETED]
 
 **Goal**: Run the complete gate set and confirm no regression in axioms, sorries, linter
 findings, or paper anchors.
 
 **Tasks**:
-- [ ] `lake build` (FormalSystem default target), detached per long-builds.md.
-- [ ] `lake build BimodalTest` (or `lake test`) — the default target does not compile `Tests/`.
-- [ ] `bash scripts/check-module-invariants.sh` in full; confirm C3 (sorry inventory zero),
+- [x] `lake build` (FormalSystem default target), detached per long-builds.md.
+- [x] `lake build BimodalTest` (or `lake test`) — the default target does not compile `Tests/`.
+- [x] `bash scripts/check-module-invariants.sh` in full; confirm C3 (sorry inventory zero),
       C11 (Boneyard imports resolve), C14 (axiom baselines), C15 (paper anchors), C16
       (`runLinter` vs `nolints.json`) all pass.
-- [ ] `bash scripts/typst-sync-check.sh` — all three checks.
-- [ ] Final KEEP-list guard, plus a whole-tree assertion that no live `.lean` file outside
+- [x] `bash scripts/typst-sync-check.sh` — all three checks.
+- [x] Final KEEP-list guard, plus a whole-tree assertion that no live `.lean` file outside
       `Boneyard/` still contains `\.(Discrete|Dedekind)\b`, `IsSuccArchDiscrete`, `IsDedekind`,
       `ValidDiscrete`, `ValidDedekind`, `soundness_discrete`, or `soundness_dedekind`.
-- [ ] Confirm `git diff --stat` touches no `FormalSystem/Boneyard/` path.
+- [x] Confirm `git diff --stat` touches no `FormalSystem/Boneyard/` path.
 
 **Timing**: 1 hour
 
@@ -685,18 +686,18 @@ findings, or paper anchors.
 
 ## Testing & Validation
 
-- [ ] `lake build` green (FormalSystem)
-- [ ] `lake build BimodalTest` green (Tests are not in the default target)
-- [ ] `scripts/check-module-invariants.sh` green, with C3, C14, C15, C16 specifically confirmed
-- [ ] `scripts/typst-sync-check.sh` green, all three checks
-- [ ] `scripts/typst-status-counts.sh` still yields 3 / 3 for the two class-only axiom counts
-- [ ] Sorry inventory unchanged at zero across non-Boneyard `FormalSystem/`
-- [ ] `runLinter` reports no new `docBlame` findings (i.e. `nolints.json` was updated, not
+- [x] `lake build` green (FormalSystem)
+- [x] `lake build BimodalTest` green (Tests are not in the default target)
+- [x] `scripts/check-module-invariants.sh` green, with C3, C14, C15, C16 specifically confirmed
+- [x] `scripts/typst-sync-check.sh` green, all three checks
+- [x] `scripts/typst-status-counts.sh` still yields 3 / 3 for the two class-only axiom counts
+- [x] Sorry inventory unchanged at zero across non-Boneyard `FormalSystem/`
+- [x] `runLinter` reports no new `docBlame` findings (i.e. `nolints.json` was updated, not
       regenerated)
-- [ ] `lake exe dataset_generator --frame-class ztime` and `--frame-class discrete` both accepted
-- [ ] KEEP-list guard clean: Dedekind-INF/SUP API at 560 occurrences, bare conditions, axiom
+- [x] `lake exe dataset_generator --frame-class ztime` and `--frame-class discrete` both accepted
+- [x] KEEP-list guard clean: Dedekind-INF/SUP API at 560 occurrences, bare conditions, axiom
       constructors, discrete-order construction lemmas, and `layerReynoldsDedekind` all unmoved
-- [ ] No `FormalSystem/Boneyard/` path appears in the task's cumulative diff
+- [x] No `FormalSystem/Boneyard/` path appears in the task's cumulative diff
 
 ## Artifacts & Outputs
 
