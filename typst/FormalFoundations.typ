@@ -25,6 +25,10 @@
 // Local notation and template (includes thmbox theorem environments)
 #import "notation/bimodal-notation.typ": *
 #import "template.typ": thmbox-show, URLblue, definition, theorem, lemma, axiom, remark, proof, corollary, proposition, leansrc, items
+// The per-declaration axiom report and the provenance stamp are GENERATED. Never
+// transcribe an axiom set or a commit hash into this file; regenerate with
+// the status-counts generator script instead.
+#import "generated/status.typ": axiom-report-table, stamp-commit, stamp-date
 
 // ============================================================================
 // Document Configuration -- matches BimodalReference.typ's type settings
@@ -977,7 +981,11 @@ term *strong* is reserved for consequence from a possibly infinite premise set.
 
 == Machine-Checked Status
 
-The axiom reports below were taken at commit 7aae4e51c via `scripts/typst-status-counts.sh`.
+The axiom reports below are *generated*, not transcribed: the status-counts generator
+reads them out of the built library with `#print axioms` --- the same construction checks C2 and
+C14 use --- and writes them into `generated/status.typ`, stamped at commit #stamp-commit
+(#stamp-date). Names are fully qualified, because `completeness_dense` and `completeness_ztime`
+each name two distinct live theorems and the module column alone does not tell them apart.
 
 #figure(
   table(
@@ -985,14 +993,13 @@ The axiom reports below were taken at commit 7aae4e51c via `scripts/typst-status
     table.hline(),
     table.header([*Declaration*], [*Module*], [*Axioms*], [*`sorryAx`*]),
     table.hline(),
-    [`completeness_dense`], [`BXCanonical/Completeness.lean`], [`propext`, `Classical.choice`, `Quot.sound`], [no],
-    [`completeness_ztime`], [`BXCanonical/Completeness.lean`], [same], [no],
-    [`countermodel_dense`], [`Chronicle/ChronicleToCountermodelBasic.lean`], [same], [no],
-    [`completeness_rtime_engine`], [`BXCanonical/CompletenessDedekind.lean`], [same], [no],
-    [`completeness`], [`BXCanonical/Completeness.lean`], [same], [no],
+    ..axiom-report-table.map(row => (
+      raw(row.at(0)), raw(row.at(1)), raw(row.at(2)), [#row.at(3)]
+    )).flatten(),
     table.hline(),
   ),
-  caption: [Axiom reports for the four completeness results and the shared dense countermodel.],
+  caption: [Axiom reports for the four completeness engines and the shared dense countermodel,
+    generated from the built library.],
 )
 
 Outside `Boneyard/`, the development contains *no* structural `sorry`, and none of the five

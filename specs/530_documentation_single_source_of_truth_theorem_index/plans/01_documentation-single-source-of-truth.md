@@ -866,27 +866,33 @@ Automation counts. `readme-lint.sh`'s own output at phase start is authoritative
 
 ---
 
-### Phase 17: Generate the typst axiom table [NOT STARTED]
+### Phase 17: Generate the typst axiom table [COMPLETED]
 
 **Goal**: `typst/generated/status.typ` carries a generated per-declaration axiom table,
 `FormalFoundations.typ`'s hand table is replaced by a `#for` over it, and the three-way
 provenance stamp is unified.
 
 **Tasks**:
-- [ ] Extend `scripts/typst-status-counts.sh` following the
+- [x] Extend `scripts/typst-status-counts.sh` following the
       `scripts/typst-machine-appendix.sh` pattern: compile a scratch file of `#print axioms`
       directives for the pinned set, parse the output, emit `#let axiom-report-table = (…)`.
-- [ ] Use fully-qualified names in every generated row, or the table repeats the
+      *(deviation: altered — the report covers the **five flagship completeness declarations the
+      chapter displays**, not all 105 pinned ones: a 105-row table is not a chapter figure. The
+      renderer lives in `scripts/lib/typst_axiom_report.py` and the display labels in
+      `scripts/typst-axiom-report-modules.txt`, because the generator already nests three
+      heredocs and a fourth is unreadable.)*
+- [x] Use fully-qualified names in every generated row, or the table repeats the
       `completeness_dense` ambiguity it currently has.
-- [ ] Replace the hand-written 5-row table in `typst/FormalFoundations.typ` with a `#for` over
+- [x] Replace the hand-written 5-row table in `typst/FormalFoundations.typ` with a `#for` over
       the generated value.
-- [ ] Unify provenance: `FormalFoundations.typ`'s "taken at commit `7aae4e51c`" reads from
+- [x] Unify provenance: `FormalFoundations.typ`'s "taken at commit `7aae4e51c`" reads from
       `status.typ`'s `stamp-commit`.
-- [ ] Fix E-10: split the sorry table into two rows so
+- [x] Fix E-10: split the sorry table into two rows so
       `sorry-total-excl-boneyard = 0` no longer prints beside `("WeakCanonical/", 4)`; the
       generator already computes `SORRY_WEAKCANONICAL_LIVE` and `SORRY_KAMP_BONEYARD`
-      separately.
-- [ ] Keep the generator a separate script invocation; it needs a built library and cannot run
+      separately. *(`typst-sync-check.sh`'s expected table was extended to assert **both**
+      halves, so the split cannot silently drop either.)*
+- [x] Keep the generator a separate script invocation; it needs a built library and cannot run
       under `--no-build`.
 
 **Timing**: 2 hours

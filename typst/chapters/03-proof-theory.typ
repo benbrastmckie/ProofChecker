@@ -224,7 +224,7 @@ where $K^+ phi.alt$ says that $phi.alt$ recurs arbitrarily soon in the future an
 )
 
 Prior-U says a bounded region where $phi.alt$ has held throughout acquires a definable upper endpoint; Sep is Reynolds' separation axiom, semantically backed by the separability of the reals.
-The axiom CO ($triangle.stroked.t (H phi.alt arrow.r F H phi.alt) arrow.r (H phi.alt arrow.r G phi.alt)$) is *derivable* over this layer rather than axiomatic: it follows from Prior-U together with the base axioms alone (`Theorems/DedekindDerived.lean` `co_derived`).
+The axiom CO ($triangle.stroked.t (H phi.alt arrow.r F H phi.alt) arrow.r (H phi.alt arrow.r G phi.alt)$) is *derivable* over this layer rather than axiomatic: it follows from Prior-U together with the base axioms alone (`Theorems/DedekindDerived.lean` `coDerived`).
 
 == Frame Classes <sec:frame-classes>
 

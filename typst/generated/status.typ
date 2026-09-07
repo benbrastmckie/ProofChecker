@@ -5,10 +5,10 @@
 //   scripts/typst-status-counts.sh
 //
 // Reproduces the SYNC-MAP.md Phase 1 ground-truth-counts methodology.
-// Stamped from live source at commit 79bd1794f (2026-09-07).
+// Stamped from live source at commit 7fdf029e6 (2026-09-07).
 // ============================================================================
 
-#let stamp-commit = "79bd1794f"
+#let stamp-commit = "7fdf029e6"
 #let stamp-date = "2026-09-07"
 
 #let axiom-count = 45
@@ -25,6 +25,21 @@
   ("Algebraic/", 0),
   ("BXCanonical/", 0),
   ("Bundle/", 0),
-  ("WeakCanonical/", 4),
+  ("WeakCanonical/ (live)", 0),
+  ("WeakCanonical/ (archived, Boneyard/Kamp/)", 4),
   ("Core/, Decidability/, SoundnessLemmas/, top-level", 0),
+)
+
+// The WeakCanonical row is SPLIT because the un-split row printed an ARCHIVED
+// count beside `sorry-total-excl-boneyard`, which is a LIVE figure: a reader saw
+// "0 sorries outside the archive" next to "WeakCanonical/: 4" and had no way to
+// tell the 4 was entirely archived. The generator already computes both halves,
+// so the split costs nothing and removes the contradiction.
+
+#let axiom-report-table = (
+  ("FormalSystem.Metalogic.BXCanonical.completeness", "BXCanonical/Completeness.lean", "propext, Classical.choice, Quot.sound", "no"),
+  ("FormalSystem.Metalogic.BXCanonical.completeness_dense", "BXCanonical/Completeness.lean", "propext, Classical.choice, Quot.sound", "no"),
+  ("FormalSystem.Metalogic.BXCanonical.completeness_ztime", "BXCanonical/Completeness.lean", "propext, Classical.choice, Quot.sound", "no"),
+  ("FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine", "BXCanonical/CompletenessDedekind.lean", "propext, Classical.choice, Quot.sound", "no"),
+  ("FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense", "BXCanonical/Chronicle/ChronicleToCountermodelBasic.lean", "propext, Classical.choice, Quot.sound", "no"),
 )

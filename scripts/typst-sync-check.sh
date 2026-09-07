@@ -217,7 +217,12 @@ expected_table = {
     "Algebraic/": live["sorry_algebraic"],
     "BXCanonical/": live["sorry_bxcanonical"],
     "Bundle/": live["sorry_bundle"],
-    "WeakCanonical/": live["sorry_weakcanonical"],
+    # The WeakCanonical row is SPLIT: an archived count printed beside the live
+    # sorry-total-excl-boneyard figure read as a contradiction. Both halves are
+    # asserted here so the split cannot silently drop either.
+    "WeakCanonical/ (live)": live["sorry_weakcanonical_excl_boneyard"],
+    "WeakCanonical/ (archived, Boneyard/Kamp/)":
+        live["sorry_weakcanonical"] - live["sorry_weakcanonical_excl_boneyard"],
     # Label must track typst-status-counts.sh's emitted row label exactly.
     # ConservativeExtension/ and Relational/ were archived/removed and dropped
     # from the generator's label and sum; this expectation was not updated at

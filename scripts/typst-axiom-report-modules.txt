@@ -1,0 +1,8 @@
+# Display module label for each declaration in typst-status-counts.sh's
+# AXIOM_DECLS. Format: fully-qualified name | module path shown in the table.
+# Keep in step with AXIOM_DECLS; a name with no row here renders as "?".
+FormalSystem.Metalogic.BXCanonical.completeness|BXCanonical/Completeness.lean
+FormalSystem.Metalogic.BXCanonical.completeness_dense|BXCanonical/Completeness.lean
+FormalSystem.Metalogic.BXCanonical.completeness_ztime|BXCanonical/Completeness.lean
+FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine|BXCanonical/CompletenessDedekind.lean
+FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense|BXCanonical/Chronicle/ChronicleToCountermodelBasic.lean

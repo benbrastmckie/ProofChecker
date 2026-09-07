@@ -10,7 +10,10 @@
 #
 # Usage:
 #   scripts/typst-status-counts.sh            # writes typst/generated/status.typ
-#   scripts/typst-status-counts.sh --json     # emits JSON to stdout only
+#                                              # NEEDS A BUILT LIBRARY: the
+#                                              # per-declaration axiom report is
+#                                              # read out of it with #print axioms
+#   scripts/typst-status-counts.sh --json     # emits JSON to stdout only, no lake
 #                                              # (consumed by typst-sync-check.sh)
 #
 # Methodology (must match SYNC-MAP.md exactly):
@@ -182,6 +185,52 @@ fi
 echo "${JSON}"
 
 # ---------------------------------------------------------------------------
+# Per-declaration axiom report
+#
+# The five flagship completeness declarations the typst status chapter displays.
+# Their axiom sets are read out of the BUILT LIBRARY with `#print axioms`, never
+# typed: the same construction C2 and C14 use in
+# scripts/check-module-invariants.sh. Names are FULLY QUALIFIED, because
+# `completeness_dense` and `completeness_ztime` each name two distinct live
+# theorems -- one in `FormalSystem.Metalogic.BXCanonical`, one in
+# `FormalSystem.Metalogic` -- and the module column alone does not disambiguate
+# them.
+#
+# This step needs a built library, which is why it lives in the write path and
+# not in `--json`: `--json` is consumed by typst-sync-check.sh, which must run
+# without a build.
+# ---------------------------------------------------------------------------
+AXIOM_DECLS=(
+  FormalSystem.Metalogic.BXCanonical.completeness
+  FormalSystem.Metalogic.BXCanonical.completeness_dense
+  FormalSystem.Metalogic.BXCanonical.completeness_ztime
+  FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine
+  FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense
+)
+
+AX_SRC=$(mktemp --suffix=.lean)
+{
+  echo "import FormalSystem"
+  for d in "${AXIOM_DECLS[@]}"; do echo "#print axioms ${d}"; done
+} > "${AX_SRC}"
+# The pretty-printer wraps at a fixed width, so a long axiom record spills onto
+# continuation lines beginning with a space; rejoin them before parsing or the
+# record is silently truncated.
+if ! AX_OUT=$(cd "${REPO_ROOT}" && lake env lean "${AX_SRC}" 2>&1 \
+      | sed -e ':a' -e '$!N' -e 's/\n / /' -e 'ta' -e 'P' -e 'D' \
+      | grep 'depends on axioms'); then
+  echo "typst-status-counts.sh: could not read axiom sets from the built library." >&2
+  echo "  Run 'lake build' first; the axiom report is generated, never typed." >&2
+  rm -f "${AX_SRC}"
+  exit 1
+fi
+rm -f "${AX_SRC}"
+
+AXIOM_REPORT_TYP=$(AX_OUT="${AX_OUT}" \
+  TYPST_AXIOM_MODULES="${REPO_ROOT}/scripts/typst-axiom-report-modules.txt" \
+  python3 "${REPO_ROOT}/scripts/lib/typst_axiom_report.py")
+
+# ---------------------------------------------------------------------------
 # Write typst/generated/status.typ
 # ---------------------------------------------------------------------------
 mkdir -p "$(dirname "${OUT_TYP}")"
@@ -213,9 +262,18 @@ cat > "${OUT_TYP}" << EOF
   ("Algebraic/", ${SORRY_ALGEBRAIC}),
   ("BXCanonical/", ${SORRY_BXCANONICAL}),
   ("Bundle/", ${SORRY_BUNDLE}),
-  ("WeakCanonical/", ${SORRY_WEAKCANONICAL_ALL}),
+  ("WeakCanonical/ (live)", ${SORRY_WEAKCANONICAL_EXCL}),
+  ("WeakCanonical/ (archived, Boneyard/Kamp/)", ${SORRY_KAMP_BONEYARD}),
   ("Core/, Decidability/, SoundnessLemmas/, top-level", ${SORRY_OTHER}),
 )
+
+// The WeakCanonical row is SPLIT because the un-split row printed an ARCHIVED
+// count beside \`sorry-total-excl-boneyard\`, which is a LIVE figure: a reader saw
+// "0 sorries outside the archive" next to "WeakCanonical/: 4" and had no way to
+// tell the 4 was entirely archived. The generator already computes both halves,
+// so the split costs nothing and removes the contradiction.
+
+${AXIOM_REPORT_TYP}
 EOF
 
 echo "Wrote ${OUT_TYP}" >&2
