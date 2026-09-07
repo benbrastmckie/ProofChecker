@@ -1,21 +1,28 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "agent_type": "planner-agent",
+  "delegation_path": ["orchestrator", "plan", "planner-agent"],
+  "task_number": 463,
+  "session_id": "sess_1788816036_26092a",
+  "dispatch_seq": 2,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md",
-      "summary": "Verdict FALSE: PostBlockingSettlesRun is refutable at every positive fuel (hence at mintAwareFuelAt) via an over-quantified EventualityTracker argument; machine-checked, sorry-free, axiom-free witness plus the named minimal further narrowing."
-    },
-    {
-      "type": "reference",
-      "path": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_verified-refutation-witness.lean",
-      "summary": "The verified refutation witness source, compiling against the built MintBound.olean with zero errors and zero sorries."
+      "type": "plan",
+      "path": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/plans/01_postblockingsettlesrun-verdict-terminus-fuel.md",
+      "summary": "7-phase plan landing the machine-checked FALSE verdict on PostBlockingSettlesRun at the terminus's own fuel figure, plus C9 entry 25 and the named next narrowing PostBlockingSettlesSeedRun."
     }
   ],
-  "metadata": {
-    "session_id": "sess_1788816036_26092a",
-    "agent_type": "lean-research-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+  "phase_count": 7,
+  "estimated_hours": 9.5,
+  "dependency_waves": [[1], [2], [3], [4, 5], [6], [7]],
+  "next_steps": "Run /implement 463 to execute the plan",
+  "memory_candidates": [
+    {
+      "content": "Engine-run predicate over-quantification is a recurring, refutable defect shape in MintBound.lean: every argument of an engine entry point (expandBranchWithFuel, saturateBlocked) that the CONSUMING site instantiates at a default is an over-quantification surface, and narrowing one such argument does not clear the others. Three instances now: fuel (C9 entry 22), the output branch (entry 23), and the EventualityTracker argument (task 463). The cheap refutation technique: build a witness the entry point returns at its FIRST step, so `rw [entryPoint]` unfolds the equation lemma exactly once and the `.saturated` arm closes the goal by rfl. This makes a kernel refutation cheap precisely where a kernel PROOF about the same well-founded-recursive function is prohibitive (which is why such predicates get probed with #guard_msgs measurements instead). Planning checklist for any such predicate: for each binder, ask whether the consuming site instantiates it at a default; if yes, that binder is a refutation lever.",
+      "category": "PATTERN",
+      "source_artifact": "specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/plans/01_postblockingsettlesrun-verdict-terminus-fuel.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["over-quantification", "engine-predicate", "refutation-witness", "one-step-unfold", "well-founded-recursion", "lean4"]
+    }
+  ]
 }

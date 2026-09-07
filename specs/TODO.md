@@ -50,7 +50,7 @@ next_project_number: 549
 
 ### Decidability
 
-463 [RESEARCHED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
+463 [PLANNED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
   └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
     └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
       └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
@@ -610,11 +610,12 @@ Dependencies: 462 is a REAL SEMANTIC dependency -- the engine-level assembly is 
 ---
 
 ### 463. Postblockingsettlesrun verdict at terminus fuel
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 462, Task 433
 - **Research**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md]
+- **Plan**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/plans/01_postblockingsettlesrun-verdict-terminus-fuel.md]
 
 **Description**: Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D beta)` -- the narrowed settlement residual task 433 landed -- at the terminus's OWN fuel figure. Nothing currently decides it in either direction, and task 433's C9 register entry 24 exists precisely so the narrowing is not mistaken for a proof.
 
