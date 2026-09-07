@@ -584,7 +584,7 @@ Contrapositive, four steps, no case split:
    `FrameClass.Dedekind ≤ FrameClass.Dedekind` and `real_lub_of_bddAbove` discharging the
    least-upper-bound binder of `ValidRTime`. That binder is reached through the generic
    `ValidIn.apply_total`: `ValidRTime` is `ValidIn FrameClass.Dedekind`, whose frame
-   hypothesis is the packed `TaskFrame.IsDedekind`, supplied as `⟨inferInstance, hlub⟩` — density
+   hypothesis is the packed `TaskFrame.IsRTime`, supplied as `⟨inferInstance, hlub⟩` — density
    is found by search because `IsDense` is an `abbrev` and `Sat` is `@[reducible]`.
 -/
 theorem completeness_rtime_engine (ψ : Formula) :

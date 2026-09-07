@@ -49,7 +49,7 @@ The two corollaries below are the **closed** half of a four-part picture; the ot
 `TaskFrame.IsDiscrete` — `def:frame-properties`' bare Discrete clause, guarded by `(∃ y, x < y)` —
 is the class `X⊤` indicates, and it *is* Galois-closed (`galoisClosed_isDiscrete`).
 
-`FrameClass.Sat FrameClass.Discrete` is `TaskFrame.IsSuccArchDiscrete`, `def:TMplus-f`'s Hölder
+`FrameClass.Sat FrameClass.Discrete` is `TaskFrame.IsZTime`, `def:TMplus-f`'s Hölder
 narrowing to ℤ-time. It is strictly stronger, and it is **not** Galois-closed —
 `Metalogic/Independence/LexIntWitness.lean` exhibits a frame over `ℤ ×ₗ ℤ` inside
 `Mod (AxiomSet .Discrete)` and outside it. Stating the closure corollary below over
@@ -160,7 +160,7 @@ One application of `galoisClosed_of_indicator_iff` at `φ := X⊤`, handed
 `validOn_nextTop_iff_isDiscrete` whole.
 
 **This is `TaskFrame.IsDiscrete`, the paper's bare Discrete clause — NOT
-`FrameClass.Sat FrameClass.Discrete`.** The latter is `TaskFrame.IsSuccArchDiscrete`, the ℤ-time
+`FrameClass.Sat FrameClass.Discrete`.** The latter is `TaskFrame.IsZTime`, the ℤ-time
 narrowing, and it is *not* Galois-closed: `Metalogic/Independence/LexIntWitness.lean` exhibits a
 frame over `ℤ ×ₗ ℤ` that models every `.Discrete` axiom without being successor-Archimedean.
 Restating this corollary over `Sat .Discrete` would contradict that witness.

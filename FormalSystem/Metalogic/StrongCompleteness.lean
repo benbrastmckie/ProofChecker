@@ -1029,7 +1029,7 @@ non-compactness means.
 
 **Where the binder guard now lives.** As for the two classes above: the four-instance list is no
 longer reproduced here by hand but read off `FrameClass.Sat .Discrete`
-(`TaskFrame.IsSuccArchDiscrete`), the same expression `ValidZTime` and `soundness_in` are
+(`TaskFrame.IsZTime`), the same expression `ValidZTime` and `soundness_in` are
 indexed by. `soundness_ztime_consequence`'s warning about dropping `[IsSuccArchimedean D]`
 still holds and is now enforced at that one definition rather than by keeping two lists in step.
 The pre-abbreviation binder shape is recovered by the

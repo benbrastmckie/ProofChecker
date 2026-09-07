@@ -31,8 +31,8 @@ below.
 |-------------|-------|--------|
 | `.Base` | `True` | — (unconstrained: `def:logical-consequence`'s own class) |
 | `.Dense` | `TaskFrame.IsDense` | `def:frame-properties`, Dense clause |
-| `.Discrete` | `TaskFrame.IsSuccArchDiscrete` | `def:TMplus-f` (Hölder narrowing to ℤ-time) |
-| `.Dedekind` | `TaskFrame.IsDedekind` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_c clause |
+| `.Discrete` | `TaskFrame.IsZTime` | `def:TMplus-f` (Hölder narrowing to ℤ-time) |
+| `.Dedekind` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_c clause |
 
 Two of these are the *narrowed* member of a split pair, and deliberately so — interpreting
 `.Discrete` by the bare `TaskFrame.IsDiscrete`, or `.Dedekind` by the bare `TaskFrame.IsComplete`,
@@ -40,10 +40,10 @@ would widen the frame class a soundness theorem at that tag ranges over. `Semant
 records both splits and the paper sentences that force them.
 
 **Naming deviation of record.** `def:frame-properties` calls the dense-and-complete class
-**Complete**; this tree calls it `Dedekind`, in `FrameClass.Dedekind`, `TaskFrame.IsDedekind` and
+**Complete**; this tree calls it `Dedekind`, in `FrameClass.Dedekind`, `TaskFrame.IsRTime` and
 `ValidRTime` alike. That divergence from the definition of record is deliberate — "complete"
 is already load-bearing here for *proof-theoretic* completeness — and is recorded in full at
-`TaskFrame.IsDedekind`'s definition site.
+`TaskFrame.IsRTime`'s definition site.
 
 ## Module placement, and the one import seam it introduces
 
@@ -97,17 +97,17 @@ Per-constructor anchors:
   here.
 * `.Dense ↦ TaskFrame.IsDense`. `def:frame-properties`' Dense clause. `Axiom.density` (`GGφ → Gφ`)
   and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) carry `.Dense`.
-* `.Discrete ↦ TaskFrame.IsSuccArchDiscrete`, **not** `TaskFrame.IsDiscrete`. `def:TMplus-f`'s
+* `.Discrete ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:TMplus-f`'s
   closing sentence states that "the successor-Archimedean discrete class to which BX_f and TM⁺_f
   are sound and complete is exactly ℤ-time", and it is that narrowed class `Axiom.prior_UZ`,
   `Axiom.prior_SZ` and `Axiom.z1` are sound over. Interpreting `.Discrete` by the bare Discrete
   clause would silently widen the class under `soundness_ztime`.
-* `.Dedekind ↦ TaskFrame.IsDedekind`, **not** `TaskFrame.IsComplete`. `FrameClass.Dedekind` sits
+* `.Dedekind ↦ TaskFrame.IsRTime`, **not** `TaskFrame.IsComplete`. `FrameClass.Dedekind` sits
   strictly above `FrameClass.Dense`, so `density` and `dense_indicator` are admissible in a
   `.Dedekind` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.
   The dense-and-complete narrowing is what `cor:tm-completeness`'s TM⁺_c clause names and what
   keeps soundness at this tag from being refutable. See the naming deviation recorded at
-  `TaskFrame.IsDedekind`: the paper calls this property Complete, this tree calls it Dedekind.
+  `TaskFrame.IsRTime`: the paper calls this property Complete, this tree calls it Dedekind.
 
 ## Reducibility is load-bearing
 
@@ -124,8 +124,8 @@ this declaration.
 def FrameClass.Sat : FrameClass → TaskFrame → Prop
   | .Base, _ => True
   | .Dense, F => F.IsDense
-  | .Discrete, F => F.IsSuccArchDiscrete
-  | .Dedekind, F => F.IsDedekind
+  | .Discrete, F => F.IsZTime
+  | .Dedekind, F => F.IsRTime
 
 /--
 `sat_intro h` normalises a `FrameClass.Sat fc F` hypothesis named `h` into whatever the tag
@@ -138,10 +138,10 @@ Per tag, with `Sat` reducible (see the docstring above):
 * `.Dense` — `Sat .Dense F` is `TaskFrame.IsDense F` is `DenselyOrdered ↑F.Duration`, and the
   whole reducible chain exists so that `intro h` alone already registers `h` in the local
   instance cache. The `skip` branch fires and `exists_between` is available.
-* `.Discrete` — `Sat .Discrete F` is `TaskFrame.IsSuccArchDiscrete F`, a four-component
+* `.Discrete` — `Sat .Discrete F` is `TaskFrame.IsZTime F`, a four-component
   existential; `obtain ⟨_, _, _, _⟩` lands `SuccOrder`, `PredOrder`, `IsSuccArchimedean` and
   `IsPredArchimedean` in the instance cache.
-* `.Dedekind` — `Sat .Dedekind F` is `TaskFrame.IsDedekind F`, i.e. `IsDense F ∧ IsComplete F`;
+* `.Dedekind` — `Sat .Dedekind F` is `TaskFrame.IsRTime F`, i.e. `IsDense F ∧ IsComplete F`;
   `obtain ⟨_, h⟩` registers the density instance and rebinds the *completeness* conjunct under
   the caller's own name `h`, so it stays reachable under the spelling the caller wrote.
 
@@ -186,7 +186,7 @@ Everything downstream — `Semantics.ValidIn.mono`, and the set-consequence mono
 in the same direction as `DerivationTree.lift` without either lemma restating the argument.
 
 The proof is a 16-case split. Four cases are reflexivity, one is the `Dense ≤ Dedekind` projection
-`TaskFrame.isDense_of_isDedekind`, four are `Sat .Base = True`, and the remaining seven have an
+`TaskFrame.isDense_of_isRTime`, four are `Sat .Base = True`, and the remaining seven have an
 absurd order hypothesis discharged by `decide` against `FrameClass`'s `DecidableRel` instance.
 -/
 theorem FrameClass.Sat.anti {fc₁ fc₂ : FrameClass} (h : fc₁ ≤ fc₂) {F : TaskFrame} :
@@ -195,7 +195,7 @@ theorem FrameClass.Sat.anti {fc₁ fc₂ : FrameClass} (h : fc₁ ≤ fc₂) {F 
     first
       | exact fun _ => trivial
       | exact id
-      | exact TaskFrame.isDense_of_isDedekind
+      | exact TaskFrame.isDense_of_isRTime
       | exact absurd h (by decide)
 
 end FormalSystem.ProofSystem

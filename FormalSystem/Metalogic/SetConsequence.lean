@@ -147,7 +147,7 @@ proof that wants one component can now write `P.time` or `P.inClass` instead of 
 seven binders to reach it, and a docstring can name a field instead of counting positions.
 
 The `inClass` field holds the frame condition. At `.Discrete` that is
-`TaskFrame.IsSuccArchDiscrete Frame` (`Semantics/FrameProperty.lean`), itself a four-component
+`TaskFrame.IsZTime Frame` (`Semantics/FrameProperty.lean`), itself a four-component
 nested existential which neither the structure nor the anonymous constructor unfolds, so a
 destructuring pattern still needs exactly one nesting pair there. -/
 structure PointedModel (fc : FrameClass) (Γ : Set Formula) where
@@ -255,7 +255,7 @@ with no transport.
 The two exceptions are `SatisfiableBaseSet` and `SatisfiableZTimeSet`, whose pre-collapse
 binder lists differ from `SatisfiableSet`'s by the frame-condition slot — `Sat .Base` is `True`,
 which the old Base list simply omitted, and `Sat .Discrete` nests its four class witnesses inside
-`TaskFrame.IsSuccArchDiscrete` where the old Discrete list held them flat. Both are *stated* as
+`TaskFrame.IsZTime` where the old Discrete list held them flat. Both are *stated* as
 instantiations below; the pre-collapse shape is restored at call sites by the adapters. -/
 
 /-! ### Binder-shape adapters
@@ -263,7 +263,7 @@ instantiations below; the pre-collapse shape is restored at call sites by the ad
 The pre-collapse binder shapes, restored — **once, generically**, not once per tag. The frame
 condition travels as the single `fc.Sat F` argument, and a proof that needs it taken apart calls
 `sat_intro` (`Semantics/FrameClassValidity.lean`), which registers the density instance at
-`.Dense`/`.Dedekind` and destructures `TaskFrame.IsSuccArchDiscrete` at `.Discrete`. The four
+`.Dense`/`.Dedekind` and destructures `TaskFrame.IsZTime` at `.Discrete`. The four
 per-class `SetSemanticConsequence*.{of_forall, apply}` pairs that used to live here existed only
 because a `Sat .Dense F` hypothesis was once invisible to instance search; `FrameClass.Sat` is now
 `@[reducible]`, so they were deleted rather than maintained. -/
@@ -294,7 +294,7 @@ The same service `SetSemanticConsequenceOn.of_forall_total` above performs, on t
 side of `SatisfiableSet`, and likewise a single `fc`-indexed declaration where four tag-specific
 ones used to stand. It takes the frame condition in the single `fc.Sat F` slot; a site holding
 the four discrete instances flat reaches that slot through
-`TaskFrame.isSuccArchDiscrete_of_instances` (`Semantics/FrameProperty.lean`). It serves every
+`TaskFrame.isZTime_of_instances` (`Semantics/FrameProperty.lean`). It serves every
 `SatisfiableSet` name stated at the end of this module (`SatisfiableBaseSet`,
 `SatisfiableDenseSet`, `SatisfiableZTimeSet`, `SatisfiableRTimeSet`) and is what both
 `Metalogic/DedekindNonCompactness.lean` and `Metalogic/DiscreteNonCompactness.lean` use at their
@@ -535,11 +535,11 @@ def StrongCompletenessZTime : Prop := StrongCompleteness FrameClass.Discrete
     `∀ ψ ∈ Γ`.
 
     **The four class binders re-nested under the collapse.** `Sat .Discrete` is
-    `TaskFrame.IsSuccArchDiscrete` (`Semantics/FrameProperty.lean`), a plain `def` wrapping
+    `TaskFrame.IsZTime` (`Semantics/FrameProperty.lean`), a plain `def` wrapping
     `∃ (_ : SuccOrder D) (_ : PredOrder D), _ ∧ _`, and the anonymous constructor does not unfold
     it. So the flat ten-component tuple this predicate used to accept no longer elaborates: an
     introduction site should call `SatisfiableSet.of_forall` with
-    `TaskFrame.isSuccArchDiscrete_of_instances` (`Semantics/FrameProperty.lean`) in the
+    `TaskFrame.isZTime_of_instances` (`Semantics/FrameProperty.lean`) in the
     frame-condition slot, and an elimination pattern needs exactly one nesting pair,
     `⟨F, ⟨_, _, _, _⟩, M, τ, hτ, t, h⟩` — or a single `hF` passed straight back to
     `ValidIn.apply_total`.
@@ -600,7 +600,7 @@ def CompactRTime : Prop := Compact FrameClass.Dedekind
     least-upper-bound hypothesis — in place of `ValidDense`'s `DenselyOrdered` alone, and the
     conclusion generalised from a single formula to `∀ ψ ∈ Γ`.
 
-    `Sat .Dedekind` is `TaskFrame.IsDedekind`, i.e. `IsDense ∧ IsComplete`, so a destructuring
+    `Sat .Dedekind` is `TaskFrame.IsRTime`, i.e. `IsDense ∧ IsComplete`, so a destructuring
     pattern needs exactly one nesting pair here, `⟨F, ⟨hd, hlub⟩, M, τ, hτ, t, h⟩`, and an
     introduction site should call `SatisfiableSet.of_forall` above. The destructured
     `hd : F.IsDense` **is** visible to instance search: `TaskFrame.IsDense` is an `abbrev` and

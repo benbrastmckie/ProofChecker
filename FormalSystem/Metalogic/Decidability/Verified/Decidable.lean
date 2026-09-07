@@ -2411,7 +2411,7 @@ did when a carrier transport was still needed; it disappears with `TruthAt`'s se
 itself.
 
 The four discreteness instances are bound on `D` and handed to `FrameClass.Discrete.Sat`
-**positionally**, exactly as `TaskFrame.isSuccArchDiscrete_of_instances` and `sat_intro` do:
+**positionally**, exactly as `TaskFrame.isZTime_of_instances` and `sat_intro` do:
 `SuccOrder` and `PredOrder` are data, so routing them back through instance synthesis at
 `F.toTaskFrame.Duration.carrier` breaks against the instances the three call sites have already
 fixed on `D` with `letI`. -/

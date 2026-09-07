@@ -331,7 +331,7 @@ and confirm afterwards that the same count now matches `\bValid(ZTime|RTime)\b` 
 
 ---
 
-### Phase 4: Tier 1 satellites and frame predicates [NOT STARTED]
+### Phase 4: Tier 1 satellites and frame predicates [COMPLETED]
 
 **Goal**: Rename the two frame predicates and their satellite lemmas — the last step before the
 constructors themselves.
@@ -339,15 +339,15 @@ constructors themselves.
 **Tasks**:
 - [ ] `Semantics/FrameProperty.lean:161`: `TaskFrame.IsSuccArchDiscrete` -> `TaskFrame.IsZTime`.
 - [ ] `Semantics/FrameProperty.lean:212`: `TaskFrame.IsDedekind` -> `TaskFrame.IsRTime`.
-- [ ] Satellites: `isSuccArchDiscrete_of_instances` -> `isZTime_of_instances`,
+- [x] Satellites: `isSuccArchDiscrete_of_instances` -> `isZTime_of_instances`,
       `IsSuccArchDiscrete.elim` -> `IsZTime.elim`, `isDense_of_isDedekind` ->
       `isDense_of_isRTime`, `isComplete_of_isDedekind` -> `isComplete_of_isRTime`.
-- [ ] Update the `FrameClass.Sat` monotonicity proof at
+- [x] Update the `FrameClass.Sat` monotonicity proof at
       `Semantics/FrameClassValidity.lean:198`, which consumes `isDense_of_isDedekind` as the
       `Dense <= Dedekind` projection.
-- [ ] Update the comment mention in `scripts/boneyard-import-waivers.txt:48`
+- [x] Update the comment mention in `scripts/boneyard-import-waivers.txt:48`
       (`IsSuccArchDiscrete / IsDedekind`).
-- [ ] Run the KEEP-list guard, paying particular attention to `TaskFrame.IsDiscrete` being
+- [x] Run the KEEP-list guard, paying particular attention to `TaskFrame.IsDiscrete` being
       untouched.
 
 **Timing**: 1 hour

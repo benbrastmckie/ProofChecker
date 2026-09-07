@@ -614,12 +614,12 @@ This restricts `Valid` to temporal types with `SuccOrder D` and `PredOrder D`,
 capturing the frame condition for the discreteness axioms DF/DP.
 
 **Now an abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .Discrete`, which
-is `TaskFrame.IsSuccArchDiscrete` — `def:TMplus-f`'s Hölder narrowing to ℤ-time, *not*
+is `TaskFrame.IsZTime` — `def:TMplus-f`'s Hölder narrowing to ℤ-time, *not*
 `def:frame-properties`' bare Discrete clause. Recording the narrowing in the tag's interpretation
 rather than in a binder list here is what keeps `soundness_ztime` from silently widening its
 frame class. The binder shape this definition used to have is recovered by the generic
 `ValidIn.of_forall_total` / `ValidIn.apply_total` followed by `sat_intro`, which destructures the
-`IsSuccArchDiscrete` existential into the four instances.
+`IsZTime` existential into the four instances.
 
 **Notation**: `⊨_discrete φ`
 
@@ -679,7 +679,7 @@ statement and as the target of the forgetful bridge from `Valid`.
 **Why the name still reads oddly, and why that is recorded rather than fixed.** The paper calls
 the dense-and-complete class Complete; this tree calls it Dedekind, because "complete" is already
 load-bearing here for *proof-theoretic* completeness. That naming deviation of record is stated
-in full at `TaskFrame.IsDedekind` (`Semantics/FrameProperty.lean`) and is a *different* thing from
+in full at `TaskFrame.IsRTime` (`Semantics/FrameProperty.lean`) and is a *different* thing from
 the trap this paragraph closes: the rename removed `ValidRTime ≠ ValidIn .Dedekind`, it did not
 remove the paper-versus-tree deviation, which stands.
 
@@ -733,7 +733,7 @@ strictly weaker statement and as the target of the forgetful bridge from `Valid`
 abbreviation, the wrong target differed from the right one by *one binder in an inlined list* —
 delete `[DenselyOrdered F.Duration]` and the refutable statement typechecks, with nothing but this
 docstring to say so. The two are now built from different frame predicates entirely
-(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .Dedekind`, i.e. `TaskFrame.IsDedekind`), so
+(`ValidOnFrames TaskFrame.IsComplete` against `ValidIn .Dedekind`, i.e. `TaskFrame.IsRTime`), so
 writing the refutable version requires naming a different predicate rather than dropping a binder.
 
 **Source.** Reynolds 1992 (printed p.169) observes that the Prior axioms enforce only a
@@ -748,12 +748,12 @@ A formula is valid over **dense Dedekind-complete** temporal orders. This is the
 predicate, and sharply so: up to order-and-group isomorphism `ℝ` is the *only* nontrivial model,
 not merely a paradigm one.
 
-**This is `ValidIn .Dedekind`** — `FrameClass.Sat .Dedekind` is `TaskFrame.IsDedekind`, the
+**This is `ValidIn .Dedekind`** — `FrameClass.Sat .Dedekind` is `TaskFrame.IsRTime`, the
 conjunction of `def:frame-properties`' Dense and Complete clauses — and it is therefore the
 predicate the `.Dedekind` tag denotes, whatever its name may suggest about `ValidComplete`. The
 binder shape this definition used to have is recovered by the generic
 `ValidIn.of_forall_total` / `ValidIn.apply_total` followed by `sat_intro`, which splits
-`IsDedekind` into the density instance and the least-upper-bound hypothesis.
+`IsRTime` into the density instance and the least-upper-bound hypothesis.
 
 **Why the density binder is exactly the right cut.** By
 `FormalSystem.Semantics.complete_duration_discrete_or_dense`
@@ -801,7 +801,7 @@ theorem validDense_iff_validIn_dense (φ : Formula) :
     ValidDense φ ↔ ValidIn ProofSystem.FrameClass.Dense φ := Iff.rfl
 
 /-- `ValidZTime` is `ValidIn .Discrete`: its four-instance binder bundle is exactly the
-existential `TaskFrame.IsSuccArchDiscrete` that `Sat .Discrete` returns.
+existential `TaskFrame.IsZTime` that `Sat .Discrete` returns.
 
 The forward direction destructures that existential and passes the witnesses **positionally with
 `@`**, never with `haveI`: `F`'s and `M`'s types already carry instances, and re-introducing
@@ -810,7 +810,7 @@ theorem validZTime_iff_validIn_ztime (φ : Formula) :
     ValidZTime φ ↔ ValidIn ProofSystem.FrameClass.Discrete φ := Iff.rfl
 
 /-- `ValidRTime` is `ValidIn .Dedekind`: its density binder together with its
-least-upper-bound hypothesis is exactly the conjunction `TaskFrame.IsDedekind` that
+least-upper-bound hypothesis is exactly the conjunction `TaskFrame.IsRTime` that
 `Sat .Dedekind` returns. This is the `soundness_rtime` target. -/
 theorem validRTime_iff_validIn_rtime (φ : Formula) :
     ValidRTime φ ↔ ValidIn ProofSystem.FrameClass.Dedekind φ := Iff.rfl
@@ -863,7 +863,7 @@ proves the weaker `ValidRTime`, and anything genuinely established at
 -/
 theorem validRTime_of_validComplete {φ : Formula} (h : ValidComplete φ) :
     ValidRTime φ :=
-  ValidOnFrames.mono (fun _ => TaskFrame.isComplete_of_isDedekind) h
+  ValidOnFrames.mono (fun _ => TaskFrame.isComplete_of_isRTime) h
 
 /--
 Valid formulas are semantic consequences of empty context.

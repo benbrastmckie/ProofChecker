@@ -1581,7 +1581,7 @@ theorem not_derivable_nil_bot_ztime :
   exact Truth.bot_false
     (Semantics.ValidIn.apply_total (FormalSystem.Metalogic.soundness_ztime_valid d)
       (FrameOver.trivialFrame (D := ℤ))
-      (Semantics.TaskFrame.isSuccArchDiscrete_of_instances _)
+      (Semantics.TaskFrame.isZTime_of_instances _)
       TaskModel.allFalse τ.val τ.property 0)
 
 end FormalSystem.Metalogic

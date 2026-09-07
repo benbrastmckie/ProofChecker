@@ -367,7 +367,7 @@ theorem validZTime_iff_validInt (φ : Formula) : ValidZTime φ ↔ ValidInt φ :
   constructor
   · intro h F M τ hτ t
     exact ValidIn.apply_total h F.toTaskFrame
-      (TaskFrame.isSuccArchDiscrete_of_instances _) M τ hτ t
+      (TaskFrame.isZTime_of_instances _) M τ hτ t
   · intro h
     refine ValidIn.of_forall_total ?_
     intro F hF M τ hτ t

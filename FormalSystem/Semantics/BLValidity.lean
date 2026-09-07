@@ -208,10 +208,10 @@ Validity over **discrete** temporal orders: `BLValid` with successor and predece
 added to the binder list, capturing the frame condition for BL's discreteness axioms.
 
 Binder-for-binder mirror of `Semantics.ValidZTime`, and like it now an abbreviation: the frame
-constraint is `FrameClass.Sat .Discrete`, i.e. `TaskFrame.IsSuccArchDiscrete` — `def:TMplus-f`'s
+constraint is `FrameClass.Sat .Discrete`, i.e. `TaskFrame.IsZTime` — `def:TMplus-f`'s
 Hölder narrowing to ℤ-time. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
-`sat_intro`, which destructures the `IsSuccArchDiscrete` existential into the four instances.
+`sat_intro`, which destructures the `IsZTime` existential into the four instances.
 -/
 def BLValidZTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Discrete φ
 
@@ -222,7 +222,7 @@ Mirrors `BLValidZTime`'s pre-abbreviation four-instance binder shape exactly, mi
 `[IsSuccArchimedean F.Duration]` and `[IsPredArchimedean F.Duration]`. Unlike `BLValidZTime`,
 this is stated directly in the pre-abbreviation shape rather than as an abbreviation over
 `BLValidIn`: there is no `FrameClass.Sat` variant bundling `SuccOrder`+`PredOrder` alone
-(`TaskFrame.IsSuccArchDiscrete` bundles all four), so no `.of_forall`/`.apply` pair is needed —
+(`TaskFrame.IsZTime` bundles all four), so no `.of_forall`/`.apply` pair is needed —
 a value of this type already **is** the binder-shape statement.
 
 **Why this exists.** `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_ztime_succ` is the
@@ -260,9 +260,9 @@ at `FrameClass.Dedekind` and is false on `ℤ`, which satisfies every remaining 
 deliberately no `BLValidComplete` in this file.
 
 Now an abbreviation: the frame constraint is `FrameClass.Sat .Dedekind`, i.e.
-`TaskFrame.IsDedekind`. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
+`TaskFrame.IsRTime`. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
-`sat_intro`, which splits `IsDedekind` into the density instance and the least-upper-bound
+`sat_intro`, which splits `IsRTime` into the density instance and the least-upper-bound
 hypothesis.
 -/
 def BLValidRTime (φ : BLFormula) : Prop := BLValidIn ProofSystem.FrameClass.Dedekind φ

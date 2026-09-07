@@ -156,7 +156,7 @@ theorem ratStaticFrame_mem_mod :
 /--
 **The witness is not in `Sat .Dedekind`.**
 
-`Sat .Dedekind` is `TaskFrame.IsDedekind`, the conjunction of `IsDense` and `IsComplete`;
+`Sat .Dedekind` is `TaskFrame.IsRTime`, the conjunction of `IsDense` and `IsComplete`;
 `rat_not_complete` kills the second conjunct.
 -/
 theorem ratStaticFrame_not_sat :

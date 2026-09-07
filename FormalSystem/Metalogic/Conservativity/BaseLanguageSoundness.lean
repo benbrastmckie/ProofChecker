@@ -496,7 +496,7 @@ theorem bl_not_derivable_nil_bot_ztime :
   rintro ⟨d⟩
   obtain ⟨τ⟩ := TaskFrame.hF_nonempty_of_frameAxioms (FrameOver.trivialFrame (D := ℤ))
   exact BLValidIn.apply_total (bl_soundness_ztime_valid d) (FrameOver.trivialFrame (D := ℤ))
-    (TaskFrame.isSuccArchDiscrete_of_instances _) TaskModel.allFalse τ.val τ.property 0
+    (TaskFrame.isZTime_of_instances _) TaskModel.allFalse τ.val τ.property 0
 
 /-! ## Native spot checks
 

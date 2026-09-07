@@ -61,7 +61,7 @@ theorem not_validZTime_of_satAtState
   obtain ⟨τ, hτ, t, -, htr⟩ := h
   intro hv
   exact htr (ValidIn.apply_total hv P.toTaskFrame
-    (TaskFrame.isSuccArchDiscrete_of_instances _) P.toModel τ hτ t)
+    (TaskFrame.isZTime_of_instances _) P.toModel τ hτ t)
 
 theorem validZTime_iff_check
     (canon : Formula → IntPresentation)

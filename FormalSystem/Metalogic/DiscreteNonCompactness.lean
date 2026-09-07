@@ -206,7 +206,7 @@ theorem archWitness_finitely_satisfiable (p : Atom) (L : List Formula)
     (hL : ∀ ψ ∈ L, ψ ∈ archWitness p) : SatisfiableZTimeSet {ψ | ψ ∈ L} := by
   classical
   refine SatisfiableSet.of_forall (fc := FrameClass.Discrete) (FrameOver.natFrame (D := ℤ))
-    (TaskFrame.isSuccArchDiscrete_of_instances _) zModel
+    (TaskFrame.isZTime_of_instances _) zModel
     (zHistory ((L.map witIdx).sum : ℕ)) (zHistory_total _) 0 ?_
   set N : ℕ := (L.map witIdx).sum with hNdef
   intro ψ hψ
