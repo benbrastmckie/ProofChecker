@@ -1263,7 +1263,7 @@
     {
       "project_number": 531,
       "project_name": "docgen_publication_and_automation_suite_triage",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "medium",
@@ -1292,7 +1292,7 @@
         "FormalSystem/Metalogic/Algebraic/FlowFrame.lean"
       ],
       "created": "2026-09-02T03:30:31Z",
-      "last_updated": "2026-09-07T21:33:07Z",
+      "last_updated": "2026-09-07T23:24:00Z",
       "artifacts": [
         {
           "path": "specs/531_docgen_publication_and_automation_suite_triage/reports/01_docgen-publication-automation-triage.md",
@@ -1303,10 +1303,20 @@
           "path": "specs/531_docgen_publication_and_automation_suite_triage/plans/01_docgen-publication-automation-triage.md",
           "type": "plan",
           "summary": "17-phase, 27.5-hour plan across four independent workstreams (publication, bibliography, automation triage, naming), built on the research report's eight corrections to the dispatch's stale anchors."
+        },
+        {
+          "path": "specs/531_docgen_publication_and_automation_suite_triage/summaries/01_docgen-publication-automation-triage-summary.md",
+          "type": "summary",
+          "summary": "WAVE 5 publication and automation triage: doc-gen4 workflow, complete references.bib, MainResults.lean, root furniture, three new invariant checks, and the retirement of 17 unused tactic declarations."
         }
       ],
       "session_id": "sess_1788808508_a5588d",
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Published the API documentation via a docgen-action workflow with a completed 26-entry references.bib wired into it, added FormalSystem/MainResults.lean restating 27 headline results each followed by #print axioms, and added root ORGANISATION.md and NOTATION.md. Retired the bespoke automation suite by measurement: 17 tactic declarations and the two dead TMLogic Aesop modules moved to a new guard-first Boneyard/RetiredTactics/, the 1,210-line Tactics/Helpers.lean split into UserTactics/Meta/Search, and five write-only SearchConfig weight fields plus three behaviourally identical tactic aliases removed. Brought the naming classes to zero outside three recorded exception sets (57 lemma to theorem, 38 Uppercase_x names dot-namespaced, 11 shadowing renames) and added three invariant checks -- C21, C22 and C23 -- so none of it can regrow. lake build and lake test green; no sorry, no axiom, no deferral.",
+      "roadmap_items": [
+        "specs/ROADMAP.md Phase 5 (Publication and Documentation): the doc-gen4 site, the completed bibliography and the root-level furniture this phase's polish pass assumed existed are now in place. FormalSystem/MainResults.lean is the artefact the decidability-example item (ROADMAP.md:255) should cite -- one page of already-axiom-pinned headline results rather than a directory tour.",
+        "specs/ROADMAP.md Phase 7 (Repository Hygiene and Programme Metadata): the automation triage and the three naming classes are closed, each guarded against regrowth by a new check rather than by convention."
+      ]
     },
     {
       "project_number": 539,
