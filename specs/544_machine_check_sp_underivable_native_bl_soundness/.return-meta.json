@@ -1,0 +1,21 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/544_machine_check_sp_underivable_native_bl_soundness/reports/01_sp-underivable-native-bl-soundness.md",
+      "summary": "Research for machine-checking (Sp)'s TM-underivability: a native BL frame notion, native BL soundness, and a verified ℤ ⊕ ℝ two-fibre countermodel; includes a compiling sorry-free end-to-end prototype and three corrections to the task description."
+    },
+    {
+      "type": "other",
+      "path": "specs/544_machine_check_sp_underivable_native_bl_soundness/prototype/SpCountermodelPrototype.lean",
+      "summary": "340-line sorry-free Lean prototype covering all five scope items; compiles with lake env lean and reports the standard [propext, Classical.choice, Quot.sound] axiom profile."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788807358_25f89d_544",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
