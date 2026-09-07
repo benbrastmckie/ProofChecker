@@ -1626,7 +1626,7 @@ def denseRules : List TableauRule := [
 /--
 Discrete-specific rules, included only when fc >= .Discrete.
 -/
-def discreteRules : List TableauRule := [
+def zTimeRules : List TableauRule := [
   .priorUZ, .priorSZ,
   .z1Rule
 ]
@@ -1640,7 +1640,7 @@ touches, and the reason `Discrete ≰ Dedekind` is the correct gating rather tha
 the Dedekind terminus consumes `ValidDedekind`, so its arm is base + dense + dedekind
 and never includes the Discrete rules.
 -/
-def dedekindRules : List TableauRule := [
+def rTimeRules : List TableauRule := [
   .priorUGap, .priorSGap, .sepRule
 ]
 
@@ -1652,8 +1652,8 @@ when the frame class supports them.
 def allRulesForFC (fc : FrameClass := .Base) : List TableauRule :=
   let base := allRules
   let dense := if decide (FrameClass.Dense ≤ fc) then denseRules else []
-  let discrete := if decide (FrameClass.Discrete ≤ fc) then discreteRules else []
-  let dedekind := if decide (FrameClass.Dedekind ≤ fc) then dedekindRules else []
+  let discrete := if decide (FrameClass.Discrete ≤ fc) then zTimeRules else []
+  let dedekind := if decide (FrameClass.Dedekind ≤ fc) then rTimeRules else []
   -- The Dedekind rules come FIRST, ahead of the base rules. They are persistent, they fire
   -- at most once per label (each checks `branch.contains` on its own conclusion), and they
   -- trigger on a conjunction that the consumable propositional rules destroy on their very

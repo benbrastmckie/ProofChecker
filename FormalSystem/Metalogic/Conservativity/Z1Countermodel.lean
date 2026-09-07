@@ -24,7 +24,7 @@ sorry-free), and refutes `TM_f`'s weak completeness over ℤ-time (report §6.1)
 `M.valuation w _ := 1 ≤ (ofLex w.2).1`. The refuting structure **is** a task frame — a
 lexicographic product of ordered abelian groups is an ordered abelian group — so the CEF
 refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `SuccOrder`/
-`PredOrder` instances `bl_soundness_discrete_succ` needs, and `Metalogic/BXCanonical/
+`PredOrder` instances `bl_soundness_ztime_succ` needs, and `Metalogic/BXCanonical/
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
@@ -38,13 +38,13 @@ than a weaker claim.
 - `z1_gp_iff_p` — `Gp ↔ p`, pointwise
 - `not_bl_derivable_z1` — **Deliverable 1**: `¬ ⊢ᴮᴸ[Discrete] Z1 p`
 - `blValidDiscrete_z1` — **Deliverable 2**: `BLValidDiscrete (Z1 p)`, stated as the negation of
-  `TMCompleteDiscrete` (Phase 4's `Prop`), so the two phases visibly compose
+  `TMCompleteZTime` (Phase 4's `Prop`), so the two phases visibly compose
 
 ## References
 
 * `specs/495_determine_tm_completeness_status_over_task_frames/reports/01_tm-completeness-status.md` §6.1
 * `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_f half)
-* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteDiscrete`
+* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteZTime`
 -/
 
 namespace FormalSystem.Metalogic
@@ -167,7 +167,7 @@ theorem z1_not_true_at_zero (p : Atom) :
 /-! ## The two CEF deliverables -/
 
 /--
-**Deliverable 1.** `Z1 p` is not `TM_f`-derivable: soundness of `bl_soundness_discrete_succ`
+**Deliverable 1.** `Z1 p` is not `TM_f`-derivable: soundness of `bl_soundness_ztime_succ`
 against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 `Semantics/LexCarrier.lean`. Combined with `Conservativity.z1_translate`, this is CEF refuted
 with both halves machine-checked.
@@ -176,7 +176,7 @@ theorem not_bl_derivable_z1 (p : Atom) :
     ¬ BaseLanguage.Derivable FrameClass.Discrete [] (Conservativity.Z1 (BLFormula.atom p)) := by
   rintro ⟨d⟩
   exact z1_not_true_at_zero p
-    (bl_soundness_discrete_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
+    (bl_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
 
 /--
 **Deliverable 2.** `Z1 p` is `BLValidDiscrete`: from `Conservativity.z1_translate`
@@ -185,7 +185,7 @@ gives `ValidDiscrete (tr (Z1 p))`, and `blValidDiscrete_iff_validDiscrete_tr` cr
 bridge.
 
 Combined with `not_bl_derivable_z1`, this refutes the `.Discrete` row of Phase 4's reduction:
-**`TM_f` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteDiscrete`
+**`TM_f` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
 so the two phases visibly compose.
 -/
 theorem blValidDiscrete_z1 (p : Atom) : BLValidDiscrete (Conservativity.Z1 (BLFormula.atom p)) := by
@@ -193,10 +193,10 @@ theorem blValidDiscrete_z1 (p : Atom) : BLValidDiscrete (Conservativity.Z1 (BLFo
   obtain ⟨d⟩ := Conservativity.z1_translate (BLFormula.atom p)
   exact soundness_ztime_valid d
 
-/-- **TM_f is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteDiscrete`,
+/-- **TM_f is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteZTime`,
 witnessed by `Z1 p`: `BLValidDiscrete (Z1 p)` holds (`blValidDiscrete_z1`) yet `Z1 p` is not
 `TM_f`-derivable (`not_bl_derivable_z1`). -/
-theorem tmCompleteDiscrete_refuted (p : Atom) : ¬ TMCompleteDiscrete :=
+theorem tmCompleteZTime_refuted (p : Atom) : ¬ TMCompleteZTime :=
   fun h => not_bl_derivable_z1 p (h _ (blValidDiscrete_z1 p))
 
 end FormalSystem.Metalogic

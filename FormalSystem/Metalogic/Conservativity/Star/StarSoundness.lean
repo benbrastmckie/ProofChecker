@@ -156,12 +156,12 @@ theorem star_soundness_dense {φ : StarFormula} (h : StarDerivable FrameClass.De
   star_soundness_validIn h
 
 /-- Soundness of TM⋆ at `.Discrete`. -/
-theorem star_soundness_discrete {φ : StarFormula}
+theorem star_soundness_ztime {φ : StarFormula}
     (h : StarDerivable FrameClass.Discrete [] φ) : StarValidDiscrete φ :=
   star_soundness_validIn h
 
 /-- Soundness of TM⋆ at `.Dedekind`. -/
-theorem star_soundness_dedekind {φ : StarFormula}
+theorem star_soundness_rtime {φ : StarFormula}
     (h : StarDerivable FrameClass.Dedekind [] φ) : StarValidDedekind φ :=
   star_soundness_validIn h
 
@@ -175,7 +175,7 @@ example {fc : FrameClass} {φ : StarFormula} (d : ⊢⋆[fc] φ) :
 
 /-- **TM⋆ is consistent at `.Base`**: `⊥` is not a theorem. (Consistency at the wider classes is
 not a corollary, since derivability lifts upward; each would need its own witness frame.) Witness: the trivial frame over `ℤ` with the all-false valuation, mirroring
-`bl_not_derivable_nil_bot_discrete`. -/
+`bl_not_derivable_nil_bot_ztime`. -/
 theorem star_not_derivable_nil_bot :
     ¬ StarDerivable FrameClass.Base [] StarFormula.bot := by
   intro h

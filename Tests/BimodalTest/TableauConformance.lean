@@ -455,7 +455,7 @@ def discreteRows : List Row :=
     ++ serialityRows ++ seriesRows ++ counterexampleRows ++ untilSinceRows
     ++ discreteExtraRows
 
-/-- The three Dedekind axiom instances. `allRulesForFC` now has a `dedekindRules` arm
+/-- The three Dedekind axiom instances. `allRulesForFC` now has a `rTimeRules` arm
 (`priorUGap`, `priorSGap`, `sepRule`), and all three close. `kPlus`/`kMinus` are Reynolds'
 `K⁺`/`K⁻` (`Formula.lean:180,193`), which those three rules are the only consumers of.
 

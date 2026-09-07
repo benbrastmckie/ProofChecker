@@ -154,8 +154,8 @@ theorem cec_backward {φ : BLFormula}
 Not part of the bridge: this is the TM⁺_f half of the CEF refutation. The other half — that
 `TM_f ⊬ Z1` — is **also machine-checked**, in the sibling module
 `Conservativity/Z1Countermodel.lean`, as `not_bl_derivable_z1`; the BL-side soundness theorem it
-needed, `bl_soundness_discrete_succ`, is in `Conservativity/BaseLanguageSoundness.lean`.
-`tmCompleteDiscrete_refuted`, in that same countermodel module, reads the pair off as an outright
+needed, `bl_soundness_ztime_succ`, is in `Conservativity/BaseLanguageSoundness.lean`.
+`tmCompleteZTime_refuted`, in that same countermodel module, reads the pair off as an outright
 refutation of TM_f-completeness over the discrete class. Neither half is outstanding. -/
 
 /--

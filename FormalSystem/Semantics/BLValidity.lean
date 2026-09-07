@@ -225,7 +225,7 @@ this is stated directly in the pre-abbreviation shape rather than as an abbrevia
 (`TaskFrame.IsSuccArchDiscrete` bundles all four), so no `.of_forall`/`.apply` pair is needed —
 a value of this type already **is** the binder-shape statement.
 
-**Why this exists.** `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_discrete_succ` is the
+**Why this exists.** `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_ztime_succ` is the
 single prerequisite CEF was missing (report §6.1): a discrete BL soundness theorem that does not
 assume Archimedean structure, so it applies to the non-Archimedean carrier `ℚ ×ₗ ℤ`
 (`Semantics/LexCarrier.lean`) that `Metalogic/Conservativity/Z1Countermodel.lean`'s countermodel is built over.
@@ -242,7 +242,7 @@ and its dense/Dedekind siblings.
 corollary of `blValidIn_iff_validIn_tr`. This one is neither, and cannot be made either:
 `BLValidDiscreteSucc` is **not** any `BLValidIn fc` — no `FrameClass.Sat` variant bundles just
 `SuccOrder` + `PredOrder` without the two Archimedean conditions, which is exactly the weakening
-`bl_soundness_discrete_succ` needs for the non-Archimedean carrier `ℚ ×ₗ ℤ`. Adding such a tag to
+`bl_soundness_ztime_succ` needs for the non-Archimedean carrier `ℚ ×ₗ ℤ`. Adding such a tag to
 `FrameClass` to make this a corollary would widen the proof side's class lattice to serve a
 semantic convenience. Leave it as a direct lambda. -/
 theorem BLValidity.blValid_implies_blValidDiscreteSucc {φ : BLFormula} (h : BLValid φ) :

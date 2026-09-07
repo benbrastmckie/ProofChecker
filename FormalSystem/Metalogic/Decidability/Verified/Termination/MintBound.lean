@@ -4714,7 +4714,7 @@ theorem findApplicableRule_multWitness (b : Branch)
     intro h
     exact hnot (mem_of_branch_contains (h (SignedFormula.pos mfp Label.initial)
       (by simp [multEmitted])))
-  simp only [findApplicableRule, allRulesForFC, allRules, dedekindRules]
+  simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
   by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
   · simp [hd, hg, List.findSome?]
   · simp [hd, hg, List.findSome?]
@@ -5876,7 +5876,7 @@ ahead of it — the three Dedekind rules, then `negPos`, `negNeg`, `impNeg`, `an
 theorem findApplicableRule_freshWorldWitness (fc : FormalSystem.ProofSystem.FrameClass) :
     findApplicableRule freshWorldWitness freshWorldBranch TimeOrdering.empty fc
       = some (TableauRule.boxNeg, RuleResult.linear freshWorldEmitted, TimeOrdering.empty) := by
-  simp only [findApplicableRule, allRulesForFC, allRules, dedekindRules]
+  simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
   by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
   · simp [hd, List.findSome?]
   · simp [hd, List.findSome?]
@@ -11477,7 +11477,7 @@ theorem findApplicableRule_freshWorldWitnessAt
     (fc : FormalSystem.ProofSystem.FrameClass) (l : Label) :
     findApplicableRule (freshWorldWitnessAt l) (freshWorldBranchAt l) TimeOrdering.empty fc
       = some (TableauRule.boxNeg, RuleResult.linear (freshWorldEmittedAt l), TimeOrdering.empty) := by
-  simp only [findApplicableRule, allRulesForFC, allRules, dedekindRules]
+  simp only [findApplicableRule, allRulesForFC, allRules, rTimeRules]
   by_cases hd : FormalSystem.ProofSystem.FrameClass.Dedekind ≤ fc
   · simp [hd, List.findSome?]
   · simp [hd, List.findSome?]

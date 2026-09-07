@@ -11,7 +11,7 @@ import FormalSystem.Metalogic.Conservativity.Z1Countermodel
 
 **Read `Metalogic/Conservativity.lean`'s module docstring first.** Forward proof-theoretic
 conservativity of TM⁺ over TM — `Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ` —
-is refuted at `.Discrete` (`tmCompleteDiscrete_refuted`), refuted in the source at `.Base`, and
+is refuted at `.Discrete` (`tmCompleteZTime_refuted`), refuted in the source at `.Base`, and
 by `tmComplete_iff_forward` it is *the same proposition* as "TM is complete over the frames of
 `fc`". Nothing in this file states, approaches, or `sorry`s it.
 
@@ -31,7 +31,7 @@ mechanically through the landed truth-transfer bridge `blValidIn_iff_validIn_tr`
   all four classes by `tmFrag_complete_base/dense/discrete/dedekind`;
 - **`TM ⊆ TMFrag`** at every class (`tm_le_tmFrag`, the `Γ = []` instance of
   `derivable_translate`);
-- **`TM ⊊ TMFrag` at `.Discrete`** (`tm_lt_tmFrag_discrete`): the Z1 schema is in the fragment
+- **`TM ⊊ TMFrag` at `.Discrete`** (`tm_lt_tmFrag_ztime`): the Z1 schema is in the fragment
   (`z1_translate`) but not a TM_f theorem (`not_bl_derivable_z1`);
 - the reduction restated in fragment terms (`tmComplete_iff_tmFrag_le_tm`): TM is complete at
   `fc` iff the fragment collapses onto TM at `fc` — with `Forward` unfolded, never asserted.
@@ -44,7 +44,7 @@ Compactness of the fragment at `.Base` and `.Dense` is the sibling module
 `TMFrag` is defined *through* TM⁺; a native finite Hilbert axiomatization of the H/G-fragment of
 TM⁺ over `BLFormula` is open research and is not attempted here. What the fragment gives is an
 honest, complete logic of `BLValidIn` at every frame class, which TM itself is not
-(`tmCompleteDiscrete_refuted`).
+(`tmCompleteZTime_refuted`).
 
 ## References
 
@@ -69,7 +69,7 @@ iff its translation `tr φ` is a TM⁺ theorem at `fc`.
 
 This — not TM — is the complete logic of `BLValidIn fc`: by `tmComplete_iff_forward`
 (`Conservativity/TMCompletenessReduction.lean`), TM-completeness at `fc` is equivalent to forward
-conservativity at `fc`, which is refuted at `.Discrete` (`tmCompleteDiscrete_refuted`). The
+conservativity at `fc`, which is refuted at `.Discrete` (`tmCompleteZTime_refuted`). The
 fragment sidesteps that gap by definition: `tmFrag_iff_blValidIn` below shows it is exactly
 `BLValidIn fc` at every class carrying a `WeakCompleteness fc` engine.
 -/
@@ -107,12 +107,12 @@ theorem tmFrag_complete_dense (φ : BLFormula) (h : BLValidIn FrameClass.Dense �
   tmFrag_complete completeness_dense φ h
 
 /-- Fragment completeness at `.Discrete`, via `completeness_ztime`. -/
-theorem tmFrag_complete_discrete (φ : BLFormula) (h : BLValidIn FrameClass.Discrete φ) :
+theorem tmFrag_complete_ztime (φ : BLFormula) (h : BLValidIn FrameClass.Discrete φ) :
     TMFrag FrameClass.Discrete φ :=
   tmFrag_complete completeness_ztime φ h
 
 /-- Fragment completeness at `.Dedekind`, via `completeness_rtime`. -/
-theorem tmFrag_complete_dedekind (φ : BLFormula) (h : BLValidIn FrameClass.Dedekind φ) :
+theorem tmFrag_complete_rtime (φ : BLFormula) (h : BLValidIn FrameClass.Dedekind φ) :
     TMFrag FrameClass.Dedekind φ :=
   tmFrag_complete completeness_rtime φ h
 
@@ -125,7 +125,7 @@ theorem tm_le_tmFrag {fc : FrameClass} (φ : BLFormula)
   derivable_translate h
 
 /-- The Z1 schema is in the fragment at `.Discrete`: this is `z1_translate`. -/
-theorem tmFrag_z1_discrete (p : Atom) : TMFrag FrameClass.Discrete (Z1 (.atom p)) :=
+theorem tmFrag_z1_ztime (p : Atom) : TMFrag FrameClass.Discrete (Z1 (.atom p)) :=
   z1_translate _
 
 /--
@@ -137,20 +137,20 @@ contains a formula — `Z1 p` — that TM_f does not derive (`not_bl_derivable_z
 This is the fragment-logic reading of the CEF refutation: the H/G-fragment of TM⁺_f is
 strictly larger than TM_f.
 -/
-theorem tm_lt_tmFrag_discrete :
+theorem tm_lt_tmFrag_ztime :
     (∀ φ : BLFormula, BaseLanguage.Derivable FrameClass.Discrete [] φ →
         TMFrag FrameClass.Discrete φ) ∧
       ∃ φ : BLFormula, TMFrag FrameClass.Discrete φ ∧
         ¬ BaseLanguage.Derivable FrameClass.Discrete [] φ :=
   ⟨fun φ h => tm_le_tmFrag φ h,
-   ⟨Z1 (.atom (Atom.mkBase "p")), tmFrag_z1_discrete _, not_bl_derivable_z1 _⟩⟩
+   ⟨Z1 (.atom (Atom.mkBase "p")), tmFrag_z1_ztime _, not_bl_derivable_z1 _⟩⟩
 
 /--
 **The reduction, in fragment terms.** TM is complete over the frames of `fc` iff the fragment
 collapses onto TM at `fc`. This is `tmComplete_iff_forward` with `Forward fc` unfolded to its
 definition — `∀ φ, TMFrag fc φ → BaseLanguage.Derivable fc [] φ` — and, exactly as there,
-**neither side is asserted**: at `.Discrete` both are false (`tmCompleteDiscrete_refuted`,
-`tm_lt_tmFrag_discrete`).
+**neither side is asserted**: at `.Discrete` both are false (`tmCompleteZTime_refuted`,
+`tm_lt_tmFrag_ztime`).
 -/
 theorem tmComplete_iff_tmFrag_le_tm {fc : FrameClass} (engine : WeakCompleteness fc) :
     TMComplete fc ↔ ∀ φ : BLFormula, TMFrag fc φ → BaseLanguage.Derivable fc [] φ :=
@@ -164,6 +164,6 @@ example (φ : BLFormula) : TMFrag FrameClass.Base φ ↔ BLValidIn FrameClass.Ba
 
 /-- At `.Discrete`, TM-completeness is refuted and the fragment is strictly larger — the two
 facts are the two halves of one story. -/
-example : ¬ TMComplete FrameClass.Discrete := tmCompleteDiscrete_refuted (Atom.mkBase "p")
+example : ¬ TMComplete FrameClass.Discrete := tmCompleteZTime_refuted (Atom.mkBase "p")
 
 end FormalSystem.Metalogic.Conservativity

@@ -868,9 +868,9 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.modelExistenceRTime_refuted' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmComplete_iff_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteDiscrete_iff_forwardDiscrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmCompleteZTime_iff_forwardZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmCompleteDense_iff_forwardDense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteDedekind_iff_forwardDedekind' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmCompleteRTime_iff_forwardRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.qAlpha_step' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.exists_strictMono_qPoints' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.setConsequence_iff_not_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -926,9 +926,9 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.modelExistenceRTime_refuted
 #print axioms FormalSystem.Metalogic.tmComplete_iff_forward
 #print axioms FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase
-#print axioms FormalSystem.Metalogic.tmCompleteDiscrete_iff_forwardDiscrete
+#print axioms FormalSystem.Metalogic.tmCompleteZTime_iff_forwardZTime
 #print axioms FormalSystem.Metalogic.tmCompleteDense_iff_forwardDense
-#print axioms FormalSystem.Metalogic.tmCompleteDedekind_iff_forwardDedekind
+#print axioms FormalSystem.Metalogic.tmCompleteRTime_iff_forwardRTime
 #print axioms FormalSystem.Metalogic.qAlpha_step
 #print axioms FormalSystem.Metalogic.exists_strictMono_qPoints
 #print axioms FormalSystem.Metalogic.setConsequence_iff_not_satisfiable

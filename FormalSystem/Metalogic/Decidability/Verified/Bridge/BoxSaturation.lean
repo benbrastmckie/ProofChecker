@@ -93,7 +93,7 @@ theorem sat_box_temporal (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .boxTemporal (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .boxTemporal (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [isApplicable, applyRule] at h
   simp only [ite_true] at h
   by_cases hg : Branch.contains b (SignedFormula.pos (Formula.allFuture φ) l) = true
@@ -120,7 +120,7 @@ theorem sat_all_future_pos (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .allFuturePos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .allFuturePos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [Formula.allFuture, Formula.someFuture, Formula.neg, Formula.top, isApplicable,
     applyRule] at h
   simp only [ite_true] at h
@@ -152,7 +152,7 @@ theorem sat_all_past_pos (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .allPastPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .allPastPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [Formula.allPast, Formula.somePast, Formula.neg, Formula.top, isApplicable,
     applyRule] at h
   simp only [ite_true] at h

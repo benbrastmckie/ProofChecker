@@ -49,7 +49,7 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
   TM-derivable at `fc`. Unasserted, at every tag.
 - `Forward fc` — the forward-conservativity statement at `fc`, literally `Conservativity.lean`'s
   forbidden `forward` theorem restricted to one frame class. Unasserted, at every tag.
-- `TMCompleteBase`, `TMCompleteDiscrete`, `ForwardBase`, `ForwardDiscrete` — the two tags this
+- `TMCompleteBase`, `TMCompleteZTime`, `ForwardBase`, `ForwardZTime` — the two tags this
   module named before the generalization, retained as instantiations with their statements
   unchanged.
 
@@ -57,9 +57,9 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
 
 - `tmComplete_iff_forward` — the two propositions are equivalent at any `fc` supplying a
   `WeakCompleteness fc` engine
-- `tmCompleteBase_iff_forwardBase`, `tmCompleteDiscrete_iff_forwardDiscrete` — its two
+- `tmCompleteBase_iff_forwardBase`, `tmCompleteZTime_iff_forwardZTime` — its two
   pre-existing instantiations
-- `tmCompleteDense_iff_forwardDense`, `tmCompleteDedekind_iff_forwardDedekind` — two further
+- `tmCompleteDense_iff_forwardDense`, `tmCompleteRTime_iff_forwardRTime` — two further
   rows the generalization yields for free
 
 ## References
@@ -158,16 +158,16 @@ theorem tmCompleteBase_iff_forwardBase : TMCompleteBase ↔ ForwardBase :=
 `BLValidDiscrete` is `BLValidIn .Discrete` definitionally. **Unasserted**, exactly as
 `TMCompleteBase`.
 -/
-def TMCompleteDiscrete : Prop := TMComplete FrameClass.Discrete
+def TMCompleteZTime : Prop := TMComplete FrameClass.Discrete
 
 /--
 **"Forward conservativity holds at `FrameClass.Discrete`."** `Forward` at `.Discrete`.
 **Unasserted**, exactly as `ForwardBase`.
 -/
-def ForwardDiscrete : Prop := Forward FrameClass.Discrete
+def ForwardZTime : Prop := Forward FrameClass.Discrete
 
 /-- **The `.Discrete` mirror**, with `completeness_ztime` as the engine. -/
-theorem tmCompleteDiscrete_iff_forwardDiscrete : TMCompleteDiscrete ↔ ForwardDiscrete :=
+theorem tmCompleteZTime_iff_forwardZTime : TMCompleteZTime ↔ ForwardZTime :=
   tmComplete_iff_forward completeness_ztime
 
 /-! ## The two rows the generalization yields
@@ -184,7 +184,7 @@ theorem tmCompleteDense_iff_forwardDense :
   tmComplete_iff_forward completeness_dense
 
 /-- **The `.Dedekind` row.** `tmComplete_iff_forward completeness_rtime`. -/
-theorem tmCompleteDedekind_iff_forwardDedekind :
+theorem tmCompleteRTime_iff_forwardRTime :
     TMComplete FrameClass.Dedekind ↔ Forward FrameClass.Dedekind :=
   tmComplete_iff_forward completeness_rtime
 

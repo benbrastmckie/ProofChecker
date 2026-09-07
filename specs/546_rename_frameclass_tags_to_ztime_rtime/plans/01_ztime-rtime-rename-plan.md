@@ -227,28 +227,29 @@ numbers have drifted and the grep output is authoritative.
 
 ---
 
-### Phase 2: Tier 3b — BL, Star, Conservativity, and tableau class families [NOT STARTED]
+### Phase 2: Tier 3b — BL, Star, Conservativity, and tableau class families [COMPLETED]
 
 **Goal**: Rename the remaining Tier 3 identifier families, which live outside `Metalogic/`'s
 soundness/completeness core.
 
 **Tasks**:
-- [ ] BL family: `bl_soundness_discrete{,_valid,_succ,_succ_valid}`,
+- [x] BL family: `bl_soundness_discrete{,_valid,_succ,_succ_valid}`,
       `bl_soundness_dedekind{,_valid}`, `bl_not_derivable_nil_bot_discrete`,
       `bl_derivable_valid_and_swap_valid_discreteSucc`.
-- [ ] Star family: `star_soundness_discrete`/`dedekind`, `star_of_tm_discrete`/`dedekind`,
+- [x] Star family: `star_soundness_discrete`/`dedekind`, `star_of_tm_discrete`/`dedekind`,
       `star_backward_discrete`/`dedekind`, `forward_star_discrete`/`dedekind`,
       `starDerivable_ofFormula_iff_discrete`/`dedekind`.
-- [ ] Conservativity family: `TMCompleteDiscrete`, `ForwardDiscrete`,
+- [x] Conservativity family: `TMCompleteDiscrete`, `ForwardDiscrete`,
       `tmCompleteDiscrete_iff_forwardDiscrete`, `tmCompleteDedekind_iff_forwardDedekind`,
       `tmCompleteDiscrete_refuted`, `tmFrag_complete_discrete`/`dedekind`,
       `tmFrag_z1_discrete`, `tm_lt_tmFrag_discrete`.
-- [ ] Tableau rule sets: `discreteRules`/`dedekindRules` in `Decidability/Tableau.lean`.
-- [ ] Satisfiability-subset family: `sat_discrete_{,s}subset_mod_axiomSet`,
+- [x] Tableau rule sets: `discreteRules`/`dedekindRules` in `Decidability/Tableau.lean`. *(deviation: altered — renamed to `zTimeRules`/`rTimeRules` per the lowerCamel row of the naming scheme.)*
+- [x] Satisfiability-subset family: `sat_discrete_{,s}subset_mod_axiomSet`,
       `sat_dedekind_{,s}subset_mod_axiomSet`, `mod_axiomSet_dedekind_subset_sat_dense`.
       Leave `mod_axiomSet_discrete_subset_isDiscrete` alone (KEEP list — names the bare
       condition on its right-hand side).
-- [ ] Run the KEEP-list guard.
+- [x] Run the KEEP-list guard.
+- [x] *(deviation: added — `scripts/check-module-invariants.sh` C14 baseline lines 871/873 and probe lines 929/931, deferred here from Phase 1, moved to `tmCompleteZTime_iff_forwardZTime` / `tmCompleteRTime_iff_forwardRTime` in the same commit as the declarations.)*
 
 **Timing**: 1.5 hours
 

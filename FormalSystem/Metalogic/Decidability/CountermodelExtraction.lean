@@ -448,7 +448,7 @@ theorem sat_imp_neg (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .impNeg (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .impNeg (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   have hall : (List.all [SignedFormula.pos ψ l, SignedFormula.neg χ l] b.contains) = true := by
     by_contra hc
     simp only [isApplicable, applyRule, ruleMintsFreshLabel, if_true, Bool.false_eq_true,
@@ -474,7 +474,7 @@ theorem sat_box_pos (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have hBoxPos := hExp (.boxPos) (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have hBoxPos := hExp (.boxPos) (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [isApplicable, applyRule] at hBoxPos
   simp only [ite_true] at hBoxPos
   -- Extract: the filterMap over knownWorlds must be empty
@@ -511,7 +511,7 @@ theorem sat_box_neg (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .boxNeg (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .boxNeg (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   -- `boxNeg` mints a fresh world, so its suppression is the witness guard, not output
   -- presence: some already-known world carries `F(φ)` at this time.
   -- The suppression test is `witnessPresent … || trivialEventWitnessed …`. `.boxNeg` mints a
@@ -566,7 +566,7 @@ theorem sat_untl_pos (b : Branch) (timeOrd : TimeOrdering)
   by_cases hg : guard = Formula.top
   · -- `F(event)`: `someFuturePos` is the acting rule, and it is linear.
     subst hg
-    have h := hExp .someFuturePos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .someFuturePos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     have hwit :
         witnessPresent .someFuturePos ⟨.pos, .untl Formula.top event, ⟨w, t⟩⟩ b timeOrd = true
         ∨ trivialEventWitnessed .someFuturePos ⟨.pos, .untl Formula.top event, ⟨w, t⟩⟩ b timeOrd
@@ -592,7 +592,7 @@ theorem sat_untl_pos (b : Branch) (timeOrd : TimeOrdering)
         simp [trivialEventWitnessed, hnil] at htriv
   · -- Genuine Until: `untlPos` is the acting rule, and it is branching.
     have hg' : (guard == Formula.top) = false := by simp [hg]
-    have h := hExp .untlPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .untlPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     -- `trivialEventWitnessed` fires only on `F ⊤` / `P ⊤`, i.e. only when the guard *is* `⊤`.
     -- This is the genuine-Until branch (`hg' : (guard == ⊤) = false`), so the second disjunct of
     -- the suppression test is `false` and the guard collapses to `witnessPresent` alone.
@@ -635,7 +635,7 @@ theorem sat_snce_pos (b : Branch) (timeOrd : TimeOrdering)
   rw [List.findSome?_eq_none_iff] at hExp
   by_cases hg : guard = Formula.top
   · subst hg
-    have h := hExp .somePastPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .somePastPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     have hwit :
         witnessPresent .somePastPos ⟨.pos, .snce Formula.top event, ⟨w, t⟩⟩ b timeOrd = true
         ∨ trivialEventWitnessed .somePastPos ⟨.pos, .snce Formula.top event, ⟨w, t⟩⟩ b timeOrd
@@ -660,7 +660,7 @@ theorem sat_snce_pos (b : Branch) (timeOrd : TimeOrdering)
       · intro hnil
         simp [trivialEventWitnessed, hnil] at htriv
   · have hg' : (guard == Formula.top) = false := by simp [hg]
-    have h := hExp .sncePos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .sncePos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     -- Mirror of the `untlPos` branch: `hg'` refutes the `trivialEventWitnessed` disjunct.
     have htriv : trivialEventWitnessed .sncePos ⟨.pos, .snce guard event, ⟨w, t⟩⟩ b timeOrd
         = false := by simp [trivialEventWitnessed, hg']
@@ -702,7 +702,7 @@ theorem sat_some_future_neg (b : Branch) (timeOrd : TimeOrdering)
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
   have hSFNeg := hExp (.someFutureNeg)
-    (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [isApplicable, asSomeFuture?] at hSFNeg
   -- Extract: applyRule must return .notApplicable
   have hNA : (applyRule .someFutureNeg ⟨.neg, .untl (.imp .bot .bot) event, ⟨w, t⟩⟩ b timeOrd).1 =
@@ -772,7 +772,7 @@ theorem sat_some_past_neg (b : Branch) (timeOrd : TimeOrdering)
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
   have hSPNeg := hExp (.somePastNeg)
-    (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   simp only [isApplicable, asSomePast?] at hSPNeg
   have hNA : (applyRule .somePastNeg ⟨.neg, .snce (.imp .bot .bot) event, ⟨w, t⟩⟩ b timeOrd).1 =
       .notApplicable := by

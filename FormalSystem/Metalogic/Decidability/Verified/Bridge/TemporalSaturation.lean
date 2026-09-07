@@ -128,7 +128,7 @@ theorem sat_untl_pos_future (b : Branch) (timeOrd : TimeOrdering)
   rw [List.findSome?_eq_none_iff] at hExp
   by_cases hg : guard = Formula.top
   · subst hg
-    have h := hExp .someFuturePos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .someFuturePos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     have hwit :
         witnessPresent .someFuturePos ⟨.pos, .untl Formula.top event, ⟨w, t⟩⟩ b timeOrd = true
         ∨ trivialEventWitnessed .someFuturePos ⟨.pos, .untl Formula.top event, ⟨w, t⟩⟩ b timeOrd
@@ -157,7 +157,7 @@ theorem sat_untl_pos_future (b : Branch) (timeOrd : TimeOrdering)
         | cons a l => exact ⟨a, by simp⟩
       exact ⟨t', strictBefore_of_mem_futureOf ht', Or.inr ⟨hev, rfl⟩⟩
   · have hg' : (guard == Formula.top) = false := by simp [hg]
-    have h := hExp .untlPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .untlPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     -- The genuine-Until branch: `trivialEventWitnessed` needs `guard == ⊤`, which `hg'` refutes,
     -- so the suppression test collapses back to `witnessPresent` alone.
     have htriv : trivialEventWitnessed .untlPos ⟨.pos, .untl guard event, ⟨w, t⟩⟩ b timeOrd
@@ -201,7 +201,7 @@ theorem sat_snce_pos_past (b : Branch) (timeOrd : TimeOrdering)
   rw [List.findSome?_eq_none_iff] at hExp
   by_cases hg : guard = Formula.top
   · subst hg
-    have h := hExp .somePastPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .somePastPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     have hwit :
         witnessPresent .somePastPos ⟨.pos, .snce Formula.top event, ⟨w, t⟩⟩ b timeOrd = true
         ∨ trivialEventWitnessed .somePastPos ⟨.pos, .snce Formula.top event, ⟨w, t⟩⟩ b timeOrd
@@ -230,7 +230,7 @@ theorem sat_snce_pos_past (b : Branch) (timeOrd : TimeOrdering)
         | cons a l => exact ⟨a, by simp⟩
       exact ⟨t', strictBefore_of_mem_pastOf ht', Or.inr ⟨hev, rfl⟩⟩
   · have hg' : (guard == Formula.top) = false := by simp [hg]
-    have h := hExp .sncePos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+    have h := hExp .sncePos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
     -- Mirror of the `untlPos` branch: `hg'` refutes the `trivialEventWitnessed` disjunct.
     have htriv : trivialEventWitnessed .sncePos ⟨.pos, .snce guard event, ⟨w, t⟩⟩ b timeOrd
         = false := by simp [trivialEventWitnessed, hg']

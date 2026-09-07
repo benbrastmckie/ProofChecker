@@ -49,7 +49,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   direction is refuted, TM is not the complete logic of base-language validity; the fragment
   `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
   (`tmFrag_complete_*`), containing TM everywhere (`tm_le_tmFrag`) and strictly at `.Discrete`
-  (`tm_lt_tmFrag_discrete`). Its consequence relation is compact at `.Base` and `.Dense`
+  (`tm_lt_tmFrag_ztime`). Its consequence relation is compact at `.Base` and `.Dense`
   (`blCompactBase`, `blCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
   Discrete/Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
 - **The stability extension L⋆ / TM⋆** (`Metalogic/Conservativity/Star.lean`, over
@@ -72,13 +72,13 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
 - **Soundness (dense)** (`soundness_dense`): SORRY-FREE
 - **Soundness (discrete)** (`soundness_ztime`): SORRY-FREE
 - **Soundness, base language BL** (`bl_soundness`, `bl_soundness_dense`,
-  `bl_soundness_discrete`, `bl_soundness_dedekind`, plus the empty-context validity forms and the
-  consistency corollaries `bl_not_derivable_nil_bot` / `bl_not_derivable_nil_bot_discrete`):
+  `bl_soundness_ztime`, `bl_soundness_rtime`, plus the empty-context validity forms and the
+  consistency corollaries `bl_not_derivable_nil_bot` / `bl_not_derivable_nil_bot_ztime`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Stated against the
   **native** BL semantics `BLTruthAt` of `Semantics/BLTruth.lean` — a six-clause recursion on
   `BLFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
-  induction in `Metalogic/Conservativity/BaseLanguageSoundness.lean`. `bl_soundness_dedekind` carries
+  induction in `Metalogic/Conservativity/BaseLanguageSoundness.lean`. `bl_soundness_rtime` carries
   `ValidDedekind`'s binder set and its validity form concludes at `BLValidDedekind`,
   inheriting `soundness_rtime`'s target; a density-free `BLValidComplete` is deliberately not
   defined because it would be refutable
@@ -156,10 +156,10 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   `FrameClass.Sat FrameClass.Discrete`) are the two positive results, via the indicator
   biconditionals `validOn_nextTop_iff` / `validOn_nextTop_iff_isDiscrete`
   (`Semantics/Correspondence/Indicator.lean`). Two negative results sandwich the corresponding
-  narrowed classes instead: `sat_dedekind_ssubset_mod_axiomSet` proves `Sat .Dedekind` is **not
+  narrowed classes instead: `sat_rtime_ssubset_mod_axiomSet` proves `Sat .Dedekind` is **not
   Galois-closed** — a statement about definability of the model class, a different property from
   Dedekind strong completeness (unresolved; see the consequence-completeness entry above) — and
-  `sat_discrete_ssubset_mod_axiomSet` proves the analogous fact for `Sat .Discrete`
+  `sat_ztime_ssubset_mod_axiomSet` proves the analogous fact for `Sat .Discrete`
   (`Metalogic/Independence/{RationalWitness,LexIntWitness}.lean`). Closed-form characterizations
   of `Mod (AxiomSet .Discrete)` and `Mod (AxiomSet .Dedekind)` remain open and are not promised.
 - **Non-definability of determinism** (`deterministic_not_starDefinable`,

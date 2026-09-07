@@ -59,7 +59,7 @@ require a single-frame `F.ValidOn φ → F.ValidOn φ.swapTemporal` closure lemm
 * the `ℤ ×ₗ ℤ` order facts, imported from `Semantics/LexCarrier.lean`'s generic `LexInt` API
 * `lexIntStaticFrame`, `lexIntStaticFrame_mem_mod`, `lexIntStaticFrame_not_sat` — the witness
 * `validOn_nextTop_of_mem_mod_discrete` — the semantic upper-bound engine
-* `sat_discrete_ssubset_mod_axiomSet`, `mod_axiomSet_discrete_subset_isDiscrete` — the sandwich
+* `sat_ztime_ssubset_mod_axiomSet`, `mod_axiomSet_discrete_subset_isDiscrete` — the sandwich
 -/
 
 namespace FormalSystem.Metalogic.Independence
@@ -169,7 +169,7 @@ theorem validOn_nextTop_of_mem_mod_discrete {F : TaskFrame}
 /-! ## The Discrete sandwich -/
 
 /-- `Sat .Discrete ⊆ Mod (AxiomSet .Discrete)`: soundness of the `.Discrete` axioms. -/
-theorem sat_discrete_subset_mod_axiomSet :
+theorem sat_ztime_subset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} ⊆
       Semantics.Mod (AxiomSet FrameClass.Discrete) :=
   fun F hF _ ⟨ax, hax⟩ => axiom_ztime_valid ax hax F hF
@@ -181,17 +181,17 @@ theorem sat_discrete_subset_mod_axiomSet :
 Equivalently: `Sat .Discrete` — the ℤ-time narrowing — is **not** Galois-closed. Contrast
 `Semantics.galoisClosed_isDiscrete`, which shows that the paper's bare Discrete class *is*.
 -/
-theorem sat_discrete_ssubset_mod_axiomSet :
+theorem sat_ztime_ssubset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} ⊂
       Semantics.Mod (AxiomSet FrameClass.Discrete) :=
-  ⟨sat_discrete_subset_mod_axiomSet,
+  ⟨sat_ztime_subset_mod_axiomSet,
     fun hrev => lexIntStaticFrame_not_sat (hrev lexIntStaticFrame_mem_mod)⟩
 
 /--
 **The upper half of the sandwich**: `Mod (AxiomSet .Discrete) ⊆ {F | F.IsDiscrete}`.
 
 The upper bound is the **paper's** Discrete class, not `Sat .Discrete`; the two are different,
-and `sat_discrete_ssubset_mod_axiomSet` is the proof that they are.
+and `sat_ztime_ssubset_mod_axiomSet` is the proof that they are.
 -/
 theorem mod_axiomSet_discrete_subset_isDiscrete :
     Semantics.Mod (AxiomSet FrameClass.Discrete) ⊆ {F : TaskFrame | F.IsDiscrete} :=

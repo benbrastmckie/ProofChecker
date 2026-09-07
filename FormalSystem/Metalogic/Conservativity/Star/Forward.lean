@@ -27,7 +27,7 @@ frame class carrying a completeness engine — that is, at all four.
 ## Contrast with the base-language pair
 
 The same composition for L ⊂ L⁺ (`TM⁺ ⊢ tr φ ⟹ TM ⊢ φ`) would need TM-completeness, which is
-refuted (`tmCompleteDiscrete_refuted`; `Metalogic/Conservativity.lean`). So `Forward⋆`
+refuted (`tmCompleteZTime_refuted`; `Metalogic/Conservativity.lean`). So `Forward⋆`
 (TM⋆ over TM⁺) holds at all four classes, unlike `Forward` (TM⁺ over TM). The composed L ⊂ L⋆
 rows below inherit exactly that status: the backward direction composes, the forward direction
 is the L ⊂ L⁺ forward direction and is **not asserted**.
@@ -72,13 +72,13 @@ theorem forward_star_dense (φ : Formula) (h : StarDerivable FrameClass.Dense []
   forward_star completeness_dense φ h
 
 /-- Forward conservativity at `.Discrete`, via `completeness_ztime`. -/
-theorem forward_star_discrete (φ : Formula)
+theorem forward_star_ztime (φ : Formula)
     (h : StarDerivable FrameClass.Discrete [] (ofFormula φ)) :
     ProofSystem.Derivable FrameClass.Discrete [] φ :=
   forward_star completeness_ztime φ h
 
 /-- Forward conservativity at `.Dedekind`, via `completeness_rtime`. -/
-theorem forward_star_dedekind (φ : Formula)
+theorem forward_star_rtime (φ : Formula)
     (h : StarDerivable FrameClass.Dedekind [] (ofFormula φ)) :
     ProofSystem.Derivable FrameClass.Dedekind [] φ :=
   forward_star completeness_rtime φ h
@@ -102,13 +102,13 @@ theorem starDerivable_ofFormula_iff_dense (φ : Formula) :
   starDerivable_ofFormula_iff completeness_dense φ
 
 /-- Conservativity at `.Discrete`. -/
-theorem starDerivable_ofFormula_iff_discrete (φ : Formula) :
+theorem starDerivable_ofFormula_iff_ztime (φ : Formula) :
     StarDerivable FrameClass.Discrete [] (ofFormula φ) ↔
       ProofSystem.Derivable FrameClass.Discrete [] φ :=
   starDerivable_ofFormula_iff completeness_ztime φ
 
 /-- Conservativity at `.Dedekind`. -/
-theorem starDerivable_ofFormula_iff_dedekind (φ : Formula) :
+theorem starDerivable_ofFormula_iff_rtime (φ : Formula) :
     StarDerivable FrameClass.Dedekind [] (ofFormula φ) ↔
       ProofSystem.Derivable FrameClass.Dedekind [] φ :=
   starDerivable_ofFormula_iff completeness_rtime φ
@@ -138,13 +138,13 @@ theorem star_of_tm_dense (φ : BLFormula) (h : BaseLanguage.Derivable FrameClass
   star_of_tm φ h
 
 /-- L ⊂ L⋆ backward at `.Discrete`. -/
-theorem star_of_tm_discrete (φ : BLFormula)
+theorem star_of_tm_ztime (φ : BLFormula)
     (h : BaseLanguage.Derivable FrameClass.Discrete [] φ) :
     StarDerivable FrameClass.Discrete [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
 /-- L ⊂ L⋆ backward at `.Dedekind`. -/
-theorem star_of_tm_dedekind (φ : BLFormula)
+theorem star_of_tm_rtime (φ : BLFormula)
     (h : BaseLanguage.Derivable FrameClass.Dedekind [] φ) :
     StarDerivable FrameClass.Dedekind [] (ofFormula (tr φ)) :=
   star_of_tm φ h

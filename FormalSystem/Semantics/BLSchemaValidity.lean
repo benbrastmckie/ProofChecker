@@ -11,7 +11,7 @@ import FormalSystem.Semantics.DurationClassification
 # DF and DN semantic lemmas, and their past-duals
 
 The four semantic facts consumed by both `Metalogic/Conservativity/SpWitness.lean` (the (Sp) validity witness)
-and `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_discrete_succ` — the shared
+and `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_ztime_succ` — the shared
 mathematical core of the TM-completeness task (report §4.1 Lemmas B and C, plus §6.1's
 past-dual obligation).
 

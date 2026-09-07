@@ -97,7 +97,7 @@ theorem sat_imp_pos (b : Branch) (timeOrd : TimeOrdering)
   simp only [isExpanded, Option.isNone_iff_eq_none] at hExp
   unfold findApplicableRule at hExp
   rw [List.findSome?_eq_none_iff] at hExp
-  have h := hExp .impPos (by simp [allRulesForFC, allRules, denseRules, discreteRules])
+  have h := hExp .impPos (by simp [allRulesForFC, allRules, denseRules, zTimeRules])
   by_cases hneg : Branch.contains b (SignedFormula.neg ψ l) = true
   · exact Or.inl ((mem_iff_contains' b _).mp hneg)
   · by_cases hpos : Branch.contains b (SignedFormula.pos χ l) = true

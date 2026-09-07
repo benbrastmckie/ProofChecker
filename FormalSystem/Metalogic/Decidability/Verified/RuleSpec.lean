@@ -11,7 +11,7 @@ import FormalSystem.ProofSystem.Axioms
 # RuleSpec — tying the tableau rule lattice to the axiom lattice
 
 The tableau engine maintains its frame-class-specific rule lists (`denseRules`,
-`discreteRules`, `dedekindRules`, and the two rules scheduled outside those lists) **by hand**,
+`zTimeRules`, `rTimeRules`, and the two rules scheduled outside those lists) **by hand**,
 and nothing in the engine connects them to `Axiom.minFrameClass`. That disconnect is the single
 largest maintainability hazard in the decidability stack: a rule can be gated at a frame class
 that cannot derive the axiom justifying it, and nothing notices. Adding an axiom does not prompt
@@ -355,7 +355,7 @@ theorem mem_allRulesForFC_mono {r : TableauRule} {fc fc' : FrameClass}
 ## Shape regression checks
 
 These pin the sizes of the four rule lists. They are not used downstream; they exist so that a
-future edit to `allRules`, `denseRules`, `discreteRules` or `dedekindRules` that changes what the
+future edit to `allRules`, `denseRules`, `zTimeRules` or `rTimeRules` that changes what the
 engine actually runs cannot pass unnoticed just because the gates above happen to survive it.
 -/
 

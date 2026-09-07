@@ -47,7 +47,7 @@ anyway. See `Semantics/Correspondence/Galois.lean`'s "Reified sets" section.
 * `rat_not_complete` — `ℚ` is not Dedekind-complete; written here because Mathlib carries no
   off-the-shelf statement of it in this form
 * `ratStaticFrame` — the witness frame, and `ratStaticFrame_mem_mod` / `ratStaticFrame_not_sat`
-* `sat_dedekind_ssubset_mod_axiomSet` and `mod_axiomSet_dedekind_subset_sat_dense` — the sandwich
+* `sat_rtime_ssubset_mod_axiomSet` and `mod_axiomSet_rtime_subset_sat_dense` — the sandwich
 -/
 
 namespace FormalSystem.Metalogic.Independence
@@ -166,7 +166,7 @@ theorem ratStaticFrame_not_sat :
 /-! ## The Dedekind sandwich -/
 
 /-- `Sat .Dedekind ⊆ Mod (AxiomSet .Dedekind)`: soundness of the `.Dedekind` axioms. -/
-theorem sat_dedekind_subset_mod_axiomSet :
+theorem sat_rtime_subset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} ⊆
       Semantics.Mod (AxiomSet FrameClass.Dedekind) :=
   fun F hF _ ⟨ax, hax⟩ => axiom_rtime_valid ax hax F hF
@@ -178,10 +178,10 @@ theorem sat_dedekind_subset_mod_axiomSet :
 Equivalently: `Sat .Dedekind` is not Galois-closed, since its `Mod (Th ·)` closure contains the
 witness.
 -/
-theorem sat_dedekind_ssubset_mod_axiomSet :
+theorem sat_rtime_ssubset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} ⊂
       Semantics.Mod (AxiomSet FrameClass.Dedekind) :=
-  ⟨sat_dedekind_subset_mod_axiomSet,
+  ⟨sat_rtime_subset_mod_axiomSet,
     fun hrev => ratStaticFrame_not_sat (hrev ratStaticFrame_mem_mod)⟩
 
 /--
@@ -191,7 +191,7 @@ Semantic, not proof-theoretic: `Axiom.dense_indicator` is itself a member of
 `AxiomSet .Dedekind` (its `minFrameClass` is `.Dense`, and `Dense ≤ Dedekind`), so every frame in
 the model class validates `¬X⊤` and `Semantics.validOn_neg_nextTop_iff` converts that to density.
 -/
-theorem mod_axiomSet_dedekind_subset_sat_dense :
+theorem mod_axiomSet_rtime_subset_sat_dense :
     Semantics.Mod (AxiomSet FrameClass.Dedekind) ⊆
       {F : TaskFrame | FrameClass.Sat FrameClass.Dense F} :=
   fun F hF => (validOn_neg_nextTop_iff F).mp

@@ -41,8 +41,8 @@ The two corollaries below are the **closed** half of a four-part picture; the ot
 |---|---|---|
 | `FrameClass.Sat FrameClass.Dense` | yes | `galoisClosed_sat_dense`, below |
 | `{F \| F.IsDiscrete}` (the paper's bare clause) | yes | `galoisClosed_isDiscrete`, below |
-| `FrameClass.Sat FrameClass.Discrete` | **no** | `LexIntWitness.lean`'s `sat_discrete_ssubset_mod_axiomSet` |
-| `FrameClass.Sat FrameClass.Dedekind` | **no** | `RationalWitness.lean`'s `sat_dedekind_ssubset_mod_axiomSet` |
+| `FrameClass.Sat FrameClass.Discrete` | **no** | `LexIntWitness.lean`'s `sat_ztime_ssubset_mod_axiomSet` |
+| `FrameClass.Sat FrameClass.Dedekind` | **no** | `RationalWitness.lean`'s `sat_rtime_ssubset_mod_axiomSet` |
 
 ### Why the Discrete row splits
 

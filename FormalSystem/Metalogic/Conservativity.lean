@@ -56,7 +56,7 @@ an approximation of it.
 
 **Cross-reference**: `Metalogic/Conservativity/TMCompletenessReduction.lean` pins "TM (resp. TM_f) is complete
 over task frames" as *the same proposition* as `forward` above, restricted to `fc := .Base`
-(resp. `.Discrete`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteDiscrete_iff_forwardDiscrete`
+(resp. `.Discrete`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteZTime_iff_forwardZTime`
 are equivalences between two unasserted `Prop`s, proving neither side. A future dispatch
 attempting to prove TM-completeness directly is thereby attempting `forward` under a different
 name, and falls under this same prohibition.
@@ -76,7 +76,7 @@ the TM⁺_f half.
 
 The other half — `TM_f ⊢ Z1 φ` fails, because `TM_f = TM + DF` is sound over *every* discrete
 frame while `Z1` is unsound over non-Archimedean discrete orders — is now **also** a theorem:
-`Metalogic/Conservativity/Z1Countermodel.lean`'s `not_bl_derivable_z1`, via `bl_soundness_discrete_succ`
+`Metalogic/Conservativity/Z1Countermodel.lean`'s `not_bl_derivable_z1`, via `bl_soundness_ztime_succ`
 (`Metalogic/Conservativity/BaseLanguageSoundness.lean`, the binder-weakened discrete BL soundness theorem
 dropping the Archimedean instances) applied to a countermodel over `ℚ ×_lex ℤ`
 (`Semantics/LexCarrier.lean`), **not** `ℤ ×_lex ℤ` as an earlier draft of this section and the
@@ -134,7 +134,7 @@ provenance, never as something this tree has machine-checked.
   completeness class to `ℤ`-time precisely: "It follows by Hölder's theorem that a nontrivial
   discrete Archimedean totally ordered abelian group is isomorphic to `ℤ`, and so the
   successor-Archimedean discrete class to which `BX`_f and `TM⁺`_f are sound and complete is
-  exactly `ℤ`-time." This is what makes `Z1Countermodel.tmCompleteDiscrete_refuted` read as the
+  exactly `ℤ`-time." This is what makes `Z1Countermodel.tmCompleteZTime_refuted` read as the
   `TM_f`-vs-`TM⁺_f` completeness *gap*, rather than a weaker claim about some other class.
 - **A commented (non-live) line**, `possible_worlds.tex:4614` immediately below `def:TMplus-f`,
   gives the author's own position in the author's own words: "`TM`_f, by contrast, is sound
@@ -142,7 +142,7 @@ provenance, never as something this tree has machine-checked.
   only on `ℤ`-time; whether `TM`_f is complete over that broader class remains open, as
   discussed at `cor:tm-completeness`." Cited as the author's stated position, flagged
   explicitly as **commented out** and therefore not live text — the open verdict it records
-  matches this module's own CEF finding (`Z1Countermodel.tmCompleteDiscrete_refuted`) that
+  matches this module's own CEF finding (`Z1Countermodel.tmCompleteZTime_refuted`) that
   `TM_f` is not weakly complete over the *broader* (non-Archimedean) discrete class, only over
   `ℤ`-time.
 
@@ -152,7 +152,7 @@ Because the forward direction is refuted, TM is **not** the complete logic of `B
 logic that is — at every frame class carrying a `WeakCompleteness` engine — is the **H/G-fragment
 of TM⁺**, `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`Conservativity/Fragment.lean`): sound
 (`tmFrag_sound`), complete (`tmFrag_complete`, four rows), containing TM at every class
-(`tm_le_tmFrag`) and strictly so at `.Discrete` (`tm_lt_tmFrag_discrete`, from the CEF pair
+(`tm_le_tmFrag`) and strictly so at `.Discrete` (`tm_lt_tmFrag_ztime`, from the CEF pair
 `z1_translate` / `not_bl_derivable_z1`). `tmComplete_iff_tmFrag_le_tm` restates the reduction
 above in fragment terms with `Forward` unfolded, never asserted. Compactness of the
 base-language consequence relation transfers along `tr` at `.Base` and `.Dense` only
@@ -190,7 +190,7 @@ still needs beyond that differs, and reading it as one shared "countermodels alo
 longer accurate for either row:
 
 - **CEF (`FrameClass.Discrete`) — done, both halves machine-checked.** The missing prerequisite
-  was a *binder-weakened* BL soundness theorem — `bl_soundness_discrete_succ`
+  was a *binder-weakened* BL soundness theorem — `bl_soundness_ztime_succ`
   (`Metalogic/Conservativity/BaseLanguageSoundness.lean`), dropping `IsSuccArchimedean`/`IsPredArchimedean` so
   it applies to a non-Archimedean carrier — plus the countermodel itself, assembled over
   `multiFamTaskFrameGen` at the non-Archimedean discrete carrier `ℚ ×_lex ℤ`
@@ -214,7 +214,7 @@ The **forward direction remains refuted** at both rows and must still not be sta
 row-refutation with a machine-checked witness, while leaving the general prohibition (this
 module's own `forward` schema, for every frame class) exactly as forbidden as before. See also
 `Metalogic/Conservativity/TMCompletenessReduction.lean`, whose `tmCompleteBase_iff_forwardBase` /
-`tmCompleteDiscrete_iff_forwardDiscrete` pin "TM (resp. TM_f) complete over task frames" as the
+`tmCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_f) complete over task frames" as the
 *same proposition* as this module's forward-conservativity prohibition, at `.Base` and
 `.Discrete` respectively — so a future dispatch attempting TM-completeness directly is thereby
 attempting the forbidden claim, under a different name.
@@ -276,7 +276,7 @@ and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺
 | `Conservativity/BaseLanguageSoundness.lean` | the `bl_soundness` family and the `truthAt_tr` transfer bridge |
 | `Conservativity/TMCompletenessReduction.lean` | `TMComplete` / `Forward` and their equivalence |
 | `Conservativity/SpWitness.lean` | the reconstructed `(Sp)` witness for the CEB row |
-| `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteDiscrete_refuted` |
+| `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteZTime_refuted` |
 | `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.Discrete` |
 | `Conservativity/FragmentCompactness.lean` | `BLCompact`, `blCompactBase`, `blCompactDense` — base-language compactness transferred along `tr` |
 | `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`starDerivable_ofFormula_iff`) |
