@@ -1,5 +1,5 @@
 ---
-next_project_number: 549
+next_project_number: 550
 ---
 
 # TODO
@@ -12,7 +12,7 @@ next_project_number: 549
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
 | 1 | 127,128,193,257,298,463,476,481,502,504,506,531,534,535,540,541,542,544,545,547 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,464,497,537,548 | 193,298,463,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 2 | 178,231,282,296,464,497,537,548,549 | 193,298,463,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,465,498,499,500 | 231,464,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 429,501 | 125,428 | algebraic-representation, decidability |
@@ -50,7 +50,7 @@ next_project_number: 549
 
 ### Decidability
 
-463 [PLANNED] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
+463 [IMPLEMENTING] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
   └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
     └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
       └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
@@ -60,6 +60,7 @@ next_project_number: 549
               └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
                 └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
                   └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
+  └─ 549 [NOT STARTED] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
 
@@ -109,6 +110,33 @@ next_project_number: 549
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 549. Trace decide dependency on vacuous run theorems
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: decidability
+- **Dependencies**: Task 463
+
+**Description**: Trace whether `FormalSystem.Metalogic.Decidability.decide` depends on the six now-vacuous `_run` theorems, and correct the affected status claims if it does.
+
+WHY THIS EXISTS. Task 463 machine-checked a FALSE verdict: `PostBlockingSettlesRun fc fuel` is refutable at every `fuel >= 1`, hence at the terminus's own `mintAwareFuelAt` figure for all parameter values. The consequence is that `buildTableauAt_isSome_of_budget_fixed_run` (MintBound.lean:12199) and its five `_run` siblings are VACUOUS at `.Base`, `.Dense` and `.RTime` -- they carry a false hypothesis. Vacuous here means unusable as premises, not merely unproved: they establish nothing, so anything resting on them for a load-bearing step has no support.
+
+THE OPEN QUESTION, stated as a question and not a claim. `docs/theorem-index.md:113` carries a status row for the tableau decision procedure `FormalSystem.Metalogic.Decidability.decide` (`DecisionProcedure.lean`, Base, `pcq pinned:C14`). That row does NOT cite the `_run` theorems by name, so it is not wrong on its face. But if `decide`'s totality or correctness argument routes through any of the six vacuous results, the row's status claim is indirectly overstated. Nobody has traced it. Do not assume either answer.
+
+SCOPE -- a dependency trace, then a conditional correction:
+1. Enumerate the six vacuous `_run` results precisely (the terminus `buildTableauAt_isSome_of_budget_fixed_run` and its five siblings; task 463's report and its C9 register entry name them).
+2. Trace, mechanically rather than by reading prose, whether `decide`'s totality/correctness argument reaches any of them -- `#print axioms`, transitive import/use analysis, or `lean_references` on each of the six. A mechanical trace is the deliverable; a prose argument that it "probably doesn't" is not.
+3. BINARY VERDICT, both outcomes first-class:
+   - NO DEPENDENCY: record that `decide` routes around them, name the evidence, and leave `docs/theorem-index.md:113` untouched. This is a real result, not a null one -- it retires an open question.
+   - DEPENDS: name every load-bearing step that rests on a vacuous premise, state precisely what `decide`'s row may still claim and what it may not, and correct the row.
+
+CONTEXT ALREADY ESTABLISHED -- consume, do not re-derive. A concurrent search of `docs/` and `README.md` for all 13 `_run`-suffixed declarations in `FormalSystem/` returned zero hits, so no documentation cites the six by name; the exposure, if any, is indirect through `decide` alone. A weak prior, explicitly NOT clearance: the six sit in the termination/fuel-bound layer (`Termination/MintBound.lean`) while the index row points at `DecisionProcedure.lean`, so a termination-side vacuity is likelier to break a fuel-bound argument than a correctness argument -- but MintBound is a termination file and totality is exactly the kind of claim that could route through it.
+
+CONSTRAINTS. Read-only with respect to `FormalSystem/**` -- this task traces, it does not repair; if the trace finds a real break, the repair is a separate task and must be named, not attempted here. The only file this task may edit is `docs/theorem-index.md`, and only on the DEPENDS branch. Do not edit `MintBound.lean` (task 463 owns it and both tasks would collide on the same file). No `sorry`, no axiom additions, full `lake build` green.
+
+Dependencies: 463, both mathematically (its verdict is this task's premise) and as a file_scope serialization edge on MintBound.lean.
+
+---
 
 ### 548. Repin renamed paper anchors bx z d r
 - **Status**: [NOT STARTED]
@@ -610,7 +638,7 @@ Dependencies: 462 is a REAL SEMANTIC dependency -- the engine-level assembly is 
 ---
 
 ### 463. Postblockingsettlesrun verdict at terminus fuel
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 462, Task 433
