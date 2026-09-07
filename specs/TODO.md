@@ -1,21 +1,21 @@
 ---
-next_project_number: 544
+next_project_number: 546
 ---
 
 # TODO
 
 ## Task Order
 
-*Updated 2026-09-04. Generated from state.json dependency graph.*
+*Updated 2026-09-07. Generated from state.json dependency graph.*
 
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,538,539,540,541,542 | -- | automation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,538,539,540,541,542,544,545 | -- | automation, dataset-enhancement, decidability, ... |
 | 2 | 178,231,282,296,463,502,531,537 | 193,298,433,461,530,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
-| 5 | 125,428 | 465,498,499 | algebraic-representation, decidability |
+| 5 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
 | 6 | 429,501 | 125,428 | algebraic-representation, decidability |
 | 7 | 410 | 429 | decidability |
 | 8 | 411 | 410 | decidability |
@@ -86,10 +86,10 @@ next_project_number: 544
 
 530 [RESEARCHED] — WAVE 5 (publication infrastructure). Make status and counts machi
   └─ 531 [NOT STARTED] — WAVE 5 (publication infrastructure). Publish the API documentatio
-534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 535 [RESEARCHED] — RESEARCH TASK -- report and probe files only; no changes to Forma
   └─ 537 [NOT STARTED] — Implement in Lean the honest TM⋆ metatheory that research task 53
 538 [NOT STARTED] — Resolve the three paper anchors that make C15 fail, so scripts/ch
+543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Publication Quality
 
@@ -99,6 +99,12 @@ next_project_number: 544
 
 540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
 
+### Incompleteness
+
+534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
+544 [NOT STARTED] — Machine-check the failing half of CEB: no instance of the boxed d
+545 [NOT STARTED] — Decide, with machine-checked proof, whether the two H/G-language 
+
 ### Infrastructure
 
 539 [NOT STARTED] — Draw down the linter debt that the CI/linter-gates work recorded 
@@ -106,6 +112,26 @@ next_project_number: 544
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 545. Hg completeness dense and dedekind verdicts
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: incompleteness
+- **Dependencies**: None
+
+**Description**: Decide, with machine-checked proof, whether the two H/G-language (Past/Future) systems that the paper leaves open are weakly complete: TM_d := TM + DN over the Dense frame class, and TM_dc := TM + DN + CO over the Dedekind (dense-and-complete, i.e. R-time) class, where TM is the BaseLanguage proof system (the paper's TM^-). These are the two remaining open rows of the paper's rmk:fragment; the Base row is the CEB task (Sp underivability) and the Discrete row is closed (tmCompleteDiscrete_refuted). A negative verdict with a machine-checked separating H/G-validity, or a positive verdict with a completeness proof, are both complete outcomes; an honest OPEN verdict must name the precise obstruction. EXPECTED VERDICT (to be tested, not assumed): both complete. Reasoning: unlike Base and Discrete, neither class splits into two H/G-definable subclasses, so no (Sp)/Z1-style dichotomy witness is available; every dense unbounded chain has the H/G logic of Q by downward Lowenheim-Skolem, and R is a single frame up to isomorphism. SUGGESTED ROUTE FOR DENSE: (1) Kripke-style completeness of TM + DN over frames whose Box-classes are R-closed unions of dense unbounded chains, via the Sahlqvist/canonical-model argument for the fusion S5 (x) Kt4.3 + seriality + density with the MF interaction (MF and its TD-mirror force each Box-class to be closed under R-successors and R-predecessors; the TM-completeness-status report section 5(i) records this as the Kripke-level answer, unformalized); bulldoze clusters into dense chains; (2) replace each chain by a countable elementary substructure, order-isomorphic to Q by Mathlib's Order.iso_of_countable_dense; (3) transform into a Dense task frame: world states := chain points, durations := Q, task relation := translation along each chain (a disjoint union of translation task frames, each satisfying Compositionality, Seriality, Limit, Saturation with singleton fibres), histories := all translates; show BL truth is preserved since Box over H_F at a time equals truth at every point of the class under translation closure. SUGGESTED ROUTE FOR DEDEKIND: the temporal part of TM_dc is Bull 1968 / Goldblatt's axiomatization of the H/G logic of R (CO is exactly the Dedekind axiom of that literature), so the target is Bull's completeness theorem for R plus the same product/translation transfer; NOTE that CO is not Sahlqvist, so the canonical-model route of the Dense case does not apply and a Bull/Burgess-style step-by-step or Dedekind-completion construction is required, making this the substantially harder half. EXISTING ASSETS: BL-side semantics and soundness (Semantics/BLTruth.lean, BLValidity.lean, Metalogic/Conservativity/BaseLanguageSoundness.lean), the Fragment theorem (Conservativity/Fragment.lean), the reduction tmComplete_iff_forward and its Dense/Dedekind rows (Conservativity/TMCompletenessReduction.lean), the BX-side canonical model and completeness_dense / completeness_dedekind (Metalogic/BXCanonical/), and LexCarrier.lean. RELATION TO OTHER TASKS: settling these two rows settles the Sigma_fc = empty case of the Hg-fragment finite-axiomatizability task at Dense and Dedekind, and is independent of the CEB task at Base. HARD CONSTRAINT inherited from Conservativity.lean: never state a completeness or forward-conservativity theorem and discharge it with sorry.
+
+---
+
+### 544. Machine check sp underivable native bl soundness
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: incompleteness
+- **Dependencies**: None
+
+**Description**: Machine-check the failing half of CEB: no instance of the boxed dichotomy (Sp) := Box(DF phi) or Box(DN psi) is a theorem of TM, the BaseLanguage Past/Future proof system (the paper's TM^-). SpWitness.lean already records (Sp) as BL-valid (blValid_sp) and TM+-derivable (sp_translate); its TM-underivability is the one claim in the paper's fragment-system discussion (possible_worlds.tex, sub:Logic, second footnote of the TM^- paragraph) that is stated as NOT verified, and the paper wants to cite this repository for it. WHY IT IS UNAVAILABLE TODAY: (Sp) is valid on every task frame, so no TaskFrame-bound refutation exists; a countermodel must be a structure OUTSIDE the task-frame class on which every TM schema remains sound but whose temporal order is neither discrete nor dense (e.g. the lexicographic sum Z + Q, or the two-fibre structure named in Metalogic/Conservativity.lean). SCOPE, following the follow-up proposed but not created by the TM-completeness-status task: (1) a native BL frame notion not bound to TaskFrame; (2) a native BL truth definition over it; (3) a native BL soundness theorem verifying all TM axiom schemata directly (MK, MT, M5, MF, TD, TK, T4, TB, TA, TL) plus MP, MN, and temporal necessitation, via swap-strengthened induction for TD; (4) the concrete countermodel instance and the evaluation of some (Sp) instance as false there; (5) the theorem not_derivable_sp and its corollary tmCompleteBase_refuted : not TMCompleteBase, mirroring Z1Countermodel.tmCompleteDiscrete_refuted. HARD CONSTRAINT inherited from Conservativity.lean: never state a forward-conservativity theorem and discharge it with sorry; it is refuted, not open. OUT OF SCOPE: whether TM^-_d and TM^-_dc are complete over the dense and dense-and-complete classes remains a separate open question.
+
+---
 
 ### 543. Formalize mf correspondence rigidity
 - **Status**: [NOT STARTED]
@@ -163,7 +189,7 @@ next_project_number: 544
 - **Topic**: metalogic
 - **Dependencies**: None
 
-**Description**: Resolve the three paper anchors that make C15 fail, so scripts/check-module-invariants.sh can report ALL CHECKS PASSED. MEASURED STATE: C15 (paper-anchor citation resolution) is the sole failing check group in the invariant script as of the CI/linter-gates work; every other group (B0, C1-C14, C16-C19) passes. The three unresolved anchors are `app:drift`, `cor:no-characterization`, and `lem:deterministic-singleton`, cited in FormalSystem/Metalogic/Independence/DriftFrame.lean, RealTranslationFrame.lean, and StateSetTruth.lean respectively, and absent from specs/paper-definitions-of-record.md. The gap was introduced by the stability/deterministic-collapse work that added those Independence/ files; it predates and is unrelated to the invariant-gates task, which recorded it as a Reasoned Exclusion in every phase rather than fixing it, because resolving it needs paper-content knowledge the implementer did not have. WORK: for each of the three anchors, determine against the actual paper whether it is LIVE-UNPINNED (the result exists in the paper and simply needs recording in specs/paper-definitions-of-record.md with its statement and location) or DANGLING (no such result exists, and the citing docstring must be corrected or the anchor removed). Apply the correct treatment per anchor -- do not blanket-add all three to the record without checking, since a dangling anchor recorded as live converts a detectable citation error into an undetectable one. Then re-run the invariant script and confirm C15 passes. ACCEPTANCE: `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED with no group failing; each of the three anchors is either present in specs/paper-definitions-of-record.md with a real paper location, or its citation is removed/corrected in the Independence/ file that carried it, with the classification recorded per anchor.
+**Description**: Resolve the three paper anchors that make C15 fail, so scripts/check-module-invariants.sh can report ALL CHECKS PASSED. MEASURED STATE: C15 (paper-anchor citation resolution) is the sole failing check group in the invariant script as of the CI/linter-gates work; every other group (B0, C1-C14, C16-C19) passes. The three unresolved anchors are `app:drift`, `cor:no-characterization`, and `lem:deterministic-singleton`, cited in FormalSystem/Metalogic/Independence/DriftFrame.lean, RealTranslationFrame.lean, and StateSetTruth.lean respectively, and absent from specs/paper-definitions-of-record.md. The gap was introduced by the stability/deterministic-collapse work that added those Independence/ files; it predates and is unrelated to the invariant-gates task, which recorded it as a Reasoned Exclusion in every phase rather than fixing it, because resolving it needs paper-content knowledge the implementer did not have. WORK: for each of the three anchors, determine against the actual paper whether it is LIVE-UNPINNED (the result exists in the paper and simply needs recording in specs/paper-definitions-of-record.md with its statement and location) or DANGLING (no such result exists, and the citing docstring must be corrected or the anchor removed). Apply the correct treatment per anchor -- do not blanket-add all three to the record without checking, since a dangling anchor recorded as live converts a detectable citation error into an undetectable one. Then re-run the invariant script and confirm C15 passes. ACCEPTANCE: `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED with no group failing; each of the three anchors is either present in specs/paper-definitions-of-record.md with a real paper location, or its citation is removed/corrected in the Independence/ file that carried it, with the classification recorded per anchor. ANCHOR CLASSIFICATION SUPPLIED (appended from the MF frame-correspondence research in the PossibleWorlds repository; this is the paper-content knowledge the task description notes the implementer lacked, and it answers the LIVE-UNPINNED vs DANGLING question for all three anchors -- verify each against the paper before acting, but the legwork is done). (1) lem:deterministic-singleton: LIVE AND ALREADY LABELLED in JPL/possible_worlds.tex as \begin{Lthm} \label{lem:deterministic-singleton}, with citing sites later in the same appendix and an existing comment noting that other results cite it by label. It is NOT dangling; it is simply missing from specs/paper-definitions-of-record.md. Treatment: record it, with its statement and location. Lowest-risk of the three. (2) cor:no-characterization: LIVE BUT UNLABELLED. Its content is the footnote attached to the sentence '\textit{Determined} does not characterize the task frames satisfying \textsc{Deterministic}', which constructs the drift frames F-circ (w =>_x u iff x <= u - w <= 2x) and F-1 (u = w + x) over R-time and argues that since every possible world over either frame is an order-isomorphism of (R,<) onto itself, an induction assigns each store-free and recall-free formula the same set of worlds. Treatment: it cannot be recorded against a label that does not exist, so it needs a paper-side edit first. That edit is owned by the PossibleWorlds task 'repair_paper_lean_anchor_drift', which will either promote the footnote to a numbered corollary or attach a label to it; coordinate with it rather than recording a location that is about to change. (3) app:drift: names the SAME footnote content as (2) -- specifically the F-circ/F-1 construction and the reason F-circ is indistinguishable from the deterministic F-1. The citing docstring expects an APPENDIX SECTION, which the paper does not have. This is a structural mismatch rather than a missing pin: two Lean anchors point at one unlabelled footnote and one of them expects a section. Treatment: decide jointly with the PossibleWorlds task whether the paper grows an appendix subsection for the drift construction (making app:drift genuinely live) or the Lean citation is redirected to whatever label (2) produces. Do NOT record app:drift as live against the footnote without that decision -- per this task's own warning, recording a structurally dangling anchor as live converts a detectable citation error into an undetectable one. RELATED: a separate finding from the same research is that scripts/check-paper-definitions.sh reports 18 pinned definition blocks changed and 6 anchors dangling; the 244 uncommitted lines in the paper that caused much of that drift have now been committed, so re-measure before treating that as in scope here.
 
 ---
 
@@ -205,7 +231,7 @@ next_project_number: 544
 ### 534. Hg fragment finite axiomatizability
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
-- **Topic**: metalogic
+- **Topic**: incompleteness
 - **Dependencies**: Task 533
 
 **Description**: Research and, where feasible, establish in Lean whether the H/G-fragment of TM⁺ is finitely axiomatizable natively in the tense-only language L (primitive tense operators H and G) -- Kamp/Burgess territory. THE OBJECT: TMFrag fc φ := TM⁺ ⊢_fc tr φ, the H/G-fragment of TM⁺ delivered by task 533 (Metalogic/Conservativity/Fragment.lean), which by the fragment completeness theorem is exactly Log_{H,G}(fc), the set of H/G-sentences valid over the frame class fc, for each of Base, Dense, Discrete, Dedekind. KNOWN: TM ⊊ TMFrag at Discrete (witness Z1, machine-checked: not_bl_derivable_z1, z1_translate) and at Base (witness the splitting schema (DD), formerly (Sp), refuted in source); by tmComplete_iff_forward these gaps are exactly TM's semantic incompleteness. THE QUESTION: for each class fc, is there a FINITE set Σ_fc of H/G-schemas (or at least a recursive set) with TM + Σ_fc = TMFrag_fc? Candidates: (DD); Z1-type backward-induction schemas; the classical H/G axiomatizations of linear discrete/dense/complete flows of time (Burgess 1982 Axioms for tense logic I and II; Burgess 1984 handbook chapter; Kamp 1968; Gabbay-Hodkinson-Reynolds 1994; Prior), adapted to the bimodal setting where □ ranges over all world histories of a single task frame with the MF interaction axiom and every history shares one temporal order (so Log(all task frames) = Log(Discrete) ∩ Log(Dense) and (DD) is a split validity -- see the Halldén analysis in PossibleWorlds tasks 72 and 82, which record that completeness of TM + (DD) turns on whether TM_f and TM_d axiomatize their classes, both open). Consult the Literature/ corpus (burgess_1982, burgess_1982_ii, burgess_1982b, burgess_1984, venema_1993_since_until, venema_2001) via --lit and survey online sources. DELIVERABLES: a per-class verdict (finitely axiomatizable / recursively axiomatizable / open with the precise obstruction named), a candidate axiom set Σ_fc, and the machine-checked partial results that are honestly obtainable: soundness of TM + Σ_fc relative to TMFrag_fc (i.e. TM + Σ_fc ⊆ TMFrag_fc) and either a completeness proof (canonical model or filtration in the H/G language) or a separating H/G-validity showing TM + Σ_fc ⊊ TMFrag_fc. A negative or open verdict with evidence is a complete outcome. HARD CONSTRAINT: never state a completeness or conservativity theorem and discharge it with sorry.
