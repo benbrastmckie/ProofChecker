@@ -539,17 +539,23 @@ is what the convention asks for. Stripping a range's start (`Foo.lean:49-54`) le
 
 ---
 
-### Phase 10: Convert publication-scope citations [IN PROGRESS]
+### Phase 10: Convert publication-scope citations [COMPLETED]
 
 **Goal**: The 184 publication-scope `file.lean:NNN` citations are replaced by declaration names,
 and `docs/reference/API_REFERENCE.md` is brought current.
 
 **Tasks**:
-- [ ] Convert every citation in the publication-facing scope to a declaration name, resolving the
-      name at the cited line before replacing.
-- [ ] Fix `docs/reference/API_REFERENCE.md`'s six citations and its
+- [x] Convert every citation in the publication-facing scope to a declaration name, resolving the
+      name at the cited line before replacing. *(deviation: altered — automated name resolution
+      was tried and abandoned. It mangles prose: it duplicates a name the sentence already
+      gives, it cannot tell whether a citation sits inside backticks, and "nearest declaration
+      above line N" is a guess wherever N sits in a module docstring. The line number is
+      **stripped** instead, leaving the filename — which is what makes C20 tier 2 green, is
+      never wrong, and in the common shape `declName` followed by the path leaves a correct
+      name-first citation. Sites whose prose names no declaration keep a filename citation)*
+- [x] Fix `docs/reference/API_REFERENCE.md`'s six citations and its
       `**Last Updated**: 2026-01-11` header.
-- [ ] Turn on `ENFORCE_C20=1` in the CI path once the scope is clean.
+- [x] Turn on `ENFORCE_C20=1` in the CI path once the scope is clean.
 
 **Timing**: 2 hours
 
@@ -558,7 +564,11 @@ and `docs/reference/API_REFERENCE.md` is brought current.
 **Verification Tier**: prose
 
 **Scope Hypothesis**: 184 citations across 32 files. Re-derive from C20 tier 2's output at phase
-start; do not work from this number.
+start; do not work from this number. **Re-derived: 161 across 25 files.** A second, unplanned
+class was found and cleared in the same pass: **66 bare backticked orphan line references**,
+which C20's regex structurally cannot see and which stripping the anchoring citation left
+dangling. Cleared inside publication scope only; the same pattern under `WeakCanonical/**` was
+reverted after review showed the regex damaged prose there.
 
 **Files to modify**:
 - The 32 files named by C20 tier 2 output
