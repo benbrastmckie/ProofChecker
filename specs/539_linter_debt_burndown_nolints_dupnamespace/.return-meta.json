@@ -1,16 +1,30 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
-      "summary": "Measured linter-debt baseline (307 nolints + 14 dupNamespace); both concrete fixes prototyped and compile-verified then reverted; recommends nolints.json 307 -> 217 with unusedArguments permanently grandfathered on 95.4%-instance-argument evidence."
+      "type": "plan",
+      "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/plans/01_linter-debt-burndown.md",
+      "summary": "9-phase, 10.5-hour sequential plan burning nolints.json 307 -> 217 (unusedArguments grandfathered on evidence) and dupNamespace 14 -> 0, with per-category jq removal proved by green runLinter and a policy/comment refresh phase."
+    }
+  ],
+  "dispatch_seq": 4,
+  "next_steps": "Run /implement 539 to execute the plan",
+  "memory_candidates": [
+    {
+      "content": "Pattern for planning a linter-suppression-baseline burndown (Batteries nolints.json, and structurally the same for any mypy/eslint/ruff baseline file): never regenerate the baseline wholesale with the tool's own --update flag, because --update rewrites the file from CURRENT findings and silently grandfathers any genuine regression introduced by the same edit. Instead, phase the work one linter category at a time, and in each phase (a) fix every finding in that category, (b) remove exactly that category from the baseline with a filter (jq 'map(select(.[0] == \"CATEGORY\" | not))' -- the '| not' form, not '!=', per the jq-escaping workaround), and (c) require a green run of the linter driver as the phase gate. Step (c) is the load-bearing part: an exit-0 driver run with the category absent from the baseline proves both that the category is genuinely fixed AND that no new finding appeared, which a wholesale regenerate can never prove. Corollary for phase sizing: categories that are legitimately permanent (e.g. typeclass parameters retained for signature uniformity across a family) should be grandfathered with a WRITTEN, measured rationale in a project doc rather than burned down -- and that rationale is itself a plan phase, not a footnote.",
+      "category": "PATTERN",
+      "source_artifact": "specs/539_linter_debt_burndown_nolints_dupnamespace/plans/01_linter-debt-burndown.md",
+      "confidence": 0.75,
+      "suggested_keywords": ["linter", "nolints", "suppression-baseline", "burndown", "jq", "phase-decomposition"]
     }
   ],
   "metadata": {
     "session_id": "sess_1788809122_cefddd_539",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 9,
+    "estimated_hours": 10.5,
+    "dependency_waves": [[1], [2], [3], [4], [5], [6], [7], [8], [9]]
   }
 }
