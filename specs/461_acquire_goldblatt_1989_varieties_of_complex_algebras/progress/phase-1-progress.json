@@ -1,0 +1,35 @@
+{
+  "phase": 1,
+  "phase_name": "Establish a working Zotero write path",
+  "started_at": "2026-09-07T00:00:00Z",
+  "last_updated": "2026-09-07T00:10:00Z",
+  "objectives": [
+    {"id": 1, "description": "Probe PATH zot --version and zot read stats", "status": "done", "files_touched": [], "note": "PATH zot (~/.nix-profile/bin/zot resolving to /home/benjamin/.cache/uv/archive-v0/RRJjYB2_J-WxTi9z/bin/zot) fails both invocations with ModuleNotFoundError: No module named 'httpx' (exit 1), confirming research finding."},
+    {"id": 2, "description": "Probe known-good install directly if PATH zot fails", "status": "done", "files_touched": [], "note": "~/.local/share/uv/tools/zotero-cli-cc/bin/zot --version -> 'zot, version 0.7.0' exit 0. `zot read stats` treats 'stats' as an item key (not a real subcommand) and returns a structured not_found JSON error (exit 4), NOT a traceback -- this itself proves the httpx import chain succeeds. Ran `zot list --limit 1` as the actual read-only smoke test: exit 0, valid JSON item returned."},
+    {"id": 3, "description": "Establish PATH-prefix routing for remaining phases", "status": "done", "files_touched": [], "note": "Direct binary works, so no reinstall needed. zotero-write.sh resolves zot via `command -v zot` (line 53), so PATH=\"$HOME/.local/share/uv/tools/zotero-cli-cc/bin:$PATH\" prefix suffices for Phase 2's zotero-write.sh calls; no script edit, no Nix/home-manager change."},
+    {"id": 4, "description": "Confirm ZOTERO_API_KEY presence without disclosing value", "status": "done", "files_touched": [], "note": "Present (value not printed)."},
+    {"id": 5, "description": "Record route used and zot --version output in progress notes", "status": "done", "files_touched": [], "note": "Route: PATH=\"$HOME/.local/share/uv/tools/zotero-cli-cc/bin:$PATH\" prefixed on zotero-write.sh invocations. zot --version output: 'zot, version 0.7.0'."}
+  ],
+  "current_objective": null,
+  "deviations": [
+    {
+      "task_id": "1.4",
+      "description": "If the direct binary also fails, attempt exactly one recovery: uv tool install --reinstall zotero-cli-cc",
+      "type": "skipped",
+      "reason": "Not needed -- the direct binary succeeded on first probe (exit 0, no httpx traceback), so no reinstall recovery was required.",
+      "annotation": "*(deviation: skipped — not needed; direct binary succeeded on first probe)*"
+    },
+    {
+      "task_id": "1.verification",
+      "description": "zot read stats exits 0 (read-only smoke test proving the add-chain import no longer aborts)",
+      "type": "altered",
+      "reason": "'stats' is not a real subcommand of installed zot 0.7.0; it is parsed as an item key and returns a structured not_found JSON error (exit 4), not a traceback. The absence of a traceback already proves the httpx import chain succeeds. Substituted `zot list --limit 1` as the literal read-only smoke test, which exits 0 with valid JSON.",
+      "annotation": "*(deviation: altered — see plan Phase 1 Verification section)*"
+    }
+  ],
+  "approaches_tried": [
+    {"approach": "PATH zot (~/.nix-profile/bin/zot)", "result": "failed", "reason": "ModuleNotFoundError: No module named 'httpx' at import time (zotero_cli_cc/cli.py add-chain import)"},
+    {"approach": "Direct binary ~/.local/share/uv/tools/zotero-cli-cc/bin/zot via PATH prefix", "result": "succeeded", "reason": "httpx present in this install; --version and list both exit 0"}
+  ],
+  "handoff_count": 0
+}

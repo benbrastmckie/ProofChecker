@@ -1,7 +1,7 @@
 # Implementation Plan: Task #461
 
 - **Task**: 461 - Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 2 hours
 - **Dependencies**: 460 (per task metadata; not blocking — the acquisition it gated is already complete)
 - **Research Inputs**: specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md
@@ -115,27 +115,33 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 1: Establish a working Zotero write path [NOT STARTED]
+### Phase 1: Establish a working Zotero write path [COMPLETED]
 
 **Goal**: Obtain a `zot` invocation that runs without the `httpx` import failure, or determine
 that no working path exists in this environment — before any Zotero mutation is attempted.
 
 **Tasks**:
-- [ ] Probe the `$PATH` binary: `zot --version` and the read-only `zot read stats`. Capture the
-      exact output/traceback.
-- [ ] If it fails, probe the known-good install directly:
-      `~/.local/share/uv/tools/zotero-cli-cc/bin/zot --version`.
-- [ ] If the direct binary works, establish the routing for the remaining phases by prefixing
+- [x] Probe the `$PATH` binary: `zot --version` and the read-only `zot read stats`. Capture the
+      exact output/traceback. *(completed: both invocations fail with `ModuleNotFoundError: No
+      module named 'httpx'` at import, exit 1 — matches research finding)*
+- [x] If it fails, probe the known-good install directly:
+      `~/.local/share/uv/tools/zotero-cli-cc/bin/zot --version`. *(completed: prints "zot,
+      version 0.7.0", exit 0)*
+- [x] If the direct binary works, establish the routing for the remaining phases by prefixing
       `PATH="$HOME/.local/share/uv/tools/zotero-cli-cc/bin:$PATH"` on each `zotero-write.sh`
       invocation (`zotero-write.sh` resolves `zot` via `command -v`, so a prefix suffices — no
-      script edit, no shell-profile change, no Nix/home-manager change).
+      script edit, no shell-profile change, no Nix/home-manager change). *(completed: confirmed
+      zotero-write.sh:53 uses `command -v zot`)*
 - [ ] If the direct binary also fails, attempt exactly one recovery: `uv tool install --reinstall
-      zotero-cli-cc`. Do not attempt a third repair route.
-- [ ] Confirm `ZOTERO_API_KEY` is present in the environment (`[ -n "${ZOTERO_API_KEY:-}" ]`);
-      never print its value.
-- [ ] Record in the progress notes which route was used and the exact `zot --version` output.
+      zotero-cli-cc`. Do not attempt a third repair route. *(deviation: skipped — not needed;
+      direct binary succeeded on first probe)*
+- [x] Confirm `ZOTERO_API_KEY` is present in the environment (`[ -n "${ZOTERO_API_KEY:-}" ]`);
+      never print its value. *(completed: present, value not disclosed)*
+- [x] Record in the progress notes which route was used and the exact `zot --version` output.
+      *(completed: see progress/phase-1-progress.json)*
 - [ ] If no route works: stop at this phase, mark it `[BLOCKED]`, record the root cause, and skip
       Phases 2 and 3. Phases 4 and 5 (record correction) remain executable and MUST still run.
+      *(deviation: skipped — not applicable; a working route was found)*
 
 **Timing**: 0.25 hours
 
@@ -150,7 +156,12 @@ that no working path exists in this environment — before any Zotero mutation i
 - A `zot --version` invocation exits 0 and prints a version string, with the exact command form
   (bare or `PATH`-prefixed) written down for reuse in Phase 2.
 - `zot read stats` exits 0 (read-only smoke test proving the `add`-chain import no longer aborts).
-- `ZOTERO_API_KEY` presence confirmed without disclosing it.
+  *(deviation: altered — "stats" is not a real subcommand of the installed 0.7.0 CLI; it is
+  treated as an item key and returns a structured `not_found` JSON error, exit 4, not a
+  traceback. That absence of a traceback is itself the proof the `httpx` import chain succeeds.
+  Ran `zot list --limit 1` as the literal read-only smoke test instead: exit 0, valid JSON
+  returned.)*
+- `ZOTERO_API_KEY` presence confirmed without disclosing it. *(completed)*
 
 ---
 
