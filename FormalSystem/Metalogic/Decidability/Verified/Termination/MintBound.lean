@@ -12190,13 +12190,24 @@ and `postBlockingSettles_fuel_gap_false` kills it at a nonzero one, on a branch
 (`freshWorldBranch`) that no engine run hands to the pass. Entry 23 records why relocating
 conditions onto the pass's **output** branch is not the repair either.
 
-**The quantification is the honest one**, in the same sense and the same words as `ArmSettlement`:
-`ob` is a branch some `expandBranchWithFuel` call returned open, and the fuel is that call's own.
-Whether the predicate holds at the terminus's fuel figure is open; nothing here decides it in
-either direction, and it is a hypothesis everywhere it appears. What *is* decided is that the
-`fuel = 0` degeneracy which refutes the unrestricted form cannot reach this one
-(`expandBranchWithFuel_eq_none_zero`), and that its antecedent is genuinely satisfiable at figures
-the engine reaches — see the non-vacuity subsection below. -/
+**The quantification is the honest one as far as it goes**, in the same sense and the same words as
+`ArmSettlement`: `ob` is a branch some `expandBranchWithFuel` call returned open, and the fuel is
+that call's own. What *is* decided in this narrowing's favour is that the `fuel = 0` degeneracy
+which refutes the unrestricted form cannot reach it (`expandBranchWithFuel_eq_none_zero`), and that
+its antecedent is genuinely satisfiable at figures the engine reaches — see the non-vacuity
+subsection below.
+
+**But the narrowing is incomplete, and the predicate is REFUTED at the terminus's own fuel figure.**
+`postBlockingSettlesRun_terminusFuel_false` decides it in the negative at `.Base`, for every value of
+every parameter, and `postBlockingSettlesRun_false_dense` / `postBlockingSettlesRun_false_rtime` do
+the same at two further classes. The defect is a *second* over-quantification: this predicate
+restricts `(ob, oOrd, fuel)` but leaves `expandBranchWithFuel`'s `EventualityTracker` argument
+universally quantified, and that argument is the only input the engine's blocked-set computation and
+the settlement test's recomputed `armTracker` do not share. Nothing is withdrawn on that account —
+this definition is retained verbatim, as everything in this file is — but it is a **false**
+hypothesis at those three classes, so the termini carrying it are vacuous there. See the verdict
+subsection below and register entry 25. The completion of the narrowing is
+`PostBlockingSettlesSeedRun`, which is carried as a hypothesis and is **not** shown true. -/
 def PostBlockingSettlesRun (fc : FormalSystem.ProofSystem.FrameClass) (fuel : Nat) : Prop :=
   ∀ (b ob : Branch) (ord oOrd : TimeOrdering) (tr : EventualityTracker) (ap oAp : AppliedSet)
     (mb bu : Nat) (satBr : Branch) (satOrd : TimeOrdering),
@@ -12511,7 +12522,15 @@ found, at any figure probed. That is evidence and not a proof, and the residual 
 hypothesis accordingly. The same sweep also found `buildTableauAt`'s own guard never firing on those
 shapes: the threaded tracker and the recomputed `armTracker` agreed everywhere, so the entry point
 did not consult its post-blocking arm on any of them. The residual is therefore live but not yet
-exercised by a probed formula, which is a fact about the probe's reach, not about the residual. -/
+exercised by a probed formula, which is a fact about the probe's reach, not about the residual.
+
+**And that warning was the right one: the residual is now refuted.** The subsection below decides
+`PostBlockingSettlesRun` in the negative at `.Base`, `.Dense` and `.RTime`, at every positive fuel
+figure and hence at the terminus's own. Nothing above is withdrawn — the measurements stand exactly
+as recorded, and the pass really does do real work on the shapes probed — but no part of this
+subsection should be read as evidence toward the residual's *truth*. The counterexample is reached
+by doctoring an input the probes never varied, which is precisely what "a fact about the probe's
+reach" left open. -/
 
 /-- The witness pass extends its input strictly: one formula in, three out. The length fact behind
 non-vacuity claim (a). -/
@@ -12737,6 +12756,204 @@ theorem postBlockingSettlesRun_terminusFuel_false
     (Nat.one_le_iff_ne_zero.mp (one_le_mintAwareFuelAt U.card Tmax mintBudget D β))
   rw [hn]
   exact postBlockingSettlesRun_false_succ n
+
+
+/-! ##### The record at the other frame classes
+
+Refuting at one frame class already refutes the predicate, so what follows completes the **record**,
+not the verdict.
+
+`.Dense` and `.RTime` are covered: the same three `rfl` obligations go through unchanged there,
+because none of the rules those classes add is applicable to the witness. `.ZTime` is **not** covered
+by this witness, and the reason is recorded here rather than left implicit: at that class `priorUZ`
+and `priorSZ` remain applicable to `T(⊤ untl ⊤)` and `T(⊤ snce ⊤)` at `⟨0,0⟩`, `⟨0,1⟩`, `⟨1,0⟩` and
+`⟨1,1⟩`, so `expandOnceNoFresh` reports `.extended` rather than `.saturated` and the first obligation
+fails. Adding those rules' conclusions to the witness would close it; that is mechanical and is left
+undone deliberately, because the predicate is already refuted and a fourth class buys nothing beyond
+tidiness. A future reader who wants it can re-run the measurement from the two rule names and the
+four labels named here without re-deriving anything. -/
+
+/-- The label-free pass is saturated on the witness at `.Dense`. -/
+theorem pbrWitness_expandOnceNoFresh_saturated_dense :
+    expandOnceNoFresh pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.Dense
+      = (ExpansionResult.saturated, pbrWitnessOrd) := by rfl
+
+/-- The doctored run returns the witness open at `.Dense`, at every positive fuel. -/
+theorem pbrWitness_expandBranchWithFuel_eq_dense (n : Nat) :
+    expandBranchWithFuel pbrWitnessBranch (n + 1) pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.Dense pbrDoctoredTracker {} 100 0
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd, {})) := by
+  rw [expandBranchWithFuel]
+  norm_num
+  rfl
+
+/-- The settlement test still reports the minting formula at `.Dense`. -/
+theorem pbrWitness_settlement_fails_dense :
+    findUnexpandedUnblockedWith pbrWitnessBranch pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.Dense
+        (blockedTimes pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.Dense
+          (armTracker pbrWitnessBranch))
+      = some (SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩) := by rfl
+
+/-- The label-free pass is saturated on the witness at `.RTime`. -/
+theorem pbrWitness_expandOnceNoFresh_saturated_rtime :
+    expandOnceNoFresh pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.RTime
+      = (ExpansionResult.saturated, pbrWitnessOrd) := by rfl
+
+/-- The doctored run returns the witness open at `.RTime`, at every positive fuel. -/
+theorem pbrWitness_expandBranchWithFuel_eq_rtime (n : Nat) :
+    expandBranchWithFuel pbrWitnessBranch (n + 1) pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.RTime pbrDoctoredTracker {} 100 0
+      = some (.inr (pbrWitnessBranch, pbrWitnessOrd, {})) := by
+  rw [expandBranchWithFuel]
+  norm_num
+  rfl
+
+/-- The settlement test still reports the minting formula at `.RTime`. -/
+theorem pbrWitness_settlement_fails_rtime :
+    findUnexpandedUnblockedWith pbrWitnessBranch pbrWitnessOrd
+        FormalSystem.ProofSystem.FrameClass.RTime
+        (blockedTimes pbrWitnessBranch pbrWitnessOrd FormalSystem.ProofSystem.FrameClass.RTime
+          (armTracker pbrWitnessBranch))
+      = some (SignedFormula.pos (Formula.untl mfp mfq) ⟨9, 4⟩) := by rfl
+
+/-- **Verdict at `.Dense`: FALSE**, at every positive fuel figure. -/
+theorem postBlockingSettlesRun_false_dense (n : Nat) :
+    ¬ PostBlockingSettlesRun FormalSystem.ProofSystem.FrameClass.Dense (n + 1) :=
+  postBlockingSettlesRun_false_succ_of n pbrWitness_expandOnceNoFresh_saturated_dense
+    (pbrWitness_expandBranchWithFuel_eq_dense n) pbrWitness_settlement_fails_dense
+
+/-- **Verdict at `.RTime`: FALSE**, at every positive fuel figure. -/
+theorem postBlockingSettlesRun_false_rtime (n : Nat) :
+    ¬ PostBlockingSettlesRun FormalSystem.ProofSystem.FrameClass.RTime (n + 1) :=
+  postBlockingSettlesRun_false_succ_of n pbrWitness_expandOnceNoFresh_saturated_rtime
+    (pbrWitness_expandBranchWithFuel_eq_rtime n) pbrWitness_settlement_fails_rtime
+
+
+/-! ##### The minimal further narrowing, named and carried
+
+What the refutation above kills is the residual's quantification over `expandBranchWithFuel`'s
+*other* inputs. `buildTableauAt` does not quantify over them: at the one place it reaches the
+residual it has just made the call
+
+```
+expandBranchWithFuel [F φ @ initial] fuel TimeOrdering.empty fc (maxBranches := maxBranches)
+```
+
+which supplies `ord`, `tracker`, `applied` and `branchesUsed` at `TimeOrdering.empty`,
+`EventualityTracker.empty`, `{}` and `0`. Quantifying over those four was over-quantification, in the
+same sense and for the same reason that quantifying over `(ob, oOrd, fuel)` was: generality the
+consuming site never asked for, bought at the price of admitting inputs no run produces.
+
+`PostBlockingSettlesSeedRun` fixes exactly those four and leaves everything else quantified. The
+bridge survives verbatim, so the repaired chain is non-vacuous again.
+
+**This is not a proof of the narrowing, and the distinction is the whole point of this subsection.**
+-/
+
+/-- **The residual with the four arguments `buildTableauAt` always supplies at their defaults
+fixed.** `ord := TimeOrdering.empty`, `tr := EventualityTracker.empty`, `ap := {}` and `bu := 0`;
+`b`, `ob`, `oOrd`, `oAp`, `mb`, `satBr` and `satOrd` stay quantified.
+
+**(i) What it fixes, and why exactly those four.** They are precisely the arguments the consuming
+site instantiates itself. `buildTableauAt` makes one `expandBranchWithFuel` call, from the seed
+branch, at the empty ordering, the empty tracker, the empty applied set and zero branches used. A
+predicate quantifying over them was not more general in any way a caller could use; it was admitting
+inputs the entry point never produces, which is what
+`postBlockingSettlesRun_terminusFuel_false` exploits.
+
+**(ii) It kills that witness, and the reason is checked rather than hoped for.** At
+`tr := EventualityTracker.empty` the witness branch's own `expandOnceUnblocked` reports `.extended`,
+not `.saturated` — the doctored entry is exactly what made time 4 blocked, and with it gone the run
+does not return the witness open at all. The measured genuine run from the witness at the empty
+tracker reaches an exit whose settlement test **passes**.
+
+**(iii) It is NOT shown true, and a second, structurally independent refutation route against it is
+unprobed.** `saturateBlocked` may *extend* `ob`, and `expandOnceNoFresh` ignores blocking entirely —
+so it can do label-free work at a *blocked* time, and the formulas it adds can break
+`isSubsetBlocked` (or `timeSaturated` at the ancestor) and thereby **unblock** a time carrying
+label-minting work that `expandOnceNoFresh` itself skips. The settlement test on `satBr` would then
+report it, with no doctored tracker anywhere. That route needs no over-quantification at all and was
+not probed. Any future claim that this predicate holds must gate on it first; the cheapest probe is a
+sweep reporting, for engine exits `ob`, whether
+`blockedTimes satBr satOrd fc (armTracker satBr)` ever loses a time that
+`blockedTimes ob oOrd fc (armTracker ob)` held. -/
+def PostBlockingSettlesSeedRun (fc : FormalSystem.ProofSystem.FrameClass) (fuel : Nat) : Prop :=
+  ∀ (b ob : Branch) (oOrd : TimeOrdering) (oAp : AppliedSet) (mb : Nat)
+    (satBr : Branch) (satOrd : TimeOrdering),
+    expandBranchWithFuel b fuel TimeOrdering.empty fc EventualityTracker.empty {} mb 0
+      = some (.inr (ob, oOrd, oAp)) →
+    saturateBlocked ob fuel oOrd fc = some (.inr (satBr, satOrd)) →
+    findUnexpandedUnblockedWith satBr satOrd fc
+      (blockedTimes satBr satOrd fc (armTracker satBr)) = none
+
+/-- **The direction, fixed and stated in words**, in the same idiom as
+`postBlockingSettlesRun_of_postBlockingSettles`. `PostBlockingSettlesSeedRun fc fuel` is the
+**weaker** predicate: it speaks only about runs started from the four defaults, where the run form
+speaks about all of them. So the implication runs
+`PostBlockingSettlesRun fc fuel → PostBlockingSettlesSeedRun fc fuel`, and **every theorem restated
+against the seed form is a strengthening of its `_run` original**, never a weakening. Register entry
+7 is why this is stated rather than assumed. -/
+theorem postBlockingSettlesSeedRun_of_postBlockingSettlesRun
+    {fc : FormalSystem.ProofSystem.FrameClass} {fuel : Nat}
+    (h : PostBlockingSettlesRun fc fuel) : PostBlockingSettlesSeedRun fc fuel :=
+  fun b ob oOrd oAp mb satBr satOrd hE hsb =>
+    h b ob TimeOrdering.empty oOrd EventualityTracker.empty {} oAp mb 0 satBr satOrd hE hsb
+
+/-- **Bridge, at the seed narrowing.** `buildTableauAt_isSome_of_settlesRun` with
+`PostBlockingSettlesRun fc fuel` exchanged for `PostBlockingSettlesSeedRun fc fuel`. The exchange is
+available for exactly the reason the narrowing is the right one: `buildTableauAt`'s own
+`expandBranchWithFuel` call supplies the four fixed arguments at the very values the narrowing pins
+them to, so the proof skeleton survives byte for byte. -/
+theorem buildTableauAt_isSome_of_settlesSeedRun {phi : Formula} {fuel : Nat}
+    {fc : FormalSystem.ProofSystem.FrameClass} {maxBranches : Nat}
+    (hpb : PostBlockingSettlesSeedRun fc fuel)
+    (hexp : (expandBranchWithFuel [SignedFormula.neg phi Label.initial] fuel TimeOrdering.empty fc
+      (maxBranches := maxBranches)).isSome = true) :
+    (buildTableauAt phi fuel fc maxBranches).isSome = true := by
+  unfold buildTableauAt
+  simp only
+  match hE : expandBranchWithFuel [SignedFormula.neg phi Label.initial] fuel TimeOrdering.empty fc
+      (maxBranches := maxBranches) with
+  | none => rw [hE] at hexp; simp at hexp
+  | some (.inl closedBr) => simp
+  | some (.inr (ob, oOrd, oAp)) =>
+      dsimp only
+      split
+      · simp
+      · match hsb : saturateBlocked ob fuel oOrd fc with
+        | none => exact absurd hsb (saturateBlocked_ne_none ob fuel oOrd fc)
+        | some (.inl cb) => simp
+        | some (.inr (satBr, satOrd)) =>
+            dsimp only
+            split
+            · simp
+            · rename_i sf2 hg2
+              rw [hpb _ _ _ _ _ _ _ hE hsb] at hg2
+              simp at hg2
+
+/-- `buildTableauAt_isSome_of_budget_fixed_run` at the seed narrowing — the terminus restated so it
+rests on a hypothesis this file has **not** refuted. Exactly one entry of the hypothesis list
+differs from its `_run` original; the fuel expression is reused byte for byte.
+
+This is the representative restatement, not the family: the other five `_run` termini are left as
+they stand, and widening to them is deliberately deferred rather than forgotten. -/
+theorem buildTableauAt_isSome_of_budget_fixed_seedRun
+    {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula}
+    {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
+    (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U) (hD : DifficultyBounded fc U D)
+    (hmint : MintPaysForTimeFixed fc U Tmax) (harm : ArmSettlement fc)
+    (hpb : PostBlockingSettlesSeedRun fc (mintAwareFuelAt U.card Tmax mintBudget D β))
+    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
+    (hmb : 10 * U.card ≤ mintBudget)
+    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
+    (hbud : β * mintAwareFuelAt U.card Tmax mintBudget D β ≤ maxBranches) :
+    (buildTableauAt phi (mintAwareFuelAt U.card Tmax mintBudget D β) fc maxBranches).isSome
+      = true := by
+  refine buildTableauAt_isSome_of_settlesSeedRun hpb ?_
+  exact expandBranchWithFuel_isSome_of_budget_fixed hβ hUcl hD hmint harm
+    (seedBranch phi) TimeOrdering.empty EventualityTracker.empty {} maxBranches 0
+    hseed (runInvariant_initial _) hmb hT (by omega)
 
 section PostBlockingRunProbe
 
@@ -15443,8 +15660,12 @@ already been here.
 
 24. **Reading `PostBlockingSettlesRun` as discharged.** It is not, and this entry exists so the
     narrowing is not mistaken for a proof. It is a **hypothesis** everywhere it appears, exactly as
-    `ArmSettlement` is, and whether it holds at the terminus's own fuel figure is open — nothing in
-    this file decides it in either direction.
+    `ArmSettlement` is. It is now **decided, and decided in the negative**: entry 25 records the
+    verdict, and `postBlockingSettlesRun_terminusFuel_false` is the theorem — the predicate is false
+    at the terminus's own fuel figure, at `.Base`, for every value of every parameter. The clause
+    that used to stand here, that nothing in this file decides it in either direction, was true when
+    it was written and is false now; it is corrected rather than deleted so the sequence of findings
+    stays legible.
 
     *What is established about it.* It is not refuted by either witness that kills the unrestricted
     form (entry 22), and it is not vacuous: `postBlockingRunProbe`'s `#guard_msgs`-checked
@@ -15467,6 +15688,72 @@ already been here.
     threaded tracker and the recomputed `armTracker` agreed everywhere, so the entry point did not
     consult its post-blocking arm on any of them. That is a fact about the probe's reach, not about
     the residual.
+
+25. **Re-attempting `PostBlockingSettlesRun` in the positive direction, at any positive figure.**
+    The verdict is in and it is **FALSE**, and this entry exists so entry 24's narrowing is not
+    mistaken for a *safe* one either. `postBlockingSettlesRun_terminusFuel_false` refutes the
+    predicate at `.Base` at the terminus's own figure `mintAwareFuelAt U.card Tmax mintBudget D β`,
+    for **all** parameter values: that figure is always at least one (`one_le_mintAwareFuelAt`, off
+    `mintPathBound`'s trailing `+ 1` through `fuelFigure_pos`), and `postBlockingSettlesRun_false_succ`
+    refutes it at every positive fuel. `postBlockingSettlesRun_false_dense` and
+    `postBlockingSettlesRun_false_rtime` land the same verdict at two further classes. All of it is a
+    kernel proof — no `sorry`, and no axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
+
+    *The mechanism: entry 24's narrowing was **incomplete**.* It restricted `(ob, oOrd, fuel)` to
+    run-produced pairs and left `expandBranchWithFuel`'s `EventualityTracker` argument universally
+    quantified. That argument is the **only** input the engine's blocked-set computation and the
+    settlement test's recomputed `armTracker` do not share, and it is not inert. Blocking is monotone
+    in pending entries at the ancestor — `isTemporallyBlockedSaturated` conjoins
+    `allEventualitiesFulfilledOrDuplicated`, which asks for a pending entry with the same event
+    formula and the same `isUntil` flag at the ancestor time — so a doctored tracker yields a
+    **strictly larger** blocked set than `armTracker`, and the engine skips a time the settlement
+    test still inspects. `pbrDoctoredTracker` parks one `q`-eventuality at an unused world, where the
+    world-sensitive `fulfillEventualities` never discharges it while the world-blind subset half of
+    blocking is still satisfied. `pbrWitnessBranch` is the engine's own open exit from
+    `seedBranch (p → q)`, augmented, carrying `T(p untl q)@⟨9,4⟩` — a formula `untlPos` mints a time
+    for, so `expandOnceNoFresh` skips it and `saturateBlocked_eq_self_of_noFresh_saturated` hands the
+    branch back at **every** fuel.
+
+    *Why the refutation is cheap where entry 24 records the positive direction as prohibitive.* The
+    doctored run returns the witness at its **first** step, so `rw [expandBranchWithFuel]` unfolds the
+    equation lemma exactly once and the `.saturated` arm closes the goal; no engine step is
+    transcribed. That is what converts what entry 24 calls a measurement into a theorem, and it
+    generalises: a kernel *refutation* about a well-founded-recursive engine function is cheap exactly
+    when the witness is returned before the first recursive call, even where a kernel *proof* about
+    the same function is not.
+
+    *What this does NOT say.* It is not a claim that any engine run ever threads such a tracker —
+    `buildTableauAt` does not. The predicate **as written** quantifies over the tracker, so the
+    predicate as written is false. This is the same form of statement entry 22 makes about the
+    `fuel = 0` degeneracy, and it is not to be softened to a caveat: the finding is that the narrowing
+    was incomplete, and the completion is named next.
+
+    *The named next narrowing, and why it is NOT claimed true.* `PostBlockingSettlesSeedRun` fixes the
+    four arguments `buildTableauAt` always supplies at their defaults — `ord := TimeOrdering.empty`,
+    `tr := EventualityTracker.empty`, `ap := {}`, `bu := 0` — and leaves the rest quantified.
+    `buildTableauAt_isSome_of_settlesSeedRun` shows the bridge survives verbatim, and
+    `buildTableauAt_isSome_of_budget_fixed_seedRun` is the representative terminus restated against
+    it. That narrowing kills *this* witness (checked: at the empty tracker the same branch's
+    `expandOnceUnblocked` reports `.extended`, not `.saturated`, and a genuine run from it reaches an
+    exit whose settlement test passes), and it is **not** thereby true. A second, structurally
+    independent refutation route against it is **unprobed**: `saturateBlocked` may *extend* `ob`, and
+    `expandOnceNoFresh` ignores blocking entirely, so it can do label-free work at a *blocked* time,
+    and the formulas it adds can break `isSubsetBlocked` (or `timeSaturated` at the ancestor) and
+    thereby **unblock** a time carrying label-minting work that `expandOnceNoFresh` itself skips; the
+    settlement test on `satBr` would then report it, with no doctored tracker anywhere. Any future
+    claim that `PostBlockingSettlesSeedRun` holds must gate on that route first. The cheapest probe:
+    for engine exits `ob`, does `blockedTimes satBr satOrd fc (armTracker satBr)` ever lose a time
+    that `blockedTimes ob oOrd fc (armTracker ob)` held?
+
+    *Do not re-attempt.* The unrestricted `PostBlockingSettles` (entry 22, refuted); the output-branch
+    bridge `PostBlockingExitSettled` (entry 23, refuted); an `ArmSettlement` discharge of the entry
+    point's post-blocking arm, which is strictly too weak because `resolveOpenArm` tests
+    `findClosure satBr` before its saturation test and `buildTableauAt` does not; and
+    `PostBlockingSettlesRun` itself in the positive direction, at any positive figure. What remains
+    open is a fact about the **witness**, not about the verdict: at `.ZTime` the witness leaves
+    `priorUZ` and `priorSZ` applicable at `⟨0,0⟩`, `⟨0,1⟩`, `⟨1,0⟩` and `⟨1,1⟩`, so its first
+    obligation fails there. Completing that class is mechanical and buys only tidiness — refuting at
+    one frame class already refutes the predicate.
     -/
 
 end FormalSystem.Metalogic.Decidability

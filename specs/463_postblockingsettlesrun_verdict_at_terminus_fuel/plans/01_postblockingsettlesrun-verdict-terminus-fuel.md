@@ -288,20 +288,20 @@ figure is always positive, and land the theorem that answers the dispatch's lite
 
 ---
 
-### Phase 4: Extend to `.Dense` and `.RTime`; record `.ZTime` as a scoped sub-case [IN PROGRESS]
+### Phase 4: Extend to `.Dense` and `.RTime`; record `.ZTime` as a scoped sub-case [COMPLETED]
 
 **Goal**: Complete the frame-class record for the classes research verified, and record `.ZTime`
 honestly rather than leaving it implicit.
 
 **Tasks**:
-- [ ] Land `postBlockingSettlesRun_false_dense` and `postBlockingSettlesRun_false_rtime` by
+- [x] Land `postBlockingSettlesRun_false_dense` and `postBlockingSettlesRun_false_rtime` by
       re-running the Phase 2 obligations at those classes (research verified both
       `expandOnceUnblocked` and `expandOnceNoFresh` close by `rfl` there) and reassembling.
-- [ ] Add a short prose note in the section recording that `.ZTime` is **not** covered by this
+- [x] Add a short prose note in the section recording that `.ZTime` is **not** covered by this
       witness, naming the measured reason: `priorUZ`/`priorSZ` remain applicable to
       `T(⊤ untl ⊤)` / `T(⊤ snce ⊤)` at `⟨0,0⟩ ⟨0,1⟩ ⟨1,0⟩ ⟨1,1⟩`. State plainly that this is
       completeness of the record, not of the verdict — the predicate is already refuted.
-- [ ] **Optional, opportunistic**: if adding those two rules' conclusions to `pbrWitnessBranch`
+- [ ] **Optional, opportunistic**: if adding those two rules' conclusions *(deviation: skipped — the optional `.ZTime` strengthening was not attempted. It is explicitly plan-optional and buys record tidiness only; concurrent full `lake build`s in this repo made each in-file build cost 20-25 minutes, well past the phase's own 20-minute time-box for this item. The scoped `.ZTime` note was landed instead, naming `priorUZ`/`priorSZ` and the four labels so the measurement is re-runnable.)* to `pbrWitnessBranch`
       leaves the three verified classes' `rfl`s intact and closes `.ZTime` too, land
       `postBlockingSettlesRun_false_ztime` as well. This is a plan-unanticipated strengthening and
       MUST be flagged as such in the implementation summary. Time-box it to 20 minutes; if the
@@ -329,18 +329,18 @@ measurement and is worth recording.
 
 ---
 
-### Phase 5: Name the minimal further narrowing — carried, not discharged [NOT STARTED]
+### Phase 5: Name the minimal further narrowing — carried, not discharged [COMPLETED]
 
 **Goal**: Land `PostBlockingSettlesSeedRun`, its direction lemma, its bridge, and one restated
 terminus, so the repaired chain is non-vacuous again — while stating in the same breath that the
 narrowing is **not** shown true.
 
 **Tasks**:
-- [ ] Land `def PostBlockingSettlesSeedRun`: `PostBlockingSettlesRun` with the four arguments
+- [x] Land `def PostBlockingSettlesSeedRun`: `PostBlockingSettlesRun` with the four arguments
       `buildTableauAt` always supplies at defaults fixed — `ord := TimeOrdering.empty`,
       `tr := EventualityTracker.empty`, `ap := {}`, `bu := 0` — leaving `b`, `ob`, `oOrd`, `oAp`,
       `mb`, `satBr`, `satOrd` quantified.
-- [ ] Docstring MUST carry three things, in this order: (i) what it fixes and why exactly those four
+- [x] Docstring MUST carry three things, in this order: (i) what it fixes and why exactly those four
       (the consuming site instantiates them, so quantifying over them was over-quantification, not
       generality); (ii) that it kills the Phase 2 witness, with the checked reason — at
       `tr := .empty` the same branch's `expandOnceUnblocked` is `.extended`, not `.saturated`;
@@ -348,19 +348,19 @@ narrowing is **not** shown true.
       refutation route (`saturateBlocked` may extend `ob`, and `expandOnceNoFresh` ignores blocking
       entirely, so it can do label-free work at a blocked time and thereby *unblock* a time carrying
       label-minting work it itself skips).
-- [ ] Land `postBlockingSettlesSeedRun_of_postBlockingSettlesRun` — the direction lemma, in the
+- [x] Land `postBlockingSettlesSeedRun_of_postBlockingSettlesRun` — the direction lemma, in the
       same idiom as `postBlockingSettlesRun_of_postBlockingSettles` (`:12220`): the seed form is the
       **weaker** predicate, so every theorem restated against it is a strengthening.
-- [ ] Land `buildTableauAt_isSome_of_settlesSeedRun` by copying the proof skeleton of
+- [x] Land `buildTableauAt_isSome_of_settlesSeedRun` by copying the proof skeleton of
       `buildTableauAt_isSome_of_settlesRun` (`:12197`) with the narrowed hypothesis. Research
       checked this survives verbatim because `buildTableauAt` passes exactly those defaults.
-- [ ] Land `buildTableauAt_isSome_of_budget_fixed_seedRun` — `buildTableauAt_isSome_of_budget_fixed_run`
+- [x] Land `buildTableauAt_isSome_of_budget_fixed_seedRun` — `buildTableauAt_isSome_of_budget_fixed_run`
       (`:12438`) with `hpb` at the seed-run predicate; the fuel expression is reused byte for byte.
-- [ ] **Fallback, pre-declared**: if the bridge does not typecheck, land the `def` and the direction
+- [ ] **Fallback, pre-declared**: *(not needed — the bridge typechecked verbatim on the first attempt; the terminus restatement landed.)* if the bridge does not typecheck, land the `def` and the direction
       lemma only, skip the terminus restatement, and carry the failure into entry 25 as a named open
       item. Do NOT loosen the narrowing until a bridge appears — that is the exact failure mode
       register entry 23 exists to prevent.
-- [ ] Commit each green declaration.
+- [x] Commit each green declaration. *(deviation: altered — phases 4, 5 and 6 were landed as one declared atomic batch verified by a single green module build and one commit; see the Phase 2 note on concurrent-build cost.)*
 
 **Timing**: 2 hours
 
@@ -382,13 +382,13 @@ narrowing is **not** shown true.
 
 ---
 
-### Phase 6: C9 register entry 25, and the amendments task 463 makes necessary [NOT STARTED]
+### Phase 6: C9 register entry 25, and the amendments task 463 makes necessary [COMPLETED]
 
 **Goal**: Record the verdict in the do-not-re-attempt register, and correct every place in the file
 that currently asserts the question is open — those statements become false with Phase 3.
 
 **Tasks**:
-- [ ] Add **C9 register entry 25** after entry 24 (`:15224`), in the register's established voice:
+- [x] Add **C9 register entry 25** after entry 24 (`:15224`), in the register's established voice:
       the verdict (FALSE, machine-checked, at `.Base`/`.Dense`/`.RTime` and at the terminus's own
       figure for all parameters); the mechanism (the tracker argument was the surviving
       over-quantification; blocking is monotone in pending entries at the ancestor, so a doctored
@@ -399,23 +399,23 @@ that currently asserts the question is open — those statements become false wi
       `PostBlockingSettlesSeedRun` **with** the unprobed second refutation route and the cheapest
       probe for it; and the do-not-re-attempt instruction (do not re-attempt the unnarrowed forms,
       the output-branch bridge, or an `ArmSettlement` discharge).
-- [ ] **Amend entry 24 in place.** Its current text — "whether it holds at the terminus's own fuel
+- [x] **Amend entry 24 in place.** Its current text — "whether it holds at the terminus's own fuel
       figure is open; nothing in this file decides it in either direction" — is made false by Phase
       3. Rewrite that clause to point at entry 25 and at
       `postBlockingSettlesRun_terminusFuel_false`. Preserve the rest of entry 24 (its non-vacuity
       and probe-reach paragraphs remain accurate).
-- [ ] **Amend the `PostBlockingSettlesRun` docstring** (`:11961` region): the clause "Whether the
+- [x] **Amend the `PostBlockingSettlesRun` docstring** (`:11961` region): the clause "Whether the
       predicate holds at the terminus's fuel figure is open; nothing here decides it in either
       direction, and it is a hypothesis everywhere it appears" is now false. Replace with the
       verdict and a pointer to `postBlockingSettlesRun_terminusFuel_false`.
-- [ ] **Amend the non-vacuity subsection** (`:12479` region), whose "What the probe did not find"
+- [x] **Amend the non-vacuity subsection** (`:12479` region), whose "What the probe did not find"
       paragraph reads as evidence toward truth. Add, without deleting the existing honest text, that
       the residual is now **refuted** and that the probe's non-finding was a fact about the probe's
       reach — precisely as that paragraph itself warned.
-- [ ] Sweep the section preamble at `:12155` for any further "nothing here decides it" language and
-      amend it the same way.
-- [ ] Grep the whole file for residual claims of openness about `PostBlockingSettlesRun` before
-      declaring the phase done.
+- [x] Sweep the section preamble at `:12155` for any further "nothing here decides it" language and
+      amend it the same way. *(deviation: altered — the Scope Hypothesis's fourth amendment site does not exist. The `:12155` section preamble carries no openness claim about `PostBlockingSettlesRun`; the grep found three sites, not four, and all three were amended.)*
+- [x] Grep the whole file for residual claims of openness about `PostBlockingSettlesRun` before
+      declaring the phase done. *(completed: the four surviving hits are about other predicates — `ArmSettlement` at :3765, an unrelated measure question at :2973 and :7971, and a historical quotation about `PostBlockingSettles` at :5178 — plus the new corrective sentence in entry 24 that quotes the clause it retracts.)*
 
 **Timing**: 1.5 hours
 
@@ -443,7 +443,7 @@ site, amend it and say so — the list here is a hypothesis, not a boundary.
 
 ---
 
-### Phase 7: Final gate and handoff [NOT STARTED]
+### Phase 7: Final gate and handoff [IN PROGRESS]
 
 **Goal**: Run the complete gate set, confirm the frozen-file and additive-only contracts held, and
 hand off with the verdict stated plainly.
