@@ -30,7 +30,7 @@ module cited `app:valid` at "line 1984", which in the live paper is an unrelated
 bogus; `cor:perpetuity-valid` is the live anchor that carries this content.
 
 **Axiom Validity**:
-All TM axioms (MT, M4, MB, T4, TA, TL, MF, TF) are proven valid over all
+All TM axioms (MT, M4, MB, T4, TC, TL, MF, TF) are proven valid over all
 task semantic models. The MF and TF axioms use time-shift invariance
 (following the JPL paper's approach) to establish unconditional validity.
 
@@ -55,7 +55,7 @@ task semantic models. The MF and TF axioms use time-shift invariance
 
 **Completed Proofs**:
 - Base axiom validity lemmas: prop_k, prop_s, ex_falso, peirce, MT, M4, MB, M5_collapse,
-  MK_dist, TK_dist, T4, TA, TL, MF, TF, linearity (universally valid)
+  MK_dist, TK_dist, T4, TC, TL, MF, TF, linearity (universally valid)
 - Frame-class axiom validity: density (ValidDense), discreteness_forward (ValidDiscrete)
 - `axiom_validIn_min` (one arm per axiom constructor, each at that axiom's own
   `minFrameClass`), lifted by `ValidIn.mono` to `axiom_validIn` at an arbitrary class; the four

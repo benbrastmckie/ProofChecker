@@ -37,13 +37,13 @@ is a single `DerivationTree.axiom` or a single named theorem.
 | TK | `Theorems.TemporalDerived.gDistribution` | yes |
 | T4 | `Theorems.TemporalDerived.gTransitivity` | yes |
 | DN | `Axiom.density` | yes |
-| TB | `Axiom.serial_future` + MP | **no** — `F`-bridge |
-| TA | `Axiom.connect_future` | **no** — `P`-bridge under `G` |
+| TS | `Axiom.serial_future` + MP | **no** — `F`-bridge |
+| TC | `Axiom.connect_future` | **no** — `P`-bridge under `G` |
 | TL | `Axiom.temp_linearity` | **no** — `F`-bridge *and* a disjunct reshuffle |
 | DF | `Theorems.DiscreteUnfolding.dfSchema` | **no** — `F`-bridge on both sides |
 | CO | `Theorems.DedekindDerived.co_derived` | **no** — `F`-bridge under `△` |
 
-The research report predicted "exact syntactic match" for TA and TB. That is **refuted**, and
+The research report predicted "exact syntactic match" for TC and TS. That is **refuted**, and
 structurally so rather than by accident: BL's `F`/`P` are *derived* (`Fφ = ¬G¬φ`), so `tr (Fφ)`
 is `¬G¬(tr φ)`, whereas `Formula.someFuture` is a top-level `untl` — and by
 `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. No choice of
@@ -162,7 +162,7 @@ def P_imp_notHNot {fc : FrameClass} (ψ : Formula) :
 /-! ## Base row
 
 One lemma per Base-class BL axiom, each of shape `⊢[fc] tr (<the BL axiom formula>)`. Seven are
-a single application; TB, TA and TL carry the bridge. -/
+a single application; TS, TC and TL carry the bridge. -/
 
 /-- **CPL/K**. Exact. -/
 def discharge_prop_k {fc : FrameClass} (a b c : BLFormula) :
@@ -218,7 +218,7 @@ def discharge_temp_4 {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.allFuture.imp a.allFuture.allFuture) :=
   gTransitivity (tr a)
 
-/-- **TB** (`F⊤`). `Axiom.serial_future` gives `⊤ → F⊤`; modus ponens on `⊤` gives `F⊤`; the
+/-- **TS** (`F⊤`). `Axiom.serial_future` gives `⊤ → F⊤`; modus ponens on `⊤` gives `F⊤`; the
 `F`-bridge converts that to the `¬G¬⊤` shape `tr` produces. -/
 def discharge_temp_serial {fc : FrameClass} :
     ⊢[fc] tr BLFormula.top.someFuture :=
@@ -227,7 +227,7 @@ def discharge_temp_serial {fc : FrameClass} :
       (DerivationTree.axiom [] _ ProofSystem.Axiom.serial_future (FrameClass.base_le fc))
   mp serial (F_imp_notGNot Formula.top)
 
-/-- **TA** (`φ → G P φ`). `Axiom.connect_future` gives `A → G(P A)`; the `P`-bridge, pushed
+/-- **TC** (`φ → G P φ`). `Axiom.connect_future` gives `A → G(P A)`; the `P`-bridge, pushed
 under `G` by `gRule`, converts `P A` to the `¬H¬A` shape `tr` produces. -/
 def discharge_temp_connect {fc : FrameClass} (a : BLFormula) :
     ⊢[fc] tr (a.imp a.somePast.allFuture) :=

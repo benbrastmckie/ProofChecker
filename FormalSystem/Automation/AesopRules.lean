@@ -32,7 +32,7 @@ rules takes an explicit `aesop (rule_sets := [TMLogic])`; plain `aesop` no longe
 
 ## Main Components
 
-- Forward chaining lemmas for 5 proven axioms (MT, M4, MB, T4, TA)
+- Forward chaining lemmas for 5 proven axioms (MT, M4, MB, T4, TC)
 - Apply rules for core inference (modus_ponens, modal_k, temporal_k)
 - Normalization rules for derived operators (diamond, always, sometimes)
 

@@ -11,7 +11,7 @@ import FormalSystem.ProofSystem.Axioms
 # `BaseLanguage.Axiom` — TM's axiom schemata over the base language BL
 
 TM, the *Logic of Tense and Modality*, is (JPL paper, `\S sub:Logic`) the smallest extension of
-**CPL** over the base language BL closed under the schemata MK, MT, M5, MF, TK, T4, TB, TA, TL
+**CPL** over the base language BL closed under the schemata MK, MT, M5, MF, TK, T4, TS, TC, TL
 and the rules MP, MN, TD. This module carries the **axiom** half of that list; MP, MN and TD are
 *rules* and live in `BaseLanguage/Derivation.lean`.
 
@@ -23,6 +23,91 @@ their frame classes by `Axiom.minFrameClass`:
 | DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.Discrete` | `TM_f` |
 | DN | `GGφ → Gφ` | `.Dense` | `TM_d` |
 | CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.Dedekind` | `TM_c` (see the caveat below) |
+
+## Paper Name Correspondence
+
+Every live `\aitem` key in the JPL paper (`possible_worlds.tex`), mapped to its paper section and
+its Lean identifier where one exists. This table is the single maintained source of truth for the
+paper-to-Lean name mapping; a future paper rename should be a mechanical sweep through this table
+plus the doc-comments it cites, not a re-derivation from scratch. Names below are current as of
+the paper's `TP`/`CT` → `TP1`/`TP2`, `P9`/`P10` → `P7`/`P8`, `TB`/`TA` → `TS`/`TC`, and
+`SP` → `SEP` rename round; see `possible_worlds.tex` for the historical names these replaced.
+
+**Introduction (`\S sec:Introduction`) — motivating, invalid principles:**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `SP1` | none | Invalid-under-2D-semantics principle; not formalized (the Lean tree formalizes `TM`, not the 2D-semantics counterexample). |
+| `SP2` | none | As above. |
+
+**Necessarily Always (`\S sub:NecessarilyAlways`):**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `TP1` | none | Trivial (Montagovian) perpetuity principle; no Lean counterpart. |
+| `TP2` | none | As above. |
+
+**Bimodal Logic (`\S sub:Logic`) — S5 modal group:**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `MK` | `Axiom.modal_k` | |
+| `MT` | `Axiom.modal_t` | |
+| `M5` | `Axiom.modal_5` | |
+| `MP` | `BaseLanguage.DerivationTree.modus_ponens` | Rule, in `BaseLanguage/Derivation.lean`. |
+| `MN` | `BaseLanguage.DerivationTree.necessitation` | Rule, in `BaseLanguage/Derivation.lean`. |
+
+**Bimodal Logic (`\S sub:Logic`) — BX temporal group** (`BX` = Burgess–Xu tense system,
+`def:BX` in the paper):
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `TN` | `BaseLanguage.DerivationTree.temporal_necessitation` | Rule; content matches, paper key not quoted verbatim in the doc-comment. |
+| `TD` | `BaseLanguage.DerivationTree.temporal_duality` | Rule. |
+| `TS` | `Axiom.temp_serial` | |
+| `TC` | `Axiom.temp_connect` | |
+| `TL` | `Axiom.temp_linearity` | Disjunct order/association is the paper's, transcribed verbatim (see the doc-comment above). |
+| `UE`, `UT`, `NP`, `NF`, `UI`, `UC`, `UF`, `UG`, `SU`, `NA`, `NB`, `CN` | none (under these names) | The Lean `BX` layer (`ProofSystem/Axioms.lean`'s 45-constructor until/since system: `serial_future`, `left_mono_until_G`, `enrichment_until`, ...) is a structurally finer, differently-named axiomatization of the same fragment. A constructor-by-constructor naming audit remains open — see `specs/archive/514_align_definitions_with_source_paper/reports/01_definitional-review-and-closure.md` §1.2 in this repository. |
+
+**Bimodal Logic (`\S sub:Logic`) — interaction and derived perpetuity principles:**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `MF` | `Axiom.modal_future` | |
+| `P1` | `FormalSystem.Theorems.Perpetuity.perpetuity_1` | |
+| `P2` | `FormalSystem.Theorems.Perpetuity.perpetuity_2` | |
+| `TF` | `FormalSystem.Theorems.Combinators.temporalFutureDerived` | Derived, not primitive — matches the paper, where `TF` is likewise a derived theorem. |
+| `P3` | `FormalSystem.Theorems.Perpetuity.perpetuity3` | |
+| `P4` | `FormalSystem.Theorems.Perpetuity.perpetuity4` | |
+| `TK` | `Axiom.temp_k` | |
+| `T4` | `Axiom.temp_4` | |
+| `P5` | `FormalSystem.Theorems.Perpetuity.perpetuity5` | |
+| `P6` | `FormalSystem.Theorems.Perpetuity.perpetuity6` | |
+
+**Extensions (`\S sub:Extension`):**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `DF` | `Axiom.df` | |
+| `DN` | `Axiom.dn` / `ProofSystem.Axiom.density` | |
+| `CO` | `Axiom.co` | See the CEC fidelity caveat below. |
+| `UZ` | `ProofSystem.Axiom.prior_UZ` | Doc-comment still says "Prior-UZ" (the paper's pre-rename display name); documentation lag, not a Lean defect. |
+| `Z1` | `ProofSystem.Axiom.z1` | |
+| `NN` | `ProofSystem.Axiom.dense_indicator` | |
+| `PU` | `ProofSystem.Axiom.prior_U_gap` | Doc-comment still says "Prior-U" (pre-rename display name); documentation lag. |
+| `SEP` | `ProofSystem.Axiom.sep` | Doc-comments across the Metalogic tree still say "Sep" (Reynolds' own historical name, distinct from the paper's two-letter key convention); out of scope to reconcile here. |
+
+**Appendix: Objective Modality (`\S app:ObjectiveModality`):**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `Ref`, `Imp`, `LL`, `I1`–`I7`, `Fac`, `Ax`, `Ord`, `O-Ax`, `O-Nec`, `O-Tran`, `O-Comp`, `O-Conv`, `O-Meet`, `O-Rev`, `O-Cons` | none | No Lean counterpart at all (exhaustive grep, zero hits) — this appendix is not formalized. |
+
+**Appendix: Soundness and Completeness (`\S sub:Soundness...`):**
+
+| Paper key | Lean identifier | Notes |
+|---|---|---|
+| `P7`, `P8` | none | No Lean counterpart yet. |
 
 ## Reuse of `ProofSystem.FrameClass`
 
@@ -51,7 +136,7 @@ while producing a `DerivationTree` (itself a `Type`). A `Prop`-valued inductive 
 
 ## References
 
-* JPL paper `\S sub:Logic` — the TM axiomatization (MP/MN/MK/MT/M5/MF/TD/TK/T4/TB/TA/TL)
+* JPL paper `\S sub:Logic` — the TM axiomatization (MP/MN/MK/MT/M5/MF/TD/TK/T4/TS/TC/TL)
 * JPL paper `\S sub:Extension` — DF, DN, CO
 * `FormalSystem/ProofSystem/Axioms.lean` — the BL⁺ (Burgess-Xu) counterpart
 -/
@@ -97,9 +182,9 @@ inductive Axiom : BLFormula → Type where
       Axiom ((φ.imp ψ).allFuture.imp (φ.allFuture.imp ψ.allFuture))
   /-- **T4**: `Gφ → GGφ`. -/
   | temp_4 (φ : BLFormula) : Axiom (φ.allFuture.imp φ.allFuture.allFuture)
-  /-- **TB**: `F⊤`. Future seriality, stated as a bare theorem rather than an implication. -/
+  /-- **TS**: `F⊤`. Future seriality, stated as a bare theorem rather than an implication. -/
   | temp_serial : Axiom BLFormula.top.someFuture
-  /-- **TA**: `φ → G P φ`. Temporal connectedness: the present is always in the past of the
+  /-- **TC**: `φ → G P φ`. Temporal connectedness: the present is always in the past of the
       future. -/
   | temp_connect (φ : BLFormula) : Axiom (φ.imp φ.somePast.allFuture)
   /-- **TL**: `(Fφ ∧ Fψ) → [F(Fφ ∧ ψ) ∨ F(φ ∧ ψ) ∨ F(φ ∧ Fψ)]`.

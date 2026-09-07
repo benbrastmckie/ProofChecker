@@ -22,7 +22,7 @@ trees with 7 inference rules.
   Dedekind (3) layers
   - Propositional: K, S, EFQ (ex falso), Peirce
   - Modal S5: MT (reflexivity), M4 (transitivity), MB (symmetry), M5 (collapse), MK (distribution)
-  - Temporal: TK (distribution), T4 (transitivity), TT-F/TT-P (reflexivity), TA
+  - Temporal: TK (distribution), T4 (transitivity), TT-F/TT-P (reflexivity), TC
   (present-past-future), TL (perpetuity), Lin (linearity)
   - Modal-Temporal: MF (modal-future), TF (temporal-future)
   - Dense Extension: DN (density)
@@ -44,7 +44,7 @@ trees with 7 inference rules.
 |----------|--------|-------------|
 | Propositional | K, S, EFQ, Peirce | Classical propositional logic basis |
 | Modal S5 | MT, M4, MB, MK | Reflexive, transitive, symmetric accessibility |
-| Temporal | TK, T4, TA, TL | Future/past with transitivity and recurrence |
+| Temporal | TK, T4, TC, TL | Future/past with transitivity and recurrence |
 | Interaction | MF, TF | Modal-temporal connection axioms |
 
 ## Inference Rules

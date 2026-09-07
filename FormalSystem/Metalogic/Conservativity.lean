@@ -122,7 +122,7 @@ over it — proposed as a follow-up task, not attempted here (see Phase 8's comp
 
 Independently of the CEB/CEF/CED/CEC row analysis above, there is a standard modal-logic answer
 to what TM's Kripke frame class actually is: **S5 ⊗ Kt4.3 + MF**, complete by Sahlqvist
-canonicity. This is textbook material (the axioms MK/MT/M5/MF/TK/T4/TB/TA/TL are each Sahlqvist,
+canonicity. This is textbook material (the axioms MK/MT/M5/MF/TK/T4/TS/TC/TL are each Sahlqvist,
 and Sahlqvist's theorem gives canonicity, hence completeness, for their join), not a repository
 result: formalizing the Sahlqvist-canonicity argument itself is a large separate development
 (explicitly a Non-Goal of this plan) and is recorded here only as the principled answer's
