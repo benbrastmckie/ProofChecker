@@ -1285,6 +1285,8 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.WeakCanonical.Kamp.kampPriorExpressiveCompleteness' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.WeakCanonical.uSExpressivelyCompleteOverPrior' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.consequence_completeness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.BXCanonical.countermodel_dedekind_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 C14BASE
 
 if [ "$RUN_BUILD" -eq 1 ]; then
@@ -1390,6 +1392,8 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.WeakCanonical.Kamp.kampPriorExpressiveCompleteness
 #print axioms FormalSystem.Metalogic.WeakCanonical.uSExpressivelyCompleteOverPrior
 #print axioms FormalSystem.Metalogic.consequence_completeness_rtime
+#print axioms FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine
+#print axioms FormalSystem.Metalogic.BXCanonical.countermodel_dedekind_dense
 C14LEAN
   C14_OUT=$(lake env lean "$C14_SRC" 2>&1 \
     | sed -e ':a' -e '$!N' -e 's/\n / /' -e 'ta' -e 'P' -e 'D' \

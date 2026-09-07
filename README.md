@@ -207,14 +207,17 @@ modal `⊡`, related to L⁺ by the embedding `ofFormula`). Every result below i
 (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`) and holds at all four frame classes
 unless a class is named.
 
+Per-theorem status — every statement, its Lean name, its frame class and its machine-pinned
+axiom set — is in [`docs/theorem-index.md`](docs/theorem-index.md), the repository's single
+ledger. The five rows below are a highlights table, not a second copy of it.
+
 | Result | L (TM, via `tr`) | L⋆ (TM⋆, via `ofFormula`) |
 |--------|------------------|----------------------------|
 | Semantic conservativity over/under L⁺ | `blValidIn_iff_validIn_tr` | `starValidIn_ofFormula_iff` |
 | Soundness | `bl_soundness_*` (TM) | `star_soundness_validIn` (TM⋆), TD discharged semantically |
 | Proof-theoretic conservativity, backward | `derivable_translate` (TM ⊆ TM⁺) | `starDerivable_of_derivable` (TM⁺ ⊆ TM⋆) |
 | Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmComplete_iff_forward`, `tmCompleteZTime_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
-| Completeness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`); TM itself is incomplete, and `TM ⊊ TMFrag` at ZTime (`tm_lt_tmFrag_ztime`) | **open** (see below) |
-| Compactness | `blCompactBase`, `blCompactDense` for the fragment's consequence relation | not attempted |
+| Completeness and compactness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`), whose consequence relation is compact at Base and Dense (`blCompactBase`, `blCompactDense`); TM itself is incomplete, and `TM ⊊ TMFrag` at ZTime (`tm_lt_tmFrag_ztime`) | **open**; compactness not attempted (see below) |
 
 The L side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⋆ side
 in `Semantics/Star*.lean` and `Metalogic/Conservativity/Star/`. TM⋆'s axioms are the 45 TM⁺

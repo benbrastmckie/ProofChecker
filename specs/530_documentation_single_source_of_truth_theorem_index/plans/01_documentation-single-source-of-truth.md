@@ -317,25 +317,28 @@ C2+C14 pinned set; expect the count to have moved.
 
 ---
 
-### Phase 5: Seed docs/theorem-index.md [NOT STARTED]
+### Phase 5: Seed docs/theorem-index.md [COMPLETED]
 
 **Goal**: `docs/theorem-index.md` exists as the sole per-theorem ledger, with fully-qualified
 names, a generated Axioms column, and a Notation-and-naming table.
 
 **Tasks**:
-- [ ] Create `docs/theorem-index.md` with schema
+- [x] Create `docs/theorem-index.md` with schema
       `| Paper label | Statement (one line) | Lean name | File | Frame class | Axioms |`.
       File column carries no line numbers.
-- [ ] Transcribe the corrected seed rows, applying report §4.2's seven verified name/file
+- [x] Transcribe the corrected seed rows, applying report §4.2's seven verified name/file
       corrections (`notCompactDiscrete`, `notStrongCompletenessDiscrete`, `notCompactDedekind`,
       `notStrongCompletenessDedekind`, the two `completeness_dense`/`completeness_discrete`
       splits, and `FormalSystem.ProofSystem.Derivable.deduction`).
-- [ ] Use fully-qualified Lean names in every row, unconditionally — `completeness_dense` and
+- [x] Use fully-qualified Lean names in every row, unconditionally — `completeness_dense` and
       `completeness_discrete` each name two distinct live theorems.
-- [ ] Populate the Axioms column from Phase 4's recorded values: `pcq` / literal list, plus
-      `pinned:C2` or `pinned:C14`; `claimed` only where genuinely prose-only.
-- [ ] Add the Notation-and-naming table (E-20) mapping paper term to Lean identifier.
-- [ ] Replace the ledger copies on the other surfaces with a pointer plus a highlights table of
+- [x] Populate the Axioms column from Phase 4's recorded values: `pcq` / literal list, plus
+      `pinned:C2` or `pinned:C14`; `claimed` only where genuinely prose-only. *(deviation:
+      altered — seeding surfaced two unpinned flagship declarations,
+      `BXCanonical.completeness_rtime_engine` and `BXCanonical.countermodel_dedekind_dense`.
+      They were pinned rather than recorded as `claimed`, so no row reads `claimed`)*
+- [x] Add the Notation-and-naming table (E-20) mapping paper term to Lean identifier.
+- [x] Replace the ledger copies on the other surfaces with a pointer plus a highlights table of
       at most five rows.
 
 **Timing**: 2 hours

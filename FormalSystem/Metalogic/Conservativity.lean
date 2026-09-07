@@ -30,6 +30,10 @@ theorem rather than four developments.
 - `derivable_translate` : the `Prop`-level corollary
 - `ceb_backward`, `cef_backward`, `ced_backward`, `cec_backward` : the four paper rows
 
+Per-theorem status for all of these — statement, frame class, and machine-pinned axiom set —
+lives in `docs/theorem-index.md`, which is the repository's single ledger. This module is the
+authority on *why the forward direction must not be attempted*, not on which theorems hold.
+
 ## Scope
 
 This module proves the **backward** direction only.

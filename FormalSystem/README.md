@@ -323,6 +323,9 @@ lake env lean FormalSystem/ProofSystem/Axioms.lean
 
 ## Implementation Status
 
+Per-theorem status is in [`docs/theorem-index.md`](../docs/theorem-index.md), the repository's
+single ledger. The table below is per *layer*, and is not a second copy of it.
+
 | Layer | Component | Status |
 |-------|-----------|--------|
 | 0 | Syntax | Complete |
@@ -333,8 +336,10 @@ lake env lean FormalSystem/ProofSystem/Axioms.lean
 | 4 | Automation | Complete (tactics); ML pipeline active |
 
 **Key Results**: soundness, weak completeness, finite-context consequence completeness, and the
-deduction theorem are proven for **all four** frame classes (Base, Dense, Discrete, Dedekind),
-each `SORRY-FREE (sorryAx-free; axioms: exactly propext, Classical.choice, Quot.sound)`.
+deduction theorem are proven for **all four** frame classes (`Base`, `Dense`, `ZTime`, `RTime` —
+the tree's names for the paper's TM⁺, TM⁺_d, TM⁺_f, TM⁺_c), each sorry-free at exactly
+`[propext, Classical.choice, Quot.sound]`. Those axiom sets are asserted by C2 and C14, and the
+per-theorem rows are in [`docs/theorem-index.md`](../docs/theorem-index.md).
 
 **Decidability is not "fully proven" and must not be described that way.** Only the *sound*
 direction of the `isValid`-shaped statement is landed — `sound_of_isValid` and `isValid_sound`

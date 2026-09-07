@@ -155,7 +155,7 @@ Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside
 | `Algebraic.lean` | 40 | `Algebraic/` |
 | `BXCanonical.lean` | 43 | `BXCanonical/` |
 | `Bundle.lean` | 47 | `Bundle/` |
-| `Conservativity.lean` | 294 | `Conservativity/` |
+| `Conservativity.lean` | 298 | `Conservativity/` |
 | `Core.lean` | 37 | `Core/` |
 | `Decidability.lean` | 168 | `Decidability/` |
 | `Independence.lean` | 90 | `Independence/` |
@@ -170,7 +170,7 @@ sibling directory. The list is generated, so a file that moves out (four of them
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=non-aggregators -->
 | Loose non-aggregator | Lines | Role |
 |----------------------|------:|------|
-| `Conservativity.lean` | 294 | Conservativity of the extension |
+| `Conservativity.lean` | 298 | Conservativity of the extension |
 | `Compactness.lean` | 218 | Compactness and strong completeness for Base and Dense, by ultraproduct model existence |
 | `DedekindNonCompactness.lean` | 525 | Non-compactness of the Dedekind frame class — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤}` witness, finitely satisfiable over `ℝ` and unsatisfiable over every Dedekind-complete carrier, refuting `CompactDedekind` and `StrongCompletenessDedekind` |
 | `DiscreteNonCompactness.lean` | 319 | Non-compactness of the discrete frame class |
@@ -215,7 +215,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
 | `Conservativity/` | 12 | 2,508 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
-| [`Decidability/`](Decidability/README.md) | 62 | 52,668 | Tableau decision procedure and countermodel extraction |
+| [`Decidability/`](Decidability/README.md) | 62 | 52,664 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 2,987 | Axiom-independence models |
 | [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,458 | Per-axiom validity lemmas feeding `Soundness.lean` |
 | [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,111 | Kamp/Reynolds route, including all of `Kamp/` |
@@ -292,6 +292,10 @@ description of this repository's shape that omits it is wrong about the reposito
 
 ## Main Results
 
+Per-theorem status — statement, Lean name, file, frame class and machine-pinned axiom set — is
+in [`docs/theorem-index.md`](../../docs/theorem-index.md), the repository's single ledger. What
+follows is orientation, not a second ledger.
+
 ### Soundness — `Soundness.lean`
 
 Every derivable formula is valid on the corresponding frame class. The per-axiom
@@ -302,7 +306,7 @@ rather than restating them.
 
 - `completeness` — the general Base-frame result
 - `completeness_dense` — dense frame class
-- `completeness_discrete` — discrete frame class
+- `completeness_ztime` — the ℤ-time frame class
 - `countermodel_dense` — in `BXCanonical/Chronicle/ChronicleToCountermodelBasic.lean`
 
 These four are the repository's axiom-set invariant. Their `#print axioms` results are
@@ -339,10 +343,10 @@ in `WeakCanonical/Transfer.lean`; that file now documents the move near the top 
 docstring. The `sorry` occurrences still greppable in `Transfer.lean` are all inside prose
 describing sorry-*freeness* — they are not structural sorries.
 
-The separate theorem `completeness_discrete` calls remains
+The separate theorem `completeness_ztime` calls remains
 `countermodel_discrete_reynolds_v2` in `WeakCanonical/IntegerModel/ReynoldsBridge.lean`, which
 is also `sorryAx`-free. Do not conflate the two: `countermodel_discrete` is `completeness`'s
-branch, `countermodel_discrete_reynolds_v2` is `completeness_discrete`'s.
+branch, `countermodel_discrete_reynolds_v2` is `completeness_ztime`'s.
 
 Should a structural sorry ever reappear, locate it **by content** — the enclosing theorem name —
 never by line number. The invariant check does exactly that, so the assertion survives edits above
