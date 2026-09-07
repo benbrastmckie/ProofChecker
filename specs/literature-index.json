@@ -254,7 +254,8 @@
         "The paper's own table-of-contents page-number column is itself partly OCR-garbled (3.8 shows as \"3Z3\", section 4 as \"m\"); verify any section offset against the page image before relying on it."
       ],
       "added": "2026-08-26",
-      "source": "manual"
+      "source": "manual",
+      "zotero_key": "MJEB25VU"
     },
     {
       "doc_id": "venema_2007_algebras_and_coalgebras",

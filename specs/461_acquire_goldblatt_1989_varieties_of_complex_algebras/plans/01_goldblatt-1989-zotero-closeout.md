@@ -237,26 +237,33 @@ its key.
 
 ---
 
-### Phase 3: Record the Zotero linkage on the corpus index entries [NOT STARTED]
+### Phase 3: Record the Zotero linkage on the corpus index entries [COMPLETED]
 
 **Goal**: The `goldblatt_1989` entries in the global index and the repo sub-index carry the Zotero
 item key, closing the provenance gap the research report identified (the entry currently has no
 `zotero_key`/`zotero_path` at all, unlike siblings that went through the Zotero-first pipeline).
 
 **Tasks**:
-- [ ] Skip this phase entirely if Phase 2 produced no item key; mark it `[BLOCKED]` with that reason.
-- [ ] Back up both index files before editing (timestamped copies in the scratchpad).
-- [ ] Add `"zotero_key": "<key>"` to the `goldblatt_1989` entry in `~/Projects/Literature/index.json`
-      via a single targeted `jq` update of that one entry.
-- [ ] Add `"zotero_key": "<key>"` to the `doc_id: "goldblatt_1989"` entry in
-      `specs/literature-index.json`.
-- [ ] Add `zotero_path` **only** if a real attachment landed in the derived Zotero storage tree
+- [x] Skip this phase entirely if Phase 2 produced no item key; mark it `[BLOCKED]` with that reason.
+      *(completed: not applicable -- Phase 2 produced key MJEB25VU, phase proceeds)*
+- [x] Back up both index files before editing (timestamped copies in the scratchpad).
+      *(completed: index.json.bak.20260907T195332Z, literature-index.json.bak.20260907T195332Z)*
+- [x] Add `"zotero_key": "<key>"` to the `goldblatt_1989` entry in `~/Projects/Literature/index.json`
+      via a single targeted `jq` update of that one entry. *(completed: zotero_key MJEB25VU added,
+      entry count unchanged 11681 -> 11681)*
+- [x] Add `"zotero_key": "<key>"` to the `doc_id: "goldblatt_1989"` entry in
+      `specs/literature-index.json`. *(completed: zotero_key MJEB25VU added, entry count
+      unchanged 1 -> 1)*
+- [x] Add `zotero_path` **only** if a real attachment landed in the derived Zotero storage tree
       (`$(dirname "$(bash .claude/scripts/zotero-resolve-sqlite-path.sh)")/storage/<attachmentKey>/`)
       and the file exists on disk. If the attach was quota-rejected, omit the field rather than
-      pointing at a nonexistent path.
-- [ ] Leave `"source": "manual"` unchanged in the sub-index — it accurately records how the corpus
+      pointing at a nonexistent path. *(completed: omitted -- no attachment landed, DOI-only
+      create per Phase 2)*
+- [x] Leave `"source": "manual"` unchanged in the sub-index — it accurately records how the corpus
       entry was created, and the Zotero item does not retroactively change that provenance.
-- [ ] Leave `hazard`, `citation_rule`, `reason`, and every other existing field untouched.
+      *(completed: confirmed unchanged by diff)*
+- [x] Leave `hazard`, `citation_rule`, `reason`, and every other existing field untouched.
+      *(completed: confirmed unchanged by diff -- both entries show a single-field addition only)*
 
 **Timing**: 0.25 hours
 
@@ -274,11 +281,14 @@ than 1 means duplicate entries exist and must be reported rather than silently e
 - `specs/literature-index.json` — add `zotero_key` to the `doc_id: goldblatt_1989` entry
 
 **Verification**:
-- Both files parse: `jq empty` exits 0 on each.
+- Both files parse: `jq empty` exits 0 on each. *(confirmed)*
 - Global index entry count is unchanged before vs. after (11,681 at research time — compare the
-  measured before-count, not the quoted one).
+  measured before-count, not the quoted one). *(confirmed: measured before-count 11681, after
+  11681)*
 - `jq` on each file returns the `goldblatt_1989` entry with the new `zotero_key` and every
-  pre-existing field intact (diff the single entry, not the whole file).
+  pre-existing field intact (diff the single entry, not the whole file). *(confirmed: diff of
+  each entry against its backup shows exactly one added line, `"zotero_key": "MJEB25VU"`, with
+  every pre-existing field byte-identical)*
 
 ---
 
