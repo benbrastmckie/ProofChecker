@@ -1,7 +1,7 @@
 # Implementation Plan: Documentation Single Source of Truth and Theorem Index
 
 - **Task**: 530 - Documentation single source of truth, theorem index, publication packaging
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 33 hours
 - **Dependencies**: None (this task is itself a dependency of task 177)
 - **Research Inputs**: specs/530_documentation_single_source_of_truth_theorem_index/reports/01_documentation-single-source-of-truth.md
@@ -999,22 +999,27 @@ renamed, or changed.
 
 ## Testing & Validation
 
-- [ ] `bash scripts/check-module-invariants.sh --no-build` — C7, C9, C14 (structural half), C18,
-      C20 tier 1 all pass; C15's new assertion passes; C15's pre-existing three-anchor failure is
-      the only remaining non-zero cause.
-- [ ] `bash scripts/check-module-invariants.sh` (full, with build, via the guarded long-build
+- [x] `bash scripts/check-module-invariants.sh --no-build` — every check passes and the run
+      exits 0. *(the plan expected C15's three-anchor failure to remain; it does not exist —
+      those anchors carry LIVE-UNPINNED rows in the record, so both C15 halves are green)*
+- [x] `bash scripts/check-module-invariants.sh` (full, with build, via the guarded long-build
       pattern) — C14 passes with the extended baseline.
-- [ ] `bash scripts/check-module-invariants.sh --emit-inventory --check` exits 0.
-- [ ] `ENFORCE_C20=1 bash scripts/check-module-invariants.sh --no-build` exits 0.
-- [ ] `bash scripts/readme-lint.sh` exits 0.
-- [ ] `bash scripts/typst-sync-check.sh` passes and the typst document compiles.
-- [ ] `lake build` green.
-- [ ] `grep -rEn 'before the collapse|formerly a strategic sorry|earlier revisions of this docstring|used to live'`
-      returns zero hits on live surfaces.
-- [ ] `grep -rn '\bBimodal\.[A-Z]' --include=*.md` returns zero.
-- [ ] Every `docs/theorem-index.md` Lean name resolves and every File cell names an existing path
+- [x] `bash scripts/check-module-invariants.sh --emit-inventory --check` exits 0.
+- [x] `ENFORCE_C20=1 bash scripts/check-module-invariants.sh --no-build` exits 0.
+- [x] `bash scripts/readme-lint.sh` exits 0.
+- [x] `bash scripts/typst-sync-check.sh` passes and the typst document compiles.
+- [x] `lake build` green.
+- [x] `grep -rEn 'before the collapse|formerly a strategic sorry|earlier revisions of this docstring|used to live'`
+      returns zero hits on live surfaces. *(five hits outside the phases' named scope were found
+      by this check and cleared: `Soundness.lean`, `WeakCanonical/Transfer.lean`,
+      `IntegerModel/ReynoldsBridge.lean`, `Decidability/CountermodelExtraction.lean`,
+      `Automation/README.md`)*
+- [x] `grep -rn '\bBimodal\.[A-Z]' --include=*.md` returns zero outside `specs/**`, which is the
+      rule's own documented exemption.
+- [x] Every `docs/theorem-index.md` Lean name resolves and every File cell names an existing path
       with no `:NNN`.
-- [ ] C19 docstring coverage has not regressed below 90%.
+- [x] C19 docstring coverage has not regressed below 90% (92.34% refined, against 92.34% at
+      dispatch start).
 
 ## Artifacts & Outputs
 
