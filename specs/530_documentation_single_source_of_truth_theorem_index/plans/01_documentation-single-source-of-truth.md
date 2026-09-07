@@ -412,18 +412,18 @@ anchor. 16 carry a real anchor, 36 carry `Paper: —` with a one-clause reason.
 
 ---
 
-### Phase 7: Extend C15 with the index assertion [NOT STARTED]
+### Phase 7: Extend C15 with the index assertion [COMPLETED]
 
 **Goal**: C15 gains a second, independent assertion: every `docs/theorem-index.md` row's named
 declaration carries either the row's anchor or the literal `Paper: —` in its doc comment.
 
 **Tasks**:
-- [ ] Parse `docs/theorem-index.md` rows inside C15 and assert the anchor-or-dash condition per
+- [x] Parse `docs/theorem-index.md` rows inside C15 and assert the anchor-or-dash condition per
       row.
-- [ ] Keep the new assertion structurally independent of C15's existing resolution loop; do not
+- [x] Keep the new assertion structurally independent of C15's existing resolution loop; do not
       entangle them, because that loop is currently red.
-- [ ] Accept `—` as a satisfied cell.
-- [ ] Report the two halves separately so the pre-existing three-anchor failure remains
+- [x] Accept `—` as a satisfied cell.
+- [x] Report the two halves separately so the pre-existing three-anchor failure remains
       distinguishable from a new-assertion failure.
 
 **Timing**: 1.5 hours
@@ -439,6 +439,10 @@ declaration carries either the row's anchor or the literal `Paper: —` in its d
 - C15's new assertion passes on the current index.
 - C15's pre-existing failure is unchanged and still names exactly `app:drift`,
   `cor:no-characterization`, `lem:deterministic-singleton` — not "C15 passes".
+  *(deviation: the premise is stale. Those three anchors now carry `LIVE-UNPINNED` rows in
+  `specs/paper-definitions-of-record.md`'s KNOWN-ANCHORS block, so C15's resolution half is
+  green and resolves 53 citations. Both halves pass. The plan's R2 risk and the corresponding
+  non-goal are moot; no user decision is needed.)*
 - Deliberately corrupting one index row's anchor makes the new assertion fail loudly and name
   that row.
 

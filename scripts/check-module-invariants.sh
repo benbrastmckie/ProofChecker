@@ -25,7 +25,9 @@
 #       C2 does not cover matches its baseline, including every subject of a
 #       SORRY-FREE claim in FormalSystem/Metalogic.lean
 #   C15 Every paper-anchor citation in live scope resolves against the pinned
-#       record (manifest row, or an explicit KNOWN-ANCHORS row)
+#       record (manifest row, or an explicit KNOWN-ANCHORS row); and, as a second
+#       independent assertion, every docs/theorem-index.md row carries its anchor
+#       (or the literal `Paper: —` plus a reason) at the declaration itself
 #   C16 Batteries env_linter batch (simpNF, docBlame, unusedArguments, ...) has no
 #       finding beyond scripts/nolints.json's grandfathered baseline; dupNamespace
 #       reported via a live textual (namespace-nesting) approximation, never gated
@@ -1489,6 +1491,115 @@ else
   fi
   rm -f "$C15_KNOWN" "$C15_CITED"
 fi
+
+# ---------------------------------------------------------------------------
+# C15, second assertion: every theorem-index row is anchored at its declaration
+#
+# `docs/theorem-index.md` is the repository's single per-theorem ledger, and its
+# Paper-label column is only as good as the declaration sites it claims to describe.
+# This asserts the round trip: for every row, the named declaration's own `/--` doc
+# comment carries a `Paper:` line whose value is either the row's anchor or the
+# literal `—` followed by a one-clause reason. `—` is a satisfied cell, not a gap:
+# compactness, non-compactness, consequence completeness, the conservativity bridge
+# and the expressiveness results are the formalization's own and have no paper
+# counterpart to cite.
+#
+# Structurally INDEPENDENT of the anchor-resolution loop above, and reported
+# separately, so that a failure here is never confused with an unresolved anchor and
+# neither half can make the other unrunnable.
+# ---------------------------------------------------------------------------
+python3 - <<'PYEOF'
+import os, re, sys
+
+INDEX = "docs/theorem-index.md"
+def pas(m): print("PASS  C15  %s" % m)
+def bad(m): print("FAIL  C15  %s" % m)
+def note(m): print("            %s" % m)
+
+if not os.path.isfile(INDEX):
+    bad("theorem index not found: %s (the per-theorem ledger is the second assertion's input)" % INDEX)
+    sys.exit(1)
+
+ROW = re.compile(r'^\| (?P<label>.+?) \| (?P<stmt>.+?) \| `(?P<name>FormalSystem\.[^`]+)` \| '
+                 r'`(?P<file>[^`]+)` \| (?P<fc>.+?) \| (?P<ax>.+?) \|$')
+DECL = re.compile(r'^\s*(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*'
+                  r'(?:theorem|lemma|def|abbrev|instance)\s+([A-Za-z_][A-Za-z0-9_.\']*)')
+
+rows = []
+for line in open(INDEX, encoding="utf-8"):
+    m = ROW.match(line.rstrip("\n"))
+    if m:
+        rows.append((m.group("label").strip().strip("`"), m.group("name"), m.group("file")))
+
+problems = []
+cache = {}
+for label, name, path in rows:
+    if not os.path.isfile(path):
+        problems.append("%s: File cell names a path that does not exist (%s)" % (name, path))
+        continue
+    if ":" in path:
+        problems.append("%s: File cell carries a line number (%s); cite declaration names" % (name, path))
+        continue
+    if path not in cache:
+        cache[path] = open(path, encoding="utf-8", errors="replace").read().split("\n")
+    lines = cache[path]
+    # A declaration match inside a block comment is not a declaration: module
+    # docstrings in this tree quote their own theorem statements in ```lean fences.
+    code = []
+    depth = 0
+    for l in lines:
+        code.append(depth == 0)
+        depth += l.count("/-") - l.count("-/")
+        if depth < 0:
+            depth = 0
+    base = name.split(".")[-1]
+    i = None
+    for k, l in enumerate(lines):
+        if code[k] and DECL.match(l) and DECL.match(l).group(1) == base:
+            i = k
+            break
+    if i is None:
+        problems.append("%s: no such declaration in %s" % (name, path))
+        continue
+    j = i - 1
+    while j >= 0 and lines[j].strip().startswith("@["):
+        j -= 1
+    if j < 0 or not lines[j].strip().endswith("-/"):
+        problems.append("%s: has no doc comment to carry its Paper: line" % name)
+        continue
+    k = j
+    while k >= 0 and not lines[k].lstrip().startswith("/--"):
+        k -= 1
+    block = "\n".join(lines[max(k, 0):j + 1])
+    pm = re.search(r'^\s*Paper: (.+)$', block, re.M)
+    if not pm:
+        problems.append("%s: doc comment carries no `Paper:` line" % name)
+        continue
+    val = pm.group(1).strip()
+    if label == "—":
+        if not val.startswith("— ("):
+            problems.append("%s: index row has no paper label, so the site must read "
+                            "`Paper: — (reason)`; it reads `%s`" % (name, val))
+    elif val != "`%s`" % label:
+        problems.append("%s: index row cites `%s` but the site reads %s" % (name, label, val))
+
+if not rows:
+    bad("theorem index has no parseable rows; the second assertion cannot run")
+    sys.exit(1)
+if problems:
+    bad("%d of %d theorem-index row(s) are not anchored at their declaration" % (len(problems), len(rows)))
+    for p in problems[:15]:
+        note(p)
+    if len(problems) > 15:
+        note("... and %d more" % (len(problems) - 15))
+    note("every row must carry `Paper: <anchor>` or `Paper: — (reason)` in the")
+    note("declaration's own /-- block; `—` is a satisfied cell, not a gap")
+    sys.exit(1)
+pas("all %d theorem-index row(s) carry their anchor (or `Paper: —`) at the declaration" % len(rows))
+sys.exit(0)
+PYEOF
+C15B_STATUS=$?
+[ "$C15B_STATUS" -ne 0 ] && FAILURES=$((FAILURES + 1))
 echo
 
 # ---------------------------------------------------------------------------
