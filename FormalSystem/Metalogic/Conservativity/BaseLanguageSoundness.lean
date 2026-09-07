@@ -48,7 +48,7 @@ valid by unfolding `BLTruthAt`'s clauses and nothing else.
 `bl_soundness_dedekind` concludes at `BLValidDedekind`, **not** at a density-free
 `BLValidComplete` — which is deliberately not defined. `Semantics/BLValidity.lean`'s module
 docstring gives the BL-native refutation: `Axiom.dn` is admissible at `FrameClass.Dedekind` and is
-false on `ℤ`, which satisfies every remaining binder. This mirrors `soundness_dedekind`'s own
+false on `ℤ`, which satisfies every remaining binder. This mirrors `soundness_rtime`'s own
 target on the BL⁺ side.
 
 ## Why there is no dense or Dedekind consistency corollary
@@ -72,7 +72,7 @@ consistency lemma in the tree yet"), and the BL side inherits it exactly.
   `bl_soundness_dedekind_valid` — their empty-context validity forms
 - `bl_soundness_discrete_succ`, `bl_soundness_discrete_succ_valid` — a **fifth** soundness
   theorem, at `FrameClass.Discrete` with the two Archimedean binders dropped. Unlike the four
-  above, it is **not** a composition (`Soundness.soundness_discrete` itself carries the binders
+  above, it is **not** a composition (`Soundness.soundness_ztime` itself carries the binders
   being dropped); it is proved directly against `BLTruthAt`. See its own docstring section below.
 - `bl_not_derivable_nil_bot`, `bl_not_derivable_nil_bot_discrete` — consistency of BL at
   `FrameClass.Base` and `FrameClass.Discrete`
@@ -278,7 +278,7 @@ theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
 /--
 **Soundness of BL at `FrameClass.Discrete`.** `bl_soundness_in` at `fc = .Discrete`, with the
 four order instances bundled into the `Sat .Discrete` witness; the binder bundle is
-`soundness_discrete`'s.
+`soundness_ztime`'s.
 -/
 theorem bl_soundness_discrete (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.Discrete Γ φ)
@@ -295,7 +295,7 @@ theorem bl_soundness_discrete (Γ : BaseLanguage.Context) (φ : BLFormula)
 /--
 **Soundness of BL at `FrameClass.Dedekind`.** `bl_soundness_in` at `fc = .Dedekind`, with the
 density instance and `h_lub` paired into the `Sat .Dedekind` witness; the binder bundle is
-`soundness_dedekind`'s, including the `[DenselyOrdered D]` binder and the least-upper-bound
+`soundness_rtime`'s, including the `[DenselyOrdered D]` binder and the least-upper-bound
 hypothesis `h_lub` in its original position.
 
 The `[DenselyOrdered D]` binder is load-bearing, not decorative — see the module docstring and
@@ -342,7 +342,7 @@ countermodel is built over.
 
 **This is not a composition.** Unlike `bl_soundness`/`bl_soundness_dense`/`bl_soundness_discrete`/
 `bl_soundness_dedekind` above, `bl_soundness_discrete_succ` cannot be obtained by translating and
-invoking `Soundness.soundness_discrete`, because that theorem's own binder bundle carries the very
+invoking `Soundness.soundness_ztime`, because that theorem's own binder bundle carries the very
 two Archimedean instances being dropped here. It is proved instead by induction on
 `BaseLanguage.DerivationTree FrameClass.Discrete`, directly against `BLTruthAt`.
 

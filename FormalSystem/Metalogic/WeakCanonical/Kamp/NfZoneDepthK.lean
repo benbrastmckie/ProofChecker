@@ -11,7 +11,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.VecEADecomp
 
 This module is the depth-`k` generalization scaffold for the two-anchor arity-3 zone
 converter (Rabinovich 2014 §5, Cor 5.4 `F_i` chain). It is **off the live import path**
-(nothing in the `completeness_discrete` chain imports it) and is **fully sorry-free**.
+(nothing in the `completeness_ztime` chain imports it) and is **fully sorry-free**.
 
 ## What this file lands (sorry-free)
 

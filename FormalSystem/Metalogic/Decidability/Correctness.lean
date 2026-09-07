@@ -34,7 +34,7 @@ The `FrameClass.Base` parameter structurally excludes axioms with
 `minFrameClass > Base` (density, Prior-UZ/SZ, z1) via the `h_fc` gate.
 
 - `decide_sound`: If `decide φ` returns `.valid proof`, then `⊨ φ` (semantic validity)
-- Frame-class specific soundness is available via `soundness_dense`, `soundness_discrete`
+- Frame-class specific soundness is available via `soundness_dense`, `soundness_ztime`
 
 ## References
 

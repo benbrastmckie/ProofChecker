@@ -106,15 +106,15 @@ theorem tmFrag_complete_dense (φ : BLFormula) (h : BLValidIn FrameClass.Dense �
     TMFrag FrameClass.Dense φ :=
   tmFrag_complete completeness_dense φ h
 
-/-- Fragment completeness at `.Discrete`, via `completeness_discrete`. -/
+/-- Fragment completeness at `.Discrete`, via `completeness_ztime`. -/
 theorem tmFrag_complete_discrete (φ : BLFormula) (h : BLValidIn FrameClass.Discrete φ) :
     TMFrag FrameClass.Discrete φ :=
-  tmFrag_complete completeness_discrete φ h
+  tmFrag_complete completeness_ztime φ h
 
-/-- Fragment completeness at `.Dedekind`, via `completeness_dedekind`. -/
+/-- Fragment completeness at `.Dedekind`, via `completeness_rtime`. -/
 theorem tmFrag_complete_dedekind (φ : BLFormula) (h : BLValidIn FrameClass.Dedekind φ) :
     TMFrag FrameClass.Dedekind φ :=
-  tmFrag_complete completeness_dedekind φ h
+  tmFrag_complete completeness_rtime φ h
 
 /-! ### `TM ⊆ TMFrag`, and the strict inclusion at `.Discrete` -/
 

@@ -14,7 +14,7 @@ The Dedekind sibling of `Metalogic/DiscreteNonCompactness.lean`: the set-based s
 consequence relation for `FrameClass.Dedekind` is **not compact**, so genuine strong
 completeness is unavailable for that class too. This settles the fourth and last row of the
 `FrameClass` table, whose statements are named in `Metalogic/SetConsequence.lean`
-(`CompactDedekind`, `StrongCompletenessDedekind`, `SatisfiableDedekindSet`).
+(`CompactRTime`, `StrongCompletenessRTime`, `SatisfiableRTimeSet`).
 
 ## Why `archWitness` does not port
 
@@ -72,13 +72,13 @@ counting.
 **Generality of the unsatisfiable half.** `dedWitness_core` takes `hlub : F.IsComplete` and no
 density binder at all: density is never used. So the witness is unsatisfiable over *every*
 Dedekind-complete frame, `ℤ` included — the headline `dedWitness_not_satisfiable` merely states
-that general fact at `SatisfiableDedekindSet`, where the compactness refutation consumes it.
+that general fact at `SatisfiableRTimeSet`, where the compactness refutation consumes it.
 Density is needed only for the *finite*-satisfiability half, and only because
 `FrameClass.Dedekind` requires it of the witnessing frame.
 
-Together these refute `CompactDedekind` (`notCompactDedekind`) and, by way of
-`soundness_dedekind`, `StrongCompletenessDedekind` itself
-(`notStrongCompletenessDedekind`).
+Together these refute `CompactRTime` (`notCompactRTime`) and, by way of
+`soundness_rtime`, `StrongCompletenessRTime` itself
+(`notStrongCompletenessRTime`).
 
 **No conflict with `compactDense`.** `Metalogic/Compactness.lean` proves compactness for
 `FrameClass.Dense`, which forces `dedWitness q` to be satisfiable over *some* dense frame. That
@@ -296,7 +296,7 @@ theorem dedWitness_core (q : Atom) (M : TaskModel F) (τ : WorldHistory F) (t : 
 class: the `Sat .Dedekind` slot is `IsDense ∧ IsComplete`, and only its second component is
 used. -/
 theorem dedWitness_not_satisfiable (q : Atom) :
-    ¬ SatisfiableDedekindSet (dedWitness q) := by
+    ¬ SatisfiableRTimeSet (dedWitness q) := by
   rintro ⟨F, ⟨-, hlub⟩, M, τ, hτ, t, h⟩
   exact dedWitness_core q M τ t hlub h
 
@@ -420,7 +420,7 @@ Note that a *finite* unsatisfiable set would refute nothing about compactness �
 hand back the whole of any finite premise set. That is precisely why `dedWitness` carries the
 infinite family `{αₙ}` rather than the single formula `G(q → F q)`. -/
 theorem dedWitness_finitely_satisfiable (q : Atom) (L : List Formula)
-    (hL : ∀ ψ ∈ L, ψ ∈ dedWitness q) : SatisfiableDedekindSet {ψ | ψ ∈ L} := by
+    (hL : ∀ ψ ∈ L, ψ ∈ dedWitness q) : SatisfiableRTimeSet {ψ | ψ ∈ L} := by
   classical
   set N : ℕ := (L.map qDepth).sum with hNdef
   refine SatisfiableSet.of_forall (fc := FrameClass.Dedekind) (rShift q N).frame
@@ -442,7 +442,7 @@ theorem dedWitness_finitely_satisfiable (q : Atom) (L : List Formula)
 /-! ## The two refutations -/
 
 /-- **The `FrameClass.Dedekind` set-based consequence relation is not compact.** Refutes
-`CompactDedekind` (`Metalogic/SetConsequence.lean`).
+`CompactRTime` (`Metalogic/SetConsequence.lean`).
 
 `not_compact_of_witness` (`Metalogic/StrongCompleteness.lean`) at `dedWitness ⟨"q", none⟩`, on
 the two acceptance theorems above: the witness is finitely satisfiable over `ℝ` and satisfiable
@@ -453,60 +453,60 @@ supported. It existed to feed an instance binder further down the old hand-writt
 skeleton destructures no satisfiability witness here, so there is no `hd` to reinstall.
 
 Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below. -/
-theorem notCompactDedekind : ¬ CompactDedekind :=
+theorem notCompactRTime : ¬ CompactRTime :=
   not_compact_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
 
 /-- **Strong completeness fails for `FrameClass.Dedekind`.** Refutes
-`StrongCompletenessDedekind` (`Metalogic/SetConsequence.lean`).
+`StrongCompletenessRTime` (`Metalogic/SetConsequence.lean`).
 
 `not_strongCompleteness_of_witness` at the same witness. This is the outright refutation that
-explains why only *weak* completeness (`completeness_dedekind`, Reynolds 1992 §9 Theorem 7) is
+explains why only *weak* completeness (`completeness_rtime`, Reynolds 1992 §9 Theorem 7) is
 available for this class — the refutation does not contradict that theorem, it accounts for its
 scope.
 
-**This proof no longer mentions `soundness_dedekind`**, and so no longer needs the
+**This proof no longer mentions `soundness_rtime`**, and so no longer needs the
 `haveI : DenselyOrdered F.Duration := hd` that fed its instance binder: the skeleton's soundness
 step is the class-generic `soundness_validIn`, inside `compact_of_strongCompleteness`.
 
 Sorry-free at exactly `[propext, Classical.choice, Quot.sound]`; see the axiom audit below. -/
-theorem notStrongCompletenessDedekind : ¬ StrongCompletenessDedekind :=
+theorem notStrongCompletenessRTime : ¬ StrongCompletenessRTime :=
   not_strongCompleteness_of_witness (dedWitness_finitely_satisfiable ⟨"q", none⟩)
     (dedWitness_not_satisfiable ⟨"q", none⟩)
 
-/-- **Model existence fails for `FrameClass.Dedekind`.** Refutes `ModelExistenceDedekind`
+/-- **Model existence fails for `FrameClass.Dedekind`.** Refutes `ModelExistenceRTime`
 (`Metalogic/SetConsequence.lean`).
 
 The corollary that `Metalogic/SetConsequence.lean` used to describe as "simply not drawn here":
 `compact_of_modelExistence` (`Metalogic/StrongCompleteness.lean`) turns model existence into
 compactness, and compactness at this class is refuted directly above. Equivalently, it is the
-`mpr` of `compact_iff_modelExistence` composed with `notCompactDedekind`.
+`mpr` of `compact_iff_modelExistence` composed with `notCompactRTime`.
 
-**It is stated in this module, not beside `ModelExistenceDedekind` in
+**It is stated in this module, not beside `ModelExistenceRTime` in
 `Metalogic/SetConsequence.lean`, for the usual import reason**: it consumes
-`notCompactDedekind` directly above, and this module imports `SetConsequence.lean`
+`notCompactRTime` directly above, and this module imports `SetConsequence.lean`
 rather than the other way round. That module keeps the definition and now points here for the
 refutation. -/
-theorem modelExistenceDedekind_refuted : ¬ ModelExistenceDedekind :=
-  fun h => notCompactDedekind (compact_of_modelExistence h)
+theorem modelExistenceRTime_refuted : ¬ ModelExistenceRTime :=
+  fun h => notCompactRTime (compact_of_modelExistence h)
 
-#print axioms notCompactDedekind
+#print axioms notCompactRTime
 
 /-! ## Axiom Audit
 
-`#print axioms notCompactDedekind` above is the only in-file directive this module keeps: it is
+`#print axioms notCompactRTime` above is the only in-file directive this module keeps: it is
 one of the five termini named in the C2/C14 manifest contract. **The rest of this module's axiom
 audit lives in `scripts/check-module-invariants.sh`'s C14 heredoc pair**, which pins
 `qDepth_qAlpha`, `dedWitness_core`, `dedWitness_not_satisfiable`,
-`dedWitness_finitely_satisfiable`, `notStrongCompletenessDedekind`,
-`modelExistenceDedekind_refuted`, `qAlpha_step` and `exists_strictMono_qPoints` by exact string
+`dedWitness_finitely_satisfiable`, `notStrongCompletenessRTime`,
+`modelExistenceRTime_refuted`, `qAlpha_step` and `exists_strictMono_qPoints` by exact string
 equality against a recorded baseline. That is a stronger guarantee than the hand-transcribed
 output block that used to sit here, which could and did drift out of step with the declarations
 it claimed to report.
 
 **`sorryAx`-free throughout.** All four headline results carry exactly the three standard
-classical axioms — the identical set already carried by `notCompactDiscrete` and by
-`completeness_dedekind` itself. No new axiom is introduced and no obligation is deferred.
+classical axioms — the identical set already carried by `notCompactZTime` and by
+`completeness_rtime` itself. No new axiom is introduced and no obligation is deferred.
 
 `qDepth_qAlpha` carries a strict *subset*, `[propext, Quot.sound]`: it is a purely structural
 induction on `Formula` and never reaches for choice. That is a smaller dependency, not a larger

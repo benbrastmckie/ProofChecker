@@ -71,17 +71,17 @@ theorem forward_star_dense (φ : Formula) (h : StarDerivable FrameClass.Dense []
     ProofSystem.Derivable FrameClass.Dense [] φ :=
   forward_star completeness_dense φ h
 
-/-- Forward conservativity at `.Discrete`, via `completeness_discrete`. -/
+/-- Forward conservativity at `.Discrete`, via `completeness_ztime`. -/
 theorem forward_star_discrete (φ : Formula)
     (h : StarDerivable FrameClass.Discrete [] (ofFormula φ)) :
     ProofSystem.Derivable FrameClass.Discrete [] φ :=
-  forward_star completeness_discrete φ h
+  forward_star completeness_ztime φ h
 
-/-- Forward conservativity at `.Dedekind`, via `completeness_dedekind`. -/
+/-- Forward conservativity at `.Dedekind`, via `completeness_rtime`. -/
 theorem forward_star_dedekind (φ : Formula)
     (h : StarDerivable FrameClass.Dedekind [] (ofFormula φ)) :
     ProofSystem.Derivable FrameClass.Dedekind [] φ :=
-  forward_star completeness_dedekind φ h
+  forward_star completeness_rtime φ h
 
 /-- **TM⋆ is a conservative extension of TM⁺**: at any class with an engine, an L⁺ formula is a
 TM⋆ theorem iff it is a TM⁺ theorem. Backward by the embedding of derivations, forward by
@@ -105,13 +105,13 @@ theorem starDerivable_ofFormula_iff_dense (φ : Formula) :
 theorem starDerivable_ofFormula_iff_discrete (φ : Formula) :
     StarDerivable FrameClass.Discrete [] (ofFormula φ) ↔
       ProofSystem.Derivable FrameClass.Discrete [] φ :=
-  starDerivable_ofFormula_iff completeness_discrete φ
+  starDerivable_ofFormula_iff completeness_ztime φ
 
 /-- Conservativity at `.Dedekind`. -/
 theorem starDerivable_ofFormula_iff_dedekind (φ : Formula) :
     StarDerivable FrameClass.Dedekind [] (ofFormula φ) ↔
       ProofSystem.Derivable FrameClass.Dedekind [] φ :=
-  starDerivable_ofFormula_iff completeness_dedekind φ
+  starDerivable_ofFormula_iff completeness_rtime φ
 
 /-! ## The composed pair L ⊂ L⋆
 

@@ -1,7 +1,7 @@
 # Implementation Plan: Rename FrameClass tags to ZTime/RTime
 
 - **Task**: 546 - Rename frameclass tags to ztime rtime
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 13.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/546_rename_frameclass_tags_to_ztime_rtime/reports/01_frameclass-ztime-rtime-rename.md
@@ -173,30 +173,31 @@ checkout contend for the same build artifacts.
 
 ---
 
-### Phase 1: Tier 3a — Metalogic class-level statements and C14 baselines [NOT STARTED]
+### Phase 1: Tier 3a — Metalogic class-level statements and C14 baselines [COMPLETED]
 
 **Goal**: Rename the self-contained metalogical statement families whose bodies still refer to
 the unrenamed constructors, and move `check-module-invariants.sh`'s C14 baseline and probe lines
 with them.
 
 **Tasks**:
-- [ ] Rename the `Metalogic/SetConsequence.lean` block: `StrongCompletenessDiscrete`,
+- [x] Rename the `Metalogic/SetConsequence.lean` block: `StrongCompletenessDiscrete`,
       `StrongCompletenessDedekind`, `CompactDiscrete`, `CompactDedekind`,
       `SatisfiableDiscreteSet`, `SatisfiableDedekindSet`, `SetSemanticConsequenceDiscrete`,
       `SetSemanticConsequenceDedekind`, `ModelExistenceDedekind`.
-- [ ] Rename `SemanticConsequenceDiscrete`/`Dedekind`, `semantic_deduction_discrete`/`dedekind`.
-- [ ] Rename the soundness family: `soundness_discrete{,_valid,_consequence}`,
+- [x] Rename `SemanticConsequenceDiscrete`/`Dedekind`, `semantic_deduction_discrete`/`dedekind`.
+- [x] Rename the soundness family: `soundness_discrete{,_valid,_consequence}`,
       `soundness_dedekind{,_valid,_consequence}`, `axiom_discrete_valid`, `axiom_dedekind_valid`.
-- [ ] Rename the completeness family: `completeness_discrete`, `completeness_dedekind{,_engine,
+- [x] Rename the completeness family: `completeness_discrete`, `completeness_dedekind{,_engine,
       _of_engine}`, `consequence_completeness_discrete`,
       `consequence_completeness_dedekind{,_of_engine}`, and the `BXCanonical.` variants.
-- [ ] Rename the non-compactness family: `notCompactDiscrete`, `notCompactDedekind`,
+- [x] Rename the non-compactness family: `notCompactDiscrete`, `notCompactDedekind`,
       `notStrongCompletenessDiscrete`, `notStrongCompletenessDedekind`,
       `modelExistenceDedekind_refuted`.
-- [ ] Update `scripts/check-module-invariants.sh` C14 **baseline** lines 167, 828, 849, 850, 851,
+- [x] *(deviation: added — `not_derivable_nil_bot_discrete` -> `not_derivable_nil_bot_ztime`, a class-naming soundness-family lemma in `Metalogic/Soundness.lean` not enumerated in the plan; renamed here with the rest of the soundness family.)*
+- [x] Update `scripts/check-module-invariants.sh` C14 **baseline** lines 167, 828, 849, 850, 851,
       862, 867, 868, 871, 873 and **probe** lines 177, 886, 907, 908, 909, 920, 925, 926, 929,
-      931 as a matched pair, plus the prose at 746, 759, 816, 819-820, 943, 1414.
-- [ ] Run the KEEP-list guard.
+      931 as a matched pair, plus the prose at 746, 759, 816, 819-820, 943, 1414. *(deviation: altered — baseline/probe lines 871/873 and 929/931 name `tmCompleteDiscrete_iff_forwardDiscrete` / `tmCompleteDedekind_iff_forwardDedekind`, which Phase 2 renames; moving them here would have broken C14 in this phase, so they are deferred to Phase 2. Prose lines 816 and 1414 name module/file names (`DiscreteNonCompactness.lean`, `MonoDiscrete.lean`) and `countermodel_discrete`, all on the KEEP list, so they were left unchanged.)*
+- [x] Run the KEEP-list guard.
 
 **Timing**: 2 hours
 

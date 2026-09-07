@@ -420,7 +420,7 @@ theorem box_stable_in_shifted_fmcs (M₀ : Set Formula)
 /-! ## FC-Parametric Chain Construction
 
 The existing chain (FwdSucc, BwdPred, IntChain, etc.) is hardcoded to FrameClass.Base.
-For completeness_discrete we need chains parametric over fc, since the BFMCS must be
+For completeness_ztime we need chains parametric over fc, since the BFMCS must be
 typed at the same fc as the MCS input (e.g., FrameClass.Discrete).
 
 The fc-parametric versions use:

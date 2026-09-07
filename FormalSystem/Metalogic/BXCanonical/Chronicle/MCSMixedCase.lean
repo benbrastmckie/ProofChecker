@@ -10,7 +10,7 @@ import FormalSystem.Metalogic.BXCanonical.Chronicle.ChronicleToCountermodelBasic
 # MCS Mixed Case Elimination
 
 The mixed case (¬□(F'T) ∧ ¬□(U(⊤,⊥)) in an MCS) is impossible due to the
-structural axiom `discrete_box_necessity`. This fact is used by `completeness_discrete`
+structural axiom `discrete_box_necessity`. This fact is used by `completeness_ztime`
 in `Completeness.lean`.
 
 Separated from `ChronicleToCountermodel.lean` to decouple the sorry-free mixed-case

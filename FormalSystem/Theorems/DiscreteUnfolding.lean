@@ -55,7 +55,7 @@ does not satisfy, so generalizing along `h` preserves the argument rather than d
 stated at `FrameClass.Base` because that is the *weakest* class at which they hold; they lift to
 any `fc` through `Combinators.baseThm`.
 
-`FormalSystem.Metalogic.not_derivable_nil_bot_discrete` (`Metalogic/Soundness.lean`) is what
+`FormalSystem.Metalogic.not_derivable_nil_bot_ztime` (`Metalogic/Soundness.lean`) is what
 makes these results non-vacuous: the `Discrete` system is consistent, so `⊢[Discrete]` is not
 the trivial predicate.
 

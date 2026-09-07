@@ -698,8 +698,8 @@ for the base frame class without unnecessary hypotheses.
 
 This resolves the 3 `temporal_duality` sorries in Soundness.lean:
 - `soundness` (general, line ~877)
-- `soundness_discrete_valid` (line ~1094)
-- `soundness_discrete` (line ~1151)
+- `soundness_ztime_valid` (line ~1094)
+- `soundness_ztime` (line ~1151)
 -/
 
 /-- All base axiom swaps are valid without DenselyOrdered constraints.

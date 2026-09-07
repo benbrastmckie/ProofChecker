@@ -666,7 +666,7 @@ theorem not_validDense_of_hasOpen (hV : branchOrderValid b ord = true)
 **`not_validDedekind_of_hasOpen`.** The same branch refutes `ValidDedekind χ`, the
 countermodel being carried by `ℝ`.
 
-This is the real-flow result, and it is the one `soundness_dedekind` targets. The extra binder
+This is the real-flow result, and it is the one `soundness_rtime` targets. The extra binder
 `ValidDedekind` carries over `ValidDense` is the least-upper-bound property, discharged for
 `ℝ` by `isLUB_csSup`; nothing in the truth lemma consumes it.
 -/

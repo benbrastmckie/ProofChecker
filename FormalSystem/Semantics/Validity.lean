@@ -86,8 +86,8 @@ def ConsequenceOnFrames (P : TaskFrame → Prop) (Γ : Context) (φ : Formula) :
 
 /-- `cor:tm-completeness`'s class-restricted consequence `Γ ⊨_C φ` at a finite context: the
 mirror of `ValidIn`, over the same `FrameClass.Sat`. The four named consequence relations —
-`SemanticConsequence` here, and `SemanticConsequenceDense` / `SemanticConsequenceDiscrete` /
-`SemanticConsequenceDedekind` in `Metalogic/StrongCompleteness.lean` — are its four
+`SemanticConsequence` here, and `SemanticConsequenceDense` / `SemanticConsequenceZTime` /
+`SemanticConsequenceRTime` in `Metalogic/StrongCompleteness.lean` — are its four
 instances. -/
 def SemanticConsequenceIn (fc : ProofSystem.FrameClass) (Γ : Context) (φ : Formula) : Prop :=
   ConsequenceOnFrames fc.Sat Γ φ
@@ -156,7 +156,7 @@ binder shape. The body is `h` — `ConsequenceOnFrames` already quantifies over 
 
 **This is why the per-class consequence adapters were boilerplate.** The three pairs that used
 to live in `Metalogic/StrongCompleteness.lean` (`SemanticConsequenceDense`,
-`SemanticConsequenceDiscrete`, `SemanticConsequenceDedekind`) were each this lemma at a fixed
+`SemanticConsequenceZTime`, `SemanticConsequenceRTime`) were each this lemma at a fixed
 tag with `fc.Sat F` unfolded to that class's frame condition; they are deleted, and a site now
 writes the tag instead of picking a name. -/
 theorem SemanticConsequenceIn.of_forall_total {fc : ProofSystem.FrameClass} {Γ : Context}
@@ -616,7 +616,7 @@ capturing the frame condition for the discreteness axioms DF/DP.
 **Now an abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .Discrete`, which
 is `TaskFrame.IsSuccArchDiscrete` — `def:TMplus-f`'s Hölder narrowing to ℤ-time, *not*
 `def:frame-properties`' bare Discrete clause. Recording the narrowing in the tag's interpretation
-rather than in a binder list here is what keeps `soundness_discrete` from silently widening its
+rather than in a binder list here is what keeps `soundness_ztime` from silently widening its
 frame class. The binder shape this definition used to have is recovered by the generic
 `ValidIn.of_forall_total` / `ValidIn.apply_total` followed by `sat_intro`, which destructures the
 `IsSuccArchDiscrete` existential into the four instances.
@@ -666,14 +666,14 @@ predicate is the sole exception: it is `ValidOnFrames TaskFrame.IsComplete` —
 a `ValidIn` tag, because no `FrameClass` constructor denotes the bare Complete class (see the
 `FrameClass` docstring in `ProofSystem/Axioms.lean`).
 
-**Do not retarget `soundness_dedekind` at it.** `FrameClass.Dedekind` sits strictly above
+**Do not retarget `soundness_rtime` at it.** `FrameClass.Dedekind` sits strictly above
 `FrameClass.Dense`, so `Axiom.density` (`GGφ → Gφ`) and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are
 admissible in a `.Dedekind` derivation. Both are FALSE on `ℤ`: for `density`, take `φ` true
 exactly at times `≥ t + 2`, so `GGφ` holds at `t` while `Gφ` fails; for `dense_indicator`,
 `⊥ U ⊤` is true on `ℤ` because every point has an immediate successor. `ℤ` satisfies every binder
 of this predicate (Mathlib gives it a `ConditionallyCompleteLinearOrder`), so a
-`soundness_dedekind : DerivationTree .Dedekind … → ValidComplete` would be **refutable**.
-`soundness_dedekind` targets `ValidDedekind`; this predicate is landed as the strictly weaker
+`soundness_rtime : DerivationTree .Dedekind … → ValidComplete` would be **refutable**.
+`soundness_rtime` targets `ValidDedekind`; this predicate is landed as the strictly weaker
 statement and as the target of the forgetful bridge from `Valid`.
 
 **Why the name still reads oddly, and why that is recorded rather than fixed.** The paper calls
@@ -718,15 +718,15 @@ model class is `{ℤ, ℝ}` up to isomorphism and whose theory is `Th(ℤ) ∩ T
 element corresponds to it — see the `FrameClass` docstring in
 `FormalSystem/ProofSystem/Axioms.lean`.
 
-**This predicate is NOT the target of `soundness_dedekind`, and that is not an oversight.**
+**This predicate is NOT the target of `soundness_rtime`, and that is not an oversight.**
 `FrameClass.Dedekind` sits strictly above `FrameClass.Dense` (see the `FrameClass` docstring
 in `FormalSystem/ProofSystem/Axioms.lean`), so `Axiom.density` (`GGφ → Gφ`) and
 `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) are admissible in `DerivationTree FrameClass.Dedekind`.
 Both are FALSE on `ℤ`: for `density`, take `φ` true exactly at times `≥ t + 2`, so `GGφ` holds
 at `t` while `Gφ` fails; for `dense_indicator`, `⊥ U ⊤` is true on `ℤ` because every point has
 an immediate successor. Since `ℤ` also satisfies `TaskFrame.IsComplete`, a
-`soundness_dedekind : DerivationTree .Dedekind … → ValidComplete` would be refutable.
-`soundness_dedekind` therefore targets `ValidDedekind`. This predicate is landed as the
+`soundness_rtime : DerivationTree .Dedekind … → ValidComplete` would be refutable.
+`soundness_rtime` therefore targets `ValidDedekind`. This predicate is landed as the
 strictly weaker statement and as the target of the forgetful bridge from `Valid`.
 
 **The trap is now structural rather than merely documented.** Before this predicate became an
@@ -766,7 +766,7 @@ which is why `ℤ` is excluded here even though it satisfies every binder of `Va
 does not carry; the composition path and the reason it is out of scope are recorded in the
 `DurationClassification` module docstring.)
 
-**This is the target of `soundness_dedekind`**, not `ValidComplete`, and retargeting it at the
+**This is the target of `soundness_rtime`**, not `ValidComplete`, and retargeting it at the
 weaker predicate yields a refutable theorem. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidDedekind` distinction is argued in full.
 
 The placement of `Dedekind` above `Dense` is itself primary-source: Reynolds 1992 (printed
@@ -811,7 +811,7 @@ theorem validDiscrete_iff_validIn_discrete (φ : Formula) :
 
 /-- `ValidDedekind` is `ValidIn .Dedekind`: its density binder together with its
 least-upper-bound hypothesis is exactly the conjunction `TaskFrame.IsDedekind` that
-`Sat .Dedekind` returns. This is the `soundness_dedekind` target. -/
+`Sat .Dedekind` returns. This is the `soundness_rtime` target. -/
 theorem validDedekind_iff_validIn_dedekind (φ : Formula) :
     ValidDedekind φ ↔ ValidIn ProofSystem.FrameClass.Dedekind φ := Iff.rfl
 
@@ -857,7 +857,7 @@ theorem valid_implies_validDedekind {φ : Formula} (h : Valid φ) : ValidDedekin
 binder restricts the class of temporal types quantified over, so validity on all
 Dedekind-complete orders entails validity on the dense ones.
 
-This is the bridge that makes the SETTLED soundness target coherent: `soundness_dedekind`
+This is the bridge that makes the SETTLED soundness target coherent: `soundness_rtime`
 proves the weaker `ValidDedekind`, and anything genuinely established at
 `ValidComplete` can be transported into it via this lemma.
 -/

@@ -38,8 +38,8 @@ commutes with `imp` definitionally.
 
 ## The `.Discrete` and `.Dedekind` rows do NOT transfer
 
-BL⁺'s non-compactness at `.Discrete` (`notCompactDiscrete`, witness `{F p} ∪ {¬Xⁿ p}`) and at
-`.Dedekind` (`notCompactDedekind`, witness built from `K⁺`-shaped `untl` guards) uses formulas
+BL⁺'s non-compactness at `.Discrete` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
+`.Dedekind` (`notCompactRTime`, witness built from `K⁺`-shaped `untl` guards) uses formulas
 **outside the range of `tr`**: `Formula.next` is `untl bot _` and `K⁺` is a top-level `untl`,
 while by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
 refutation transfers to the base language, and no BL non-compactness claim is made at those two

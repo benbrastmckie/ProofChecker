@@ -187,7 +187,7 @@ The only list all of whose members lie in `∅` is `[]`, so the obligation colla
 Consistency of the system is genuinely a per-frame-class fact and cannot be discharged
 uniformly in `fc`: it is read off a soundness theorem for `fc`, and the tree currently proves
 one for `FrameClass.Base` (`not_derivable_nil_bot`) and for `FrameClass.Discrete`
-(`not_derivable_nil_bot_discrete`). Hence the hypothesis rather than a `{fc}`-uniform statement.
+(`not_derivable_nil_bot_ztime`). Hence the hypothesis rather than a `{fc}`-uniform statement.
 -/
 theorem setConsistent_empty_of {fc : FrameClass}
     (h : ¬ Derivable fc ([] : Context) Formula.bot) :
@@ -231,7 +231,7 @@ Every formula has at least one `FrameClass.Base` closure MCS.
 **Why `Base` is essential here**: this is the `fc := FrameClass.Base` instance of
 `closureMCSBundle_nonempty_of`; it inherits the base-system consistency witness from
 `setConsistent_empty`. The `{fc}`-uniform statement is `closureMCSBundle_nonempty_of`, which
-also applies at `FrameClass.Discrete` via `not_derivable_nil_bot_discrete`.
+also applies at `FrameClass.Discrete` via `not_derivable_nil_bot_ztime`.
 -/
 theorem closureMCSBundle_nonempty (phi : Formula) : Nonempty (ClosureMCSBundle phi) :=
   closureMCSBundle_nonempty_of FormalSystem.Metalogic.not_derivable_nil_bot phi

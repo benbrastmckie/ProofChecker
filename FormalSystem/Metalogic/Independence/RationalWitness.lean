@@ -169,7 +169,7 @@ theorem ratStaticFrame_not_sat :
 theorem sat_dedekind_subset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Dedekind F} ⊆
       Semantics.Mod (AxiomSet FrameClass.Dedekind) :=
-  fun F hF _ ⟨ax, hax⟩ => axiom_dedekind_valid ax hax F hF
+  fun F hF _ ⟨ax, hax⟩ => axiom_rtime_valid ax hax F hF
 
 /--
 **The lower half of the sandwich is strict**: `Sat .Dedekind ⊊ Mod (AxiomSet .Dedekind)`, with

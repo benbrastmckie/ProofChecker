@@ -31,7 +31,7 @@ This eliminates the sorry chain
 `chronicle_gap_contradiction` → `succ_cofinal` → `limitDomSubtype_isSuccArchimedean`
 → `succ_embed_surjective` → `cantor_bfmcs_discrete_restricted_tc/fuc`
 
-The bypass is what made that archival possible: because `completeness_discrete` routes through
+The bypass is what made that archival possible: because `completeness_ztime` routes through
 `countermodel_discrete_reynolds_v2` below rather than through the chain, the whole chain was
 dead and could be excised. Note that `countermodel_discrete_reynolds_v2` (this file, sorry-free)
 is a different theorem from the archived, `sorryAx`-tainted `countermodel_discrete_reynolds`

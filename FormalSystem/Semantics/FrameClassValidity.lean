@@ -101,7 +101,7 @@ Per-constructor anchors:
   closing sentence states that "the successor-Archimedean discrete class to which BX_f and TM⁺_f
   are sound and complete is exactly ℤ-time", and it is that narrowed class `Axiom.prior_UZ`,
   `Axiom.prior_SZ` and `Axiom.z1` are sound over. Interpreting `.Discrete` by the bare Discrete
-  clause would silently widen the class under `soundness_discrete`.
+  clause would silently widen the class under `soundness_ztime`.
 * `.Dedekind ↦ TaskFrame.IsDedekind`, **not** `TaskFrame.IsComplete`. `FrameClass.Dedekind` sits
   strictly above `FrameClass.Dense`, so `density` and `dense_indicator` are admissible in a
   `.Dedekind` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.

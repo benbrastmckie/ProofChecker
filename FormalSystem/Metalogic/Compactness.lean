@@ -113,8 +113,8 @@ witnesses and the Łoś transport are all uniform in the tag.
 ultraproduct of Archimedean orders need not be Archimedean, and an ultraproduct of
 Dedekind-complete orders need not be Dedekind-complete — the standard nonstandard-analysis
 phenomenon, in both cases. So this route is unavailable at those two tags, and no reformulation
-of `hpres` recovers it: `notCompactDiscrete`
-(`Metalogic/DiscreteNonCompactness.lean`) and `notCompactDedekind`
+of `hpres` recovers it: `notCompactZTime`
+(`Metalogic/DiscreteNonCompactness.lean`) and `notCompactRTime`
 (`Metalogic/DedekindNonCompactness.lean`) *refute* compactness at those classes outright, and
 `compact_of_modelExistence` would turn a model-existence proof into exactly the compactness
 those two theorems deny. The failure of `hpres` at half the table is therefore the machine-checked

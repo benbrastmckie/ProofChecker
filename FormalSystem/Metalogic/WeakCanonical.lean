@@ -107,7 +107,7 @@ is archived — see `Boneyard/DeadChronicleGapElimination/ChronicleGapChainExcis
 been archived to `Boneyard/DeadChronicleGapElimination/ChronicleGapChainExcision.lean`. It is
 proved at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ` off `companionChronicle`
 (`GroupModel/GroupableCompanion.lean`); the separate sorry-free discrete result is
-`completeness_discrete`, via `countermodel_discrete_reynolds_v2`
+`completeness_ztime`, via `countermodel_discrete_reynolds_v2`
 (IntegerModel/ReynoldsBridge.lean) at `ℤ`.
 
 It lives in `GroupModel/` rather than in `Transfer.lean` because
@@ -128,7 +128,7 @@ existence given C3. In particular `G_backward_mcs` and `H_backward_mcs` (`TruthL
 all proved.
 
 **Both consumer-facing completeness results are sorry-free.**
-`BXCanonical.completeness_discrete` reaches its countermodel via
+`BXCanonical.completeness_ztime` reaches its countermodel via
 `countermodel_discrete_reynolds_v2` (`IntegerModel/ReynoldsBridge.lean`); `BXCanonical.completeness`
 at `.Base` reaches its discrete branch via `countermodel_discrete`
 (`GroupModel/CountermodelBase.lean`). Check C2 records both as depending on

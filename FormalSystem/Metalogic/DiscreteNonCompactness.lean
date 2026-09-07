@@ -31,9 +31,9 @@ constructor is **guard-first**: `next φ` is `untl (guard := ⊥) (event := φ)`
   `IsSuccArchimedean` does its work — so `Xⁿ⁺¹ p` holds at `t` for that `n`, contradicting the
   corresponding `¬Xⁿ⁺¹ p`.
 
-Together these refute `CompactDiscrete` (`notCompactDiscrete`) and, by way of
-`soundness_discrete`, `StrongCompletenessDiscrete` itself
-(`notStrongCompletenessDiscrete`). Both statements are declared in
+Together these refute `CompactZTime` (`notCompactZTime`) and, by way of
+`soundness_ztime`, `StrongCompletenessZTime` itself
+(`notStrongCompletenessZTime`). Both statements are declared in
 `Metalogic/SetConsequence.lean`.
 
 ## Note on `truthAt_next_iff` / `truthAt_next_iterate`
@@ -203,7 +203,7 @@ theorem succ_iterate_zero_int (n : ℕ) : Order.succ^[n] (0:ℤ) = (n : ℤ) := 
     `List.single_le_sum (fun _ _ => Nat.zero_le _)` supplies `witIdx ψ ≤ N` directly; no `foldr
     max` helper and no auxiliary lemma is needed. -/
 theorem archWitness_finitely_satisfiable (p : Atom) (L : List Formula)
-    (hL : ∀ ψ ∈ L, ψ ∈ archWitness p) : SatisfiableDiscreteSet {ψ | ψ ∈ L} := by
+    (hL : ∀ ψ ∈ L, ψ ∈ archWitness p) : SatisfiableZTimeSet {ψ | ψ ∈ L} := by
   classical
   refine SatisfiableSet.of_forall (fc := FrameClass.Discrete) (FrameOver.natFrame (D := ℤ))
     (TaskFrame.isSuccArchDiscrete_of_instances _) zModel
@@ -237,7 +237,7 @@ theorem archWitness_finitely_satisfiable (p : Atom) (L : List Formula)
     The existential is destructured with **bare `_` instance binders** so that synthesis recovers
     the originals. Naming them and re-installing with `haveI` would drop the value and break
     definitional equality with the instances baked into `F`'s and `M`'s types. -/
-theorem archWitness_not_satisfiable (p : Atom) : ¬ SatisfiableDiscreteSet (archWitness p) := by
+theorem archWitness_not_satisfiable (p : Atom) : ¬ SatisfiableZTimeSet (archWitness p) := by
   rintro ⟨F, ⟨_, _, _, _⟩, M, τ, hτ, t, h⟩
   haveI : NoMaxOrder F.Duration := inferInstance
   have hF : TruthAt M τ t ((Formula.atom p).someFuture) := by
@@ -265,7 +265,7 @@ The argument the skeleton runs — `archWitness p ⊨ ⊥` holds vacuously, comp
 finite `L` with `L.foldr imp ⊥` Discrete-valid, and `truthAt_foldr_imp` contradicts that against
 a Discrete model of the same `L` — used to be written out here in full, and again in
 `Metalogic/DedekindNonCompactness.lean` with a different witness. It is now written once. -/
-theorem notCompactDiscrete : ¬ CompactDiscrete :=
+theorem notCompactZTime : ¬ CompactZTime :=
   not_compact_of_witness (archWitness_finitely_satisfiable ⟨"p", none⟩)
     (archWitness_not_satisfiable ⟨"p", none⟩)
 
@@ -275,35 +275,35 @@ theorem notCompactDiscrete : ¬ CompactDiscrete :=
 
 `not_strongCompleteness_of_witness` at the same witness, on the same two acceptance theorems.
 
-**This proof no longer mentions `soundness_discrete`.** The skeleton routes through
+**This proof no longer mentions `soundness_ztime`.** The skeleton routes through
 `compact_of_strongCompleteness`, whose soundness step is the class-generic `soundness_validIn`;
 the per-class soundness corollary is no longer on the refutation path. With it went the
 bare-instance-binder `rintro ⟨F, ⟨_,_,_,_⟩, M, τ, hτ, t, hsat⟩` discipline this proof used to
-need, since it no longer destructures a `SatisfiableDiscreteSet` witness itself —
+need, since it no longer destructures a `SatisfiableZTimeSet` witness itself —
 `archWitness_not_satisfiable` above still does, and still documents the discipline.
 
 This is the theorem behind the module docstring claim in `Metalogic/StrongCompleteness.lean`
 that only weak completeness is available for this class. -/
-theorem notStrongCompletenessDiscrete : ¬ StrongCompletenessDiscrete :=
+theorem notStrongCompletenessZTime : ¬ StrongCompletenessZTime :=
   not_strongCompleteness_of_witness (archWitness_finitely_satisfiable ⟨"p", none⟩)
     (archWitness_not_satisfiable ⟨"p", none⟩)
 
-#print axioms notCompactDiscrete
+#print axioms notCompactZTime
 
 /-! ## Axiom Audit
 
-`#print axioms notCompactDiscrete` above is the only in-file directive this module keeps: it is
+`#print axioms notCompactZTime` above is the only in-file directive this module keeps: it is
 one of the five termini named in the C2/C14 manifest contract. **The rest of this module's
 axiom audit lives in `scripts/check-module-invariants.sh`'s C14 heredoc pair**, which pins
 `truthAt_next_iff`, `truthAt_next_iterate`, `archWitness_finitely_satisfiable`,
-`archWitness_not_satisfiable` and `notStrongCompletenessDiscrete` by exact string equality
+`archWitness_not_satisfiable` and `notStrongCompletenessZTime` by exact string equality
 against a recorded baseline. That is a stronger guarantee than the hand-transcribed output block
 that used to sit here, which could and did drift out of step with the declarations it claimed to
 report.
 
 **`sorryAx`-free throughout.** Every declaration in this module carries exactly the three
 standard classical axioms, the identical set already carried by `completeness_dense`,
-`completeness_discrete` and `consequence_completeness_dedekind`. No new axiom is introduced and
+`completeness_ztime` and `consequence_completeness_rtime`. No new axiom is introduced and
 no obligation is deferred.
 
 ### Axiom classification

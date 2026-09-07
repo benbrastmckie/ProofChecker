@@ -66,7 +66,7 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
 
 * `FormalSystem/Metalogic/Conservativity.lean` — the forward-conservativity prohibition this
   module strengthens
-* `FormalSystem/Metalogic/BXCanonical/Completeness.lean` — `completeness`, `completeness_discrete`
+* `FormalSystem/Metalogic/BXCanonical/Completeness.lean` — `completeness`, `completeness_ztime`
 * `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `blValid_iff_valid_tr`,
   `blValidDiscrete_iff_validDiscrete_tr`
 -/
@@ -166,14 +166,14 @@ def TMCompleteDiscrete : Prop := TMComplete FrameClass.Discrete
 -/
 def ForwardDiscrete : Prop := Forward FrameClass.Discrete
 
-/-- **The `.Discrete` mirror**, with `completeness_discrete` as the engine. -/
+/-- **The `.Discrete` mirror**, with `completeness_ztime` as the engine. -/
 theorem tmCompleteDiscrete_iff_forwardDiscrete : TMCompleteDiscrete ↔ ForwardDiscrete :=
-  tmComplete_iff_forward completeness_discrete
+  tmComplete_iff_forward completeness_ztime
 
 /-! ## The two rows the generalization yields
 
 `FrameClass.Dense` and `FrameClass.Dedekind` carry weak-completeness engines of their own
-(`completeness_dense` and `completeness_dedekind`, the latter being Reynolds 1992 §9 Theorem 7 as
+(`completeness_dense` and `completeness_rtime`, the latter being Reynolds 1992 §9 Theorem 7 as
 formalized in this tree), so the same equivalence holds at those tags. Neither row existed before
 the collapse, and neither costs anything beyond naming it. Both sides remain **unasserted** at
 both tags, exactly as at `.Base` and `.Discrete`. -/
@@ -183,10 +183,10 @@ theorem tmCompleteDense_iff_forwardDense :
     TMComplete FrameClass.Dense ↔ Forward FrameClass.Dense :=
   tmComplete_iff_forward completeness_dense
 
-/-- **The `.Dedekind` row.** `tmComplete_iff_forward completeness_dedekind`. -/
+/-- **The `.Dedekind` row.** `tmComplete_iff_forward completeness_rtime`. -/
 theorem tmCompleteDedekind_iff_forwardDedekind :
     TMComplete FrameClass.Dedekind ↔ Forward FrameClass.Dedekind :=
-  tmComplete_iff_forward completeness_dedekind
+  tmComplete_iff_forward completeness_rtime
 
 
 end FormalSystem.Metalogic

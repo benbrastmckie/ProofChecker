@@ -12,7 +12,7 @@ import FormalSystem.Metalogic.WeakCanonical.Kamp.NfDepth0Generalized
 # Phase 1 GO/NO-GO GATE — navigated (depth-graded) flattening at `k = 1`
 
 This module is the **decisive go/no-go gate** for the bound-anchor zone converter
-(`KampPrior.lean:391`). It is **off the live import path** (nothing in the `completeness_discrete`
+(`KampPrior.lean:391`). It is **off the live import path** (nothing in the `completeness_ztime`
 chain imports it) and is **fully sorry-free**.
 
 ## The categorical distinction under test (vs. the refuted atomic D1)

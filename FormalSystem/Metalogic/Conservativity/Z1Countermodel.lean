@@ -180,7 +180,7 @@ theorem not_bl_derivable_z1 (p : Atom) :
 
 /--
 **Deliverable 2.** `Z1 p` is `BLValidDiscrete`: from `Conservativity.z1_translate`
-(`⊢[Discrete] tr (Z1 p)`), `soundness_discrete_valid` (BL⁺'s empty-context discrete soundness)
+(`⊢[Discrete] tr (Z1 p)`), `soundness_ztime_valid` (BL⁺'s empty-context discrete soundness)
 gives `ValidDiscrete (tr (Z1 p))`, and `blValidDiscrete_iff_validDiscrete_tr` crosses the
 bridge.
 
@@ -191,7 +191,7 @@ so the two phases visibly compose.
 theorem blValidDiscrete_z1 (p : Atom) : BLValidDiscrete (Conservativity.Z1 (BLFormula.atom p)) := by
   rw [blValidDiscrete_iff_validDiscrete_tr]
   obtain ⟨d⟩ := Conservativity.z1_translate (BLFormula.atom p)
-  exact soundness_discrete_valid d
+  exact soundness_ztime_valid d
 
 /-- **TM_f is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteDiscrete`,
 witnessed by `Z1 p`: `BLValidDiscrete (Z1 p)` holds (`blValidDiscrete_z1`) yet `Z1 p` is not

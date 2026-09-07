@@ -70,7 +70,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
 
 - **Soundness** (`soundness`): SORRY-FREE
 - **Soundness (dense)** (`soundness_dense`): SORRY-FREE
-- **Soundness (discrete)** (`soundness_discrete`): SORRY-FREE
+- **Soundness (discrete)** (`soundness_ztime`): SORRY-FREE
 - **Soundness, base language BL** (`bl_soundness`, `bl_soundness_dense`,
   `bl_soundness_discrete`, `bl_soundness_dedekind`, plus the empty-context validity forms and the
   consistency corollaries `bl_not_derivable_nil_bot` / `bl_not_derivable_nil_bot_discrete`):
@@ -80,7 +80,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
   induction in `Metalogic/Conservativity/BaseLanguageSoundness.lean`. `bl_soundness_dedekind` carries
   `ValidDedekind`'s binder set and its validity form concludes at `BLValidDedekind`,
-  inheriting `soundness_dedekind`'s target; a density-free `BLValidComplete` is deliberately not
+  inheriting `soundness_rtime`'s target; a density-free `BLValidComplete` is deliberately not
   defined because it would be refutable
 - **Completeness** (`completeness`): SORRY-FREE (sorryAx-free; axioms: exactly `propext`,
   `Classical.choice`, `Quot.sound`). Its Base-frame discrete branch,
@@ -89,13 +89,13 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   `ℚ ×ₗ ℤ`, off `companionChronicle`
 - **Completeness (dense)** (`completeness_dense`): SORRY-FREE (sorryAx-free; axioms: exactly
   `propext`, `Classical.choice`, `Quot.sound`)
-- **Completeness (discrete)** (`completeness_discrete`): SORRY-FREE (sorryAx-free; axioms:
+- **Completeness (discrete)** (`completeness_ztime`): SORRY-FREE (sorryAx-free; axioms:
   exactly `propext`, `Classical.choice`, `Quot.sound`)
-- **Completeness (Dedekind)** (`completeness_dedekind`): SORRY-FREE (sorryAx-free; axioms:
+- **Completeness (Dedekind)** (`completeness_rtime`): SORRY-FREE (sorryAx-free; axioms:
   exactly `propext`, `Classical.choice`, `Quot.sound`). Weak completeness for
   `FrameClass.Dedekind` against `ValidDedekind`, on the real line. It is a corollary of
   the consequence form below, not an independent construction.
-- **Consequence completeness (Dedekind)** (`consequence_completeness_dedekind`): SORRY-FREE
+- **Consequence completeness (Dedekind)** (`consequence_completeness_rtime`): SORRY-FREE
   (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Finite-context
   consequence completeness. This is **not** strong completeness: `Context` is `List Formula`,
   so it is inter-derivable with the weak form through the deduction theorem — see the module
@@ -111,10 +111,10 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Stated against
   `SemanticConsequenceDense`, with guard `soundness_dense_consequence` and weak corollary
   `completeness_dense`, both at the same axiom set.
-- **Consequence completeness (discrete)** (`consequence_completeness_discrete`): SORRY-FREE
+- **Consequence completeness (discrete)** (`consequence_completeness_ztime`): SORRY-FREE
   (sorryAx-free; axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Stated against
-  `SemanticConsequenceDiscrete`, with guard `soundness_discrete_consequence` and weak corollary
-  `completeness_discrete`, both at the same axiom set.
+  `SemanticConsequenceZTime`, with guard `soundness_ztime_consequence` and weak corollary
+  `completeness_ztime`, both at the same axiom set.
 
   **Terminology caveat, binding on all four entries above.** `Context` is `List Formula`, so
   every one of these is a *finite*-context result, inter-derivable with the corresponding weak
@@ -123,8 +123,8 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   relation. The infinitary statement has **three distinct statuses** across the four classes,
   which must not be collapsed into one:
 
-  * `FrameClass.Discrete` — **machine-refuted**. `notCompactDiscrete` and
-    `notStrongCompletenessDiscrete` (entry below) settle it negatively.
+  * `FrameClass.Discrete` — **machine-refuted**. `notCompactZTime` and
+    `notStrongCompletenessZTime` (entry below) settle it negatively.
   * `FrameClass.Base` and `FrameClass.Dense` — **proved**. `strongCompletenessBase` and
     `strongCompletenessDense` (`Metalogic/Compactness.lean`) inhabit the
     `StrongCompletenessBase`/`StrongCompletenessDense` statements of
@@ -134,17 +134,17 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
     `modelExistenceBase`/`modelExistenceDense` by an ultraproduct construction over the finite
     sublists of the premise set.
   * `FrameClass.Dedekind` — **refuted**, like Discrete. Reynolds 1992 Theorem 7 is weak-only,
-    and this tree now explains why: `CompactDedekind` and `StrongCompletenessDedekind` are
+    and this tree now explains why: `CompactRTime` and `StrongCompletenessRTime` are
     stated in `Metalogic/SetConsequence.lean` and refuted in
-    `Metalogic/DedekindNonCompactness.lean` by `notCompactDedekind` and
-    `notStrongCompletenessDedekind`.
-- **Non-compactness (discrete)** (`notCompactDiscrete`): SORRY-FREE (sorryAx-free;
+    `Metalogic/DedekindNonCompactness.lean` by `notCompactRTime` and
+    `notStrongCompletenessRTime`.
+- **Non-compactness (discrete)** (`notCompactZTime`): SORRY-FREE (sorryAx-free;
   axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). The `FrameClass.Discrete`
   set-based consequence relation is **not** compact: the premise set `{F p} ∪ {¬Xⁿ p : n ∈ ℕ}`
   is finitely satisfiable over `ℤ` yet has no model on any Archimedean discrete carrier. The
-  companion `notStrongCompletenessDiscrete` (same axiom set) converts this into an outright
+  companion `notStrongCompletenessZTime` (same axiom set) converts this into an outright
   refutation of strong completeness for the class, which is why only the weak form
-  (`completeness_discrete`) appears above.
+  (`completeness_ztime`) appears above.
 - **Decidability** (`decide`): SORRY-FREE
 - **Characterization / definability** (`galoisClosed_mod`, `galoisClosed_of_indicator`,
   `galoisClosed_sat_dense`, `galoisClosed_isDiscrete`): SORRY-FREE. `galoisClosed_mod` is the
@@ -207,7 +207,7 @@ theorem (Reynolds 1992, Section 8 Theorem 6) at the chronicle bridge and reading
 - **StrongCompleteness.lean**: the per-class finite-context consequence layer — for each of
   Base, Dense, Discrete and Dedekind a semantic deduction theorem, a consequence terminus, a
   soundness guard and a weak corollary — including the Dedekind terminus
-  (`consequence_completeness_dedekind`, `completeness_dedekind`); plus the strong-completeness
+  (`consequence_completeness_rtime`, `completeness_rtime`); plus the strong-completeness
   programme, the single `FrameClass`-generic compactness reduction
   `strongCompleteness_of_compact` (keeping its single-formula `engine` hypothesis live, so that
   the reduction records compactness as the whole of the gap between weak and strong
@@ -228,20 +228,20 @@ theorem (Reynolds 1992, Section 8 Theorem 6) at the chronicle bridge and reading
   the refuted Discrete and Dedekind ones
 - **DiscreteNonCompactness.lean**: the machine-checked discharge of one of those obstructions —
   the `{F p} ∪ {¬Xⁿ p}` witness, the first semantic characterisation of `Formula.next`
-  (`truthAt_next_iff`), and the two refutations `notCompactDiscrete` and
-  `notStrongCompletenessDiscrete`
+  (`truthAt_next_iff`), and the two refutations `notCompactZTime` and
+  `notStrongCompletenessZTime`
 - **DedekindNonCompactness.lean**: its Dedekind sibling, and the discharge of the last remaining
   obstruction — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤ : n ∈ ℕ}` witness (`dedWitness`, with
   `Xq φ = untl ¬q (q ∧ φ)`), finitely satisfiable over `ℝ` and unsatisfiable over every
-  Dedekind-complete carrier, and the two refutations `notCompactDedekind` and
-  `notStrongCompletenessDedekind`. `archWitness` does not port: `Formula.next` is vacuously
+  Dedekind-complete carrier, and the two refutations `notCompactRTime` and
+  `notStrongCompletenessRTime`. `archWitness` does not port: `Formula.next` is vacuously
   false on a densely ordered carrier, so the witness is genuinely new
 - **Bundle/**: BFMCS infrastructure (shared by all paths)
 
 ## Axiom Dependencies
 
 Soundness, decidability, and the completeness theorems (`completeness_dense`,
-`completeness_discrete`, `completeness_dedekind`, `consequence_completeness_dedekind`) all use
+`completeness_ztime`, `completeness_rtime`, `consequence_completeness_rtime`) all use
 standard Lean axioms only: `propext`, `Classical.choice`, `Quot.sound`. The former `Lean.ofReduceBool`/`Lean.trustCompiler` dependency was eliminated
 by swapping the Syntax-layer `native_decide` sites to `rfl`/`decide` (see the Axiom Audit
 in `BXCanonical/Completeness.lean`). No `sorryAx` on any of these paths. The general

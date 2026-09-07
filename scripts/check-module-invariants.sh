@@ -164,7 +164,7 @@ echo
 read -r -d '' AXIOM_BASELINE <<'BASELINE'
 'FormalSystem.Metalogic.BXCanonical.completeness' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.BXCanonical.completeness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.BXCanonical.completeness_discrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.BXCanonical.completeness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 BASELINE
 
@@ -174,7 +174,7 @@ if [ "$RUN_BUILD" -eq 1 ]; then
 import FormalSystem
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness_dense
-#print axioms FormalSystem.Metalogic.BXCanonical.completeness_discrete
+#print axioms FormalSystem.Metalogic.BXCanonical.completeness_ztime
 #print axioms FormalSystem.Metalogic.BXCanonical.Chronicle.countermodel_dense
 LEAN
   # The pretty-printer wraps at a fixed width, and `FormalSystem.` is longer than the
@@ -743,7 +743,7 @@ echo
 #        untouched -- every one of them lived in a Lean docstring, where C14
 #        could not see it. Lean doc comments are documentation and are in scope.
 #   (ii) `#print axioms` for the two headline theorems that C2's four do not
-#        cover, so that the decidability soundness bridge and Dedekind
+#        cover, so that the decidability soundness bridge and RTime
 #        completeness are pinned by the BUILD rather than by prose. This half
 #        reuses C2's scratch-file + `lake env lean` machinery, including the
 #        continuation-line rejoin, and skips under --no-build exactly as C2 does.
@@ -756,7 +756,7 @@ C14_FAIL=0
 
 # (i) stale axiom counts. 45 is the constructor count of `inductive Axiom`, per
 # `Axiom.minFrameClass`. 42 is the figure in the stale `Axioms.lean` docstring,
-# which omits the Dedekind layer; 21, 14 and 44 are older figures still.
+# which omits the RTime (Dedekind-complete) layer; 21, 14 and 44 are older figures still.
 # Scope note: `FormalSystem` is scanned for `*.lean` only, and Boneyard/ is excluded --
 # archived modules are not documentation and are allowed to carry historical figures.
 #
@@ -816,8 +816,8 @@ fi
 # Metalogic/{StrongCompleteness,Compactness,DiscreteNonCompactness,DedekindNonCompactness}.lean
 # and Metalogic/Conservativity/TMCompletenessReduction.lean that used to carry its own in-file
 # `#print axioms` directive now lives here instead. Exactly five in-file directives remain, on
-# the five termini: strongCompletenessBase, strongCompletenessDense, notCompactDiscrete,
-# notCompactDedekind, consequence_completeness_dedekind.
+# the five termini: strongCompletenessBase, strongCompletenessDense, notCompactZTime,
+# notCompactRTime, consequence_completeness_rtime.
 #
 # Four entries carry a STRICT SUBSET of [propext, Classical.choice, Quot.sound], recorded
 # literally rather than rounded up: setConsequence_of_not_satisfiable, satisfiableSet_iff_
@@ -825,7 +825,7 @@ fi
 # qDepth_qAlpha is [propext, Quot.sound]. A smaller dependency is not a regression.
 read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.Decidability.sound_of_isValid' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.completeness_dedekind' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.completeness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.strongCompletenessBase' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.strongCompletenessDense' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.semantic_deduction_in' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -846,9 +846,9 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.consequence_completeness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.completeness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.soundness_dense_consequence' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.consequence_completeness_discrete' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.completeness_discrete' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.soundness_discrete_consequence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.consequence_completeness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.completeness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.soundness_ztime_consequence' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.sat_ofModel_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.modelExistence_of_satPreserved' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.modelExistenceBase' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -859,13 +859,13 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.truthAt_next_iterate' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.archWitness_finitely_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.archWitness_not_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.notStrongCompletenessDiscrete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.notStrongCompletenessZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.qDepth_qAlpha' depends on axioms: [propext, Quot.sound]
 'FormalSystem.Metalogic.dedWitness_core' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.dedWitness_not_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.dedWitness_finitely_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.notStrongCompletenessDedekind' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.modelExistenceDedekind_refuted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.notStrongCompletenessRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.modelExistenceRTime_refuted' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmComplete_iff_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.tmCompleteDiscrete_iff_forwardDiscrete' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -883,7 +883,7 @@ if [ "$RUN_BUILD" -eq 1 ]; then
   cat >"$C14_SRC" <<'C14LEAN'
 import FormalSystem
 #print axioms FormalSystem.Metalogic.Decidability.sound_of_isValid
-#print axioms FormalSystem.Metalogic.completeness_dedekind
+#print axioms FormalSystem.Metalogic.completeness_rtime
 #print axioms FormalSystem.Metalogic.strongCompletenessBase
 #print axioms FormalSystem.Metalogic.strongCompletenessDense
 #print axioms FormalSystem.Metalogic.semantic_deduction_in
@@ -904,9 +904,9 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.consequence_completeness_dense
 #print axioms FormalSystem.Metalogic.completeness_dense
 #print axioms FormalSystem.Metalogic.soundness_dense_consequence
-#print axioms FormalSystem.Metalogic.consequence_completeness_discrete
-#print axioms FormalSystem.Metalogic.completeness_discrete
-#print axioms FormalSystem.Metalogic.soundness_discrete_consequence
+#print axioms FormalSystem.Metalogic.consequence_completeness_ztime
+#print axioms FormalSystem.Metalogic.completeness_ztime
+#print axioms FormalSystem.Metalogic.soundness_ztime_consequence
 #print axioms FormalSystem.Metalogic.sat_ofModel_frame
 #print axioms FormalSystem.Metalogic.modelExistence_of_satPreserved
 #print axioms FormalSystem.Metalogic.modelExistenceBase
@@ -917,13 +917,13 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.truthAt_next_iterate
 #print axioms FormalSystem.Metalogic.archWitness_finitely_satisfiable
 #print axioms FormalSystem.Metalogic.archWitness_not_satisfiable
-#print axioms FormalSystem.Metalogic.notStrongCompletenessDiscrete
+#print axioms FormalSystem.Metalogic.notStrongCompletenessZTime
 #print axioms FormalSystem.Metalogic.qDepth_qAlpha
 #print axioms FormalSystem.Metalogic.dedWitness_core
 #print axioms FormalSystem.Metalogic.dedWitness_not_satisfiable
 #print axioms FormalSystem.Metalogic.dedWitness_finitely_satisfiable
-#print axioms FormalSystem.Metalogic.notStrongCompletenessDedekind
-#print axioms FormalSystem.Metalogic.modelExistenceDedekind_refuted
+#print axioms FormalSystem.Metalogic.notStrongCompletenessRTime
+#print axioms FormalSystem.Metalogic.modelExistenceRTime_refuted
 #print axioms FormalSystem.Metalogic.tmComplete_iff_forward
 #print axioms FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase
 #print axioms FormalSystem.Metalogic.tmCompleteDiscrete_iff_forwardDiscrete
@@ -940,7 +940,7 @@ C14LEAN
     | grep 'depends on axioms')
   rm -f "$C14_SRC"
   if [ "$C14_OUT" = "$C14_BASELINE" ]; then
-    pass C14 "decidability soundness, Dedekind completeness and Base/Dense strong completeness match their axiom baseline"
+    pass C14 "decidability soundness, RTime completeness and Base/Dense strong completeness match their axiom baseline"
     while IFS= read -r l; do note "$l"; done <<<"$C14_OUT"
   else
     C14_FAIL=1

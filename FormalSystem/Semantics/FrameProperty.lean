@@ -134,7 +134,7 @@ exactly `ℤ`-time."
 for.** `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` all carry `.Discrete` as their
 `minFrameClass`, and by the sentence above they are sound over `ℤ`-time rather than over every
 frame satisfying `def:frame-properties`' bare Discrete clause. Interpreting `FrameClass.Discrete`
-by `IsDiscrete` would silently widen the class under `soundness_discrete` — the defect that the
+by `IsDiscrete` would silently widen the class under `soundness_ztime` — the defect that the
 retired marker-typeclass frame-condition layer carried, and part of why that layer was removed.
 
 **Existential, not instance binders, and deliberately so.** `SuccOrder` and `PredOrder` are
@@ -199,7 +199,7 @@ are exclusive. So up to order-and-group isomorphism this class is the real flow.
 deliberate divergence from the definition of record, not an oversight and not a synonym chosen at
 random, and it is the only naming deviation sanctioned on this front. The word "complete" is
 already load-bearing here for *proof-theoretic* completeness — `completeness`,
-`completeness_dense`, `completeness_discrete`, `completeness_dedekind`,
+`completeness_dense`, `completeness_ztime`, `completeness_rtime`,
 `Metalogic/StrongCompleteness.lean` — so a `TaskFrame.IsComplete`-versus-`FrameClass.Complete`
 pair would collide with the tree's most-cited word at exactly the point where the two senses meet.
 "Dedekind complete" is the standard and unambiguous name for the order-theoretic property, so it

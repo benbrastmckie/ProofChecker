@@ -38,7 +38,7 @@ therefore no order-theoretic bridge to build.
 * `chronicle_eval_family_zero_eq_root` — the root placement: the chronicle bundle's evaluation
   family takes the value `A` at time `0`.
 * `countermodel_dedekind_dense` — Reynolds §9 Theorem 7's countermodel, on `ℝ`.
-* `completeness_dedekind_engine` — the single-formula completeness engine for
+* `completeness_rtime_engine` — the single-formula completeness engine for
   `ValidDedekind`, which `StrongCompleteness.lean` instantiates into the unconditional
   terminus.
 
@@ -196,7 +196,7 @@ Stavi development and is **not** what §9 needs; the plain `table` layer is.
 
 **ADAPTED-FROM**: `countermodel_discrete_reynolds_v2`
 (`WeakCanonical/IntegerModel/ReynoldsBridge.lean:739`), statement-for-statement with
-`ℤ → ℝ`. The `ℤ` original is untouched and still consumed by `completeness_discrete`. Three
+`ℤ → ℝ`. The `ℤ` original is untouched and still consumed by `completeness_ztime`. Three
 things change beyond the carrier: the per-family monadic structure is the chronicle bridge
 rather than the limit-domain structure, so the truth correspondence is
 `Chronicle.chronicleMonadic_truth_correspondence_eval` rather than the
@@ -564,7 +564,7 @@ theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.Dedekind
 
 Reynolds 1992, §2, printed p.169, fixes the notion of completeness this discharges: a formula
 valid over the class is derivable in the system for that class — the *single-formula* (weak)
-statement. `StrongCompleteness.lean`'s `consequence_completeness_dedekind_of_engine` is stated
+statement. `StrongCompleteness.lean`'s `consequence_completeness_rtime_of_engine` is stated
 against exactly this interface, one formula in and one derivation from the empty context out,
 and it is the deduction theorem that makes the finite-context form fall out of it without a
 second construction. -/
@@ -579,7 +579,7 @@ Contrapositive, four steps, no case split:
 3. `dedekind_box_dense_mem` supplies `□(¬U(⊤,⊥)) ∈ M` *unconditionally* — this is where the
    Dedekind route is simpler than the Base and Discrete ones: `FrameClass.Dense ≤
    FrameClass.Dedekind`, so `Axiom.dense_indicator` is admissible and the non-dense branch that
-   `completeness` and `completeness_discrete` must discharge does not exist here.
+   `completeness` and `completeness_ztime` must discharge does not exist here.
 4. `countermodel_dedekind_dense` at `ℝ` produces the countermodel, with `by decide` discharging
    `FrameClass.Dedekind ≤ FrameClass.Dedekind` and `real_lub_of_bddAbove` discharging the
    least-upper-bound binder of `ValidDedekind`. That binder is reached through the generic
@@ -587,7 +587,7 @@ Contrapositive, four steps, no case split:
    hypothesis is the packed `TaskFrame.IsDedekind`, supplied as `⟨inferInstance, hlub⟩` — density
    is found by search because `IsDense` is an `abbrev` and `Sat` is `@[reducible]`.
 -/
-theorem completeness_dedekind_engine (ψ : Formula) :
+theorem completeness_rtime_engine (ψ : Formula) :
     ValidDedekind ψ → Derivable FrameClass.Dedekind [] ψ := by
   intro h_valid
   by_contra h_not_deriv
@@ -608,6 +608,6 @@ report exactly `[propext, Classical.choice, Quot.sound]` — no `sorryAx`. -/
 #print axioms real_lub_of_bddAbove
 #print axioms dedekind_box_dense_mem
 #print axioms countermodel_dedekind_dense
-#print axioms completeness_dedekind_engine
+#print axioms completeness_rtime_engine
 
 end FormalSystem.Metalogic.BXCanonical

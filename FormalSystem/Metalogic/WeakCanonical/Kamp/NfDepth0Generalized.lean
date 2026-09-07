@@ -324,7 +324,7 @@ the v35 Phase 1 pass. Consumed by Route A′ (the revised zone-split from the
 Phase-0 regate decision): the `mpr` direction of `renameNF_eval_iff`
 and the `mergeNFSucc`/`mergeNF_succ_atom` merge definition below are reused to
 assemble the in-situ x=t collapse at `KampPrior.lean:391`. These look like generic
-plumbing but are load-bearing for the live `completeness_discrete` chain.
+plumbing but are load-bearing for the live `completeness_ztime` chain.
 
 `renameNF f r` precomposes a normal form's atom/quant layers with an index map.
 `f : Fin b → Fin a` is the forward map (relating positions of the *result* arity `b`

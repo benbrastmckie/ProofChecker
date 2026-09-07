@@ -172,7 +172,7 @@ theorem validOn_nextTop_of_mem_mod_discrete {F : TaskFrame}
 theorem sat_discrete_subset_mod_axiomSet :
     {F : TaskFrame | FrameClass.Sat FrameClass.Discrete F} ⊆
       Semantics.Mod (AxiomSet FrameClass.Discrete) :=
-  fun F hF _ ⟨ax, hax⟩ => axiom_discrete_valid ax hax F hF
+  fun F hF _ ⟨ax, hax⟩ => axiom_ztime_valid ax hax F hF
 
 /--
 **The lower half of the sandwich is strict**: `Sat .Discrete ⊊ Mod (AxiomSet .Discrete)`, with

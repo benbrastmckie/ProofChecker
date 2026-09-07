@@ -35,7 +35,7 @@ a target `ψ : MonadicFormula sig 1` into `translate_correct`'s domain
 `MonadicFormula (sigE sig F) 1` with truth preserved.
 
 Off the live import path (imported by nothing on the spine); the completeness spine and
-`#print axioms completeness_discrete` are untouched.
+`#print axioms completeness_ztime` are untouched.
 
 ## References
 

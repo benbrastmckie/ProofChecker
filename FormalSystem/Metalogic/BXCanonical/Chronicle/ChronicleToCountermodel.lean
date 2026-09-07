@@ -80,7 +80,7 @@ consumer, `countermodel_discrete_enriched`, had itself already been archived (to
 `Boneyard/DeadChronicleGapElimination/TransferDead.lean`), leaving both surviving heads with
 zero consumers, so the entire closure moved as one unit and `lake build` stayed green.
 
-The live discrete paths are unaffected. `completeness_discrete` goes through
+The live discrete paths are unaffected. `completeness_ztime` goes through
 `countermodel_discrete_reynolds_v2` (`WeakCanonical/IntegerModel/ReynoldsBridge.lean`), which
 bypasses `succ_embed_surjective` and the `IsSuccArchimedean` requirement entirely; do not
 confuse it with the archived, `sorryAx`-tainted `countermodel_discrete_reynolds`. The

@@ -23,7 +23,7 @@ discrete carrier `ℚ ×ₗ ℤ`. It had to move because closing it needs `compa
 from here a cycle. Its fully-qualified name is unchanged.
 
 **Which theorem is the live discrete path.** It is `countermodel_discrete_reynolds_v2`, in
-`WeakCanonical/IntegerModel/ReynoldsBridge.lean`. That is the theorem `completeness_discrete`
+`WeakCanonical/IntegerModel/ReynoldsBridge.lean`. That is the theorem `completeness_ztime`
 calls, and it is `sorryAx`-free. (`countermodel_discrete`, the Base-frame branch of
 `completeness`, is a separate theorem and is likewise `sorryAx`-free.)
 
