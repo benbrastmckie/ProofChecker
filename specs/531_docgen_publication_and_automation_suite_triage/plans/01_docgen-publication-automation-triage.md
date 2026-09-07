@@ -369,7 +369,7 @@ occurrences after.
 
 ---
 
-### Phase 5: Retire the zero-use tactics and the dead Aesop rule set [NOT STARTED]
+### Phase 5: Retire the zero-use tactics and the dead Aesop rule set [IN PROGRESS]
 
 **Goal**: move every remaining tactic with zero library-and-test uses, plus the consumer-less
 `TMLogic` Aesop rule set, into a documented guard-first `Boneyard/` exception directory.
@@ -417,7 +417,7 @@ moving each one; a non-zero count is a stop condition, not a formality.
 
 ---
 
-### Phase 6: Split Helpers.lean [NOT STARTED]
+### Phase 6: Split Helpers.lean [IN PROGRESS]
 
 **Goal**: replace the 1,210-line `Helpers.lean` with `Tactics/{UserTactics,Meta,Search}.lean`,
 moving declarations (the three ranges interleave, so line-boundary cuts are impossible).
@@ -466,7 +466,7 @@ starting.
 
 ---
 
-### Phase 7: Time-boxed deduction/undischarge trial [NOT STARTED]
+### Phase 7: Time-boxed deduction/undischarge trial [IN PROGRESS]
 
 **Goal**: decide, on evidence, whether the `deduction`/`undischarge` tactic forms should be adopted
 in `Metalogic/Core/DeductionTheorem.lean`, and record the verdict either way.
@@ -541,7 +541,7 @@ the Phase 2/12/13 conventions to the `Automation/` territory those phases exclud
 
 ---
 
-### Phase 9: FormalSystem/MainResults.lean [NOT STARTED]
+### Phase 9: FormalSystem/MainResults.lean [IN PROGRESS]
 
 **Goal**: one readable navigation page restating the headline results, each followed by
 `#print axioms` with the verbatim output recorded.
@@ -583,21 +583,31 @@ a name that resolves but is unpinned must be reported, not silently included.
 
 ---
 
-### Phase 10: C21 MainResults subset guard [NOT STARTED]
+### Phase 10: C21 MainResults subset guard [COMPLETED]
 
 **Goal**: make it impossible for `MainResults.lean` to advertise a result whose axiom set is not
 pinned.
 
 **Tasks**:
-- [ ] Confirm the next free check id (C21 at plan time) and register it in the header list at the
-      top of `scripts/check-module-invariants.sh`.
-- [ ] Extract the declaration names `MainResults.lean` names, and assert each appears in the C2
-      `AXIOM_BASELINE` or the C14 `C14_BASELINE` block.
-- [ ] Fail (not warn) on a `MainResults.lean` name absent from both baselines; this is the whole
-      point of the check.
-- [ ] Follow the existing check idiom: a `pass`/`fail` helper call, an `ENFORCE_C21` variable
-      defaulting to enforced, and `FAILURES` increment on non-zero status.
-- [ ] Document in the header comment why this is a subset assertion and not a third baseline.
+- [x] Confirm the next free check id (C21 at plan time) and register it in the header list at the
+      top of `scripts/check-module-invariants.sh`. *(completed — C20 confirmed as the highest
+      existing id; C21 registered in the header list)*
+- [x] Extract the declaration names `MainResults.lean` names, and assert each appears in the C2
+      `AXIOM_BASELINE` or the C14 `C14_BASELINE` block. *(completed — names are read from the
+      page's own `#print axioms` directives, so the check cannot drift from what the page
+      actually asserts)*
+- [x] Fail (not warn) on a `MainResults.lean` name absent from both baselines; this is the whole
+      point of the check. *(completed — and verified by deliberate violation: appending
+      `#print axioms FormalSystem.Metalogic.Core.deductionTheorem` produced
+      `FAIL C21 1 of 28 MainResults.lean declaration(s) are pinned by neither C2 nor C14`,
+      naming the offender; reverted, back to PASS)*
+- [x] Follow the existing check idiom: a `pass`/`fail` helper call, an `ENFORCE_C21` variable
+      defaulting to enforced, and `FAILURES` increment on non-zero status. *(completed — the
+      `fail` helper does the `FAILURES` increment itself, so calling it is the whole idiom;
+      `ENFORCE_C21` sits beside `ENFORCE_C20` with the same never-flip-back-to-0 note)*
+- [x] Document in the header comment why this is a subset assertion and not a third baseline.
+      *(completed — including what the check deliberately does NOT do: it checks names, not
+      axiom sets, and does not require the converse inclusion)*
 
 **Timing**: 1 hour
 
@@ -608,6 +618,10 @@ pinned.
 **Scope Hypothesis**: C21 is the next free id (C20 is the current highest); the two baseline blocks
 hold 4 + 101 = 105 entries. Confirm both figures with the report Appendix's two `awk` commands
 before wiring.
+
+*Measured*: both confirmed. C2's `AXIOM_BASELINE` holds 4 entries and C14's `C14_BASELINE`
+holds 101, and the union of their declaration names is the 105-name pinned set C21 tests
+against. `MainResults.lean` names 27 declarations; all 27 are in that set.
 
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - header list, new C21 section
@@ -806,29 +820,43 @@ before extending, so any post-extension finding is attributable to the change.
 
 ---
 
-### Phase 15: ORGANISATION.md and NOTATION.md [NOT STARTED]
+### Phase 15: ORGANISATION.md and NOTATION.md [COMPLETED]
 
 **Goal**: the two root-level furniture documents mature Lean libraries carry, without duplicating
 what `docs/ARCHITECTURE.md` already says.
 
 **Tasks**:
-- [ ] Write root `ORGANISATION.md` as a short **pointer**: the Syntax/ProofSystem/Semantics/
+- [x] Write root `ORGANISATION.md` as a short **pointer**: the Syntax/ProofSystem/Semantics/
       Metalogic/Automation layering in one paragraph, the single documented
       `Semantics → ProofSystem` edge (`Semantics/FrameClassValidity.lean:8`), then links to
       `docs/ARCHITECTURE.md` and `docs/development/MODULE_ORGANIZATION.md`. C18 gates paragraph
       duplication across top-level READMEs, so a third copy of the layering prose would fail.
-- [ ] Write root `NOTATION.md` inventorying the **15** live `notation` declarations: the 12
+      *(completed — 76 lines, a six-row layer table and a where-to-look-next table rather than a
+      prose copy. C18 reports zero duplicated paragraphs and zero duplicated sentences)*
+- [x] Write root `NOTATION.md` inventorying the **15** live `notation` declarations: the 12
       derivability notations that already carry a per-frame-class tag (`Γ ⊢[fc] φ`, `⊢[fc] φ`,
       `Γ ⊢ φ`, `⊢ φ`, the four `|-![fc]` siblings, `Γ ⊢ᴮᴸ[fc] φ`/`⊢ᴮᴸ[fc] φ`,
       `Γ ⊢⋆[fc] φ`/`⊢⋆[fc] φ`), the 2 untagged validity notations, and the scoped quotient bracket.
-- [ ] Record the tag **asymmetry** and its reason: `Semantics/Validity.lean:239-242` deliberately
+      *(completed — the count of 15 was re-derived and matches exactly: 12 derivability, 2
+      validity, 1 scoped quotient bracket)*
+- [x] Record the tag **asymmetry** and its reason: `Semantics/Validity.lean:239-242` deliberately
       dropped a `TruthAt` notation because it conflicts with `⊨`, using a subscripted variant and
       dot-notation instead. Document the seven-predicate `⊨` family (`ValidOnFrames`, `ValidIn`,
       `Valid`, `ValidDense`, `ValidZTime`, `ValidComplete`, `ValidRTime`) plus the
-      `SemanticConsequence` family and the `StarFormula` mirror.
-- [ ] **Do not introduce a new `TM[...]` validity notation** — G-16's "four ⊨-shaped relations"
+      `SemanticConsequence` family and the `StarFormula` mirror. *(completed — all seven
+      confirmed present, plus the four `SemanticConsequence*` members and the six `StarValid*`
+      mirrors. `ValidComplete` is flagged as the one member that is not a `ValidIn` instance)*
+- [x] **Do not introduce a new `TM[...]` validity notation** — G-16's "four ⊨-shaped relations"
       premise is wrong and its recommendation is already half-implemented on the `⊢` side.
-- [ ] Link both documents from `README.md`.
+      *(completed — none introduced. `NOTATION.md` carries an "On adding a per-logic judgement
+      tag" subsection recording the decision and its two grounds, so the proposal is declined on
+      the record rather than silently dropped)*
+- [x] Link both documents from `README.md`. *(completed — a new "Start here" block under
+      `## Documentation`, linking `ORGANISATION.md`, `NOTATION.md` and `docs/ARCHITECTURE.md`)*
+- [x] **Added**: corrected the `ORGANISATION.md` claim about upward edges. The plan's task text
+      names one (`Semantics → ProofSystem`); `docs/ARCHITECTURE.md` documents **two**, the
+      second being `Decidability → Automation`. Both are named, since a page claiming one edge
+      beside a page claiming two is exactly the drift this task exists to remove.
 
 **Timing**: 1.5 hours
 
@@ -839,6 +867,12 @@ what `docs/ARCHITECTURE.md` already says.
 **Scope Hypothesis**: 15 live `notation` declarations (12 tagged derivability, 2 untagged validity,
 1 scoped quotient), and exactly one `Semantics → ProofSystem` import edge. Confirm both by grep
 before writing; a second edge would falsify the layering claim and must be reported.
+
+*Measured*: both confirmed. 15 notation declarations, split exactly as hypothesised, and
+exactly one `^import FormalSystem.ProofSystem` line under `FormalSystem/Semantics/`
+(`FrameClassValidity.lean`). The naive census pattern reports **17**: `^\s*notation` matches
+two docstring lines that wrap onto the word "notation". `NOTATION.md`'s verification command
+anchors at column zero and requires `=>`, and records why both filters are needed.
 
 **Files to modify**:
 - `ORGANISATION.md` (new), `NOTATION.md` (new)
@@ -851,39 +885,66 @@ before writing; a second edge would falsify the layering claim and must be repor
 
 ---
 
-### Phase 16: Publish the API documentation [NOT STARTED]
+### Phase 16: Publish the API documentation [COMPLETED]
 
 **Goal**: a doc-gen4 site built and deployed by `docgen-action`, linked from `README.md`, with the
 now-stale `docs/README.md` recipe replaced.
 
 **Tasks**:
-- [ ] Add `.github/workflows/docs.yml`: `permissions: {contents: read, id-token: write,
+- [x] Add `.github/workflows/docs.yml`: `permissions: {contents: read, id-token: write,
       pages: write}`, triggered on push to `main` plus `workflow_dispatch`, with a single
-      `uses: leanprover-community/docgen-action@main` step.
-- [ ] Set the inputs explicitly: `api-docs: true`, `blueprint: false`, `references: references.bib`,
+      `uses: leanprover-community/docgen-action@main` step. *(completed — plus a
+      `concurrency: {group: pages, cancel-in-progress: false}` block and a `github-pages`
+      environment, neither in the plan's list: without the first, two pushes in quick
+      succession race for the same deploy, and the second is what surfaces the page URL)*
+- [x] Set the inputs explicitly: `api-docs: true`, `blueprint: false`, `references: references.bib`,
       and **`build-page: false`** — the last resolves the `homepage: docs` collision with this
-      repo's non-Jekyll 100-file `docs/` tree. Do not rely on any default.
-- [ ] Do **not** add `require «doc-gen4»` to `lakefile.lean`; the action supplies it, and
-      `lake-manifest.json` must stay unchanged.
-- [ ] Rewrite `docs/README.md:272-278`, which currently asserts that no doc-gen4 target exists and
+      repo's non-Jekyll 100-file `docs/` tree. Do not rely on any default. *(completed — all
+      four present literally; the file's header comment records why `build-page: false` is
+      load-bearing rather than a default restated)*
+- [x] Do **not** add `require «doc-gen4»` to `lakefile.lean`; the action supplies it, and
+      `lake-manifest.json` must stay unchanged. *(completed — `git diff --stat lakefile.lean
+      lake-manifest.json` is empty)*
+- [x] Rewrite `docs/README.md:272-278`, which currently asserts that no doc-gen4 target exists and
       that adding one would be a build-graph change — true before this task, false after.
-- [ ] Add the site link to `README.md` above `## Documentation` (`README.md:293`).
-- [ ] Delete the stray root artefact `Scratch434.lean.tmp` (0 bytes; its name is also a
-      task-number reference in a deliverable path).
-- [ ] Record in `docs/README.md` that the repository Pages source must be set to **GitHub Actions**
+      *(completed — replaced with the workflow's own account, including the standing
+      prohibition on adding a `lakefile.lean` dependency, which is the half of the old text
+      that is still true)*
+- [x] Add the site link to `README.md` above `## Documentation` (`README.md:293`). *(deviation:
+      altered — placed immediately **below** the `## Documentation` heading rather than above
+      it. Above the heading the link would sit at the end of the preceding section, which is
+      the expressive-completeness result; below it, it is the first thing under the heading it
+      belongs to)*
+- [x] Delete the stray root artefact `Scratch434.lean.tmp` (0 bytes; its name is also a
+      task-number reference in a deliverable path). *(completed)*
+- [x] Record in `docs/README.md` that the repository Pages source must be set to **GitHub Actions**
       manually — a one-time human step the workflow cannot perform, and a precondition for the
-      first deploy to appear.
-- [ ] Confirm `.gitignore:32-34` already covers `doc/` and `_site/`.
+      first deploy to appear. *(completed — recorded in `docs/README.md` and again in the
+      workflow file's own header, so whoever opens either one finds it)*
+- [x] Confirm `.gitignore:32-34` already covers `doc/` and `_site/`. *(completed — both present
+      under "Documentation build output")*
 
 **Timing**: 1.5 hours
 
 **Depends on**: 2, 3, 8, 15
+
+**Ordering note**: executed after 2, 3 and 15 but **before** 8, inverting one declared edge.
+The reason the 8 → 16 edge exists is that the first deploy must not publish stale
+automation docstrings — and no deploy happens until the user merges, which is after every
+phase of this task. Phase 8 still runs and still precedes any deploy; only the authoring order
+moved. The trigger was the shared working tree: another session held the `lake build` lock for
+most of this phase's window, and Phase 16 is the largest piece of work in the plan that needs
+no build at all.
 
 **Verification Tier**: prose
 
 **Scope Hypothesis**: one new workflow file, one rewritten `docs/README.md` section, one `README.md`
 link, one file deletion. `lake-manifest.json` and `lakefile.lean` must show **zero** diff — confirm
 with `git diff --stat` at phase close.
+
+*Measured*: as hypothesised. `.github/workflows/docs.yml` (56 lines) added, the
+`### Building Documentation` section of `docs/README.md` replaced, one `README.md` link added,
+`Scratch434.lean.tmp` deleted. `git diff --stat lakefile.lean lake-manifest.json` is empty.
 
 **Files to modify**:
 - `.github/workflows/docs.yml` (new)

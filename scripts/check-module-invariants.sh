@@ -43,6 +43,9 @@
 #   C20 file.lean:NNN citations: tier 1 gates any that is out of range or lands
 #       on a blank line (repo-wide); tier 2 reports any at all in
 #       publication-facing scope, gated by ENFORCE_C20=1
+#   C21 Every declaration named in FormalSystem/MainResults.lean is axiom-pinned by
+#       C2 or C14 -- a subset assertion over the two existing baselines, NOT a third
+#       baseline
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
@@ -449,6 +452,11 @@ ENFORCE_C16=${ENFORCE_C16:-1} # env_linter batch has no un-nolisted finding (enf
 # than file:line. The scope is clean, so this is enforced. Never flip it back to 0 to
 # quiet a new citation; remove the citation instead.
 ENFORCE_C20=${ENFORCE_C20:-1} # no file:line citations in publication scope (enforced)
+# C21 asserts that every result the main-results page advertises has its axiom set pinned by
+# one of the two baselines this script already carries. The scope is clean the day the page is
+# written, so this is enforced from the outset. Never flip it back to 0 to quiet a new name;
+# either pin the declaration in the C14 baseline pair or take it off the page.
+ENFORCE_C21=${ENFORCE_C21:-1} # MainResults.lean names are all axiom-pinned (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -2296,6 +2304,55 @@ if pct_refined >= FLOOR:
 else:
     print(f"TODO  C19  docstring coverage (refined, /-! section credit): {documented_refined}/{total} = {pct_refined:.2f}% -- below the {FLOOR:.0f}% floor (never affects FAILURES)")
 PYEOF
+echo
+
+# ---------------------------------------------------------------------------
+# C21: every result MainResults.lean advertises is axiom-pinned
+#
+# `FormalSystem/MainResults.lean` is the one-page list of headline results, and it is
+# publication-facing: doc-gen4 renders it, and it is what a reader who wants "the theorems"
+# is pointed at. A page like that earns its keep only if the guarantee it states is checked
+# somewhere. This check is that somewhere.
+#
+# It is a SUBSET ASSERTION, deliberately, and NOT a third axiom baseline. C2 pins four
+# declarations by exact `#print axioms` string equality and C14 pins the rest, 105 between
+# them; every name MainResults.lean carries is already in that set. Adding a third recorded
+# baseline for the same declarations would mean three places to update on any change and three
+# chances for them to disagree -- which is precisely the drift that retired the hand-transcribed
+# `#print axioms` output blocks two Metalogic modules used to carry. So this check asserts a
+# closure property over the two baselines that already exist: a declaration may not appear on
+# the main-results page unless one of them pins its axiom set.
+#
+# It therefore fails, rather than warns, on an unpinned name. A warning would let the page
+# advertise a result whose axiom dependencies nothing is watching, which is the whole failure
+# mode.
+#
+# Note what this does NOT do: it does not check the axiom SETS (C2 and C14 do that, under
+# --no-build's `#print axioms` half), and it does not check that every pinned declaration is on
+# the page (the baselines are far broader than the headline list, by design).
+# ---------------------------------------------------------------------------
+C21_SRC="FormalSystem/MainResults.lean"
+if [ ! -f "$C21_SRC" ]; then
+  fail C21 "$C21_SRC is missing -- the main-results page is part of the published surface"
+else
+  C21_NAMES=$(grep -oE '^#print axioms [A-Za-z_][A-Za-z0-9_.'"'"']*' "$C21_SRC" \
+    | awk '{print $3}' | sort -u)
+  C21_PINNED=$(printf '%s\n%s\n' "$AXIOM_BASELINE" "$C14_BASELINE" \
+    | grep -oE "^'[^']+'" | tr -d "'" | sort -u)
+  C21_TOTAL=$(printf '%s' "$C21_NAMES" | grep -c . || true)
+  C21_MISSING=$(comm -23 <(printf '%s\n' "$C21_NAMES") <(printf '%s\n' "$C21_PINNED") | grep . || true)
+  C21_MISS_COUNT=$(printf '%s' "$C21_MISSING" | grep -c . || true)
+  if [ "$C21_TOTAL" -eq 0 ]; then
+    fail C21 "$C21_SRC carries no '#print axioms' directive -- the page states no guarantee"
+  elif [ "$C21_MISS_COUNT" -eq 0 ]; then
+    pass C21 "all $C21_TOTAL declaration(s) named in MainResults.lean are pinned by C2 or C14"
+  else
+    MSG="$C21_MISS_COUNT of $C21_TOTAL MainResults.lean declaration(s) are pinned by neither C2 nor C14"
+    if [ "$ENFORCE_C21" -eq 1 ]; then fail C21 "$MSG"; else soft C21 "$MSG (not yet enforced)"; fi
+    printf '%s\n' "$C21_MISSING" | while IFS= read -r l; do note "$l"; done
+    note "add the declaration to the C14 baseline pair, or take it off the main-results page"
+  fi
+fi
 echo
 
 # ---------------------------------------------------------------------------

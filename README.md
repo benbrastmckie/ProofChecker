@@ -17,10 +17,10 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 <!-- BEGIN GENERATED: inventory dir=FormalSystem rows=totals desc=no -->
 | Metric | Count |
 |--------|-------|
-| Live `.lean` files | 459 |
-| Live lines | 281,440 |
-| Archived `.lean` files | 164 |
-| Archived lines | 90,890 |
+| Live `.lean` files | 460 |
+| Live lines | 281,320 |
+| Archived `.lean` files | 168 |
+| Archived lines | 91,539 |
 <!-- END GENERATED -->
 
 The table above is generated: `bash scripts/check-module-invariants.sh --emit-inventory`
@@ -291,6 +291,16 @@ It is load-bearing for the live completeness chain via `uSExpressivelyCompleteOv
 ---
 
 ## Documentation
+
+**[API documentation](https://benbrastmckie.github.io/BimodalLogic/)** — the generated
+doc-gen4 reference for every declaration in `FormalSystem`, built and deployed by
+[`.github/workflows/docs.yml`](.github/workflows/docs.yml) on every push to `main`.
+
+### Start here
+
+- [Organisation](ORGANISATION.md) — where everything lives, in one page
+- [Notation](NOTATION.md) — every notation this library declares, and the one it deliberately does not
+- [Architecture](docs/ARCHITECTURE.md) — the layer graph and its two upward edges
 
 ### Reference
 

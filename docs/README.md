@@ -270,12 +270,33 @@ For detailed documentation standards, see:
 
 ### Building Documentation
 
-There is **no** generated API documentation target. `doc-gen4` is not a dependency of this
-project — it appears in neither `lakefile.lean` nor `lake-manifest.json` — so `lake build :docs`
-does not exist and does not work. The declaration docstrings in the tree are the API reference;
-[`reference/API_REFERENCE.md`](reference/API_REFERENCE.md) is the hand-maintained reading guide
-over them, and [`theorem-index.md`](theorem-index.md) is the per-theorem ledger. Adding
-`doc-gen4` would be a real change to the build graph, not a documentation fix.
+Generated API documentation is published by
+[`.github/workflows/docs.yml`](../.github/workflows/docs.yml), which runs
+`leanprover-community/docgen-action` on every push to `main` and deploys the result to GitHub
+Pages. The docstrings in the tree are the source; `references.bib` at the repository root
+supplies the bibliography, so a `[key]` citation in a `## References` block renders as a real
+reference rather than a bare surname and year.
+
+**There is deliberately no `doc-gen4` entry in `lakefile.lean` or `lake-manifest.json`, and
+none should be added.** The action supplies doc-gen4 itself. Declaring it as a package
+dependency would put it into every contributor's `lake build` for the sake of a job that only
+ever runs in CI. `lake build :docs` therefore still does not exist and is still not the way to
+build these pages; there is no local build target at all.
+
+**One-time manual step, and the docs will not appear until it is done.** The repository's Pages
+source must be set to **GitHub Actions** (Settings → Pages → Build and deployment → Source). A
+workflow cannot set this for itself. Until it is set, the workflow runs and the deploy step has
+nowhere to publish.
+
+The workflow passes `build-page: false`. That is load-bearing rather than a default restated:
+the action's `homepage` input defaults to `docs`, and it expects that directory to be a Jekyll
+site into whose `docs/docs/` subdirectory the API pages are placed. This `docs/` tree is ~100
+hand-written markdown files with no `_config.yml`. If a landing page is ever wanted, the route
+is `homepage: website` pointing at a real Jekyll site in a new directory — never this one.
+
+[`reference/API_REFERENCE.md`](reference/API_REFERENCE.md) remains the hand-written reading
+guide and [`theorem-index.md`](theorem-index.md) the per-theorem ledger; the generated site
+complements them rather than replacing them.
 
 ## External Resources
 
