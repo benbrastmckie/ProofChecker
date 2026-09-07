@@ -11,16 +11,15 @@ next_project_number: 550
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,463,476,481,502,504,506,531,534,535,540,541,542,544,545,547 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,464,497,537,548,549 | 193,298,463,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,465,498,499,500 | 231,464,497 | algebraic-representation, dataset-enhancement, decidability |
-| 4 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
-| 5 | 429,501 | 125,428 | algebraic-representation, decidability |
-| 6 | 410 | 429 | decidability |
-| 7 | 411 | 410 | decidability |
-| 8 | 430 | 411 | decidability |
-| 9 | 177,412 | 193,430 | decidability, formula-refactor |
-| 10 | 482 | 412 | decidability |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,531,534,535,540,541,542,544,545,547,549 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,548 | 193,298,464,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
+| 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
+| 5 | 410,501 | 125,429 | algebraic-representation, decidability |
+| 6 | 411 | 410 | decidability |
+| 7 | 430 | 411 | decidability |
+| 8 | 177,412 | 193,430 | decidability, formula-refactor |
+| 9 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
 
@@ -50,19 +49,18 @@ next_project_number: 550
 
 ### Decidability
 
-463 [IMPLEMENTING] — Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mi
-  └─ 464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
-    └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
-      └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
-        └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2 and 
-          └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program (parent: t
-            └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program (parent: t
-              └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
-                └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
-                  └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
-  └─ 549 [NOT STARTED] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
+464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
+  └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
+    └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
+      └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2 and 
+        └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program (parent: t
+          └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program (parent: t
+            └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
+              └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
+                └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
+549 [NOT STARTED] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
 
 ### Formula Refactor
 
@@ -638,12 +636,13 @@ Dependencies: 462 is a REAL SEMANTIC dependency -- the engine-level assembly is 
 ---
 
 ### 463. Postblockingsettlesrun verdict at terminus fuel
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 462, Task 433
 - **Research**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md]
 - **Plan**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/plans/01_postblockingsettlesrun-verdict-terminus-fuel.md]
+- **Summary**: [463_postblockingsettlesrun_verdict_at_terminus_fuel/summaries/01_postblockingsettlesrun-verdict-terminus-fuel-summary.md]
 
 **Description**: Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D beta)` -- the narrowed settlement residual task 433 landed -- at the terminus's OWN fuel figure. Nothing currently decides it in either direction, and task 433's C9 register entry 24 exists precisely so the narrowing is not mistaken for a proof.
 
