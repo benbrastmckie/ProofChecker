@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
+      "summary": "C15 has FOUR unresolved anchors (app:ObjectiveModality added by commit d155835f2, not three); all four are LIVE and labelled in the current paper, so the supplied DANGLING/unlabelled classification is stale; fix is four LIVE-UNPINNED rows in the record's KNOWN-ANCHORS block, dry-run verified to empty the unresolved set."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788795069_3d83b2_538",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

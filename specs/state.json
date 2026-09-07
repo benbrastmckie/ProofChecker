@@ -17,7 +17,32 @@
         547
       ],
       "created": "2026-09-07T04:24:21Z",
-      "last_updated": "2026-09-07T04:44:26Z"
+      "last_updated": "2026-09-07T14:58:19Z",
+      "file_scope": [
+        "FormalSystem/Metalogic/Conservativity.lean",
+        "FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean",
+        "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean",
+        "FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean",
+        "FormalSystem/Metalogic/Independence/LexIntWitness.lean",
+        "FormalSystem/Metalogic/SetConsequence.lean",
+        "FormalSystem/Metalogic/Soundness.lean",
+        "FormalSystem/Metalogic/SoundnessLemmas/CoValidity.lean",
+        "FormalSystem/ProofSystem/Axioms.lean",
+        "FormalSystem/README.md",
+        "FormalSystem/Semantics.lean",
+        "FormalSystem/Semantics/BLValidity.lean",
+        "FormalSystem/Semantics/Correspondence/Indicator.lean",
+        "FormalSystem/Semantics/Correspondence/README.md",
+        "FormalSystem/Semantics/FrameClassValidity.lean",
+        "FormalSystem/Semantics/FrameProperty.lean",
+        "FormalSystem/Semantics/StarValidity.lean",
+        "FormalSystem/Semantics/Validity.lean",
+        "FormalSystem/Syntax/Formula.lean",
+        "FormalSystem/Theorems/DedekindDerived.lean",
+        "specs/decisions/total-history-validity-decisions.md",
+        "specs/paper-definitions-of-record.md",
+        "README.md"
+      ]
     },
     {
       "project_number": 547,
@@ -30,7 +55,30 @@
         546
       ],
       "created": "2026-09-07T04:24:13Z",
-      "last_updated": "2026-09-07T04:44:18Z"
+      "last_updated": "2026-09-07T14:58:19Z",
+      "file_scope": [
+        "FormalSystem/BaseLanguage/AxiomDischarge.lean",
+        "FormalSystem/BaseLanguage/Axioms.lean",
+        "FormalSystem/BaseLanguage/Derivation.lean",
+        "FormalSystem/Metalogic/Conservativity.lean",
+        "FormalSystem/Metalogic/Conservativity/Backward.lean",
+        "FormalSystem/Metalogic/Conservativity/Fragment.lean",
+        "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean",
+        "FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean",
+        "FormalSystem/Metalogic/README.md",
+        "FormalSystem/ProofSystem/Axioms.lean",
+        "FormalSystem/README.md",
+        "FormalSystem/Semantics/FrameClassValidity.lean",
+        "FormalSystem/Semantics/FrameProperty.lean",
+        "FormalSystem/Semantics/Validity.lean",
+        "FormalSystem/Theorems/DedekindDerived.lean",
+        "FormalSystem/Theorems/DiscreteUnfolding.lean",
+        "docs/README.md",
+        "docs/user-guide/architecture.md",
+        "specs/paper-definitions-of-record.md",
+        "typst/SYNC-MAP.md",
+        "README.md"
+      ]
     },
     {
       "project_number": 546,
@@ -41,7 +89,20 @@
       "topic": "semantics",
       "dependencies": [],
       "created": "2026-09-07T04:24:05Z",
-      "last_updated": "2026-09-07T04:24:05Z"
+      "last_updated": "2026-09-07T14:58:19Z",
+      "file_scope": [
+        "FormalSystem/",
+        "Tests/BimodalTest/",
+        "docs/",
+        "typst/",
+        "scripts/check-module-invariants.sh",
+        "scripts/check-evidence-probes.sh",
+        "scripts/typst-status-counts.sh",
+        "scripts/nolints.json",
+        "data/bmlogic-c7-discrete_metadata.json",
+        "data/proof_steps.jsonl",
+        "README.md"
+      ]
     },
     {
       "project_number": 545,
@@ -2434,7 +2495,7 @@
     {
       "project_number": 538,
       "project_name": "resolve_unpinned_paper_anchors_c15_gate",
-      "status": "not_started",
+      "status": "researched",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "high",
@@ -2447,9 +2508,15 @@
         "FormalSystem/Metalogic/Independence/StateSetTruth.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-06T01:30:00Z",
-      "artifacts": [],
-      "session_id": "sess_1788503051_6873ef"
+      "last_updated": "2026-09-07T15:39:32Z",
+      "artifacts": [
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
+          "type": "report",
+          "summary": "C15 has FOUR unresolved anchors (app:ObjectiveModality added by commit d155835f2, not three); all four are LIVE and labelled in the current paper, so the supplied DANGLING/unlabelled classification is stale; fix is four LIVE-UNPINNED rows in the record's KNOWN-ANCHORS block, dry-run verified to empty the unresolved set."
+        }
+      ],
+      "session_id": "sess_1788795069_3d83b2_538"
     },
     {
       "project_number": 539,
