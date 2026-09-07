@@ -165,36 +165,45 @@ that no working path exists in this environment — before any Zotero mutation i
 
 ---
 
-### Phase 2: Create the Zotero item for Goldblatt 1989 [NOT STARTED]
+### Phase 2: Create the Zotero item for Goldblatt 1989 [COMPLETED]
 
 **Goal**: A Zotero bibliographic item for Goldblatt 1989 exists, with its item key captured, and
 its attachment status recorded honestly.
 
 **Tasks**:
-- [ ] Re-confirm absence immediately before writing, to avoid creating a duplicate: search the
+- [x] Re-confirm absence immediately before writing, to avoid creating a duplicate: search the
       fresh export (`bash .claude/scripts/zotero-search.sh Goldblatt`) and, if reachable, an
       authenticated Web-API search on DOI `10.1016/0168-0072(89)90032-8`. If an item already
-      exists, skip the create and carry its key forward.
-- [ ] Attempt a read-only storage-quota probe against the Zotero Web API for the authenticated
+      exists, skip the create and carry its key forward. *(completed: both searches confirmed
+      absence — export search returned only the 4 known unrelated items, live Web-API DOI search
+      returned `[]`)*
+- [x] Attempt a read-only storage-quota probe against the Zotero Web API for the authenticated
       user. If no such endpoint responds (it may not exist or may 404), do **not** invent one —
       treat the documented `2745.6 > 300` MB overage from
-      `context/project/literature/patterns/zotero-item-creation.md` as authoritative.
-- [ ] Choose the create route on the probe result:
+      `context/project/literature/patterns/zotero-item-creation.md` as authoritative. *(completed:
+      no such endpoint exists — `/users/2622830/storageadmin` 404s; documented overage treated as
+      authoritative)*
+- [x] Choose the create route on the probe result:
       - **No headroom / probe unavailable (expected default)**: DOI-only create, no attachment —
         `bash .claude/scripts/zotero-write.sh item-add --doi 10.1016/0168-0072(89)90032-8`.
       - **Headroom confirmed**: `item-add --pdf ~/Projects/Literature/sources/goldblatt_1989/Goldblatt_1989_Varieties_of_Complex_Algebras.pdf --doi 10.1016/0168-0072(89)90032-8`
         (prefer this corpus copy over the opaquely-named duplicate).
-- [ ] Run the chosen command with `--dry-run` first and read the preview before the real call.
-- [ ] Execute the real call once, with `--idempotency-key` set, capturing the full stdout envelope
-      to the progress notes.
-- [ ] Extract the item key from `.data.key` (the empirically confirmed path; `.data.item.key` and
-      `.data.itemKey` do not exist in the real envelope).
+      *(completed: DOI-only route chosen — no headroom probe available)*
+- [x] Run the chosen command with `--dry-run` first and read the preview before the real call.
+      *(completed: dry-run previewed `{"would": {"source": "doi", "doi": "10.1016/0168-0072(89)90032-8", "resolve_metadata": true}}`)*
+- [x] Execute the real call once, with `--idempotency-key` set, capturing the full stdout envelope
+      to the progress notes. *(completed: `--idempotency-key task461-goldblatt1989-doi-add-1`; full
+      envelope in progress/phase-2-progress.json)*
+- [x] Extract the item key from `.data.key` (the empirically confirmed path; `.data.item.key` and
+      `.data.itemKey` do not exist in the real envelope). *(completed: key = `MJEB25VU`)*
 - [ ] If an attach was attempted and failed (`413` / `.data.attachment_error` present): enumerate
       `GET https://api.zotero.org/users/<uid>/items/<key>/children` (read-only) and delete only
       the child attachment records with `md5: null` that this run created. Record each deletion.
-- [ ] Record the outcome in one of exactly two honest forms: "item created, PDF attached" or
+      *(deviation: skipped — not applicable; DOI-only create attempted no attachment, so there is
+      no attach failure to handle. Confirmed `GET .../items/MJEB25VU/children` returns `[]`.)*
+- [x] Record the outcome in one of exactly two honest forms: "item created, PDF attached" or
       "item created, **no PDF attached** (storage quota)". Never describe the second as a full
-      success.
+      success. *(completed: outcome is "item created, **no PDF attached** (storage quota)")*
 
 **Timing**: 0.5 hours
 
@@ -213,12 +222,18 @@ its key.
 
 **Verification**:
 - An authenticated Web-API `GET .../items/<key>` returns the item with title "Varieties of Complex
-  Algebras", creator Goldblatt, and DOI `10.1016/0168-0072(89)90032-8`.
+  Algebras", creator Goldblatt, and DOI `10.1016/0168-0072(89)90032-8`. *(confirmed: `GET
+  .../items/MJEB25VU` returns title "Varieties of complex algebras" (CrossRef-resolved
+  capitalization — sentence case, not title case; same paper), creator Robert Goldblatt, DOI
+  `10.1016/0168-0072(89)90032-8`, publicationTitle "Annals of Pure and Applied Logic", volume 44,
+  pages 173-242)*
 - **Do not** verify via `zot read`, `zot search`, or `zotero-search.sh`: those read local SQLite
   and will report "not found" for a Web-API-created item until a desktop client syncs it. A
-  local-search miss is expected and is not evidence of failure.
+  local-search miss is expected and is not evidence of failure. *(honored: verification used the
+  Web API exclusively, not local search)*
 - If an attach was attempted, `GET .../items/<key>/children` shows either a real attachment (with
-  non-null `md5`) or no file-less orphan records left behind.
+  non-null `md5`) or no file-less orphan records left behind. *(confirmed: no attach was
+  attempted; `GET .../items/MJEB25VU/children` returns `[]`)*
 
 ---
 

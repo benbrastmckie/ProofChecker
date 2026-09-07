@@ -1,0 +1,28 @@
+{
+  "phase": 2,
+  "phase_name": "Create the Zotero item for Goldblatt 1989",
+  "started_at": "2026-09-07T00:15:00Z",
+  "last_updated": "2026-09-07T00:15:00Z",
+  "objectives": [
+    {"id": 1, "description": "Re-confirm absence via fresh export search and Web-API DOI search", "status": "done", "files_touched": [], "note": "zotero-search.sh Goldblatt -> only 4 known unrelated items (Topoi, 2x 2003/2006 survey, untitled). Live Web-API q=Goldblatt search -> same 4 items (keys JSFMAID3, QC846KVP, ICXDVDEJ, QCPAC6FB). Live Web-API DOI search for 10.1016/0168-0072(89)90032-8 -> [] (empty). Absence re-confirmed."},
+    {"id": 2, "description": "Attempt read-only storage-quota probe", "status": "done", "files_touched": [], "note": "No storage/quota endpoint found (tried /users/2622830/storageadmin -> 404; no documented Web API quota endpoint exists). Per plan, treated the documented 2745.6 > 300 MB overage as authoritative -> DOI-only route chosen."},
+    {"id": 3, "description": "Choose create route (DOI-only default vs pdf attach) and dry-run", "status": "done", "files_touched": [], "note": "DOI-only route chosen (no headroom probe available). Dry-run via zotero-write.sh item-add --doi ... --dry-run previewed correctly (ok:true, would.source:doi)."},
+    {"id": 4, "description": "Execute real create call, extract item key", "status": "done", "files_touched": [], "note": "Real call via zotero-write.sh item-add --doi 10.1016/0168-0072(89)90032-8 --idempotency-key task461-goldblatt1989-doi-add-1. .data.key = MJEB25VU. resolved metadata: title 'Varieties of complex algebras', author Goldblatt, journal Annals of Pure and Applied Logic, date 1989-10. stderr confirms 'NO PDF attached' honest surfacing."},
+    {"id": 5, "description": "Handle any attach failure / orphan cleanup", "status": "done", "files_touched": [], "note": "Not applicable -- no attach was attempted (DOI-only route). GET .../items/MJEB25VU/children returns [] -- no orphaned attachment records."},
+    {"id": 6, "description": "Verify via authenticated Web-API GET on item key", "status": "done", "files_touched": [], "note": "GET https://api.zotero.org/users/2622830/items/MJEB25VU returns itemType journalArticle, title 'Varieties of complex algebras', creator Robert Goldblatt, DOI 10.1016/0168-0072(89)90032-8, publicationTitle Annals of Pure and Applied Logic, date 1989-10, volume 44, pages 173-242. Matches research-verified bibliographic record exactly. Did NOT use zot read/search/zotero-search.sh for this verification (per plan's sync-lag caveat)."}
+  ],
+  "current_objective": null,
+  "approaches_tried": [],
+  "handoff_count": 0,
+  "zotero_item_key": "MJEB25VU",
+  "attachment_status": "no PDF attached (storage quota)",
+  "deviations": [
+    {
+      "task_id": "2.7",
+      "description": "If an attach was attempted and failed (413 / .data.attachment_error present): enumerate GET .../items/<key>/children (read-only) and delete only the child attachment records with md5: null that this run created.",
+      "type": "skipped",
+      "reason": "No attach was attempted (DOI-only create route chosen since no quota headroom probe was available). GET .../items/MJEB25VU/children confirmed empty -- no orphan cleanup needed.",
+      "annotation": "*(deviation: skipped — not applicable; DOI-only create attempted no attachment, so there is no attach failure to handle. Confirmed GET .../items/MJEB25VU/children returns [].)*"
+    }
+  ]
+}
