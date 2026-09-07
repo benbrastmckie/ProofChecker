@@ -2495,7 +2495,7 @@
     {
       "project_number": 538,
       "project_name": "resolve_unpinned_paper_anchors_c15_gate",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "high",
@@ -2508,7 +2508,7 @@
         "FormalSystem/Metalogic/Independence/StateSetTruth.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T15:43:27Z",
+      "last_updated": "2026-09-07T15:53:21Z",
       "artifacts": [
         {
           "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
@@ -2519,9 +2519,15 @@
           "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/plans/01_resolve-c15-paper-anchors.md",
           "type": "plan",
           "summary": "Three-phase plan (re-measure, add four LIVE-UNPINNED KNOWN-ANCHORS rows, full invariant run with Reasoned Exclusions) to make check-module-invariants.sh report ALL CHECKS PASSED."
+        },
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/summaries/01_c15-anchor-resolution-summary.md",
+          "type": "summary",
+          "summary": "Four LIVE-UNPINNED KNOWN-ANCHORS rows plus a dated narrative subsection in specs/paper-definitions-of-record.md restore check-module-invariants.sh to ALL CHECKS PASSED."
         }
       ],
-      "session_id": "sess_1788795069_3d83b2_538"
+      "session_id": "sess_1788795069_3d83b2_538",
+      "completion_summary": "Recorded the four unresolved paper anchors (app:ObjectiveModality, app:drift, cor:no-characterization, lem:deterministic-singleton) as LIVE-UNPINNED rows in the KNOWN-ANCHORS block of specs/paper-definitions-of-record.md, each with a per-anchor why-unpinned note, plus a dated 2026-09-07 classification subsection in the record's provenance narrative. C15 was the sole failing check group; bash scripts/check-module-invariants.sh now exits 0 with ALL CHECKS PASSED and C15 resolving all 52 cited anchors. No .lean file, manifest row, or checksum/commit sentinel was touched."
     },
     {
       "project_number": 539,
