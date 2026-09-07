@@ -1,11 +1,11 @@
 # Implementation Plan: Decide `PostBlockingSettlesRun` at the terminus's own fuel figure
 
 - **Task**: 463 - Decide `PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D β)` at the terminus's own fuel figure
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 9.5 hours
 - **Dependencies**: 462 — `file_scope` SERIALIZATION edge only (both tasks edit `MintBound.lean`). No mathematical dependency; nothing below reads the minting measure.
 - **Research Inputs**: `specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/reports/01_postblockingsettlesrun-verdict-terminus-fuel.md`
-- **Artifacts**: plans/01_postblockingsettlesrun-verdict-terminus-fuel.md (this file)
+- **Artifacts**: plans/01_postblockingsettlesrun-verdict-terminus-fuel.md (this file), summaries/01_postblockingsettlesrun-verdict-terminus-fuel-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: true
@@ -443,23 +443,23 @@ site, amend it and say so — the list here is a hypothesis, not a boundary.
 
 ---
 
-### Phase 7: Final gate and handoff [IN PROGRESS]
+### Phase 7: Final gate and handoff [COMPLETED]
 
 **Goal**: Run the complete gate set, confirm the frozen-file and additive-only contracts held, and
 hand off with the verdict stated plainly.
 
 **Tasks**:
-- [ ] Full `lake build` from a clean-enough state; zero errors, zero warnings introduced.
-- [ ] `grep -rn "sorry" MintBound.lean` scoped to the diff — zero new occurrences.
-- [ ] `#print axioms` on every new theorem in the Goals list; each reports no axiom beyond
-      `propext, Classical.choice, Quot.sound`.
-- [ ] Re-`md5sum` the three frozen files against the Phase 1 baselines — must be byte-identical.
-- [ ] `git diff --stat` confirms `MintBound.lean` is the only file changed, and `git diff` confirms
+- [x] Full `lake build` from a clean-enough state; zero errors, zero warnings introduced. *(completed: 2592 jobs, exit 0.)*
+- [x] `grep -rn "sorry" MintBound.lean` scoped to the diff — zero new occurrences. *(completed: the one hit is the phrase "no `sorry`" inside C9 entry 25's prose, not a proof placeholder.)*
+- [x] `#print axioms` on every new theorem in the Goals list; each reports no axiom beyond
+      `propext, Classical.choice, Quot.sound`. *(completed: all 19 new declarations checked; six need only `propext`.)*
+- [x] Re-`md5sum` the three frozen files against the Phase 1 baselines. *(deviation: altered — `Fuel.lean` is byte-identical; `Saturation.lean` and `Tableau.lean` are NOT, and the drift is not this task's. Commit `5167fd5d3` ("task 531 phase 2: convert prose citations to bib keys") landed concurrently and changed exactly one module-docstring bibliography line in each (`* Gore, R. (1999). …` -> `* [gore1999]`). No declaration, definition or proof term moved, so the consumed public interface is unchanged. Recorded in the summary rather than glossed.)*
+- [x] `git diff --stat` confirms `MintBound.lean` is the only file changed, and `git diff` confirms
       no existing declaration was withdrawn (docstring amendments in Phase 6 are the only in-place
-      edits, and they touch no statement or proof term).
-- [ ] Re-check `git log -1` on `MintBound.lean` against the Phase 1 record; if task 462 landed
-      mid-flight, rebase these additions onto it rather than the reverse.
-- [ ] Write the summary stating the binary verdict FALSE as a **first-class deliverable**, not as a
+      edits, and they touch no statement or proof term). *(completed: the three task commits touch `MintBound.lean` and this plan file only, 560 insertions.)*
+- [x] Re-check `git log -1` on `MintBound.lean` against the Phase 1 record; if task 462 landed
+      mid-flight, rebase these additions onto it rather than the reverse. *(completed: task 462 did not land mid-flight; no other task touched `MintBound.lean` during this dispatch, so no rebase was needed.)*
+- [x] Write the summary stating the binary verdict FALSE as a **first-class deliverable**, not as a
       shortfall: what was proved, at which frame classes, what `.ZTime` status is, what the named
       next narrowing is, and what remains unprobed about it.
 
