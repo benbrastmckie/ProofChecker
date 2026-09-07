@@ -48,7 +48,7 @@ completeness carrier.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014): Proposition 4.2 (closure under negation, PDF
+- [rabinovich2014]: Proposition 4.2 (closure under negation, PDF
   p.6), Proposition 4.3 / Theorem 4.4 (PDF p.6), Definition 4.1 (PDF p.5), eq (5.2) (PDF p.8),
   Definitions (2)/(3) for `K⁻`/`K⁺` (PDF p.3).
 - `EANegationFixFaithful/VecEANegFixFaithful.lean`: the faithful De Morgan fold.

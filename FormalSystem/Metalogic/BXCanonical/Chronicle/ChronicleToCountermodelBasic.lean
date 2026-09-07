@@ -48,7 +48,7 @@ succ chain reaching any target element).
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods"
+- [burgess1982]: "Axioms for tense logic II: Time periods"
 - Design provenance: the case-split completeness route
 -/
 

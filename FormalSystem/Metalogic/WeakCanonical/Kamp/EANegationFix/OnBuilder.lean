@@ -70,7 +70,7 @@ one pin disjunct whose tail is unsatisfiable-free — see `negChainOn_iff`.)
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Lemma 5.3, **PDF p.8**. Cite by page only: the
+- [rabinovich2014], "A Proof of Kamp's Theorem", Lemma 5.3, **PDF p.8**. Cite by page only: the
   companion `.md` conversion is corrupt (it drops displayed equations — and Lemma 5.3 *is*
   displayed equations — and inverts `k ≠ m` to `k = m`). The former `chunk_0014 md:3-41`
   citation here pointed into that corrupt conversion and has been re-cited by page.

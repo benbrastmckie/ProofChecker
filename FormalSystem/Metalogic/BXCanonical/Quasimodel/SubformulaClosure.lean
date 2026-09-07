@@ -22,8 +22,8 @@ Given a target formula (e.g., `φ U ψ`), the Sigma-closure includes:
 
 ## References
 
-- Burgess 1984: "Basic tense logic"
-- Reynolds 1996: "An axiomatization of full computation tree logic" (Section 2)
+- [burgess1984]: "Basic tense logic"
+- [reynolds2001]: "An axiomatization of full computation tree logic" (Section 2)
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Quasimodel

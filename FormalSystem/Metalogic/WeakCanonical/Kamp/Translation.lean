@@ -33,7 +33,7 @@ holds iff there exist strictly decreasing witnesses x_1 > ... > x_m all < t with
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Proposition 3.5
+- [rabinovich2014], "A Proof of Kamp's Theorem", Proposition 3.5
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

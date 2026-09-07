@@ -79,9 +79,9 @@ Note: temp_k_dist and temp_4 are now derived theorems (`temporalKDistDerived`,
 
 ## References
 
-* Burgess 1982/84: Until-Since temporal logic axiomatization
-* Xu 1988: Completeness for Until-Since on linear orders
-* Venema 1993: Temporal logic survey
+* [burgess1982], [burgess1984]: Until-Since temporal logic axiomatization
+* [xu1988]: Completeness for Until-Since on linear orders
+* [venema1993]: Temporal logic survey
 -/
 
 namespace FormalSystem.ProofSystem

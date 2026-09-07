@@ -45,7 +45,7 @@ object's arity is capped by construction.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Definition 3.1 (p.4). Cited by PDF page; the
+- [rabinovich2014], Definition 3.1 (p.4). Cited by PDF page; the
   companion markdown transcription is corrupt.
 - `ESigmaExpansion.lean`: the E[Σ] alphabet `sigE` and canonical expansion `canonExpand`.
 - `NormalForm.lean`: `NormalForm`, `NfEvalNf`, `AtomKind`, `AtomEval`.

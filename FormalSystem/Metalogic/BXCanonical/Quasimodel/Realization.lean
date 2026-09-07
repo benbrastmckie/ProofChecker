@@ -38,9 +38,9 @@ recommended resolution path (chain-based completeness).
 
 ## References
 
-- Verbrugge 2007: "Completeness by Construction" (realization technique)
-- Burgess 1984: One-step defect discharge
-- Reynolds 2003: Until axiomatization and completeness
+- [verbrugge2004]: "Completeness by Construction" (realization technique)
+- [burgess1984]: One-step defect discharge
+- [reynolds2003]: Until axiomatization and completeness
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Quasimodel

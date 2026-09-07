@@ -136,9 +136,9 @@ below as `quotientDenselyOrdered_epsTop_vacuous` rather than left to be rediscov
 
 ## References
 
-- Reynolds 1992, §7 Theorem 5, printed p.184 (statement and whole proof)
-- Reynolds 1992, §7 Lemma 10, printed p.183 (Sep's validity over real flows — *not* re-derived)
-- Reynolds 1992, §8 Theorem 6, printed p.184 (Doets' theorem, whose D2 this is)
+- [reynolds1992], §7 Theorem 5, printed p.184 (statement and whole proof)
+- [reynolds1992], §7 Lemma 10, printed p.183 (Sep's validity over real flows — *not* re-derived)
+- [reynolds1992], §8 Theorem 6, printed p.184 (Doets' theorem, whose D2 this is)
 - `NoGaps.lean` — Theorem 4 (D1), `no_gaps_dense_prior` / `no_gaps_dense_prior_left`
 - `Defs.lean` — `ContempEquivDense`, `IsContempEquivDense`, `EndsInGapOnRight` / `OnLeft`
 - `Dual.lean` — the order-duality transport used for the left-hand closed-interval lemma

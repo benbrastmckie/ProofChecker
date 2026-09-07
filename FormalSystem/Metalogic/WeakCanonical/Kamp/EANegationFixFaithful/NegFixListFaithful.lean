@@ -113,7 +113,7 @@ possibly-unattained infimum suffices here.
 
 ## References
 
-- Rabinovich 2014, *A Proof of Kamp's Theorem*, Lemma 5.1's inductive step, PDF pp.10-11
+- [rabinovich2014], *A Proof of Kamp's Theorem*, Lemma 5.1's inductive step, PDF pp.10-11
   (including Figure 1 on p.10 and the two displayed equivalences on p.11)
 -/
 

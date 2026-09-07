@@ -54,8 +54,8 @@ The carrier is used in full — never as an interval type — per the design rul
 
 ## References
 
-- Doets 1987, ch. 7 (pp. 89-93); ch. 3 (pp. 36-57); ch. 1 (pp. 1-22).
-- Reynolds 1992, §8 (printed p.185): the `good` vocabulary transposed in
+- [doets1987], ch. 7 (pp. 89-93); ch. 3 (pp. 36-57); ch. 1 (pp. 1-22).
+- [reynolds1992], §8 (printed p.185): the `good` vocabulary transposed in
   `GroupModel/GoodGroupable.lean`.
 -/
 

@@ -112,7 +112,7 @@ primitive for eq (5.2)'s `(P₁(r₀) ∨ K⁺(P₁)(r₀))`.
 
 ## References
 
-- Rabinovich 2014, *A Proof of Kamp's Theorem*, Lemma 5.3 and eq (5.2), PDF p.8
+- [rabinovich2014], *A Proof of Kamp's Theorem*, Lemma 5.3 and eq (5.2), PDF p.8
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

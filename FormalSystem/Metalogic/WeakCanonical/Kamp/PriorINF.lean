@@ -40,8 +40,8 @@ holds outright, and the K+ disjunct is vacuous.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Section 5, eq (5.2)
-- Rabinovich 2014, Proposition 4.2 (negation closure uses INF/SUP)
+- [rabinovich2014], "A Proof of Kamp's Theorem", Section 5, eq (5.2)
+- [rabinovich2014], Proposition 4.2 (negation closure uses INF/SUP)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

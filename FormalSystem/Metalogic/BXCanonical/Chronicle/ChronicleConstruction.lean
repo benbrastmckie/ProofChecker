@@ -47,7 +47,7 @@ an enumeration of `Rat x Formula x Formula x Bool`. Since both `Rat` and
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods", Section 2
+- [burgess1982]: "Axioms for tense logic II: Time periods", Section 2
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

@@ -94,7 +94,7 @@ valid in the canonical model (Reynolds §4 Corollary 1), not because their flow 
 
 ## References
 
-- Reynolds 1992, Prior-U / Prior-S, printed p.168; the Prior-structure definition, printed p.176
+- [reynolds1992], Prior-U / Prior-S, printed p.168; the Prior-structure definition, printed p.176
 - Sibling integer hypotheses: `PriorDefs.lean` (`SemanticPriorUZ`, `SemanticPriorSZ`)
 -/
 

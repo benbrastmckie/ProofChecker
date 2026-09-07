@@ -27,7 +27,7 @@ decomposes by order direction.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Section 5 (base case)
+- [rabinovich2014], "A Proof of Kamp's Theorem", Section 5 (base case)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

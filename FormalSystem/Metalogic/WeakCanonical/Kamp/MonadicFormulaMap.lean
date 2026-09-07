@@ -39,7 +39,7 @@ Off the live import path (imported by nothing on the spine); the completeness sp
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Definition 4.1 (p.5), collapse-to-atom note
+- [rabinovich2014], Definition 4.1 (p.5), collapse-to-atom note
   (p.6). Cited by PDF page; the companion markdown transcription is corrupt.
 - `Prop43Translate.lean`: `MonadicFormula.rename` / `eval_rename` — the variable-side naturality
   template mirrored here on the predicate side.

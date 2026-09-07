@@ -58,8 +58,8 @@ and BX10 (until_F: phi U psi -> F(psi)) as replacements.
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods"
-- Burgess 1984: "Basic tense logic"
+- [burgess1982]: "Axioms for tense logic II: Time periods"
+- [burgess1984]: "Basic tense logic"
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

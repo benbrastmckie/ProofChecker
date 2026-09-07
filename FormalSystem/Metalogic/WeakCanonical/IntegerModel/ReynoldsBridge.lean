@@ -49,8 +49,8 @@ differ only in a suffix.
 
 ## References
 
-- Reynolds 1994, Theorem 18 (completeness pipeline via k-equivalence)
-- Doets 1989, Theorem 1.1 (k-equivalence preserves bounded-depth sentences)
+- [reynolds1994], Theorem 18 (completeness pipeline via k-equivalence)
+- [doets1989], Theorem 1.1 (k-equivalence preserves bounded-depth sentences)
 - Design provenance: the strategy-B route for the Reynolds pipeline bridge
 -/
 

@@ -59,7 +59,7 @@ over admissible completions — the same device the landed arity-2 `vvecea2_coll
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Prop 4.3 ¬-case (PDF p.6), Prop 3.5 (p.5).
+- [rabinovich2014], Prop 4.3 ¬-case (PDF p.6), Prop 3.5 (p.5).
 Cited by
   PDF page; the companion markdown transcription is corrupt.
 - `EFSatNegation.lean`: `efSat_negation_pair`, `efSat_negation_demorgan`, `pairProject_swap_efSat`.

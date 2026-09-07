@@ -38,7 +38,7 @@ all completions — exactly as `skelR` demonstrates end to end here.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Lemma 3.2(1) (p.4), Lemma 3.4 (p.5), Def 3.1
+- [rabinovich2014], Lemma 3.2(1) (p.4), Lemma 3.4 (p.5), Def 3.1
   (p.4), Prop 4.3 ¬-case (p.6). Cited by PDF page; the companion markdown transcription is corrupt.
 - `ConjInterleave.lean`: the landed both-directions merge `conjInterleave_iff` and its internal
   `MergePair` / `mergedFormula` / sorted-union rank machinery reused by the lift.

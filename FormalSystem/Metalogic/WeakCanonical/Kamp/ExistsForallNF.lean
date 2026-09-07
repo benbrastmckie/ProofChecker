@@ -36,7 +36,7 @@ key closure properties needed for the Kamp theorem proof.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Section 3
+- [rabinovich2014], "A Proof of Kamp's Theorem", Section 3
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

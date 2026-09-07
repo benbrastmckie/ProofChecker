@@ -36,7 +36,7 @@ by inserting new points into the domain.
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods", Section 2
+- [burgess1982]: "Axioms for tense logic II: Time periods", Section 2
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

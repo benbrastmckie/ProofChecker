@@ -68,7 +68,7 @@ G5 — every bridge is a manual `constructor`/`intro`/`exact` step. FORBIDDEN
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Cor 5.4 (chunks 0014-0015); Lemma 3.2(2)
+- [rabinovich2014], "A Proof of Kamp's Theorem", Cor 5.4 (chunks 0014-0015); Lemma 3.2(2)
   coincident-witness collapse (chunk_0009); Lemma 7.6 gluing (chunk_0021).
 - The negfix-refactor design for the exterior carriers, Phase 16a: the dispatcher convention
   and channel split restated in the Structure section above.

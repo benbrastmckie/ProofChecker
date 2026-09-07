@@ -43,7 +43,7 @@ The r-relation lemmas use:
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods", Lemmas 2.2-2.3
+- [burgess1982]: "Axioms for tense logic II: Time periods", Lemmas 2.2-2.3
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

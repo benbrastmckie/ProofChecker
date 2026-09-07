@@ -67,10 +67,10 @@ different* index sets. The engine underneath it is `BackAndForth.lean`'s `BackFo
 takes only the shuffle data `hγ` and `hσ` it was always a consequence of.
 
 ## References
-- Reynolds 1992, §8, printed p.188:
+- [reynolds1992], §8, printed p.188:
   `literature/sources/reynolds_1992/sec04_7-separability.md`
-- Doets 1987/1989, 3.1.8 (the mixing lemma): `literature/Doets_1989_Monadic_Pi11_Theories.md`
-- Doets 1989, Lemma 1.4 (shared-index case): `doets_lemma_1_4` (`OrderedSum.lean`)
+- [doets1987], [doets1989], 3.1.8 (the mixing lemma): `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [doets1989], Lemma 1.4 (shared-index case): `doets_lemma_1_4` (`OrderedSum.lean`)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

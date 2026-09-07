@@ -84,9 +84,9 @@ apparatus stays exactly as it is, it stays the tree's record of the `kplus` devi
 
 ## References
 
-- Rabinovich 2014, `K⁺` definition (PDF p.3); Lemma 5.3 Case 2 and eq (5.2) (PDF p.8)
-- Reynolds 1992, abbreviation table §1 and Prior-U / Prior-S (printed p.168)
-- Gabbay-Hodkinson-Reynolds 1994, §10.3.1
+- [rabinovich2014], `K⁺` definition (PDF p.3); Lemma 5.3 Case 2 and eq (5.2) (PDF p.8)
+- [reynolds1992], abbreviation table §1 and Prior-U / Prior-S (printed p.168)
+- [gabbay1994], §10.3.1
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

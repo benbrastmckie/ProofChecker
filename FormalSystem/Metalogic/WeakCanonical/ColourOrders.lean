@@ -39,8 +39,8 @@ Reynolds' *"another simple game argument"*, printed p.188.
 coloured-order hypothesis.
 
 ## References
-- Reynolds 1992, §8, printed p.188: `literature/sources/reynolds_1992/sec04_7-separability.md`
-- Doets 1987/1989, 3.1.8: `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [reynolds1992], §8, printed p.188: `literature/sources/reynolds_1992/sec04_7-separability.md`
+- [doets1987], [doets1989], 3.1.8: `literature/Doets_1989_Monadic_Pi11_Theories.md`
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

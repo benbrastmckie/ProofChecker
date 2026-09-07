@@ -70,7 +70,7 @@ discharged** — their discharge is the Phase-ζ concern. This module stays OFF 
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 4.3 (p.6), Definition 3.1 (p.4).
+- [rabinovich2014], Proposition 4.3 (p.6), Definition 3.1 (p.4).
   Cited by PDF page; the companion markdown transcription is corrupt.
 - `LiftPair.lean`: `skelDisjunct`, `skelR`, `skelR_sat`, `charType`, `unaryHolds_charType`,
   `intervalHolds_top` — the universally-satisfiable arity-`m+1` skeleton.

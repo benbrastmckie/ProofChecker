@@ -194,19 +194,42 @@ the actual numbers.
 
 ---
 
-### Phase 2: Convert prose citations to bib keys [NOT STARTED]
+### Phase 2: Convert prose citations to bib keys [COMPLETED]
 
 **Goal**: live-scope `## References` sections cite bib keys rather than free prose, so doc-gen4
 resolves them against `references.bib`.
 
 **Tasks**:
-- [ ] Build the work-string → bib-key substitution table (20 distinct forms, including the
+- [x] Build the work-string → bib-key substitution table (20 distinct forms, including the
       composite `Doets 1987/1989` and `Burgess 1982/84` cases, which expand to two keys).
-- [ ] Apply the substitution inside `## References` blocks only, in `FormalSystem/` (excluding
+      *(deviation: altered — 20 forms were not enough. The Phase 1 census keyed on
+      `Surname YYYY`, which cannot see four other citation shapes that are live in `##
+      References` blocks: `Rabinovich, *A Proof of Kamp's Theorem* (2014)` (~20 sites),
+      `GHR93`/`GHR94`/`GHR93 (Gabbay, Hodkinson, Reynolds, 1994)` (~16 sites),
+      `Blackburn, de Rijke, Venema (2001)` / `…: Modal Logic`, and `Goldblatt (1992), Logics
+      of Time and Computation`. A second substitution pass of 13 further forms was added,
+      giving 33 in all)*
+- [x] Apply the substitution inside `## References` blocks only, in `FormalSystem/` (excluding
       `Automation/` — see territory) and `Tests/`, live scope only (`Boneyard/` excluded).
-- [ ] Confirm by diff read-through that every changed hunk lies inside a `/-- ... -/` or
-      `/-! ... -/` block; no hunk may cross a comment boundary.
-- [ ] Leave narrative in-body citations alone; only `## References` list entries convert.
+      *(completed — 193 lines across 134 files: 132 lines/85 files in pass 1, 61 lines/52 files
+      in pass 2)*
+- [x] Confirm by diff read-through that every changed hunk lies inside a `/-- ... -/` or
+      `/-! ... -/` block; no hunk may cross a comment boundary. *(completed — asserted
+      mechanically rather than by eye: a comment-depth scan over the post-edit files
+      confirmed all 193 changed lines lie at block-comment depth > 0, and no line was added
+      or removed, so no boundary could move. `lake build` green independently confirms it)*
+- [x] Leave narrative in-body citations alone; only `## References` list entries convert.
+      *(completed — the residual scan finds three in-body survivors and leaves them: a
+      Literature corpus path, a possessive "Rabinovich's Definition 4.1", and "Doets 1.4/1.5"
+      naming lemma numbers rather than a work)*
+- [x] **Added**: five bib entries for works this phase's wider scan found cited in `##
+      References` blocks with no key at all — `gore1999` (9 sites), `libal2016`, `korf1985`,
+      `yang2019`, `kaliszyk2018`. `references.bib` now holds 26 entries, up from 13.
+- [x] **Added**: regenerated the three stale `<!-- BEGIN GENERATED: inventory -->` blocks
+      (`README.md`, `FormalSystem/README.md`, `FormalSystem/Automation/Tactics/README.md`),
+      which Phase 4's deletion of 148 lines from `Commands.lean` made stale. Phase 8 owns the
+      inventory regeneration, but leaving the tree with a failing `INV` check between phases
+      is worse than regenerating twice; the operation is idempotent.
 
 **Timing**: 2 hours
 
@@ -220,6 +243,13 @@ resolves them against `references.bib`.
 section, less the `FormalSystem/Automation/` share deferred to Phase 8. Confirm by re-running the
 census before and after; the post-edit prose-citation count for converted works must be zero
 outside the excluded territory.
+
+*Measured*: 193 lines changed across 134 files. The post-edit `Surname YYYY` census returns
+**zero** over all of `FormalSystem/` and `Tests/` — including `Automation/`, which turns out to
+carry no `Surname YYYY` citation at all, so Phase 8's citation task is already discharged for
+that shape. Phase 8 still owns `Automation/`'s four remaining non-`Surname YYYY` citations
+(`Korf, R.E. (1985)`, `Yang et al. (2019)` ×2, `Kaliszyk et al. (2018)`), whose keys this phase
+added.
 
 **Territory**: `FormalSystem/**` excluding `FormalSystem/Automation/**`; `Tests/**`. The
 `Automation/` share is deliberately deferred to Phase 8 so this phase cannot collide with the

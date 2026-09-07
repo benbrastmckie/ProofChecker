@@ -43,8 +43,8 @@ The equivalence `normalFormEquivFin` provides the bijection between the inductiv
 
 ## References
 
-- Doets 1989, Section 1, Lemma 1.1: `literature/Doets_1989_Monadic_Pi11_Theories.md`
-- Doets 1987, Definition 1.6.1 (n-characteristics)
+- [doets1989], Section 1, Lemma 1.1: `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [doets1987], Definition 1.6.1 (n-characteristics)
 - Design provenance: the concrete NormalForm-evaluation design (Doets Lemma 1.1 / `KType`)
 -/
 namespace FormalSystem.Metalogic.WeakCanonical

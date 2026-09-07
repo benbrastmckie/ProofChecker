@@ -45,7 +45,7 @@ Phases 8-11) and the `aggPop1` conjunction fold (Phase 16) require.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Lemma 3.2(1) (pp. 3-4),
+- [rabinovich2014], "A Proof of Kamp's Theorem", Lemma 3.2(1) (pp. 3-4),
   Lemma 3.4 (p. 4).
 -/
 

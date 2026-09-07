@@ -101,7 +101,7 @@ exclusion type, never `TemporalPred.top`. G5 — every Cor 5.4 chain step below 
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem": Cor 5.4 (the all-order-patterns clause — the
+- [rabinovich2014], "A Proof of Kamp's Theorem": Cor 5.4 (the all-order-patterns clause — the
   population match IS its "for every order pattern" clause), Def 3.1 (order-zone channel),
   Lemma 3.2(2) + §5 bracket notation (two-fixed-endpoint framing), Prop 3.5 (∃-witness →
   Until/Since folding mechanism).

@@ -63,7 +63,7 @@ not referenced.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Lemma 3.2(2) (chunk_0009).
+- [rabinovich2014], "A Proof of Kamp's Theorem", Lemma 3.2(2) (chunk_0009).
 - The negfix-refactor design for the exterior carriers, Phase 12a (the point-merge channels).
 -/
 

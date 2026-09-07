@@ -39,7 +39,7 @@ Rabinovich 2014. This extends the interval decomposition infrastructure in
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Definition 3.1, Notation 5.2
+- [rabinovich2014], "A Proof of Kamp's Theorem", Definition 3.1, Notation 5.2
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

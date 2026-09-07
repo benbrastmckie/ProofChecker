@@ -33,7 +33,7 @@ there are at most 2^|closure| distinct equivalence classes.
 
 ## References
 
-- Blackburn, de Rijke, Venema: Modal Logic (Ch 2.3)
+- [blackburn2002] (Ch 2.3)
 -/
 
 namespace FormalSystem.Metalogic.Decidability.FMP

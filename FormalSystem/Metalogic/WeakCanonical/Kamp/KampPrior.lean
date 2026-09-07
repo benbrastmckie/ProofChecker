@@ -51,8 +51,8 @@ are all sorry-free and reused directly.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Sections 3-5
-- Reynolds 1994, Theorem 5
+- [rabinovich2014], "A Proof of Kamp's Theorem", Sections 3-5
+- [reynolds1994], Theorem 5
 
 ## Tags
 

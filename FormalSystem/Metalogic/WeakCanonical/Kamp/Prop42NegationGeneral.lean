@@ -54,7 +54,7 @@ case, mirroring how `Prop42ExistsForall.lean` and `Prop43.lean` already sit off-
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 4.2 statement (p.6), proof and the
+- [rabinovich2014], Proposition 4.2 statement (p.6), proof and the
   three-way chain split + Lemma 5.1 (p.7). Cited by PDF page; the companion markdown
   transcription is corrupt.
 - `Prop42ExistsForall.lean`: `EndpointPinnedCapTrivial`, `prop42_veeSat_negation` (middle piece).

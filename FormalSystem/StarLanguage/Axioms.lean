@@ -81,8 +81,8 @@ unchanged.
 
 ## References
 
-* `FormalSystem/ProofSystem/Axioms.lean` — the 45 TM⁺ schemata, with their Burgess 1982 / Xu 1988 /
-  Reynolds 1992 provenance; the docstrings there are authoritative for each schema's reading
+* `FormalSystem/ProofSystem/Axioms.lean` — the 45 TM⁺ schemata, with their [burgess1982] / [xu1988] /
+  [reynolds1992] provenance; the docstrings there are authoritative for each schema's reading
 * JPL paper `possible_worlds.tex` lines 1108, 1114, 1118-1119, 1121
 -/
 

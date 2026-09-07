@@ -39,7 +39,7 @@ sentence (`r = 0`) is negated through the same engine+bridge at arity `0`/`2`.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Prop 4.3 ¬-case (PDF p.6), Def 4.1 (p.5-6). Cited
+- [rabinovich2014], Prop 4.3 ¬-case (PDF p.6), Def 4.1 (p.5-6). Cited
   by PDF page; the companion markdown transcription is corrupt.
 - `ExistsForallLemmas.lean`: `augTarget_iff`, `pairProject`, `pairwiseProjections`, `conjSat`.
 - `Prop42NegationGeneral.lean`: `prop42_efSat_negation_general` (the arbitrary-pin `VVecEA2`

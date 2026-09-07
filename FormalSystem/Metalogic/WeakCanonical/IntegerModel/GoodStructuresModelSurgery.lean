@@ -82,8 +82,8 @@ and the docstring on
 
 ## References
 
-- Reynolds 1994, Section 7, Lemmas 6-13, Theorem 14
-- Reynolds 1994, Theorem 5 (US expressive completeness, PriorExpressiveness.lean)
+- [reynolds1994], Section 7, Lemmas 6-13, Theorem 14
+- [reynolds1994], Theorem 5 (US expressive completeness, PriorExpressiveness.lean)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

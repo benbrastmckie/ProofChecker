@@ -47,7 +47,7 @@ biconditional against `efSat`, and lifts the result through `VeeExistsForall` (D
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 3.5 (p.5), Definition 3.3 (p.4).
+- [rabinovich2014], Proposition 3.5 (p.5), Definition 3.3 (p.4).
   Cited by PDF page; the companion markdown transcription is corrupt.
 - `Prop35ExistsForall.lean`: `unaryToFormula`, `unaryToFormula_correct`.
 - `Prop35Chain.lean`: `buildRight_spec_iff_chain`, `buildLeft_spec_iff_chain`.

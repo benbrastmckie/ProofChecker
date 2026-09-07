@@ -68,7 +68,7 @@ No frozen file is touched.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem": **Lemma 7.8(2)** TL(Until, K⁻) duality
+- [rabinovich2014], "A Proof of Kamp's Theorem": **Lemma 7.8(2)** TL(Until, K⁻) duality
   (chunk_0022) — realized here by duplication (see the E6 decision above); Lemma 7.10 /
   Prop 3.5 one-free-variable fold (chunks 0023, 0010); Lemma 7.6 gluing (chunk_0021).
 - Consumed by name (public Phase 13/14 assets): `ext3Mk`, `ext3_zoneHolds_cons_iff`,

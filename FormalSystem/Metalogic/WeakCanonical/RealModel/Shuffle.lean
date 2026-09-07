@@ -83,9 +83,9 @@ tree depends on it — the main proof only ever needs one shuffle, produced from
 themselves by `kEquiv_shuffle_of_classIso`.
 
 ## References
-- Reynolds 1992, §8, printed pp.186-187:
+- [reynolds1992], §8, printed pp.186-187:
   `literature/sources/reynolds_1992/sec04_7-separability.md`
-- Doets 1989, Lemma 1.4 (sums preserve `≡ₖ`): consumed via `doets_lemma_1_4`
+- [doets1989], Lemma 1.4 (sums preserve `≡ₖ`): consumed via `doets_lemma_1_4`
   (`OrderedSum.lean:41`)
 -/
 

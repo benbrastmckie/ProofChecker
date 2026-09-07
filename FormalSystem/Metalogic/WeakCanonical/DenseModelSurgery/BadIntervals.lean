@@ -202,7 +202,7 @@ results are **not** to be described as discharged.
 
 ## References
 
-- Reynolds 1992, §6 Lemmas 6 and 7, printed pp.179-181
+- [reynolds1992], §6 Lemmas 6 and 7, printed pp.179-181
 - `Defs.lean` — `ρ`, `λ`, `EndsInGapOnRight`, `EndsInGapOnLeft`, `gapRightFormula`,
   `gapLeftFormula`, Lemma 2
 - `Lemma34.lean` — Lemmas 3 and 4, the class calculus, `false_of_holds_throughout_class`

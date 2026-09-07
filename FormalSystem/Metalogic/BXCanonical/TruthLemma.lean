@@ -45,7 +45,7 @@ remaining sorries are in chain coherence proofs (RootScopedChain.lean, Canonical
 
 ## References
 
-- Burgess 1984, Goldblatt 1992 (canonical model truth lemma)
+- [burgess1984], [goldblatt1992] (canonical model truth lemma)
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical

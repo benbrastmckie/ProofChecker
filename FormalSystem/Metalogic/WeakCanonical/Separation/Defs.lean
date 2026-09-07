@@ -25,7 +25,7 @@ Core definitions for the separation theorem over integer time (GHR94 Chapter 10.
 
 ## References
 
-- GHR94, Chapter 10, Section 10.2 (pp. 569-592)
+- [gabbay1994], Chapter 10, Section 10.2 (pp. 569-592)
 - Design provenance: the expressive-completeness proof for U/S over integer time
 -/
 

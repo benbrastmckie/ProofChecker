@@ -32,7 +32,7 @@ unsound under open guard.
 
 ## References
 
-- Burgess 1984: One-step defect discharge
+- [burgess1984]: One-step defect discharge
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Filtration

@@ -29,8 +29,8 @@ Under open guard, the return types no longer claim φ ∈ w
 
 ## References
 
-- Burgess 1984: "Basic tense logic" (until induction in original axiom system)
-- Xu 1988: "Completeness for Until-Since on linear orders"
+- [burgess1984]: "Basic tense logic" (until induction in original axiom system)
+- [xu1988]: "Completeness for Until-Since on linear orders"
 - Design provenance: the chain-member-quantification guard (see `Frame.lean`,
   "Eventuality Resolution for Until/Since")
 -/

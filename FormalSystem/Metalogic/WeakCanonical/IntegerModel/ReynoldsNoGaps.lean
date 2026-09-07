@@ -41,8 +41,8 @@ The following definitions were moved to
 
 ## References
 
-- Reynolds 1994, Section 8, Theorem 15 (one-class theorem)
-- Doets 1989, Theorem 1.1 (finite structures are good)
+- [reynolds1994], Section 8, Theorem 15 (one-class theorem)
+- [doets1989], Theorem 1.1 (finite structures are good)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

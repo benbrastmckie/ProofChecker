@@ -40,8 +40,8 @@ The file also provides:
 - No-gaps theorem for integers (`no_gaps_int`)
 
 ## References
-- Reynolds 1994, Theorem 18 (full completeness pipeline)
-- Doets 1989, Theorem 1.1 (k-equivalence preserves bounded-depth sentences)
+- [reynolds1994], Theorem 18 (full completeness pipeline)
+- [doets1989], Theorem 1.1 (k-equivalence preserves bounded-depth sentences)
 -/
 namespace FormalSystem.Metalogic.WeakCanonical
 

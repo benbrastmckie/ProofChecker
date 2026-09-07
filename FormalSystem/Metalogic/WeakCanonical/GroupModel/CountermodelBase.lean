@@ -57,7 +57,7 @@ cites a proved name instead of a decision procedure.
 
 ## References
 
-- Doets 1987, ch. 7 (pp. 89-93); Reynolds 1992, §8 (printed p. 185) — as transposed by
+- [doets1987], ch. 7 (pp. 89-93); [reynolds1992], §8 (printed p. 185) — as transposed by
   `GroupModel/GoodGroupable.lean` and `GroupModel/GroupableCompanion.lean`.
 -/
 

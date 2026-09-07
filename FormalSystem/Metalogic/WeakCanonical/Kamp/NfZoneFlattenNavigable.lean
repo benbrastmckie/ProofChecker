@@ -47,7 +47,7 @@ express what the atomic flattening could not.
 - `VecEATranslation.lean:234` (`bracketBuildRight_correct`), `:503` (`bracketBuildLeft_correct`),
   `:311` (`BracketFormula.trivial_holds`).
 - `reports/01_bound-anchor-verdict.md` §3 (outcome (a): navigated chain, `w` a bracket witness).
-- Rabinovich 2014 "A Proof of Kamp's Theorem" Cor 5.4 (`md:154-157`).
+- [rabinovich2014] "A Proof of Kamp's Theorem" Cor 5.4 (`md:154-157`).
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

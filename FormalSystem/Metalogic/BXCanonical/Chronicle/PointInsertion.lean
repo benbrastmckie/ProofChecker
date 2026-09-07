@@ -68,7 +68,7 @@ Local definitions used for point insertion lemmas.
 
 ## References
 
-- Burgess 1982: "Basic tense logic", Section 2, Lemmas 2.4-2.8
+- [burgess1982]: "Basic tense logic", Section 2, Lemmas 2.4-2.8
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

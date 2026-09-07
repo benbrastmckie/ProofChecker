@@ -33,7 +33,7 @@ The proof bodies are the per-`N` Fin-layer proofs verbatim, re-entered after `in
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 4.3 / Theorem 4.4 (p.6),
+- [rabinovich2014], Proposition 4.3 / Theorem 4.4 (p.6),
   Definition 4.1 (p.5), collapse-to-atom note (p.6). Cited by PDF page; the companion markdown
   transcription is corrupt.
 - `ESigmaCapture.lean`: `capTypeFin`, `capTypeFin_atomNamed` (the direct capture).

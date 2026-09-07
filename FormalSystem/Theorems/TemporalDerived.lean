@@ -83,7 +83,7 @@ originals remain in `Boneyard/ClosedGuardLegacy/ClosedGuardTemporalDerived.lean`
 
 ## References
 
-- Burgess 1982/84: Until-Since temporal logic axiomatization
+- [burgess1982], [burgess1984]: Until-Since temporal logic axiomatization
 - Archive of 27 sorry-tainted definitions
 -/
 

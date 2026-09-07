@@ -40,7 +40,7 @@ stays OFF the live import path.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 4.3 (p.6), Lemma 3.4 (p.5). Cited by
+- [rabinovich2014], Proposition 4.3 (p.6), Lemma 3.4 (p.5). Cited by
   PDF page; the companion markdown transcription is corrupt.
 - `EFSatNegationGeneral.lean`: `efSat_negation_generalFin` (β at the `∨∃∀` type).
 - `VeeConj.lean`: `veeConjFin`, `veeConjFin_iff` (Lemma 3.4, ∧-part).

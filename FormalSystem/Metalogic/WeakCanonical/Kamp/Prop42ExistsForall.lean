@@ -44,7 +44,7 @@ to carry caps — that would be canonical-form machinery beyond Rabinovich.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 4.2 (p.6), proved Section 5 pp.7-11.
+- [rabinovich2014], Proposition 4.2 (p.6), proved Section 5 pp.7-11.
   Cited by PDF page; the companion markdown transcription is corrupt.
 - `Prop35Assembly.lean`: `efPointTP`, `efIntervalTP` (rendering `UnaryType`s as `TemporalPred`s).
 - `VecEAFormula.lean`: `VecEA2`, `BracketFormula`, `VVecEA2`; `ExistsForallNF.lean`:

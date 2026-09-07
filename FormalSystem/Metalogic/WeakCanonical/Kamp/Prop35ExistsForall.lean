@@ -33,7 +33,7 @@ imports it); it re-exports nothing.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 3.5 (p.5), Definition 4.1 (p.5).
+- [rabinovich2014], Proposition 3.5 (p.5), Definition 4.1 (p.5).
   Cited by PDF page; the companion markdown transcription is corrupt.
 - `PerFormulaRender.lean`: `unaryToFormulaFin`, `unaryToFormulaFin_correct` (the production
   rendering).

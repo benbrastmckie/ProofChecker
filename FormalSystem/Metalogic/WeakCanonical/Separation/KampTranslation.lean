@@ -29,9 +29,9 @@ for details on the blocker and three identified approaches to resolve it.
 
 ## References
 
-- Kamp 1968, "Tense Logic and the Theory of Linear Order"
-- GHR94 Chapter 10 (separation theorem)
-- Doets 1989, Lemma 1.1 (normal form theory)
+- [kamp1968], "Tense Logic and the Theory of Linear Order"
+- [gabbay1994] Chapter 10 (separation theorem)
+- [doets1989], Lemma 1.1 (normal form theory)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Separation

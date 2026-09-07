@@ -31,7 +31,7 @@ The succ case proceeds in three sub-cases:
 
 ## References
 
-- Rabinovich 2014, Section 5, Proposition 3.5
+- [rabinovich2014], Section 5, Proposition 3.5
 - Translation.lean (translateEF1, translateEF1_correct)
 -/
 

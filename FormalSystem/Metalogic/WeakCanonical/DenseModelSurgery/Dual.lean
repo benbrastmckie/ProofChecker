@@ -96,8 +96,8 @@ witness arrives with Lemma 9 / Theorem 4.
 
 ## References
 
-- Reynolds 1992, §6, printed p.178 (the duality convention, *"Dually we can define `λ(x)`"*).
-- Reynolds 1992, §6 Lemma 6, printed p.180 (*"using mirror images of the above and previous
+- [reynolds1992], §6, printed p.178 (the duality convention, *"Dually we can define `λ(x)`"*).
+- [reynolds1992], §6 Lemma 6, printed p.180 (*"using mirror images of the above and previous
   results"*).
 -/
 

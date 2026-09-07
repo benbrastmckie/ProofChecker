@@ -148,8 +148,8 @@ introduced; `ContempEquivDense` is the §6 notion, parameterized by `ε`.
 
 ## References
 
-- Reynolds 1992, §6, printed pp.176-177 (the definitions and Lemma 2)
-- Reynolds 1992, §5, printed p.176 (the uniformity remark)
+- [reynolds1992], §6, printed pp.176-177 (the definitions and Lemma 2)
+- [reynolds1992], §5, printed p.176 (the uniformity remark)
 - `uSExpressivelyCompleteOverDensePrior` (`PriorExpressivenessDense.lean:302`) — Reynolds §5
   Theorem 3, the input to Lemma 2
 - `MonadicFormula.rename` / `eval_rename` (`Kamp/Prop43Translate.lean:109`) — the variable

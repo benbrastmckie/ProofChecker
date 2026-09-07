@@ -47,9 +47,9 @@ needs a not-q witness before u0 (contradicting minimality).
 
 ## References
 
-- GHR93 (Gabbay, Hodkinson, Reynolds, 1994), Chapter 9, Section 3 (p. 95)
-- BdRV 2002, Definition 7.11 (gap-based picture)
-- Reynolds 1994, Section 4 (p.122-124)
+- [gabbay1994], Chapter 9, Section 3 (p. 95)
+- [blackburn2002], Definition 7.11 (gap-based picture)
+- [reynolds1994], Section 4 (p.122-124)
 -/
 namespace FormalSystem.Metalogic.WeakCanonical
 

@@ -41,8 +41,8 @@ finitely many atoms in `GContent(M)`, we can find a fresh atom not mentioned.
 
 ## References
 
-- Goldblatt (1992), Logics of Time and Computation
-- Blackburn, de Rijke, Venema (2001), Modal Logic
+- [goldblatt1992]
+- [blackburn2002]
 -/
 
 namespace FormalSystem.Syntax

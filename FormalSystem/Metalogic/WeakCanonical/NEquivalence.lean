@@ -31,8 +31,8 @@ concrete recursive normal form type from NormalForm.lean. This makes
 `k_equiv_monotone` to be proved via `nf_agreement_monotone`.
 
 ## References
-- Doets 1989, Section 1 (k-types, finiteness): `literature/Doets_1989_Monadic_Pi11_Theories.md`
-- Reynolds 1994, Section 4 (k-equivalence framework):
+- [doets1989], Section 1 (k-types, finiteness): `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [reynolds1994], Section 4 (k-equivalence framework):
 `literature/Reynolds_1994_Axiomatising_U_and_S_over_integer_time.md`
 - Design provenance: the Doets Lemma 1.1 NormalForm/KType redesign
 - Design provenance: the NEquivalence split — `KType` redesigned onto `NormalForm`,

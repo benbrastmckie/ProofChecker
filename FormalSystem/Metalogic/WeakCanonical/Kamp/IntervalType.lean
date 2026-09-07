@@ -39,7 +39,7 @@ bounded search `∃ τ ∈ S` at each point.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Definition 3.1 (p.4), Lemma 3.2(1)/3.4 (p.4-5),
+- [rabinovich2014], Definition 3.1 (p.4), Lemma 3.2(1)/3.4 (p.4-5),
   Proposition 3.5 (p.5). Cited by PDF page; the companion markdown transcription is corrupt.
 - `ExistsForallFormula.lean`: `UnaryType`, `unaryHolds`, `unaryHolds_iff`.
 - `NormalForm.lean`: the `Fintype`/`DecidableEq` instances on `NormalForm`.

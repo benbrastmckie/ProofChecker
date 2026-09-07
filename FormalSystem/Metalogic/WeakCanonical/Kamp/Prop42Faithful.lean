@@ -119,7 +119,7 @@ below — which is a genuine use, not a symmetric one.
 
 ## References
 
-- Rabinovich 2014, *A Proof of Kamp's Theorem*, Proposition 4.2, PDF p.6 (statement and carrier);
+- [rabinovich2014], *A Proof of Kamp's Theorem*, Proposition 4.2, PDF p.6 (statement and carrier);
   Propositions 4.3 and Theorem 4.4, same page; Section 5, pp.7-11 (proof).
 - Cite by **PDF page only**:
   `~/Projects/Literature/sources/rabinovich_2014/Rabinovich_2014_Proof_of_Kamps_Theorem.pdf`.

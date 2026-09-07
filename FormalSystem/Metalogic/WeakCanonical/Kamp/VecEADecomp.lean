@@ -20,7 +20,7 @@ t and x produces a VecEA2 with 1 bracket witness.
 
 ## References
 
-- Rabinovich 2014, Lemma 3.2(2)
+- [rabinovich2014], Lemma 3.2(2)
 - NfToVecEA.lean (depth-0 2-var case, template)
 -/
 

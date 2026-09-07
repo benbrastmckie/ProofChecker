@@ -45,7 +45,7 @@ duality (`dualStructure`), transporting `BackForth` along the mirror involution 
 
 ## References
 
-- Doets 1987, ch. 1, pp. 1-22 (1.0.2, 1.0.3).
+- [doets1987], ch. 1, pp. 1-22 (1.0.2, 1.0.3).
 - `literature/Doets_1989_Monadic_Pi11_Theories.md`.
 -/
 

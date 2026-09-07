@@ -45,7 +45,7 @@ discharged at m = 0 by the plan-v2 Phase-5 supply theorems. No `sorry`, no vacuo
 introduced here.
 
 ## References
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Cor 5.4 + Lemma 7.6.
+- [rabinovich2014], "A Proof of Kamp's Theorem", Cor 5.4 + Lemma 7.6.
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

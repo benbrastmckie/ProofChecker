@@ -176,7 +176,7 @@ chain) — exactly the endpoint machinery the flat reframing tried to avoid; it 
 `BracketFormula.holds … x t` disjunction.
 
 ## References
-- Rabinovich 2014 §5 (interval split), Cor 5.4 (`F_i` chain)
+- [rabinovich2014] §5 (interval split), Cor 5.4 (`F_i` chain)
 - `VecEADecomp.lean:407-744` (depth-0 templates: `reconstruct_nf_3var`, `nf_3var_zone_*`)
 - `NormalForm.lean:134-207` (`NormalForm`, `NfEvalNf`, `AtomEval`)
 - plan v39 Phase 11; Phase 10 "Re-scoped on resume" note

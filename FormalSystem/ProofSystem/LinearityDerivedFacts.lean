@@ -63,8 +63,8 @@ This is handled automatically by `DerivationTree.temporal_duality`.
 
 ## References
 
-- Goldblatt 1992, *Logics of Time and Computation*
-- Blackburn, de Rijke, Venema 2001, *Modal Logic*
+- [goldblatt1992], *Logics of Time and Computation*
+- [blackburn2002], *Modal Logic*
 -/
 
 namespace FormalSystem.ProofSystem

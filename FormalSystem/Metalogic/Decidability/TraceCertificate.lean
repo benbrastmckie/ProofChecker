@@ -31,7 +31,7 @@ remain valid.
 
 ## References
 
-* Libal & Volpe (2016) "Certification of Prefixed Tableau Proofs for Modal Logic"
+* [libal2016]
   (GandALF/EPTCS 226, pp. 257–271) — FPC schema.
 * `tableau_rule_firing_traces` — the rule-firing trace deliverable these
   certificates feed (exported by `TraceExport.lean`).

@@ -34,7 +34,7 @@ This file lands the fold TYPE and EVALUATOR (Phase 1). The quant-assignment doma
 
 ## References
 
-- Rabinovich 2014, *A Proof of Kamp's Theorem*: Def 3.1 (p.4, ∃∀-formula / point type),
+- [rabinovich2014], *A Proof of Kamp's Theorem*: Def 3.1 (p.4, ∃∀-formula / point type),
   Lemma 3.2(2) (p.4, ≤2 free variables), Def 4.1 (p.5, E[Σ]-atom fold),
   Prop 4.3 (p.6, innermost-first iteration).
 - `NormalForm.lean` (`NfEvalNf`, `AtomKind`, `AtomEval`) — the parallel encoding.

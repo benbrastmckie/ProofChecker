@@ -38,7 +38,7 @@ formulation.
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Proposition 3.5 (p.5). Cited by PDF page; the
+- [rabinovich2014], Proposition 3.5 (p.5). Cited by PDF page; the
   companion markdown transcription is corrupt.
 - `Translation.lean`: `translateEF1`, `translateEF1_correct`, `BuildRightSpec`, `BuildLeftSpec`.
 - `Prop35ExistsForall.lean`: `unaryToFormula`, `unaryToFormula_correct`.

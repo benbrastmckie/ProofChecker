@@ -22,7 +22,7 @@ Connects `IntStructure`/`IntTruth` (separation framework) with
 
 ## References
 
-- GHR94 Chapter 10: Separation on integer time
+- [gabbay1994] Chapter 10: Separation on integer time
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Separation

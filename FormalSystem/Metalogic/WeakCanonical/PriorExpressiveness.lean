@@ -35,9 +35,9 @@ on the critical path for `uSExpressivelyCompleteOverPrior`.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem"
-- Reynolds 1994, Theorem 5, p.123
-- GHR93 (Gabbay, Hodkinson, Reynolds, 1994), Chapter 9, Theorem 9.3.1
+- [rabinovich2014], "A Proof of Kamp's Theorem"
+- [reynolds1994], Theorem 5, p.123
+- [gabbay1994], Chapter 9, Theorem 9.3.1
 
 ## Tags
 

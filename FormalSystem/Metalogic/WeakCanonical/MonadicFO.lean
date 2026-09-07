@@ -37,8 +37,8 @@ following Reynolds 1994 Section 6 and Doets 1987 Chapter 1. Constructors:
 for quantifier binding.
 
 ## References
-- Doets 1989, Section 1 (k-types, finiteness): `literature/Doets_1989_Monadic_Pi11_Theories.md`
-- Reynolds 1994, Section 6 (monadic FO language):
+- [doets1989], Section 1 (k-types, finiteness): `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [reynolds1994], Section 6 (monadic FO language):
 `literature/Reynolds_1994_Axiomatising_U_and_S_over_integer_time.md`
 -/
 namespace FormalSystem.Metalogic.WeakCanonical

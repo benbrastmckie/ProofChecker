@@ -20,7 +20,7 @@ interface for higher-level modules.
 
 ## References
 
-- Burgess 1984: "Basic tense logic" (canonical model construction)
+- [burgess1984]: "Basic tense logic" (canonical model construction)
 - Design provenance: signature weakening to the chain-member guard (v5)
 -/
 

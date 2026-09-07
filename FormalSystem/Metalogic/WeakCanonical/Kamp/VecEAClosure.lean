@@ -15,7 +15,7 @@ under disjunction, conjunction, and existential quantification.
 
 ## References
 
-- Rabinovich 2014, Lemma 3.2 (pp. 3-4), Lemma 3.4 (p. 4)
+- [rabinovich2014], Lemma 3.2 (pp. 3-4), Lemma 3.4 (p. 4)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical.Kamp

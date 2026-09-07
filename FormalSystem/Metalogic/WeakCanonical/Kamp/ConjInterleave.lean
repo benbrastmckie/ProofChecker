@@ -74,7 +74,7 @@ OFF the live import path: nothing here is imported by `KampPrior.lean` or the co
 
 ## References
 
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Lemma 3.2(1) (p.4), Lemma 3.4 (p.5), Definition
+- [rabinovich2014], Lemma 3.2(1) (p.4), Lemma 3.4 (p.5), Definition
   3.1 (p.4). Cited by PDF page; the companion markdown transcription is corrupt.
 - `ExistsForallFormula.lean`: the Def 3.1 object `ExistsForallFormula`, `efSat`, `UnaryType`,
   `unaryHolds`.

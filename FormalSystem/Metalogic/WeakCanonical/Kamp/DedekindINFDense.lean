@@ -118,10 +118,10 @@ alternative is dead weight.
 
 ## References
 
-- Rabinovich 2014, *A Proof of Kamp's Theorem*, Lemma 5.3 Case 2 and eq (5.2), **PDF p.8**
+- [rabinovich2014], *A Proof of Kamp's Theorem*, Lemma 5.3 Case 2 and eq (5.2), **PDF p.8**
   (cited by PDF page only: the `.md` conversion of this paper is corrupt). Verbatim:
   `INF(z₀,r₀,z₁,P₁) := z₀ < r₀ < z₁ ∧ (∀y)^{<r₀}_{>z₀} ¬P₁(y) ∧ (P₁(r₀) ∨ K⁺(P₁)(r₀))`.
-- Reynolds 1992, *An Axiomatization for Until and Since over the Reals without the IRR Rule*,
+- [reynolds1992], *An Axiomatization for Until and Since over the Reals without the IRR Rule*,
   **Prior-U / Prior-S, printed p.168**: `U(⊤,p) ∧ F¬p → U(¬p ∨ K⁺(¬p),p)` and its mirror. The
   derivations below instantiate Prior-U at `p := ¬P` — in words: *the guard says `¬P` holds at
   `z₀`, failure of `K⁺(P)(z₀)` says `¬P` persists throughout some initial stretch above `z₀`

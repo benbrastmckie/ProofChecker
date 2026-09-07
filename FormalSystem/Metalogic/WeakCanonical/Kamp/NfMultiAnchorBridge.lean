@@ -408,7 +408,7 @@ atom layer**, where it is a proven iff. The depth-`(k+1)` quant layer goes throu
 honest arity-3 navigated existential — **never** collapsed to arity 1.
 
 ## References
-- Rabinovich 2014, "A Proof of Kamp's Theorem", Cor 5.4 (`F_i` chain).
+- [rabinovich2014], "A Proof of Kamp's Theorem", Cor 5.4 (`F_i` chain).
 - The multi-anchor characteristic-formula bridge design and its blocker research: the deliverable
   list, the phase split, and the three refuted routes above are transcribed from them verbatim.
 -/

@@ -111,7 +111,7 @@ non-trivial instance; the first live instance is due at the Lemma 9 / dense-surg
 
 ## References
 
-- Reynolds 1992, §6 Lemma 5, printed p.179
+- [reynolds1992], §6 Lemma 5, printed p.179
 - `Defs.lean` — `ρ`, `λ`, `EndsInGapOnRight`, `gapRightFormula`, Lemma 2
 - `Lemma34.lean` — Lemmas 3 and 4, `false_of_holds_throughout_class`, `exists_contemp_gt`
 - `SemanticPriorU` (`PriorDefsDense.lean:119`) — Reynolds' Prior-U, printed p.168

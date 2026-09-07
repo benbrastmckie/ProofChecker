@@ -45,7 +45,7 @@ by the invariant.
 
 ## References
 
-- Doets 1987, ch. 1 (1.0.2/1.0.3, pp. 1-22) and ch. 7 (pp. 89-93).
+- [doets1987], ch. 1 (1.0.2/1.0.3, pp. 1-22) and ch. 7 (pp. 89-93).
 - `literature/Doets_1989_Monadic_Pi11_Theories.md`.
 -/
 

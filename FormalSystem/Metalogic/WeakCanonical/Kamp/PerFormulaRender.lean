@@ -37,7 +37,7 @@ the fold is over `M.attach.toList`, so every construction survives the infinite 
 Def 4.1 (p.5).
 
 ## References
-- Rabinovich, *A Proof of Kamp's Theorem* (2014), Def 3.1 (p.4), Prop 3.5 (p.5), Def 4.1 (p.5).
+- [rabinovich2014], Def 3.1 (p.4), Prop 3.5 (p.5), Def 4.1 (p.5).
   Cited by PDF page; the companion markdown transcription is corrupt.
 - `PerFormulaType.lean` (`UnaryTypeFin`, `partialHolds`); `Separation/KampTranslation.lean`
   (`formulaConjList`, `atomLiteral` — reused, not modified); `NormalForm.lean` (`AtomKind`,

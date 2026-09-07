@@ -55,8 +55,8 @@ real witness, leaving depth `d`.
 * `kEquiv_orderedSum_of_kEquiv_colour` — the mixing lemma itself.
 
 ## References
-- Doets 1987/1989, 3.1.8: `literature/Doets_1989_Monadic_Pi11_Theories.md`
-- Reynolds 1992, §8, printed p.188 (*"by another simple game argument"*)
+- [doets1987], [doets1989], 3.1.8: `literature/Doets_1989_Monadic_Pi11_Theories.md`
+- [reynolds1992], §8, printed p.188 (*"by another simple game argument"*)
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

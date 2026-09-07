@@ -10,7 +10,7 @@ import FormalSystem.Metalogic.WeakCanonical.EFGames.CustomGame
 # GHR93 Proposition 7: Strategy Composition for EF Games
 
 ## References
-- GHR93 (Gabbay, Hodkinson, Reynolds, 1994), Chapter 9, Proposition 7
+- [gabbay1994], Chapter 9, Proposition 7
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical

@@ -236,7 +236,7 @@ invariant check allowlists it by name (check C8).
 | File | Lines | Description |
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
-| `Automation.lean` | 103 | Re-export for Automation submodule |
+| `Automation.lean` | 102 | Re-export for Automation submodule |
 | `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |

@@ -31,8 +31,8 @@ as fields. The extraction function `extract_chronicle_as_prior` takes
 MCS A with `neg(phi)` and `□(nextTop)` and produces the prior model.
 
 ## References
-- Reynolds 1994, Corollary 3 (= Burgess-Xu)
-- Burgess 1982: "Axioms for tense logic II: Time periods"
+- [reynolds1994], Corollary 3 (= Burgess-Xu)
+- [burgess1982]: "Axioms for tense logic II: Time periods"
 -/
 namespace FormalSystem.Metalogic.WeakCanonical
 

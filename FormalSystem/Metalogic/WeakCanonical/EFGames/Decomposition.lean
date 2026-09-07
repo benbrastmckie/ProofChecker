@@ -37,8 +37,8 @@ and is more natural to work with in Lean.
 
 ### References
 
-- GHR93 (Gabbay, Hodkinson, Reynolds, 1994), Chapter 9, Definition 8.8
-- GHR93 Lemma 11
+- [gabbay1994], Chapter 9, Definition 8.8
+- [gabbay1994] Lemma 11
 -/
 
 /-- Semantic content of (n;r)-decomposition formula agreement.

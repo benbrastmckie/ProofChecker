@@ -48,8 +48,8 @@ hypothesis the whole Dedekind route rests on.
 
 ## References
 
-- Reynolds 1992, §1, printed p.169 (definably-Dedekind-complete scoping).
-- Reynolds 1992, printed p.168 (US/R's density axioms, this tree's `Axiom.dense_indicator`).
+- [reynolds1992], §1, printed p.169 (definably-Dedekind-complete scoping).
+- [reynolds1992], printed p.168 (US/R's density axioms, this tree's `Axiom.dense_indicator`).
 
 ## Tags
 

@@ -28,8 +28,8 @@ with the defect-discharge property for Until/Since formulas.
 
 ## References
 
-- Burgess 1984: Defect-discharge construction for Until
-- Reynolds 1996: Formal treatment of quasimodel chains
+- [burgess1984]: Defect-discharge construction for Until
+- [reynolds2001]: Formal treatment of quasimodel chains
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Quasimodel

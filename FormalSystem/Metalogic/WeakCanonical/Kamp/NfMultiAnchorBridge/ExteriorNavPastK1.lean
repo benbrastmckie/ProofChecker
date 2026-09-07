@@ -58,7 +58,7 @@ No frozen file is touched.
 
 ## References
 
-- Rabinovich 2014, "A Proof of Kamp's Theorem": **Lemma 7.10 / Prop 3.5** one-free-variable
+- [rabinovich2014], "A Proof of Kamp's Theorem": **Lemma 7.10 / Prop 3.5** one-free-variable
   fold to TL(Since, K⁺) (chunks 0023, 0010) — the exact device this module instantiates.
 - Phase-13 kit consumed by name: `extZBelowW/extZAtW/extZIntWX` zone fibers of
   `extZoneFiber_k1` (ExteriorFiberKitK1.lean).

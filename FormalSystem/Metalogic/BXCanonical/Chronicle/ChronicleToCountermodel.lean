@@ -42,8 +42,8 @@ This is a DAG, not a cycle, because `ChronicleExtraction` now imports
 
 ## References
 
-- Burgess 1982: "Axioms for tense logic II: Time periods"
-- Reynolds 1994: "Axiomatising first-order temporal logic: Until and Since over linear time"
+- [burgess1982]: "Axioms for tense logic II: Time periods"
+- [reynolds1994]: "Axiomatising first-order temporal logic: Until and Since over linear time"
 -/
 
 namespace FormalSystem.Metalogic.BXCanonical.Chronicle

@@ -131,8 +131,8 @@ this tree could have transcribed even had the Stavi route been available.
 
 ## References
 
-- Reynolds 1992, "Continuous Temporal Models", §5 Theorem 3, printed p.176
-- Rabinovich 2014, "A Proof of Kamp's Theorem", §5, eq (5.2), PDF p.8
+- [reynolds1992], "Continuous Temporal Models", §5 Theorem 3, printed p.176
+- [rabinovich2014], "A Proof of Kamp's Theorem", §5, eq (5.2), PDF p.8
 -/
 
 namespace FormalSystem.Metalogic.WeakCanonical
