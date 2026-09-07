@@ -216,6 +216,12 @@ Membership witness for formula in context.
 A value `MembershipWitness Γ φ` is a proof that `φ ∈ Γ`.
 This is used to enable proof term construction for assumptions.
 -/
+-- `Type`-valued rather than `Prop`-valued on purpose: `findMembershipWitness` returns
+-- `Option (MembershipWitness Γ φ)` and the proof-search layer eliminates that option in *data*
+-- position, which a `Prop`-valued structure could not support (no large elimination). This is
+-- the same argument `docs/development/NAMING_CONVENTION_DEVIATION.md` makes for
+-- `DerivationTree`; the exemption is recorded here rather than in `scripts/nolints.json`.
+@[nolint structureInType]
 structure MembershipWitness (Γ : Context) (φ : Formula) : Type where
   proof : φ ∈ Γ
 

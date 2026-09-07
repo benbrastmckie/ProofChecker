@@ -1,9 +1,5 @@
 [
   [
-    "structureInType",
-    "FormalSystem.Automation.MembershipWitness"
-  ],
-  [
     "unusedArguments",
     "FormalSystem.Semantics.duration_dense_or_least_pos"
   ],

@@ -418,20 +418,20 @@ disappear from `runLinter` output before removing its rows from the JSON.
 
 ---
 
-### Phase 7: `structureInType` -> in-source `@[nolint]` [NOT STARTED]
+### Phase 7: `structureInType` -> in-source `@[nolint]` [COMPLETED]
 
 **Goal**: Move the single `structureInType` exemption from the central JSON to the declaration
 itself, with the large-elimination reason stated at the site.
 
 **Tasks**:
-- [ ] Locate the declaration: `grep -n "MembershipWitness" FormalSystem/Automation/ProofSearch/Core.lean`.
-- [ ] Add `@[nolint structureInType]` to `FormalSystem.Automation.MembershipWitness`, with a
+- [x] Locate the declaration: `grep -n "MembershipWitness" FormalSystem/Automation/ProofSearch/Core.lean`.
+- [x] Add `@[nolint structureInType]` to `FormalSystem.Automation.MembershipWitness`, with a
       comment stating the reason: the `Type` universe is load-bearing because
       `findMembershipWitness` returns `Option (MembershipWitness Γ φ)` and the proof-search layer
       eliminates it in data position, which a `Prop`-valued structure could not support (large
       elimination). This is the same argument `NAMING_CONVENTION_DEVIATION.md` already makes for
       `DerivationTree`.
-- [ ] Drop the row:
+- [x] Drop the row:
       `jq 'map(select(.[0] == "structureInType" | not))' scripts/nolints.json > /tmp/n.json && mv /tmp/n.json scripts/nolints.json`
 
 **Timing**: 0.5 hours
