@@ -2495,7 +2495,7 @@
     {
       "project_number": 538,
       "project_name": "resolve_unpinned_paper_anchors_c15_gate",
-      "status": "researched",
+      "status": "planned",
       "task_type": "lean4",
       "topic": "metalogic",
       "priority": "high",
@@ -2508,12 +2508,17 @@
         "FormalSystem/Metalogic/Independence/StateSetTruth.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T15:39:32Z",
+      "last_updated": "2026-09-07T15:43:27Z",
       "artifacts": [
         {
           "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
           "type": "report",
           "summary": "C15 has FOUR unresolved anchors (app:ObjectiveModality added by commit d155835f2, not three); all four are LIVE and labelled in the current paper, so the supplied DANGLING/unlabelled classification is stale; fix is four LIVE-UNPINNED rows in the record's KNOWN-ANCHORS block, dry-run verified to empty the unresolved set."
+        },
+        {
+          "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/plans/01_resolve-c15-paper-anchors.md",
+          "type": "plan",
+          "summary": "Three-phase plan (re-measure, add four LIVE-UNPINNED KNOWN-ANCHORS rows, full invariant run with Reasoned Exclusions) to make check-module-invariants.sh report ALL CHECKS PASSED."
         }
       ],
       "session_id": "sess_1788795069_3d83b2_538"

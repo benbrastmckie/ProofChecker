@@ -1,16 +1,29 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md",
-      "summary": "C15 has FOUR unresolved anchors (app:ObjectiveModality added by commit d155835f2, not three); all four are LIVE and labelled in the current paper, so the supplied DANGLING/unlabelled classification is stale; fix is four LIVE-UNPINNED rows in the record's KNOWN-ANCHORS block, dry-run verified to empty the unresolved set."
+      "type": "plan",
+      "path": "specs/538_resolve_unpinned_paper_anchors_c15_gate/plans/01_resolve-c15-paper-anchors.md",
+      "summary": "Three-phase plan (re-measure, add four LIVE-UNPINNED KNOWN-ANCHORS rows, full invariant run with Reasoned Exclusions) to make check-module-invariants.sh report ALL CHECKS PASSED."
+    }
+  ],
+  "next_steps": "Run /implement 538 to execute the plan",
+  "memory_candidates": [
+    {
+      "content": "When a task description ships a pre-computed classification of a failing gate's items (which anchors are live vs dangling, which files are affected), treat it as a hypothesis with a timestamp, not as input data. Re-run the failing check first and enumerate the live failure set before planning against the description: commits landing between task creation and dispatch routinely add members to the set (here a fourth anchor from a later commit) and resolve members the description called blocked (here a cross-repo coordination the description demanded had already landed). The plan-side carrier for this is a Scope Hypothesis line on the measuring phase, which makes the measured set authoritative over the report.",
+      "category": "WORKFLOW",
+      "source_artifact": "specs/538_resolve_unpinned_paper_anchors_c15_gate/plans/01_resolve-c15-paper-anchors.md",
+      "confidence": 0.75,
+      "suggested_keywords": ["stale-task-description", "scope-hypothesis", "re-measure-baseline", "paper-anchors", "check-module-invariants"]
     }
   ],
   "metadata": {
     "session_id": "sess_1788795069_3d83b2_538",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 3,
+    "estimated_hours": 1,
+    "dependency_waves": [[1], [2], [3]]
   }
 }
