@@ -11,12 +11,12 @@ next_project_number: 549
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,433,461,476,481,504,506,530,534,535,539,540,541,542,544,545,547 | -- | automation, dataset-enhancement, decidability, ... |
-| 2 | 178,231,282,296,463,502,531,537,548 | 193,298,433,461,530,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,464,497 | 231,463,502 | algebraic-representation, dataset-enhancement, decidability |
-| 4 | 465,498,499,500 | 464,497 | algebraic-representation, decidability |
-| 5 | 125,428,543 | 465,498,499,500 | algebraic-representation, decidability, metalogic |
-| 6 | 429,501 | 125,428 | algebraic-representation, decidability |
+| 1 | 127,128,193,257,298,433,476,481,502,504,506,530,534,535,540,541,542,544,545,547 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,463,497,531,537,548 | 193,298,433,502,530,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,464,498,499,500 | 231,463,497 | algebraic-representation, dataset-enhancement, decidability |
+| 4 | 125,465,543 | 464,498,499,500 | algebraic-representation, decidability, metalogic |
+| 5 | 428,501 | 125,465 | algebraic-representation, decidability |
+| 6 | 429 | 428 | decidability |
 | 7 | 410 | 429 | decidability |
 | 8 | 411 | 410 | decidability |
 | 9 | 430 | 411 | decidability |
@@ -27,16 +27,14 @@ next_project_number: 549
 
 ### Algebraic Representation
 
-125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson
-  └─ 501 [NOT STARTED] — Phase 4 of the Jonsson-Tarski representation: extend STSA with th
-497 [NOT STARTED] — Bring the Shift-closed Tense S5 Algebra class into live code and 
-  └─ 498 [NOT STARTED] — Phase 1 of the Jonsson-Tarski representation: the complex algebra
-    └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson (see above)
-  └─ 499 [NOT STARTED] — HARD. Phase 2 of the Jonsson-Tarski representation: the ultrafilt
-    └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson (see above)
-  └─ 500 [NOT STARTED] — RESEARCH TASK. Prevent two parallel representation theorems from 
 502 [NOT STARTED] — RESEARCH TASK. Ground the algebraic representation front in the l
-  └─ 497 [NOT STARTED] — Bring the Shift-closed Tense S5 Algebra class into live code and  (see above)
+  └─ 497 [NOT STARTED] — Bring the Shift-closed Tense S5 Algebra class into live code and 
+    └─ 498 [NOT STARTED] — Phase 1 of the Jonsson-Tarski representation: the complex algebra
+      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson
+        └─ 501 [NOT STARTED] — Phase 4 of the Jonsson-Tarski representation: extend STSA with th
+    └─ 499 [NOT STARTED] — HARD. Phase 2 of the Jonsson-Tarski representation: the ultrafilt
+      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson (see above)
+    └─ 500 [NOT STARTED] — RESEARCH TASK. Prevent two parallel representation theorems from 
 
 ### Automation
 
@@ -79,7 +77,6 @@ next_project_number: 549
 
 ### Literature
 
-461 [IMPLEMENTING] — SCOPE 8 acquisition gap identified by task 457's research and re-
 504 [NOT STARTED] — Retry acquisition of the standard modal-representation sources th
 
 ### Metalogic
@@ -111,7 +108,6 @@ next_project_number: 549
 
 ### Infrastructure
 
-539 [IMPLEMENTING] — Draw down the linter debt that the CI/linter-gates work recorded 
 541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
@@ -213,12 +209,13 @@ next_project_number: 549
 ---
 
 ### 539. Linter debt burndown nolints dupnamespace
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529
 - **Research**: [539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md]
 - **Plan**: [539_linter_debt_burndown_nolints_dupnamespace/plans/01_linter-debt-burndown.md]
+- **Summary**: [539_linter_debt_burndown_nolints_dupnamespace/summaries/01_linter-debt-burndown-summary.md]
 
 **Description**: Draw down the linter debt that the CI/linter-gates work recorded rather than fixed. MEASURED STATE: `lint: true` is live in CI via scripts/nolints.json, Batteries' standard grandfathering mechanism -- the full env_linter batch runs and fails only on NEW findings, while 307 pre-existing findings are suppressed by that checked-in file. The 307 break down as unusedArguments=217, docBlame=51, defsWithUnderscore=33, tacticDocs=4, simpNF=1, structureInType=1. Separately, dupNamespace (a Lean-core syntax linter, architecturally distinct from the Batteries env_linter family and unreachable by the driver, so nolints.json cannot cover it) reports 14 findings, all in FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleTypes.lean, where `structure Chronicle` is declared inside `namespace ...Chronicle` so every field projection and the `.mk` constructor double-namespaces (Chronicle.Chronicle.dom, .f, .g, .c0..c5', etc.). C16 in check-module-invariants.sh reports the dupNamespace count via a live textual scan and does not gate on it. WORK: (1) fix the single simpNF finding, `length_range_map` in FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean (a 'simp can prove this' duplicate-lemma notice). (2) Fix the 14 dupNamespace findings by renaming the Chronicle structure out of its same-named namespace, updating every projection site. (3) Decide and record a policy for the remaining nolints.json entries: either burn down whole linter categories (docBlame's 51 and defsWithUnderscore's 33 are the tractable ones; unusedArguments' 217 is the bulk and may be largely legitimate for instance-argument-heavy signatures), or document explicitly which categories are permanently grandfathered and why. After any fix, regenerate nolints.json with `lake exe runLinter --update FormalSystem` -- but only after confirming every remaining entry is intentional, since --update grandfathers everything currently reported including a genuine regression. ACCEPTANCE: simpNF and dupNamespace both report zero findings; scripts/nolints.json shrinks by at least the categories the recorded policy commits to; plain `lake lint` still exits 0; C16 reports zero dupNamespace findings via its textual scan.
 
@@ -640,12 +637,13 @@ Dependencies: 462, as a file_scope SERIALIZATION edge only (both tasks edit Mint
 ---
 
 ### 461. Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: general
 - **Topic**: literature
 - **Dependencies**: Task 460
 - **Research**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/reports/01_acquisition-verified-corpus-status.md]
 - **Plan**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/plans/01_goldblatt-1989-zotero-closeout.md]
+- **Summary**: [461_acquire_goldblatt_1989_varieties_of_complex_algebras/summaries/01_goldblatt-1989-zotero-closeout-summary.md]
 
 **Description**: SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.
 

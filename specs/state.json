@@ -890,12 +890,12 @@
     {
       "project_number": 461,
       "project_name": "acquire_goldblatt_1989_varieties_of_complex_algebras",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "general",
       "topic": "literature",
       "priority": "medium",
       "created": "2026-08-18T20:25:41Z",
-      "last_updated": "2026-09-07T19:55:34Z",
+      "last_updated": "2026-09-07T20:54:42Z",
       "title": "Acquire Goldblatt 1989 'Varieties of complex algebras' (Annals of Pure and Applied Logic)",
       "description": "SCOPE 8 acquisition gap identified by task 457's research and re-confirmed at implementation time: this paper is absent from both the ~/Projects/Literature corpus and the Zotero library, and is named as a prerequisite by other tasks in this repo working on the Jonsson-Tarski representation theorem. Note: goldblatt_2003 already present in the corpus is a DIFFERENT paper (Erdos Graphs Resolve Fine's Canonicity Problem) -- do not conflate the two. Needed: locate and acquire a copy of Goldblatt 1989 (Annals of Pure and Applied Logic 44, pp. 173-242), add it to Zotero, then run a normal /literature ingest.",
       "artifacts": [
@@ -908,6 +908,11 @@
           "path": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/plans/01_goldblatt-1989-zotero-closeout.md",
           "type": "plan",
           "summary": "5-phase, 2-hour plan scoping only the genuinely remaining work: establish a working zot route around the httpx packaging defect, create the Zotero item (DOI-only by default given the documented storage-quota overage, with orphaned-attachment cleanup if an attach is attempted), record the zotero_key on both corpus index entries, annotate the stale first report and correct state.json's blocker text, and leave the redundant duplicate PDF in place pending a non-blocking user decision."
+        },
+        {
+          "path": "specs/461_acquire_goldblatt_1989_varieties_of_complex_algebras/summaries/01_goldblatt-1989-zotero-closeout-summary.md",
+          "type": "summary",
+          "summary": "Records completion of the Zotero closeout: item MJEB25VU created (DOI-only, no PDF attached due to documented storage-quota overage), verified via authenticated Web-API GET; both corpus index entries linked with zotero_key; the stale first report annotated as superseded; specs/state.json's blocker text corrected; the duplicate PDF left in place pending a non-blocking user decision."
         }
       ],
       "dependencies": [
@@ -920,7 +925,8 @@
       ],
       "session_id": "sess_1788809122_cefddd",
       "blockers": "Acquisition blocker CLEARED 2026-08-26: user obtained the PDF (doi 10.1016/0168-0072(89)90032-8, 70pp), fully ingested into the corpus at ~/Projects/Literature/sources/goldblatt_1989/ and indexed in both the global index and specs/literature-index.json. The single remaining step from the task description, adding the paper to Zotero, was completed 2026-09-07: Zotero item key MJEB25VU (DOI-only create, no PDF attached due to a documented ~9.2x storage-quota overage on this account -- the PDF already lives durably in the corpus). See reports/01_acquisition-verified-corpus-status.md and summaries/01_goldblatt-1989-zotero-closeout-summary.md for the full record.",
-      "blocks_note": "All acquisition and Zotero steps complete as of 2026-09-07. Corpus ingest: done 2026-08-25/26 (zotero_key MJEB25VU now recorded on both index entries). Zotero: item MJEB25VU created via Web API, DOI-only (no PDF attach -- storage quota overage). Outstanding environment issues routed around, not fixed, by this task: (1) the zot CLI on $PATH fails all subcommands with a missing httpx import (a working install exists at ~/.local/share/uv/tools/zotero-cli-cc/bin/zot); (2) this Zotero account is ~9.2x over its storage allotment. Each merits its own task if a durable fix is wanted. specs/literature/1-s2.0-0168007289900328-main.pdf (a duplicate download) left in place pending user decision -- see .return-meta.json user_decision."
+      "blocks_note": "All acquisition and Zotero steps complete as of 2026-09-07. Corpus ingest: done 2026-08-25/26 (zotero_key MJEB25VU now recorded on both index entries). Zotero: item MJEB25VU created via Web API, DOI-only (no PDF attach -- storage quota overage). Outstanding environment issues routed around, not fixed, by this task: (1) the zot CLI on $PATH fails all subcommands with a missing httpx import (a working install exists at ~/.local/share/uv/tools/zotero-cli-cc/bin/zot); (2) this Zotero account is ~9.2x over its storage allotment. Each merits its own task if a durable fix is wanted. specs/literature/1-s2.0-0168007289900328-main.pdf (a duplicate download) left in place pending user decision -- see .return-meta.json user_decision.",
+      "completion_summary": "Created Zotero item MJEB25VU for Goldblatt 1989 (DOI-only, no PDF attach due to documented ~9.2x storage-quota overage), verified via authenticated Web-API GET, linked zotero_key on both corpus index entries, annotated the stale first report as superseded, and corrected specs/state.json's blocker text to reflect that acquisition and Zotero steps are both complete."
     },
     {
       "project_number": 463,
@@ -1252,7 +1258,7 @@
     {
       "project_number": 539,
       "project_name": "linter_debt_burndown_nolints_dupnamespace",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1266,7 +1272,7 @@
         "FormalSystem/Metalogic/Decidability/BiLasso/Extraction.lean"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-07T19:48:57Z",
+      "last_updated": "2026-09-07T20:54:57Z",
       "artifacts": [
         {
           "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/reports/01_linter-debt-burndown.md",
@@ -1277,10 +1283,16 @@
           "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/plans/01_linter-debt-burndown.md",
           "type": "plan",
           "summary": "9-phase, 10.5-hour sequential plan burning nolints.json 307 -> 217 (unusedArguments grandfathered on evidence) and dupNamespace 14 -> 0, with per-category jq removal proved by green runLinter and a policy/comment refresh phase."
+        },
+        {
+          "path": "specs/539_linter_debt_burndown_nolints_dupnamespace/summaries/01_linter-debt-burndown-summary.md",
+          "type": "summary",
+          "summary": "Burned scripts/nolints.json from 307 to 217 entries and dupNamespace from 14 to 0, by genuine conformance in every category rather than regeneration."
         }
       ],
       "session_id": "sess_1788809122_cefddd",
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "All nine plan phases closed. scripts/nolints.json fell 307 -> 217 (all remaining entries unusedArguments) by fixing simpNF, defsWithUnderscore, docBlame, tacticDocs and structureInType outright and removing each category with a jq filter proved by a green lake exe runLinter; dupNamespace went 14 -> 0 by relocating structure Chronicle out of its same-named namespace with zero downstream edits. lake exe runLinter --update was never run. The unusedArguments grandfathering is now recorded with measured evidence in docs/development/NAMING_CONVENTION_DEVIATION.md, alongside corrections to seven stale numeric claims in ci.yml and check-module-invariants.sh."
     },
     {
       "project_number": 540,
