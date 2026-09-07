@@ -1,7 +1,7 @@
 # Implementation Plan: Resolve unpinned paper anchors (C15 gate)
 
 - **Task**: 538 - resolve_unpinned_paper_anchors_c15_gate
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 1 hour
 - **Dependencies**: None
 - **Research Inputs**: specs/538_resolve_unpinned_paper_anchors_c15_gate/reports/01_c15-anchor-resolution.md
@@ -166,22 +166,22 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 3: Full invariant run, exclusion record, and summary [NOT STARTED]
+### Phase 3: Full invariant run, exclusion record, and summary [COMPLETED]
 
 - **Goal:** Confirm ALL CHECKS PASSED across the whole invariant script and record the excluded
   `check-paper-definitions.sh` drift with evidence.
 - **Tasks:**
-  - [ ] Run `bash scripts/check-module-invariants.sh` in full; capture the terminal line and
+  - [x] Run `bash scripts/check-module-invariants.sh` in full; capture the terminal line and
         confirm it reads ALL CHECKS PASSED with no group failing.
-  - [ ] Confirm C15 now passes with a resolved-citation count (research measured 52 cited anchors;
+  - [x] Confirm C15 now passes with a resolved-citation count (research measured 52 cited anchors;
         treat the exact number as measured-at-run, not asserted).
-  - [ ] Record a `#### Reasoned Exclusions` subsection under this phase for the
+  - [x] Record a `#### Reasoned Exclusions` subsection under this phase for the
         `check-paper-definitions.sh` drift, with evidence: that script is not invoked by
         `check-module-invariants.sh` and not run by `.github/workflows/ci.yml` (which runs only
         `lean-action` build/test/lint), C15 resolves against the record and never the paper by
         documented design, and seven of the nine dangling anchors fall under the open
         fragment-removal / BX-rename work.
-  - [ ] Write the implementation summary to
+  - [x] Write the implementation summary to
         `specs/538_resolve_unpinned_paper_anchors_c15_gate/summaries/01_c15-anchor-resolution-summary.md`,
         noting the four-not-three correction and the stale task-description classification.
 - **Timing:** 20 minutes
@@ -199,14 +199,22 @@ Phases within the same wave can execute in parallel.
   - `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED.
   - The Reasoned Exclusions table is present with `Item`, `Reason`, `Evidence` columns.
 
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `scripts/check-paper-definitions.sh` drift wave: 15 drifted definitions | Out of this task's scope by declared Non-Goal; that script is a separate instrument from the C15 gate this task closes, and it gates nothing. | `grep -c 'check-paper-definitions' scripts/check-module-invariants.sh` returns `0` — the invariant script never invokes it. `.github/workflows/ci.yml` has one job step that runs `leanprover/lean-action@v1` (build/test/lint) plus a `Report results` step; it never invokes either script. C15 resolves citations against `specs/paper-definitions-of-record.md` and never against the live `.tex`, by the design the record documents at its `## Known anchors outside the manifest` heading — so paper drift cannot turn C15 red. |
+| `scripts/check-paper-definitions.sh`: 9 dangling recorded anchors | Same Non-Goal; seven of the nine are the declared scope of open, separately-tracked work, and absorbing them here would duplicate and pre-empt it. | Measured dangling set: `def:directed`, `def:BLplus-semantics`, `def:BLplus-defined`, `thm:BLplus-PastFuture`, `thm:BLplus-NextPrevious`, `TMP-CO`, `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c`. The seven `BLplus`/`TMplus` anchors fall under the open fragment-removal / BX-rename task in `specs/TODO.md`, whose description names `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` (renamed to `def:BX-z`, `def:BX-d`, `def:BX-r`) and the Past/Future fragment removal explicitly. |
+| Re-pinning `FILE_CHECKSUM` / `PINNED_COMMIT` after the paper moved | Declared Non-Goal, and contrary to the record's own convention. | The record's own dirty-pin convention (`## Recording provenance`, the `typst/FormalFoundations.typ` coverage-extension row) states that a re-pin is warranted only when a drift *correction* is absorbed, not on every touch-event. This wave absorbed no drift correction — all four anchors resolve unchanged. |
+
 ## Testing & Validation
 
-- [ ] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED, no group failing.
-- [ ] C15 reports every cited paper anchor resolving against `specs/paper-definitions-of-record.md`.
-- [ ] `git status --short` shows no `.lean` file modified by this task.
-- [ ] The `KNOWN-ANCHORS` block remains ASCII-sorted with LIVE-UNPINNED rows before DANGLING rows.
-- [ ] No `FILE_CHECKSUM` or `PINNED_COMMIT` sentinel changed.
-- [ ] No `lake build` needed (no `.lean` file touched); if any Lean file is touched, the build must
+- [x] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED, no group failing.
+- [x] C15 reports every cited paper anchor resolving against `specs/paper-definitions-of-record.md`.
+- [x] `git status --short` shows no `.lean` file modified by this task.
+- [x] The `KNOWN-ANCHORS` block remains ASCII-sorted with LIVE-UNPINNED rows before DANGLING rows.
+- [x] No `FILE_CHECKSUM` or `PINNED_COMMIT` sentinel changed.
+- [x] No `lake build` needed (no `.lean` file touched); if any Lean file is touched, the build must
       be run and must pass.
 
 ## Artifacts & Outputs
