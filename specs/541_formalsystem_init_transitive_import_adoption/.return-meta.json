@@ -1,16 +1,28 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "agent_type": "planner-agent",
+  "delegation_path": ["orchestrator", "plan", "planner-agent"],
+  "task_number": 541,
+  "session_id": "sess_1788847801_97d6cb_541",
+  "dispatch_seq": 6,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md",
-      "summary": "Re-measures the Init-import debt as 457 modules (not 434), shows the fix is 11 file edits at the import DAG's minimal elements, resolves the ForMathlib rule conflict via an exceptions entry, and specifies the exit-code fix and C24 wiring needed to flip CheckInitImports from reporting to gating."
+      "type": "plan",
+      "path": "specs/541_formalsystem_init_transitive_import_adoption/plans/01_init-transitive-import-adoption.md",
+      "summary": "Six-phase plan adopting FormalSystem.Init across the module tree via 11 minimal-element import edits, fixing the checker's truncated exit status, and wiring it as enforced check C24 with a mandated negative test."
     }
   ],
-  "metadata": {
-    "session_id": "sess_1788847801_97d6cb_541",
-    "agent_type": "lean-research-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+  "phase_count": 6,
+  "estimated_hours": 5.5,
+  "dependency_waves": [[1], [2], [3], [4], [5], [6]],
+  "memory_candidates": [
+    {
+      "content": "When a repository-wide invariant is 'every module must transitively import root module R', the edit surface is not the number of failing modules but the number of MINIMAL ELEMENTS of the project-internal import DAG (modules with zero intra-project imports). Adding the import to those leaves alone drives the missing count to zero, because every non-leaf reaches a minimal element by following any chain of internal imports. In BimodalLogic this turned a reported 457-module violation into 11 file edits. Two corollaries: (1) sequence the leaf edits low-fan-out first so the mechanism is exercised cheaply before the leaves that invalidate the whole build; (2) edit docstrings in the root module BEFORE adoption, since afterwards every module depends on it and any edit there forces a second full rebuild.",
+      "category": "PATTERN",
+      "source_artifact": "specs/541_formalsystem_init_transitive_import_adoption/plans/01_init-transitive-import-adoption.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["import-graph", "minimal-elements", "transitive-import", "lean4", "rebuild-ordering", "module-invariant"]
+    }
+  ],
+  "next_steps": "Run /implement 541 to execute the plan"
 }
