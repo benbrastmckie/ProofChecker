@@ -1,7 +1,7 @@
 # Implementation Plan: Close `defsWithUnderscore` Gate Evasion Routes
 
 - **Task**: 558 - Close the three (now four) evasion routes that let `defsWithUnderscore` reopen invisibly
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 9.5 hours
 - **Dependencies**: 555 (completed), 557 (completed)
 - **Research Inputs**: None (no research report; planned directly from the task specification plus live codebase measurement — see "Opening Measurement" below)
@@ -135,33 +135,33 @@ documents what phases 2-5 actually built.
 
 ---
 
-### Phase 1: Baseline measurement and exemption-set lock [NOT STARTED]
+### Phase 1: Baseline measurement and exemption-set lock [COMPLETED]
 
 **Goal**: Replace every inherited count with a measured one, and settle the three design
 questions C26's exemption set turns on, before a line of the check is written.
 
 **Tasks**:
-- [ ] Re-measure, on the current tree excluding `Boneyard/`: public snake_case `def`/`abbrev`
+- [x] Re-measure, on the current tree excluding `Boneyard/`: public snake_case `def`/`abbrev`
       declarations; `private` snake_case `def`/`abbrev` declarations; names hidden behind the
       upstream `_1`/`_2`/`_mathlib`/trailing-underscore heuristic; snake_case `instance`
       declarations. Record each count and its file distribution.
-- [ ] **Confirm or refute the Prop-instance hypothesis.** Take at least three of the measured
+- [x] **Confirm or refute the Prop-instance hypothesis.** Take at least three of the measured
       snake_case `instance` declarations and establish, by elaboration rather than by reading,
       whether the constant Lean records is a definition or a theorem — e.g. a scratch module that
       `import`s `FormalSystem` and reports `isDefinition` for each name, run with `lake env lean`
       against the existing oleans. The answer decides whether `instance` is exempt from C26.
-- [ ] Inventory every in-source `nolint` attribute outside `Boneyard/`: the attribute site
+- [x] Inventory every in-source `nolint` attribute outside `Boneyard/`: the attribute site
       (`@[nolint X]` and `attribute [nolint X] a b c` forms both), the linter named, and every
       declaration it covers. Record the exact list; this becomes the allow-list's seed content.
       Check `Tests/` as well as `FormalSystem/` and record whether the check's scope should
       include it.
-- [ ] Confirm what `runLinter` can and cannot be pointed at: whether
+- [x] Confirm what `runLinter` can and cannot be pointed at: whether
       `lake exe runLinter <ModuleName>` accepts a `lean_exe` root module and the `BimodalTest`
       library root, and what each reports today. This is the input to Phase 4's decision and
       costs nothing to establish now.
-- [ ] Record the next free check ID by reading the script's existing `ENFORCE_C*` block
+- [x] Record the next free check ID by reading the script's existing `ENFORCE_C*` block
       (expected `C26`; confirm no collision).
-- [ ] Write the findings into the phase's commit message and carry them forward — later phases
+- [x] Write the findings into the phase's commit message and carry them forward — later phases
       cite these numbers rather than re-deriving them.
 
 **Timing**: 1.5 hours
