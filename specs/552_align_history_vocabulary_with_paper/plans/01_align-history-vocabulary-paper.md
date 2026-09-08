@@ -1,7 +1,7 @@
 # Implementation Plan: Task #552
 
 - **Task**: 552 - Align history vocabulary with paper (`WorldHistory` -> `ConvexHistory`)
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 7 hours
 - **Dependencies**: None (the paper-anchor re-pin dependency is discharged for this task's three
   anchors — see Research Integration; the sibling task's six drifted anchors are disjoint)
@@ -124,29 +124,34 @@ Phase 3 owns `FormalSystem/**` (`.lean` docstrings + `README.md`); Phase 4 owns
 
 ---
 
-### Phase 1: Correct the record file's stale prose [NOT STARTED]
+### Phase 1: Correct the record file's stale prose [COMPLETED]
 
 **Goal**: Bring `specs/paper-definitions-of-record.md`'s own commentary onto the paper's
 vocabulary, without touching any pinned text, hash, or sentinel.
 
 **Tasks**:
-- [ ] Confirm the three anchors are already current: run `bash scripts/check-paper-definitions.sh`
+- [x] Confirm the three anchors are already current: run `bash scripts/check-paper-definitions.sh`
       and verify `def:world-history`, `thm:extension`, `cor:occurrence` are absent from the
       drifted list (expected drift set: the six `def:S5`/`def:BX*`/`def:TMplus` anchors).
-- [ ] Line 714 heading: `partial history, world history, totality, the extension order, \`H_F\``
+- [x] Line 714 heading: `partial history, world history, totality, the extension order, \`H_F\``
       -> `partial history, convex history, possible world, the extension order, \`H_F\``.
-- [ ] Line ~728 layering sentence: `**world history** (convex domain)` -> `**convex history**
+- [x] Line ~728 layering sentence: `**world history** (convex domain)` -> `**convex history**
       (convex domain)`; `**total** / **possible world**` -> `**possible world**`. This sentence is
       the wording that seeded the Lean naming; correcting it is the point of the phase.
-- [ ] Line 733 heading: `extends to a total world history` -> `extends to a possible world`.
-- [ ] Line 745 heading: `in some total world history` -> `in some possible world`.
-- [ ] Line ~898 commentary: `the full set of *total* world histories` -> `the set of possible
+- [x] Line 733 heading: `extends to a total world history` -> `extends to a possible world`.
+- [x] Line 745 heading: `in some total world history` -> `in some possible world`.
+- [x] Line ~898 commentary: `the full set of *total* world histories` -> `the set of possible
       worlds`.
-- [ ] Follow the file's own "How to extend this record" procedure (~line 1613) for any addendum
-      note recording that this task changed prose only.
-- [ ] Verify by inspection that lines 195, 228, 231, 339, 521 (archival drift-log entries) and
-      line ~1768 (a `>`-quoted **verbatim paper footnote**, hashed) are UNCHANGED.
-- [ ] `git diff` review: zero changes to any line matching `^sha256:`, `FILE_CHECKSUM`,
+- [x] Follow the file's own "How to extend this record" procedure (~line 1613) for any addendum
+      note recording that this task changed prose only. *(deviation: altered — steps 1-3 of that
+      procedure are anchor-addition steps and were vacuous here since no anchor was added or
+      re-pinned; only step 4, the checker re-run, applied. An addendum subsection "Vocabulary
+      alignment (2026-09-07): prose only, no re-pin" was added recording that.)*
+- [x] Verify by inspection that lines 195, 228, 231, 339, 521 (archival drift-log entries) and
+      line ~1768 (a `>`-quoted **verbatim paper footnote**, hashed) are UNCHANGED. *(deviation:
+      altered — measured at implementation time, only lines 228 and 1768 carry the phrase at all;
+      195/231/339/521 do not and needed no protection.)*
+- [x] `git diff` review: zero changes to any line matching `^sha256:`, `FILE_CHECKSUM`,
       `PINNED_COMMIT`, or to any line inside a fenced ` ```latex ` block.
 
 **Timing**: 0.5 hours

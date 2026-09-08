@@ -560,6 +560,25 @@ footnote has since been removed from the paper entirely, and the Lean tree has b
 guard-first, discharging the caveat rather than restating it. The decision record is closed as
 DECIDED.
 
+### Vocabulary alignment (2026-09-07): prose only, no re-pin
+
+The repository's own commentary around `def:world-history`, `thm:extension` and `cor:occurrence`
+still described the paper's middle tier as a *world history* and its top tier as a *total* world
+history. Those are the superseded terms: the pinned text of `def:world-history` above already
+layers **partial history** -> **convex history** -> **possible world**, and reserves `H_F` for the
+possible worlds. The surrounding headings and commentary have been brought onto that vocabulary.
+
+This was a prose-only correction. Per "How to extend this record", no anchor was added and no
+anchor drifted, so **no `verbatim:` block, no `sha256:` line, no manifest row, and neither the
+`PINNED_COMMIT` nor the `FILE_CHECKSUM` sentinel was touched**. `scripts/check-paper-definitions.sh`
+was re-run after the edit and its drifted-anchor set was unchanged (the six `def:S5`, `def:BX`,
+`def:BX-z`, `def:BX-d`, `def:BX-r`, `def:TMplus` anchors owned by the separate re-pin work);
+`def:world-history`, `thm:extension` and `cor:occurrence` do not appear in it.
+
+Two occurrences of "world history" survive below and are deliberate: the drift-log row under
+"Drift correction and rename absorption (2026-09-07)" quotes the *superseded* wording as archival
+evidence, and the `>`-quoted footnote under "Untracked sources" is verbatim paper text.
+
 ## How to read this file
 
 Each entry below has:
@@ -711,7 +730,7 @@ sha256: `94ed018343635a8ef6671daef07eaa72da1cb49fd11043fb3aa9b391a2c9c973`
 Proved (per the paper) from Seriality at `x = 0` plus Limit — choice-free, unlike `thm:extension`
 below which needs Zorn's lemma.
 
-### `def:world-history` — partial history, world history, totality, the extension order, `H_F`
+### `def:world-history` — partial history, convex history, possible world, the extension order, `H_F`
 
 ```latex
 \begin{Ddef} \label{def:world-history}
@@ -725,12 +744,12 @@ below which needs Zorn's lemma.
 sha256: `550661d3b388c3ef494ffb81c643ab5a550f996a5a86329afc557f41ed7872e7`
 
 Layering, exactly as the paper states it: **partial history** (nonempty domain, no convexity
-requirement) → **world history** (convex domain) → **total** / **possible world** (`X = D`). The
+requirement) → **convex history** (convex domain) → **possible world** (`X = D`). The
 vocabulary "task-constrained function" is retired paper-wide and must not be reintroduced as
 current terminology (see the paper-refactor cluster's task descriptions, which record the same
-point). `H_F` denotes only the *total* histories.
+point). `H_F` denotes the *possible worlds*, not the convex histories.
 
-### `thm:extension` — every partial history extends to a total world history
+### `thm:extension` — every partial history extends to a possible world
 
 ```latex
 \begin{Tthm} \label{thm:extension}
@@ -742,7 +761,7 @@ point). `H_F` denotes only the *total* histories.
 ```
 sha256: `65811dcff91a3dd840058353b14667d8abfcf5d94c8be9979944f03be5234379`
 
-### `cor:occurrence` — DERIVED: every world state occurs at any prescribed time in some total world history (renamed from `thm:occurrence`; see "Drift correction" below)
+### `cor:occurrence` — DERIVED: every world state occurs at any prescribed time in some possible world (renamed from `thm:occurrence`; see "Drift correction" below)
 
 ```latex
 \begin{Cthm} \label{cor:occurrence}
@@ -895,7 +914,7 @@ sha256: `239fba0ff163b461e0d1bf3c0e94da0cb0b62e7b2d7f4519916af4cc50d6967f`
 ```
 sha256: `b64b782a61c9a9613b68f37ec2d12229e7df8498043faeb1cf1c2686b8dd5a75`
 
-**The box clause's quantifier domain is `H_F`** — the full set of *total* world histories, not a
+**The box clause's quantifier domain is `H_F`** — the set of *possible worlds*, not a
 maximal-history set `H^max_F` (that vocabulary is retired; the block's own `%%` comment history
 above shows it was explicitly eliminated) and not an externally-supplied `Omega` subset. This is
 the single most consequential clause for the current `paper-refactor` cluster: the Lean tree's
