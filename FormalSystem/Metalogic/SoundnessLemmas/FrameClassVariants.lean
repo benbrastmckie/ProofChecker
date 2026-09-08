@@ -107,7 +107,7 @@ theorem mf_swap_valid (φ : Formula) :
       ((Formula.box φ).imp (Formula.box (Formula.allFuture φ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_box_swap σ h_σ_mem s h_s_lt_t
   have h_at_shifted :=
@@ -192,7 +192,7 @@ theorem serial_future_swap_valid :
         (Formula.someFuture (Formula.bot.imp Formula.bot))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro _
   obtain ⟨s, hst⟩ := exists_lt t
@@ -206,7 +206,7 @@ theorem serial_past_swap_valid :
         (Formula.somePast (Formula.bot.imp Formula.bot))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_past, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro _
   obtain ⟨s, hts⟩ := exists_gt t
@@ -219,7 +219,7 @@ theorem left_mono_until_G_swap_valid (φ χ ψ : Formula) :
       ((φ.imp χ).allFuture.imp ((Formula.untl φ ψ).imp (Formula.untl χ ψ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_H ⟨s, hst, h_ψs, h_guard⟩
   exact ⟨s, hst, h_ψs, fun r hsr hrt => h_H r hrt (h_guard r hsr hrt)⟩
@@ -231,7 +231,7 @@ theorem left_mono_since_H_swap_valid (φ χ ψ : Formula) :
       ((φ.imp χ).allPast.imp ((Formula.snce φ ψ).imp (Formula.snce χ ψ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_G ⟨s, hts, h_ψs, h_guard⟩
   exact ⟨s, hts, h_ψs, fun r htr hrs => h_G r htr (h_guard r htr hrs)⟩
@@ -243,7 +243,7 @@ theorem right_mono_until_swap_valid (φ ψ χ : Formula) :
       ((φ.imp ψ).allFuture.imp ((Formula.untl χ φ).imp (Formula.untl χ ψ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_H ⟨s, hst, h_φs, h_guard⟩
   exact ⟨s, hst, h_H s hst h_φs, h_guard⟩
@@ -255,7 +255,7 @@ theorem right_mono_since_swap_valid (φ ψ χ : Formula) :
       ((φ.imp ψ).allPast.imp ((Formula.snce χ φ).imp (Formula.snce χ ψ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_G ⟨s, hts, h_φs, h_guard⟩
   exact ⟨s, hts, h_G s hts h_φs, h_guard⟩
@@ -266,8 +266,7 @@ theorem connect_future_swap_valid (φ : Formula) :
     ValidIn FrameClass.Base (φ.imp (φ.somePast.allFuture)).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_past, Formula.swap_temporal_all_future,
-    Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_φt s hst
   exact ⟨t, hst, h_φt⟩
@@ -278,8 +277,7 @@ theorem connect_past_swap_valid (φ : Formula) :
     ValidIn FrameClass.Base (φ.imp (φ.someFuture.allPast)).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_future, Formula.swap_temporal_all_past,
-    Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro h_φt s hts
   exact ⟨t, hts, h_φt⟩
@@ -475,7 +473,7 @@ theorem until_F_swap_valid (φ ψ : Formula) :
     ValidIn FrameClass.Base ((Formula.untl φ ψ).imp (Formula.someFuture ψ)).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro ⟨s, hst, h_ψs, _h_guard⟩
   exact ⟨s, hst, h_ψs⟩
@@ -485,7 +483,7 @@ theorem since_P_swap_valid (φ ψ : Formula) :
     ValidIn FrameClass.Base ((Formula.snce φ ψ).imp (Formula.somePast ψ)).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_some_past, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro ⟨s, hts, h_ψs, _h_guard⟩
   exact ⟨s, hts, h_ψs⟩
@@ -535,7 +533,7 @@ theorem discrete_propagate_fwd_swap_valid :
         (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩ u _hut
   refine ⟨u - (t - r), sub_lt_self u (sub_pos.mpr hrt), fun h => h, fun c hrc hcu => ?_⟩
@@ -555,7 +553,7 @@ theorem discrete_propagate_bwd_swap_valid :
       (Formula.allPast (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
+  simp only [swap_norm, Formula.swapTemporal]
   simp only [truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩ u _htu
   refine ⟨u - (t - r), sub_lt_self u (sub_pos.mpr hrt), fun h => h, fun c hrc hcu => ?_⟩
