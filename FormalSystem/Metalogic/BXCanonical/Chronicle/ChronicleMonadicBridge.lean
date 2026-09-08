@@ -346,12 +346,12 @@ No source: original work. -/
 /-! ### Helper tautologies for the implication case
 
 Classical propositional facts about `neg (ψ → χ)`. These duplicate the *private* helpers
-`neg_imp_antecedent` / `neg_imp_neg_consequent` of `Algebraic/FlowFrame.lean` (originally of
+`negImpAntecedent` / `negImpNegConsequent` of `Algebraic/FlowFrame.lean` (originally of
 the retired restricted parametric truth-lemma module), which are not exported. The proofs are
 transcribed unchanged; nothing in the source file is edited or weakened. -/
 
 /-- Classical tautology: `neg (ψ → χ) → ψ`. -/
-private noncomputable def neg_imp_antecedent {fc : FrameClass} (ψ χ : Formula) :
+private noncomputable def negImpAntecedent {fc : FrameClass} (ψ χ : Formula) :
     DerivationTree fc [] ((ψ.imp χ).neg.imp ψ) := by
   have h_efq : DerivationTree FrameClass.Base [] (ψ.neg.imp (ψ.imp χ)) :=
     FormalSystem.Theorems.Propositional.impOfNeg ψ χ
@@ -381,7 +381,7 @@ private noncomputable def neg_imp_antecedent {fc : FrameClass} (ψ χ : Formula)
   exact h_base.lift (by cases fc <;> trivial)
 
 /-- Classical tautology: `neg (ψ → χ) → neg χ`. -/
-private noncomputable def neg_imp_neg_consequent {fc : FrameClass} (ψ χ : Formula) :
+private noncomputable def negImpNegConsequent {fc : FrameClass} (ψ χ : Formula) :
     DerivationTree fc [] ((ψ.imp χ).neg.imp χ.neg) := by
   have h_prop_s : [] ⊢ χ.imp (ψ.imp χ) :=
     DerivationTree.axiom [] _ (Axiom.prop_s χ ψ) trivial
@@ -449,13 +449,13 @@ theorem chronicleMonadic_truth_correspondence {fc : FrameClass}
           SetMaximalConsistent.closed_under_derivation h_mcs [(ψ.imp χ).neg]
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
-              (DerivationTree.weakening [] _ _ (neg_imp_antecedent ψ χ) (by intro; simp))
+              (DerivationTree.weakening [] _ _ (negImpAntecedent ψ χ) (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_neg_χ_mcs : χ.neg ∈ fam.mcs q :=
           SetMaximalConsistent.closed_under_derivation h_mcs [(ψ.imp χ).neg]
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
-              (DerivationTree.weakening [] _ _ (neg_imp_neg_consequent ψ χ) (by intro; simp))
+              (DerivationTree.weakening [] _ _ (negImpNegConsequent ψ χ) (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_χ_mcs : χ ∈ fam.mcs q :=
           (ihχ h_χ_sub q).mp (h_truth_imp ((ihψ h_ψ_sub q).mpr h_ψ_mcs))
@@ -696,7 +696,7 @@ theorem chronicleMonadic_truth_effective {fc : FrameClass}
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
               (DerivationTree.weakening [] _ _
-                (neg_imp_antecedent (chronicleEff root ψ) (chronicleEff root χ))
+                (negImpAntecedent (chronicleEff root ψ) (chronicleEff root χ))
                 (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_neg_χ_mcs : (chronicleEff root χ).neg ∈ fam.mcs q :=
@@ -705,7 +705,7 @@ theorem chronicleMonadic_truth_effective {fc : FrameClass}
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
               (DerivationTree.weakening [] _ _
-                (neg_imp_neg_consequent (chronicleEff root ψ) (chronicleEff root χ))
+                (negImpNegConsequent (chronicleEff root ψ) (chronicleEff root χ))
                 (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_χ_mcs : chronicleEff root χ ∈ fam.mcs q :=

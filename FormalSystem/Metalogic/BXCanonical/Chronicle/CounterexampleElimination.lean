@@ -778,7 +778,7 @@ At each step from `start`, find x' = successor in dom:
 
 Termination: `(dom.filter (· > start)).card` strictly decreases at each recursive step.
 -/
-private noncomputable def c5_forward_walk (fc : FrameClass)
+private noncomputable def c5ForwardWalk (fc : FrameClass)
     (χ : Chronicle) (h_c0 : χ.c0 fc) (h_c2' : χ.c2' fc)
     (ξ η : Formula) (pt : Rat)
     (h_start_mem : pt ∈ χ.dom)
@@ -1031,7 +1031,7 @@ private noncomputable def c5_forward_walk (fc : FrameClass)
           exact ⟨x', Finset.mem_filter.mpr ⟨hx'_dom, hstart_lt_x'⟩,
             fun h => absurd (Finset.mem_filter.mp h).2 (lt_irrefl _)⟩
       -- Recurse
-      have r := c5_forward_walk fc χ h_c0 h_c2' ξ η x' hx'_dom h_untl_x' h_no_wit_x'
+      have r := c5ForwardWalk fc χ h_c0 h_c2' ξ η x' hx'_dom h_untl_x' h_no_wit_x'
       -- Compose: guard at (pt, x') from condition (i) + recursive guard from x'
       exact { val := r.val
               dom_sub := r.dom_sub
@@ -1495,7 +1495,7 @@ below.
 
 Termination: `(dom.filter (· < start)).card` strictly decreases at each recursive step.
 -/
-private noncomputable def c5_backward_walk (fc : FrameClass)
+private noncomputable def c5BackwardWalk (fc : FrameClass)
     (χ : Chronicle) (h_c0 : χ.c0 fc) (h_c2' : χ.c2' fc)
     (ξ η : Formula) (pt : Rat)
     (h_start_mem : pt ∈ χ.dom)
@@ -1745,7 +1745,7 @@ private noncomputable def c5_backward_walk (fc : FrameClass)
           exact ⟨x'', Finset.mem_filter.mpr ⟨hx''_dom, hx''_lt_start⟩,
             fun h => absurd (Finset.mem_filter.mp h).2 (lt_irrefl _)⟩
       -- Recurse
-      have r := c5_backward_walk fc χ h_c0 h_c2' ξ η x'' hx''_dom h_snce_x'' h_no_wit_x''
+      have r := c5BackwardWalk fc χ h_c0 h_c2' ξ η x'' hx''_dom h_snce_x'' h_no_wit_x''
       -- Compose: guard at (x'', pt) from condition (i) + recursive guard from x''
       exact { val := r.val
               dom_sub := r.dom_sub
@@ -2017,7 +2017,7 @@ private noncomputable def c5_backward_walk (fc : FrameClass)
                   -- contradicting h_adj_x''s.
                   -- If a ∉ χ.dom, then a is a new point. But there are no new points in val (this
                   -- is the split case, not recursion).
-                  -- Actually, this is the split case in c5_backward_walk. val = insert z χ.dom.
+                  -- Actually, this is the split case in c5BackwardWalk. val = insert z χ.dom.
                   -- The only new point is z.
                   -- So a ∈ val.dom means a = z ∨ a ∈ χ.dom. Since a ≠ z, a ∈ χ.dom.
                   rcases ha_dom with rfl | ha_mem
@@ -2331,7 +2331,7 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
         -- If not, the existing splitting lemmas handle all cases.
         by_cases h_cond_i : Formula.and pc.ξ (Formula.untl pc.ξ pc.η) ∈ χ.f x' ∧ pc.ξ ∈ χ.g pc.x x'
         · -- **Condition (i)**: use recursive walk helper (Burgess 2.10 induction).
-          let r := c5_forward_walk fc χ h_c0 h_c2' pc.ξ pc.η pc.x h_mem h_until h_no_wit
+          let r := c5ForwardWalk fc χ h_c0 h_c2' pc.ξ pc.η pc.x h_mem h_until h_no_wit
           exact { val := r.val
                   dom_sub := r.dom_sub
                   c0 := r.c0
@@ -2899,7 +2899,7 @@ noncomputable def eliminatePotentialCounterexample (fc : FrameClass)
         by_cases h_cond_i_back : Formula.and pc.ξ (Formula.snce pc.ξ pc.η) ∈ χ.f x'' ∧ pc.ξ ∈ χ.g
             x'' pc.x
         · -- **Condition (i) backward**: use recursive backward walk helper
-          let r := c5_backward_walk fc χ h_c0 h_c2' pc.ξ pc.η pc.x h_mem h_since h_no_wit
+          let r := c5BackwardWalk fc χ h_c0 h_c2' pc.ξ pc.η pc.x h_mem h_since h_no_wit
           exact { val := r.val
                   dom_sub := r.dom_sub
                   c0 := r.c0

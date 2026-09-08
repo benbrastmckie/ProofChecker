@@ -433,22 +433,22 @@ and 1 `specs/` artifact. Confirm at phase start with
 
 ---
 
-### Phase 5: Private renames, cluster A — `BXCanonical/Chronicle` and `Bundle` [NOT STARTED]
+### Phase 5: Private renames, cluster A — `BXCanonical/Chronicle` and `Bundle` [COMPLETED]
 
 **Goal**: Rename the 26 private snake_case `def`s in the Chronicle / Bundle cluster. `private`
 in Lean 4 is module-scoped, so every use site of each name is inside its own file — these renames
 are strictly file-local.
 
 **Tasks**:
-- [ ] `FormalSystem/Metalogic/BXCanonical/Chronicle/PointInsertion.lean` — 20 renames
+- [x] `FormalSystem/Metalogic/BXCanonical/Chronicle/PointInsertion.lean` — 20 renames
       (`ex_falso_from_assumption`, `conj_intro_curried`, `and_left_impl`, `and_right_impl`,
       `derivation_from_implied`, `list_conj`, `list_conj_implies_elem`, the four `*_mono_deriv`,
       `iterated_enrichment`, `iterated_enrichment_since`, the two `lemma_2_7*_seed`, the four
       `l27*` helpers, and the remainder from the worklist).
-- [ ] `FormalSystem/Metalogic/BXCanonical/Chronicle/CounterexampleElimination.lean` — 2 renames.
-- [ ] `FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean` — 2 renames.
-- [ ] `FormalSystem/Metalogic/Bundle/WitnessSeed.lean` — 2 renames.
-- [ ] For each file: apply longest-name-first, word-boundary renames; update in-file docstrings
+- [x] `FormalSystem/Metalogic/BXCanonical/Chronicle/CounterexampleElimination.lean` — 2 renames.
+- [x] `FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean` — 2 renames.
+- [x] `FormalSystem/Metalogic/Bundle/WitnessSeed.lean` — 2 renames.
+- [x] For each file: apply longest-name-first, word-boundary renames; update in-file docstrings
       and comments naming the renamed helpers; confirm no cross-file reference exists
       (`grep -rlwF "<oldName>" FormalSystem/ Tests/` returns only the owning file).
 

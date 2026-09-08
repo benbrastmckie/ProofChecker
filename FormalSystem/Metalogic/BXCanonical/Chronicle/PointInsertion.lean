@@ -829,7 +829,7 @@ we show `burgessR3(A, Set.univ, C)` using ex-falso propagation through
 -/
 
 /-- Helper: `⊢ φ → (φ.neg → ψ)` for any ψ (ex falso from assumption). -/
-private noncomputable def ex_falso_from_assumption (fc : FrameClass) (φ ψ : Formula) :
+private noncomputable def exFalsoFromAssumption (fc : FrameClass) (φ ψ : Formula) :
     DerivationTree fc [] (φ.imp (φ.neg.imp ψ)) := by
   -- [φ.neg, φ] ⊢ ⊥ via modus ponens (φ.neg = φ → ⊥)
   have h1 : DerivationTree fc [φ.neg, φ] Formula.bot :=
@@ -845,12 +845,12 @@ private noncomputable def ex_falso_from_assumption (fc : FrameClass) (φ ψ : Fo
   -- Discharge φ.neg then φ: [φ] ⊢ φ.neg → ψ, then [] ⊢ φ → (φ.neg → ψ)
   exact deductionTheorem [] φ _ (deductionTheorem [φ] φ.neg ψ h2)
 
-/-- Helper: G(φ.neg → ψ) ∈ A from G(φ) ∈ A, using ex_falso_from_assumption + TG + temp_k_dist. -/
+/-- Helper: G(φ.neg → ψ) ∈ A from G(φ) ∈ A, using exFalsoFromAssumption + TG + temp_k_dist. -/
 private theorem G_ex_falso_strengthen (fc : FrameClass) {A : Set Formula}
     (h_mcs_A : SetMaximalConsistent (fc := fc) A) (φ ψ : Formula)
     (h_Gφ : Formula.allFuture φ ∈ A) :
     (φ.neg.imp ψ).allFuture ∈ A := by
-  have d_ef := ex_falso_from_assumption fc φ ψ
+  have d_ef := exFalsoFromAssumption fc φ ψ
   exact SetMaximalConsistent.implication_property h_mcs_A
     (SetMaximalConsistent.mp_of_theorem h_mcs_A (liftBase fc
           (FormalSystem.Theorems.TemporalDerived.temporalKDistDerived φ
@@ -858,13 +858,13 @@ private theorem G_ex_falso_strengthen (fc : FrameClass) {A : Set Formula}
       (theorem_in_mcs h_mcs_A (DerivationTree.temporal_necessitation _ d_ef)))
     h_Gφ
 
-/-- Helper: H(ψ.neg → χ) ∈ C from H(ψ) ∈ C, using ex_falso_from_assumption + pastNecessitation +
+/-- Helper: H(ψ.neg → χ) ∈ C from H(ψ) ∈ C, using exFalsoFromAssumption + pastNecessitation +
 pastKDist. -/
 private theorem H_ex_falso_strengthen (fc : FrameClass) {C : Set Formula}
     (h_mcs_C : SetMaximalConsistent (fc := fc) C) (ψ χ : Formula)
     (h_Hψ : Formula.allPast ψ ∈ C) :
     (ψ.neg.imp χ).allPast ∈ C := by
-  have d_ef := ex_falso_from_assumption fc ψ χ
+  have d_ef := exFalsoFromAssumption fc ψ χ
   exact SetMaximalConsistent.implication_property h_mcs_C
     (SetMaximalConsistent.mp_of_theorem h_mcs_C (FormalSystem.Theorems.pastKDist ψ (ψ.neg.imp χ))
       (theorem_in_mcs h_mcs_C (FormalSystem.Theorems.pastNecessitation _ d_ef)))
@@ -977,7 +977,7 @@ every φ ∈ GContent(A) (i.e., G(φ) ∈ A) must also be in B.
 -/
 
 /-- Helper: ⊢ φ → (β → (β ∧ φ)). Conjunction introduction curried. -/
-private noncomputable def conj_intro_curried (fc : FrameClass) (β φ : Formula) :
+private noncomputable def conjIntroCurried (fc : FrameClass) (β φ : Formula) :
     DerivationTree fc [] (φ.imp (β.imp (Formula.and β φ))) := by
   have h1 : DerivationTree fc [β, φ] (Formula.and β φ) :=
     DerivationTree.modus_ponens [β, φ] _ _
@@ -1192,12 +1192,12 @@ private theorem F_mono_mcs (fc : FrameClass) {A : Set Formula}
   exact Bundle.some_future_all_future_neg_absurd h_mcs phi h_F h_G_neg_phi
 
 /-- Helper: ⊢ (a ∧ b) → a (left conjunction elimination). -/
-private noncomputable def and_left_impl (fc : FrameClass) (a b : Formula) :
+private noncomputable def andLeftImpl (fc : FrameClass) (a b : Formula) :
     DerivationTree fc [] ((Formula.and a b).imp a) :=
   lceImp a b
 
 /-- Helper: ⊢ (a ∧ b) → b (right conjunction elimination). -/
-private noncomputable def and_right_impl (fc : FrameClass) (a b : Formula) :
+private noncomputable def andRightImpl (fc : FrameClass) (a b : Formula) :
     DerivationTree fc [] ((Formula.and a b).imp b) :=
   rceImp a b
 
@@ -1206,7 +1206,7 @@ If Γ ⊢ φ for each φ ∈ L, and L ⊢ ψ, then Γ ⊢ ψ.
 
 This is the substitution principle: we can replace assumptions in L
 with their derivations from Γ. Proved by induction on L. -/
-private noncomputable def derivation_from_implied (fc : FrameClass) (Γ : Context) :
+private noncomputable def derivationFromImplied (fc : FrameClass) (Γ : Context) :
     (L : Context) → (ψ : Formula) →
     (∀ φ ∈ L, DerivationTree fc Γ φ) →
     DerivationTree fc L ψ →
@@ -1219,7 +1219,7 @@ private noncomputable def derivation_from_implied (fc : FrameClass) (Γ : Contex
     have h_derives' : ∀ φ ∈ L', DerivationTree fc Γ φ := fun φ hφ =>
       h_derives φ (List.mem_cons.mpr (Or.inr hφ))
     have d_impl_Γ : DerivationTree fc Γ (l.imp ψ) :=
-      derivation_from_implied fc Γ L' (l.imp ψ) h_derives' d_impl
+      derivationFromImplied fc Γ L' (l.imp ψ) h_derives' d_impl
     -- Derive l from Γ
     have d_l : DerivationTree fc Γ l := h_derives l (List.mem_cons.mpr (Or.inl rfl))
     -- Apply modus ponens: Γ ⊢ l.imp ψ and Γ ⊢ l gives Γ ⊢ ψ
@@ -1242,60 +1242,60 @@ subset L of a seed D₀, we compress it into a single conjunction and
 show that conjunction is consistent via the BX chain. -/
 
 /-- Conjunction of a list of formulas. Empty list gives ⊤ (= ⊥→⊥). -/
-private noncomputable def list_conj (fc : FrameClass) : List Formula → Formula
+private noncomputable def listConj (fc : FrameClass) : List Formula → Formula
   | [] => Formula.bot.imp Formula.bot  -- top
   | [φ] => φ
-  | (φ :: rest) => Formula.and φ (list_conj fc rest)
+  | (φ :: rest) => Formula.and φ (listConj fc rest)
 
-/-- ⊢ list_conj L → φ for each φ ∈ L. -/
-private noncomputable def list_conj_implies_elem (fc : FrameClass) :
+/-- ⊢ listConj L → φ for each φ ∈ L. -/
+private noncomputable def listConjImpliesElem (fc : FrameClass) :
     (L : List Formula) → (φ : Formula) → (h : φ ∈ L) →
-    DerivationTree fc [] ((list_conj fc L).imp φ)
+    DerivationTree fc [] ((listConj fc L).imp φ)
   | [ψ], φ, h => by
     simp only [List.mem_cons, List.not_mem_nil, or_false] at h
-    subst h; simp only [list_conj]; exact identity φ
+    subst h; simp only [listConj]; exact identity φ
   | (ψ₁ :: ψ₂ :: rest), φ, h => by
-    simp only [list_conj]
+    simp only [listConj]
     -- Cannot use rcases on Or into Type; use decidable equality instead
     by_cases h_eq : φ = ψ₁
-    · -- φ = ψ₁: extract left component of ψ₁ ∧ list_conj(ψ₂::rest)
-      subst h_eq; exact lceImp φ (list_conj fc (ψ₂ :: rest))
+    · -- φ = ψ₁: extract left component of ψ₁ ∧ listConj(ψ₂::rest)
+      subst h_eq; exact lceImp φ (listConj fc (ψ₂ :: rest))
     · -- φ ∈ ψ₂ :: rest: extract right component, then recurse
       have h' : φ ∈ ψ₂ :: rest := by
         rcases List.mem_cons.mp h with rfl | h'
         · exact absurd rfl h_eq
         · exact h'
-      have h_right : DerivationTree fc [] _ := rceImp ψ₁ (list_conj fc (ψ₂ :: rest))
-      have h_rec := list_conj_implies_elem fc (ψ₂ :: rest) φ h'
+      have h_right : DerivationTree fc [] _ := rceImp ψ₁ (listConj fc (ψ₂ :: rest))
+      have h_rec := listConjImpliesElem fc (ψ₂ :: rest) φ h'
       exact impTrans h_right h_rec
 
-/-- If B is DCS and all elements of L are in B, then list_conj L ∈ B. -/
+/-- If B is DCS and all elements of L are in B, then listConj L ∈ B. -/
 private theorem list_conj_mem_dcs (fc : FrameClass) {B : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B) :
-    (L : List Formula) → (h : ∀ φ ∈ L, φ ∈ B) → list_conj fc L ∈ B
+    (L : List Formula) → (h : ∀ φ ∈ L, φ ∈ B) → listConj fc L ∈ B
   | [], _ => cud_contains_theorems h_dcs (identity Formula.bot)
-  | [φ], h => by simp only [list_conj]; exact h φ (List.mem_singleton.mpr rfl)
+  | [φ], h => by simp only [listConj]; exact h φ (List.mem_singleton.mpr rfl)
   | (φ₁ :: φ₂ :: rest), h => by
-    simp only [list_conj]
+    simp only [listConj]
     have h1 : φ₁ ∈ B := h φ₁ (List.mem_cons.mpr (Or.inl rfl))
-    have h2 : list_conj fc (φ₂ :: rest) ∈ B :=
+    have h2 : listConj fc (φ₂ :: rest) ∈ B :=
       list_conj_mem_dcs fc h_dcs (φ₂ :: rest) (fun ψ hψ =>
         h ψ (List.mem_cons.mpr (Or.inr hψ)))
     exact cud_conj_closed h_dcs h1 h2
 
-/-- If A is MCS and all elements of L are in A, then list_conj L ∈ A. -/
+/-- If A is MCS and all elements of L are in A, then listConj L ∈ A. -/
 private theorem list_conj_mem_mcs (fc : FrameClass) {A : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) A) :
-    (L : List Formula) → (h : ∀ φ ∈ L, φ ∈ A) → list_conj fc L ∈ A
+    (L : List Formula) → (h : ∀ φ ∈ L, φ ∈ A) → listConj fc L ∈ A
   | [], _ => theorem_in_mcs h_mcs (identity Formula.bot)
-  | [φ], h => by simp only [list_conj]; exact h φ (List.mem_singleton.mpr rfl)
+  | [φ], h => by simp only [listConj]; exact h φ (List.mem_singleton.mpr rfl)
   | (φ₁ :: φ₂ :: rest), h => by
-    simp only [list_conj]
+    simp only [listConj]
     have h1 : φ₁ ∈ A := h φ₁ (List.mem_cons.mpr (Or.inl rfl))
-    have h2 : list_conj fc (φ₂ :: rest) ∈ A :=
+    have h2 : listConj fc (φ₂ :: rest) ∈ A :=
       list_conj_mem_mcs fc h_mcs (φ₂ :: rest) (fun ψ hψ =>
         h ψ (List.mem_cons.mpr (Or.inr hψ)))
-    exact conj_mcs fc h_mcs φ₁ (list_conj fc (φ₂ :: rest)) h1 h2
+    exact conj_mcs fc h_mcs φ₁ (listConj fc (φ₂ :: rest)) h1 h2
 
 /-- If F(φ)∈A (MCS), then {φ} is consistent. -/
 private theorem consistent_of_F_mem (fc : FrameClass) {A : Set Formula}
@@ -1317,7 +1317,7 @@ private theorem inconsistent_singleton_false (fc : FrameClass) {φ : Formula}
 
 /-- Derivation-level left_mono for Until: if ⊢ φ→χ then ⊢ untl(φ,ψ) → untl(χ,ψ).
 Uses BX2G (left_mono_until_G): G(φ→χ) → untl(φ,ψ) → untl(χ,ψ). -/
-private noncomputable def untl_left_mono_deriv (fc : FrameClass) (φ ψ χ : Formula)
+private noncomputable def untlLeftMonoDeriv (fc : FrameClass) (φ ψ χ : Formula)
     (h_impl : DerivationTree fc [] (φ.imp χ)) :
     DerivationTree fc [] ((Formula.untl φ ψ).imp (Formula.untl χ ψ)) := by
   have h_G := DerivationTree.temporal_necessitation _ h_impl
@@ -1326,7 +1326,7 @@ private noncomputable def untl_left_mono_deriv (fc : FrameClass) (φ ψ χ : For
 
 /-- Derivation-level left_mono for Since: if ⊢ φ→χ then ⊢ snce(φ,ψ) → snce(χ,ψ).
 Uses BX2H (left_mono_since_H): H(φ→χ) → snce(φ,ψ) → snce(χ,ψ). -/
-private noncomputable def snce_left_mono_deriv (fc : FrameClass) (φ ψ χ : Formula)
+private noncomputable def snceLeftMonoDeriv (fc : FrameClass) (φ ψ χ : Formula)
     (h_impl : DerivationTree fc [] (φ.imp χ)) :
     DerivationTree fc [] ((Formula.snce φ ψ).imp (Formula.snce χ ψ)) := by
   have h_H := FormalSystem.Theorems.pastNecessitation _ h_impl
@@ -1335,7 +1335,7 @@ private noncomputable def snce_left_mono_deriv (fc : FrameClass) (φ ψ χ : For
 
 /-- Derivation-level right_mono for Until: if ⊢ φ→ψ then ⊢ untl(χ,φ) → untl(χ,ψ).
 Uses BX3 (right_mono_until): G(φ→ψ) → untl(χ,φ) → untl(χ,ψ). -/
-private noncomputable def untl_right_mono_deriv (fc : FrameClass) (φ ψ χ : Formula)
+private noncomputable def untlRightMonoDeriv (fc : FrameClass) (φ ψ χ : Formula)
     (h_impl : DerivationTree fc [] (φ.imp ψ)) :
     DerivationTree fc [] ((Formula.untl χ φ).imp (Formula.untl χ ψ)) := by
   have h_G := DerivationTree.temporal_necessitation _ h_impl
@@ -1344,7 +1344,7 @@ private noncomputable def untl_right_mono_deriv (fc : FrameClass) (φ ψ χ : Fo
 
 /-- Derivation-level right_mono for Since: if ⊢ φ→ψ then ⊢ snce(χ,φ) → snce(χ,ψ).
 Uses BX3' (right_mono_since): H(φ→ψ) → snce(χ,φ) → snce(χ,ψ). -/
-private noncomputable def snce_right_mono_deriv (fc : FrameClass) (φ ψ χ : Formula)
+private noncomputable def snceRightMonoDeriv (fc : FrameClass) (φ ψ χ : Formula)
     (h_impl : DerivationTree fc [] (φ.imp ψ)) :
     DerivationTree fc [] ((Formula.snce χ φ).imp (Formula.snce χ ψ)) := by
   have h_H := FormalSystem.Theorems.pastNecessitation _ h_impl
@@ -1424,7 +1424,7 @@ structure EnrichedEvent (fc : FrameClass) (A : Set Formula) (guard event : Formu
 formulas each in A, enrich the event with snce(guard, αⱼ) for each αⱼ.
 
 Result: EnrichedEvent fc containing the new event and proofs. -/
-private noncomputable def iterated_enrichment (fc : FrameClass) {A : Set Formula}
+private noncomputable def iteratedEnrichment (fc : FrameClass) {A : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (guard : Formula) :
     (alphas : List Formula) →
@@ -1438,7 +1438,7 @@ private noncomputable def iterated_enrichment (fc : FrameClass) {A : Set Formula
     have h_enriched := enrichment_until_mcs fc h_mcs h_α h_untl
     have h_rest : ∀ α' ∈ rest, α' ∈ A := fun α' hα' =>
       h_alphas α' (List.mem_cons.mpr (Or.inr hα'))
-    let evt := iterated_enrichment fc h_mcs guard rest h_rest
+    let evt := iteratedEnrichment fc h_mcs guard rest h_rest
       (Formula.and event (Formula.snce guard α)) h_enriched
     exact EnrichedEvent.mk evt.event' evt.h_untl
       (impTrans evt.hImpl (lceImp event (Formula.snce guard α)))
@@ -1465,7 +1465,7 @@ structure EnrichedEventSince (fc : FrameClass) (C : Set Formula) (guard event : 
 
 /-- Iterated BX13' enrichment (Since direction): given snce(guard, event) ∈ C and
 a list of formulas each in C, enrich the event with untl(guard, γⱼ) for each γⱼ. -/
-private noncomputable def iterated_enrichment_since (fc : FrameClass) {C : Set Formula}
+private noncomputable def iteratedEnrichmentSince (fc : FrameClass) {C : Set Formula}
     (h_mcs : SetMaximalConsistent (fc := fc) C)
     (guard : Formula) :
     (gammas : List Formula) →
@@ -1480,7 +1480,7 @@ private noncomputable def iterated_enrichment_since (fc : FrameClass) {C : Set F
     have h_enriched := enrichment_since_mcs fc h_mcs h_γ h_snce
     have h_rest : ∀ γ' ∈ rest, γ' ∈ C := fun γ' hγ' =>
       h_gammas γ' (List.mem_cons.mpr (Or.inr hγ'))
-    let evt := iterated_enrichment_since fc h_mcs guard rest h_rest
+    let evt := iteratedEnrichmentSince fc h_mcs guard rest h_rest
       (Formula.and event (Formula.untl guard γ)) h_enriched
     exact EnrichedEventSince.mk evt.event' evt.h_snce
       (impTrans evt.hImpl (lceImp event (Formula.untl guard γ)))
@@ -1597,11 +1597,11 @@ theorem xu_lemma_3_2_1_until (fc : FrameClass) {A B C : Set Formula}
   have h_event_mono : DerivationTree fc []
       ((Formula.untl beta'' gamma'').imp (Formula.untl beta'' gamma)) :=
     DerivationTree.modus_ponens [] _ _ h_bx3_ax h_G_event
-  -- Guard monotonicity: ⊢ untl(beta'', gamma) → untl(beta, gamma) via untl_left_mono_deriv
+  -- Guard monotonicity: ⊢ untl(beta'', gamma) → untl(beta, gamma) via untlLeftMonoDeriv
   have h_guard_impl : DerivationTree fc [] (beta''.imp beta) := lceImp beta beta'
   have h_guard_mono : DerivationTree fc []
       ((Formula.untl beta'' gamma).imp (Formula.untl beta gamma)) :=
-    untl_left_mono_deriv fc beta'' gamma beta h_guard_impl
+    untlLeftMonoDeriv fc beta'' gamma beta h_guard_impl
   -- Compose: ⊢ untl(beta'', gamma'') → untl(beta, gamma)
   have h_untl_mono : DerivationTree fc []
       ((Formula.untl beta'' gamma'').imp (Formula.untl beta gamma)) :=
@@ -1733,11 +1733,11 @@ theorem xu_lemma_3_2_1_since (fc : FrameClass) {A B C : Set Formula}
   have h_event_mono : DerivationTree fc []
       ((Formula.snce beta'' alpha'').imp (Formula.snce beta'' alpha')) :=
     DerivationTree.modus_ponens [] _ _ h_bx3'_ax h_H_event
-  -- Guard monotonicity: ⊢ snce(beta'', alpha') → snce(beta, alpha') via snce_left_mono_deriv
+  -- Guard monotonicity: ⊢ snce(beta'', alpha') → snce(beta, alpha') via snceLeftMonoDeriv
   have h_guard_impl : DerivationTree fc [] (beta''.imp beta) := lceImp beta beta'
   have h_guard_mono : DerivationTree fc []
       ((Formula.snce beta'' alpha').imp (Formula.snce beta alpha')) :=
-    snce_left_mono_deriv fc beta'' alpha' beta h_guard_impl
+    snceLeftMonoDeriv fc beta'' alpha' beta h_guard_impl
   -- Compose: ⊢ snce(beta'', alpha'') → snce(beta, alpha')
   have h_snce_mono : DerivationTree fc []
       ((Formula.snce beta'' alpha'').imp (Formula.snce beta alpha')) :=
@@ -1776,7 +1776,7 @@ theorem xu_lemma_3_2_1_since (fc : FrameClass) {A B C : Set Formula}
       -- Guard: beta'' → beta (lceImp)
       have h_gd_mono : DerivationTree fc []
           ((Formula.snce beta'' alpha).imp (Formula.snce beta alpha)) :=
-        snce_left_mono_deriv fc beta'' alpha beta (lceImp beta beta')
+        snceLeftMonoDeriv fc beta'' alpha beta (lceImp beta beta')
       have h_full_snce_mono : DerivationTree fc []
           ((Formula.snce beta'' alpha'').imp (Formula.snce beta alpha)) :=
         impTrans h_ev_mono h_gd_mono
@@ -1879,18 +1879,18 @@ Convention alignment with Burgess:
   The condition is xi ∉ B (guard not in B, matching Burgess η ∉ B).
   The seed contains {eta} (event, Burgess ξ) → eta ∈ D.
   The 3rd component snce(β∧xi, α) (Burgess S(α, β∧η)) → xi ∈ B'. -/
-private def lemma_2_7_seed (_fc : FrameClass) (A B _C : Set Formula) (xi eta : Formula) : Set
+private def lemma27Seed (_fc : FrameClass) (A B _C : Set Formula) (xi eta : Formula) : Set
     Formula :=
   B ∪ {eta} ∪ {φ | ∃ β ∈ B, ∃ α ∈ A, φ = Formula.snce (Formula.and β xi) α}
 
-/-- Extract a B-guard from a single element of the lemma_2_7_seed.
+/-- Extract a B-guard from a single element of the lemma27Seed.
 For each of the 3 cases:
 1. φ ∈ B: guard = φ
 2. φ = eta: guard = ⊤ (any theorem)
 3. φ = snce(β'∧xi, α'): guard = β' -/
-private noncomputable def l27_guard (fc : FrameClass) {A B C : Set Formula}
+private noncomputable def l27Guard (fc : FrameClass) {A B C : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B)
-    (xi eta : Formula) (φ : Formula) (_h : φ ∈ lemma_2_7_seed fc A B C xi eta) :
+    (xi eta : Formula) (φ : Formula) (_h : φ ∈ lemma27Seed fc A B C xi eta) :
     { g : Formula // g ∈ B } := by
   classical
   by_cases h1 : φ ∈ B
@@ -1900,41 +1900,41 @@ private noncomputable def l27_guard (fc : FrameClass) {A B C : Set Formula}
     · -- Must be eta
       exact ⟨Formula.bot.imp Formula.bot, cud_contains_theorems h_dcs (identity Formula.bot)⟩
 
-/-- Recursively extract B-guards from L ⊆ lemma_2_7_seed.
+/-- Recursively extract B-guards from L ⊆ lemma27Seed.
 Includes β₀ (maximality witness guard) to ensure guard→β₀ via conjunction elimination. -/
-private noncomputable def l27_collect_guards (fc : FrameClass) {A B C : Set Formula}
+private noncomputable def l27CollectGuards (fc : FrameClass) {A B C : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B)
     (xi eta : Formula) :
     (L : List Formula) →
-    (hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta) →
+    (hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta) →
     { gs : List Formula // ∀ g ∈ gs, g ∈ B }
   | [], _ => ⟨[], fun _ h => (by simp at h)⟩
   | φ :: rest, hL =>
-    let ⟨g, hg⟩ := l27_guard fc h_dcs xi eta φ (hL φ (List.mem_cons.mpr (Or.inl rfl)))
-    let ⟨gs, hgs⟩ := l27_collect_guards fc h_dcs xi eta rest
+    let ⟨g, hg⟩ := l27Guard fc h_dcs xi eta φ (hL φ (List.mem_cons.mpr (Or.inl rfl)))
+    let ⟨gs, hgs⟩ := l27CollectGuards fc h_dcs xi eta rest
       (fun ψ hψ => hL ψ (List.mem_cons.mpr (Or.inr hψ)))
     ⟨g :: gs, fun g' hg' => by
       rcases List.mem_cons.mp hg' with rfl | h
       · exact hg
       · exact hgs g' h⟩
 
-/-- For each element of L ⊆ lemma_2_7_seed, extract the A-event
+/-- For each element of L ⊆ lemma27Seed, extract the A-event
 (if snce(β'∧xi, α') formula from component 3). -/
-private noncomputable def l27_a_event_list (fc : FrameClass) {A B C : Set Formula}
+private noncomputable def l27AEventList (fc : FrameClass) {A B C : Set Formula}
     (xi eta : Formula) (L : List Formula)
-    (_hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta) : List Formula :=
+    (_hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta) : List Formula :=
   L.filterMap (fun φ => by
     classical
     exact if h : ∃ β' ∈ B, ∃ α ∈ A, φ = Formula.snce (Formula.and β' xi) α then
       some (Classical.choose (Classical.choose_spec h).2)
     else none)
 
-/-- Elements of l27_a_event_list are in A. -/
+/-- Elements of l27AEventList are in A. -/
 private theorem l27_a_event_list_mem (fc : FrameClass) {A B C : Set Formula}
     {xi eta : Formula} {L : List Formula}
-    {hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta}
-    {α : Formula} (hα : α ∈ l27_a_event_list fc xi eta L hL) : α ∈ A := by
-  unfold l27_a_event_list at hα
+    {hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta}
+    {α : Formula} (hα : α ∈ l27AEventList fc xi eta L hL) : α ∈ A := by
+  unfold l27AEventList at hα
   rcases List.mem_filterMap.mp hα with ⟨φ, _, h_eq⟩
   split at h_eq
   · next h_snce5 =>
@@ -1943,18 +1943,18 @@ private theorem l27_a_event_list_mem (fc : FrameClass) {A B C : Set Formula}
     exact (Classical.choose_spec ((Classical.choose_spec h_snce5).2)).1
   · simp at h_eq
 
-/-- If φ ∈ L ∩ B then φ is in l27_collect_guards output. -/
+/-- If φ ∈ L ∩ B then φ is in l27CollectGuards output. -/
 private theorem l27_collect_guards_mem_of_B (fc : FrameClass) {A B C : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B) (xi eta : Formula) :
     (L : List Formula) →
-    (hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta) →
-    ∀ φ ∈ L, φ ∈ B → φ ∈ (l27_collect_guards fc h_dcs xi eta L hL).val
+    (hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta) →
+    ∀ φ ∈ L, φ ∈ B → φ ∈ (l27CollectGuards fc h_dcs xi eta L hL).val
   | [], _, φ, hφ, _ => (by simp at hφ)
   | ψ :: rest, hL, φ, hφ, h_B => by
-    simp only [l27_collect_guards, List.mem_cons]
+    simp only [l27CollectGuards, List.mem_cons]
     rcases List.mem_cons.mp hφ with rfl | h_rest
     · left
-      unfold l27_guard; simp [h_B]
+      unfold l27Guard; simp [h_B]
     · right; exact l27_collect_guards_mem_of_B fc h_dcs xi eta rest _ φ h_rest h_B
 
 /-- Formula.and is injective in the first argument. -/
@@ -1963,14 +1963,14 @@ private theorem formula_and_left_cancel (_fc : FrameClass) {a b c : Formula}
   unfold Formula.and Formula.neg at h
   exact (Formula.imp.injEq _ _ _ _ |>.mp (Formula.imp.injEq _ _ _ _ |>.mp h).1).1
 
-/-- l27_guard for snce(β'∧xi,α') when snce(β'∧xi,α') ∉ B returns β'. -/
+/-- l27Guard for snce(β'∧xi,α') when snce(β'∧xi,α') ∉ B returns β'. -/
 private theorem l27_guard_snce_xi_val (fc : FrameClass) {A B C : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B) (xi eta β' α' : Formula)
-    (h_seed : Formula.snce (Formula.and β' xi) α' ∈ lemma_2_7_seed fc A B C xi eta)
+    (h_seed : Formula.snce (Formula.and β' xi) α' ∈ lemma27Seed fc A B C xi eta)
     (h_not_B : Formula.snce (Formula.and β' xi) α' ∉ B)
     (hβ' : β' ∈ B) (hα' : α' ∈ A) :
-    (l27_guard fc h_dcs xi eta (Formula.snce (Formula.and β' xi) α') h_seed).val = β' := by
-  unfold l27_guard; simp only [h_not_B, ↓reduceDIte, Formula.snce.injEq, ↓existsAndEq, true_and]
+    (l27Guard fc h_dcs xi eta (Formula.snce (Formula.and β' xi) α') h_seed).val = β' := by
+  unfold l27Guard; simp only [h_not_B, ↓reduceDIte, Formula.snce.injEq, ↓existsAndEq, true_and]
   split
   · next h =>
     have h_spec := Classical.choose_spec h
@@ -1986,13 +1986,13 @@ then β' is in the guard list. -/
 private theorem l27_collect_guards_mem_of_snce_xi (fc : FrameClass) {A B C : Set Formula}
     (h_dcs : ClosedUnderDerivation fc B) (xi eta : Formula) :
     (L : List Formula) →
-    (hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta) →
+    (hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta) →
     ∀ β' α', Formula.snce (Formula.and β' xi) α' ∈ L → β' ∈ B → α' ∈ A →
       Formula.snce (Formula.and β' xi) α' ∉ B →
-      β' ∈ (l27_collect_guards fc h_dcs xi eta L hL).val
+      β' ∈ (l27CollectGuards fc h_dcs xi eta L hL).val
   | [], _, β', α', hφ, _, _, _ => (by simp at hφ)
   | ψ :: rest, hL, β', α', hφ, hβ', hα', h_not_B => by
-    simp only [l27_collect_guards, List.mem_cons]
+    simp only [l27CollectGuards, List.mem_cons]
     rcases List.mem_cons.mp hφ with rfl | h_rest
     · left
       exact (l27_guard_snce_xi_val fc h_dcs xi eta β' α'
@@ -2002,14 +2002,14 @@ private theorem l27_collect_guards_mem_of_snce_xi (fc : FrameClass) {A B C : Set
       exact l27_collect_guards_mem_of_snce_xi fc h_dcs xi eta rest _ β' α' h_rest hβ' hα' h_not_B
 
 /-- If snce(β'∧xi,α') ∈ L with β'∈B, α'∈A, and appropriate conditions,
-then α' ∈ l27_a_event_list. -/
+then α' ∈ l27AEventList. -/
 private theorem l27_a_event_list_α_mem_xi (fc : FrameClass) {A B C : Set Formula}
     {xi eta : Formula} {L : List Formula}
-    {hL : ∀ φ ∈ L, φ ∈ lemma_2_7_seed fc A B C xi eta}
+    {hL : ∀ φ ∈ L, φ ∈ lemma27Seed fc A B C xi eta}
     {β' α' : Formula} (hφ : Formula.snce (Formula.and β' xi) α' ∈ L)
     (hβ' : β' ∈ B) (hα' : α' ∈ A) :
-    α' ∈ l27_a_event_list fc xi eta L hL := by
-  unfold l27_a_event_list
+    α' ∈ l27AEventList fc xi eta L hL := by
+  unfold l27AEventList
   apply List.mem_filterMap.mpr
   refine ⟨Formula.snce (Formula.and β' xi) α', hφ, ?_⟩
   have h_ex : ∃ β'' ∈ B, ∃ α'' ∈ A, Formula.snce (Formula.and β' xi) α' = Formula.snce (Formula.and β'' xi)
@@ -2036,7 +2036,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
     (xi eta : Formula)
     (h_until : Formula.untl xi eta ∈ A)
     (h_xi_not_B : xi ∉ B) :
-    SetConsistent (fc := fc) (lemma_2_7_seed fc A B C xi eta) := by
+    SetConsistent (fc := fc) (lemma27Seed fc A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   -- Step 1: Extract neg-until witness from xi ∉ B + BurgessR3Maximal
   have h_not_r3_xi := BurgessR3Maximal.extension_fails fc h_r3m h_xi_not_B
@@ -2084,22 +2084,22 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
         (∀ α ∈ alpha_list, DerivationTree fc []
             (event.imp (Formula.snce (Formula.and b (Formula.and xi (Formula.untl xi eta))) α))) by
     -- Extract B-guards and A-events from L
-    let b_list_raw := (l27_collect_guards fc h_B_dcs xi eta L hL).val
-    have hb_list : ∀ g ∈ b_list_raw, g ∈ B := (l27_collect_guards fc h_B_dcs xi eta L hL).property
+    let b_list_raw := (l27CollectGuards fc h_B_dcs xi eta L hL).val
+    have hb_list : ∀ g ∈ b_list_raw, g ∈ B := (l27CollectGuards fc h_B_dcs xi eta L hL).property
     let b_list := beta0 :: b_list_raw
     have hb_list' : ∀ g ∈ b_list, g ∈ B := by
       intro g hg; rcases List.mem_cons.mp hg with rfl | h
       · exact h_beta0
       · exact hb_list g h
-    let a_list := l27_a_event_list fc xi eta L hL
+    let a_list := l27AEventList fc xi eta L hL
     have ha_list : ∀ α ∈ a_list, α ∈ A := fun α hα => l27_a_event_list_mem fc hα
     -- Form compressed formulas (gamma0 alone suffices since no untl in seed)
-    let b := list_conj fc b_list
+    let b := listConj fc b_list
     let γ_hat := gamma0
     have hb_B : b ∈ B := list_conj_mem_dcs fc h_B_dcs b_list hb_list'
     have hγ_C : γ_hat ∈ C := h_gamma0
     have h_b_to_beta0 : DerivationTree fc [] (b.imp beta0) :=
-      list_conj_implies_elem fc b_list beta0 (List.mem_cons.mpr (Or.inl rfl))
+      listConjImpliesElem fc b_list beta0 (List.mem_cons.mpr (Or.inl rfl))
     have h_γ_to_gamma0 : DerivationTree fc [] (γ_hat.imp gamma0) := identity gamma0
     -- Apply h_key
     obtain ⟨event, h_F_event, h_ev_b, h_ev_eta, _h_ev_untl, h_ev_snce⟩ :=
@@ -2114,7 +2114,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
       · have h_φ_in_raw : φ ∈ b_list_raw := l27_collect_guards_mem_of_B fc h_B_dcs xi eta L hL φ hφ
           h_B_case
         have h_φ_in_b : φ ∈ b_list := List.mem_cons.mpr (Or.inr h_φ_in_raw)
-        have h_b_to_φ : DerivationTree fc [] (b.imp φ) := list_conj_implies_elem fc b_list φ
+        have h_b_to_φ : DerivationTree fc [] (b.imp φ) := listConjImpliesElem fc b_list φ
             h_φ_in_b
         have h_ev_to_φ : DerivationTree fc [] (event.imp φ) := impTrans h_ev_b h_b_to_φ
         exact DerivationTree.modus_ponens _ _ _
@@ -2143,7 +2143,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
               have h_in_b : Formula.snce (Formula.and β' xi) α' ∈ b_list := List.mem_cons.mpr
                   (Or.inr h_in_raw)
               have h_b_imp : DerivationTree fc [] (b.imp (Formula.snce (Formula.and β' xi) α')) :=
-                list_conj_implies_elem fc b_list (Formula.snce (Formula.and β' xi) α') h_in_b
+                listConjImpliesElem fc b_list (Formula.snce (Formula.and β' xi) α') h_in_b
               have h_ev_imp := impTrans h_ev_b h_b_imp
               exact DerivationTree.modus_ponens _ _ _
                 (DerivationTree.weakening [] _ _ h_ev_imp (List.nil_subset _))
@@ -2155,7 +2155,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
               have h_β'_in_raw := l27_collect_guards_mem_of_snce_xi fc h_B_dcs xi eta L hL β' α'
                   h_φ_eq_snce5 hβ' hα' h_snce5_B
               have h_β'_in_b : β' ∈ b_list := List.mem_cons.mpr (Or.inr h_β'_in_raw)
-              have h_b_to_β' : DerivationTree fc [] (b.imp β') := list_conj_implies_elem fc b_list
+              have h_b_to_β' : DerivationTree fc [] (b.imp β') := listConjImpliesElem fc b_list
                   β' h_β'_in_b
               have h_bχ_to_β'xi : DerivationTree fc []
                   ((Formula.and b χ_gen).imp (Formula.and β' xi)) := by
@@ -2163,7 +2163,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
                 have h2 : DerivationTree fc [] _ := impTrans (rceImp b χ_gen)
                     (lceImp xi (Formula.untl xi eta))
                 exact combineImpConj h1 h2
-              have h_mono := snce_left_mono_deriv fc (Formula.and b χ_gen) α' (Formula.and β' xi)
+              have h_mono := snceLeftMonoDeriv fc (Formula.and b χ_gen) α' (Formula.and β' xi)
                   h_bχ_to_β'xi
               have h_chain := impTrans h_ev_snce_α' h_mono
               exact DerivationTree.modus_ponens _ _ _
@@ -2171,10 +2171,10 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
                 (DerivationTree.assumption _ _ (by exact List.mem_singleton.mpr rfl))
           · -- Contradiction: φ must be in one of the three sets
             exfalso
-            simp [lemma_2_7_seed, h_B_case, h_eta, h_snce5] at h_φ_seed
+            simp [lemma27Seed, h_B_case, h_eta, h_snce5] at h_φ_seed
     -- Derive contradiction.
     have d_event : DerivationTree fc [event] Formula.bot :=
-      derivation_from_implied fc [event] L Formula.bot h_event_implies_L d
+      derivationFromImplied fc [event] L Formula.bot h_event_implies_L d
     have h_event_cons := consistent_of_F_mem fc h_mcs_A event h_F_event
     exact inconsistent_singleton_false fc h_event_cons d_event
   -- Prove h_key: the generalized BX5+BX7+BX13 chain helper.
@@ -2208,7 +2208,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
     · exact h_D3
   let guard := Formula.and φ_gen χ_gen
   let base_event := Formula.and φ_gen eta
-  let evt := iterated_enrichment fc h_mcs_A guard alpha_list h_alphas base_event h_D3_gen
+  let evt := iteratedEnrichment fc h_mcs_A guard alpha_list h_alphas base_event h_D3_gen
   let event := evt.event'
   have h_F_event : Formula.someFuture event ∈ A := until_implies_F_mcs fc h_mcs_A evt.h_untl
   have h_ev_base := evt.hImpl
@@ -2227,7 +2227,7 @@ private theorem lemma_2_7_seed_consistent (fc : FrameClass) {A B C : Set Formula
           (lceImp b (Formula.untl b γ_hat))
       have h2 : DerivationTree fc [] _ := rceImp φ_gen χ_gen
       exact combineImpConj h1 h2
-    exact impTrans h_snce_guard (snce_left_mono_deriv fc guard α (Formula.and b χ_gen)
+    exact impTrans h_snce_guard (snceLeftMonoDeriv fc guard α (Formula.and b χ_gen)
         h_guard_to_bχ)
   exact ⟨event, h_F_event, h_ev_b, h_ev_eta, h_ev_untl, h_ev_snce⟩
 
@@ -2268,10 +2268,10 @@ theorem lemma_2_7 (fc : FrameClass) {A B C : Set Formula}
   obtain ⟨D, h_sup, h_D_mcs⟩ := set_lindenbaum _ h_seed_cons
   -- Step 3: Extract key memberships from seed
   have h_eta_D : eta ∈ D := by
-    apply h_sup; show eta ∈ lemma_2_7_seed fc A B C xi eta; simp [lemma_2_7_seed]
+    apply h_sup; show eta ∈ lemma27Seed fc A B C xi eta; simp [lemma27Seed]
   have h_B_sub_D : B ⊆ D := by
     intro φ hφ; apply h_sup
-    show φ ∈ lemma_2_7_seed fc A B C xi eta; simp [lemma_2_7_seed, hφ]
+    show φ ∈ lemma27Seed fc A B C xi eta; simp [lemma27Seed, hφ]
   -- Until/Since formulas in D via Xu 3.2.1 + B ⊆ D
   -- Xu 3.2.1(i): untl(β, γ) ∈ B for all β ∈ B, γ ∈ C. Since B ⊆ D: untl(β, γ) ∈ D.
   have h_untl_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl β γ ∈ D := by
@@ -2300,8 +2300,8 @@ theorem lemma_2_7 (fc : FrameClass) {A B C : Set Formula}
   -- (xi = guard = Burgess η; the 5th component is S(α, β∧η) in Burgess)
   have h_snce_conj_xi_D : ∀ β ∈ B, ∀ α ∈ A, Formula.snce (Formula.and β xi) α ∈ D := by
     intro β hβ α hα; apply h_sup
-    show Formula.snce (Formula.and β xi) α ∈ lemma_2_7_seed fc A B C xi eta
-    simp only [lemma_2_7_seed, Set.mem_union, Set.mem_setOf_eq]; right; exact ⟨β, hβ, α, hα, rfl⟩
+    show Formula.snce (Formula.and β xi) α ∈ lemma27Seed fc A B C xi eta
+    simp only [lemma27Seed, Set.mem_union, Set.mem_setOf_eq]; right; exact ⟨β, hβ, α, hα, rfl⟩
   -- Step 5c: Derive snce(xi, α) ∈ D for all α ∈ A (via left_mono_since_H)
   -- From snce(β∧xi, α) ∈ D and ⊢ (β∧xi) → xi: snce(xi, α) ∈ D
   have h_B_nonempty : ∃ β₀ : Formula, β₀ ∈ B := by
@@ -2361,7 +2361,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
     (xi eta : Formula)
     (h_until : Formula.untl xi eta ∈ A)
     (h_neg_disj : (Formula.or eta (Formula.and xi (Formula.untl xi eta))).neg ∈ C) :
-    SetConsistent (fc := fc) (lemma_2_7_seed fc A B C xi eta) := by
+    SetConsistent (fc := fc) (lemma27Seed fc A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   set γ' := (Formula.or eta (Formula.and xi (Formula.untl xi eta))).neg with γ'_def
   have h_γ'_to_neg_eta : DerivationTree fc [] (γ'.imp eta.neg) :=
@@ -2382,9 +2382,9 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
         (∀ α ∈ alpha_list, DerivationTree fc []
             (event.imp (Formula.snce (Formula.and b (Formula.and xi (Formula.untl xi eta))) α))) by
     intro L hL ⟨d⟩
-    let b_list_raw := (l27_collect_guards fc h_B_dcs xi eta L hL).val
-    have hb_list : ∀ g ∈ b_list_raw, g ∈ B := (l27_collect_guards fc h_B_dcs xi eta L hL).property
-    let a_list := l27_a_event_list fc xi eta L hL
+    let b_list_raw := (l27CollectGuards fc h_B_dcs xi eta L hL).val
+    have hb_list : ∀ g ∈ b_list_raw, g ∈ B := (l27CollectGuards fc h_B_dcs xi eta L hL).property
+    let a_list := l27AEventList fc xi eta L hL
     have ha_list : ∀ α ∈ a_list, α ∈ A := fun α hα => l27_a_event_list_mem fc hα
     -- b_list with ⊤ prefix for nonemptiness
     let b_list_full := (Formula.bot.imp Formula.bot) :: b_list_raw
@@ -2392,7 +2392,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
       intro g hg; rcases List.mem_cons.mp hg with rfl | h
       · exact cud_contains_theorems h_B_dcs (identity Formula.bot)
       · exact hb_list g h
-    let b := list_conj fc b_list_full
+    let b := listConj fc b_list_full
     -- γ_hat = γ' (the neg-disjunction witness)
     let γ_hat := γ'
     have hb_B : b ∈ B := list_conj_mem_dcs fc h_B_dcs b_list_full hb_list_full
@@ -2409,7 +2409,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
       · have h_φ_in_raw : φ ∈ b_list_raw := l27_collect_guards_mem_of_B fc h_B_dcs xi eta L hL φ hφ
           h_B_case
         have h_φ_in_b : φ ∈ b_list_full := List.mem_cons.mpr (Or.inr h_φ_in_raw)
-        have h_b_to_φ : DerivationTree fc [] (b.imp φ) := list_conj_implies_elem fc b_list_full φ
+        have h_b_to_φ : DerivationTree fc [] (b.imp φ) := listConjImpliesElem fc b_list_full φ
             h_φ_in_b
         have h_ev_to_φ : DerivationTree fc [] (event.imp φ) := impTrans h_ev_b h_b_to_φ
         exact DerivationTree.modus_ponens _ _ _
@@ -2435,7 +2435,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
               have h_in_b : Formula.snce (Formula.and β' xi) α' ∈ b_list_full := List.mem_cons.mpr
                   (Or.inr h_in_raw)
               have h_b_imp : DerivationTree fc [] (b.imp (Formula.snce (Formula.and β' xi) α')) :=
-                list_conj_implies_elem fc b_list_full (Formula.snce (Formula.and β' xi) α') h_in_b
+                listConjImpliesElem fc b_list_full (Formula.snce (Formula.and β' xi) α') h_in_b
               have h_ev_imp := impTrans h_ev_b h_b_imp
               exact DerivationTree.modus_ponens _ _ _
                 (DerivationTree.weakening [] _ _ h_ev_imp (List.nil_subset _))
@@ -2446,7 +2446,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
               have h_β'_in_raw := l27_collect_guards_mem_of_snce_xi fc h_B_dcs xi eta L hL β' α'
                   h_φ_eq_snce5 hβ' hα' h_snce5_B
               have h_β'_in_b : β' ∈ b_list_full := List.mem_cons.mpr (Or.inr h_β'_in_raw)
-              have h_b_to_β' : DerivationTree fc [] (b.imp β') := list_conj_implies_elem fc
+              have h_b_to_β' : DerivationTree fc [] (b.imp β') := listConjImpliesElem fc
                   b_list_full β' h_β'_in_b
               have h_bχ_to_β'xi : DerivationTree fc []
                   ((Formula.and b χ_gen).imp (Formula.and β' xi)) := by
@@ -2454,16 +2454,16 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
                 have h2 : DerivationTree fc [] _ := impTrans (rceImp b χ_gen)
                     (lceImp xi (Formula.untl xi eta))
                 exact combineImpConj h1 h2
-              have h_mono := snce_left_mono_deriv fc (Formula.and b χ_gen) α' (Formula.and β' xi)
+              have h_mono := snceLeftMonoDeriv fc (Formula.and b χ_gen) α' (Formula.and β' xi)
                   h_bχ_to_β'xi
               have h_chain := impTrans h_ev_snce_α' h_mono
               exact DerivationTree.modus_ponens _ _ _
                 (DerivationTree.weakening [] _ _ h_chain (List.nil_subset _))
                 (DerivationTree.assumption _ _ (by exact List.mem_singleton.mpr rfl))
           · exfalso
-            simp [lemma_2_7_seed, h_B_case, h_eta, h_snce5] at h_φ_seed
+            simp [lemma27Seed, h_B_case, h_eta, h_snce5] at h_φ_seed
     have d_event : DerivationTree fc [event] Formula.bot :=
-      derivation_from_implied fc [event] L Formula.bot h_event_implies_L d
+      derivationFromImplied fc [event] L Formula.bot h_event_implies_L d
     have h_event_cons := consistent_of_F_mem fc h_mcs_A event h_F_event
     exact inconsistent_singleton_false fc h_event_cons d_event
   -- Prove h_key: BX5+BX7+BX13 chain with D1/D2 eliminated via γ'
@@ -2516,7 +2516,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
     · exact h_D3
   let guard := Formula.and φ_gen χ_gen
   let base_event := Formula.and φ_gen eta
-  let evt := iterated_enrichment fc h_mcs_A guard alpha_list h_alphas base_event h_D3_gen
+  let evt := iteratedEnrichment fc h_mcs_A guard alpha_list h_alphas base_event h_D3_gen
   let event := evt.event'
   have h_F_event : Formula.someFuture event ∈ A := until_implies_F_mcs fc h_mcs_A evt.h_untl
   have h_ev_base := evt.hImpl
@@ -2535,7 +2535,7 @@ private theorem lemma_2_8_seed_consistent (fc : FrameClass) {A B C : Set Formula
           (lceImp b (Formula.untl b γ_hat))
       have h2 : DerivationTree fc [] _ := rceImp φ_gen χ_gen
       exact combineImpConj h1 h2
-    exact impTrans h_snce_guard (snce_left_mono_deriv fc guard α (Formula.and b χ_gen)
+    exact impTrans h_snce_guard (snceLeftMonoDeriv fc guard α (Formula.and b χ_gen)
         h_guard_to_bχ)
   exact ⟨event, h_F_event, h_ev_b, h_ev_eta, h_ev_untl, h_ev_snce⟩
 
@@ -2571,10 +2571,10 @@ theorem lemma_2_8 (fc : FrameClass) {A B C : Set Formula}
   obtain ⟨D, h_sup, h_D_mcs⟩ := set_lindenbaum _ h_seed_cons
   -- Step 3: Extract key memberships from seed
   have h_eta_D : eta ∈ D := by
-    apply h_sup; show eta ∈ lemma_2_7_seed fc A B C xi eta; simp [lemma_2_7_seed]
+    apply h_sup; show eta ∈ lemma27Seed fc A B C xi eta; simp [lemma27Seed]
   have h_B_sub_D : B ⊆ D := by
     intro φ hφ; apply h_sup
-    show φ ∈ lemma_2_7_seed fc A B C xi eta; simp [lemma_2_7_seed, hφ]
+    show φ ∈ lemma27Seed fc A B C xi eta; simp [lemma27Seed, hφ]
   -- Until/Since formulas in D via Xu 3.2.1 + B ⊆ D
   have h_untl_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl β γ ∈ D := by
     intro β hβ γ hγ
@@ -2597,8 +2597,8 @@ theorem lemma_2_8 (fc : FrameClass) {A B C : Set Formula}
   -- Step 5b: Extract snce(β∧xi, α) ∈ D from the 5th seed component (same as lemma_2_7)
   have h_snce_conj_xi_D : ∀ β ∈ B, ∀ α ∈ A, Formula.snce (Formula.and β xi) α ∈ D := by
     intro β hβ α hα; apply h_sup
-    show Formula.snce (Formula.and β xi) α ∈ lemma_2_7_seed fc A B C xi eta
-    simp only [lemma_2_7_seed, Set.mem_union, Set.mem_setOf_eq]; right; exact ⟨β, hβ, α, hα, rfl⟩
+    show Formula.snce (Formula.and β xi) α ∈ lemma27Seed fc A B C xi eta
+    simp only [lemma27Seed, Set.mem_union, Set.mem_setOf_eq]; right; exact ⟨β, hβ, α, hα, rfl⟩
   -- Step 5c: Derive snce(xi, α) ∈ D for all α ∈ A
   have h_B_nonempty : ∃ β₀ : Formula, β₀ ∈ B := by
     exact ⟨Formula.bot.imp Formula.bot, cud_contains_theorems h_r3m.1
@@ -2654,11 +2654,11 @@ B ∪ {eta} ∪ {untl(β∧xi, γ) | β∈B, γ∈C}.
 The original 5-component seed included {untl(β,γ)} and {snce(β,α)} but these are
 redundant: Xu 3.2.1 proves they are already in B. The 3rd component untl(β∧xi, γ)
 cannot be dropped because xi ∉ B prevents Xu 3.2.1 from applying. -/
-private def lemma_2_7_since_seed (_A B C : Set Formula) (xi eta : Formula) : Set Formula :=
+private def lemma27SinceSeed (_A B C : Set Formula) (xi eta : Formula) : Set Formula :=
   B ∪ {eta} ∪ {φ | ∃ β ∈ B, ∃ γ ∈ C, φ = Formula.untl (Formula.and β xi) γ}
 
 /-- Extract γ' events from component 3 elements (untl(β∧xi, γ)) of a list. -/
-private noncomputable def l27s_c5_event_list (B C : Set Formula) (xi : Formula)
+private noncomputable def l27sC5EventList (B C : Set Formula) (xi : Formula)
     (L : List Formula) : List Formula :=
   L.filterMap (fun φ => by
     classical
@@ -2666,10 +2666,10 @@ private noncomputable def l27s_c5_event_list (B C : Set Formula) (xi : Formula)
       some (Classical.choose (Classical.choose_spec h).2)
     else none)
 
-/-- Elements of l27s_c5_event_list are in C. -/
+/-- Elements of l27sC5EventList are in C. -/
 private theorem l27s_c5_event_list_mem {B C : Set Formula} {xi : Formula}
-    {L : List Formula} {γ : Formula} (hγ : γ ∈ l27s_c5_event_list B C xi L) : γ ∈ C := by
-  unfold l27s_c5_event_list at hγ
+    {L : List Formula} {γ : Formula} (hγ : γ ∈ l27sC5EventList B C xi L) : γ ∈ C := by
+  unfold l27sC5EventList at hγ
   simp only [List.mem_filterMap, Option.dite_none_right_eq_some, Option.some.injEq] at hγ
   obtain ⟨φ, _, hγ_eq⟩ := hγ
   by_cases h : ∃ β' ∈ B, ∃ γ' ∈ C, φ = Formula.untl (Formula.and β' xi) γ'
@@ -2678,7 +2678,7 @@ private theorem l27s_c5_event_list_mem {B C : Set Formula} {xi : Formula}
   · simp [h] at hγ_eq
 
 /-- Extract β' guards from component 3 elements (untl(β∧xi, γ)) of a list. -/
-private noncomputable def l27s_b5_guard_list (B C : Set Formula) (xi : Formula)
+private noncomputable def l27sB5GuardList (B C : Set Formula) (xi : Formula)
     (L : List Formula) : List Formula :=
   L.filterMap (fun φ => by
     classical
@@ -2686,10 +2686,10 @@ private noncomputable def l27s_b5_guard_list (B C : Set Formula) (xi : Formula)
       some (Classical.choose h)
     else none)
 
-/-- Elements of l27s_b5_guard_list are in B. -/
+/-- Elements of l27sB5GuardList are in B. -/
 private theorem l27s_b5_guard_list_mem {B C : Set Formula} {xi : Formula}
-    {L : List Formula} {β : Formula} (hβ : β ∈ l27s_b5_guard_list B C xi L) : β ∈ B := by
-  unfold l27s_b5_guard_list at hβ
+    {L : List Formula} {β : Formula} (hβ : β ∈ l27sB5GuardList B C xi L) : β ∈ B := by
+  unfold l27sB5GuardList at hβ
   simp only [List.mem_filterMap, Option.dite_none_right_eq_some, Option.some.injEq] at hβ
   obtain ⟨φ, _, hβ_eq⟩ := hβ
   by_cases h : ∃ β' ∈ B, ∃ γ' ∈ C, φ = Formula.untl (Formula.and β' xi) γ'
@@ -2702,8 +2702,8 @@ private theorem l27s_c5_γ_mem {B C : Set Formula} {xi : Formula}
     {L : List Formula} {β' γ' : Formula}
     (hφ : Formula.untl (Formula.and β' xi) γ' ∈ L)
     (hβ' : β' ∈ B) (hγ' : γ' ∈ C) :
-    γ' ∈ l27s_c5_event_list B C xi L := by
-  unfold l27s_c5_event_list
+    γ' ∈ l27sC5EventList B C xi L := by
+  unfold l27sC5EventList
   simp only [List.mem_filterMap]
   refine ⟨Formula.untl (Formula.and β' xi) γ', hφ, ?_⟩
   have h : ∃ β'' ∈ B, ∃ γ'' ∈ C, Formula.untl (Formula.and β' xi) γ' =
@@ -2717,8 +2717,8 @@ private theorem l27s_b5_β_mem {B C : Set Formula} {xi : Formula}
     {L : List Formula} {β' γ' : Formula}
     (hφ : Formula.untl (Formula.and β' xi) γ' ∈ L)
     (hβ' : β' ∈ B) (hγ' : γ' ∈ C) :
-    β' ∈ l27s_b5_guard_list B C xi L := by
-  unfold l27s_b5_guard_list
+    β' ∈ l27sB5GuardList B C xi L := by
+  unfold l27sB5GuardList
   simp only [List.mem_filterMap]
   refine ⟨Formula.untl (Formula.and β' xi) γ', hφ, ?_⟩
   have h : ∃ β'' ∈ B, ∃ γ'' ∈ C, Formula.untl (Formula.and β' xi) γ' =
@@ -2744,7 +2744,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
     (xi eta : Formula)
     (h_since : Formula.snce xi eta ∈ C)
     (h_xi_not_B : xi ∉ B) :
-    SetConsistent (fc := fc) (lemma_2_7_since_seed A B C xi eta) := by
+    SetConsistent (fc := fc) (lemma27SinceSeed A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   have h_not_r3_xi := BurgessR3Maximal.extension_fails fc h_r3m h_xi_not_B
   have h_neg_since_exists : ∃ beta0 ∈ B, ∃ alpha0 ∈ A,
@@ -2787,9 +2787,9 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
         (∀ γ ∈ gamma_list, DerivationTree fc []
             (event.imp (Formula.untl (Formula.and b (Formula.and xi (Formula.snce xi eta))) γ))) by
     -- Extract B-guards, C-events from L
-    let b_list_5 := l27s_b5_guard_list B C xi L
+    let b_list_5 := l27sB5GuardList B C xi L
     have hb_list_5 : ∀ g ∈ b_list_5, g ∈ B := fun g hg => l27s_b5_guard_list_mem hg
-    let c_list := l27s_c5_event_list B C xi L
+    let c_list := l27sC5EventList B C xi L
     have hc_list : ∀ γ ∈ c_list, γ ∈ C := fun γ hγ => l27s_c5_event_list_mem hγ
     -- Also need B-guards for elements of L that are in B directly
     haveI : DecidablePred (· ∈ B) := fun _ => Classical.dec _
@@ -2807,14 +2807,14 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
     have ha_list : ∀ α ∈ a_list, α ∈ A := by
       intro α hα; simp only [List.mem_cons, List.not_mem_nil, or_false, a_list] at hα; subst hα;
           exact h_alpha0
-    let b := list_conj fc b_list
-    let α_hat := list_conj fc a_list
+    let b := listConj fc b_list
+    let α_hat := listConj fc a_list
     have hb_B : b ∈ B := list_conj_mem_dcs fc h_B_dcs b_list hb_list'
     have hα_A : α_hat ∈ A := list_conj_mem_mcs fc h_mcs_A a_list ha_list
     have h_b_to_beta0 : DerivationTree fc [] (b.imp beta0) :=
-      list_conj_implies_elem fc b_list beta0 (List.mem_cons.mpr (Or.inl rfl))
+      listConjImpliesElem fc b_list beta0 (List.mem_cons.mpr (Or.inl rfl))
     have h_α_to_alpha0 : DerivationTree fc [] (α_hat.imp alpha0) :=
-      list_conj_implies_elem fc a_list alpha0 (by simp [a_list])
+      listConjImpliesElem fc a_list alpha0 (by simp [a_list])
     obtain ⟨event, h_P_event, h_ev_b, h_ev_eta, _h_ev_snce, h_ev_untl⟩ :=
       h_key b hb_B h_b_to_beta0 α_hat hα_A h_α_to_alpha0 c_list hc_list
     -- Show event implies each element of L (3-way case split)
@@ -2828,7 +2828,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
           List.mem_filter.mpr ⟨hφ, decide_eq_true_eq.mpr h_B_case⟩
         have h_φ_in_b : φ ∈ b_list :=
           List.mem_cons.mpr (Or.inr (List.mem_append.mpr (Or.inl h_φ_in_B_list)))
-        have h_b_to_φ := list_conj_implies_elem fc b_list φ h_φ_in_b
+        have h_b_to_φ := listConjImpliesElem fc b_list φ h_φ_in_b
         have h_ev_to_φ := impTrans h_ev_b h_b_to_φ
         exact DerivationTree.modus_ponens _ _ _
           (DerivationTree.weakening [] _ _ h_ev_to_φ (List.nil_subset _))
@@ -2854,7 +2854,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
             have h_β'_in_5 := l27s_b5_β_mem h_φ_eq hβ' hγ'
             have h_β'_in_b : β' ∈ b_list :=
               List.mem_cons.mpr (Or.inr (List.mem_append.mpr (Or.inr h_β'_in_5)))
-            have h_b_to_β' := list_conj_implies_elem fc b_list β' h_β'_in_b
+            have h_b_to_β' := listConjImpliesElem fc b_list β' h_β'_in_b
             have h_γ'_in_c := l27s_c5_γ_mem h_φ_eq hβ' hγ'
             have h_ev_untl_γ' := h_ev_untl γ' h_γ'_in_c
             have h_bχ_to_β'xi : DerivationTree fc [] ((Formula.and b χ_gen).imp
@@ -2863,21 +2863,21 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
               have h2 : DerivationTree fc [] ((Formula.and b χ_gen).imp xi) :=
                 impTrans (rceImp b χ_gen) (lceImp xi (Formula.snce xi eta))
               exact combineImpConj h1 h2
-            have h_left := untl_left_mono_deriv fc (Formula.and b χ_gen) γ'
+            have h_left := untlLeftMonoDeriv fc (Formula.and b χ_gen) γ'
               (Formula.and β' xi) h_bχ_to_β'xi
             have h_chain := impTrans h_ev_untl_γ' h_left
             exact DerivationTree.modus_ponens _ _ _
               (DerivationTree.weakening [] _ _ h_chain (List.nil_subset _))
               (DerivationTree.assumption _ _ (by exact List.mem_singleton.mpr rfl))
           · exfalso
-            simp only [lemma_2_7_since_seed, Set.mem_union, Set.mem_setOf_eq,
+            simp only [lemma27SinceSeed, Set.mem_union, Set.mem_setOf_eq,
               Set.mem_singleton_iff] at h_φ_seed
             rcases h_φ_seed with ((h1 | h2) | h5)
             · exact h_B_case h1
             · exact h_eta h2
             · exact h_comp5 h5
     have d_event : DerivationTree fc [event] Formula.bot :=
-      derivation_from_implied fc [event] L Formula.bot h_event_implies_L d
+      derivationFromImplied fc [event] L Formula.bot h_event_implies_L d
     have h_event_cons := consistent_of_P_mem fc h_mcs_C event h_P_event
     exact inconsistent_singleton_false fc h_event_cons d_event
   -- Prove h_key: BX5'+BX7'+BX13' chain.
@@ -2912,7 +2912,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
     · exact h_D3
   let guard := Formula.and φ_gen χ_gen
   let base_event := Formula.and φ_gen eta
-  let evt := iterated_enrichment_since fc h_mcs_C guard gamma_list h_gammas base_event h_D3_gen
+  let evt := iteratedEnrichmentSince fc h_mcs_C guard gamma_list h_gammas base_event h_D3_gen
   let event := evt.event'
   have h_P_event : Formula.somePast event ∈ C := since_implies_P_mcs fc h_mcs_C evt.h_snce
   have h_ev_base := evt.hImpl
@@ -2931,7 +2931,7 @@ private theorem lemma_2_7_since_seed_consistent (fc : FrameClass) {A B C : Set F
           (lceImp b (Formula.snce b α_hat))
       have h2 : DerivationTree fc [] _ := rceImp φ_gen χ_gen
       exact combineImpConj h1 h2
-    exact impTrans h_untl_guard (untl_left_mono_deriv fc guard γ (Formula.and b χ_gen)
+    exact impTrans h_untl_guard (untlLeftMonoDeriv fc guard γ (Formula.and b χ_gen)
         h_guard_to_bχ)
   exact ⟨event, h_P_event, h_ev_b, h_ev_eta, h_ev_snce_ba, h_ev_untl⟩
 
@@ -2961,11 +2961,11 @@ theorem lemma_2_7_since (fc : FrameClass) {A B C : Set Formula}
     xi eta h_since h_xi_not_B
   obtain ⟨D, h_sup, h_D_mcs⟩ := set_lindenbaum _ h_seed_cons
   have h_eta_D : eta ∈ D := by
-    apply h_sup; show eta ∈ lemma_2_7_since_seed A B C xi eta
-    simp [lemma_2_7_since_seed]
+    apply h_sup; show eta ∈ lemma27SinceSeed A B C xi eta
+    simp [lemma27SinceSeed]
   have h_B_sub_D : B ⊆ D := by
     intro φ hφ; apply h_sup
-    show φ ∈ lemma_2_7_since_seed A B C xi eta; simp [lemma_2_7_since_seed, hφ]
+    show φ ∈ lemma27SinceSeed A B C xi eta; simp [lemma27SinceSeed, hφ]
   -- Until/Since formulas in D via Xu 3.2.1 + B ⊆ D
   have h_untl_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl β γ ∈ D := by
     intro β hβ γ hγ
@@ -2986,8 +2986,8 @@ theorem lemma_2_7_since (fc : FrameClass) {A B C : Set Formula}
   -- Extract untl(β∧xi, γ) ∈ D from the 3rd seed component
   have h_untl_conj_xi_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl (Formula.and β xi) γ ∈ D := by
     intro β hβ γ hγ; apply h_sup
-    show Formula.untl (Formula.and β xi) γ ∈ lemma_2_7_since_seed A B C xi eta
-    simp only [lemma_2_7_since_seed, Set.mem_union, Set.mem_setOf_eq]
+    show Formula.untl (Formula.and β xi) γ ∈ lemma27SinceSeed A B C xi eta
+    simp only [lemma27SinceSeed, Set.mem_union, Set.mem_setOf_eq]
     right; exact ⟨β, hβ, γ, hγ, rfl⟩
   -- Derive untl(xi, γ) ∈ D via left_mono
   have h_B_nonempty : ∃ β₀ : Formula, β₀ ∈ B := by
@@ -3038,7 +3038,7 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
     (xi eta : Formula)
     (h_since : Formula.snce xi eta ∈ C)
     (h_neg_disj : (Formula.or eta (Formula.and xi (Formula.snce xi eta))).neg ∈ A) :
-    SetConsistent (fc := fc) (lemma_2_7_since_seed A B C xi eta) := by
+    SetConsistent (fc := fc) (lemma27SinceSeed A B C xi eta) := by
   have h_r3 : burgessR3 A B C := h_r3m.2.1
   set α' := (Formula.or eta (Formula.and xi (Formula.snce xi eta))).neg with α'_def
   have h_α'_to_neg_eta : DerivationTree fc [] (α'.imp eta.neg) :=
@@ -3061,9 +3061,9 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
     intro L hL ⟨d⟩
     haveI : DecidablePred (· ∈ B) := fun _ => Classical.dec _
     -- Extract B-guards and C-events from L
-    let b_list_5 := l27s_b5_guard_list B C xi L
+    let b_list_5 := l27sB5GuardList B C xi L
     have hb_list_5 : ∀ g ∈ b_list_5, g ∈ B := fun g hg => l27s_b5_guard_list_mem hg
-    let c_list := l27s_c5_event_list B C xi L
+    let c_list := l27sC5EventList B C xi L
     have hc_list : ∀ γ ∈ c_list, γ ∈ C := fun γ hγ => l27s_c5_event_list_mem hγ
     let b_list_B := L.filter (· ∈ B)
     have hb_list_B : ∀ g ∈ b_list_B, g ∈ B := by
@@ -3079,12 +3079,12 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
     have ha_list : ∀ α_elem ∈ a_list, α_elem ∈ A := by
       intro α_elem hα_elem; simp only [List.mem_cons, List.not_mem_nil, or_false,
           a_list] at hα_elem; subst hα_elem; exact h_neg_disj
-    let b := list_conj fc b_list
-    let α_hat := list_conj fc a_list
+    let b := listConj fc b_list
+    let α_hat := listConj fc a_list
     have hb_B : b ∈ B := list_conj_mem_dcs fc h_B_dcs b_list hb_list'
     have hα_A : α_hat ∈ A := list_conj_mem_mcs fc h_mcs_A a_list ha_list
     have h_αhat_to_α' : DerivationTree fc [] (α_hat.imp α') :=
-      list_conj_implies_elem fc a_list α' (by simp [a_list])
+      listConjImpliesElem fc a_list α' (by simp [a_list])
     obtain ⟨event, h_P_event, h_ev_b, h_ev_eta, _h_ev_snce, h_ev_untl⟩ :=
       h_key b hb_B α_hat hα_A h_αhat_to_α' c_list hc_list
     -- Show event implies each element of L (3-way case split)
@@ -3097,7 +3097,7 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
           List.mem_filter.mpr ⟨hφ, decide_eq_true_eq.mpr h_B_case⟩
         have h_φ_in_b : φ ∈ b_list :=
           List.mem_cons.mpr (Or.inr (List.mem_append.mpr (Or.inl h_φ_in_B_list)))
-        have h_b_to_φ := list_conj_implies_elem fc b_list φ h_φ_in_b
+        have h_b_to_φ := listConjImpliesElem fc b_list φ h_φ_in_b
         have h_ev_to_φ := impTrans h_ev_b h_b_to_φ
         exact DerivationTree.modus_ponens _ _ _
           (DerivationTree.weakening [] _ _ h_ev_to_φ (List.nil_subset _))
@@ -3121,7 +3121,7 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
             have h_β'_in_5 := l27s_b5_β_mem h_φ_eq hβ' hγ'
             have h_β'_in_b : β' ∈ b_list :=
               List.mem_cons.mpr (Or.inr (List.mem_append.mpr (Or.inr h_β'_in_5)))
-            have h_b_to_β' := list_conj_implies_elem fc b_list β' h_β'_in_b
+            have h_b_to_β' := listConjImpliesElem fc b_list β' h_β'_in_b
             have h_γ'_in_c := l27s_c5_γ_mem h_φ_eq hβ' hγ'
             have h_ev_untl_γ' := h_ev_untl γ' h_γ'_in_c
             have h_bχ_to_β'xi : DerivationTree fc [] ((Formula.and b χ_gen).imp
@@ -3130,21 +3130,21 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
               have h2 : DerivationTree fc [] ((Formula.and b χ_gen).imp xi) :=
                 impTrans (rceImp b χ_gen) (lceImp xi (Formula.snce xi eta))
               exact combineImpConj h1 h2
-            have h_left := untl_left_mono_deriv fc (Formula.and b χ_gen) γ'
+            have h_left := untlLeftMonoDeriv fc (Formula.and b χ_gen) γ'
               (Formula.and β' xi) h_bχ_to_β'xi
             have h_chain := impTrans h_ev_untl_γ' h_left
             exact DerivationTree.modus_ponens _ _ _
               (DerivationTree.weakening [] _ _ h_chain (List.nil_subset _))
               (DerivationTree.assumption _ _ (by exact List.mem_singleton.mpr rfl))
           · exfalso
-            simp only [lemma_2_7_since_seed, Set.mem_union, Set.mem_setOf_eq,
+            simp only [lemma27SinceSeed, Set.mem_union, Set.mem_setOf_eq,
               Set.mem_singleton_iff] at h_φ_seed
             rcases h_φ_seed with ((h1 | h2) | h5)
             · exact h_B_case h1
             · exact h_eta_case h2
             · exact h_comp5 h5
     have d_event : DerivationTree fc [event] Formula.bot :=
-      derivation_from_implied fc [event] L Formula.bot h_event_implies_L d
+      derivationFromImplied fc [event] L Formula.bot h_event_implies_L d
     have h_event_cons := consistent_of_P_mem fc h_mcs_C event h_P_event
     exact inconsistent_singleton_false fc h_event_cons d_event
   -- Prove h_key: BX5'+BX7'+BX13' chain with D1/D2 eliminated via α'
@@ -3197,7 +3197,7 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
     · exact h_D3
   let guard := Formula.and φ_gen χ_gen
   let base_event := Formula.and φ_gen eta
-  let evt := iterated_enrichment_since fc h_mcs_C guard gamma_list h_gammas base_event h_D3_gen
+  let evt := iteratedEnrichmentSince fc h_mcs_C guard gamma_list h_gammas base_event h_D3_gen
   let event := evt.event'
   have h_P_event : Formula.somePast event ∈ C := since_implies_P_mcs fc h_mcs_C evt.h_snce
   have h_ev_base := evt.hImpl
@@ -3216,7 +3216,7 @@ private theorem lemma_2_8_since_seed_consistent (fc : FrameClass) {A B C : Set F
           (lceImp b (Formula.snce b α_hat))
       have h2 : DerivationTree fc [] _ := rceImp φ_gen χ_gen
       exact combineImpConj h1 h2
-    exact impTrans h_untl_guard (untl_left_mono_deriv fc guard γ (Formula.and b χ_gen)
+    exact impTrans h_untl_guard (untlLeftMonoDeriv fc guard γ (Formula.and b χ_gen)
         h_guard_to_bχ)
   exact ⟨event, h_P_event, h_ev_b, h_ev_eta, h_ev_snce_ba, h_ev_untl⟩
 
@@ -3245,11 +3245,11 @@ theorem lemma_2_8_since (fc : FrameClass) {A B C : Set Formula}
     xi eta h_since h_neg_disj
   obtain ⟨D, h_sup, h_D_mcs⟩ := set_lindenbaum _ h_seed_cons
   have h_eta_D : eta ∈ D := by
-    apply h_sup; show eta ∈ lemma_2_7_since_seed A B C xi eta
-    simp [lemma_2_7_since_seed]
+    apply h_sup; show eta ∈ lemma27SinceSeed A B C xi eta
+    simp [lemma27SinceSeed]
   have h_B_sub_D : B ⊆ D := by
     intro φ hφ; apply h_sup
-    show φ ∈ lemma_2_7_since_seed A B C xi eta; simp [lemma_2_7_since_seed, hφ]
+    show φ ∈ lemma27SinceSeed A B C xi eta; simp [lemma27SinceSeed, hφ]
   -- Until/Since formulas in D via Xu 3.2.1 + B ⊆ D
   have h_untl_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl β γ ∈ D := by
     intro β hβ γ hγ
@@ -3270,8 +3270,8 @@ theorem lemma_2_8_since (fc : FrameClass) {A B C : Set Formula}
   -- Extract untl(β∧xi, γ) ∈ D from the 3rd seed component
   have h_untl_conj_xi_D : ∀ β ∈ B, ∀ γ ∈ C, Formula.untl (Formula.and β xi) γ ∈ D := by
     intro β hβ γ hγ; apply h_sup
-    show Formula.untl (Formula.and β xi) γ ∈ lemma_2_7_since_seed A B C xi eta
-    simp only [lemma_2_7_since_seed, Set.mem_union, Set.mem_setOf_eq]
+    show Formula.untl (Formula.and β xi) γ ∈ lemma27SinceSeed A B C xi eta
+    simp only [lemma27SinceSeed, Set.mem_union, Set.mem_setOf_eq]
     right; exact ⟨β, hβ, γ, hγ, rfl⟩
   have h_B_nonempty : ∃ β₀ : Formula, β₀ ∈ B := by
     exact ⟨Formula.bot.imp Formula.bot, cud_contains_theorems h_r3m.1
@@ -3371,7 +3371,7 @@ theorem until_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
         obtain ⟨α, hα_list, _⟩ := h_since_extracted φ hφ h_since
         rw [h_empty] at hα_list; simp at hα_list
     exact until_witness_seed_consistent fc h_mcs γ β h_until L hL' ⟨d⟩
-  · set α_star := list_conj fc alpha_list
+  · set α_star := listConj fc alpha_list
     have hα_star_A : α_star ∈ A := list_conj_mem_mcs fc h_mcs alpha_list h_alphas_in_A
     have h_enriched := enrichment_until_mcs fc h_mcs hα_star_A h_until
     have h_F := until_implies_F_mcs fc h_mcs h_enriched
@@ -3405,7 +3405,7 @@ theorem until_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
           exact DerivationTree.modus_ponens Γ _ _
             (DerivationTree.weakening [] Γ _ h_impl (List.nil_subset _))
             (DerivationTree.assumption Γ ψ_star hψ_in_Γ)
-      exact h_cons Γ hΓ_sub ⟨derivation_from_implied fc Γ L Formula.bot h_L_from_Γ d⟩
+      exact h_cons Γ hΓ_sub ⟨derivationFromImplied fc Γ L Formula.bot h_L_from_Γ d⟩
     intro φ hφ
     rcases h_extract φ hφ with h_cov | h_since
     · simp only [Set.mem_union, Set.mem_singleton_iff] at h_cov
@@ -3415,7 +3415,7 @@ theorem until_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
       · exact Or.inl h_gc
     · obtain ⟨α, hα_list, hφ_eq⟩ := h_since_extracted φ hφ h_since
       rw [hφ_eq]
-      have h_proj := list_conj_implies_elem fc alpha_list α hα_list
+      have h_proj := listConjImpliesElem fc alpha_list α hα_list
       have h_H_proj := FormalSystem.Theorems.pastNecessitation _ h_proj
       have h_bx3' := DerivationTree.axiom (fc := fc) [] _ (Axiom.right_mono_since α_star α γ)
           trivial
@@ -3528,7 +3528,7 @@ theorem since_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
         rw [h_empty] at hα_list; simp at hα_list
     exact past_temporal_witness_seed_consistent A h_mcs β
       (since_implies_P_in_mcs fc h_mcs h_since) L hL' ⟨d⟩
-  · set α_star := list_conj fc alpha_list
+  · set α_star := listConj fc alpha_list
     have hα_star_A : α_star ∈ A := list_conj_mem_mcs fc h_mcs alpha_list h_alphas_in_A
     have h_enriched := enrichment_since_mcs fc h_mcs hα_star_A h_since
     -- enrichment_since gives: snce(γ, β ∧ untl(γ, α_star)) ∈ A
@@ -3564,7 +3564,7 @@ theorem since_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
           exact DerivationTree.modus_ponens Γ _ _
             (DerivationTree.weakening [] Γ _ h_impl (List.nil_subset _))
             (DerivationTree.assumption Γ ψ_star hψ_in_Γ)
-      exact h_cons Γ hΓ_sub ⟨derivation_from_implied fc Γ L Formula.bot h_L_from_Γ d⟩
+      exact h_cons Γ hΓ_sub ⟨derivationFromImplied fc Γ L Formula.bot h_L_from_Γ d⟩
     intro φ hφ
     rcases h_extract φ hφ with h_cov | h_untl_case
     · simp only [Set.mem_union, Set.mem_singleton_iff] at h_cov
@@ -3574,7 +3574,7 @@ theorem since_witness_enriched_seed_consistent (fc : FrameClass) {A : Set Formul
       · exact Or.inl h_hc
     · obtain ⟨α, hα_list, hφ_eq⟩ := h_untl_extracted φ hφ h_untl_case
       rw [hφ_eq]
-      have h_proj := list_conj_implies_elem fc alpha_list α hα_list
+      have h_proj := listConjImpliesElem fc alpha_list α hα_list
       -- G(α_star → α) gives untl(γ, α_star) → untl(γ, α) via BX3 (right_mono_until)
       have h_G_proj := DerivationTree.temporal_necessitation _ h_proj
       have h_bx2 := DerivationTree.axiom (fc := fc) [] _ (Axiom.right_mono_until α_star α γ) trivial

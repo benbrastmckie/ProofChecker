@@ -38,7 +38,7 @@ reverse, and vice versa).
 - `allPast_neg_of_hseed_inconsistent`: past-side core, mirroring the future core; its
   `bot`-derivation branch is obtained from the future core's by `Formula.swapTemporal` +
   `DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`
-  (`allPast_bot_imp_neg_deriv`) rather than a second hand derivation
+  (`allPastBotImpNegDeriv`) rather than a second hand derivation
 - `past_temporal_witness_seed_consistent`: application of the past-side core
 - `g_content_subset_implies_h_content_reverse`: GContent(M) ⊆ M' implies HContent(M') ⊆ M
 - `h_content_subset_implies_g_content_reverse`: HContent(M) ⊆ M' implies GContent(M') ⊆ M
@@ -145,10 +145,10 @@ theorem g_content_subset_forward_temporal_witness_seed (M : Set Formula) (psi : 
 Shared syntactic core: `⊢ G(⊥) → G(¬chi)` for arbitrary `chi`, via `prop_s` + temporal
 necessitation + temporal K distribution + modus ponens. This is the one genuinely
 future-specific, purely syntactic (context-free) step inside the forward witness-seed
-consistency argument below; its past dual (`allPast_bot_imp_neg_deriv`) is obtained by
+consistency argument below; its past dual (`allPastBotImpNegDeriv`) is obtained by
 duality rather than a second hand derivation through `pastNecessitation`/`pastKDist`.
 -/
-private noncomputable def allFuture_bot_imp_neg_deriv {fc : FrameClass} (chi : Formula) :
+private noncomputable def allFutureBotImpNegDeriv {fc : FrameClass} (chi : Formula) :
     DerivationTree fc []
       ((Formula.allFuture Formula.bot).imp (Formula.allFuture (Formula.neg chi))) :=
   let h_bot_imp_neg : ⊢[fc] Formula.bot.imp (Formula.neg chi) :=
@@ -162,15 +162,15 @@ private noncomputable def allFuture_bot_imp_neg_deriv {fc : FrameClass} (chi : F
   DerivationTree.modus_ponens [] _ _ h_K h_G_ef
 
 /--
-Past dual of `allFuture_bot_imp_neg_deriv`: `⊢ H(⊥) → H(¬psi)`, obtained by
+Past dual of `allFutureBotImpNegDeriv`: `⊢ H(⊥) → H(¬psi)`, obtained by
 `Formula.swapTemporal` + `DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`
 -- the `past_tf_deriv` technique (`Algebraic/FlowFrame.lean`) -- applied to the future core
 above at the swapped formula `psi.swapTemporal`, then unswapped back to `psi` by involution.
 -/
-private noncomputable def allPast_bot_imp_neg_deriv {fc : FrameClass} (psi : Formula) :
+private noncomputable def allPastBotImpNegDeriv {fc : FrameClass} (psi : Formula) :
     DerivationTree fc []
       ((Formula.allPast Formula.bot).imp (Formula.allPast (Formula.neg psi))) := by
-  have h_fut := allFuture_bot_imp_neg_deriv (fc := fc) (Formula.swapTemporal psi)
+  have h_fut := allFutureBotImpNegDeriv (fc := fc) (Formula.swapTemporal psi)
   have h_dual := DerivationTree.temporal_duality _ h_fut
   have h_eq : Formula.swapTemporal ((Formula.allFuture Formula.bot).imp
       (Formula.allFuture (Formula.neg (Formula.swapTemporal psi)))) =
@@ -195,7 +195,7 @@ Case 1 (psi ∈ L): By deduction, `L \ {psi} ⊢ ¬psi`. By generalized temporal
 
 Case 2 (psi ∉ L): All of L are in GContent(M), so `G chi ∈ M` for each `chi ∈ L`.
 From `L ⊢ ⊥`, by generalized temporal K, `G(L) ⊢ G(⊥)`. Since all of `G(L)` are in M,
-`G(⊥) ∈ M`. By `allFuture_bot_imp_neg_deriv`, `G(⊥) → G(¬psi)`, so `G(¬psi) ∈ M`. But
+`G(⊥) ∈ M`. By `allFutureBotImpNegDeriv`, `G(⊥) → G(¬psi)`, so `G(¬psi) ∈ M`. But
 `F(psi) = ¬G(¬psi) ∈ M`. Contradiction.
 -/
 theorem allFuture_neg_of_gseed_inconsistent {fc : FrameClass} (M : Set Formula)
@@ -265,7 +265,7 @@ theorem allFuture_neg_of_gseed_inconsistent {fc : FrameClass} (M : Set Formula)
     -- G(⊥) → G(¬psi) by the shared syntactic core
     have h_G_imp : ⊢[fc] (Formula.allFuture Formula.bot).imp
         (Formula.allFuture (Formula.neg psi)) :=
-      allFuture_bot_imp_neg_deriv (fc := fc) psi
+      allFutureBotImpNegDeriv (fc := fc) psi
     have h_G_neg_psi : Formula.allFuture (Formula.neg psi) ∈ M :=
       SetMaximalConsistent.mp_of_theorem h_mcs h_G_imp h_G_bot_in_M
     -- Contradiction: F(psi) and G(neg psi) cannot both be in MCS
@@ -303,7 +303,7 @@ theorem h_content_subset_past_temporal_witness_seed (M : Set Formula) (psi : For
 
 /--
 Past-side core, mirroring `allFuture_neg_of_gseed_inconsistent`: uses `generalizedPastK` for
-the direction-native branch (Case 1) and the duality-derived `allPast_bot_imp_neg_deriv` for
+the direction-native branch (Case 1) and the duality-derived `allPastBotImpNegDeriv` for
 the `bot`-derivation branch (Case 2), in place of a second hand derivation through
 `pastNecessitation`/`pastKDist`.
 -/
@@ -371,7 +371,7 @@ theorem allPast_neg_of_hseed_inconsistent {fc : FrameClass} (M : Set Formula)
         h_H_L_in_M d_H_bot
     -- H(⊥) → H(¬psi) by the duality-derived core
     have h_H_imp : ⊢[fc] (Formula.allPast Formula.bot).imp (Formula.allPast (Formula.neg psi)) :=
-      allPast_bot_imp_neg_deriv (fc := fc) psi
+      allPastBotImpNegDeriv (fc := fc) psi
     have h_H_neg_psi : Formula.allPast (Formula.neg psi) ∈ M :=
       SetMaximalConsistent.mp_of_theorem h_mcs h_H_imp h_H_bot_in_M
     -- Contradiction: P(psi) and H(neg psi) cannot both be in MCS
@@ -384,7 +384,7 @@ Past temporal witness seed consistency: If P(psi) is in an MCS M, then
 Application of the shared core `allPast_neg_of_hseed_inconsistent`, whose past-only
 `bot`-derivation branch is itself obtained from the future core by
 `Formula.swapTemporal` + `DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`
-(see `allPast_bot_imp_neg_deriv` above) rather than a second hand proof.
+(see `allPastBotImpNegDeriv` above) rather than a second hand proof.
 -/
 theorem past_temporal_witness_seed_consistent {fc : FrameClass} (M : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) M)
