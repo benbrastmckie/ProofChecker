@@ -1,11 +1,11 @@
 # Implementation Plan: Task #193
 
 - **Task**: 193 - Codebase tactic refactor (truth-layer simp-normal-form application sweep)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 7.5 hours
 - **Dependencies**: 165, 402, 448, 470, 508, 519, 521, 522 — all archived/completed; verified at plan time
 - **Research Inputs**: `specs/193_codebase_tactic_refactor/reports/01_codebase-refactor-seed.md` (2026-05-22 seed report — **superseded**, see Research Integration)
-- **Artifacts**: plans/01_truth-norm-application-sweep.md (this file)
+- **Artifacts**: plans/01_truth-norm-application-sweep.md (this file), baseline.txt, summaries/01_truth-norm-application-sweep-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -412,26 +412,35 @@ than attempted.
 
 ---
 
-### Phase 6: Full gate, measurement report, and summary [IN PROGRESS]
+### Phase 6: Full gate, measurement report, and summary [COMPLETED]
 
 **Goal**: Run the complete repository gate set, score the completion criterion against the frozen
 baseline, and write the execution summary.
 
 **Tasks**:
-- [ ] `lake build` full — green, job count comparable to the Phase 1 baseline, 0 errors
-- [ ] `bash scripts/check-module-invariants.sh` — ALL CHECKS PASSED
-- [ ] C2 axiom baseline for the flagship theorems unchanged from Phase 1's record
-- [ ] Executable `sorry` inventory unchanged, located **by content** (`grep` for a bare `sorry`
+- [x] `lake build` full — green, job count comparable to the Phase 1 baseline, 0 errors *(exit 0, 2615 jobs; run with `--no-share`, no `REPLAY:` marker, so a genuine build)*
+- [x] `bash scripts/check-module-invariants.sh` — ALL CHECKS PASSED *(exit 0, 36 PASS / 0 FAIL)*
+- [x] C2 axiom baseline for the flagship theorems unchanged from Phase 1's record *(PASS: all four flagship axiom sets match baseline)*
+- [x] Executable `sorry` inventory unchanged, located **by content** (`grep` for a bare `sorry`
       tactic, not by line number); confirm the single executable sorry is still in
       `FormalSystem/Metalogic/WeakCanonical/Transfer.lean` and that no new one was introduced
-- [ ] Re-run every metric from `baseline.txt` and produce the before/after table: criterion
+      *(deviation: altered — the "single executable sorry in Transfer.lean" premise is STALE. That
+      sorry was `countermodel_discrete`, closed when the theorem moved to
+      `WeakCanonical/GroupModel/CountermodelBase.lean` and was proved there. Transfer.lean's nine
+      `sorry` strings are all docstring prose. The invariant verified is ZERO, asserted by content
+      and confirmed by C3. No new sorry introduced.)*
+- [x] Re-run every metric from `baseline.txt` and produce the before/after table: criterion
       metric, broad metric, `truth_norm` count, `swap_norm` count, per-file line counts
-- [ ] Score the completion criterion explicitly: criterion metric fell from 60 by ≥80% (to ≤12)?
+      *(table in baseline.txt under "PHASE 6"; the broad metric is reported twice — single-line
+      grep and wrap-aware — because `sep_swap_valid`'s list wraps and the grep undercounts by one)*
+- [x] Score the completion criterion explicitly: criterion metric fell from 60 by ≥80% (to ≤12)?
       State the observed percentage. If a sub-goal was not met, say so plainly rather than
-      re-framing the target
-- [ ] Write `specs/193_codebase_tactic_refactor/summaries/01_truth-norm-application-sweep-summary.md`
+      re-framing the target *(60 -> 1 = 98.3%, MET with 11 sites of margin. Class A 55/55, Class C
+      13/13, Class B 16/32 with 16 reasoned exclusions — cross-checked by an independent
+      wrap-aware census that finds exactly those 16 blocks still naming TruthAt)*
+- [x] Write `specs/193_codebase_tactic_refactor/summaries/01_truth-norm-application-sweep-summary.md`
       per `summary-format.md`, including the exclusions from Phase 5 and any plan deviation
-- [ ] Commit
+- [x] Commit
 
 **Timing**: 1 hour
 
@@ -450,15 +459,15 @@ baseline, and write the execution summary.
 
 ## Testing & Validation
 
-- [ ] `lake build` green at the end of every phase that edits a `.lean` file, and at the end
-- [ ] `bash scripts/check-module-invariants.sh` passes
-- [ ] C2 axiom baseline for the flagship theorems unchanged (`[propext, Classical.choice, Quot.sound]`)
-- [ ] Executable `sorry` count unchanged, verified by content and not by line number
-- [ ] Criterion metric: combined `grep -c 'simp only \[TruthAt'` across the two files falls from
-      the observed baseline (60 at plan time) by at least 80%
-- [ ] All 13 `Formula.swap_temporal_*` simp lists in `FrameClassVariants.lean` collapsed to `swap_norm`
-- [ ] No theorem or lemma statement changed anywhere: every diff hunk lies inside a `by` block
-- [ ] No new tactic, macro, elaborator, simp attribute, or `@[truth_norm]` tag introduced
+- [x] `lake build` green at the end of every phase that edits a `.lean` file, and at the end
+- [x] `bash scripts/check-module-invariants.sh` passes *(36 PASS / 0 FAIL)*
+- [x] C2 axiom baseline for the flagship theorems unchanged (`[propext, Classical.choice, Quot.sound]`)
+- [x] Executable `sorry` count unchanged, verified by content and not by line number *(ZERO, not 1 — see Phase 6)*
+- [x] Criterion metric: combined `grep -c 'simp only \[TruthAt'` across the two files falls from
+      the observed baseline (60 at plan time) by at least 80% *(60 -> 1, 98.3%)*
+- [x] All 13 `Formula.swap_temporal_*` simp lists in `FrameClassVariants.lean` collapsed to `swap_norm`
+- [x] No theorem or lemma statement changed anywhere: every diff hunk lies inside a `by` block *(mechanical audit over this task's seven commits: +87/-97 lines, zero declaration lines touched)*
+- [x] No new tactic, macro, elaborator, simp attribute, or `@[truth_norm]` tag introduced
 
 ## Artifacts & Outputs
 
