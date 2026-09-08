@@ -1,0 +1,30 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/193_codebase_tactic_refactor/plans/01_truth-norm-application-sweep.md",
+      "summary": "Six-phase mechanical application pass replacing hand-enumerated TruthAt simp lists with simp only [truth_norm] / [swap_norm] across Soundness.lean and FrameClassVariants.lean."
+    }
+  ],
+  "dispatch_seq": 2,
+  "next_steps": "Run /implement 193 to execute the plan",
+  "phase_count": 6,
+  "estimated_hours": 7.5,
+  "dependency_waves": 6,
+  "memory_candidates": [
+    {
+      "content": "Planning a simp-set adoption pass in Lean 4: before sizing phases, classify every call site into (A) lists naming only the set's own lemmas, which are goal-identical drop-ins, and (B) lists that also name syntax-unfolding lemmas (Formula.and/neg/or/swapTemporal), which are NOT drop-ins. simp rewrites bottom-up, so the syntax lemma fires on the argument before the head-matching characterization lemma can match; adding the set to such a list is a no-op, and removing the syntax lemmas changes the goal shape so the proof body below must be rewritten. Confirm the split empirically with lean_multi_attempt at 2-3 representative sites at PLAN time - it converts phase sizing and the risk table from guesswork into measurement, and it reveals whether the completion metric is reachable from class A alone (giving class B a safe exclusion path).",
+      "category": "PATTERN",
+      "source_artifact": "specs/193_codebase_tactic_refactor/plans/01_truth-norm-application-sweep.md",
+      "confidence": 0.75,
+      "suggested_keywords": ["lean4", "simp-set", "adoption-pass", "planning", "lean_multi_attempt", "bottom-up-rewriting"]
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788890905_c2bc06_193",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  }
+}

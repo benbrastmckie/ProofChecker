@@ -36,7 +36,7 @@ next_project_number: 571
 
 ### Automation
 
-193 [PLANNING] — Apply validity-intro and truth-simp macros to the soundness layer
+193 [PLANNED] — Apply validity-intro and truth-simp macros to the soundness layer
 
 ### Categorical Structure
 
@@ -1066,11 +1066,12 @@ without depending on agent-system context at all.
 ---
 
 ### 193. Codebase tactic refactor
-- **Status**: [PLANNING]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: automation
 - **Dependencies**: Task 165, Task 402, Task 448, Task 470, Task 508, Task 519, Task 521, Task 522
 - **Research**: [193_codebase_tactic_refactor/reports/01_codebase-refactor-seed.md]
+- **Plan**: [193_codebase_tactic_refactor/plans/01_truth-norm-application-sweep.md]
 
 **Description**: Apply validity-intro and truth-simp macros to the soundness layer.
 
