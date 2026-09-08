@@ -16,7 +16,12 @@ linters and common tactics that should be active by default throughout. Unlike C
 has no local lint/tactic-attribute module to pin alongside `Mathlib.Init`, so this file imports
 only the two Mathlib roots.
 
-`scripts/CheckInitImports.lean` reports which `FormalSystem` modules do not (yet) transitively
-import this file; see that script and G-08 in the task that introduced it. Rewriting the tree so
-every module actually imports `FormalSystem.Init` is an explicit follow-up, not done here.
+`scripts/CheckInitImports.lean` checks that every `FormalSystem` module transitively imports this
+file, and `scripts/check-module-invariants.sh` runs it as enforced check C24. That property now
+holds across the tree: the eleven minimal elements of the internal import DAG -- the modules with
+no `FormalSystem.*` import of their own -- import this file directly, and every other module
+inherits it through them. The sole recorded exception is
+`FormalSystem.ForMathlib.Order.PFilter`, which is staged for upstreaming and so may not depend on
+anything under `FormalSystem`; the sibling aggregator `FormalSystem/ForMathlib.lean` carries the
+import on its consumers' behalf.
 -/

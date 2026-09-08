@@ -1,7 +1,7 @@
 # Implementation Plan: FormalSystem.Init Transitive Import Adoption
 
 - **Task**: 541 - FormalSystem Init transitive import adoption
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 5.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md
@@ -123,7 +123,7 @@ Phases within the same wave can execute in parallel. This plan is fully sequenti
 phase depends on the previous one's green build, and the gate-wiring phases depend on a clean
 checker.
 
-### Phase 1: Baseline, Gate-Correctness Fix, and Docstring Corrections [NOT STARTED]
+### Phase 1: Baseline, Gate-Correctness Fix, and Docstring Corrections [COMPLETED]
 
 **Goal**: Capture the measured before-state, make the checker's exit status meaningful, record the
 `ForMathlib` exception, and correct both in-tree docstrings that assert the deferral this task
@@ -132,23 +132,23 @@ second full-tree rebuild.
 
 **Tasks**:
 
-- [ ] Run `lake exe checkInitImports` through the build guard; record the reported count and the
+- [x] Run `lake exe checkInitImports` through the build guard; record the reported count and the
       shell's `$?`. Save the sorted name list to a scratch file for later diffing.
-- [ ] In `scripts/CheckInitImports.lean`, replace `return diff.length.toUInt32` with a constant
+- [x] In `scripts/CheckInitImports.lean`, replace `return diff.length.toUInt32` with a constant
       return: `1` when `diff` is non-empty, `0` otherwise. Add a comment at the site stating this
       is a deliberate deviation from the near-verbatim CSLib original, and why (8-bit exit-status
       truncation makes a count-returning gate silently pass at any multiple of 256).
-- [ ] Add `` `FormalSystem.ForMathlib.Order.PFilter `` to `exceptions` in the same file, with a
+- [x] Add `` `FormalSystem.ForMathlib.Order.PFilter `` to `exceptions` in the same file, with a
       one-line rationale comment naming the documented upstreaming rule ("Nothing under
       `FormalSystem/ForMathlib/` imports `FormalSystem.*`") as the technical constraint.
-- [ ] Correct the `scripts/CheckInitImports.lean` module docstring: it currently says the check is
+- [x] Correct the `scripts/CheckInitImports.lean` module docstring: it currently says the check is
       "Reporting-only: not wired into `check-module-invariants.sh`" and cites a "~430-file import
       rewrite" follow-up. Both become false; the figure is also stale (457) and wrong in kind (11
       files).
-- [ ] Correct the `FormalSystem/Init.lean` module docstring: it currently says "Rewriting the tree
+- [x] Correct the `FormalSystem/Init.lean` module docstring: it currently says "Rewriting the tree
       so every module actually imports `FormalSystem.Init` is an explicit follow-up, not done
       here."
-- [ ] Rebuild the executable and re-run it. Confirm the count is unchanged except for the removal
+- [x] Rebuild the executable and re-run it. Confirm the count is unchanged except for the removal
       of the one exception, and that `$?` is now `1`, not a truncated count.
 
 **Timing**: 0.5 hours

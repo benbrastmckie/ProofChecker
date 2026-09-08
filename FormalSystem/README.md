@@ -246,7 +246,7 @@ invariant check allowlists it by name (check C8).
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
-| `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
+| `Init.lean` | 27 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
