@@ -90,7 +90,7 @@ next_project_number: 555
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-550 [RESEARCHED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+550 [PLANNED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -228,11 +228,12 @@ CONSTRAINTS. Do not delete anything in the characterization or recommendation st
 ---
 
 ### 550. Decompose mintbound for publication legibility
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: Task 549, Task 554
 - **Research**: [550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md]
+- **Plan**: [550_decompose_mintbound_for_publication_legibility/plans/01_decompose-mintbound-publication-legibility.md]
 
 **Description**: Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.
 
