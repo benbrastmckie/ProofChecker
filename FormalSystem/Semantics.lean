@@ -22,6 +22,7 @@ import FormalSystem.Semantics.ConvexHistory
 import FormalSystem.Semantics.TaskModel
 import FormalSystem.Semantics.Truth
 import FormalSystem.Semantics.BLTruth
+import FormalSystem.Semantics.BLFrame
 import FormalSystem.Semantics.ShiftSet
 import FormalSystem.Semantics.Ultraproduct.Carrier
 import FormalSystem.Semantics.Ultraproduct.IndexFilter
@@ -113,6 +114,12 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   natively on `BLFormula`'s six constructors per `def:BL-semantics` (H and G quantify over
   strictly past/future times directly, not via `untl`/`snce`), plus the `BLTruth.*` clause and
   derived-operator characterization lemmas
+- `BLFrame`: a native BL frame notion *not* bound to `TaskFrame` — `BLFrame`, `BLFrame.swap`,
+  `BLFrameTruth` (with `□` read as the universal modality over the point set) and
+  `BLFrameValid`, plus the `BLFrameTruth.*` characterization family and the order-reversal
+  transfer lemma `truth_swap`. Dropping the `Duration : TemporalOrder` group structure is what
+  frees the class from the dense-or-discrete dichotomy, which is what makes a countermodel to
+  `(Sp)` possible; see `Metalogic/Conservativity/SpCountermodel.lean`
 - `Validity`: Semantic validity `⊨ φ` and consequence `Γ ⊨ φ` quantifying over all temporal types
 - `BLValidity`: the base-language mirrors — `BLValid`, `BLSemanticConsequence`, `BLValidDense`,
   `BLValidZTime` and `BLValidRTime`, binder for binder against `BLTruthAt`; there is

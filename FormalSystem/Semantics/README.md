@@ -23,6 +23,7 @@ live file and subdirectory here, and no row for anything else.
 | ConvexHistory.lean | Convex histories for temporal evaluation, and `TaskFrame.HF` — the paper's possible worlds |
 | Truth.lean | `TruthAt`, the truth relation for formula evaluation, with its `truth_norm` simp-normal form; the relational truth transport `TruthCorr` / `Truth.truthAt_of_truthCorr` (one `induction φ`) from which `timeShift_preserves_truth`, `truthAt_of_truthIso`, and `IntTransfer.truthAt_map` are derived; `TruthIso`/`TruthAntiIso` |
 | BLTruth.lean | `BLTruthAt` — the same truth relation for the tense-primitive base language, by native six-clause recursion on `BLFormula` per `def:BL-semantics` (not `TruthAt ∘ tr`) |
+| BLFrame.lean | `BLFrame` — a native BL frame notion not bound to `TaskFrame` (points with an unbounded, transitive, irreflexive, forward- and backward-linear strict order, no group structure), its truth recursion `BLFrameTruth` with `□` as the universal modality, `BLFrameValid`, the `BLFrameTruth.*` characterization family, and the order-reversal transfer lemma `truth_swap`; the frame class a countermodel to `(Sp)` lives on |
 | ShiftSet.lean | Shift-set representation theorem: task models ↔ shift sets, both directions with truth correspondence |
 | Validity.lean | Validity and semantic consequence |
 | BLValidity.lean | `BLValid`, `BLSemanticConsequence`, `BLValidDense`, `BLValidDiscrete`, `BLValidDiscreteSucc`, `BLValidDedekind` — binder-for-binder base-language mirrors of Validity.lean |

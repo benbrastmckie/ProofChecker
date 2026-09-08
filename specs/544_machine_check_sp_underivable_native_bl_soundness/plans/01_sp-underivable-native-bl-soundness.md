@@ -1,7 +1,7 @@
 # Implementation Plan: Task #544
 
 - **Task**: 544 - Machine-check the failing half of CEB: `(Sp)` is not a theorem of TM, via a native BL frame notion and native BL soundness
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 6 hours
 - **Dependencies**: None (all prerequisites are in-tree and built)
 - **Research Inputs**: `specs/544_machine_check_sp_underivable_native_bl_soundness/reports/01_sp-underivable-native-bl-soundness.md` (plus its compiling prototype at `specs/544_machine_check_sp_underivable_native_bl_soundness/prototype/SpCountermodelPrototype.lean`)
@@ -133,24 +133,24 @@ consumes its soundness theorem, and Phase 4 documents theorem names that must al
 
 ---
 
-### Phase 1: Native BL frame and truth (`Semantics/BLFrame.lean`) [NOT STARTED]
+### Phase 1: Native BL frame and truth (`Semantics/BLFrame.lean`) [COMPLETED]
 
 **Goal**: A `TaskFrame`-free frame notion, a native truth recursion over it, the characterization
 lemma family, the swap-transfer lemma, and the validity notion — wired into the `Semantics`
 aggregator and green on a full build.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Semantics/BLFrame.lean` with the standard copyright header, `import FormalSystem.BaseLanguage.Formula` plus the Mathlib order imports only, the `assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass` G-15 guard copied from `Semantics/BLTruth.lean`, and `set_option autoImplicit false`.
-- [ ] Write the module docstring: what a `BLFrame` is, why it exists (`BLTruthAt` is `TaskFrame`-bound through `Duration : TemporalOrder`, and that group hypothesis is exactly what `DurationClassification.duration_dense_or_least_pos` consumes to make `blValid_sp` go through, so a native recursion is mandatory rather than a reindexing); that `□` is the universal modality over `Point` and why that is the cheapest condition making MF sound; and the contrast that in the task-frame semantics MF is underwritten instead by shift-closure of `H_F` plus `Duration` being a group — a different route to the same axiom, which is a feature, since underivability needs only *some* class on which TM is sound.
-- [ ] Declare `structure BLFrame` in `namespace FormalSystem.Semantics`: fields `Point : Type`, `[pointNonempty : Nonempty Point]`, `lt`, `lt_trans`, `lt_irrefl`, `no_max`, `no_min`, `fut_lin`, `past_lin`. Add `attribute [instance] BLFrame.pointNonempty`.
-- [ ] Add the private `triRotate` trichotomy-rotation helper (with a docstring — C16 `docBlame` covers private declarations).
-- [ ] Define `BLFrame.swap`, reversing `lt` and cross-wiring `no_max`/`no_min` and `fut_lin`/`past_lin`. Document that `no_min` and `past_lin` are fields precisely so the class is converse-closed, which is what makes the TD route in Phase 2 available.
-- [ ] Define `BLFrameTruth` by recursion on `BLFormula`'s six constructors, and `BLFrameValid`.
-- [ ] Add the `BLFrameTruth` namespace characterization lemmas mirroring `BLTruth.*` one for one: `imp_iff`, `box_iff`, `past_iff`, `future_iff`, `neg_iff`, `top_true`, `and_iff`, `or_iff`, `diamond_iff`, `someFuture_iff`, `somePast_iff`. Use `push Not` (not the deprecated `push_neg`) in the three existential cases.
-- [ ] Prove `truth_swap` by `induction φ generalizing w` — six cases, `Iff.rfl` / `imp_congr` / `forall_congr'`.
-- [ ] Add `import FormalSystem.Semantics.BLFrame` to `FormalSystem/Semantics.lean` (place it adjacent to the `BLTruth` import) and add a `- BLFrame:` submodule bullet to that file's `## Submodules` docstring list.
-- [ ] Add a `BLFrame.lean` row to `FormalSystem/Semantics/README.md` (readme-lint check 2) and refresh its "Last verified" date (check 4).
-- [ ] Verify: `lake env lean FormalSystem/Semantics/BLFrame.lean` clean, then a full `lake build`.
+- [x] Create `FormalSystem/Semantics/BLFrame.lean` with the standard copyright header, `import FormalSystem.BaseLanguage.Formula` plus the Mathlib order imports only, the `assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.DerivationTree FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass` G-15 guard copied from `Semantics/BLTruth.lean`, and `set_option autoImplicit false`.
+- [x] Write the module docstring: what a `BLFrame` is, why it exists (`BLTruthAt` is `TaskFrame`-bound through `Duration : TemporalOrder`, and that group hypothesis is exactly what `DurationClassification.duration_dense_or_least_pos` consumes to make `blValid_sp` go through, so a native recursion is mandatory rather than a reindexing); that `□` is the universal modality over `Point` and why that is the cheapest condition making MF sound; and the contrast that in the task-frame semantics MF is underwritten instead by shift-closure of `H_F` plus `Duration` being a group — a different route to the same axiom, which is a feature, since underivability needs only *some* class on which TM is sound.
+- [x] Declare `structure BLFrame` in `namespace FormalSystem.Semantics`: fields `Point : Type`, `[pointNonempty : Nonempty Point]`, `lt`, `lt_trans`, `lt_irrefl`, `no_max`, `no_min`, `fut_lin`, `past_lin`. Add `attribute [instance] BLFrame.pointNonempty`.
+- [x] Add the private `triRotate` trichotomy-rotation helper (with a docstring — C16 `docBlame` covers private declarations).
+- [x] Define `BLFrame.swap`, reversing `lt` and cross-wiring `no_max`/`no_min` and `fut_lin`/`past_lin`. Document that `no_min` and `past_lin` are fields precisely so the class is converse-closed, which is what makes the TD route in Phase 2 available.
+- [x] Define `BLFrameTruth` by recursion on `BLFormula`'s six constructors, and `BLFrameValid`.
+- [x] Add the `BLFrameTruth` namespace characterization lemmas mirroring `BLTruth.*` one for one: `imp_iff`, `box_iff`, `past_iff`, `future_iff`, `neg_iff`, `top_true`, `and_iff`, `or_iff`, `diamond_iff`, `someFuture_iff`, `somePast_iff`. Use `push Not` (not the deprecated `push_neg`) in the three existential cases. *(deviation: altered — Scope Hypothesis confirmed the enumerated 11 is short of `BLTruth`'s actual 13; `bot_false` and `always_iff` were added so the mirror really is one for one)*
+- [x] Prove `truth_swap` by `induction φ generalizing w` — six cases, `Iff.rfl` / `imp_congr` / `forall_congr'`.
+- [x] Add `import FormalSystem.Semantics.BLFrame` to `FormalSystem/Semantics.lean` (place it adjacent to the `BLTruth` import) and add a `- BLFrame:` submodule bullet to that file's `## Submodules` docstring list.
+- [x] Add a `BLFrame.lean` row to `FormalSystem/Semantics/README.md` (readme-lint check 2) and refresh its "Last verified" date (check 4).
+- [x] Verify: `lake env lean FormalSystem/Semantics/BLFrame.lean` clean, then a full `lake build`.
 
 **Timing**: 1.5 hours
 
