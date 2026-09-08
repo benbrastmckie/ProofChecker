@@ -5191,9 +5191,11 @@ file is withdrawn — but it is a conditional no caller can discharge, in the sa
 restricted to a branch some `expandBranchWithFuel` call returned open, at that call's own fuel —
 which is the only way `buildTableauAt` reaches it. `postBlockingSettlesRun_of_postBlockingSettles`
 fixes the direction: the hypothesis list is longer, so the predicate is **weaker**, so every
-theorem restated against it is a **strengthening**. `buildTableauAt_isSome_of_budget_run` and its
-siblings are the termini stated at it, and `buildTableauAt_isSome_of_budget_of_run` certifies the
-strengthening by re-deriving the landed statement from the restated one. Entry 23 records the
+theorem restated against it is a **strengthening**. Nine termini were once stated at it and have
+since been retired as vacuous — the narrowed predicate is itself refuted at the fuel figures they
+were stated at, so none of them delivered anything. Section C12's retirement record carries the
+disposition and the frame-class split; register entries 24 and 25 carry the verdict. Entry 23
+records the
 repair that was tried first and rejected, and why this one is not that.
 
 It is a hypothesis wherever it appears, and it is never an axiom. -/
@@ -12169,9 +12171,11 @@ arm at which its hypothesis is satisfied by every branch whatsoever. `buildTable
 exactly one kind of pair: a branch `expandBranchWithFuel` returned open, and the same fuel figure
 that call was given.
 
-Nothing here withdraws anything. `PostBlockingSettles` is retained verbatim, the landed termini are
-untouched, and the restatements below are additive siblings carrying `ArmSettlement` — which the
-landed chain already needed and already had — together with the narrowed residual.
+`PostBlockingSettles` is retained verbatim and the landed termini are untouched. Nine restatements
+once stood below, carrying `ArmSettlement` — which the landed chain already needed and already had
+— together with the narrowed residual. They have been retired as vacuous, because the narrowed
+residual is itself refuted at the figures they were stated at; the retirement record below carries
+the disposition, and the live successor line is `PostBlockingSettlesSeedRun`.
 -/
 
 /-- **The post-blocking settlement residual, at what the terminus instantiates it at.**
@@ -12205,8 +12209,9 @@ restricts `(ob, oOrd, fuel)` but leaves `expandBranchWithFuel`'s `EventualityTra
 universally quantified, and that argument is the only input the engine's blocked-set computation and
 the settlement test's recomputed `armTracker` do not share. Nothing is withdrawn on that account —
 this definition is retained verbatim, as everything in this file is — but it is a **false**
-hypothesis at those three classes, so the termini carrying it are vacuous there. See the verdict
-subsection below and register entry 25. The completion of the narrowing is
+hypothesis at those three classes. The nine termini that carried it were vacuous there for exactly
+that reason and have been retired; see the retirement record below, the verdict subsection, and
+register entries 24 and 25. The completion of the narrowing is
 `PostBlockingSettlesSeedRun`, which is carried as a hypothesis and is **not** shown true. -/
 def PostBlockingSettlesRun (fc : FormalSystem.ProofSystem.FrameClass) (fuel : Nat) : Prop :=
   ∀ (b ob : Branch) (ord oOrd : TimeOrdering) (tr : EventualityTracker) (ap oAp : AppliedSet)
@@ -12224,7 +12229,10 @@ runs `PostBlockingSettles fc → PostBlockingSettlesRun fc fuel`, at every `fuel
 theorem restated against the narrowed form is a strengthening of its landed original**, never a
 weakening. This is the same direction `universeClosedAt_of_universeClosed` and
 `mintPaysForTimeFixed_of_mintPaysForTimeStable` record for their own repairs, and register entry 7
-is why it is stated rather than assumed. -/
+is why it is stated rather than assumed.
+
+Retained as the record of the direction; its one consumer was among the retired `_run` termini, so
+it has none today. See the retirement record below. -/
 theorem postBlockingSettlesRun_of_postBlockingSettles
     {fc : FormalSystem.ProofSystem.FrameClass} (h : PostBlockingSettles fc) (fuel : Nat) :
     PostBlockingSettlesRun fc fuel :=
@@ -12256,7 +12264,10 @@ theorem postBlockingSettlesRun_zero (fc : FormalSystem.ProofSystem.FrameClass) :
 narrowed residual.** The analogue of `buildTableauAt_isSome_of_settles`, with
 `PostBlockingSettles fc` exchanged for `PostBlockingSettlesRun fc fuel`. The exchange is available
 because `buildTableauAt` reaches the residual holding the very equation the narrowed form asks for:
-its own `expandBranchWithFuel` call is in scope at the point the post-blocking arm is decided. -/
+its own `expandBranchWithFuel` call is in scope at the point the post-blocking arm is decided.
+
+Retained as the record of the narrowing; its four consumers were the retired `_run` termini, so it
+has none today. See the retirement record below. -/
 theorem buildTableauAt_isSome_of_settlesRun {phi : Formula} {fuel : Nat}
     {fc : FormalSystem.ProofSystem.FrameClass} {maxBranches : Nat}
     (hpb : PostBlockingSettlesRun fc fuel)
@@ -12285,206 +12296,65 @@ theorem buildTableauAt_isSome_of_settlesRun {phi : Formula} {fuel : Nat}
               simp at hg2
 
 
-/-! #### The termini, restated at the narrowed residual
+/-! #### The termini restated at the narrowed residual — retired as vacuous
 
-One hypothesis is exchanged and one is made explicit. `PostBlockingSettles fc` supplied **two**
-things to the landed termini — `ArmSettlement fc`, through `armSettlement_of_postBlockingSettles`,
-for `expandBranchWithFuel`'s split folds, and the entry point's own post-blocking arm. The
-narrowed residual covers only the second, so `ArmSettlement` is now named in the hypothesis list
-instead of being manufactured from a refuted predicate. That is a strict improvement and not a new
-cost: `ArmSettlement` is a landed residual of this file, is *already* quantified the honest way, and
-was always what the fold consumed.
+**What stood here.** Nine theorems restated the landed termini against the narrowed residual:
 
-**Every restatement is a strengthening of its landed original**, and this is proved rather than
-asserted: `buildTableauAt_isSome_of_budget_of_run` re-derives the landed statement from the
-restated one, using `armSettlement_of_postBlockingSettles` and
-`postBlockingSettlesRun_of_postBlockingSettles` to supply the two hypotheses from the single one.
+* `buildTableauAt_isSome_of_budget_run`
+* `buildTableauAt_isSome_of_budget_of_run`
+* `buildTableauAt_isSome_at_seed_run`
+* `buildTableauAt_isSome_of_budget_at_run`
+* `buildTableauAt_isSome_at_seed_at_run`
+* `buildTableauAt_isSome_of_budget_selfGuarded_run`
+* `buildTableauAt_isSome_at_seed_selfGuarded_run`
+* `buildTableauAt_isSome_of_budget_fixed_run`
+* `buildTableauAt_isSome_at_seed_fixed_run`
 
-**It costs no figure.** `mintAwareFuel`, `mintAwareFuelAt`, `derivedTmax`, `derivedTmaxAt`,
-`budgetPotentialAt` and `mintPathBoundAt` are reused byte for byte; the fuel expression in each
-restatement is the one already in its original's conclusion, and the narrowed residual is
-instantiated at exactly that expression.
+They are gone from the file. The names are recorded here so a reader arriving from `git log`, from
+register entries 24 and 25, or from an external citation still finds them, in the idiom
+`Correctness.lean` uses for its own retired pair: delete the theorem, keep the record.
 
-The landed termini are retained verbatim, because nothing in this file is withdrawn.
+**Why they were retired.** Each read as a headline result — the tableau construction succeeds —
+while establishing nothing, because each carried a hypothesis this file itself refutes. That is
+worse than the statements being absent: a reader meeting one at its declaration site got no local
+signal, and the refutation sits thousands of lines away in the register. Removing them withdraws
+no content, because none of them ever delivered any.
+
+**The refutations, at the figures the nine were actually stated at.** Four of them
+(`_of_budget_run`, `_at_seed_run`, `_of_budget_at_run`, `_at_seed_at_run`) carried
+`PostBlockingSettlesRun fc` at the un-`At` figure `mintAwareFuel …`, refuted by
+`postBlockingSettlesRun_mintAwareFuel_false`. Four (`_of_budget_selfGuarded_run`,
+`_at_seed_selfGuarded_run`, `_of_budget_fixed_run`, `_at_seed_fixed_run`) carried it at
+`mintAwareFuelAt …`, refuted by `postBlockingSettlesRun_terminusFuel_false`. Both figures are
+positive at every parameter value (`one_le_mintAwareFuel`, `one_le_mintAwareFuelAt`), and
+`postBlockingSettlesRun_false_succ` refutes the predicate at every positive figure. The ninth,
+`buildTableauAt_isSome_of_budget_of_run`, carried the unrestricted `PostBlockingSettles`, refuted
+by `postBlockingSettles_fuel_zero_false`.
+
+**The frame-class split, which is not uniform and must not be flattened.** The eight carrying
+`PostBlockingSettlesRun` are established vacuous at `.Base`, `.Dense` and `.RTime` — the last two
+by `postBlockingSettlesRun_false_dense` and `postBlockingSettlesRun_false_rtime`. At `.ZTime`
+their hypothesis is *undecided here*: the witness leaves `priorUZ` and `priorSZ` applicable, as
+entry 25 records. Undecided is not delivered — at `.ZTime` they proved nothing either, and they
+had zero dependents there as everywhere else. `buildTableauAt_isSome_of_budget_of_run` is the
+exception in the other direction: carrying the unrestricted predicate, it is refuted by
+`postBlockingSettles_fuel_zero_false` at **all four** frame classes, so entry 25's `.ZTime`
+caveat does not reach it at all.
+
+**What survives, and why.** Everything but the nine restatements. `PostBlockingSettlesRun` itself
+is retained verbatim as the record of the narrowing, with
+`postBlockingSettlesRun_of_postBlockingSettles` fixing its direction and
+`buildTableauAt_isSome_of_settlesRun` as its bridge. The whole refutation apparatus stands —
+`pbrWitnessBranch`, `pbrDoctoredTracker`, `postBlockingSettlesRun_false_succ` and the per-class
+records — as does the non-vacuity subsection below. So does the live successor line:
+`PostBlockingSettlesSeedRun`, its bridge `buildTableauAt_isSome_of_settlesSeedRun`, and
+`buildTableauAt_isSome_of_budget_fixed_seedRun`, the terminus restated against a hypothesis this
+file has **not** refuted. The landed termini stated against `PostBlockingSettles` are untouched.
+
+**What the removal cost.** Nothing measurable. A whole-environment reverse-dependency scan found
+zero dependents of the nine outside the nine themselves, and the decision procedure
+`FormalSystem.Metalogic.Decidability.decide` reaches zero constants from this file at all.
 -/
-
-/-- `buildTableauAt_isSome_of_budget` at the narrowed settlement residual. -/
-theorem buildTableauAt_isSome_of_budget_run {fc : FormalSystem.ProofSystem.FrameClass}
-    {U : Finset SignedFormula} {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosed fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTime fc U Tmax) (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc (mintAwareFuel U.card Tmax mintBudget D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
-    (hmb : 8 * U.card ≤ mintBudget)
-    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
-    (hbud : β * mintAwareFuel U.card Tmax mintBudget D β ≤ maxBranches) :
-    (buildTableauAt phi (mintAwareFuel U.card Tmax mintBudget D β) fc maxBranches).isSome
-      = true := by
-  refine buildTableauAt_isSome_of_settlesRun hpb ?_
-  exact expandBranchWithFuel_isSome_of_budget hβ hUcl hD hmint harm
-    (seedBranch phi) TimeOrdering.empty EventualityTracker.empty {} maxBranches 0
-    hseed (runInvariant_initial _) hmb hT (by omega)
-
-/-- **The strengthening certificate.** The landed terminus follows from its restated sibling, so the
-exchange loses nothing that was ever available: a caller holding `PostBlockingSettles fc` can supply
-both of the restated form's hypotheses and recover the original statement verbatim. -/
-theorem buildTableauAt_isSome_of_budget_of_run {fc : FormalSystem.ProofSystem.FrameClass}
-    {U : Finset SignedFormula} {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosed fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTime fc U Tmax) (hpb : PostBlockingSettles fc)
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
-    (hmb : 8 * U.card ≤ mintBudget)
-    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
-    (hbud : β * mintAwareFuel U.card Tmax mintBudget D β ≤ maxBranches) :
-    (buildTableauAt phi (mintAwareFuel U.card Tmax mintBudget D β) fc maxBranches).isSome
-      = true :=
-  buildTableauAt_isSome_of_budget_run phi maxBranches hβ hUcl hD hmint
-    (armSettlement_of_postBlockingSettles hpb)
-    (postBlockingSettlesRun_of_postBlockingSettles hpb _) hseed hmb hT hbud
-
-/-- `buildTableauAt_isSome_at_seed` at the narrowed settlement residual, with every number read
-off. -/
-theorem buildTableauAt_isSome_at_seed_run {fc : FormalSystem.ProofSystem.FrameClass}
-    {U : Finset SignedFormula} {D β : Nat} (phi : Formula)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosed fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTime fc U
-      (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card))
-    (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc
-      (mintAwareFuel U.card (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card)
-        (8 * U.card) D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U) :
-    (buildTableauAt phi
-        (mintAwareFuel U.card (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card)
-          (8 * U.card) D β)
-        fc
-        (β * mintAwareFuel U.card
-          (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card) (8 * U.card) D β)
-      ).isSome = true :=
-  buildTableauAt_isSome_of_budget_run phi _ hβ hUcl hD hmint harm hpb hseed (Nat.le_refl _)
-    (derivedTmax_spec (seedBranch phi) U) (Nat.le_refl _)
-
-/-- `buildTableauAt_isSome_of_budget_at` at the narrowed settlement residual — the terminus with
-**both** its closure residual and its settlement residual at their repaired shapes. -/
-theorem buildTableauAt_isSome_of_budget_at_run {fc : FormalSystem.ProofSystem.FrameClass}
-    {U : Finset SignedFormula} {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTime fc U Tmax) (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc (mintAwareFuel U.card Tmax mintBudget D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
-    (hmb : 8 * U.card ≤ mintBudget)
-    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
-    (hbud : β * mintAwareFuel U.card Tmax mintBudget D β ≤ maxBranches) :
-    (buildTableauAt phi (mintAwareFuel U.card Tmax mintBudget D β) fc maxBranches).isSome
-      = true := by
-  refine buildTableauAt_isSome_of_settlesRun hpb ?_
-  exact expandBranchWithFuel_isSome_of_budget_at hβ hUcl hD hmint harm
-    (seedBranch phi) TimeOrdering.empty EventualityTracker.empty {} maxBranches 0
-    hseed (runInvariant_initial _) hmb hT (by omega)
-
-/-- `buildTableauAt_isSome_at_seed_at` at the narrowed settlement residual. -/
-theorem buildTableauAt_isSome_at_seed_at_run {fc : FormalSystem.ProofSystem.FrameClass}
-    {U : Finset SignedFormula} {D β : Nat} (phi : Formula)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTime fc U
-      (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card))
-    (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc
-      (mintAwareFuel U.card (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card)
-        (8 * U.card) D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U) :
-    (buildTableauAt phi
-        (mintAwareFuel U.card (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card)
-          (8 * U.card) D β)
-        fc
-        (β * mintAwareFuel U.card
-          (derivedTmax ((seedBranch phi).knownTimes.toFinset.card) U.card) (8 * U.card) D β)
-      ).isSome = true :=
-  buildTableauAt_isSome_of_budget_at_run phi _ hβ hUcl hD hmint harm hpb hseed (Nat.le_refl _)
-    (derivedTmax_spec (seedBranch phi) U) (Nat.le_refl _)
-
-/-- `buildTableauAt_isSome_of_budget_selfGuarded` at the narrowed settlement residual. -/
-theorem buildTableauAt_isSome_of_budget_selfGuarded_run
-    {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula}
-    {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTimeStable fc U Tmax) (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
-    (hmb : 10 * U.card ≤ mintBudget)
-    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
-    (hbud : β * mintAwareFuelAt U.card Tmax mintBudget D β ≤ maxBranches) :
-    (buildTableauAt phi (mintAwareFuelAt U.card Tmax mintBudget D β) fc maxBranches).isSome
-      = true := by
-  refine buildTableauAt_isSome_of_settlesRun hpb ?_
-  exact expandBranchWithFuel_isSome_of_budget_selfGuarded hβ hUcl hD hmint harm
-    (seedBranch phi) TimeOrdering.empty EventualityTracker.empty {} maxBranches 0
-    hseed (runInvariant_initial _) hmb hT (by omega)
-
-/-- `buildTableauAt_isSome_at_seed_selfGuarded` at the narrowed settlement residual. -/
-theorem buildTableauAt_isSome_at_seed_selfGuarded_run
-    {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula} {D β : Nat}
-    (phi : Formula) (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U)
-    (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTimeStable fc U
-      (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card))
-    (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc
-      (mintAwareFuelAt U.card (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card)
-        (10 * U.card) D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U) :
-    (buildTableauAt phi
-        (mintAwareFuelAt U.card (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card)
-          (10 * U.card) D β)
-        fc
-        (β * mintAwareFuelAt U.card
-          (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card) (10 * U.card) D β)
-      ).isSome = true :=
-  buildTableauAt_isSome_of_budget_selfGuarded_run phi _ hβ hUcl hD hmint harm hpb hseed
-    (Nat.le_refl _) (derivedTmaxAt_spec (seedBranch phi) U) (Nat.le_refl _)
-
-/-- `buildTableauAt_isSome_of_budget_fixed` at the narrowed settlement residual. This is the
-terminus with **every** residual at its repaired shape: `UniverseClosedAt` for the closure,
-`MintPaysForTimeFixed` for the mint accounting, and `PostBlockingSettlesRun` for the settlement. -/
-theorem buildTableauAt_isSome_of_budget_fixed_run
-    {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula}
-    {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
-    (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U) (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTimeFixed fc U Tmax) (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc (mintAwareFuelAt U.card Tmax mintBudget D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U)
-    (hmb : 10 * U.card ≤ mintBudget)
-    (hT : (seedBranch phi).knownTimes.toFinset.card + mintBudget ≤ Tmax)
-    (hbud : β * mintAwareFuelAt U.card Tmax mintBudget D β ≤ maxBranches) :
-    (buildTableauAt phi (mintAwareFuelAt U.card Tmax mintBudget D β) fc maxBranches).isSome
-      = true := by
-  refine buildTableauAt_isSome_of_settlesRun hpb ?_
-  exact expandBranchWithFuel_isSome_of_budget_fixed hβ hUcl hD hmint harm
-    (seedBranch phi) TimeOrdering.empty EventualityTracker.empty {} maxBranches 0
-    hseed (runInvariant_initial _) hmb hT (by omega)
-
-/-- `buildTableauAt_isSome_at_seed_fixed` at the narrowed settlement residual, with every number
-read off. The caller-facing form of the terminus with every residual repaired. -/
-theorem buildTableauAt_isSome_at_seed_fixed_run
-    {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula} {D β : Nat}
-    (phi : Formula) (hβ : 3 ≤ β) (hUcl : UniverseClosedAt fc U)
-    (hD : DifficultyBounded fc U D)
-    (hmint : MintPaysForTimeFixed fc U
-      (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card))
-    (harm : ArmSettlement fc)
-    (hpb : PostBlockingSettlesRun fc
-      (mintAwareFuelAt U.card (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card)
-        (10 * U.card) D β))
-    (hseed : ∀ x ∈ seedBranch phi, x ∈ U) :
-    (buildTableauAt phi
-        (mintAwareFuelAt U.card (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card)
-          (10 * U.card) D β)
-        fc
-        (β * mintAwareFuelAt U.card
-          (derivedTmaxAt ((seedBranch phi).knownTimes.toFinset.card) U.card) (10 * U.card) D β)
-      ).isSome = true :=
-  buildTableauAt_isSome_of_budget_fixed_run phi _ hβ hUcl hD hmint harm hpb hseed
-    (Nat.le_refl _) (derivedTmaxAt_spec (seedBranch phi) U) (Nat.le_refl _)
 
 
 /-! #### Non-vacuity of the narrowed residual
@@ -12744,12 +12614,15 @@ theorem one_le_mintAwareFuel (Ucard Tmax mintBudget D β : Nat) :
 values of the parameters — the figure is always at least one, and the predicate is refuted at every
 positive figure.
 
-**The consequence, stated without hedging.** `buildTableauAt_isSome_of_budget_fixed_run` and its five
-`_run` siblings carry `PostBlockingSettlesRun fc (mintAwareFuelAt …)` as a hypothesis. At `.Base`
-(and, by `postBlockingSettlesRun_false_dense` / `postBlockingSettlesRun_false_rtime`, at `.Dense` and
-`.RTime`) that hypothesis is **false**: those statements are vacuous there, not merely unproved.
-Nothing is withdrawn on that account — they remain exactly as true as they ever were — but a reader
-must not read them as delivering `buildTableauAt … .isSome` at those classes. This is the analogue
+**The consequence, stated without hedging.** Eight `_run` termini carried `PostBlockingSettlesRun
+fc` as a hypothesis: four at `mintAwareFuelAt …`, refuted here, and four at the un-`At` figure
+`mintAwareFuel …`, refuted by `postBlockingSettlesRun_mintAwareFuel_false` immediately below. At
+`.Base` (and, by `postBlockingSettlesRun_false_dense` / `postBlockingSettlesRun_false_rtime`, at
+`.Dense` and `.RTime`) that hypothesis is **false**: those statements were vacuous there, not merely
+unproved, and a reader could not read them as delivering `buildTableauAt … .isSome` at those
+classes. They have since been retired for that reason, together with a ninth that carried the
+unrestricted `PostBlockingSettles` and is refuted at all four classes — see the retirement record in
+section C12. This is the analogue
 of `postBlockingExitSettled_false`, and it sits beside it in spirit: a residual decided in the
 negative, recorded as a theorem rather than left to be inferred.
 
@@ -12953,12 +12826,15 @@ theorem buildTableauAt_isSome_of_settlesSeedRun {phi : Formula} {fuel : Nat}
               rw [hpb _ _ _ _ _ _ _ hE hsb] at hg2
               simp at hg2
 
-/-- `buildTableauAt_isSome_of_budget_fixed_run` at the seed narrowing — the terminus restated so it
-rests on a hypothesis this file has **not** refuted. Exactly one entry of the hypothesis list
-differs from its `_run` original; the fuel expression is reused byte for byte.
+/-- The `_of_budget_fixed` terminus at the seed narrowing — restated so it rests on a hypothesis
+this file has **not** refuted. Exactly one entry of the hypothesis list differs from the retired
+`buildTableauAt_isSome_of_budget_fixed_run`; the fuel expression is reused byte for byte.
 
-This is the representative restatement, not the family: the other five `_run` termini are left as
-they stand, and widening to them is deliberately deferred rather than forgotten. -/
+This is the representative restatement, not the family. The nine `_run` termini it once stood beside
+have been retired as vacuous (see the retirement record in section C12), so this is now the only
+terminus in the file stated at a narrowed post-blocking residual. Widening the seed narrowing to the
+rest of that family is deliberately deferred rather than forgotten — but note that widening it now
+means restating landed termini, not repairing surviving ones. -/
 theorem buildTableauAt_isSome_of_budget_fixed_seedRun
     {fc : FormalSystem.ProofSystem.FrameClass} {U : Finset SignedFormula}
     {mintBudget Tmax D β : Nat} (phi : Formula) (maxBranches : Nat)
@@ -15669,8 +15545,12 @@ already been here.
     *And what it costs.* One hypothesis becomes explicit. `PostBlockingSettles` supplied **two**
     things to the landed termini — `ArmSettlement fc`, through
     `armSettlement_of_postBlockingSettles`, for `expandBranchWithFuel`'s split folds, and the entry
-    point's own arm. The narrowed residual covers only the second, so the restated termini name
-    `ArmSettlement` instead of manufacturing it from a refuted predicate. That is not a new cost:
+    point's own arm. The narrowed residual covered only the second, so the restated termini named
+    `ArmSettlement` instead of manufacturing it from a refuted predicate. (Those termini have since
+    been retired as vacuous — entry 25's verdict reaches the very figures they were stated at — and
+    section C12's retirement record carries the disposition. What is recorded here is the cost
+    accounting as it stood: the exchange was the right one and was still not enough.) That is not a
+    new cost:
     `ArmSettlement` is a landed residual of this file, is *already* quantified the honest way — its
     own docstring is where the "restricted to arms an engine run actually hands the fold" idiom
     comes from — and was always what the fold consumed.
@@ -15687,6 +15567,17 @@ already been here.
     that used to stand here, that nothing in this file decides it in either direction, was true when
     it was written and is false now; it is corrected rather than deleted so the sequence of findings
     stays legible.
+
+    *The consequence for the termini, and the corrected count.* **Nine** termini were stated against
+    the narrowed residual, not six. The six-count was an undercount twice over: it read one terminus
+    plus its five named siblings off a single sentence three sections up, and it silently assumed all
+    of them stood at `mintAwareFuelAt …` when four stood at the un-`At` `mintAwareFuel …`. All nine have been
+    retired as vacuous, by the same discipline this entry states for itself — the record is corrected
+    and kept rather than deleted. Section C12's retirement record names each of the nine, gives the
+    refutation that reaches it, and carries the frame-class split. The removal was cost-free: a
+    whole-environment reverse-dependency scan found zero dependents of the nine outside the nine
+    themselves, and `FormalSystem.Metalogic.Decidability.decide` reaches no constant of this file at
+    all.
 
     *What is established about it.* It is not refuted by either witness that kills the unrestricted
     form (entry 22), and it is not vacuous: `postBlockingRunProbe`'s `#guard_msgs`-checked
@@ -15716,7 +15607,11 @@ already been here.
     predicate at `.Base` at the terminus's own figure `mintAwareFuelAt U.card Tmax mintBudget D β`,
     for **all** parameter values: that figure is always at least one (`one_le_mintAwareFuelAt`, off
     `mintPathBound`'s trailing `+ 1` through `fuelFigure_pos`), and `postBlockingSettlesRun_false_succ`
-    refutes it at every positive fuel. `postBlockingSettlesRun_false_dense` and
+    refutes it at every positive fuel. **Both** fuel figures are covered, not only the `At` one:
+    `one_le_mintAwareFuel` and `postBlockingSettlesRun_mintAwareFuel_false` land the identical verdict
+    at the un-`At` `mintAwareFuel …`, by the identical route. That is not tidiness — it is the figure
+    four of the nine retired termini were actually stated at, so without it the vacuity claim reached
+    only half of them. `postBlockingSettlesRun_false_dense` and
     `postBlockingSettlesRun_false_rtime` land the same verdict at two further classes. All of it is a
     kernel proof — no `sorry`, and no axiom beyond `propext`, `Classical.choice`, `Quot.sound`.
 
@@ -15775,6 +15670,15 @@ already been here.
     `priorUZ` and `priorSZ` applicable at `⟨0,0⟩`, `⟨0,1⟩`, `⟨1,0⟩` and `⟨1,1⟩`, so its first
     obligation fails there. Completing that class is mechanical and buys only tidiness — refuting at
     one frame class already refutes the predicate.
+
+    *That `.ZTime` caveat does not apply uniformly across the retired termini, and must not be read
+    as though it did.* Eight of the nine carried `PostBlockingSettlesRun` and inherit exactly the gap
+    just named: established vacuous at `.Base`, `.Dense` and `.RTime`, undecided here at `.ZTime` —
+    where undecided still means undelivered, and where they had no dependent either. The ninth,
+    `buildTableauAt_isSome_of_budget_of_run`, is not one of them. It carried the **unrestricted**
+    `PostBlockingSettles`, which `postBlockingSettles_fuel_zero_false` refutes at every frame class,
+    so it was unconditionally vacuous at **all four**. It sat inside what read as a uniform block and
+    was not uniform with it.
     -/
 
 end FormalSystem.Metalogic.Decidability

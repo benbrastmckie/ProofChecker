@@ -240,7 +240,7 @@ modules through unchanged signatures — cannot apply to a declaration that did 
 
 ---
 
-### Phase 3: Retire the nine and install the retirement record [NOT STARTED]
+### Phase 3: Retire the nine and install the retirement record [COMPLETED]
 
 **Goal**: Delete the nine vacuous theorems and the block prose that introduces them, and put a
 named retirement record in their place — following `Correctness.lean:192-234` and the ADR-007
@@ -311,7 +311,7 @@ was wrong.
 
 ---
 
-### Phase 4: Repair the six collateral prose sites [NOT STARTED]
+### Phase 4: Repair the six collateral prose sites [COMPLETED]
 
 **Goal**: Leave no prose in the file that names a retired theorem as live, forward-references the
 deleted block, or asserts something the deletion made false. Three of these six sites appear in no
@@ -389,7 +389,7 @@ that does not match means the file moved under the research — stop and re-loca
 
 ---
 
-### Phase 5: Amend the C9 register and correct the count [NOT STARTED]
+### Phase 5: Amend the C9 register and correct the count [COMPLETED]
 
 **Goal**: Bring the C9 register into agreement with the file: the corrected count of nine, the
 widened vacuity claim over both fuel figures, and the row that falls outside the `.ZTime` caveat
