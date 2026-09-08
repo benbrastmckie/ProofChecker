@@ -757,7 +757,9 @@ already carrying `T p`, and `expandOnceUnblocked_multBranch` for any `n ≥ 1`. 
 
 section MultiplicityRefutation
 
+/-- The base atom `p` of the multiplicity refutation's witness `F(p → q)`. -/
 def mfp : Formula := .atom (Atom.mkBase "p")
+/-- The base atom `q` of the multiplicity refutation's witness `F(p → q)`. -/
 def mfq : Formula := .atom (Atom.mkBase "q")
 
 /-- `F(p → q)` at the initial label: the formula the refutation duplicates. `.impNeg` fires on it at

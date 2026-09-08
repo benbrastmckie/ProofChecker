@@ -1,11 +1,12 @@
 # Implementation Plan: Task #550
 
 - **Task**: 550 - Decompose `MintBound.lean` for publication legibility
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 10.75 hours (phase timings sum exactly; build waits are passive)
 - **Dependencies**: 549 (completed), 554 (completed) — both resolved; no live blocker
 - **Research Inputs**: specs/550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md
-- **Artifacts**: plans/01_decompose-mintbound-publication-legibility.md (this file)
+- **Artifacts**: plans/01_decompose-mintbound-publication-legibility.md (this file),
+  summaries/01_decompose-mintbound-publication-legibility-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -511,25 +512,44 @@ headers; Phase 8 confirms them against the tree and corrects them there rather t
 
 ---
 
-### Phase 8: Final gate — invariants, baselines, and count reconciliation [NOT STARTED]
+### Phase 8: Final gate — invariants, baselines, and count reconciliation [COMPLETED]
 
 **Goal**: Close the task against the full repository gate set and reconcile every asserted count
 with the tree as built.
 
 **Tasks**:
-- [ ] Run `bash scripts/check-module-invariants.sh`; confirm C4 (imports resolve), C6 (no
+- [x] **Two gate failures surfaced and were fixed, neither anticipated by the plan.** C16's
+      `docBlame` linter reported 7 new findings — `mfp`, `mfq`, `fwp`, `mwE`, `mwG`, `mwP`, `mwQ`,
+      the witness atoms Phase 2 de-privatized, since `docBlame` does not see `private`
+      declarations. Each was given a one-line docstring; grandfathering them via
+      `runLinter --update` was rejected because the regression is real. `INV` reported two stale
+      generated inventory blocks (also failing before this task began, from concurrent work);
+      the split's +18 files and +199 lines made them stale on this task's own account too, so
+      `--emit-inventory` was run and both blocks are now current.
+- [x] Run `bash scripts/check-module-invariants.sh`; confirm C4 (imports resolve), C6 (no
       unreachable live module; no manifest entry needed, since the aggregator imports all 18) and
       C8 (`MintBound.lean` sits beside `MintBound/`) all pass.
-- [ ] Run `lake exe checkInitImports`; confirm no new violation, in particular that `Register.lean`
-      is not flagged.
-- [ ] **Final full build gate** (detached + guarded), from a clean state.
-- [ ] Diff against the Phase 1 baseline: declaration-name set identical (751 names); sorry count
+- [x] Run `lake exe checkInitImports`; confirm no new violation, in particular that `Register.lean`
+      is not flagged. *(deviation: altered — the plan's expectation is falsified, and the reason
+      matters. `checkInitImports` reports 453 modules that do not transitively import
+      `FormalSystem.Init`, and `Fuel.lean`, `TimeTypeBound.lean`, `SubformulaProperty.lean` and
+      the pre-split `MintBound.lean` were all already among them. Every new module imports `Fuel`,
+      so all 18 inherit the status structurally; giving `Register.lean` a `Fuel` import for
+      "hygiene" cannot avoid it, because `Fuel` is itself flagged. The set grows from 435 to 453 —
+      no new KIND of violation. The executable is declared in `lakefile.lean` and is not wired
+      into CI or into `check-module-invariants.sh`, so nothing gates on it.)*
+- [x] **Final full build gate** (detached + guarded), from a clean state.
+- [x] Diff against the Phase 1 baseline: declaration-name set identical (751 names); sorry count
       unchanged; `#print axioms` output for the C2 flagship theorems unchanged.
-- [ ] Reconcile the per-module line counts in both READMEs against `wc -l` on the tree; correct
+- [x] Reconcile the per-module line counts in both READMEs against `wc -l` on the tree; correct
       any that drifted from the plan-time estimates.
-- [ ] Confirm `MintBound.lean` is now under 100 lines and the largest module is under 2,000.
-- [ ] Confirm zero task-number citations under `FormalSystem/`.
-- [ ] Commit.
+- [x] Confirm `MintBound.lean` is now under 100 lines and the largest module is under 2,000.
+      *(deviation: altered — the largest module is `MintPotential.lean` at 1,828 lines, under
+      2,000 as asserted. The aggregator is 121 lines, not under 100: the `## Submodules` map with
+      18 entries plus the retained A/B/C/D overview does not fit in 100, and the overview is the
+      file's orientation. Measured and reported rather than met by deleting prose.)*
+- [x] Confirm zero task-number citations under `FormalSystem/`.
+- [x] Commit.
 
 **Timing**: 1 hour
 
@@ -568,20 +588,23 @@ obligation at all. The `#print axioms` baseline is untouched because the proof t
 
 ## Testing & Validation
 
-- [ ] `lake build` green at every one of the five build gates (Phases 2, 3, 4, 5, 6) and at the
+- [x] `lake build` green at every one of the five build gates (Phases 2, 3, 4, 5, 6) and at the
       final gate (Phase 8), each run detached and guarded per
       `context/project/lean4/operations/long-builds.md`.
-- [ ] `bash scripts/check-module-invariants.sh` passes C4, C6 and C8 after the split.
-- [ ] `lake exe checkInitImports` reports no new violation.
-- [ ] Declaration-name set is byte-identical to the Phase 1 baseline: 751 names, no addition, no
+- [x] `bash scripts/check-module-invariants.sh` passes C4, C6 and C8 after the split.
+- [x] `lake exe checkInitImports` reports no new violation. *(deviation: altered — it reports the
+      same KIND of finding for the 18 new modules that it already reported for `Fuel.lean`,
+      `TimeTypeBound.lean`, `SubformulaProperty.lean` and the pre-split `MintBound.lean`; the
+      total moves 435 -> 453. The executable is not wired into CI or the invariant gate.)*
+- [x] Declaration-name set is byte-identical to the Phase 1 baseline: 751 names, no addition, no
       removal, no rename.
-- [ ] `private` count drops from 92 to 76 and by no more.
-- [ ] Sorry count unchanged (zero); `#print axioms` unchanged for the C2 flagship theorems.
-- [ ] `FormalSystem/Metalogic/Decidability.lean` has no diff across the whole task.
-- [ ] Cross-boundary private-use check returns empty against the final tree.
-- [ ] The C9 register in `Register.lean` retains all 25 entries verbatim, with only the header's
+- [x] `private` count drops from 92 to 76 and by no more.
+- [x] Sorry count unchanged (zero); `#print axioms` unchanged for the C2 flagship theorems.
+- [x] `FormalSystem/Metalogic/Decidability.lean` has no diff across the whole task.
+- [x] Cross-boundary private-use check returns empty against the final tree.
+- [x] The C9 register in `Register.lean` retains all 25 entries verbatim, with only the header's
       "Twenty-four" corrected.
-- [ ] Zero task-number citations under `FormalSystem/`.
+- [x] Zero task-number citations under `FormalSystem/`.
 
 ## Artifacts & Outputs
 

@@ -77,9 +77,13 @@ is what `OrdTimesKnown` needs; atoms fire no rule, so nothing pre-empts the trig
 the witness quantifies over `fc` and the four cases are decided separately. It also quantifies over
 `Tmax`: disjunct 1 fails at its *first* conjunct, which does not mention `Tmax` at all. -/
 
+/-- The base atom `e` of the time-reuse witness's trigger `F(U(g, e))`. -/
 def mwE : Formula := .atom (Atom.mkBase "e")
+/-- The base atom `g` of the time-reuse witness's trigger `F(U(g, e))`. -/
 def mwG : Formula := .atom (Atom.mkBase "g")
+/-- The base atom `p` the time-reuse witness branch carries at time `1`. -/
 def mwP : Formula := .atom (Atom.mkBase "p")
+/-- The base atom `q` the time-reuse witness branch carries at time `2`. -/
 def mwQ : Formula := .atom (Atom.mkBase "q")
 
 /-- The trigger: `F(U(e,g))` at the initial label. -/

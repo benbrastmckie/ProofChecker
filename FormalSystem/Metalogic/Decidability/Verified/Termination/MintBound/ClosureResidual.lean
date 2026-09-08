@@ -440,6 +440,7 @@ register entry 11 records. -/
 
 section FreshWorldRefutation
 
+/-- The base atom `p` of the fresh-world refutation's witness `F(□p)`. -/
 def fwp : Formula := .atom (Atom.mkBase "p")
 
 /-- `F(□p)` at the initial label: the smallest branch whose step leaves every fixed label set. -/

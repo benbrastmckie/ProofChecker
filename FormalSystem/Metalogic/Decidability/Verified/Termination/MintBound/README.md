@@ -35,11 +35,11 @@ Listed in dependency order. Line and declaration counts are of the module as it 
 | `Invariants.lean` | 1021 | 63 | The renaming `rho`/`rhoSF`, `IrreflOrd` and its preservation at all four result shapes, the ordering-times invariant, the reachability transport stack, and the pick bridges `pickOrd`/`pickBranches` |
 | `OrderingTimes.lean` | 1016 | 51 | `OrdTimesLeMaxTime` at the branching shapes with its refutation at the identification arm, the strengthened `OrdTimesKnown`, the engine-level run invariant, and `witnessPresent` monotonicity |
 | `MintPotential.lean` | 1828 | 90 | The world dimension and a time bound that does not go through the mint chain, the fresh-world discipline, `mintPotential`, the once-only bound, the counting chain, and the fuel induction over an abstract measure |
-| `Measure.lean` | 1256 | 73 | The concrete measure and the fuel figure it earns, the difficulty toolkit and the scope decision it settles, and the closure residual as literally stated — refuted at every `D` |
+| `Measure.lean` | 1258 | 73 | The concrete measure and the fuel figure it earns, the difficulty toolkit and the scope decision it settles, and the closure residual as literally stated — refuted at every `D` |
 | `Terminus.lean` | 272 | 7 | The terminus at `buildTableauAt`, and its sibling terminus at the length budget |
-| `ClosureResidual.lean` | 1160 | 57 | The repaired closure residual, the four consuming theorems restated at it, and the refutations of clause 1's label and formula dimensions |
+| `ClosureResidual.lean` | 1161 | 57 | The repaired closure residual, the four consuming theorems restated at it, and the refutations of clause 1's label and formula dimensions |
 | `TimeCensus.lean` | 696 | 33 | The time coordinate: the minting census, `applyRule_emitted_time_mem` as the time analogue of the world sweep, and the time dichotomy lifted to the engine |
-| `TimeReuse.lean` | 769 | 46 | The verdict on `MintPaysForTime` — the refuting configuration, the repair attempted and blocked, and the fourth measure component |
+| `TimeReuse.lean` | 773 | 46 | The verdict on `MintPaysForTime` — the refuting configuration, the repair attempted and blocked, and the fourth measure component |
 | `MonotoneIssuance.lean` | 505 | 24 | Monotone time issuance at the identification-side gate, run-level monotonicity off the gate configuration, and invariant survival at the oriented arm |
 | `OrientedGate.lean` | 997 | 55 | The self-guard component re-gated at the oriented arm, its structural facts, and the σ-hit obligation discharged rather than carried |
 | `FourComponent.lean` | 768 | 26 | The four-component measure, its per-step bundle and fuel figure, and the terminus chain restated at the repaired predicate |
