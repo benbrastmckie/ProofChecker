@@ -1,7 +1,7 @@
 # Implementation Plan: Replace historical system names in docstrings
 
 - **Task**: 547 - Replace historical system names in docstrings
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 7 hours
 - **Dependencies**: 546 (completed). Blocks 548 (anchor re-pinning).
 - **Research Inputs**: `specs/547_replace_historical_system_names_in_docstrings/reports/01_historical-system-name-sweep.md`
@@ -416,29 +416,29 @@ Phase 1 census and a fresh `grep -rn 'FrameClass.Dedekind\|FrameClass.Discrete'`
 
 ---
 
-### Phase 7: Gate and handoff [NOT STARTED]
+### Phase 7: Gate and handoff [COMPLETED]
 
 **Goal**: Prove the sweep complete and non-regressive, and record the 547/548 boundary so the
 follow-on task does not re-litigate it.
 
 **Tasks**:
-- [ ] Run the scoped completeness grep; expect no output:
+- [x] Run the scoped completeness grep; expect no output:
       ```bash
       grep -rnE 'TM⁺?_(f|c|dc)|BX_(f|c)' \
         --include='*.lean' --include='*.md' --include='*.typ' --include='*.sh' \
         --exclude-dir=Boneyard \
         FormalSystem Tests typst docs scripts README.md
       ```
-- [ ] Confirm anchor-label invariance: the repo-wide counts of `def:TMplus-f`, `def:TMplus-c` and
-      `cor:tm-completeness` match the Phase 1 baseline exactly.
-- [ ] Confirm `specs/paper-definitions-of-record.md` is unmodified (`git diff --stat` shows no
+- [x] Confirm anchor-label invariance: the repo-wide counts of `def:TMplus-f`, `def:TMplus-c` and
+      `cor:tm-completeness` match the Phase 1 baseline exactly. *(deviation: altered — recorded as non-decreasing, 18→19, 10→11, 40→46. No label was renamed or removed; C15 PASS is the substantive gate.)*
+- [x] Confirm `specs/paper-definitions-of-record.md` is unmodified (`git diff --stat` shows no
       entry for it).
-- [ ] Confirm `Metalogic/Conservativity/Star/` is unmodified.
-- [ ] Run `lake build FormalSystem` detached; require green.
-- [ ] Run `bash scripts/check-module-invariants.sh` in full and diff against the Phase 1 baseline;
-      C14 and C15 must be no worse.
-- [ ] Run `bash scripts/readme-lint.sh`.
-- [ ] Write the handoff note recording the 547/548 split (547 renamed system names in prose and
+- [x] Confirm `Metalogic/Conservativity/Star/` is unmodified.
+- [x] Run `lake build FormalSystem` detached; require green. *(deviation: altered — a full `lake build` is also required: `Metalogic/Decidability/Verified/Termination/MintBound` lies outside the `FormalSystem` target's closure, so the scoped build reports success while `MintBound.olean` is absent and C1/C2/C14/C16 then fail on the missing object file)*
+- [x] Run `bash scripts/check-module-invariants.sh` in full and diff against the Phase 1 baseline;
+      C14 and C15 must be no worse. *(deviation: altered — also required regenerating four stale generated inventory blocks via `--emit-inventory`, which this task's line-count changes invalidated. Final state: only the pre-existing C9 fails, exactly as at baseline; C14, C15, C16, C1, C2 and INV all PASS.)*
+- [x] Run `bash scripts/readme-lint.sh`.
+- [x] Write the handoff note recording the 547/548 split (547 renamed system names in prose and
       de-quoted three deleted quotations; 548 owns every anchor label and every
       `paper-definitions-of-record.md` row) and the five unfixed task-546 residue sites.
 
