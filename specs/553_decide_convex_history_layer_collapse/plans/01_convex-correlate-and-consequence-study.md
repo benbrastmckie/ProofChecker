@@ -348,31 +348,31 @@ line 1102 but must still be machine-checked here, not cited.
 
 ---
 
-### Phase 4: Axiom survival audit under the alternative semantics [NOT STARTED]
+### Phase 4: Axiom survival audit under the alternative semantics [COMPLETED]
 
 **Goal**: Determine what logic C3 (and C4) actually is, by auditing TM's axiom set constructor
 by constructor.
 
 **Tasks**:
-- [ ] Enumerate the `Axiom` constructors of `FormalSystem/ProofSystem/Axioms.lean` by layer
+- [x] Enumerate the `Axiom` constructors of `FormalSystem/ProofSystem/Axioms.lean` by layer
       (propositional, S5 modal, Burgess-Xu temporal, additional BX temporal, modal-temporal
       interaction, uniformity, Prior-UZ/SZ, Z1, density, Reynolds) and, for each, record
       SURVIVES / FAILS / CONDITIONAL under C3, with a one-line reason.
-- [ ] Machine-check the named separating subset in
+- [x] Machine-check the named separating subset in
       `specs/553_decide_convex_history_layer_collapse/probes/03_axiom-survival.lean`:
       `serial_future`, `serial_past` (expected FAILS), `modal_t`, `modal_4`,
       `modal_5_collapse` (expected SURVIVES), `modal_future` and one of the
       `connect_future`/`temp_linearity` pair (the modal-temporal interaction, where the answer
       is genuinely unclear and matters most).
-- [ ] Characterize the resulting logic as precisely as the evidence supports: name the axioms
+- [x] Characterize the resulting logic as precisely as the evidence supports: name the axioms
       that must be dropped, say whether the remainder is a known system (a tense logic of
       bounded/interval time), and say explicitly what is *not* established — in particular
       whether completeness or decidability transfers is out of scope here and belongs to a
       proposed task.
-- [ ] Do the same, briefly, for C2, whose interest is diagnostic rather than logical: if C2's
+- [x] Do the same, briefly, for C2, whose interest is diagnostic rather than logical: if C2's
       logic is degenerate (Phase 2's finding), say that C2 is an artifact to be eliminated, not
       an alternative to be developed.
-- [ ] Write §4 of the report.
+- [x] Write §4 of the report.
 
 **Timing**: 2 hours
 

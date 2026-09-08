@@ -463,3 +463,136 @@ design anyone chose; it is the reading the current clause set falls into when th
 is removed, and it invalidates an axiom of the logic the repository proves sound. The one thing
 it is good for is the argument in §6: it is the concrete cost of carrying an evaluation index
 that is more general than the semantics can actually interpret.
+
+---
+
+## §4. Axiom survival under C3
+
+Machine-checked evidence:
+`specs/553_decide_convex_history_layer_collapse/probes/03_axiom-survival.lean`, compiled
+sorry-free with
+
+```
+lake env lean specs/553_decide_convex_history_layer_collapse/probes/03_axiom-survival.lean
+```
+
+**Constructor count, re-derived.** `FormalSystem/ProofSystem/Axioms.lean`'s `inductive Axiom`
+has **45** constructors, by
+`awk '/^inductive Axiom/,0' FormalSystem/ProofSystem/Axioms.lean | grep -c "^  | "` (58) minus
+the 4 `FrameClass` constructors and the 9 `axiomFrameClass` match arms that the same pattern
+picks up. The file's own module docstring states 45 and lists the nine layers; the two agree.
+
+Legend: **P** = machine-checked in probe 03; **A** = audited by argument.
+
+### §4.1 The table
+
+| # | Constructor | Layer | Verdict | Evidence |
+|---:|---|---|---|---|
+| 1 | `prop_k` | Propositional | SURVIVES | **A** — `imp`/`bot` clauses unchanged; C3 truth at a fixed `(τ, x)` is a classical valuation of the propositional skeleton |
+| 2 | `prop_s` | Propositional | SURVIVES | **A** — as above |
+| 3 | `ex_falso` | Propositional | SURVIVES | **A** — as above |
+| 4 | `peirce` | Propositional | SURVIVES | **A** — as above (classical) |
+| 5 | `modal_t` | S5 | SURVIVES | **P** `c3_modal_t` |
+| 6 | `modal_4` | S5 | SURVIVES | **P** `c3_modal_4` |
+| 7 | `modal_b` | S5 | SURVIVES | **P** `c3_modal_b` |
+| 8 | `modal_5_collapse` | S5 | SURVIVES | **P** `c3_modal_5_collapse` |
+| 9 | `modal_k_dist` | S5 | SURVIVES | **P** `c3_modal_k_dist` |
+| 10 | `serial_future` | BX temporal | **FAILS** | **P** `refute_C3_serial_future` — no later domain time at the right endpoint |
+| 11 | `serial_past` | BX temporal | **FAILS** | **P** `refute_C3_serial_past` — dual, at the left endpoint |
+| 12 | `left_mono_until_G` | BX temporal | SURVIVES | **A** — `G` restricted to `dom τ` still covers every `r` the `untl` guard consults, since those `r` are in `dom τ` by C3's own clause |
+| 13 | `left_mono_since_H` | BX temporal | SURVIVES | **A** — dual |
+| 14 | `right_mono_until` | BX temporal | SURVIVES | **A** — the witness `s` is in `dom τ`, so restricted `G` reaches it |
+| 15 | `right_mono_since` | BX temporal | SURVIVES | **A** — dual |
+| 16 | `connect_future` | BX temporal | SURVIVES | **P** `c3_connect_future` — uses the C3 side condition `x ∈ dom τ` |
+| 17 | `connect_past` | BX temporal | SURVIVES | **P** `c3_connect_past` |
+| 18 | `enrichment_until` | BX temporal | SURVIVES | **A** — the `S`-witness is `x` itself, available because `x ∈ dom τ`; the guard interval `(x, s) ∩ dom τ` is the same set on both sides |
+| 19 | `enrichment_since` | BX temporal | SURVIVES | **A** — dual |
+| 20 | `self_accum_until` | BX temporal | SURVIVES | **A** — same witness `s`; at any guard time `r`, `(r, s) ∩ dom τ ⊆ (x, s) ∩ dom τ` |
+| 21 | `self_accum_since` | BX temporal | SURVIVES | **A** — dual |
+| 22 | `absorb_until` | BX temporal | SURVIVES | **A** — order argument entirely inside `dom τ` |
+| 23 | `absorb_since` | BX temporal | SURVIVES | **A** — dual |
+| 24 | `linear_until` | BX temporal | SURVIVES | **A** — trichotomy on two witnesses, both in `dom τ`, which inherits `D`'s linear order |
+| 25 | `linear_since` | BX temporal | SURVIVES | **A** — dual |
+| 26 | `until_F` | BX temporal | SURVIVES | **P** `c3_until_F` |
+| 27 | `since_P` | BX temporal | SURVIVES | **P** `c3_since_P` |
+| 28 | `temp_linearity` | BX temporal | SURVIVES | **A** — trichotomy, as for `linear_until` |
+| 29 | `temp_linearity_past` | BX temporal | SURVIVES | **A** — dual |
+| 30 | `F_until_equiv` | BX temporal | SURVIVES | **P** `c3_F_until_equiv` (definitional) |
+| 31 | `P_since_equiv` | BX temporal | SURVIVES | **P** `c3_P_since_equiv` (definitional) |
+| 32 | `modal_future` | Interaction | SURVIVES | **P** `c3_modal_future`, via `truthC3_timeShift` and `c3_box_time_uniform` |
+| 33 | `discrete_symm_fwd` | Uniformity | **FAILS** | **P** `refute_C3_discrete_symm_fwd` — forward gap at the left endpoint, no backward gap possible |
+| 34 | `discrete_symm_bwd` | Uniformity | **FAILS** | **P** `refute_C3_discrete_symm_bwd` — dual, at the right endpoint |
+| 35 | `discrete_propagate_fwd` | Uniformity | **FAILS** | **P** `refute_C3_discrete_propagate_fwd` — `G` now reaches the right endpoint, where the gap does not exist |
+| 36 | `discrete_propagate_bwd` | Uniformity | CONDITIONAL | **A** — survives on `ℤ`-interval indices (`H` reaches only non-right-endpoint times, each of which keeps its successor gap); unresolved for an arbitrary convex domain over an arbitrary `D` |
+| 37 | `discrete_box_necessity` | Uniformity | **FAILS** | **P** `refute_C3_discrete_box_necessity` — its consequent boxes a `U`-formula, hence is C3-unsatisfiable |
+| 38 | `prior_UZ` | Prior (ZTime) | SURVIVES | **A** — `{s ∈ dom τ : s > x, φ}` is bounded below by `x`; well-ordering on a discrete order gives the least element |
+| 39 | `prior_SZ` | Prior (ZTime) | SURVIVES | **A** — dual |
+| 40 | `z1` | Z1 (ZTime) | CONDITIONAL | **A** — the backward induction runs inside `dom τ` and `G` is vacuous at the right endpoint, which is favourable; not verified |
+| 41 | `density` | Density | SURVIVES | **A** — convexity of `dom τ` puts the interpolated time back in the domain, so the usual argument goes through unchanged |
+| 42 | `dense_indicator` | Density | SURVIVES | **A** — at the right endpoint `U(⊤,⊥)` is false for want of any later domain time; elsewhere density + convexity interpolate |
+| 43 | `prior_U_gap` | Reynolds (RTime) | UNRESOLVED | **A** — plausible on closed real intervals (which are order-complete), but `K⁺` is itself a restricted `U`-formula and its endpoint behaviour was not checked |
+| 44 | `prior_S_gap` | Reynolds (RTime) | UNRESOLVED | **A** — dual |
+| 45 | `sep` | Reynolds (RTime) | UNRESOLVED | **A** — same, compounded by `sep`'s nesting of `K⁺`/`K⁻` |
+
+**Totals**: 36 SURVIVES (12 machine-checked), 6 FAILS (all 6 machine-checked), 2 CONDITIONAL,
+3 UNRESOLVED (the RTime layer, whose analysis is real work and belongs to a follow-on task).
+
+### §4.2 What logic C3 actually is
+
+The failures are not scattered. Every one of them is an **existence assertion about the temporal
+order**, and boundedness is exactly what makes existence assertions fail:
+
+- `serial_future` / `serial_past` — assert a later / earlier time. Fail at the endpoints.
+- `discrete_symm_fwd` / `_bwd` — assert that a gap on one side implies a gap on the other. Fail
+  at the endpoints, where one side has no times at all.
+- `discrete_propagate_fwd` — asserts the gap propagates forward. Fails because `G` now reaches
+  the right endpoint.
+- `discrete_box_necessity` — asserts a boxed gap. Fails for the germ reason (§3.3).
+
+Nothing in the S5 layer fails, nothing in the propositional layer fails, and — the finding that
+was genuinely unclear in advance — **the modal/temporal interaction axiom `modal_future`
+survives**. It survives because C3 is *time-uniform*: `truthC3_timeShift` proves that C3 truth is
+invariant under translating the index, which is the C3 analogue of the paper's
+`app:auto_existence` (closure of `H_F` under translation). That lemma was the phase's one real
+piece of work and it is what makes the verdict on row 32 a proof rather than a guess.
+
+So: **C3 is TM's S5 modal layer over a bounded-interval tense logic.** Precisely,
+
+> C3 ⊇ (classical propositional) + (S5 for `□`) + (the whole Burgess–Xu monotonicity,
+> enrichment, accumulation, absorption and linearity block) + `modal_future`,
+> and C3 ⊉ seriality and the uniformity layer.
+
+Whether the remainder is a *known* system: it is close to Burgess–Xu on a linear order **without
+the unboundedness assumption** — the logic of `U`/`S` over an arbitrary linear order, which is
+the setting Burgess 1982 and Xu 1988 actually axiomatize before unboundedness is added. What is
+*not* established here, and should not be claimed, is that C3 equals BX-without-seriality plus
+S5: that is a completeness question, and it is out of scope. §7.3 proposes it as a task.
+
+### §4.3 The germ constraint, which is the real obstacle
+
+Two probe lemmas together give the governing structural constraint:
+
+- `c3_nec` — C3 **is** closed under necessitation, semantically.
+- `c3_valid_imp_germ_valid` — every C3-validity holds at every germ `{⟨x, w⟩}`.
+- `c3_box_untl_unsat` / `c3_box_snce_unsat` — `□(φ U ψ)` and `□(φ S ψ)` are C3-**unsatisfiable**
+  for every `φ`, `ψ`.
+
+So the C3 logic must have every theorem germ-valid, and no boxed binary-tense formula can ever be
+a theorem. This is more than the loss of TS: it constrains what any axiomatization of C3 could
+look like. Row 37 (`discrete_box_necessity`) is the one place in TM's actual axiom set where this
+bites directly, but it would bite any future axiom of the same shape.
+
+A reader wanting to *develop* C3 rather than merely diagnose it has a design choice here that the
+paper's footnote does not raise: whether to let `□` range over all convex histories through `x`
+(as the footnote says, and as C3 does — germs included) or to cut the range back, e.g. to the
+interval histories of some minimum length, or to those whose domain contains `dom τ`. The germ
+result is the argument that the choice matters. §7.3 proposes it as a task.
+
+### §4.4 C2, briefly
+
+C2's status is diagnostic, not logical. §2 and §3.4 show it invalidates `modal_t` — an axiom that
+survives even C3. C2 is therefore **strictly worse than both** C1 and C3: it is not a weakening
+of TM in a principled direction, it is the accidental reading that results from removing a guard
+without replacing it. It should be eliminated, not developed. That is a direct argument for
+either retargeting the index to a total one (removing the possibility of C2 arising) or adding
+C3's side condition (making the bounded case coherent) — and §6 costs both.
