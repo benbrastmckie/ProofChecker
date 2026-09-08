@@ -152,3 +152,68 @@ truth_norm grep -c 'truth_norm'               36                 19             
   re-applied by hand and committed immediately. Nothing was lost. Post-incident, every
   batch is committed as soon as its build goes green rather than at phase end.
 
+
+================================================================================
+## FINAL after Phase 5 (Class C collapse + Class B partial conversion)
+================================================================================
+
+                                        Soundness.lean   FrameClassVariants.lean   Total
+criterion  grep -c 'simp only \[TruthAt'      1                  0                   1
+swap       grep -c 'Formula.swap_temporal_'   1*                 0                   1
+truth_norm/swap_norm occurrences              44                 40                 84
+lines      wc -l                            1594                834                2428
+
+  * unchanged: the `rw [Formula.swap_temporal_involution]` at Soundness.lean, never a simp list.
+
+  CRITERION METRIC: 60 -> 1. Reduction = 59/60 = 98.3%. Target >= 80% (<= 12). MET.
+  CLASS C: 13 of 13 collapsed to `swap_norm`. Complete, zero exclusions.
+  CLASS B: 16 of 32 converted, 16 excluded (enumerated in the plan's Phase 5
+           `#### Reasoned Exclusions` block).
+
+### Class B method note (honest record of how the 16 failures were found)
+
+  The eight FrameClassVariants `[Formula.swapTemporal, TruthAt]` sites were probed
+  individually with `lean_multi_attempt` before editing; all eight were goal-identical
+  under `[Formula.swapTemporal, truth_norm]` and all eight built green first time.
+
+  Six further sites were converted on pattern-match WITHOUT a per-site probe, contrary
+  to the plan's Phase 5 instruction to attempt sites one at a time. All six failed, in
+  two build cycles:
+
+    cycle 1 (FrameClassVariants): 604, 638  -- `Function expected` + `introN failed`
+    cycle 2 (Soundness):          354, 593, 604, 1124
+                                  -- `Function expected`, `Application type mismatch`,
+                                     `simp made no progress`
+
+  All six were reverted to their original lists. The failures cost two build cycles
+  that six probes would have avoided. This is recorded because the plan predicted it:
+  the Risks table's Class-B row and the Truth.lean caveat both say exactly this.
+
+### The `swapTemporal`-through-connectives gap in `swap_norm` (follow-up candidate)
+
+  Two independent lines of evidence, both observed here rather than assumed:
+
+  1. At the eight FrameClassVariants `[Formula.swapTemporal, Formula.and, ...]` sites,
+     NO list shorter than the original preserves the goal. Probed three candidates at
+     site 292:
+       `[Formula.swapTemporal, truth_norm]`     -> leaves `(p.and (φ.untl ψ)).swapTemporal`
+                                                   unreduced (goal differs)
+       `[swap_norm, Formula.and, truth_norm]`   -> leaves the OUTER `.swapTemporal`
+       `[swap_norm, Formula.and, Formula.swapTemporal, truth_norm]`
+                                                -> works, but is exactly as long as the
+                                                   original: zero text reduction
+  2. At Soundness `dense_indicator_swap_valid`, dropping `Formula.neg` in favour of
+     `truth_norm` gives `simp made no progress` -- nothing in `truth_norm` matches a
+     `.neg`-headed `untl` under `swapTemporal`.
+
+  Diagnosis: `swap_norm`'s eleven lemmas push `swapTemporal` through the temporal and
+  modal operators but NOT through `and`, `or`, or `imp`, so at every site whose formula
+  has a propositional connective under the swap, the definitional `Formula.and` /
+  `Formula.or` / `Formula.neg` unfolds remain load-bearing and cannot come out.
+
+  Adding `swap_temporal_and`, `swap_temporal_or` and `swap_temporal_imp` to
+  `FormalSystem/Syntax/Formula.lean` and tagging them `@[swap_norm]` would very likely
+  unlock these nine sites. That is a change to a declaring module and therefore OUT OF
+  SCOPE here (this task's Non-Goals forbid adding lemmas or `@[truth_norm]` tags), but
+  it is a well-evidenced candidate for a follow-on task.
+

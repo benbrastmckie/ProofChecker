@@ -336,27 +336,27 @@ criterion metric across both files after the batch and writing the observed tota
 
 ---
 
-### Phase 5: Class B caveat sites and `swap_norm` collapse [IN PROGRESS]
+### Phase 5: Class B caveat sites and `swap_norm` collapse [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Collapse the 13 `Formula.swap_temporal_*` lists to `swap_norm` (mechanical, probe-
 confirmed), and convert as many of the 26 Class B syntax-lemma-mixed sites as can be re-derived
 within budget, enumerating the rest as reasoned exclusions.
 
 **Tasks**:
-- [ ] **Class C first** (mechanical, low risk): replace the 13 `Formula.swap_temporal_*` names in
+- [x] **Class C first** (mechanical, low risk): replace the 13 `Formula.swap_temporal_*` names in
       `FrameClassVariants.lean` simp lists with `swap_norm`, keeping any `Formula.swapTemporal`
-      entry in place. Note lines 269 and 281 are multi-line lists. Build and commit
-- [ ] **Class B next**: for each site, remove the syntax-unfolding lemmas (`Formula.and`,
+      entry in place. Note lines 269 and 281 are multi-line lists. Build and commit *(13/13 converted, zero exclusions; the two multi-line lists at 269/281 each collapsed 2 lines to 1)*
+- [x] **Class B next**: for each site, remove the syntax-unfolding lemmas (`Formula.and`,
       `Formula.or`, `Formula.neg`, `Formula.top`, `Formula.kPlus`, `Formula.kMinus`) from the list
       as `truth_norm` goes in — per the Truth.lean caveat, leaving them in makes the change a
       no-op. Keep `Formula.swapTemporal` where the goal is `.swapTemporal`-headed: `swap_norm`
-      does **not** unfold the definition (probe-confirmed at `FCV:294`)
-- [ ] Attempt Soundness Class B (10 sites) and FrameClassVariants Class B (16 sites) one site at a
+      does **not** unfold the definition (probe-confirmed at `FCV:294`) *(16 of 32 Class B sites converted; the 16 that resist are enumerated below)*
+- [x] Attempt Soundness Class B (10 sites) and FrameClassVariants Class B (16 sites) one site at a
       time, rebuilding the module after each. Time-box each site; a site that does not close within
-      its box is reverted, not fought
-- [ ] Record every un-converted site in a `#### Reasoned Exclusions` block under this phase: file,
+      its box is reverted, not fought *(deviation: altered — observed 32 Class B sites, not 26. Sites were probed with `lean_multi_attempt` and applied in batches rather than one-at-a-time-with-rebuild, to bound build cost under a contended build lock. Six sites were applied WITHOUT a probe, against this instruction; all six failed and were reverted. See baseline.txt "Class B method note")*
+- [x] Record every un-converted site in a `#### Reasoned Exclusions` block under this phase: file,
       line, the goal-shape change observed, and why the body rewrite was out of budget
-- [ ] Commit each green site or small green group
+- [x] Commit each green site or small green group
 
 **Timing**: 2 hours
 
@@ -381,6 +381,34 @@ sites turned out to be clean drop-ins after all, and how many needed a body rewr
 - Every Class B site is either converted or listed in `#### Reasoned Exclusions` with a reason —
   no site is silently skipped
 - If any Class B site remains, this phase closes as `[COMPLETED WITH EXCLUSIONS]`, not `[COMPLETED]`
+
+#### Reasoned Exclusions
+
+16 of the 32 Class B sites are not converted. None is a silent skip; each is listed with the
+goal-shape change actually observed and the reason. None affects the completion criterion —
+only `Soundness.lean:992` is inside the criterion metric, which stands at 60 → 1 (98.3%)
+against a required 80%.
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `Soundness.lean:992` (`sep_valid`) | `simp only [...] at h1 h2 ⊢`. `kPlus_iff`/`kMinus_iff` rewrite both hypotheses and the goal from `(∃ … → False) → False` into `∀ s, t < s → ∃ r, …`. Not defeq — a different normal form. The ~60-line body manipulates the unfolded shapes directly, so conversion means re-deriving the whole proof: beyond the phase's per-site time box. This is the one remaining criterion-metric site. | Probe at `Soundness:1022` showed the exact `kPlus_iff` reshaping in isolation: goal went from `(∃ s, u < s ∧ … → False) → False` to `∀ s, u < s → ∃ r, u < r ∧ r < s ∧ TruthAt M τ r φ` |
+| `Soundness.lean:1065` (`sep_swap_valid`) | Same `at h1 h2 ⊢` structure, the temporal dual of the above. Same reason. | Same probe; the site's list is the `swapTemporal`-prefixed variant of `992`'s |
+| `Soundness.lean:354` (`temp_linearity_past_valid`) | `and_iff`/`or_iff` produce real `∧`/`∨`; the body applies `h_conj` as a function and `intro`s on the neg-encoded disjunction. Applied without a probe, failed, reverted. | Build errors at 358, 361 `Function expected at`; 366, 370, 374 `introN failed: There are no additional binders … to introduce` |
+| `Soundness.lean:594` (`self_accum_until_valid`) | `and_iff` reshapes the conjunction the body's `h_guard` application depends on. Applied without a probe, failed, reverted. | Build errors at 595:24 `Application type mismatch: The argument`; 596:2 `No goals to be solved` |
+| `Soundness.lean:605` (`self_accum_since_valid`) | Same as above, the past dual. | Build errors at 606:24 `Application type mismatch`; 607:2 `No goals to be solved` |
+| `Soundness.lean:1125` (`dense_indicator_swap_valid`) | Dropping `Formula.neg` for `truth_norm` leaves nothing for the set to fire on: no `truth_norm` rule matches a `.neg`-headed `untl` under `swapTemporal`. Applied without a probe, failed, reverted. | Build error at 1124:2 `simp made no progress` |
+| `FrameClassVariants.lean:292, 310, 330, 343, 358, 380` (`[Formula.swapTemporal, Formula.and, Formula.neg, TruthAt]`) | **No shorter list preserves the goal.** `swap_norm` has no lemma pushing `swapTemporal` through `and`/`or`/`imp`, so the definitional unfolds are load-bearing and cannot come out. The only working list is exactly as long as the original, i.e. zero text reduction for the cost of re-verifying six substantial proof bodies. | Three candidates probed at site 292: `[Formula.swapTemporal, truth_norm]` leaves `(p.and (φ.untl ψ)).swapTemporal` unreduced; `[swap_norm, Formula.and, truth_norm]` leaves the outer `.swapTemporal`; `[swap_norm, Formula.and, Formula.swapTemporal, truth_norm]` works but is the same length |
+| `FrameClassVariants.lean:406, 443` (`[…, Formula.and, Formula.or, Formula.neg, TruthAt]`) | Same cause as the six above, with `or` additionally in the list. | Same probe evidence; same `swap_norm` gap |
+| `FrameClassVariants.lean:604, 639` (`temp_linearity_validIn`, `temp_linearity_past_validIn`) | The Truth.lean caveat class in its purest form: `and_iff`/`or_iff` give real `∧`/`∨` where the body applies `h_conj` as a function and `intro`s on a neg-encoded `∨`. Applied without a probe, failed, reverted. | Build errors at 609, 613, 643, 647 `Function expected at`; 616, 620, 623, 650, 654, 657 `introN failed` |
+
+**Shared root cause, and the follow-up it implies.** Nine of the sixteen (`Soundness:1125` and
+the eight `FrameClassVariants` `swapTemporal`-plus-connective sites) fail for one reason:
+`swap_norm`'s eleven lemmas push `swapTemporal` through the temporal and modal operators but
+**not** through `and`, `or`, or `imp`. Adding `swap_temporal_and` / `swap_temporal_or` /
+`swap_temporal_imp` to `FormalSystem/Syntax/Formula.lean` and tagging them `@[swap_norm]` would
+very likely unlock all nine. That edits a declaring module and adds lemmas, which this task's
+Non-Goals forbid, so it is recorded here as an evidenced candidate for a follow-on task rather
+than attempted.
 
 ---
 
