@@ -361,35 +361,35 @@ decision follows the number rather than the plan's expectation.
 
 ---
 
-### Phase 5: The four deliberate negative tests [NOT STARTED]
+### Phase 5: The four deliberate negative tests [COMPLETED]
 
 **Goal**: Prove each of the four routes independently fails the gate when exercised and passes
 after restore. `MODULE_INVARIANTS.md` mandates this before a check is accepted, and records that
 a check which silently passes on everything is worse than no check.
 
 **Tasks**:
-- [ ] **Route (1), out-of-closure module**: introduce one snake_case `def` in
+- [x] **Route (1), out-of-closure module**: introduce one snake_case `def` in
       `FormalSystem/Theorems/ContextualProofs.lean` — a module imported only by a `lean_exe` root,
       so nothing in the `FormalSystem` library closure elaborates it. Observe `FAIL C26` **and**
       a non-zero script exit. Restore; observe `PASS` and exit 0.
-- [ ] **Route (2), in-source suppression**: attach a `nolint` attribute to a declaration that is
+- [x] **Route (2), in-source suppression**: attach a `nolint` attribute to a declaration that is
       not on `scripts/nolint-attribute-allowlist.txt`. Observe `FAIL C26` and a non-zero exit.
       Restore; observe `PASS` and exit 0.
-- [ ] **Route (3), the `_1`/`_2` heuristic**: introduce a public snake_case `def` whose last name
+- [x] **Route (3), the `_1`/`_2` heuristic**: introduce a public snake_case `def` whose last name
       component ends in `_1`, in a module confirmed to be **inside** the linted closure. Observe
       `FAIL C26` and a non-zero exit — **and in the same run, observe that C16 still reports
       PASS**. That contrast is the whole point of the check, and it is the same observation
       `MODULE_INVARIANTS.md` calls the sharpest part of C25's negative test. Restore; observe
       `PASS` and exit 0.
-- [ ] **Route (4), private declaration**: introduce a `private def` with an internal underscore in
+- [x] **Route (4), private declaration**: introduce a `private def` with an internal underscore in
       a module confirmed to be inside the linted closure. Observe `FAIL C26` and a non-zero exit,
       and again observe C16 still PASSing in the same run. Restore; observe `PASS` and exit 0.
-- [ ] Place at least one of the four seeds in an attribute-decorated or otherwise
+- [x] Place at least one of the four seeds in an attribute-decorated or otherwise
       non-plain-line position, so the scanner's regex is exercised beyond the easy case.
-- [ ] For every one of the four: record the exact `FAIL` line text, the shell exit status, and
+- [x] For every one of the four: record the exact `FAIL` line text, the shell exit status, and
       the restored `PASS` line. Assert the exit status explicitly — the recorded C24 history is a
       check that printed a failure while handing the shell a 0.
-- [ ] Confirm `git status --short` is clean after all four restores; no seed may survive.
+- [x] Confirm `git status --short` is clean after all four restores; no seed may survive.
 
 **Timing**: 1.5 hours
 
