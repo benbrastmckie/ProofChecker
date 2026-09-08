@@ -1,16 +1,33 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md",
-      "summary": "Verifies the 549 delete/keep set at HEAD e5cb311af, extends the collateral-prose amend set from one site to six, records the namespace and naming hazards for landing the two widening lemmas, and recommends retirement-with-a-record following the repository's own Correctness.lean/ADR-007 precedent."
+      "type": "plan",
+      "path": "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md",
+      "summary": "Six-phase plan to retire nine vacuous _run theorems behind a retirement record, land two un-At widening lemmas, repair six collateral prose sites, and amend C9 register entries 23/24/25."
     }
   ],
+  "next_steps": "Run /implement 554 to execute the plan",
+  "dispatch_seq": 2,
   "metadata": {
     "session_id": "sess_1788827428_44fd7f_554",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 6,
+    "estimated_hours": 5,
+    "dependency_waves": [[1],[2],[3],[4],[5],[6]]
+  },
+  "memory_candidates": [
+    {
+      "content": "When a plan's phases all edit a single large file, the dependency-wave table is necessarily degenerate (one phase per wave) regardless of the phases' logical independence: shared-file write contention serializes dispatch even where the work is independent. State this explicitly in the wave table rather than letting a reader mistake the degenerate shape for an analysis failure, and separate the two reasons a phase is serialized (substantive dependency vs. file-contention) in its 'Depends on' justification. Observed on a 15,759-line Lean module where two prose-repair phases were logically independent but could not be parallelised.",
+      "category": "PATTERN",
+      "source_artifact": "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md",
+      "confidence": 0.7,
+      "suggested_keywords": ["dependency-waves", "single-file-serialization", "plan-decomposition", "parallel-dispatch", "phase-independence"]
+    }
+  ],
+  "modified_files": [
+    "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md"
+  ]
 }
