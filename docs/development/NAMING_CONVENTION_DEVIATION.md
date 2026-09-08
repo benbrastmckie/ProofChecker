@@ -314,6 +314,69 @@ check that does not inherit `runLinter`'s observation model — in particular on
 source text rather than an imported environment, so that out-of-closure modules, the `_1`/`_2`
 heuristic, in-source `nolint` attributes and `private` declarations are all in view.
 
+## The four evasion routes, and the gate that now closes each
+
+The section above ends by saying what closing this category durably would take: a check that does
+not inherit `runLinter`'s observation model. This section records the check that was then built,
+route by route, and what each route's gate does *not* cover. It is deliberately written as a
+map from blind spot to instrument, because the failure it exists to prevent is the one already
+recorded above — a category declared closed on a measurement whose instrument could not see the
+violation.
+
+The gate is **C26** in [`scripts/check-module-invariants.sh`](../../scripts/check-module-invariants.sh),
+in two halves, plus a widening of **C16**'s linter target in the same script. C26 reads source
+text and consults no import closure and no elaborated environment, which is what lets one check
+answer three of the four routes at once.
+
+| Route | Why the standing gates could not see it | What now sees it | Residual |
+|---|---|---|---|
+| Out-of-closure modules | `runLinter FormalSystem` observes the FormalSystem library closure by importing it; a module reachable only from a `lean_exe` root is never elaborated | C26 half one walks the **tree**, so an out-of-closure file is as visible as any other. C16's widened half additionally lints every root declared in `lakefile.lean` | C16's widened half is **reporting-only** while its scope carries pre-existing findings; the textual half is enforced |
+| In-source `nolint` attributes | An `attribute [nolint X]` produces no finding at all, so there is nothing for the linter, CI, a `nolints.json` diff or C16 to count | C26 half two inventories every in-source `nolint` pair and fails on any absent from [`scripts/nolint-attribute-allowlist.txt`](../../scripts/nolint-attribute-allowlist.txt) | An attribute form neither matcher recognizes; the negative test is what keeps this honest |
+| The upstream `_1` / `_2` / `_mathlib` heuristic | Mathlib's own name test skips any last component with that shape, and the exemption is invisible at the declaration site | C26 half one deliberately does not inherit the heuristic: it flags an underscore anywhere but the trailing position | A purely **trailing** underscore is not flagged, on purpose — `true` and `false` are keywords, and two live names disambiguate by suffix |
+| `private` declarations | An env_linter reads a package by importing it, and a non-public declaration is not exported to an importing module. Upstream behaviour, shared by Mathlib; not configurable | C26 half one scans source text, where visibility is not a filter, so `private` declarations are in scope | None for declared names |
+
+### What the textual half deliberately does not judge
+
+Two shapes are excluded from C26's textual half, both for the same reason and both with the
+measurement that decided it recorded at the exemption site in the script.
+
+A **`Prop`-valued instance** is recorded by Lean as a theorem, not a definition, which is exactly
+why the upstream linter never fires on one — and snake_case is the correct convention for it. All
+live snake_case `instance` declarations were probed by elaboration against the built artifacts,
+and every one of them is a theorem. A textual scan that did not exempt `instance` would start
+life red on conformant names.
+
+**Structure fields** are the same distinction one level down. Lean turns each field into a
+projection definition, so a *data*-valued field with an underscored name genuinely is a
+`defsWithUnderscore` violation — and live ones exist today, all auto-generated projections of a
+single structure in an out-of-closure module. But the great majority of textually snake_case
+fields in the tree are `Prop`-valued, hence theorems, hence correctly named, and `Prop`-ness is
+not decidable from source text. Flagging fields textually would mean a large majority of false
+positives. That shape is therefore assigned to the widened, elaboration-based linter sweep, where
+the distinction costs nothing — and that sweep is the reporting-only half, so the debt is printed
+at every gate rather than either blocking or disappearing.
+
+### Why an allow-list rather than trusting the attribute site
+
+The section on the surviving exemptions argues that an in-source `nolint` attribute is safer than
+a row in a suppression file, because it is reviewable in the diff that introduces it. That
+argument is sound and it is why those exemptions live in the source. It also assumes a human
+reads the diff, and that assumption does not hold for every route by which a change now reaches
+this repository. The allow-list does not replace the in-source reason; it asserts that the set of
+attributes in the tree is exactly the set someone signed off on, and it reports any entry that no
+longer matches anything so the file cannot rot into a dumping ground.
+
+### Every route was negative-tested
+
+A check that silently passes on everything is worse than no check, so each of the four routes was
+exercised deliberately: a violation of that specific shape was introduced, the gate was observed
+to fail **and** to hand the shell a non-zero exit status, the violation was removed, and the pass
+and the zero exit were re-observed. For the two routes that can be exercised inside the linted
+closure, the sharpest observation is what did *not* fail in the same run: the env_linter half of
+C16 kept reporting a clean `FormalSystem`, because neither shape produces a finding for it. That
+contrast is the whole argument for C26's existence, and it is the observation to repeat after any
+change to C26's scope, to its naming rule, or to the allow-list's format.
+
 ## The frame-class tag names: `ZTime` / `RTime`
 
 A second, unrelated naming question was settled separately, and this is its record.

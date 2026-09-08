@@ -1,7 +1,7 @@
 # Implementation Plan: Close `defsWithUnderscore` Gate Evasion Routes
 
 - **Task**: 558 - Close the three (now four) evasion routes that let `defsWithUnderscore` reopen invisibly
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 9.5 hours
 - **Dependencies**: 555 (completed), 557 (completed)
 - **Research Inputs**: None (no research report; planned directly from the task specification plus live codebase measurement — see "Opening Measurement" below)
@@ -423,32 +423,32 @@ in-closure status is confirmed, or the "C16 still passes" contrast is vacuous.
 
 ---
 
-### Phase 6: Documentation and final gate [NOT STARTED]
+### Phase 6: Documentation and final gate [COMPLETED]
 
 **Goal**: Record the four routes and the gate that closes each, in the two documents this task
 owns, and close on a green full gate.
 
 **Tasks**:
-- [ ] **Append** to `docs/development/NAMING_CONVENTION_DEVIATION.md` a new section naming the
+- [x] **Append** to `docs/development/NAMING_CONVENTION_DEVIATION.md` a new section naming the
       four evasion routes and the gate that now closes each, plus the residual each gate does not
       cover. Append only — do **not** restate or re-edit the burndown table, the "closed at 0"
       claim, or the existing four-blind-spots list, all of which are the sibling task's output and
       are already correct.
-- [ ] Add C26 to `docs/development/MODULE_INVARIANTS.md`'s check table (one row, in the
+- [x] Add C26 to `docs/development/MODULE_INVARIANTS.md`'s check table (one row, in the
       established "what it checks / why it exists" voice, with the measured evidence that
       motivated it), and add `scripts/nolint-attribute-allowlist.txt` to the "Companion Files"
       section with its admission bar.
-- [ ] Add C26 to the "Adding a Check" section's record of checks accepted only after a deliberate
+- [x] Add C26 to the "Adding a Check" section's record of checks accepted only after a deliberate
       negative test, naming all four routes tested and the both-line-and-exit-status observation.
-- [ ] If Phase 4 shipped a widening or a new `ENFORCE_` flag, document it in the same pass.
-- [ ] Obey that page's own warnings, which it records were learned the hard way on itself:
+- [x] If Phase 4 shipped a widening or a new `ENFORCE_` flag, document it in the same pass.
+- [x] Obey that page's own warnings, which it records were learned the hard way on itself:
       describe violation *shapes*, never write a literal unresolvable anchor, never phrase a
       historical count so it reads as a current claim, and cite only paths that resolve.
-- [ ] No task-number citations anywhere in either document — refer to the sibling work by what it
+- [x] No task-number citations anywhere in either document — refer to the sibling work by what it
       did, not by number.
-- [ ] Run `bash scripts/check-module-invariants.sh --no-build` after **each** doc edit, not once
+- [x] Run `bash scripts/check-module-invariants.sh --no-build` after **each** doc edit, not once
       at the end, so a tripwire hit is attributable to the paragraph that caused it.
-- [ ] Final gate: `lake build` green, and
+- [x] Final gate: `lake build` green, and
       `bash scripts/check-module-invariants.sh` printing `ALL CHECKS PASSED` with exit 0 on the
       clean tree.
 
@@ -488,19 +488,19 @@ negative-test seeds in Phase 5, every one of which is reverted before that phase
 
 ## Testing & Validation
 
-- [ ] `bash scripts/check-module-invariants.sh --no-build` exits 0 with `PASS C26`.
-- [ ] `bash scripts/check-module-invariants.sh` prints `ALL CHECKS PASSED` and exits 0.
-- [ ] `lake build` exits 0.
-- [ ] `lake exe runLinter FormalSystem` exits 0 (unchanged from baseline).
-- [ ] Route (1) negative test: FAIL line + non-zero exit observed, restore, PASS + exit 0.
-- [ ] Route (2) negative test: FAIL line + non-zero exit observed, restore, PASS + exit 0.
-- [ ] Route (3) negative test: FAIL line + non-zero exit observed **with C16 PASSing in the same
+- [x] `bash scripts/check-module-invariants.sh --no-build` exits 0 with `PASS C26`.
+- [x] `bash scripts/check-module-invariants.sh` prints `ALL CHECKS PASSED` and exits 0.
+- [x] `lake build` exits 0.
+- [x] `lake exe runLinter FormalSystem` exits 0 (unchanged from baseline).
+- [x] Route (1) negative test: FAIL line + non-zero exit observed, restore, PASS + exit 0.
+- [x] Route (2) negative test: FAIL line + non-zero exit observed, restore, PASS + exit 0.
+- [x] Route (3) negative test: FAIL line + non-zero exit observed **with C16 PASSing in the same
       run**, restore, PASS + exit 0.
-- [ ] Route (4) negative test: FAIL line + non-zero exit observed **with C16 PASSing in the same
+- [x] Route (4) negative test: FAIL line + non-zero exit observed **with C16 PASSing in the same
       run**, restore, PASS + exit 0.
-- [ ] `scripts/nolint-attribute-allowlist.txt` reports zero stale entries.
-- [ ] `git status --short` clean of negative-test residue.
-- [ ] `git diff` on `NAMING_CONVENTION_DEVIATION.md` shows an append only.
+- [x] `scripts/nolint-attribute-allowlist.txt` reports zero stale entries.
+- [x] `git status --short` clean of negative-test residue.
+- [x] `git diff` on `NAMING_CONVENTION_DEVIATION.md` shows an append only.
 
 ## Artifacts & Outputs
 
