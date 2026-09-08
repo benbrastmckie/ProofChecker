@@ -230,20 +230,20 @@ the phase entry — do not edit the observation to match the plan.
 
 ---
 
-### Phase 2: FrameClassVariants.lean — Class A sweep [NOT STARTED]
+### Phase 2: FrameClassVariants.lean — Class A sweep [COMPLETED]
 
 **Goal**: Replace all 19 Class A hand-enumerated lists in `FrameClassVariants.lean` with
 `simp only [truth_norm]`, module green.
 
 **Tasks**:
-- [ ] Convert the 19 Class A sites (lines 90, 111, 144, 196, 210, 223, 235, 247, 259, 271, 283,
+- [x] Convert the 19 Class A sites (lines 90, 111, 144, 196, 210, 223, 235, 247, 259, 271, 283,
       479, 489, 539, 559, 675, 688, 816, 831 — re-derive by grep, line numbers shift as edits land)
-      to `simp only [truth_norm]`
-- [ ] Work in batches of at most 10 sites; after each batch run
-      `lake build FormalSystem.Metalogic.SoundnessLemmas.FrameClassVariants`
-- [ ] For any site whose proof no longer closes: revert that one site, reclassify it as Class B in
-      `baseline.txt`, and leave it for Phase 5. Do not force it here
-- [ ] Commit each green batch (per-substep mandate)
+      to `simp only [truth_norm]` *(all 19 converted, zero reclassified; re-derived by grep, line numbers matched the plan exactly since every edit is a 1-for-1 line replacement)*
+- [x] Work in batches of at most 10 sites; after each batch run
+      `lake build FormalSystem.Metalogic.SoundnessLemmas.FrameClassVariants` *(deviation: altered — invoked through the mandatory build guard as `lake-build-guard.sh build --timeout 1800 -- build <module>`, detached. Batch 1 = 10 sites, batch 2 = 9 sites; both green at 876 jobs)*
+- [x] For any site whose proof no longer closes: revert that one site, reclassify it as Class B in
+      `baseline.txt`, and leave it for Phase 5. Do not force it here *(no site required reverting; zero reclassifications)*
+- [x] Commit each green batch (per-substep mandate)
 
 **Timing**: 1.5 hours
 
@@ -266,7 +266,7 @@ actual number reclassified.
 
 ---
 
-### Phase 3: Soundness.lean — Class A sweep, first block [NOT STARTED]
+### Phase 3: Soundness.lean — Class A sweep, first block [IN PROGRESS]
 
 **Goal**: Convert the 28 Class A sites in the first half of `Soundness.lean` (lines 159–552),
 module green.

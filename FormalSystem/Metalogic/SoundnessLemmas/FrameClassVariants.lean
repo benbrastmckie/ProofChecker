@@ -280,7 +280,7 @@ theorem connect_past_swap_valid (φ : Formula) :
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_future, Formula.swap_temporal_all_past,
     Formula.swapTemporal]
-  simp only [TruthAt, Truth.future_iff, Truth.some_past_iff]
+  simp only [truth_norm]
   intro h_φt s hts
   exact ⟨t, hts, h_φt⟩
 
@@ -476,7 +476,7 @@ theorem until_F_swap_valid (φ ψ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro ⟨s, hst, h_ψs, _h_guard⟩
   exact ⟨s, hst, h_ψs⟩
 
@@ -486,7 +486,7 @@ theorem since_P_swap_valid (φ ψ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_past, Formula.swapTemporal]
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro ⟨s, hts, h_ψs, _h_guard⟩
   exact ⟨s, hts, h_ψs⟩
 
@@ -536,7 +536,7 @@ theorem discrete_propagate_fwd_swap_valid :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩ u _hut
   refine ⟨u - (t - r), sub_lt_self u (sub_pos.mpr hrt), fun h => h, fun c hrc hcu => ?_⟩
   have h1 : r < c + (t - u) := by
@@ -556,7 +556,7 @@ theorem discrete_propagate_bwd_swap_valid :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩ u _htu
   refine ⟨u - (t - r), sub_lt_self u (sub_pos.mpr hrt), fun h => h, fun c hrc hcu => ?_⟩
   have h1 : r < c + (t - u) := by
@@ -672,7 +672,7 @@ theorem F_until_equiv_validIn (φ : Formula) :
       (Formula.untl (Formula.bot.imp Formula.bot) φ)) := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro ⟨s, hts, h_φs⟩
   exact ⟨s, hts, h_φs, fun _ _ _ hf => absurd hf not_false⟩
 
@@ -685,7 +685,7 @@ theorem P_since_equiv_validIn (φ : Formula) :
       (Formula.snce (Formula.bot.imp Formula.bot) φ)) := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro ⟨s, hst, h_φs⟩
   exact ⟨s, hst, h_φs, fun _ _ _ hf => absurd hf not_false⟩
 
@@ -813,7 +813,7 @@ theorem z1_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [TruthAt, Truth.future_iff, Truth.some_future_iff]
+  simp only [truth_norm]
   intro h_GGpIp ⟨s₀, hts₀, hs₀⟩
   exact forall_gt_of_succ_step (P := fun x => TruthAt M τ x φ) h_GGpIp hts₀ hs₀
 
@@ -828,7 +828,7 @@ theorem z1_past_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [TruthAt, Truth.past_iff, Truth.some_past_iff]
+  simp only [truth_norm]
   intro h_HHpIp ⟨s₀, hs₀t, hs₀⟩
   exact forall_lt_of_pred_step (P := fun x => TruthAt M τ x φ) h_HHpIp hs₀t hs₀
 
