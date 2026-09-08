@@ -8,9 +8,9 @@ import FormalSystem.Syntax.Formula
 import FormalSystem.Syntax.Context
 
 /-!
-# `PlusFormula` — the language L⋆: L⁺ plus the stability modal `⊡`
+# `PlusFormula` — the language L⁺: L plus the stability modal `⊡`
 
-This module defines the language **L⋆** obtained from the until/since-primitive language L⁺
+This module defines the language **L⁺** obtained from the until/since-primitive language L
 (`FormalSystem.Syntax.Formula`) by adding one primitive unary operator, the **stability modal**
 `⊡` (`stab`), read "settled at the present world state":
 
@@ -18,16 +18,18 @@ This module defines the language **L⋆** obtained from the until/since-primitiv
 φ, ψ ::= pᵢ | ⊥ | φ → ψ | □φ | φ U ψ | φ S ψ | ⊡φ
 ```
 
-The paper (`possible_worlds.tex`) introduces `⊡` at line 1114: `M,τ,x ⊨ ⊡φ` iff `M,σ,x ⊨ φ`
+The paper (`possible_worlds.tex`) introduces `⊡` in `def:BLstar-semantics`: `M,τ,x ⊨ ⊡φ` iff `M,σ,x ⊨ φ`
 for every possible world `σ ∈ ⟨τ⟩_x`, where `⟨τ⟩_x := {σ ∈ H_F | σ(x) = τ(x)}` (line 1108) is
 the set of worlds that share `τ`'s world state at `x`. The dual `⟐φ := ¬⊡¬φ` is line 1121
 (`dstab`), and the defined modals `Will := ⊡G`, `will := ⊡F`, `Could := ⟐G`, `could := ⟐F`
 are lines 1125-1129.
 
-**Scope.** L⋆ here is L⁺ plus `⊡` only. The paper's own `\BL^\star` (line 1374) additionally
-carries the hybrid store/recall operators `\timeStore^i, \timeRecall^i, \worldStore^i,
-\worldRecall^i`, which change the point of evaluation and would need a different
-truth-definition signature; they are **out of scope** for this component.
+**Scope.** L⁺ here is L plus `⊡` only, and it is therefore the **⊡-only fragment** of the
+manuscript's `\BL^\star` (`sub:Extension`), not a language the manuscript names. `\BL^\star`
+additionally carries the hybrid store/recall operators `\timeStore^i, \timeRecall^i,
+\worldStore^i, \worldRecall^i`, which change the point of evaluation and would need a different
+truth-definition signature; they are **out of scope** for this component, and their
+time-register half is what this tree reserves the name L⋆ (`FormalSystem/StarLanguage/`) for.
 
 ## Design
 
@@ -41,14 +43,14 @@ by `rfl` — the `rfl` pins at the end of this file are what the proof-system em
 
 ## Main Definitions
 
-- `PlusFormula`: seven-constructor inductive type for L⋆; `PlusContext := List PlusFormula`
+- `PlusFormula`: seven-constructor inductive type for L⁺; `PlusContext := List PlusFormula`
 - Derived operators with `Formula`'s right-hand sides: `top`, `neg`, `and`, `or`, `iff`,
   `diamond`, `someFuture`, `somePast`, `allFuture`, `allPast`, `kPlus`, `kMinus`, `always`,
   `sometimes`, `next`, `prev`
 - The `⊡`-specific operators `dstab` (`⟐`), `Will`, `will`, `Could`, `could`
 - `PlusFormula.swapTemporal`: the past/future interchange for the TD rule (`stab ↦ stab`)
 - `IsPureFuture`, `IsPurePast`: the syntactic purity predicates that guard the pasting axioms
-- `ofFormula`, `ofCtx`: the embedding of L⁺ into L⋆
+- `ofFormula`, `ofCtx`: the embedding of L into L⁺
 
 ## Main Results
 
@@ -70,8 +72,8 @@ permitted and used: `FormalSystem/Semantics/PlusTruth.lean` imports this module 
 ## References
 
 * JPL paper `possible_worlds.tex` lines 1108-1129 — `⟨τ⟩_x`, the `⊡` clause, `⟐`, and the
-  defined modals; line 1374 — the (out-of-scope) store/recall operators
-* `FormalSystem/Syntax/Formula.lean` — the L⁺ side whose derived operators are mirrored here
+  defined modals; `sub:Extension` — the (out-of-scope) store/recall operators
+* `FormalSystem/Syntax/Formula.lean` — the L side whose derived operators are mirrored here
 * `FormalSystem/MinusLanguage/Formula.lean` — the pattern this component follows
 -/
 
@@ -80,7 +82,7 @@ namespace FormalSystem.PlusLanguage
 open FormalSystem.Syntax
 
 /--
-Formula type for the language L⋆: the six constructors of `Formula` plus the stability modal.
+Formula type for the language L⁺: the six constructors of `Formula` plus the stability modal.
 
 Constructor order and argument order (guard first, event second for `untl`/`snce`) are those of
 `FormalSystem.Syntax.Formula`, so that `ofFormula` is constructor-to-constructor.
@@ -98,7 +100,7 @@ inductive PlusFormula : Type where
   | untl : PlusFormula → PlusFormula → PlusFormula
   /-- Since, `φ S ψ`, guard first and event second, exactly as `Formula.snce`. -/
   | snce : PlusFormula → PlusFormula → PlusFormula
-  /-- The stability modal `⊡φ` (paper line 1114): `φ` holds in every world sharing the present
+  /-- The stability modal `⊡φ` (`def:BLstar-semantics`): `φ` holds in every world sharing the present
       world state. -/
   | stab : PlusFormula → PlusFormula
   deriving Repr, DecidableEq, Countable
@@ -116,7 +118,7 @@ instance : Infinite PlusFormula :=
 noncomputable instance : Denumerable PlusFormula :=
   Classical.choice (nonempty_denumerable PlusFormula)
 
-/-- Contexts of L⋆ formulas. -/
+/-- Contexts of L⁺ formulas. -/
 abbrev PlusContext := List PlusFormula
 
 namespace PlusFormula
@@ -197,7 +199,7 @@ def could (φ : PlusFormula) : PlusFormula := dstab (someFuture φ)
 /-! ### Temporal duality -/
 
 /--
-Swap temporal operators (past ↔ future) in an L⋆ formula.
+Swap temporal operators (past ↔ future) in an L⁺ formula.
 
 Mirrors `Formula.swapTemporal` constructor for constructor; the new case sends `stab φ` to
 `stab φ.swapTemporal` — `⊡` is fixed by time reversal because `⟨τ⟩_x` is defined by a
@@ -371,9 +373,9 @@ theorem IsPurePast.allPast {φ : PlusFormula} (h : IsPurePast φ) :
 
 end PlusFormula
 
-/-! ## The embedding of L⁺ into L⋆ -/
+/-! ## The embedding of L into L⁺ -/
 
-/-- The embedding of L⁺ into L⋆, constructor to constructor. -/
+/-- The embedding of L into L⁺, constructor to constructor. -/
 def ofFormula : Formula → PlusFormula
   | .atom a => .atom a
   | .bot => .bot
@@ -402,7 +404,7 @@ theorem ofFormula_injective : Function.Injective ofFormula := by
     cases ψ <;> simp [ofFormula] at h
     rw [ih₁ h.1, ih₂ h.2]
 
-/-- Nothing in the range of `ofFormula` is a top-level `stab`. The L⋆ mirror of
+/-- Nothing in the range of `ofFormula` is a top-level `stab`. The L⁺ mirror of
 `MinusLanguage.tr_ne_untl`. -/
 @[simp] theorem ofFormula_ne_stab (φ : Formula) (ψ : PlusFormula) :
     ofFormula φ ≠ PlusFormula.stab ψ := by
@@ -434,7 +436,7 @@ theorem mem_ofCtx {φ : Formula} {Γ : Context} (h : φ ∈ Γ) : ofFormula φ �
 
 /-! ### `rfl` pins
 
-`ofFormula` commutes with every derived operator **definitionally**, because each L⋆ operator
+`ofFormula` commutes with every derived operator **definitionally**, because each L⁺ operator
 was given `Formula`'s right-hand side verbatim. These `example`s are the contract the
 `PlusAxiom.ofTM` arms (`PlusLanguage/Derivation.lean`) and the atomization push-through
 lemmas rely on; if one of them stops being `rfl`, the fix is in the operator's right-hand side

@@ -10,7 +10,7 @@ import FormalSystem.Metalogic.Independence.OrderTransfer
 # `satSet` and the state-set bridge — truth depends on the world state alone
 
 The one real proof obligation behind `cor:no-characterization`. Over a frame satisfying (H1) and
-(H2) (`Independence/OrderTransfer.lean`) the truth of an L⋆ formula at a total history and a time
+(H2) (`Independence/OrderTransfer.lean`) the truth of an L⁺ formula at a total history and a time
 depends **only on the world state of evaluation** — not on which history passes through it, and
 not on the time.
 
@@ -69,7 +69,7 @@ open FormalSystem.Semantics
 open FormalSystem.PlusLanguage
 
 /--
-The **state set** of an L⋆ formula under a valuation `V` on a linearly ordered carrier `W`: the
+The **state set** of an L⁺ formula under a valuation `V` on a linearly ordered carrier `W`: the
 set of world states at which the formula holds, computed without reference to any frame, any
 history, or any task relation.
 
@@ -119,7 +119,7 @@ end Clauses
 variable {F : TaskFrame} [LinearOrder F.WorldState]
 
 /--
-**The state-set bridge.** Over a frame satisfying (H1) and (H2), an L⋆ formula is true at a total
+**The state-set bridge.** Over a frame satisfying (H1) and (H2), an L⁺ formula is true at a total
 history and a time exactly when the world state occupied there lies in the formula's state set.
 
 By induction on `PlusFormula`, with the history and the time universally quantified inside the

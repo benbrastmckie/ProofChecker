@@ -8,7 +8,7 @@ import FormalSystem.Metalogic.Independence.DriftHistories
 import FormalSystem.Metalogic.Independence.StateSetTruth
 
 /-!
-# `Deterministic` is not L⋆-definable — `cor:no-characterization`
+# `Deterministic` is not L⁺-definable — `cor:no-characterization`
 
 The two headline results, obtained by instantiating the generic state-set bridge
 (`Independence/StateSetTruth.lean`) at the **indistinguishable pair** `F°` (the drift frame,
@@ -21,7 +21,7 @@ The two headline results, obtained by instantiating the generic state-set bridge
   *Determined* without being deterministic, so the converse of
   `determined_of_deterministic` (`Semantics/PlusDeterminism.lean`) fails
 - `fzero_plusValidOn_iff_f1` — **(T4)**: `F°` and `F¹` validate exactly the same `PlusFormula`s
-- `deterministic_not_plusDefinable` — the conclusion: no set of L⋆ formulas defines the
+- `deterministic_not_plusDefinable` — the conclusion: no set of L⁺ formulas defines the
   deterministic frames
 
 ## The three-way split the "exactly" claim conflates
@@ -35,8 +35,8 @@ three different regions, and only the first two coincide:
 2. `⊡` trivializes **logically** — *Determined* is frame-valid — on a class **strictly
    containing** them. `F°` is in that class (`fzero_determined`) and not deterministic
    (`fzero_not_deterministic`): its histories through a given state at a given time are many, but
-   they all agree on every L⋆ formula, which is all validity can see.
-3. Neither region is **L⋆-definable** (`deterministic_not_plusDefinable`).
+   they all agree on every L⁺ formula, which is all validity can see.
+3. Neither region is **L⁺-definable** (`deterministic_not_plusDefinable`).
 
 So the ⇒ direction of the claim holds (`determined_of_deterministic`), the ⇐ direction is false,
 and no repair by a different formula set is possible.
@@ -85,7 +85,7 @@ collapse theorems still report `[propext]` alone.
 
 ## Tags
 
-independence · definability · determinism · star-language · app:deterministic
+independence · definability · determinism · plus-language · app:deterministic
 -/
 
 namespace FormalSystem.Metalogic.Independence
@@ -154,10 +154,10 @@ theorem determined_valid_on_non_deterministic :
     (∀ φ : PlusFormula, F0.PlusValidOn (.imp φ (.stab φ))) ∧ ¬ F0.Deterministic :=
   ⟨fzero_determined, fzero_not_deterministic⟩
 
-/-! ## (T4) — F° and F¹ are L⋆-indistinguishable -/
+/-! ## (T4) — F° and F¹ are L⁺-indistinguishable -/
 
 /--
-**(T4): `F°` and `F¹` validate exactly the same L⋆ formulas.**
+**(T4): `F°` and `F¹` validate exactly the same L⁺ formulas.**
 
 Both sides reduce, by `plusValidOn_iff_satSet_univ`, to the *same* frame-free condition — that
 `satSet V φ` is all of `ℝ` for every valuation `V` — because the state-set recursion mentions
@@ -168,14 +168,14 @@ theorem fzero_plusValidOn_iff_f1 (φ : PlusFormula) : F0.PlusValidOn φ ↔ F1.P
       plusValidOn_iff_satSet_univ f1_orderFlow f1_stateOccurs φ]
 
 /--
-**`Deterministic` is not L⋆-definable** (`cor:no-characterization`).
+**`Deterministic` is not L⁺-definable** (`cor:no-characterization`).
 
 No set `Γ` of `PlusFormula`s has "`F` validates every member of `Γ`" equivalent to
 `F.Deterministic`. Any such `Γ` would be validated by `F¹`, which is deterministic; by (T4) it
 would then be validated by `F°`; and `F°` is not deterministic.
 
 This is *elimination by indistinguishability*, not separation: the two frames **agree** on every
-L⋆ sentence, which is precisely why no such sentence set can tell determinism apart.
+L⁺ sentence, which is precisely why no such sentence set can tell determinism apart.
 
 Paper: `app:deterministic`
 -/

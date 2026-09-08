@@ -9,7 +9,7 @@ import FormalSystem.Metalogic.BXCanonical
 import FormalSystem.Metalogic.StrongCompleteness
 
 /-!
-# The TM-completeness / forward-conservativity reduction
+# The TM⁻-completeness / forward-conservativity reduction
 
 **Read `Metalogic/Conservativity.lean`'s module docstring first.** That module states, and
 proves the tree must never state or `sorry`, the **forward-conservativity prohibition**:
@@ -22,11 +22,11 @@ is refuted at `fc := .Base` and `fc := .ZTime`, and a `sorry`-ed proof of it wou
 unsound placeholder, not deferred debt.
 
 **This module strengthens that prohibition by exposing a second phrasing of the forbidden
-claim.** Given the tree's own `BXCanonical.completeness` (BL⁺ completeness at `.Base`) and
-`minusValid_iff_valid_tr` (the BL/BL⁺ validity bridge), "TM is complete over task frames" and
+claim.** Given the tree's own `BXCanonical.completeness` (L completeness at `.Base`) and
+`minusValid_iff_valid_tr` (the L⁻/L validity bridge), "TM⁻ is complete over task frames" and
 "forward conservativity holds at `FrameClass.Base`" turn out to be *the same proposition* — a
 two-line composition of results already in this tree, with **neither side asserted**. Nothing
-here proves TM-completeness, and nothing here proves forward conservativity; the point is that a
+here proves TM⁻-completeness, and nothing here proves forward conservativity; the point is that a
 future dispatch attempting either one, in good faith, is thereby attempting the other, and is
 covered by the same prohibition. No `sorry` occurs anywhere in this file, and neither
 `TMMinusCompleteBase` nor `ForwardBase` (nor their `.ZTime` siblings) appears as the conclusion of
@@ -36,17 +36,17 @@ discharged.
 ## Where the backward direction does the work
 
 `tmMinusCompleteBase_iff_forwardBase`'s **backward** direction (`ForwardBase → TMMinusCompleteBase`) is
-where `BXCanonical.completeness` — TM⁺'s completeness over *all* task frames, `cor:tm-completeness`
+where `BXCanonical.completeness` — TM's completeness over *all* task frames, `cor:tm-completeness`
 row 1, machine-checked in this tree — actually does the work: it is the step that turns a
-BL-valid formula into a `⊢[Base] tr φ` derivation, which `ForwardBase` then pulls back across the
+L⁻-valid formula into a `⊢[Base] tr φ` derivation, which `ForwardBase` then pulls back across the
 translation. The **forward** direction (`TMMinusCompleteBase → ForwardBase`) is the easier composition,
-routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then across
+routing `⊢[Base] tr φ` through TM's own soundness to `Valid (tr φ)`, then across
 `minusValid_iff_valid_tr` to `MinusValid φ`.
 
 ## Main Definitions
 
-- `TMMinusComplete fc` — "TM is complete over the frames of `fc`": every `fc`-BL-valid formula is
-  TM-derivable at `fc`. Unasserted, at every tag.
+- `TMMinusComplete fc` — "TM⁻ is complete over the frames of `fc`": every `fc`-L⁻-valid formula is
+  TM⁻-derivable at `fc`. Unasserted, at every tag.
 - `Forward fc` — the forward-conservativity statement at `fc`, literally `Conservativity.lean`'s
   forbidden `forward` theorem restricted to one frame class. Unasserted, at every tag.
 - `TMMinusCompleteBase`, `TMMinusCompleteZTime`, `ForwardBase`, `ForwardZTime` — the two tags this
@@ -68,16 +68,16 @@ the two that are open; it is prose, not a declaration, and asserts none of the f
 ## The four-row status table
 
 **This is the canonical location for the status of all four rows.** Each row asks the same
-question — is TM (at that frame class) weakly complete for base-language validity over that class,
+question — is TM⁻ (at that frame class) weakly complete for base-language validity over that class,
 equivalently does forward conservativity hold there — and by `tmMinusComplete_iff_forward` the two
 readings never come apart. Two rows are closed, two are not.
 
 | Frame class | System | Status | Evidence |
 |---|---|---|---|
-| `.Base` | TM | **refuted** | `tmMinusCompleteBase_refuted` (`Conservativity/SpCountermodel.lean`), witnessed by `Sp` on the two-fibre `ℤ ⊕ ℝ` model |
-| `.ZTime` | TM_z | **refuted** | `tmMinusCompleteZTime_refuted` (`Conservativity/Z1Countermodel.lean`), witnessed by `Z1` on `ℚ ×ₗ ℤ` |
-| `.Dense` | TM_d | **open; expected complete, no obstruction found** | see below |
-| `.RTime` | TM_dc | **open; obstruction named** | see below |
+| `.Base` | TM⁻ | **refuted** | `tmMinusCompleteBase_refuted` (`Conservativity/SpCountermodel.lean`), witnessed by `Sp` on the two-fibre `ℤ ⊕ ℝ` model |
+| `.ZTime` | TM⁻_z | **refuted** | `tmMinusCompleteZTime_refuted` (`Conservativity/Z1Countermodel.lean`), witnessed by `Z1` on `ℚ ×ₗ ℤ` |
+| `.Dense` | TM⁻_d | **open; expected complete, no obstruction found** | see below |
+| `.RTime` | TM⁻_dc | **open; obstruction named** | see below |
 
 Both closed rows are closed by a *dichotomy witness*: a schema valid over the class because the
 class splits into two subclasses that H/G can tell apart, while no single derivation covers both.
@@ -89,7 +89,7 @@ open in the direction they are.
 **No obstruction is known, and both known witnesses provably fail to transfer.**
 `Conservativity/DenseObstructionTransfer.lean` machine-checks both halves:
 
-* `spDerivableDense` — the `.Base` witness `Sp` is a **theorem** of TM_d (its right disjunct's
+* `spDerivableDense` — the `.Base` witness `Sp` is a **theorem** of TM⁻_d (its right disjunct's
   inner formula is `Axiom.dn`), so it is not an underivable validity. `spDerivableRTime` says
   the same at `.RTime`.
 * `not_minusValidDense_z1` — the `.ZTime` witness `Z1` is **not** dense-valid, refuted on the flow
@@ -117,13 +117,13 @@ is the *canonical model*, all of it on the base-language side:
 
 Borrowing `Metalogic/BXCanonical/Chronicle/` instead is **not** an option, and the reason is worth
 recording because it is not obvious: that machinery starts from a `SetMaximalConsistent` set of
-`Formula`s, so using it would require "`{¬φ}` is TM_d-consistent ⟹ `{tr ¬φ}` is TM⁺_d-consistent",
+`Formula`s, so using it would require "`{¬φ}` is TM⁻_d-consistent ⟹ `{tr ¬φ}` is TM_d-consistent",
 which is the contrapositive of the very forward-conservativity statement being proved. The route
 is circular, not merely inconvenient.
 
 ### `.RTime` — open, with the obstruction named
 
-The temporal part of TM_dc is the H/G logic of ℝ, and `Axiom.co` is the Dedekind axiom of that
+The temporal part of TM⁻_dc is the H/G logic of ℝ, and `Axiom.co` is the Dedekind axiom of that
 literature: reading `S := {u | Hφ(u)}`, `CO`'s antecedent says the downward-closed `S` has no
 maximum and its consequent says `S` is unbounded above — which is Dedekind completeness, and fails
 on ℚ at `φ(w) :↔ w < √2`.
@@ -160,7 +160,7 @@ Two things make this row harder than `.Dense` rather than merely later:
 ### What the prohibition does and does not forbid
 
 `Metalogic/Conservativity.lean`'s standing prohibition is: **do not state a completeness or
-forward-conservativity theorem for L ⊂ L⁺ and discharge it with `sorry`.** It is not a prohibition
+forward-conservativity theorem for L⁻ ⊂ L and discharge it with `sorry`.** It is not a prohibition
 on *proving* one. `forward` is refuted at `.Base` and `.ZTime`, so a `sorry` there would be an
 unsound placeholder rather than deferred debt; at `.Dense` and `.RTime` the statements are simply
 open, and a genuine proof of either would be welcome. What is forbidden at all four tags is
@@ -185,7 +185,7 @@ module is a `def`, referenced as a statement and never the conclusion of a theor
   canonical-model route
 * `FormalSystem/Metalogic/WeakCanonical/RealModel/DoetsTheorem.lean`,
   `FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean` — the Doets layer
-  and the BL⁺-only axiom consumption that is the `.RTime` row's named obstruction
+  and the L-only axiom consumption that is the `.RTime` row's named obstruction
 -/
 
 namespace FormalSystem.Metalogic
@@ -204,7 +204,7 @@ tag. The four per-tag rows below are instantiations; before this collapse the `.
 and `.RTime` rows did not exist. -/
 
 /--
-**"TM is complete over the frames of `fc`."** Every `fc`-BL-valid formula is derivable in TM at
+**"TM⁻ is complete over the frames of `fc`."** Every `fc`-L⁻-valid formula is derivable in TM⁻ at
 `fc`. **Unasserted** — this `def` states the proposition so it can be named and related to
 `Forward` below; it is never the conclusion of a `theorem` in this tree, at any tag.
 -/
@@ -230,7 +230,7 @@ direction does not use the engine.
 
 Backward (`Forward fc → TMMinusComplete fc`): given `MinusValidIn fc φ`, `minusValidIn_iff_validIn_tr` gives
 `ValidIn fc (tr φ)`, and the **engine** turns that into `⊢[fc] tr φ`; apply the hypothesis. This
-is where TM⁺'s completeness does the actual work, and it is the whole of the class-dependence —
+is where TM's completeness does the actual work, and it is the whole of the class-dependence —
 the reason `WeakCompleteness fc` is the hypothesis rather than anything stronger.
 
 **The module's prohibition discipline is preserved, not weakened.** The conclusion here is an
@@ -250,7 +250,7 @@ theorem tmMinusComplete_iff_forward {fc : FrameClass} (engine : WeakCompleteness
 /-! ## `FrameClass.Base` -/
 
 /--
-**"TM is complete over task frames."** `TMMinusComplete` at `.Base`. `MinusValid` is `MinusValidIn .Base`
+**"TM⁻ is complete over task frames."** `TMMinusComplete` at `.Base`. `MinusValid` is `MinusValidIn .Base`
 definitionally (`Semantics/MinusValidity.lean`), so the statement is unchanged by the
 generalization. **Unasserted.**
 -/
@@ -271,7 +271,7 @@ theorem tmMinusCompleteBase_iff_forwardBase : TMMinusCompleteBase ↔ ForwardBas
 /-! ## `FrameClass.ZTime` -/
 
 /--
-**"TM_z is complete over `FrameClass.ZTime` task frames."** `TMMinusComplete` at `.ZTime`;
+**"TM⁻_z is complete over `FrameClass.ZTime` task frames."** `TMMinusComplete` at `.ZTime`;
 `MinusValidZTime` is `MinusValidIn .ZTime` definitionally. **Unasserted**, exactly as
 `TMMinusCompleteBase`.
 -/

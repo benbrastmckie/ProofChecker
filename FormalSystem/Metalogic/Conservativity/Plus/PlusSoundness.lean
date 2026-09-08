@@ -8,9 +8,9 @@ import FormalSystem.Metalogic.Conservativity.Plus.AxiomValidity
 import FormalSystem.PlusLanguage
 
 /-!
-# Soundness of TM⋆ at every frame class
+# Soundness of TM⁺ at every frame class
 
-`TM⋆ ⊢[fc] φ ⟹ PlusValidIn fc φ`, for every `fc`, by the same companion recursion the L⁺
+`TM⁺ ⊢[fc] φ ⟹ PlusValidIn fc φ`, for every `fc`, by the same companion recursion the L
 soundness theorem uses (`Metalogic/Soundness.lean`, `derivable_valid_and_swap_validIn`):
 the recursion carries **both** `PlusValidIn fc φ` and `PlusValidIn fc φ.swapTemporal`, so that
 the `temporal_duality` case simply exchanges the two components. The `axiom` case feeds in the
@@ -18,7 +18,7 @@ two dispatch lemmas of `Conservativity/Plus/AxiomValidity.lean`; everything else
 structure of `PlusTruthAt`.
 
 **TD is discharged semantically, never proof-theoretically.** Mapping derivations to mirrored
-derivations would require the axiom set to be mirror-closed, which TM⁺'s is not (BX lists the
+derivations would require the axiom set to be mirror-closed, which TM's is not (BX lists the
 future halves and obtains the past halves by TD); the companion recursion needs only
 per-schema swap-validity, which `plusAxiom_swap_validIn_min` supplies for every constructor.
 
@@ -36,7 +36,7 @@ per-schema swap-validity, which `plusAxiom_swap_validIn_min` supplies for every 
 
 ## Tags
 
-soundness · star-language · stability-modal · atomization
+soundness · plus-language · stability-modal · atomization
 -/
 
 namespace FormalSystem.Metalogic.Conservativity
@@ -48,7 +48,7 @@ open FormalSystem.PlusLanguage.PlusFormula
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
 
-/-- **The companion recursion.** A TM⋆ theorem at `fc` is `PlusValidIn fc`, and so is its
+/-- **The companion recursion.** A TM⁺ theorem at `fc` is `PlusValidIn fc`, and so is its
 temporal dual. Mirror of `derivable_valid_and_swap_validIn`, arm for arm; well-founded on the
 derivation's height because the `weakening` case re-targets to the empty context without a
 structural descent. -/
@@ -107,15 +107,15 @@ decreasing_by
     | omega
     | simp only [PlusDerivationTree.height]; omega
 
-/-- **Soundness of TM⋆ at `fc`**, empty-context validity form.
+/-- **Soundness of TM⁺ at `fc`**, empty-context validity form.
 
-Paper: — (formalization-native; the stability extension L-star is not in the paper)
+Paper: — (formalization-native; L⁺ is the ⊡-only fragment of the paper's `\BL^\star`, for which the paper supplies no logic)
 -/
 theorem plus_soundness_validIn {fc : FrameClass} {φ : PlusFormula}
     (h : PlusDerivable fc [] φ) : PlusValidIn fc φ :=
   h.elim fun d => (plus_derivable_valid_and_swap_validIn d).1
 
-/-- **Soundness of TM⋆ at `fc`**, context form: a derivation of `φ` from `Γ` makes `φ` true at
+/-- **Soundness of TM⁺ at `fc`**, context form: a derivation of `φ` from `Γ` makes `φ` true at
 every model over a frame satisfying `fc`, every total history and every time at which all of `Γ`
 is true. Mirror of `soundness_in`; the `temporal_duality` case defers to the companion
 recursion. -/
@@ -145,29 +145,29 @@ theorem plus_soundness_in {fc : FrameClass} (Γ : PlusContext) (φ : PlusFormula
 
 /-! ## The four rows -/
 
-/-- Soundness of TM⋆ at `.Base`: a TM⋆ theorem is `PlusValid`. -/
+/-- Soundness of TM⁺ at `.Base`: a TM⁺ theorem is `PlusValid`. -/
 theorem plus_soundness_valid {φ : PlusFormula} (h : PlusDerivable FrameClass.Base [] φ) :
     PlusValid φ :=
   plus_soundness_validIn h
 
-/-- Soundness of TM⋆ at `.Base` (context form). -/
+/-- Soundness of TM⁺ at `.Base` (context form). -/
 theorem plus_soundness_base (Γ : PlusContext) (φ : PlusFormula)
     (d : PlusDerivationTree FrameClass.Base Γ φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, PlusTruthAt M τ t ψ) : PlusTruthAt M τ t φ :=
   plus_soundness_in Γ φ d F trivial M τ h_mem t h_ctx
 
-/-- Soundness of TM⋆ at `.Dense`. -/
+/-- Soundness of TM⁺ at `.Dense`. -/
 theorem plus_soundness_dense {φ : PlusFormula} (h : PlusDerivable FrameClass.Dense [] φ) :
     PlusValidDense φ :=
   plus_soundness_validIn h
 
-/-- Soundness of TM⋆ at `.ZTime`. -/
+/-- Soundness of TM⁺ at `.ZTime`. -/
 theorem plus_soundness_ztime {φ : PlusFormula}
     (h : PlusDerivable FrameClass.ZTime [] φ) : PlusValidZTime φ :=
   plus_soundness_validIn h
 
-/-- Soundness of TM⋆ at `.RTime`. -/
+/-- Soundness of TM⁺ at `.RTime`. -/
 theorem plus_soundness_rtime {φ : PlusFormula}
     (h : PlusDerivable FrameClass.RTime [] φ) : PlusValidRTime φ :=
   plus_soundness_validIn h
@@ -180,7 +180,7 @@ example {fc : FrameClass} {φ : PlusFormula} (d : ⊢⁺[fc] φ) :
     PlusValidIn fc (PlusFormula.stab φ) :=
   plus_soundness_validIn ⟨stabNecessitation d⟩
 
-/-- **TM⋆ is consistent at `.Base`**: `⊥` is not a theorem. (Consistency at the wider classes is
+/-- **TM⁺ is consistent at `.Base`**: `⊥` is not a theorem. (Consistency at the wider classes is
 not a corollary, since derivability lifts upward; each would need its own witness frame.) Witness: the trivial frame over `ℤ` with the all-false valuation, mirroring
 `minus_not_derivable_nil_bot_ztime`. -/
 theorem plus_not_derivable_nil_bot :

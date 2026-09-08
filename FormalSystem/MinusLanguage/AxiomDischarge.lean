@@ -15,19 +15,19 @@ import FormalSystem.Theorems.GeneralizedNecessitation
 import FormalSystem.Metalogic.Core.DeductionTheorem
 
 /-!
-# The axiom-discharge table: a BL⁺ derivation of `tr` of every BL axiom
+# The axiom-discharge table: an L derivation of `tr` of every L⁻ axiom
 
 `dischargeAxiom` is the lookup table that makes the `axiom` case of
 `FormalSystem.Metalogic.Conservativity.translate` a one-line match. For each constructor of
 `MinusLanguage.Axiom` it produces a `FormalSystem.ProofSystem` derivation of that axiom's
-translation, at the frame class the BL-side side condition already supplies.
+translation, at the frame class the L⁻-side side condition already supplies.
 
 ## Which rows are exact and which need the `F`/`P` bridge
 
-Seven rows are *exact*: `tr` of the BL axiom is syntactically the BL⁺ asset, and the discharge
+Seven rows are *exact*: `tr` of the L⁻ axiom is syntactically the L asset, and the discharge
 is a single `DerivationTree.axiom` or a single named theorem.
 
-| Row | BL⁺ asset | Exact? |
+| Row | L asset | Exact? |
 |---|---|---|
 | CPL (4) | `Axiom.prop_k`, `prop_s`, `ex_falso`, `peirce` | yes |
 | MK | `Axiom.modal_k_dist` | yes |
@@ -44,10 +44,10 @@ is a single `DerivationTree.axiom` or a single named theorem.
 | CO | `Theorems.DedekindDerived.coDerived` | **no** — `F`-bridge under `△` |
 
 The research report predicted "exact syntactic match" for TC and TS. That is **refuted**, and
-structurally so rather than by accident: BL's `F`/`P` are *derived* (`Fφ = ¬G¬φ`), so `tr (Fφ)`
+structurally so rather than by accident: L⁻'s `F`/`P` are *derived* (`Fφ = ¬G¬φ`), so `tr (Fφ)`
 is `¬G¬(tr φ)`, whereas `Formula.someFuture` is a top-level `untl` — and by
 `MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. No choice of
-BL-side abbreviation could have closed that gap. See `MinusLanguage/Translation.lean`'s
+L⁻-side abbreviation could have closed that gap. See `MinusLanguage/Translation.lean`'s
 `tr_someFuture_ne`.
 
 What *does* close it is the derivable equivalence `¬G¬ψ ↔ Fψ` (`notGNotImpF` / `fImpNotGNot`
@@ -57,7 +57,7 @@ lines.
 
 ## Frame-class side conditions
 
-Each extension row consumes the BL-side `h_fc` directly rather than re-deriving it: for `df` it
+Each extension row consumes the L⁻-side `h_fc` directly rather than re-deriving it: for `df` it
 is exactly `Discrete ≤ fc`, which is what `DerivationTree.lift` wants for `dfSchema`; for `dn`
 it is `Dense ≤ fc`, which is what `Axiom.density`'s own side condition wants; for `co` it is
 `Dedekind ≤ fc`, which is `coDerived`'s hypothesis. Base rows use `FrameClass.base_le fc`.
@@ -134,7 +134,7 @@ private def alwaysMono {fc : FrameClass} {A B : Formula} (h : ⊢[fc] A.imp B) :
 
 /-! ## The `F`/`P` bridge
 
-`tr` sends BL's `Fψ = ¬G¬ψ` to `¬G¬(tr ψ)`, which unfolds on the BL⁺ side to `¬¬F(¬¬·)` and is
+`tr` sends L⁻'s `Fψ = ¬G¬ψ` to `¬G¬(tr ψ)`, which unfolds on the L side to `¬¬F(¬¬·)` and is
 therefore *not* `Formula.someFuture`. The four lemmas below are the derivable equivalence that
 repairs this, once, for every row that needs it. -/
 
@@ -161,7 +161,7 @@ def pImpNotHNot {fc : FrameClass} (ψ : Formula) :
 
 /-! ## Base row
 
-One lemma per Base-class BL axiom, each of shape `⊢[fc] tr (<the BL axiom formula>)`. Seven are
+One lemma per Base-class L⁻ axiom, each of shape `⊢[fc] tr (<the L⁻ axiom formula>)`. Seven are
 a single application; TS, TC and TL carry the bridge. -/
 
 /-- **CPL/K**. Exact. -/
@@ -196,7 +196,7 @@ def dischargeModalT {fc : FrameClass} (a : MinusFormula) :
     ⊢[fc] tr (a.box.imp a) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.modal_t (tr a)) (FrameClass.base_le fc)
 
-/-- **M5**. Exact: `Axiom.modal_5_collapse`. `tr` commutes with `◇` because BL's `◇` and BL⁺'s
+/-- **M5**. Exact: `Axiom.modal_5_collapse`. `tr` commutes with `◇` because L⁻'s `◇` and L's
 are the same abbreviation `¬□¬`. -/
 def dischargeModal5 {fc : FrameClass} (a : MinusFormula) :
     ⊢[fc] tr (a.box.diamond.imp a.box) :=
@@ -252,7 +252,7 @@ def dischargeTempLinearity {fc : FrameClass} (a b : MinusFormula) :
         (((a.and b).someFuture).or ((a.and b.someFuture).someFuture)))) := by
   set A := tr a with hA
   set B := tr b with hB
-  -- `nf X` is the shape `tr` gives BL's `F X`.
+  -- `nf X` is the shape `tr` gives L⁻'s `F X`.
   set nfA := (Formula.allFuture A.neg).neg with hnfA
   set nfB := (Formula.allFuture B.neg).neg with hnfB
   set T1 := (Formula.allFuture (Formula.and nfA B).neg).neg with hT1
@@ -311,19 +311,19 @@ def dischargeTempLinearity {fc : FrameClass} (a b : MinusFormula) :
 
 /-! ## Extension rows
 
-DN, CO and DF, each at its own frame class, each consuming the BL-side `h_fc` unchanged. -/
+DN, CO and DF, each at its own frame class, each consuming the L⁻-side `h_fc` unchanged. -/
 
-/-- **DN** at `Dense`. Exact: `Axiom.density` is literally the same formula, and the BL-side
+/-- **DN** at `Dense`. Exact: `Axiom.density` is literally the same formula, and the L⁻-side
 side condition `Dense ≤ fc` is exactly the one `Axiom.density` needs. -/
 def dischargeDn {fc : FrameClass} (h_fc : FrameClass.Dense ≤ fc) (a : MinusFormula) :
     ⊢[fc] tr (a.allFuture.allFuture.imp a.allFuture) :=
   DerivationTree.axiom [] _ (ProofSystem.Axiom.density (tr a)) h_fc
 
 /-- **CO** at `Dedekind`. `Theorems.DedekindDerived.coDerived` proves `Formula.co A`; `tr` of
-BL's CO differs from it only in the inner `F(HA)`, which the bridge repairs — pushed under `→`
+L⁻'s CO differs from it only in the inner `F(HA)`, which the bridge repairs — pushed under `→`
 by `impMono` and then under `△` by `alwaysMono`.
 
-Because this repository's `RTime` class admits the dense axioms, the row lands at **`TM_r`**;
+Because this repository's `RTime` class admits the dense axioms, the row lands at **`TM⁻_r`**;
 see `Metalogic/Conservativity/Backward.lean`'s `cec_backward`. -/
 def dischargeCo {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : MinusFormula) :
     ⊢[fc] tr ((a.allPast.imp a.allPast.someFuture).always.imp (a.allPast.imp a.allFuture)) :=
@@ -332,7 +332,7 @@ def dischargeCo {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : MinusFor
     (FormalSystem.Theorems.DedekindDerived.coDerived h_fc (tr a))
 
 /-- **DF** at `Discrete`. `Theorems.DiscreteUnfolding.dfSchema` is the Route-A syntactic
-derivation; it is stated at `FrameClass.ZTime` and lifted here by the BL-side side condition.
+derivation; it is stated at `FrameClass.ZTime` and lifted here by the L⁻-side side condition.
 Both the antecedent's `F⊤` and the consequent's `F(Hφ)` cross the bridge. -/
 def dischargeDf {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : MinusFormula) :
     ⊢[fc] tr (((a.allPast.and a).and MinusFormula.top.someFuture).imp a.allPast.someFuture) :=
@@ -349,11 +349,11 @@ def dischargeDf {fc : FrameClass} (h_fc : FrameClass.ZTime ≤ fc) (a : MinusFor
 /-! ## The table -/
 
 /--
-For every BL axiom instance, a BL⁺ derivation of its translation at the same frame class.
+For every L⁻ axiom instance, an L derivation of its translation at the same frame class.
 
 This is the whole content of the `axiom` case of
 `FormalSystem.Metalogic.Conservativity.translate`. The side condition `h_fc` is threaded
-through unchanged: on the three extension rows it is already exactly the hypothesis the BL⁺
+through unchanged: on the three extension rows it is already exactly the hypothesis the L
 asset requires, and on the Base rows it is discarded in favour of `FrameClass.base_le`.
 -/
 def dischargeAxiom {fc : FrameClass} {φ : MinusFormula} (h : Axiom φ)

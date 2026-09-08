@@ -23,13 +23,13 @@ live file and subdirectory here, and no row for anything else.
 | ConvexHistory.lean | Convex histories for temporal evaluation, and `TaskFrame.HF` — the paper's possible worlds |
 | Truth.lean | `TruthAt`, the truth relation for formula evaluation, with its `truth_norm` simp-normal form; the relational truth transport `TruthCorr` / `Truth.truthAt_of_truthCorr` (one `induction φ`) from which `timeShift_preserves_truth`, `truthAt_of_truthIso`, and `IntTransfer.truthAt_map` are derived; `TruthIso`/`TruthAntiIso` |
 | MinusTruth.lean | `MinusTruthAt` — the same truth relation for the tense-primitive base language, by native six-clause recursion on `MinusFormula` per `def:BL-semantics` (not `TruthAt ∘ tr`) |
-| MinusFrame.lean | `MinusFrame` — a native BL frame notion not bound to `TaskFrame` (points with an unbounded, transitive, irreflexive, forward- and backward-linear strict order, no group structure), its truth recursion `MinusFrameTruth` with `□` as the universal modality, `MinusFrameValid`, the `MinusFrameTruth.*` characterization family, and the order-reversal transfer lemma `truth_swap`; the frame class a countermodel to `(Sp)` lives on |
+| MinusFrame.lean | `MinusFrame` — a native L⁻ frame notion not bound to `TaskFrame` (points with an unbounded, transitive, irreflexive, forward- and backward-linear strict order, no group structure), its truth recursion `MinusFrameTruth` with `□` as the universal modality, `MinusFrameValid`, the `MinusFrameTruth.*` characterization family, and the order-reversal transfer lemma `truth_swap`; the frame class a countermodel to `(Sp)` lives on |
 | ShiftSet.lean | Shift-set representation theorem: task models ↔ shift sets, both directions with truth correspondence |
 | Validity.lean | Validity and semantic consequence |
 | MinusValidity.lean | `MinusValid`, `MinusSemanticConsequence`, `MinusValidDense`, `MinusValidZTime`, `MinusValidZTimeSucc`, `MinusValidRTime` — binder-for-binder base-language mirrors of Validity.lean |
 | MinusSchemaValidity.lean | DF/DN semantic lemmas (Lemmas B/C) and DF's `PredOrder` past-dual, consumed by `Metalogic/Conservativity/SpWitness.lean` and `minus_soundness_ztime_succ` |
-| PlusTruth.lean | `SameStateAt` (the paper's `⟨τ⟩_x`) and `PlusTruthAt` — the truth recursion for L⋆ (L⁺ plus the stability modal `⊡`, `PlusLanguage/Formula.lean`), the `PlusTruth.*` clause lemmas, the S5 validities of `⊡`, and `stab_state_only` |
-| PlusValidity.lean | `PlusValidOnFrames`, `PlusValidIn`, `PlusValid` and per-class abbreviations — L⋆ mirrors of Validity.lean; `plusTruthAt_ofFormula` and `plusValidIn_ofFormula_iff`, semantic conservativity of L⋆ over L⁺ at every frame class |
+| PlusTruth.lean | `SameStateAt` (the paper's `⟨τ⟩_x`) and `PlusTruthAt` — the truth recursion for L⁺ (L plus the stability modal `⊡`, `PlusLanguage/Formula.lean`), the `PlusTruth.*` clause lemmas, the S5 validities of `⊡`, and `stab_state_only` |
+| PlusValidity.lean | `PlusValidOnFrames`, `PlusValidIn`, `PlusValid` and per-class abbreviations — L⁺ mirrors of Validity.lean; `plusTruthAt_ofFormula` and `plusValidIn_ofFormula_iff`, semantic conservativity of L⁺ over L at every frame class |
 | PlusPasting.lean | `paste` — two total histories sharing a state paste into a total history — the purity congruences, and the pasting validities PS/US/FS/GS with their past mirrors |
 | PlusNonValidities.lean | The five refutations on `natFrame` over ℤ that bound the `⊡` axiom set from above (`⊡p → □⊡p`, `G⊡p → ⊡Gp`, `⊡GPp → G⊡Pp`, *Determined*, `P⊡p → ⊡Pp`) |
 | PlusDeterminism.lean | `app:deterministic`'s positive half: `states_eq_of_deterministic` (the singleton bridge), `stab_iff_of_deterministic`, `determined_of_deterministic`, `stab_biconditional_plusValidOn_of_deterministic` — the collapse `⊡φ ↔ φ` over every `TaskFrame.Deterministic` frame, choice-free (`[propext]` only) |
@@ -81,4 +81,4 @@ directed graph — the presentation `Metalogic/Decidability/IntPresentation.lean
 
 ---
 
-*Last verified: 2026-09-07*
+*Last verified: 2026-09-08*

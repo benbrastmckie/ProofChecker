@@ -18,7 +18,7 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 | Metric | Count |
 |--------|-------|
 | Live `.lean` files | 482 |
-| Live lines | 283,541 |
+| Live lines | 283,540 |
 | Archived `.lean` files | 168 |
 | Archived lines | 91,618 |
 <!-- END GENERATED -->
@@ -211,7 +211,7 @@ logic; the other three are this repository's, and the superscripts are Lean-only
 | **L⁻** | ⊥, →, □, H, G | **TM⁻** | `FormalSystem/MinusLanguage/`, `MinusFormula`, `⊢⁻[fc]` |
 | **L** | ⊥, →, □, S, U | **TM** (TM_z, TM_d, TM_r) | `FormalSystem/Syntax/` + `ProofSystem/`, `Formula`, `⊢[fc]` |
 | **L⁺** | L plus the stability modal ⊡ | **TM⁺** | `FormalSystem/PlusLanguage/`, `PlusFormula`, `⊢⁺[fc]` |
-| **L⋆** | L⁺ plus the time store/recall operators ↑ⁱ/↓ⁱ | — (not yet built) | `FormalSystem/StarLanguage/` — name reserved |
+| **L⋆** | L⁺ plus the time store/recall operators ↑ⁱ/↓ⁱ | — (not yet built) | the `StarLanguage` name is reserved for it; nothing is built yet |
 
 The manuscript has exactly **two** languages: 𝓛 and 𝓛⋆, where 𝓛⋆ bundles ⊡ with both the
 time-store/recall and the world-store/recall families (the sentence defining `\BL^\star` in

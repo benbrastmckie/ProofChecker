@@ -7,14 +7,14 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.MinusLanguage.Axioms
 
 /-!
-# `MinusLanguage.DerivationTree` — TM's proof system over BL
+# `MinusLanguage.DerivationTree` — TM⁻'s proof system over L⁻
 
 A constructor-for-constructor mirror of `FormalSystem.ProofSystem.DerivationTree`, over
 `MinusFormula` instead of `Formula`. The mirror is deliberate: it is what makes
 `FormalSystem.Metalogic.Conservativity.translate` a seven-case structural recursion with one
 case per rule and no bookkeeping.
 
-## Inference rules (7, matching the BL⁺ side exactly)
+## Inference rules (7, matching the L side exactly)
 
 1. `axiom` — an `Axiom` instance, gated by `ax.minFrameClass ≤ fc`
 2. `assumption` — formulas in the context
@@ -24,35 +24,35 @@ case per rule and no bookkeeping.
 6. `temporal_duality` — **TD**, empty context only, via **`swapMinus`**
 7. `weakening`
 
-**TD uses `swapMinus`, not `swapTemporal`.** `swapTemporal` acts on BL⁺'s `untl`/`snce`; the BL
+**TD uses `swapMinus`, not `swapTemporal`.** `swapTemporal` acts on L's `untl`/`snce`; the L⁻
 side has no such constructors. The two are intertwined by `MinusLanguage.tr_swapMinus`.
 
 ## Fidelity note: `temporal_necessitation` is not a strengthening
 
-TM as axiomatized in the paper (`\S sub:Logic`) has **no primitive temporal necessitation
+TM⁻ as axiomatized in the paper (`\S sub:Logic`) has **no primitive temporal necessitation
 rule** — its rules are exactly MP, MN and TD. Including `temporal_necessitation` here therefore
-looks like an addition, but it changes no theorem of TM: `⊢ φ ⟹ ⊢ Gφ` is already *derivable*
-in TM from MN + MF + MT, by necessitating `φ` to `□φ`, applying **MF** (`□φ → □Gφ`) and then
+looks like an addition, but it changes no theorem of TM⁻: `⊢ φ ⟹ ⊢ Gφ` is already *derivable*
+in TM⁻ from MN + MF + MT, by necessitating `φ` to `□φ`, applying **MF** (`□φ → □Gφ`) and then
 **MT** (`□Gφ → Gφ`). The rule is carried as a primitive purely to keep the seven-rule mirror,
 and `FormalSystem.MinusLanguage.temporalNecessitationDerivable` below proves the claim rather
 than asserting it.
 
 ## Frame-class parameterization
 
-Exactly as on the BL⁺ side: `axiom` carries `ax.minFrameClass ≤ fc`, and `lift` moves a
-derivation up the `FrameClass` order. TM, TM_z, TM_d and TM_r are `fc := .Base`, `.ZTime`,
+Exactly as on the L side: `axiom` carries `ax.minFrameClass ≤ fc`, and `lift` moves a
+derivation up the `FrameClass` order. TM⁻, TM⁻_z, TM⁻_d and TM⁻_r are `fc := .Base`, `.ZTime`,
 `.Dense`, `.RTime`.
 
 ## Notation
 
-`Γ ⊢⁻[fc] φ` and `⊢⁻[fc] φ`, deliberately distinct from BL⁺'s `Γ ⊢[fc] φ` / `⊢[fc] φ` so
+`Γ ⊢⁻[fc] φ` and `⊢⁻[fc] φ`, deliberately distinct from L's `Γ ⊢[fc] φ` / `⊢[fc] φ` so
 that a file opening both namespaces cannot silently mean the wrong system. There is no
 `.Base`-defaulting form: on this side the frame class is always worth writing out.
 
 ## References
 
-* JPL paper `\S sub:Logic` — TM's rules MP, MN, TD
-* `FormalSystem/ProofSystem/Derivation.lean` — the BL⁺ counterpart being mirrored
+* JPL paper `\S sub:Logic` — the rules MP, MN, TD that TM⁻ inherits
+* `FormalSystem/ProofSystem/Derivation.lean` — the L counterpart being mirrored
 -/
 
 namespace FormalSystem.MinusLanguage
@@ -60,9 +60,9 @@ namespace FormalSystem.MinusLanguage
 open FormalSystem.ProofSystem (FrameClass)
 
 /--
-Derivation tree for TM over the base language BL, parameterized by frame class.
+Derivation tree for TM⁻ over the base language L⁻, parameterized by frame class.
 
-`Type`-valued, like its BL⁺ counterpart, so that `Conservativity.translate` can pattern-match
+`Type`-valued, like its L counterpart, so that `Conservativity.translate` can pattern-match
 on it while producing a `DerivationTree`.
 -/
 inductive DerivationTree (fc : FrameClass) : Context → MinusFormula → Type where
@@ -78,7 +78,7 @@ inductive DerivationTree (fc : FrameClass) : Context → MinusFormula → Type w
   /-- **MN**: from `⊢ φ`, conclude `⊢ □φ`. Theorems only (empty context). -/
   | necessitation (φ : MinusFormula)
       (d : DerivationTree fc [] φ) : DerivationTree fc [] φ.box
-  /-- From `⊢ φ`, conclude `⊢ Gφ`. Theorems only. Derivable in TM from MN + MF + MT — see the
+  /-- From `⊢ φ`, conclude `⊢ Gφ`. Theorems only. Derivable in TM⁻ from MN + MF + MT — see the
       fidelity note in the module docstring and `temporalNecessitationDerivable`. -/
   | temporal_necessitation (φ : MinusFormula)
       (d : DerivationTree fc [] φ) : DerivationTree fc [] φ.allFuture
@@ -98,7 +98,7 @@ Lift a derivation from `fc₁` to `fc₂` when `fc₁ ≤ fc₂`.
 
 Mirrors `ProofSystem.DerivationTree.lift`: the only interesting case is `axiom`, where
 transitivity composes the two `≤` proofs. Used by the row corollaries in
-`Metalogic/Conservativity/Backward.lean` to move a TM theorem into `TM_z` / `TM_d` / `TM_r`.
+`Metalogic/Conservativity/Backward.lean` to move a TM⁻ theorem into `TM⁻_z` / `TM⁻_d` / `TM⁻_r`.
 -/
 def lift {fc₁ fc₂ : FrameClass} (h_le : fc₁ ≤ fc₂)
     {Γ : Context} {φ : MinusFormula} : DerivationTree fc₁ Γ φ → DerivationTree fc₂ Γ φ
@@ -154,27 +154,27 @@ def Derivable (fc : FrameClass) (Γ : Context) (φ : MinusFormula) : Prop :=
 
 /-! ## Notation
 
-`Γ ⊢⁻[fc] φ` / `⊢⁻[fc] φ`. The `ᴮᴸ` marker keeps these from colliding with BL⁺'s `⊢[fc]`
+`Γ ⊢⁻[fc] φ` / `⊢⁻[fc] φ`. The `⁻` marker keeps these from colliding with L's `⊢[fc]`
 even in a file that has opened both `FormalSystem.ProofSystem` and
 `FormalSystem.MinusLanguage`. -/
 
-/-- Derivability in TM from context `Γ` at frame class `fc`. -/
+/-- Derivability in TM⁻ from context `Γ` at frame class `fc`. -/
 notation:50 Γ " ⊢⁻[" fc "] " φ => DerivationTree fc Γ φ
 
-/-- Theoremhood in TM at frame class `fc`. -/
+/-- Theoremhood in TM⁻ at frame class `fc`. -/
 notation:50 "⊢⁻[" fc "] " φ => DerivationTree fc [] φ
 
 /-! ## The fidelity note, discharged
 
-TM's rule set is MP, MN, TD. `temporal_necessitation` is carried as an eighth-slot primitive
-only to mirror BL⁺'s seven-rule shape; the derivation below shows it adds nothing. -/
+TM⁻'s rule set is MP, MN, TD. `temporal_necessitation` is carried as an eighth-slot primitive
+only to mirror L's seven-rule shape; the derivation below shows it adds nothing. -/
 
 /--
 `⊢⁻[fc] φ ⟹ ⊢⁻[fc] Gφ` **without** using `temporal_necessitation`.
 
 Route: **MN** gives `⊢ □φ`; **MF** (`□φ → □Gφ`) gives `⊢ □Gφ`; **MT** (`□Gφ → Gφ`) gives
-`⊢ Gφ`. All three are TM primitives, so including `temporal_necessitation` as a constructor
-changes no theorem of TM.
+`⊢ Gφ`. All three are TM⁻ primitives, so including `temporal_necessitation` as a constructor
+changes no theorem of TM⁻.
 -/
 def temporalNecessitationDerivable {fc : FrameClass} (φ : MinusFormula)
     (d : ⊢⁻[fc] φ) : ⊢⁻[fc] φ.allFuture :=
@@ -189,7 +189,7 @@ def temporalNecessitationDerivable {fc : FrameClass} (φ : MinusFormula)
 
 /-! ## Smoke tests -/
 
-/-- Identity is a TM theorem, by the propositional basis alone. -/
+/-- Identity is a TM⁻ theorem, by the propositional basis alone. -/
 example (φ : MinusFormula) : ⊢⁻[FrameClass.Base] φ.imp φ :=
   let k : ⊢⁻[FrameClass.Base]
       ((φ.imp ((φ.imp φ).imp φ)).imp ((φ.imp (φ.imp φ)).imp (φ.imp φ))) :=
@@ -207,7 +207,7 @@ example (φ : MinusFormula) :
       (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp φ.allPast.someFuture) :=
   .axiom [] _ (Axiom.df φ) (show FrameClass.ZTime ≤ FrameClass.ZTime by decide)
 
-/-- Lifting a `Base` theorem into `TM_z`. -/
+/-- Lifting a `Base` theorem into `TM⁻_z`. -/
 example (φ : MinusFormula) : ⊢⁻[FrameClass.ZTime] φ.box.imp φ :=
   DerivationTree.lift (fc₁ := FrameClass.Base) (by decide)
     (.axiom [] _ (Axiom.modal_t φ) (FrameClass.base_le _))

@@ -32,7 +32,7 @@ to say "the one result carried here", which stopped being true three witnesses a
    directions.
 2. `Sat .RTime ⊊ Mod (AxiomSet .RTime)`, witnessed by the static frame over `ℚ`.
 3. `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.
-4. `TaskFrame.Deterministic` is **not L⋆-definable** (`cor:no-characterization`), witnessed by
+4. `TaskFrame.Deterministic` is **not L⁺-definable** (`cor:no-characterization`), witnessed by
    the indistinguishable pair `F°`/`F¹` over `ℝ`. The same pair refutes the converse of the
    deterministic collapse (`Semantics/PlusDeterminism.lean`): `F°` validates *Determined*
    without being deterministic.
@@ -67,7 +67,7 @@ Galois-closed, in contrast with the paper's bare classes.
 * `Independence/OrderTransfer.lean` — the frame-independent layer: hypotheses (H1) `OrderFlow`
   and (H2) `StateOccurs`, and the order-transfer lemmas the temporal cases consume.
 * `Independence/StateSetTruth.lean` — `satSet` and the state-set bridge: over an (H1)+(H2) frame,
-  L⋆ truth depends only on the world state of evaluation.
+  L⁺ truth depends only on the world state of evaluation.
 * `Independence/DeterminismUndefinable.lean` — the instantiation at `F°` and `F¹`, and
   `deterministic_not_plusDefinable`.
 

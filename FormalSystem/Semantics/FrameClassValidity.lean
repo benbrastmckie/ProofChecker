@@ -32,14 +32,14 @@ below.
 | `.Base` | `True` | — (unconstrained: `def:logical-consequence`'s own class) |
 | `.Dense` | `TaskFrame.IsDense` | `def:frame-properties`, Dense clause |
 | `.ZTime` | `TaskFrame.IsZTime` | `def:BX-z` (narrowing to ℤ-time) |
-| `.RTime` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_r clause |
+| `.RTime` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM_r clause |
 
 Two of these are the *narrowed* member of a split pair, and deliberately so — interpreting
 `.ZTime` by the bare `TaskFrame.IsDiscrete`, or `.RTime` by the bare `TaskFrame.IsComplete`,
 would widen the frame class a soundness theorem at that tag ranges over. `Semantics/FrameProperty.lean`
 records both splits and the paper sentences that force them.
 
-`.RTime` is the paper's TM⁺_r class, the `ℝ`-time row of `cor:tm-completeness`: dense and
+`.RTime` is the paper's TM_r class, the `ℝ`-time row of `cor:tm-completeness`: dense and
 Dedekind-complete, hence exactly the real flow `ℝ` up to order-and-group isomorphism.
 `TaskFrame.IsRTime`'s definition site gives the argument in full.
 
@@ -92,7 +92,7 @@ Per-constructor anchors:
 * `.Dense ↦ TaskFrame.IsDense`. `def:frame-properties`' Dense clause. `Axiom.density` (`GGφ → Gφ`)
   and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) carry `.Dense`.
 * `.ZTime ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:BX-z`'s closing
-  sentence narrows the discrete class over which BX_z and TM⁺_z are sound and complete to exactly
+  sentence narrows the discrete class over which BX_z and TM_z are sound and complete to exactly
   the frames over ℤ-time — `UZ` and `Z1` fail over every discrete order that is not Archimedean —
   and it is that narrowed class `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` are sound over.
   Interpreting `.ZTime` by the bare Discrete clause would silently widen the class under
@@ -100,7 +100,7 @@ Per-constructor anchors:
 * `.RTime ↦ TaskFrame.IsRTime`, **not** `TaskFrame.IsComplete`. `FrameClass.RTime` sits
   strictly above `FrameClass.Dense`, so `density` and `dense_indicator` are admissible in a
   `.RTime` derivation, and both are false on `ℤ` — which satisfies the bare Complete clause.
-  The dense-and-complete narrowing is what `cor:tm-completeness`'s TM⁺_r clause names — its
+  The dense-and-complete narrowing is what `cor:tm-completeness`'s TM_r clause names — its
   `ℝ`-time row — and what keeps soundness at this tag from being refutable.
 
 ## Reducibility is load-bearing

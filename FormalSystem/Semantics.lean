@@ -114,7 +114,7 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   natively on `MinusFormula`'s six constructors per `def:BL-semantics` (H and G quantify over
   strictly past/future times directly, not via `untl`/`snce`), plus the `MinusTruth.*` clause and
   derived-operator characterization lemmas
-- `MinusFrame`: a native BL frame notion *not* bound to `TaskFrame` — `MinusFrame`, `MinusFrame.swap`,
+- `MinusFrame`: a native L⁻ frame notion *not* bound to `TaskFrame` — `MinusFrame`, `MinusFrame.swap`,
   `MinusFrameTruth` (with `□` read as the universal modality over the point set) and
   `MinusFrameValid`, plus the `MinusFrameTruth.*` characterization family and the order-reversal
   transfer lemma `truth_swap`. Dropping the `Duration : TemporalOrder` group structure is what
@@ -124,15 +124,15 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
 - `MinusValidity`: the base-language mirrors — `MinusValid`, `MinusSemanticConsequence`, `MinusValidDense`,
   `MinusValidZTime` and `MinusValidRTime`, binder for binder against `MinusTruthAt`; there is
   deliberately no density-free `MinusValidComplete`, which would be refutable
-- `PlusTruth`: the truth recursion for the language L⋆ (L⁺ plus the stability modal `⊡`,
+- `PlusTruth`: the truth recursion for the language L⁺ (L plus the stability modal `⊡`,
   `FormalSystem/PlusLanguage/Formula.lean`) — `SameStateAt` (the paper's `⟨τ⟩_x`, line 1108) and
-  `PlusTruthAt`, whose seventh clause is the paper's `($\Stability$)` clause (line 1114); the
+  `PlusTruthAt`, whose seventh clause is the paper's `($\Stability$)` clause (`def:BLstar-semantics`); the
   `PlusTruth.*` clause lemmas, the S5 validities of `⊡`, and `stab_state_only` (`⊡φ` depends on
   the world state alone)
-- `PlusValidity`: the L⋆ mirrors of `Validity` — `PlusValidOnFrames` (the frame-predicate
+- `PlusValidity`: the L⁺ mirrors of `Validity` — `PlusValidOnFrames` (the frame-predicate
   primitive), `PlusValidIn`, `PlusValid` and the per-class abbreviations — plus the truth-transfer
   bridge `plusTruthAt_ofFormula` and `plusValidIn_ofFormula_iff`, the semantic conservativity of
-  L⋆ over L⁺ at every frame class
+  L⁺ over L at every frame class
 - `PlusPasting`: the history-pasting lemma (`paste`: two total histories sharing a state at `t`
   paste into a total history, by *Compositionality* and the converse convention alone), the
   purity congruences, and the pasting validities PS/US/FS/GS and their past mirrors — the

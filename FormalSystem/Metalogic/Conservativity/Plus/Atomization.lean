@@ -8,11 +8,11 @@ import FormalSystem.Semantics.PlusValidity
 import FormalSystem.Metalogic.Soundness
 
 /-!
-# Atomization — TM⁺ schema soundness over L⋆ in one lemma
+# Atomization — TM schema soundness over L⁺ in one lemma
 
-The TM⁺ schemata of TM⋆ (`PlusLanguage/Axioms.lean`) range over all of `PlusFormula`, so their
+The TM schemata of TM⁺ (`PlusLanguage/Axioms.lean`) range over all of `PlusFormula`, so their
 instances may contain `⊡`. Rather than re-proving all 45 schemata over `PlusTruthAt`, this
-module transfers the landed L⁺ validity lemmas `axiom_validIn_min` / `axiom_swap_validIn_min`
+module transfers the landed L validity lemmas `axiom_validIn_min` / `axiom_swap_validIn_min`
 (`Metalogic/Soundness.lean`) through **atomization**:
 
 1. `⊡χ` depends on the world state alone (`Semantics.stab_state_only`), so it behaves like a
@@ -21,12 +21,12 @@ module transfers the landed L⁺ validity lemmas `axiom_validIn_min` / `axiom_sw
    and each atom `p` by `e.ι (inl p)`, for an injective **encoding**
    `e.ι : Atom ⊕ PlusFormula → Atom` (`Encoding`; one exists classically because both sides are
    denumerable).
-3. `TaskModel.atomModel M e` is the L⁺ model on the same frame whose valuation reads `e.ι (inl p)`
+3. `TaskModel.atomModel M e` is the L model on the same frame whose valuation reads `e.ι (inl p)`
    as `p` and `e.ι (inr χ)` as "`⊡χ` holds at some total history through this state, at some
    time" — well defined by (1).
 4. `plusTruthAt_iff_atomize`: `PlusTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ)`.
 
-A TM⁺ schema instance over L⋆ then holds in `M` iff its L⁺ instance at the atomized parameters
+A TM schema instance over L⁺ then holds in `M` iff its L instance at the atomized parameters
 holds in `M.atomModel e`, which is the landed lemma applied on the same frame — so `fc.Sat` is
 inherited. `plusValidIn_of_tm` packages this, and `plusValidIn_swap_of_tm` its swap form via
 `atomize_swapTemporal` (atomization commutes with temporal duality up to swapping the encoding,
@@ -87,7 +87,7 @@ def Encoding.swap (e : Encoding) : Encoding where
 /-! ## Atomization -/
 
 /-- Replace each atom `p` by `e.ι (inl p)` and each maximal `⊡χ` by the fresh atom
-`e.ι (inr χ)`; structural on the six L⁺ constructors. -/
+`e.ι (inr χ)`; structural on the six L constructors. -/
 def atomize (e : Encoding) : PlusFormula → Formula
   | .atom p => .atom (e.ι (.inl p))
   | .bot => .bot
@@ -98,7 +98,7 @@ def atomize (e : Encoding) : PlusFormula → Formula
   | .stab χ => .atom (e.ι (.inr χ))
 
 /-! Push-through equations, all `rfl`: the derived operators of `PlusFormula` carry `Formula`'s
-right-hand sides, and `atomize` is structural on the L⁺ constructors. -/
+right-hand sides, and `atomize` is structural on the L constructors. -/
 
 @[simp] theorem atomize_top (e : Encoding) : atomize e top = Formula.top := rfl
 @[simp] theorem atomize_neg (e : Encoding) (φ : PlusFormula) :
@@ -139,7 +139,7 @@ theorem atomize_swapTemporal (e : Encoding) (φ : PlusFormula) :
 
 variable {F : TaskFrame}
 
-/-- The L⁺ model on `M`'s frame that reads the encoded atoms back: `e.ι (inl p)` as `p`, and
+/-- The L model on `M`'s frame that reads the encoded atoms back: `e.ι (inl p)` as `p`, and
 `e.ι (inr χ)` as "`⊡χ` holds at some total history through this state, at some time". The
 second clause is well defined as a state property by `stab_state_only`. -/
 def _root_.FormalSystem.Semantics.TaskModel.atomModel (M : TaskModel F) (e : Encoding) :
@@ -150,8 +150,8 @@ def _root_.FormalSystem.Semantics.TaskModel.atomModel (M : TaskModel F) (e : Enc
       τ.states t (hτ t) = w ∧ PlusTruthAt M τ t (.stab χ))
 
 /--
-**The transfer lemma.** At a total history, an L⋆ formula is true in `M` iff its atomization is
-true in the atomized model. By induction on `φ`, `generalizing τ t`: the six L⁺ cases are
+**The transfer lemma.** At a total history, an L⁺ formula is true in `M` iff its atomization is
+true in the atomized model. By induction on `φ`, `generalizing τ t`: the six L cases are
 congruence (the `box` case ranges over total `σ`), the `atom` case is injectivity of the
 encoding, and the `stab` case is `stab_state_only` — the `→` direction witnesses `τ` itself, the
 `←` direction transports the witnessing history's `⊡χ` to `τ` through the shared state.
@@ -200,7 +200,7 @@ theorem plusTruthAt_iff_atomize (M : TaskModel F) (e : Encoding) (φ : PlusFormu
 /-! ## The two helpers for the dispatch lemmas -/
 
 /--
-**TM⁺ schema soundness over L⋆.** If the atomization of `φ` is a TM⁺ axiom instance admissible
+**TM schema soundness over L⁺.** If the atomization of `φ` is a TM axiom instance admissible
 at `fc`, then `φ` is `PlusValidIn fc`: `axiom_validIn` on the atomized model (same frame, so
 `fc.Sat` is inherited), transported back through `plusTruthAt_iff_atomize`.
 -/
@@ -211,8 +211,8 @@ theorem plusValidIn_of_tm {fc : FrameClass} (e : Encoding) (φ : PlusFormula)
       ((axiom_validIn ax h).apply_total F hF (M.atomModel e) τ hτ t)
 
 /--
-**TM⁺ schema swap-soundness over L⋆.** If the atomization of `φ` **under the conjugated
-encoding** is a TM⁺ axiom instance admissible at `fc`, then `φ.swapTemporal` is
+**TM schema swap-soundness over L⁺.** If the atomization of `φ` **under the conjugated
+encoding** is a TM axiom instance admissible at `fc`, then `φ.swapTemporal` is
 `PlusValidIn fc`: `axiom_swap_validIn` on the atomized model, with `atomize_swapTemporal`
 rewriting the target.
 -/

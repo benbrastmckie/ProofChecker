@@ -686,7 +686,7 @@ is either `≃+o ℤ` or densely ordered, and by `complete_not_dense_iso_int` th
 `≃+o ℤ` on the nose. So this predicate's model class is `{ℤ, ℝ}` up to isomorphism and its
 theory is `Th(ℤ) ∩ Th(ℝ)`. **It is the class of no paper system.** `cor:tm-completeness` names
 four rows, and the one this predicate could be mistaken for — the `ℝ`-time row, `TM_r` in the
-paper's notation and `TM⁺_r` in this tree's — is weak completeness over the dense-and-complete
+paper's notation and `TM_r` in this tree's — is weak completeness over the dense-and-complete
 class, which is `FrameClass.RTime` / `ValidRTime`, not this predicate. `ValidComplete` is
 repository-only; see `Metalogic/Conservativity.lean` for how the two families of system name
 line up.

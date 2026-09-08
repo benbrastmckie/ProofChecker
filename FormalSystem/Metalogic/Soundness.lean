@@ -118,15 +118,15 @@ derivations by the `h.minFrameClass ≤ .Dense` gate on the axiom rule, their
 comes from `SoundnessLemmas`' well-founded descent on succ/pred chains, reached through
 `axiom_validIn`.
 
-## Soundness for the base language BL
+## Soundness for the base language L⁻
 
 The four theorems here are stated over `FormalSystem.Syntax.Formula`, the `untl`/`snce`-primitive
-language BL⁺. Their counterparts for the tense-primitive base language BL live in
+language L. Their counterparts for the tense-primitive base language L⁻ live in
 `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`: `minus_soundness`, `minus_soundness_dense`,
 `minus_soundness_ztime` and `minus_soundness_rtime`, each obtained by composing
 `Metalogic/Conservativity/Backward.lean`'s `translate` with the theorem of the same frame class below,
-then crossing the truth-transfer bridge `truthAt_tr` into the native BL semantics of
-`Semantics/MinusTruth.lean`. That module also carries the BL consistency corollaries
+then crossing the truth-transfer bridge `truthAt_tr` into the native L⁻ semantics of
+`Semantics/MinusTruth.lean`. That module also carries the L⁻ consistency corollaries
 `minus_not_derivable_nil_bot` and `minus_not_derivable_nil_bot_ztime`, which mirror
 `not_derivable_nil_bot` and `not_derivable_nil_bot_ztime` below — and inherit their
 frame-class asymmetry, for the same reason: there is no dense or Dedekind-complete witness frame

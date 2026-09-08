@@ -43,7 +43,7 @@ recursion needs from it is proved once, against the hypotheses alone.
 The recursion these lemmas serve mentions **only the order on `W`** and neither frame's task
 relation. That is the crux clause of `cor:no-characterization`: two frames whose histories are
 order-isomorphisms of the same order onto the same state order satisfy the same recursion, so
-they validate exactly the same L⋆ formulas — even when one is deterministic and the other is
+they validate exactly the same L⁺ formulas — even when one is deterministic and the other is
 not. Written as two parallel inductions the point would be invisible; written once against (H1)
 and (H2) it is the statement of this module.
 
@@ -51,8 +51,8 @@ and (H2) it is the statement of this module.
 
 The two frames this is instantiated at (`Independence/DriftFrame.lean` and
 `Independence/RealTranslationFrame.lean`) **agree** on every store-free, recall-free sentence
-while differing in determinism. The argument is *elimination by indistinguishability*: no L⋆
-sentence can tell them apart, so no set of L⋆ sentences defines determinism. Calling them a
+while differing in determinism. The argument is *elimination by indistinguishability*: no L⁺
+sentence can tell them apart, so no set of L⁺ sentences defines determinism. Calling them a
 "separating pair" inverts the mechanism, and has already misled one reader into expecting the
 non-deterministic member to *refute* *Determined* — which it in fact validates.
 

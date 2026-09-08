@@ -498,7 +498,7 @@ The four frame classes form a partial order:
   (`Semantics/DurationClassification.lean`) that is not merely "ℝ-like": a Dedekind-complete
   duration group is either `≃+o ℤ` or densely ordered, so once the density binder is imposed
   the class contains, up to order-and-group isomorphism, only the real flow. `FrameClass.RTime`
-  is therefore the paper's **TM⁺_r** — the `ℝ`-time row of `cor:tm-completeness`.
+  is therefore the paper's **TM_r** — the `ℝ`-time row of `cor:tm-completeness`.
 - Dense and ZTime are incomparable: density contradicts discreteness.
 - ZTime and RTime are likewise incomparable, and `RTime ≰ Dense`.
 

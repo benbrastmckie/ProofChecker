@@ -23,9 +23,9 @@ The base-language mirror of `Metalogic/SetConsequence.lean`'s consequence-form c
 
 ## Main Results
 
-- `minusSetConsequence_iff_image` — BL set-consequence is BL⁺ set-consequence of the `tr`-image
+- `minusSetConsequence_iff_image` — L⁻ set-consequence is L set-consequence of the `tr`-image
 - `tr_foldr_imp` — `tr` commutes with the `foldr`-implication
-- `minusCompact_of_compact` — `Compact fc → MinusCompact fc`, by pulling the BL⁺ witness list back
+- `minusCompact_of_compact` — `Compact fc → MinusCompact fc`, by pulling the L witness list back
   along `tr`
 - `minusCompactBase`, `minusCompactDense` — the two positive rows
 
@@ -33,16 +33,16 @@ The base-language mirror of `Metalogic/SetConsequence.lean`'s consequence-form c
 
 The **consequence form** (the mirror of `Compact`, `SetConsequence.lean`), not the
 model-existence form: the witness list pulls back along `tr` by a straightforward induction
-(`exists_preimage_list`), because every member of the BL⁺ witness lies in `tr '' Γ` and `tr`
+(`exists_preimage_list`), because every member of the L witness lies in `tr '' Γ` and `tr`
 commutes with `imp` definitionally.
 
 ## The `.ZTime` and `.RTime` rows do NOT transfer
 
-BL⁺'s non-compactness at `.ZTime` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
+L's non-compactness at `.ZTime` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
 `.RTime` (`notCompactRTime`, witness built from `K⁺`-shaped `untl` guards) uses formulas
 **outside the range of `tr`**: `Formula.next` is `untl bot _` and `K⁺` is a top-level `untl`,
 while by `MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
-refutation transfers to the base language, and no BL non-compactness claim is made at those two
+refutation transfers to the base language, and no L⁻ non-compactness claim is made at those two
 classes here. Only the two positive rows are delivered; whether `MinusCompact .ZTime` or
 `MinusCompact .RTime` holds is left open.
 
@@ -81,7 +81,7 @@ def MinusCompact (fc : FrameClass) : Prop :=
   ∀ (Γ : Set MinusFormula) (φ : MinusFormula), MinusSetSemanticConsequenceOn fc Γ φ →
     ∃ L : List MinusFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ MinusValidIn fc (L.foldr MinusFormula.imp φ)
 
-/-- BL set-consequence over the frames satisfying `P` is BL⁺ set-consequence of the `tr`-image
+/-- L⁻ set-consequence over the frames satisfying `P` is L set-consequence of the `tr`-image
 over the same frames, by the truth-transfer bridge `truthAt_tr` on every premise and on the
 conclusion. -/
 theorem minusSetConsequenceOnFrames_iff_image (P : TaskFrame → Prop) (Γ : Set MinusFormula)
@@ -111,7 +111,7 @@ theorem tr_foldr_imp (L : List MinusFormula) (φ : MinusFormula) :
   | nil => rfl
   | cons ψ L ih => simp only [List.foldr_cons, List.map_cons, tr_imp, ih]
 
-/-- Every list of BL⁺ formulas drawn from `tr '' Γ` is the `tr`-image of a list drawn from `Γ`. -/
+/-- Every list of L formulas drawn from `tr '' Γ` is the `tr`-image of a list drawn from `Γ`. -/
 theorem exists_preimage_list (Γ : Set MinusFormula) :
     ∀ L' : List Formula, (∀ ψ ∈ L', ψ ∈ tr '' Γ) →
       ∃ L : List MinusFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ L.map tr = L'
@@ -127,7 +127,7 @@ theorem exists_preimage_list (Γ : Set MinusFormula) :
       · exact hL x hx
 
 /--
-**Transfer of compactness along `tr`.** From `Compact fc`, obtain the BL⁺ witness list for the
+**Transfer of compactness along `tr`.** From `Compact fc`, obtain the L witness list for the
 image consequence `tr '' Γ ⊨ tr φ`, pull it back along `tr` (`exists_preimage_list`), and read
 the `MinusValidIn` conclusion off `minusValidIn_iff_validIn_tr` after rewriting with `tr_foldr_imp`.
 -/

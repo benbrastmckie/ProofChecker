@@ -9,15 +9,15 @@ import FormalSystem.ProofSystem.Derivation
 import FormalSystem.ProofSystem.Derivable
 
 /-!
-# `PlusDerivationTree` — TM⋆'s proof system, and backward conservativity over TM⁺
+# `PlusDerivationTree` — TM⁺'s proof system, and backward conservativity over TM
 
 A constructor-for-constructor mirror of `FormalSystem.ProofSystem.DerivationTree` over
 `PlusFormula`, with `PlusAxiom` in the `axiom` rule. The mirror is deliberate: it is what makes
 the embedding `PlusDerivationTree.ofTM` a seven-case structural recursion with one case per
 rule, and what lets the soundness companion recursion
-(`Metalogic/Conservativity/Plus/PlusSoundness.lean`) transcribe TM⁺'s arm for arm.
+(`Metalogic/Conservativity/Plus/PlusSoundness.lean`) transcribe TM's arm for arm.
 
-## Inference rules (7, matching TM⁺ exactly)
+## Inference rules (7, matching TM exactly)
 
 1. `axiom` — a `PlusAxiom` instance, gated by `ax.minFrameClass ≤ fc`
 2. `assumption`
@@ -34,29 +34,29 @@ mirror that `ofTM` and the soundness recursion rely on.
 
 ## Backward conservativity
 
-`PlusAxiom.ofTM` sends every TM⁺ axiom instance to its re-declared TM⋆ twin at the embedded
+`PlusAxiom.ofTM` sends every TM axiom instance to its re-declared TM⁺ twin at the embedded
 parameters; each of its 45 arms is `rfl`-shaped because the derived operators of
 `PlusLanguage/Formula.lean` carry `Formula`'s right-hand sides verbatim, and
 `minFrameClass_ofTM` records that the frame class is preserved. `PlusDerivationTree.ofTM`
 then lifts derivations, and `plusDerivable_of_derivable` is the `Prop`-level statement:
 
 ```
-TM⁺ ⊢[fc] φ  ⟹  TM⋆ ⊢[fc] ofFormula φ,   at every frame class and every context.
+TM ⊢[fc] φ  ⟹  TM⁺ ⊢[fc] ofFormula φ,   at every frame class and every context.
 ```
 
 Unlike the base-language bridge (`Metalogic/Conservativity/Backward.lean`), no axiom-discharge
 table is needed: the embedding is constructor-to-constructor, so the `axiom` case is one line.
-The **forward** direction — `TM⋆ ⊢ ofFormula φ ⟹ TM⁺ ⊢ φ` — is proved semantically in
-`Metalogic/Conservativity/Plus/Forward.lean` from TM⋆ soundness and the TM⁺ completeness
-engines; it needs no TM⋆ completeness.
+The **forward** direction — `TM⁺ ⊢ ofFormula φ ⟹ TM ⊢ φ` — is proved semantically in
+`Metalogic/Conservativity/Plus/Forward.lean` from TM⁺ soundness and the TM completeness
+engines; it needs no TM⁺ completeness.
 
 ## Notation
 
-`Γ ⊢⁺[fc] φ` and `⊢⁺[fc] φ`, distinct from TM⁺'s `⊢[fc]` and TM's `⊢⁻[fc]`.
+`Γ ⊢⁺[fc] φ` and `⊢⁺[fc] φ`, distinct from TM's `⊢[fc]` and TM's `⊢⁻[fc]`.
 
 ## References
 
-* `FormalSystem/ProofSystem/Derivation.lean` — the TM⁺ counterpart being mirrored
+* `FormalSystem/ProofSystem/Derivation.lean` — the TM counterpart being mirrored
 * `FormalSystem/MinusLanguage/Derivation.lean` — the base-language mirror, the same shape
 -/
 
@@ -66,7 +66,7 @@ open FormalSystem.Syntax
 open FormalSystem.ProofSystem (FrameClass Axiom DerivationTree)
 
 /--
-Derivation tree for TM⋆, parameterized by frame class. `Type`-valued, like its TM⁺ counterpart,
+Derivation tree for TM⁺, parameterized by frame class. `Type`-valued, like its TM counterpart,
 so that the soundness recursion can match on it and `height` is computable.
 -/
 inductive PlusDerivationTree (fc : FrameClass) : PlusContext → PlusFormula → Type where
@@ -157,14 +157,14 @@ theorem mp_height_gt_right {fc : FrameClass} {Γ : PlusContext} {φ ψ : PlusFor
 
 end PlusDerivationTree
 
-/-- Prop-valued derivability in TM⋆, mirroring `ProofSystem.Derivable`. -/
+/-- Prop-valued derivability in TM⁺, mirroring `ProofSystem.Derivable`. -/
 def PlusDerivable (fc : FrameClass) (Γ : PlusContext) (φ : PlusFormula) : Prop :=
   Nonempty (PlusDerivationTree fc Γ φ)
 
-/-- Derivability in TM⋆ from context `Γ` at frame class `fc`. -/
+/-- Derivability in TM⁺ from context `Γ` at frame class `fc`. -/
 notation:50 Γ " ⊢⁺[" fc "] " φ => PlusDerivationTree fc Γ φ
 
-/-- Theoremhood in TM⋆ at frame class `fc`. -/
+/-- Theoremhood in TM⁺ at frame class `fc`. -/
 notation:50 "⊢⁺[" fc "] " φ => PlusDerivationTree fc [] φ
 
 /-- `PlusDerivable` is monotone in the frame class. -/
@@ -182,10 +182,10 @@ def stabNecessitation {fc : FrameClass} {φ : PlusFormula}
     (.axiom [] _ (PlusAxiom.box_stab φ) (FrameClass.base_le fc))
     (.necessitation φ d)
 
-/-! ## Backward conservativity: TM⁺ derivations embed into TM⋆ -/
+/-! ## Backward conservativity: TM derivations embed into TM⁺ -/
 
 /--
-Every TM⁺ axiom instance is a TM⋆ axiom instance under the embedding. Each arm is
+Every TM axiom instance is a TM⁺ axiom instance under the embedding. Each arm is
 `rfl`-shaped: `ofFormula` commutes definitionally with every derived operator, so the embedded
 schema instance **is** the re-declared constructor at the embedded parameters. Any drift between
 `Axiom` and `PlusAxiom` fails to typecheck here.
@@ -245,7 +245,7 @@ theorem PlusAxiom.minFrameClass_ofTM {φ : Formula} (ax : Axiom φ) :
   cases ax <;> rfl
 
 /--
-**The backward conservativity bridge.** Every TM⁺ derivation becomes a TM⋆ derivation of its
+**The backward conservativity bridge.** Every TM derivation becomes a TM⁺ derivation of its
 embedding, at the same frame class and over the embedded context. Seven cases, one per rule; the
 `axiom` case is `PlusAxiom.ofTM`, the `temporal_duality` case transports along
 `ofFormula_swapTemporal`, and the rest are structural.
@@ -269,7 +269,7 @@ def PlusDerivationTree.ofTM {fc : FrameClass} {Γ : Context} {φ : Formula} :
           obtain ⟨y, hy, rfl⟩ := List.mem_map.mp hx
           exact List.mem_map_of_mem (h hy))
 
-/-- **Backward conservativity, `Prop`-level**: `TM⁺ ⊢[fc] φ ⟹ TM⋆ ⊢[fc] ofFormula φ`, at every
+/-- **Backward conservativity, `Prop`-level**: `TM ⊢[fc] φ ⟹ TM⁺ ⊢[fc] ofFormula φ`, at every
 frame class and context. -/
 theorem plusDerivable_of_derivable {fc : FrameClass} {Γ : Context} {φ : Formula}
     (h : ProofSystem.Derivable fc Γ φ) : PlusDerivable fc (ofCtx Γ) (ofFormula φ) :=
@@ -301,7 +301,7 @@ theorem plus_backward_rtime {φ : Formula}
 
 /-! ### Smoke tests -/
 
-/-- MF at a `⊡`-formula is an axiom instance of TM⋆ — the instance `ofTM` alone could not
+/-- MF at a `⊡`-formula is an axiom instance of TM⁺ — the instance `ofTM` alone could not
 supply. -/
 example (p : Atom) :
     ⊢⁺[FrameClass.Base] (PlusFormula.box (PlusFormula.stab (PlusFormula.atom p))).imp

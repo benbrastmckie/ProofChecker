@@ -37,7 +37,7 @@ together with the two **past mirrors** that temporal duality needs (`swapTempora
 | PS, conjuncts exchanged | `⟐ψ⁻ ∧ ⟐φ⁺ → ⟐(ψ⁻ ∧ φ⁺)` | `paste_valid'` |
 | **SS** (past pasting) | `(α⁺ S ⟐φ⁻) → ⟐(α⁺ S φ⁻)` | `snce_dstab_valid` |
 
-PS and US are the two pasting **axioms** of TM⋆ (`PlusLanguage/Axioms.lean`); FS, GS and the
+PS and US are the two pasting **axioms** of TM⁺ (`PlusLanguage/Axioms.lean`); FS, GS and the
 mirrors are derived (the mirrors by TD). The purity restrictions are **necessary**: the
 refutations in `Semantics/PlusNonValidities.lean` show that `G⊡p → ⊡Gp` fails even for atoms
 and that `⊡GPp → G⊡Pp` fails once a past operator enters the scope.
@@ -59,7 +59,7 @@ stability-modal probes recorded with the research on the `⊡` axiomatization; `
 
 ## Tags
 
-star-language · pasting · stability-modal
+plus-language · pasting · stability-modal
 -/
 
 namespace FormalSystem.Semantics

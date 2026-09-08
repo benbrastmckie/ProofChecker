@@ -37,7 +37,7 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 | `OrderTransfer.lean` | 197 | The frame-independent layer: `OrderFlow` (H1), `StateOccurs` (H2), and the order-transfer lemmas — `future_image`, `past_image`, `between`, `between_past`, `state_image`. |
 | `RationalWitness.lean` | 206 | `rat_not_complete` — `ℚ` is not Dedekind-complete, written out because Mathlib carries no statement in this shape — and the static frame over `ℚ` as a member of `Mod (AxiomSet .Dedekind)` outside `Sat .Dedekind`, with the Dedekind sandwich. |
 | `RealTranslationFrame.lean` | 189 | `realOrder`; `F¹`, the deterministic translation flow over `ℝ`, built through `ShiftSet` (the only route on which the world-set characterization elaborates); `f1_deterministic`, `f1_total_eq_orbit`, `f1_eq_of_states_eq`. |
-| `StateSetTruth.lean` | 240 | `satSet` and `plusTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⋆ truth depends only on the world state of evaluation. Plus `plusValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
+| `StateSetTruth.lean` | 240 | `satSet` and `plusTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⁺ truth depends only on the world state of evaluation. Plus `plusValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
 | `StaticFrame.lean` | 323 | The static frame at an arbitrary duration group: every nonzero duration loops, so truth is time-invariant, and the `untl`/`snce` clauses collapse into a small constant-truth calculus (general, dense and discrete forms, plus `K⁺`/`K⁻` and `Axiom.z1`). Turns every later axiom check into a rewrite. |
 <!-- END GENERATED -->
 
@@ -78,8 +78,8 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 
 ---
 
-**Last verified**: 2026-09-02
+**Last verified**: 2026-09-08
 
 ---
 
-*Last verified: 2026-09-07*
+*Last verified: 2026-09-08*

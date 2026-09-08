@@ -80,7 +80,7 @@ All four report `[propext]` only — in particular **no `Classical.choice`**.
 
 ## Tags
 
-star-language · determinism · stability-modal · app:deterministic
+plus-language · determinism · stability-modal · app:deterministic
 -/
 
 namespace FormalSystem.Semantics

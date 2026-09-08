@@ -9,7 +9,7 @@ import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.BXCanonical
 
 /-!
-# The `(Sp)` witness — validity, and the TM⁺ half of CEB
+# The `(Sp)` witness — validity, and the TM half of CEB
 
 `(Sp) := □(DF φ) ∨ □(DN ψ)` — the *reconstruction* (not the source's formula; see the
 Provenance section below) of the CEB witness `Conservativity.lean`'s module docstring names.
@@ -21,14 +21,14 @@ paragraph).
 
 ## What this does **not** do
 
-CEB's failing half — the schema `(Sp)` is not a TM-theorem — is out of scope *here* and is not
+CEB's failing half — the schema `(Sp)` is not a TM⁻-theorem — is out of scope *here* and is not
 claimed or approached by anything in this module: `MinusTruthAt`/`minus_soundness` are
-`TaskFrame`-bound and TM⁺ is *unsound* on the two-fibre class, so the composition route this
+`TaskFrame`-bound and TM is *unsound* on the two-fibre class, so the composition route this
 module uses is unavailable for that half (report §6.2).
 
 It is, however, no longer an open claim. It is discharged in
 `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`, which builds the native
-(`TaskFrame`-free) semantics of `FormalSystem/Semantics/MinusFrame.lean`, proves BL soundness for TM
+(`TaskFrame`-free) semantics of `FormalSystem/Semantics/MinusFrame.lean`, proves L⁻ soundness for TM⁻
 directly against it, and refutes the atomic instance on the disjoint sum `ℤ ⊕ ℝ` —
 `not_derivable_sp`, and its corollary `tmMinusCompleteBase_refuted : ¬ TMMinusCompleteBase`. Note the claim
 there is **schema-level**: `□(DF ⊤)` holds on every `MinusFrame`, so `Sp ⊤ ψ` is *not* refuted, and
@@ -56,11 +56,11 @@ section, which is the authority on that history.
 
 - `minusValid_df_or_dn` — the un-boxed sharpening: `DF φ ∨ DN ψ` is valid on every task frame
 - `minusValid_sp` — `MinusValid (Sp φ ψ)`
-- `sp_translate` — `⊢[Base] tr (Sp φ ψ)`, the CEB witness's TM⁺ half
+- `sp_translate` — `⊢[Base] tr (Sp φ ψ)`, the CEB witness's TM half
 
 ## References
 
-* The TM-completeness status report (`01_tm-completeness-status.md`),
+* The TM⁻-completeness status report (`01_tm-completeness-status.md`),
   §4.1, §4.2, §6.2
 * `FormalSystem/Metalogic/Conservativity.lean` — the CEB/CEF refutation record and the forward
   prohibition this module never approaches
@@ -126,7 +126,7 @@ theorem minusValid_sp (φ ψ : MinusFormula) : MinusValid (Sp φ ψ) := by
     exact df_valid_of_isLeast_pos hd M σ t φ
 
 /--
-**`⊢[Base] tr (Sp φ ψ)`** — the CEB witness's TM⁺ half, the analogue of
+**`⊢[Base] tr (Sp φ ψ)`** — the CEB witness's TM half, the analogue of
 `Conservativity.z1_translate`. Derived from `minusValid_sp` via `minusValid_iff_valid_tr` then
 `BXCanonical.completeness`, with **no appeal to the source's TMP-NB/M5 derivation** — the route
 here is purely the completeness composition.

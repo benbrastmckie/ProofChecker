@@ -191,7 +191,7 @@ Because `Dense ≤ Dedekind`, a Dedekind derivation admits the two density axiom
   on ℤ, which is nonetheless conditionally complete.
 - **Frame**: `DenselyOrdered D` plus Dedekind completeness
 
-**`FrameClass.RTime` *is* the paper's TM⁺_r.** The live `cor:tm-completeness` gives TM⁺_r as
+**`FrameClass.RTime` *is* the paper's TM_r.** The live `cor:tm-completeness` gives TM_r as
 weakly complete over `ℝ`-time, the dense and Dedekind-complete orders, and `FrameClass.RTime` is
 exactly that class (`DenselyOrdered D` plus Dedekind completeness). An earlier revision of this
 file described the paper's complete-order system as completeness *simpliciter*, with models
@@ -242,16 +242,16 @@ invariant check allowlists it by name (check C8).
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
 | `Automation.lean` | 100 | Re-export for Automation submodule |
-| `MinusLanguage.lean` | 44 | Re-export for MinusLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 29 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 27 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
+| `MinusLanguage.lean` | 45 | Re-export for MinusLanguage submodule |
+| `PlusLanguage.lean` | 49 | Re-export for PlusLanguage submodule (L⁺ = L plus the stability modal `⊡`, and its logic TM⁺) |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 255 | Re-export for Semantics submodule |
-| `PlusLanguage.lean` | 49 | Re-export for PlusLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |
 | `Theorems.lean` | 90 | Re-export for Theorems submodule |
 <!-- END GENERATED -->
@@ -263,7 +263,7 @@ invariant check allowlists it by name (check C8).
 | ForMathlib | `ForMathlib.lean` | Mathlib-shaped extensions intended for upstreaming (proper/maximal/prime-filter API of `Order.PFilter`, `Order.PrimeFilter`); imports nothing from `FormalSystem.*` |
 | Syntax | `Syntax.lean` | Formula type, atoms, contexts, subformula closure |
 | ProofSystem | `ProofSystem.lean` | 45 axiom constructors, 7 inference rules, derivation trees |
-| PlusLanguage | `PlusLanguage.lean` | `PlusFormula` (L⁺ plus `⊡`), `PlusAxiom` (the 45 TM⁺ schemata over `PlusFormula` plus the `⊡` schemata), `PlusDerivationTree`, the embedding `ofFormula` and backward conservativity |
+| PlusLanguage | `PlusLanguage.lean` | `PlusFormula` (L plus `⊡`), `PlusAxiom` (the 45 TM schemata over `PlusFormula` plus the `⊡` schemata), `PlusDerivationTree`, the embedding `ofFormula` and backward conservativity |
 
 ### Layer 1 — Semantics
 
@@ -308,7 +308,7 @@ invariant check allowlists it by name (check C8).
 | [Examples/](Examples/README.md) | Yes | Pedagogical examples |
 | `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
 | `MinusLanguage/` | No | Shared base-language definitions (no README yet) |
-| [PlusLanguage/](PlusLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
+| [PlusLanguage/](PlusLanguage/README.md) | Yes | L⁺ — L plus the stability modal `⊡` — and its logic TM⁺ |
 | [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — retired code, excluded from the live build; no `.olean` is produced under any `Boneyard` path. Its README is the single source for its counts |
 
 ## Quick Reference
@@ -322,13 +322,13 @@ invariant check allowlists it by name (check C8).
 - **Task Frames**: `Semantics/TaskFrame.lean` - Task frame structure
 - **Models**: `Semantics/TaskModel.lean` - Models with valuation
 - **Truth**: `Semantics/Truth.lean` - Truth evaluation
-- **BL truth**: `Semantics/MinusTruth.lean` - Native truth evaluation for the base language BL
+- **L⁻ truth**: `Semantics/MinusTruth.lean` - Native truth evaluation for the base language L⁻
 - **Validity**: `Semantics/Validity.lean` - Semantic consequence
-- **BL validity**: `Semantics/MinusValidity.lean` - Base-language validity predicates
+- **L⁻ validity**: `Semantics/MinusValidity.lean` - Base-language validity predicates
 - **Soundness**: `Metalogic/Soundness.lean` - Soundness theorem
-- **BL soundness**: `Metalogic/Conservativity/MinusLanguageSoundness.lean` - Soundness for BL, by composition
-- **L⋆ truth and validity**: `Semantics/PlusTruth.lean`, `Semantics/PlusValidity.lean` - Native truth evaluation and validity for L⋆
-- **TM⋆ soundness and conservativity**: `Metalogic/Conservativity/Plus.lean` - Soundness of TM⋆ at every class, conservativity over TM⁺ in both directions
+- **L⁻ soundness**: `Metalogic/Conservativity/MinusLanguageSoundness.lean` - Soundness for L⁻, by composition
+- **L⁺ truth and validity**: `Semantics/PlusTruth.lean`, `Semantics/PlusValidity.lean` - Native truth evaluation and validity for L⁺
+- **TM⁺ soundness and conservativity**: `Metalogic/Conservativity/Plus.lean` - Soundness of TM⁺ at every class, conservativity over TM in both directions
 - **Completeness**: `Metalogic/BXCanonical/Completeness.lean` - Canonical model
 - **Perpetuity**: `Theorems/Perpetuity.lean` - P1-P6 principles
 - **Tactics**: `Automation/Tactics/Commands.lean` - Custom tactics
@@ -394,6 +394,6 @@ For Bimodal-specific guides and references, see [docs/](../docs/README.md):
 
 ---
 
-*Last verified: 2026-09-07 — `lake build` clean and sorry-free, `scripts/check-module-invariants.sh`
+*Last verified: 2026-09-08 — `lake build` clean and sorry-free, `scripts/check-module-invariants.sh`
 all-green (including the widened C14 and the new C15), `scripts/check-paper-definitions.sh` exit 0,
 `scripts/typst-sync-check.sh` PASS.*

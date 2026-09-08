@@ -29,7 +29,7 @@ every total history and every time. On a flow frame the total histories are *exa
 translates (`multiFamGen_total_eq_range`), so "every total history, every time" is "every point of
 `FamIdx × ↑D`".
 
-A `box` clause carrying a time argument would therefore be a mis-transcription, and would make BL
+A `box` clause carrying a time argument would therefore be a mis-transcription, and would make L⁻
 over task frames look like a product logic with same-time alignment validities, which it is not.
 
 ## What this module is, and what it is not
@@ -112,7 +112,7 @@ def chainSat (v : FamIdx × (D : Type) → Atom → Prop) :
   | q, .allFuture φ => ∀ s : (D : Type), q.2 < s → chainSat v (q.1, s) φ
 
 /--
-**The truth lemma.** BL truth along the translate history `multiFamHistoryGen f w₀`, at time `t`,
+**The truth lemma.** L⁻ truth along the translate history `multiFamHistoryGen f w₀`, at time `t`,
 is `chainSat` at the point `(f, w₀ + t)`.
 
 Induction on `φ`, `generalizing f w₀ t` — mandatory, since three of the six cases need the
@@ -191,7 +191,7 @@ from `chainSat` back to `MinusValidIn`. -/
 
 The single interface a future base-language canonical model consumes. Given a valuation `v`, a
 point `q` at which `φ` fails, and *any* frame-class tag the flow frame over `D` satisfies, `φ` is
-not `fc`-BL-valid.
+not `fc`-L⁻-valid.
 
 Every ingredient is already generic: the model is `⟨v⟩` (`TaskModel` has one field), the history
 is `multiFamHistoryGen q.1 q.2`, its totality is `multiFamHistoryGen_total`, and the bridge is

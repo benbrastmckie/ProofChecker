@@ -11,9 +11,9 @@ import FormalSystem.Metalogic.Algebraic.FlowFrame
 /-!
 # Neither closed row's obstruction transfers to the dense classes
 
-Both frame classes over which the forward direction of `L ⊂ L⁺` is **refuted** are refuted by a
+Both frame classes over which the forward direction of `L⁻ ⊂ L` is **refuted** are refuted by a
 *dichotomy witness*: a base-language schema that is valid over the class because the class splits
-into two H/G-distinguishable halves, while no single TM-derivation covers both halves at once.
+into two H/G-distinguishable halves, while no single TM⁻-derivation covers both halves at once.
 
 | Row | Witness | Why it separates |
 |---|---|---|
@@ -99,7 +99,7 @@ open FormalSystem.Metalogic.Algebraic
 /-! ## The `.Base` witness is a theorem of both open systems -/
 
 /--
-**`Sp` is a `TM_d` theorem.**
+**`Sp` is a `TM⁻_d` theorem.**
 
 `Sp φ ψ` is `□(DF φ) ∨ □(DN ψ)`, and `.or` unfolds to `(·).neg.imp (·)`, so it suffices to derive
 the *right* disjunct outright and weaken. The right disjunct's inner formula
@@ -133,7 +133,7 @@ noncomputable def spDerivableDense (φ ψ : MinusFormula) :
   DerivationTree.modus_ponens [] _ _ s boxdn
 
 /--
-**`Sp` is a `TM_dc` theorem**, by the same derivation at `.RTime`.
+**`Sp` is a `TM⁻_dc` theorem**, by the same derivation at `.RTime`.
 
 `Axiom.dn`'s `minFrameClass` is `.Dense` and `Dense ≤ RTime` holds definitionally, so the only
 change from `spDerivableDense` is the side-condition term. There is no frame-class weakening
@@ -165,7 +165,7 @@ as data — `DerivationTree`-valued results included — so no linter exemption 
 given.
 
 They read as derivability facts rather than as constructions, and every neighbouring result in
-this namespace that says something about what TM does or does not derive is snake_case —
+this namespace that says something about what TM⁻ does or does not derive is snake_case —
 `z1_translate`, `not_derivable_sp`, `not_minus_derivable_z1`, `minusValid_sp`. Those are snake_case
 because they are `Prop`-valued proofs; these two say the same kind of thing but are `def`s only
 because `⊢⁻[fc] φ` is `DerivationTree` rather than `Nonempty ∘ DerivationTree`. That is a fact

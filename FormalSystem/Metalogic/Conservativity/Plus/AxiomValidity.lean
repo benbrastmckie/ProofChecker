@@ -9,9 +9,9 @@ import FormalSystem.Semantics.PlusPasting
 import FormalSystem.PlusLanguage.Axioms
 
 /-!
-# Validity and swap-validity of every TM⋆ axiom schema
+# Validity and swap-validity of every TM⁺ axiom schema
 
-The two dispatch lemmas of TM⋆ soundness, one arm per `PlusAxiom` constructor and no wildcard
+The two dispatch lemmas of TM⁺ soundness, one arm per `PlusAxiom` constructor and no wildcard
 arm — so that a constructor added to `PlusAxiom` fails the build here until its arm is supplied:
 
 - `plusAxiom_validIn_min` — every schema is valid at its own `minFrameClass`;
@@ -20,12 +20,12 @@ arm — so that a constructor added to `PlusAxiom` fails the build here until it
 
 The second is what makes the `temporal_duality` rule sound **semantically**
 (`Conservativity/Plus/PlusSoundness.lean`, the companion recursion): no proof-theoretic
-mirror argument is used, since the TM⁺ axiom set is not mirror-closed.
+mirror argument is used, since the TM axiom set is not mirror-closed.
 
 ## How the arms close
 
-- **The 45 TM⁺ arms** are discharged by atomization (`Conservativity/Plus/Atomization.lean`):
-  each is `plusValidIn_of_tm` (resp. `plusValidIn_swap_of_tm`) applied to the landed L⁺
+- **The 45 TM arms** are discharged by atomization (`Conservativity/Plus/Atomization.lean`):
+  each is `plusValidIn_of_tm` (resp. `plusValidIn_swap_of_tm`) applied to the landed L
   schema at the atomized parameters, under one fixed encoding. No schema is re-proved over
   `PlusTruthAt`.
 - **The six S5/bridge `⊡` arms** are the definitional validities of `Semantics/PlusTruth.lean`
@@ -39,7 +39,7 @@ mirror argument is used, since the TM⁺ axiom set is not mirror-closed.
 ## References
 
 * `FormalSystem/Metalogic/Soundness.lean` — `axiom_validIn_min`, `axiom_swap_validIn_min`, the
-  L⁺ lemmas being transferred, and the dispatch shape being mirrored
+  L lemmas being transferred, and the dispatch shape being mirrored
 -/
 
 namespace FormalSystem.Metalogic.Conservativity
@@ -51,7 +51,7 @@ open FormalSystem.PlusLanguage.PlusFormula
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
 
-/-- One fixed encoding, chosen once for every TM⁺ arm below. -/
+/-- One fixed encoding, chosen once for every TM arm below. -/
 noncomputable def theEncoding : Encoding := Classical.choice Encoding.nonempty
 
 /-- Atomization under the fixed encoding. -/
@@ -62,7 +62,7 @@ noncomputable abbrev A' (φ : PlusFormula) : Formula := atomize theEncoding.swap
 
 /-! ## Validity -/
 
-/-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor. -/
+/-- **Every TM⁺ schema is valid at its own minimum frame class.** One arm per constructor. -/
 theorem plusAxiom_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
     PlusValidIn ax.minFrameClass φ := by
   cases ax with
@@ -148,14 +148,14 @@ theorem plusAxiom_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
   | paste a0 a1 h0 h1 => exact paste_plusValid h0 h1
   | untl_paste a0 a1 h0 h1 => exact untl_paste_starValid h0 h1
 
-/-- Validity of a TM⋆ schema at any class admitting it. -/
+/-- Validity of a TM⁺ schema at any class admitting it. -/
 theorem plusAxiom_validIn {φ : PlusFormula} {fc : FrameClass} (ax : PlusAxiom φ)
     (h : ax.minFrameClass ≤ fc) : PlusValidIn fc φ :=
   PlusValidIn.mono h (plusAxiom_validIn_min ax)
 
 /-! ## Swap-validity -/
 
-/-- **Every TM⋆ schema's temporal dual is valid at its own minimum frame class.** One arm per
+/-- **Every TM⁺ schema's temporal dual is valid at its own minimum frame class.** One arm per
 constructor; the semantic input to the `temporal_duality` case of soundness. -/
 theorem plusAxiom_swap_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
     PlusValidIn ax.minFrameClass φ.swapTemporal := by
@@ -268,7 +268,7 @@ theorem plusAxiom_swap_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
     simp only [PlusFormula.swapTemporal, swap_temporal_dstab]
     exact snce_paste_plusValid h0.swapTemporal h1.swapTemporal
 
-/-- Swap-validity of a TM⋆ schema at any class admitting it. -/
+/-- Swap-validity of a TM⁺ schema at any class admitting it. -/
 theorem plusAxiom_swap_validIn {φ : PlusFormula} {fc : FrameClass} (ax : PlusAxiom φ)
     (h : ax.minFrameClass ≤ fc) : PlusValidIn fc φ.swapTemporal :=
   PlusValidIn.mono h (plusAxiom_swap_validIn_min ax)

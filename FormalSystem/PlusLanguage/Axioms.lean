@@ -8,16 +8,16 @@ import FormalSystem.PlusLanguage.Formula
 import FormalSystem.ProofSystem.Axioms
 
 /-!
-# `PlusAxiom` — the axiom schemata of TM⋆ over `PlusFormula`
+# `PlusAxiom` — the axiom schemata of TM⁺ over `PlusFormula`
 
-The axiom system **TM⋆** for the language L⋆ (`PlusLanguage/Formula.lean`): the 45 schemata of
-TM⁺ (`ProofSystem/Axioms.lean`) **re-declared with `PlusFormula` parameters**, plus eight
+The axiom system **TM⁺** for the language L⁺ (`PlusLanguage/Formula.lean`): the 45 schemata of
+TM (`ProofSystem/Axioms.lean`) **re-declared with `PlusFormula` parameters**, plus eight
 schemata for the stability modal `⊡`.
 
-## Why the TM⁺ schemata are re-declared rather than embedded
+## Why the TM schemata are re-declared rather than embedded
 
 An embedding constructor `ofTM : Axiom φ → PlusAxiom (ofFormula φ)` would yield only the
-`⊡`-free instances of each schema. TM⋆ needs, for instance, `□⊡p → □G⊡p` — MF at `⊡p` — so every
+`⊡`-free instances of each schema. TM⁺ needs, for instance, `□⊡p → □G⊡p` — MF at `⊡p` — so every
 schema must range over all of `PlusFormula`. The re-declaration is mechanical: constructor for
 constructor, the same name, the same parameter list, the same statement through the derived
 operators of `PlusLanguage/Formula.lean`, whose right-hand sides are `Formula`'s verbatim. The
@@ -58,15 +58,15 @@ exchanges `IsPureFuture` and `IsPurePast`. `⊡`-necessitation is likewise a der
 **Refuted, hence absent.** `⊡φ → □⊡φ`, `G⊡p → ⊡Gp`, `⊡GPp → G⊡Pp`, *Determined* `φ → ⊡φ` (over
 non-deterministic frames), and `P⊡p → ⊡Pp` are all refuted in
 `Semantics/PlusNonValidities.lean`. In particular *Determined* must never be added here: it is
-refuted at `.Base`, so adding it would falsify TM⋆ soundness. A validity notion over the
+refuted at `.Base`, so adding it would falsify TM⁺ soundness. A validity notion over the
 deterministic frames can be stated through `PlusValidOnFrames` without touching this inductive.
 
-**Open.** Completeness of TM⋆ over the all-histories semantics, and decidability of TM⋆, are
+**Open.** Completeness of TM⁺ over the all-histories semantics, and decidability of TM⁺, are
 both open and outside this module's scope; nothing here promises either.
 
 ## Frame classes
 
-`PlusAxiom.minFrameClass` routes the TM⁺ schemata exactly as `Axiom.minFrameClass` does (Dense,
+`PlusAxiom.minFrameClass` routes the TM schemata exactly as `Axiom.minFrameClass` does (Dense,
 Discrete and Dedekind axioms to their classes, everything else to `.Base`); every `⊡` schema is
 valid over every task frame and is routed to `.Base`.
 
@@ -81,7 +81,7 @@ unchanged.
 
 ## References
 
-* `FormalSystem/ProofSystem/Axioms.lean` — the 45 TM⁺ schemata, with their [burgess1982] / [xu1988] /
+* `FormalSystem/ProofSystem/Axioms.lean` — the 45 TM schemata, with their [burgess1982] / [xu1988] /
   [reynolds1992] provenance; the docstrings there are authoritative for each schema's reading
 * JPL paper `possible_worlds.tex` lines 1108, 1114, 1118-1119, 1121
 -/
@@ -93,7 +93,7 @@ open FormalSystem.ProofSystem (FrameClass)
 open PlusFormula
 
 /--
-Axiom schemata of TM⋆ over `PlusFormula`: the 45 TM⁺ schemata re-declared with `PlusFormula`
+Axiom schemata of TM⁺ over `PlusFormula`: the 45 TM schemata re-declared with `PlusFormula`
 parameters, then the eight `⊡` schemata. See the module docstring for the design and the axiom
 inventory.
 -/
@@ -274,7 +274,7 @@ inductive PlusAxiom : PlusFormula → Type where
         (PlusFormula.kPlus (PlusFormula.and (PlusFormula.kPlus φ) (PlusFormula.kMinus φ))))
   -- The stability modal (8)
   /-- SK: `⊡(φ → ψ) → (⊡φ → ⊡ψ)` — K for `⊡`, from the universal-quantifier shape of the
-  `stab` clause (paper line 1114). -/
+  `stab` clause (`def:BLstar-semantics`). -/
   | stab_k (φ ψ : PlusFormula) :
       PlusAxiom ((PlusFormula.stab (φ.imp ψ)).imp ((PlusFormula.stab φ).imp (PlusFormula.stab ψ)))
   /-- ST: `⊡φ → φ` — T for `⊡` (paper footnote, line 1118); `Semantics.of_stab`. -/
@@ -301,7 +301,7 @@ inductive PlusAxiom : PlusFormula → Type where
       PlusAxiom ((PlusFormula.untl α (dstab φ)).imp (dstab (PlusFormula.untl α φ)))
 
 /--
-Minimum frame class of each TM⋆ schema. The TM⁺ arms are `Axiom.minFrameClass`'s
+Minimum frame class of each TM⁺ schema. The TM arms are `Axiom.minFrameClass`'s
 (`ProofSystem/Axioms.lean`); every `⊡` schema is valid over every task frame and is routed to
 `.Base`.
 -/

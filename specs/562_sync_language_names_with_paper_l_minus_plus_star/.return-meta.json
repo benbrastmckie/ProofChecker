@@ -1,22 +1,16 @@
 {
-  "status": "planned",
-  "artifacts": [
-    {
-      "type": "plan",
-      "path": "specs/562_sync_language_names_with_paper_l_minus_plus_star/plans/01_sync-language-names-paper.md",
-      "summary": "12-phase plan for the L/L-minus/L-plus/L-star rename sweep: inventory, two structural+declaration rename chains, tm-family split, three prose waves, paper-record re-pin, dependent-task rewording, and a full check-module-invariants gate."
-    }
-  ],
-  "metadata": {
-    "session_id": "sess_1788890905_c2bc06_562",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 12,
-    "estimated_hours": 18,
-    "dependency_waves": [[1],[2],[3],[4],[5],[6],[7,8],[9],[10,11],[12]]
+  "status": "in_progress",
+  "started_at": "2026-09-08T18:20:00Z",
+  "partial_progress": {
+    "stage": "phase_12_final_verification",
+    "details": "Phases 1-11 applied and committed through phase 11; phases 7-8 staged in the working tree; final full lake build in flight",
+    "phases_completed": 11,
+    "phases_total": 12
   },
-  "memory_candidates": [],
-  "next_steps": "Run /implement 562 to execute the plan",
-  "dispatch_seq": 1
+  "metadata": {
+    "session_id": "sess_1788890905_c2bc06",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+  }
 }

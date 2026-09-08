@@ -18,9 +18,9 @@ boxed dichotomy
 
   `(Sp) := □(DF φ) ∨ □(DN ψ)`
 
-is **not** a theorem of TM, the tense-primitive base proof system
+is **not** a theorem of TM⁻, the tense-primitive base proof system
 `MinusLanguage.DerivationTree FrameClass.Base`. Together with `SpWitness.minusValid_sp` (`(Sp)` is
-BL-valid on every task frame) this refutes TM's weak completeness over the task-frame class:
+L⁻-valid on every task frame) this refutes TM⁻'s weak completeness over the task-frame class:
 `tmMinusCompleteBase_refuted : ¬ TMMinusCompleteBase`, the `.Base` mirror of
 `Z1Countermodel.tmMinusCompleteZTime_refuted`.
 
@@ -28,11 +28,11 @@ BL-valid on every task frame) this refutes TM's weak completeness over the task-
 
 `(Sp)` is valid on *every* task frame, so the refuting structure must lie outside the class. The
 route taken here is a native semantics: `Semantics/MinusFrame.lean` supplies a frame notion with no
-group structure on time, native BL soundness for TM is proved directly against it
+group structure on time, native L⁻ soundness for TM⁻ is proved directly against it
 (`minusFrameValid_of_derivation`), and the countermodel is an instance of that class. Note the
-contrast with the `TaskFrame`-bound stack: **TM⁺ is unsound** on the two-fibre structure below,
-so no composition through `tr` and BL⁺ soundness is available. The soundness theorem in this
-module is about TM (`MinusLanguage.DerivationTree`), never about TM⁺, and the two must not be
+contrast with the `TaskFrame`-bound stack: **TM is unsound** on the two-fibre structure below,
+so no composition through `tr` and L soundness is available. The soundness theorem in this
+module is about TM⁻ (`MinusLanguage.DerivationTree`), never about TM, and the two must not be
 blurred.
 
 ## Why the countermodel needs *two* order shapes
@@ -55,11 +55,11 @@ lexicographic sum is again a single linear order and is refuted by the argument 
 
 ## The claim is schema-level, not universally quantified
 
-"No instance of `(Sp)` is a theorem of TM" is **false as literally stated**, and must not be
+"No instance of `(Sp)` is a theorem of TM⁻" is **false as literally stated**, and must not be
 re-attempted. `DF ⊤` is true at every point of every `MinusFrame` (its consequent `F(H⊤)` follows
 from `no_max`), so `□(DF ⊤)` holds everywhere and `Sp ⊤ ψ` is not refuted here — indeed it is
-TM-derivable. The deliverable is the schema-level claim, witnessed by the atomic instance
-`Sp (.atom a) (.atom a)`. Refuting `TMMinusCompleteBase` needs exactly one BL-valid non-theorem, so
+TM⁻-derivable. The deliverable is the schema-level claim, witnessed by the atomic instance
+`Sp (.atom a) (.atom a)`. Refuting `TMMinusCompleteBase` needs exactly one L⁻-valid non-theorem, so
 nothing is lost.
 
 ## Main Definitions
@@ -69,11 +69,11 @@ nothing is lost.
 
 ## Main Results
 
-- `minusFrameValid_of_axiom` — every TM axiom schema admissible at `FrameClass.Base` is `MinusFrameValid`
-- `minusFrameValid_of_derivation` — **native BL soundness**: every TM theorem is `MinusFrameValid`
+- `minusFrameValid_of_axiom` — every TM⁻ axiom schema admissible at `FrameClass.Base` is `MinusFrameValid`
+- `minusFrameValid_of_derivation` — **native L⁻ soundness**: every TM⁻ theorem is `MinusFrameValid`
 - `df_fails`, `dn_fails` — the two disjuncts fail, on the `ℝ` and `ℤ` fibres respectively
 - `sp_false` — `(Sp)` is false at every point of `twoFibre`
-- `not_derivable_sp` — **CEB's failing half**: `(Sp)` is not a TM-theorem
+- `not_derivable_sp` — **CEB's failing half**: `(Sp)` is not a TM⁻-theorem
 - `tmMinusCompleteBase_refuted` — `¬ TMMinusCompleteBase`
 
 ## References
@@ -97,17 +97,17 @@ open FormalSystem.MinusLanguage
 open FormalSystem.ProofSystem
 open FormalSystem.Semantics
 
-/-! ## Native BL soundness for TM
+/-! ## Native L⁻ soundness for TM⁻
 
 Naming note: the axiom-validity lemma is `minusFrameValid_of_axiom`, not the bare `axiom_valid` a
 reader might expect by analogy with `Metalogic/Soundness.lean`. That base name is already taken
-there by the BL⁺ lemma (about `Formula`, not `MinusFormula`), and the repository's C23 invariant
+there by the L lemma (about `Formula`, not `MinusFormula`), and the repository's C23 invariant
 additionally forbids resolving the clash by nesting a namespace — a shadowed base name defeats
 the dead-declaration census. The `minusFrameValid_of_*` pair also reads better together.
 -/
 
 /--
-**Every TM axiom admissible at `FrameClass.Base` is valid on the native BL frame class.**
+**Every TM⁻ axiom admissible at `FrameClass.Base` is valid on the native L⁻ frame class.**
 
 Sixteen `MinusLanguage.Axiom` constructors, thirteen of which have `minFrameClass = .Base`:
 
@@ -178,8 +178,8 @@ theorem minusFrameValid_of_axiom {φ : MinusFormula} (ax : MinusLanguage.Axiom �
   | co _ => exact absurd h_fc (show ¬ (FrameClass.RTime ≤ FrameClass.Base) by decide)
 
 /--
-**Native BL soundness for TM.** Every closed `FrameClass.Base` derivation yields a formula valid
-on the whole native BL frame class.
+**Native L⁻ soundness for TM⁻.** Every closed `FrameClass.Base` derivation yields a formula valid
+on the whole native L⁻ frame class.
 
 Recursion over all seven `MinusLanguage.DerivationTree` constructors. `assumption` is vacuous at
 the empty context; `modus_ponens`, `necessitation` and `temporal_necessitation` are immediate
@@ -355,14 +355,14 @@ theorem sp_false (a : Atom) (w : twoFibre.Point) :
   · exact dn_fails a (hr (Sum.inl 0))
 
 /--
-**CEB's failing half: `(Sp)` is not a theorem of TM.**
+**CEB's failing half: `(Sp)` is not a theorem of TM⁻.**
 
-The atomic instance `Sp p p` is `MinusFrameValid`-refuted by `twoFibre`, and native BL soundness
-(`minusFrameValid_of_derivation`) says every TM theorem is `MinusFrameValid`. This is
+The atomic instance `Sp p p` is `MinusFrameValid`-refuted by `twoFibre`, and native L⁻ soundness
+(`minusFrameValid_of_derivation`) says every TM⁻ theorem is `MinusFrameValid`. This is
 the claim `SpWitness.lean` disclaims as out of scope; it is now discharged.
 
 The statement is deliberately **schema-level**, witnessed by an atomic instance. The universally
-quantified reading — "no instance of `(Sp)` is a TM-theorem" — is *false*: `□(DF ⊤)` holds on
+quantified reading — "no instance of `(Sp)` is a TM⁻-theorem" — is *false*: `□(DF ⊤)` holds on
 every `MinusFrame` (its consequent follows from `no_max`), so `Sp ⊤ ψ` is not refuted here. See the
 module docstring.
 -/
@@ -372,9 +372,9 @@ theorem not_derivable_sp (a : Atom) :
   exact sp_false a (Sum.inl 0) (minusFrameValid_of_derivation d twoFibre twoV (Sum.inl 0))
 
 /--
-**TM is not weakly complete over the task-frame class.** The negation of
+**TM⁻ is not weakly complete over the task-frame class.** The negation of
 `TMCompletenessReduction`'s `TMMinusCompleteBase`, witnessed by `Sp p p`: `MinusValid (Sp p p)` holds
-(`SpWitness.minusValid_sp`) yet `Sp p p` is not TM-derivable (`not_derivable_sp`).
+(`SpWitness.minusValid_sp`) yet `Sp p p` is not TM⁻-derivable (`not_derivable_sp`).
 
 Mirrors `Z1Countermodel.tmMinusCompleteZTime_refuted` in shape. Only the **negation** is stated: per
 `Metalogic/Conservativity.lean`'s standing prohibition, forward conservativity is refuted, not

@@ -12,7 +12,7 @@ import FormalSystem.Semantics.DurationClassification
 
 The four semantic facts consumed by both `Metalogic/Conservativity/SpWitness.lean` (the (Sp) validity witness)
 and `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `minus_soundness_ztime_succ` — the shared
-mathematical core of the TM-completeness task (report §4.1 Lemmas B and C, plus §6.1's
+mathematical core of the TM⁻-completeness task (report §4.1 Lemmas B and C, plus §6.1's
 past-dual obligation).
 
 ## The two axiom shapes, pinned
@@ -37,7 +37,7 @@ association is checked by elaboration against `MinusLanguage/Axioms.lean`'s own 
 
 ## References
 
-* The TM-completeness status report (`01_tm-completeness-status.md`),
+* The TM⁻-completeness status report (`01_tm-completeness-status.md`),
   §4.1 (Lemmas B and C), §6.1 (the past-dual obligation)
 * `FormalSystem/MinusLanguage/Axioms.lean` — `Axiom.df`, `Axiom.dn`
 * `FormalSystem/Semantics/DurationClassification.lean` — `isLeast_pos_succ_zero`
@@ -86,12 +86,12 @@ the least-positive form via `DurationClassification.isLeast_pos_succ_zero` — `
 least strictly positive element, so this is a corollary rather than a second direct proof.
 
 **Documented exception: neither this nor `df_valid_of_isLeast_pos` can be replaced by transporting
-a BL⁺ theorem across `tr`.** `tr` is exact only on `□, G, H, →, ⊥`; on `someFuture` it is not.
+an L theorem across `tr`.** `tr` is exact only on `□, G, H, →, ⊥`; on `someFuture` it is not.
 `tr φ.someFuture` is `(Formula.allFuture (tr φ).neg).neg`, a different constructor tree from
 `Formula.someFuture (tr φ)` — recorded by proof as `tr_someFuture_ne`
 (`MinusLanguage/Translation.lean`). Both DF statements have `F⊤` and `F(Hφ)` in them, so the
 transfer theorems in `Metalogic/Conservativity/MinusLanguageSoundness.lean` do not reach them, and both proofs
-stay native. Do not delete either as a duplicate of a BL⁺ result.
+stay native. Do not delete either as a duplicate of an L result.
 -/
 theorem df_valid_of_succOrder [SuccOrder F.Duration] [Nontrivial F.Duration]
     (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : MinusFormula) :

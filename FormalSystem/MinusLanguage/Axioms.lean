@@ -8,10 +8,10 @@ import FormalSystem.MinusLanguage.Formula
 import FormalSystem.ProofSystem.Axioms
 
 /-!
-# `MinusLanguage.Axiom` — TM's axiom schemata over the base language BL
+# `MinusLanguage.Axiom` — TM⁻'s axiom schemata over the base language L⁻
 
-TM, the *Logic of Tense and Modality*, is (JPL paper, `\S sub:Logic`) the smallest extension of
-**CPL** over the base language BL closed under the schemata MK, MT, M5, MF, TK, T4, TS, TC, TL
+TM⁻, the *Logic of Tense and Modality*, is (JPL paper, `\S sub:Logic`) the smallest extension of
+**CPL** over the base language L⁻ closed under the schemata MK, MT, M5, MF, TK, T4, TS, TC, TL
 and the rules MP, MN, TD. This module carries the **axiom** half of that list; MP, MN and TD are
 *rules* and live in `MinusLanguage/Derivation.lean`.
 
@@ -20,13 +20,13 @@ their frame classes by `Axiom.minFrameClass`:
 
 | Key | Schema | Frame class | System |
 |---|---|---|---|
-| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.ZTime` | `TM_z` |
-| DN | `GGφ → Gφ` | `.Dense` | `TM_d` |
-| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.RTime` | `TM_r` |
+| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.ZTime` | `TM⁻_z` |
+| DN | `GGφ → Gφ` | `.Dense` | `TM⁻_d` |
+| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.RTime` | `TM⁻_r` |
 
 **These four system names are Lean-only and have no paper counterpart.** The paper names no
-Past/Future system, so `TM`, `TM_z`, `TM_d` and `TM_r` on this side of the tree name nothing in
-it; the `z`/`d`/`r` subscripts were chosen to run parallel to the `TM⁺` side and to the frame-class
+Past/Future system, so `TM⁻`, `TM⁻_z`, `TM⁻_d` and `TM⁻_r` on this side of the tree name nothing in
+it; the `z`/`d`/`r` subscripts were chosen to run parallel to the `TM` side and to the frame-class
 tags. `FormalSystem/Metalogic/Conservativity.lean`'s module docstring states the mapping between
 the two families of name in full, and is the place to read it.
 
@@ -43,7 +43,7 @@ the paper's `TP`/`CT` → `TP1`/`TP2`, `P9`/`P10` → `P7`/`P8`, `TB`/`TA` → `
 
 | Paper key | Lean identifier | Notes |
 |---|---|---|
-| `SP1` | none | Invalid-under-2D-semantics principle; not formalized (the Lean tree formalizes `TM`, not the 2D-semantics counterexample). |
+| `SP1` | none | Invalid-under-2D-semantics principle; not formalized (the Lean tree formalizes `TM⁻`, not the 2D-semantics counterexample). |
 | `SP2` | none | As above. |
 
 **Necessarily Always (`\S sub:NecessarilyAlways`):**
@@ -120,11 +120,11 @@ the paper's `TP`/`CT` → `TP1`/`TP2`, `P9`/`P10` → `P7`/`P8`, `TB`/`TA` → `
 The frame class is the **existing** `FormalSystem.ProofSystem.FrameClass`, not a clone. That is
 what makes the backward bridge one theorem with four instantiations rather than four parallel
 developments. Only `FrameClass`, its order, and `FrameClass.base_le` are used from
-`ProofSystem.Axioms`; no BL⁺ `Axiom` constructor is referenced here.
+`ProofSystem.Axioms`; no L `Axiom` constructor is referenced here.
 
 **Where the CO row lands.** This repository's `RTime` class satisfies `Dense ≤ RTime`, so a
 `.RTime` derivation admits the dense axioms too, and `Axiom.co ↦ .RTime` lands the CO row at
-`TM_r`. There is no repository frame class for "complete but not dense", and none is wanted: the
+`TM⁻_r`. There is no repository frame class for "complete but not dense", and none is wanted: the
 `ℝ`-time row is the dense-and-complete one on both sides of the bridge. See
 `FormalSystem/Metalogic/Conservativity/Backward.lean`'s `cec_backward`.
 
@@ -143,9 +143,9 @@ while producing a `DerivationTree` (itself a `Type`). A `Prop`-valued inductive 
 
 ## References
 
-* JPL paper `\S sub:Logic` — the TM axiomatization (MP/MN/MK/MT/M5/MF/TD/TK/T4/TS/TC/TL)
+* JPL paper `\S sub:Logic` — the TM axiomatization (MP/MN/MK/MT/M5/MF/TD/TK/T4/TS/TC/TL) that TM⁻ transposes
 * JPL paper `\S sub:Extension` — DF, DN, CO
-* `FormalSystem/ProofSystem/Axioms.lean` — the BL⁺ (Burgess-Xu) counterpart
+* `FormalSystem/ProofSystem/Axioms.lean` — the L (Burgess-Xu) counterpart
 -/
 
 namespace FormalSystem.MinusLanguage
@@ -153,7 +153,7 @@ namespace FormalSystem.MinusLanguage
 open FormalSystem.ProofSystem (FrameClass)
 
 /--
-TM's axiom schemata over the base language BL, plus the three extension axioms DF/DN/CO.
+TM⁻'s axiom schemata over the base language L⁻, plus the three extension axioms DF/DN/CO.
 
 The propositional group (`prop_k`, `prop_s`, `ex_falso`, `peirce`) is transcribed
 constructor-for-constructor from `FormalSystem.ProofSystem.Axiom`'s own propositional layer, so
@@ -173,7 +173,7 @@ inductive Axiom : MinusFormula → Type where
   | ex_falso (φ : MinusFormula) : Axiom (MinusFormula.bot.imp φ)
   /-- Peirce's law: `((φ → ψ) → φ) → φ`. -/
   | peirce (φ ψ : MinusFormula) : Axiom (((φ.imp ψ).imp φ).imp φ)
-  -- Modal (S5 fragment of TM)
+  -- Modal (S5 fragment of TM⁻)
   /-- **MK**: `□(φ → ψ) → (□φ → □ψ)`. -/
   | modal_k (φ ψ : MinusFormula) :
       Axiom ((φ.imp ψ).box.imp (φ.box.imp ψ.box))
@@ -205,15 +205,15 @@ inductive Axiom : MinusFormula → Type where
         (((φ.someFuture.and ψ).someFuture).or
           (((φ.and ψ).someFuture).or ((φ.and ψ.someFuture).someFuture))))
   -- Extension axioms (`\S sub:Extension`)
-  /-- **DF** (`TM_z`, discrete): `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`.
+  /-- **DF** (`TM⁻_z`, discrete): `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`.
 
       Association `((Hφ ∧ φ) ∧ F⊤)` is pinned to match
       `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, which discharges its translation. -/
   | df (φ : MinusFormula) :
       Axiom (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp φ.allPast.someFuture)
-  /-- **DN** (`TM_d`, dense): `GGφ → Gφ`. -/
+  /-- **DN** (`TM⁻_d`, dense): `GGφ → Gφ`. -/
   | dn (φ : MinusFormula) : Axiom (φ.allFuture.allFuture.imp φ.allFuture)
-  /-- **CO** (`TM_r`, complete order): `△(Hφ → F Hφ) → (Hφ → Gφ)`.
+  /-- **CO** (`TM⁻_r`, complete order): `△(Hφ → F Hφ) → (Hφ → Gφ)`.
 
       `△` is `MinusFormula.always` (`Hχ ∧ (χ ∧ Gχ)`), the *temporal* triangle, not the modal box —
       the same operator-resolution trap flagged on `Formula.co`. The association mirrors
@@ -224,12 +224,12 @@ inductive Axiom : MinusFormula → Type where
   deriving Repr
 
 /--
-Minimum frame class for each BL axiom constructor.
+Minimum frame class for each L⁻ axiom constructor.
 
-Only the three extension axioms are non-`Base`; every TM axiom proper falls through the
+Only the three extension axioms are non-`Base`; every TM⁻ axiom proper falls through the
 catch-all, exactly as in `ProofSystem.Axiom.minFrameClass`. The invariant
 `ax.minFrameClass ≤ fc` in `MinusLanguage.DerivationTree`'s `axiom` constructor is what makes
-`TM`, `TM_z`, `TM_d` and `TM_r` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
+`TM⁻`, `TM⁻_z`, `TM⁻_d` and `TM⁻_r` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
 `.RTime` of a single derivation type.
 -/
 def Axiom.minFrameClass {φ : MinusFormula} : Axiom φ → FrameClass

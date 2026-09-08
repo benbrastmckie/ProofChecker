@@ -8,11 +8,11 @@ import FormalSystem.Semantics.Truth
 import FormalSystem.PlusLanguage.Formula
 
 /-!
-# `PlusTruthAt` — truth for the language L⋆ (L⁺ plus the stability modal `⊡`)
+# `PlusTruthAt` — truth for the language L⁺ (L plus the stability modal `⊡`)
 
 The native truth recursion for `PlusFormula` (`FormalSystem/PlusLanguage/Formula.lean`): the six
-L⁺ clauses are those of `TruthAt` (`Semantics/Truth.lean`) verbatim, and the seventh is the
-paper's `($\Stability$)` clause, `possible_worlds.tex` line 1114:
+L clauses are those of `TruthAt` (`Semantics/Truth.lean`) verbatim, and the seventh is the
+paper's `($\Stability$)` clause, `def:BLstar-semantics`:
 
 ```
 M,τ,x ⊨ ⊡φ   iff   M,σ,x ⊨ φ for all σ ∈ ⟨τ⟩_x,
@@ -35,7 +35,7 @@ histories together with the totality predicate `σ.IsTotal` (the predicate form 
   (T), `stab_four` (4), `stab_five` (5), `stab_atom_of_atom` (`p → ⊡p` for atoms)
 - `stab_congr_sameState`: `⊡φ` is a state formula at each time; `box_stab_iff` (`□⊡φ ↔ □φ`),
   `stab_box_of_box` (`□φ → ⊡□φ`)
-- `plusTruthAt_timeShift`: L⋆ truth commutes with time shift (the `PlusFormula` twin of
+- `plusTruthAt_timeShift`: L⁺ truth commutes with time shift (the `PlusFormula` twin of
   `timeShift_preserves_truth`, proved directly because `TruthCorr` is `Formula`-only)
 - `stab_state_only`: `⊡φ` depends on the world state **alone**, at any two times — the fact that
   licenses treating each `⊡χ` as a fresh state-valued atom
@@ -50,12 +50,12 @@ file); proofs are unchanged.
 ## References
 
 * JPL paper `possible_worlds.tex` lines 1108, 1114, 1118-1119, 1121
-* `FormalSystem/Semantics/Truth.lean` — the six L⁺ clauses being mirrored
+* `FormalSystem/Semantics/Truth.lean` — the six L clauses being mirrored
 * `FormalSystem/Semantics/MinusTruth.lean` — the sibling native recursion for the base language
 
 ## Tags
 
-truth · star-language · stability-modal
+truth · plus-language · stability-modal
 -/
 
 namespace FormalSystem.Semantics
@@ -108,10 +108,10 @@ theorem sameStateAt_congr_left {τ σ ρ : ConvexHistory F} {t : F.Duration}
 /-! ## The truth recursion -/
 
 /--
-Truth of an L⋆ formula at a model, history and time.
+Truth of an L⁺ formula at a model, history and time.
 
-The six L⁺ clauses are `TruthAt`'s verbatim (`Semantics/Truth.lean`). The `stab` clause is the
-paper's `($\Stability$)`, line 1114: `⊡φ` holds at `(τ, t)` iff `φ` holds at `(σ, t)` for every
+The six L clauses are `TruthAt`'s verbatim (`Semantics/Truth.lean`). The `stab` clause is the
+paper's `($\Stability$)` clause of `def:BLstar-semantics`: `⊡φ` holds at `(τ, t)` iff `φ` holds at `(σ, t)` for every
 **total** history `σ` with `SameStateAt τ σ t`.
 -/
 def PlusTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : PlusFormula → Prop
@@ -265,7 +265,7 @@ theorem stab_box_of_box (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration
 theorem states_congr (ρ : ConvexHistory F) {s s' : F.Duration} (h : s = s') (hs : ρ.domain s) :
     ρ.states s hs = ρ.states s' (h ▸ hs) := by subst h; rfl
 
-/-- Pointwise-equal histories (same domain, same states) satisfy the same L⋆ formulas. -/
+/-- Pointwise-equal histories (same domain, same states) satisfy the same L⁺ formulas. -/
 theorem truth_congr_ext (M : TaskModel F) (φ : PlusFormula) :
     ∀ (τ σ : ConvexHistory F) (t : F.Duration),
       (∀ s, τ.domain s ↔ σ.domain s) →
@@ -309,7 +309,7 @@ theorem shift_neg_shift_states (ρ : ConvexHistory F) (Δ s : F.Duration)
   show ρ.states (s + Δ + -Δ) h1 = ρ.states s h2
   exact (states_congr ρ (add_neg_cancel_right s Δ) h1)
 
-/-- **L⋆ truth commutes with time shift.** The `PlusFormula` twin of
+/-- **L⁺ truth commutes with time shift.** The `PlusFormula` twin of
 `timeShift_preserves_truth`, proved directly because `TruthCorr` is `Formula`-only; the `box`
 and `stab` cases need the inverse shift and `truth_congr_ext`, since `timeShift` is not
 definitionally involutive. -/
@@ -380,7 +380,7 @@ theorem plusTruthAt_timeShift (M : TaskModel F) (φ : PlusFormula) :
 
 /-- **`⊡φ` depends on the world state alone.** If `τ(t) = σ(s)` — at possibly different times —
 then `⊡φ` has the same truth value at `(τ, t)` and `(σ, s)`. This is what licenses treating each
-`⊡φ` as a fresh state-valued atom: the atomization route to TM⁺-schema soundness over L⋆
+`⊡φ` as a fresh state-valued atom: the atomization route to TM-schema soundness over L⁺
 (`Metalogic/Conservativity/Plus/Atomization.lean`). -/
 theorem stab_state_only (M : TaskModel F) (τ σ : ConvexHistory F) (hτ : τ.IsTotal)
     (hσ : σ.IsTotal) (t s : F.Duration) (h : τ.states t (hτ t) = σ.states s (hσ s))

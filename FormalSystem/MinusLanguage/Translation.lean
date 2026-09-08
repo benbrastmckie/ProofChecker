@@ -9,11 +9,11 @@ import FormalSystem.Syntax.Formula
 import FormalSystem.Syntax.Context
 
 /-!
-# `tr` — the translation of BL into BL⁺
+# `tr` — the translation of L⁻ into L
 
 `tr : MinusFormula → Formula` maps the tense-primitive base language into this repository's
-until/since-primitive `Formula`, sending each BL primitive to the BL⁺ operator of the same
-name. For `allPast`/`allFuture` the target is BL⁺'s *derived* `Formula.allPast`/
+until/since-primitive `Formula`, sending each L⁻ primitive to the L operator of the same
+name. For `allPast`/`allFuture` the target is L's *derived* `Formula.allPast`/
 `Formula.allFuture` — that substitution is the whole content of the translation.
 
 ## Main Definitions
@@ -42,11 +42,11 @@ Formula.someFuture (tr φ)    =  U(⊤, tr φ)
 and these are not merely differently associated, they are *different constructors* —
 `tr_someFuture_ne` records this by proof. The reason is structural rather than incidental:
 `Formula.someFuture` is a top-level `untl`, and by `tr_ne_untl` **no** formula in the range of
-`tr` is a top-level `untl`. So no choice of BL-side abbreviation could have made this exact.
+`tr` is a top-level `untl`. So no choice of L⁻-side abbreviation could have made this exact.
 
 The consequence is that the research report's claim that TC discharges by an "exact syntactic
 match" against `Axiom.connect_future`, and the analogous claim for TS, are **refuted**. Every
-TM axiom mentioning `F` or `P` needs the derivable equivalence `¬G¬ψ ↔ Fψ` instead, supplied
+TM⁻ axiom mentioning `F` or `P` needs the derivable equivalence `¬G¬ψ ↔ Fψ` instead, supplied
 once by `MinusLanguage/AxiomDischarge.lean`'s bridge lemmas. Axioms mentioning only `□`, `G`,
 `H`, `→` and `⊥` (MK, MT, M5, MF, TK, T4, DN) *are* exact.
 
@@ -61,9 +61,9 @@ namespace FormalSystem.MinusLanguage
 open FormalSystem.Syntax
 
 /--
-The translation of BL into BL⁺: each primitive to the operator of the same name.
+The translation of L⁻ into L: each primitive to the operator of the same name.
 
-`allPast` and `allFuture` land on `Formula.allPast`/`Formula.allFuture`, which on the BL⁺ side
+`allPast` and `allFuture` land on `Formula.allPast`/`Formula.allFuture`, which on the L side
 are *derived* from `snce`/`untl` — that is exactly the point of the conservativity question.
 -/
 def tr : MinusFormula → Formula
@@ -76,8 +76,8 @@ def tr : MinusFormula → Formula
 
 /-! ### Push-through equations
 
-Everything here is `rfl`: `tr` is structural and the BL-side abbreviations were chosen to
-mirror the BL⁺ ones. The `somePast`/`someFuture` entries are the deliberate exceptions, stated
+Everything here is `rfl`: `tr` is structural and the L⁻-side abbreviations were chosen to
+mirror the L ones. The `somePast`/`someFuture` entries are the deliberate exceptions, stated
 in the shape `tr` actually produces rather than the shape one might expect. -/
 
 @[simp] theorem tr_atom (a : Atom) : tr (.atom a) = Formula.atom a := rfl
@@ -97,12 +97,12 @@ in the shape `tr` actually produces rather than the shape one might expect. -/
 `Formula.always`'s association. Needed by the CO discharge. -/
 @[simp] theorem tr_always (φ : MinusFormula) : tr φ.always = Formula.always (tr φ) := rfl
 
-/-- `tr` of BL's existential future, in the shape it actually takes. **Not**
+/-- `tr` of L⁻'s existential future, in the shape it actually takes. **Not**
 `Formula.someFuture (tr φ)` — see `tr_someFuture_ne`. -/
 theorem tr_someFuture (φ : MinusFormula) :
     tr φ.someFuture = (Formula.allFuture (tr φ).neg).neg := rfl
 
-/-- `tr` of BL's existential past, in the shape it actually takes. **Not**
+/-- `tr` of L⁻'s existential past, in the shape it actually takes. **Not**
 `Formula.somePast (tr φ)` — see `tr_somePast_ne`. -/
 theorem tr_somePast (φ : MinusFormula) :
     tr φ.somePast = (Formula.allPast (tr φ).neg).neg := rfl
@@ -130,18 +130,18 @@ theorem tr_somePast_ne (φ : MinusFormula) :
     tr φ.somePast ≠ Formula.somePast (tr φ) :=
   tr_ne_snce φ.somePast Formula.top (tr φ)
 
-/-! ### The commutation lemma for TM's TD rule -/
+/-! ### The commutation lemma for TM⁻'s TD rule -/
 
 /--
-**The load-bearing lemma**: `tr` intertwines the BL-side past/future interchange `swapMinus` with
-the BL⁺-side one `swapTemporal`.
+**The load-bearing lemma**: `tr` intertwines the L⁻-side past/future interchange `swapMinus` with
+the L-side one `swapTemporal`.
 
-TM's **TD** rule concludes `⊢ swapMinus φ` from `⊢ φ`; BL⁺'s `DerivationTree.temporal_duality`
+TM⁻'s **TD** rule concludes `⊢ swapMinus φ` from `⊢ φ`; L's `DerivationTree.temporal_duality`
 concludes `⊢ swapTemporal ψ` from `⊢ ψ`. Without this equation the TD case of
 `FormalSystem.Metalogic.Conservativity.translate` does not typecheck at all.
 
 The `allPast`/`allFuture` cases are the only real content: they need
-`Formula.swap_temporal_all_past` / `Formula.swap_temporal_all_future`, since on the BL⁺ side
+`Formula.swap_temporal_all_past` / `Formula.swap_temporal_all_future`, since on the L side
 `allPast`/`allFuture` are abbreviations over `snce`/`untl` and `swapTemporal` acts on the
 primitives.
 -/
@@ -157,13 +157,13 @@ theorem tr_swapMinus (φ : MinusFormula) : tr φ.swapMinus = (tr φ).swapTempora
 /-! ### Injectivity
 
 Not required by the backward direction — it would be needed only if faithfulness were stated
-as a biconditional — but cheap, and it certifies that the BL-side and BL⁺-side statements of a
+as a biconditional — but cheap, and it certifies that the L⁻-side and L-side statements of a
 theorem determine one another. -/
 
 /-- `tr` is injective.
 
 The four `imp`-versus-`allPast`/`allFuture` cases are *shape clashes* rather than constructor
-clashes: on the BL⁺ side `allPast`/`allFuture` are themselves top-level `imp`s (`neg` of a
+clashes: on the L side `allPast`/`allFuture` are themselves top-level `imp`s (`neg` of a
 `snce`/`untl`), so the mismatch has to be resolved one level down, by `tr_ne_snce`/`tr_ne_untl`
 saying that nothing in the range of `tr` is a top-level `snce`/`untl`. -/
 theorem tr_injective : Function.Injective tr := by

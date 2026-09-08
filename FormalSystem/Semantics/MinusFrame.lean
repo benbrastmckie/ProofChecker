@@ -16,9 +16,9 @@ assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.Deriva
 set_option autoImplicit false
 
 /-!
-# `MinusFrame` — a native BL frame notion, not bound to `TaskFrame`
+# `MinusFrame` — a native L⁻ frame notion, not bound to `TaskFrame`
 
-This module defines a frame notion for the tense-primitive base language BL that is **not** a
+This module defines a frame notion for the tense-primitive base language L⁻ that is **not** a
 task frame, together with a truth recursion over it, the matching validity notion, and the
 order-reversal transfer lemma. Everything here is additive: `MinusTruthAt`, `MinusValid` and the whole
 `TaskFrame`-bound semantic stack are untouched and sit beside this layer.
@@ -36,11 +36,11 @@ a least positive element, so one of the two disjuncts of
   `(Sp) := □(DF φ) ∨ □(DN ψ)`
 
 is forced. `(Sp)` is therefore valid on *every* task frame, and no `TaskFrame`-bound structure can
-refute it. Showing `(Sp)` underivable in TM demands a class of structures on which TM remains
+refute it. Showing `(Sp)` underivable in TM⁻ demands a class of structures on which TM⁻ remains
 sound but the dichotomy fails — which means dropping the group structure entirely, not reindexing
 it. Hence a native recursion rather than a change of index.
 
-A `MinusFrame` keeps only what TM's schemata actually need of time: a nonempty point set with a
+A `MinusFrame` keeps only what TM⁻'s schemata actually need of time: a nonempty point set with a
 transitive irreflexive relation that is unbounded in both directions and forward- and
 backward-linear. No group, no successor, no completeness — so a `MinusFrame` may mix order shapes,
 which is what a countermodel to `(Sp)` requires.
@@ -58,7 +58,7 @@ MK immediate, so the whole S5 block costs nothing.
 The task-frame semantics reaches MF by a different route: there `□` quantifies over the frame's
 total histories `H_F`, and MF is underwritten by shift-closure of `H_F` together with `Duration`
 being a group. Two different sufficient conditions for the same axiom. That is a feature, not a
-discrepancy: an underivability result needs only *some* class of structures on which every TM
+discrepancy: an underivability result needs only *some* class of structures on which every TM⁻
 schema is sound, and the native class here is that class. Nothing in this module claims the two
 semantics agree, and nothing downstream should assume they do.
 
@@ -97,7 +97,7 @@ formula.
 * JPL paper `\S sub:Logic` — `def:BL-language`, `def:BL-semantics` (which this deliberately
   departs from in its `□` clause; see above)
 * `FormalSystem/Semantics/MinusTruth.lean` — the `TaskFrame`-bound recursion this sits beside
-* `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` — the consumer: native BL soundness
+* `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` — the consumer: native L⁻ soundness
   and the two-fibre refutation of `(Sp)`
 
 ## Tags
@@ -110,10 +110,10 @@ namespace FormalSystem.Semantics
 open FormalSystem.Syntax FormalSystem.MinusLanguage
 
 /--
-A native BL frame: a nonempty set of points carrying a strict order that is transitive,
+A native L⁻ frame: a nonempty set of points carrying a strict order that is transitive,
 irreflexive, unbounded in both directions, and linear both forwards and backwards from any point.
 
-These are exactly the conditions TM's temporal schemata need (`T4` from `lt_trans`, `TS` from
+These are exactly the conditions TM⁻'s temporal schemata need (`T4` from `lt_trans`, `TS` from
 `no_max`, `TC` from the definition of the past existential, `TL` from `fut_lin`), and no more. In
 particular there is **no** group structure on `Point`, which is what frees the class from the
 dense-or-discrete dichotomy that makes `(Sp)` valid on every task frame — see the module
@@ -192,10 +192,10 @@ def MinusFrameTruth (F : MinusFrame) (V : F.Point → Atom → Prop) (w : F.Poin
   | .allFuture φ => ∀ v : F.Point, F.lt w v → MinusFrameTruth F V v φ
 
 /--
-Validity on the native BL frame class: truth at every point of every `MinusFrame` under every
+Validity on the native L⁻ frame class: truth at every point of every `MinusFrame` under every
 valuation.
 
-This is the notion native BL soundness (`Metalogic/minusFrameValid_of_derivation`) concludes, and the
+This is the notion native L⁻ soundness (`Metalogic/minusFrameValid_of_derivation`) concludes, and the
 notion the two-fibre countermodel refutes for `(Sp)`.
 -/
 def MinusFrameValid (φ : MinusFormula) : Prop :=

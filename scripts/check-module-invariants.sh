@@ -1432,8 +1432,8 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.Conservativity.tmFrag_complete_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.blCompactBase' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.blCompactDense' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.minusCompactBase' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.minusCompactDense' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.plus_soundness_validIn' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Semantics.plusValidIn_ofFormula_iff' depends on axioms: [propext]
@@ -1539,8 +1539,8 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.Conservativity.tmFrag_complete_rtime
 #print axioms FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag
 #print axioms FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime
-#print axioms FormalSystem.Metalogic.Conservativity.blCompactBase
-#print axioms FormalSystem.Metalogic.Conservativity.blCompactDense
+#print axioms FormalSystem.Metalogic.Conservativity.minusCompactBase
+#print axioms FormalSystem.Metalogic.Conservativity.minusCompactDense
 #print axioms FormalSystem.Metalogic.Conservativity.plus_soundness_validIn
 #print axioms FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff
 #print axioms FormalSystem.Semantics.plusValidIn_ofFormula_iff

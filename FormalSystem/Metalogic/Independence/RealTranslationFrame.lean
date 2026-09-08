@@ -75,7 +75,7 @@ second copy of that two-line definition rather than an import, and the duplicati
 ## On `ShiftSet`'s valuation field
 
 `ShiftSet` bundles a valuation `A` alongside the action, and `ShiftSet.model` reads it off. That
-model is **not used anywhere in this development**: L⋆ frame validity quantifies over *all*
+model is **not used anywhere in this development**: L⁺ frame validity quantifies over *all*
 `TaskModel`s over the frame, so routing anything through `S.model` would prove a strictly weaker
 statement. Only `oneShift.frame` is consumed. The valuation field is discharged with the constant
 `False` purely to satisfy the structure.

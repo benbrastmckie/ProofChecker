@@ -15,7 +15,7 @@ import FormalSystem.Metalogic.Algebraic.FlowFrame
 
 Machine-checks `¬ ⊢⁻[Discrete] Z1 p` at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ`, closing
 CEF with **both** halves in-tree (`Conservativity.z1_translate` is the other half, already
-sorry-free), and refutes `TM_z`'s weak completeness over ℤ-time (report §6.1).
+sorry-free), and refutes `TM⁻_z`'s weak completeness over ℤ-time (report §6.1).
 
 ## The countermodel
 
@@ -28,9 +28,9 @@ refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `S
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
-The paper's `def:BX-z` pins the discrete class over which `BX_z` and `TM⁺_z` are sound and
+The paper's `def:BX-z` pins the discrete class over which `BX_z` and `TM_z` are sound and
 complete to exactly `ℤ`-time, so `ValidZTime` is validity over `ℤ`-time up to isomorphism — which
-is what makes Deliverable 2 the `TM_z`-vs-`TM⁺_z` completeness gap rather than a weaker claim.
+is what makes Deliverable 2 the `TM⁻_z`-vs-`TM_z` completeness gap rather than a weaker claim.
 (The paper reached that conclusion through Hölder's theorem in an earlier revision; the argument
 now runs through the failure of `UZ` and `Z1` over non-Archimedean discrete orders, and the
 conclusion is unchanged. See `Metalogic/Conservativity.lean` for the full statement.)
@@ -45,8 +45,8 @@ conclusion is unchanged. See `Metalogic/Conservativity.lean` for the full statem
 
 ## References
 
-* The TM-completeness status report (`01_tm-completeness-status.md`), §6.1
-* `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_z half)
+* The TM⁻-completeness status report (`01_tm-completeness-status.md`), §6.1
+* `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM_z half)
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMMinusCompleteZTime`
 -/
 
@@ -170,7 +170,7 @@ theorem z1_not_true_at_zero (p : Atom) :
 /-! ## The two CEF deliverables -/
 
 /--
-**Deliverable 1.** `Z1 p` is not `TM_z`-derivable: soundness of `minus_soundness_ztime_succ`
+**Deliverable 1.** `Z1 p` is not `TM⁻_z`-derivable: soundness of `minus_soundness_ztime_succ`
 against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 `Semantics/LexCarrier.lean`. Combined with `Conservativity.z1_translate`, this is CEF refuted
 with both halves machine-checked.
@@ -183,12 +183,12 @@ theorem not_minus_derivable_z1 (p : Atom) :
 
 /--
 **Deliverable 2.** `Z1 p` is `MinusValidZTime`: from `Conservativity.z1_translate`
-(`⊢[Discrete] tr (Z1 p)`), `soundness_ztime_valid` (BL⁺'s empty-context discrete soundness)
+(`⊢[Discrete] tr (Z1 p)`), `soundness_ztime_valid` (L's empty-context discrete soundness)
 gives `ValidZTime (tr (Z1 p))`, and `minusValidZTime_iff_validZTime_tr` crosses the
 bridge.
 
 Combined with `not_minus_derivable_z1`, this refutes the `.ZTime` row of Phase 4's reduction:
-**`TM_z` is not weakly complete over ℤ-time.** Stated as the negation of `TMMinusCompleteZTime`
+**`TM⁻_z` is not weakly complete over ℤ-time.** Stated as the negation of `TMMinusCompleteZTime`
 so the two phases visibly compose.
 -/
 theorem minusValidZTime_z1 (p : Atom) : MinusValidZTime (Conservativity.Z1 (MinusFormula.atom p)) := by
@@ -196,9 +196,9 @@ theorem minusValidZTime_z1 (p : Atom) : MinusValidZTime (Conservativity.Z1 (Minu
   obtain ⟨d⟩ := Conservativity.z1_translate (MinusFormula.atom p)
   exact soundness_ztime_valid d
 
-/-- **TM_z is not weakly complete over ℤ-time.** The negation of Phase 4's `TMMinusCompleteZTime`,
+/-- **TM⁻_z is not weakly complete over ℤ-time.** The negation of Phase 4's `TMMinusCompleteZTime`,
 witnessed by `Z1 p`: `MinusValidZTime (Z1 p)` holds (`minusValidZTime_z1`) yet `Z1 p` is not
-`TM_z`-derivable (`not_minus_derivable_z1`). -/
+`TM⁻_z`-derivable (`not_minus_derivable_z1`). -/
 theorem tmMinusCompleteZTime_refuted (p : Atom) : ¬ TMMinusCompleteZTime :=
   fun h => not_minus_derivable_z1 p (h _ (minusValidZTime_z1 p))
 

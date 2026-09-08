@@ -1775,12 +1775,14 @@ app:ObjectiveModality|LIVE-UNPINNED|section label for the objective-modality app
 app:TaskSemantics|LIVE-UNPINNED|section label for the task-semantics appendix; cited as a pointer
 app:auto_existence|LIVE-UNPINNED|automorphism existence; cited as a pointer, text never quoted
 app:deterministic|LIVE-UNPINNED|determinism CORRESPONDENCE theorem, not the definition; the definition is def:deterministic, which IS pinned
+app:deterministic-future|LIVE-UNPINNED|the deterministic-future appendix, whose sentence sent:det uses the time store/recall operators; cited as a pointer by README.md's four-language table, which records that this repository's reserved L⋆ is the time-register fragment the appendix actually uses. Not pinned: no docstring quotes its text, and the Lean formalization of it is future work
 app:drift|LIVE-UNPINNED|the non-deterministic drift frame theorem (Tthm); DriftFrame.lean discusses its PROOF (the interpolation and the compactness/finite-intersection Saturation argument), which lives in the \begin{proof} block outside the Tthm and so is not what a pin would hash; the statement itself is cited as a pointer
 app:topology-r0|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
 app:topology-t1|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
 cor:no-characterization|LIVE-UNPINNED|the no-characterization corollary (Cthm); cited as a pointer, text never quoted
 cor:perpetuity-valid|LIVE-UNPINNED|perpetuity principles valid; the live anchor that replaced the never-existent app:valid
 def:BL-language|LIVE-UNPINNED|the BL language; cited as a pointer alongside the pinned def:BLplus-language
+def:BLstar-semantics|LIVE-UNPINNED|the truth definition for the manuscript's \BL^\star, whose ($\Stability$) clause is the semantics of this repository's L⁺; cited as a pointer wherever a docstring names the ⊡ clause. Not pinned: the clause is quoted in this repository only in paraphrase, and the anchor's block also covers the store/recall clauses, which no module here implements
 def:task-topology|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
 lem:deterministic-singleton|LIVE-UNPINNED|deterministic-frame singleton fibers (Lthm); cited as a pointer (StateSetTruth.lean names its choice-free direction but quotes no text)
 lem:history-time-shift-preservation|LIVE-UNPINNED|time-shift preservation; cited as a pointer

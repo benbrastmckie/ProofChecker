@@ -35,48 +35,48 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
 
 ## Conservativity (proof-theoretic, no semantics)
 
-- **Backward TM/TM⁺ bridge** (`Conservativity.translate`, `derivable_translate`, and the four
+- **Backward TM/TM bridge** (`Conservativity.translate`, `derivable_translate`, and the four
   row corollaries `ceb_backward` / `cef_backward` / `ced_backward` / `cec_backward`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). `TM ⊢ φ ⟹
-  TM⁺ ⊢ tr φ` over the tense-primitive base language of `FormalSystem/MinusLanguage/`. The
+  TM ⊢ tr φ` over the tense-primitive base language of `FormalSystem/MinusLanguage/`. The
   **forward** direction is refuted for the Base and Discrete rows and open for the other two;
   `Metalogic/Conservativity.lean`'s module docstring is the standing record of why it must not
   be attempted or `sorry`-ed. That record is row-dependent and is not restated here: CEF is
-  refuted with both halves machine-checked, CEB is refuted in the source with only its TM⁺ half
+  refuted with both halves machine-checked, CEB is refuted in the source with only its TM half
   machine-checkable in this tree, and CED/CEC are open. Per-row status lives in
   `docs/theorem-index.md`; the standing prohibition lives in `Conservativity.lean`.
-- **The H/G-fragment of TM⁺** (`Conservativity.TMFrag`, `Metalogic/Conservativity/Fragment.lean`):
+- **The H/G-fragment of TM** (`Conservativity.TMFrag`, `Metalogic/Conservativity/Fragment.lean`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Because the forward
   direction is refuted, TM is not the complete logic of base-language validity; the fragment
-  `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
+  `TMFrag fc φ := TM ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
   (`tmFrag_complete_*`), containing TM everywhere (`tmMinus_le_tmFrag`) and strictly at `.ZTime`
   (`tmMinus_lt_tmFrag_ztime`). Its consequence relation is compact at `.Base` and `.Dense`
   (`minusCompactBase`, `minusCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
   Discrete/Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
-- **The stability extension L⋆ / TM⋆** (`Metalogic/Conservativity/Plus.lean`, over
-  `FormalSystem/PlusLanguage/` and `Semantics/Star*.lean`): SORRY-FREE (axioms: exactly
-  `propext`, `Classical.choice`, `Quot.sound`). Soundness of TM⋆ at every frame class
+- **The stability extension L⁺ / TM⁺** (`Metalogic/Conservativity/Plus.lean`, over
+  `FormalSystem/PlusLanguage/` and `Semantics/Plus*.lean`): SORRY-FREE (axioms: exactly
+  `propext`, `Classical.choice`, `Quot.sound`). Soundness of TM⁺ at every frame class
   (`plus_soundness_validIn`), TD discharged semantically by the companion recursion with the
-  TM⁺ schemata over L⋆ handled by atomization; semantic conservativity
-  (`Semantics.plusValidIn_ofFormula_iff`); and **proof-theoretic conservativity of TM⋆ over TM⁺
+  TM schemata over L⁺ handled by atomization; semantic conservativity
+  (`Semantics.plusValidIn_ofFormula_iff`); and **proof-theoretic conservativity of TM⁺ over TM
   in both directions at all four classes** (`plusDerivable_ofFormula_iff`) — the forward
-  direction from TM⋆ soundness and the four completeness engines, needing no TM⋆ completeness.
-  TM⋆ completeness and decidability are open. One durable fact bears on any future attempt: the
+  direction from TM⁺ soundness and the four completeness engines, needing no TM⁺ completeness.
+  TM⁺ completeness and decidability are open. One durable fact bears on any future attempt: the
   countermodels of all four completeness engines are **deterministic** — `multiFamTaskFrameGen`
   (`Metalogic/Algebraic/FlowFrame.lean`) has `TaskRel p d q := p.1 = q.1 ∧ q.2 = p.2 + d`, and
   `zTaskFrameV2` (`Metalogic/WeakCanonical/IntegerModel/ReynoldsBridge.lean`) has `u = w + d` —
-  so on them `⊡` is the identity, and none of the engines transfers to L⋆.
+  so on them `⊡` is the identity, and none of the engines transfers to L⁺.
 
 ## Publication-Ready Results
 
 - **Soundness** (`soundness`): SORRY-FREE
 - **Soundness (dense)** (`soundness_dense`): SORRY-FREE
 - **Soundness (discrete)** (`soundness_ztime`): SORRY-FREE
-- **Soundness, base language BL** (`minus_soundness`, `minus_soundness_dense`,
+- **Soundness, base language L⁻** (`minus_soundness`, `minus_soundness_dense`,
   `minus_soundness_ztime`, `minus_soundness_rtime`, plus the empty-context validity forms and the
   consistency corollaries `minus_not_derivable_nil_bot` / `minus_not_derivable_nil_bot_ztime`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Stated against the
-  **native** BL semantics `MinusTruthAt` of `Semantics/MinusTruth.lean` — a six-clause recursion on
+  **native** L⁻ semantics `MinusTruthAt` of `Semantics/MinusTruth.lean` — a six-clause recursion on
   `MinusFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
   induction in `Metalogic/Conservativity/MinusLanguageSoundness.lean`. `minus_soundness_rtime` carries
@@ -159,7 +159,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `PlusFormula`s
   defines the class of frames satisfying `TaskFrame.Deterministic`, witnessed by the
   indistinguishable pair `F°` (a drift band over `ℝ`) and `F¹` (translation over `ℝ`), which
-  validate exactly the same L⋆ formulas while differing in determinism. The same pair refutes the
+  validate exactly the same L⁺ formulas while differing in determinism. The same pair refutes the
   converse of the deterministic collapse `determined_of_deterministic`
   (`Semantics/PlusDeterminism.lean`): validity of *Determined* holds on a class strictly larger
   than the deterministic frames. Uniform substitution is unsound in this setting, so no proof

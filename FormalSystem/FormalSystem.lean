@@ -34,8 +34,8 @@ with linear temporal logic.
 - `FormalSystem.ProofSystem`: Hilbert-style proof system with 45 axiom schemata
 (base/dense/discrete)
 and 7 inference rules
-- `FormalSystem.MinusLanguage`: The tense-primitive base language BL (`H`/`G` primitive) with
-  TM's Hilbert system and the translation `tr : MinusFormula → Formula` into BL⁺, supporting the
+- `FormalSystem.MinusLanguage`: The tense-primitive base language L⁻ (`H`/`G` primitive) with
+  TM's Hilbert system and the translation `tr : MinusFormula → Formula` into L, supporting the
   backward conservativity bridge in `Metalogic/Conservativity/Backward.lean`. Imports nothing from
   `Semantics/`
 - `FormalSystem.Semantics`: Task frame semantics with convex histories, truth evaluation, and

@@ -29,7 +29,7 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
   `ℤ`-time; strictly stronger than `IsDiscrete`, and the predicate the proof side's
   `FrameClass.ZTime` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
-- `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM⁺_r target
+- `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM_r target
 - `TaskFrame.Deterministic` — `def:deterministic`: every fibre of the task relation is a
   subsingleton, the frame condition the stability modal `⊡` collapses over
 
@@ -40,7 +40,7 @@ split would silently widen a soundness target:
 
 - **Discrete splits.** `def:frame-properties`' bare Discrete clause is `IsDiscrete`.
   `def:BX-z` narrows the class its axioms are sound over: the discrete task frames over which
-  BX_z and TM⁺_z are sound and complete are exactly those over `ℤ`-time, because the axioms `UZ`
+  BX_z and TM_z are sound and complete are exactly those over `ℤ`-time, because the axioms `UZ`
   and `Z1` fail over every non-Archimedean discrete order. That narrowed class is `IsZTime`, and
   only the narrowed one is a sound interpretation of the proof side's `FrameClass.ZTime`.
 - **Complete splits.** `def:frame-properties`' bare Complete clause is `IsComplete`, which `ℤ`
@@ -130,7 +130,7 @@ def TaskFrame.IsDiscrete (F : TaskFrame) : Prop :=
 /--
 The **successor-Archimedean discrete** class: `def:BX-z`'s narrowing of `IsDiscrete`.
 
-`def:BX-z` closes by narrowing the discrete class over which `BX_z` and `TM⁺_z` are sound and
+`def:BX-z` closes by narrowing the discrete class over which `BX_z` and `TM_z` are sound and
 complete to exactly the frames over `ℤ`-time: the axioms `UZ` and `Z1` fail over every discrete
 temporal order that is not Archimedean, and the Archimedean discrete orders are exactly `ℤ`-time.
 (An earlier revision of the paper reached the same conclusion by way of Hölder's theorem, which is
@@ -191,7 +191,7 @@ def TaskFrame.IsComplete (F : TaskFrame) : Prop :=
 
 /--
 The **dense and Dedekind-complete** class: `def:frame-properties`' Dense clause conjoined with its
-Complete clause. This is `cor:tm-completeness`'s TM⁺_r target — that corollary states TM⁺_r
+Complete clause. This is `cor:tm-completeness`'s TM_r target — that corollary states TM_r
 weakly complete over `ℝ`-time, the dense and Dedekind-complete orders — and the semantic
 interpretation of the proof side's `FrameClass.RTime`.
 

@@ -12,7 +12,7 @@ import Mathlib.Data.Int.SuccPred
 # Non-validities of `⊡` on the permissive frame over ℤ
 
 Machine-checked refutations of the candidate `⊡`/tense interaction principles that are **not**
-axioms of TM⋆ (`PlusLanguage/Axioms.lean`). Every refutation lives on one countermodel: the
+axioms of TM⁺ (`PlusLanguage/Axioms.lean`). Every refutation lives on one countermodel: the
 permissive frame `natFrame` over `ℤ` (`Semantics/TaskFrame.lean`), where every function
 `ℤ → ℕ` is a total history, so `⟨τ⟩_t` is as large as it can be; the valuation makes every atom
 true at world state `0` and nowhere else.
@@ -51,7 +51,7 @@ Transcription of Part D of the compiled stability-modal probes recorded with the
 
 ## Tags
 
-star-language · refutation · stability-modal · upper-bound
+plus-language · refutation · stability-modal · upper-bound
 -/
 
 namespace FormalSystem.Semantics

@@ -1,18 +1,37 @@
 # Rename Inventory: Task #562
 
 - **Task**: 562 - Sync language names with the paper (L⁻ / L / L⁺ / L⋆)
-- **Type**: inventory (plan deliverable 1, Phase 1 output)
-- **Date**: 2026-09-08
+- **Status**: [COMPLETED]
+- **Started**: 2026-09-08T18:22:00Z
+- **Completed**: 2026-09-08T18:35:00Z
+- **Effort**: ~15 minutes
+- **Dependencies**: None
+- **Sources/Inputs**: the task description (a full specification), `FormalSystem/**`,
+  `docs/**`, `README.md`, `NOTATION.md`, `ORGANISATION.md`, `typst/FormalFoundations.typ`,
+  `scripts/check-module-invariants.sh`, `specs/state.json`, `specs/paper-definitions-of-record.md`
+- **Artifacts**: reports/01_rename-inventory.md (this file)
+- **Standards**: report-format.md, artifact-management.md, tasks.md
 - **Plan**: `specs/562_sync_language_names_with_paper_l_minus_plus_star/plans/01_sync-language-names-paper.md`
-- **Standards**: report-format.md, artifact-management.md
 
-## Overview
+## Executive Summary
+
+Every declaration, module, namespace, notation and prose token this rename touches, mapped
+name-by-name to its replacement, with the ambiguous documentation sites classified by hand. The
+counts match the plan's hypothesis exactly for the three declaration families (63 / 66 / 23) and
+differ by more than 10% on two figures, both re-scoped below rather than absorbed silently. The
+load-bearing finding is that **no phase may use a pattern-based `sed`**: four token families that
+a naive `bl`/`star` pattern matches must not be renamed, and two of them are local hypothesis
+names inside proof terms.
+
+## Context & Scope
 
 This is the name-by-name mapping every later phase renames from. It re-derives the plan's
 "Measured surface" figures, enumerates every declaration, module, namespace, notation and
 prose-token site the rename touches, and classifies the ambiguous documentation sites.
 
-## Re-derived surface (Phase 1 Scope Hypothesis check)
+## Findings
+
+### Re-derived surface (Phase 1 Scope Hypothesis check)
 
 | Surface | Plan hypothesis | Measured | Delta |
 |---|---|---|---|
@@ -42,7 +61,7 @@ silently:
    1556 (`C14LEAN`), plus one prose comment at line 1345 that names
    `Semantics.starValidIn_ofFormula_iff`. Phase 12 is re-scoped to 17 + 17 + 1 = 35 lines.
 
-## False positives excluded from every rename rule
+### False positives excluded from every rename rule
 
 These tokens match a naive `bl`/`BL`/`star`/`Star` pattern but MUST NOT be renamed. A blanket
 `sed` would corrupt them; two of them sit inside proof terms.
@@ -62,7 +81,7 @@ These tokens match a naive `bl`/`BL`/`star`/`Star` pattern but MUST NOT be renam
 **Consequence for method**: no phase may use a pattern-based `sed`. Every rename below is applied
 as an **exact whole-token substitution** from the tables in this report, longest-token-first.
 
-## Structural moves (Phases 2 and 5)
+### Structural moves (Phases 2 and 5)
 
 ### Directories
 
@@ -117,7 +136,7 @@ each directory together with its sibling aggregator in the same commit.
 
 `⊢ᴮᴸ` occurs in 7 files (31 occurrences); `⊢⋆` in 3 files.
 
-## Declaration mapping
+### Declaration mapping
 
 ### L⁻ family: 67 tokens (`BL*` / `bl*` / `bl_*` → `Minus*` / `minus*` / `minus_*`)
 
@@ -319,7 +338,9 @@ each directory together with its sibling aggregator in the same commit.
 
 Split: **13 renamed, 10 kept** of the 23 tm-family declarations.
 
-## Decision 1 confirmed: `ofPlus` → `ofTM`
+## Decisions
+
+### Decision 1 confirmed: `ofPlus` → `ofTM`
 
 `ofPlus` has 22 occurrences, all inside `StarLanguage/{Axioms,Derivation,Formula}.lean` and
 `StarLanguage.lean`, and all denote the embedding of the S/U (`Axiom` / `DerivationTree`)
@@ -339,7 +360,9 @@ and the two Atomization helpers follow the same rule:
 Post-rename assertion for Phase 6: zero occurrences of `ofPlus`, `PlusPlus`, `plus_of_plus`,
 `plusAxiom_ofPlus`.
 
-## Prose-token inventory and hand classification
+## Recommendations
+
+### Prose-token inventory and hand classification
 
 ### Current meaning of each decorated token (verified by reading every declaring site)
 
@@ -406,7 +429,7 @@ In-tree `README.md` (8): `FormalSystem/`, `FormalSystem/Semantics/`,
 `FormalSystem/Metalogic/Independence/`.
 Plus `typst/FormalFoundations.typ`.
 
-## `scripts/check-module-invariants.sh` C14 rows (Phase 12)
+### `scripts/check-module-invariants.sh` C14 rows (Phase 12)
 
 17 rows in `C14BASE` (lines 1396–1400, 1414–1419, 1433–1434, 1437–1439, 1449), their 17
 `#print axioms` twins in `C14LEAN` (1503–1507, 1521–1526, 1540–1541, 1544–1546, 1556), and one
@@ -430,14 +453,14 @@ prose comment at line 1345. Old → new NAME only; **no axiom set on any row cha
 
 C2's four flagship rows are all `FormalSystem.Metalogic.BXCanonical.*` and are **untouched**.
 
-## `docs/theorem-index.md` rows whose Lean name changes
+### `docs/theorem-index.md` rows whose Lean name changes
 
 Every `bl_soundness*`, `bl_not_derivable_nil_bot*`, `tmComplete*`, `star_soundness*`,
 `starDerivable_*`, `starValidIn_*` and `deterministic_not_starDefinable` row, plus the two
 language rows and the "Name collision" note. Re-derived in Phase 9 by grepping the file against
 the three mapping tables above.
 
-## Non-`.lean` consumers of renamed identifiers
+### Non-`.lean` consumers of renamed identifiers
 
 | File | What it names |
 |---|---|
@@ -448,7 +471,7 @@ the three mapping tables above.
 `Tests/` carries **no** old vocabulary; `lake-manifest.json`, `lakefile.lean` and
 `scripts/module-invariants-manifest.txt` were checked and carry none.
 
-## Verification of this phase
+### Verification of this phase
 
 - `git status` shows no change under `FormalSystem/`, `docs/`, `typst/` or the repository root.
 - Every declaration in the three families has a new name; there are no `TBD` rows.

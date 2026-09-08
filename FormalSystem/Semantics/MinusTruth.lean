@@ -13,21 +13,21 @@ assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.Deriva
   FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass
 
 /-!
-# `MinusTruthAt` — native task semantics for the tense-primitive base language BL
+# `MinusTruthAt` — native task semantics for the tense-primitive base language L⁻
 
 This module defines truth evaluation for `FormalSystem.MinusLanguage.MinusFormula` — the base
-language BL of `def:BL-language`, whose `H`/`G` are *primitive* — directly by recursion on
+language L⁻ of `def:BL-language`, whose `H`/`G` are *primitive* — directly by recursion on
 `MinusFormula`'s six constructors, transcribing `def:BL-semantics` clause for clause.
 
 ## This is a native recursion, not a composite
 
 `MinusTruthAt` is **not** `TruthAt ∘ tr`. Every clause below quantifies in the base language's own
 terms: the `allPast`/`allFuture` clauses state the paper's universal quantification over times
-directly rather than routing through BL⁺'s `untl`/`snce` abbreviations, and no clause mentions
+directly rather than routing through L's `untl`/`snce` abbreviations, and no clause mentions
 the translation. That is what makes the truth-transfer bridge
 (`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `truthAt_tr`) a *theorem* with content in
-its temporal cases, rather than a definitional unfolding — and it is what makes a BL soundness
-theorem stated against `MinusTruthAt` a claim about BL rather than a restatement of the BL⁺ one.
+its temporal cases, rather than a definitional unfolding — and it is what makes an L⁻ soundness
+theorem stated against `MinusTruthAt` a claim about L⁻ rather than a restatement of the L one.
 
 ## Paper Specification Reference
 
@@ -78,7 +78,7 @@ about the converse; see `FormalSystem/MinusLanguage.lean`'s "Module Invariant" s
 ## References
 
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:BL-language`
-* `FormalSystem/Semantics/Truth.lean` — the BL⁺ truth definition this mirrors
+* `FormalSystem/Semantics/Truth.lean` — the L truth definition this mirrors
 * `FormalSystem/MinusLanguage/Formula.lean` — `MinusFormula` and its derived operators
 
 ## Tags

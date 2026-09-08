@@ -7,9 +7,9 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Syntax.Atom
 
 /-!
-# `MinusFormula` — the tense-primitive base language BL
+# `MinusFormula` — the tense-primitive base language L⁻
 
-This module defines the *base language* `BL` of the paper's `\S sub:Logic`
+This module defines the *base language* `L⁻` of the paper's `\S sub:Logic`
 (`def:BL-language`), in which `H` (`allPast`) and `G` (`allFuture`) are **primitive**:
 
 ```
@@ -24,11 +24,11 @@ substance of the backward conservativity bridge in
 
 ## Main Definitions
 
-- `MinusFormula`: six-constructor inductive type for BL
+- `MinusFormula`: six-constructor inductive type for L⁻
 - `MinusFormula.neg`, `top`, `and`, `or`, `iff`: derived Boolean operators
 - `MinusFormula.somePast` (P), `MinusFormula.someFuture` (F): derived existential temporal operators
 - `MinusFormula.always` (△): `Hφ ∧ φ ∧ Gφ`, mirroring `Formula.always`
-- `MinusFormula.swapMinus`: the past/future interchange used by TM's **TD** rule
+- `MinusFormula.swapMinus`: the past/future interchange used by TM⁻'s **TD** rule
 
 ## Main Results
 
@@ -59,8 +59,8 @@ constructors below. Nothing flows back the other way, so the `grep` check above 
 
 ## References
 
-* JPL paper `\S sub:Logic` — `def:BL-language` and the TM axiomatization
-* `FormalSystem/Syntax/Formula.lean` — the BL⁺ (until/since-primitive) side
+* JPL paper `\S sub:Logic` — `def:BL-language` and the TM axiomatization that TM⁻ transposes
+* `FormalSystem/Syntax/Formula.lean` — the L (until/since-primitive) side
 -/
 
 namespace FormalSystem.MinusLanguage
@@ -68,12 +68,12 @@ namespace FormalSystem.MinusLanguage
 open FormalSystem.Syntax
 
 /--
-Formula type for the tense-primitive base language BL.
+Formula type for the tense-primitive base language L⁻.
 
 Six primitive constructors, per `def:BL-language`:
 `φ, ψ ::= pᵢ | ⊥ | φ → ψ | □φ | Hφ | Gφ`.
 
-Atoms are the *existing* `FormalSystem.Syntax.Atom`, shared with BL⁺, so the translation `tr`
+Atoms are the *existing* `FormalSystem.Syntax.Atom`, shared with L, so the translation `tr`
 is the identity on atoms.
 -/
 inductive MinusFormula : Type where
@@ -134,8 +134,8 @@ def always (φ : MinusFormula) : MinusFormula := φ.allPast.and (φ.and φ.allFu
 /--
 Interchange the two universal temporal operators `H` and `G` throughout a formula.
 
-This is the BL-side analogue of `Formula.swapTemporal` and is what TM's **TD** rule
-("if `⊢ φ` then `⊢ φ⟨P|F⟩`") transforms by. Note that on the BL⁺ side the corresponding
+This is the L⁻-side analogue of `Formula.swapTemporal` and is what TM⁻'s **TD** rule
+("if `⊢ φ` then `⊢ φ⟨P|F⟩`") transforms by. Note that on the L side the corresponding
 operation swaps the *primitive* `untl`/`snce`; the commutation of the two is
 `MinusLanguage.tr_swapMinus`.
 -/
@@ -153,7 +153,7 @@ theorem swapMinus_involution (φ : MinusFormula) : φ.swapMinus.swapMinus = φ :
 
 /-! ### `swapMinus` push-through lemmas for the derived operators
 
-These are the BL-side counterparts of `Formula.swap_temporal_neg`,
+These are the L⁻-side counterparts of `Formula.swap_temporal_neg`,
 `Formula.swap_temporal_some_future`, and friends. They are `@[simp]` so that the TD case of
 the Phase 8 recursion and the axiom-discharge table can normalise a `swapMinus` of a derived
 operator without unfolding to primitives by hand. -/
@@ -201,7 +201,7 @@ theorem atom_injective : Function.Injective MinusFormula.atom := by
 
 end MinusFormula
 
-/-- BL-side proof contexts, mirroring `FormalSystem.Syntax.Context`.
+/-- L⁻-side proof contexts, mirroring `FormalSystem.Syntax.Context`.
 
 Defined here rather than in `MinusLanguage/Derivation.lean` because both `Derivation.lean` and
 `Translation.lean` need it and neither imports the other. -/

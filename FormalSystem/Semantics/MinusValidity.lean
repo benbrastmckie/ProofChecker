@@ -8,9 +8,9 @@ import FormalSystem.Semantics.MinusTruth
 import FormalSystem.Semantics.Validity
 
 /-!
-# BL validity — the base-language mirrors of `Semantics/Validity.lean`
+# L⁻ validity — the base-language mirrors of `Semantics/Validity.lean`
 
-Validity and semantic consequence for the tense-primitive base language BL, stated against the
+Validity and semantic consequence for the tense-primitive base language L⁻, stated against the
 native `MinusTruthAt` of `Semantics/MinusTruth.lean`.
 
 Each predicate here is a **binder-for-binder mirror** of its counterpart in
@@ -25,22 +25,22 @@ than `Type*` is used throughout for the same universe reason recorded on `Valid`
 
 There is deliberately **no** density-free `MinusValidComplete`, and the soundness theorem for
 `FrameClass.RTime` targets `MinusValidRTime`. A density-free target would be
-**refutable**, and on the BL side one axiom suffices to refute it:
+**refutable**, and on the L⁻ side one axiom suffices to refute it:
 
 - `(MinusLanguage.Axiom.dn φ).minFrameClass = FrameClass.Dense` and
   `FrameClass.Dense ≤ FrameClass.RTime` (pinned by an `example` in
   `FormalSystem/MinusLanguage/Axioms.lean`), so `dn` — the density axiom `GGφ → Gφ` — is
-  admissible in any `FrameClass.RTime` BL derivation.
+  admissible in any `FrameClass.RTime` L⁻ derivation.
 - `dn` is false on `ℤ`: take `φ` true exactly at the times `≥ t + 2`. Then `GGφ` holds at `t`
   while `Gφ` fails at `t`, because `t + 1` is strictly future and `φ` is false there.
 - `ℤ` satisfies every binder of a density-free `MinusValidComplete` — it is Dedekind-complete
   (Mathlib's `ConditionallyCompleteLinearOrder ℤ`) — so the refutation lands.
 
 Adding `[DenselyOrdered D]` deletes exactly the `ℤ` branch of the Hölder dichotomy and nothing
-else (`Semantics/DurationClassification.lean`). This is the BL-native form of the argument
-`Semantics/Validity.lean` records for `ValidComplete` on the BL⁺ side; note that BL⁺'s version
-additionally leans on `Axiom.dense_indicator` (`¬(⊥ U ⊤)`), which has no BL counterpart at all
-since BL has no `untl`. Do not "simplify" the target.
+else (`Semantics/DurationClassification.lean`). This is the L⁻-native form of the argument
+`Semantics/Validity.lean` records for `ValidComplete` on the L side; note that L's version
+additionally leans on `Axiom.dense_indicator` (`¬(⊥ U ⊤)`), which has no L⁻ counterpart at all
+since L⁻ has no `untl`. Do not "simplify" the target.
 
 ## Main Definitions
 
@@ -57,7 +57,7 @@ since BL has no `untl`. Do not "simplify" the target.
 ## References
 
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:logical-consequence`
-* `FormalSystem/Semantics/Validity.lean` — the BL⁺ predicates these mirror
+* `FormalSystem/Semantics/Validity.lean` — the L predicates these mirror
 * `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — the soundness theorems targeting these
 
 ## Tags
@@ -84,7 +84,7 @@ def MinusSemanticConsequence (Γ : MinusLanguage.Context) (φ : MinusFormula) : 
 /-! ## `FrameClass`-indexed validity for the base language
 
 The same two-layer shape `Semantics/Validity.lean` gives the full language, mirrored here against
-`MinusTruthAt`. BL⁺ needs its own predicates because it has its own truth recursion — `MinusTruthAt` is
+`MinusTruthAt`. L needs its own predicates because it has its own truth recursion — `MinusTruthAt` is
 defined natively on `MinusFormula`'s six constructors per `def:BL-semantics`, not via `untl`/`snce` —
 but it shares one and the same `FrameClass.Sat`, so the frame classes the two languages are
 indexed by are literally the same classes and not two parallel copies. -/
@@ -93,20 +93,20 @@ indexed by are literally the same classes and not two parallel copies. -/
 `def:frame-validity` for the base language: `φ` is **valid over the frame `F`** iff it is true at
 every model over `F`, every possible world `τ ∈ H_F`, and every time `x ∈ D`.
 
-The BL mirror of `TaskFrame.ValidOn`, and in fact the more literal reading of the anchor, whose
-text is stated for "a well-formed sentence `φ` of `BL`". `TaskFrame.ValidOn` is the same clause
+The L⁻ mirror of `TaskFrame.ValidOn`, and in fact the more literal reading of the anchor, whose
+text is stated for "a well-formed sentence `φ` of `L⁻`". `TaskFrame.ValidOn` is the same clause
 applied to the full language's `Formula`. Both render the bundled `H_F` as `TaskFrame.HF`.
 -/
 def TaskFrame.MinusValidOn (F : TaskFrame) (φ : MinusFormula) : Prop :=
   ∀ (M : TaskModel F) (τ : TaskFrame.HF F) (x : F.Duration), MinusTruthAt M τ.val x φ
 
-/-- `φ` is valid on every frame satisfying `P`. The BL mirror of `Semantics.ValidOnFrames`, and
+/-- `φ` is valid on every frame satisfying `P`. The L⁻ mirror of `Semantics.ValidOnFrames`, and
 for the same reason: indexing the primitive by a bare frame predicate rather than by a
 `FrameClass` tag is what lets one monotonicity lemma serve every bridge. -/
 def MinusValidOnFrames (P : TaskFrame → Prop) (φ : MinusFormula) : Prop :=
   ∀ F : TaskFrame, P F → F.MinusValidOn φ
 
-/-- `cor:tm-completeness`'s class-restricted consequence `⊨_C` for the base language. The BL
+/-- `cor:tm-completeness`'s class-restricted consequence `⊨_C` for the base language. The L⁻
 mirror of `Semantics.ValidIn`, over the same `FrameClass.Sat`. -/
 def MinusValidIn (fc : ProofSystem.FrameClass) (φ : MinusFormula) : Prop :=
   MinusValidOnFrames fc.Sat φ
@@ -128,33 +128,33 @@ def MinusValid (φ : MinusFormula) : Prop :=
   MinusValidIn ProofSystem.FrameClass.Base φ
 
 /-- Introduce `MinusValid` from its pre-abbreviation binder shape; the `Sat .Base` argument (`True`)
-is discharged here rather than at each call site. The BL mirror of `Valid.of_forall_total`. -/
+is discharged here rather than at each call site. The L⁻ mirror of `Valid.of_forall_total`. -/
 theorem MinusValid.of_forall_total {φ : MinusFormula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, MinusTruthAt M τ t φ) :
     MinusValid φ :=
   fun F _ M τ t => h F M τ.val τ.property t
 
-/-- Eliminate `MinusValid` into its pre-abbreviation binder shape. The BL mirror of `Valid.apply`. -/
+/-- Eliminate `MinusValid` into its pre-abbreviation binder shape. The L⁻ mirror of `Valid.apply`. -/
 theorem MinusValid.apply {φ : MinusFormula} (h : MinusValid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : MinusTruthAt M τ t φ :=
   h F trivial M ⟨τ, hτ⟩ t
 
-/-- **The one monotonicity lemma for BL⁺**: `MinusValidOnFrames` is antitone in its frame predicate.
-The BL mirror of `Semantics.ValidOnFrames.mono`. -/
+/-- **The one monotonicity lemma for L**: `MinusValidOnFrames` is antitone in its frame predicate.
+The L⁻ mirror of `Semantics.ValidOnFrames.mono`. -/
 theorem MinusValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : MinusFormula} (h : ∀ F, Q F → P F)
     (hP : MinusValidOnFrames P φ) : MinusValidOnFrames Q φ :=
   fun F hF => hP F (h F hF)
 
-/-- BL⁺ validity is monotone in the `FrameClass` order, pointing the same direction as
-`MinusLanguage.DerivationTree.lift`. The BL mirror of `Semantics.ValidIn.mono`. -/
+/-- L validity is monotone in the `FrameClass` order, pointing the same direction as
+`MinusLanguage.DerivationTree.lift`. The L⁻ mirror of `Semantics.ValidIn.mono`. -/
 theorem MinusValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : MinusFormula} (h : fc₁ ≤ fc₂)
     (hv : MinusValidIn fc₁ φ) : MinusValidIn fc₂ φ :=
   MinusValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
 
 /-! ### Binder-shape adapters for the generic layer
 
-The BL mirrors of `Semantics.ValidOnFrames.of_forall_total` / `.apply_total` and their
+The L⁻ mirrors of `Semantics.ValidOnFrames.of_forall_total` / `.apply_total` and their
 `FrameClass`-tagged forms. `MinusValidOnFrames` is stated over the bundled `(τ : TaskFrame.HF F)`;
 every proof that consumes or produces it works with the unbundled pair
 `(τ : ConvexHistory F) (hτ : τ.IsTotal)`. The two spellings are not definitionally equal, so these
@@ -166,7 +166,7 @@ Unlike the per-class `.of_forall`/`.apply` pairs further down, these are generic
 predicate, which is what lets one pair serve every class at once. -/
 
 /-- Introduce `MinusValidOnFrames` from the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape.
-The BL mirror of `Semantics.ValidOnFrames.of_forall_total`. -/
+The L⁻ mirror of `Semantics.ValidOnFrames.of_forall_total`. -/
 theorem MinusValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : MinusFormula}
     (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, MinusTruthAt M τ t φ) :
@@ -174,13 +174,13 @@ theorem MinusValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : MinusF
   fun F hF M τ t => h F hF M τ.val τ.property t
 
 /-- Eliminate `MinusValidOnFrames` into the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape.
-The BL mirror of `Semantics.ValidOnFrames.apply_total`. -/
+The L⁻ mirror of `Semantics.ValidOnFrames.apply_total`. -/
 theorem MinusValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : MinusFormula}
     (h : MinusValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : MinusTruthAt M τ t φ :=
   h F hF M ⟨τ, hτ⟩ t
 
-/-- `MinusValidOnFrames.of_forall_total` at a `FrameClass` tag. The BL mirror of
+/-- `MinusValidOnFrames.of_forall_total` at a `FrameClass` tag. The L⁻ mirror of
 `Semantics.ValidIn.of_forall_total`. -/
 theorem MinusValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : MinusFormula}
     (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
@@ -188,7 +188,7 @@ theorem MinusValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : MinusFo
     MinusValidIn fc φ :=
   MinusValidOnFrames.of_forall_total h
 
-/-- `MinusValidOnFrames.apply_total` at a `FrameClass` tag. The BL mirror of
+/-- `MinusValidOnFrames.apply_total` at a `FrameClass` tag. The L⁻ mirror of
 `Semantics.ValidIn.apply_total`. -/
 theorem MinusValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : MinusFormula}
     (h : MinusValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
@@ -196,7 +196,7 @@ theorem MinusValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : MinusFormul
   MinusValidOnFrames.apply_total h F hF M τ hτ t
 
 /--
-Validity over **dense** temporal orders, capturing the frame condition for BL's density axiom
+Validity over **dense** temporal orders, capturing the frame condition for L⁻'s density axiom
 `dn` (`GGφ → Gφ`).
 
 Binder-for-binder mirror of `Semantics.ValidDense`, and like it now an abbreviation: the frame
@@ -209,7 +209,7 @@ def MinusValidDense (φ : MinusFormula) : Prop := MinusValidIn ProofSystem.Frame
 
 /--
 Validity over **discrete** temporal orders: `MinusValid` with successor and predecessor structure
-added to the binder list, capturing the frame condition for BL's discreteness axioms.
+added to the binder list, capturing the frame condition for L⁻'s discreteness axioms.
 
 Binder-for-binder mirror of `Semantics.ValidZTime`, and like it now an abbreviation: the frame
 constraint is `FrameClass.Sat .ZTime`, i.e. `TaskFrame.IsZTime` — `def:BX-z`'s
@@ -230,7 +230,7 @@ this is stated directly in the pre-abbreviation shape rather than as an abbrevia
 a value of this type already **is** the binder-shape statement.
 
 **Why this exists.** `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `minus_soundness_ztime_succ` is the
-single prerequisite CEF was missing (report §6.1): a discrete BL soundness theorem that does not
+single prerequisite CEF was missing (report §6.1): a discrete L⁻ soundness theorem that does not
 assume Archimedean structure, so it applies to the non-Archimedean carrier `ℚ ×ₗ ℤ`
 (`Semantics/LexCarrier.lean`) that `Metalogic/Conservativity/Z1Countermodel.lean`'s countermodel is built over.
 -/
@@ -242,7 +242,7 @@ def MinusValidZTimeSucc (φ : MinusFormula) : Prop :=
 and its dense/RTime siblings.
 
 **Documented exception to the transfer-theorem collapse.** Its three siblings are corollaries of
-`MinusValidIn.mono`, and every BL/BL⁺ equivalence in `Metalogic/Conservativity/MinusLanguageSoundness.lean` is a
+`MinusValidIn.mono`, and every L⁻/L equivalence in `Metalogic/Conservativity/MinusLanguageSoundness.lean` is a
 corollary of `minusValidIn_iff_validIn_tr`. This one is neither, and cannot be made either:
 `MinusValidZTimeSucc` is **not** any `MinusValidIn fc` — no `FrameClass.Sat` variant bundles just
 `SuccOrder` + `PredOrder` without the two Archimedean conditions, which is exactly the weakening
@@ -259,7 +259,7 @@ together with `[DenselyOrdered D]`.
 
 Binder-for-binder mirror of `Semantics.ValidRTime`, and **this — not a density-free
 `MinusValidComplete` — is the target of the `FrameClass.RTime` soundness theorem.** The module
-docstring above gives the BL-native refutation of the density-free form: `Axiom.dn` is admissible
+docstring above gives the L⁻-native refutation of the density-free form: `Axiom.dn` is admissible
 at `FrameClass.RTime` and is false on `ℤ`, which satisfies every remaining binder. There is
 deliberately no `MinusValidComplete` in this file.
 
@@ -279,12 +279,12 @@ All three are now corollaries of the single `MinusValidIn.mono`, routed through
 `minusValid_iff_minusValidIn_base` and `FrameClass.base_le`. Before the indexing they were three
 hand-written binder-discarding lambdas.
 
-Two members of the BL⁺ family have no mirror here, both for the same reason: they mention
-`ValidComplete`, whose BL counterpart is deliberately not defined (see the module docstring).
+Two members of the L family have no mirror here, both for the same reason: they mention
+`ValidComplete`, whose L⁻ counterpart is deliberately not defined (see the module docstring).
 Those are `Validity.valid_implies_validComplete` and
 `Validity.validRTime_of_validComplete`. -/
 
-/-- `MinusValid` is `MinusValidIn` at the unconstrained class: `Sat .Base` is `True`. The BL mirror of
+/-- `MinusValid` is `MinusValidIn` at the unconstrained class: `Sat .Base` is `True`. The L⁻ mirror of
 `Validity.valid_iff_validIn_base`. -/
 theorem minusValid_iff_minusValidIn_base (φ : MinusFormula) :
     MinusValid φ ↔ MinusValidIn ProofSystem.FrameClass.Base φ := Iff.rfl
