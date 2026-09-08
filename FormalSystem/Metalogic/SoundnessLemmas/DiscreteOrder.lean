@@ -7,6 +7,7 @@ Authors: Benjamin Brast-McKie
 import Mathlib.Data.Nat.Find
 import Mathlib.Order.SuccPred.Basic
 import Mathlib.Order.SuccPred.Archimedean
+import FormalSystem.Init
 
 /-!
 # The order cores of the discrete-frame soundness lemmas

@@ -8,6 +8,7 @@ import Mathlib.Algebra.Order.Group.Defs
 import Mathlib.Algebra.Order.Group.Abs
 import Mathlib.Algebra.Order.Group.Int
 import Mathlib.Algebra.Order.Ring.Int
+import FormalSystem.Init
 
 /-!
 # TemporalOrder — the paper's `def:temporal-order`, reified

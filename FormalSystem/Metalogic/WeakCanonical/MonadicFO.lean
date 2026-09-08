@@ -10,6 +10,7 @@ import Mathlib.Data.Fin.Tuple.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.SetTheory.Cardinal.NatCard
 import Mathlib.Tactic.Positivity
+import FormalSystem.Init
 
 /-!
 # Monadic First-Order Logic over Linear Orders

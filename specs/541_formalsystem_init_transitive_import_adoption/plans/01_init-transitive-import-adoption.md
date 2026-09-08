@@ -241,14 +241,14 @@ graph model drifted, not a reason to proceed.
 
 ---
 
-### Phase 3: Mid-Tier Leaves [NOT STARTED]
+### Phase 3: Mid-Tier Leaves [COMPLETED]
 
 **Goal**: Adopt the six mid-fan-out minimal elements in one batch, now that the mechanism has been
 shown to work, keeping the two tree-invalidating leaves for last.
 
 **Tasks**:
 
-- [ ] Add `import FormalSystem.Init` after the last existing `import` line in each of:
+- [x] Add `import FormalSystem.Init` after the last existing `import` line in each of:
       - `FormalSystem/Metalogic/WeakCanonical/RealModel/OrderIsoReal.lean` (fan-out 24) —
         **its import block begins at line 42, not line 7**; content-matched insertion is mandatory
         here
@@ -257,9 +257,9 @@ shown to work, keeping the two tree-invalidating leaves for last.
       - `FormalSystem/Automation/LemmaDB.lean` (fan-out 187)
       - `FormalSystem/Metalogic/WeakCanonical/MonadicFO.lean` (fan-out 199)
       - `FormalSystem/Semantics/TemporalOrder.lean` (fan-out 238)
-- [ ] Build the six modules and their dependents through the guard, detached.
-- [ ] Inspect output for new warnings; `LemmaDB` is the second `Lean`-only attribute module.
-- [ ] Commit at green.
+- [x] Build the six modules and their dependents through the guard, detached *(deviation: altered — the computed dependent closure is 437 targets, and `FormalSystem.Automation.ProofStepExport` was excluded from it as a pre-existing, out-of-closure breakage recorded in the Phase 2 handoff)*.
+- [x] Inspect output for new warnings; `LemmaDB` is the second `Lean`-only attribute module.
+- [x] Commit at green.
 
 **Timing**: 1 hour
 

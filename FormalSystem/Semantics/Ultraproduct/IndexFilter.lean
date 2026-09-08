@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import Mathlib.Order.Filter.Ultrafilter.Basic
+import FormalSystem.Init
 
 /-!
 # The index ultrafilter

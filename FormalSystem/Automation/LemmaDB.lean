@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import Lean
+import FormalSystem.Init
 
 /-!
 # Lemma Database for Proof Search (`@[tmLemma]`)

@@ -44,6 +44,7 @@ import Mathlib.Order.Hom.Set
 import Mathlib.Data.Set.Countable
 import Mathlib.Data.Rat.Denumerable
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
+import FormalSystem.Init
 
 namespace FormalSystem.Metalogic.WeakCanonical
 
