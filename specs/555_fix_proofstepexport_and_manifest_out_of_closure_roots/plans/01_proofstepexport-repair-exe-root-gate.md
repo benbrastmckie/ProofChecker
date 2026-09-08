@@ -1,7 +1,7 @@
 # Implementation Plan: Task #555
 
 - **Task**: 555 - Fix ProofStepExport elaboration failure and bring out-of-closure `lean_exe` roots under compile checking
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 6.5 hours
 - **Dependencies**: None upstream. Downstream: tasks 557 and 558 both depend on this one.
 - **Research Inputs**: specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md
@@ -118,25 +118,25 @@ either before the repair would leave a red commit.
 three reported mismatches.
 
 **Tasks**:
-- [ ] Establish the baseline: `lake env lean -DmaxErrors=100000 FormalSystem/Automation/ProofStepExport.lean`
+- [x] Establish the baseline: `lake env lean -DmaxErrors=100000 FormalSystem/Automation/ProofStepExport.lean`
       and record the error count (expected 3, capped reporting).
-- [ ] Try `git apply --check specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/verified-repair.patch`.
+- [x] Try `git apply --check specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/verified-repair.patch`.
       If clean, apply it. If not, re-derive from the three rules below.
-- [ ] Rule 1 — insert `.Base` positionally after `@` at the three reported sites (lines ~1479,
+- [x] Rule 1 — insert `.Base` positionally after `@` at the three reported sites (lines ~1479,
       ~1496, ~1497): `@b_combinator_weakened .Base (A := p) ... s`, and likewise for
       `theorem_flip_weakened` and `theorem_app1_weakened`. This matches the ~16 existing
       `@bCombinator .Base (A := p) ...` sites in the same file.
-- [ ] Rule 2 — rename `mkEntry` -> `mkEntryAt`, changing `{fc : FrameClass}` to an explicit
+- [x] Rule 2 — rename `mkEntry` -> `mkEntryAt`, changing `{fc : FrameClass}` to an explicit
       `(fc : FrameClass)` second parameter; add a new
       `private def mkEntry (name) {Γ φ} (tree : DerivationTree .Base Γ φ) := mkEntryAt name .Base tree`
       with the docstring explaining that the `.Base` in the *argument type* is what pins `fc` by
       unification at the ~455 generic sites.
-- [ ] Rule 3 — rewrite the 31 genuinely non-Base entries to `mkEntryAt "<name>" .ZTime` /
+- [x] Rule 3 — rewrite the 31 genuinely non-Base entries to `mkEntryAt "<name>" .ZTime` /
       `mkEntryAt "<name>" .Dense`, per the Appendix list in the research report. **Caution**:
       `peirce_axiom_rs` is Base but sits immediately above the `.ZTime` block; a naive "next
       `mkEntry` starts the next entry" chunker mis-classifies it (observed and corrected during
       research).
-- [ ] Re-measure with `-DmaxErrors=100000` and confirm **0** errors.
+- [x] Re-measure with `-DmaxErrors=100000` and confirm **0** errors.
 
 **Timing**: 1.5 hours
 
@@ -171,17 +171,17 @@ the 31-entry list must be re-derived from the source rather than transcribed fro
 expected output — the elaboration check of Phase 1 is not sufficient evidence.
 
 **Tasks**:
-- [ ] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- build FormalSystem.Automation.ProofStepExport`
+- [x] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- build FormalSystem.Automation.ProofStepExport`
       (detached; note the guard takes the lake *subcommand*, so `-- build X`, never `-- lake build X`).
-- [ ] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- exe proof_extractor -- --output <tmp>`
+- [x] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- exe proof_extractor -- --output <tmp>`
       and confirm exit 0.
-- [ ] Confirm the reported counts: `Theorems processed: 487/487`, `Total proof steps: 12077`,
+- [x] Confirm the reported counts: `Theorems processed: 487/487`, `Total proof steps: 12077`,
       `Axiom coverage: 42/45`, `Rule coverage: 7/7`.
-- [ ] **Contingency** (only if `maximum recursion depth reached in the code generator` appears):
+- [ ] **Contingency** (only if `maximum recursion depth reached in the code generator` appears): *(deviation: skipped — the code-generator recursion did not occur under real C emission; the registry was not chunked)*
       split the 488-element registry list into chunked sub-lists concatenated at the top level,
       then re-run both commands. Do not work around it with a `set_option maxRecDepth` bump without
       first confirming the chunked form does not fix it.
-- [ ] Commit the repair once both commands are green.
+- [x] Commit the repair once both commands are green.
 
 **Timing**: 1 hour
 
@@ -211,24 +211,24 @@ rewrite), and the diff must be re-audited before proceeding.
 `lakefile.lean`, so no exe root can fail invisibly again.
 
 **Tasks**:
-- [ ] Add a C25 block to `scripts/check-module-invariants.sh`, modelled structurally on the
+- [x] Add a C25 block to `scripts/check-module-invariants.sh`, modelled structurally on the
       existing C24 block (comment block stating the rationale, `RUN_BUILD` guard, `pass`/`fail`/
       `info` calls, `ENFORCE_C25` variable declared beside the others near line 500).
-- [ ] Scrape the root list the same way the C6 reachability block already does:
+- [x] Scrape the root list the same way the C6 reachability block already does: *(deviation: altered — 13 roots scraped, not the 12 the Scope Hypothesis expected; 12 `FormalSystem.Automation.*` plus `CheckInitImports`, all building clean)*
       `re.findall(r"root\s*:=\s*`([A-Za-z0-9_.]+)", lakefile_text)` — derived at run time, so a
       newly declared `lean_exe` is covered the day it is added and there is no list to forget.
-- [ ] Run `lake build <root>` per scraped root (module target, **not** exe target — elaboration
+- [x] Run `lake build <root>` per scraped root (module target, **not** exe target — elaboration
       only, no linking; F8's measured 240-310 MB per linked binary is why).
-- [ ] Skip cleanly under `--no-build` with an `info` line, exactly as C1/C2/C6/C16/C24 do.
-- [ ] Ship it **enforced** (`ENFORCE_C25=1`), with the C24 precedent cited: the work clearing its
+- [x] Skip cleanly under `--no-build` with an `info` line, exactly as C1/C2/C6/C16/C24 do.
+- [x] Ship it **enforced** (`ENFORCE_C25=1`), with the C24 precedent cited: the work clearing its
       debt lands in the same change, so a soft period would only open a regression window.
-- [ ] Update the script's own header comment list (the `# Checks:` block) with a C25 line, and the
+- [x] Update the script's own header comment list (the `# Checks:` block) with a C25 line, and the
       `--no-build` usage line from `skip C1/C2/C6/C16/C24` to include C25.
-- [ ] Add a C25 row to the `## What It Checks` table in `docs/development/MODULE_INVARIANTS.md`,
+- [x] Add a C25 row to the `## What It Checks` table in `docs/development/MODULE_INVARIANTS.md`,
       in the same voice as the C24 row (what it checks + why it exists, naming the invisible-failure
       history as the reason).
-- [ ] Record the measured added wall-clock of C25 in its comment block.
-- [ ] **Do not** add any entry to `scripts/module-invariants-manifest.txt` — C6 fails on it by
+- [x] Record the measured added wall-clock of C25 in its comment block.
+- [x] **Do not** add any entry to `scripts/module-invariants-manifest.txt` — C6 fails on it by
       construction (F6).
 
 **Timing**: 1.5 hours
@@ -263,19 +263,19 @@ rather than deferring — a red new gate is not an acceptable landing state.
 "Adding a Check" mandate, and record the observation the way C15 and C24 recorded theirs.
 
 **Tasks**:
-- [ ] Choose `FormalSystem/Automation/TraceExporter.lean` as the subject — smallest out-of-closure
+- [x] Choose `FormalSystem/Automation/TraceExporter.lean` as the subject — smallest out-of-closure
       root, 0 build errors. **Do not use `ProofStepExport`**: it is the module under repair, so a
       failure there proves nothing about the gate.
-- [ ] Introduce a deliberate one-character break in `TraceExporter.lean`.
-- [ ] Run `bash scripts/check-module-invariants.sh` and observe `FAIL C25` **and** a non-zero
+- [x] Introduce a deliberate one-character break in `TraceExporter.lean`.
+- [x] Run `bash scripts/check-module-invariants.sh` and observe `FAIL C25` **and** a non-zero
       script exit (both, not just the printed line — C24's history is exactly a case where a
       failure printed while the shell received a 0).
-- [ ] Restore the file (`git checkout` on that path only; the tree is otherwise clean at this
+- [x] Restore the file (`git checkout` on that path only; the tree is otherwise clean at this
       point), re-run, and observe `PASS C25` and exit 0.
-- [ ] Record the negative test in the C25 comment block in `scripts/check-module-invariants.sh`,
+- [x] Record the negative test in the C25 comment block in `scripts/check-module-invariants.sh`,
       in the same voice as C24's paragraph, including the instruction to re-run it after any change
       to C25's scope.
-- [ ] Record it in `docs/development/MODULE_INVARIANTS.md`'s `## Adding a Check` section alongside
+- [x] Record it in `docs/development/MODULE_INVARIANTS.md`'s `## Adding a Check` section alongside
       the C15/C24 paragraphs.
 
 **Timing**: 1 hour
@@ -303,14 +303,14 @@ rather than deferring — a red new gate is not an acceptable landing state.
 script locally.
 
 **Tasks**:
-- [ ] Add one step to `.github/workflows/ci.yml`, after the `lean-action` step, running
+- [x] Add one step to `.github/workflows/ci.yml`, after the `lean-action` step, running
       `lake build` over the twelve exe root **modules** (not exe targets — elaboration only, no
       linking, sharing the cache the action already populated).
-- [ ] Give the step a comment explaining why it exists: `@[default_target]` was rejected on
+- [x] Give the step a comment explaining why it exists: `@[default_target]` was rejected on
       measured link cost, and these modules are otherwise outside every closure CI touches.
-- [ ] Do **not** change the `lint:` input or add a `runLinter` invocation — the compile-only
+- [x] Do **not** change the `lint:` input or add a `runLinter` invocation — the compile-only
       boundary is deliberate (see Non-Goals).
-- [ ] Verify the YAML parses and the step's command is exactly what runs green locally.
+- [x] Verify the YAML parses and the step's command is exactly what runs green locally.
 
 **Timing**: 0.5 hours
 
@@ -335,25 +335,25 @@ addition is named here deliberately rather than arriving unannounced. Note also 
 
 ---
 
-### Phase 6: Final gate and lint-closure non-regression [IN PROGRESS]
+### Phase 6: Final gate and lint-closure non-regression [COMPLETED]
 
 **Goal**: Every acceptance criterion observed in one pass, and the compile-only boundary proven
 intact so tasks 557 and 558 can sequence off a green baseline.
 
 **Tasks**:
-- [ ] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- build` — full build green.
-- [ ] `bash scripts/check-module-invariants.sh` — `ALL CHECKS PASSED`, including `PASS C25`.
-- [ ] `lake exe runLinter FormalSystem` — still `Linting passed for FormalSystem.`, exit 0. This is
+- [x] `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- build` — full build green.
+- [x] `bash scripts/check-module-invariants.sh` — `ALL CHECKS PASSED`, including `PASS C25`.
+- [x] `lake exe runLinter FormalSystem` — still `Linting passed for FormalSystem.`, exit 0. This is
       the non-regression that proves the lint closure did **not** widen.
-- [ ] `git diff` on `scripts/nolints.json` — empty. No grandfathering was needed or added
+- [x] `git diff` on `scripts/nolints.json` — empty. No grandfathering was needed or added
       (`docs/development/NAMING_CONVENTION_DEVIATION.md` records grandfathering `defsWithUnderscore`
       as exactly the silent-drift failure this project already reversed once).
-- [ ] `lake exe proof_extractor` — still 487/487, re-confirmed after all subsequent phases.
-- [ ] Record in the execution summary that the `ContextualProofs` exposure is **65** findings (not
+- [x] `lake exe proof_extractor` — still 487/487, re-confirmed after all subsequent phases.
+- [x] Record in the execution summary that the `ContextualProofs` exposure is **65** findings (not
       66 — `mp_chain_2` is exempt by the `_1`/`_2`/`_mathlib` rule in Mathlib's
       `isBadNameWithUnderscore`), that it is **not** triggered by this task, and that it becomes
       live only when 558 widens the lint closure.
-- [ ] Final commit.
+- [x] Final commit.
 
 **Timing**: 1 hour
 
@@ -373,19 +373,19 @@ intact so tasks 557 and 558 can sequence off a green baseline.
 
 ## Testing & Validation
 
-- [ ] `FormalSystem/Automation/ProofStepExport.lean` elaborates with zero errors under
+- [x] `FormalSystem/Automation/ProofStepExport.lean` elaborates with zero errors under
       `lake env lean -DmaxErrors=100000`.
-- [ ] Real `lake build FormalSystem.Automation.ProofStepExport` exits 0 (C emission exercised).
-- [ ] `lake exe proof_extractor` exits 0 with 487/487 theorems and 12,077 proof steps.
-- [ ] A deliberately reintroduced break in `TraceExporter` (an out-of-closure root that is **not**
+- [x] Real `lake build FormalSystem.Automation.ProofStepExport` exits 0 (C emission exercised).
+- [x] `lake exe proof_extractor` exits 0 with 487/487 theorems and 12,077 proof steps.
+- [x] A deliberately reintroduced break in `TraceExporter` (an out-of-closure root that is **not**
       the module under repair) is CAUGHT: `FAIL C25` observed with non-zero exit, then `PASS`
       observed after restore.
-- [ ] `lake build` green.
-- [ ] `bash scripts/check-module-invariants.sh` reports `ALL CHECKS PASSED`.
-- [ ] `bash scripts/check-module-invariants.sh --no-build` still runs and skips C25 cleanly.
-- [ ] `lake exe runLinter FormalSystem` still passes — lint closure unchanged.
-- [ ] `scripts/nolints.json` unchanged.
-- [ ] Zero `sorry` and zero new `axiom` introduced anywhere.
+- [x] `lake build` green.
+- [x] `bash scripts/check-module-invariants.sh` reports `ALL CHECKS PASSED`.
+- [x] `bash scripts/check-module-invariants.sh --no-build` still runs and skips C25 cleanly.
+- [x] `lake exe runLinter FormalSystem` still passes — lint closure unchanged.
+- [x] `scripts/nolints.json` unchanged.
+- [x] Zero `sorry` and zero new `axiom` introduced anywhere.
 
 ## Artifacts & Outputs
 
