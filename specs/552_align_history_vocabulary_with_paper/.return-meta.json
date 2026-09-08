@@ -1,16 +1,29 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "agent_type": "planner-agent",
+  "task_number": 552,
+  "session_id": "sess_1788840748_54b780",
+  "delegation_path": ["orchestrator", "plan", "planner-agent"],
+  "dispatch_seq": 2,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/552_align_history_vocabulary_with_paper/reports/01_align-history-vocabulary-paper.md",
-      "summary": "Research for the WorldHistory -> ConvexHistory rename: confirms the rename is pure alpha-conversion (0 structures extend it, no fixture/script coupling, ConvexHistory free), corrects three stale premises in the dispatch (the paper still says 'world history' on 8 body lines meaning the TOTAL tier; the definitions-of-record re-pin is already done with 43/43 anchors matching; check-paper-definitions.sh is currently a silent no-op gate), sizes the prose sweep at 181 occurrences over 175 lines with 35 'total world history' collapses, and records the ~250-module rebuild blast radius that forces a batch-then-build-once phase plan."
+      "type": "plan",
+      "path": "specs/552_align_history_vocabulary_with_paper/plans/01_align-history-vocabulary-paper.md",
+      "summary": "Five-phase plan for the WorldHistory -> ConvexHistory rename and paper-vocabulary prose sweep, with a two-build budget and set-based gate baselines."
     }
   ],
-  "metadata": {
-    "session_id": "sess_1788840748_54b780",
-    "agent_type": "lean-research-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+  "phase_count": 5,
+  "estimated_hours": 7,
+  "dependency_waves": [[1, 2], [3, 4], [5]],
+  "summary": "Plan created: 5 phases, 7 hours, 3 waves. Record-file prose and the Lean identifier rename run in parallel (wave 1); Lean prose and docs/typst/latex prose run in parallel (wave 2); a single full gate closes (wave 3). Exactly two full-tree lake builds are budgeted against a 241-of-479-module blast radius.",
+  "next_steps": "Run /implement 552 to execute the plan",
+  "memory_candidates": [
+    {
+      "content": "Phase decomposition for a wide rename in a repository where the renamed symbol has a large reverse-import closure: split phases by Verification Tier so the rebuild budget is explicit and bounded. Only the interface-tier phase (the identifier/signature sweep) builds in-phase; prose-tier phases (docstrings, READMEs, external docs) declare zero in-phase build and defer their cache invalidation to the single full-tier gate phase at the end. This yields a fixed two-build budget instead of one-build-per-phase, while still isolating mechanical rename failure from prose churn -- if the interface phase's build is green and the final build is red, the fault is in prose, not in the rename. Applies whenever whole-file hashing means a comment-only edit at the base of the import graph invalidates hundreds of downstream artifacts (Lean/lake, and any build system with file-granular hashing). Pair it with Commit Mode atomic-batch on the identifier phase, since a half-renamed tree is genuinely red at every intermediate file.",
+      "category": "PATTERN",
+      "source_artifact": "specs/552_align_history_vocabulary_with_paper/plans/01_align-history-vocabulary-paper.md",
+      "confidence": 0.82,
+      "suggested_keywords": ["verification-tier", "rename", "build-budget", "blast-radius", "phase-decomposition", "atomic-batch"]
+    }
+  ]
 }

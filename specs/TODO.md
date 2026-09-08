@@ -83,7 +83,7 @@ next_project_number: 555
 
 ### Paper Refactor
 
-552 [RESEARCHED] — Rename this repository's semantic history layer so that its names
+552 [PLANNED] — Rename this repository's semantic history layer so that its names
   └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
@@ -174,11 +174,12 @@ CONSTRAINTS. Do not begin the refactor as part of this research; probe files und
 ---
 
 ### 552. Align history vocabulary with paper
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 548
 - **Research**: [552_align_history_vocabulary_with_paper/reports/01_align-history-vocabulary-paper.md]
+- **Plan**: [552_align_history_vocabulary_with_paper/plans/01_align-history-vocabulary-paper.md]
 
 **Description**: Rename this repository's semantic history layer so that its names mean what the paper's mean: the paper's `def:world-history` layers *partial history* -> *convex history* -> *possible world* (the set being H_F), and this repository's `WorldHistory` denotes the paper's CONVEX history, not its top tier. Rename `WorldHistory` to `ConvexHistory` throughout, keep `IsTotal` and `TaskFrame.HF` as they are, and re-pin the drifted `def:world-history` record entry. This is a name-and-prose sweep with no change to any proof term.
 
