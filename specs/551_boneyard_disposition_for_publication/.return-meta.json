@@ -1,16 +1,33 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/551_boneyard_disposition_for_publication/reports/01_boneyard-disposition-recommendation.md",
-      "summary": "Recommends KEEP with a documentation-integrity repair: measures the archive (168 files / 91,539 lines / 24.5% of FormalSystem), shows CUT and SPLIT are blocked by 96 external citations including the published LaTeX, and documents four shipping documentation defects plus their mechanical root cause in the inventory generator's Boneyard pruning."
+      "type": "plan",
+      "path": "specs/551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md",
+      "summary": "10-phase plan executing the KEEP disposition for FormalSystem/Boneyard/: an ADR recording the decision, an archive-aware inventory generator, and repair of the four documentation-integrity defects (D1-D4) that ship today."
     }
   ],
+  "dispatch_seq": 2,
+  "next_steps": "Run /implement 551 to execute the plan",
   "metadata": {
     "session_id": "sess_1788840970_70e80d",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 10,
+    "estimated_hours": 11,
+    "dependency_waves": [[1], [2, 3], [4], [5, 9], [6], [7], [8], [10]]
+  },
+  "memory_candidates": [
+    {
+      "content": "Generated-inventory drift has a single mechanical cause worth checking first: the generator's own directory-pruning list. In this repo, scripts/check-module-invariants.sh's markdown_targets() prunes 'Boneyard' from the markdown walk, so the archive README is the one README in the tree whose counts are hand-typed and ungated -- and it had three mutually disagreeing counts as a result. When a documentation subtree's numbers drift while every sibling's stay correct, look for the exclusion in the generator's walk rather than auditing the numbers. The general pattern: any tree excluded from the instrument that generates counts will silently diverge from the trees that are included, and the fix is to register it with the generator (adding whatever label/empty-member handling the excluded tree's shape needs) rather than to re-type the numbers.",
+      "category": "PATTERN",
+      "source_artifact": "specs/551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md",
+      "confidence": 0.82,
+      "suggested_keywords": ["inventory-generator", "documentation-drift", "boneyard", "check-module-invariants", "generated-counts", "archive-governance"]
+    }
+  ],
+  "modified_files": [
+    "specs/551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md"
+  ]
 }

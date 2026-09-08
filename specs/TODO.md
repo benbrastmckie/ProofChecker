@@ -83,7 +83,7 @@ next_project_number: 555
 
 ### Paper Refactor
 
-552 [PLANNED] — Rename this repository's semantic history layer so that its names
+552 [IMPLEMENTING] — Rename this repository's semantic history layer so that its names
   └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
@@ -92,7 +92,7 @@ next_project_number: 555
 
 ### Repo Hygiene
 
-551 [PLANNING] — Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 line
+551 [PLANNED] — Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 line
 
 ### Documentation
 
@@ -174,7 +174,7 @@ CONSTRAINTS. Do not begin the refactor as part of this research; probe files und
 ---
 
 ### 552. Align history vocabulary with paper
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 548
@@ -206,11 +206,12 @@ DEPENDENCY NOTE. The dependency on the paper-anchor re-pin task is for file seri
 ---
 
 ### 551. Boneyard disposition for publication
-- **Status**: [PLANNING]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: repo-hygiene
 - **Dependencies**: None
 - **Research**: [551_boneyard_disposition_for_publication/reports/01_boneyard-disposition-recommendation.md]
+- **Plan**: [551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md]
 
 **Description**: Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 lines, roughly a quarter of the repository, carrying every `sorry` in the tree.
 
