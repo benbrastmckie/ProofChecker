@@ -139,6 +139,34 @@ not by inspection (see Verification).
   (C9 green; the 142 pre-existing `docs/` citations are a separate, unenforced TODO).
 - **Files verified**: yes.
 
+### Independent re-verification (dispatch 5, 2026-09-08)
+
+The orchestrator's completion-claim gate refused the first `implemented` claim: `.return-meta.json`
+said `implemented` while the plan file still showed Phases 7, 8 and 12 at `[NOT STARTED]`. The
+refusal was correct as a *marker* discrepancy and wrong as a *work* discrepancy — the work had been
+done in `b8502cfd2`; only the headings were left stale, along with every phase's task checkboxes.
+
+Dispatch 5 re-verified the outcomes rather than accepting the prior claim, and reproduced every
+figure above on the live tree (`4bbb21bbc`; no commit after `b8502cfd2` touches `FormalSystem/`,
+`scripts/` or `Tests/`):
+
+- `lake build` — exit 0. `scripts/check-module-invariants.sh` — exit 0, `ALL CHECKS PASSED`.
+  `scripts/readme-lint.sh` — PASS.
+- Phases 7-8 comment-only claim re-proved with an independent comment-stripping parser: of the 48
+  `.lean` files in `b8502cfd2`, **0 differ outside comments**.
+- C14 heredocs: 101 names each, identical order. C2 flagship rows: **0** `BXCanonical` lines
+  changed by this task. Across the task's entire diff of that script the only axiom sets present are
+  `[propext]` and `[propext, Classical.choice, Quot.sound]` — names moved, axiom sets did not.
+- Freed-name assertions: the only 3 live non-`specs/**` occurrences of the reserved tokens are
+  deliberate forward-references reserving `StarLanguage` for task 561 (`README.md:214`,
+  `FormalSystem/PlusLanguage/README.md:15`, `FormalSystem/PlusLanguage/Formula.lean:32`). The lone
+  live `@[deprecated]` under `FormalSystem/` is `impOfNeg` (2025-12-14), predating this task.
+- `check-paper-definitions.sh` exits 1 on exactly the six anchors named above and no others,
+  confirming this rename introduced no new drift. The manuscript is an external read-only
+  repository this task never edited.
+
+All 12 phase headings are now `[COMPLETED]`, matching the work actually performed.
+
 ## Impacts
 
 - **Task 561 is unblocked in the way it was waiting for.** `StarLanguage/`, `StarFormula`,

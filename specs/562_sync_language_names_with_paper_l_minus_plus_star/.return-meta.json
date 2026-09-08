@@ -6,7 +6,11 @@
     "sorry_count": 0,
     "vacuous_count": 0,
     "axiom_count": 0,
-    "build_passed": true
+    "build_passed": true,
+    "phases_completed": 12,
+    "phases_total": 12,
+    "gate_result": "check-module-invariants.sh exit 0, ALL CHECKS PASSED; lake build exit 0; readme-lint.sh PASS",
+    "reverified_in_dispatch": 5
   },
   "artifacts": [
     {
@@ -21,7 +25,7 @@
     }
   ],
   "completion_data": {
-    "completion_summary": "Renamed this repository's object languages and proof systems so their names mean what the paper's mean: the S/U language Formula and its logic are now L and TM (the paper's own 𝓛 and TM), the H/G language is L⁻/TM⁻ in MinusLanguage/, and the ⊡-extension is L⁺/TM⁺ in PlusLanguage/ — which frees StarLanguage/, StarFormula, StarAxiom, StarDerivationTree, ⊢⋆ and TM⋆ for the genuine store/recall L⋆ that task 561 builds. 169 declaration tokens, 16 file and directory moves, 4 notation declarations, 55 .lean docstrings, 20 markdown files and one .typ file were rewritten, with zero proof-term changes established mechanically twice over. lake build is green over all 2615 jobs and scripts/check-module-invariants.sh exits 0 with ALL CHECKS PASSED.",
+    "completion_summary": "Renamed this repository's object languages and proof systems so their names mean what the paper's mean: the S/U language Formula and its logic are now L and TM (the paper's own 𝓛 and TM), the H/G language is L⁻/TM⁻ in MinusLanguage/, and the ⊡-extension is L⁺/TM⁺ in PlusLanguage/ — which frees StarLanguage/, StarFormula, StarAxiom, StarDerivationTree, ⊢⋆ and TM⋆ for the genuine store/recall L⋆ that task 561 builds. 169 declaration tokens, 16 file and directory moves, 4 notation declarations, 55 .lean docstrings, 20 markdown files and one .typ file were rewritten, with zero proof-term changes established mechanically. All 12 plan phases are complete and independently re-verified in dispatch 5: lake build exits 0 and scripts/check-module-invariants.sh exits 0 with ALL CHECKS PASSED.",
     "roadmap_items": []
   },
   "metadata": {
@@ -29,6 +33,8 @@
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
     "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
-    "compliance_check": "passed"
+    "compliance_check": "passed",
+    "dispatch_seq": 5,
+    "reconciliation_note": "Dispatch 4 performed the work of phases 7, 8 and 12 (commit b8502cfd2) but left those three plan phase headings at [NOT STARTED]; the orchestrator gate correctly refused that completion claim. Dispatch 5 re-verified each phase's own Verification criteria against the live tree, found the work genuinely done, and closed the markers. No phase was marked closed without verification."
   }
 }
