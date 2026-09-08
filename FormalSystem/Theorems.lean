@@ -76,7 +76,7 @@ open FormalSystem.Theorems.ModalS5
 -- Perpetuity principles
 open FormalSystem.Theorems.Perpetuity
 
-#check perpetuity_1  -- □φ → △φ
+#check perpetuity1  -- □φ → △φ
 #check perpetuity5  -- ◇▽φ → △◇φ
 ```
 

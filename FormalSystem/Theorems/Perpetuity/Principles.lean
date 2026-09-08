@@ -18,8 +18,8 @@ establish fundamental connections between modal necessity (□) and temporal ope
 
 ## Main Theorems
 
-- `perpetuity_1`: `□φ → △φ` (necessary implies always)
-- `perpetuity_2`: `▽φ → ◇φ` (sometimes implies possible)
+- `perpetuity1`: `□φ → △φ` (necessary implies always)
+- `perpetuity2`: `▽φ → ◇φ` (sometimes implies possible)
 - `perpetuity3`: `□φ → □△φ` (necessity of perpetuity)
 - `perpetuity4`: `◇▽φ → ◇φ` (possibility of occurrence)
 - `perpetuity5`: `◇▽φ → △◇φ` (persistent possibility)
@@ -51,7 +51,7 @@ Convenience wrapper for the derived DNE theorem from Propositional.lean.
 
 This theorem is now derived from EFQ + Peirce axioms (see Propositional.doubleNegation).
 -/
-private def double_negation {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.neg.neg.imp φ :=
+private def doubleNegation {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.neg.neg.imp φ :=
   Propositional.doubleNegation φ
 
 /-!
@@ -74,7 +74,7 @@ Derivation combines three components:
 
 This proof uses the `pairing` axiom for conjunction introduction.
 -/
-def perpetuity_1 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.box.imp φ.always := by
+def perpetuity1 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.box.imp φ.always := by
   -- always φ = φ.allPast.and (φ.and φ.allFuture) = Hφ ∧ (φ ∧ Gφ)
   have h_past : ⊢[fc] φ.box.imp φ.allPast := boxToPast φ
   have h_present : ⊢[fc] φ.box.imp φ := boxToPresent φ
@@ -217,7 +217,7 @@ def diamond4 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.diamond.diamond.imp �
   -- Step 3: We need to relate φ.neg.box.neg.neg.box.neg to φ.neg.box.box.neg
   -- Use DNE:  ¬¬□¬φ → □¬φ
   have dne_box : ⊢[fc] φ.neg.box.neg.neg.imp φ.neg.box :=
-    double_negation φ.neg.box
+    doubleNegation φ.neg.box
   -- Step 4: Apply M4 after DNE: ¬¬□¬φ → □¬φ → □□¬φ
   have combined : ⊢[fc] φ.neg.box.neg.neg.imp φ.neg.box.box :=
     impTrans dne_box m4_neg
@@ -305,14 +305,14 @@ Derivation via contraposition of P1:
 3. Since `▽φ = ¬△¬φ` and `◇φ = ¬□¬φ`:
 4. We get: `▽φ → ◇φ`
 -/
-def perpetuity_2 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.sometimes.imp φ.diamond := by
+def perpetuity2 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.sometimes.imp φ.diamond := by
   -- Goal: ⊢ ▽φ → ◇φ
   -- Recall: ▽φ = sometimes φ = ¬(always ¬φ) = ¬(H¬φ ∧ ¬φ ∧ G¬φ)
   -- Recall: ◇φ = diamond φ = ¬□¬φ = (φ.neg.box).neg
   -- By P1 for ¬φ: □(¬φ) → △(¬φ) = □(¬φ) → always(¬φ)
   -- By contraposition: ¬(always(¬φ)) → ¬(□(¬φ))
   -- Which is: sometimes φ → diamond φ = ▽φ → ◇φ
-  have h1 : ⊢[fc] φ.neg.box.imp φ.neg.always := perpetuity_1 φ.neg
+  have h1 : ⊢[fc] φ.neg.box.imp φ.neg.always := perpetuity1 φ.neg
   -- Unfold: always (neg φ) = H(neg φ) ∧ neg φ ∧ G(neg φ)
   -- So h1 : ⊢ (¬φ).box → (¬φ).always
   -- We need: ⊢ ¬((¬φ).always) → ¬((¬φ).box)
@@ -475,7 +475,7 @@ def boxDne {fc : FrameClass} {A : Formula}
     (h : ⊢[fc] A.neg.neg.box) : ⊢[fc] A.box := by
   -- Step 1: DNE axiom
   have dne : ⊢[fc] A.neg.neg.imp A :=
-    double_negation A
+    doubleNegation A
   -- Step 2: Necessitate using modal_k with empty context
   have box_dne : ⊢[fc] (A.neg.neg.imp A).box :=
     DerivationTree.necessitation _ dne

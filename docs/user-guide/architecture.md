@@ -218,10 +218,10 @@ def height {Γ : Context} {φ : Formula} : DerivationTree Γ φ → Nat
 
 -- Perpetuity Principles (derived theorems in TM)
 -- P1: `□φ → always φ` (what is necessary is always the case)
-theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by sorry
+theorem perpetuity1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by sorry
 
 -- P2: `sometimes φ → ◇φ` (what is sometimes the case is possible)
-theorem perpetuity_2 (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := by sorry
+theorem perpetuity2 (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := by sorry
 
 -- P3: `□φ → □always φ` (necessity of perpetuity)
 theorem perpetuity3 (φ : Formula) : ⊢ (φ.box.imp ((always φ).box)) := by sorry
@@ -1293,7 +1293,7 @@ theorem derive_perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
 -- Example: Use P1 to derive consequence
 example (P : Formula) : [P.box] ⊢ (always P) := by
   apply Derivable.modus_ponens
-  · exact perpetuity_1 P
+  · exact perpetuity1 P
   · apply Derivable.assumption
     simp
 ```

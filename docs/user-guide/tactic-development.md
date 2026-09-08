@@ -368,11 +368,11 @@ declare_aesop_rule_sets [TMLogic]
 
 -- Mark perpetuity principles for TM rule set
 @[aesop safe [TMLogic]]
-theorem perpetuity_1 (φ : Formula) : Derivable [] (Formula.box φ).imp (always φ) := by
+theorem perpetuity1 (φ : Formula) : Derivable [] (Formula.box φ).imp (always φ) := by
   sorry  -- P1 implementation
 
 @[aesop safe [TMLogic]]
-theorem perpetuity_2 (φ : Formula) : Derivable [] (eventually φ).imp (diamond φ) := by
+theorem perpetuity2 (φ : Formula) : Derivable [] (eventually φ).imp (diamond φ) := by
   sorry  -- P2 implementation
 
 -- Mark axioms as safe rules

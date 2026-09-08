@@ -331,7 +331,7 @@ The perpetuity principles (P1-P6) are key derived theorems in TM logic connectin
 ### P1: Necessity Implies Perpetuity
 **Statement**: `□φ → always φ`
 **Natural Language**: What is necessary is always the case.
-**LEAN Code**: `perpetuity_1 φ : ⊢ (φ.box.imp (always φ))`
+**LEAN Code**: `perpetuity1 φ : ⊢ (φ.box.imp (always φ))`
 **Proof Strategy**: From modal axiom MT and temporal semantics
 **Intuition**: If φ holds in all possible worlds, it holds at all times in the actual world
 **See also**: [P3 (necessity of perpetuity)](#p3-necessity-of-perpetuity)
@@ -339,7 +339,7 @@ The perpetuity principles (P1-P6) are key derived theorems in TM logic connectin
 ### P2: Occurrence Implies Possibility
 **Statement**: `sometimes φ → ◇φ`
 **Natural Language**: What is sometimes the case is possible.
-**LEAN Code**: `perpetuity_2 φ : ⊢ ((sometimes φ).imp φ.dia)`
+**LEAN Code**: `perpetuity2 φ : ⊢ ((sometimes φ).imp φ.dia)`
 **Proof Strategy**: From temporal existential and modal semantics
 **Intuition**: If φ occurs at some time, there exists a possible world where φ holds
 **See also**: [P4 (possibility of occurrence)](#p4-possibility-of-occurrence)

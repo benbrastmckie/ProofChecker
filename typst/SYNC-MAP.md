@@ -290,7 +290,7 @@ Locations abbreviated: PS = ProofSystem, SEM = Semantics, ML = Metalogic, TH = T
 
 | Line | Claim | Verdict | Live location / replacement |
 |------|-------|---------|------------------------------|
-| 49-54 | `perpetuity_1`..`perpetuity6` | verified | TH/Perpetuity/Principles.lean (+Bridge.lean for P6); sorry-free |
+| 49-54 | `perpetuity1`..`perpetuity6` | verified | TH/Perpetuity/Principles.lean (+Bridge.lean for P6); sorry-free |
 | 187 | `Perpetuity.lean` | verified (re-export) | TH/Perpetuity.lean + Perpetuity/ subdir (Principles, Bridge, Helpers) |
 | 188-189 | `ModalS5.lean`, `ModalS4.lean` | verified | TH/ |
 | 190 | `Propositional.lean` | stale | `Propositional/` subdir (Core, Connectives, Reasoning) |

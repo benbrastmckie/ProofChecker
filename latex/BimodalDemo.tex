@@ -275,11 +275,11 @@ $\nec\varphi \imp \always\varphi$
 \vspace{0.3cm}
 
 \begin{lstlisting}
-#check @perpetuity_1
--- perpetuity_1 : (φ : Formula) → ⊢ φ.box.imp (△φ)
+#check @perpetuity1
+-- perpetuity1 : (φ : Formula) → ⊢ φ.box.imp (△φ)
 
 example (φ : Formula) : ⊢ φ.box.imp (△φ) :=
-  perpetuity_1 φ
+  perpetuity1 φ
 \end{lstlisting}
 
 \vspace{0.3cm}
@@ -519,7 +519,7 @@ def conservation_of_energy := atom "conservation_of_energy"
 -- If conservation is necessary, it holds eternally
 example : ⊢ conservation_of_energy.box.imp
             (△conservation_of_energy) :=
-  perpetuity_1 conservation_of_energy
+  perpetuity1 conservation_of_energy
 \end{lstlisting}
 
 \vspace{0.3cm}
@@ -541,7 +541,7 @@ def lunar_eclipse := atom "lunar_eclipse"
 
 -- If an eclipse sometimes occurs, it is possible
 example : ⊢ (▽lunar_eclipse).imp lunar_eclipse.diamond :=
-  perpetuity_2 lunar_eclipse
+  perpetuity2 lunar_eclipse
 \end{lstlisting}
 
 \vspace{0.3cm}

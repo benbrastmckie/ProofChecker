@@ -38,7 +38,7 @@ The dual-verification loop for a candidate formula $phi.alt$ has a single entry 
 + *Exit invalid.* The result carries a `SimpleCountermodel` naming the atom assignment that breaks the formula, extracted from an open saturated tableau branch. The countermodel is a checkable artifact in its own right: evaluating the formula under the reported assignment reproduces the failure.
 
 The two conjectures above illustrate the exits.
-The P1 pattern closes as a theorem (`perpetuity_1`, below).
+The P1 pattern closes as a theorem (`perpetuity1`, below).
 Its converse fails, and the shape of the failure is instructive: a formula can hold at every time along one history while failing on another history through a different world state, so "always" does not imply "necessarily" -- the semantic content of the countermodel any run on the converse pattern produces.
 Each exit hands downstream consumers a certificate of the corresponding kind, which is precisely the dual-signal contract the dataset pipeline of @sec:dataset-pipeline packages at scale.
 
@@ -47,7 +47,7 @@ Each exit hands downstream consumers a certificate of the corresponding kind, wh
 `Examples/BimodalProofs.lean` (241 lines, sorry-free) demonstrates the perpetuity principles (@sec:notes) as concrete, checked derivations rather than abstract statements.
 
 #example("P1 Applied to an Atom")[
-  `⊢ φ.box.imp φ.always := perpetuity_1 φ`#footnote[`Examples/BimodalProofs.lean`.] instantiates immediately to any formula; concretely, for an atom: `⊢ (Formula.atomS "p").box.imp (△(Formula.atomS "p")) := perpetuity_1 _`#footnote[`Examples/BimodalProofs.lean`.] -- necessity of $p$ implies $p$ holds always, both notations (`.always` and $triangle.stroked.t$) proven definitionally equal.
+  `⊢ φ.box.imp φ.always := perpetuity1 φ`#footnote[`Examples/BimodalProofs.lean`.] instantiates immediately to any formula; concretely, for an atom: `⊢ (Formula.atomS "p").box.imp (△(Formula.atomS "p")) := perpetuity1 _`#footnote[`Examples/BimodalProofs.lean`.] -- necessity of $p$ implies $p$ holds always, both notations (`.always` and $triangle.stroked.t$) proven definitionally equal.
 ]
 
 #example("P5: Persistent Possibility")[

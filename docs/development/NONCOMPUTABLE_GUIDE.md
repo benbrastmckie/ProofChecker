@@ -205,7 +205,7 @@ noncomputable def de (Γ : Context) (A B C : Formula) (h1 : (A :: Γ) ⊢ C) (h2
 - Lean 4 allows noncomputable calls in proof terms without marking the theorem noncomputable
 
 **Definitions** (All compile without `noncomputable`):
-- `perpetuity_1`, `diamond4`, `modal5`, `perpetuity_2`, `boxToBoxPast`
+- `perpetuity1`, `diamond4`, `modal5`, `perpetuity2`, `boxToBoxPast`
 - `boxConjIntro`, `boxConjIntroImp`, `boxConjIntroImp3`
 - `perpetuity3`, `boxDne`, `perpetuity4`, `mbDiamond`
 - `boxDiamondToFutureBoxDiamond`, `boxDiamondToPastBoxDiamond`

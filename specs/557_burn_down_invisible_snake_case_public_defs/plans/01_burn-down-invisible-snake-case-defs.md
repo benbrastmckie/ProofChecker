@@ -283,7 +283,7 @@ findings — `mp_chain_2` is the one the upstream `_2` heuristic hides), and ~13
 
 ---
 
-### Phase 3: The `_1`/`_2`-heuristic stragglers in `Perpetuity/Principles.lean` [NOT STARTED]
+### Phase 3: The `_1`/`_2`-heuristic stragglers in `Perpetuity/Principles.lean` [COMPLETED]
 
 **Goal**: Rename `perpetuity_1` and `perpetuity_2` to `perpetuity1` / `perpetuity2` — matching
 their own siblings `perpetuity3`/`perpetuity4`/`perpetuity5`, renamed by the earlier burndown in
@@ -291,10 +291,10 @@ the same file — plus the one private snake_case `def` in that file, and update
 fanout.
 
 **Tasks**:
-- [ ] Rename the two public `def`s and the file's one private `def` (from the worklist) in
+- [x] Rename the two public `def`s and the file's one private `def` (from the worklist) in
       `FormalSystem/Theorems/Perpetuity/Principles.lean`, including the in-file use at the
       `perpetuity_2` proof body and the module-docstring bullet list.
-- [ ] Update the Lean citation fanout, all measured:
+- [x] Update the Lean citation fanout, all measured:
       `FormalSystem/Theorems/Perpetuity.lean` (docstring bullets),
       `FormalSystem/Theorems.lean` and `FormalSystem/FormalSystem.lean` (`#check` lines — these
       elaborate, so a miss is a build error),
@@ -304,14 +304,14 @@ fanout.
       `FormalSystem/Automation/ProofStepExport.lean` (call sites at the `Perpetuity.perpetuity_1/2`
       applications and the module-docstring inventory line),
       `Tests/BimodalTest/Theorems/PerpetuityTest.lean` (6 `example` bodies).
-- [ ] Leave `mkEntry "perpetuity_1"`, `mkEntry "perpetuity_2"`, `mkEntry "G_perpetuity_1"`,
+- [x] Leave `mkEntry "perpetuity_1"`, `mkEntry "perpetuity_2"`, `mkEntry "G_perpetuity_1"`,
       `mkEntry "H_perpetuity_1"` and their siblings **unchanged** — dataset labels, not
       identifiers. Verify by diffing the `proof_extractor` output against Phase 1's baseline.
-- [ ] Update the `docs/` citations: `docs/project-info/tactic-registry.md`,
+- [x] Update the `docs/` citations: `docs/project-info/tactic-registry.md`,
       `docs/user-guide/architecture.md`, `docs/user-guide/tactic-development.md`,
       `docs/development/TESTING_STANDARDS.md`. Where a docs snippet writes these as `theorem`
       rather than `def`, fix the identifier only — do not restate the declaration form.
-- [ ] Re-run `grep -rnw "perpetuity_1\|perpetuity_2"` over the repository excluding `.lake/` and
+- [x] Re-run `grep -rnw "perpetuity_1\|perpetuity_2"` over the repository excluding `.lake/` and
       `specs/`; the only permitted survivors are the `mkEntry` string labels.
 
 **Timing**: 1.5 hours

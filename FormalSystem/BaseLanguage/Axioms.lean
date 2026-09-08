@@ -80,8 +80,8 @@ the paper's `TP`/`CT` → `TP1`/`TP2`, `P9`/`P10` → `P7`/`P8`, `TB`/`TA` → `
 | Paper key | Lean identifier | Notes |
 |---|---|---|
 | `MF` | `Axiom.modal_future` | |
-| `P1` | `FormalSystem.Theorems.Perpetuity.perpetuity_1` | |
-| `P2` | `FormalSystem.Theorems.Perpetuity.perpetuity_2` | |
+| `P1` | `FormalSystem.Theorems.Perpetuity.perpetuity1` | |
+| `P2` | `FormalSystem.Theorems.Perpetuity.perpetuity2` | |
 | `TF` | `FormalSystem.Theorems.Combinators.temporalFutureDerived` | Derived, not primitive — matches the paper, where `TF` is likewise a derived theorem. |
 | `P3` | `FormalSystem.Theorems.Perpetuity.perpetuity3` | |
 | `P4` | `FormalSystem.Theorems.Perpetuity.perpetuity4` | |

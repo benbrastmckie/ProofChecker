@@ -16,8 +16,8 @@ between modal necessity (□) and temporal operators (always △, sometimes ▽)
 
 ## Main Theorems
 
-- `perpetuity_1`: `□φ → △φ` (necessary implies always)
-- `perpetuity_2`: `▽φ → ◇φ` (sometimes implies possible)
+- `perpetuity1`: `□φ → △φ` (necessary implies always)
+- `perpetuity2`: `▽φ → ◇φ` (sometimes implies possible)
 - `perpetuity3`: `□φ → □△φ` (necessity of perpetuity)
 - `perpetuity4`: `◇▽φ → ◇φ` (possibility of occurrence)
 - `perpetuity5`: `◇▽φ → △◇φ` (persistent possibility)

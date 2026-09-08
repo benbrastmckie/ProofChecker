@@ -1168,8 +1168,8 @@ parameters. The result is guaranteed valid by construction.
 - Modal (4): modal_t, modal_4, modal_b, modal_k_dist
 - Temporal basic (6): serial_future, serial_past, connect_future, connect_past,
   right_mono_until, F_until_equiv
-- Temporal-modal interaction (8): modal_future, modal_past, perpetuity_1,
-  perpetuity_2, gDistribution, hDistribution, alwaysToPresent, presentToSometimes
+- Temporal-modal interaction (8): modal_future, modal_past, perpetuity1,
+  perpetuity2, gDistribution, hDistribution, alwaysToPresent, presentToSometimes
 -/
 partial def instantiateAxiom (atoms : List Atom) (maxParamSize : Nat) : IO Formula := do
   let schemaIdx ← IO.rand 0 21
@@ -1246,11 +1246,11 @@ partial def instantiateAxiom (atoms : List Atom) (maxParamSize : Nat) : IO Formu
     let φ ← randomSubFormula atoms maxParamSize
     return φ.box.imp φ.box.allPast
   | 16 => do
-    -- perpetuity_1(φ): □φ → always(φ)
+    -- perpetuity1(φ): □φ → always(φ)
     let φ ← randomSubFormula atoms maxParamSize
     return φ.box.imp φ.always
   | 17 => do
-    -- perpetuity_2(φ): sometimes(φ) → ◇φ
+    -- perpetuity2(φ): sometimes(φ) → ◇φ
     let φ ← randomSubFormula atoms maxParamSize
     return φ.sometimes.imp φ.diamond
   | 18 => do
@@ -1535,13 +1535,13 @@ private def theoremSeedFormulas : List Formula :=
     p.box.imp p.allPast,                                    -- boxToPast
     p.box.imp p,                                             -- boxToPresent (= modal_t)
     -- Principles (10)
-    p.box.imp p.always,                                      -- perpetuity_1
+    p.box.imp p.always,                                      -- perpetuity1
     p.diamond.diamond.imp p.diamond,                         -- diamond4
     p.diamond.imp p.diamond.box,                             -- modal5
-    p.sometimes.diamond.imp p.diamond,                       -- perpetuity_2
+    p.sometimes.diamond.imp p.diamond,                       -- perpetuity2
     p.box.imp p.allPast.box,                                -- boxToBoxPast
     p.box.imp p.always.box,                                  -- perpetuity3
-    p.sometimes.diamond.imp p.diamond,                       -- perpetuity4 (= perpetuity_2)
+    p.sometimes.diamond.imp p.diamond,                       -- perpetuity4 (= perpetuity2)
     p.imp p.diamond.box,                                     -- mbDiamond (= modal_b)
     p.diamond.box.imp p.diamond.box.allFuture,              -- boxDiamondToFutureBoxDiamond
     p.diamond.box.imp p.diamond.box.allPast,                -- boxDiamondToPastBoxDiamond
@@ -1560,7 +1560,7 @@ private def theoremSeedFormulas : List Formula :=
     p.always.imp p.allPast,                                   -- alwaysImpAllPast
     -- Bimodal interactions mixing box with G/H/F/P
     p.box.imp p.box.allPast,                                  -- boxToBoxPast (duplicate check ok)
-    p.box.imp p.always,                                        -- perpetuity_1 (duplicate check ok)
+    p.box.imp p.always,                                        -- perpetuity1 (duplicate check ok)
     p.sometimes.imp p.diamond,                                 -- perpetuity_2_alt (sometimes ->
     -- diamond)
     -- Deep temporal chains

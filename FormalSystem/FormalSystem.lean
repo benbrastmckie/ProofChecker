@@ -74,7 +74,7 @@ example (p : String) : ⊢ (Formula.box (Formula.atom p)).imp (Formula.atom p) :
 
 -- Use perpetuity principles
 open FormalSystem.Theorems.Perpetuity
-#check perpetuity_1  -- □φ → △φ
+#check perpetuity1  -- □φ → △φ
 ```
 
 ## Usage

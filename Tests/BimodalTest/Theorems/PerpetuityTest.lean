@@ -190,26 +190,26 @@ example (A B C D : Formula) (h1 : ⊢ A.imp B) (h2 : ⊢ B.imp C) (h3 : ⊢ C.im
 -/
 
 /-- Test P1 type signature: □φ → △φ (always = future) -/
-example (φ : Formula) : ⊢ φ.box.imp φ.always := perpetuity_1 φ
+example (φ : Formula) : ⊢ φ.box.imp φ.always := perpetuity1 φ
 
 /-- Test P1 with atomic formula -/
-example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p").always := perpetuity_1 _
+example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p").always := perpetuity1 _
 
 /-- Test P1 using triangle notation -/
-example (φ : Formula) : ⊢ φ.box.imp (△φ) := perpetuity_1 φ
+example (φ : Formula) : ⊢ φ.box.imp (△φ) := perpetuity1 φ
 
 /-!
 ## P2 Tests: sometimes φ → ◇φ (sometimes implies possible)
 -/
 
 /-- Test P2 type signature: ▽φ → ◇φ -/
-example (φ : Formula) : ⊢ φ.sometimes.imp φ.diamond := perpetuity_2 φ
+example (φ : Formula) : ⊢ φ.sometimes.imp φ.diamond := perpetuity2 φ
 
 /-- Test P2 with atomic formula -/
-example : ⊢ (Formula.atomS "p").sometimes.imp (Formula.atomS "p").diamond := perpetuity_2 _
+example : ⊢ (Formula.atomS "p").sometimes.imp (Formula.atomS "p").diamond := perpetuity2 _
 
 /-- Test P2 using triangle notation -/
-example (φ : Formula) : ⊢ (▽φ).imp φ.diamond := perpetuity_2 φ
+example (φ : Formula) : ⊢ (▽φ).imp φ.diamond := perpetuity2 φ
 
 /-!
 ## P3 Tests: □φ → □always φ (necessity of perpetuity)

@@ -200,7 +200,7 @@ theorem modal_t (φ : Formula) : ⊢ (φ.box.imp φ) := by
   apply Axiom.modal_t
 
 -- Perpetuity principle P1: `□φ → always φ`
-theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
+theorem perpetuity1 (φ : Formula) : ⊢ (φ.box.imp (always φ)) := by
   sorry
 
 -- Soundness: if `Γ ⊢ φ` then `Γ ⊨ φ`
@@ -273,8 +273,8 @@ Logos uses Unicode symbols for logical operators with prefix notation declaratio
 **Good Examples**:
 ```lean
 -- Using triangle notation for perpetuity principles
-theorem perpetuity_1 (φ : Formula) : ⊢ (□φ → △φ) := by sorry
-theorem perpetuity_2 (φ : Formula) : ⊢ (▽φ → ◇φ) := by sorry
+theorem perpetuity1 (φ : Formula) : ⊢ (□φ → △φ) := by sorry
+theorem perpetuity2 (φ : Formula) : ⊢ (▽φ → ◇φ) := by sorry
 
 -- Mixed notation is acceptable
 example (p : Formula) : △p = p.always := rfl
@@ -284,8 +284,8 @@ example (p : Formula) : ▽(p.imp q) = (p.imp q).sometimes := rfl
 **Avoid**:
 ```lean
 -- Don't mix inconsistent styles unnecessarily
-theorem perpetuity_1 (φ : Formula) : ⊢ (□φ → always φ) := by sorry  -- inconsistent
-theorem perpetuity_2 (φ : Formula) : ⊢ (sometimes φ → ◇φ) := by sorry  -- inconsistent
+theorem perpetuity1 (φ : Formula) : ⊢ (□φ → always φ) := by sorry  -- inconsistent
+theorem perpetuity2 (φ : Formula) : ⊢ (sometimes φ → ◇φ) := by sorry  -- inconsistent
 
 -- Prefer: Use either all Unicode or all text consistently per theorem
 ```

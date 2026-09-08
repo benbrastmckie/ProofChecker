@@ -147,7 +147,7 @@ The parts are ordered by logical dependency, but several shorter paths through t
 - *Comparative positioning.* The closing chapters of Part I -- the LTL comparison, the Vlach/BL#super[⋆] survey, and the decidability frontier -- locate *TM* among its neighbors and can be read independently after the spine.
 - *Applications.* Part II is self-contained given the spine and the decidability chapter: proof automation, the training-data pipeline, and dual verification each occupy one chapter.
 
-Formal claims are typeset with their Lean identifiers in fixed-width font (e.g. `perpetuity_1`); each such identifier names a declaration in the live source, and the machine appendix indexes the full correspondence.
+Formal claims are typeset with their Lean identifiers in fixed-width font (e.g. `perpetuity1`); each such identifier names a declaration in the live source, and the machine appendix indexes the full correspondence.
 
 == Project Structure
 

@@ -49,8 +49,8 @@ and P2, and P6 lives in a different file. The exact names are:
 
 | Principle | Declaration | Site |
 |-----------|-------------|------|
-| P1 | `perpetuity_1` | [Principles.lean](Principles.lean):77 |
-| P2 | `perpetuity_2` | [Principles.lean](Principles.lean):308 |
+| P1 | `perpetuity1` | [Principles.lean](Principles.lean):77 |
+| P2 | `perpetuity2` | [Principles.lean](Principles.lean):308 |
 | P3 | `perpetuity3` | [Principles.lean](Principles.lean):443 |
 | P4 | `perpetuity4` | [Principles.lean](Principles.lean):512 |
 | P5 | `perpetuity5` | [Principles.lean](Principles.lean):811 |

@@ -74,10 +74,10 @@ open FormalSystem.ProofSystem
 open FormalSystem.Theorems
 
 /-- Test P1: □φ → always φ is derivable -/
-example (φ : Formula) : ⊢ (φ.box.imp (always φ)) := perpetuity_1 φ
+example (φ : Formula) : ⊢ (φ.box.imp (always φ)) := perpetuity1 φ
 
 /-- Test P2: sometimes φ → ◇φ is derivable -/
-example (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := perpetuity_2 φ
+example (φ : Formula) : ⊢ ((sometimes φ).imp (diamond φ)) := perpetuity2 φ
 
 /-- Test modus ponens application -/
 example (P Q : Formula) : [P.imp Q, P] ⊢ Q := by

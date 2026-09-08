@@ -390,11 +390,11 @@ The perpetuity principles P1-P6 connect modal and temporal operators:
 
 ```lean
 -- P1: `□φ → △φ` (necessary implies always)
-theorem perpetuity_1 (φ : Formula) : ⊢ (φ.box.imp (△φ)) := by
+theorem perpetuity1 (φ : Formula) : ⊢ (φ.box.imp (△φ)) := by
   sorry
 
 -- P2: `▽φ → ◇φ` (sometimes implies possible)
-theorem perpetuity_2 (φ : Formula) : ⊢ ((▽φ).imp (diamond φ)) := by
+theorem perpetuity2 (φ : Formula) : ⊢ ((▽φ).imp (diamond φ)) := by
   sorry
 
 -- P3-P6: See Theorems/Perpetuity.lean
@@ -406,7 +406,7 @@ from-scratch walkthrough; the library itself is sorry-free. In the actual librar
 is fully proven; all four weak completeness theorems -- `completeness`,
 `completeness_dense`, `completeness_ztime`, and `completeness_rtime`
 (`FormalSystem/Metalogic/StrongCompleteness.lean`) -- are fully proven and sorryAx-free;
-and `perpetuity_1`-`perpetuity6` are all fully proven. See
+and `perpetuity1`-`perpetuity6` are all fully proven. See
 `FormalSystem/Metalogic/Soundness.lean`,
 `FormalSystem/Metalogic/BXCanonical/Completeness.lean`, and
 `FormalSystem/Theorems/Perpetuity/`.

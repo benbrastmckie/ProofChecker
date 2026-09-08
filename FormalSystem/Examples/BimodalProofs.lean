@@ -55,16 +55,16 @@ If φ is metaphysically necessary, then φ is always (perpetually) true.
 -/
 
 /-- P1 with dot notation: necessary implies always -/
-example (φ : Formula) : ⊢ φ.box.imp φ.always := perpetuity_1 φ
+example (φ : Formula) : ⊢ φ.box.imp φ.always := perpetuity1 φ
 
 /-- P1 with triangle notation: □φ → △φ -/
-example (φ : Formula) : ⊢ φ.box.imp (△φ) := perpetuity_1 φ
+example (φ : Formula) : ⊢ φ.box.imp (△φ) := perpetuity1 φ
 
 /-- P1 applied to atomic formula (dot notation) -/
-example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p").always := perpetuity_1 _
+example : ⊢ (Formula.atomS "p").box.imp (Formula.atomS "p").always := perpetuity1 _
 
 /-- P1 applied to atomic formula (triangle notation) -/
-example : ⊢ (Formula.atomS "p").box.imp (△(Formula.atomS "p")) := perpetuity_1 _
+example : ⊢ (Formula.atomS "p").box.imp (△(Formula.atomS "p")) := perpetuity1 _
 
 /-!
 ## P2: Sometimes Implies Possible
@@ -73,16 +73,16 @@ If φ happens at some future time, then φ is possible.
 -/
 
 /-- P2 with dot notation: sometimes implies possible -/
-example (φ : Formula) : ⊢ φ.sometimes.imp φ.diamond := perpetuity_2 φ
+example (φ : Formula) : ⊢ φ.sometimes.imp φ.diamond := perpetuity2 φ
 
 /-- P2 with triangle notation: ▽φ → ◇φ -/
-example (φ : Formula) : ⊢ (▽φ).imp φ.diamond := perpetuity_2 φ
+example (φ : Formula) : ⊢ (▽φ).imp φ.diamond := perpetuity2 φ
 
 /-- P2 applied to complex formula -/
-example (p q : Formula) : ⊢ (p.imp q).sometimes.imp (p.imp q).diamond := perpetuity_2 _
+example (p q : Formula) : ⊢ (p.imp q).sometimes.imp (p.imp q).diamond := perpetuity2 _
 
 /-- P2 with triangle notation on complex formula -/
-example (p q : Formula) : ⊢ (▽(p.imp q)).imp (p.imp q).diamond := perpetuity_2 _
+example (p q : Formula) : ⊢ (▽(p.imp q)).imp (p.imp q).diamond := perpetuity2 _
 
 /-!
 ## P3: Necessity of Perpetuity
@@ -190,7 +190,7 @@ example (p : Formula) : ⊢ (▽p).diamond.imp p.diamond := perpetuity4 p
 noncomputable example (p : Formula) : ⊢ (▽(p.box)).imp (△p).box := perpetuity6 p
 
 /-- Recommendation: Prefer prefix triangle notation for temporal, dot for modal -/
-example (p : Formula) : ⊢ p.box.imp (△p) := perpetuity_1 p
+example (p : Formula) : ⊢ p.box.imp (△p) := perpetuity1 p
 
 /-!
 ## Complex Bimodal Formulas

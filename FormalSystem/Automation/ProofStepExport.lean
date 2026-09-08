@@ -60,7 +60,7 @@ Source files for the 36 original theorems:
   untilImpF, sinceImpP, fMono, pMono, untilMonoGuard,
   sinceMonoGuard, untilMonoEvent, sinceMonoEvent, fNegG, pNegH)
 - Helpers.lean: 3 (boxToFuture, boxToPast, boxToPresent)
-- Principles.lean: 10 (perpetuity_1, diamond4, modal5, perpetuity_2,
+- Principles.lean: 10 (perpetuity1, diamond4, modal5, perpetuity2,
   boxToBoxPast, perpetuity3, perpetuity4, mbDiamond,
   boxDiamondToFutureBoxDiamond, boxDiamondToPastBoxDiamond)
 
@@ -291,8 +291,8 @@ def theoremRegistry : List TheoremEntry := [
   -- Principles.lean (10 entries)
   -- ============================================================
 
-  -- perpetuity_1 : ⊢ □φ → △φ (where △φ = H(φ) ∧ (φ ∧ G(φ)))
-  mkEntry "perpetuity_1" (FormalSystem.Theorems.Perpetuity.perpetuity_1 p),
+  -- perpetuity1 : ⊢ □φ → △φ (where △φ = H(φ) ∧ (φ ∧ G(φ)))
+  mkEntry "perpetuity_1" (FormalSystem.Theorems.Perpetuity.perpetuity1 p),
 
   -- diamond4 : ⊢ ◇◇φ → ◇φ
   mkEntry "diamond4" (FormalSystem.Theorems.Perpetuity.diamond4 p),
@@ -300,8 +300,8 @@ def theoremRegistry : List TheoremEntry := [
   -- modal5 : ⊢ ◇φ → □◇φ
   mkEntry "modal5" (FormalSystem.Theorems.Perpetuity.modal5 p),
 
-  -- perpetuity_2 : ⊢ ◇△φ → ◇φ (where ◇△ = sometimes = ◇▽)
-  mkEntry "perpetuity_2" (FormalSystem.Theorems.Perpetuity.perpetuity_2 p),
+  -- perpetuity2 : ⊢ ◇△φ → ◇φ (where ◇△ = sometimes = ◇▽)
+  mkEntry "perpetuity_2" (FormalSystem.Theorems.Perpetuity.perpetuity2 p),
 
   -- boxToBoxPast : ⊢ □φ → □(H(φ))
   mkEntry "boxToBoxPast" (FormalSystem.Theorems.Perpetuity.boxToBoxPast p),
@@ -418,13 +418,13 @@ def theoremRegistry : List TheoremEntry := [
 
   -- Principles G-wrapped
   mkEntry "G_perpetuity_1"
-    (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity_1 p)),
+    (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity1 p)),
   mkEntry "G_diamond_4"
     (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.diamond4 p)),
   mkEntry "G_modal_5"
     (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.modal5 p)),
   mkEntry "G_perpetuity_2"
-    (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity_2 p)),
+    (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity2 p)),
   mkEntry "G_box_to_box_past"
     (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.boxToBoxPast p)),
   mkEntry "G_perpetuity_3"
@@ -577,7 +577,7 @@ def theoremRegistry : List TheoremEntry := [
   -- Principles H-wrapped
   mkEntry "H_perpetuity_1"
     (DerivationTree.temporal_duality _
-      (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity_1 p))),
+      (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity1 p))),
   mkEntry "H_diamond_4"
     (DerivationTree.temporal_duality _
       (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.diamond4 p))),
@@ -586,7 +586,7 @@ def theoremRegistry : List TheoremEntry := [
       (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.modal5 p))),
   mkEntry "H_perpetuity_2"
     (DerivationTree.temporal_duality _
-      (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity_2 p))),
+      (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.perpetuity2 p))),
   mkEntry "H_box_to_box_past"
     (DerivationTree.temporal_duality _
       (DerivationTree.temporal_necessitation _ (FormalSystem.Theorems.Perpetuity.boxToBoxPast p))),

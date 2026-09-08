@@ -340,7 +340,7 @@ theorem perpetuity_1_example (P : Formula) : ⊢ (P.box.imp (△P)) := by
 /-- Using P1 -/
 example (P : Formula) : [P.box] ⊢ always P := by
   apply DerivationTree.modusPonens
-  · exact perpetuity_1 P
+  · exact perpetuity1 P
   · apply DerivationTree.assumption; simp
 ```
 
