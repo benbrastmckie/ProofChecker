@@ -182,7 +182,7 @@
     {
       "project_number": 547,
       "project_name": "replace_historical_system_names_in_docstrings",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f, TM_c, TM_dc, BX_f, BX_c in docstrings, comments, docs and scripts with the paper's current z/d/r subscripts, and record in one place the mapping between this repository's two base systems and the paper's. PAPER CONVENTION (implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex): the since/until logic of BL is called TM; its extensions are named by the class over which each is complete -- TM_z (Z-time), TM_d (dense task frames), TM_r (R-time, the dense and complete orders) -- with the same subscripts on the Burgess-Xu cores BX_z, BX_d, BX_r. BX_r is the extension of BX_d by PU and SP, with CO derived, matching this repository's Dedekind-class derivations. THE PAPER NO LONGER NAMES A PAST/FUTURE FRAGMENT: the former fragment language BL⁻ and the systems TM⁻, TM⁻_f, TM⁻_d, TM⁻_dc, the Fragment proposition and the fragment remark are all deleted. What remains is one footnote in the Logic subsection stating the Past/Future axiom set (S5 schemata, MF, TK, T4, TB, TA, TL, TD with P and F interchanged), its incompleteness over all task frames by a two-line Kripke countermodel to the dichotomy of a boxed DF instance and a boxed DN instance, the Z-time incompleteness of its extension by DF via Z1 (citing this repository), and the open dense and R-time cases. MAPPING: this repository's `TM` (BaseLanguage, H/G primitive) is that footnote's Past/Future system, and its `TM⁺` is the paper's TM; the repository's `TM_f`, `TM_d`, `TM_dc` (BaseLanguage plus DF, DN, DN and CO) correspond to no named paper system. DO NOT drop the ⁺ superscript and do not rename bare `TM`: the earlier plan to do so is withdrawn, because bare TM is not greppable and the TM/TM⁺ distinction is load-bearing throughout Conservativity/. WORK, a comment-and-docstring-only sweep with no identifier changes beyond those the FrameClass rename task already made: (a) TM⁺_f → TM⁺_z, TM⁺_c and TM⁺_dc → TM⁺_r, BX_f → BX_z, BX_c → BX_r; (b) for the BaseLanguage extensions use the parallel Lean-only names TM_z, TM_d, TM_r (replacing TM_f, TM_c, TM_dc) and say once that these have no paper name; (c) add the mapping paragraph above to the module docstring of FormalSystem/Metalogic/Conservativity.lean and to docs/README.md, and reword the `TMFrag` docstring in Metalogic/Conservativity/Fragment.lean so it describes the H/G-fragment of TM⁺ as the set of Past/Future theorems of the paper's TM rather than as a fragment of a named paper system; (d) rewrite the per-constructor anchors in Semantics/FrameClassValidity.lean in the new vocabulary. MEASURED STATE under FormalSystem/: `TM⁺` 124 lines in 21 files (stays); `TM_f` 29 lines in 8 files; `TM_dc` 8 lines in 4 files; `TM_c` 7 lines in 3 files; `BX_c` 3 lines in 2 files; `BX_f` 2 lines in 2 files; 12 further lines across docs/, scripts/ and the definitions-of-record. TM⋆ (Metalogic/Conservativity/Star/) is a different system and must not be touched. Verify with a final grep that no f, c or dc subscript remains outside Boneyard/ and the archive, and that lake build FormalSystem stays green.",
       "topic": "paper-refactor",
@@ -190,7 +190,7 @@
         546
       ],
       "created": "2026-09-07T04:24:13Z",
-      "last_updated": "2026-09-08T00:25:25Z",
+      "last_updated": "2026-09-08T01:07:24Z",
       "file_scope": [
         "FormalSystem/BaseLanguage/AxiomDischarge.lean",
         "FormalSystem/BaseLanguage/Axioms.lean",
@@ -225,9 +225,15 @@
           "path": "specs/547_replace_historical_system_names_in_docstrings/plans/01_replace-historical-system-names.md",
           "type": "plan",
           "summary": "7-phase, 7-hour comment-and-docstring-only sweep replacing the historical TM/BX f/c/dc subscripts with the paper's z/d/r vocabulary, partitioned into mechanical rename, editorial rewrites of 12 retracted-claim passages, and a canonical two-base-systems mapping paragraph."
+        },
+        {
+          "path": "specs/547_replace_historical_system_names_in_docstrings/summaries/01_replace-historical-system-names-summary.md",
+          "type": "summary",
+          "summary": "Comment-and-docstring-only sweep retiring the historical TM/BX f/c/dc subscripts for the paper's z/d/r vocabulary across 20 files, with 12 retracted-claim passages rewritten by hand and a canonical two-base-systems mapping added."
         }
       ],
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Retired the historical system names TM+_f, TM+_c, TM+_dc, TM_f, TM_c, TM_dc, BX_f and BX_c from every live comment, docstring, README, doc page and typst sync map, replacing them with the paper's z/d/r subscripts across 20 files. Rewrote by hand the twelve passages asserting things about the paper its revision has retracted -- four verbatim quotations of a deleted sentence, the closed 'real gap' argument, the answered 'open question', and a two-name contrast that collapses to one -- and added a canonical mapping recording that this repository's TM-plus is the paper's TM while its BaseLanguage TM and extensions answer to no paper system. No Lean identifier, anchor label, or definitions-of-record row was touched."
     },
     {
       "project_number": 546,

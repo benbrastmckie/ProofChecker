@@ -11,10 +11,10 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,551,554 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537,548,550 | 193,298,464,502,535,547,554 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,428,498,499,500,552 | 231,465,497,548 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 4 | 125,429,543,553 | 428,498,499,500,552 | algebraic-representation, decidability, metalogic, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,548,551,554 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,550,552 | 193,298,464,502,535,548,554 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,428,498,499,500,553 | 231,465,497,552 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
 | 7 | 430 | 411 | decidability |
@@ -83,10 +83,9 @@ next_project_number: 555
 
 ### Paper Refactor
 
-547 [IMPLEMENTING] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
-  └─ 548 [NOT STARTED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
-    └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
-      └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
+548 [NOT STARTED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
+  └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
+    └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
 
@@ -300,12 +299,13 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 547. Replace historical system names in docstrings
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 546
 - **Research**: [547_replace_historical_system_names_in_docstrings/reports/01_historical-system-name-sweep.md]
 - **Plan**: [547_replace_historical_system_names_in_docstrings/plans/01_replace-historical-system-names.md]
+- **Summary**: [547_replace_historical_system_names_in_docstrings/summaries/01_replace-historical-system-names-summary.md]
 
 **Description**: Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f, TM_c, TM_dc, BX_f, BX_c in docstrings, comments, docs and scripts with the paper's current z/d/r subscripts, and record in one place the mapping between this repository's two base systems and the paper's. PAPER CONVENTION (implemented in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex): the since/until logic of BL is called TM; its extensions are named by the class over which each is complete -- TM_z (Z-time), TM_d (dense task frames), TM_r (R-time, the dense and complete orders) -- with the same subscripts on the Burgess-Xu cores BX_z, BX_d, BX_r. BX_r is the extension of BX_d by PU and SP, with CO derived, matching this repository's Dedekind-class derivations. THE PAPER NO LONGER NAMES A PAST/FUTURE FRAGMENT: the former fragment language BL⁻ and the systems TM⁻, TM⁻_f, TM⁻_d, TM⁻_dc, the Fragment proposition and the fragment remark are all deleted. What remains is one footnote in the Logic subsection stating the Past/Future axiom set (S5 schemata, MF, TK, T4, TB, TA, TL, TD with P and F interchanged), its incompleteness over all task frames by a two-line Kripke countermodel to the dichotomy of a boxed DF instance and a boxed DN instance, the Z-time incompleteness of its extension by DF via Z1 (citing this repository), and the open dense and R-time cases. MAPPING: this repository's `TM` (BaseLanguage, H/G primitive) is that footnote's Past/Future system, and its `TM⁺` is the paper's TM; the repository's `TM_f`, `TM_d`, `TM_dc` (BaseLanguage plus DF, DN, DN and CO) correspond to no named paper system. DO NOT drop the ⁺ superscript and do not rename bare `TM`: the earlier plan to do so is withdrawn, because bare TM is not greppable and the TM/TM⁺ distinction is load-bearing throughout Conservativity/. WORK, a comment-and-docstring-only sweep with no identifier changes beyond those the FrameClass rename task already made: (a) TM⁺_f → TM⁺_z, TM⁺_c and TM⁺_dc → TM⁺_r, BX_f → BX_z, BX_c → BX_r; (b) for the BaseLanguage extensions use the parallel Lean-only names TM_z, TM_d, TM_r (replacing TM_f, TM_c, TM_dc) and say once that these have no paper name; (c) add the mapping paragraph above to the module docstring of FormalSystem/Metalogic/Conservativity.lean and to docs/README.md, and reword the `TMFrag` docstring in Metalogic/Conservativity/Fragment.lean so it describes the H/G-fragment of TM⁺ as the set of Past/Future theorems of the paper's TM rather than as a fragment of a named paper system; (d) rewrite the per-constructor anchors in Semantics/FrameClassValidity.lean in the new vocabulary. MEASURED STATE under FormalSystem/: `TM⁺` 124 lines in 21 files (stays); `TM_f` 29 lines in 8 files; `TM_dc` 8 lines in 4 files; `TM_c` 7 lines in 3 files; `BX_c` 3 lines in 2 files; `BX_f` 2 lines in 2 files; 12 further lines across docs/, scripts/ and the definitions-of-record. TM⋆ (Metalogic/Conservativity/Star/) is a different system and must not be touched. Verify with a final grep that no f, c or dc subscript remains outside Boneyard/ and the archive, and that lake build FormalSystem stays green.
 
