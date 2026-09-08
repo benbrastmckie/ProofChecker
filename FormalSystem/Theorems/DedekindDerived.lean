@@ -328,13 +328,16 @@ private noncomputable def coEventBot {fc : FrameClass} (φ : Formula) :
 
 `⊢[fc] △(Hφ → F(Hφ)) → (Hφ → Gφ)` whenever `FrameClass.RTime ≤ fc`.
 
-**Source of the formula**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside
-`def:BX-r`; displayed key CO), verbatim:
-"`\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
+**Source of the formula**: JPL paper anchor `CO`, verbatim:
+"`\aitem{CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
 (\Past\varphi \rightarrow \Future\varphi)$.`"
-In the paper's current text CO is a *derived* theorem of the complete-order extension `BX_r`,
+In the paper's current text CO is a *derived* theorem of the dense-and-complete extension `BX_r`,
 which is `BX_d` extended by PU and SEP — the same arrangement as this tree's, and the reason this
-module exists. The `△` is the temporal triangle `Formula.always`, not `Formula.box`; see
+module exists. **Retired anchor**: this formula used to be quoted from `TMP-CO`, the `BL^+`
+restatement carried inside the old `def:TMplus-c`. The paper's 2026-09 wave dropped that
+restatement — `def:BX-r` now derives CO rather than displaying it a second time — so `TMP-CO` is
+recorded `DANGLING` in `specs/paper-definitions-of-record.md` while the plain `CO` anchor stays
+pinned. The formula is character-for-character the same under both. The `△` is the temporal triangle `Formula.always`, not `Formula.box`; see
 `Formula.co`.
 
 **CO is derived here, not primitive.** No `Axiom.co` constructor exists; the official

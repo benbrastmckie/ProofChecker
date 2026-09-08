@@ -17,7 +17,7 @@ import Mathlib.Algebra.Order.Group.Int
 # Witness (b): the static frame over `ℤ ×ₗ ℤ`, and the Discrete sandwich
 
 `FrameClass.Sat FrameClass.ZTime` is **not** Galois-closed. `Sat .ZTime` is
-`TaskFrame.IsZTime`, `def:BX-z`'s Hölder narrowing to ℤ-time, and the witness that
+`TaskFrame.IsZTime`, `def:BX-z`'s narrowing to ℤ-time (`prop:archimedean`), and the witness that
 it is strictly smaller than the model class of its axiom set is the static frame over
 `ℤ ×ₗ ℤ`: a discrete carrier — every point has an immediate successor, `toLex (0, 1)` above it —
 that is **not Archimedean**, since `toLex (1, 0)` dominates every multiple of `toLex (0, 1)`.

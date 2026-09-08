@@ -49,8 +49,10 @@ The two corollaries below are the **closed** half of a four-part picture; the ot
 `TaskFrame.IsDiscrete` — `def:frame-properties`' bare Discrete clause, guarded by `(∃ y, x < y)` —
 is the class `X⊤` indicates, and it *is* Galois-closed (`galoisClosed_isDiscrete`).
 
-`FrameClass.Sat FrameClass.ZTime` is `TaskFrame.IsZTime`, `def:BX-z`'s Hölder
-narrowing to ℤ-time. It is strictly stronger, and it is **not** Galois-closed —
+`FrameClass.Sat FrameClass.ZTime` is `TaskFrame.IsZTime`, `def:BX-z`'s narrowing to ℤ-time —
+the narrowing the paper now grounds in `prop:archimedean` (`UZ` and `Z1` fail over every
+non-Archimedean discrete order) rather than in Hölder's theorem, which it cites only for the
+step from Archimedean-and-discrete to ℤ. It is strictly stronger, and it is **not** Galois-closed —
 `Metalogic/Independence/LexIntWitness.lean` exhibits a frame over `ℤ ×ₗ ℤ` inside
 `Mod (AxiomSet .ZTime)` and outside it. Stating the closure corollary below over
 `Sat .ZTime` would therefore contradict that witness. The corollary is over `{F | F.IsDiscrete}`

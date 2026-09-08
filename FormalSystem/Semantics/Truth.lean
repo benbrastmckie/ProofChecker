@@ -209,7 +209,7 @@ vacuously satisfiable at every `t`, so the two readings agree on `H_F`; the conj
 
 **Until / Since argument order**: `untl`/`snce` are **guard-first / event-second** — `untl ψ φ`
 reads "ψ is the guard, φ is the event". The two clauses below transcribe
-`def:BLplus-semantics`'s clause bodies directly:
+`def:BL-semantics`'s clause bodies directly:
 
 - (since) "M,τ,x ⊨ φ since ψ *iff* M,τ,z ⊨ ψ for some time z < x where M,τ,y ⊨ φ for all y ∈ D
   with z < y < x."
@@ -217,14 +217,22 @@ reads "ψ is the guard, φ is the event". The two clauses below transcribe
   with x < y < z."
 
 In both, the existential witness is the **second** argument and the universally quantified
-open-interval condition is the **first**. `def:BLplus-defined` corroborates independently:
+open-interval condition is the **first**. `def:BLplus-language` corroborates independently:
 `past φ := ⊤ since φ`, `future φ := ⊤ until φ`, `Next φ := ⊥ until φ`, `Previous φ := ⊥ since φ`
 — in each the operand is the event and sits second. `Formula.someFuture φ = untl ⊤ φ` and
 `Formula.next φ = untl ⊥ φ` match character for character.
 
-Earlier revisions of this docstring quoted an argument-order **footnote** of
-`def:BLplus-semantics` and asserted that the Lean tree was deliberately event-first. Both are
-retired: the tracked anchor (sha256 `edde7517…`) carries no footnote, and the tree was aligned
+**Anchor provenance.** These clauses used to live under `def:BLplus-semantics`, a separate
+definition for the separate language `BL^+`. The paper's 2026-09 wave collapsed `BL^+` into `BL`
+and made the since/until clauses clauses of `def:BL-semantics` itself, deleting the old label —
+which `specs/paper-definitions-of-record.md` now records `DANGLING`. The clause bodies quoted
+above are word-for-word what the live `def:BL-semantics` carries; only their home moved. The same
+wave moved the defined operators into `def:BLplus-language`'s own block (that anchor id is
+unchanged), retiring `def:BLplus-defined` likewise.
+
+Earlier revisions of this docstring quoted an argument-order **footnote** of the then-`BL^+`
+semantics anchor and asserted that the Lean tree was deliberately event-first. Both are
+retired: the tracked anchor carries no footnote, and the tree was aligned
 to the paper by a uniform argument swap of the definition and every call site. See
 `specs/decisions/untl-snce-argument-order.md`. These clauses are τ-local and are untouched by the
 box retarget.

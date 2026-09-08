@@ -600,7 +600,7 @@ This restricts `Valid` to temporal types with `SuccOrder D` and `PredOrder D`,
 capturing the frame condition for the discreteness axioms DF/DP.
 
 **Now an abbreviation over `ValidIn`.** The frame constraint is `FrameClass.Sat .ZTime`, which
-is `TaskFrame.IsZTime` — `def:BX-z`'s Hölder narrowing to ℤ-time, *not*
+is `TaskFrame.IsZTime` — `def:BX-z`'s narrowing to ℤ-time (`prop:archimedean`), *not*
 `def:frame-properties`' bare Discrete clause. Recording the narrowing in the tag's interpretation
 rather than in a binder list here is what keeps `soundness_ztime` from silently widening its
 frame class. The binder shape this definition used to have is recovered by the generic

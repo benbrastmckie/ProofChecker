@@ -207,7 +207,7 @@ forward status unchanged. TM⋆ completeness and decidability are open and not a
 ## CED / CEC — open
 
 No counterexample analogous to the CEB and CEF witnesses is known for CED. CEC inherits that
-openness, plus an independent doubt: whether TMP-CO alone axiomatizes the same BL⁺-logic as
+openness, plus an independent doubt: whether CO alone axiomatizes the same BL-logic as
 the full Reynolds triple is itself open, and the converse direction (CO deriving the Reynolds
 gap axioms) is separately **refuted** in
 `FormalSystem.Metalogic.Independence.CoNotPriorU`. "Open" here means open in the source, not

@@ -43,7 +43,8 @@ relation satisfying the following for $x, y \geq 0$":
   `multiFamGen_saturation`, via `sInter_nonempty_of_directed_subsingleton`: determinism makes
   every fiber a singleton and every segment a subsingleton.
 
-**Fiber/segment apparatus (`def:task-relation`)** and **directed families (`def:directed`)**
+**Fiber/segment apparatus (`def:task-relation`)** and **`⊇`-directed families (`def:frame`'s
+opening clause; the standalone `def:directed` is retired — `DANGLING`)**
 are consumed from `Semantics/TaskFrame.lean` (`TaskFrame.Fib`, `TaskFrame.Seg`,
 `TaskFrame.DirectedFamily`, `TaskFrame.IsFiber`, `TaskFrame.IsSegment`).
 
@@ -92,7 +93,7 @@ construction site in any inventory of sites that owe the structure a field.
   the generic flow frame `multiFamTaskFrameGen` / `multiFamHistoryGen`
 * JPL Paper anchors `def:frame` (sub-anchors `def:frame#Compositionality`,
   `def:frame#Seriality`, `def:frame#Limit`, `def:frame#Saturation`), `def:task-relation`,
-  `def:directed`, `def:world-history` — cited by `\label` anchor, never by line number
+  `def:world-history` — cited by `\label` anchor, never by line number
 -/
 
 namespace FormalSystem.Metalogic.Algebraic
@@ -288,7 +289,7 @@ theorem multiFamGen_fib_subsingleton {FamIdx : Type} [Nonempty FamIdx] (w : FamI
 
 /-- *Saturation* (`def:frame#Saturation`) for the generic flow frame: every fiber is a
 singleton and every segment is an intersection of fibers, hence a subsingleton, so a
-directed family (`def:directed`) of nonempty fibers and segments meets the hypotheses of
+`⊇`-directed family (`def:frame`'s opening clause) of nonempty fibers and segments meets the hypotheses of
 `sInter_nonempty_of_directed_subsingleton`. -/
 theorem multiFamGen_saturation {FamIdx : Type} [Nonempty FamIdx] (S : Set (Set (FamIdx × ↑D)))
     (hdir : TaskFrame.DirectedFamily S)

@@ -504,10 +504,24 @@ constrains is the points of evaluation, not the propositions.
   ]
   UZ asserts that if $phi.alt$ holds at some future time, there is a *nearest* future
   $phi.alt$-time with $not phi.alt$ throughout the intervening interval. Z1 is a backward
-  induction principle characteristic of successor-Archimedean frames: by Hölder's theorem a
-  nontrivial discrete Archimedean totally ordered abelian group is isomorphic to $ZZ$, so the
-  successor-Archimedean discrete class to which $"BX"_f$ and $op("TM")^+_f$ are sound and
-  complete is exactly $ZZ$-time.
+  induction principle characteristic of successor-Archimedean frames. UZ and Z1 fail over every
+  discrete temporal order that is not Archimedean (`prop:archimedean`), and the Archimedean
+  discrete orders are exactly $ZZ$-time, so the discrete task frames over which this system and
+  its TM extension are sound and complete are exactly those over $ZZ$-time.
+]
+
+#remark[
+  *Naming provenance.* This section transcribes the paper's earlier presentation, in which the
+  three extensions were $"BX"_f slash "BX"_d slash "BX"_c$ over the separate language
+  $#BLplus$. The paper's 2026-09 revision collapsed $#BLplus$ into $#BL$, dropped the $+$
+  superscript from the TM family, and renamed the extensions $"BX"_z slash "BX"_d slash "BX"_r$
+  under the anchors `def:BX-z`, `def:BX-d` and `def:BX-r` (see
+  `specs/paper-definitions-of-record.md`; the old anchors `def:TMplus-f`, `def:TMplus-d` and
+  `def:TMplus-c` are recorded there as `DANGLING`). The subscripts used throughout this section are therefore the
+  paper's old ones, read $f arrow.r z$ and $c arrow.r r$; the mathematics is unchanged. Two
+  presentational differences also follow from that revision and are *not* transcribed here: the
+  live definitions cite the Extensions section for their axioms rather than displaying them, and
+  $"BX"_r$ is presented as an extension of $"BX"_d$ rather than of BX.
 ]
 
 #definition($"BX"_d$)[
@@ -546,7 +560,7 @@ adds UZ and Z1, $op("TM")^+_d$ adds DN and NN, and $op("TM")^+_c$ adds Prior-U a
   table(
     columns: 2, stroke: none, align: (left,left),
     table.hline(), table.header([*System*],[*Additional axioms*]), table.hline(),
-    [$op("TM")^+_f$], [UZ, Z1 (backward induction; successor-Archimedean, hence $ZZ$-time by Hölder's theorem)],
+    [$op("TM")^+_f$], [UZ, Z1 (backward induction; fail off the Archimedean discrete orders, hence exactly $ZZ$-time)],
     [$op("TM")^+_d$], [DN ($#allfuture#allfuture phi.alt arrow.r #allfuture phi.alt$), NN ($not #Nxt top$)],
     [$op("TM")^+_c$], [Prior-U, Sep; CO is a derived theorem, not a further axiom],
     table.hline(),

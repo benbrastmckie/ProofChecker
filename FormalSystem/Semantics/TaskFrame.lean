@@ -84,9 +84,11 @@ world state $w \in W$ in every task frame $\F = \tuple{W, \D, \Rightarrow}$.") i
 choice-free, from *Seriality* at `x = 0` plus *Limit*, and asserts reflexivity only.
 
 The supporting apparatus — nonempty `W`, the positive-cone primitive relation, the converse
-convention, fiber, cone, and segment (`def:task-relation`), and the directed family
-(`def:directed`) — is transcribed in this module's "Fiber, cone, segment, and directed-family
-apparatus" section. The temporal order is `def:temporal-order` (verbatim: "A \textit{temporal
+convention, fiber, cone, and segment (`def:task-relation`), and the `⊇`-directed family
+(`def:frame`'s opening clause; formerly the standalone `def:directed`, which the paper's 2026-09
+wave inlined into `def:frame` and deleted — recorded `DANGLING` in
+`specs/paper-definitions-of-record.md`) — is transcribed in this module's "Fiber, cone, segment,
+and directed-family apparatus" section. The temporal order is `def:temporal-order` (verbatim: "A \textit{temporal
 order} is a nontrivial totally ordered abelian group $\D = \tuple{D, +, 0, \leq}$ with
 \textit{positive cone} $D^+ \coloneq \set{x \in D : x \geq 0}$.").
 
@@ -166,7 +168,7 @@ routes are `limit_of_succOrder` and `limit_of_shift` below.
 - `FrameOver.converse`: The definitional converse convention (`TaskRel w d u ↔ TaskRel u (-d) w`)
 - `FrameOver.nullity`: Derived reflexivity theorem (`TaskRel w 0 w`, matching `lem:nullity`)
 - `TaskFrame.Fib`, `TaskFrame.cone`, `TaskFrame.Seg`, `TaskFrame.DirectedFamily`,
-  `TaskFrame.IsFiber`, `TaskFrame.IsSegment`: the `def:task-relation` / `def:directed`
+  `TaskFrame.IsFiber`, `TaskFrame.IsSegment`: the `def:task-relation` / `⊇`-directed
   apparatus over a bare relation
 - `TaskFrame.Saturation`, `TaskFrame.Serial`, `TaskFrame.Interpolates`,
   `TaskFrame.Compositional`: `def:frame`'s axioms as predicates over a bare relation, hosted
@@ -208,7 +210,7 @@ routes are `limit_of_succOrder` and `limit_of_shift` below.
 * [architecture.md](../../../docs/user-guide/architecture.md) - Task semantics specification
 * JPL Paper anchors `def:frame` (with sub-anchors `def:frame#Compositionality`,
   `def:frame#Seriality`, `def:frame#Limit`, `def:frame#Saturation`), `def:task-relation`,
-  `def:directed`, `def:temporal-order`, and `lem:nullity` — cited by `\label` anchor with
+  `def:temporal-order`, and `lem:nullity` — cited by `\label` anchor with
   verbatim quotes above, never by raw line number
 
 ## Tags
@@ -247,9 +249,10 @@ Recorded source, `def:task-relation` (verbatim):
 - *Cone:* `(w)_x \coloneq \bigcup\limits_{\vert{y} < x} \Fib(w, y)` where `x > 0`.
 - *Segment:* `[w, v]_x^y \coloneq \Fib(w, x) \cap \Fib(v, -y)` where `x, y \geq 0`.
 
-Recorded source, `def:directed` (verbatim): "A nonempty family of sets $\mathcal{S}$ is
-\textit{directed} just in case $S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever
-$S_1, S_2 \in \mathcal{S}$."
+Recorded source, `def:frame`'s opening clause (verbatim): "Letting a nonempty family of sets
+$\mathcal{S}$ be \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some
+$S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$". (Formerly the standalone
+`def:directed`; see `DirectedFamily`'s docstring for the retirement.)
 
 Fibers and segments are TWO separate classes of sets (`IsFiber`, `IsSegment`): a one-sided
 fiber does not count as a segment, and a "fibers and segments" hypothesis is always the
@@ -324,20 +327,22 @@ theorem mem_Seg {W : Type} {R : W → D → W → Prop} {w v u : W} {x y : D} :
 /--
 A `⊇`-directed family of sets.
 
-Recorded source (`def:directed`, the `$\supseteq$` clause, verbatim):
-"\item[\bf $\mathbf{\supseteq}$-Directed:] just in case $S \subseteq S_1 \cap S_2$ for some
-$S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$."
+Recorded source (`def:frame`'s opening clause, verbatim): "Letting a nonempty family of sets
+$\mathcal{S}$ be \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some
+$S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$".
 
-**The paper splits `def:directed` in two.** Its enclosing sentence reads "A nonempty family of
-sets $\mathcal{S}$ is:", followed by a `$\supseteq$-Directed` clause and a
-`$\subseteq$-Directed` clause (`$S_1, S_2 \subseteq S$ for some $S \in \mathcal{S}$`). This
-definition transcribes the **`$\supseteq$` clause only**, because that is the one *Saturation*
-consumes. An earlier revision quoted an undifferentiated "\textit{directed}", from before the
-split; the mathematics is unchanged but the unqualified word is now ambiguous and must not be
-reintroduced.
+**The anchor moved twice, and the current shape is the third.** The condition itself has never
+changed; its home in the paper has. It was first a standalone `def:directed` stating an
+undifferentiated "\textit{directed}"; then that definition split into a `$\supseteq$-Directed`
+and a `$\subseteq$-Directed` clause, of which *Saturation* consumes only the `$\supseteq$` one;
+then the paper's 2026-09 wave deleted `def:directed` outright, dropped the `$\subseteq$` half
+entirely, and inlined the `$\supseteq$` half into `def:frame`'s opening clause — which is what is
+quoted above. `def:directed` is recorded `DANGLING` in
+`specs/paper-definitions-of-record.md`; do not cite it as a live anchor, and do not reintroduce
+the unqualified word "directed", which was ambiguous even before the split.
 
-The nonemptiness of the family is part of the definition (it comes from the enclosing "A nonempty
-family of sets"); the nonemptiness of its *members* is a separate hypothesis wherever
+The nonemptiness of the family is part of the definition (it comes from "a nonempty family of
+sets"); the nonemptiness of its *members* is a separate hypothesis wherever
 *Saturation*-shaped statements need it.
 -/
 def DirectedFamily {W : Type} (S : Set (Set W)) : Prop :=
@@ -398,17 +403,20 @@ $\supseteq$-directed family $\mathcal{S}$ of nonempty fibers and segments."
 (quoted from `def:frame`): the nonempty fibers and segments form a *ball space* on `W` in the
 sense of Ćmiel, Kuhlmann and Kuhlmann, and *Saturation* is the **downward-directed-intersection
 condition $\mathbf{S}_1^d$** of that hierarchy — "the nest condition $\mathbf{S}_1$ with a
-$\supseteq$-directed system of balls in place of a nest". It is therefore **strictly stronger**
-than the standard *spherically complete* condition, which is $\mathbf{S}_1$ itself. The name
-"Saturation" is not a synonym for "spherically complete"; reading it as one understates the axiom.
+$\supseteq$-directed system of balls in place of a nest". The footnote concludes that it is
+therefore **at least as strong as** the standard *spherically complete* condition, which is
+$\mathbf{S}_1$ itself. The name "Saturation" is not a synonym for "spherically complete"; reading
+it as one understates the axiom. (Note the paper's 2026-09 wave *withdrew* the strictness claim:
+the footnote used to read "strictly stronger", and now reads "at least as strong as". The
+implication $\mathbf{S}_1^d \Rightarrow \mathbf{S}_1$ is still asserted; the converse is no
+longer denied. Do not restore "strictly stronger" here.)
 
 Three points of the transcription, each load bearing:
 
-1. *Directed* is `def:directed`, transcribed as `DirectedFamily`. The paper split `def:directed`
-   into a `$\supseteq$-Directed` and a `$\subseteq$-Directed` clause; *Saturation* consumes the
-   `$\supseteq$` half — "$S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever
-   $S_1, S_2 \in \mathcal{S}$" — which is what `DirectedFamily` transcribes, and which already
-   carries the nonemptiness of the family `S`.
+1. *Directed* is `def:frame`'s own opening clause, transcribed as `DirectedFamily`: "$S \subseteq
+   S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$", which already
+   carries the nonemptiness of the family `S`. It was a standalone `def:directed` until the
+   paper's 2026-09 wave inlined it here and deleted the label; see `DirectedFamily`'s docstring.
 2. "Nonempty fibers and segments" is a condition on each *member*: it is both a class condition
    (`IsFiber R s ∨ IsSegment R s`) and a nonemptiness condition (`s.Nonempty`). Fibers and
    segments are **two separate classes**; a one-sided fiber does not count as a segment.
@@ -978,9 +986,9 @@ theorem exists_pos_of_nontrivial : ∃ x : D, 0 < x := by
 The *Saturation* core argument for every relation whose nonempty fibers and segments are each
 either the whole carrier or a singleton.
 
-Recorded source (`def:directed`, verbatim): "A nonempty family of sets $\mathcal{S}$ is
-\textit{directed} just in case $S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever
-$S_1, S_2 \in \mathcal{S}$."
+Recorded source (`def:frame`'s opening clause, verbatim): "Letting a nonempty family of sets
+$\mathcal{S}$ be \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some
+$S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$".
 
 If some member is a singleton `{a}`, directedness forces `a` into every other member: the
 witness `S' ⊆ {a} ∩ t` is nonempty, so its point is both `a` and a point of `t`. If no member is
@@ -1377,7 +1385,8 @@ axioms**, and `saturation_of_fib_subsingleton` on `[propext]` alone.
 -/
 
 omit [IsOrderedAddMonoid D] in
-/-- A directed family (`def:directed`) of nonempty subsingleton sets has nonempty intersection.
+/-- A `⊇`-directed family (`DirectedFamily`) of nonempty subsingleton sets has nonempty
+intersection.
 Pick `a` in some member `s₀`; for any member `s₁`, directedness gives a member `s' ⊆ s₀ ∩ s₁`,
 whose element must be `a` by subsingleton-ness of `s₀` — so `a ∈ s₁`. -/
 theorem sInter_nonempty_of_directed_subsingleton {W : Type} {S : Set (Set W)}

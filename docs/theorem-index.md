@@ -34,11 +34,11 @@ the mapping.
 | world history / possible world | `FormalSystem.Semantics.WorldHistory` | `def:world-history`; a total history is a possible world |
 | task relation `w ⇒ₓ v` | `TaskFrame.TaskRel` | `def:task-relation` |
 | duration group `D` | `FormalSystem.Semantics.TemporalOrder` | `def:temporal-order`; a nontrivial totally ordered abelian group |
-| TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus` |
-| TM⁺_d (dense) | `FrameClass.Dense` | `def:BX-d` |
-| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:BX-z`. The tree says `ZTime`, not `Discrete` |
-| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r`. The tree says `RTime`, not `Dedekind` |
-| BL (tense-primitive base language) | `FormalSystem.BaseLanguage` | `def:BL-semantics`; its truth relation is `Semantics.BLTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr` |
+| TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus`. The paper calls this system **TM**, without the superscript, and its language **BL**; the anchor id is unchanged but its text is not. The tree's `⁺` marks the since/until side against its own Past/Future `TM` — see `Metalogic/Conservativity.lean` |
+| TM⁺_d (dense) | `FrameClass.Dense` | `def:BX-d` (the paper's **TM**_d, over **BX**_d) |
+| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:BX-z` (the paper's **TM**_z, over **BX**_z). The tree says `ZTime`, not `Discrete` |
+| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r` (the paper's **TM**_r, over **BX**_r, *Dense and Complete*). The tree says `RTime`, not `Dedekind` |
+| BL (tense-primitive base language) | `FormalSystem.BaseLanguage` | its truth relation is `Semantics.BLTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr`. **Name collision**: since the paper collapsed `BL^+` into `BL`, the paper's `BL` is the *since/until* language (`def:BLplus-language`, `def:BL-semantics`) — this row's `BL` is the tree's own Past/Future language and answers to no paper name |
 | L⋆ / TM⋆ (stability modal `⊡`) | `FormalSystem.StarLanguage` | truth relation `Semantics.StarTruthAt` |
 | `U(φ, ψ)` (until) | `Formula.untl ψ φ` | guard-first: `untl guard event` |
 | `S(φ, ψ)` (since) | `Formula.snce ψ φ` | guard-first |

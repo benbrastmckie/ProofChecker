@@ -213,7 +213,7 @@ added to the binder list, capturing the frame condition for BL's discreteness ax
 
 Binder-for-binder mirror of `Semantics.ValidZTime`, and like it now an abbreviation: the frame
 constraint is `FrameClass.Sat .ZTime`, i.e. `TaskFrame.IsZTime` — `def:BX-z`'s
-Hölder narrowing to ℤ-time. The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
+narrowing to ℤ-time (`prop:archimedean`). The binder shape this definition used to have is recovered by the generic `BLValidIn.of_forall_total` /
 `BLValidIn.apply_total` followed by
 `sat_intro`, which destructures the `IsZTime` existential into the four instances.
 -/

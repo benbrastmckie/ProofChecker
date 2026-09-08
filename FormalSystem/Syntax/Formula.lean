@@ -89,11 +89,12 @@ inductive Formula : Type where
       and the *guard* `φ` holds at every time in the open interval `(t, s)`:
       `∃ s > t, ψ(s) ∧ ∀ r ∈ (t,s), φ(r)`.
 
-      This is the guard-first order of the paper's `def:BLplus-semantics`, whose `(until)` clause
+      This is the guard-first order of the paper's `def:BL-semantics`, whose `(until)` clause
+      (formerly a clause of the retired `def:BLplus-semantics`, before `BL^+` collapsed into `BL`)
       reads "M,τ,x ⊨ φ until ψ iff M,τ,z ⊨ ψ for some time z > x where M,τ,y ⊨ φ for all y ∈ D
       with x < y < z" — the existential witness is the *second* argument, the universally
       quantified interval condition the *first*. It agrees with the same definition's derived
-      operators `future φ := ⊤ until φ` and `Next φ := ⊥ until φ` (`def:BLplus-defined`). -/
+      operators `future φ := ⊤ until φ` and `Next φ := ⊥ until φ` (`def:BLplus-language`). -/
   | untl : Formula → Formula → Formula
   /-- Since, `φ S ψ`. **Argument 1 is the guard, argument 2 is the event.**
 
@@ -101,9 +102,9 @@ inductive Formula : Type where
       and the *guard* `φ` holds at every time in the open interval `(s, t)`:
       `∃ s < t, ψ(s) ∧ ∀ r ∈ (s,t), φ(r)`.
 
-      The past mirror of `untl`, and the guard-first order of `def:BLplus-semantics`'s `(since)`
+      The past mirror of `untl`, and the guard-first order of `def:BL-semantics`'s `(since)`
       clause; it agrees with `past φ := ⊤ since φ` and `Previous φ := ⊥ since φ`
-      (`def:BLplus-defined`). -/
+      (`def:BLplus-language`). -/
   | snce : Formula → Formula → Formula
   deriving Repr, DecidableEq, BEq, Hashable, Countable
 
@@ -481,12 +482,15 @@ The paper's **CO** formula (Cauchy/completeness-of-order principle), as a *named
 
   `CO(φ) := △(Hφ → F(Hφ)) → (Hφ → Gφ)`
 
-**Source**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside `def:BX-r`;
-displayed key CO), verbatim:
-"`\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
+**Source**: JPL paper anchor `CO`, verbatim:
+"`\aitem{CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
 (\Past\varphi \rightarrow \Future\varphi)$.`"
-There CO is listed as the extra axiom distinguishing the complete-order extension of the base
-tense logic.
+**Retired anchor**: this used to be quoted from `TMP-CO`, the `BL^+` restatement inside the old
+`def:TMplus-c`; the paper's 2026-09 wave dropped that restatement (`def:BX-r` derives CO from PU
+instead of displaying it again), so `TMP-CO` is recorded `DANGLING` in
+`specs/paper-definitions-of-record.md` and the plain `CO` anchor is the live, pinned one. The
+formula is unchanged. In `def:BX-r` CO is a *derived theorem* of the dense-and-complete
+extension, not a further axiom.
 
 **Operator resolution (important).** The `△` here is the **temporal** triangle
 `Formula.always` — i.e. `△ψ = Hψ ∧ ψ ∧ Gψ` (see `Formula.always` immediately above) — and

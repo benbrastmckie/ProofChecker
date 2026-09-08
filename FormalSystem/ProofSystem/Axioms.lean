@@ -18,7 +18,7 @@ Three renderings appear in this file and they do **not** all order the arguments
 
 | Rendering | Order | Where it comes from |
 |---|---|---|
-| `untl(g, e)`, `snce(g, e)` | **guard** first, event second | the constructor's own argument order (`Syntax/Formula.lean`), matching `def:BLplus-semantics` |
+| `untl(g, e)`, `snce(g, e)` | **guard** first, event second | the constructor's own argument order (`Syntax/Formula.lean`), matching `def:BL-semantics` |
 | `φ U ψ`, `φ S ψ` (infix) | **guard** first, event second | the paper's and the Typst manual's infix notation |
 | `U(e, g)`, `S(e, g)` (prefix) | **event** first, guard second | `Formula.prettyPrint`'s output and the `schema_string` field of `typst/generated/machine-appendix.jsonl` |
 

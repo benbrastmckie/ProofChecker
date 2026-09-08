@@ -349,7 +349,11 @@ Derivations are represented as inductive trees.
 
 `DerivationTree` is a `Type` (not a `Prop`), so derivations can be pattern-matched and measured; the height function enables well-founded recursion in metalogical proofs (notably the deduction theorem).
 
-// CONFIRM(paper): def:S5 + def:BX + def:TMplus jointly state the system this chapter axiomatizes
+// CONFIRM(paper): def:S5 + def:BX + def:TMplus jointly state the system this chapter axiomatizes.
+//   The three anchor ids are unchanged, but their texts moved in the paper's 2026-09 wave: all
+//   three now cite the Logic/Extensions sections for their axioms instead of displaying them, and
+//   def:TMplus names the system TM (no + superscript) for the language BL (no + superscript),
+//   with extensions TM_z / TM_d / TM_r over BX_z / BX_d / BX_r.
 == The Tense-Primitive Subsystem <sec:paper-contrast>
 
 The system of this chapter takes Since and Until as its temporal primitives.

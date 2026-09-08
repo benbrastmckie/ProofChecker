@@ -315,31 +315,55 @@ and record the corrected count in the phase's commit message.
 
 ---
 
-### Phase 5: Correct the prose the paper's restructuring invalidated [NOT STARTED]
+### Phase 5: Correct the prose the paper's restructuring invalidated [COMPLETED]
 
 **Goal**: The tree's claims about *why* the ℤ-time narrowing holds, and about the system names
 `TM` / `BL`, match the current paper rather than the pre-refactor one.
 
 **Tasks**:
-- [ ] At the six sites phrasing the narrowing as "`def:TMplus-f`'s Hölder narrowing", rewrite to
+- [x] At the six sites phrasing the narrowing as "`def:TMplus-f`'s Hölder narrowing", rewrite to
       attribute the narrowing to `def:BX-z` and cite `prop:archimedean` (paper line 3265, a live
       `Pthm`) for the failure over non-Archimedean discrete orders — the paper now defers the
       Hölder step to the §Extensions footnote (paper lines 1408-1411). Keep the parenthetical
       explaining where the predicate's name comes from; it remains accurate.
-- [ ] Re-read `FrameClassValidity.lean:94-98` and `FrameProperty.lean:131-137`. The dispatch
+- [x] Re-read `FrameClassValidity.lean:94-98` and `FrameProperty.lean:131-137`. The dispatch
       description says one of them quotes the old closing sentence verbatim; the research measured
       both as paraphrases ("restated here in the tree's own voice rather than quoted"). Confirm
       which is true at implementation time; if a verbatim quotation exists, refresh it against the
-      new `def:BX-z` text, and if not, correct only the attribution.
-- [ ] If any rewritten prose names `prop:archimedean`, add a
+      new `def:BX-z` text, and if not, correct only the attribution. *(deviation: altered — the
+      research was right about both Lean sites (paraphrase, already accurate). A verbatim
+      quotation of the old closing sentence does exist, but in a third file neither the dispatch
+      nor the plan named: `typst/FormalFoundations.typ:507-510`. Its stale Hölder-derivation
+      sentence and the matching table row were refreshed against the live `def:BX-z` text, and a
+      `#remark` naming-provenance block was added. The document-wide rename that file would also
+      need — ~57 sites of `BX_f`/`BX_c`, `TM^+`, `BLplus` — is recorded as a follow-up, not done
+      here: it is a re-transcription of a 1561-line standalone report, out of this plan's scope.)*
+- [x] If any rewritten prose names `prop:archimedean`, add a
       `prop:archimedean|LIVE-UNPINNED|…` row to the record's KNOWN-ANCHORS block **in the same
       change** — otherwise C15 goes red. Do not add the row speculatively if no site cites it.
-- [ ] At the four bare `def:TMplus` sites (`Conservativity.lean`, `Conservativity/Fragment.lean`,
+      *(deviation: altered — the row was added (nine sites now cite `prop:archimedean`), but the
+      stated consequence is false and is corrected here: C15's citation regex is
+      `(def|thm|lem|cor|app|rmk):`, which does not include `prop:`, so a `prop:` citation could
+      never have turned C15 red. The row stands as a record decision, not as a gate repair, and
+      records that this repository does not check the proposition.)*
+- [x] At the four bare `def:TMplus` sites (`Conservativity.lean`, `Conservativity/Fragment.lean`,
       `typst/chapters/03-proof-theory.typ`, `docs/theorem-index.md`), review the prose for the
       TM⁺/BL⁺ → TM/BL and f/d/c → z/d/r shifts. The label is unchanged; only the surrounding
       claims may be stale.
-- [ ] Build each touched Lean module; re-run the standalone C15 reproduction.
-- [ ] Commit.
+- [x] Build each touched Lean module; re-run the standalone C15 reproduction.
+- [x] *(scope addition, discovered in Phase 2 and not in the plan's task list)* Make every in-tree
+      citation of a newly-`DANGLING` anchor say so at the citation site, per the record's own
+      KNOWN-ANCHORS rule. `def:directed` (16 sites over `TaskFrame.lean`, `FrameAxioms.lean`,
+      `Extension/Constraint.lean`, `Algebraic/FlowFrame.lean`, `typst/chapters/02-semantics.typ`)
+      retargeted to `def:frame`'s opening clause; `def:BLplus-semantics` -> `def:BL-semantics` and
+      `def:BLplus-defined` -> `def:BLplus-language` across `Truth.lean`, `Formula.lean`,
+      `Axioms.lean` and two typst chapters; `TMP-CO` -> the live `CO` in `DedekindDerived.lean`,
+      `Formula.lean` and `Conservativity.lean`; `thm:BLplus-PastFuture` marked retired at its one
+      typst site. Three claims that were true of the old text and are now false were corrected
+      rather than re-labelled: the paper no longer splits directedness into `⊇`/`⊆` halves, the
+      ball-space footnote says *at least as strong as* rather than *strictly stronger*
+      (`TaskFrame.lean`, `README.md:81`), and `def:BX-r` derives `CO` rather than restating it.
+- [x] Commit.
 
 **Timing**: 1.0 hours
 

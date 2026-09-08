@@ -105,10 +105,12 @@ Any converse operation written explicitly in this book uses a superscript invers
   ]
 ]
 
-// CONFIRM(paper): def:directed states this definition (source text pinned verbatim in
-//   specs/paper-definitions-of-record.md)
+// CONFIRM(paper): def:frame's opening clause states this definition (source text pinned
+//   verbatim in specs/paper-definitions-of-record.md). It was a standalone def:directed until
+//   the paper's 2026-09 wave inlined it into def:frame and deleted the label; def:directed is
+//   recorded DANGLING there.
 #definition("Directed Family")[
-  A nonempty family of sets $S$ is *directed* just in case $S' subset.eq S_1 inter S_2$ for some $S' in S$ whenever $S_1, S_2 in S$.
+  A nonempty family of sets $S$ is *$supset.eq$-directed* just in case $S' subset.eq S_1 inter S_2$ for some $S' in S$ whenever $S_1, S_2 in S$.
 ]
 
 // CONFIRM(paper): def:frame states this definition (source text pinned verbatim in
@@ -278,7 +280,7 @@ Truth is evaluated relative to a model $cal(M)$ providing the interpretation, a 
 Whereas the model fixes the interpretation of the language, the contextual parameters $tau$ and $x$ determine the truth value of every sentence of the language.
 
 // CONFIRM(paper): def:BL-semantics's box clause ranges over all sigma in H_F with no admissible-history or
-//   shift-closure parameter, and def:BLplus-semantics states the guard-first since/until clauses transcribed below.
+//   shift-closure parameter, and def:BL-semantics states the guard-first since/until clauses transcribed below.
 #definition("Truth")[
   For model $cal(M)$, possible world $tau in H_(cal(F))$, and time $x : D$, truth is defined by recursion on the six primitive constructors:#footnote[`TruthAt` in `Semantics/Truth.lean`. The box clause quantifies over all total world histories (`WorldHistory.IsTotal`), with no admissible-history or shift-closure parameter.]
   $

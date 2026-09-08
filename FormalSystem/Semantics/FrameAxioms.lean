@@ -53,12 +53,15 @@ paper source — is the citation source of record.
 - *Limit* (`def:frame#Limit`, verbatim): "$\bigcap\limits_{x > 0} (w)_x = \set{w}$."
 - *Saturation* (`def:frame#Saturation`, verbatim): "$\bigcap \mathcal{S} \neq \emptyset$ for any
   $\supseteq$-directed family $\mathcal{S}$ of nonempty fibers and segments."
-- `def:directed`, the `$\supseteq$` clause (verbatim): "\item[\bf $\mathbf{\supseteq}$-Directed:]
-  just in case $S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever
-  $S_1, S_2 \in \mathcal{S}$." The paper split `def:directed` into a `$\supseteq$-Directed` and a
-  `$\subseteq$-Directed` clause; *Saturation*, and hence `DirectedFamily`, consumes the
-  `$\supseteq$` half only. The enclosing definition still opens "A nonempty family of sets
-  $\mathcal{S}$ is:", which is where the family's own nonemptiness comes from."
+- `def:frame`'s opening clause (verbatim): "Letting a nonempty family of sets $\mathcal{S}$ be
+  \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some
+  $S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$". This is where the family's own
+  nonemptiness comes from. **Retired anchor.** This clause used to be the standalone
+  `def:directed`, which the paper's 2026-09 wave folded inline into `def:frame` and deleted;
+  `def:directed` is recorded `DANGLING` in `specs/paper-definitions-of-record.md`. The old
+  definition had a `$\supseteq$-Directed` and a `$\subseteq$-Directed` clause, of which
+  *Saturation* — and hence `DirectedFamily` — consumed the `$\supseteq$` half only; the paper now
+  defines only that half, so the split no longer exists to choose from.
 - `lem:nullity` (verbatim): "$w \Rightarrow_0 w$ for every world state $w \in W$ in every task
   frame $\F = \tuple{W, \D, \Rightarrow}$."
 - `def:constraints` (verbatim): "For a partial history $\tau : X \to W$ over a task frame $\F$
@@ -67,8 +70,8 @@ paper source — is the citation source of record.
   $t,s \in X$, and the fibers $\fib{\tau(t), z - t}$ for $t \in X$ otherwise."
 
 The `Fib` / `Seg` / `DirectedFamily` / `IsFiber` / `IsSegment` apparatus these statements are
-built from lives in `TaskFrame.lean`, transcribed there from `def:task-relation` and
-`def:directed`.
+built from lives in `TaskFrame.lean`, transcribed there from `def:task-relation` and (for
+`DirectedFamily`) from `def:frame`'s opening clause, formerly the now-retired `def:directed`.
 
 ## Main Definitions
 
@@ -90,9 +93,12 @@ built from lives in `TaskFrame.lean`, transcribed there from `def:task-relation`
 - **Fibers and segments are two separate classes.** A "fibers and segments" hypothesis is always
   the disjunction `IsFiber R s ∨ IsSegment R s`. The retired device by which a one-sided fiber
   counted among the segments must not reappear.
-- **Directedness is its own definition** (`def:directed`, transcribed as
-  `TaskFrame.DirectedFamily`), including the nonemptiness of the *family*; the nonemptiness of
-  its *members* is a separate conjunct in `Saturation`, exactly as the paper phrases it.
+- **Directedness is a definition of its own on the tree's side** (`TaskFrame.DirectedFamily`),
+  including the nonemptiness of the *family*; the nonemptiness of its *members* is a separate
+  conjunct in `Saturation`, exactly as the paper phrases it. On the paper's side it is no longer
+  separate: it was the standalone `def:directed` until the 2026-09 wave inlined it into
+  `def:frame`'s opening clause (`def:directed` is recorded `DANGLING`). Keeping it separate here
+  is a tree-side choice, not a transcription of the paper's current structure.
 - **`Limit` is deliberately not given a name here.** It is used only as a hypothesis of
   `nullity_of_serial_limit`, in the literal transcribed shape
   `∀ w u, (∀ x, 0 < x → ∃ y, |y| < x ∧ R w y u) → u = w`, which is precisely the conclusion of

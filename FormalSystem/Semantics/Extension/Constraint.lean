@@ -30,9 +30,12 @@ source — is the citation source of record.
   $\F = \tuple{W, \D, \Rightarrow}$ and duration $z \in D \setminus X$, the \textit{constraints
   imposed on $z$} are the segments $[\tau(t), \tau(s)]_{z-t}^{s-z}$ for times $t,s \in X$ where
   $t < z < s$, and the fibers $\Fib(\tau(t), z - t)$ for $t \in X$ otherwise."
-- `def:directed` (verbatim): "A nonempty family of sets $\mathcal{S}$ is \textit{directed} just in
-  case $S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever $S_1, S_2 \in
-  \mathcal{S}$."
+- `def:frame`'s opening clause (verbatim): "Letting a nonempty family of sets $\mathcal{S}$ be
+  \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some
+  $S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$". **Retired anchor**: this was the
+  standalone `def:directed` until the paper's 2026-09 wave folded it inline into `def:frame` and
+  deleted the label, which `specs/paper-definitions-of-record.md` now records `DANGLING`. The
+  condition itself is unchanged.
 - *Seriality* (`def:frame#Seriality`, verbatim): "$w \Rightarrow_x u$ and $v \Rightarrow_x w$ for
   some $u, v \in W$."
 - *Compositionality* (`def:frame#Compositionality`, verbatim): "$w \Rightarrow_{x + y} v$ if and
@@ -76,7 +79,8 @@ That is the `fib_zero_subset_of_mem_Constraints` branch below.
 - `PartialHistory.seg_subset_seg` — segment monotonicity in both endpoints
 - `PartialHistory.nonempty_fib_of_serial` / `nonempty_seg_of_interpolates` — the two
   member-nonemptiness cases
-- `PartialHistory.nonempty_Constraints` — the family itself is nonempty (part of `def:directed`)
+- `PartialHistory.nonempty_Constraints` — the family itself is nonempty (part of the
+  `⊇`-directed condition of `def:frame`'s opening clause)
 - `PartialHistory.exists_mem_subset_inter` — the directedness step proper
 
 ## Implementation Notes
@@ -255,7 +259,8 @@ theorem nonempty_of_mem_Constraints {τ : PartialHistory F} {z : F.Duration} {c 
 -/
 
 /--
-The constraint family is itself nonempty — the first conjunct of `def:directed`.
+The constraint family is itself nonempty — the first conjunct of the `⊇`-directed condition
+(`def:frame`'s opening clause).
 
 The partial history's domain is nonempty by its `nonempty_domain` field. Any domain time `t`
 contributes: if `t` is not paired about `z` it contributes its own fiber, and if it is paired the
@@ -270,7 +275,7 @@ theorem nonempty_Constraints (τ : PartialHistory F) (z : F.Duration) : (Constra
   · exact ⟨_, mem_Constraints.mpr (Or.inr ⟨t, ht, hp, rfl⟩)⟩
 
 /--
-The directedness step of `def:directed`: any two constraints on `z` are jointly refined by a third
+The directedness step of the `⊇`-directed condition: any two constraints on `z` are jointly refined by a third
 constraint on `z`.
 
 The proof is a four-way case analysis on `def:constraints`' two clauses, and the `¬ IsPaired`
