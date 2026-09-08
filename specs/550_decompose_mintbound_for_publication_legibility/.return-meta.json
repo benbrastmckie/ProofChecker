@@ -1,30 +1,15 @@
 {
-  "status": "planned",
-  "artifacts": [
-    {
-      "type": "plan",
-      "path": "specs/550_decompose_mintbound_for_publication_legibility/plans/01_decompose-mintbound-publication-legibility.md",
-      "summary": "8-phase, 10.75-hour plan splitting MintBound.lean (15,684 lines) into 18 modules behind a retained aggregator, with de-privatization isolated to one phase and five batched build gates."
-    }
-  ],
-  "dispatch_seq": 5,
-  "memory_candidates": [
-    {
-      "content": "Decomposing an oversized Lean 4 module: the binding constraint is `private` visibility, which is module-scoped in Lean 4 -- a private name does not cross a module boundary, and the usual failure mode is not a build error at the cut but a temptation to duplicate the proof (BimodalLogic already carries `pick_split'`/`pick_splitOrdered'` in MintBound.lean solely because Fuel.lean's originals are private). The reusable planning recipe: (1) run a whole-file name cross-product restricted to code lines to derive the cross-boundary private set BEFORE proposing any cut; (2) verify file order IS dependency order by checking for zero forward references -- if true, file order is the only acyclic cut and thematic groupings are usually cyclic (measure this rather than assuming); (3) grep the whole tree for collisions before de-privatizing, since short helper names like `fwp`/`mfp`/`mwE` are collision-prone; (4) check for file-scoped `set_option` and `open` lines, which must be replicated into every extracted module, versus per-declaration `set_option ... in` forms, which travel with their declaration; (5) confirm no `section ... end` block straddles a proposed cut. Extraction must proceed TOP-DOWN (head first), because the residual file imports the extracted prefix; extracting the tail first creates an import cycle. A pure-prose tail section is the exception and can go first.",
-      "category": "PATTERN",
-      "source_artifact": "specs/550_decompose_mintbound_for_publication_legibility/plans/01_decompose-mintbound-publication-legibility.md",
-      "confidence": 0.85,
-      "suggested_keywords": ["lean4", "module-decomposition", "private-visibility", "import-cycle", "file-order-dependency", "aggregator-pattern"]
-    }
-  ],
-  "metadata": {
-    "session_id": "sess_1788827428_44fd7f_550",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 8,
-    "estimated_hours": 10.75,
-    "dependency_waves": [[1], [2], [3], [4, 7], [5], [6], [8]]
+  "status": "in_progress",
+  "started_at": "2026-09-07T00:00:00Z",
+  "artifacts": [],
+  "partial_progress": {
+    "stage": "initializing",
+    "details": "Agent started, parsing delegation context"
   },
-  "next_steps": "Run /implement 550 to execute the plan"
+  "metadata": {
+    "session_id": "sess_1788827428_44fd7f",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+  }
 }

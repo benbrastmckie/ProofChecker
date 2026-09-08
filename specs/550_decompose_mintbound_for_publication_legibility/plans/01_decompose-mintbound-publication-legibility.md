@@ -1,7 +1,7 @@
 # Implementation Plan: Task #550
 
 - **Task**: 550 - Decompose `MintBound.lean` for publication legibility
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 10.75 hours (phase timings sum exactly; build waits are passive)
 - **Dependencies**: 549 (completed), 554 (completed) — both resolved; no live blocker
 - **Research Inputs**: specs/550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md
@@ -126,29 +126,32 @@ markdown and is deliberately overlapped with the extraction phases, which touch 
 
 ---
 
-### Phase 1: Baseline capture and static extraction harness [NOT STARTED]
+### Phase 1: Baseline capture and static extraction harness [COMPLETED]
 
 **Goal**: Establish the invariants every later phase is checked against, and build the
 seconds-cheap static checks that catch relocation errors before an expensive build does.
 
 **Tasks**:
-- [ ] Record `git rev-parse HEAD` and confirm `MintBound.lean` is unmodified in the working tree.
-- [ ] Record baselines to a scratch file: total line count (expect 15,684); declaration count
+- [x] Record `git rev-parse HEAD` and confirm `MintBound.lean` is unmodified in the working tree.
+- [x] Record baselines to a scratch file: total line count (expect 15,684); declaration count
       (expect 751) and the full sorted declaration-name set; `private` count (expect 92);
       `grep -c sorry` on the file; `#print axioms` output for the flagship theorems named in
       `docs/development/MODULE_INVARIANTS.md`'s C2 baseline.
-- [ ] Write a scratch harness script (under the session scratchpad, **not** under `.claude/**` or
+- [x] Write a scratch harness script (under the session scratchpad, **not** under `.claude/**` or
       `FormalSystem/**`) providing three checks, each runnable in seconds:
       (a) declaration-name-set diff between the split tree and baseline;
       (b) total-line and per-module line accounting against the partition table;
       (c) cross-boundary `private` use — for each module, every name it references that is
       declared `private` in a different module.
-- [ ] Verify the 18-way partition covers lines 1-15,684 with no gap and no overlap, and that each
+- [x] Verify the 18-way partition covers lines 1-15,684 with no gap and no overlap, and that each
       boundary line is an existing `/-!` header (confirmed at planning for all 17 interior
       boundaries).
-- [ ] Verify no `section ... end` block straddles a boundary (five blocks, all confirmed contained
-      at planning; re-confirm mechanically).
-- [ ] Run check (c) against the *current* single file partitioned notionally, and confirm it
+- [x] Verify no `section ... end` block straddles a boundary (five blocks, all confirmed contained
+      at planning; re-confirm mechanically). *(deviation: altered — five real `section ... end`
+      blocks confirmed contained; separately, the plan's "five `attribute [local simp]` blocks"
+      measured as three (`:4696`, `:5870`, `:11471`), each inside one of those sections and so
+      still fully contained)*
+- [x] Run check (c) against the *current* single file partitioned notionally, and confirm it
       reproduces exactly the 16 names in the research table. A different answer means the plan's
       de-privatization set is wrong and Phase 2 must be re-scoped before proceeding.
 
