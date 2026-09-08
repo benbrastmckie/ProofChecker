@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md",
+      "summary": "Re-measures the Init-import debt as 457 modules (not 434), shows the fix is 11 file edits at the import DAG's minimal elements, resolves the ForMathlib rule conflict via an exceptions entry, and specifies the exit-code fix and C24 wiring needed to flip CheckInitImports from reporting to gating."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788847801_97d6cb_541",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

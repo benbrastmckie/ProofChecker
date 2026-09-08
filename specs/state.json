@@ -1628,7 +1628,7 @@
     {
       "project_number": 541,
       "project_name": "formalsystem_init_transitive_import_adoption",
-      "status": "not_started",
+      "status": "researched",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1644,9 +1644,16 @@
         "scripts/check-module-invariants.sh"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-04T08:00:00Z",
-      "artifacts": [],
-      "session_id": "sess_1788503051_6873ef"
+      "last_updated": "2026-09-08T07:32:28Z",
+      "artifacts": [
+        {
+          "path": "specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md",
+          "type": "report",
+          "summary": "Re-measures the Init-import debt as 457 modules (not 434), shows the fix is 11 file edits at the import DAG's minimal elements, resolves the ForMathlib rule conflict via an exceptions entry, and specifies the exit-code fix and C24 wiring needed to flip CheckInitImports from reporting to gating."
+        }
+      ],
+      "session_id": "sess_1788847801_97d6cb",
+      "next_artifact_number": 2
     },
     {
       "project_number": 542,
