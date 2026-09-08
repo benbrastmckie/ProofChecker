@@ -348,7 +348,7 @@ hypothesis and the import is added rather than the partition changed.
 
 ---
 
-### Phase 5: Decompose D2, the verdict section (5 modules) [NOT STARTED]
+### Phase 5: Decompose D2, the verdict section (5 modules) [COMPLETED]
 
 **Goal**: Break up the single largest section — D2 at 3,944 lines, itself 78% of the next-largest
 live file in the repository. This is the phase that most directly delivers reviewability.
@@ -359,20 +359,27 @@ during extraction; D2's own `## D2. MintPaysForTime: the verdict` preamble prose
 travels with `TimeReuse.lean` as its module docstring context.
 
 **Tasks**:
-- [ ] Extract `TimeReuse.lean` from lines 7,219-7,974. Imports: `...MintBound.Measure`. Carries
+- [x] Extract `TimeReuse.lean` from lines 7,219-7,974. Imports: `...MintBound.Measure`. Carries
       `mwE`/`mwG`/`mwP`/`mwQ`, now public.
-- [ ] Extract `MonotoneIssuance.lean` from lines 7,975-8,466. Imports:
+- [x] Extract `MonotoneIssuance.lean` from lines 7,975-8,466. Imports:
       `...MintBound.ClosureResidual`, `...MintBound.TimeReuse`.
-- [ ] Extract `OrientedGate.lean` from lines 8,467-9,450. Imports: `...MintBound.MonotoneIssuance`.
-- [ ] Extract `FourComponent.lean` from lines 9,451-10,204. Imports: `...MintBound.TimeCensus`,
+- [x] Extract `OrientedGate.lean` from lines 8,467-9,450. Imports: `...MintBound.MonotoneIssuance`.
+- [x] Extract `FourComponent.lean` from lines 9,451-10,204. Imports: `...MintBound.TimeCensus`,
       `...MintBound.OrientedGate`.
-- [ ] Extract `SigmaFixed.lean` from lines 10,205-11,162. Imports: `...MintBound.FourComponent`.
-- [ ] Promote every extracted `###`/`####` module heading to `#`/`##`; read all five new files
+- [x] Extract `SigmaFixed.lean` from lines 10,205-11,162. Imports: `...MintBound.FourComponent`.
+- [x] Promote every extracted `###`/`####` module heading to `#`/`##`; read all five new files
       through once to confirm the docstrings read as module-level prose, not as fragments.
-- [ ] Update the residual `MintBound.lean` imports; body now begins at what was line 11,163.
-- [ ] Re-run Phase 1 checks (a), (b), (c).
-- [ ] **Build gate** (detached + guarded).
-- [ ] Commit the batch as one objective once green.
+      *(deviation: altered — the read found three docstrings opening on a deictic that no longer
+      had a referent once the cut was made, so three same-line prose repairs were added:
+      `OrientedGate`'s "Phase 1's gate above" now names `MonotoneIssuance.lean`, `SigmaFixed`'s
+      "The subsection above" now names `FourComponent.lean`, and `MonotoneIssuance`'s "nothing
+      below it is assumed anywhere above" becomes a statement about its import direction. The
+      repair is scoped to these five module docstrings; body-level "above"/"below" deictics that
+      now cross a module boundary are NOT swept, and are recorded as a follow-up.)*
+- [x] Update the residual `MintBound.lean` imports; body now begins at what was line 11,163.
+- [x] Re-run Phase 1 checks (a), (b), (c).
+- [x] **Build gate** (detached + guarded).
+- [x] Commit the batch as one objective once green.
 
 **Timing**: 2 hours
 
