@@ -2061,6 +2061,16 @@ if [ "$RUN_BUILD" -eq 1 ]; then
     [ -n "$C16R_ROOT" ] || continue
     [ "$C16R_ROOT" = "FormalSystem" ] && continue   # the enforced half above already covers it
     C16R_COUNT=$((C16R_COUNT + 1))
+    # BUILD BEFORE LINTING, and this is load-bearing rather than defensive. `lake exe runLinter
+    # <Module>` builds the runLinter EXECUTABLE, not the module it is handed: the module is read
+    # back from its .olean at run time. An out-of-closure root's olean is stale here by
+    # construction -- C1's `lake build` cannot reach it and C25's builds run later in this script
+    # -- so without this line the sweep silently lints the PREVIOUS state of exactly the modules
+    # it exists to cover. Measured, not theorised: a deliberate snake_case seed in an
+    # out-of-closure module was invisible to this sweep and visible to the same runLinter command
+    # run by hand a moment later, after C25 had rebuilt the olean. `lake build` is a no-op once
+    # the root is current, so C25 pays nothing for this.
+    lake build "$C16R_ROOT" >/dev/null 2>&1 || true
     if lake exe runLinter "$C16R_ROOT" >"$C16R_LOG" 2>&1; then
       continue
     fi
