@@ -32,25 +32,30 @@ short version:
 
 | Repository | Language | Paper |
 |------------|----------|-------|
-| `TM⁺` | `BL`, with `S` and `U` primitive (`FormalSystem/ProofSystem/`) | the paper's `TM` |
-| `TM⁺_z`, `TM⁺_d`, `TM⁺_r` | the same, plus the discrete / dense / dense-and-complete axioms | the paper's `TM_z`, `TM_d`, `TM_r` |
+| `TM` | `L`, with `S` and `U` primitive (`FormalSystem/ProofSystem/`) | the paper's `TM` — the same system under the same name |
+| `TM_z`, `TM_d`, `TM_r` | the same, plus the discrete / dense / dense-and-complete axioms | the paper's `TM_z`, `TM_d`, `TM_r` |
 | `BX_z`, `BX_d`, `BX_r` | the Burgess–Xu tense cores underneath those | the paper's `BX_z`, `BX_d`, `BX_r` |
-| `TM` | the Past/Future fragment, with `H` and `G` primitive (`FormalSystem/BaseLanguage/`) | none |
-| `TM_z`, `TM_d`, `TM_r` | the same, plus `DF` / `DN` / `DN` and `CO` | none |
+| `TM⁻` | `L⁻`, the Past/Future language with `H` and `G` primitive (`FormalSystem/MinusLanguage/`) | none — the H/G fragment was withdrawn from the paper |
+| `TM⁻_z`, `TM⁻_d`, `TM⁻_r` | the same, plus `DF` / `DN` / `DN` and `CO` | none |
+| `TM⁺` | `L⁺`, `L` plus the stability modal `⊡` (`FormalSystem/PlusLanguage/`) | none — `L⁺` is the ⊡-only fragment of the paper's `𝓛⋆`, for which the paper supplies no logic |
 
-The subscripts on the `TM⁺` side name the class each system is complete over: `z` for `ℤ`-time,
+The subscripts on the `TM` side name the class each system is complete over: `z` for `ℤ`-time,
 `d` for the dense task frames, `r` for `ℝ`-time — the dense and Dedekind-complete orders. `BX_r`
 extends `BX_d` by `PU` and `SEP`, with `CO` a derived theorem rather than an axiom, which is how
 this repository arranges its Dedekind-class derivations too.
 
-On the `TM` side the same three subscripts are Lean-only labels. The paper names no Past/Future
-system, so `TM_z` should not be read as one; the subscripts were chosen only to run parallel to
-the `TM⁺` side and to the frame-class tags `.ZTime`, `.Dense` and `.RTime`.
+On the `TM⁻` side the same three subscripts are Lean-only labels. The paper names no Past/Future
+system, so `TM⁻_z` should not be read as one; the subscripts were chosen only to run parallel to
+the `TM` side and to the frame-class tags `.ZTime`, `.Dense` and `.RTime`.
 
-The `⁺` superscript is what separates the two families and is load-bearing throughout
-`FormalSystem/Metalogic/Conservativity/`. Earlier revisions of this documentation used `_f` where
-`_z` now stands, and used two names, `_c` and `_dc`, where a single `_r` now stands; those
-subscripts have been retired everywhere.
+The `⁻` and `⁺` superscripts are what separate this repository's own systems from the paper's,
+and they are load-bearing throughout `FormalSystem/Metalogic/Conservativity/`. The full
+four-language table — L⁻, L, L⁺, L⋆, their operators, their logics and their Lean homes — is in
+[the repository README](../README.md); it is stated once there and not restated here. Earlier
+revisions of this documentation used `_f` where `_z` now stands, and used two names, `_c` and
+`_dc`, where a single `_r` now stands; those subscripts have been retired everywhere. Earlier
+revisions also called the since/until system `TM⁺` and the H/G system `TM`; those names have
+been retired too, in favour of the paper's own `TM` for the since/until system.
 
 ## Theory-Specific Documentation
 

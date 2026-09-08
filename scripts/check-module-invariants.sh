@@ -1342,7 +1342,7 @@ fi
 # Seven entries carry a STRICT SUBSET of [propext, Classical.choice, Quot.sound], recorded
 # literally rather than rounded up: setConsequence_of_not_satisfiable, satisfiableSet_iff_
 # finitelySatisfiable, modelExistence_iff_finitelySatisfiable, Conservativity.TMFrag,
-# Semantics.starValidIn_ofFormula_iff and Semantics.galoisClosed_mod are [propext], and
+# Semantics.plusValidIn_ofFormula_iff and Semantics.galoisClosed_mod are [propext], and
 # qDepth_qAlpha is [propext, Quot.sound]. A smaller dependency is not a regression.
 #
 # The second block below (soundness onward) is the SORRY-FREE claim set of
@@ -1393,11 +1393,11 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.dedWitness_finitely_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.notStrongCompletenessRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.modelExistenceRTime_refuted' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmComplete_iff_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteZTime_iff_forwardZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteDense_iff_forwardDense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.tmCompleteRTime_iff_forwardRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmMinusComplete_iff_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmMinusCompleteBase_iff_forwardBase' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmMinusCompleteZTime_iff_forwardZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmMinusCompleteDense_iff_forwardDense' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.tmMinusCompleteRTime_iff_forwardRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.qAlpha_step' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.exists_strictMono_qPoints' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.setConsequence_iff_not_satisfiable' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -1411,12 +1411,12 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.notCompactZTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.notCompactRTime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Semantics.truthAt_tr' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_soundness' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_soundness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_soundness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_soundness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_not_derivable_nil_bot' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.bl_not_derivable_nil_bot_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_soundness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_soundness_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_soundness_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_soundness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_not_derivable_nil_bot' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.minus_not_derivable_nil_bot_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.translate' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.derivable_translate' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.ceb_backward' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -1430,13 +1430,13 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.Conservativity.tmFrag_complete_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.tmFrag_complete_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.tmFrag_complete_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.tm_le_tmFrag' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.tm_lt_tmFrag_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.blCompactBase' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Conservativity.blCompactDense' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.star_soundness_validIn' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Semantics.starValidIn_ofFormula_iff' depends on axioms: [propext]
+'FormalSystem.Metalogic.Conservativity.plus_soundness_validIn' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Semantics.plusValidIn_ofFormula_iff' depends on axioms: [propext]
 'FormalSystem.Metalogic.Decidability.decide' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Semantics.galoisClosed_mod' depends on axioms: [propext]
 'FormalSystem.Semantics.galoisClosed_of_indicator' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -1446,7 +1446,7 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Semantics.validOn_nextTop_iff_isDiscrete' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Independence.sat_rtime_ssubset_mod_axiomSet' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.Independence.sat_ztime_ssubset_mod_axiomSet' depends on axioms: [propext, Classical.choice, Quot.sound]
-'FormalSystem.Metalogic.Independence.deterministic_not_starDefinable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.WeakCanonical.Kamp.kampPriorExpressiveCompleteness' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.WeakCanonical.uSExpressivelyCompleteOverPrior' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.consequence_completeness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -1500,11 +1500,11 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.dedWitness_finitely_satisfiable
 #print axioms FormalSystem.Metalogic.notStrongCompletenessRTime
 #print axioms FormalSystem.Metalogic.modelExistenceRTime_refuted
-#print axioms FormalSystem.Metalogic.tmComplete_iff_forward
-#print axioms FormalSystem.Metalogic.tmCompleteBase_iff_forwardBase
-#print axioms FormalSystem.Metalogic.tmCompleteZTime_iff_forwardZTime
-#print axioms FormalSystem.Metalogic.tmCompleteDense_iff_forwardDense
-#print axioms FormalSystem.Metalogic.tmCompleteRTime_iff_forwardRTime
+#print axioms FormalSystem.Metalogic.tmMinusComplete_iff_forward
+#print axioms FormalSystem.Metalogic.tmMinusCompleteBase_iff_forwardBase
+#print axioms FormalSystem.Metalogic.tmMinusCompleteZTime_iff_forwardZTime
+#print axioms FormalSystem.Metalogic.tmMinusCompleteDense_iff_forwardDense
+#print axioms FormalSystem.Metalogic.tmMinusCompleteRTime_iff_forwardRTime
 #print axioms FormalSystem.Metalogic.qAlpha_step
 #print axioms FormalSystem.Metalogic.exists_strictMono_qPoints
 #print axioms FormalSystem.Metalogic.setConsequence_iff_not_satisfiable
@@ -1518,12 +1518,12 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.notCompactZTime
 #print axioms FormalSystem.Metalogic.notCompactRTime
 #print axioms FormalSystem.Semantics.truthAt_tr
-#print axioms FormalSystem.Metalogic.bl_soundness
-#print axioms FormalSystem.Metalogic.bl_soundness_dense
-#print axioms FormalSystem.Metalogic.bl_soundness_ztime
-#print axioms FormalSystem.Metalogic.bl_soundness_rtime
-#print axioms FormalSystem.Metalogic.bl_not_derivable_nil_bot
-#print axioms FormalSystem.Metalogic.bl_not_derivable_nil_bot_ztime
+#print axioms FormalSystem.Metalogic.minus_soundness
+#print axioms FormalSystem.Metalogic.minus_soundness_dense
+#print axioms FormalSystem.Metalogic.minus_soundness_ztime
+#print axioms FormalSystem.Metalogic.minus_soundness_rtime
+#print axioms FormalSystem.Metalogic.minus_not_derivable_nil_bot
+#print axioms FormalSystem.Metalogic.minus_not_derivable_nil_bot_ztime
 #print axioms FormalSystem.Metalogic.Conservativity.translate
 #print axioms FormalSystem.Metalogic.Conservativity.derivable_translate
 #print axioms FormalSystem.Metalogic.Conservativity.ceb_backward
@@ -1537,13 +1537,13 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.Conservativity.tmFrag_complete_dense
 #print axioms FormalSystem.Metalogic.Conservativity.tmFrag_complete_ztime
 #print axioms FormalSystem.Metalogic.Conservativity.tmFrag_complete_rtime
-#print axioms FormalSystem.Metalogic.Conservativity.tm_le_tmFrag
-#print axioms FormalSystem.Metalogic.Conservativity.tm_lt_tmFrag_ztime
+#print axioms FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag
+#print axioms FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime
 #print axioms FormalSystem.Metalogic.Conservativity.blCompactBase
 #print axioms FormalSystem.Metalogic.Conservativity.blCompactDense
-#print axioms FormalSystem.Metalogic.Conservativity.star_soundness_validIn
-#print axioms FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff
-#print axioms FormalSystem.Semantics.starValidIn_ofFormula_iff
+#print axioms FormalSystem.Metalogic.Conservativity.plus_soundness_validIn
+#print axioms FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff
+#print axioms FormalSystem.Semantics.plusValidIn_ofFormula_iff
 #print axioms FormalSystem.Metalogic.Decidability.decide
 #print axioms FormalSystem.Semantics.galoisClosed_mod
 #print axioms FormalSystem.Semantics.galoisClosed_of_indicator
@@ -1553,7 +1553,7 @@ import FormalSystem
 #print axioms FormalSystem.Semantics.validOn_nextTop_iff_isDiscrete
 #print axioms FormalSystem.Metalogic.Independence.sat_rtime_ssubset_mod_axiomSet
 #print axioms FormalSystem.Metalogic.Independence.sat_ztime_ssubset_mod_axiomSet
-#print axioms FormalSystem.Metalogic.Independence.deterministic_not_starDefinable
+#print axioms FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable
 #print axioms FormalSystem.Metalogic.WeakCanonical.Kamp.kampPriorExpressiveCompleteness
 #print axioms FormalSystem.Metalogic.WeakCanonical.uSExpressivelyCompleteOverPrior
 #print axioms FormalSystem.Metalogic.consequence_completeness_rtime

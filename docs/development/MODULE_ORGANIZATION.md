@@ -12,8 +12,8 @@ BimodalLogic/
 ├── FormalSystem/               # Main library source
 │   ├── Syntax.lean             # Aggregates Syntax/
 │   ├── ProofSystem.lean        # Aggregates ProofSystem/
-│   ├── BaseLanguage.lean       # Aggregates BaseLanguage/
-│   ├── StarLanguage.lean       # Aggregates StarLanguage/
+│   ├── MinusLanguage.lean       # Aggregates MinusLanguage/
+│   ├── PlusLanguage.lean       # Aggregates PlusLanguage/
 │   ├── Semantics.lean          # Aggregates Semantics/
 │   ├── Metalogic.lean          # Aggregates Metalogic/
 │   ├── Theorems.lean           # Aggregates Theorems/
@@ -21,8 +21,8 @@ BimodalLogic/
 │   ├── Examples.lean           # Aggregates Examples/
 │   ├── Syntax/                 # Formula types, atoms, contexts, subformulas
 │   ├── ProofSystem/            # Axioms, derivation trees, inference rules
-│   ├── BaseLanguage/           # The tense-primitive second object language
-│   ├── StarLanguage/           # L⋆: L⁺ plus the stability modal ⊡, and its logic TM⋆
+│   ├── MinusLanguage/           # The tense-primitive second object language
+│   ├── PlusLanguage/           # L⁺: L plus the stability modal ⊡, and its logic TM⁺
 │   ├── Semantics/              # Task frame semantics, truth evaluation, extension
 │   ├── Metalogic/              # Soundness, completeness, decidability, independence
 │   ├── Theorems/               # Derived theorems (perpetuity, combinators, propositional)
@@ -149,38 +149,38 @@ Dependencies flow in one direction to prevent circular imports:
 ```
 Layer 4: Automation (depends on all below)
     ↑
-Layer 3: Metalogic (depends on ProofSystem, Semantics, BaseLanguage, StarLanguage)
+Layer 3: Metalogic (depends on ProofSystem, Semantics, MinusLanguage, PlusLanguage)
     ↑
 Layer 2: Semantics, Theorems (depend on Syntax, ProofSystem; Semantics also on
-         BaseLanguage.Formula and StarLanguage.Formula)
+         MinusLanguage.Formula and PlusLanguage.Formula)
     ↑
-Layer 1: ProofSystem (depends on Syntax), BaseLanguage (depends on Syntax),
-         StarLanguage (depends on Syntax, ProofSystem)
+Layer 1: ProofSystem (depends on Syntax), MinusLanguage (depends on Syntax),
+         PlusLanguage (depends on Syntax, ProofSystem)
     ↑
 Layer 0: Syntax (no internal dependencies)
 ```
 
-**Where `BaseLanguage` sits.** It is a second object language parallel to
-`Syntax` + `ProofSystem`, not a layer of its own: `BaseLanguage.Formula` imports only
-`Syntax.Atom`, and the rest of `BaseLanguage/` imports only `Syntax` and itself. Nothing under
-`BaseLanguage/` imports `Semantics/` — that is the directory's standing module invariant, stated
-in `FormalSystem/BaseLanguage.lean`.
-`StarLanguage/` follows the same pattern and the same directional invariant (stated in
-`FormalSystem/StarLanguage.lean`): `Semantics/StarTruth.lean` imports `StarLanguage.Formula`,
-and nothing under `StarLanguage/` imports `Semantics/`.
+**Where `MinusLanguage` sits.** It is a second object language parallel to
+`Syntax` + `ProofSystem`, not a layer of its own: `MinusLanguage.Formula` imports only
+`Syntax.Atom`, and the rest of `MinusLanguage/` imports only `Syntax` and itself. Nothing under
+`MinusLanguage/` imports `Semantics/` — that is the directory's standing module invariant, stated
+in `FormalSystem/MinusLanguage.lean`.
+`PlusLanguage/` follows the same pattern and the same directional invariant (stated in
+`FormalSystem/PlusLanguage.lean`): `Semantics/PlusTruth.lean` imports `PlusLanguage.Formula`,
+and nothing under `PlusLanguage/` imports `Semantics/`.
 
 The invariant is **directional**, and the converse edge is both permitted and used:
-`Semantics/BLTruth.lean` imports `BaseLanguage.Formula` to define `BLTruthAt` natively on
-`BLFormula`, and `Metalogic/Conservativity/BaseLanguageSoundness.lean` composes that with `Translation` and
-`Conservativity`. So the one `Semantics → BaseLanguage` edge in the tree runs into a
+`Semantics/MinusTruth.lean` imports `MinusLanguage.Formula` to define `MinusTruthAt` natively on
+`MinusFormula`, and `Metalogic/Conservativity/MinusLanguageSoundness.lean` composes that with `Translation` and
+`Conservativity`. So the one `Semantics → MinusLanguage` edge in the tree runs into a
 `Syntax.Atom`-only leaf and introduces no cycle.
 
 ### Dependency Rules
 
 1. **Syntax** has no internal dependencies.
 2. **ProofSystem** depends only on Syntax.
-3. **Semantics** depends on Syntax and ProofSystem, plus `BaseLanguage.Formula` (a
-   `Syntax.Atom`-only leaf) in `BLTruth.lean` / `BLValidity.lean`.
+3. **Semantics** depends on Syntax and ProofSystem, plus `MinusLanguage.Formula` (a
+   `Syntax.Atom`-only leaf) in `MinusTruth.lean` / `MinusValidity.lean`.
 4. **Theorems** depends on Syntax and ProofSystem (and may use Semantics for transport lemmas where needed).
 5. **Metalogic** depends on Syntax, ProofSystem, Semantics, and Theorems infrastructure used in proofs.
 6. **Automation** (tactics, proof search) may depend on any module.
@@ -292,37 +292,37 @@ logic with linear temporal logic. Proven sound and complete.
 * `FormalSystem.ProofSystem.Derivable`
 * `FormalSystem.ProofSystem.Derivation` -- `DerivationTree`, 7 inference rules
 
-### BaseLanguage
+### MinusLanguage
 
 A **second object language**, tense-primitive (`H`/`G` are constructors rather than
 abbreviations), with its own axioms and proof system, related to the primary language by a
 translation. It is the language in which the source paper states TM.
 
-* `FormalSystem.BaseLanguage.Formula` -- `BLFormula`
-* `FormalSystem.BaseLanguage.Axioms` -- a second `inductive Axiom`
-* `FormalSystem.BaseLanguage.Derivation` -- the mirror proof system
-* `FormalSystem.BaseLanguage.Translation` -- `tr : BLFormula → Formula`
-* `FormalSystem.BaseLanguage.AxiomDischarge`
+* `FormalSystem.MinusLanguage.Formula` -- `MinusFormula`
+* `FormalSystem.MinusLanguage.Axioms` -- a second `inductive Axiom`
+* `FormalSystem.MinusLanguage.Derivation` -- the mirror proof system
+* `FormalSystem.MinusLanguage.Translation` -- `tr : MinusFormula → Formula`
+* `FormalSystem.MinusLanguage.AxiomDischarge`
 
 The base language's **semantics** deliberately does not live here, so that the directory's
-`BaseLanguage/ → Semantics/` invariant stays literally true: see
-`FormalSystem.Semantics.BLTruth`, `FormalSystem.Semantics.BLValidity` and
-`FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness` below.
+`MinusLanguage/ → Semantics/` invariant stays literally true: see
+`FormalSystem.Semantics.MinusTruth`, `FormalSystem.Semantics.MinusValidity` and
+`FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness` below.
 
 ### Semantics
 * `FormalSystem.Semantics.TaskFrame`
 * `FormalSystem.Semantics.ConvexHistory`
 * `FormalSystem.Semantics.TaskModel`
 * `FormalSystem.Semantics.Truth`
-* `FormalSystem.Semantics.BLTruth` -- `BLTruthAt`, the native base-language truth recursion
+* `FormalSystem.Semantics.MinusTruth` -- `MinusTruthAt`, the native base-language truth recursion
 * `FormalSystem.Semantics.Validity`
-* `FormalSystem.Semantics.BLValidity` -- the base-language validity predicates
+* `FormalSystem.Semantics.MinusValidity` -- the base-language validity predicates
 * `FormalSystem.Semantics.Extension` -- the Extension Theorem: every partial history
   extends to a total one
 
 ### Metalogic
 * `FormalSystem.Metalogic.Soundness`
-* `FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness` -- BL soundness at Base/Dense/ZTime/RTime,
+* `FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness` -- BL soundness at Base/Dense/ZTime/RTime,
   by composition, plus the truth-transfer bridge `truthAt_tr`
 * `FormalSystem.Metalogic.SoundnessLemmas`
 * `FormalSystem.Metalogic.Core.DeductionTheorem`
@@ -341,7 +341,7 @@ The base language's **semantics** deliberately does not live here, so that the d
   construction, together with Base and Dense strong completeness
 * `FormalSystem.Metalogic.DiscreteNonCompactness` -- the machine refutation of ZTime
   strong completeness
-* `FormalSystem.Metalogic.Conservativity` -- the TM/TM⁺ backward bridge
+* `FormalSystem.Metalogic.Conservativity` -- the TM⁻/TM backward bridge
 * `FormalSystem.Metalogic.Independence` -- underivability results
 * `FormalSystem.Metalogic.Decidability` -- the tableau decision procedure and its
   sound-direction correctness proofs

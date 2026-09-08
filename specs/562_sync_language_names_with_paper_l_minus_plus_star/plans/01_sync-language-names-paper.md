@@ -605,7 +605,7 @@ exactly — no file in both phases, none in neither.
 
 ---
 
-### Phase 9: Root and docs/ prose, and the four-language table [NOT STARTED]
+### Phase 9: Root and docs/ prose, and the four-language table [COMPLETED]
 
 **Goal**: Deliverable (3) — rewrite the repository's user-facing documentation to the new
 vocabulary, including one table stating the four languages, their operators, their logics and
@@ -678,7 +678,7 @@ under the new convention.
 
 ---
 
-### Phase 10: Re-pin specs/paper-definitions-of-record.md [NOT STARTED]
+### Phase 10: Re-pin specs/paper-definitions-of-record.md [COMPLETED]
 
 **Goal**: Deliverable (4) — record the repo↔manuscript correspondence as PERMANENT, and keep C15
 resolving.
@@ -728,7 +728,7 @@ after Phases 7–9; every anchor newly appearing must have a row.
 
 ---
 
-### Phase 11: Re-word the dependent open task descriptions [NOT STARTED]
+### Phase 11: Re-word the dependent open task descriptions [COMPLETED]
 
 **Goal**: Deliverable (5) — tasks 534, 537, 559, 560 and 561 name the new identifiers, so they are
 written once rather than twice.

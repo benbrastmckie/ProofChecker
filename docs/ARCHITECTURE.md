@@ -43,7 +43,7 @@ because a diagram that hides them misdescribes the build.
                                          │ imports                         │
                          ┌───────────────▼──────────────────┐              │
   Layer 0  Foundation    │  Syntax/      ProofSystem/ ◄─────────────────────┘
-                         │  ForMathlib/  StarLanguage/      │
+                         │  ForMathlib/  PlusLanguage/      │
                          └──────────────────────────────────┘
 ```
 
@@ -74,14 +74,14 @@ the **data-flow** graph runs Decidability → Automation. Neither is the other.
 
 ## Layer 0 in full
 
-Layer 0 is four modules, not two. Both `ForMathlib` and `StarLanguage` are easy to miss:
+Layer 0 is four modules, not two. Both `ForMathlib` and `PlusLanguage` are easy to miss:
 
 | Module | Role | Constraint |
 |--------|------|------------|
 | `Syntax/` | `Formula` (six constructors), atoms, contexts, subformula closure | — |
 | `ProofSystem/` | 45 axiom constructors, 7 inference rules, `DerivationTree`, `FrameClass` | imports only `Syntax` |
 | `ForMathlib/` | Mathlib-shaped proper/maximal/prime **filter** API | imports **nothing** from `FormalSystem.*` — it is intended for upstreaming |
-| `StarLanguage/` | `StarFormula` (L⁺ plus the stability modal `⊡`), `StarAxiom`, `StarDerivationTree`, `ofFormula` | a second object language beside `Formula` |
+| `PlusLanguage/` | `PlusFormula` (**L⁺** = L plus the stability modal `⊡`), `PlusAxiom`, `PlusDerivationTree`, `ofFormula` | a second object language beside `Formula` |
 
 ## The three completeness routes
 

@@ -55,6 +55,56 @@ re-derives every hash below directly from the live paper file on every run.
 <!-- FILE_CHECKSUM: 1b3c33a2b6a445b14e13e2f59b10c02b5140bb00280a3191ef27448e63460aa5 -->
 <!-- LINE_COUNT: 4452 -->
 
+### Language correspondence (2026-09-08): permanent, prose only, no re-pin
+
+The repository renamed its object languages so that its names mean what the paper's mean. This
+section records the resulting correspondence as a **permanent** fact about the two documents, not
+as a pending alignment to be resolved later.
+
+**The manuscript has exactly two languages.** They are 𝓛 and 𝓛⋆, where 𝓛⋆ bundles the stability
+modal ⊡ with **both** register families — time store/recall and world store/recall. The
+line-independent anchor for that is the sentence defining `\BL^\star` in `\S sub:Extension`;
+`sub:` is a sectioning prefix, which C15's citation pattern does not match, so it needs no
+`KNOWN-ANCHORS` row. `def:BLstar-semantics` interprets ⊡, `timeStore` and `timeRecall`, and
+suppresses the world registers.
+
+**`def:BLplus-language` and `def:TMplus` keep their anchor labels.** Their *labels* still read
+`BLplus`/`TMplus` for historical reasons, but their *content* has defined 𝓛 and TM since the
+paper collapsed `BL^+` into `BL`. After this rename they correspond to this repository's **L**
+and **TM** on the nose — the repository's earlier `L⁺`/`TM⁺` names for them are gone. No text
+moved on either side, so neither anchor's hash changes.
+
+**The correspondence, stated permanently:**
+
+| Repository | Manuscript |
+|---|---|
+| **L**, **TM** (with TM_z, TM_d, TM_r) | 𝓛 (`def:BLplus-language`), TM (`def:TMplus`, `cor:tm-completeness`) — the same systems under the same names |
+| **L⁻**, **TM⁻** | **no counterpart.** The H/G fragment was withdrawn from the paper; the passage that named a Past/Future system is commented out in the live source. L⁻ is this repository's own language, and its `z`/`d`/`r` subscripts are Lean-only labels |
+| **L⁺**, **TM⁺** | L⁺ is the **⊡-only fragment** of the manuscript's 𝓛⋆. The manuscript supplies no logic for 𝓛⋆ (it places one outside its scope), so TM⁺ answers to no paper system |
+| **L⋆** | the **time-register fragment** of the manuscript's 𝓛⋆ — ⊡ plus `timeStore`/`timeRecall`, which is what `app:deterministic-future` uses. The world registers are not formalized |
+
+Every docstring and README that relates a repository language to the paper must say this in those
+words. In particular, a repository result about L⁺ or L⋆ is a result about a **fragment of 𝓛⋆**,
+and must never be described by a paper name it does not have. The one paper name that now
+transfers without qualification is TM, and it transfers because the two are the same system.
+
+**No pin moved.** Per "How to extend this record", this is a prose-and-classification change: no
+anchor was added, no anchor drifted as a result of it, and therefore **no `verbatim:` block, no
+`sha256:` line, no manifest row, and neither the `PINNED_COMMIT` nor the `FILE_CHECKSUM` sentinel
+was touched**. This follows the precedent of "Vocabulary alignment (2026-09-07): prose only, no
+re-pin" above.
+
+`scripts/check-paper-definitions.sh` was re-run after the edit. Its verdict is unchanged by this
+work: **case (b)**, drift detected, with the same six anchors the separate re-pin work already
+owns — `def:S5`, `def:BX`, `def:BX-z`, `def:BX-d`, `def:BX-r`, `def:TMplus` — every one of them a
+`smallest extension of X closed under Y` → `extends X to include Y` rewording plus, for `def:BX`
+and `def:BX-r`, footnote/comment churn. No anchor entered or left that set because of this rename.
+
+**Citation sites that moved.** The `app:ObjectiveModality` row of "Anchor classification
+(2026-09-07)" above names `FormalSystem/BaseLanguage/Axioms.lean` as its citing file; that module
+is now `FormalSystem/MinusLanguage/Axioms.lean`. The anchor, its classification and its reason are
+unchanged.
+
 ### Drift correction and rename absorption (2026-09-07): the z/d/r wave
 
 The paper's z/d/r wave is the largest single wave this record has absorbed: **15 pinned entries

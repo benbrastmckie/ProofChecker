@@ -767,7 +767,7 @@ strong completeness for `FrameClass.ZTime` is false rather than merely unproved.
 **Module**: `FormalSystem/Metalogic/Conservativity/Backward.lean` (under the
 `FormalSystem/Metalogic/Conservativity.lean` aggregator, which carries the narrative)
 
-The TM/TM⁺ bridge: `TM ⊢ φ ⟹ TM⁺ ⊢ tr φ`, by structural recursion over TM derivations,
+The TM⁻/TM bridge: `TM⁻ ⊢ φ ⟹ TM ⊢ tr φ`, by structural recursion over TM⁻ derivations,
 parameterized by frame class so that the paper's four rows are four instantiations of one
 theorem.
 
@@ -780,17 +780,17 @@ theorem.
 | `ced_backward` | 232 | The ZTime row |
 | `cec_backward` | 253 | The fourth row |
 
-**Backward direction only.** The converse `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ` is **refuted** for the Base
+**Backward direction only.** The converse `TM ⊢ tr φ ⟹ TM⁻ ⊢ φ` is **refuted** for the Base
 and ZTime rows and **open** for the other two. This is a negative result recorded in the
 module docstring, not outstanding work.
 
-The tense-primitive source language is `FormalSystem/BaseLanguage/` -- see the entry below.
+The tense-primitive source language is `FormalSystem/MinusLanguage/` -- see the entry below.
 
 ---
 
-### BaseLanguage (`FormalSystem.BaseLanguage`)
+### MinusLanguage (`FormalSystem.MinusLanguage`)
 
-**Module**: `FormalSystem/BaseLanguage/`
+**Module**: `FormalSystem/MinusLanguage/`
 
 A **second object language**, in which `H` (`allPast`) and `G` (`allFuture`) are primitive
 rather than derived:
@@ -801,32 +801,32 @@ rather than derived:
 
 | File | What it carries |
 |------|-----------------|
-| `BaseLanguage/Formula.lean` | `BLFormula`, the tense-primitive language |
-| `BaseLanguage/Axioms.lean` | A second `inductive Axiom`, TM's schemata over BL |
-| `BaseLanguage/Derivation.lean` | A constructor-for-constructor mirror of `DerivationTree` |
-| `BaseLanguage/Translation.lean` | `tr : BLFormula → Formula` and `trCtx` |
-| `BaseLanguage/AxiomDischarge.lean` | `dischargeAxiom`, the per-axiom discharge table |
+| `MinusLanguage/Formula.lean` | `MinusFormula`, the tense-primitive language |
+| `MinusLanguage/Axioms.lean` | A second `inductive Axiom`, TM's schemata over BL |
+| `MinusLanguage/Derivation.lean` | A constructor-for-constructor mirror of `DerivationTree` |
+| `MinusLanguage/Translation.lean` | `tr : MinusFormula → Formula` and `trCtx` |
+| `MinusLanguage/AxiomDischarge.lean` | `dischargeAxiom`, the per-axiom discharge table |
 
-**Its semantics lives outside the directory**, so that `BaseLanguage/`'s standing invariant
+**Its semantics lives outside the directory**, so that `MinusLanguage/`'s standing invariant
 (nothing here imports `FormalSystem/Semantics/`) stays literally true. The invariant is
 directional; the converse edge is permitted and is what these three modules use:
 
 | File | What it carries |
 |------|-----------------|
-| `Semantics/BLTruth.lean` | `BLTruthAt`, a native six-clause recursion on `BLFormula` per `def:BL-semantics` -- **not** `TruthAt ∘ tr` -- plus the `BLTruth.*` characterization lemmas |
-| `Semantics/BLValidity.lean` | `BLValid`, `BLSemanticConsequence`, `BLValidDense`, `BLValidZTime`, `BLValidRTime`; no density-free `BLValidComplete`, which would be refutable |
-| `Metalogic/Conservativity/BaseLanguageSoundness.lean` | `truthAt_tr` (the bridge, proved by induction), `bl_soundness{,_dense,_discrete,_dedekind}` and their validity forms, and `bl_not_derivable_nil_bot{,_discrete}` |
+| `Semantics/MinusTruth.lean` | `MinusTruthAt`, a native six-clause recursion on `MinusFormula` per `def:BL-semantics` -- **not** `TruthAt ∘ tr` -- plus the `MinusTruth.*` characterization lemmas |
+| `Semantics/MinusValidity.lean` | `MinusValid`, `MinusSemanticConsequence`, `MinusValidDense`, `MinusValidZTime`, `MinusValidRTime`; no density-free `MinusValidComplete`, which would be refutable |
+| `Metalogic/Conservativity/MinusLanguageSoundness.lean` | `truthAt_tr` (the bridge, proved by induction), `minus_soundness{,_dense,_discrete,_dedekind}` and their validity forms, and `minus_not_derivable_nil_bot{,_discrete}` |
 
 | Result | What it says |
 |--------|--------------|
-| `truthAt_tr` | `TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ` |
-| `bl_soundness` | A BL derivation at `FrameClass.Base` makes its conclusion true wherever its context is |
-| `bl_soundness_dense` / `_discrete` / `_dedekind` | The same at the three extensions; the RTime one carries `ValidRTime`'s binder set |
-| `bl_not_derivable_nil_bot` / `_discrete` | BL is consistent at `FrameClass.Base` and `FrameClass.ZTime` |
+| `truthAt_tr` | `TruthAt M τ t (tr φ) ↔ MinusTruthAt M τ t φ` |
+| `minus_soundness` | A BL derivation at `FrameClass.Base` makes its conclusion true wherever its context is |
+| `minus_soundness_dense` / `_discrete` / `_dedekind` | The same at the three extensions; the RTime one carries `ValidRTime`'s binder set |
+| `minus_not_derivable_nil_bot` / `_discrete` | BL is consistent at `FrameClass.Base` and `FrameClass.ZTime` |
 
 All are sorry-free at `[propext, Classical.choice, Quot.sound]`. They are obtained by composing
 `Conservativity.translate` with `Metalogic/Soundness.lean`'s four theorems and crossing
-`truthAt_tr`; no BL axiom is evaluated directly against `BLTruthAt` except by the three native
+`truthAt_tr`; no BL axiom is evaluated directly against `MinusTruthAt` except by the three native
 spot checks that module carries.
 
 ---

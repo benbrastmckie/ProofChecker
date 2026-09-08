@@ -130,10 +130,10 @@
   constructions with their sources. Section 4 states the two costs the semantics incurs --- the
   necessity of temporal structure, and the higher-order character of the condition singling out
   $square.stroked$ --- and where the two meet. Section 5 states and proves the representation
-  theorem for *TM⁺*: every *TM⁺*-algebra embeds, point-completely, into a product of complex
+  theorem for *TM*: every *TM*-algebra embeds, point-completely, into a product of complex
   algebras of shift-set flows, one factor per □-component, each temporal order discrete or dense
   according to the algebra's discreteness element, so that the representable algebras are exactly
-  the *TM⁺*-algebras. Complexity as distinct from
+  the *TM*-algebras. Complexity as distinct from
   decidability, interpolation, and finite axiomatizability are known open and are not treated here.
 
   This document reports what is machine-checked in `FormalSystem/`, following the presentation of
@@ -1183,11 +1183,11 @@ It is $prec.eq$-leastness, and not S5-hood, that picks $square.stroked$ out.
 
 = The Representation Theorem <sec:representation>
 
-Every TM⁺-algebra embeds, point-completely, into a product of complex algebras of shift-set
+Every TM-algebra embeds, point-completely, into a product of complex algebras of shift-set
 flows, one factor per □-component, the temporal order of each component being discrete or dense
 according to the algebra's discreteness element $#Nxt top$. Since every complex algebra of a task
-frame is a TM⁺-algebra (algebraic soundness), the class of representable algebras is exactly the
-class of TM⁺-algebras: representation and completeness meet exactly at "point-complete."
+frame is a TM-algebra (algebraic soundness), the class of representable algebras is exactly the
+class of TM-algebras: representation and completeness meet exactly at "point-complete."
 Point-completeness --- every ultrafilter of the algebra is the theory of some point --- is model
 existence stated algebraically, so it is strong completeness restated one class at a time. The
 proof runs from the free algebra through the ultrafilter frame's Jónsson--Tarski embedding, then
@@ -1196,7 +1196,7 @@ a point.
 
 == Algebras and Complex Algebras
 
-#definition("TM⁺-algebra")[
+#definition("TM-algebra")[
   A *$op("TM")^+$-algebra* is a Boolean algebra $A = (A, and, or, not, 0, 1)$ together with a
   unary operation $square.stroked$ and binary operations $#until$, $#since$, from which the
   following are derived:
@@ -1272,10 +1272,10 @@ a point.
   $op("Cm")(S)$ is $square.stroked$-simple: $square.stroked X$ takes only the values $emptyset$ and
   $Omega$.
 ]
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness")
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_dense")
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_ztime")
-#leansrc("Metalogic.BaseLanguageSoundness", "bl_soundness_rtime")
+#leansrc("Metalogic.MinusLanguageSoundness", "minus_soundness")
+#leansrc("Metalogic.MinusLanguageSoundness", "minus_soundness_dense")
+#leansrc("Metalogic.MinusLanguageSoundness", "minus_soundness_ztime")
+#leansrc("Metalogic.MinusLanguageSoundness", "minus_soundness_rtime")
 
 #lemma("Lindenbaum–Tarski")[
   The Lindenbaum algebra on a set $X$ of atoms is the free $op("TM")^+$-algebra on $X$, and its

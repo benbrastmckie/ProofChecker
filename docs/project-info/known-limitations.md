@@ -262,39 +262,39 @@ with finite premise sets over ZTime frames.
 Settled. This limitation is permanent and is recorded here so that the absence of a ZTime
 strong-completeness theorem is not misread as outstanding work.
 
-## Limitation 8: TM/TM⁺ Conservativity Holds Backward Only
+## Limitation 8: TM⁻/TM Conservativity Holds Backward Only
 
 ### Description
 
-The bridge between TM (stated over the tense-primitive base language,
-`FormalSystem/BaseLanguage/`) and TM⁺ (this repository's until/since-primitive system) is
-proved in the **backward** direction only:
+The bridge between TM⁻ (stated over the tense-primitive language L⁻,
+`FormalSystem/MinusLanguage/`) and TM (the until/since-primitive system, which is the paper's
+own TM) is proved in the **backward** direction only:
 
 ```
-TM ⊢ φ   ⟹   TM⁺ ⊢ tr φ
+TM⁻ ⊢ φ   ⟹   TM ⊢ tr φ
 ```
 
-`FormalSystem/Metalogic/Conservativity/Backward.lean` proves this by structural recursion over TM
+`FormalSystem/Metalogic/Conservativity/Backward.lean` proves this by structural recursion over TM⁻
 derivations, parameterized by frame class so that the paper's four rows are four instantiations
 of one theorem: `translate`, `derivable_translate`, and the four row
 corollaries `ceb_backward`, `cef_backward`, `ced_backward`,
 `cec_backward`. All are sorry-free.
 
-**The forward direction is refuted, not open.** `TM⁺ ⊢ tr φ ⟹ TM ⊢ φ` is refuted for the Base
+**The forward direction is refuted, not open.** `TM ⊢ tr φ ⟹ TM⁻ ⊢ φ` is refuted for the Base
 and ZTime rows and open for the other two. The module docstring is the standing record of
 why it must not be attempted or `sorry`-ed; see also the "Conservativity (proof-theoretic, no
 semantics)" section of `FormalSystem/Metalogic.lean`.
 
 ### Impact
 
-- A TM theorem transfers to TM⁺ automatically. A TM⁺ theorem does **not** transfer back.
+- A TM⁻ theorem transfers to TM automatically. A TM theorem does **not** transfer back.
 - Results proved in the until/since-primitive language cannot be assumed to be statable, let
   alone provable, in the tense-primitive one.
 - The base language now has a **semantics and a soundness theorem of its own**, so BL results
   no longer have to be routed through `tr` to be given meaning:
-  `FormalSystem/Semantics/BLTruth.lean` defines `BLTruthAt` natively on `BLFormula`,
-  `FormalSystem/Semantics/BLValidity.lean` carries the four BL validity predicates, and
-  `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` proves BL soundness at `FrameClass.Base`
+  `FormalSystem/Semantics/MinusTruth.lean` defines `MinusTruthAt` natively on `MinusFormula`,
+  `FormalSystem/Semantics/MinusValidity.lean` carries the four BL validity predicates, and
+  `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` proves BL soundness at `FrameClass.Base`
   and its three extensions. **This does not change the limitation**: it is a fact about the
   proof systems, and the forward direction stays refuted.
 
@@ -360,7 +360,7 @@ outstanding work.
 | Modal S4 partial | Low | Manual derivation | Resolved |
 | Decision procedure completeness direction | Medium | Treat as semi-decision procedure | Open (`valid_iff_allClosed`) |
 | ZTime consequence relation not compact | Medium | None; work with finite premise sets | Settled negatively |
-| TM/TM⁺ conservativity backward only | Low | State results in the base language | Two rows refuted, two open |
+| TM⁻/TM conservativity backward only | Low | State results in the base language | Two rows refuted, two open |
 | `CO` does not derive Prior-U | Low | Assume the RTime axioms directly | Settled negatively |
 
 ## What Works Well

@@ -45,9 +45,9 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | `ConvexHistory.lean` | ✅ | Temporal traces |
 | `TaskModel.lean` | ✅ | Models with valuation |
 | `Truth.lean` | ✅ | Truth evaluation |
-| `BLTruth.lean` | ✅ | `BLTruthAt`, native truth evaluation for the tense-primitive base language |
+| `MinusTruth.lean` | ✅ | `MinusTruthAt`, native truth evaluation for the tense-primitive base language |
 | `Validity.lean` | ✅ | Semantic consequence |
-| `BLValidity.lean` | ✅ | The four base-language validity predicates plus `BLSemanticConsequence` |
+| `MinusValidity.lean` | ✅ | The four base-language validity predicates plus `MinusSemanticConsequence` |
 | `Correspondence/Galois.lean` | ✅ | `Th`/`Mod` Galois connection; `galoisClosed_mod` (axiomatizable = Galois-closed), `galoisClosed_of_indicator` (single-formula closure method) |
 | `Correspondence/Indicator.lean` | ✅ | `galoisClosed_sat_dense` and `galoisClosed_isDiscrete` (bare `TaskFrame.IsDiscrete` clause) -- the two positive Galois-closure results, via `validOn_nextTop_iff`/`validOn_nextTop_iff_isDiscrete` |
 
@@ -71,7 +71,7 @@ Module-by-module implementation status for the Bimodal TM logic library.
 | `Metalogic/Compactness.lean` | ✅ | Discharges all six: `modelExistenceBase`/`modelExistenceDense` by ultraproduct, `compactBase`/`compactDense`, `strongCompletenessBase`/`strongCompletenessDense` -- all sorryAx-free |
 | `Metalogic/Conservativity.lean` | ✅ | Aggregator: the forward-conservativity prohibition and the CEB/CEF status record; re-exports the five modules below |
 | `Metalogic/Conservativity/Backward.lean` | ✅ | TM/TM+ backward bridge |
-| `Metalogic/Conservativity/BaseLanguageSoundness.lean` | ✅ | BL soundness at Base/Dense/ZTime/RTime by composition; `truthAt_tr`, the validity forms, and `bl_not_derivable_nil_bot{,_discrete}` |
+| `Metalogic/Conservativity/MinusLanguageSoundness.lean` | ✅ | BL soundness at Base/Dense/ZTime/RTime by composition; `truthAt_tr`, the validity forms, and `minus_not_derivable_nil_bot{,_discrete}` |
 | `Metalogic/Independence/` | ✅ | Three independence results, including `sat_rtime_ssubset_mod_axiomSet` (`Sat .RTime` not Galois-closed -- definability of the model class, distinct from the open RTime strong-completeness question above) and `sat_ztime_ssubset_mod_axiomSet` (`Sat .ZTime` not Galois-closed) |
 | `Metalogic/WeakCanonical/Kamp/` | ✅ | `kampPriorExpressiveCompleteness` -- `{U, S}` expressively complete relative to monadic first-order logic **for Prior structures**, sorry-free (`propext`, `Classical.choice`, `Quot.sound`); load-bearing via `uSExpressivelyCompleteOverPrior` |
 
@@ -79,9 +79,9 @@ Module-by-module implementation status for the Bimodal TM logic library.
 - Full soundness proof: `derivable Γ φ → SemanticConsequence Γ φ`, over all 45 axiom
   constructors (Base 37 / Dense 2 / ZTime 3 / RTime 3, per `Axiom.minFrameClass` in
   `FormalSystem/ProofSystem/Axioms.lean`)
-- Base-language soundness (`bl_soundness` and its dense / ZTime / RTime siblings,
-  `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`), stated against the native `BLTruthAt` of
-  `FormalSystem/Semantics/BLTruth.lean` and obtained by composing
+- Base-language soundness (`minus_soundness` and its dense / ZTime / RTime siblings,
+  `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`), stated against the native `MinusTruthAt` of
+  `FormalSystem/Semantics/MinusTruth.lean` and obtained by composing
   `Conservativity.translate` with the four theorems above across the truth-transfer bridge
   `truthAt_tr`
 

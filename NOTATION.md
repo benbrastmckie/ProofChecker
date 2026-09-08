@@ -38,25 +38,25 @@ forgotten. Use it when only the fact of derivability matters. These four are spe
 precisely so that they cannot be confused at a glance with the `Type`-valued four above — the
 distinction is load-bearing, and a Unicode near-twin would hide it.
 
-### BL⁺, the base language (`FormalSystem/BaseLanguage/Derivation.lean`)
+### L⁻, the tense-primitive language (`FormalSystem/MinusLanguage/Derivation.lean`)
 
 | Notation | Unfolds to |
 |---|---|
-| `Γ ⊢ᴮᴸ[fc] φ` | `DerivationTree fc Γ φ` (over `BLFormula`) |
-| `⊢ᴮᴸ[fc] φ` | `DerivationTree fc [] φ` (over `BLFormula`) |
+| `Γ ⊢⁻[fc] φ` | `DerivationTree fc Γ φ` (over `MinusFormula`) |
+| `⊢⁻[fc] φ` | `DerivationTree fc [] φ` (over `MinusFormula`) |
 
-The `ᴮᴸ` marker exists so these do not collide with TM's `⊢[fc]` in a file that has opened both
-`FormalSystem.ProofSystem` and `FormalSystem.BaseLanguage`. The declaration's own docstring says
+The `⁻` marker exists so these do not collide with TM's `⊢[fc]` in a file that has opened both
+`FormalSystem.ProofSystem` and `FormalSystem.MinusLanguage`. The declaration's own docstring says
 so; it is a disambiguator, not decoration.
 
-### TM⋆, the stability language (`FormalSystem/StarLanguage/Derivation.lean`)
+### L⁺, the stability extension (`FormalSystem/PlusLanguage/Derivation.lean`)
 
 | Notation | Unfolds to |
 |---|---|
-| `Γ ⊢⋆[fc] φ` | `StarDerivationTree fc Γ φ` |
-| `⊢⋆[fc] φ` | `StarDerivationTree fc [] φ` |
+| `Γ ⊢⁺[fc] φ` | `PlusDerivationTree fc Γ φ` |
+| `⊢⁺[fc] φ` | `PlusDerivationTree fc [] φ` |
 
-Same shape again, over `StarFormula` and `StarContext`. TM⋆ has no untagged abbreviation: its
+Same shape again, over `PlusFormula` and `PlusContext`. TM⁺ has no untagged abbreviation: its
 whole point is that the class matters.
 
 ## Validity: the `⊨` family
@@ -79,8 +79,8 @@ validity predicates and four consequence predicates:
 * `ValidOnFrames`, `ValidIn`, `Valid`, `ValidDense`, `ValidZTime`, `ValidComplete`, `ValidRTime`
   (`Semantics/Validity.lean`).
 * `SemanticConsequenceIn`, `SemanticConsequence`, and the `Dense`/`ZTime`/`RTime` siblings.
-* `StarValidOnFrames`, `StarValidIn`, `StarValid`, `StarValidDense`, `StarValidZTime`,
-  `StarValidRTime` (`Semantics/StarValidity.lean`) mirror the first list over `StarFormula`.
+* `PlusValidOnFrames`, `PlusValidIn`, `PlusValid`, `PlusValidDense`, `PlusValidZTime`,
+  `PlusValidRTime` (`Semantics/PlusValidity.lean`) mirror the first list over `PlusFormula`.
 
 `ValidComplete` is the one member that is not a `ValidIn` instance: it quantifies over
 `TaskFrame.IsComplete` directly, and `Validity.lean` argues at length why it must not be
@@ -118,7 +118,7 @@ quantified over frames — so this is one notion written two ways, not two compe
 A `TM[...]`-style tag on the validity side has been considered and **declined**. The proposal
 rests on the premise that the repository carries several unrelated `⊨`-shaped relations needing
 to be told apart. It does not: the `⊨` family above is one definition (`ValidIn`) with its
-frame-class argument fixed, plus a `Star` mirror for a different formula type, and the
+frame-class argument fixed, plus a `Plus` mirror for a different formula type, and the
 turnstile side already carries the tag wherever a tag can disambiguate. Adding a second tagging
 scheme on the `⊨` side would reintroduce the parser conflict the two decisions above exist to
 avoid, in exchange for a distinction the type checker already makes.

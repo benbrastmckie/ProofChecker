@@ -107,8 +107,8 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 ├── FormalSystem.lean             # Lake root module for the FormalSystem library
 ├── FormalSystem/                 # TM bimodal logic library (live file and line counts: see the table above)
 │   ├── FormalSystem.lean         # library aggregator
-│   ├── BaseLanguage/             # shared base-language definitions
-│   ├── StarLanguage/             # L⋆ = L⁺ plus the stability modal ⊡, and its logic TM⋆
+│   ├── MinusLanguage/            # L⁻ = the tense-primitive (H/G) language, and its logic TM⁻
+│   ├── PlusLanguage/             # L⁺ = L plus the stability modal ⊡, and its logic TM⁺
 │   ├── Syntax/                   # Formula types, atoms, contexts
 │   ├── ProofSystem/              # Axioms (45 constructors, nine layers), derivation trees
 │   ├── Semantics/                # TemporalOrder, FrameOver, TaskFrame, ConvexHistory, TaskModel, validity
@@ -195,18 +195,47 @@ graph TD
 
 The Dense and ZTime logics are independent extensions — neither subsumes the other. RTime extends **Dense**: `Axiom.minFrameClass` places `density` and `dense_indicator` below `FrameClass.RTime`, because Reynolds' own axiomatization of real flow contains them. ZTime and RTime are likewise incomparable, and `RTime ≰ Dense`.
 
-**`FrameClass.RTime` is the paper's TM⁺_r.** Under the paper's current text, `cor:tm-completeness` gives TM⁺_r as weakly complete over `ℝ`-time — the dense and Dedekind-complete orders — which is exactly what `FrameClass.RTime` denotes: `DenselyOrdered D` plus Dedekind completeness. Earlier revisions of this README described the paper's complete-order system as completeness *simpliciter* with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picks the class out. That is stale on both counts: the `{ℤ, ℝ}` / `Th(ℤ) ∩ Th(ℝ)` footnote is commented out in the live `def:BX-r`, and the class the paper names is dense-and-complete, not complete-simpliciter.
+**`FrameClass.RTime` is the paper's TM_r.** Under the paper's current text, `cor:tm-completeness` gives TM_r as weakly complete over `ℝ`-time — the dense and Dedekind-complete orders — which is exactly what `FrameClass.RTime` denotes: `DenselyOrdered D` plus Dedekind completeness. Earlier revisions of this README described the paper's complete-order system as completeness *simpliciter* with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picks the class out. That is stale on both counts: the `{ℤ, ℝ}` / `Th(ℤ) ∩ Th(ℝ)` footnote is commented out in the live `def:BX-r`, and the class the paper names is dense-and-complete, not complete-simpliciter.
 
 The axiom-basis question this README used to record as open is answered as well: `def:BX-r` bases BX_r on the **dense** logic BX_d extended by `TMP-PU` and `TMP-SEP`, so the density axioms are present on the paper's side too, and `completeness_rtime` proves the corollary's own statement rather than a stronger-premise variant. CO is derived rather than assumed on both sides.
 
-The system names on the two sides of the `⁺` are not the same family. `TM⁺` and its extensions `TM⁺_z`, `TM⁺_d`, `TM⁺_r` are this tree's names for the paper's `TM`, `TM_z`, `TM_d`, `TM_r`; the bare `TM` of `FormalSystem/BaseLanguage/` and its extensions `TM_z`, `TM_d`, `TM_r` are Lean-only names with no counterpart in the paper. See [`FormalSystem/Metalogic/Conservativity.lean`](FormalSystem/Metalogic/Conservativity.lean) for the full mapping.
+`TM` and its extensions `TM_z`, `TM_d`, `TM_r` are the paper's own systems under the paper's own names; the languages and logics that carry a `⁻` or a `⁺` are this repository's, and are described against the paper in the table below. See [`FormalSystem/Metalogic/Conservativity.lean`](FormalSystem/Metalogic/Conservativity.lean) for the full mapping.
 
-### The base language L and the stability extension L⋆
+### The four object languages, and how they map onto the paper
 
-Two further object languages sit beside L⁺ (`Formula`): the tense-primitive **base language L**
-(`FormalSystem/BaseLanguage/`, `BLFormula`, related to L⁺ by the translation `tr`) and the
-**stability extension L⋆** (`FormalSystem/StarLanguage/`, `StarFormula` = L⁺ plus the stability
-modal `⊡`, related to L⁺ by the embedding `ofFormula`). Every result below is sorry-free
+This tree carries four object languages. `L` is the paper's own language and `TM` the paper's own
+logic; the other three are this repository's, and the superscripts are Lean-only vocabulary.
+
+| Language | Operators | Logic | Lean home |
+|---|---|---|---|
+| **L⁻** | ⊥, →, □, H, G | **TM⁻** | `FormalSystem/MinusLanguage/`, `MinusFormula`, `⊢⁻[fc]` |
+| **L** | ⊥, →, □, S, U | **TM** (TM_z, TM_d, TM_r) | `FormalSystem/Syntax/` + `ProofSystem/`, `Formula`, `⊢[fc]` |
+| **L⁺** | L plus the stability modal ⊡ | **TM⁺** | `FormalSystem/PlusLanguage/`, `PlusFormula`, `⊢⁺[fc]` |
+| **L⋆** | L⁺ plus the time store/recall operators ↑ⁱ/↓ⁱ | — (not yet built) | `FormalSystem/StarLanguage/` — name reserved |
+
+The manuscript has exactly **two** languages: 𝓛 and 𝓛⋆, where 𝓛⋆ bundles ⊡ with both the
+time-store/recall and the world-store/recall families (the sentence defining `\BL^\star` in
+`\S sub:Extension`). Against that:
+
+- **L is the paper's 𝓛** (`def:BLplus-language`) and **TM is the paper's TM** (`def:TMplus`),
+  with `TM_z`, `TM_d` and `TM_r` the paper's own three extensions (`cor:tm-completeness`). The
+  names coincide; there is no longer anything to translate.
+- **L⁻ has no manuscript counterpart.** The H/G fragment was withdrawn from the paper. L⁻ and
+  TM⁻ exist here because the conservativity results need a name for the system they are about,
+  and the `z`/`d`/`r` subscripts on that side are Lean-only labels.
+- **L⁺ is the ⊡-only fragment of the manuscript's 𝓛⋆**, and TM⁺ is a logic for that fragment
+  which the manuscript does not supply — it puts a logic for 𝓛⋆ outside its scope.
+- **L⋆ is the time-register fragment of the manuscript's 𝓛⋆** — ⊡ together with
+  timeStore/timeRecall, which is what `app:deterministic-future` actually uses. The world
+  registers are not formalized here.
+
+So results stated below about L⁺ and L⋆ are results about *fragments* of the manuscript's 𝓛⋆,
+and are described that way rather than by a paper name they do not have.
+
+Two of these sit beside L (`Formula`): the tense-primitive **L⁻**
+(`FormalSystem/MinusLanguage/`, `MinusFormula`, related to L by the translation `tr`) and the
+**stability extension L⁺** (`FormalSystem/PlusLanguage/`, `PlusFormula` = L plus the stability
+modal `⊡`, related to L by the embedding `ofFormula`). Every result below is sorry-free
 (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`) and holds at all four frame classes
 unless a class is named.
 
@@ -214,32 +243,32 @@ Per-theorem status — every statement, its Lean name, its frame class and its m
 axiom set — is in [`docs/theorem-index.md`](docs/theorem-index.md), the repository's single
 ledger. The five rows below are a highlights table, not a second copy of it.
 
-| Result | L (TM, via `tr`) | L⋆ (TM⋆, via `ofFormula`) |
-|--------|------------------|----------------------------|
-| Semantic conservativity over/under L⁺ | `blValidIn_iff_validIn_tr` | `starValidIn_ofFormula_iff` |
-| Soundness | `bl_soundness_*` (TM) | `star_soundness_validIn` (TM⋆), TD discharged semantically |
-| Proof-theoretic conservativity, backward | `derivable_translate` (TM ⊆ TM⁺) | `starDerivable_of_derivable` (TM⁺ ⊆ TM⋆) |
-| Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmComplete_iff_forward`, `tmCompleteBase_refuted`, `tmCompleteZTime_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
-| Completeness and compactness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`), whose consequence relation is compact at Base and Dense (`blCompactBase`, `blCompactDense`); TM itself is incomplete, and `TM ⊊ TMFrag` at ZTime (`tm_lt_tmFrag_ztime`) | **open**; compactness not attempted (see below) |
+| Result | L⁻ (TM⁻, via `tr`) | L⁺ (TM⁺, via `ofFormula`) |
+|--------|--------------------|----------------------------|
+| Semantic conservativity over/under L | `minusValidIn_iff_validIn_tr` | `plusValidIn_ofFormula_iff` |
+| Soundness | `minus_soundness_*` (TM⁻) | `plus_soundness_validIn` (TM⁺), TD discharged semantically |
+| Proof-theoretic conservativity, backward | `derivable_translate` (TM⁻ ⊆ TM) | `plusDerivable_of_derivable` (TM ⊆ TM⁺) |
+| Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmMinusComplete_iff_forward`, `tmMinusCompleteBase_refuted`, `tmMinusCompleteZTime_refuted`) | **proved**: `plusDerivable_ofFormula_iff`, from TM⁺ soundness and the four completeness engines |
+| Completeness and compactness | of the **H/G-fragment** `TMFrag fc φ := TM ⊢[fc] tr φ` (`tmFrag_iff_minusValidIn`), whose consequence relation is compact at Base and Dense (`minusCompactBase`, `minusCompactDense`); TM⁻ itself is incomplete, and `TM⁻ ⊊ TMFrag` at ZTime (`tmMinus_lt_tmFrag_ztime`) | **open**; compactness not attempted (see below) |
 
-The L side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⋆ side
-in `Semantics/Star*.lean` and `Metalogic/Conservativity/Star/`. TM⋆'s axioms are the 45 TM⁺
-schemata re-declared over `StarFormula` (so that, e.g., `□⊡p → □G⊡p` is an MF instance) plus S5
+The L⁻ side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⁺ side
+in `Semantics/Plus*.lean` and `Metalogic/Conservativity/Plus/`. TM⁺'s axioms are the 45 TM
+schemata re-declared over `PlusFormula` (so that, e.g., `□⊡p → □G⊡p` is an MF instance) plus S5
 for `⊡`, `□φ → ⊡φ`, `p → ⊡p` for atoms, and two **pasting** schemata with pure-future/pure-past
-side conditions (`Semantics/StarPasting.lean`); the five refutations in
-`Semantics/StarNonValidities.lean` bound the set from above.
+side conditions (`Semantics/PlusPasting.lean`); the five refutations in
+`Semantics/PlusNonValidities.lean` bound the set from above.
 
-**Open problems for TM⋆.**
+**Open problems for TM⁺.**
 
-- **Completeness** of TM⋆ over the paper's all-histories semantics, at any class. The nearest
+- **Completeness** of TM⁺ over the paper's all-histories semantics, at any class. The nearest
   results in the literature are for Ockhamist branching time: Reynolds 2003 axiomatizes the
   complete-tree Ockhamist logic (F/P only, with an IRR-style rule and a long construction), and
   Zanardo 1991 axiomatizes the *bundled* Since/Until Ockhamist semantics with Burgess-Gabbay-style
   rules. Neither transfers directly: every completeness engine in this tree builds a
   deterministic countermodel, on which `⊡` is the identity. Nothing here asserts or approaches
-  TM⋆ completeness.
-- **Decidability** of TM⋆. By the conservativity above it is no easier than decidability of
-  TM⁺, itself open for every class (next subsection); no result in either direction is claimed.
+  TM⁺ completeness.
+- **Decidability** of TM⁺. By the conservativity above it is no easier than decidability of
+  TM, itself open for every class (next subsection); no result in either direction is claimed.
 
 ### Decidability
 

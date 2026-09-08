@@ -36,12 +36,12 @@ the mapping.
 | possible world | `TaskFrame.HF` (predicate form: `ConvexHistory.IsTotal`) | `def:world-history`; a convex history whose domain is total, so `X = D`. `HF` is the paper's `H_F` |
 | task relation `w ⇒ₓ v` | `TaskFrame.TaskRel` | `def:task-relation` |
 | duration group `D` | `FormalSystem.Semantics.TemporalOrder` | `def:temporal-order`; a nontrivial totally ordered abelian group |
-| TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus`. The paper calls this system **TM**, without the superscript, and its language **BL**; the anchor id is unchanged but its text is not. The tree's `⁺` marks the since/until side against its own Past/Future `TM` — see `Metalogic/Conservativity.lean` |
-| TM⁺_d (dense) | `FrameClass.Dense` | `def:BX-d` (the paper's **TM**_d, over **BX**_d) |
-| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:BX-z` (the paper's **TM**_z, over **BX**_z). The tree says `ZTime`, not `Discrete` |
-| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r` (the paper's **TM**_r, over **BX**_r, *Dense and Complete*). The tree says `RTime`, not `Dedekind` |
-| BL (tense-primitive base language) | `FormalSystem.BaseLanguage` | its truth relation is `Semantics.BLTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr`. **Name collision**: since the paper collapsed `BL^+` into `BL`, the paper's `BL` is the *since/until* language (`def:BLplus-language`, `def:BL-semantics`) — this row's `BL` is the tree's own Past/Future language and answers to no paper name |
-| L⋆ / TM⋆ (stability modal `⊡`) | `FormalSystem.StarLanguage` | truth relation `Semantics.StarTruthAt` |
+| TM | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus`. The anchor id still reads `TMplus` for historical reasons; its text defines the paper's **TM** over the language **𝓛**, which is this tree's **L**. The two names now coincide — see `Metalogic/Conservativity.lean` |
+| TM_d (dense) | `FrameClass.Dense` | `def:BX-d` (the paper's **TM**_d, over **BX**_d) |
+| TM_z (ℤ-time) | `FrameClass.ZTime` | `def:BX-z` (the paper's **TM**_z, over **BX**_z). The tree says `ZTime`, not `Discrete` |
+| TM_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r` (the paper's **TM**_r, over **BX**_r, *Dense and Complete*). The tree says `RTime`, not `Dedekind` |
+| L⁻ / TM⁻ (tense-primitive, `H`/`G` primitive) | `FormalSystem.MinusLanguage` | its truth relation is `Semantics.MinusTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr`. L⁻ answers to **no paper name**: the H/G fragment was withdrawn from the paper, so nothing in the manuscript corresponds to it |
+| L⁺ / TM⁺ (stability modal `⊡`) | `FormalSystem.PlusLanguage` | truth relation `Semantics.PlusTruthAt`. L⁺ is the **⊡-only fragment** of the paper's `𝓛⋆` (`sub:Extension`, `def:BLstar-semantics`); the paper supplies no logic for `𝓛⋆`, so TM⁺ answers to no paper name |
 | `U(φ, ψ)` (until) | `Formula.untl ψ φ` | guard-first: `untl guard event` |
 | `S(φ, ψ)` (since) | `Formula.snce ψ φ` | guard-first |
 | `△φ` / `▽φ` | `Formula.always` / `Formula.sometimes` | derived, not primitive |
@@ -58,10 +58,10 @@ the mapping.
 
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
 |-------------|-----------|-----------|------|-------------|--------|
-| `thm:TM-soundness` | TM⁺ is sound over all task frames | `FormalSystem.Metalogic.soundness` | `FormalSystem/Metalogic/Soundness.lean` | Base | pcq pinned:C14 |
-| `thm:TM-soundness` | TM⁺_d is sound over the densely ordered task frames | `FormalSystem.Metalogic.soundness_dense` | `FormalSystem/Metalogic/Soundness.lean` | Dense | pcq pinned:C14 |
-| `thm:TM-soundness` | TM⁺_z is sound over ℤ-time | `FormalSystem.Metalogic.soundness_ztime` | `FormalSystem/Metalogic/Soundness.lean` | ZTime | pcq pinned:C14 |
-| `thm:TM-soundness` | TM⁺_r is sound over the dense Dedekind-complete task frames | `FormalSystem.Metalogic.soundness_rtime` | `FormalSystem/Metalogic/Soundness.lean` | RTime | pcq pinned:C14 |
+| `thm:TM-soundness` | TM is sound over all task frames | `FormalSystem.Metalogic.soundness` | `FormalSystem/Metalogic/Soundness.lean` | Base | pcq pinned:C14 |
+| `thm:TM-soundness` | TM_d is sound over the densely ordered task frames | `FormalSystem.Metalogic.soundness_dense` | `FormalSystem/Metalogic/Soundness.lean` | Dense | pcq pinned:C14 |
+| `thm:TM-soundness` | TM_z is sound over ℤ-time | `FormalSystem.Metalogic.soundness_ztime` | `FormalSystem/Metalogic/Soundness.lean` | ZTime | pcq pinned:C14 |
+| `thm:TM-soundness` | TM_r is sound over the dense Dedekind-complete task frames | `FormalSystem.Metalogic.soundness_rtime` | `FormalSystem/Metalogic/Soundness.lean` | RTime | pcq pinned:C14 |
 
 ### Weak completeness — the engines
 
@@ -125,34 +125,34 @@ the mapping.
 | — | Closure from one indicator formula valid on precisely the class's members | `FormalSystem.Semantics.galoisClosed_of_indicator` | `FormalSystem/Semantics/Correspondence/Galois.lean` | — | pcq pinned:C14 |
 | `app:complete` | `Sat .RTime ⊊ Mod (AxiomSet .RTime)` — the narrowing is not Galois-closed | `FormalSystem.Metalogic.Independence.sat_rtime_ssubset_mod_axiomSet` | `FormalSystem/Metalogic/Independence/RationalWitness.lean` | RTime | pcq pinned:C14 |
 | `app:discrete` | `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)` — the narrowing is not Galois-closed | `FormalSystem.Metalogic.Independence.sat_ztime_ssubset_mod_axiomSet` | `FormalSystem/Metalogic/Independence/LexIntWitness.lean` | ZTime | pcq pinned:C14 |
-| `app:deterministic` | No set of `StarFormula`s defines `TaskFrame.Deterministic` | `FormalSystem.Metalogic.Independence.deterministic_not_starDefinable` | `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean` | — | pcq pinned:C14 |
+| `app:deterministic` | No set of `PlusFormula`s defines `TaskFrame.Deterministic` | `FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable` | `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean` | — | pcq pinned:C14 |
 
-### Conservativity — TM over BL, TM⁺ over TM, TM⋆ over TM⁺
+### Conservativity — TM⁻ over L⁻, TM over TM⁻, TM⁺ over TM
 
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
 |-------------|-----------|-----------|------|-------------|--------|
-| — | `TM ⊢ φ ⟹ TM⁺ ⊢ tr φ`, the backward bridge | `FormalSystem.Metalogic.Conservativity.derivable_translate` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | — | pcq pinned:C14 |
+| — | `TM⁻ ⊢ φ ⟹ TM ⊢ tr φ`, the backward bridge | `FormalSystem.Metalogic.Conservativity.derivable_translate` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | — | pcq pinned:C14 |
 | — | CEB row corollary of the backward bridge | `FormalSystem.Metalogic.Conservativity.ceb_backward` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | Base | pcq pinned:C14 |
 | — | CEF row corollary of the backward bridge | `FormalSystem.Metalogic.Conservativity.cef_backward` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | ZTime | pcq pinned:C14 |
 | — | CED row corollary of the backward bridge | `FormalSystem.Metalogic.Conservativity.ced_backward` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | Dense | pcq pinned:C14 |
 | — | CEC row corollary of the backward bridge | `FormalSystem.Metalogic.Conservativity.cec_backward` | `FormalSystem/Metalogic/Conservativity/Backward.lean` | RTime | pcq pinned:C14 |
 | — | Soundness of the H/G-fragment `TMFrag` | `FormalSystem.Metalogic.Conservativity.tmFrag_sound` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | — | pcq pinned:C14 |
 | — | Completeness of `TMFrag` at all four frame classes | `FormalSystem.Metalogic.Conservativity.tmFrag_complete` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | — | pcq pinned:C14 |
-| — | `TM ≤ TMFrag` everywhere | `FormalSystem.Metalogic.Conservativity.tm_le_tmFrag` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | — | pcq pinned:C14 |
-| — | `TM ⊊ TMFrag` at ℤ-time | `FormalSystem.Metalogic.Conservativity.tm_lt_tmFrag_ztime` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | ZTime | pcq pinned:C14 |
-| — | Proof-theoretic conservativity of TM⋆ over TM⁺, both directions, all four classes | `FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff` | `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` | — | pcq pinned:C14 |
-| — | Soundness of TM⋆ at every frame class | `FormalSystem.Metalogic.Conservativity.star_soundness_validIn` | `FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean` | — | pcq pinned:C14 |
-| — | Semantic conservativity of L⋆ over L⁺ | `FormalSystem.Semantics.starValidIn_ofFormula_iff` | `FormalSystem/Semantics/StarValidity.lean` | — | `[propext]` pinned:C14 |
+| — | `TM ≤ TMFrag` everywhere | `FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | — | pcq pinned:C14 |
+| — | `TM ⊊ TMFrag` at ℤ-time | `FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | ZTime | pcq pinned:C14 |
+| — | Proof-theoretic conservativity of TM⁺ over TM, both directions, all four classes | `FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff` | `FormalSystem/Metalogic/Conservativity/Plus/Forward.lean` | — | pcq pinned:C14 |
+| — | Soundness of TM⁺ at every frame class | `FormalSystem.Metalogic.Conservativity.plus_soundness_validIn` | `FormalSystem/Metalogic/Conservativity/Plus/PlusSoundness.lean` | — | pcq pinned:C14 |
+| — | Semantic conservativity of L⁺ over L | `FormalSystem.Semantics.plusValidIn_ofFormula_iff` | `FormalSystem/Semantics/PlusValidity.lean` | — | `[propext]` pinned:C14 |
 
 ### Base-language soundness
 
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
 |-------------|-----------|-----------|------|-------------|--------|
-| — | Soundness of BL against the native `BLTruthAt` semantics | `FormalSystem.Metalogic.bl_soundness` | `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` | Base | pcq pinned:C14 |
-| — | BL soundness over the dense class | `FormalSystem.Metalogic.bl_soundness_dense` | `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` | Dense | pcq pinned:C14 |
-| — | BL soundness over ℤ-time | `FormalSystem.Metalogic.bl_soundness_ztime` | `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` | ZTime | pcq pinned:C14 |
-| — | BL soundness over the dense Dedekind-complete class | `FormalSystem.Metalogic.bl_soundness_rtime` | `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` | RTime | pcq pinned:C14 |
-| — | Consistency of BL: `⊬ ⊥` | `FormalSystem.Metalogic.bl_not_derivable_nil_bot` | `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` | Base | pcq pinned:C14 |
+| — | Soundness of TM⁻ against the native `MinusTruthAt` semantics | `FormalSystem.Metalogic.minus_soundness` | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | Base | pcq pinned:C14 |
+| — | TM⁻ soundness over the dense class | `FormalSystem.Metalogic.minus_soundness_dense` | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | Dense | pcq pinned:C14 |
+| — | TM⁻ soundness over ℤ-time | `FormalSystem.Metalogic.minus_soundness_ztime` | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | ZTime | pcq pinned:C14 |
+| — | TM⁻ soundness over the dense Dedekind-complete class | `FormalSystem.Metalogic.minus_soundness_rtime` | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | RTime | pcq pinned:C14 |
+| — | Consistency of TM⁻: `⊬ ⊥` | `FormalSystem.Metalogic.minus_not_derivable_nil_bot` | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | Base | pcq pinned:C14 |
 
 ### Expressiveness
 
@@ -168,11 +168,11 @@ Three of the rows above are negative results, and they are easy to misread as un
 - **Strong completeness at `ZTime` and `RTime` is machine-refuted**, not open.
   `notStrongCompletenessZTime` and `notStrongCompletenessRTime` settle both negatively, which is
   why only the weak forms appear for those two classes.
-- **Forward proof-theoretic conservativity of TM⁺ over TM is refuted at `Base` and `ZTime`** and
+- **Forward proof-theoretic conservativity of TM over TM⁻ is refuted at `Base` and `ZTime`** and
   open at `Dense` and `RTime`. Both refutations are machine-checked:
-  `FormalSystem.Metalogic.tmCompleteBase_refuted`
-  (`FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`, over the native `BLFrame`
-  semantics) and `FormalSystem.Metalogic.tmCompleteZTime_refuted`
+  `FormalSystem.Metalogic.tmMinusCompleteBase_refuted`
+  (`FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`, over the native `MinusFrame`
+  semantics) and `FormalSystem.Metalogic.tmMinusCompleteZTime_refuted`
   (`FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean`).
   `FormalSystem/Metalogic/Conservativity.lean` carries the standing
   prohibition on attempting or `sorry`-ing it; that record is the authority on the CEB/CEF/CED/CEC

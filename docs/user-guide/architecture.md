@@ -894,7 +894,7 @@ completeness binder: its models are exactly `{ℤ, ℝ}` up to order-and-group i
 theory is `Th(ℤ) ∩ Th(ℝ)`. **No element of `FrameClass` picks that class out**, and none needs
 to -- it is the class of no paper system. Every row of `cor:tm-completeness` is covered here:
 the complete-but-discrete branch is exactly `ℤ` and is handled by `ZTime`, and the `ℝ`-time row,
-the paper's TM⁺_r, is `RTime`. Their *intersection* is not itself a frame class, and adding one
+the paper's TM_r, is `RTime`. Their *intersection* is not itself a frame class, and adding one
 would require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does not have. `ValidComplete`
 survives as a repository-only predicate -- the forgetful-bridge target and the subject of the
 discrete-or-dense dichotomy -- and is deliberately not a soundness target.
@@ -1079,7 +1079,7 @@ FormalSystem/                              # Main source directory
 │   ├── Axioms.lean                        # TM axiom schemata (45 constructors, 4 layers)
 │   ├── Derivable.lean                     # Derivability relation
 │   └── Derivation.lean                    # DerivationTree (7 inference rules)
-├── BaseLanguage/                          # Second object language (tense-primitive)
+├── MinusLanguage/                          # Second object language (tense-primitive)
 │   ├── Formula.lean
 │   ├── Axioms.lean
 │   ├── Derivation.lean
@@ -1090,9 +1090,9 @@ FormalSystem/                              # Main source directory
 │   ├── ConvexHistory.lean                  # Convex history definition
 │   ├── TaskModel.lean                     # Task model with valuation
 │   ├── Truth.lean                         # Truth evaluation
-│   ├── BLTruth.lean                       # Native truth evaluation for the base language
+│   ├── MinusTruth.lean                       # Native truth evaluation for the base language
 │   ├── Validity.lean                      # Validity and consequence
-│   ├── BLValidity.lean                    # Base-language validity predicates
+│   ├── MinusValidity.lean                    # Base-language validity predicates
 │   └── Extension/                         # Semantic extension layer
 ├── Metalogic/
 │   ├── Soundness.lean                     # Soundness theorem
@@ -1107,7 +1107,7 @@ FormalSystem/                              # Main source directory
 │   ├── Compactness.lean                   # Their ultraproduct discharge; Base/Dense strong completeness
 │   ├── DiscreteNonCompactness.lean        # Refutation of ZTime strong completeness
 │   ├── Conservativity.lean                # TM/TM+ backward bridge
-│   ├── BaseLanguageSoundness.lean         # BL soundness by composition; the truth-transfer bridge
+│   ├── MinusLanguageSoundness.lean         # BL soundness by composition; the truth-transfer bridge
 │   ├── Independence/                      # Independence results
 │   └── Decidability/                      # Tableau decision procedure
 ├── Theorems/

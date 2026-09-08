@@ -101,7 +101,7 @@ Distribution of the 174: 66 in `Theorems/ContextualProofs.lean`; 2 in
 
 Every rename preserved its declaration's signature exactly; only identifiers changed. The
 `DerivationTree`-valued declarations in particular were **not** restated at
-`BaseLanguage.Derivable`: a `Nonempty`-wrapped restatement under the same name is a strictly
+`MinusLanguage.Derivable`: a `Nonempty`-wrapped restatement under the same name is a strictly
 weaker statement, which is a fidelity violation rather than a naming fix.
 
 Alongside the earlier renames, the library root moved from `Theories/Bimodal/` to `FormalSystem/`
@@ -288,7 +288,7 @@ requiring camelCase tactic tokens, the seven exemptions above become renames.
 
 **It has already reopened twice.** This section declared `defsWithUnderscore` closed at 0; by the
 time the CI linter gate was turned on, 33 findings had accumulated again — 20 of them in
-`FormalSystem.BaseLanguage`, which did not exist when the original migration ran. They were
+`FormalSystem.MinusLanguage`, which did not exist when the original migration ran. They were
 grandfathered into `scripts/nolints.json` rather than fixed, which is precisely the silent-drift
 failure mode the section below on suppression files describes. The burndown re-closed the
 category at 0 and removed its rows from the JSON. The lesson was the operational one already
