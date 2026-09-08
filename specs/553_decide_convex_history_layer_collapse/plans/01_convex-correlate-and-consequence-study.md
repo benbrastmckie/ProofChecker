@@ -402,14 +402,14 @@ recording a guess.
 
 ---
 
-### Phase 5: The categorical correlate, both directions [NOT STARTED]
+### Phase 5: The categorical correlate, both directions [COMPLETED]
 
 **Goal**: Map the paper's `app:Structure` onto the repository's existing types, and — the half
 the User focus asks for that the paper does not supply — record what this repository's proof
 theory, semantics and decidability results teach *about* that categorical structure.
 
 **Tasks**:
-- [ ] Write §5.1 of the report: a dictionary from `app:Structure` to the tree, entry by entry.
+- [x] Write §5.1 of the report: a dictionary from `app:Structure` to the tree, entry by entry.
       Seed entries established during planning, to be verified and extended: `Tr p` ↔
       `ConvexHistory.timeShift` (`Semantics/ConvexHistory.lean:330`); two-piece gluing at a
       shared time ↔ `StarPasting.paste` (`Semantics/StarPasting.lean:109`), currently
@@ -417,11 +417,11 @@ theory, semantics and decidability results teach *about* that categorical struct
       `app:presheaf-dictionary` uses for its *Totality* and *Directed Gluing* clauses;
       `H_F ≅ lim Beh(F)(2x)` ↔ `TaskFrame.HF` (`Semantics/ConvexHistory.lean:450`). For each
       entry state what exists, what is total-only, and what is absent.
-- [ ] Write `specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`:
+- [x] Write `specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`:
       the interval-domain convex history (`domain := fun z => 0 ≤ z ∧ z ≤ ℓ`), the restriction
       along `Tr p`, presheaf functoriality (identity and composition), and the *Germs* clause
       (`Beh(F)(0) ≅ W`). Stop there — see Scope Hypothesis.
-- [ ] Write §5.2, the reverse direction, developing at least these three connections and
+- [x] Write §5.2, the reverse direction, developing at least these three connections and
       stating for each what is established, what is conjectural, and what a follow-on task would
       have to prove:
       1. **Determinism ↔ injectivity of restriction.** `app:presheaf-dictionary`'s *Determinism*
@@ -445,7 +445,7 @@ theory, semantics and decidability results teach *about* that categorical struct
          sheaf-theoretic locality result about the logic. State the conjecture precisely and
          check the two easy directions in the probe if they fit in budget; otherwise state it
          and hand it to a proposed task.
-- [ ] Note explicitly that `app:Structure` carries a `% TODO: review in full` marker in the
+- [x] Note explicitly that `app:Structure` carries a `% TODO: review in full` marker in the
       paper source, so any formalization proposed here should be flagged as tracking material
       the author has not finished reviewing.
 

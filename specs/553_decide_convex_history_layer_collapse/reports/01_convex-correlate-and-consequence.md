@@ -596,3 +596,174 @@ of TM in a principled direction, it is the accidental reading that results from 
 without replacing it. It should be eliminated, not developed. That is a direct argument for
 either retargeting the index to a total one (removing the possibility of C2 arising) or adding
 C3's side condition (making the bounded case coherent) — and §6 costs both.
+
+---
+
+## §5. The categorical correlate, both directions
+
+Machine-checked evidence:
+`specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`, compiled
+sorry-free with
+
+```
+lake env lean specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean
+```
+
+The paper's `app:Structure` runs from `def:task-topology` to `cor:path-fibration` and carries a
+`% TODO: review in full` marker in the LaTeX source. **Anything proposed here tracks material the
+author has not finished reviewing**, and any follow-on task should be flagged accordingly.
+
+### §5.1 The dictionary: `app:Structure` → the tree
+
+One row per named item of `app:Structure`, in the paper's order.
+
+| Paper item | Repository correlate | Status |
+|---|---|---|
+| `def:task-topology` (basic opens `(w)_x`, `T_F`, closure, T1, R0) | — | **absent**. Nothing in `FormalSystem/` builds a topology on `WorldState`. The *Limit* frame field (`TaskFrame`'s `limit`) is the analytic input its T1 proof uses, and it is present. |
+| `app:topology-t1` | — | **absent** (its input `lem:nullity` = `F.nullity_identity` and `limit` are present) |
+| `app:topology-r0` | — | **absent** (immediate from T1) |
+| `app:gluing` (two-piece gluing at a shared time, arbitrary convex domains) | `StarPasting.paste` (`Semantics/StarPasting.lean:109`) and its seam argument `paste_rel_le_lt` (`:83`) | **present, total-only**. `paste` glues two TOTAL histories at a time; `app:gluing` glues two arbitrary convex histories on a nonempty overlap. The mathematics is the same *Compositionality* step. Probe 04's `glue_seam` re-derives it at the interval site to measure the gap. |
+| `def:interval-site`: *Duration Monoid* `BD⁺` | — | **absent** |
+| `def:interval-site`: *Interval* `[p, q]` | probe 04's `Beh`'s domain predicate; nothing in the library | **absent** as a named notion |
+| `def:interval-site`: *Interval Category* `Int(D)`, translations `Tr p` | `ConvexHistory.timeShift` (`Semantics/ConvexHistory.lean:330`) is the ACTION of `Tr p` on histories; `ShiftSet.ts_zero` (`:299`) and `ts_add` (`:306`) are its functoriality laws | **present in action, absent as a category**. `ts_zero`/`ts_add` are literally `Tr 0 = id` and `Tr p ∘ Tr p' = Tr (p+p')`, proved, on arbitrary convex histories. |
+| `def:interval-site`: *Presheaf*, *Johnstone Coverage*, *Sheaf* | — | **absent** |
+| `def:behavior-presheaf`: `Beh(F)(ℓ)` and its restrictions | probe 04's `Beh` + `restrict` + `restrict_id` + `restrict_comp` | **absent from the library; established in this task's probe.** |
+| `def:behavior-presheaf`: *Reflection* `τ^r`, *Converse Frame* `F⁻`, *Reflection Automorphism* | the converse convention is a frame field (`FrameOver.converse`); the past/future duality metarule TD is `Metalogic/`'s `thm:TD-valid` correlate | **present as a duality, absent as a natural isomorphism** |
+| `def:twisted-arrow`, `lem:interval-twisted-arrow` | — | **absent** |
+| `app:presheaf-dictionary`: *Germs* `Beh(F)(0) ≅ W` | probe 04's `germ` / `ofGerm` / `germ_ofGerm` / `ofGerm_germ` | **absent from the library; PROVED in this task's probe**, using `F.nullity_identity` exactly as the paper's proof does |
+| `app:presheaf-dictionary`: *Sheaf* | `glue_seam` (probe 04) is its composition step; the assembly is not done | **composition step proved; clause open** |
+| `app:presheaf-dictionary`: *Directed Gluing* | `Semantics/Extension/` (`thm:extension`) is the analytic input the paper's proof cites, and it is fully proved | **input present, clause absent** |
+| `app:presheaf-dictionary`: *Totality* (restrictions are surjective) | same — the paper's proof is "extend by `thm:extension`, restrict" | **input present, clause absent** |
+| `app:presheaf-dictionary`: *Possible Worlds* `H_F ≅ lim Beh(F)(2x)` | `TaskFrame.HF` (`Semantics/ConvexHistory.lean:450`); over `ℤ`, `FrameOver.mem_HF_iff_adjacent` (`Semantics/IntNormalForm.lean:337`) identifies `H_F` with the bi-infinite step paths | **`H_F` present; the limit presentation absent** |
+| `app:presheaf-dictionary`: *Determinism* (⟺ injectivity of every restriction) | `Semantics/StarDeterminism.lean` — `states_eq_of_deterministic` (the singleton bridge), `stab_iff_of_deterministic`, `determined_of_deterministic` | **present in a different idiom.** `states_eq_of_deterministic` — "two total histories agreeing at one time agree everywhere" — is *exactly* injectivity of restriction, stated for total histories instead of sections. |
+| `app:presheaf-dictionary`: *Reflection* (natural isomorphism) | — | **absent** |
+| `def:conduche`, `fact:conduche-equivalence` | — | **absent** |
+| `def:path-category` `Path(F)` | — | **absent** as a category |
+| `cor:path-fibration`, `D = ℤ` clause (sections = paths; `Path(F)` free) | `FrameOver.mem_HF_iff_adjacent`; the whole of `Metalogic/Decidability/BiLasso/` | **present as an effective analogue**, see §5.2.2 |
+
+**The headline of the dictionary.** Of the appendix's seven `app:presheaf-dictionary` clauses,
+two (*Germs*, and the composition step of *Sheaf*) are now machine-checked in this task's probe;
+two more (*Directed Gluing*, *Totality*) have their entire analytic input already proved in the
+tree as `thm:extension`; one (*Determinism*) exists in a different idiom; and two (*Possible
+Worlds*, *Reflection*) have their objects present but not their categorical presentation. The
+site itself — `Int(D)`, `BD⁺`, the twisted-arrow category, the Johnstone coverage — is genuinely
+absent, but it is also the cheapest part: `ts_zero` and `ts_add` are already the functoriality
+laws, proved.
+
+This directly corrects §1.4's inference. A `presheaf`-grep of 0 is a fact about *naming*.
+
+### §5.2 The other direction: what this repository teaches about the categorical structure
+
+The User focus asks for this half explicitly, and the paper does not supply it. Three
+connections, each with what is established and what is conjectural stated separately.
+
+#### §5.2.1 Determinism ⟺ injectivity, and a modal-formula characterization of separatedness
+
+**Established (paper side).** `app:presheaf-dictionary`'s *Determinism* clause: `F` is
+`Deterministic` iff every restriction map of `Beh(F)` is injective.
+
+**Established (repository side).** `Semantics/StarDeterminism.lean`'s
+`states_eq_of_deterministic` is the singleton bridge: two total histories of a deterministic
+frame that agree on their world state at one time agree at *every* time. Read presheaf-side, that
+is precisely "restriction to a germ is injective on the sections through it". The module also
+proves `determined_of_deterministic` — the object-language schema *Determined* (`φ → ⊡φ`, with
+`⊡` the stability modal) is frame-valid on every deterministic frame — and it records, with
+citations, that the converse fails: the drift frame `F°` validates *Determined* without being
+deterministic (`Metalogic/Independence/`).
+
+**The connection, and it is new.** Composing the two gives a *modal-formula* statement about a
+*categorical* property: on frames where the object-language schema *Determined* is valid, the
+behavior presheaf is separated. And the repository's own independence result says the converse
+fails, so:
+
+> **`Beh(F)` separated is strictly stronger than the validity of *Determined* on `F`.** The
+> object language can express a sufficient condition for the presheaf's separatedness but not a
+> necessary and sufficient one, and the repository already carries the countermodel that
+> establishes the gap.
+
+That is a fact about the *category theory* that came out of the proof theory, not the other way
+round, and it is exactly the kind of thing the User focus asks for. **Conjectural**: whether some
+*other* formula of `BL⋆` characterizes separatedness exactly. `StarDeterminism.lean`'s own
+"choice-dependence tracks a direction" note is the relevant obstruction: the genuine converse of
+the bridge needs `thm:extension` and hence Zorn, which suggests separatedness is not
+first-order-in-the-object-language definable. **A follow-on task would have to prove or refute
+that**; nothing here settles it.
+
+#### §5.2.2 BiLasso as the effective content of `cor:path-fibration`
+
+**Established (paper side).** `cor:path-fibration`: when `D = ℤ`, the sections of `Beh(F)` over
+`ℓ` are the paths of length `ℓ` in the graph `⟨W, ⇒₁⟩`, gluing is concatenation, and `Path(F)` is
+the free category on that graph. The paper's line-1773 footnote adds the effective half: when `W`
+is finite, every bounded convex history extends to a possible world that is *eventually periodic
+in both directions* — a finite prefix plus a finite cycle each way — "licensing a finite
+certificate that a given bounded history is a fragment of a possible world".
+
+**Established (repository side).** `FrameOver.mem_HF_iff_adjacent`
+(`Semantics/IntNormalForm.lean:337`) proves `H_F` over `ℤ` is exactly the bi-infinite step paths
+— the `H_F` half of the correspondence, machine-checked. `Metalogic/Decidability/BiLasso/Basic.lean`
+defines a `BiLasso` as three lists `back`/`mid`/`fwd` decoded to a bi-infinite path: a finite
+cycle backward, a finite window, a finite cycle forward. `BiLasso/Agreement.lean`'s
+`extends_of_agrees` (`:112`) proves that a placed bi-lasso agreeing with a bounded partial history
+on that history's own domain **extends** it in the paper's sense.
+
+**The connection.** `extends_of_agrees` **is** the paper's line-1773 footnote, formalized: the
+bi-lasso is the finite certificate, and the theorem is that the certificate is sound. The paper
+states the fact and cites Lind and Marcus; the repository proves it and ships a decision
+procedure over it.
+
+**What that teaches about the categorical statement.** `cor:path-fibration` says `Path(F)` is the
+free category on `⟨W, ⇒₁⟩`, whose morphisms are the finite paths. `H_F` is the limit of the
+sections (the *Possible Worlds* clause). The BiLasso layer says something the categorical
+statement does not: over a *finite* `W`, the limit is computed by *finitely presentable* elements
+— every point of `lim Beh(F)(2x)` is reachable as a bi-lasso, and membership of a section in the
+image of the limit projection is decidable. In shift-of-finite-type language (which the paper's
+line 1770 uses): `H_F` is a shift of finite type, and its points of interest are the eventually
+periodic ones.
+
+**Where it breaks, stated honestly.** The correspondence is about *paths*, not about *truth*.
+`BiLasso/Annotation.lean` records a machine-checked refutation: formula truth along a bi-lasso is
+**not** a function of the state at a time and is **not** periodic in the time, even though the
+state sequence is — the witness family is `prevⁿ p`, whose truth set along a fixed short lasso is
+`[n, ∞)`. So the free-category presentation of `Path(F)` gives the *syntax* of the model for free
+and gives *nothing* about the semantics of the tense language over it; that is why the BiLasso
+layer needs annotations at all, and why `Assembly.lean`'s finite-model hypothesis `fmp` is still
+open. **This is the sharpest thing this repository has to say back to `cor:path-fibration`**: the
+categorical presentation is a statement about the underlying graph, and the logic does not
+factor through it.
+
+#### §5.2.3 A restriction-invariance fragment (conjecture, with the two easy directions settled)
+
+**The conjecture.** Under C4 — evaluation at interval sections — truth at a point of a section
+is preserved under restriction to smaller subintervals containing that point, for some syntactic
+fragment of `BL` and not for others.
+
+**Settled here, in the negative direction.** Probe 03's germ theorems already decide the two
+extremes, and they decide them more sharply than the conjecture anticipated:
+
+- **Atoms are restriction-invariant.** The atom clause reads `τ.states t ht`, and restriction
+  does not change the value at a retained time. Immediate.
+- **`□` is restriction-invariant** — indeed *index-independent* (`truthC3_box_indep`, probe 02).
+  So it is trivially invariant, but for a reason stronger than locality: it does not consult the
+  index at all.
+- **`F` and `P` are NOT even co-monotone in the way the conjecture guessed.** The conjecture said
+  they should be "co-monotone" (preserved under *enlarging* the domain). That is right for `F`/`P`
+  read existentially — a witness in a subinterval survives in a superinterval — but probe 03's
+  `germ_untl_false` shows the failure is total in the other direction: restricting to the germ
+  makes *every* binary tense formula false, so no `U`/`S` formula whatever is
+  restriction-invariant downward.
+- **`G` and `H` are anti-monotone**, dually: they are vacuously true at the germ and can only
+  lose truth as the domain grows.
+
+**So the fragment is exactly the `□`-and-atoms fragment plus Boolean combinations**, i.e. the
+tense-free fragment. That is a *complete* answer to the conjecture rather than a partial one, and
+it is a negative one: there is no interesting locality result to be had at C4, because the germ
+is a legal restriction and it kills the entire tense language.
+
+**What that teaches about the sheaf.** The interesting reformulation is not "which formulas are
+local" but **"which formulas are germ-determined"** — determined by the section's germs alone.
+Atoms and `□` are; nothing else is. Read sheaf-theoretically, `BL`'s tense fragment is precisely
+the part of the language that is *not* a section of a sheaf of truth values over the interval
+site, and the failure is detected at the coverage's germ objects. That is a clean statement, it is
+the paper's own *Sheaf* clause read backwards through the logic, and it is a genuine contribution
+from this side to that one. **It is stated here as a formulation, not proved as a theorem**;
+§7.3 proposes it.
