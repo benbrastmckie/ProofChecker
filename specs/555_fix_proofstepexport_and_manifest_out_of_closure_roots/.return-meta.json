@@ -1,0 +1,21 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md",
+      "summary": "Diagnoses ProofStepExport.lean's elaboration failure (3 reported errors mask 873 more), records an end-to-end verified 77-line repair, maps the lean_exe out-of-closure gate topology, and shows why the module-invariants manifest is the wrong mechanism."
+    },
+    {
+      "type": "reference",
+      "path": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/verified-repair.patch",
+      "summary": "Verified unified diff for FormalSystem/Automation/ProofStepExport.lean: zero elaboration errors, lake exe proof_extractor processes 487/487 theorems. git apply --check clean."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788880178_8201de_555",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}

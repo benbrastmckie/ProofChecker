@@ -40,7 +40,7 @@ next_project_number: 559
 
 ### Code Quality
 
-555 [NOT STARTED] — Fix ProofStepExport.lean elaboration failure and bring out-of-clo
+555 [RESEARCHED] — Fix ProofStepExport.lean elaboration failure and bring out-of-clo
   └─ 557 [NOT STARTED] — Burn down snake_case public defs that the defsWithUnderscore gate
 
 ### Dataset Enhancement
@@ -142,10 +142,11 @@ next_project_number: 559
 ---
 
 ### 555. Fix proofstepexport and manifest out of closure roots
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: code-quality
 - **Dependencies**: None
+- **Research**: [555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md]
 
 **Description**: Fix ProofStepExport.lean elaboration failure and bring out-of-closure lean_exe roots under compile checking. MEASURED STATE: FormalSystem/Automation/ProofStepExport.lean does not elaborate -- three `Application type mismatch` errors at lines 1479, 1496 and 1497. `@b_combinator_weakened`, `@theorem_flip_weakened` and `@theorem_app1_weakened` are called as `(A := p) (B := q) ... s` with a positional Formula argument, but under `@` each declaration's FIRST parameter is the implicit `{fc : FrameClass}`, so the positional argument lands in the wrong slot. Confirmed PRE-EXISTING (not introduced by the Init-import adoption): stashing the adoption import lines and rebuilding this module alone reproduces byte-identical errors. WHY IT WENT UNNOTICED: the module is the `lake exe proof_extractor` root, sits OUTSIDE the FormalSystem root closure (so neither `lake build` nor `lake exe checkInitImports` ever elaborates it) AND is absent from scripts/module-invariants-manifest.txt, so invariant C6 does not compile-check it either -- it has been failing invisibly with no gate able to observe it. WORK: (1) repair the three call sites, either by supplying the implicit `fc` explicitly or by dropping `@` in favour of named arguments, whichever preserves the intended frame class; (2) verify `lake exe proof_extractor` builds and runs; (3) decide and implement how out-of-closure `lean_exe` roots are brought under continuous compile checking -- add ProofStepExport (and any sibling out-of-closure root) to scripts/module-invariants-manifest.txt, or extend the gate set so no `lean_exe` root can fail silently again; (4) add the negative test that docs/development/MODULE_INVARIANTS.md mandates for any new or widened invariant. ACCEPTANCE: ProofStepExport.lean elaborates with zero errors; `lake exe proof_extractor` succeeds; a deliberately reintroduced break in an out-of-closure root is CAUGHT by the gate set (observed FAIL, then PASS after restore); `lake build` green and `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED. DOWNSTREAM CONSEQUENCE (measured, plan for it): FormalSystem/Theorems/ContextualProofs.lean is imported by NOTHING except this broken module, so it too is outside the build and lint closure. Bringing ProofStepExport under compile checking therefore also pulls ContextualProofs in, exposing its 66 public snake_case defs -- including the very b_combinator_weakened, theorem_flip_weakened and theorem_app1_weakened this task repairs the call sites of -- to Mathlib defsWithUnderscore for the first time. Expect the linter to go from 0 findings to 66 the moment this lands. That is correct and desirable (it is the debt becoming visible, not new debt), but it means this task must either land together with the sibling rename burndown or explicitly stage the exposure so CI does not break in between. Sequence the two deliberately rather than discovering the interaction mid-implementation.
 
