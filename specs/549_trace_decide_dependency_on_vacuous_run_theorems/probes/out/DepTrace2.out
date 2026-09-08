@@ -1,8 +1,0 @@
-decide reaches FormalSystem.Metalogic.Decidability.buildTableauAt? false  (exists: true)
-decide reaches FormalSystem.Metalogic.Decidability.buildTableau? true  (exists: true)
-decide reaches FormalSystem.Metalogic.Decidability.expandBranchWithFuel? true  (exists: true)
-decide reaches FormalSystem.Metalogic.Decidability.saturateBlocked? true  (exists: true)
-decide reaches FormalSystem.Metalogic.Decidability.mintAwareFuelAt? false  (exists: true)
-decide reaches FormalSystem.Metalogic.Decidability.mintAwareFuel? false  (exists: true)
-constants from MintBound reached by decide: 0
-DecisionProcedure module idx: some (3724), MintBound idx: 3755

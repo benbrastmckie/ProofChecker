@@ -1,4 +1,0 @@
-import FormalSystem.Metalogic.Decidability
-#print axioms FormalSystem.Metalogic.Decidability.decide
-#print axioms FormalSystem.Metalogic.Decidability.sound_of_isValid
-#print axioms FormalSystem.Metalogic.Decidability.buildTableauAt_isSome_of_budget_fixed_run

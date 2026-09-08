@@ -1,3 +1,0 @@
-FormalSystem.Metalogic.Decidability.buildTableauAt_isSome_of_budget_fixed_run exists under `import FormalSystem`: true
-FormalSystem.Metalogic.Decidability.buildTableauAt_isSome_of_budget_run exists under `import FormalSystem`: true
-FormalSystem.Metalogic.Decidability.decide exists under `import FormalSystem`: true

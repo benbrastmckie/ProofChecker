@@ -1,6 +1,0 @@
-FormalSystem.Metalogic.Decidability.decide: closure = 1252 consts; hits = []
-FormalSystem.Metalogic.Decidability.decideAuto: closure = 1338 consts; hits = []
-FormalSystem.Metalogic.Decidability.decideBlocking: closure = 1260 consts; hits = []
-FormalSystem.Metalogic.Decidability.isValid: closure = 1259 consts; hits = []
-FormalSystem.Metalogic.Decidability.isSatisfiable: closure = 1260 consts; hits = []
-FormalSystem.Metalogic.Decidability.sound_of_isValid: closure = 294 consts; hits = []
