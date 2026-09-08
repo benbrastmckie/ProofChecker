@@ -2,7 +2,7 @@
 
 - **Task**: 553 - Decide convex history layer collapse (reframed: develop the categorical
   correlate of convex histories and the alternative consequence relations)
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 12 hours
 - **Dependencies**: 552 (`align_history_vocabulary_with_paper`) — **satisfied**, status
   `completed`; `FormalSystem/Semantics/ConvexHistory.lean` exists and `ConvexHistory` is the
@@ -181,28 +181,28 @@ appends §2 after Phase 1 commits, so the two do not contend for the same region
 
 ---
 
-### Phase 1: Evidence audit and convex-consumer hunt [NOT STARTED]
+### Phase 1: Evidence audit and convex-consumer hunt [COMPLETED]
 
 **Goal**: Settle question (a). Verify or correct each of the description's four evidence claims
 against the current tree, and determine whether any site genuinely requires a convex, non-total,
 non-partial history.
 
 **Tasks**:
-- [ ] Create `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md`
+- [x] Create `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md`
       with a §0 scope/method note and a §1 "Evidence audit" section.
-- [ ] Re-measure each claim and record measured-vs-claimed: occurrences of `IsTotal`, `.domain`,
+- [x] Re-measure each claim and record measured-vs-claimed: occurrences of `IsTotal`, `.domain`,
       `ConvexHistory`, and `.convex`; the count of non-`fun _ => True` `domain` fields at the
       convex layer; the bundled/predicate bridge inventory named in claim 3.
-- [ ] Enumerate every construction of a `ConvexHistory` value in the tree and classify each as
+- [x] Enumerate every construction of a `ConvexHistory` value in the tree and classify each as
       total-by-construction, generic transport, or genuinely bounded. `ConvexHistory.ofTotal`
       (`Semantics/ConvexHistory.lean:178`) and its listed twelve unmigrated skeleton sites are a
       starting index, not the whole set.
-- [ ] Hunt the named surfaces for a genuine bounded consumer: `Semantics/StarPasting.lean`,
+- [x] Hunt the named surfaces for a genuine bounded consumer: `Semantics/StarPasting.lean`,
       `Semantics/ShiftSet.lean`, `Semantics/Ultraproduct/`, `Metalogic/Decidability/BiLasso/`,
       `Metalogic/WeakCanonical/`, `Semantics/IntTransfer.lean`, and `FormalSystem/Boneyard/`.
       For `Boneyard/`, additionally check whether any live task in `specs/state.json` names a
       revival of the subtree in question.
-- [ ] Record, for each of the four claims, one of: CONFIRMED, CORRECTED (with the correction),
+- [x] Record, for each of the four claims, one of: CONFIRMED, CORRECTED (with the correction),
       or REFUTED (with the counter-evidence).
 
 **Timing**: 1.5 hours
