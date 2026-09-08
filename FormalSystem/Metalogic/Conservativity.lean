@@ -9,6 +9,7 @@ import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
 import FormalSystem.Metalogic.Conservativity.TMCompletenessReduction
 import FormalSystem.Metalogic.Conservativity.SpWitness
 import FormalSystem.Metalogic.Conservativity.Z1Countermodel
+import FormalSystem.Metalogic.Conservativity.SpCountermodel
 import FormalSystem.Metalogic.Conservativity.Fragment
 import FormalSystem.Metalogic.Conservativity.FragmentCompactness
 import FormalSystem.Metalogic.Conservativity.Star
@@ -121,7 +122,7 @@ syntactic identity. It is not, and cannot be: `Formula.someFuture` is a top-leve
 by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. The bridge
 `BaseLanguage.notGNotImpF` closes the gap derivably instead — see `z1_translate`.
 
-## CEB / `FrameClass.Base` — refuted in the source; TM⁺ half machine-checked, TM half not machine-checkable here
+## CEB / `FrameClass.Base` — refuted, and **both halves are now machine-checked**
 
 The source's witness is `(Sp) := □φ_DF ∨ □ψ_DN`. Its TM⁺ derivation uses TMP-NB (`X⊤ → □X⊤`)
 and M5, and **both are available at `FrameClass.Base` in this repository**:
@@ -138,16 +139,33 @@ reason (`SpWitness.blValid_sp`, from `Semantics/DurationClassification.lean`'s
 `duration_dense_or_least_pos` dichotomy), and composing with `BXCanonical.completeness` yields
 `⊢[Base] tr (Sp φ ψ)` (`SpWitness.sp_translate`) with **no appeal to TMP-NB or M5 at all**.
 
-Unlike CEF, the failing half — no instance of `(Sp)` is a TM-theorem, by soundness on a
-disjoint two-fibre structure (a `ℤ`-fibre and an `ℝ`-fibre with `□` read globally over both) —
-is **not** merely unbuilt but **unavailable in principle** with the tree's current semantics
-layer: `BLTruthAt`/`bl_soundness` are `TaskFrame`-bound, and `Metalogic/Conservativity/SpWitness.lean`'s own
-un-boxed sharpening (report §4.2) shows why a `TaskFrame`-level argument cannot reach the
-two-fibre case — `(Sp)`'s un-boxed dichotomy is valid on *every* strict linear order, so what a
-CEB countermodel needs is a structure where `□` sees *different* histories with
-differently-shaped time, which no single `TaskFrame` (one shared `Duration`) can express. Closing
-CEB needs a frame notion outside `TaskFrame` plus a *native* (non-composed) BL soundness theorem
-over it — proposed as a follow-up task, not attempted here (see Phase 8's completion note).
+The failing half — the schema `(Sp)` is not a TM-theorem — is **now machine-checked** in
+`Metalogic/Conservativity/SpCountermodel.lean`: `not_derivable_sp` at the atomic instance, and
+its corollary `tmCompleteBase_refuted : ¬ TMCompleteBase`, the `.Base` mirror of
+`Z1Countermodel.tmCompleteZTime_refuted`.
+
+The two-fibre description this section previously gave as a wish list is what the implementation
+vindicates, and it is the *explanation* of why the result took the shape it did. The refutation
+cannot live on a `TaskFrame`: `Metalogic/Conservativity/SpWitness.lean`'s un-boxed sharpening
+(report §4.2) shows `(Sp)`'s un-boxed dichotomy is valid on *every* strict linear order, so a
+countermodel needs a structure where `□` sees differently-shaped time, which no single
+`TaskFrame` (one shared `Duration`) can express. Neither can it be reached by composition through
+`tr`: **TM⁺ is unsound on the two-fibre class**, so the `translate`-then-`soundness` route this
+module supplies is unavailable in principle for this half. What closed it instead is exactly what
+this section previously said was missing — a frame notion outside `TaskFrame`
+(`Semantics/BLFrame.lean`'s `BLFrame`: a nonempty point set with an unbounded, transitive,
+irreflexive, forward- and backward-linear order and **no group structure**, with `□` read as the
+universal modality over the points) plus a *native*, non-composed BL soundness theorem over it
+(`blFrameValid_of_derivation`, by recursion on `BaseLanguage.DerivationTree`, with
+`Semantics.truth_swap` discharging the temporal-duality rule). The countermodel is the disjoint
+sum `ℤ ⊕ ℝ` — a discrete fibre refuting the `DN` disjunct and a dense-complete fibre refuting the
+`DF` disjunct, both `□`-accessible. Note that the native soundness theorem is about **TM**
+(`BaseLanguage.DerivationTree`), never about TM⁺; the two must not be blurred.
+
+One caveat is recorded so it is never re-attempted: the *universally quantified* reading — "no
+instance of `(Sp)` is a TM-theorem" — is **false**. `□(DF ⊤)` holds on every `BLFrame` (its
+consequent follows from `no_max`), so `Sp ⊤ ψ` is not refuted. The claim is schema-level,
+witnessed by the atomic instance, which is all a completeness refutation needs.
 
 ## The Kripke-level answer to "what is TM complete for" (report §5(i)) — principled, unformalized
 
@@ -229,17 +247,23 @@ longer accurate for either row:
   (`Semantics/LexCarrier.lean`, `Metalogic/Conservativity/Z1Countermodel.lean`). **Both are now landed**: `z1_translate`
   below is the TM⁺_z half, and `Z1Countermodel.not_bl_derivable_z1` is the TM_z half — the
   refutation is machine-checked, not merely documented.
-- **CEB (`FrameClass.Base`) — still not machine-checkable in this tree, and not close.** The
-  missing prerequisite is a **frame notion outside `TaskFrame`** plus a **native** (non-composed)
-  BL soundness theorem over it. `BLTruthAt`/`bl_soundness` are `TaskFrame`-bound and cannot
-  supply this: `(Sp) := □(DF φ) ∨ □(DN ψ)` — the reconstructed witness, `Metalogic/Conservativity/SpWitness.lean`'s
-  `blValid_sp`/`sp_translate` — is BL-valid on *every* task frame (a theorem now, not a
-  conjecture), and TM⁺ is *unsound* on the two-fibre class the source's refutation needs, so the
-  `translate`-then-`soundness` composition this module supplies is unavailable **in principle**,
-  not merely unbuilt. See `Metalogic/Conservativity/SpWitness.lean`'s module docstring for the un-boxed
-  sharpening (report §4.2) that makes this precise: `□` is what turns the dichotomy into a
-  frame-uniform fact, and a CEB refutation needs a structure where different histories see
-  differently-shaped time.
+- **CEB (`FrameClass.Base`) — done, both halves machine-checked.** The missing prerequisite was
+  a **frame notion outside `TaskFrame`** plus a **native** (non-composed) BL soundness theorem
+  over it, and both are now landed: `Semantics/BLFrame.lean` supplies `BLFrame`/`BLFrameTruth`/
+  `BLFrameValid` and the order-reversal transfer lemma `truth_swap`, and
+  `Metalogic/Conservativity/SpCountermodel.lean` supplies
+  `blFrameValid_of_derivation` together with the `ℤ ⊕ ℝ` countermodel. The TM⁺
+  half is `Metalogic/Conservativity/SpWitness.lean`'s `blValid_sp`/`sp_translate`; the TM half is
+  `not_derivable_sp`, and the two compose into
+  `tmCompleteBase_refuted`.
+  Why the composition route this module supplies could **not** serve here, in one line:
+  `BLTruthAt`/`bl_soundness` are `TaskFrame`-bound, `(Sp) := □(DF φ) ∨ □(DN ψ)` is BL-valid on
+  *every* task frame, and **TM⁺ is unsound on the two-fibre class** — so
+  `translate`-then-`soundness` was unavailable in principle, and a native soundness theorem was
+  mandatory rather than merely convenient. See `Metalogic/Conservativity/SpWitness.lean`'s module
+  docstring for the un-boxed sharpening (report §4.2) that makes this precise: `□` is what turns
+  the dichotomy into a frame-uniform fact, and a CEB refutation needs a structure where different
+  histories see differently-shaped time.
 
 The **forward direction remains refuted** at both rows and must still not be stated or
 `sorry`-ed here — nothing about the CEF closure changes that; it closes CEF's specific
@@ -300,7 +324,7 @@ truth-transfer bridge `truthAt_tr`. This module and everything under
 
 **This file is the aggregator, and it holds no declarations.** It carries the narrative above —
 the forward-conservativity prohibition, the paper-anchor record, and the per-row status of CEB
-and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺-vs-TM⋆ story:
+and CEF — and re-exports the nine modules that make up the BL-vs-TM and TM⁺-vs-TM⋆ story:
 
 | Module | Contents |
 |--------|----------|
@@ -309,6 +333,7 @@ and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺
 | `Conservativity/TMCompletenessReduction.lean` | `TMComplete` / `Forward` and their equivalence |
 | `Conservativity/SpWitness.lean` | the reconstructed `(Sp)` witness for the CEB row |
 | `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteZTime_refuted` |
+| `Conservativity/SpCountermodel.lean` | `not_derivable_sp` and `tmCompleteBase_refuted`, over the native `BLFrame` semantics |
 | `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.ZTime` |
 | `Conservativity/FragmentCompactness.lean` | `BLCompact`, `blCompactBase`, `blCompactDense` — base-language compactness transferred along `tr` |
 | `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`starDerivable_ofFormula_iff`) |
@@ -317,8 +342,11 @@ and CEF — and re-exports the eight modules that make up the BL-vs-TM and TM⁺
 `FormalSystem.Metalogic.Conservativity.Backward` directly; importing the aggregator from a child
 is an import cycle, because the aggregator imports every child. The chain the children preserve
 is `Backward ← BaseLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ←
-FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness` and the
-`Star/` chain `Atomization ← AxiomValidity ← StarSoundness ← Forward` hanging off `Fragment`.
+FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness`,
+`SpCountermodel` hanging off `SpWitness` and `TMCompletenessReduction` jointly (it also imports
+`Semantics/BLFrame.lean`, which is outside this directory and reaches nothing in `ProofSystem/`),
+and the `Star/` chain `Atomization ← AxiomValidity ← StarSoundness ← Forward` hanging off
+`Fragment`.
 
 The namespace is unchanged by the reorganization: `Backward.lean` still opens
 `namespace FormalSystem.Metalogic.Conservativity`, so every declaration keeps its

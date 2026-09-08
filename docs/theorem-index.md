@@ -169,7 +169,12 @@ Three of the rows above are negative results, and they are easy to misread as un
   `notStrongCompletenessZTime` and `notStrongCompletenessRTime` settle both negatively, which is
   why only the weak forms appear for those two classes.
 - **Forward proof-theoretic conservativity of TM⁺ over TM is refuted at `Base` and `ZTime`** and
-  open at `Dense` and `RTime`. `FormalSystem/Metalogic/Conservativity.lean` carries the standing
+  open at `Dense` and `RTime`. Both refutations are machine-checked:
+  `FormalSystem.Metalogic.tmCompleteBase_refuted`
+  (`FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`, over the native `BLFrame`
+  semantics) and `FormalSystem.Metalogic.tmCompleteZTime_refuted`
+  (`FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean`).
+  `FormalSystem/Metalogic/Conservativity.lean` carries the standing
   prohibition on attempting or `sorry`-ing it; that record is the authority on the CEB/CEF/CED/CEC
   rows, this page on their per-theorem status.
 - **The `Sat` narrowings are not Galois-closed** at `ZTime` and `RTime`

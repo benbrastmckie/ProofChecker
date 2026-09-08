@@ -5,7 +5,7 @@ The three conservativity questions this development answers, and the one it refu
 | Extension | Direction | Status |
 |-----------|-----------|--------|
 | L ⊂ L⁺ (TM into TM⁺, via `tr`) | backward | **proved** — `derivable_translate` and the four row corollaries |
-| L ⊂ L⁺ | forward | **refuted** at `.Base` and `.ZTime`, open at `.Dense` and `.RTime` |
+| L ⊂ L⁺ | forward | **refuted** at `.Base` and `.ZTime` — both rows machine-checked (`tmCompleteBase_refuted`, `tmCompleteZTime_refuted`); open at `.Dense` and `.RTime` |
 | L⁺ ⊂ L⋆ (TM⁺ into TM⋆, via `ofFormula`) | both | **proved** at all four classes — `starDerivable_ofFormula_iff` |
 
 Per-theorem status — statement, frame class, machine-pinned axiom set — is in
@@ -27,7 +27,8 @@ than deferred debt.
 | `BaseLanguageSoundness.lean` | 551 | <!-- TODO: add description --> |
 | `Fragment.lean` | 190 | <!-- TODO: add description --> |
 | `FragmentCompactness.lean` | 150 | <!-- TODO: add description --> |
-| `SpWitness.lean` | 128 | <!-- TODO: add description --> |
+| `SpCountermodel.lean` | 390 | CEB's failing half: native BL soundness for TM against `Semantics/BLFrame.lean`'s `TaskFrame`-free semantics (`blFrameValid_of_axiom`, `blFrameValid_of_derivation`), the two-fibre countermodel `ℤ ⊕ ℝ`, and the deliverables `not_derivable_sp` and `tmCompleteBase_refuted` |
+| `SpWitness.lean` | 138 | <!-- TODO: add description --> |
 | `Star.lean` | 65 | <!-- TODO: add description --> |
 | `TMCompletenessReduction.lean` | 192 | <!-- TODO: add description --> |
 | `Z1Countermodel.lean` | 205 | <!-- TODO: add description --> |
@@ -46,6 +47,11 @@ than deferred debt.
   validity, which TM itself is not
 - `tmCompleteBase_iff_forwardBase` and its `.ZTime` mirror — equivalences between two unasserted
   `Prop`s, proving neither side
+- `not_derivable_sp` / `tmCompleteBase_refuted` — the CEB row's failing half: the schema `(Sp)`
+  is not a TM-theorem, refuted on the disjoint sum `ℤ ⊕ ℝ` over the native, `TaskFrame`-free
+  `BLFrame` semantics, with `blFrameValid_of_derivation` supplying the soundness
+  step the composition route could not
+- `not_bl_derivable_z1` / `tmCompleteZTime_refuted` — the same for the CEF row over ℤ-time
 - `starDerivable_ofFormula_iff` — conservativity of TM⋆ over TM⁺ in both directions
 
 ## Related Documentation

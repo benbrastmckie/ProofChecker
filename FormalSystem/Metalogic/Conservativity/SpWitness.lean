@@ -21,10 +21,18 @@ paragraph).
 
 ## What this does **not** do
 
-CEB's failing half — no instance of `(Sp)` is a TM-theorem — is an explicit Non-Goal of this
-task (report §6.2: `BLTruthAt`/`bl_soundness` are `TaskFrame`-bound and TM⁺ is *unsound* on the
-two-fibre class, so the composition route this module uses is unavailable for the failing
-half). Nothing here claims or approaches that half.
+CEB's failing half — the schema `(Sp)` is not a TM-theorem — is out of scope *here* and is not
+claimed or approached by anything in this module: `BLTruthAt`/`bl_soundness` are
+`TaskFrame`-bound and TM⁺ is *unsound* on the two-fibre class, so the composition route this
+module uses is unavailable for that half (report §6.2).
+
+It is, however, no longer an open claim. It is discharged in
+`FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`, which builds the native
+(`TaskFrame`-free) semantics of `FormalSystem/Semantics/BLFrame.lean`, proves BL soundness for TM
+directly against it, and refutes the atomic instance on the disjoint sum `ℤ ⊕ ℝ` —
+`not_derivable_sp`, and its corollary `tmCompleteBase_refuted : ¬ TMCompleteBase`. Note the claim
+there is **schema-level**: `□(DF ⊤)` holds on every `BLFrame`, so `Sp ⊤ ψ` is *not* refuted, and
+the universally quantified reading is false.
 
 ## The un-boxed sharpening (report §4.2)
 
@@ -56,6 +64,8 @@ section, which is the authority on that history.
   §4.1, §4.2, §6.2
 * `FormalSystem/Metalogic/Conservativity.lean` — the CEB/CEF refutation record and the forward
   prohibition this module never approaches
+* `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` — CEB's failing half, discharged
+  over the native `BLFrame` semantics
 * `FormalSystem/Semantics/BLSchemaValidity.lean` — the DF/DN semantic lemmas
 -/
 

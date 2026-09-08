@@ -69,7 +69,7 @@ nothing is lost.
 
 ## Main Results
 
-- `axiom_valid` — every TM axiom schema admissible at `FrameClass.Base` is `BLFrameValid`
+- `blFrameValid_of_axiom` — every TM axiom schema admissible at `FrameClass.Base` is `BLFrameValid`
 - `blFrameValid_of_derivation` — **native BL soundness**: every TM theorem is `BLFrameValid`
 - `df_fails`, `dn_fails` — the two disjuncts fail, on the `ℝ` and `ℤ` fibres respectively
 - `sp_false` — `(Sp)` is false at every point of `twoFibre`
@@ -97,14 +97,13 @@ open FormalSystem.BaseLanguage
 open FormalSystem.ProofSystem
 open FormalSystem.Semantics
 
-namespace SpCountermodel
-
 /-! ## Native BL soundness for TM
 
-`FormalSystem.Metalogic.axiom_valid` is already taken by `Metalogic/Soundness.lean`'s BL⁺ lemma
-(about `Formula`, not `BLFormula`), so the two soundness ingredients live in this nested
-`SpCountermodel` namespace. The deliverable theorems below leave it and sit at
-`FormalSystem.Metalogic.*`, exactly where `Z1Countermodel`'s mirrors sit.
+Naming note: the axiom-validity lemma is `blFrameValid_of_axiom`, not the bare `axiom_valid` a
+reader might expect by analogy with `Metalogic/Soundness.lean`. That base name is already taken
+there by the BL⁺ lemma (about `Formula`, not `BLFormula`), and the repository's C23 invariant
+additionally forbids resolving the clash by nesting a namespace — a shadowed base name defeats
+the dead-declaration census. The `blFrameValid_of_*` pair also reads better together.
 -/
 
 /--
@@ -122,7 +121,7 @@ The remaining three (`df`, `dn`, `co`) carry `minFrameClass` `.ZTime`, `.Dense`,
 which is `≤ .Base`, so the side condition `h_fc` is absurd for them. Exhaustiveness of `cases ax`
 is what confirms the census — a missed constructor is a compile error, not an oversight.
 -/
-theorem axiom_valid {φ : BLFormula} (ax : BaseLanguage.Axiom φ)
+theorem blFrameValid_of_axiom {φ : BLFormula} (ax : BaseLanguage.Axiom φ)
     (h_fc : ax.minFrameClass ≤ FrameClass.Base) : BLFrameValid φ := by
   cases ax with
   | prop_k φ ψ χ => intro F V w h1 h2 h3; exact h1 h3 (h2 h3)
@@ -192,7 +191,7 @@ available precisely because the frame class is converse-closed. `weakening` rout
 theorem blFrameValid_of_derivation {φ : BLFormula}
     (d : BaseLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ := by
   match d with
-  | .axiom _ _ h_ax h_fc => exact axiom_valid h_ax h_fc
+  | .axiom _ _ h_ax h_fc => exact blFrameValid_of_axiom h_ax h_fc
   | .assumption _ _ h_mem => exact absurd h_mem (by simp)
   | .modus_ponens _ ψ' _ d1 d2 =>
       exact fun F V w =>
@@ -338,10 +337,6 @@ theorem dn_fails (a : Atom) :
   have h1 : (1 : ℤ) ≠ 1 := this
   exact h1 rfl
 
-end SpCountermodel
-
-open SpCountermodel
-
 /--
 **`(Sp)` is false at every point of the two-fibre frame.**
 
@@ -363,7 +358,7 @@ theorem sp_false (a : Atom) (w : twoFibre.Point) :
 **CEB's failing half: `(Sp)` is not a theorem of TM.**
 
 The atomic instance `Sp p p` is `BLFrameValid`-refuted by `twoFibre`, and native BL soundness
-(`SpCountermodel.blFrameValid_of_derivation`) says every TM theorem is `BLFrameValid`. This is
+(`blFrameValid_of_derivation`) says every TM theorem is `BLFrameValid`. This is
 the claim `SpWitness.lean` disclaims as out of scope; it is now discharged.
 
 The statement is deliberately **schema-level**, witnessed by an atomic instance. The universally

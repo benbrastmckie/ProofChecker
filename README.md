@@ -17,8 +17,8 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 <!-- BEGIN GENERATED: inventory dir=FormalSystem rows=totals desc=no -->
 | Metric | Count |
 |--------|-------|
-| Live `.lean` files | 478 |
-| Live lines | 282,057 |
+| Live `.lean` files | 480 |
+| Live lines | 282,801 |
 | Archived `.lean` files | 168 |
 | Archived lines | 91,618 |
 <!-- END GENERATED -->
@@ -219,7 +219,7 @@ ledger. The five rows below are a highlights table, not a second copy of it.
 | Semantic conservativity over/under L⁺ | `blValidIn_iff_validIn_tr` | `starValidIn_ofFormula_iff` |
 | Soundness | `bl_soundness_*` (TM) | `star_soundness_validIn` (TM⋆), TD discharged semantically |
 | Proof-theoretic conservativity, backward | `derivable_translate` (TM ⊆ TM⁺) | `starDerivable_of_derivable` (TM⁺ ⊆ TM⋆) |
-| Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmComplete_iff_forward`, `tmCompleteZTime_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
+| Proof-theoretic conservativity, forward | **refuted** at Base/ZTime, open at Dense/RTime (`tmComplete_iff_forward`, `tmCompleteBase_refuted`, `tmCompleteZTime_refuted`) | **proved**: `starDerivable_ofFormula_iff`, from TM⋆ soundness and the four completeness engines |
 | Completeness and compactness | of the **H/G-fragment** `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`tmFrag_iff_blValidIn`), whose consequence relation is compact at Base and Dense (`blCompactBase`, `blCompactDense`); TM itself is incomplete, and `TM ⊊ TMFrag` at ZTime (`tm_lt_tmFrag_ztime`) | **open**; compactness not attempted (see below) |
 
 The L side lives in `Metalogic/Conservativity/{Fragment,FragmentCompactness}.lean`; the L⋆ side

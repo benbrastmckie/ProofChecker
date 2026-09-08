@@ -1,7 +1,7 @@
 # Implementation Plan: Task #544
 
 - **Task**: 544 - Machine-check the failing half of CEB: `(Sp)` is not a theorem of TM, via a native BL frame notion and native BL soundness
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 6 hours
 - **Dependencies**: None (all prerequisites are in-tree and built)
 - **Research Inputs**: `specs/544_machine_check_sp_underivable_native_bl_soundness/reports/01_sp-underivable-native-bl-soundness.md` (plus its compiling prototype at `specs/544_machine_check_sp_underivable_native_bl_soundness/prototype/SpCountermodelPrototype.lean`)
@@ -271,22 +271,22 @@ assuming either way.
 
 ---
 
-### Phase 4: Wiring, record correction, and the full gate [NOT STARTED]
+### Phase 4: Wiring, record correction, and the full gate [COMPLETED]
 
 **Goal**: The new module is reachable from the aggregator, every repository record that says this
 result is not machine-checkable is corrected, and the complete gate set is green.
 
 **Tasks**:
-- [ ] Add `import FormalSystem.Metalogic.Conservativity.SpCountermodel` to `FormalSystem/Metalogic/Conservativity.lean` (alongside the `Z1Countermodel` import) and add its row to that file's module table (`| Conservativity/SpCountermodel.lean | not_derivable_sp and tmCompleteBase_refuted |`).
-- [ ] Update the aggregator's dependency-chain sentence (currently `Backward ← BaseLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ← FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness`) to place `SpCountermodel` correctly.
-- [ ] Rewrite the aggregator's `## CEB / FrameClass.Base` section: it currently says the TM half is "not machine-checkable here" and describes what a refutation *would* need. It now IS machine-checked; state the result, name `not_derivable_sp`/`tmCompleteBase_refuted`, and keep the two-fibre description (which the implementation vindicates) as the *explanation* rather than a wish list.
-- [ ] Rewrite the aggregator's later "**CEB (`FrameClass.Base`) — still not machine-checkable in this tree, and not close**" bullet to record the landed result. Preserve the correct surrounding claim that TM^+ is unsound on the two-fibre class — the native soundness theorem is about TM (`BaseLanguage.DerivationTree`), not TM^+, and the docstring must not blur the two.
-- [ ] Update `FormalSystem/Metalogic/Conservativity/SpWitness.lean`'s "What this does **not** do" section: the CEB half it disclaims is now discharged in `SpCountermodel.lean`; point there.
-- [ ] Add the `SpCountermodel.lean` row to `FormalSystem/Metalogic/Conservativity/README.md` and refresh its "Last verified" date. (Note the existing `Z1Countermodel.lean` row carries a `<!-- TODO: add description -->` placeholder; do not propagate that pattern to the new row.)
-- [ ] Check and update, where they assert the CEB status: `FormalSystem/Metalogic/README.md`, `FormalSystem/README.md`, `README.md` (its conservativity table row currently reads "refuted at Base/ZTime … `tmCompleteZTime_refuted`"), and `docs/theorem-index.md`. Each row touched must carry its paper anchor or the literal `Paper: —` plus a reason (C15).
-- [ ] Run `bash scripts/check-metalogic-cycles.sh` to confirm no import cycle was introduced.
-- [ ] Run the full gate: `lake build`, then `bash scripts/check-module-invariants.sh`, then `bash scripts/readme-lint.sh FormalSystem`. Fix every finding attributable to this task; do not re-baseline C2/C14 to accommodate a divergence.
-- [ ] Confirm zero task-number citations were introduced under `FormalSystem/`, `scripts/`, `docs/` or `README.md` (C9/C9D) — cite `SpCountermodel.lean` and theorem names, never a task number.
+- [x] Add `import FormalSystem.Metalogic.Conservativity.SpCountermodel` to `FormalSystem/Metalogic/Conservativity.lean` (alongside the `Z1Countermodel` import) and add its row to that file's module table (`| Conservativity/SpCountermodel.lean | not_derivable_sp and tmCompleteBase_refuted |`).
+- [x] Update the aggregator's dependency-chain sentence (currently `Backward ← BaseLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ← FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness`) to place `SpCountermodel` correctly.
+- [x] Rewrite the aggregator's `## CEB / FrameClass.Base` section: it currently says the TM half is "not machine-checkable here" and describes what a refutation *would* need. It now IS machine-checked; state the result, name `not_derivable_sp`/`tmCompleteBase_refuted`, and keep the two-fibre description (which the implementation vindicates) as the *explanation* rather than a wish list.
+- [x] Rewrite the aggregator's later "**CEB (`FrameClass.Base`) — still not machine-checkable in this tree, and not close**" bullet to record the landed result. Preserve the correct surrounding claim that TM^+ is unsound on the two-fibre class — the native soundness theorem is about TM (`BaseLanguage.DerivationTree`), not TM^+, and the docstring must not blur the two.
+- [x] Update `FormalSystem/Metalogic/Conservativity/SpWitness.lean`'s "What this does **not** do" section: the CEB half it disclaims is now discharged in `SpCountermodel.lean`; point there.
+- [x] Add the `SpCountermodel.lean` row to `FormalSystem/Metalogic/Conservativity/README.md` and refresh its "Last verified" date. (Note the existing `Z1Countermodel.lean` row carries a `<!-- TODO: add description -->` placeholder; do not propagate that pattern to the new row.) *(deviation: altered — that table is machine-owned (`<!-- BEGIN GENERATED: inventory -->`), so the row was produced by `scripts/check-module-invariants.sh --emit-inventory` and only its hand-written description column was authored. "Last verified" already read 2026-09-07 and needed no refresh.)*
+- [x] Check and update, where they assert the CEB status: `FormalSystem/Metalogic/README.md`, `FormalSystem/README.md`, `README.md` (its conservativity table row currently reads "refuted at Base/ZTime … `tmCompleteZTime_refuted`"), and `docs/theorem-index.md`. Each row touched must carry its paper anchor or the literal `Paper: —` plus a reason (C15). *(Scope Hypothesis confirmed: `FormalSystem/Metalogic/README.md` and `FormalSystem/README.md` assert no CEB status prose — only generated counts, refreshed mechanically. `README.md` and `docs/theorem-index.md` each had exactly one CEB-status assertion, both now naming `tmCompleteBase_refuted`. No new theorem-index row was added, mirroring `tmCompleteZTime_refuted`'s own absence from that ledger, so no C2/C14 baseline addition was needed — C14 and C21 both pass.)*
+- [x] Run `bash scripts/check-metalogic-cycles.sh` to confirm no import cycle was introduced.
+- [x] Run the full gate: `lake build`, then `bash scripts/check-module-invariants.sh`, then `bash scripts/readme-lint.sh FormalSystem`. Fix every finding attributable to this task; do not re-baseline C2/C14 to accommodate a divergence.
+- [x] Confirm zero task-number citations were introduced under `FormalSystem/`, `scripts/`, `docs/` or `README.md` (C9/C9D) — cite `SpCountermodel.lean` and theorem names, never a task number.
 
 **Timing**: 1.5 hours
 
@@ -387,6 +387,18 @@ theorem tmCompleteBase_refuted (a : Atom) : ¬ TMCompleteBase := sorry
 end FormalSystem.Metalogic
 ```
 
+**Recorded divergence from this block (do not read the block as describing the landed tree
+without it).** `axiom_valid` was landed as **`blFrameValid_of_axiom`**, same signature, same
+namespace. The pinned base name is unattainable here: `FormalSystem.Metalogic.axiom_valid`
+already exists (`Metalogic/Soundness.lean:1345`, the BL⁺ lemma about `Formula`), so declaring it
+in `FormalSystem.Metalogic` is a duplicate-declaration error; and resolving the clash by nesting
+a `namespace SpCountermodel` was tried and **rejected by repository invariant C23**
+(`outer-shadows-inner bare-declaration pair`, since C17's dead-declaration census keys on the
+last dot-segment). Renaming was therefore the only route that satisfies both the compiler and the
+gates. Nothing else in this block moved: every other identifier landed at the pinned name, in the
+pinned namespace, with the pinned signature. The block above is left as originally recorded
+rather than rewritten to match the implementation.
+
 Note on `sp_false` and `twoV`: the prototype states `sp_false` at `w : ℤ ⊕ ℝ` and `twoV` at
 `(ℤ ⊕ ℝ) → Atom → Prop`, which type-check against `twoFibre.Point` only because `twoFibre`
 carries `@[reducible]`. The block above writes `twoFibre.Point` in `sp_false` for statement
@@ -395,17 +407,17 @@ present.
 
 ## Testing & Validation
 
-- [ ] `lake env lean FormalSystem/Semantics/BLFrame.lean` — no errors, no `sorry`, no warnings
-- [ ] `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` — same
-- [ ] `lake build` green after each of Phases 1 and 4
-- [ ] `#print axioms FormalSystem.Metalogic.not_derivable_sp` = `[propext, Classical.choice, Quot.sound]`
-- [ ] `#print axioms FormalSystem.Metalogic.tmCompleteBase_refuted` = `[propext, Classical.choice, Quot.sound]`
-- [ ] `#print axioms FormalSystem.Metalogic.blFrameValid_of_derivation` = `[propext, Classical.choice, Quot.sound]`
-- [ ] `bash scripts/check-module-invariants.sh` exits 0 (C3 zero-sorry in particular)
-- [ ] `bash scripts/readme-lint.sh FormalSystem` — no new finding
-- [ ] `bash scripts/check-metalogic-cycles.sh` — no cycle
-- [ ] No theorem anywhere in the new modules concludes `TMCompleteBase`, `ForwardBase` or `forward` positively; only their negations appear
-- [ ] `grep -rn "sorry" FormalSystem/Semantics/BLFrame.lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` returns nothing
+- [x] `lake env lean FormalSystem/Semantics/BLFrame.lean` — no errors, no `sorry`, no warnings
+- [x] `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` — same
+- [x] `lake build` green after each of Phases 1 and 4
+- [x] `#print axioms FormalSystem.Metalogic.not_derivable_sp` = `[propext, Classical.choice, Quot.sound]`
+- [x] `#print axioms FormalSystem.Metalogic.tmCompleteBase_refuted` = `[propext, Classical.choice, Quot.sound]`
+- [x] `#print axioms FormalSystem.Metalogic.blFrameValid_of_derivation` = `[propext, Classical.choice, Quot.sound]` *(also `blFrameValid_of_axiom`; `Semantics.truth_swap` is axiom-free)*
+- [x] `bash scripts/check-module-invariants.sh` exits 0 (C3 zero-sorry in particular)
+- [x] `bash scripts/readme-lint.sh FormalSystem` — no new finding
+- [x] `bash scripts/check-metalogic-cycles.sh` — no cycle
+- [x] No theorem anywhere in the new modules concludes `TMCompleteBase`, `ForwardBase` or `forward` positively; only their negations appear
+- [x] `grep -rn "sorry" FormalSystem/Semantics/BLFrame.lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` returns nothing
 
 ## Artifacts & Outputs
 
