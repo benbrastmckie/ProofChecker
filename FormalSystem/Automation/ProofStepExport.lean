@@ -111,7 +111,7 @@ Given a theorem name and a DerivationTree, create a TheoremEntry
 that extracts steps on demand.
 -/
 
-private def mkEntry (name : String) {fc : FrameClass} {Γ : Context} {φ : Formula}
+private def mkEntryAt (name : String) (fc : FrameClass) {Γ : Context} {φ : Formula}
     (tree : DerivationTree fc Γ φ) : TheoremEntry :=
   { name := name
   , extract := fun () =>
@@ -119,6 +119,13 @@ private def mkEntry (name : String) {fc : FrameClass} {Γ : Context} {φ : Formu
       let (steps, _) := extractStepSequence name fcStr 0 tree
       steps
   }
+
+/-- `mkEntryAt` at the Base frame class. Most registry entries instantiate a theorem
+derivable at every frame class, so nothing in the entry determines the frame class and a
+generic `{fc}` would be left unassigned; the `DerivationTree .Base` argument type pins it. -/
+private def mkEntry (name : String) {Γ : Context} {φ : Formula}
+    (tree : DerivationTree .Base Γ φ) : TheoremEntry :=
+  mkEntryAt name .Base tree
 
 /-!
 ## Helpers: N-layer Temporal Wrapping
@@ -1189,39 +1196,39 @@ def theoremRegistry : List TheoremEntry := [
   -- Uniformity Axioms (Discrete frame class for semantic accuracy):
   -- These have minFrameClass = .Base (wildcard), but are semantically
   -- about discrete structures, so we use fc := .ZTime.
-  mkEntry "discrete_symm_fwd_axiom"
+  mkEntryAt "discrete_symm_fwd_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_fwd trivial),
-  mkEntry "discrete_symm_bwd_axiom"
+  mkEntryAt "discrete_symm_bwd_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_bwd trivial),
-  mkEntry "discrete_propagate_fwd_axiom"
+  mkEntryAt "discrete_propagate_fwd_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_propagate_fwd trivial),
-  mkEntry "discrete_propagate_bwd_axiom"
+  mkEntryAt "discrete_propagate_bwd_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_propagate_bwd trivial),
-  mkEntry "discrete_box_necessity_axiom"
+  mkEntryAt "discrete_box_necessity_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_box_necessity trivial),
 
   -- Prior Axioms (Discrete): F(φ) → U(φ, ¬φ) and P(φ) → S(φ, ¬φ)
-  mkEntry "prior_UZ_axiom"
+  mkEntryAt "prior_UZ_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_UZ p) trivial),
-  mkEntry "prior_UZ_axiom_q"
+  mkEntryAt "prior_UZ_axiom_q" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_UZ q) trivial),
-  mkEntry "prior_SZ_axiom"
+  mkEntryAt "prior_SZ_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_SZ p) trivial),
-  mkEntry "prior_SZ_axiom_q"
+  mkEntryAt "prior_SZ_axiom_q" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_SZ q) trivial),
 
   -- Z1 Axiom (Discrete): G(G(φ) → φ) → (F(G(φ)) → G(φ))
-  mkEntry "z1_axiom"
+  mkEntryAt "z1_axiom" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.z1 p) trivial),
-  mkEntry "z1_axiom_q"
+  mkEntryAt "z1_axiom_q" .ZTime
     (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.z1 q) trivial),
 
   -- Density Axioms (Dense): G(G(φ)) → G(φ) and ¬U(⊤,⊥)
-  mkEntry "density_axiom"
+  mkEntryAt "density_axiom" .Dense
     (DerivationTree.axiom (fc := .Dense) [] _ (Axiom.density p) trivial),
-  mkEntry "density_axiom_q"
+  mkEntryAt "density_axiom_q" .Dense
     (DerivationTree.axiom (fc := .Dense) [] _ (Axiom.density q) trivial),
-  mkEntry "dense_indicator_axiom"
+  mkEntryAt "dense_indicator_axiom" .Dense
     (DerivationTree.axiom (fc := .Dense) [] _ Axiom.dense_indicator trivial),
 
   -- ============================================================
@@ -1243,53 +1250,53 @@ def theoremRegistry : List TheoremEntry := [
         (DerivationTree.axiom (fc := .Base) [] _ (Axiom.peirce p q) trivial))),
 
   -- G-wrapped uniformity axioms (Discrete)
-  mkEntry "G_discrete_symm_fwd_axiom"
+  mkEntryAt "G_discrete_symm_fwd_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_fwd trivial)),
-  mkEntry "G_discrete_symm_bwd_axiom"
+  mkEntryAt "G_discrete_symm_bwd_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_bwd trivial)),
-  mkEntry "G_discrete_propagate_fwd_axiom"
+  mkEntryAt "G_discrete_propagate_fwd_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_propagate_fwd trivial)),
-  mkEntry "G_discrete_propagate_bwd_axiom"
+  mkEntryAt "G_discrete_propagate_bwd_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_propagate_bwd trivial)),
-  mkEntry "G_discrete_box_necessity_axiom"
+  mkEntryAt "G_discrete_box_necessity_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_box_necessity trivial)),
 
   -- G-wrapped Prior axioms (Discrete)
-  mkEntry "G_prior_UZ_axiom"
+  mkEntryAt "G_prior_UZ_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_UZ p) trivial)),
-  mkEntry "G_prior_SZ_axiom"
+  mkEntryAt "G_prior_SZ_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_SZ p) trivial)),
 
   -- G-wrapped Z1 (Discrete)
-  mkEntry "G_z1_axiom"
+  mkEntryAt "G_z1_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.z1 p) trivial)),
 
   -- G-wrapped density axioms (Dense)
-  mkEntry "G_density_axiom"
+  mkEntryAt "G_density_axiom" .Dense
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .Dense) [] _ (Axiom.density p) trivial)),
-  mkEntry "G_dense_indicator_axiom"
+  mkEntryAt "G_dense_indicator_axiom" .Dense
     (DerivationTree.temporal_necessitation _
       (DerivationTree.axiom (fc := .Dense) [] _ Axiom.dense_indicator trivial)),
 
   -- H-wrapped non-Base axioms (selected)
-  mkEntry "H_discrete_symm_fwd_axiom"
+  mkEntryAt "H_discrete_symm_fwd_axiom" .ZTime
     (DerivationTree.temporal_duality _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_fwd trivial))),
-  mkEntry "H_prior_UZ_axiom"
+  mkEntryAt "H_prior_UZ_axiom" .ZTime
     (DerivationTree.temporal_duality _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_UZ p) trivial))),
-  mkEntry "H_density_axiom"
+  mkEntryAt "H_density_axiom" .Dense
     (DerivationTree.temporal_duality _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .Dense) [] _ (Axiom.density p) trivial))),
@@ -1299,19 +1306,19 @@ def theoremRegistry : List TheoremEntry := [
     (DerivationTree.temporal_necessitation _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .Base) [] _ (Axiom.peirce p q) trivial))),
-  mkEntry "GG_discrete_symm_fwd_axiom"
+  mkEntryAt "GG_discrete_symm_fwd_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .ZTime) [] _ Axiom.discrete_symm_fwd trivial))),
-  mkEntry "GG_prior_UZ_axiom"
+  mkEntryAt "GG_prior_UZ_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.prior_UZ p) trivial))),
-  mkEntry "GG_density_axiom"
+  mkEntryAt "GG_density_axiom" .Dense
     (DerivationTree.temporal_necessitation _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .Dense) [] _ (Axiom.density p) trivial))),
-  mkEntry "GG_z1_axiom"
+  mkEntryAt "GG_z1_axiom" .ZTime
     (DerivationTree.temporal_necessitation _
       (DerivationTree.temporal_necessitation _
         (DerivationTree.axiom (fc := .ZTime) [] _ (Axiom.z1 p) trivial))),
@@ -1476,7 +1483,7 @@ def theoremRegistry : List TheoremEntry := [
   -- ============================================================
 
   mkEntry "ctx_pw_identity" (identity_weakened p q),
-  mkEntry "ctx_pw_b_combinator" (@b_combinator_weakened (A := p) (B := q) (C := r) s),
+  mkEntry "ctx_pw_b_combinator" (@b_combinator_weakened .Base (A := p) (B := q) (C := r) s),
   mkEntry "ctx_pw_dni" (dni_weakened p q),
   mkEntry "ctx_pw_connect_future" (connect_future_weakened p q),
   mkEntry "ctx_pw_connect_past" (connect_past_weakened p q),
@@ -1493,8 +1500,8 @@ def theoremRegistry : List TheoremEntry := [
   mkEntry "ctx_pw_since_P" (since_P_weakened p q r),
   mkEntry "ctx_pw_serial_future" (serial_future_weakened p),
   mkEntry "ctx_pw_serial_past" (serial_past_weakened p),
-  mkEntry "ctx_pw_theorem_flip" (@theorem_flip_weakened (A := p) (B := q) (C := r) s),
-  mkEntry "ctx_pw_theorem_app1" (@theorem_app1_weakened (A := p) (B := q) r),
+  mkEntry "ctx_pw_theorem_flip" (@theorem_flip_weakened .Base (A := p) (B := q) (C := r) s),
+  mkEntry "ctx_pw_theorem_app1" (@theorem_app1_weakened .Base (A := p) (B := q) r),
 
   -- Pure weakening with alternative atoms
   mkEntry "ctx_pw_identity_qr" (identity_weakened q r),

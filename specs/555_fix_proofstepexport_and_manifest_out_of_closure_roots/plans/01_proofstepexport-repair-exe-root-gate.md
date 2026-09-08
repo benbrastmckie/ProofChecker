@@ -1,7 +1,7 @@
 # Implementation Plan: Task #555
 
 - **Task**: 555 - Fix ProofStepExport elaboration failure and bring out-of-closure `lean_exe` roots under compile checking
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 6.5 hours
 - **Dependencies**: None upstream. Downstream: tasks 557 and 558 both depend on this one.
 - **Research Inputs**: specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md
@@ -112,7 +112,7 @@ either before the repair would leave a red commit.
 
 ---
 
-### Phase 1: Repair ProofStepExport.lean [NOT STARTED]
+### Phase 1: Repair ProofStepExport.lean [COMPLETED]
 
 **Goal**: The module elaborates with zero errors — all 873 masked errors resolved, not just the
 three reported mismatches.
@@ -165,7 +165,7 @@ the 31-entry list must be re-derived from the source rather than transcribed fro
 
 ---
 
-### Phase 2: Prove the repair through a real build and a real run [NOT STARTED]
+### Phase 2: Prove the repair through a real build and a real run [COMPLETED]
 
 **Goal**: Confirm the repair survives C emission and linking, and that the executable produces the
 expected output — the elaboration check of Phase 1 is not sufficient evidence.
