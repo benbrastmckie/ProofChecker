@@ -205,7 +205,7 @@ rewrite), and the diff must be re-audited before proceeding.
 
 ---
 
-### Phase 3: Add invariant C25 — every `lean_exe` root compiles [NOT STARTED]
+### Phase 3: Add invariant C25 — every `lean_exe` root compiles [COMPLETED]
 
 **Goal**: A self-maintaining gate that compile-checks every `lean_exe` root declared in
 `lakefile.lean`, so no exe root can fail invisibly again.
@@ -297,7 +297,7 @@ rather than deferring — a red new gate is not an acceptable landing state.
 
 ---
 
-### Phase 5: Make the gate continuous in CI [NOT STARTED]
+### Phase 5: Make the gate continuous in CI [COMPLETED]
 
 **Goal**: The new coverage runs on every push and PR, not only when someone runs the invariants
 script locally.

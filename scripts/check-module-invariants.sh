@@ -54,6 +54,9 @@
 #       FormalSystem.Init, via `lake exe checkInitImports` -- the root file is the
 #       single place repository-wide linter options and tactic imports are
 #       inherited from, so a module with no path to it silently opts out
+#   C25 Every `lean_exe` root declared in lakefile.lean compiles -- the root list
+#       is scraped at run time, so a newly declared executable is covered the day
+#       it is added and there is no list to forget
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
@@ -68,7 +71,7 @@
 #
 # Usage:
 #   bash scripts/check-module-invariants.sh            # all checks
-#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16/C24 (fast structural pass)
+#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16/C24/C25 (fast structural pass)
 #   bash scripts/check-module-invariants.sh --emit-inventory          # rewrite generated inventory blocks
 #   bash scripts/check-module-invariants.sh --emit-inventory --check  # fail if a rewrite would change a byte
 #
@@ -537,6 +540,13 @@ ENFORCE_C23=${ENFORCE_C23:-1} # naming regressions (enforced)
 # quiet a failure; add the import at the offending module's own minimal element, or record a
 # genuinely-cannot-import module in `exceptions` in scripts/CheckInitImports.lean.
 ENFORCE_C24=${ENFORCE_C24:-1} # every module transitively imports FormalSystem.Init (enforced)
+# C25 compile-checks every `lean_exe` root declared in lakefile.lean. Those roots sit outside
+# both library root closures, so `lake build` never elaborates them and C24's closure walk never
+# reaches them -- ProofStepExport.lean was failing to elaborate with no gate anywhere able to
+# observe it. The repair landed in the same change that added this check, so all thirteen roots
+# are green from its first run and it ships enforced with no soft period. Never flip it to 0 to
+# quiet a failure; repair the root, or delete the `lean_exe` target if it is genuinely dead.
+ENFORCE_C25=${ENFORCE_C25:-1} # every lean_exe root module compiles (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -2700,6 +2710,95 @@ if [ "$RUN_BUILD" -eq 1 ]; then
   rm -f "$C24_LOG"
 else
   info C24 "FormalSystem.Init transitive-import check skipped (--no-build)"
+fi
+echo
+
+# ---------------------------------------------------------------------------
+# C25: every `lean_exe` root declared in lakefile.lean compiles
+#
+# `lake build` builds the two library targets, so it elaborates exactly what is
+# reachable from `FormalSystem` and `BimodalTest`. Every `lean_exe` root is outside
+# both closures: nothing imports it, `lake build` never touches it, and C24's
+# closure walk never reaches it either. C6's rot guard does not cover them either --
+# C6 seeds its reachability walk from every `root :=` in this same lakefile, so an
+# exe root is *reachable* by C6's definition and listing one in
+# scripts/module-invariants-manifest.txt trips C6's stale-manifest branch instead of
+# covering it. That is the wrong mechanism; this check is the right one, and the
+# manifest must not gain an exe-root line.
+#
+# The gap was not hypothetical. FormalSystem/Automation/ProofStepExport.lean -- the
+# `proof_extractor` root -- failed to elaborate for an extended period with three
+# `Application type mismatch` errors masking a further 873, and no gate anywhere in
+# the repository was able to observe it. `lake exe proof_extractor` was simply
+# broken, and the tree was green.
+#
+# The root list is scraped from lakefile.lean at run time with the same regex C6's
+# reachability block uses, so a newly declared `lean_exe` is covered the day it is
+# added and there is no second list to forget to update. An empty scrape is a
+# failure, not a silent pass: it means the regex or the lakefile's shape changed.
+#
+# Module targets, never exe targets. `lake build <root>` elaborates and emits C
+# without linking; `lake exe <name>` would link a 240-310 MB binary per root, and
+# there are thirteen of them. Elaboration coverage is what this invariant is about.
+# Measured cost with the tree already built by C1, which is the position this check
+# runs in: 10s wall-clock for all thirteen roots.
+#
+# Ships ENFORCED with no soft period, on the C24 precedent: the ProofStepExport
+# repair landed in the same change, so every root is green from the first run and a
+# soft window would only be a window in which the invariant could regress unnoticed.
+#
+# Inside the RUN_BUILD guard because it is a build; under --no-build it reports INFO
+# and skips, exactly as C1/C2/C6/C16/C24 do.
+#
+# Negative-tested per docs/development/MODULE_INVARIANTS.md's "Adding a Check"
+# mandate: a one-character break was introduced in
+# FormalSystem/Automation/TraceExporter.lean -- deliberately NOT ProofStepExport,
+# the module the same change repairs, since a failure there would prove nothing
+# about the gate -- `FAIL C25` was observed together with a non-zero script exit
+# (both, not just the printed line), and the file was restored and the `PASS` and
+# exit 0 re-observed. Re-run that test after any change to this check's scope or to
+# the root-scraping regex; check the shell's exit status as well as the printed
+# line, because C24's history is exactly a case of a check that could print a
+# failure while handing the shell a 0.
+# ---------------------------------------------------------------------------
+if [ "$RUN_BUILD" -eq 1 ]; then
+  C25_ROOTS=$(python3 - <<'PYEOF'
+import re
+try:
+    lf = open("lakefile.lean", encoding="utf-8").read()
+except OSError:
+    raise SystemExit(0)
+for m in re.findall(r"root\s*:=\s*`([A-Za-z0-9_.]+)", lf):
+    print(m)
+PYEOF
+)
+  C25_ROOT_COUNT=$(printf '%s\n' "$C25_ROOTS" | grep -c . || true)
+  if [ "$C25_ROOT_COUNT" -eq 0 ]; then
+    fail C25 "no lean_exe root scraped from lakefile.lean -- the scraper regex or the lakefile's shape changed"
+    note "expected one or more \`root := \\\`Module.Name\` lines in lakefile.lean"
+  else
+    C25_LOG=$(mktemp)
+    C25_BROKEN=""
+    while IFS= read -r C25_ROOT; do
+      [ -n "$C25_ROOT" ] || continue
+      if ! lake build "$C25_ROOT" >"$C25_LOG" 2>&1; then
+        C25_BROKEN="${C25_BROKEN}${C25_ROOT}"$'\n'
+        grep -m3 '^error: ' "$C25_LOG" | while IFS= read -r l; do note "$C25_ROOT: $l"; done
+      fi
+    done <<< "$C25_ROOTS"
+    rm -f "$C25_LOG"
+    C25_BROKEN_COUNT=$(printf '%s\n' "$C25_BROKEN" | grep -c . || true)
+    if [ "$C25_BROKEN_COUNT" -eq 0 ]; then
+      pass C25 "all $C25_ROOT_COUNT lean_exe root module(s) from lakefile.lean compile"
+    else
+      MSG="$C25_BROKEN_COUNT of $C25_ROOT_COUNT lean_exe root module(s) do not compile"
+      if [ "$ENFORCE_C25" -eq 1 ]; then fail C25 "$MSG"; else soft C25 "$MSG (not yet enforced)"; fi
+      printf '%s\n' "$C25_BROKEN" | grep . | while IFS= read -r l; do note "broken root: $l"; done
+      note "repair the root, or drop its lean_exe target; do NOT add it to scripts/module-invariants-manifest.txt (C6 fails on an exe-root line by construction)"
+    fi
+  fi
+else
+  info C25 "lean_exe root compile check skipped (--no-build)"
 fi
 echo
 

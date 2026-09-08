@@ -33,6 +33,7 @@ file and line.
 | C14 | Documented axiom and sorry counts match the tree — in `docs/`, `README.md` **and** `FormalSystem/**/*.lean` docstrings — and the two headline theorems C2 does not cover match their axiom baseline | C2 and C3 assert facts about the *tree*; C14 is what asserts the *documentation* agrees with them. `docs/` had documented the axiom count as 21 against an actual 45, and the sorry count as 12 against an actual 0. The `.lean` half was added later: C14's original markdown-only scope is exactly why six docstrings claiming an axiom-constructor count of 42 survived a 42 → 45 change untouched, and widening it immediately surfaced seven further claims of an axiom count of 21, in Lean docstrings that no gate had ever seen |
 | C15 | Every `def:`/`thm:`/`lem:`/`cor:`/`app:`/`rmk:` paper-anchor citation in live scope resolves against `specs/paper-definitions-of-record.md` | Nothing asserted that a cited paper anchor exists. Thirty dangling citations accumulated across six paper editing waves; `lem:fibers` alone was cited 17 times after the paper deleted its `\label` |
 | C24 | Every module in the `FormalSystem` root closure transitively imports `FormalSystem.Init`, via `lake exe checkInitImports` | `FormalSystem/Init.lean` exists so that repository-wide linter options and common tactic imports have one place to be inherited from, and that promise is only as strong as its weakest module: a file with no path to the root silently opts out of every option the root sets, and a green build says nothing about it. The check reads the real import graph out of the compiled environment rather than the text of the `import` lines, so it sees inheritance through intermediate modules exactly as Lean does — which is why the invariant is carried by eleven import lines at the minimal elements of the internal DAG, not one per module. It ran reporting-only for one release cycle, over 457 modules with no path to the root |
+| C25 | Every `lean_exe` root declared in `lakefile.lean` compiles, with the root list scraped at run time | `lake build` elaborates only what is reachable from the two library targets, so every `lean_exe` root sits outside both closures: nothing imports it, C24's closure walk never reaches it, and C6 cannot cover it either — C6 seeds its own reachability walk from these same `root :=` lines, so an exe root is *reachable* by C6's definition and a manifest line for one trips C6's stale-manifest branch rather than covering it. The gap was not hypothetical: `FormalSystem/Automation/ProofStepExport.lean`, the `proof_extractor` root, failed to elaborate for an extended period with three `Application type mismatch` errors masking a further 873, `lake exe proof_extractor` was simply broken, and the tree was green throughout because no gate anywhere could observe it. Scraping the list from `lakefile.lean` rather than maintaining one means a newly declared executable is covered the day it is added. Module targets only, never exe targets — elaboration coverage without linking a 240-310 MB binary per root, thirteen times over |
 | C9D | Task-number citations under `docs/` (computed always, **soft** by default) | C9's rule binds `docs/` too, but `docs/` does not yet satisfy it. Reported at every gate so the debt is visible rather than forgotten |
 
 ### Why C5 was not simply extended
@@ -172,6 +173,15 @@ leaf, `FAIL C24` and a non-zero script exit were observed, and the line was rest
 `scripts/CheckInitImports.lean`'s exit path — the executable originally returned
 `diff.length.toUInt32`, and an 8-bit exit status truncates that, so it would have printed a
 failure while handing the shell a `0` at any count that happened to be a multiple of 256.
+
+C25 ships enforced on the same precedent and was accepted only after the same negative test, run
+deliberately on a module *other* than the one the same change repaired: a one-character break was
+introduced in `FormalSystem/Automation/TraceExporter.lean` — not `ProofStepExport.lean`, since a
+failure in the module under repair would prove nothing about the gate — `FAIL C25` was observed
+**together with a non-zero script exit**, and the file was restored and the `PASS` and exit 0
+re-observed. Re-run that test after any change to C25's scope or to its root-scraping regex, and
+check the shell's exit status as well as the printed line: C24's history above is exactly a case of
+a check that could print a failure while handing the shell a `0`.
 
 C15 was accepted only after a **deliberate negative test** — a scratch file citing a `thm:` anchor that
 appears nowhere in the record was added under `docs/`, the gate was confirmed to fail with

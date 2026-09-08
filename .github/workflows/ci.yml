@@ -36,6 +36,27 @@ jobs:
           lint: true
           use-mathlib-cache: true
 
+      # Every `lean_exe` root in lakefile.lean sits outside both library root closures, so the
+      # `build: true` step above never elaborates any of them: nothing imports them, and
+      # `lake build` only walks what is reachable from `FormalSystem` and `BimodalTest`.
+      # FormalSystem/Automation/ProofStepExport.lean failed to elaborate for an extended period
+      # with `lake exe proof_extractor` simply broken and CI green throughout, because no step
+      # here could observe it. Marking the exe targets `@[default_target]` was rejected on
+      # measured cost -- 240-310 MB of linked binary per root, thirteen of them. These are
+      # MODULE targets: elaboration and C emission, no linking, reusing the cache the
+      # lean-action step above already populated. The local counterpart is invariant C25 in
+      # scripts/check-module-invariants.sh, which scrapes the same root list at run time.
+      - name: Compile lean_exe roots (outside the library closures)
+        run: |
+          set -euo pipefail
+          roots=$(grep -oP 'root\s*:=\s*`\K[A-Za-z0-9_.]+' lakefile.lean)
+          test -n "$roots"
+          for root in $roots; do
+            echo "::group::lake build $root"
+            lake build "$root"
+            echo "::endgroup::"
+          done
+
       - name: Report results
         if: always()
         run: |
