@@ -361,12 +361,12 @@
     {
       "project_number": 545,
       "project_name": "hg_completeness_dense_and_dedekind_verdicts",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Decide, with machine-checked proof, whether the two H/G-language (Past/Future) systems that the paper leaves open are weakly complete: TM_d := TM + DN over the Dense frame class, and TM_dc := TM + DN + CO over the Dedekind (dense-and-complete, i.e. R-time) class, where TM is the BaseLanguage proof system (the paper's TM^-). These are the two remaining open rows of the paper's rmk:fragment; the Base row is the CEB task (Sp underivability) and the Discrete row is closed (tmCompleteDiscrete_refuted). A negative verdict with a machine-checked separating H/G-validity, or a positive verdict with a completeness proof, are both complete outcomes; an honest OPEN verdict must name the precise obstruction. EXPECTED VERDICT (to be tested, not assumed): both complete. Reasoning: unlike Base and Discrete, neither class splits into two H/G-definable subclasses, so no (Sp)/Z1-style dichotomy witness is available; every dense unbounded chain has the H/G logic of Q by downward Lowenheim-Skolem, and R is a single frame up to isomorphism. SUGGESTED ROUTE FOR DENSE: (1) Kripke-style completeness of TM + DN over frames whose Box-classes are R-closed unions of dense unbounded chains, via the Sahlqvist/canonical-model argument for the fusion S5 (x) Kt4.3 + seriality + density with the MF interaction (MF and its TD-mirror force each Box-class to be closed under R-successors and R-predecessors; the TM-completeness-status report section 5(i) records this as the Kripke-level answer, unformalized); bulldoze clusters into dense chains; (2) replace each chain by a countable elementary substructure, order-isomorphic to Q by Mathlib's Order.iso_of_countable_dense; (3) transform into a Dense task frame: world states := chain points, durations := Q, task relation := translation along each chain (a disjoint union of translation task frames, each satisfying Compositionality, Seriality, Limit, Saturation with singleton fibres), histories := all translates; show BL truth is preserved since Box over H_F at a time equals truth at every point of the class under translation closure. SUGGESTED ROUTE FOR DEDEKIND: the temporal part of TM_dc is Bull 1968 / Goldblatt's axiomatization of the H/G logic of R (CO is exactly the Dedekind axiom of that literature), so the target is Bull's completeness theorem for R plus the same product/translation transfer; NOTE that CO is not Sahlqvist, so the canonical-model route of the Dense case does not apply and a Bull/Burgess-style step-by-step or Dedekind-completion construction is required, making this the substantially harder half. EXISTING ASSETS: BL-side semantics and soundness (Semantics/BLTruth.lean, BLValidity.lean, Metalogic/Conservativity/BaseLanguageSoundness.lean), the Fragment theorem (Conservativity/Fragment.lean), the reduction tmComplete_iff_forward and its Dense/Dedekind rows (Conservativity/TMCompletenessReduction.lean), the BX-side canonical model and completeness_dense / completeness_dedekind (Metalogic/BXCanonical/), and LexCarrier.lean. RELATION TO OTHER TASKS: settling these two rows settles the Sigma_fc = empty case of the Hg-fragment finite-axiomatizability task at Dense and Dedekind, and is independent of the CEB task at Base. HARD CONSTRAINT inherited from Conservativity.lean: never state a completeness or forward-conservativity theorem and discharge it with sorry.",
       "topic": "incompleteness",
       "created": "2026-09-07T03:57:13Z",
-      "last_updated": "2026-09-08T06:50:35Z",
+      "last_updated": "2026-09-08T07:19:43Z",
       "session_id": "sess_1788847801_97d6cb",
       "file_scope": [
         "FormalSystem/Semantics/BLTruth.lean",
@@ -384,12 +384,18 @@
           "path": "specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md",
           "type": "plan",
           "summary": "Six-phase, 9-hour plan landing the sorry-free de-risking round for the two open H/G rows (eight new declarations), recording Dense as expected-complete-no-obstruction and Dedekind as OPEN with the Doets D1/D2 obstruction named, and scoping the expensive remainder as follow-up briefs."
+        },
+        {
+          "path": "specs/545_hg_completeness_dense_and_dedekind_verdicts/summaries/01_hg-completeness-dense-dedekind-summary.md",
+          "type": "summary",
+          "summary": "Both open H/G rows recorded with evidence: .Dense open-but-expected-complete with no obstruction found (both closed rows' witnesses provably fail to transfer), .RTime open with its obstruction named at declaration granularity; eight headline declarations landed sorry-free plus the reusable chain-bundle transfer interface."
         }
       ],
       "next_artifact_number": 2,
       "dependencies": [
         544
-      ]
+      ],
+      "completion_summary": "Settled the two open H/G rows as far as evidence allows without asserting anything unproved. FrameClass.Dense is recorded as open-but-expected-complete with no obstruction found, backed by machine-checked proof that both closed rows' separating witnesses fail to transfer (sp_derivable_dense / sp_derivable_rtime show Sp is a theorem of both open systems; not_blValidDense_z1 shows Z1 is not dense-valid, on a fresh flow model over the rationals). FrameClass.RTime is recorded as open with its obstruction named at declaration granularity: the Doets D1/D2 suppliers are generic, but every existing discharge of their semantic side conditions consumes prior_U_gap / prior_S_gap / sep, none of which BLFormula can express. Also landed: bl_box_universal (BL's box is the universal modality over the whole model), blTruthAt_timeShift, and the valuation-only chain-bundle interface chainSat / chainBundle_truth_lemma / not_blValidIn_of_not_chainSat with instantiations at the rationals and the reals, which closes the transfer half of the canonical-model route for both open rows. No completeness or forward-conservativity theorem is stated anywhere in the diff, and no sorry was used."
     },
     {
       "project_number": 544,
