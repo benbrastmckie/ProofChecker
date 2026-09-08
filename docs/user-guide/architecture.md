@@ -492,13 +492,13 @@ Because `Duration` is a field, a property of the temporal order alone is an ordi
 a frame — which is what makes `def:frame-properties` (Discrete / Dense / Complete) sayable of a
 frame rather than only of a carrier.
 
-#### World Histories
+#### Convex Histories
 
-A **world history** (possible world) is a function from a convex set of times to world states that respects the task relation. The convexity requirement matches JPL paper def:world-history (line 1849).
+A **convex history** is a function from a convex set of times to world states that respects the task relation. A convex history whose domain is all of `D` is a **possible world**; `TaskFrame.HF` is the set of those. The convexity requirement matches JPL paper `def:world-history`.
 
 ```lean
--- World history over task frame F (polymorphic over T)
-structure WorldHistory (F : TaskFrame) where
+-- Convex history over task frame F (polymorphic over T)
+structure ConvexHistory (F : TaskFrame) where
   domain : F.Duration → Prop                                          -- Domain predicate X ⊆ T
   convex : ∀ x z, domain x → domain z →
     ∀ y, x ≤ y → y ≤ z → domain y                           -- X is convex (no temporal gaps)
@@ -506,8 +506,8 @@ structure WorldHistory (F : TaskFrame) where
   respects_task : ∀ s t (hs : domain s) (ht : domain t),
     s ≤ t → F.TaskRel (states s hs) (t - s) (states t ht)  -- τ(s) ⇒_{t-s} τ(t)
 
--- Notation for world history evaluation
-notation τ "(" t ")" => WorldHistory.states τ t
+-- Notation for convex history evaluation
+notation τ "(" t ")" => ConvexHistory.states τ t
 ```
 
 #### Task Model and Truth Evaluation
@@ -519,7 +519,7 @@ structure TaskModel (F : TaskFrame) where
 
 -- Truth at model-history-time triple (polymorphic over T)
 def TruthAt {F : TaskFrame}
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (ht : τ.domain t) : Formula → Prop
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (ht : τ.domain t) : Formula → Prop
   | Formula.atom p =>
       M.valuation (τ.states t ht) p                          -- Atomic truth
   | Formula.bot =>
@@ -527,7 +527,7 @@ def TruthAt {F : TaskFrame}
   | Formula.imp φ ψ =>
       TruthAt M τ t ht φ → TruthAt M τ t ht ψ              -- Implication
   | Formula.box φ =>
-      ∀ (σ : WorldHistory F) (hs : σ.domain t),
+      ∀ (σ : ConvexHistory F) (hs : σ.domain t),
         TruthAt M σ t hs φ                                   -- Necessity: all histories at t
   | Formula.allPast φ =>
       ∀ (s : T) (hs : τ.domain s), s < t →
@@ -540,7 +540,7 @@ notation M ", " τ ", " t " ⊨ " φ => TruthAt M τ t φ
 
 -- Time-shift invariance (critical theorem for temporal reasoning)
 theorem time_shift_preserves_truth {F : TaskFrame}
-    (M : TaskModel F) (τ : WorldHistory F) (t : T) (Δ : T) (φ : Formula)
+    (M : TaskModel F) (τ : ConvexHistory F) (t : T) (Δ : T) (φ : Formula)
     (ht : τ.domain t) (ht' : (timeShift τ Δ).domain (t + Δ)) :
   TruthAt M τ t ht φ ↔ TruthAt M (timeShift τ Δ) (t + Δ) ht' φ := by sorry
 ```
@@ -553,7 +553,7 @@ Layer 2 extends task models with selection functions for counterfactuals and gro
 -- Layer 2: Extended task model
 structure ExtendedTaskModel (F : TaskFrame) extends TaskModel F where
   -- Counterfactual selection function
-  counterfactual_selection : F.WorldState → Formula → Set (WorldHistory F)
+  counterfactual_selection : F.WorldState → Formula → Set (ConvexHistory F)
 
   -- Grounding relation
   grounding_relation : F.WorldState → Formula → Formula → Prop
@@ -565,7 +565,7 @@ structure ExtendedTaskModel (F : TaskFrame) extends TaskModel F where
   -- Grounding relation constraints (to be specified)
 
 -- Extended truth evaluation for Layer 2 operators
-def extended_truth_at (M : ExtendedTaskModel F) (τ : WorldHistory F) (t : F.Time) :
+def extended_truth_at (M : ExtendedTaskModel F) (τ : ConvexHistory F) (t : F.Time) :
   ExtendedFormula → Prop
   | ExtendedFormula.core φ =>
       TruthAt M.toTaskModel τ t φ                                         -- Embed Layer 1
@@ -585,16 +585,16 @@ def extended_truth_at (M : ExtendedTaskModel F) (τ : WorldHistory F) (t : F.Tim
 ```lean
 -- Global validity (truth at all history-time pairs in all task models)
 def valid (φ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     M, τ, t ⊨ φ
 
 -- Local validity (truth at all history-time pairs in a specific model)
 def valid_in_model (M : TaskModel F) (φ : Formula) : Prop :=
-  ∀ (τ : WorldHistory F) (t : F.Time), M, τ, t ⊨ φ
+  ∀ (τ : ConvexHistory F) (t : F.Time), M, τ, t ⊨ φ
 
 -- Semantic consequence
 def SemanticConsequence (Γ : Context) (φ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     (∀ ψ ∈ Γ, M, τ, t ⊨ ψ) → M, τ, t ⊨ φ
 
 notation Γ " ⊨ " φ => SemanticConsequence Γ φ
@@ -602,12 +602,12 @@ notation " ⊨ " φ => valid φ
 
 -- Satisfiability
 def satisfiable (Γ : Context) : Prop :=
-  ∃ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∃ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     ∀ φ ∈ Γ, M, τ, t ⊨ φ
 
 -- Semantic equivalence
 def semantically_equivalent (φ ψ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     (M, τ, t ⊨ φ) ↔ (M, τ, t ⊨ ψ)
 ```
 
@@ -654,7 +654,7 @@ def canonical_model : TaskModel canonical_frame := {
 
 -- Canonical history construction from set-based maximal consistent set
 def canonical_history (S : CanonicalWorldState) :
-  WorldHistory canonical_frame := by
+  ConvexHistory canonical_frame := by
   sorry -- Construct history where each time maps to a maximal consistent set
 
 -- Modal saturation lemma for canonical model (set-based)
@@ -1087,7 +1087,7 @@ FormalSystem/                              # Main source directory
 │   └── AxiomDischarge.lean
 ├── Semantics/
 │   ├── TaskFrame.lean                     # Task frame structure
-│   ├── WorldHistory.lean                  # World history definition
+│   ├── ConvexHistory.lean                  # Convex history definition
 │   ├── TaskModel.lean                     # Task model with valuation
 │   ├── Truth.lean                         # Truth evaluation
 │   ├── BLTruth.lean                       # Native truth evaluation for the base language
@@ -1421,8 +1421,8 @@ The proof-checker's task semantics provides the formal foundation for the model-
 
 - **World States**: Correspond to model-checker's possible states
 - **Task Relation**: Models transitions between states (compatible with model-checker's task relations)
-- **World Histories**: Functions from times to world states (formalize model-checker's temporal evolution)
-- **Convexity**: Ensures world histories span continuous time intervals
+- **Convex Histories**: Functions from times to world states (formalize model-checker's temporal evolution)
+- **Convexity**: Ensures convex histories span continuous time intervals
 
 This alignment enables **bidirectional verification**:
 1. Model-checker finds satisfying models → Proof-checker verifies inference validity
@@ -1435,7 +1435,7 @@ The layered architecture provides clear development milestones:
 **Layer 0 (Current Implementation)**:
 - Complete language: Boolean + Modal + Temporal
 - Complete proof system: TM with 45 axiom constructors and 7 inference rules
-- Complete semantics: Task frames, world histories, truth evaluation
+- Complete semantics: Task frames, convex histories, truth evaluation
 - Complete metalogic: full soundness proof over all 45 axiom constructors; weak completeness
   proven and sorryAx-free for all four frame classes (Base, Dense, ZTime, RTime).
   *Strong* completeness -- consequence from an arbitrary infinite premise set -- is a separate

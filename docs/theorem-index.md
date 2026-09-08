@@ -31,7 +31,9 @@ the mapping.
 | Paper term | Lean identifier | Notes |
 |------------|-----------------|-------|
 | task frame | `FormalSystem.Semantics.TaskFrame` | `def:frame`; four axioms — Compositionality, Seriality, Limit, Saturation. Nullity is *derived*, not an axiom |
-| world history / possible world | `FormalSystem.Semantics.WorldHistory` | `def:world-history`; a total history is a possible world |
+| partial history | `FormalSystem.Semantics.PartialHistory` | `def:world-history`; nonempty domain, no convexity requirement |
+| convex history | `FormalSystem.Semantics.ConvexHistory` | `def:world-history`; a partial history whose domain is convex. **Not** a possible world: a bounded convex history is a member of neither `HF` nor the paper's top tier |
+| possible world | `TaskFrame.HF` (predicate form: `ConvexHistory.IsTotal`) | `def:world-history`; a convex history whose domain is total, so `X = D`. `HF` is the paper's `H_F` |
 | task relation `w ⇒ₓ v` | `TaskFrame.TaskRel` | `def:task-relation` |
 | duration group `D` | `FormalSystem.Semantics.TemporalOrder` | `def:temporal-order`; a nontrivial totally ordered abelian group |
 | TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus`. The paper calls this system **TM**, without the superscript, and its language **BL**; the anchor id is unchanged but its text is not. The tree's `⁺` marks the since/until side against its own Past/Future `TM` — see `Metalogic/Conservativity.lean` |

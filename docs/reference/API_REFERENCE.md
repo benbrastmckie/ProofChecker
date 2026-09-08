@@ -185,16 +185,16 @@ structure TaskModel (F : TaskFrame) where
 
 ---
 
-### WorldHistory (`FormalSystem.Semantics.WorldHistory`)
+### ConvexHistory (`FormalSystem.Semantics.ConvexHistory`)
 
-**Module**: `FormalSystem/Semantics/WorldHistory.lean`
+**Module**: `FormalSystem/Semantics/ConvexHistory.lean`
 
-World histories representing functions from convex time intervals to world states.
+Convex histories representing functions from convex time intervals to world states; the total ones are the possible worlds, collected as `TaskFrame.HF`.
 
 #### Structure Definition
 
 ```lean
-structure WorldHistory (F : TaskFrame) where
+structure ConvexHistory (F : TaskFrame) where
   domain : F.Duration → Prop
   states : (t : F.Duration) → domain t → F.WorldState
   task_coherence : ∀ t s ∈ domain, F.TaskRel (history t) (s - t) (history s)
@@ -211,7 +211,7 @@ structure WorldHistory (F : TaskFrame) where
 
 **Module**: `FormalSystem/Semantics/Truth.lean`
 
-Truth definition for formulas at world histories and times.
+Truth definition for formulas at convex histories and times.
 
 **Note**: Currently has build errors (type mismatch with `swap_past_future`).
 

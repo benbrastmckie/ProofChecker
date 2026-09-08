@@ -8,9 +8,9 @@
 
 The TM logic completeness proof uses a **two-level bundling architecture** to model both temporal and modal aspects of formulas:
 
-1. **FMCS (Family of MCS)**: A single "world history" - one maximal consistent set (MCS) per time point with temporal coherence conditions ensuring G/H formulas propagate correctly.
+1. **FMCS (Family of MCS)**: A single "possible world" - one maximal consistent set (MCS) per time point with temporal coherence conditions ensuring G/H formulas propagate correctly.
 
-2. **BFMCS (Bundle of FMCS)**: A collection of world histories with modal coherence conditions ensuring Box/Diamond formulas relate correctly across histories.
+2. **BFMCS (Bundle of FMCS)**: A collection of possible worlds with modal coherence conditions ensuring Box/Diamond formulas relate correctly across histories.
 
 **Key insight**: G-content propagates automatically through seeding (the 4_G axiom ensures G(phi) -> G(G(phi))), while F-obligations require explicit witness tracking because F(phi) -> G(F(phi)) is semantically invalid.
 
@@ -26,8 +26,8 @@ Quot.sound]`, asserted by check C2.
 ## Table of Contents
 
 1. [Ontology Overview](#1-ontology-overview)
-   - [FMCS: Single World History](#11-fmcs-single-world-history)
-   - [BFMCS: Bundle of World Histories](#12-bfmcs-bundle-of-world-histories)
+   - [FMCS: Single Possible World](#11-fmcs-single-possible-world)
+   - [BFMCS: Bundle of Possible Worlds](#12-bfmcs-bundle-of-possible-worlds)
    - [Why Two Levels?](#13-why-two-levels)
 2. [Propagation Mechanics](#2-propagation-mechanics)
    - [G-Content Automatic Propagation](#21-g-content-automatic-propagation)
@@ -44,9 +44,9 @@ Quot.sound]`, asserted by check C2.
 
 ## 1. Ontology Overview
 
-### 1.1 FMCS: Single World History
+### 1.1 FMCS: Single Possible World
 
-An **FMCS** (Family of Maximal Consistent Sets) represents a single complete "world history" --
+An **FMCS** (Family of Maximal Consistent Sets) represents a single complete "possible world" --
 one MCS at each time point, with temporal coherence. The carrier `D` is a `Preorder`, not
 fixed to `Int`.
 
@@ -79,16 +79,16 @@ MCS:        M_{-2} M_{-1} M_0  M_1  M_2  M_3
               Temporal coherence constraints
 ```
 
-### 1.2 BFMCS: Bundle of World Histories
+### 1.2 BFMCS: Bundle of Possible Worlds
 
-A **BFMCS** (Bundle of Families of MCS) is a collection of FMCS structures (world histories)
+A **BFMCS** (Bundle of Families of MCS) is a collection of FMCS structures (possible worlds)
 with modal coherence.
 
 **Definition** (from `FormalSystem/Metalogic/Bundle/BFMCS.lean`, line 91):
 
 ```lean
 structure BFMCS (fc : FrameClass := FrameClass.Base) where
-  families : Set (FMCS (fc := fc) D)   -- Collection of world histories
+  families : Set (FMCS (fc := fc) D)   -- Collection of possible worlds
   nonempty : families.Nonempty
   modal_forward : forall fam in families, forall phi t,
     Formula.box phi ∈ fam.mcs t -> forall fam' in families, phi ∈ fam'.mcs t
@@ -99,10 +99,10 @@ structure BFMCS (fc : FrameClass := FrameClass.Base) where
 ```
 
 **Semantic interpretation**:
-- `families`: Set of possible world histories
+- `families`: Set of possible worlds
 - `modal_forward`: Box(phi) at time t in any history means phi at time t in ALL histories
 - `modal_backward`: phi at time t in ALL histories means Box(phi) at time t in each history
-- `evalFamily`: The "actual" world history used for evaluation
+- `evalFamily`: The "actual" possible world used for evaluation
 
 **Visual representation**:
 ```

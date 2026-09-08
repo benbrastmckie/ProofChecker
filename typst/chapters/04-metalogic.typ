@@ -39,7 +39,7 @@ The proof proceeds by induction on the derivation structure:
 - *Weakening*: Adding premises preserves semantic consequence
 
 The axiom validity lemmas live in `Metalogic/SoundnessLemmas/` (with `CoValidity.lean`, `DiscreteOrder.lean`, `Separability.lean`, and `FrameClassVariants.lean`), and the frame-condition semantics for the Base/Dense/ZTime classes is developed in `Semantics/FrameProperty.lean` and `Semantics/FrameClassValidity.lean` (the RTime class's semantic side lives in `WeakCanonical/RealModel/`, per @sec:frame-classes).
-The modal-temporal interaction axiom MF uses time-shift invariance (via `timeShift` on world histories) to relate truth at different times.
+The modal-temporal interaction axiom MF uses time-shift invariance (via `timeShift` on convex histories) to relate truth at different times.
 
 == Core Infrastructure
 

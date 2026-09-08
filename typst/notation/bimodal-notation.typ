@@ -67,7 +67,7 @@
 // model is imported from shared-notation.typ
 #let valuation = $V$
 
-// --- World History ---
+// --- Histories ---
 #let history = $tau$
 #let althistory = $sigma$
 #let domain = $"dom"$

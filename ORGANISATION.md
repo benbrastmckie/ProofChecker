@@ -15,7 +15,7 @@ graph itself, with its exceptions drawn rather than described, is in
 | 4 | `Automation/` | Tactics, proof search, the ML dataset pipeline |
 | 3 | `Theorems/` | Derived object-logic theorems |
 | 2 | `Metalogic/` | Soundness, completeness, compactness, decidability |
-| 1 | `Semantics/` | `TaskFrame`, `WorldHistory`, `TaskModel`, `TruthAt`, validity |
+| 1 | `Semantics/` | `TaskFrame`, `ConvexHistory`, `TaskModel`, `TruthAt`, validity |
 | 0 | `Syntax/`, `ProofSystem/`, `StarLanguage/`, `ForMathlib/` | Formulas, axioms, derivations |
 
 Two edges run *upward* through that stack, and both are deliberate:

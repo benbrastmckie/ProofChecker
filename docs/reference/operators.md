@@ -96,7 +96,7 @@ Modal necessity operator from S5 modal logic - expresses metaphysical necessity.
 
 **Formal Definition**: Primitive operator quantifying over all possible worlds
 **LEAN Code**: `Formula.box φ`
-**Semantics**: `M,h,t ⊨ □φ` iff for all world histories h', `M,h',t ⊨ φ`
+**Semantics**: `M,h,t ⊨ □φ` iff for all possible worlds h', `M,h',t ⊨ φ`
 **Axioms**: MT (`□φ → φ`), M4 (`□φ → □□φ`), MB (`φ → □◇φ`)
 **See also**: [◇ (possibility)](#-diamond--possibility)
 **Duality**: `□φ ↔ ¬◇¬φ`
@@ -107,7 +107,7 @@ Modal possibility operator from S5 modal logic - expresses metaphysical possibil
 
 **Formal Definition**: `◇φ := ¬□¬φ` (interdefinable with necessity)
 **LEAN Code**: Defined via `Formula.box` and negation
-**Semantics**: `M,h,t ⊨ ◇φ` iff there exists some world history h' such that `M,h',t ⊨ φ`
+**Semantics**: `M,h,t ⊨ ◇φ` iff there exists some possible world h' such that `M,h',t ⊨ φ`
 **See also**: [□ (necessity)](#-box--necessity)
 **Duality**: `◇φ ↔ ¬□¬φ`
 **Examples**: `◇(p ∧ q)` means "possibly both p and q"
@@ -266,7 +266,7 @@ Semantic consequence relation - expresses validity in task frame models.
 
 **Formal Definition**: `Γ ⊨ φ` means φ is true in all task models where all formulas in Γ are true
 **LEAN Code**: `valid Γ φ` (semantic validity definition)
-**Semantics**: Based on task frame structures with world histories and time domains
+**Semantics**: Based on task frame structures with convex histories and time domains
 **See also**: [⊢ (provability)](#-turnstile--provability)
 **Completeness**: available in the **finite-context** form only. `Context` is `List Formula`,
 so `consequence_completeness` (`FormalSystem/Metalogic/StrongCompleteness.lean`) is
@@ -303,7 +303,7 @@ Set membership relation.
 **LEAN Code**: LEAN's `∈` for sets and types
 **Usage Context**: Time domains, world state sets, formula contexts
 **See also**: [⊆ (subset)](#-subset-relation)
-**Examples**: `t ∈ domain(h)` (time in world history domain)
+**Examples**: `t ∈ domain(h)` (time in convex history domain)
 
 ### ⊆ (subset relation)
 Subset relation between sets.
@@ -404,11 +404,11 @@ ProofChecker follows consistent naming conventions for variables across document
 **LEAN Usage**: `(τ σ : Time)`
 **Examples**: `τ < σ`, `τ ∈ domain(h)`
 
-### World Histories
-- **h** - Primary world history variable
-- **h'** - Alternative world history
+### Histories
+- **h** - Primary convex history variable
+- **h'** - Alternative convex history
 
-**LEAN Usage**: `(h : WorldHistory)`
+**LEAN Usage**: `(h : ConvexHistory)`
 **Examples**: `M,h,τ ⊨ φ`
 
 ### Models

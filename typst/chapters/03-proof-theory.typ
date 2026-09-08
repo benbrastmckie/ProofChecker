@@ -63,7 +63,7 @@ Together with modus ponens, these four schemata axiomatize classical proposition
   caption: none,
 )
 
-The metaphysical necessity operator $square.stroked$ is S5: it quantifies over all admissible world histories at the current time.
+The metaphysical necessity operator $square.stroked$ is S5: it quantifies over all possible worlds at the current time.
 
 === Layer 3: BX Temporal (22)
 

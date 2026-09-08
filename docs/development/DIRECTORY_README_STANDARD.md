@@ -408,7 +408,7 @@ Evaluates truth of a formula at a model, history, and time.
 **Parameters**:
 - `M : TaskModel W S T Γ`: The task model
 - `φ : Formula`: The formula to evaluate
-- `h : WorldHistory W S T`: The world history
+- `h : ConvexHistory F`: The convex history over task frame `F`
 - `t : T`: The time point
 
 **Returns**: `Prop` - Truth value

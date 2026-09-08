@@ -311,7 +311,7 @@ The base language's **semantics** deliberately does not live here, so that the d
 
 ### Semantics
 * `FormalSystem.Semantics.TaskFrame`
-* `FormalSystem.Semantics.WorldHistory`
+* `FormalSystem.Semantics.ConvexHistory`
 * `FormalSystem.Semantics.TaskModel`
 * `FormalSystem.Semantics.Truth`
 * `FormalSystem.Semantics.BLTruth` -- `BLTruthAt`, the native base-language truth recursion

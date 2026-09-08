@@ -94,7 +94,7 @@ Both directions are load-bearing; in particular the interpolation direction is u
 \emph{Seriality} provides, at every nonnegative duration, both a successor and a predecessor for every world state, so no world state is a temporal dead end in either direction.
 \emph{Limit} excludes world states that are distinct from $w$ and yet reachable from $w$ within arbitrarily small durations; equivalently, $w$ is the only world state lying in every cone around $w$.
 \emph{Saturation} is a directed-intersection condition: any $\supseteq$-directed family drawn from the nonempty fibers and segments has a common element.
-It supplies the candidate world state needed to extend a partial history to one further time, and is consumed exactly at that step of the extension argument for world histories.
+It supplies the candidate world state needed to extend a partial history to one further time, and is consumed exactly at that step of the extension argument for possible worlds.
 
 % Restates the JPL paper's derived \label{lem:nullity} (Nullity is a lemma, not an axiom).
 % Verbatim source text:
@@ -112,10 +112,10 @@ Composition over negative durations is likewise derived rather than postulated: 
 Mixed-sign composition is not so much prohibited as inexpressible at the primitive level, since primitive durations are nonnegative.
 \end{remark}
 
-\subsection{World Histories}
+\subsection{Convex Histories}
 
-A world history is a function from times to world states that respects the task relation over a convex temporal domain.
-World histories represent possible paths through the space of world states.
+A convex history is a function from times to world states that respects the task relation over a convex temporal domain.
+Convex histories represent possible paths through the space of world states; the ones whose domain is total are the \textbf{possible worlds}.
 
 \begin{definition}[Convex Domain]
 A domain $\domain : D \to \text{Prop}$ is \textbf{convex} if whenever $a, c \in \domain$ with $a \le c$, every time $b$ with $a \le b \le c$ is also in $\domain$.
@@ -123,9 +123,9 @@ More precisely, for all $a, b, c : D$, if $\domain(a)$ and $\domain(c)$ and $a \
 Convexity ensures the domain has no temporal gaps.
 \end{definition}
 
-\begin{definition}[World History]
-A \textbf{world history} in a task frame $\taskframe$ is a dependent function $\tau : (x : D) \to \domain(x) \to \worldstate$ where $\domain : D \to \text{Prop}$ is a convex subset of $D$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : D$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
-We write $\histories_{\taskframe}$ for all world histories over frame $\taskframe$.
+\begin{definition}[Convex History]
+A \textbf{convex history} in a task frame $\taskframe$ is a dependent function $\tau : (x : D) \to \domain(x) \to \worldstate$ where $\domain : D \to \text{Prop}$ is a convex subset of $D$ and $\tau(x) \taskto{y-x} \tau(y)$ for all times $x, y : D$ with $\domain(x)$, $\domain(y)$, and $x \le y$.
+We write $\histories_{\taskframe}$ for the \textbf{possible worlds} over frame $\taskframe$: the convex histories whose domain is total, so that $\domain(x)$ holds for every $x : D$.
 \end{definition}
 
 \subsection{Task Models}
@@ -142,7 +142,7 @@ We write $I(w, p)$ to indicate that sentence letter $p$ is true at $w$.
 
 \subsection{Truth Conditions}
 
-Truth is evaluated relative to a model $\model$ providing the interpretation, a world history $\tau$ representing a possible path through the space of world states, and a time $x : D$.
+Truth is evaluated relative to a model $\model$ providing the interpretation, a possible world $\tau$ representing a complete path through the space of world states, and a time $x : D$.
 Whereas the model fixes the interpretation of the language, the contextual parameters $\tau$ and $x$ determine the truth value of every sentence of the langauge.
 
 \begin{definition}[Truth]
@@ -162,7 +162,7 @@ For model $\model$, history $\tau : \histories_{\taskframe}$, and time $x : D$:
 \end{definition}
 
 \noindent
-The modal operator $\nec$ quantifies over all world histories $\sigma : \histories_{\taskframe}$ at the current time $x : D$.
+The modal operator $\nec$ quantifies over all possible worlds $\sigma : \histories_{\taskframe}$ at the current time $x : D$.
 The temporal operators $\allpast$ and $\allfuture$ quantify over all earlier and later times $y : D$.
 
 
@@ -177,7 +177,7 @@ It is natural to assume that whatever is necessary is always the case, or equiva
 Time-shift enables proofs of the bimodal axioms MF ($\nec\varphi \imp \nec\allfuture\varphi$) and TF ($\nec\varphi \imp \allfuture\nec\varphi$) which together imply the perpetuity principles.
 
 \begin{definition}[Time-Shift]
-For $\tau, \sigma \in \histories_{\taskframe}$ and $x, y : D$, world histories $\tau$ and $\sigma$ are \textbf{time-shifted from $y$ to $x$}, written $\tau \approx_y^x \sigma$, if and only if there exists an order automorphism $\bar{a} : D \to D$ where $y = \bar{a}(x)$, $\domain_\sigma = \bar{a}^{-1}(\domain_\tau)$, and $\sigma(z) = \tau(\bar{a}(z))$ for all $z \in \domain_\sigma$.
+For $\tau, \sigma \in \histories_{\taskframe}$ and $x, y : D$, possible worlds $\tau$ and $\sigma$ are \textbf{time-shifted from $y$ to $x$}, written $\tau \approx_y^x \sigma$, if and only if there exists an order automorphism $\bar{a} : D \to D$ where $y = \bar{a}(x)$, $\domain_\sigma = \bar{a}^{-1}(\domain_\tau)$, and $\sigma(z) = \tau(\bar{a}(z))$ for all $z \in \domain_\sigma$.
 \end{definition}
 
 \noindent

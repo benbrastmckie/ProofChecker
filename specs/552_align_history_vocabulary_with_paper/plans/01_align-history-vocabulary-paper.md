@@ -180,7 +180,7 @@ numbers will have drifted if any sibling task has landed since this plan was wri
 
 ---
 
-### Phase 2: Lean identifier and file rename [NOT STARTED]
+### Phase 2: Lean identifier and file rename [IN PROGRESS]
 
 **Goal**: `ConvexHistory` becomes the name of the convex-tier structure, namespace, module file
 and every derived identifier, with a green `lake build FormalSystem` and zero proof-term change.
@@ -240,7 +240,7 @@ below the pre-edit `WorldHistory` count means the target list was too narrow.
 
 ---
 
-### Phase 3: Lean prose, docstrings and paper re-quotation [NOT STARTED]
+### Phase 3: Lean prose, docstrings and paper re-quotation [IN PROGRESS]
 
 **Goal**: Every live Lean docstring and `FormalSystem/` README states the paper's three tiers
 correctly, with all `verbatim:` quotations copied fresh from the current paper text.
@@ -322,40 +322,40 @@ numbers in the task list above are pre-Phase-2 and will have shifted.
 
 ---
 
-### Phase 4: docs / typst / latex prose [NOT STARTED]
+### Phase 4: docs / typst / latex prose [COMPLETED]
 
 **Goal**: The documentation, Typst and LaTeX trees use the paper's vocabulary and reference the
 renamed module, with `typst-sync-check.sh` violations not exceeding the baseline of 4.
 
 **Tasks**:
-- [ ] First pass again: `total world histor*` -> "possible world(s)" across all three roots.
-- [ ] Second pass: remaining "world history" -> "convex history" or "possible world" by tier.
-- [ ] `typst/chapters/02-semantics.typ` — the typst-sync-check-coupled sites:
+- [x] First pass again: `total world histor*` -> "possible world(s)" across all three roots.
+- [x] Second pass: remaining "world history" -> "convex history" or "possible world" by tier.
+- [x] `typst/chapters/02-semantics.typ` — the typst-sync-check-coupled sites:
       - line 262: backticked `Semantics/WorldHistory.lean` path and `WorldHistory` /
         `WorldHistory.IsTotal` type names -> `ConvexHistory` forms.
       - line 285: footnote "quantifies over all total world histories (`WorldHistory.IsTotal`)"
         -> "quantifies over all possible worlds (`ConvexHistory.IsTotal`)".
       - line 341: footnote path `timeShift` in `Semantics/WorldHistory.lean` -> `ConvexHistory.lean`.
       - remaining ~13 prose lines in the same file.
-- [ ] `typst/chapters/00-introduction.typ` (~9), `typst/FormalFoundations.typ` (~2, including the
+- [x] `typst/chapters/00-introduction.typ` (~9), `typst/FormalFoundations.typ` (~2, including the
       lines 247-249 restatement of the old two-step layering), plus 3 singleton files.
-- [ ] `docs/theorem-index.md:34` — split the glossary row
+- [x] `docs/theorem-index.md:34` — split the glossary row
       `| world history / possible world | FormalSystem.Semantics.WorldHistory | … |` into two
       rows, mirroring the `Semantics.lean:185` fix. This row is the false friend written down.
-- [ ] `docs/architecture/BFMCS_ARCHITECTURE.md` (~11), `docs/user-guide/architecture.md` (~8),
+- [x] `docs/architecture/BFMCS_ARCHITECTURE.md` (~11), `docs/user-guide/architecture.md` (~8),
       `docs/reference/operators.md` (~7), `docs/user-guide/tutorial.md` (~3),
       `docs/reference/API_REFERENCE.md` (~2), `docs/development/LEAN_STYLE_GUIDE.md` (~2),
       `docs/development/DIRECTORY_README_STANDARD.md` (~1 — also fix line ~411's stale
       three-parameter signature `h : WorldHistory W S T`; current is `ConvexHistory (F : TaskFrame)`).
-- [ ] `latex/subfiles/02-Semantics.tex` (~10), `latex/subfiles/00-Introduction.tex` (~3),
+- [x] `latex/subfiles/02-Semantics.tex` (~10), `latex/subfiles/00-Introduction.tex` (~3),
       `latex/subfiles/06-Notes.tex` (~1), `latex/assets/bimodal-notation.sty:72`
       (`% --- World History ---` section comment).
-- [ ] `latex/subfiles/04-Metalogic.tex:54` — the sole `latex/` identifier site. Update the module
+- [x] `latex/subfiles/04-Metalogic.tex:54` — the sole `latex/` identifier site. Update the module
       path AND correct the stale line citation: it cites `WorldHistory.lean:246` for `timeShift`,
       which now lives near line 304 (re-derive the post-rename line number rather than trusting
       either figure).
-- [ ] `Tests/BimodalTest/Semantics/TruthTest.lean:35` comment (1 line).
-- [ ] Skip `latex/**/build/*` and `latex/build/*` entirely — generated `.aux`, `.toc`, `.log`.
+- [x] `Tests/BimodalTest/Semantics/TruthTest.lean:35` comment (1 line).
+- [x] Skip `latex/**/build/*` and `latex/build/*` entirely — generated `.aux`, `.toc`, `.log`.
 
 **Timing**: 1.5 hours
 

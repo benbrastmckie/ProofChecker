@@ -19,18 +19,18 @@ This book presents the bimodal system itself, in full: its formal specification 
 
 *TM* combines S5 historical modal operators for necessity ($square.stroked$) and possibility ($diamond.stroked$) with linear temporal operators for past ($H$) and future ($G$), all built over a *Since/Until* primitive basis.
 Precisely: *TM* is Since/Until temporal logic over linearly ordered abelian groups of durations -- discrete or dense generally, with $ZZ$ the successor-Archimedean carrier of the discrete completeness theorem and $QQ$ the dense chronicle carrier -- fused with S5, plus a load-bearing modal-temporal interaction axiom (MF) and uniformity axiom layers over task frames.
-The Since/Until basis and the interaction axioms make *TM* a genuine fusion of temporal and modal reasoning rather than a temporal logic with a modal operator adjoined: the S5 modality quantifies across world histories, the temporal operators quantify within a single history, and the interaction axioms bind the two dimensions together (@sec:notes records the system's design notes in detail).
+The Since/Until basis and the interaction axioms make *TM* a genuine fusion of temporal and modal reasoning rather than a temporal logic with a modal operator adjoined: the S5 modality quantifies across possible worlds, the temporal operators quantify within a single history, and the interaction axioms bind the two dimensions together (@sec:notes records the system's design notes in detail).
 Beyond *TM* itself lies a natural extension hierarchy: the Vlach store/recall operators for cross-referencing worlds and times, and the BL#super[⋆] tower, surveyed at the close of Part I.
 
 *Why task frames rather than Kripke frames.*
 A Kripke model for a bimodal logic would posit two independent primitives: a set of "worlds" with an accessibility relation for $square.stroked$, and, orthogonally, a set of "times" with an order for $H$/$G$ -- two structures glued together after the fact, with nothing to explain why they interact at all.
-Task frames build the two dimensions out of a *single* underlying construction instead (@sec:world-histories).
-A *world state* is an instant; a *task relation* $w arrow.r.double.long_x u$ says that a task of duration $x$ carries world state $w$ to world state $u$; and a *possible world*, in the sense $square.stroked$ quantifies over, is not a primitive point but a *total world history* -- a specific temporal trajectory built by chaining task-relation steps across every duration.
+Task frames build the two dimensions out of a *single* underlying construction instead (@sec:convex-histories).
+A *world state* is an instant; a *task relation* $w arrow.r.double.long_x u$ says that a task of duration $x$ carries world state $w$ to world state $u$; and a *possible world*, in the sense $square.stroked$ quantifies over, is not a primitive point but a *total convex history* -- a specific temporal trajectory built by chaining task-relation steps across every duration.
 Modal accessibility between possible worlds is therefore *derived* from the finer-grained task relation between world states, rather than posited as an independent primitive alongside it, and this is exactly what makes the interaction axiom MF (below) a substantive discovery about the construction rather than a stipulation bolted on afterward.
 This is the sense in which the source paper is about *constructing* possible worlds rather than positing them.
 
 *Why the temporal order is an ordered abelian group, not a bare linear order.*
-Durations need to *add*: a task of duration $x$ followed by one of duration $y$ composes into a single task of duration $x + y$ (the *Compositionality* frame axiom, @sec:world-histories), and negative durations recover the converse of a task by the sign of its duration.
+Durations need to *add*: a task of duration $x$ followed by one of duration $y$ composes into a single task of duration $x + y$ (the *Compositionality* frame axiom, @sec:convex-histories), and negative durations recover the converse of a task by the sign of its duration.
 A bare linear order has no addition to state this with, so the temporal order $D$ is required to be a nontrivial totally ordered abelian group.
 That choice pays off far downstream, and it is worth flagging early because the payoff is genuinely striking: *every* nontrivial totally ordered abelian group is either discrete (has a least positive element) or dense, and never both -- a dichotomy that *fails* for bare linear orders (a copy of $ZZ$ followed by a copy of $QQ$ is neither) and holds for ordered abelian groups only because translation invariance globalizes any local gap or density witness into a global one.
 This single algebraic fact -- stated as a standalone theorem in @sec:dichotomy -- is the reason *TM*'s frame classes split into `Dense`/`ZTime`/`RTime` branches (@sec:frame-classes), and it is what makes the canonical construction's case split exhaustive (@sec:metalogic).
@@ -45,9 +45,9 @@ The perpetuity principles are the clearest evidence that the fusion is doing rea
   #cetz.canvas({
     import cetz.draw: *
 
-    // A single timelike world history through x, with its past/future light
+    // A single timelike possible world through x, with its past/future light
     // cones opening along the trajectory direction. Time increases along tau.
-    let theta = 20deg          // inclination of the world history
+    let theta = 20deg          // inclination of the possible world
     let alpha = 34deg          // light-cone half-angle
     let L = 1.9                // cone edge length
     let pt(ang, r) = (calc.cos(ang) * r, calc.sin(ang) * r)
@@ -80,7 +80,7 @@ The perpetuity principles are the clearest evidence that the fusion is doing rea
     bezier(x, pt(214deg, 1.75), (-0.55, -0.15), pt(214deg, 1.2),
       stroke: dstroke, mark: (end: ">", fill: gray.lighten(35%)))
 
-    // The actual world history tau: ONE smooth S threading through x.
+    // The actual possible world tau: ONE smooth S threading through x.
     // S0, x, S1 are collinear (along theta), so the curve must cross that
     // center line at x. Both lobes share a single tangent at x that is
     // STEEPER than the line (~38deg): the past lobe stays below the line as a
@@ -96,7 +96,7 @@ The perpetuity principles are the clearest evidence that the fusion is doing rea
       stroke: (paint: blue.darken(40%), thickness: 2pt),
       mark: (end: ">", fill: blue.darken(40%)))
 
-    // Label tau near the past end of the world history
+    // Label tau near the past end of the possible world
     content((S0.at(0) + 0.2, S0.at(1) + 0.3),
       text(fill: blue.darken(40%), size: 10pt)[$tau$])
 
@@ -108,11 +108,11 @@ The perpetuity principles are the clearest evidence that the fusion is doing rea
 
 #align(center)[
   #text(size: 0.85em, style: "italic")[
-    A single world history $tau$ (the actual evolution, solid) through task-frame state space. From point $x$, the past/future light cones (shaded) contain the states that are modally accessible via $square.stroked$/$diamond.stroked$; the temporal operators $H$/$G$ quantify strictly within a single history's past/future. Dotted paths are *not* alternative histories in *TM*'s formalization.
+    A single possible world $tau$ (the actual evolution, solid) through task-frame state space. From point $x$, the past/future light cones (shaded) contain the states that are modally accessible via $square.stroked$/$diamond.stroked$; the temporal operators $H$/$G$ quantify strictly within a single history's past/future. Dotted paths are *not* alternative histories in *TM*'s formalization.
   ]
 ]
 
-The solid curve $tau$ above represents a single world history -- a temporal sequence of states.
+The solid curve $tau$ above represents a single possible world -- a temporal sequence of states.
 From any point $x$ along a history, the past and future light cones contain all states that are modally accessible.
 The necessity operator $square.stroked$ quantifies over all possible histories, though we may often restrict to those histories that pass through the world state $tau(x)$.
 The temporal operators $H$ and $G$ quantify over past and future times which, given a particular history, determine the range of past and future world states that history occupies relative to a given time.
@@ -154,7 +154,7 @@ Formal claims are typeset with their Lean identifiers in fixed-width font (e.g. 
 The Lean 4 implementation is in the `FormalSystem/` directory:
 - `Syntax/` -- Defines the formula language with 6 primitive constructors (atoms, $bot$, implication, $square.stroked$, Since, Until) and derived operators.
 - `ProofSystem/` -- The Burgess-Xu (BX) axiom system: #axiom-count axiom constructors in 9 layers and #rule-count inference rules forming a Hilbert-style proof system, parameterized by frame class (Base/Dense/ZTime/RTime).
-- `Semantics/` -- Task frames model possible worlds; world histories model time (partial, then convex/world, then total -- @sec:world-histories); strict (irreflexive) truth conditions define meaning; `Extension/` runs the existence machinery (Constraint Lemma through the Extension Theorem) as a machine-checked chain.
+- `Semantics/` -- Task frames model possible worlds; histories model time (partial, then convex, then total -- @sec:convex-histories); strict (irreflexive) truth conditions define meaning; `Extension/` runs the existence machinery (Constraint Lemma through the Extension Theorem) as a machine-checked chain.
 - `Metalogic/` -- Soundness for all four frame classes (Base, Dense, ZTime, RTime), the deduction theorem and Lindenbaum lemma, the canonical-model machinery carrying the completeness theorems of @sec:metalogic, and the tableau-based decision procedure.
 - `Theorems/` -- Perpetuity principles (P1--P6), modal and propositional theorem libraries, and derived temporal axioms.
 - `Automation/`, `Examples/` -- Proof tactics, the training-data pipeline, and worked examples, covered in Part II.

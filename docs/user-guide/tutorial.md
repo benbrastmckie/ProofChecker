@@ -303,13 +303,13 @@ structure TaskFrame where
   TaskRel : WorldState → Time → WorldState → Prop  -- Task relation
 ```
 
-### World Histories
+### Convex Histories
 
-A world history is a function from times to world states:
+A convex history is a function from times to world states (a **possible world** is one whose domain is all of `D`):
 
 ```lean
--- World history maps convex time interval to world states
-structure WorldHistory (F : TaskFrame) where
+-- Convex history maps convex time interval to world states
+structure ConvexHistory (F : TaskFrame) where
   domain : Set F.Time
   convex : IsConvex F domain
   states : (t : F.Time) → t ∈ domain → F.WorldState
@@ -331,12 +331,12 @@ Truth at a model-history-time triple:
 
 ```lean
 -- Evaluate formula truth
-def TruthAt (M : TaskModel F) (τ : WorldHistory F) (t : F.Time) :
+def TruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time) :
   Formula → Prop
   | Formula.atom p => t ∈ τ.domain ∧ τ(t) ∈ M.valuation p
   | Formula.bot => False
   | Formula.imp φ ψ => TruthAt M τ t φ → TruthAt M τ t ψ
-  | Formula.box φ => ∀ σ : WorldHistory F, TruthAt M σ t φ
+  | Formula.box φ => ∀ σ : ConvexHistory F, TruthAt M σ t φ
   | Formula.allPast φ => ∀ s < t, TruthAt M τ s φ
   | Formula.allFuture φ => ∀ s > t, TruthAt M τ s φ
 ```
@@ -346,12 +346,12 @@ def TruthAt (M : TaskModel F) (τ : WorldHistory F) (t : F.Time) :
 ```lean
 -- Global validity
 def valid (φ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     M, τ, t ⊨ φ
 
 -- Semantic consequence
 def SemanticConsequence (Γ : Context) (φ : Formula) : Prop :=
-  ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F) (t : F.Time),
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F) (t : F.Time),
     (∀ ψ ∈ Γ, M, τ, t ⊨ ψ) → M, τ, t ⊨ φ
 ```
 

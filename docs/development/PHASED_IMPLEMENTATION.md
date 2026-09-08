@@ -23,7 +23,7 @@ actionable phases with time-saving parallelization strategies.
 - Complete soundness proofs (Task 5)
 - Complete perpetuity proofs (Task 6)
 - Implement core automation (Task 7)
-- Fix WorldHistory helper (Task 8)
+- Fix ConvexHistory helper (Task 8)
 
 **Out of Scope** (Layer 0):
 - Completeness proofs (Task 9) - 70-90 hours, Wave 3
@@ -124,7 +124,7 @@ Prioritize Task 2 completion to avoid blocking Wave 2.
 ## 3. Wave 2 - Medium Priority Implementation (77-113 hours, partial parallelization)
 
 **Objective**: Complete soundness proofs, perpetuity theorems, core automation, and
-WorldHistory helper. Tasks 5, 7, 8 can run in parallel; Task 6 requires Task 2
+ConvexHistory helper. Tasks 5, 7, 8 can run in parallel; Task 6 requires Task 2
 completion.
 
 **Completion Signal**: Soundness 100%, Perpetuity P1-P6 proven, 4 tactics implemented
@@ -208,7 +208,7 @@ allows incremental progress.
 
 **Outputs**: 4 working tactics, 40-50% automation coverage
 
-### Task 8: Fix WorldHistory (1-2 hours) - Can run parallel with all
+### Task 8: Fix ConvexHistory (1-2 hours) - Can run parallel with all
 
 **Description**: Prove `respects_task` property for universal history helper.
 
@@ -217,13 +217,13 @@ allows incremental progress.
 **Steps**:
 1. Analyze universal history helper requirements
 2. Prove `respects_task` property
-3. Remove `sorry` at line 75 (WorldHistory.lean)
+3. Remove `sorry` at line 75 (ConvexHistory.lean)
 4. Add test case for universal history
 5. Update implementation-status.md Semantics status
 
 **Dependencies**: None
 
-**Outputs**: Complete WorldHistory implementation
+**Outputs**: Complete ConvexHistory implementation
 
 ### Wave 2 Summary
 
@@ -239,7 +239,7 @@ allows incremental progress.
 │ Task 5: Complete Soundness (15-20 hours) [PARALLEL]     │
 │ Task 6: Complete Perpetuity (20-30 hours) [REQUIRES TASK 2]│
 │ Task 7: Implement Automation (40-60 hours) [PARALLEL]    │
-│ Task 8: Fix WorldHistory (1-2 hours) [PARALLEL]       │
+│ Task 8: Fix ConvexHistory (1-2 hours) [PARALLEL]       │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -417,7 +417,7 @@ These tasks are NOT on critical path and can run in parallel:
 - Task 3 (Complete Archive): 5-10 hours - Independent
 - Task 5 (Complete Soundness): 15-20 hours - Independent
 - Task 7 (Implement Automation): 40-60 hours - Independent
-- Task 8 (Fix WorldHistory): 1-2 hours - Independent
+- Task 8 (Fix ConvexHistory): 1-2 hours - Independent
 
 **Parallelization Strategy**: Start off-critical-path tasks alongside critical path
 work to maximize throughput.
@@ -479,7 +479,7 @@ Developer C: Task 1 (Fix CI Flags) - 1-2 hours, then assist Developer A
 Developer A: Task 6 (Complete Perpetuity) - 20-30 hours [CRITICAL PATH]
 Developer B: Task 7 (Implement Core Automation) - 40-60 hours [LONGEST]
 Developer C: Task 5 (Complete Soundness) - 15-20 hours
-Developer D (Optional): Task 8 (Fix WorldHistory) - 1-2 hours (can be absorbed)
+Developer D (Optional): Task 8 (Fix ConvexHistory) - 1-2 hours (can be absorbed)
 ```
 
 **Result**: All Wave 2 tasks complete in 40-60 hours (limited by Task 7, longest
