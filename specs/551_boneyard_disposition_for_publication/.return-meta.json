@@ -25,13 +25,31 @@
     "session_id": "sess_1788840970_70e80d",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "delegation_path": [
+      "orchestrator",
+      "implement",
+      "skill-lean-implementation"
+    ],
     "compliance_check": "skipped",
     "compliance_note": "The plan commits to NO new Lean declarations -- its Lean Challenge Statements section declares the identifier set empty, matching an empty set of identifier-shaped Goals bullets. There is therefore no declaration list to spot-check against Theories/. Coverage was instead verified structurally: every one of the 40 top-level archive entries has exactly one generated inventory row and one taxonomy row, checked in both directions, and all 39 subtrees appear under both the taxonomy and the subdirectory details.",
     "phases_completed": 10,
     "phases_total": 10,
-    "phase_order_executed": [1, 2, 3, 4, 9, 5, 6, 7, 8, 10],
+    "phase_order_executed": [
+      1,
+      2,
+      3,
+      4,
+      9,
+      5,
+      6,
+      7,
+      8,
+      10
+    ],
     "concurrency_caveat": "A separate session executed the WorldHistory -> ConvexHistory rename (task 552) in the same working tree throughout. The Phase 1 baseline gate carried one pre-existing failure (C12) from that work, and transient C5/C11/C20/INV findings appeared and cleared as it progressed; by Phase 6 the gate was fully green. One unguarded lake build launched by this task's gate collided with their guarded build and was killed immediately; every subsequent build went through lake-build-guard.sh detached. Every commit here used git-commit-scoped.sh with an explicit pathspec, but the sweep was not symmetric: this task's Phase 9 edits to FormalSystem/FormalSystem.lean and FormalSystem/README.md were committed by their session in b9fd6f15c. The content is correct and present; only the attribution is off.",
-    "known_failing_adjacent_lint": "scripts/typst-sync-check.sh fails on 4 violations in typst/chapters/p4-proof-automation.typ (AesopRules.lean, Automation/Tactics/Helpers.lean, Tactics/Helpers.lean, tm_auto 5). PRE-EXISTING: left by the RetiredTactics/ archival in commit 1ff119610, a different task; the same citations were present before this task's first commit, and this task never touched typst/. Recorded as a follow-up in the summary rather than repaired or concealed."
+    "known_failing_adjacent_lint": "scripts/typst-sync-check.sh fails on 4 violations in typst/chapters/p4-proof-automation.typ (AesopRules.lean, Automation/Tactics/Helpers.lean, Tactics/Helpers.lean, tm_auto 5). PRE-EXISTING: left by the RetiredTactics/ archival in commit 1ff119610, a different task; the same citations were present before this task's first commit, and this task never touched typst/. Recorded as a follow-up in the summary rather than repaired or concealed.",
+    "cycles_used": 3,
+    "final_state": "completed",
+    "detected_defects": []
   }
 }
