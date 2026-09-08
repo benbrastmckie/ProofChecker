@@ -12731,6 +12731,13 @@ theorem one_le_mintAwareFuelAt (Ucard Tmax mintBudget D β : Nat) :
     1 ≤ mintAwareFuelAt Ucard Tmax mintBudget D β :=
   fuelFigure_pos (by simp only [mintPathBoundAt, mintPathBound]; omega)
 
+/-- **The un-`At` figure is positive too, by the same route.** The un-`At` counterpart of
+`one_le_mintAwareFuelAt`: `mintPathBound` ends in `+ 1`, so `fuelFigure_pos` lifts that to
+`mintAwareFuel` itself, with no hypothesis on any parameter. -/
+theorem one_le_mintAwareFuel (Ucard Tmax mintBudget D β : Nat) :
+    1 ≤ mintAwareFuel Ucard Tmax mintBudget D β :=
+  fuelFigure_pos (by simp only [mintPathBound]; omega)
+
 /-- **The dispatch's literal question, answered: FALSE.**
 
 `PostBlockingSettlesRun` does not hold at the terminus's own fuel figure, at `.Base`, for **any**
@@ -12754,6 +12761,20 @@ theorem postBlockingSettlesRun_terminusFuel_false
         (mintAwareFuelAt U.card Tmax mintBudget D β) := by
   obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero
     (Nat.one_le_iff_ne_zero.mp (one_le_mintAwareFuelAt U.card Tmax mintBudget D β))
+  rw [hn]
+  exact postBlockingSettlesRun_false_succ n
+
+/-- **The same verdict at the un-`At` figure.** The un-`At` counterpart of
+`postBlockingSettlesRun_terminusFuel_false`, and the reason the vacuity claim covers **both** fuel
+figures rather than only the `At` one: four of the nine retired `_run` termini were stated at
+`mintAwareFuel …`, not at `mintAwareFuelAt …`. The frame class is written out in full because this
+file opens only `FormalSystem.Syntax`. -/
+theorem postBlockingSettlesRun_mintAwareFuel_false
+    (U : Finset SignedFormula) (Tmax mintBudget D β : Nat) :
+    ¬ PostBlockingSettlesRun FormalSystem.ProofSystem.FrameClass.Base
+        (mintAwareFuel U.card Tmax mintBudget D β) := by
+  obtain ⟨n, hn⟩ := Nat.exists_eq_succ_of_ne_zero
+    (Nat.one_le_iff_ne_zero.mp (one_le_mintAwareFuel U.card Tmax mintBudget D β))
   rw [hn]
   exact postBlockingSettlesRun_false_succ n
 

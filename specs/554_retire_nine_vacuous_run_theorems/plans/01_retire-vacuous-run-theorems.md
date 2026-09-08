@@ -1,7 +1,7 @@
 # Implementation Plan: Task #554
 
 - **Task**: 554 - Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 5 hours
 - **Dependencies**: None outstanding (463 complete, 549 complete)
 - **Research Inputs**: `specs/554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md`
@@ -138,7 +138,7 @@ so.
 
 ---
 
-### Phase 1: Baseline capture and regression anchors [NOT STARTED]
+### Phase 1: Baseline capture and regression anchors [COMPLETED]
 
 **Goal**: Establish that the tree is green and the probe baseline holds *before* any edit, and
 re-confirm every anchor this plan depends on, so a later failure is attributable to this task's
@@ -185,7 +185,7 @@ under the research.
 
 ---
 
-### Phase 2: Land the two un-`At` widening lemmas [NOT STARTED]
+### Phase 2: Land the two un-`At` widening lemmas [COMPLETED]
 
 **Goal**: Close the register's vacuity claim over the un-`At` `mintAwareFuel` figure, not only
 `mintAwareFuelAt`, by transplanting two already-proved lemmas from the probe file into
