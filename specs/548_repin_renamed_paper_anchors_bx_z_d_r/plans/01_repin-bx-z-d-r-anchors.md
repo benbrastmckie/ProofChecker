@@ -1,7 +1,7 @@
 # Implementation Plan: Task #548
 
 - **Task**: 548 - Re-pin the paper anchors changed by the paper's z/d/r refactor and its removal of the Past/Future fragment
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 5.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md
@@ -116,31 +116,31 @@ forcing run that validates it.
 
 ---
 
-### Phase 1: Retire dangling pins and pin `def:BX-z/-d/-r` [NOT STARTED]
+### Phase 1: Retire dangling pins and pin `def:BX-z/-d/-r` [COMPLETED]
 
 **Goal**: The record stops asserting anchors the paper no longer defines, and starts pinning the
 three renamed ones with verbatim text and re-derived hashes.
 
 **Tasks**:
-- [ ] Run `bash scripts/check-paper-definitions.sh` with **no tail-truncation** and capture the
+- [x] Run `bash scripts/check-paper-definitions.sh` with **no tail-truncation** and capture the
       full drift + dangling report to a scratch file. Confirm the dangling set against the
       report's list of nine.
-- [ ] For each of the nine dangling anchors, remove its MANIFEST row, **retain** its prose entry,
+- [x] For each of the nine dangling anchors, remove its MANIFEST row, **retain** its prose entry,
       and mark that entry `DANGLING` per the record's established convention (see the existing
       `lem:fibers` / `thm:occurrence` entries for the exact shape).
-- [ ] Add a `DANGLING` row to the KNOWN-ANCHORS block for each of the nine, with a note naming
+- [x] Add a `DANGLING` row to the KNOWN-ANCHORS block for each of the nine, with a note naming
       what replaced it (`def:TMplus-f` → renamed `def:BX-z`; `def:directed` → folded into
       `def:frame`'s opening clause; the `BL^+` cluster → collapsed into `BL`; `TMP-CO` →
       superseded by the plain `\aitem{CO}`).
-- [ ] Re-derive the three new hashes:
+- [x] Re-derive the three new hashes:
       `bash scripts/check-paper-definitions.sh --resolve 'def:BX-z|env|-|-'` and likewise for
       `def:BX-d`, `def:BX-r`. Cross-check against the report's `385f73e8…` / `555db844…` /
       `b35751c7…`; if any differs, use the freshly resolved value and note the divergence.
-- [ ] Add three `### \`def:BX-z\`` / `-d` / `-r` prose entries quoting the resolved text verbatim,
+- [x] Add three `### \`def:BX-z\`` / `-d` / `-r` prose entries quoting the resolved text verbatim,
       placed in paper order near the existing `def:TMplus` entry.
-- [ ] Add the three MANIFEST rows with the re-derived hashes. Use `SEP` (not `SP`) wherever the
+- [x] Add the three MANIFEST rows with the re-derived hashes. Use `SEP` (not `SP`) wherever the
       new prose names `def:BX-r`'s second axiom.
-- [ ] Commit.
+- [x] Commit.
 
 **Timing**: 1.0 hours
 

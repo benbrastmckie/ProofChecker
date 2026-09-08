@@ -513,7 +513,14 @@ sha256: `bc89eea5f9bafa1e326bc8bda93b6631c49212c1f0c3253208f0cfbdb049fb1f`
 ```
 sha256: `f076d52a3b75a5cdacdc86ed815c006b6bcbf78483aebd36152d1c5b04ed5b33`
 
-### `def:directed` — directed family (used by Saturation)
+### `def:directed` — directed family (used by Saturation) — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
+
+The live paper no longer carries a `\label{def:directed}`. The `⊇`-directed condition was
+folded inline into `def:frame`'s opening clause ("Letting a nonempty family of sets
+$\mathcal{S}$ be *$\supseteq$-directed* just in case …"), and the `⊆`-directed half was
+dropped. The quoted text below is retained as the last-resolved historical record. If the paper
+restores the anchor, re-add a manifest row via
+`check-paper-definitions.sh --resolve "def:directed|env|-|-"`.
 
 ```latex
 \begin{Ddef} \label{def:directed}
@@ -779,7 +786,12 @@ closes. See "Downstream consumers" below.
 ```
 sha256: `a43b3df2ea2fcb96eeb156b3403a33ac51fcafd2ad4eb55e7915c07cf509f8b7`
 
-### `def:BLplus-semantics` — the `\since` / `\until` truth clauses (and the argument-order footnote)
+### `def:BLplus-semantics` — the `\since` / `\until` truth clauses (and the argument-order footnote) — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
+
+The live paper no longer carries a `\label{def:BLplus-semantics}`. When the paper collapsed
+`BL^+` into `BL`, the `\since` / `\until` clauses became clauses of `def:BL-semantics` itself
+(which is pinned, and whose 2026-09-07 re-hash records exactly this change). The quoted text
+below is retained as the last-resolved historical record.
 
 ```latex
 \begin{Ddef} \label{def:BLplus-semantics}
@@ -839,7 +851,12 @@ One residual asymmetry, deliberate and not a defect: the codebase's **prefix** r
 the paper's infix. Each such site now says so explicitly. Flipping it is deferred; see the
 "Deferred consequences" section of the decision record.
 
-### `def:BLplus-defined` — the defined temporal operators of `BL^+`
+### `def:BLplus-defined` — the defined temporal operators of `BL^+` — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
+
+The live paper no longer carries a `\label{def:BLplus-defined}`. The eight defined operators
+(Past/Future/Historical/Henceforth/Always/Sometimes/Next/Previous) now sit inside
+`def:BLplus-language`'s own block, which is pinned. The quoted text below is retained as the
+last-resolved historical record.
 
 ```latex
 \begin{Ddef} \label{def:BLplus-defined}
@@ -862,7 +879,12 @@ the paper's infix. Each such site now says so explicitly. Flipping it is deferre
 ```
 sha256: `fcad976996f1346178180d69dd93196df651818705c00fe546db8bea56f3c8f5`
 
-### `thm:BLplus-PastFuture` — DERIVED: the H/G truth conditions of the defined tense operators (the unconditional language embedding)
+### `thm:BLplus-PastFuture` — DERIVED: the H/G truth conditions of the defined tense operators (the unconditional language embedding) — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
+
+The live paper no longer carries a `\label{thm:BLplus-PastFuture}`; it went away with the
+`BL^+` fragment cluster. The quoted text below is retained as the last-resolved historical
+record. The repository's own `TruthAt` H/G characterizations are unaffected — they are proved
+in-tree, not imported from this anchor.
 
 ```latex
 \begin{Tthm} \label{thm:BLplus-PastFuture}
@@ -871,7 +893,11 @@ sha256: `fcad976996f1346178180d69dd93196df651818705c00fe546db8bea56f3c8f5`
 ```
 sha256: `cf9d2e2bb1bcb17e3f27d9ac76f89c340f2cce5992586c617f4202051ac8256d`
 
-### `thm:BLplus-NextPrevious` — DERIVED: Next/Previous truth conditions over Discrete frames
+### `thm:BLplus-NextPrevious` — DERIVED: Next/Previous truth conditions over Discrete frames — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
+
+The live paper no longer carries a `\label{thm:BLplus-NextPrevious}`; it went away with the
+`BL^+` fragment cluster. The quoted text below is retained as the last-resolved historical
+record.
 
 ```latex
 \begin{Tthm} \label{thm:BLplus-NextPrevious}
@@ -918,7 +944,7 @@ just in case ⊨φ") — the paper defines them in the same `Ddef`. `def:frame-v
 separate, frame-relative validity notion (`⊨_F φ`); the two are distinct anchors and both are
 tracked.
 
-### `CO` / `TMP-CO` — worked example of the `\aitem`-key anchor kind
+### `CO` / `TMP-CO` — worked example of the `\aitem`-key anchor kind — **`TMP-CO` DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest; `CO` remains pinned)**
 
 The paper introduces some axioms via a custom `\aitem[KEY]{LABEL}` macro
 (`\newcommand{\aitem}[2][]{\item[{\bf ...}] \refstepcounter{acount}\label{#2}%`), which sets the
@@ -932,6 +958,14 @@ demonstrate the mechanism handles both anchor kinds:
 |---|---|---|---|
 | `CO` | CO | `\aitem{CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow (\Past\varphi \rightarrow \Future\varphi)$.` | `5c468c01776c449b212c98070b5bfc70951691a23905cd4d4c249bf1f5375d41` |
 | `TMP-CO` | CO (same displayed key, `BL^+` restatement) | `\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow (\Past\varphi \rightarrow \Future\varphi)$.` | `2205e7115342b037faeb67a24cb7679e393af582cedf6752c0c07d9a28b8f1be` |
+
+**2026-09-07 update.** The live paper no longer carries an `\aitem{...}{TMP-CO}`: the `BL^+`
+restatement of the completeness axiom disappeared with `def:TMplus-c` (now `def:BX-r`), which
+*derives* `CO` from `PU` rather than restating it under a second label. `TMP-CO` is therefore
+removed from the machine manifest and recorded `DANGLING`; the table row above is retained as the
+last-resolved historical record. `CO` itself still resolves and stays pinned, so the worked
+example of the two-anchor `\aitem` mechanism survives in half-form — a second live example is
+`def:S5`'s `TMP-MK`/`MK` family should one ever be needed.
 
 `CO` and `TMP-CO` are **not** part of `def:frame`'s four axioms (an unrelated coincidence of
 abbreviation — `CO` here names a temporal continuity/completeness axiom, unrelated to `def:frame`'s
@@ -1010,7 +1044,14 @@ sha256: `f588157a5ad86a277b73c29b682d66052db206bf75111acebeef80b34a40c946`
 ```
 sha256: `9af6879e367d85e7732f2d699cb2fea1862f0efc44ea497fd25604405bc771f2`
 
-### `def:TMplus-f` — the discrete Burgess–Xu tense logic BX_f, and its Z-time footnote
+### `def:TMplus-f` — the discrete Burgess–Xu tense logic BX_f, and its Z-time footnote — **DANGLING as of the 2026-09-07 rename-absorption re-pin: RENAMED to `def:BX-z` (removed from manifest)**
+
+The paper renamed this anchor to `def:BX-z`, which is pinned below. The quoted text is retained
+as the last-resolved historical record, and it is the *old* text that in-tree docstrings used to
+quote: the closing sentence now attributes the ℤ-time narrowing to `prop:archimedean` plus the
+§Extensions Hölder footnote rather than deriving it inline, and the systems are named
+**BX**$_z$ / **TM**$_z$ rather than **BX**$_f$ / **TM**$^+_f$. Any docstring still quoting the
+text below is quoting a version of the paper that no longer exists.
 
 ```latex
 \begin{Ddef} \label{def:TMplus-f}
@@ -1031,7 +1072,11 @@ sha256: `9af6879e367d85e7732f2d699cb2fea1862f0efc44ea497fd25604405bc771f2`
 ```
 sha256: `748db67fde66dfae930e60f5e332c608585b3ac2f3f35628704536b7884bde54`
 
-### `def:TMplus-d` — the dense Burgess–Xu tense logic BX_d
+### `def:TMplus-d` — the dense Burgess–Xu tense logic BX_d — **DANGLING as of the 2026-09-07 rename-absorption re-pin: RENAMED to `def:BX-d` (removed from manifest)**
+
+The paper renamed this anchor to `def:BX-d`, which is pinned below. The quoted text is retained
+as the last-resolved historical record; the live definition no longer inlines the `DN`/`NN`
+axiom statements, citing `\S`Extensions for them instead.
 
 ```latex
 \begin{Ddef} \label{def:TMplus-d}
@@ -1049,7 +1094,12 @@ sha256: `748db67fde66dfae930e60f5e332c608585b3ac2f3f35628704536b7884bde54`
 ```
 sha256: `aa6542e6eee06e5c94dddc4b4581715d8b4310bba53615e0c0f80188016f10cf`
 
-### `def:TMplus-c` — the complete Burgess–Xu tense logic BX_c, Reynolds-triple basis, CO derived
+### `def:TMplus-c` — the complete Burgess–Xu tense logic BX_c, Reynolds-triple basis, CO derived — **DANGLING as of the 2026-09-07 rename-absorption re-pin: RENAMED to `def:BX-r` (removed from manifest)**
+
+The paper renamed this anchor to `def:BX-r`, which is pinned below, and re-titled the system
+*Dense and Complete* rather than *Complete*. The quoted text is retained as the last-resolved
+historical record. Note that the live definition's second Reynolds axiom is displayed and
+labelled `SEP`, not `SP`; and the `TMP-CO` restatement quoted below no longer exists.
 
 ```latex
 \begin{Ddef} \label{def:TMplus-c}
@@ -1072,6 +1122,60 @@ sha256: `aa6542e6eee06e5c94dddc4b4581715d8b4310bba53615e0c0f80188016f10cf`
 \end{Ddef}
 ```
 sha256: `116725ac133c7ce7660d6c32e3654c2e8456c03dcd1cf97cd3b254238c2d4c03`
+
+### `def:BX-z` — the discrete Burgess–Xu tense logic BX_z (RENAMED from `def:TMplus-f`), and its ℤ-time narrowing
+
+**Renamed** from `def:TMplus-f` by the paper's 2026-09 z/d/r wave. Two substantive changes came
+with the rename, and in-tree prose that predates them is stale rather than merely mis-labelled:
+the axiom statements are no longer inlined (the definition cites `\S`Extensions for `UZ` and
+`Z1`), and the ℤ-time narrowing is no longer derived here from Hölder's theorem — the definition
+now cites `prop:archimedean` for the failure of `UZ`/`Z1` over non-Archimedean discrete orders and
+`\S`Extensions for the Hölder step, concluding that the discrete task frames over which
+**BX**$_z$ and **TM**$_z$ are sound and complete are exactly those over ℤ-time.
+
+```latex
+\begin{Ddef} \label{def:BX-z}
+  The \textit{Discrete Burgess--Xu Tense Logic} \textbf{BX}$_\textsc{z}$ is the smallest extension of the base logic \textbf{BX} to include all instances of \textbf{\aref{UZ}} and \textbf{\aref{Z1}} presented in \textbf{\S\ref{sub:Extension}}.
+  % NEW CHANGE [Hölder consolidation]: the Hölder clause is cut from this definition; the justification that the Archimedean discrete orders are exactly Z-time lives in the footnote of \S\ref{sub:Extension}, which the sentence now cites. The former sentence also misattributed the group-theoretic fact to Z1.
+  % NEW CHANGE [footnote to appendix]: the failure of UZ and Z1 over non-Archimedean discrete orders is now cited from prop:archimedean in this appendix rather than from a footnote in the body.
+  Since \textbf{\aref{UZ}} and \textbf{\aref{Z1}} fail over every discrete temporal order that is not Archimedean (\textbf{\ref{prop:archimedean}}), and the Archimedean discrete orders are exactly $\Z$-time (\textbf{\S\ref{sub:Extension}}), the discrete task frames over which \textbf{BX}$_\textsc{z}$ and \textbf{TM}$_\textsc{z}$ are sound and complete are exactly those over $\Z$-time.
+  % \textbf{TM}$_\textsc{z}$, by contrast, is sound over the full class of discrete frames, since \textbf{\aref{DF}} is valid on every discrete order and not only on $\Z$-time; whether \textbf{TM}$_\textsc{z}$ is complete over that broader class remains open, as discussed at \textbf{\ref{cor:tm-completeness}}.
+  % \textbf{\aref{UZ}} and \textbf{\aref{Z1}} are not sound over non-Archimedean discrete orders: over $\Z \times_{\mathrm{lex}} \Z$, an atom true only in the second galaxy leaves \textbf{\aref{UZ}} without a first witness.
+\end{Ddef}
+```
+sha256: `385f73e873489eb714c7d9ca548dbd20ecb000340af8a3c60f8316eb85909b54`
+
+### `def:BX-d` — the dense Burgess–Xu tense logic BX_d (RENAMED from `def:TMplus-d`)
+
+**Renamed** from `def:TMplus-d`. The axioms `DN` and `NN` are no longer displayed here; the
+definition cites `\S`Extensions for them.
+
+```latex
+\begin{Ddef} \label{def:BX-d}
+  The \textit{Dense Burgess--Xu Tense Logic} \textbf{BX}$_\textsc{d}$ is the smallest extension of the base logic \textbf{BX} to include all instances of \textbf{\aref{DN}} and \textbf{\aref{NN}} presented in \textbf{\S\ref{sub:Extension}}.
+\end{Ddef}
+```
+sha256: `555db844b3c15ca4f878406540d88c457f372a774bbb59776e3f1b0d0fb76394`
+
+### `def:BX-r` — the dense-and-complete Burgess–Xu tense logic BX_r (RENAMED from `def:TMplus-c`), CO derived
+
+**Renamed** from `def:TMplus-c`, and re-titled *Dense and Complete Burgess--Xu Tense Logic*: it
+is now presented as the extension of **BX**$_d$ (not of **BX**) by `PU` and `SEP`. The second
+Reynolds axiom is labelled **`SEP`**, not `SP`. `CO` remains a *derived theorem* rather than an
+axiom, now derived from `PU` together with the axioms of **BX**; the `TMP-CO` restatement that the
+old definition carried no longer exists (see the `CO` / `TMP-CO` entry above).
+
+```latex
+\begin{Ddef} \label{def:BX-r}
+  The \textit{Dense and Complete Burgess--Xu Tense Logic} \textbf{BX}$_\textsc{r}$ is the smallest extension of the dense logic \textbf{BX}$_\textsc{d}$ to include all instances of \textbf{\aref{PU}} and \textbf{\aref{SEP}} presented in \textbf{\S\ref{sub:Extension}}.
+  % NEW CHANGE [fragment leftovers]: reference to the deleted fragment system TM^- replaced by a section reference.
+  The completeness axiom \textbf{\aref{CO}} of \textbf{\S\ref{sub:Extension}} is a \textit{derived theorem} of \textbf{BX}$_\textsc{r}$ rather than a further axiom, using only \textbf{\aref{PU}} and the axioms of \textbf{BX}, and so is not included among the axioms of \textbf{BX}$_\textsc{r}$.
+  % This derivation is machine-checked in the Lean 4 \href{https://github.com/benbrastmckie/BimodalLogic}{repository} for this paper, and so will not be provided here.
+  % Whether \textbf{\aref{CO}} alone axiomatizes the same logic as the full triple is open: the converse derivation--- deriving \textbf{\aref{PU}} and \textbf{\aref{SEP}} from \textbf{\aref{CO}} alone--- is conjectured to fail, via an unformalized pen-and-paper sketch involving a $\Q$-flow with isolated $\neg\varphi$ points accumulating at an irrational from above; this independence is not asserted as established.
+  % NEW CHANGE [Hölder consolidation]: a commented-out footnote duplicating the Hölder footnote of \S\ref{sub:Extension} was deleted here.
+\end{Ddef}
+```
+sha256: `b35751c79a502988f9f77880354c9ed5200e9751361f2f6c209fcc3247721284`
 
 ### `def:TMplus` — TM+ base logic for BL+, and the four-part conservativity footnote
 
@@ -1419,7 +1523,6 @@ human readability and are not machine-parsed. Columns: `anchor_id|kind|enclosing
 # anchor_id|kind|enclosing|locator|sha256
 def:temporal-order|env|-|-|bc89eea5f9bafa1e326bc8bda93b6631c49212c1f0c3253208f0cfbdb049fb1f
 def:task-relation|env|-|-|f076d52a3b75a5cdacdc86ed815c006b6bcbf78483aebd36152d1c5b04ed5b33
-def:directed|env|-|-|5164210f644bb467aadc3bd279a5774cc14b67e88bdee6b8373a2025a22031f1
 def:frame|env|-|-|ad9e4473a107a295ae23bdd23617523a0b24d2a64fd72d450b7711d71811e314
 def:frame#Compositionality|item|def:frame|Compositionality|4b9248498399338eeaccb63c5e8952ca0928b87bb85bcd94f596d9c263bb64fa
 def:frame#Seriality|item|def:frame|Seriality|ad1863bf950f17906a79b469b40fddb102e4abf5bd1bfd828a2f4b4900c7dbad
@@ -1437,20 +1540,15 @@ lem:admissible|env|-|-|9606ef1f1264887ed51358744df7e5fc290250dd8209f445fd138700d
 lem:step|env|-|-|b1f65f70cc243de5b32d4e2a46c35c986dd0322cf3ca0524fb76701af3e3be4b
 def:BL-semantics|env|-|-|5f53774a3b8a04272bb3c8bf9d41f5cd777e8dc8b1ba30c92aa19113399b228b
 def:BLplus-language|env|-|-|a43b3df2ea2fcb96eeb156b3403a33ac51fcafd2ad4eb55e7915c07cf509f8b7
-def:BLplus-semantics|env|-|-|735c614181b042a498ec68826b234d30c9035464d9887b6fe717bab90e0705eb
-def:BLplus-defined|env|-|-|fcad976996f1346178180d69dd93196df651818705c00fe546db8bea56f3c8f5
-thm:BLplus-PastFuture|env|-|-|cf9d2e2bb1bcb17e3f27d9ac76f89c340f2cce5992586c617f4202051ac8256d
-thm:BLplus-NextPrevious|env|-|-|5d9a6febeae6e2dd4c78e1912616e75e6ae7896c929e75345b2ba6403c0693c9
 def:time-shift-histories|env|-|-|0b5c05e8f579807c7701cd3d28cb8f7d00a2ec42d85eec2515c48edab355b88d
 def:frame-validity|env|-|-|86a0c4b220bc43d04a2bfc14ccd14f0dab0182ff735ffde9c660e3a0ce7b2259
 def:logical-consequence|env|-|-|3af67167ee4a393d77fc8cfa8ddc065fe932bedf76a14febb8608a9001af5486
 CO|aitem|-|-|5c468c01776c449b212c98070b5bfc70951691a23905cd4d4c249bf1f5375d41
-TMP-CO|aitem|-|-|2205e7115342b037faeb67a24cb7679e393af582cedf6752c0c07d9a28b8f1be
 def:S5|env|-|-|f588157a5ad86a277b73c29b682d66052db206bf75111acebeef80b34a40c946
 def:BX|env|-|-|9af6879e367d85e7732f2d699cb2fea1862f0efc44ea497fd25604405bc771f2
-def:TMplus-f|env|-|-|748db67fde66dfae930e60f5e332c608585b3ac2f3f35628704536b7884bde54
-def:TMplus-d|env|-|-|aa6542e6eee06e5c94dddc4b4581715d8b4310bba53615e0c0f80188016f10cf
-def:TMplus-c|env|-|-|116725ac133c7ce7660d6c32e3654c2e8456c03dcd1cf97cd3b254238c2d4c03
+def:BX-z|env|-|-|385f73e873489eb714c7d9ca548dbd20ecb000340af8a3c60f8316eb85909b54
+def:BX-d|env|-|-|555db844b3c15ca4f878406540d88c457f372a774bbb59776e3f1b0d0fb76394
+def:BX-r|env|-|-|b35751c79a502988f9f77880354c9ed5200e9751361f2f6c209fcc3247721284
 def:TMplus|env|-|-|f7a811e63f644732b3e316541ca281ce1bdce81bd7d9c4358514470c8185fa4b
 thm:M5-valid|env|-|-|bce3cc3be256f7b4c10e34a397e4b3b14abe4e8ed6728e8e91768e9a2ad8b2af
 thm:TM-soundness|env|-|-|23cae2b2fcd8c034b82c4f9294b21aa4d141429a278fa08d085cae2c53bf0529
@@ -1505,11 +1603,20 @@ def:BL-language|LIVE-UNPINNED|the BL language; cited as a pointer alongside the 
 def:task-topology|LIVE-UNPINNED|topology appendix; part of the block this file deliberately does not cover
 lem:deterministic-singleton|LIVE-UNPINNED|deterministic-frame singleton fibers (Lthm); cited as a pointer (StateSetTruth.lean names its choice-free direction but quotes no text)
 lem:history-time-shift-preservation|LIVE-UNPINNED|time-shift preservation; cited as a pointer
+TMP-CO|DANGLING|the BL^+ restatement of CO; it went away with def:TMplus-c (now def:BX-r), which derives CO from PU rather than restating it under a second label. The plain CO anchor is still live and still pinned
 app:nonempty|DANGLING|merged by the paper into cor:occurrence; cited only where the tree records the merge
 app:valid|DANGLING|NEVER EXISTED; earlier revisions cited it at a bogus line number, corrected to cor:perpetuity-valid
 cor:tm-decidability|DANGLING|fully COMMENTED OUT in the paper; retained above as a DANGLING entry
 def:BL-model|DANGLING|label removed by the paper; retained above as a DANGLING entry
+def:BLplus-defined|DANGLING|label removed when the paper collapsed BL^+ into BL; the defined temporal operators now sit inside def:BLplus-language's block. Retained above as a DANGLING entry
+def:BLplus-semantics|DANGLING|label removed when the paper collapsed BL^+ into BL; the since/until truth clauses are now clauses of def:BL-semantics. Retained above as a DANGLING entry
+def:TMplus-c|DANGLING|renamed by the paper to def:BX-r, which IS pinned; cited only where the tree records the rename
+def:TMplus-d|DANGLING|renamed by the paper to def:BX-d, which IS pinned; cited only where the tree records the rename
+def:TMplus-f|DANGLING|renamed by the paper to def:BX-z, which IS pinned; cited only where the tree records the rename
+def:directed|DANGLING|label removed; the supseteq-directed definition was folded inline into def:frame's opening clause. Retained above as a DANGLING entry
 lem:fibers|DANGLING|label removed 2026-08-17; content absorbed into lem:admissible's proof; retained above
+thm:BLplus-NextPrevious|DANGLING|label removed with the BL^+ fragment cluster. Retained above as a DANGLING entry
+thm:BLplus-PastFuture|DANGLING|label removed with the BL^+ fragment cluster. Retained above as a DANGLING entry
 thm:ConservativeExtension|DANGLING|NEVER a paper label; cited only where the tree records that it is not one
 thm:occurrence|DANGLING|renamed by the paper to cor:occurrence; cited only where the tree records the rename
 thm:s4|DANGLING|folded by the paper into thm:s5; retained above as a DANGLING entry
