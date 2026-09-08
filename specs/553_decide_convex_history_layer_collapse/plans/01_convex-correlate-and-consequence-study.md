@@ -524,25 +524,25 @@ from the task description without re-measurement (see Phase 1's corrections).
 
 ---
 
-### Phase 7: Verdict, proposed description revision, and follow-on tasks [NOT STARTED]
+### Phase 7: Verdict, proposed description revision, and follow-on tasks [COMPLETED]
 
 **Goal**: Close the study. Recommend exactly one option with reasoning sufficient for a
 follow-up task to execute without re-deriving it; propose the revised task description; and
 specify the follow-on tasks.
 
 **Tasks**:
-- [ ] Write §7.1: the verdict — exactly one of COLLAPSE, KEEP, COLLAPSE-PARTIALLY, or
+- [x] Write §7.1: the verdict — exactly one of COLLAPSE, KEEP, COLLAPSE-PARTIALLY, or
       DEVELOP-AND-RETARGET — with the reasoning, not just the label. If the verdict is KEEP,
       the description requires the reason be recorded once in the `ConvexHistory` module
       docstring; since this task may not edit `FormalSystem/`, that docstring edit becomes a
       one-line proposed task rather than an edit here.
-- [ ] Write §7.2: the proposed revised `description` field for task 553 in `specs/state.json`,
+- [x] Write §7.2: the proposed revised `description` field for task 553 in `specs/state.json`,
       as a fenced block ready to paste. It must retain the ANALYSIS SURFACE note, the
       no-`file_scope` rationale, and the CONSTRAINTS paragraph; retarget the framing from
       verdict-first collapse to develop-the-correlate; add the fourth option to (e); and cite the
       paper anchors (`app:Structure` and its named items, and the line-1102 footnote). State
       explicitly that this is a proposal and that `specs/state.json` was not edited.
-- [ ] Write §7.3: follow-on task specifications, each with a title, a type, a one-paragraph
+- [x] Write §7.3: follow-on task specifications, each with a title, a type, a one-paragraph
       description, a rough size, and its dependencies. Candidates established during planning,
       to be confirmed, pruned or extended by the study's own findings:
       1. Formalize `app:gluing` at the `ConvexHistory` layer (two-piece, arbitrary convex
@@ -558,9 +558,9 @@ specify the follow-on tasks.
          (not probes), with the axiom-survival results as theorems.
       7. The retarget itself, if the verdict calls for it: a phased plan with each phase one
          agent run leaving `lake build FormalSystem` green.
-- [ ] Write §7.4: what was *not* settled, stated plainly, so the next reader does not mistake
+- [x] Write §7.4: what was *not* settled, stated plainly, so the next reader does not mistake
       the study's boundaries for its conclusions.
-- [ ] Optionally create the follow-on tasks via the repository's task-creation path if the
+- [x] Optionally create the follow-on tasks via the repository's task-creation path if the
       dispatch's mode permits it; if it does not, say so in §7.3 and leave the specifications as
       the deliverable.
 

@@ -888,3 +888,215 @@ Recorded here so §7.3's proposals inherit it:
   are. A compatibility `abbrev` plus a deprecation sweep is the shape that satisfies it.
 - `PartialHistory` and the Extension Theorem untouched. §6.1 shows this is compatible with the
   change and in fact removes 69 of the 133 `.states` sites from scope.
+
+---
+
+## §7. Verdict, proposed description revision, and follow-on tasks
+
+### §7.1 The verdict: DEVELOP-AND-RETARGET
+
+Exactly one option, with its reasoning.
+
+> **Retarget the primary semantics to a total-by-construction index — the paper's
+> `PossibleWorld` — while simultaneously growing the convex layer into the interval-site /
+> behavior-presheaf apparatus and adding the alternative consequence relations C3 and C4 as
+> explicitly named second definitions.**
+
+The reasoning, in the order the evidence forces it:
+
+**1. The bounded convex index is not merely unused; the semantics at it is incoherent.** §1.1
+shows the tier is unreachable (the tree's one partial→convex promotion requires `IsTotal`) and
+that no concrete bounded convex history exists anywhere. §2 shows *why that is fortunate*: at a
+bounded index off the domain, `modal_t` — an axiom of TM — is **false**
+(`refute_modal_t_at_bounded_index`), because the atom clause is domain-relative while the box
+clause re-indexes to `H_F`. The repository is not unsound, because the `IsTotal` guard is present
+at every validity and consequence site; but the guard is load-bearing at 239 in-code occurrences
+across 55 files, and what it guards against is a semantics nobody designed. **This is a
+correctness argument, not a tidiness argument**, and it is the decisive one for retargeting.
+
+**2. Retargeting costs about 600 mechanical touch points and removes code.** §6.1: ~600 edits
+across 55–75 files, net −150 to −250 lines out of 283,541, with exactly one genuinely open
+question (whether `IntTransfer`'s domain-generic transports survive a narrower index). The
+description's expectation — volume rather than depth — is confirmed, with two corrections: the
+`.states` cost is less than half what the raw grep suggests (64 of 133 are at the convex layer),
+and the ~280 bridge call sites, which the description omits, dominate.
+
+**3. But COLLAPSE is wrong, and §1.4's inference was the near-miss.** A `presheaf` grep of 0 is a
+fact about naming. §5.1 shows that `timeShift` + `ts_zero` + `ts_add` *are* `Tr p` and its
+functoriality laws, `StarPasting.paste_rel_le_lt` *is* `app:gluing`'s composition step,
+`thm:extension` *is* the whole analytic input to the *Totality* and *Directed Gluing* clauses, and
+`StarDeterminism.states_eq_of_deterministic` *is* injectivity of restriction. Probe 04 proves
+presheaf functoriality and the *Germs* clause in ~200 lines against the live tree. Deleting
+`ConvexHistory` would delete the type in which `Beh(F)(ℓ)`'s sections live, and probe 04 would
+stop typechecking. **The layer's intended consumer is much closer to hand than the description
+assumed.**
+
+**4. And KEEP is wrong for the same reason in reverse.** Keeping the layer *as the evaluation
+index* keeps C2 reachable and keeps the tax growing: 97 declarations already bind an index at
+which the semantics is degenerate, and the number grows monotonically with the tree.
+
+**5. What separates DEVELOP-AND-RETARGET from COLLAPSE-PARTIALLY is that the study found real
+work for the layer to do, not merely a reason to preserve the option.** §3 and §4 give C3 a
+determinate character: its S5 core is intact, `modal_future` survives (via the newly-proved
+`truthC3_timeShift`), and every failure is an existence assertion about the temporal order — but
+`□(φ U ψ)` is outright unsatisfiable, so C3 is a genuinely different logic rather than TM minus
+seriality. §5.2 turns up three connections that run *from* this repository *to* the category
+theory, including one — separatedness of `Beh(F)` is strictly stronger than the validity of
+*Determined*, witnessed by the repository's own drift-frame countermodel — that is a new fact
+about the categorical structure. A layer with that much determinate content ahead of it is being
+developed, not preserved.
+
+**The two moves are independent and must be phased separately.** Retargeting the semantics does
+not touch `Beh(F)`; growing `Beh(F)` does not touch the semantics. That independence is what
+makes the combination coherent rather than contradictory, and it is what lets each phase leave
+`lake build FormalSystem` green.
+
+**What would have changed the verdict.** A single genuine consumer of a convex, non-total,
+non-partial history would have forced KEEP. §1.5 hunted every surface the task named and found
+none. If one is found later, the retarget half of this verdict is void and the develop half is
+unaffected.
+
+### §7.2 Proposed revised description for task 553
+
+**This is a proposal. `specs/state.json` was NOT edited by this task**, nor were `specs/TODO.md`
+or `specs/ROADMAP.md` — the plan's Non-Goals forbid it. Paste-ready:
+
+```
+ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Semantics/{ConvexHistory,PartialHistory,Truth,Validity,StarPasting,ShiftSet,IntTransfer,StarDeterminism}.lean, FormalSystem/Semantics/Extension, FormalSystem/Metalogic/Decidability/BiLasso, FormalSystem/Metalogic/WeakCanonical, FormalSystem/Metalogic/Soundness.lean, FormalSystem/ProofSystem/Axioms.lean. These are a READING surface. This task declares no file_scope: the batch orchestrator treats file_scope as write ownership, and over-declaring a reading surface would collide with any concurrent task editing those trees. Every other research-only task in this repository declares no file_scope; this one matches.
+
+RESEARCH TASK --- report and probe files only; no change to FormalSystem/ beyond probes under this task's directory.
+
+THE AIM, as reframed. Develop the categorical correlate of convex histories rather than suppress it, in both directions: draw on the paper's app:Structure (the task topology, the interval site Int(D), the behavior presheaf Beh(F), the twisted-arrow and path categories) for insight into the logic, AND draw on this repository's proof theory, semantics and decidability results for insight into that categorical structure. Alongside that, study the alternative consequence relations the paper floats: one ranging over convex histories, and one additionally restricting the temporal quantifiers to the domain of the convex world. What is wanted are the most natural definitions and the best insights about them.
+
+PAPER ANCHORS. app:Structure (def:task-topology, app:topology-t1, app:topology-r0, app:gluing, def:interval-site, def:behavior-presheaf, def:twisted-arrow, lem:interval-twisted-arrow, app:presheaf-dictionary with its seven clauses Germs/Sheaf/Directed Gluing/Totality/Possible Worlds/Determinism/Reflection, def:conduche, def:path-category, fact:conduche-equivalence, cor:path-fibration). NOTE: app:Structure carries a "% TODO: review in full" marker in the LaTeX source, so anything proposed against it tracks material the author has not finished reviewing. The alternative semantics is the footnote at possible_worlds.tex line 1102; its own commented-out sentence predicts that F-top and its past dual fail, making F-bot satisfiable.
+
+WHAT THIS TASK MUST SETTLE.
+(a) Is the convex layer vestigial, and is the finding complete? Hunt for any site needing a convex, non-total, non-partial history.
+(b) What does TruthAt MEAN at a bounded index? Establish it with machine-checked probes and say plainly whether the reading is degenerate.
+(c) Cost the retarget honestly, by file and by obligation class, separating mechanical rewrites from proofs that must be rethought, against the counterfactual of doing nothing.
+(d) Weigh what each option forecloses --- including the presheaf appendix and the alternative semantics.
+(e) Recommend exactly one of: COLLAPSE; KEEP (with the reason recorded once in the ConvexHistory module docstring); COLLAPSE-PARTIALLY (retain ConvexHistory as a definition, retarget the semantics); or DEVELOP-AND-RETARGET (retarget the semantics AND grow the convex layer into the presheaf apparatus, adding the alternative consequence relations as named second definitions). State the reasoning well enough that a follow-up task can execute without re-deriving it.
+
+CONSTRAINTS. Do not begin the refactor here; probe files under this task's directory are fine, edits to the live tree are not. Any plan proposed must leave PartialHistory and the Extension Theorem untouched --- the Extension Theorem's conclusion is stated at the partial layer and is unaffected either way. lake build FormalSystem must be green with no new sorry at the end of every phase of any plan proposed here.
+```
+
+### §7.3 Follow-on task specifications
+
+**Task creation was not performed.** This dispatch runs in orchestrator mode, and the plan's
+Non-Goals forbid editing `specs/state.json`; creating tasks requires exactly that. The
+specifications below are the deliverable.
+
+The planning-time candidate list has been pruned and re-ordered against what the study actually
+established. Two of the seven candidates are dropped or merged; three are new.
+
+| # | Title | Type | Size | Depends on |
+|---:|---|---|---|---|
+| A | Formalize the interval site `Int(D)` and the behavior presheaf `Beh(F)` | lean4 | M (2–3 phases) | — |
+| B | The *Sheaf* clause: two-piece gluing at the interval site | lean4 | M (2 phases) | A |
+| C | *Totality* and *Directed Gluing* from `thm:extension` | lean4 | S (1–2 phases) | A |
+| D | `H_F ≅ lim Beh(F)(2x)` — the *Possible Worlds* clause | lean4 | M | A, C |
+| E | *Determinism* ⟺ injectivity of restriction, joined to the repository's modal treatment | lean4 | M | A |
+| F | C3/C4 as named library definitions, with the §4 survival theorems | lean4 | L (4–5 phases) | — |
+| G | Retarget the semantics to a total-by-construction `PossibleWorld` index | lean4 | L (5–7 phases) | — |
+| H | Is the C3 logic complete for BX-without-seriality plus S5? | formal/logic | L | F |
+
+**A — Formalize `Int(D)` and `Beh(F)`.** Promote probe 04 into the library. Deliver: the section
+type (`Beh F l`, the convex histories with domain exactly `[0, l]`), restriction along `Tr p`,
+presheaf functoriality (`restrict_id`, `restrict_comp`), and the *Germs* clause
+`Beh(F)(0) ≅ W`. All four are already proved in
+`specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`; the work is
+finding the right home (a new `Semantics/Presheaf/` cluster, below `Truth.lean` in the layering so
+that `assert_not_exists` on the proof system still holds), naming, and docstrings against
+`def:interval-site` and `def:behavior-presheaf`. Optionally add `BD⁺` and the twisted-arrow
+category with `lem:interval-twisted-arrow`; that lemma is pure order algebra and needs no frame.
+*Flag in the module docstring that `app:Structure` carries a `% TODO: review in full` marker.*
+
+**B — The *Sheaf* clause.** `app:gluing` for two interval sections whose germs agree at the seam,
+plus the two restriction identities and uniqueness. The composition step is already proved as
+probe 04's `glue_seam`; the remainder is assembling the glued section by cases and applying
+`ShiftSet.wh_ext`. **Generalize `StarPasting.paste` off its totality hypothesis as part of this**
+— `paste_rel_le_lt` is the same argument and should not exist twice.
+
+**C — *Totality* and *Directed Gluing*.** Both are wrappers on `thm:extension`, which is fully
+proved: translate a section to its subinterval, extend to a possible world, restrict. Small, and
+it is the task that demonstrates the Extension Theorem was the presheaf's analytic content all
+along. Records which clauses are choice-free (*Sheaf* is; *Directed Gluing* is not).
+
+**D — The *Possible Worlds* clause.** `H_F ≅ lim Beh(F)(2x)` along the central restrictions.
+Over `ℤ` this connects to `FrameOver.mem_HF_iff_adjacent`, already proved.
+
+**E — Determinism and separatedness.** Prove `app:presheaf-dictionary`'s *Determinism* clause
+(deterministic ⟺ every restriction injective) and connect it to
+`StarDeterminism.states_eq_of_deterministic`. **The deliverable that makes this worth doing is
+§5.2.1's asymmetry**: `Beh(F)` separated is strictly stronger than the validity of *Determined*
+on `F`, witnessed by the drift frame `F°` already in `Metalogic/Independence/`. State that as a
+theorem pair, and pose the open question of whether any `BL⋆` formula characterizes separatedness
+exactly.
+
+**F — C3/C4 as library definitions.** Promote probes 02 and 03. Deliver `TruthAtConvex`,
+`ValidC3`, `ValidC4`, the germ theorems (`germ_untl_false`, `c3_box_untl_unsat`,
+`c3_valid_imp_germ_valid`, `c3_nec`), the shift-invariance lemma `truthC3_timeShift`, and the
+§4.1 survival table as theorems — including the six machine-checked failures. **Close the four
+gaps §4.1 leaves**: `discrete_propagate_bwd` (CONDITIONAL), `z1` (CONDITIONAL), and the three
+RTime axioms (UNRESOLVED). This is the task the User focus most directly asks for.
+
+**G — The retarget.** §6.1's change and §6.3's constraint. Suggested phase decomposition, each
+one agent run and each leaving `lake build FormalSystem` green: (1) introduce
+`structure PossibleWorld` with an `abbrev` bridge and prove the round trip against
+`TaskFrame.HF`; (2) retarget `TruthAt` and `Truth.lean`'s lemma block; (3) retarget
+`Validity.lean` and delete the 12 bridges, keeping deprecated aliases; (4–6) sweep the ~280 bridge
+call sites, one module cluster per phase, `Metalogic/Soundness.lean` and
+`Metalogic/Decidability/` last; (7) delete the deprecated aliases and the `assert_not_exists`
+audit. **Gate G on resolving the `IntTransfer` question first** — §6.1's one genuine unknown —
+which is a one-phase spike, not a task of its own.
+
+**H — Is C3's logic BX-without-seriality plus S5?** §4.2 states the containment and explicitly
+declines the completeness claim. This is the natural sequel and it is genuinely open. The germ
+constraint (§4.3) is the first thing any canonical-model construction for C3 will have to
+accommodate, and the box-range design choice (§7.4) has to be settled before it is worth starting.
+
+**Dropped from the planning-time list.** The candidate "formalize `app:gluing` at the
+`ConvexHistory` layer, generalizing `StarPasting.paste`" is folded into B rather than run
+separately — the study showed the general-convex and interval-site versions share one proof and
+should not be written twice. The candidate "the `D = ℤ` path-category corollary and its relation
+to BiLasso" is **not** proposed as a formalization task: §5.2.2 establishes that the interesting
+content is already proved (`mem_HF_iff_adjacent`, `Agreement.extends_of_agrees`) and that the
+categorical presentation *does not* transfer to the logic (`Annotation.lean`'s refutation), so
+formalizing `Path(F)` as a category would add vocabulary and no theorem. Recording that finding
+is the deliverable; a task is not.
+
+**A roadmap note, not a roadmap edit.** `specs/ROADMAP.md` currently has no front for the
+categorical/presheaf material and was not modified by this task. Tasks A–E constitute a coherent
+new front; proposing one is a decision for whoever owns the roadmap.
+
+### §7.4 What was NOT settled
+
+Stated plainly so the boundaries of the study are not mistaken for its conclusions.
+
+1. **Whether C3 and C4 have the same validities.** `validC3_imp_validC4` proves one containment;
+   no separating formula was found and none is claimed. The four-way split C1/C2/C3/C4 is
+   justified by *definition*, and by C1 ≠ C2 and C1 ≠ C3 as proved separations — not by four
+   distinct validity sets.
+2. **Four of the 45 axiom verdicts.** `discrete_propagate_bwd` and `z1` are CONDITIONAL;
+   `prior_U_gap`, `prior_S_gap` and `sep` are UNRESOLVED. The RTime layer's analysis is real work
+   — `K⁺`/`K⁺` are themselves restricted `U`/`S` formulas whose endpoint behaviour was not
+   checked — and it belongs to task F.
+3. **Whether C3's logic is a known system.** §4.2 states a containment and explicitly declines
+   the completeness claim. Task H.
+4. **A design choice C3 forces that the paper's footnote does not raise.** The footnote lets `□`
+   quantify over *all* convex histories through `x`, germs included. §3.3 and §4.3 show that
+   choice is what makes `□(φ U ψ)` unsatisfiable and `discrete_box_necessity` fail. Cutting the
+   range back — to interval sections of some minimum length, or to those whose domain contains
+   `dom τ` — would give a different and possibly more natural logic. **This is surfaced as a
+   user decision**, non-blocking; the study's recommendation is to keep the footnote's own reading
+   as the primary C3 and add the restricted variant as a named alternative, because the footnote
+   is the definition of record and the germ result is more interesting stated than avoided.
+5. **The `IntTransfer` question.** Whether the ℤ-transfer machinery survives a narrower index
+   (§6.1, class (ii)) is the one item in the retarget that grep cannot answer. It gates task G.
+6. **Whether any `BL⋆` formula characterizes separatedness of `Beh(F)` exactly.** §5.2.1 proves
+   one direction and cites the repository's own countermodel for the failure of the converse for
+   *Determined*; whether some other formula does better is open, and `StarDeterminism.lean`'s
+   choice-dependence note suggests it does not.
+7. **The paper's own review status.** `app:Structure` carries `% TODO: review in full`. Every
+   §5.1 dictionary row and every task A–E tracks material the author has not finished reviewing,
+   and could move under him.
