@@ -1,5 +1,5 @@
 ---
-next_project_number: 552
+next_project_number: 554
 ---
 
 # TODO
@@ -13,8 +13,8 @@ next_project_number: 552
 |------|-------|------------|--------|
 | 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,549,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
 | 2 | 178,231,282,296,465,497,537,548,550 | 193,298,464,502,535,547,549 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
-| 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
+| 3 | 219,428,498,499,500,552 | 231,465,497,548 | algebraic-representation, dataset-enhancement, decidability, paper-refactor |
+| 4 | 125,429,543,553 | 428,498,499,500,552 | algebraic-representation, decidability, metalogic, paper-refactor |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
 | 7 | 430 | 411 | decidability |
@@ -86,6 +86,8 @@ next_project_number: 552
 
 547 [NOT STARTED] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
   └─ 548 [NOT STARTED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
+    └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its
+      └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only
 
 ### Publication Quality
 
@@ -112,6 +114,63 @@ next_project_number: 552
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 553. Decide convex history layer collapse
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: paper-refactor
+- **Dependencies**: Task 552
+
+**Description**: RESEARCH TASK, verdict-first --- report and probe files only; no change to `FormalSystem/` beyond probes. Decide whether the convex-history layer should exist in this repository at all, and, if it should not, specify how to collapse it. Deliver a reasoned recommendation with the evidence needed to act on it. Implementation, if the recommendation is accepted, is a follow-up task.
+
+THE QUESTION. Once the history-vocabulary rename has landed, `ConvexHistory` is the evaluation index of `TruthAt` and `IsTotal` is carried as a side hypothesis at every validity, soundness, completeness and decidability site. The paper evaluates sentences only at world histories --- only at total ones. The alternative is to make the evaluation index total by construction, `structure WorldHistory (F : TaskFrame) where states : F.Duration -> F.WorldState ; respects_task : forall s t, F.TaskRel (states s) (t - s) (states t)`, so that `WorldHistory F` and `F.HF` coincide definitionally exactly as they do in the paper, with `ConvexHistory` surviving only for material that genuinely needs a bounded domain. That would make the repository's central type mean the paper's central notion with no side condition and no bridging apparatus. It would also foreclose things. Decide which way it goes.
+
+EVIDENCE ALREADY GATHERED --- verify it, do not re-derive it from scratch, and report any of it that turns out to be wrong.
+1. The convex layer looks vestigial. Every concrete construction with a non-total domain in the repository lives at the `PartialHistory` layer: `Semantics/Extension/Extension.lean:227` (`point`), `Semantics/Extension/Admissible.lean:239` (`adjoinDomain`), `Semantics/PartialHistoryOrder.lean:126` and `:193`. The only convex-layer constructions whose `domain` field is anything other than `fun _ => True` are the two generic transports --- `timeShift` (`Semantics/WorldHistory.lean:305`) and the two directions of `Semantics/IntTransfer.lean` (`:199`, `:255`) --- and those merely carry through whatever domain they were handed. Every CONCRETE convex-layer value built anywhere in the tree is total.
+2. The `convex` field is discharged 22 times and consumed essentially never. A grep for `.convex` applied to a history value returns only those transports and their re-establishment lemmas; the remaining hits belong to unrelated `convex` fields in `Metalogic/WeakCanonical/DenseModelSurgery/` and `Metalogic/WeakCanonical/RealModel/`.
+3. The generality has a real price. `IsTotal` occurs on 322 lines. `TruthAt`'s atom clause carries `exists (ht : tau.domain t)` (`Semantics/Truth.lean:234`), and there are roughly 85 dependent `.states t ht` applications; `.domain` occurs on 198 lines. The bundled/predicate split exists only to manage the same thing: `TaskFrame.HF.val`/`.property`, `SemanticConsequence.of_forall`/`.apply`, `SemanticConsequenceIn.of_forall_total`/`.apply_total`, `Valid.of_forall_total`/`.apply`, and `validOn_iff_total` are all bridges between the two spellings of one notion.
+4. Nothing in the repository formalizes the paper's presheaf appendix --- the behavior presheaf Beh(F), the interval site, the gluing lemma, the path-category correspondence. "presheaf" occurs 0 times in `FormalSystem/`. That appendix is the paper's principal consumer of bounded convex histories, so the strongest argument for keeping the layer is prospective rather than actual, and its weight depends on whether that appendix is ever going to be formalized here.
+
+WHAT THIS TASK MUST SETTLE.
+(a) Is the vestigial finding correct AND complete? Hunt specifically for any site that needs a convex, non-total, non-partial history: check `Semantics/StarPasting.lean`, `Semantics/ShiftSet.lean`, `Semantics/Ultraproduct/`, `Metalogic/Decidability/BiLasso/`, `Metalogic/WeakCanonical/`, and any `Boneyard/` subtree that a live task might revive. One genuine consumer changes the answer.
+(b) What actually happens to `TruthAt` at a total index? The atom clause loses its `exists ht`; the box clause loses its `sigma.IsTotal ->` guard; the `untl` and `snce` clauses already quantify over all of `D` with no domain guard (`Semantics/Truth.lean:238-241`) rather than over `tau.domain`. Establish what those tense clauses currently MEAN at a non-total index --- an atom outside the domain is false rather than ill-formed, so the clauses are well-defined, but that is not the paper's footnoted alternative semantics either. If the current reading at a bounded index is degenerate rather than intended, say so plainly: that is an argument for collapsing on correctness grounds and not merely on tidiness, and it should be weighed as such.
+(c) Cost the change honestly, by file and by obligation class, separating mechanical rewrites (`tau.states t ht` -> `tau.states t`, dropped `IsTotal` binders) from proofs that must genuinely be rethought. Compare against the counterfactual of doing nothing. Note that the change is expected to REMOVE code rather than add it, so volume rather than depth is the likely difficulty --- confirm or refute that expectation with measurements.
+(d) Weigh what is lost. Collapsing forecloses evaluating at a bounded convex history, which is the alternative semantics the paper floats in a footnote --- box quantifying over the convex histories whose domain contains the time, the tense operators restricted to that domain, and logical consequence relativised from D to the domain --- and it forecloses formalizing the presheaf appendix without first reintroducing a layer. Assess whether retaining `ConvexHistory` as a structure that the semantics simply no longer uses preserves those options at acceptable cost. That middle answer is the likeliest one and deserves to be costed as carefully as the two extremes rather than adopted by default.
+(e) Recommend exactly one of: COLLAPSE, with a phased plan sized so that each phase is one agent run and leaves `lake build FormalSystem` green; KEEP, with the reason recorded once in the `ConvexHistory` module docstring so the question is not silently reopened a third time; or COLLAPSE-PARTIALLY, retaining `ConvexHistory` as a definition while retargeting the semantics to a total index. State the reasoning, not just the verdict, and state it well enough that a follow-up task can execute without re-deriving it.
+
+CONSTRAINTS. Do not begin the refactor as part of this research; probe files under this task's directory are fine, edits to the live tree are not. The history-vocabulary rename must land first --- costing this against a tree in which `WorldHistory` still names the convex layer would produce a plan that reads as its own opposite. Any plan this task proposes must leave `PartialHistory` and the Extension Theorem untouched: the Extension Theorem's conclusion is stated at the partial layer and is unaffected either way. `lake build FormalSystem` must be green with no new `sorry` at the end of every phase of any plan proposed here.
+
+---
+
+### 552. Align history vocabulary with paper
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: paper-refactor
+- **Dependencies**: Task 548
+
+**Description**: Rename this repository's semantic history layer so that its names mean what the paper's mean: the paper's `def:world-history` layers *partial history* -> *convex history* -> *world history* (equivalently *possible world*, the set being H_F), and this repository's `WorldHistory` denotes the paper's CONVEX history, not its world history. Rename `WorldHistory` to `ConvexHistory` throughout, keep `IsTotal` and `TaskFrame.HF` as they are, and re-pin the drifted `def:world-history` record entry. This is a name-and-prose sweep with no change to any proof term.
+
+PAPER CONVENTION (current text of `def:world-history` in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex): a *partial history* over a task frame is a function tau : X -> W on a nonempty X subset of D with tau(x) => _{y-x} tau(y) for all times x, y in X, with no convexity requirement; a *convex history* is any partial history whose domain X is convex; a *world history* --- equivalently a *possible world* --- is any convex history whose domain is total, so that X = D; *history* is the generic term for all three wherever the distinction is immaterial; H_F is the set of all world histories over F. The paper's body reinforces the layering rather than merely stipulating it: a finite game of chess is a bounded convex history, and the paper argues that a bounded convex history is NOT a possibility in which time begins or ends, which is exactly why it must not be called a world history. The paper also defines W_F as the set of time-shift equivalence classes [tau]_F and then states that, since those classes play no further role, it will also refer to H_F as the set of possible worlds --- so H_F = possible worlds is the paper's own identification, and this repository's lack of a W_F quotient is a licensed omission rather than a divergence. Record that fact once; do not build a quotient.
+
+THE MISMATCH IS A SHIFT-BY-ONE, not a scatter of small divergences. `PartialHistory` is already correct and must not be touched. `WorldHistory` denotes the convex layer, i.e. the paper's convex history, which makes it a false friend: `forall sigma : WorldHistory F, ...` without an `IsTotal` guard quantifies over strictly MORE than H_F. Correspondingly the paper's middle tier has no Lean name at all --- the string "convex history" occurs zero times in this repository. The origin is recorded and benign: `specs/paper-definitions-of-record.md` (the `def:world-history` entry, lines 577-593) still quotes the SUPERSEDED wording, "A world history is any partial history whose domain X is convex... A world history is total --- equivalently, a possible world --- just in case X = D". The Lean naming was a faithful transcription of the draft it was made from; the paper has since renamed the middle tier and given the top tier the name.
+
+MEASURED STATE. Identifier `WorldHistory`: 629 lines under `FormalSystem/` across 78 `.lean` files, of which 7 files are under `Boneyard/`; 6 lines in `Tests/`; 43 in `docs/`; 4 in `typst/`; 5 in `latex/`. `specs/` carries 2505 further occurrences which are ARCHIVAL task history and must not be rewritten. Case variants beyond the bare name: `toWorldHistory` (6), `worldHistory_ext` (4), `isTotal_toWorldHistory` (2), `toWorldHistory_toPartialHistory` (1), and `Boneyard/ChainCompleteness/Bundle/SuccChainWorldHistory.lean` (2, Boneyard). Heaviest live files: `Semantics/Truth.lean` 64, `Metalogic/Decidability/Verified/Decidable.lean` 57, `Semantics/IntTransfer.lean` 33, `Semantics/WorldHistory.lean` 32, `Semantics/Validity.lean` 31, `Semantics/StarTruth.lean` 30, `Semantics/StarPasting.lean` 22, `Metalogic/WeakCanonical/IntegerModel/ReynoldsBridge.lean` 18, `Metalogic/Decidability/Verified/Bridge/RegionFrame.lean` 16, `Metalogic/Independence/StaticFrame.lean` 14. `import FormalSystem.Semantics.WorldHistory` occurs on 8 lines. There are NO string literals, JSON fixtures or benchmark data naming the type --- `data/`, `scripts/` and `FormalSystem/Automation/` were checked and carry none --- so unlike the FrameClass rename there is no fixture tail. `ConvexHistory` currently occurs 0 times anywhere in the tree, so the target name is free. Prose occurrences of "world histor*" outside `specs/`: 100 lines in `FormalSystem/`, 35 in `docs/`, 30 in `typst/`, 17 in `latex/`, 1 in `Tests/`. Most of those say "world history" while MEANING the convex notion, and they are the real editorial work of this task; the identifier sweep is the easy half.
+
+WORK.
+(a) Rename the file `FormalSystem/Semantics/WorldHistory.lean` to `FormalSystem/Semantics/ConvexHistory.lean` and fix the 8 import lines plus the `FormalSystem/Semantics.lean` aggregator, which names it at lines 21, 107, 169, 185, 234 and 242.
+(b) Rename the structure and its namespace `WorldHistory` -> `ConvexHistory` and every derived identifier with it: `toWorldHistory` -> `toConvexHistory`, `worldHistory_ext` -> `convexHistory_ext`, `isTotal_toWorldHistory` -> `isTotal_toConvexHistory`, `toWorldHistory_toPartialHistory` -> `toConvexHistory_toPartialHistory`. `PartialHistory`, `IsTotal`, `ofTotal`, `timeShift` and `TaskFrame.HF` all keep their names.
+(c) `TaskFrame.HF` becomes the sole Lean name for the paper's world histories. Rewrite its docstring (currently `Semantics/WorldHistory.lean:405-420`) so it says that an element of `F.HF` is a world history, equivalently a possible world, and that `IsTotal` is the predicate form of the same notion. Do NOT introduce an `abbrev WorldHistory F := F.HF`: it would make dot-notation such as `tau.states` fail on a subtype and would reintroduce exactly the ambiguity this task removes. If a structure-level Lean name for the paper's top tier is wanted beyond `HF`, that is the collapse question, not this task's business.
+(d) Rewrite the prose. Every docstring, README and documentation line that says "world history" while meaning the convex notion becomes "convex history"; every line that means the total notion becomes "world history (possible world)". The module docstrings of `PartialHistory.lean` and of the renamed `ConvexHistory.lean` both restate the paper's layering verbatim and must be RE-QUOTED from the current paper text rather than adjusted in place. `FormalSystem/Semantics.lean:185`'s table row --- "World History | tau : X -> W convex | WorldHistory F with convex proof" --- is precisely the wrong row and should become two rows, one per tier.
+(e) Re-pin `def:world-history` in `specs/paper-definitions-of-record.md` following that file's own "How to extend this record" procedure, together with `thm:extension` and `cor:occurrence`, whose statements now read "world history" where the record has "total world history": `thm:extension` is now "Every partial history tau : X -> W over a task frame F is extended by some world history sigma in H_F", and `cor:occurrence` is now "there is a world history tau in H_F where tau(x) = w, and so H_F is nonempty". The new `def:world-history` also carries a footnote citing THIS repository for the `WorldHistory`/`IsTotal` naming; that footnote becomes false the moment this task lands. The paper is read-only input here, so record the fact for the paper author rather than editing the paper.
+(f) `bash scripts/check-paper-definitions.sh` currently reports 15 drifted anchors and 9 unresolved. Only `def:world-history`, `thm:extension` and `cor:occurrence` belong to this task; the z/d/r anchors belong to the separate re-pin task and the remainder to neither. Do not conflate them. Leave the whole-file checksum sentinels to whichever of the two paper-refactor re-pins lands second.
+
+VERIFY. `lake build FormalSystem` green with no new `sorry`; `scripts/check-module-invariants.sh` no regression; a final grep confirming that no live-tree file outside `Boneyard/` and `specs/` contains the identifier `WorldHistory`, and that no live docstring uses the phrase "world history" for a merely-convex domain. This is alpha-renaming plus prose: if any proof term needs to change, something has gone wrong --- stop and record it rather than adapting the proof around it.
+
+SCOPE BOUNDARY. Do not collapse, weaken or delete the convex layer; do not touch the `exists (ht : tau.domain t)` guard in `TruthAt`'s atom clause; do not remove any `IsTotal` hypothesis. Whether the convex layer should exist at all is a separate research task and must not be pre-empted here. Landing this rename first is precisely what makes that question answerable on its own merits, since costing a collapse against a tree whose names still mislead would produce a plan nobody can follow.
+
+DEPENDENCY NOTE. The dependency on the paper-anchor re-pin task is for file serialisation only: both tasks edit `specs/paper-definitions-of-record.md` and both re-run the same checker, and interleaving them would produce conflicting checksum sentinels. The subject matter is independent, so the dependency may be dropped if this task is run first instead.
+
+---
 
 ### 551. Boneyard disposition for publication
 - **Status**: [NOT STARTED]
