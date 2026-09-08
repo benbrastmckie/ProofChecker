@@ -62,6 +62,112 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
 - `tmCompleteDense_iff_forwardDense`, `tmCompleteRTime_iff_forwardRTime` — two further
   rows the generalization yields for free
 
+The **four-row status table** below is the canonical record of where each row stands, including
+the two that are open; it is prose, not a declaration, and asserts none of the four propositions.
+
+## The four-row status table
+
+**This is the canonical location for the status of all four rows.** Each row asks the same
+question — is TM (at that frame class) weakly complete for base-language validity over that class,
+equivalently does forward conservativity hold there — and by `tmComplete_iff_forward` the two
+readings never come apart. Two rows are closed, two are not.
+
+| Frame class | System | Status | Evidence |
+|---|---|---|---|
+| `.Base` | TM | **refuted** | `tmCompleteBase_refuted` (`Conservativity/SpCountermodel.lean`), witnessed by `Sp` on the two-fibre `ℤ ⊕ ℝ` model |
+| `.ZTime` | TM_z | **refuted** | `tmCompleteZTime_refuted` (`Conservativity/Z1Countermodel.lean`), witnessed by `Z1` on `ℚ ×ₗ ℤ` |
+| `.Dense` | TM_d | **open; expected complete, no obstruction found** | see below |
+| `.RTime` | TM_dc | **open; obstruction named** | see below |
+
+Both closed rows are closed by a *dichotomy witness*: a schema valid over the class because the
+class splits into two subclasses that H/G can tell apart, while no single derivation covers both.
+That is the shape of argument the two open rows do not admit, which is the whole reason they are
+open in the direction they are.
+
+### `.Dense` — expected complete, unproved
+
+**No obstruction is known, and both known witnesses provably fail to transfer.**
+`Conservativity/DenseObstructionTransfer.lean` machine-checks both halves:
+
+* `sp_derivable_dense` — the `.Base` witness `Sp` is a **theorem** of TM_d (its right disjunct's
+  inner formula is `Axiom.dn`), so it is not an underivable validity. `sp_derivable_rtime` says
+  the same at `.RTime`.
+* `not_blValidDense_z1` — the `.ZTime` witness `Z1` is **not** dense-valid, refuted on the flow
+  frame over ℚ, so it is not a validity of the class at all.
+
+`FrameClass.Dense` does not split into two H/G-definable subclasses the way `.Base` (dense versus
+least-positive durations) and `.ZTime` (Archimedean versus not) do, so no dichotomy witness of the
+known shape is available. **This is evidence, not proof.** It rules out the two witnesses that
+exist in this tree; it says nothing about some third witness.
+
+**What a positive answer still needs**, at declaration granularity. The *transfer* half is already
+closed: `not_blValidIn_of_not_chainSat` (`Conservativity/ChainBundleTruth.lean`) turns a chain-model
+refutation into a task-frame refutation at any tag the flow frame satisfies, with
+`not_blValidDense_of_not_chainSat` the ℚ instantiation, and the frame construction it consumes
+(`multiFamTaskFrameGen`, `Metalogic/Algebraic/FlowFrame.lean`) was already generic. What is missing
+is the *canonical model*, all of it on the base-language side:
+
+1. a maximal-consistent-set layer over `BLFormula`. `Metalogic/Core/`'s apparatus
+   (`MaximalConsistent.lean`, `MCSProperties.lean`, `DeductionTheorem.lean`) is stated over
+   `Formula` throughout and does not transfer;
+2. canonicity for the eleven Base axioms plus `DN`;
+3. bulldozing the canonical clusters into chains;
+4. realization of each countable dense unbounded chain as ℚ, for which Mathlib's
+   `Order.iso_of_countable_dense` is the off-the-shelf step.
+
+Borrowing `Metalogic/BXCanonical/Chronicle/` instead is **not** an option, and the reason is worth
+recording because it is not obvious: that machinery starts from a `SetMaximalConsistent` set of
+`Formula`s, so using it would require "`{¬φ}` is TM_d-consistent ⟹ `{tr ¬φ}` is TM⁺_d-consistent",
+which is the contrapositive of the very forward-conservativity statement being proved. The route
+is circular, not merely inconvenient.
+
+### `.RTime` — open, with the obstruction named
+
+The temporal part of TM_dc is the H/G logic of ℝ, and `Axiom.co` is the Dedekind axiom of that
+literature: reading `S := {u | Hφ(u)}`, `CO`'s antecedent says the downward-closed `S` has no
+maximum and its consequent says `S` is unbounded above — which is Dedekind completeness, and fails
+on ℚ at `φ(w) :↔ w < √2`.
+
+**The obstruction, at declaration granularity.** The abstract Doets layer in this tree is genuinely
+reusable: `DoetsD1`/`DoetsD2` and `doets_theorem_dense`
+(`Metalogic/WeakCanonical/RealModel/DoetsTheorem.lean`) are stated over an arbitrary
+`OrderedMonadicStructure` at an arbitrary signature, and their D1/D2 suppliers
+(`no_gaps_dense_prior`, `reynolds_theorem5`, `Metalogic/WeakCanonical/DenseModelSurgery/`) are
+abstract too. The gap is one level down: **every existing discharge of the semantic side conditions
+those suppliers need consumes an axiom the base language cannot express.**
+`chronicleMonadic_semanticPriorU` consumes `Axiom.prior_U_gap`, `chronicleMonadic_semanticPriorS`
+consumes `Axiom.prior_S_gap`, and `chronicleMonadic_semanticSep` consumes `Axiom.sep` (all in
+`Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean`); D1 needs the first two and D2 needs
+all three. None of those three axioms is expressible in `BLFormula`, which has six constructors —
+`atom`, `bot`, `imp`, `box`, `allPast`, `allFuture` — and no `untl`, `snce`, `kPlus` or `kMinus`.
+
+So the `.RTime` row reduces to: **discharge `SemanticPriorU`, `SemanticPriorS` and
+`SemanticSepOpen` — or find weaker H/G-sufficient replacements for D1/D2 — on a base-language
+canonical structure, from `CO` alone.** Nothing in this tree or in Mathlib bears on whether `CO`
+suffices.
+
+Two things make this row harder than `.Dense` rather than merely later:
+
+* `CO` is **not Sahlqvist**, so the canonicity argument sketched for `.Dense` above does not carry
+  over, and a step-by-step or Dedekind-completion construction is needed instead.
+* `sep` is named for **separability**. If ℝ is distinguished from other Dedekind-complete chains in
+  the H/G language the way it appears to be in the U/S language, the `.RTime` verdict is
+  **negative**, and the separating witness is a formula valid on ℝ but refuted on some
+  Dedekind-complete non-separable dense unbounded chain. Nothing established here rules that out,
+  so a refutation probe is the cheaper thing to try first, and
+  `not_blValidRTime_of_not_chainSat` is the interface such a probe would consume.
+
+### What the prohibition does and does not forbid
+
+`Metalogic/Conservativity.lean`'s standing prohibition is: **do not state a completeness or
+forward-conservativity theorem for L ⊂ L⁺ and discharge it with `sorry`.** It is not a prohibition
+on *proving* one. `forward` is refuted at `.Base` and `.ZTime`, so a `sorry` there would be an
+unsound placeholder rather than deferred debt; at `.Dense` and `.RTime` the statements are simply
+open, and a genuine proof of either would be welcome. What is forbidden at all four tags is
+asserting one without a proof — and, equally, reading the `.Dense` row above as though the expected
+answer had been established. It has not been. Every `TMComplete` and `Forward` proposition in this
+module is a `def`, referenced as a statement and never the conclusion of a theorem.
+
 ## References
 
 * `FormalSystem/Metalogic/Conservativity.lean` — the forward-conservativity prohibition this
@@ -69,6 +175,17 @@ routing `⊢[Base] tr φ` through TM⁺'s own soundness to `Valid (tr φ)`, then
 * `FormalSystem/Metalogic/BXCanonical/Completeness.lean` — `completeness`, `completeness_ztime`
 * `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `blValid_iff_valid_tr`,
   `blValidZTime_iff_validZTime_tr`
+* `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`,
+  `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — the two closed rows'
+  refutations, `tmCompleteBase_refuted` and `tmCompleteZTime_refuted`
+* `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` — `sp_derivable_dense`,
+  `sp_derivable_rtime`, `not_blValidDense_z1`: neither closed row's witness transfers
+* `FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean` —
+  `not_blValidIn_of_not_chainSat` and its ℚ/ℝ instantiations, the transfer half of the
+  canonical-model route
+* `FormalSystem/Metalogic/WeakCanonical/RealModel/DoetsTheorem.lean`,
+  `FormalSystem/Metalogic/BXCanonical/Chronicle/ChronicleMonadicBridge.lean` — the Doets layer
+  and the BL⁺-only axiom consumption that is the `.RTime` row's named obstruction
 -/
 
 namespace FormalSystem.Metalogic

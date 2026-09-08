@@ -337,7 +337,7 @@ via `lean_run_code` *first*, and drop it to a noted gap if it does not close qui
 
 ---
 
-### Phase 5: Record both verdicts in-tree [NOT STARTED]
+### Phase 5: Record both verdicts in-tree [COMPLETED]
 
 **Goal**: Execute report Recommendation 2 — one canonical four-row status table in
 `TMCompletenessReduction.lean`'s module docstring, with the Dense verdict stated as
@@ -345,29 +345,29 @@ via `lean_run_code` *first*, and drop it to a noted gap if it does not close qui
 obstruction named at declaration granularity*.
 
 **Tasks**:
-- [ ] Extend `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`'s module
+- [x] Extend `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`'s module
       docstring with a four-row table: `.Base` refuted (`SpCountermodel`/CEB), `.ZTime` refuted
       (`tmCompleteZTime_refuted`), `.Dense` expected complete, `.RTime` open.
-- [ ] For the `.Dense` row, state: no obstruction found; both closed rows' witnesses provably fail
+- [x] For the `.Dense` row, state: no obstruction found; both closed rows' witnesses provably fail
       to transfer (cite `sp_derivable_dense` and `not_blValidDense_z1` by name); the residual
       content is a BL-side canonical model — a BL-MCS layer over `BLFormula` (the
       `Metalogic/Core/` apparatus is `Formula`-only and does not transfer), canonicity for the
       eleven Base axioms plus DN, bulldozing, and a countable-ℚ realization via
       `Order.iso_of_countable_dense`; the transfer step is already closed by
       `not_blValidIn_of_not_chainSat`.
-- [ ] For the `.RTime` row, state the F8 obstruction exactly: `doets_theorem_dense` needs
+- [x] For the `.RTime` row, state the F8 obstruction exactly: `doets_theorem_dense` needs
       `DoetsD1`/`DoetsD2`, whose only existing suppliers (`no_gaps_dense_prior`,
       `reynolds_theorem5`) are discharged through `chronicleMonadic_semanticPriorU/S/Sep`, which
       consume `Axiom.prior_U_gap` / `Axiom.prior_S_gap` / `Axiom.sep` — none of which is
       expressible in `BLFormula` (six constructors, no `untl`/`snce`/`kPlus`/`kMinus`). Note that
       `CO` is not Sahlqvist, so the Dense canonicity route does not carry over, and that the
       `sep`-is-separability signal leaves a **negative** Dedekind verdict live.
-- [ ] Repeat the `Conservativity.lean` prohibition verbatim in the same docstring, and state
+- [x] Repeat the `Conservativity.lean` prohibition verbatim in the same docstring, and state
       explicitly that it forbids `sorry`-ing these theorems, not proving them — `forward` is
       refuted only at `.Base` and `.ZTime`.
-- [ ] Add a one-line pointer from `FormalSystem/Metalogic/Conservativity/README.md` to the table
+- [x] Add a one-line pointer from `FormalSystem/Metalogic/Conservativity/README.md` to the table
       as its canonical location.
-- [ ] **Constraint**: no task numbers anywhere in these docstrings
+- [x] **Constraint**: no task numbers anywhere in these docstrings
       (`.claude/rules/no-task-references-in-deliverables.md`) — cite declaration names and file
       paths only. Do not cite the archived TM-completeness-status report by task number either.
 

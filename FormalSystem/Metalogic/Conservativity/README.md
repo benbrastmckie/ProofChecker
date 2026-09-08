@@ -5,8 +5,13 @@ The three conservativity questions this development answers, and the one it refu
 | Extension | Direction | Status |
 |-----------|-----------|--------|
 | L ⊂ L⁺ (TM into TM⁺, via `tr`) | backward | **proved** — `derivable_translate` and the four row corollaries |
-| L ⊂ L⁺ | forward | **refuted** at `.Base` and `.ZTime` — both rows machine-checked (`tmCompleteBase_refuted`, `tmCompleteZTime_refuted`); open at `.Dense` and `.RTime` |
+| L ⊂ L⁺ | forward | **refuted** at `.Base` and `.ZTime` — both rows machine-checked (`tmCompleteBase_refuted`, `tmCompleteZTime_refuted`); **open** at `.Dense` and `.RTime` |
 | L⁺ ⊂ L⋆ (TM⁺ into TM⋆, via `ofFormula`) | both | **proved** at all four classes — `starDerivable_ofFormula_iff` |
+
+The **canonical four-row status table** for the forward row above — including what the two open
+rows would still need, and the named obstruction at `.RTime` — lives in
+[`TMCompletenessReduction.lean`](TMCompletenessReduction.lean)'s module docstring. Read it there
+rather than reconstructing the status from the modules; it is the single place kept current.
 
 Per-theorem status — statement, frame class, machine-pinned axiom set — is in
 [`docs/theorem-index.md`](../../../docs/theorem-index.md), the single ledger. The standing
@@ -32,7 +37,7 @@ than deferred debt.
 | `SpCountermodel.lean` | 390 | CEB's failing half: native BL soundness for TM against `Semantics/BLFrame.lean`'s `TaskFrame`-free semantics (`blFrameValid_of_axiom`, `blFrameValid_of_derivation`), the two-fibre countermodel `ℤ ⊕ ℝ`, and the deliverables `not_derivable_sp` and `tmCompleteBase_refuted` |
 | `SpWitness.lean` | 138 | <!-- TODO: add description --> |
 | `Star.lean` | 65 | <!-- TODO: add description --> |
-| `TMCompletenessReduction.lean` | 192 | <!-- TODO: add description --> |
+| `TMCompletenessReduction.lean` | 309 | <!-- TODO: add description --> |
 | `Z1Countermodel.lean` | 205 | <!-- TODO: add description --> |
 | `Star/` | — | <!-- TODO: add description --> |
 <!-- END GENERATED -->
