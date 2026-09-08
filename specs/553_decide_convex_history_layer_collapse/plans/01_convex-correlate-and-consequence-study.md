@@ -2,7 +2,7 @@
 
 - **Task**: 553 - Decide convex history layer collapse (reframed: develop the categorical
   correlate of convex histories and the alternative consequence relations)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 12 hours
 - **Dependencies**: 552 (`align_history_vocabulary_with_paper`) — **satisfied**, status
   `completed`; `FormalSystem/Semantics/ConvexHistory.lean` exists and `ConvexHistory` is the

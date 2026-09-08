@@ -11,7 +11,7 @@ next_project_number: 563
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,553,558 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,558 | -- | algebraic-representation, automation, dataset-enhancement, ... |
 | 2 | 178,231,282,296,465,497,562 | 193,298,464,502,558 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500,534,537,559,561 | 231,465,497,562 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 125,429,543,560 | 428,498,499,500,537,559 | algebraic-representation, decidability, metalogic |
@@ -86,7 +86,6 @@ next_project_number: 563
 
 ### Paper Refactor
 
-553 [IMPLEMENTING] — ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Sem
 562 [NOT STARTED] — Rename this repository's object languages and proof systems so th
 
 ### Publication Quality
@@ -95,7 +94,7 @@ next_project_number: 563
 
 ### Repo Hygiene
 
-558 [PLANNED] — Close the three evasion routes that let defsWithUnderscore reopen
+558 [IMPLEMENTING] — Close the three evasion routes that let defsWithUnderscore reopen
 
 ### Documentation
 
@@ -178,7 +177,7 @@ GROUND TRUTH to read first: 535's report §3-4 and §7.3 with its probes; 533's 
 ---
 
 ### 558. Close defswithunderscore gate evasion routes
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: repo-hygiene
 - **Dependencies**: Task 555, Task 557
@@ -259,11 +258,12 @@ Dependencies: none outstanding. Task 463, which formerly owned this file, is com
 ---
 
 ### 553. Decide convex history layer collapse
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 552
 - **Plan**: [553_decide_convex_history_layer_collapse/plans/01_convex-correlate-and-consequence-study.md]
+- **Summary**: [553_decide_convex_history_layer_collapse/summaries/01_convex-correlate-and-consequence-summary.md]
 
 **Description**: ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Semantics/{WorldHistory,PartialHistory,Truth,Validity,StarPasting,ShiftSet,IntTransfer}.lean, FormalSystem/Semantics/Ultraproduct, FormalSystem/Metalogic/Decidability/BiLasso, FormalSystem/Metalogic/WeakCanonical, FormalSystem/Metalogic/Soundness.lean. These were previously declared as this task file_scope, which mis-stated a reading surface as owned write territory -- the batch orchestrator treats file_scope as write ownership, so the over-declaration would collide with any concurrent task editing those trees (notably the snake_case burndown, which edits four files under Metalogic/WeakCanonical) and defer one of them for no real reason. Every other research-only task in this repository declares no file_scope; this one now matches. RESEARCH TASK, verdict-first --- report and probe files only; no change to `FormalSystem/` beyond probes. Decide whether the convex-history layer should exist in this repository at all, and, if it should not, specify how to collapse it. Deliver a reasoned recommendation with the evidence needed to act on it. Implementation, if the recommendation is accepted, is a follow-up task.
 
