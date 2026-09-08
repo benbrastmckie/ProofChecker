@@ -469,7 +469,7 @@ claim guarded by a maintainer-only `CONFIRM` comment rather than status prose. C
   and the incompleteness cut were removed after per-entry citation greps (entries still cited
   by `FormalFoundations.typ`, a standalone report outside this revision's scope, were kept).
 - **Frame-class/naming alignment**: nine axiom layers (Layer 9 = Reynolds Dedekind triple),
-  four-value `FrameClass` with `RTime` hosting the complete extension TM_c
+  four-value `FrameClass` with `RTime` hosting the complete extension TM_r
   (dense-and-complete, real flow); short axiom names (TB, UG, UC, TA, ...) added as a
   cross-index column; the tense-primitive fragment is presented throughout as a deferred
   subsystem, with the conservativity theorem box replaced by a deferred-subsystem note.

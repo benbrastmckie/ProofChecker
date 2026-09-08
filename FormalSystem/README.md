@@ -191,18 +191,23 @@ Because `Dense ≤ Dedekind`, a Dedekind derivation admits the two density axiom
   on ℤ, which is nonetheless conditionally complete.
 - **Frame**: `DenselyOrdered D` plus Dedekind completeness
 
-**`FrameClass.Dedekind` *is* the paper's TM⁺_c.** The live `cor:tm-completeness` reads
-"TM⁺_c — Weakly complete over the dense-and-complete class", and `FrameClass.Dedekind` is exactly
-that class (`DenselyOrdered D` plus Dedekind completeness). An earlier revision of this file said
-TM⁺_c was completeness *simpliciter*, with models `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and that
-no element of `FrameClass` picked it out. Both halves are stale: that footnote is commented out in
-the live `def:TMplus-c`, and the paper's class for TM⁺_c is dense-and-complete. There is no gap.
+**`FrameClass.RTime` *is* the paper's TM⁺_r.** The live `cor:tm-completeness` gives TM⁺_r as
+weakly complete over `ℝ`-time, the dense and Dedekind-complete orders, and `FrameClass.RTime` is
+exactly that class (`DenselyOrdered D` plus Dedekind completeness). An earlier revision of this
+file described the paper's complete-order system as completeness *simpliciter*, with models
+`{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picked it out.
+Both halves are stale: that footnote is commented out in the live `def:TMplus-c`, and the class
+the paper names is dense-and-complete.
 
-What remains open is an axiom-basis question on the paper's side: `def:TMplus-c` builds BX_c from
-`TMP-PU` and `TMP-SEP` with no density axiom, while `FrameClass.Dedekind` admits `density` and
-`dense_indicator` in addition to Reynolds' triple, so `completeness_dedekind` proves a
-stronger-premise statement than the paper's corollary as literally written. Resolving that is an
-author decision, not a tree change.
+The axiom-basis question this file used to record as open is answered too. `def:TMplus-c` now
+builds BX_r on the *dense* logic BX_d extended by `TMP-PU` and `TMP-SEP`, so the density axioms
+are present on the paper's side as well as under `FrameClass.RTime`, and `completeness_rtime`
+proves the corollary's own statement rather than a stronger-premise variant. CO is a derived
+theorem of BX_r on the paper's side and of the Reynolds triple here
+([DedekindDerived.lean](Theorems/DedekindDerived.lean)); the two arrangements agree.
+
+For how this tree's system names line up with the paper's on both sides of the `⁺`, see the
+module docstring of [Conservativity.lean](Metalogic/Conservativity.lean).
 
 ### Variant Incompatibility
 
@@ -358,7 +363,7 @@ single ledger. The table below is per *layer*, and is not a second copy of it.
 
 **Key Results**: soundness, weak completeness, finite-context consequence completeness, and the
 deduction theorem are proven for **all four** frame classes (`Base`, `Dense`, `ZTime`, `RTime` —
-the tree's names for the paper's TM⁺, TM⁺_d, TM⁺_f, TM⁺_c), each sorry-free at exactly
+the tree's names for the paper's TM, TM_d, TM_z, TM_r), each sorry-free at exactly
 `[propext, Classical.choice, Quot.sound]`. Those axiom sets are asserted by C2 and C14, and the
 per-theorem rows are in [`docs/theorem-index.md`](../docs/theorem-index.md).
 

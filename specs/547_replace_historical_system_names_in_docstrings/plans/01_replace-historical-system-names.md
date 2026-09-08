@@ -370,27 +370,27 @@ against the Phase 1 census.
 
 ---
 
-### Phase 6: Markdown and typst prose sweep [NOT STARTED]
+### Phase 6: Markdown and typst prose sweep [COMPLETED]
 
 **Goal**: Bring the user-facing READMEs, the architecture guide and the typst sync map into the new
 vocabulary, retiring the two paragraphs the live paper has answered.
 
 **Tasks**:
-- [ ] `README.md` (~lines 197-199): the assertion "`FrameClass.RTime` *is* the paper's `TM⁺_c` …
+- [x] `README.md` (~lines 197-199): the assertion "`FrameClass.RTime` *is* the paper's `TM⁺_c` …
       There is no gap" becomes the single true statement that `FrameClass.RTime` is the paper's
       `TM⁺_r`. Retire the open question "either the paper's `BX_c` should carry the density axioms,
       or this tree should record that `completeness_rtime` proves a stronger-premise statement" —
       `def:BX-r` extends `BX_d`, so the paper answers it.
-- [ ] `FormalSystem/README.md` (~lines 174, 182, 194, 195, 201, 202): same rewrite, plus the
+- [x] `FormalSystem/README.md` (~lines 174, 182, 194, 195, 201, 202): same rewrite, plus the
       opportunistic fix of the task-546 `FrameClass.Dedekind` / `FrameClass.Discrete` residue at
       lines 194, 195 and 202, which sit inside the rewritten text.
-- [ ] `docs/user-guide/architecture.md`: rename the two `TM⁺_c` occurrences to `TM⁺_r`.
-- [ ] `typst/SYNC-MAP.md` (~line 472): rename `TM_c` to `TM_r`.
-- [ ] Record, without fixing, the five out-of-scope task-546 residue sites for the Phase 7
+- [x] `docs/user-guide/architecture.md`: rename the two `TM⁺_c` occurrences to `TM⁺_r`.
+- [x] `typst/SYNC-MAP.md` (~line 472): rename `TM_c` to `TM_r`.
+- [x] Record, without fixing, the five out-of-scope task-546 residue sites for the Phase 7
       follow-up list: `FormalSystem/ProofSystem/README.md:49`, `FormalSystem/Theorems/README.md:17`,
       `FormalSystem/Semantics/Correspondence/README.md:20`,
       `FormalSystem/Metalogic/Decidability/BiLasso/README.md:161`,
-      `docs/development/NAMING_CONVENTION_DEVIATION.md:232`.
+      `docs/development/NAMING_CONVENTION_DEVIATION.md:232`. *(deviation: altered — the list is seven, not five: `FormalSystem/README.md:174` and `:182` also carry the residue and sit outside the rewritten paragraphs. The three co-located sites the plan expected at 194/195/202 were fixed by the rewrite as planned.)*
 
 **Timing**: 1 hour
 

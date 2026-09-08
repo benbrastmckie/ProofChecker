@@ -889,14 +889,15 @@ RTime.
 by frame class `fc` only when its minimum frame class is at most `fc`. This single constraint
 replaces the ad-hoc predicates an earlier design used.
 
-**The TM⁺_c gap.** The paper's TM⁺_c is completeness *simpliciter* -- no density binder -- so
-its models are exactly `{ℤ, ℝ}` up to order-and-group isomorphism, and its theory is
-`Th(ℤ) ∩ Th(ℝ)`. **No element of `FrameClass` picks that class out.** The two branches are
-covered separately and exhaustively: the complete-but-discrete branch is exactly `ℤ` and is
-handled by `ZTime`; the dense branch is `RTime`. But their *intersection* is not itself a
-frame class, and adding one would require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does
-not have. `ValidComplete` exists as a predicate matching the TM⁺_c binder set, but is
-deliberately not a soundness target.
+**`ValidComplete` and the absent density binder.** `ValidComplete` is the density-free
+completeness binder: its models are exactly `{ℤ, ℝ}` up to order-and-group isomorphism, and its
+theory is `Th(ℤ) ∩ Th(ℝ)`. **No element of `FrameClass` picks that class out**, and none needs
+to -- it is the class of no paper system. Every row of `cor:tm-completeness` is covered here:
+the complete-but-discrete branch is exactly `ℤ` and is handled by `ZTime`, and the `ℝ`-time row,
+the paper's TM⁺_r, is `RTime`. Their *intersection* is not itself a frame class, and adding one
+would require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does not have. `ValidComplete`
+survives as a repository-only predicate -- the forgetful-bridge target and the subject of the
+discrete-or-dense dichotomy -- and is deliberately not a soundness target.
 
 **Soundness caveat.** Because `density` and `dense_indicator` are admissible at `RTime` and
 both are false on `ℤ` (which is nonetheless conditionally complete), the soundness theorem for
