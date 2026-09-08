@@ -1,5 +1,5 @@
 ---
-next_project_number: 555
+next_project_number: 558
 ---
 
 # TODO
@@ -11,7 +11,7 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,542,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,542,553,555,556,557 | -- | agent-system, algebraic-representation, automation, ... |
 | 2 | 178,231,282,296,465,497,537 | 193,298,464,502,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -22,6 +22,10 @@ next_project_number: 555
 | 9 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
+
+### Agent System
+
+556 [NOT STARTED] — Fix orchestrate-predispatch-review.sh Class A false positive: arc
 
 ### Algebraic Representation
 
@@ -37,6 +41,11 @@ next_project_number: 555
 ### Automation
 
 193 [NOT STARTED] — Apply validity-intro and truth-simp macros to the soundness layer
+
+### Code Quality
+
+555 [NOT STARTED] — Fix ProofStepExport.lean elaboration failure and bring out-of-clo
+557 [NOT STARTED] — Rename sp_derivable_dense and sp_derivable_rtime to camelCase and
 
 ### Dataset Enhancement
 
@@ -102,6 +111,36 @@ next_project_number: 555
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 557. Camelcase sp derivable defs drop nolint
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: code-quality
+- **Dependencies**: None
+
+**Description**: Rename sp_derivable_dense and sp_derivable_rtime to camelCase and drop the nolint defsWithUnderscore suppression. MEASURED STATE: FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean:179 carries `attribute [nolint defsWithUnderscore] sp_derivable_dense sp_derivable_rtime`. Both declarations are DerivationTree-valued, hence `noncomputable def`s rather than theorems (DenseObstructionTransfer.lean:122 and its sibling), and the C16 env_linter gate rejects snake_case names on defs -- the suppression exists purely to hold snake_case names the linter is right to object to. Lean 4 convention is camelCase for defs, so the conventionally correct fix is the rename, not the suppression. HISTORY WORTH PRESERVING: during the originating implementation the alternative of restating both at BaseLanguage.Derivable was tried and reverted -- it built green, but Nonempty-of-data is a strictly weaker statement under the same name, which context/contracts/plan-compliance.md Statement Fidelity forbids. Do NOT re-adopt that route; keep the DerivationTree-valued signatures exactly as they are and change only the identifiers. WORK: rename to spDerivableDense and spDerivableRtime (or the camelCase spelling the surrounding module prefers), remove the nolint attribute line, and update every citation -- the identifiers appear in DenseObstructionTransfer.lean's own module docstring and declaration comments and in TMCompletenessReduction.lean's verdict-table docstring around lines 92-93 and 181-182. Leave the unrelated pre-existing nolint at FormalSystem/Automation/Tactics/UserTactics.lean:270 alone. Also update the recorded Lean Challenge Statements block in the originating plan artifact under specs/ to name the landed identifiers, with the divergence note retained. ACCEPTANCE: no nolint defsWithUnderscore attribute remains in DenseObstructionTransfer.lean; `lake build` green; `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED including C16; grep finds zero surviving references to the old snake_case identifiers outside historical summaries; sorry, vacuous and axiom counts unchanged from baseline.
+
+---
+
+### 556. Predispatch review archived dependency false positive
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: Fix orchestrate-predispatch-review.sh Class A false positive: archived completed dependencies reported as nonexistent. MEASURED STATE: the Class A dependency-edge classifier resolves a task's dependencies[] against specs/state.json active_projects[] ONLY. A dependency that was completed and then archived by /todo is moved out of active_projects[] into specs/archive/{NNN}_{slug}/, so the classifier reports it as `nonexistent` -- the loudest verdict it has -- when in fact the dependency is SATISFIED. Measured across the current state file: 37 unique dependency numbers are flagged nonexistent across roughly 30 tasks (including 541 -> 529, 433 -> 432/434, 530 -> 518/524); ALL 37 resolve to a directory under specs/archive/, and ZERO are genuinely absent. The advisory is therefore ~100 percent false-positive noise on this repository, which trains an operator to ignore Class A entirely and would mask a real dangling edge. WORK: teach the Class A classifier a third verdict distinguishing (a) satisfied-and-archived -- resolvable under specs/archive/ -- from (b) genuinely nonexistent -- resolvable nowhere. Report (a) at informational volume or not at all; reserve the loud nonexistent wording for (b). Confirm the archive lookup matches the directory naming /todo actually writes (zero-padded {NNN}_{slug}), and decide whether a completed-but-not-yet-archived dependency needs its own verdict. SOURCE STORE NOTE: this repository has no agent-system/ directory -- .claude/ is gitignored and regenerated from a source store held elsewhere, so per rules/source-store-deploy-boundary.md the fix MUST be authored in agent-system/extensions/core/scripts/orchestrate-predispatch-review.sh in whichever repository or checkout owns that store, then redeployed here. A hand-edit to .claude/scripts/ in this repo would be silently wiped by the next regeneration. Check whether orchestrate-batch-admit.sh and orchestrate-triage-classify.sh share the same active_projects-only assumption and need the same correction. ACCEPTANCE: running the review against the current state file reports zero nonexistent findings and classifies all 37 archived edges as satisfied; a synthetic dependency on a number present in neither active_projects[] nor specs/archive/ still reports loudly as nonexistent.
+
+---
+
+### 555. Fix proofstepexport and manifest out of closure roots
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: code-quality
+- **Dependencies**: None
+
+**Description**: Fix ProofStepExport.lean elaboration failure and bring out-of-closure lean_exe roots under compile checking. MEASURED STATE: FormalSystem/Automation/ProofStepExport.lean does not elaborate -- three `Application type mismatch` errors at lines 1479, 1496 and 1497. `@b_combinator_weakened`, `@theorem_flip_weakened` and `@theorem_app1_weakened` are called as `(A := p) (B := q) ... s` with a positional Formula argument, but under `@` each declaration's FIRST parameter is the implicit `{fc : FrameClass}`, so the positional argument lands in the wrong slot. Confirmed PRE-EXISTING (not introduced by the Init-import adoption): stashing the adoption import lines and rebuilding this module alone reproduces byte-identical errors. WHY IT WENT UNNOTICED: the module is the `lake exe proof_extractor` root, sits OUTSIDE the FormalSystem root closure (so neither `lake build` nor `lake exe checkInitImports` ever elaborates it) AND is absent from scripts/module-invariants-manifest.txt, so invariant C6 does not compile-check it either -- it has been failing invisibly with no gate able to observe it. WORK: (1) repair the three call sites, either by supplying the implicit `fc` explicitly or by dropping `@` in favour of named arguments, whichever preserves the intended frame class; (2) verify `lake exe proof_extractor` builds and runs; (3) decide and implement how out-of-closure `lean_exe` roots are brought under continuous compile checking -- add ProofStepExport (and any sibling out-of-closure root) to scripts/module-invariants-manifest.txt, or extend the gate set so no `lean_exe` root can fail silently again; (4) add the negative test that docs/development/MODULE_INVARIANTS.md mandates for any new or widened invariant. ACCEPTANCE: ProofStepExport.lean elaborates with zero errors; `lake exe proof_extractor` succeeds; a deliberately reintroduced break in an out-of-closure root is CAUGHT by the gate set (observed FAIL, then PASS after restore); `lake build` green and `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED.
+
+---
 
 ### 554. Retire the nine vacuous _run theorems and correct the register count
 - **Effort**: 3-5 hours
