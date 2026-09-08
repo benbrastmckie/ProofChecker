@@ -20,6 +20,8 @@ root README). No argument swap is needed if resurrecting these.
 Not part of any `lean_lib` root; not compiled; not imported by any live module.
 -/
 
+#exit
+
 theorem limitSetBelow_forward_G_rat_target (m : Rat → Set Formula)
     (hG : ∀ (s t : Rat) (φ : Formula), s < t → Formula.allFuture φ ∈ m s → φ ∈ m t)
     (s : ℝ) (p : Rat) (φ : Formula) (hsp : s < (p : ℝ))

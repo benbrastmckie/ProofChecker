@@ -483,8 +483,8 @@ git log --diff-filter=A --oneline -- FormalSystem/Boneyard/<subdir>/<file>.lean
    - If the file imports active modules, keep those imports as-is
 3. **Move imports before doc comments**: In Lean 4, `/-! ... -/` doc comments are commands;
    `import` statements must appear BEFORE any commands
-4. **Add `#exit` if needed**: For files with deep API drift (removed axioms, renamed types),
-   add `#exit` after imports to prevent compilation errors while preserving code for reference
+4. **Add `#exit`**: after the import block, before the first declaration. This is mandatory, not
+   conditional -- see the `#exit` policy under Build Policy below
 5. **Create a README.md** in the subdirectory explaining why the code was archived,
    what it contained, and any relationship to active code
 6. **Update this README** with a new row in the Directory Inventory table
@@ -516,14 +516,58 @@ lake build                                    # default target stays green
 bash scripts/check-module-invariants.sh       # ALL CHECKS PASSED, including C11
 ```
 
+#### The `#exit` policy: mandatory, and why
+
+**Every archived `.lean` file carries `#exit` after its import block, before its first
+declaration.** This section and Expected File Structure below used to disagree -- one said `#exit`
+was for files "with deep API drift", the other that archived files "may use `#exit`" -- and under
+the permissive reading twelve archived files carried no `#exit` and, in eleven cases, no archival
+marker of any kind. A reader who opened one of those files saw a copyright header, an import
+block and an ordinary module docstring, with nothing on the page to say it was archived.
+
+`#exit` is redundant against the build, and that is not the point. Reachability is what keeps the
+archive inert, and reachability is a *global* property: to check it you must know the lakefile
+roots and the whole import graph. `#exit` makes inertness a *local* property instead -- visible in
+the first twenty lines of any single file, greppable in one command, and immune to a future
+lakefile edit that accidentally roots something under this tree:
+
+```bash
+# every archived file is guarded; this prints nothing
+for f in $(find FormalSystem/Boneyard -name '*.lean'); do grep -q '^#exit' "$f" || echo "$f"; done
+```
+
+Alongside it, each file carries the archival banner
+
+```lean
+/-!
+ARCHIVED (Boneyard) -- never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+```
+
+so that the file states its own status without reference to this README.
+
 ### Expected File Structure
 
-Each Boneyard subdirectory should contain:
-- `README.md` -- Purpose, file inventory, why archived, relationship to active code
-- `.lean` files -- Archived code (may use `#exit` for non-compiling reference code)
+Each Boneyard subdirectory contains:
+- `README.md` -- purpose, file inventory, why archived, relationship to active code. Every
+  subdirectory has one; the nine README-only tombstones below are the case where it is the
+  *only* thing the subdirectory contains.
+- `.lean` files -- archived code, each carrying the archival banner and `#exit` after its import
+  block (mandatory -- see the `#exit` policy above).
 
 Doc-only `.lean` files (pure comments, no imports) should be consolidated into the
 README as prose or code blocks, then deleted. Code is always recoverable from git.
+
+**One documented file sits at the archive root rather than in a subdirectory.**
+`VacuousKEquiv.lean` is a single 35-line excision from
+`Metalogic/WeakCanonical/OrderedSum.lean` -- two theorems whose names promised Z-interval
+k-equivalence and whose proofs were `⟨M, rfl⟩`, reflexivity and nothing more. It is small enough
+that a directory-plus-README around it would be more ceremony than content, and it is cited by
+path from a live comment in `Metalogic/WeakCanonical/OrderedSum.lean` (search that file for
+`finite_structures_k_equiv_to_Z_interval`), so moving it would change live code to no benefit. The Directory Inventory below gives it a row like any other entry, and the generator
+picks it up automatically as a loose file; a root-level file is admitted here precisely because
+it is documented in both places rather than merely tolerated.
 
 ### Tombstones (README Only, No .lean Files)
 

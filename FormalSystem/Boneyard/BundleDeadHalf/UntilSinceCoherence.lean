@@ -9,6 +9,13 @@ import FormalSystem.Boneyard.BundleDeadHalf.SuccRelation
 import FormalSystem.Theorems.TemporalDerived
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Until/Since Coherence: Backward Direction (archived)
 
 This module previously provided backward Until and backward Since lemmas for

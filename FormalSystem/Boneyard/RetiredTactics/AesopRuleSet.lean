@@ -7,6 +7,13 @@ Authors: Benjamin Brast-McKie
 import Aesop
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # TMLogic Aesop rule set
 
 Declares the `TMLogic` Aesop rule set that `FormalSystem/Automation/AesopRules.lean` registers

@@ -12,6 +12,13 @@ import FormalSystem.Metalogic.Core.MCSProperties
 import FormalSystem.Theorems.Propositional.Core
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Completeness for TM Bimodal Logic
 
 This module provides modal and temporal MCS properties for the completeness

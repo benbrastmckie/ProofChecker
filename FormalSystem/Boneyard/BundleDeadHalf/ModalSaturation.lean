@@ -12,6 +12,13 @@ import FormalSystem.Theorems.Propositional.Connectives
 import FormalSystem.Theorems.ModalDerived
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Modal Saturation for BFMCS
 
 This module implements modal saturation for Bundle of Maximal Consistent (fc := FrameClass.Base)

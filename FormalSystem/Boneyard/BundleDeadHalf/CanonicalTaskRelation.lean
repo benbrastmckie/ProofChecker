@@ -11,6 +11,13 @@ import FormalSystem.Syntax.SubformulaClosure.TemporalFormulas
 import FormalSystem.Syntax.SubformulaClosure.IteratedTemporal
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # CanonicalTask Relation for Discrete Temporal Frames
 
 This module defines the CanonicalTask relation, an integer-indexed relation built

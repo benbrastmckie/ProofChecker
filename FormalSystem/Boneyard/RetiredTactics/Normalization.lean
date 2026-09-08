@@ -7,6 +7,13 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Automation.Normalization
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Retired: the normalization tactic macros
 
 Seven tactic wrappers lifted out of `FormalSystem/Automation/Normalization.lean`. Each was a

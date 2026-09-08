@@ -11,6 +11,13 @@ import FormalSystem.Metalogic.Core.MCSProperties
 import FormalSystem.Syntax.Formula
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Canonical Frame for Bimodal Completeness
 
 This module defines the canonical frame for the Canonical Quotient approach to

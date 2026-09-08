@@ -13,6 +13,13 @@ import FormalSystem.Theorems.GeneralizedNecessitation
 import FormalSystem.Theorems.TemporalDerived
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Aesop Rules for TM Logic
 
 **DEPRECATION NOTICE**: As of 2026-01-17, the `tm_auto` tactic no longer

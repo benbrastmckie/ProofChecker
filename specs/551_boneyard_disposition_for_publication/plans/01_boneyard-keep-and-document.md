@@ -242,29 +242,29 @@ does not, add the variant the research anticipated and record the correction.
 
 ---
 
-### Phase 3: Close the Archive's Structural Gaps [NOT STARTED]
+### Phase 3: Close the Archive's Structural Gaps [COMPLETED]
 
 **Goal**: Settle the archive's file-level shape before any count is generated over it, so the
 inventory is built once against a stable tree.
 
 **Tasks**:
-- [ ] Write the six missing subtree READMEs, each following the shape §Expected File Structure
+- [x] Write the six missing subtree READMEs, each following the shape §Expected File Structure
       requires (purpose, file inventory, why archived, relationship to active code):
       `BXCanonicalQuasimodel/`, `DeadConvergenceProof/`, `FMPVariants/`, `RestrictedMCSDeferral/`,
       `SoundnessVariants/`, `StaviDiscretePath/`. Source the "why archived" text from the existing
       §Directory Inventory row and §Subdirectory Details entry for each, not from fresh invention.
-- [ ] Resolve the `#exit` policy explicitly. §Build Policy establishes liveness-equals-
+- [x] Resolve the `#exit` policy explicitly. *(chose option (a): mandatory.)* §Build Policy establishes liveness-equals-
       reachability (no lakefile target covers the archive); §Expected File Structure says archived
       `.lean` files *may* use `#exit`. Either (a) amend §Expected File Structure to state that
       `#exit` is mandatory and add it to the 12 files that lack it, or (b) state plainly that
       `#exit` is a belt-and-braces convenience and not required, and leave the 12 alone. Record
       the choice and its reason in the README; do not leave the two sections in tension.
-- [ ] If option (a) is taken, add `#exit` to the 12 files, preserving each file's existing
+- [x] Option (a) taken: `#exit` added to the 12 files, preserving each file's existing
       `ARCHIVED (Boneyard)` header placement. Note that 11 of the 12 sit in `BundleDeadHalf/`,
       `RetiredTactics/`, `LimitMCSCoherenceDeadCases/` and `SupersededCompleteness/` — the four
       subtrees archived after the last README refresh, which is the same story as their absence
       from the inventory table.
-- [ ] Decide the loose `FormalSystem/Boneyard/VacuousKEquiv.lean`. Exactly two references exist:
+- [x] Decide the loose `FormalSystem/Boneyard/VacuousKEquiv.lean`. *(chose the amend-the-policy option: the file stays at the archive root, admitted explicitly by §Expected File Structure and given a generated inventory row; zero live-tree diff.)* Exactly two references exist:
       `FormalSystem/Metalogic/WeakCanonical/OrderedSum.lean:54` (a live docstring, path-shaped) and
       the §Directory Inventory row. Either `git mv` it into a `VacuousKEquiv/` subtree with a
       README and update both references atomically, or amend §Expected File Structure to admit a

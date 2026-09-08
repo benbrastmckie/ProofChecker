@@ -7,6 +7,13 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Automation.Tactics.UserTactics
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Retired: the operator-K and modal-axiom tactics
 
 `mkOperatorKTactic` and the four tactics built on or beside it -- `modal_k_tactic`,

@@ -10,6 +10,13 @@ import FormalSystem.Metalogic.Bundle.WitnessSeed
 import FormalSystem.Metalogic.Core.MCSProperties
 
 /-!
+ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
+Do not import from live code.
+-/
+
+#exit
+
+/-!
 # Succ Relation for Discrete Temporal Frames
 
 This module defines the Succ (immediate successor) relation for discrete temporal frames.

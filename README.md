@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/benbrastmckie/BimodalLogic/actions/workflows/ci.yml/badge.svg)](https://github.com/benbrastmckie/BimodalLogic/actions/workflows/ci.yml)
 
-This repository implements the **bimodal fragment** of the [Logos](https://logos-labs.ai/) in Lean 4, establishing soundness and completeness for a logic designed for reasoning about future contingency in non-deterministic dynamical systems. The **task semantics** evaluates formulas at both a world-history and time, where world-histories are functions from times to world-states constrained by the task relation which encodes the possible transitions between world-states over a duration of time.
+This repository implements the **bimodal fragment** of the [Logos](https://logos-labs.ai/) in Lean 4, establishing soundness and completeness for a logic designed for reasoning about future contingency in non-deterministic dynamical systems. The **task semantics** evaluates formulas at both a history and a time, where histories are functions from times to world-states constrained by the task relation which encodes the possible transitions between world-states over a duration of time.
 
 Whereas dynamical systems theory provides mathematical resources for modeling the evolution of both deterministic and non-deterministic systems, a bimodal logic with tense and modal operators provides inferential resources for conducting verified reasoning about such systems. By encoding the constraints on possible transitions into the logical framework itself, one can draw fast and principled inferences about past and future contingency despite incomplete information.
 
@@ -18,9 +18,9 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 | Metric | Count |
 |--------|-------|
 | Live `.lean` files | 478 |
-| Live lines | 282,014 |
+| Live lines | 282,056 |
 | Archived `.lean` files | 168 |
-| Archived lines | 91,539 |
+| Archived lines | 91,618 |
 <!-- END GENERATED -->
 
 The table above is generated: `bash scripts/check-module-invariants.sh --emit-inventory`
@@ -82,18 +82,18 @@ A **task frame** `F = (W, D, R)` consists of a **nonempty** set `W` of world-sta
 
 Nullity (`w ⇒_0 w`) is **not** an axiom: it is derived, choice-free, from *Seriality* at `x = 0` together with *Limit*. In Lean, `structure FrameOver` (`FormalSystem/Semantics/TaskFrame.lean`) — the fibre over a temporal order, of which `TaskFrame` is the total space — additionally carries `converse` and `nullity_identity` as fields. Neither adds content — `converse` packages the converse convention, which a two-sided Lean relation cannot express in its type, and `nullity_identity` is derivable from `serial` and `limit`. Both are retained for construction ergonomics, so the Lean frame class is extensionally exactly the paper's.
 
-A **world-history** `τ` in a task frame `F` is a function `τ : X → W` from a convex subset `X ⊆ D` to world states that respects the task relation: for all times `x, y ∈ X` with `x ≤ y`, we have `τ(x) ⇒_{y-x} τ(y)`.
+A **convex history** `τ` in a task frame `F` is a function `τ : X → W` from a convex subset `X ⊆ D` to world states that respects the task relation: for all times `x, y ∈ X` with `x ≤ y`, we have `τ(x) ⇒_{y-x} τ(y)`. A convex history whose domain is all of `D` is a **possible world**; the paper writes `H_F` for the set of those.
 
-A **task model** `M = (F, I)` extends a task frame `F` with an interpretation function `I : W → Atom → Prop` that assigns truth values to sentence letters `Atom := {p_i : i ∈ ℕ}` at each world state. Truth is evaluated relative to a model `M`, a world-history `τ`, and a time `x`:
+A **task model** `M = (F, I)` extends a task frame `F` with an interpretation function `I : W → Atom → Prop` that assigns truth values to sentence letters `Atom := {p_i : i ∈ ℕ}` at each world state. Truth is evaluated relative to a model `M`, a convex history `τ`, and a time `x`:
 
 - `M, τ, x ⊨ p_i` iff `x ∈ dom(τ)` and `I(τ(x), p_i)`
 - `M, τ, x ⊨ ⊥` never
 - `M, τ, x ⊨ φ → ψ` iff `M, τ, x ⊭ φ` or `M, τ, x ⊨ ψ`
-- `M, τ, x ⊨ □φ` iff `M, σ, x ⊨ φ` for all **total** world-histories `σ` (those with `dom(σ) = D`; the paper's `H_F`)
+- `M, τ, x ⊨ □φ` iff `M, σ, x ⊨ φ` for all **possible worlds** `σ` (the convex histories with `dom(σ) = D`; the paper's `H_F`)
 - `M, τ, x ⊨ U(φ,ψ)` iff there exists `y > x` with `M, τ, y ⊨ φ` and `M, τ, z ⊨ ψ` for all `z` with `x < z < y`
 - `M, τ, x ⊨ S(φ,ψ)` iff there exists `y < x` with `M, τ, y ⊨ φ` and `M, τ, z ⊨ ψ` for all `z` with `y < z < x`
 
-Relative to a world-history, any duration `x` may be referred to as the *time* after `x` duration from the origin (the additive unit `0` in `D`) in that world-history.
+Relative to a history, any duration `x` may be referred to as the *time* after `x` duration from the origin (the additive unit `0` in `D`) in that history.
 
 The task semantics is developed in ["The Construction of Possible Worlds"](https://benbrastmckie.com/publications/possible_worlds.pdf) (Brast-McKie, 2025), providing resources for modeling non-deterministic dynamical systems.
 
@@ -111,7 +111,7 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 │   ├── StarLanguage/             # L⋆ = L⁺ plus the stability modal ⊡, and its logic TM⋆
 │   ├── Syntax/                   # Formula types, atoms, contexts
 │   ├── ProofSystem/              # Axioms (45 constructors, nine layers), derivation trees
-│   ├── Semantics/                # TemporalOrder, FrameOver, TaskFrame, WorldHistory, TaskModel, validity
+│   ├── Semantics/                # TemporalOrder, FrameOver, TaskFrame, ConvexHistory, TaskModel, validity
 │   ├── Metalogic/                # Soundness, completeness, decidability
 │   │   ├── Core/                 # MCS theory, deduction theorem
 │   │   ├── Bundle/               # BFMCS construction
