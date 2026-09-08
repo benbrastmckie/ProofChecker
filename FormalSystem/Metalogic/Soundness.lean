@@ -243,7 +243,7 @@ theorem temp_k_dist_valid (φ ψ : Formula) :
     ⊨ ((φ.imp ψ).allFuture.imp (φ.allFuture.imp ψ.allFuture)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_future_imp h_future_phi s hts
   exact h_future_imp s hts (h_future_phi s hts)
 
@@ -252,7 +252,7 @@ Under strict semantics, uses transitivity of <. -/
 theorem temp_4_valid (φ : Formula) : ⊨ ((φ.allFuture).imp (φ.allFuture.allFuture)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_future s hts r hsr
   exact h_future r (lt_trans hts hsr)
 
@@ -262,7 +262,7 @@ theorem serial_future_axiom_valid :
     ⊨ ((Formula.bot.imp Formula.bot).imp (Formula.someFuture (Formula.bot.imp Formula.bot))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro _h_top
   obtain ⟨s, hts⟩ := exists_gt t
   exact ⟨s, hts, id⟩
@@ -273,7 +273,7 @@ theorem serial_past_axiom_valid :
     ⊨ ((Formula.bot.imp Formula.bot).imp (Formula.somePast (Formula.bot.imp Formula.bot))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro _h_top
   obtain ⟨s, hst⟩ := exists_lt t
   exact ⟨s, hst, id⟩
@@ -283,7 +283,7 @@ Under strict semantics: if φ at t, then for all s > t, there exists r < s with 
 theorem temp_a_valid (φ : Formula) : ⊨ (φ.imp (Formula.allFuture φ.somePast)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff, Truth.some_past_iff]
+  simp only [truth_norm]
   intro h_phi s hts
   exact ⟨t, hts, h_phi⟩
 
@@ -303,7 +303,7 @@ totality of the shifted history is `ConvexHistory.isTotal_timeShift`. -/
 theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.allFuture).box)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_box_phi σ h_σ_mem s hts
   have h_phi_at_shifted :=
     h_box_phi (ConvexHistory.timeShift σ (s - t))
@@ -315,7 +315,7 @@ Under strict semantics: if φ at t, then for all s < t, there exists r > s with 
 theorem temp_a_dual_valid (φ : Formula) : ⊨ (φ.imp (Formula.allPast φ.someFuture)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.past_iff, Truth.some_future_iff]
+  simp only [truth_norm]
   intro h_phi s hst
   exact ⟨t, hst, h_phi⟩
 
@@ -386,7 +386,7 @@ theorem F_until_equiv_valid (φ : Formula) :
     ⊨ ((Formula.someFuture φ).imp (Formula.untl (Formula.bot.imp Formula.bot) φ)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro ⟨s, hts, h_φs⟩
   exact ⟨s, hts, h_φs, fun _ _ _ => id⟩
 
@@ -396,7 +396,7 @@ theorem P_since_equiv_valid (φ : Formula) :
     ⊨ ((Formula.somePast φ).imp (Formula.snce (Formula.bot.imp Formula.bot) φ)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro ⟨s, hst, h_φs⟩
   exact ⟨s, hst, h_φs, fun _ _ _ => id⟩
 
@@ -419,7 +419,7 @@ theorem density_valid (φ : Formula) :
     ValidDense ((φ.allFuture.allFuture).imp φ.allFuture) := by
   refine ValidIn.of_forall_total ?_
   intro F h_dense M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_GG s hts
   -- h_GG : ∀ r > t, ∀ q > r, φ(q)
   -- hts : t < s
