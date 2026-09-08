@@ -1,13 +1,13 @@
 # Implementation Plan: Burn down invisible snake_case defs
 
 - **Task**: 557 - burn_down_invisible_snake_case_public_defs
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 14 hours
 - **Dependencies**: 555 (completed)
 - **Research Inputs**: None for this task directly. Task 555's report
   `specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md`
   is treated as prior measured evidence and is cited by finding throughout.
-- **Artifacts**: plans/01_burn-down-invisible-snake-case-defs.md (this file)
+- **Artifacts**: plans/01_burn-down-invisible-snake-case-defs.md (this file), worklists/01_rename-worklist.md, summaries/01_burn-down-invisible-snake-case-defs-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -716,35 +716,43 @@ still covers: `scripts/readme-lint.sh` and C9-DOCS' task-number scan, both in Ph
 
 ---
 
-### Phase 10: Final gate, acceptance scan, and execution summary [NOT STARTED]
+### Phase 10: Final gate, acceptance scan, and execution summary [COMPLETED]
 
 **Goal**: Run the complete repository gate set, prove the acceptance criteria by measurement
 rather than assertion, and write the execution summary.
 
 **Tasks**:
-- [ ] `lake build` (full) green, run detached via `.claude/scripts/lake-build-guard.sh`.
-- [ ] **The acceptance scan**: re-run both Phase 1 scans over `FormalSystem/` excluding
+- [x] `lake build` (full) green, run detached via `.claude/scripts/lake-build-guard.sh`.
+- [x] **The acceptance scan**: re-run both Phase 1 scans over `FormalSystem/` excluding
       `Boneyard/`. Both must return **zero**. Record the commands and their empty output — this is
       the criterion "a fresh textual scan agrees with the linter rather than contradicting it by
       71".
-- [ ] `lake exe runLinter FormalSystem` -> 0 findings, and
+- [x] `lake exe runLinter FormalSystem` -> 0 findings, and
       `lake exe runLinter FormalSystem.Theorems.ContextualProofs` -> 0 findings (baseline: 65).
-- [ ] `grep -rn "nolint defsWithUnderscore" FormalSystem/` returns only the three documented
+- [x] `grep -rn "nolint defsWithUnderscore" FormalSystem/` returns only the three documented
       `UserTactics.lean` tactic-token exemptions.
-- [ ] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED — with C16, C23
+- [x] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED — with C16, C23
       (Uppercase_x and outer-shadows-inner), C17, C24 and C25 all green.
-- [ ] `bash .claude/scripts/lean-sorry-census.sh` — census identical to Phase 1's baseline; zero
+- [x] `bash .claude/scripts/lean-sorry-census.sh` — census identical to Phase 1's baseline; zero
       additions.
-- [ ] Axiom counts unchanged: re-run the `#print axioms` checks that C2 and C21 pin, and confirm
+- [x] Axiom counts unchanged: re-run the `#print axioms` checks that C2 and C21 pin, and confirm
       `spDerivableDense` / `spDerivableRTime` still return `[propext]`.
-- [ ] `lake exe proof_extractor` output identical to Phase 1's baseline (487/487 theorems, 12,077
+- [x] `lake exe proof_extractor` output identical to Phase 1's baseline (487/487 theorems, 12,077
       proof steps) — the proof that no dataset label was rewritten.
-- [ ] `bash scripts/check-metalogic-cycles.sh`, `bash scripts/check-copyright-headers.sh`,
+- [x] `bash scripts/check-metalogic-cycles.sh`, `bash scripts/check-copyright-headers.sh`,
       `bash scripts/readme-lint.sh` all pass.
-- [ ] Repo-wide citation sweep: for every renamed name, `grep -rnw "<oldName>"` excluding `.lake/`
+- [x] Repo-wide citation sweep: for every renamed name, `grep -rnw "<oldName>"` excluding `.lake/`
       returns nothing outside `specs/` (where historical artifacts legitimately keep the old name)
       and outside the permitted `mkEntry` string labels. Record the permitted survivors explicitly.
-- [ ] Write the execution summary, recording: the final counts (71 public + 103 private renamed),
+      *(deviation: added — the sweep found 12 stale citations no phase list anticipated:
+      `deduction_with_mem` in `docs/development/NONCOMPUTABLE_GUIDE.md` (5),
+      `docs/research/NONCOMPUTABLE.md` (1) and `docs/research/DEDUCTION_THEOREM_NECESSITY.md` (1);
+      `past_tf_deriv` / `allFuture_bot_imp_neg_deriv` / `allPast_bot_imp_neg_deriv` in
+      `FormalSystem/Metalogic/Bundle/README.md` (4); and `always_p` in
+      `docs/user-guide/tutorial.md` (1). All updated. Permitted survivors, recorded: the three
+      `mkEntry` labels in `ProofStepExport.lean` (295, 304, 1381), four deliberate historical
+      mentions in `NAMING_CONVENTION_DEVIATION.md`, and everything under `specs/`.)*
+- [x] Write the execution summary, recording: the final counts (71 public + 103 private renamed),
       the measured correction to the description's 47, the seven files absent from the declared
       `file_scope`, the two files (`ProofStepExport.lean`, `PerpetuityTest.lean`) edited as
       citation updates rather than renames, and every Reasoned Exclusion taken.
@@ -785,24 +793,24 @@ Goals. No `sorry` and no new `axiom` is introduced at any phase.
 
 ## Testing & Validation
 
-- [ ] `lake build` green (full).
-- [ ] `lake build FormalSystem.Automation.ProofStepExport` green (the C25 target that is the only
+- [x] `lake build` green (full).
+- [x] `lake build FormalSystem.Automation.ProofStepExport` green (the C25 target that is the only
       gate seeing `ContextualProofs.lean`).
-- [ ] `lake exe proof_extractor` output identical to the Phase 1 baseline.
-- [ ] `lake exe runLinter FormalSystem` reports 0 findings.
-- [ ] `lake exe runLinter FormalSystem.Theorems.ContextualProofs` reports 0 findings (from 65).
-- [ ] Public scan `grep -rnE "^\s*(noncomputable )?(protected )?(def|abbrev) [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`
+- [x] `lake exe proof_extractor` output identical to the Phase 1 baseline.
+- [x] `lake exe runLinter FormalSystem` reports 0 findings.
+- [x] `lake exe runLinter FormalSystem.Theorems.ContextualProofs` reports 0 findings (from 65).
+- [x] Public scan `grep -rnE "^\s*(noncomputable )?(protected )?(def|abbrev) [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`
       returns empty.
-- [ ] Private scan `grep -rnE "^\s*private (noncomputable )?def [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`
+- [x] Private scan `grep -rnE "^\s*private (noncomputable )?def [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`
       returns empty.
-- [ ] `grep -n "nolint defsWithUnderscore" FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean`
+- [x] `grep -n "nolint defsWithUnderscore" FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean`
       returns nothing.
-- [ ] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED.
-- [ ] `bash .claude/scripts/lean-sorry-census.sh` unchanged from baseline; sorry / vacuous / axiom
+- [x] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED.
+- [x] `bash .claude/scripts/lean-sorry-census.sh` unchanged from baseline; sorry / vacuous / axiom
       counts unchanged.
-- [ ] `bash scripts/check-metalogic-cycles.sh`, `bash scripts/check-copyright-headers.sh`,
+- [x] `bash scripts/check-metalogic-cycles.sh`, `bash scripts/check-copyright-headers.sh`,
       `bash scripts/readme-lint.sh` all pass.
-- [ ] The test target builds (`Tests/BimodalTest/Theorems/PerpetuityTest.lean` cites two renamed
+- [x] The test target builds (`Tests/BimodalTest/Theorems/PerpetuityTest.lean` cites two renamed
       declarations).
 
 ## Artifacts & Outputs

@@ -302,7 +302,7 @@ noncomputable def generalizedTemporalK : (Γ : Context) → (φ : Formula) →
 From the codebase:
 
 1. **DeductionTheorem.lean** (2 definitions):
-   - `deduction_with_mem` (line 206): Helper using structural recursion
+   - `deductionWithMem` (line 206): Helper using structural recursion
    - `deductionTheorem` (line 332): Main theorem using classical logic
 
 2. **Propositional.lean** (1 definition):

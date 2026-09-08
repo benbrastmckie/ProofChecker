@@ -43,16 +43,16 @@ soundness (derivability implies standard-validity), we get a full characterizati
 **The rule**: when a past statement is the `Formula.swapTemporal` image of a future one, prove
 the future form and obtain the past form by `Formula.swapTemporal` +
 `DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`; do not write the mirror
-by hand. `Algebraic/FlowFrame.lean`'s `past_tf_deriv` is the reference implementation: it proves
+by hand. `Algebraic/FlowFrame.lean`'s `pastTfDeriv` is the reference implementation: it proves
 a future-side syntactic theorem generically in its argument formula, applies it at the *swapped*
 argument, dualizes the whole derivation with `DerivationTree.temporal_duality`, then uses
 `swap_temporal_involution` (plus the `swap_temporal_*` simp set) to fold the double-swap back to
 the original formula.
 
-**Worked example**: `WitnessSeed.lean`'s `allFuture_bot_imp_neg_deriv` /
-`allPast_bot_imp_neg_deriv` pair applies the rule directly. The future-side lemma is a closed
+**Worked example**: `WitnessSeed.lean`'s `allFutureBotImpNegDeriv` /
+`allPastBotImpNegDeriv` pair applies the rule directly. The future-side lemma is a closed
 `DerivationTree fc [] (...)` fact (`⊢ G(⊥) → G(¬chi)`, built from `prop_s` + temporal
-necessitation + temporal K distribution + modus ponens); its past dual follows `past_tf_deriv`'s
+necessitation + temporal K distribution + modus ponens); its past dual follows `pastTfDeriv`'s
 pattern verbatim and is wired into the shared witness-seed core
 (`allFuture_neg_of_gseed_inconsistent` / `allPast_neg_of_hseed_inconsistent`) in place of a
 second hand derivation through `pastNecessitation`/`pastKDist`.

@@ -88,7 +88,7 @@ def possible_p : Formula := diamond p           -- `◇p` (defined as `¬□¬p`
 -- Temporal operators
 def always_past : Formula := Formula.allPast p     -- Hφ (always in past)
 def always_future : Formula := Formula.allFuture p -- Gφ (always in future)
-def always_p : Formula := p.always                  -- △φ (at all times: H ∧ present ∧ G)
+def alwaysP : Formula := p.always                  -- △φ (at all times: H ∧ present ∧ G)
 def sometimes_p : Formula := p.sometimes            -- ▽φ (at some time: P ∨ present ∨ F)
 def sometime_past_p : Formula := somePast p        -- Pφ (some time in past)
 def sometime_future_p : Formula := someFuture p    -- Fφ (some time in future)

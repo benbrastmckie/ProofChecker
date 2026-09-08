@@ -56,9 +56,9 @@ For architectural rationale, see [ADR-001-Classical-Logic-Noncomputable.md](../a
 
 **Noncomputable Definitions**:
 
-1. **`deduction_with_mem`** (Line 206)
+1. **`deductionWithMem`** (Line 206)
    ```lean
-   private noncomputable def deduction_with_mem (Γ' : Context) (A φ : Formula)
+   private noncomputable def deductionWithMem (Γ' : Context) (A φ : Formula)
    ```
    - **Why Noncomputable**: 
      - Uses `Classical.propDecidable` for decidable instance (Line 209)
@@ -73,10 +73,10 @@ For architectural rationale, see [ADR-001-Classical-Logic-Noncomputable.md](../a
    noncomputable def deductionTheorem (Γ : Context) (A B : Formula)
    ```
    - **Why Noncomputable**:
-     - Calls `deduction_with_mem` (Line 336)
+     - Calls `deductionWithMem` (Line 336)
      - Uses `Classical.propDecidable` for membership test (Line 335)
      - Performs case analysis on `A ∈ Γ`
-   - **Root Cause**: Dependency on `deduction_with_mem` + classical logic
+   - **Root Cause**: Dependency on `deductionWithMem` + classical logic
    - **Necessity**: **Yes** - This is the core metalogic theorem enabling context manipulation. Classical logic is standard for metalogic.
 
 **Additional Classical Usage**:
@@ -240,7 +240,7 @@ noncomputable def de (Γ : Context) (A B C : Formula) (h1 : (A :: Γ) ⊢ C) (h2
 
 ```
 Classical.propDecidable (Classical Axiom)
-└── deduction_with_mem (DeductionTheorem.lean)
+└── deductionWithMem (DeductionTheorem.lean)
     └── deductionTheorem (DeductionTheorem.lean)
         ├── generalizedModalK (GeneralizedNecessitation.lean) ⚠️ NEEDS FIX
         ├── generalizedTemporalK (GeneralizedNecessitation.lean) ⚠️ NEEDS FIX

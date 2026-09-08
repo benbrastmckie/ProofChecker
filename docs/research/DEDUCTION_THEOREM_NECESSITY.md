@@ -79,7 +79,7 @@ The deduction theorem proof has **three case splits** that require decidability:
    ```lean
    by_cases hA : A ∈ Γ'
    ```
-   - If `A ∈ Γ'`: Use `deduction_with_mem` helper
+   - If `A ∈ Γ'`: Use `deductionWithMem` helper
    - If `A ∉ Γ'`: Use S axiom weakening
 
 All three require **classical decidability** because:
