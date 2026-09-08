@@ -1,29 +1,40 @@
 {
-  "status": "planned",
-  "agent_type": "planner-agent",
-  "task_number": 552,
-  "session_id": "sess_1788840748_54b780",
-  "delegation_path": ["orchestrator", "plan", "planner-agent"],
-  "dispatch_seq": 2,
+  "status": "implemented",
+  "started_at": "2026-09-07T21:10:00Z",
+  "completed_at": "2026-09-07T22:20:00Z",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true,
+    "notes": "lake build FormalSystem: 'Build completed successfully (2610 jobs)', run detached through lake-build-guard.sh. sorry_count 0 is the STRUCTURAL inventory, confirmed by check-module-invariants C3 ('structural sorry inventory is ZERO across FormalSystem/, Boneyard/ excluded'); the raw grep counts 331 sorry tokens, all inside comments and deprecation markers, and that figure is unchanged from the pre-task baseline. vacuous_count 0 introduced: the one tree-wide grep hit (Examples/TemporalStructures.lean:496, int_domain_universal := trivial) is byte-identical at the merge-base and is honest, since intTimeHistory.domain t IS True by definition. axiom_count 0 before and after: every '^axiom ' grep hit in the live tree is a docstring prose line beginning with the word 'axiom' after wrapping, not a declaration, and the two lists are identical. check-module-invariants.sh: ALL CHECKS PASSED, exit 0, C19 refined 92.33% (baseline 92.33%). typst-sync-check.sh: TOTAL_VIOLATIONS=4 (baseline 4), MISMATCH_COUNT=0, MA_COUNT_MISMATCHES=0. readme-lint.sh: RESULT PASS, 0 broken file references, 9 stale dates (baseline 11). check-paper-definitions.sh: exit 1 with the drifted set exactly {def:S5, def:BX, def:BX-z, def:BX-d, def:BX-r, def:TMplus} and 0 unresolved, identical to the pre-task baseline; exit 1 is the baseline here, and those six anchors belong to the separate re-pin work. No proof term changed: verified mechanically over all 90 changed .lean files by stripping comments from both HEAD and the working tree, applying the rename to the HEAD side, and diffing."
+  },
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/552_align_history_vocabulary_with_paper/plans/01_align-history-vocabulary-paper.md",
-      "summary": "Five-phase plan for the WorldHistory -> ConvexHistory rename and paper-vocabulary prose sweep, with a two-build budget and set-based gate baselines."
+      "type": "summary",
+      "path": "specs/552_align_history_vocabulary_with_paper/summaries/01_align-history-vocabulary-paper-summary.md",
+      "summary": "Renamed WorldHistory to ConvexHistory across the live tree and brought all prose onto the paper's partial history / convex history / possible world layering, with no proof-term change."
     }
   ],
-  "phase_count": 5,
-  "estimated_hours": 7,
-  "dependency_waves": [[1, 2], [3, 4], [5]],
-  "summary": "Plan created: 5 phases, 7 hours, 3 waves. Record-file prose and the Lean identifier rename run in parallel (wave 1); Lean prose and docs/typst/latex prose run in parallel (wave 2); a single full gate closes (wave 3). Exactly two full-tree lake builds are budgeted against a 241-of-479-module blast radius.",
-  "next_steps": "Run /implement 552 to execute the plan",
-  "memory_candidates": [
-    {
-      "content": "Phase decomposition for a wide rename in a repository where the renamed symbol has a large reverse-import closure: split phases by Verification Tier so the rebuild budget is explicit and bounded. Only the interface-tier phase (the identifier/signature sweep) builds in-phase; prose-tier phases (docstrings, READMEs, external docs) declare zero in-phase build and defer their cache invalidation to the single full-tier gate phase at the end. This yields a fixed two-build budget instead of one-build-per-phase, while still isolating mechanical rename failure from prose churn -- if the interface phase's build is green and the final build is red, the fault is in prose, not in the rename. Applies whenever whole-file hashing means a comment-only edit at the base of the import graph invalidates hundreds of downstream artifacts (Lean/lake, and any build system with file-granular hashing). Pair it with Commit Mode atomic-batch on the identifier phase, since a half-renamed tree is genuinely red at every intermediate file.",
-      "category": "PATTERN",
-      "source_artifact": "specs/552_align_history_vocabulary_with_paper/plans/01_align-history-vocabulary-paper.md",
-      "confidence": 0.82,
-      "suggested_keywords": ["verification-tier", "rename", "build-budget", "blast-radius", "phase-decomposition", "atomic-batch"]
-    }
-  ]
+  "completion_data": {
+    "completion_summary": "Renamed the repository's semantic history layer so its names mean what the paper's mean: FormalSystem/Semantics/WorldHistory.lean became ConvexHistory.lean, with 620 identifier occurrences rewritten across 71 live .lean files plus four FormalSystem READMEs, and TaskFrame.HF documented as the sole Lean name for the paper's possible worlds. Every docstring, README, docs/, typst/ and latex/ line now uses 'convex history' or 'possible world' per the tier it actually means, with both module docstrings re-quoted verbatim from the current def:world-history text rather than adjusted in place. lake build FormalSystem is green (2610 jobs), check-module-invariants reports ALL CHECKS PASSED, and no proof term changed anywhere in the diff.",
+    "roadmap_items": []
+  },
+  "user_decision": null,
+  "metadata": {
+    "session_id": "sess_1788840748_54b780",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed",
+    "phases_completed": 5,
+    "phases_total": 5,
+    "commits": ["ed20a9814", "c580a0bf7", "b9fd6f15c", "995567d05", "f8c031989"],
+    "follow_ups": [
+      "specs/ROADMAP.md:223 and :742 name WorldHistory in live steering prose and are now stale identifiers; deliberately not edited because the dispatch's scope boundary excludes specs/.",
+      "scripts/check-module-invariants.sh spawns its own UNGUARDED `lake build`, which contends with a guarded build and cost this task two failed build cycles (one SIGTERM/OOM kill, one .olean output-path race on ShiftAndGlue.lean). Worth routing through lake-build-guard.sh.",
+      "The paper's own body prose (possible_worlds.tex:1014-1052) still uses the older two-word phrase for the total tier before collapsing it at line 1049; that is the paper's residual drift, recorded once in ConvexHistory.lean's module docstring so it is not 'corrected' back into the tree."
+    ]
+  }
 }
