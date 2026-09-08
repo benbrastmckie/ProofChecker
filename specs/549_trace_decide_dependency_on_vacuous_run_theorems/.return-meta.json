@@ -27,14 +27,35 @@
     "session_id": "sess_1788824812_856447",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "delegation_path": [
+      "orchestrator",
+      "implement",
+      "skill-lean-implementation"
+    ],
     "compliance_check": "skipped",
     "compliance_check_reason": "The plan's Goals bullets name no Lean identifiers to land — the plan's own 'Lean Challenge Statements' section states the identifier set is empty because the task is read-only with respect to FormalSystem/**. There is therefore nothing for the goal-name spot-check to resolve.",
     "phases_completed": 6,
     "phases_total": 6,
     "read_only_constraint_held": true,
     "files_modified_outside_specs": 0,
-    "commits": ["5efa7b0e4", "6a8118cef", "0e7ea7a1a"],
-    "agent_definition_defect": "The lean-implementation-agent definition documents the build invocation as 'lake-build-guard.sh build --timeout 1800 --', which exits 77 (usage error: build mode requires a lake subcommand). The lake subcommand must follow the '--', i.e. '... --timeout 1800 -- build'. Fix belongs in the agent-system/extensions/** source store, not .claude/**."
+    "commits": [
+      "5efa7b0e4",
+      "6a8118cef",
+      "0e7ea7a1a"
+    ],
+    "agent_definition_defect": "The lean-implementation-agent definition documents the build invocation as 'lake-build-guard.sh build --timeout 1800 --', which exits 77 (usage error: build mode requires a lake subcommand). The lake subcommand must follow the '--', i.e. '... --timeout 1800 -- build'. Fix belongs in the agent-system/extensions/** source store, not .claude/**.",
+    "cycles_used": 4,
+    "final_state": "completed",
+    "detected_defects": [
+      {
+        "task": 549,
+        "defect_class": "AGENT_CONTRACT_BAD_INVOCATION",
+        "attributed_source_path": "agent-system/extensions/lean/agents/lean-implementation-agent.md",
+        "detecting_site": "skill-orchestrate/SKILL.md:cycle3-implement-agent-report",
+        "cycle": 3,
+        "detail": "Documented build invocation `lake-build-guard.sh build --timeout 1800 --` omits the lake subcommand after `--`; guard exits 77 (usage error) before dispatch. Correct form: `--timeout 1800 -- build`. Deployed copy: .claude/agents/lean-implementation-agent.md:253. No agent-system/ source store present in this repo.",
+        "record_result": null
+      }
+    ]
   }
 }
