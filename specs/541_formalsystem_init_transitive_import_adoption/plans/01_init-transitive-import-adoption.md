@@ -1,11 +1,11 @@
 # Implementation Plan: FormalSystem.Init Transitive Import Adoption
 
 - **Task**: 541 - FormalSystem Init transitive import adoption
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 5.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md
-- **Artifacts**: plans/01_init-transitive-import-adoption.md (this file)
+- **Artifacts**: plans/01_init-transitive-import-adoption.md (this file), summaries/01_init-transitive-import-adoption-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -397,7 +397,7 @@ consistently across all four wiring sites.
 
 ---
 
-### Phase 6: Mandated Negative Test and Final Gate [NOT STARTED]
+### Phase 6: Mandated Negative Test and Final Gate [COMPLETED]
 
 **Goal**: Prove the new gate can actually fail — `docs/development/MODULE_INVARIANTS.md`
 §"Adding a Check" mandates a deliberate negative test, on the C15 precedent — then close the task
@@ -405,21 +405,21 @@ against the full acceptance criteria.
 
 **Tasks**:
 
-- [ ] Negative test: temporarily remove the `import FormalSystem.Init` line from one low-fan-out
+- [x] Negative test *(deviation: altered — the FAIL named **1** module, not the predicted ~18; post-adoption those 17 dependents reach `Init` through other minimal elements too, so removing one leaf import isolates only that leaf)*: temporarily remove the `import FormalSystem.Init` line from one low-fan-out
       leaf (`FormalSystem/Automation/NormalizationAttr.lean` is the cheapest — fan-out 17).
-- [ ] Rebuild through the guard and run `bash scripts/check-module-invariants.sh`. Confirm
+- [x] Rebuild through the guard and run `bash scripts/check-module-invariants.sh`. Confirm
       `FAIL C24`, a non-zero script exit status, and that the `note`-ed log tail names the affected
       modules.
-- [ ] Restore the import line, rebuild, and confirm `PASS C24` plus ALL CHECKS PASSED. Record both
+- [x] Restore the import line, rebuild, and confirm `PASS C24` plus ALL CHECKS PASSED. Record both
       observed outcomes in the execution summary — a gate that has never been observed to fail is
       not evidence of anything.
-- [ ] Confirm the exit-status fix independently: `lake exe checkInitImports; echo $?` must print 0
+- [x] Confirm the exit-status fix independently: `lake exe checkInitImports; echo $?` must print 0
       on the clean tree, and 1 (never a truncated count) with the import removed.
-- [ ] Final acceptance sweep: `lake build` green; `lake exe checkInitImports` reports zero missing;
+- [x] Final acceptance sweep: `lake build` green; `lake exe checkInitImports` reports zero missing;
       `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED.
-- [ ] Re-read `FormalSystem/Init.lean` and `scripts/CheckInitImports.lean` docstrings and confirm
+- [x] Re-read `FormalSystem/Init.lean` and `scripts/CheckInitImports.lean` docstrings and confirm
       no residual claim that the rewrite or the wiring is a follow-up.
-- [ ] Commit at green.
+- [x] Commit at green.
 
 **Timing**: 1 hour
 
@@ -459,19 +459,19 @@ module to pin and no ```` ```lean ```` block is provided.
 
 ## Testing & Validation
 
-- [ ] `lake exe checkInitImports` reports **zero** modules missing `FormalSystem.Init` and exits 0.
-- [ ] `lake exe checkInitImports` exits **1** (not a truncated count) when the condition is violated
+- [x] `lake exe checkInitImports` reports **zero** modules missing `FormalSystem.Init` and exits 0.
+- [x] `lake exe checkInitImports` exits **1** (not a truncated count) when the condition is violated
       — observed directly during the Phase 6 negative test.
-- [ ] `lake build` exits 0 across the whole tree.
-- [ ] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED, including `PASS C24`.
-- [ ] `bash scripts/check-module-invariants.sh --no-build` reports ALL CHECKS PASSED, with C24
+- [x] `lake build` exits 0 across the whole tree.
+- [x] `bash scripts/check-module-invariants.sh` reports ALL CHECKS PASSED, including `PASS C24`.
+- [x] `bash scripts/check-module-invariants.sh --no-build` reports ALL CHECKS PASSED, with C24
       cleanly skipped rather than failing.
-- [ ] `FAIL C24` observed at least once, with a non-zero script exit (mandated negative test).
-- [ ] `scripts/check-metalogic-cycles.sh` still reports exactly 1 directory-level cycle — no import
+- [x] `FAIL C24` observed at least once, with a non-zero script exit (mandated negative test).
+- [x] `scripts/check-metalogic-cycles.sh` still reports exactly 1 directory-level cycle — no import
       cycle introduced.
-- [ ] `FormalSystem/ForMathlib/Order/PFilter.lean` still has zero `FormalSystem.*` imports; the
+- [x] `FormalSystem/ForMathlib/Order/PFilter.lean` still has zero `FormalSystem.*` imports; the
       documented upstreaming rule is intact.
-- [ ] No `sorry`, no new axiom, no deferral introduced (C3 and C14 assert this independently).
+- [x] No `sorry`, no new axiom, no deferral introduced (C3 and C14 assert this independently).
 
 ## Artifacts & Outputs
 
