@@ -1,7 +1,7 @@
 # Implementation Plan: Replace historical system names in docstrings
 
 - **Task**: 547 - Replace historical system names in docstrings
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 7 hours
 - **Dependencies**: 546 (completed). Blocks 548 (anchor re-pinning).
 - **Research Inputs**: `specs/547_replace_historical_system_names_in_docstrings/reports/01_historical-system-name-sweep.md`
@@ -130,20 +130,20 @@ file appears in two phases.
 
 ---
 
-### Phase 1: Baseline capture [NOT STARTED]
+### Phase 1: Baseline capture [COMPLETED]
 
 **Goal**: Record a pre-edit green baseline so Phase 7 can diff against it rather than against an
 assumption.
 
 **Tasks**:
-- [ ] Run `lake build FormalSystem` detached per
+- [x] Run `lake build FormalSystem` detached per
       `context/project/lean4/operations/long-builds.md`; record exit status and any warnings.
-- [ ] Run `bash scripts/check-module-invariants.sh` in full (no `tail` truncation) and save the
-      complete output to the task directory as the baseline.
-- [ ] Re-run the census grep and record the per-file counts, confirming or correcting the figures
-      in this plan's Scope Hypothesis:
+- [x] Run `bash scripts/check-module-invariants.sh` in full (no `tail` truncation) and save the
+      complete output to the task directory as the baseline. *(deviation: altered — baseline exits 1 on a pre-existing C9 task-number citation in `MintBound.lean`, unrelated to this file set; C14 and C15 both PASS)*
+- [x] Re-run the census grep and record the per-file counts, confirming or correcting the figures
+      in this plan's Scope Hypothesis: *(deviation: altered — counts confirmed at 74 lines/19 files, but `FormalSystem/README.md`'s 6 lines sit at 194/195/197/199/201/361, not the line numbers Phase 6 guessed)*
       `grep -rcE 'TM⁺?_(f|c|dc)|BX_(f|c)' --include='*.lean' --include='*.md' --include='*.typ' --include='*.sh' --exclude-dir=Boneyard FormalSystem Tests typst docs scripts README.md`
-- [ ] Confirm the sed-safety and `Star/` invariants still hold: `grep -rnE 'TM⁺?_(f|c|dc)[A-Za-z0-9_]'`
+- [x] Confirm the sed-safety and `Star/` invariants still hold: `grep -rnE 'TM⁺?_(f|c|dc)[A-Za-z0-9_]'`
       and `grep -rnE 'TM⋆_(f|c|dc)'` over `FormalSystem/` both return empty.
 
 **Timing**: 0.5 hours (mostly detached build wait)
