@@ -151,52 +151,59 @@ The Boneyard serves three roles:
 
 ## Directory Inventory
 
-| Directory | Files | Lines | Archived From | Why Archived | Task |
-|-----------|------:|------:|---------------|--------------|------|
-| [BXCanonicalQuasimodel](#bxcanonicalquasimodel) | 1 | 166 | BXCanonical/Quasimodel/ | Enriched (Fisher-Ladner) closure — no live downstream consumers | 302 |
-| [BXPipelineDeadCode](#bxpipelinedeadcode) | 2 | 576 | WeakCanonical/IntegerModel/ | BX pipeline dead code: deprecated Reynolds model surgery (no_gaps_faithful false) and dead ReynoldsNoGaps definitions (zero references) | 268, 255 |
-| [BXPipelineGapAnalysis](#bxpipelinegapanalysis) | 2 | 304 | WeakCanonical/, Chronicle/ | BX pipeline gap analysis: no_gaps_faithful is provably false (Z+Z counterexample), succ_cofinal dead chain. Correct path: Reynolds pipeline via no_gaps_discrete. | 225 |
-| [BX1DependentCode](#bx1dependentcode) | 0 | -- | Quasimodel/Realization.lean | BX1-dependent helpers; BX1 removed under irreflexive semantics | 130 |
-| BundleSuccessorSeed | 1 | 1,218 | Metalogic/Bundle/ | Deferral-seed successor/predecessor existence construction; zero live consumers of all 72 declarations, and its 3 sorries all reduce to the T-axiom for `G`/`H` (unsound under open-guard semantics) — see subdirectory README | -- |
-| [BundleTemporalCoherence](#bundletemporalcoherence) | 0 | -- | UltrafilterChain.lean | Semantically wrong: bundle-level coherence allows temporal witnesses in different world histories | 80 |
-| [ChainCompleteness](#chaincompleteness) | 12 | 4,265 | BXCanonical/ | Earlier chain completeness iteration, superseded by SuccChain approach | 93 |
-| [ClosedGuardLegacy](#closedguardlegacy) | 0 | -- | Various | Closed guard semantics `[t,s]` replaced by open guard `(t,s)` | 109 |
-| [ConservativeExtension](#conservativeextension) | 4 | 1,616 | Metalogic/ConservativeExtension/ | Self-contained conservative-extension development with zero live importers; archived as a directory unit (incl. its README) | -- |
-| [DeadCanonicalModel](#deadcanonicalmodel) | 2 | 644 | BXCanonical/, Bundle/, ProofSystem/ | Dead enriched seed approach (README), plus orphaned `CanonicalIrreflexivity.lean` and broken `Substitution.lean` with zero live importers | 113 |
-| DeadChronicleGapElimination | 3 | 1,939 | BXCanonical/Chronicle/, WeakCanonical/ | Dead chronicle gap-elimination chain: the full 10-decl `chronicle_gap_contradiction` `sorryAx` closure, excised as one unit spanning `ChronicleToCountermodel.lean` and `Transfer.lean`; the live `completeness_discrete` uses the Reynolds pipeline (`countermodel_discrete_reynolds_v2`) — see subdirectory README | -- |
-| [DeadConvergenceProof](#deadconvergenceproof) | 2 | 468 | Root Boneyard/ | Dead convergence proof for succ_cofinal; relocated from root Boneyard/ | 202, 302 |
-| [DefectDirectedChain](#defectdirectedchain) | 1 | 1,564 | BXCanonical/ | Defect-directed root-scoped chain, abandoned after defect metric failed to decrease | 107 |
-| [DenseChronicle](#densechronicle) | 3 | 287 | Chronicle/ | Dense chronicle construction attempts, hit density gap | 105 |
-| [DiscreteXY](#discretexy) | 1 | 77 | Various | Discrete x_content/y_content approach, replaced by open guard semantics | 85 |
-| [FiltrationOrdering](#filtrationordering) | 1 | 171 | Filtration/SigmaOrdering.lean | Sigma-restricted ordering for filtration; BX1 removed under irreflexive semantics | 130 |
-| [FMPVariants](#fmpvariants) | 2 | 237 | Decidability/FMP/ | Dense/Discrete FMP variants with zero live importers; the tableau pipeline uses the Base-variant FMP | -- |
-| KampBypassArchive | 13 | 9,383 | WeakCanonical/Kamp/ | Enriched Kamp bypass-formula route (bypass core, per-direction correctness, composition); superseded by the landed live Kamp pipeline | -- |
-| [KampNegationClosure](#kampnegationclosure) | 4 | 3,284 | WeakCanonical/Kamp/ | Negation closure chain (Rabinovich 2014 Sec 5) — no live downstream consumers | 302 |
-| MergedBracketQuarantine | 1 | 1,036 | WeakCanonical/Kamp/NfMultiAnchorBridge/ | Refuted merged-bracket route — violates no-nesting audit + Rabinovich Lemma 5.1 QF point-type; task-321 fallback | 332 |
-| [NonBurgessSeed](#nonburgessseed) | 0 | -- | PointInsertion.lean | Legacy g_content/h_content approach, hit density gap | 107 |
-| [OpenGuardInvalid](#openguardinvalid) | 0 | -- | TemporalDerived.lean | BX8/BX9 dependent + reflexivity-dependent theorems invalid under open guard (t,s) | 173 |
-| [QuasimodelOracle](#quasimodeloracle) | 3 | 1,477 | BXCanonical/ | Oracle approach abandoned: 25+ sorry gaps, BX11 perpetual deferral obstruction | 107 |
-| [RabinovichPath](#rabinovichpath) | 4 | 1,294 | WeakCanonical/Kamp/ | Rabinovich generalized approach — no live downstream consumers | 302 |
-| RestrictedMCSDeferral | 1 | 772 | Metalogic/Core/RestrictedMCS/ | Deferral-restricted MCS (deferralClosure) variant of the successor seed construction; no live consumers | -- |
-| RestrictedMCSBoundedness | 1 | 262 | Metalogic/Core/RestrictedMCS/ | `iterF`/`iterP` boundedness for `RestrictedMCS`; zero live references, and its advertised consumer `succ_chain_fam` is itself archived under `StrictSemanticsLegacy/` — see subdirectory README | -- |
-| [RoundRobinChain](#roundrobinchain) | 2 | 2,537 | BXCanonical/ | Round-robin chain: BX11 perpetual deferral makes depth-0 base case unprovable | 107 |
-| [ScheduleBasedBFMCS](#scheduledbasedbfmcs) | 1 | 226 | BXCanonical/RootScopedChain.lean | Schedule-based BFMCS chain; Lindenbaum step loses F-obligations, bypassed by Chronicle | 130 |
-| [SorriedDeclExcisions](#sorrieddeclexcisions) | 6 | 3,342 | Metalogic/ (various), Bundle/ | Dead-sorry closure excisions: verified-dead declaration closures carrying statement-position sorries; never-built archive files (`#exit` guarded) — see section for inventory | -- |
-| [SoundnessVariants](#soundnessvariants) | 2 | 110 | Metalogic/ | Dense/Discrete soundness wrapper modules with zero live importers; the live `soundness_dense`/`soundness_discrete` theorems are proved in `Metalogic/Soundness.lean` | -- |
-| [StageInductionGapAnalysis](#stageinductiongapanalysis) | 0 | -- | ChronicleToCountermodel | Dead-end IsSuccArchimedean proof attempts; gap scenario is genuine | 123 |
-| [StaviDiscretePath](#stavidiscretepath) | 4 | 4,984 | WeakCanonical/EFGames/ | Discrete Stavi completeness — EF game pipeline with no live consumers, plus the dead expressive-completeness tail excised from the live `StaviCompleteness.lean` | 302 |
-| [StrictSemanticsLegacy](#strictsemanticslegacy) | 9 | 14,392 | Metalogic/ | Completeness under strict semantics; architectural incompatibility with current open-guard semantics | 94 |
-| [TAxiomDependentCode](#taxiomdependentcode) | 0 | -- | Various | T-axiom dependent (`G(phi)->phi`); unsound under strict temporal semantics | 83 |
-| [UltrafilterDeadCode](#ultrafilterdeadcode) | 0 | -- | UltrafilterChain.lean | Dead approaches: F-preserving seed (proven FALSE), bidirectional, Z-chain, coherent Z-chain | 80 |
-| [UltrafilterFrame](#ultrafilterframe) | 3 | 1,745 | Algebraic/ | TenseS5Algebra (3 sorries for removed axioms), UltrafilterFrame (2 sorries for temp_4), and AlgebraicCompleteness (completeness via the ultrafilter machinery); Jonsson-Tarski prerequisite | 21 |
-| VecEADecomposition | 1 | 334 | WeakCanonical/Kamp/ | Syntactic VBracketFormula negation and Prop 4.3 support; bypassed by the NF-specific Prop 4.3 approach — see subdirectory README | -- |
-| [XuLemma321Legacy](#xulemma321legacy) | 0 | -- | RRelation.lean | Blocked proof-by-contradiction for Xu 3.2.1; BX9 unsound under open guard semantics | 115 |
-| VacuousKEquiv.lean (root) | 1 | 35 | Theorems/ | Vacuous K-equivalence proof, standalone | -- |
-| **Total** | **93** | **58,738** | | | |
+Every top-level entry of the archive has exactly one row, and every row names something that
+exists. The **Directory**, **Files** and **Lines** columns are generated from the tree by
+`--emit-inventory` and gated by `INV`; only the trailing column is written by hand. There is no
+total row: the totals are generated once, above, in One Archive.
 
-Counts are measured from the tree (`find <subdir> -name "*.lean" | wc -l` and `wc -l` over
-those files); line counts include the normalized `ARCHIVED (Boneyard)` headers and `#exit`
-markers.
+Rows are ordered largest-first. A row with a zero count is a **tombstone** -- the code was
+deleted after doc-only consolidation and the README retained as the historical record; see
+Tombstones at the end of this file.
+
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Boneyard rows=both cols=files-lines link=yes empty=include sort=lines-desc -->
+| Directory | Files | Lines | Why Archived |
+|-----------|------:|------:|--------------|
+| [`Kamp/`](Kamp/README.md) | 85 | 43,551 | **Region index for the whole Kamp separation / expressive-completeness pipeline**, in five subdirectories: `KampWeakCanonical/` (the former nested second archive, 63 files), `KampBypassArchive/`, `KampNegationClosure/`, `RabinovichPath/`, `VecEADecomposition/`. Superseded, in stages, by the landed zeta route. See its own README for which subtree is authoritative for what |
+| [`StrictSemanticsLegacy/`](StrictSemanticsLegacy/README.md) | 9 | 14,392 | From `Metalogic/`. Complete completeness infrastructure written under **strict** temporal semantics — algebraic chains, bundle constructions, frame-condition completeness, top-level wiring. Architecturally incompatible with the current open-guard semantics |
+| [`StaviDiscretePath/`](StaviDiscretePath/README.md) | 4 | 4,981 | From `WeakCanonical/EFGames/`. The discrete Stavi completeness route (EF game pipeline) with no live consumers, plus `StaviExpressiveCompletenessTail.lean`, the dead 24-declaration expressive-completeness tail excised from the live `StaviCompleteness.lean` |
+| [`ChainCompleteness/`](ChainCompleteness/README.md) | 12 | 4,265 | From `BXCanonical/`. An earlier chain-based completeness iteration — deterministic, resolving, targeted and witness chains — superseded by the SuccChain approach, itself later superseded by the chronicle construction |
+| [`SorriedDeclExcisions/`](SorriedDeclExcisions/README.md) | 6 | 3,351 | From `Metalogic/` (various) and `Bundle/`. Verified-dead declaration closures carrying statement-position sorries, moved out of live code as units. Every archived declaration was confirmed dead by word-boundary grep before excision |
+| [`RoundRobinChain/`](RoundRobinChain/README.md) | 2 | 2,537 | From `BXCanonical/`. Round-robin chain construction, confirmed dead: the depth-0 base case of `forward_F` is blocked by the BX11 perpetual-deferral obstruction — an Until obligation can be deferred to later stages forever without being fulfilled |
+| [`BundleDeadHalf/`](BundleDeadHalf/README.md) | 6 | 2,302 | From `Metalogic/Bundle/`. Six modules retired together as a mechanical cascade after breaking the `Core -> Bundle` directory import cycle removed the first module's only live importer. **Guard-first** — no argument swap on resurrection |
+| [`DeadChronicleGapElimination/`](DeadChronicleGapElimination/README.md) | 3 | 1,939 | From `BXCanonical/Chronicle/` and `WeakCanonical/`. The full 10-declaration `chronicle_gap_contradiction` `sorryAx` closure, excised as one unit spanning `ChronicleToCountermodel.lean` and `Transfer.lean`. The live `completeness_discrete` uses the Reynolds pipeline instead |
+| [`UltrafilterFrame/`](UltrafilterFrame/README.md) | 3 | 1,745 | From `Algebraic/`. `AlgebraicCompleteness.lean` plus `TenseS5Algebra.lean` (3 sorries for the removed `temp_a`/`temp_l` axioms) and `UltrafilterFrame.lean` (2 sorries for `temp_4`). Both are Jonsson-Tarski prerequisites; the elaboration-interference attribution that retired them remains untested and so remains in force for these two files |
+| [`ConservativeExtension/`](ConservativeExtension/README.md) | 4 | 1,616 | The complete `Metalogic/ConservativeExtension/` directory archived as a unit, README included: `ExtFormula.lean`, `ExtDerivation.lean`, `Substitution.lean`, `Lifting.lean`. Self-contained, with zero live importers — reachable only from the deleted top-level `Metalogic.lean` aggregator |
+| [`DefectDirectedChain/`](DefectDirectedChain/README.md) | 1 | 1,564 | From `BXCanonical/`. A root-scoped chain built by directing construction toward reducing a "defect" metric. Abandoned once the metric was shown not to decrease monotonically through chain extension steps |
+| [`QuasimodelOracle/`](QuasimodelOracle/README.md) | 3 | 1,477 | From `BXCanonical/`. Oracle-based forward/backward MCS chain construction. Abandoned: the backward step transfer is semantically invalid, and the round-robin variant hits the BX11 perpetual-deferral obstruction |
+| [`BundleSuccessorSeed/`](BundleSuccessorSeed/README.md) | 1 | 1,218 | From `Metalogic/Bundle/`. A deferral-seed successor/predecessor existence construction. Zero live consumers across all 72 declarations, and its 3 sorries all reduce to the T-axiom for `G`/`H`, which is unsound under open-guard semantics |
+| [`MergedBracketQuarantine/`](MergedBracketQuarantine/README.md) | 1 | 1,036 | From `WeakCanonical/Kamp/NfMultiAnchorBridge/`. A **refuted** merged-bracket route: it violates the no-nesting audit and Rabinovich Lemma 5.1's QF point-type. Deliberately kept outside `Kamp/` — its subject is bracket quarantine, not the Kamp pipeline |
+| [`RestrictedMCSDeferral/`](RestrictedMCSDeferral/README.md) | 1 | 772 | From `Metalogic/Core/RestrictedMCS/`. A deferral-restricted MCS (`deferralClosure`) variant of the successor-seed construction, fully developed through Lindenbaum and boundedness. No live consumers; the construction it served is archived under `BundleSuccessorSeed/` |
+| [`RetiredTactics/`](RetiredTactics/README.md) | 4 | 677 | From `Automation/`. Fourteen tactic declarations and two whole modules retired on a **measurement**, not a design change: every artefact had zero real invocations in the live library and in `Tests/`. **Guard-first** — no argument swap on resurrection. Two files are excerpts, not whole modules |
+| [`DeadCanonicalModel/`](DeadCanonicalModel/README.md) | 2 | 644 | From `BXCanonical/`, `Bundle/` and `ProofSystem/`. The enriched-seed canonical-model approach, structurally unfixable — the enrichment step cannot maintain consistency of the extended seed — plus two orphans from the triage pass |
+| [`BXPipelineDeadCode/`](BXPipelineDeadCode/README.md) | 2 | 574 | From `WeakCanonical/IntegerModel/`. BX pipeline dead code: the deprecated Reynolds model surgery (`no_gaps_faithful`, mathematically false as stated) and four dead `ReynoldsNoGaps` definitions with zero external references |
+| [`SupersededCompleteness/`](SupersededCompleteness/README.md) | 1 | 541 | From `Metalogic/Completeness.lean`. Zero live importers: the only `import FormalSystem.Metalogic.Completeness` in the repository came from another archived file, so it sat outside every Lake target's closure while the docs still described it as live |
+| [`DeadConvergenceProof/`](DeadConvergenceProof/README.md) | 2 | 468 | Relocated from the former root-level `Boneyard/`. The dead convergence proof for `succ_cofinal` and its single-consumer helper. Fails in the constant-MCS case, where no discriminating formula exists and the temporal axioms are trivially satisfied |
+| [`BXPipelineGapAnalysis/`](BXPipelineGapAnalysis/README.md) | 2 | 303 | From `WeakCanonical/` and `Chronicle/`. Chronicle-level gap elimination via Reynolds Theorem 14, and Henkin discrete-chain analysis. Both blocked by the falsity of `no_gaps_faithful` (a Z+Z counterexample); the correct path is the Reynolds pipeline via `no_gaps_discrete` |
+| [`DenseChronicle/`](DenseChronicle/README.md) | 3 | 287 | From `Chronicle/`. Attempts to adapt the Burgess chronicle construction to dense orders. Hit the density gap: `G(phi)` and `untl(phi.neg, gamma)` are semantically contradictory on dense orders, but BX has no density axiom to derive the contradiction formally |
+| [`RestrictedMCSBoundedness/`](RestrictedMCSBoundedness/README.md) | 1 | 262 | From `Metalogic/Core/RestrictedMCS/`. `iterF`/`iterP` boundedness for `RestrictedMCS`: zero live references, and its advertised consumer `succ_chain_fam` is itself archived under `StrictSemanticsLegacy/` |
+| [`FMPVariants/`](FMPVariants/README.md) | 2 | 237 | From `Decidability/FMP/`. Dense and Discrete finite-model-property statements with zero live importers; the tableau decision procedure consumes the Base-variant FMP interface only |
+| [`ScheduleBasedBFMCS/`](ScheduleBasedBFMCS/README.md) | 1 | 226 | From `BXCanonical/RootScopedChain.lean`. A schedule-based BFMCS chain: the Lindenbaum step loses F-obligations. Bypassed by the Chronicle construction |
+| [`FiltrationOrdering/`](FiltrationOrdering/README.md) | 1 | 170 | From `Filtration/SigmaOrdering.lean`. Sigma-restricted ordering for filtration; BX1 was removed under irreflexive semantics |
+| [`BXCanonicalQuasimodel/`](BXCanonicalQuasimodel/README.md) | 1 | 166 | From `BXCanonical/Quasimodel/`. The enriched (Fisher-Ladner) closure — Phase 1 scaffolding for a migration whose Phase 2 never ran. No live downstream consumers |
+| [`SoundnessVariants/`](SoundnessVariants/README.md) | 2 | 110 | From `Metalogic/`. Dense and Discrete soundness **wrapper** modules with zero live importers; the live `soundness_dense` and `soundness_discrete` are proved directly in `Metalogic/Soundness.lean` |
+| [`LimitMCSCoherenceDeadCases/`](LimitMCSCoherenceDeadCases/README.md) | 1 | 95 | From `Metalogic/Bundle/LimitMCSCoherence.lean`. Five theorems retired during the `TemporalSide` parameterization of `Bundle/LimitMCS.lean`, each referenced only by its own declaration and by docstring prose. **Guard-first** |
+| [`DiscreteXY/`](DiscreteXY/README.md) | 1 | 77 | From various. The discrete `x_content`/`y_content` approach to BurgessR3Maximal splitting, replaced by direct open-guard semantics |
+| `VacuousKEquiv.lean` | 1 | 35 | From `Theorems/`. The archive's one root-level file: two theorems whose names promised Z-interval k-equivalence and whose proofs were `⟨M, rfl⟩` — reflexivity and nothing more. Admitted at the root by the Expected File Structure policy below |
+| [`BX1DependentCode/`](BX1DependentCode/README.md) | 0 | 0 | **Tombstone.** From `Quasimodel/Realization.lean`. BX1-dependent helpers; BX1 was removed under irreflexive semantics |
+| [`BundleTemporalCoherence/`](BundleTemporalCoherence/README.md) | 0 | 0 | **Tombstone.** From `UltrafilterChain.lean`. Semantically wrong for TM: bundle-level coherence permits temporal witnesses in a *different* world history, but TM requires witnesses within the same history |
+| [`ClosedGuardLegacy/`](ClosedGuardLegacy/README.md) | 0 | 0 | **Tombstone.** From various. Closed-guard interval semantics `[t,s]`, replaced by the open guard `(t,s)` that correctly handles the irreflexive temporal order |
+| [`NonBurgessSeed/`](NonBurgessSeed/README.md) | 0 | 0 | **Tombstone.** From `PointInsertion.lean`. The legacy `g_content`/`h_content` approach: the consistent case was proved, but the inconsistent case hits the same density gap as `DenseChronicle/` |
+| [`OpenGuardInvalid/`](OpenGuardInvalid/README.md) | 0 | 0 | **Tombstone.** From `TemporalDerived.lean`. 27 sorry-tainted definitions relying on BX8, BX9, a reflexive temporal order, seriality or density — all invalid or unavailable under open-guard semantics |
+| [`StageInductionGapAnalysis/`](StageInductionGapAnalysis/README.md) | 0 | 0 | **Tombstone.** From `ChronicleToCountermodel`. Dead-end `IsSuccArchimedean` proof attempts; the analysis confirmed the gap scenario is **genuine** — the constant-MCS case is consistent with all axioms including Z1 and Prior-UZ |
+| [`TAxiomDependentCode/`](TAxiomDependentCode/README.md) | 0 | 0 | **Tombstone.** From various. Code depending on the T-axiom (`G(phi)->phi` / `H(phi)->phi`), which is not valid under strict temporal semantics |
+| [`UltrafilterDeadCode/`](UltrafilterDeadCode/README.md) | 0 | 0 | **Tombstone.** From `UltrafilterChain.lean`. Four dead approaches removed during a sorry-elimination cleanup: F-preserving seed (proven FALSE), bidirectional seed, Z-chain (circular dependencies), CoherentZChain |
+| [`XuLemma321Legacy/`](XuLemma321Legacy/README.md) | 0 | 0 | **Tombstone.** From `RRelation.lean`. A blocked proof-by-contradiction for Xu's Lemma 3.2.1(i)/(ii): the inconsistent case needs BX9, removed as unsound under open guard. Doubly obsolete — Xu 3.2.1 was later proved via `dcs_neg_union_consistent` |
+<!-- END GENERATED -->
 
 ## Archival Reason Taxonomy
 

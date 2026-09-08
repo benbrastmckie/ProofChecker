@@ -344,30 +344,30 @@ the generator and a hand `find` as a Phase 2 defect rather than as a number to t
 
 ---
 
-### Phase 5: Rebuild and Register the Directory Inventory [NOT STARTED]
+### Phase 5: Rebuild and Register the Directory Inventory [COMPLETED]
 
 **Goal**: Fix D2 — a table naming four entries that no longer exist and omitting five that do,
 including the largest subtree in the archive — and register it so it cannot silently drift again.
 
 **Tasks**:
-- [ ] Enumerate the archive's real top-level shape and reconcile it against the table: remove or
+- [x] Enumerate the archive's real top-level shape and reconcile it against the table: remove or
       re-home the four rows ADR-005 moved under `Kamp/` (`KampBypassArchive`,
       `KampNegationClosure`, `RabinovichPath`, `VecEADecomposition`), and add the five missing
       subtrees (`Kamp/`, `BundleDeadHalf/`, `RetiredTactics/`, `SupersededCompleteness/`,
       `LimitMCSCoherenceDeadCases/`).
-- [ ] Choose the durable mechanism, against the generator behavior Phase 2 established:
+- [x] Choose the durable mechanism *(chose GENERATION: `rows=both cols=files-lines link=yes empty=include sort=lines-desc`, 40 rows, one hand-written trailing column)*, against the generator behavior Phase 2 established:
       **either** a `<!-- BEGIN GENERATED: inventory dir=FormalSystem/Boneyard rows=subdirs
       cols=files-lines link=yes -->` block (which requires collapsing the current six columns to
       one hand-written trailing column, since the generator preserves exactly one) **or** an
       `<!-- INVENTORY: hand-maintained (dir=FormalSystem/Boneyard) -->` registration, which keeps
       the richer column set and buys exhaustiveness checking without generated counts.
-- [ ] If hand-maintained registration is chosen, match `audit_hand_maintained`'s key shape: `want`
+- [x] Hand-maintained registration NOT chosen, so `audit_hand_maintained`'s key shape does not apply, match `audit_hand_maintained`'s key shape: `want`
       is built from `basename(subdir) + "/"` for subdirs that contain `.lean` files, and phantom
       detection only flags keys ending in `.lean` or `/`. Confirm the tombstone rows land on the
       intended side of that boundary by running the checker, not by reasoning about it.
-- [ ] Fix the total row (currently 93 files / 58,738 lines) so it agrees with §One Archive, or
+- [x] Fix the total row *(removed it: the totals are generated once, in §One Archive)* (currently 93 files / 58,738 lines) so it agrees with §One Archive, or
       remove it in favor of the generated counts block from Phase 4 — one number, one owner.
-- [ ] Add a per-subtree inventory to `FormalSystem/Boneyard/Kamp/README.md` so the archive's
+- [x] Add a per-subtree inventory to `FormalSystem/Boneyard/Kamp/README.md` so the archive's
       largest component (47.6% of its lines) is not a single opaque row, using the same mechanism
       chosen above.
 
@@ -383,7 +383,10 @@ including the largest subtree in the archive — and register it so it cannot si
 `.lean` file; the research report says 38 directories plus one loose file, and `ls
 FormalSystem/Boneyard` returns 41 entries (directories, plus `README.md`, plus
 `VacuousKEquiv.lean`). Resolve this discrepancy by direct enumeration before writing any row, and
-re-check after Phase 3's possible move of the loose file. Also asserted: 24 of 39 subtrees have a
+re-check after Phase 3's possible move of the loose file. *(RESOLVED by direct enumeration: 39
+subdirectories + `VacuousKEquiv.lean` + `README.md` = 41 `ls` entries, so the plan's figure is
+right and the research report's 38 is wrong. Phase 3 did not move the loose file. The generated
+table carries 40 rows, verified row-by-row against `os.listdir` for both directions.)* Also asserted: 24 of 39 subtrees have a
 §Subdirectory Details entry and 16 of 39 are classified by the taxonomy — confirm both counts in
 Phase 8 rather than carrying them forward untested.
 
