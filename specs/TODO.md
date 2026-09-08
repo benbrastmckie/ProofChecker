@@ -91,7 +91,7 @@ next_project_number: 555
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-554 [NOT STARTED] — Retire the nine vacuous `_run` theorems in `MintBound.lean`, land
+554 [RESEARCHED] — Retire the nine vacuous `_run` theorems in `MintBound.lean`, land
   └─ 550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
@@ -117,10 +117,11 @@ next_project_number: 555
 
 ### 554. Retire the nine vacuous _run theorems and correct the register count
 - **Effort**: 3-5 hours
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: None
+- **Research**: [554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md]
 
 **Description**: Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count.
 

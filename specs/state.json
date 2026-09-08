@@ -1571,7 +1571,7 @@
     {
       "project_number": 554,
       "project_name": "retire_nine_vacuous_run_theorems",
-      "status": "not_started",
+      "status": "researched",
       "task_type": "lean4",
       "title": "Retire the nine vacuous _run theorems and correct the register count",
       "topic": "publication-quality",
@@ -1581,10 +1581,18 @@
       "file_scope": [
         "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean"
       ],
-      "artifacts": [],
+      "artifacts": [
+        {
+          "path": "specs/554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md",
+          "type": "report",
+          "summary": "Verifies the 549 delete/keep set at HEAD e5cb311af, extends the collateral-prose amend set from one site to six, records the namespace and naming hazards for landing the two widening lemmas, and recommends retirement-with-a-record following the repository's own Correctness.lean/ADR-007 precedent."
+        }
+      ],
       "description": "Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count.\n\nWHY THIS EXISTS. The dependency trace recorded in `specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md` established NO DEPENDENCY: `FormalSystem.Metalogic.Decidability.decide` reaches zero constants from `MintBound.lean`, and a whole-environment reverse-dependency scan found zero dependents of the nine outside the nine themselves. Its recommended disposition, on the NO-DEPENDENCY branch, is RETIRE. Zero reverse-dependents makes the removal cost-free. Consume that summary's Section 4 (delete set / keep set, enumerated with no overlap) rather than re-deriving it.\n\nTHE PROBLEM RETIREMENT SOLVES. The nine read as headline results (\"the tableau construction succeeds\") while establishing nothing -- they carry an unsatisfiable hypothesis. A reader meeting `buildTableauAt_isSome_of_budget_fixed_run` at its declaration site gets no local signal of that; the refutation is recorded thousands of lines away in the C9 register. In a publication-facing library that is worse than the theorems being absent.\n\nSCOPE:\n1. Delete the nine per the summary's enumerated delete set (`MintBound.lean:12311-12487`, prose `:12288-12309`, forward reference `:5194-5195` -- re-locate by name, not by line number; the trace already found research line numbers stale once).\n2. Preserve the summary's keep set exactly: the `PostBlockingSettlesRun` predicate itself, the whole refutation apparatus, the live `PostBlockingSettlesSeedRun` successor line, and C9 entries 22/24/25.\n3. Land amendment (a): move `one_le_mintAwareFuel'` and `postBlockingSettlesRun_mintAwareFuel_false` from `specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/Widen.lean` into `MintBound.lean` (six lines, already proved, axioms `[propext, Classical.choice, Quot.sound]`). This closes the register's vacuity claim over the un-`At` `mintAwareFuel` figure, not only `mintAwareFuelAt`. These were deliberately not landed during the trace because that task could not write to this file.\n4. Land amendment (b): record row 2 (`buildTableauAt_isSome_of_budget_of_run`) separately in the register. It carries the unrestricted `PostBlockingSettles` and is refuted by `postBlockingSettles_fuel_zero_false` at ALL FOUR frame classes, so entry 25's `.ZTime` caveat does not apply to it. It currently reads as one of a uniform block; it is not.\n5. Correct the count wherever it appears: the vacuous set is NINE, not six. \"Its five `_run` siblings\" is an undercount.\n\nPRECISION REQUIRED IN THE COMMIT MESSAGE AND THE REGISTER. Rows 1 and 3-9 are established vacuous at `.Base`, `.Dense` and `.RTime` only, and are undecided but equally undelivering, with zero dependents, at `.ZTime`. Row 2 is unconditionally vacuous at all four. Do not flatten these into one claim.\n\nEXPLICITLY OUT OF SCOPE. Do not execute the `.ZTime` strengthening -- its only justification was the DEPENDS-at-`.ZTime` branch, which the trace ruled out. Do not touch `docs/theorem-index.md:113`: the trace confirmed it correct on a ten-of-ten column check and the NO-DEPENDENCY branch mandates leaving it alone. Do not decompose the file; that is a separate task.\n\nIF DELETION IS UNWANTED. Retiring nine named theorems from a publication-facing library is a call a human may prefer to make. The summary's Section 7 records the fallback in full: keep the nine and add a vacuity notice at each declaration site naming the refutation by name and the frame classes at which vacuity is established. That fallback is strictly worse on the publication criterion but strictly better than the status quo. If the fallback is chosen, execute Section 7 instead of steps 1-2 and still land steps 3-5.\n\nACCEPTANCE. The nine are gone (or annotated, on the fallback); full `lake build` green; no `sorry`, no axiom additions; `#print axioms` unchanged for every surviving `Decidability` result. Note that re-running `probes/RevDep.lean` will report 0 trivially once the names no longer resolve -- the meaningful regression check is that `probes/DepTrace2.lean` still reports `constants from MintBound reached by decide: 0`.\n\nDependencies: none outstanding. Task 463, which formerly owned this file, is complete.",
       "created": "2026-09-08T00:26:38Z",
-      "last_updated": "2026-09-08T00:26:38Z"
+      "last_updated": "2026-09-08T00:38:54Z",
+      "session_id": "sess_1788827428_44fd7f",
+      "next_artifact_number": 2
     }
   ],
   "artifacts": [
