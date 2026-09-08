@@ -215,3 +215,136 @@ Result: **none found.** Every surface below was searched with
 needs a convex, non-total, non-partial history. The evidence that would have changed the answer
 does not exist. But §1.4 shows the correct conclusion is not the one the description anticipated
 — the layer is unused *today* while its intended consumer is closer than assumed.
+
+---
+
+## §2. What `TruthAt` means at a bounded index
+
+**Question (b).** Machine-checked evidence:
+`specs/553_decide_convex_history_layer_collapse/probes/01_bounded-index-diagnosis.lean`,
+compiled sorry-free with
+
+```
+lake env lean specs/553_decide_convex_history_layer_collapse/probes/01_bounded-index-diagnosis.lean
+```
+
+The probe works on the permissive frame `natFrame` over `ℤ` (world states `ℕ`, task relation
+`d ≠ 0 ∨ w = u`), the model `TaskModel.allTrue`, and one bounded index `bdd` whose domain is the
+closed interval `[0, 0]`. `bdd_not_isTotal` proves it is genuinely bounded.
+
+### §2.1 The clauses, as written
+
+`TruthAt` (`Semantics/Truth.lean`) is five clauses. Read at an index `τ` and a time `t`:
+
+| Clause | Text | Domain sensitivity |
+|---|---|---|
+| `atom p` | `∃ (ht : τ.domain t), M.valuation (τ.states t ht) p` | **the only** domain-sensitive clause |
+| `bot` | `False` | none |
+| `imp φ ψ` | `TruthAt M τ t φ → TruthAt M τ t ψ` | inherited |
+| `box φ` | `∀ (σ : ConvexHistory F), σ.IsTotal → TruthAt M σ t φ` | **re-indexes to total histories** |
+| `untl ψ φ` | `∃ s, t < s ∧ TruthAt M τ s φ ∧ ∀ r, t < r → r < s → TruthAt M τ r ψ` | none — quantifies over all of `D` |
+| `snce ψ φ` | dual | none — quantifies over all of `D` |
+
+The task description's summary of (b) is confirmed: the atom clause carries the domain
+existential, the box clause re-indexes to `IsTotal` histories, and `untl`/`snce` quantify over
+all of `D` with no domain guard.
+
+### §2.2 The three findings
+
+**(i) An atom outside the domain is false, not ill-formed** (`atom_false_outside_domain`). The
+clause is a perfectly good `Prop`; it is simply refuted, because its leading existential asks for
+a domain proof that does not exist. The same atom is true at `0`, inside the domain
+(`atom_true_inside_domain`). So `TruthAt` is *total as a function* on bounded indices — nothing
+is undefined — but the value it returns off the domain is "false", not "undefined" and not
+"restricted away".
+
+**(ii) The tense clauses see outside the domain** (`tense_sees_outside_domain`). At `(bdd, 0)`,
+in the model where every atom is true at every world state, `F ¬p` is TRUE — witnessed at
+`s = 1`, a time the index does not settle, where `¬p` holds *only because* the atom clause
+failed for want of a domain proof. This is the sharpest available demonstration that the tense
+operators do not respect the index's domain: they range over all of `D` and read "outside the
+domain" as "the atom is false there".
+
+`someFuture_top_true_at_bounded` records the corollary: `F⊤` — the semantic content of TM's
+seriality axiom TS — is true at the bounded index at *every* time. The boundedness of the index
+is invisible to the tense operators, which is exactly why the current bounded-index reading is
+not the paper's footnoted alternative.
+
+**(iii) The T-schema fails at a bounded index off the domain**
+(`refute_modal_t_at_bounded_index`). `□p → p` is REFUTED at `(bdd, 1)`. The antecedent holds
+because the box clause re-indexes to the total histories, where `p`'s domain obligation is
+discharged for free (`box_atom_true`); the consequent fails because the atom clause is evaluated
+at `bdd`, where it is not. The formula's modal part and its atomic part are evaluated against
+**two different domains**, and the schema separates them.
+
+`modal_t` is an axiom of TM (`ProofSystem/Axioms.lean`). So the bounded-index reading does not
+merely give a weaker logic — it invalidates an axiom of the logic the repository proves sound.
+
+**(iv) …and holds at the same index inside the domain** (`modal_t_holds_in_domain`). At `0`,
+which is in `bdd`'s domain, the same instance holds. The degeneracy is therefore exactly
+co-extensive with evaluating at `x ∉ dom τ`.
+
+### §2.3 The plain answer: is the current bounded-index reading degenerate?
+
+**Yes, and in a specific, locatable way.** It is degenerate off the domain and coherent on it.
+
+The current clause set, read at a bounded index, is **none of the three candidate readings**:
+
+- It is **not** `def:BL-semantics`. That definition evaluates only at possible worlds; at a total
+  index the two agree (the atom clause's existential is vacuously satisfiable), which is the
+  "Decision A, accepted gap" already recorded in `Truth.lean`'s own docstring.
+- It is **not** the paper's line-1102 alternative. That alternative requires `x ∈ dom τ`,
+  restricts `Past`/`Future` to `dom τ`, and quantifies `□` over the convex histories whose domain
+  contains `x`. The current clauses do none of these three things: `x` is unrestricted, the
+  tenses are unrestricted, and `□` still quantifies over `H_F`.
+- It is a **third, unintended reading**: a hybrid in which the atom clause is domain-relative,
+  the box clause is `H_F`-relative, the tense clauses are `D`-relative, and the evaluation time
+  is unrestricted. Its incoherence is not a matter of taste; the T-schema refutation is a proof
+  that the three relativisations do not cohere.
+
+This is the correctness-grounds argument the task asked to have weighed
+(question (b), final sentence). It is a genuine one, and it should be weighed as such: the
+repository currently carries an evaluation index at which a theorem of its own proof system is
+semantically false. Nothing is *unsound*, because every validity and consequence statement in the
+tree carries the `IsTotal` guard (§1.5) and so never reaches the degenerate region. But the
+guard is load-bearing at 305 lines across 58 files, and what it is guarding against is this.
+
+### §2.4 Lemmas stated at an arbitrary index whose intended content is the total one
+
+**97 declarations** in the live tree (excluding `Boneyard/`) explicitly bind a
+`(τ : ConvexHistory F)` with no `IsTotal` anywhere in the declaration and no `.HF` in the
+signature. Command:
+
+```
+python3 specs/553_decide_convex_history_layer_collapse/probes/scan-ungated-convex-binders.py
+```
+
+Distribution: `Semantics/` 50, `Metalogic/Decidability/Verified/` 17 (+3 in its `Bridge/`),
+`Metalogic/` 9, `Decidability/BiLasso/` 5, `WeakCanonical/IntegerModel/` 4,
+`Conservativity/` 3, `Algebraic/` 2, `Automation/` 2, `Independence/` 1, `BXCanonical/` 1.
+
+Three classes, and only the third is a problem:
+
+1. **Genuinely domain-generic transport and clause-unfolding lemmas.** `Truth.lean`'s
+   `bot_false`, `imp_iff`, `some_future_iff`, `some_past_iff` etc.; `ShiftSet.wh_ext`,
+   `ts_zero`, `ts_add`; `StarPasting.AgreeFrom` / `AgreeUpTo`. These say exactly what they
+   should at any index. No action.
+2. **Lemmas applied only at total arguments, correctly.** `BiLasso/SmallModel.typeAt`,
+   `typeAt_subset`, `typeAt_fulfillingSeq`, `BoxOracle.truth_neg_iff`. Every call site supplies
+   a total history (`GoodCycle.lean:477`, `:506` inside `exists_good_fwd_cycle`, which takes
+   `hτ : τ.IsTotal`; `BoxOracle.lean:239`, `:254`). The extra generality is harmless and
+   occasionally convenient.
+3. **Lemmas whose *name* promises the total content and whose *statement* delivers the hybrid
+   one.** The tense-characterization block in `Metalogic/Decidability/Verified/Decidable.lean`
+   (`truthAt_of_allFuture`, `not_truthAt_of_someFuture`, `exists_gt_truthAt_of_untl`, …, 17
+   declarations) and `Metalogic/DedekindNonCompactness.lean`'s `truthAt_qNext_iff`,
+   `truthAt_qGap`, `truthAt_qBound` are stated at an arbitrary index. They are *true* as stated —
+   they are consequences of the unrestricted tense clauses, which do not consult the domain — but
+   what they assert at a bounded index is a fact about the hybrid reading, not about the paper's
+   semantics. A reader who takes them as statements about possible worlds is reading in a
+   hypothesis they do not carry.
+
+Class 3 is not a soundness defect and it is not, on its own, an argument for collapsing the
+layer. It is an argument that the generality is *unpaid-for*: 97 declarations carry an index
+they never use, and at the one place where the difference is observable the semantics is
+degenerate.

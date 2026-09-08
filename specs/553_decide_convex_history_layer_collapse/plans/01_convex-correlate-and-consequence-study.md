@@ -236,27 +236,27 @@ at risk is claim 1's completeness (not its truth): it enumerates constructions b
 
 ---
 
-### Phase 2: What `TruthAt` means at a bounded index [NOT STARTED]
+### Phase 2: What `TruthAt` means at a bounded index [COMPLETED]
 
 **Goal**: Settle question (b) with machine-checked evidence: establish what the current
 `TruthAt` clauses actually mean when the index is a non-total convex history, and state plainly
 whether that reading is degenerate.
 
 **Tasks**:
-- [ ] Read `FormalSystem/Semantics/Truth.lean`'s `TruthAt` (the five clauses at approximately
+- [x] Read `FormalSystem/Semantics/Truth.lean`'s `TruthAt` (the five clauses at approximately
       `:234-241`) and the docstring above it, which already records the atom clause's
       `∃ (ht : τ.domain t)` conjunct as "Decision A, accepted gap".
-- [ ] Write `specs/553_decide_convex_history_layer_collapse/probes/01_bounded-index-diagnosis.lean`
+- [x] Write `specs/553_decide_convex_history_layer_collapse/probes/01_bounded-index-diagnosis.lean`
       establishing, sorry-free, on a concrete small frame: (i) an atom is *false*, not
       ill-formed, at a time outside the index's domain; (ii) the `untl`/`snce` clauses quantify
       over all of `D` irrespective of the domain, so a bounded index still "sees" times it does
       not settle; (iii) the resulting failure of at least one axiom that is valid at a total
       index — the T-schema `□φ → φ` at an out-of-domain time is the expected witness, since
       `□p` may hold while `p` is false for want of a domain proof.
-- [ ] State in §2 of the report which of the three readings the current clauses realize: the
+- [x] State in §2 of the report which of the three readings the current clauses realize: the
       paper's `def:BL-semantics` (agrees under totality), the paper's line-1102 alternative
       (it is *not* this — the tense clauses are unrestricted), or a third, unintended reading.
-- [ ] State whether any lemma in the tree is stated for an arbitrary `(τ : ConvexHistory F)`
+- [x] State whether any lemma in the tree is stated for an arbitrary `(τ : ConvexHistory F)`
       where the intended content is the total one, and would therefore be asserting something
       weaker or different than its name suggests. List them if so.
 
