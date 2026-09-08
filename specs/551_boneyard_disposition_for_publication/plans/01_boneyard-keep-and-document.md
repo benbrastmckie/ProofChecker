@@ -388,7 +388,9 @@ subdirectories + `VacuousKEquiv.lean` + `README.md` = 41 `ls` entries, so the pl
 right and the research report's 38 is wrong. Phase 3 did not move the loose file. The generated
 table carries 40 rows, verified row-by-row against `os.listdir` for both directions.)* Also asserted: 24 of 39 subtrees have a
 §Subdirectory Details entry and 16 of 39 are classified by the taxonomy — confirm both counts in
-Phase 8 rather than carrying them forward untested.
+Phase 8 rather than carrying them forward untested. *(CONFIRMED mechanically in Phase 7: 24/39
+had a detail entry, 16/39 were classified. Both are now 39/39, plus the root-level file in the
+taxonomy, verified by name-by-name grep in both directions.)*
 
 **Files to modify**:
 - `FormalSystem/Boneyard/README.md` - §Directory Inventory rebuilt and registered
@@ -451,22 +453,22 @@ before deciding the scope of any C9 tightening — a naive tightening would pull
 
 ---
 
-### Phase 7: Complete the Taxonomy and Subdirectory Coverage [NOT STARTED]
+### Phase 7: Complete the Taxonomy and Subdirectory Coverage [COMPLETED]
 
 **Goal**: Make the archive's own narrative sections describe all of it, not a little over half —
 this is the "cleaning up and improving documentation/comments" the user asked for.
 
 **Tasks**:
-- [ ] Classify every top-level subtree under §Archival Reason Taxonomy's four categories (Unsound
+- [x] Classify every top-level subtree *(a fifth category was genuinely needed and added: **Orphaned, Not Refuted** — correct code, often still compiling, retired only because nothing imported it. 11 of the 40 entries fall there and fit none of the original four.)* under §Archival Reason Taxonomy's four categories (Unsound
       Axioms / Semantics, Superseded Approaches, Structural Dead Ends, Architectural
       Incompatibility), adding a category only if a subtree genuinely fits none.
-- [ ] Add a §Subdirectory Details entry for each subtree that lacks one, drawing on that subtree's
+- [x] Add a §Subdirectory Details entry *(15 added; the section was rebuilt in alphabetical order so coverage is checkable by heading diff)* for each subtree that lacks one, drawing on that subtree's
       own README where it has one (including the six written in Phase 3).
-- [ ] Distinguish, for each subtree, which of the three research categories it belongs to —
+- [x] Distinguish, for each subtree, which of the three research categories *(a second, independent `Provenance class` column — Superseded / Refuted / Orphaned-Unfinished — on the exhaustive 40-row classification table, kept deliberately orthogonal to the archival reason)* it belongs to —
       genuinely superseded, a refuted approach still cited elsewhere, or merely unfinished. This is
       the characterization task step 1 asked for, and it belongs in the archive's own README rather
       than only in a task report.
-- [ ] Cross-check the two named guard-first exceptions (`BundleDeadHalf/`, `RetiredTactics/`)
+- [x] Cross-check the two named guard-first exceptions *(both intact and still linked from the CONVENTION WARNING; the guard-first fact is now also carried on their inventory rows and detail entries, and `LimitMCSCoherenceDeadCases/` is recorded as a third guard-first subtree)* (`BundleDeadHalf/`, `RetiredTactics/`)
       survive intact and are still reachable from the CONVENTION WARNING.
 
 **Timing**: 1.5 hours
