@@ -25,11 +25,11 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
 
 - `TaskFrame.IsDense` — `def:frame-properties`' Dense clause
 - `TaskFrame.IsDiscrete` — `def:frame-properties`' Discrete clause, verbatim
-- `TaskFrame.IsZTime` — `def:TMplus-f`'s Hölder narrowing of the discrete class to
+- `TaskFrame.IsZTime` — `def:TMplus-f`'s narrowing of the discrete class to
   `ℤ`-time; strictly stronger than `IsDiscrete`, and the predicate the proof side's
   `FrameClass.ZTime` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
-- `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM⁺_c target
+- `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM⁺_r target
 - `TaskFrame.Deterministic` — `def:deterministic`: every fibre of the task relation is a
   subsingleton, the frame condition the stability modal `⊡` collapses over
 
@@ -39,10 +39,10 @@ Two of `def:frame-properties`' clauses each split in this tree, and in both case
 split would silently widen a soundness target:
 
 - **Discrete splits.** `def:frame-properties`' bare Discrete clause is `IsDiscrete`.
-  `def:TMplus-f` narrows the class its axioms are sound over — "the successor-Archimedean discrete
-  class to which BX_f and TM⁺_f are sound and complete is exactly `ℤ`-time" — and that narrowed
-  class is `IsZTime`. Only the narrowed one is a sound interpretation of the proof
-  side's `FrameClass.ZTime`.
+  `def:TMplus-f` narrows the class its axioms are sound over: the discrete task frames over which
+  BX_z and TM⁺_z are sound and complete are exactly those over `ℤ`-time, because the axioms `UZ`
+  and `Z1` fail over every non-Archimedean discrete order. That narrowed class is `IsZTime`, and
+  only the narrowed one is a sound interpretation of the proof side's `FrameClass.ZTime`.
 - **Complete splits.** `def:frame-properties`' bare Complete clause is `IsComplete`, which `ℤ`
   satisfies. `IsRTime` adds density, deleting exactly the `ℤ` branch of the Hölder dichotomy
   (`Semantics/DurationClassification.lean`'s `complete_duration_discrete_or_dense`).
@@ -55,8 +55,8 @@ the implication from `IsZTime` to `IsDiscrete` recorded on the former's docstrin
 
 `def:frame-properties`' bare Discrete and Complete clauses are `IsDiscrete` and `IsComplete`, and
 each keeps the paper's name. The two *narrowed* classes the proof side's tags denote are named
-separately: `IsZTime` for `def:TMplus-f`'s successor-Archimedean ℤ-time class and `IsRTime` for
-the dense-and-complete R-time class. See `TaskFrame.IsZTime` and `TaskFrame.IsRTime`.
+separately: `IsZTime` for `def:TMplus-f`'s ℤ-time class and `IsRTime` for the dense-and-complete
+`ℝ`-time class. See `TaskFrame.IsZTime` and `TaskFrame.IsRTime`.
 
 ## Why `IsDense` is an `abbrev`
 
@@ -130,14 +130,16 @@ def TaskFrame.IsDiscrete (F : TaskFrame) : Prop :=
 /--
 The **successor-Archimedean discrete** class: `def:TMplus-f`'s narrowing of `IsDiscrete`.
 
-`def:TMplus-f` closes with the Hölder sentence: "It follows by Hölder's theorem that a nontrivial
-discrete Archimedean totally ordered abelian group is isomorphic to `ℤ`, and so the
-successor-Archimedean discrete class to which **BX**`_f` and **TM**⁺`_f` are sound and complete is
-exactly `ℤ`-time."
+`def:TMplus-f` closes by narrowing the discrete class over which `BX_z` and `TM⁺_z` are sound and
+complete to exactly the frames over `ℤ`-time: the axioms `UZ` and `Z1` fail over every discrete
+temporal order that is not Archimedean, and the Archimedean discrete orders are exactly `ℤ`-time.
+(An earlier revision of the paper reached the same conclusion by way of Hölder's theorem, which is
+where this predicate's name comes from; the conclusion is unchanged, and is restated here in the
+tree's own voice rather than quoted.)
 
 **It is this predicate, not `TaskFrame.IsDiscrete`, that `FrameClass.ZTime` admits axioms
 for.** `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` all carry `.ZTime` as their
-`minFrameClass`, and by the sentence above they are sound over `ℤ`-time rather than over every
+`minFrameClass`, and by the narrowing above they are sound over `ℤ`-time rather than over every
 frame satisfying `def:frame-properties`' bare Discrete clause. Interpreting `FrameClass.ZTime`
 by `IsDiscrete` would silently widen the class under `soundness_ztime` — the defect that the
 retired marker-typeclass frame-condition layer carried, and part of why that layer was removed.
@@ -189,9 +191,9 @@ def TaskFrame.IsComplete (F : TaskFrame) : Prop :=
 
 /--
 The **dense and Dedekind-complete** class: `def:frame-properties`' Dense clause conjoined with its
-Complete clause. This is `cor:tm-completeness`'s TM⁺_c target — that corollary states TM⁺_c
-complete over "the dense-and-complete class" — and the semantic interpretation of the proof side's
-`FrameClass.RTime`.
+Complete clause. This is `cor:tm-completeness`'s TM⁺_r target — that corollary states TM⁺_r
+weakly complete over `ℝ`-time, the dense and Dedekind-complete orders — and the semantic
+interpretation of the proof side's `FrameClass.RTime`.
 
 Adding density to `IsComplete` deletes precisely the `ℤ` branch of the Hölder dichotomy and
 nothing else: by `Semantics.complete_duration_discrete_or_dense` a complete duration group is

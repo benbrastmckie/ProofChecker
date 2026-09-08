@@ -392,9 +392,10 @@ inductive Axiom : Formula → Type where
   -- that just looking at the behaviour of temporal formulas". They are the axiomatic proxy.
   --
   -- RELATIONSHIP TO THE PAPER'S CO AXIOM.
-  -- The JPL paper's `def:TMplus-c` bases its complete-order extension BX_c on a single extra
-  -- axiom, CO = `△(Hφ → F(Hφ)) → (Hφ → Gφ)` (`Formula.co`), rather than on this triple.
-  -- This tree keeps the Reynolds triple as the OFFICIAL basis, and CO is a derived theorem
+  -- The JPL paper's `def:TMplus-c` bases its complete-order extension BX_r on the dense logic
+  -- BX_d extended by PU and SEP, with CO = `△(Hφ → F(Hφ)) → (Hφ → Gφ)` (`Formula.co`) a
+  -- DERIVED THEOREM rather than a further axiom. That is this tree's own arrangement: the
+  -- repository keeps the Reynolds triple as the OFFICIAL basis, and CO is derived
   -- over it: see `FormalSystem.Theorems.DedekindDerived.coDerived`, which proves
   -- `⊢[fc] Formula.co φ` for every `fc` with `RTime ≤ fc` using `prior_U_gap` and base
   -- axioms only -- neither `prior_S_gap` nor `sep` is needed. The semantic companion is
@@ -422,13 +423,20 @@ inductive Axiom : Formula → Type where
   -- frame-validity of CO on a dense flow forces gap-freeness and hence forces Prior-U valid.
   -- This matches Reynolds' own "definably Dedekind-complete" caveat quoted above.
   --
-  -- CONSEQUENCE FOR THE PAPER (out of scope for this repository). Now that the independence is
-  -- established, `def:TMplus-c` is deductively too weak for `cor:tm-completeness`, whose
-  -- completeness claim
-  -- is deferred to this repository with no independent citation. Correcting it means switching
-  -- the paper's BX_c basis to the Reynolds axioms, which is an amendment to
-  -- `/home/benjamin/Philosophy/Papers/PossibleWorlds/` routed through the fix.md C4 process.
-  -- No file under `Philosophy/Papers/` is edited from here; this note records the finding.
+  -- CONSEQUENCE FOR THE PAPER -- DISCHARGED. An earlier revision of this note recorded that
+  -- `def:TMplus-c` was deductively too weak for `cor:tm-completeness`, and that correcting it
+  -- meant switching the paper's basis for the complete-order extension to the Reynolds axioms,
+  -- as an amendment routed through the fix.md C4 process. The paper has since made exactly that
+  -- switch: BX_r is now BX_d plus PU and SEP, with CO derived. Repository and paper agree, and
+  -- nothing here is outstanding.
+  -- What remains asymmetric is the STRENGTH of the claim on each side. The paper's own note on
+  -- the converse direction -- whether CO alone axiomatizes the same logic as the full triple --
+  -- is commented out, conjectures failure rather than asserting it, and sketches the route by a
+  -- ℚ-flow with isolated `¬φ` points accumulating at an irrational from above. That sketch is
+  -- the route REFUTED immediately above; the independence itself is established outright here by
+  -- the machine-checked `FormalSystem.Metalogic.Independence.CoNotPriorU`, on the periodic clock
+  -- model instead. No file under `Philosophy/Papers/` is edited from here; this note records the
+  -- finding.
   /-- Prior-U (gap form): `U(⊤,φ) ∧ F(¬φ) → U(¬φ ∨ K⁺(¬φ), φ)`.
   If φ holds throughout some initial future segment and ¬φ holds somewhere in the future,
   then the φ-region has a definable upper endpoint: reading forward, `¬φ ∨ K⁺(¬φ)` holds
@@ -490,7 +498,7 @@ The four frame classes form a partial order:
   (`Semantics/DurationClassification.lean`) that is not merely "ℝ-like": a Dedekind-complete
   duration group is either `≃+o ℤ` or densely ordered, so once the density binder is imposed
   the class contains, up to order-and-group isomorphism, only the real flow. `FrameClass.RTime`
-  is therefore the paper's **TM⁺_dc** (dense complete / real flow), not TM⁺_c.
+  is therefore the paper's **TM⁺_r** — the `ℝ`-time row of `cor:tm-completeness`.
 - Dense and ZTime are incomparable: density contradicts discreteness.
 - ZTime and RTime are likewise incomparable, and `RTime ≰ Dense`.
 
@@ -510,17 +518,18 @@ inadmissible in `DerivationTree .RTime` and so could not host Reynolds' system a
 **Soundness caveat.** The soundness theorem for this class must target `ValidRTime`, not the
 density-free `ValidComplete`. See the `ValidComplete` caveat in `Semantics/Validity.lean` — the one place the `ValidComplete` / `ValidRTime` distinction is argued in full.
 
-**The paper's TM⁺_c has no frame class here, and that is a real gap rather than an omission.**
-TM⁺_c is completeness *simpliciter*: no density binder, so by
-`Semantics.complete_duration_discrete_or_dense` its models are exactly `{ℤ, ℝ}` up to
-order-and-group isomorphism, and its theory is `Th(ℤ) ∩ Th(ℝ)`. No element of `FrameClass`
-picks that class out. The two branches are covered separately and exhaustively — the
-complete-but-discrete branch is *exactly* `ℤ` by `Semantics.complete_not_dense_iso_int`, and is
-handled by `FrameClass.ZTime` / `ValidZTime`; the dense branch is `FrameClass.RTime` /
-`ValidRTime` — but their intersection is not itself a frame class, and adding one would
-require an axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does not have. `ValidComplete` exists as
-a predicate matching the TM⁺_c binder set, but is deliberately not a soundness target; its own
-docstring in `Semantics/Validity.lean` explains why.
+**`ValidComplete` is a repository-only predicate, and answers to no paper system.** It is the
+density-free completeness binder: by `Semantics.complete_duration_discrete_or_dense` its models
+are exactly `{ℤ, ℝ}` up to order-and-group isomorphism, and its theory is `Th(ℤ) ∩ Th(ℝ)`. No
+element of `FrameClass` picks that class out, and none needs to — every row of
+`cor:tm-completeness` is covered here: the `ℤ`-time row is `FrameClass.ZTime` / `ValidZTime`
+(the complete-but-discrete branch being *exactly* `ℤ`, by
+`Semantics.complete_not_dense_iso_int`), and the `ℝ`-time row is `FrameClass.RTime` /
+`ValidRTime`. Their intersection is not itself a frame class, and adding one would require an
+axiom set for `Th(ℤ) ∩ Th(ℝ)` that this tree does not have — but nothing in the paper asks for
+one. `ValidComplete` survives for two internal purposes only: it is the target of the forgetful
+bridge, and it is what the Hölder-style dichotomy above is stated over. It is deliberately not a
+soundness target; its own docstring in `Semantics/Validity.lean` explains why.
 
 The key invariant is `ax.minFrameClass ≤ fc`: an axiom `ax` can appear in a derivation
 parameterized by frame class `fc` only when `ax`'s minimum frame class is at most `fc`.

@@ -684,9 +684,12 @@ dichotomy: by `complete_duration_discrete_or_dense`
 (`Semantics/DurationClassification.lean`) a duration group with the least-upper-bound hypothesis
 is either `≃+o ℤ` or densely ordered, and by `complete_not_dense_iso_int` the non-dense case is
 `≃+o ℤ` on the nose. So this predicate's model class is `{ℤ, ℝ}` up to isomorphism and its
-theory is `Th(ℤ) ∩ Th(ℝ)`. It is **not** the paper's TM⁺_c: under the paper's current
-`cor:tm-completeness`, TM⁺_c is weak completeness over the dense-and-complete class, which is
-`FrameClass.RTime`.
+theory is `Th(ℤ) ∩ Th(ℝ)`. **It is the class of no paper system.** `cor:tm-completeness` names
+four rows, and the one this predicate could be mistaken for — the `ℝ`-time row, `TM_r` in the
+paper's notation and `TM⁺_r` in this tree's — is weak completeness over the dense-and-complete
+class, which is `FrameClass.RTime` / `ValidRTime`, not this predicate. `ValidComplete` is
+repository-only; see `Metalogic/Conservativity.lean` for how the two families of system name
+line up.
 
 **Source.** Reynolds 1992 (printed p.169) observes that the Prior axioms enforce only a
 *definably* Dedekind-complete model: "there may be gaps in the order but ... you wouldn't know

@@ -256,13 +256,13 @@ discrepancy means re-triaging the extra file into Phase 4 or 5, not widening thi
 
 ---
 
-### Phase 4: ProofSystem and Semantics editorial rewrites [NOT STARTED]
+### Phase 4: ProofSystem and Semantics editorial rewrites [COMPLETED]
 
 **Goal**: Rewrite the four heaviest retracted-claim clusters — the "gap" argument, the CO-basis
 note, and the two `ValidComplete` caveats — plus the two de-quotation sites in `Semantics/`.
 
 **Tasks**:
-- [ ] `ProofSystem/Axioms.lean` (research B1-B4):
+- [x] `ProofSystem/Axioms.lean` (research B1-B4):
       - B1 (~line 394): `def:BX-r` bases `BX_r` on `BX_d + PU + SEP` with CO a *derived* theorem —
         repository and paper now agree; drop the "single extra axiom CO rather than this triple"
         contrast.
@@ -276,16 +276,16 @@ note, and the two `ValidComplete` caveats — plus the two de-quotation sites in
       - B4 (~lines 513-522): delete the "real gap" claim. `ValidComplete` survives as a
         **repository-only** predicate (forgetful-bridge target, Hölder-dichotomy statement),
         explicitly not the binder set of any paper system.
-- [ ] `Semantics/Validity.lean` (B8, ~lines 686-689): replace "it is not the paper's `TM⁺_c`"
+- [x] `Semantics/Validity.lean` (B8, ~lines 686-689): replace "it is not the paper's `TM⁺_c`"
       with: `ValidComplete` is the class of no paper system; `cor:tm-completeness`'s ℝ-time row is
       `TM_r` (this tree's `TM⁺_r`), whose class is `FrameClass.RTime` / `ValidRTime`.
-- [ ] `Semantics/FrameProperty.lean` (B9, ~lines 32, 43-44, 192-193): retarget the two
+- [x] `Semantics/FrameProperty.lean` (B9, ~lines 32, 43-44, 192-193) *(deviation: altered — a fourth site, the `TaskFrame.IsZTime` docstring at ~line 131, also quotes the deleted Hölder sentence and was de-quoted here; the census grep missed it because its markdown emphasis splits the token as ``**BX**`_f```)*: retarget the two
       `cor:tm-completeness` references to `TM⁺_r`, and **de-quote** the deleted Hölder sentence —
       paraphrase, or requote `def:BX-z`'s live closing sentence instead.
-- [ ] `Semantics/FrameClassValidity.lean` (B10, ~lines 35, 42, 95-96, 102): rewrite the
+- [x] `Semantics/FrameClassValidity.lean` (B10, ~lines 35, 42, 95-96, 102): rewrite the
       per-constructor anchors in the `z`/`d`/`r` vocabulary and **de-quote** the ℤ-time sentence.
       Keep the anchor labels `def:TMplus-f` and `cor:tm-completeness` verbatim (548 renames them).
-- [ ] Cross-reference the Phase 2 mapping paragraph rather than restating it.
+- [x] Cross-reference the Phase 2 mapping paragraph rather than restating it.
 
 **Timing**: 1.75 hours
 
@@ -308,6 +308,7 @@ passage count at implementation time.
 
 **Verification**:
 - No sentence of the form "X, not X" survives.
+- *(deviation: altered — the anchor-count check is recorded as non-decreasing rather than exact. `def:TMplus-f` 18 → 19, `def:TMplus-c` 10 → 11, `cor:tm-completeness` 40 → 44: the rewrites cite the pinned anchors in more places than the retired quotations did. No label was renamed or removed, which is the property C15 actually gates on.)*
 - No quotation marks enclose the deleted "successor-Archimedean discrete class" sentence anywhere
   in these files.
 - The strings `def:TMplus-f`, `def:TMplus-c`, `cor:tm-completeness` are unchanged in count and
