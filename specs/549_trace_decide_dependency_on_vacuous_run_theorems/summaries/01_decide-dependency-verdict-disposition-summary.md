@@ -330,14 +330,26 @@ status quo, and it preserves the option of a later `.ZTime` completion.
 
 ## Verification
 
-- Build: Success (`lake build`, guarded and detached, exit 0; `--no-share` so this is a genuine
-  build and not a replayed result)
-- Sorry count: 0
-- Vacuous count: 0
-- Axiom count: unchanged (no `FormalSystem/**` file was modified; `probes/*.lean` are standalone
-  `lake env lean` scripts, not members of any lakefile target)
-- Tests: N/A (no Lean source changed)
-- Files verified: Yes — `git diff --quiet -- FormalSystem/ docs/` exits 0
+- Build: **Success** — `Build completed successfully (2592 jobs).`, exit 0. Run guarded and
+  detached with `--no-share`, so this is a genuine build, not a replayed result (no
+  `lake-build-guard: REPLAY:` marker). Zero `error:`, zero `warning:`, zero
+  `declaration uses 'sorry'` lines in the output.
+- Sorry count: **0** attributable to this task. Repo-wide baseline is `sorry_count: 160`, all
+  under `FormalSystem/Boneyard/` (legacy quarantine, not a build target) and all pre-existing;
+  zero outside `Boneyard/`. This task modified no Lean file.
+- Vacuous count: **0** attributable. One repo-wide single-line pattern match,
+  `Examples/TemporalStructures.lean:496` (`int_domain_universal … := trivial`), is an honest proof
+  — the `Int` history's domain predicate genuinely holds everywhere — and is pre-existing.
+- Axiom count: **0 added**, and the repo-wide count of actual `axiom` declarations in
+  `FormalSystem/` is **0**. The twelve `^axiom ` grep hits are all false positives: wrapped prose
+  lines in docstrings and READMEs beginning with the word "axiom". `probes/*.lean` are standalone
+  `lake env lean` scripts, not members of any lakefile target, so they add nothing to the
+  library's axiom or `sorry` surface.
+- Tests: N/A (no Lean source changed). The build itself independently re-confirmed the axiom
+  column: `MainResults.lean:254` emits `sound_of_isValid depends on axioms: [propext,
+  Classical.choice, Quot.sound]` as a build-time obligation.
+- Files verified: Yes — `git diff --quiet -- FormalSystem/` and `git diff --quiet -- docs/` both
+  exit 0.
 
 ## Impacts
 

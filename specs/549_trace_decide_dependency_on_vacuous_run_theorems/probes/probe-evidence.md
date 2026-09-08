@@ -227,3 +227,82 @@ them to task 549): `.claude-extensions.json`, `specs/433_.../.return-meta.json` 
 The probe files under `probes/*.lean` are standalone scripts run with `lake env lean`. They are
 not members of any `lakefile` target and are never compiled by `lake build`, so they add nothing
 to the library's axiom or `sorry` surface.
+
+---
+
+## Final gate (Phase 6)
+
+### `lake build`
+
+**Command** (detached via `Bash(run_in_background: true)`, routed through the build guard;
+`--no-share` forces a genuine build rather than a replayed result):
+
+```
+$ bash .claude/scripts/lake-build-guard.sh build --timeout 1800 --no-share -- build
+```
+
+**Result**
+
+```
+✔ [2590/2592] Built FormalSystem.FormalSystem (1.3s)
+✔ [2591/2592] Built FormalSystem (1.3s)
+Build completed successfully (2592 jobs).
+LAKE_BUILD_EXIT=0
+```
+
+- **Exit status**: 0 — GREEN. No per-module failure attribution was needed.
+- **Genuine build, not a replay**: `grep -c "lake-build-guard: REPLAY:"` -> `0`. The guard reported
+  the build in flight under holder pid 145931 with a live `lean` child; wall time ~9 minutes.
+- **`error:` occurrences in build output**: 0.
+- **`warning:` occurrences in build output**: 0.
+- **`declaration uses 'sorry'` warnings**: 0.
+
+Incidental confirmation from the build itself: `FormalSystem/MainResults.lean:254` emits
+`'FormalSystem.Metalogic.Decidability.sound_of_isValid' depends on axioms: [propext,
+Classical.choice, Quot.sound]` as a build-time obligation — an independent, in-build corroboration
+of the `pcq pinned:C14` axioms column adjudicated in Section 3 of the summary.
+
+**Note on the guard invocation.** The form documented in the `lean-implementation-agent`
+definition — `lake-build-guard.sh build --timeout 1800 --` — exits **77** (usage error):
+`build mode requires a lake subcommand`. The lake subcommand must follow the `--`. The working
+form is the one recorded above. Surfaced as an agent-definition defect; the fix belongs in the
+`agent-system/extensions/**` source store, not in `.claude/**`.
+
+### `sorry` / vacuous / axiom census
+
+This task modified **zero** Lean files, so every figure below is a pre-existing baseline and none
+is attributable to task 549. Recorded rather than omitted, so the numbers are not mistaken for
+zero on a later read.
+
+| Check | Repo-wide figure | Attributable to task 549 | Notes |
+|---|---|---|---|
+| `sorry` (`lean-sorry-census.sh FormalSystem/`) | `sorry_count: 160` | **0** | All 160 are under `FormalSystem/Boneyard/` (legacy quarantine, not a build target — hence 0 `sorry` warnings in the green build above). Zero outside `Boneyard/`. |
+| Vacuous single-line pattern | 1 | **0** | `FormalSystem/Examples/TemporalStructures.lean:496` — `theorem int_domain_universal (t : Int) : intTimeHistory.domain t := trivial`. Honest: the `Int` history's domain predicate genuinely holds everywhere, so `trivial` is the real proof, not a placeholder. Pre-existing. |
+| `^axiom ` grep hits | 12 | **0** | **All twelve are false positives** — prose in docstrings, comments and READMEs where a wrapped line happens to begin with the word "axiom" (e.g. `MainResults.lean:14` "axiom audit beside each result", `TaskFrame.lean:348` "axiom (`def:frame`) ranges over"). Zero actual `axiom` declarations in `FormalSystem/`. |
+
+### Read-only re-audit
+
+| Check | Command | Result |
+|---|---|---|
+| No `FormalSystem/` modification | `git diff --quiet -- FormalSystem/` | exit 0 (CLEAN) |
+| No `docs/` modification | `git diff --quiet -- docs/` | exit 0 (CLEAN) |
+| Changes confined to task 549 + pre-existing | `git status --porcelain` | CONFIRMED |
+
+`git status --porcelain` at final audit:
+
+```
+ M .claude-extensions.json
+ D specs/433_discharge_postblockingsettles_residual/.return-meta.json
+ D specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/.return-meta.json
+ M specs/549_trace_decide_dependency_on_vacuous_run_theorems/.return-meta.json
+ M specs/TODO.md
+ M specs/events.jsonl
+ M specs/state.json
+```
+
+Every entry is either an orchestration file for this dispatch (`specs/549_.../.return-meta.json`)
+or one of the pre-existing dirty paths recorded in the Phase 2 baseline before this task wrote
+anything. Task 549's own committed writes — `probes/`, `summaries/`, `handoffs/`, `plans/` — are
+already in the tree as commits `5efa7b0e4` and `6a8118cef` and therefore do not appear here.
+
+**No file outside `specs/**` was created, modified, or deleted by this task.**

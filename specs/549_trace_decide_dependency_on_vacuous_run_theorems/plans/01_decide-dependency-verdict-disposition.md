@@ -1,7 +1,7 @@
 # Implementation Plan: Task #549
 
 - **Task**: 549 - Trace whether `FormalSystem.Metalogic.Decidability.decide` depends on the six now-vacuous `_run` theorems, and correct the affected status claims if it does
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 3.75 hours
 - **Dependencies**: 463 (mathematical premise + `file_scope` serialization edge on `MintBound.lean`)
 - **Research Inputs**: `specs/549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md`
@@ -318,21 +318,21 @@ disposition recommendation, and the follow-up briefs — as this task's summary 
 
 ---
 
-### Phase 6: Final gate — build green, read-only re-audit [IN PROGRESS]
+### Phase 6: Final gate — build green, read-only re-audit [COMPLETED]
 
 **Goal**: Discharge the dispatch's build constraint and prove the tree is unchanged.
 
 **Tasks**:
-- [ ] Run `lake build` from the repo root; capture the exit status and the tail of the output.
-- [ ] If red, attribute by failing module against Phase 2's baseline: this task modifies no Lean
+- [x] Run `lake build` from the repo root; capture the exit status and the tail of the output.
+- [x] If red, attribute by failing module against Phase 2's baseline: this task modifies no Lean
       file, so any failure is pre-existing or concurrent. Record it, do not repair it, and name the
       owner.
-- [ ] Confirm zero `sorry` and zero axiom additions attributable to this task (nothing under
+- [x] Confirm zero `sorry` and zero axiom additions attributable to this task (nothing under
       `FormalSystem/**` changed; `probes/*.lean` are not part of the library build).
-- [ ] Re-run the Phase 2 read-only audit: `git status --porcelain` shows changes only under
+- [x] Re-run the Phase 2 read-only audit: `git status --porcelain` shows changes only under
       `specs/549_trace_decide_dependency_on_vacuous_run_theorems/**` plus the pre-existing dirty
       paths recorded in Phase 2.
-- [ ] Append the build result and final audit to `probes/probe-evidence.md`.
+- [x] Append the build result and final audit to `probes/probe-evidence.md`.
 
 **Timing**: 0.75 hours
 
@@ -361,15 +361,15 @@ deferred to the follow-up retirement task, which owns `MintBound.lean`.
 
 ## Testing & Validation
 
-- [ ] All six probes elaborate cleanly with `lake env lean` and reproduce the four load-bearing
+- [x] All six probes elaborate cleanly with `lake env lean` and reproduce the four load-bearing
       numbers (zero suspect hits x 6 targets; MintBound-reach 0; reverse-dependents 0; `Widen.lean`
       axioms `[propext, Classical.choice, Quot.sound]`).
-- [ ] `#print axioms` output for `decide` and `sound_of_isValid` matches the `pcq pinned:C14`
+- [x] `#print axioms` output for `decide` and `sound_of_isValid` matches the `pcq pinned:C14`
       column in `docs/theorem-index.md`.
-- [ ] `git diff --quiet -- docs/theorem-index.md` and `git diff --quiet -- FormalSystem/` both exit 0.
-- [ ] `lake build` green (or a red result attributed, per module, to a pre-existing/concurrent cause).
-- [ ] No `sorry` and no axiom additions.
-- [ ] Deliverable contains all seven sections and states the verdict unhedged.
+- [x] `git diff --quiet -- docs/theorem-index.md` and `git diff --quiet -- FormalSystem/` both exit 0.
+- [x] `lake build` green (or a red result attributed, per module, to a pre-existing/concurrent cause).
+- [x] No `sorry` and no axiom additions.
+- [x] Deliverable contains all seven sections and states the verdict unhedged.
 
 ## Artifacts & Outputs
 
