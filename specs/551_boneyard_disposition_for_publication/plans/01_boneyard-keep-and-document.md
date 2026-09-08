@@ -179,31 +179,35 @@ before-state that Phase 10 will re-verify against.
 
 ---
 
-### Phase 2: Make the Inventory Generator Archive-Aware [NOT STARTED]
+### Phase 2: Make the Inventory Generator Archive-Aware [COMPLETED]
 
 **Goal**: Remove the mechanical cause of D1/D2 — the archive is the one tree whose counts the
 generator cannot see — without changing a single byte of current output.
 
 **Tasks**:
-- [ ] Re-confirm zero `BEGIN GENERATED` and zero `INVENTORY: hand-maintained` markers exist under
+- [x] Re-confirm zero `BEGIN GENERATED` and zero `INVENTORY: hand-maintained` markers exist under
       `FormalSystem/Boneyard/`, so un-pruning cannot activate latent work.
-- [ ] Drop `"Boneyard"` from the directory filter in `markdown_targets()`
+- [x] Drop `"Boneyard"` from the directory filter in `markdown_targets()`
       (`scripts/check-module-invariants.sh`), leaving `.git`, `specs`, `.claude`, `.lake` and
       `node_modules` pruned. Note in a comment why the archive is now walked (its README owns the
       archive's counts and must be gated like every other README).
-- [ ] Teach `scan()`'s `rows=totals` branch to label correctly when the scan base is itself the
+- [x] Teach `scan()`'s `rows=totals` branch to label correctly when the scan base is itself the
       archive. Today it computes `live = live_files(directory, ".lean")` and separately collects
       files whose path contains `/Boneyard/`; with `dir=FormalSystem/Boneyard` both sets are the
       same 168 files, so the block would emit a "Live `.lean` files" row for archived code.
       Emit archive-shaped rows instead (archived file count, archived line count, top-level
       subdirectory count, archive-directory count).
-- [ ] Give the `rows=subdirs` branch a way to represent a README-only subtree. `scan()` currently
+- [x] Give the `rows=subdirs` branch a way to represent a README-only subtree. `scan()` currently
       does `if not members: continue`, which would silently drop all 9 tombstones from a generated
       archive inventory — a regression against today's hand-typed table, which lists them.
-- [ ] Document any new marker option in the `--emit-inventory` header comment block, which is the
+- [x] Document any new marker option in the `--emit-inventory` header comment block, which is the
       generator's documented option surface.
-- [ ] Run `bash scripts/check-module-invariants.sh --emit-inventory --check`: it must pass with no
-      file reported changed, because no marker has been registered yet.
+- [x] Run `bash scripts/check-module-invariants.sh --emit-inventory --check`: it must pass with no
+      file reported changed, because no marker has been registered yet. *(deviation: altered — it
+      passed byte-for-byte at the moment of the edit; a later re-run reported one changed file,
+      `README.md`'s `Live lines` rollup moving 282,014 -> 282,051, which is the concurrent
+      live-tree `WorldHistory` -> `ConvexHistory` work and not this phase. Diff inspected
+      line-by-line to confirm; the file was restored untouched.)
 
 **Timing**: 2 hours
 
@@ -223,7 +227,10 @@ does not, add the variant the research anticipated and record the correction.
 **Files to modify**:
 - `scripts/check-module-invariants.sh` - `markdown_targets()` filter; `scan()` totals labelling
   and empty-subdir representation; `--emit-inventory` option documentation
-- `scripts/lib/live_walk.py` - only if the Scope Hypothesis above is refuted
+- `scripts/lib/live_walk.py` - only if the Scope Hypothesis above is refuted *(not modified:
+  the Scope Hypothesis was CONFIRMED — `live_subdirs("FormalSystem/Boneyard")` returns the 39
+  subtree directories and `live_files` returns all 168 archived files, so no Boneyard-aware
+  variant was needed. The research report's expectation is corrected here.)*
 
 **Verification**:
 - `bash scripts/check-module-invariants.sh --emit-inventory --check` passes and reports **zero**

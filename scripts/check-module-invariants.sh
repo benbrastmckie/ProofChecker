@@ -114,7 +114,23 @@ RUN_BUILD=1
 #   rows=loose|subdirs|both|totals
 #                           which rows to emit (default both); `totals` emits the
 #                           live/archived file and line rollup for dir= instead
-#                           of a per-file listing
+#                           of a per-file listing. When dir= is the archive itself
+#                           -- any path with a `Boneyard` component -- `totals`
+#                           emits ARCHIVE-shaped rows instead of live-shaped ones:
+#                           archived file count, archived line count, top-level
+#                           subdirectory count, and the repository's
+#                           archive-directory count (the same figure B0 asserts).
+#                           Live-shaped rows would be a category error there: with
+#                           dir=FormalSystem/Boneyard the "live" and "archived"
+#                           sets are the same files, so the block would label
+#                           archived code as live.
+#   empty=skip|include      whether a subdirectory with no `.lean` members gets a
+#                           subdirs row (default skip). The archive's README-only
+#                           tombstone subtrees are real inventory entries -- the
+#                           code was deleted and the README retained as the
+#                           historical record -- so the archive's table sets
+#                           `empty=include` and they are listed with a zero count
+#                           rather than silently dropped.
 #   filter=all|aggregators|non-aggregators
 #                           restrict the loose rows; an aggregator is a loose
 #                           `X.lean` with a sibling directory `X/` (default all)
@@ -167,10 +183,20 @@ TODO_DESC = "<!-- TODO: add description -->"
 
 
 def markdown_targets():
+    """Every markdown file the generator is allowed to touch.
+
+    `Boneyard` is deliberately NOT pruned here, although every *source* traversal
+    in this harness excludes it by name. The archive's README owns the archive's
+    own counts, and pruning it made that README the one README in the tree whose
+    numbers were hand-typed and ungated -- which is exactly how three mutually
+    disagreeing archive file counts came to ship. Walking it costs nothing on a
+    tree with no markers: this walk gains the archive's markdown files, and only
+    the ones that actually carry a BEGIN GENERATED or INVENTORY marker do any work.
+    """
     out = []
     for root, dirs, files in os.walk("."):
         dirs[:] = [d for d in dirs
-                   if d not in (".git", "specs", ".claude", ".lake", "node_modules", "Boneyard")]
+                   if d not in (".git", "specs", ".claude", ".lake", "node_modules")]
         for f in files:
             if f.endswith(".md"):
                 out.append(os.path.normpath(os.path.join(root, f)))
@@ -208,16 +234,48 @@ def is_separator(cells):
     return bool(cells) and all(SEP_CELL_RE.match(c.replace(" ", "")) for c in cells if c != "")
 
 
+def is_archive_base(directory):
+    """True when `directory` is itself the archive, or lives inside it.
+
+    Tested on the directory NAME, never a path prefix -- the same rule ADR-005
+    fixed and B0 asserts. A scan rooted at the archive must not describe its
+    contents as live: `live_files` only prunes subdirectories *named* Boneyard,
+    so with dir=FormalSystem/Boneyard it returns all 168 archived files and would
+    label every one of them live.
+    """
+    parts = os.path.normpath(directory).split(os.sep)
+    return "Boneyard" in parts
+
+
+def archive_dir_count(root="FormalSystem"):
+    """Directories named `Boneyard` anywhere under `root` -- the figure B0 asserts."""
+    n = 0
+    for _r, dirs, _f in os.walk(root):
+        n += sum(1 for d in dirs if d == "Boneyard")
+    return n
+
+
 def scan(directory, opts):
     """Return [(key, [numeric cells...], link_target_or_None)] for `directory`."""
     rows = opts.get("rows", "both")
     filt = opts.get("filter", "all")
     cols = opts.get("cols", "lines")
     want_link = opts.get("link", "no") == "yes"
+    keep_empty = opts.get("empty", "skip") == "include"
 
     subdir_names = {os.path.basename(p) for p in live_subdirs(directory)}
     out = []
     if rows == "totals":
+        if is_archive_base(directory):
+            archived = live_files(directory, ".lean")
+            out.append(("Archived `.lean` files", ["{:,}".format(len(archived))], "literal"))
+            out.append(("Archived lines",
+                        ["{:,}".format(sum(line_count(f) for f in archived))], "literal"))
+            out.append(("Top-level subdirectories",
+                        ["{:,}".format(len(live_subdirs(directory)))], "literal"))
+            out.append(("Archive directories in the repository",
+                        ["{:,}".format(archive_dir_count())], "literal"))
+            return out
         live = live_files(directory, ".lean")
         archived = [f for f in
                     (os.path.join(r, n)
@@ -246,7 +304,7 @@ def scan(directory, opts):
     if rows in ("subdirs", "both"):
         for sub in live_subdirs(directory):
             members = live_files(sub, ".lean")
-            if not members:
+            if not members and not keep_empty:
                 continue
             key = os.path.basename(sub) + "/"
             total = sum(line_count(m) for m in members)
