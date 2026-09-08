@@ -85,12 +85,18 @@ not by inspection (see Verification).
   `swapBL_involution`, `tr_swapBL`, nine `MinusFormula.swapBL_*` simp lemmas,
   `swapBL_df_valid_of_predOrder`; 83 occurrences) carries `BL` as a **suffix**, so Phase 1's
   token scan — anchored at `^` or `_` — missed it. Renamed to the `swapMinus` family.
-- **Phases 3–6 shared one `lake build` instead of one each** *(altered)*: forced by a
-  concurrency collision with task 193, which was editing
-  `Metalogic/SoundnessLemmas/FrameClassVariants.lean` and `Metalogic/Soundness.lean` throughout.
-  Two full builds were killed mid-run and a third failed on task 193's own in-progress broken
-  proof term — none on anything this task changed. Each phase was instead verified by a
-  mechanical purity proof (below), and the shared build then came back green over all 2615 jobs.
+- **Phases 3–6 shared one `lake build` instead of one each** *(altered)*: forced by running a
+  tree-wide rename concurrently with task 193's dispatch, which owned
+  `Metalogic/Soundness.lean` and `Metalogic/SoundnessLemmas/FrameClassVariants.lean` and was
+  editing them throughout. Two full-package builds were **terminated by the orchestrator** —
+  the first for holding the build-guard lock with task 193's single-module build queued behind
+  it, the second on relaunch — and a third failed while elaborating task 193's uncommitted
+  intermediate state. None failed on anything this task changed, but neither could that be
+  concluded from the build itself: a tree-wide build during a concurrent dispatch elaborates
+  the other dispatch's unverified edits alongside its own, so green would not have certified
+  this rename and red would not have indicted it. That is a consequence of the tree-wide build,
+  not a defect of task 193's. Each phase was instead verified by a mechanical purity proof
+  (below), and the final build and gate were re-run on a clean tree (see Verification).
 - **Two measured figures differed from the plan by more than 10% and were re-scoped in the
   inventory rather than absorbed** *(altered)*: `.lean` files carrying old vocabulary is **55**,
   not 80 (the plan's pattern also matched `BLOCKED`, `α_star`, `_start`, `_block`); the C14
@@ -149,16 +155,48 @@ not by inspection (see Verification).
 
 ## Follow-ups
 
-- **Concurrency, worth recording**: task 193 was implementing on the same tree throughout, and
-  outside its declared `file_scope` (it also modified `Semantics/Truth.lean`,
-  `Semantics/LexCarrier.lean` and `Semantics/DurationClassification.lean`). Two of this task's
-  builds were killed and one failed on 193's broken intermediate state. Sequencing a tree-wide
-  rename against a concurrent per-file sweep costs real time; the plan named only task 557.
+- **A tree-wide rename must not be dispatched concurrently with any other implementation
+  dispatch.** This task's plan named only task 557 as a sequencing dependency; task 193 was live
+  on the same working tree for the whole run and that gap cost real time — two full-package
+  builds terminated by the orchestrator, a third confounded by another dispatch's uncommitted
+  edits, and two commits that absorbed each other's work (see the two entries below). Task 193
+  stayed inside its declared `file_scope` (`Automation/Tactics/`,
+  `Metalogic/SoundnessLemmas/`, `Metalogic/Soundness.lean`) for its entire dispatch; an earlier
+  draft of this summary recorded a scope breach by it, which was wrong — the three
+  `Semantics/` files cited there (`Truth.lean`, `LexCarrier.lean`,
+  `DurationClassification.lean`) were modified by **this task's** phase-3 rename
+  (`BLTruth.always_iff` -> `MinusTruth.always_iff`, `bl_soundness_ztime_succ` ->
+  `minus_soundness_ztime_succ`, `BLSchemaValidity.*` -> `MinusSchemaValidity.*`), and
+  `git log -1` on each returns `d370581c5`, this task's own commit.
+- **Two commits absorbed the other dispatch's work, in both directions.** `ea1a561c9` (this
+  task's phase 2) carries 16 lines of task 193's `simp only [truth_norm]` conversions in
+  `Metalogic/Soundness.lean` alongside its own single docstring-path line; task 193's
+  `357212808` carries this task's four-line `bl_soundness*` -> `minus_soundness*` rename of the
+  same file. Both commits are correct in content and mis-attributed in authorship; neither was
+  rewritten, because two dispatches were live. The mechanism on this side was
+  `git add -- FormalSystem/`, a **directory-wide stage**. `git add -A` was attempted once and
+  correctly blocked by `guard-destructive-git.sh` — a directory stage slips past that guard with
+  the identical failure mode and should carry the identical prohibition.
+- **`git-snapshot.sh` run without `--no-revert`** by this task reverted the whole working tree,
+  including task 193's in-flight edits. Everything was recovered from `stash@{0}` by single-path
+  `git show stash@{0}:<path> > <path>`; task 193 had independently re-derived its work, so
+  nothing was lost. The script's revert is repo-wide even though its safety marker is
+  task-scoped.
 - **`FormalSystem/Semantics/README.md` carried four stale identifier names** predating this task
   (`BLValidDiscrete`, `BLValidDiscreteSucc`, `BLValidDedekind`, `bl_soundness_discrete_succ` —
   retired by the earlier z/d/r wave). Corrected here to their live `MinusValid*` forms.
 - **`ProofSystem/Axioms.lean`, `Semantics/FrameClassValidity.lean` and `Semantics/Validity.lean`
   each claimed a paper system named `TM⁺_r`.** The paper has no such name; corrected to `TM_r`.
+- **Recommendation for every future rename plan: verify the C14 baseline by resolution, never by
+  enumeration.** This plan enumerated ~24 baseline rows by hand; the true figure was 17, and two
+  further rows — `blCompactBase` and `blCompactDense` — named renamed declarations and appeared
+  in no hand list. They were caught only by checking that **all 101** names in the `C14BASE`
+  heredoc resolve to a live declaration in `FormalSystem/`, and they would otherwise have failed
+  the gate silently after the rename was already committed. The check is three lines of script
+  and is worth making a standing step: for every name in `C14BASE`, grep the live tree for its
+  declaration; assert `C14BASE` and `C14LEAN` list the same names in the same order; and diff the
+  two heredocs' `depends on axioms: [...]` tails against the pre-task script to prove no axiom set
+  moved.
 - The six drifted paper anchors remain owned by the separate re-pin work; nothing here touched a
   `verbatim:` block, a `sha256:` line, a manifest row, or either sentinel.
 
