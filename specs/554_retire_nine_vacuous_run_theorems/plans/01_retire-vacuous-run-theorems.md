@@ -1,7 +1,7 @@
 # Implementation Plan: Task #554
 
 - **Task**: 554 - Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 5 hours
 - **Dependencies**: None outstanding (463 complete, 549 complete)
 - **Research Inputs**: `specs/554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md`
@@ -456,7 +456,7 @@ falsifies. If entry 22 turns out to name a retired theorem, amend it and record 
 
 ---
 
-### Phase 6: Full verification gate [NOT STARTED]
+### Phase 6: Full verification gate [COMPLETED]
 
 **Goal**: Discharge the dispatch's acceptance criteria end to end, and confirm the meaningful
 regression check rather than the trivially-passing one.
