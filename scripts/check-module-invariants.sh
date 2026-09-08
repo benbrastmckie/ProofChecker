@@ -50,6 +50,10 @@
 #   C23 Naming regressions: zero live `lemma`, no Uppercase_x name outside the two
 #       recorded classes, no new outer-shadows-inner bare-declaration pair. Computed
 #       by EXTENDING C16's namespace walker, not by a fourth scanner
+#   C24 Every module in the FormalSystem root closure transitively imports
+#       FormalSystem.Init, via `lake exe checkInitImports` -- the root file is the
+#       single place repository-wide linter options and tactic imports are
+#       inherited from, so a module with no path to it silently opts out
 #   C9D Task-number citations under docs/ (computed always, soft by default)
 #   INV Every `<!-- BEGIN GENERATED: inventory -->` block in the tree is current
 #
@@ -64,7 +68,7 @@
 #
 # Usage:
 #   bash scripts/check-module-invariants.sh            # all checks
-#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16 (fast structural pass)
+#   bash scripts/check-module-invariants.sh --no-build # skip C1/C2/C6/C16/C24 (fast structural pass)
 #   bash scripts/check-module-invariants.sh --emit-inventory          # rewrite generated inventory blocks
 #   bash scripts/check-module-invariants.sh --emit-inventory --check  # fail if a rewrite would change a byte
 #
@@ -525,6 +529,14 @@ ENFORCE_C21=${ENFORCE_C21:-1} # MainResults.lean names are all axiom-pinned (enf
 # this is enforced. Never flip it to 0; add a reasoned entry to the in-scanner exception
 # set instead, where the reason is read alongside the name it exempts.
 ENFORCE_C23=${ENFORCE_C23:-1} # naming regressions (enforced)
+# C24 asserts that every module in the FormalSystem root closure transitively imports
+# FormalSystem.Init, the root file repository-wide linter options and tactic imports are meant
+# to be inherited from. The adoption work landed in the same change that added this check, so
+# it is green from its first run and ships enforced with no soft period -- a soft window here
+# would only be a window in which the invariant could regress unnoticed. Never flip it to 0 to
+# quiet a failure; add the import at the offending module's own minimal element, or record a
+# genuinely-cannot-import module in `exceptions` in scripts/CheckInitImports.lean.
+ENFORCE_C24=${ENFORCE_C24:-1} # every module transitively imports FormalSystem.Init (enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -2629,6 +2641,65 @@ else
       | while IFS= read -r l; do note "only in ProofStepExport.lean: $l"; done
     note "both lists must be updated in the same change; neither file imports the other"
   fi
+fi
+echo
+
+# ---------------------------------------------------------------------------
+# C24: every FormalSystem module (transitively) imports FormalSystem.Init
+#
+# `FormalSystem/Init.lean` is this library's root file, modelled on `Mathlib.Init`
+# and on CSLib's `Cslib/Init.lean`: the single place from which repository-wide
+# linter options, `set_option` defaults and common tactic imports are meant to be
+# inherited. That guarantee is worth exactly as much as its weakest module -- a
+# file with no path to `Init` silently opts out of every option the root sets, and
+# nothing about a green build reveals it. This check is what makes the root's
+# promise an invariant rather than a convention.
+#
+# `lake exe checkInitImports` reads the real import graph out of the compiled
+# environment (`CoreM.withImportModules #[`FormalSystem]` plus ImportGraph's
+# transitive closure), not out of the text of the `import` lines, so it sees
+# inheritance through intermediate modules exactly as Lean does. The property is
+# carried by the eleven minimal elements of the internal DAG -- the modules with no
+# `FormalSystem.*` import of their own -- so the tree satisfies this with eleven
+# import lines, not one per module.
+#
+# Ships ENFORCED, with no soft period, and this is deliberate: unlike C8/C9/C10,
+# whose debt was still outstanding the day they were written, the adoption work
+# landed in the same change as this block, so the check is green from its first
+# run. A soft period here would only create a window in which the invariant could
+# regress unnoticed. Never flip ENFORCE_C24 to 0 to quiet a failure -- add the
+# missing import at the offending module's own minimal element instead, or, if the
+# module genuinely cannot depend on `FormalSystem.*` (the `ForMathlib` upstreaming
+# rule is the one live instance), record it in `exceptions` in
+# scripts/CheckInitImports.lean with its reason written beside it.
+#
+# Inside the RUN_BUILD guard because `CoreM.withImportModules` loads `.olean`s: the
+# check cannot run at all without a built tree, so under --no-build it reports
+# INFO and skips, exactly as C16 and C2 do.
+#
+# Negative-tested per docs/development/MODULE_INVARIANTS.md's "Adding a Check"
+# mandate: the import line was removed from one low-fan-out leaf, this block was
+# observed to report FAIL C24 with a non-zero script exit, and the line was
+# restored and the PASS re-observed. Re-run that test after any change to this
+# check's scope or to CheckInitImports.lean's exit path -- the executable
+# previously returned `diff.length.toUInt32`, which an 8-bit exit status truncates,
+# so it would have reported failure while handing the shell a 0 at any count that
+# happened to be a multiple of 256.
+# ---------------------------------------------------------------------------
+if [ "$RUN_BUILD" -eq 1 ]; then
+  C24_LOG=$(mktemp)
+  if lake exe checkInitImports >"$C24_LOG" 2>&1; then
+    pass C24 "every FormalSystem module transitively imports FormalSystem.Init"
+  else
+    MSG="module(s) in the FormalSystem root closure do not transitively import FormalSystem.Init"
+    if [ "$ENFORCE_C24" -eq 1 ]; then fail C24 "$MSG"; else soft C24 "$MSG (not yet enforced)"; fi
+    grep -m1 '^error: ' "$C24_LOG" | while IFS= read -r l; do note "$l"; done
+    tail -20 "$C24_LOG" | while IFS= read -r l; do note "$l"; done
+    note "add the import at the offending module's own minimal element (a module with no FormalSystem.* import), not one line per module"
+  fi
+  rm -f "$C24_LOG"
+else
+  info C24 "FormalSystem.Init transitive-import check skipped (--no-build)"
 fi
 echo
 

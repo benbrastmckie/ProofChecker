@@ -345,29 +345,29 @@ add Init to arbitrary non-minimal modules to force the count down.
 
 ---
 
-### Phase 5: Wire C24 into check-module-invariants.sh [NOT STARTED]
+### Phase 5: Wire C24 into check-module-invariants.sh [COMPLETED]
 
 **Goal**: Turn the now-clean checker into an enforced gate inside the invariants harness, following
 the harness's own five-part wiring shape and the C16 build-requiring template.
 
 **Tasks**:
 
-- [ ] Add a `C24` row to the `# Checks:` header block, describing it as: every `FormalSystem`
+- [x] Add a `C24` row to the `# Checks:` header block, describing it as: every `FormalSystem`
       module transitively imports `FormalSystem.Init`, via `lake exe checkInitImports`.
-- [ ] Add `ENFORCE_C24=${ENFORCE_C24:-1}   # every module transitively imports FormalSystem.Init (enforced)`
+- [x] Add `ENFORCE_C24=${ENFORCE_C24:-1}   # every module transitively imports FormalSystem.Init (enforced)`
       to the flags block near line 497, with the other `ENFORCE_C*` declarations.
-- [ ] Add the C24 check block following the **C16 template**: a `# ---` banner, a prose rationale
+- [x] Add the C24 check block following the **C16 template**: a `# ---` banner, a prose rationale
       explaining why the Init root exists (single place from which repo-wide linter/tactic imports
       are inherited) and why the check ships enforced with no soft period, then
       `if [ "$RUN_BUILD" -eq 1 ]; then` … `C24_LOG=$(mktemp)` … `lake exe checkInitImports` …
       `pass`/`fail` (with `soft` on `ENFORCE_C24=0`) … `note`-ed `tail` of the log on failure …
       `rm -f "$C24_LOG"` … `else info C24 "… skipped (--no-build)"; fi`.
-- [ ] The block **must** sit inside the `RUN_BUILD` guard: `CoreM.withImportModules` needs the
+- [x] The block **must** sit inside the `RUN_BUILD` guard: `CoreM.withImportModules` needs the
       built `.olean`s and cannot run under `--no-build`.
-- [ ] No new companion file is introduced, so the `# Companion files:` header block is unchanged.
-- [ ] Add a C24 row to the "What It Checks" table in `docs/development/MODULE_INVARIANTS.md`. Do
+- [x] No new companion file is introduced, so the `# Companion files:` header block is unchanged. *(deviation: altered — one companion file did change: `scripts/module-invariants-manifest.txt`'s `FormalSystem.Init` entry had to be deleted, because the root is now reachable and C6 fails on a manifest entry naming a reachable module. The manifest's own comment instructed exactly this deletion once the rewrite landed.)*
+- [x] Add a C24 row to the "What It Checks" table in `docs/development/MODULE_INVARIANTS.md`. Do
       **not** back-fill the missing C16–C23 rows (research D6; out of scope).
-- [ ] Commit at green.
+- [x] Commit at green.
 
 **Timing**: 1 hour
 

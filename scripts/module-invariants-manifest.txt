@@ -12,12 +12,12 @@
 # One module path per line; `#` starts a comment.
 
 # --- Root ------------------------------------------------------------------
-# The intended root file for FormalSystem (see FormalSystem/Init.lean itself and
-# scripts/CheckInitImports.lean). No live module imports it yet -- rewriting the
-# ~430-file import graph to route through it is an explicit, deferred follow-up
-# (see the task that introduced this file), not this line's concern. DELETE this
-# line when that rewrite lands and something in the build graph imports it.
-FormalSystem.Init
+# FormalSystem.Init used to be listed here as unreachable, with a note to delete
+# the line once the import adoption landed and something in the build graph
+# imported it. That has happened: the eleven minimal elements of the internal
+# import DAG now import it directly and every other live module inherits it, so
+# the root is reachable and C24 (`lake exe checkInitImports`) asserts that the
+# property holds tree-wide. Nothing belongs in this section.
 
 # --- Automation ------------------------------------------------------------
 # Benchmark harness. Its only importer is BimodalTest.Automation.ProofFirstTests,
