@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import Mathlib.Algebra.Order.Group.Int
 import Mathlib.Data.List.Basic
+import FormalSystem.Init
 
 /-!
 # Generic Ultimately-Periodic Decoding in Both Directions

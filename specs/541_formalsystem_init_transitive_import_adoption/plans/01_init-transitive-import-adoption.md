@@ -184,7 +184,7 @@ record the live figure and carry it forward; the 11-leaf structure does not depe
 
 ---
 
-### Phase 2: Low-Fan-Out Leaves [NOT STARTED]
+### Phase 2: Low-Fan-Out Leaves [COMPLETED]
 
 **Goal**: Exercise the adoption mechanism against the two cheapest minimal elements before
 invalidating anything expensive, so a surprise (new linter warnings, an elaboration change in a
@@ -192,18 +192,24 @@ invalidating anything expensive, so a surprise (new linter warnings, an elaborat
 
 **Tasks**:
 
-- [ ] Add `import FormalSystem.Init` to `FormalSystem/Automation/NormalizationAttr.lean` (fan-out
+- [x] Add `import FormalSystem.Init` to `FormalSystem/Automation/NormalizationAttr.lean` (fan-out
       17). Insert **after the last existing `import` line**, located by content, never by a fixed
       line number.
-- [ ] Add `import FormalSystem.Init` to `FormalSystem/Metalogic/Decidability/BiLasso/Periodic.lean`
+- [x] Add `import FormalSystem.Init` to `FormalSystem/Metalogic/Decidability/BiLasso/Periodic.lean`
       (fan-out 19), same insertion rule.
-- [ ] Build the two modules and their dependents through the guard:
+- [x] Build the two modules and their dependents through the guard *(deviation: altered — the
+      guard requires a recognized lake subcommand as its first wrapped argument, so the
+      invocation is `-- build <targets>`, not `-- <targets>`; and the dependent set was
+      computed from the import graph and narrowed to 34 targets, excluding the two whole-tree
+      roll-ups `FormalSystem.FormalSystem`/`FormalSystem.MainResults` and the out-of-closure
+      `FormalSystem.Automation.ProofStepExport`, which fails identically without this phase's
+      edits — see the summary's pre-existing-defect note)*:
       `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- FormalSystem.Automation.NormalizationAttr FormalSystem.Metalogic.Decidability.BiLasso.Periodic`
       run detached via `Bash(run_in_background: true)`.
-- [ ] Inspect the build output for **new** warnings, especially in `NormalizationAttr` — this is
+- [x] Inspect the build output for **new** warnings, especially in `NormalizationAttr` — this is
       the first of the three `Lean`-only attribute modules to gain the full 1582-module Mathlib
       environment, and is the cheapest place to observe R8 if it is real.
-- [ ] Commit at green.
+- [x] Commit at green.
 
 **Timing**: 0.5 hours
 
