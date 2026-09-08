@@ -109,3 +109,46 @@ lines      wc -l                            1598                836             
                             substitute for truth_norm at TruthAt-headed sites; the two sets are
                             disjoint in effect, as the plan's FCV:294 probe already showed.
 
+
+================================================================================
+## RUNNING TOTAL after Phases 2-4 (Class A sweep complete)
+================================================================================
+
+                                        Soundness.lean   FrameClassVariants.lean   Total
+criterion  grep -c 'simp only \[TruthAt'      5                  0                   5
+truth_norm grep -c 'truth_norm'               36                 19                 55
+
+  Criterion metric: 60 -> 5. Reduction = 55/60 = 91.7%.
+  Target was >= 80% (<= 12). MET, with 7 sites of margin.
+
+  Class A sites converted: 55 of 55 (Soundness 36, FrameClassVariants 19).
+  Class A sites reclassified to Class B because the proof stopped closing: ZERO.
+  Every Class A conversion was goal-preserving in practice, including the three
+  `at`-clause sites (Soundness 1236 `at h1'`, 1269 `at *`, 1303 `at h1`), which the
+  plan flagged as the riskiest of the Class A set.
+
+  The 5 remaining criterion sites are all Class B and all in Soundness.lean:
+  992, 1022, 1027, 1094, 1099 (the kPlus/kMinus/top family). They are Phase 5 work.
+
+  Diff shape audit (git diff 90abbe5ef -- FormalSystem/): 55 lines removed, 55 added.
+  Every removed line is a `simp only [TruthAt...]` tactic line; every added line is
+  `simp only [truth_norm]`. No theorem or lemma statement was touched.
+
+  Build: `lake build FormalSystem.Metalogic.Soundness` green at 1344 jobs after every
+  batch; `lake build FormalSystem.Metalogic.SoundnessLemmas.FrameClassVariants` green
+  at 876 jobs after every batch.
+
+### Incident: concurrent git-snapshot destroyed uncommitted work (recovered)
+
+  Between the Phase 3 batch-3 edit and its commit, a concurrent dispatch in the same
+  working tree ran `.claude/scripts/git-snapshot.sh`, which performs `git stash` +
+  `git reset --hard HEAD` repo-wide. That swept 8 verified-green uncommitted edits in
+  Soundness.lean into `stash@{0}` (git-snapshot-1788892063), together with the other
+  dispatch's specs/state.json changes. `git reflog` records it as
+  `HEAD@{0}: reset: moving to HEAD`.
+
+  Recovery: the stash was NOT popped (it holds another dispatch's work, and popping it
+  would inject that work into this task's tree). The 8 edits are mechanical and were
+  re-applied by hand and committed immediately. Nothing was lost. Post-incident, every
+  batch is committed as soon as its build goes green rather than at phase end.
+

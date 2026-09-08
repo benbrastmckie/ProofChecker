@@ -266,18 +266,18 @@ actual number reclassified.
 
 ---
 
-### Phase 3: Soundness.lean — Class A sweep, first block [IN PROGRESS]
+### Phase 3: Soundness.lean — Class A sweep, first block [COMPLETED]
 
 **Goal**: Convert the 28 Class A sites in the first half of `Soundness.lean` (lines 159–552),
 module green.
 
 **Tasks**:
-- [ ] Convert the 28 Class A sites at lines 159, 167, 175, 183, 192, 201, 212, 221, 226, 237, 246,
+- [x] Convert the 28 Class A sites at lines 159, 167, 175, 183, 192, 201, 212, 221, 226, 237, 246,
       255, 265, 276, 286, 306, 318, 389, 399, 422, 455, 468, 500, 511, 521, 530, 541, 552 to
-      `simp only [truth_norm]` (re-derive by grep; line numbers shift as edits land)
-- [ ] Batch at most 10 sites, then `lake build FormalSystem.Metalogic.Soundness`
-- [ ] Reclassify-and-revert any site that does not close; leave it for Phase 5
-- [ ] Commit each green batch
+      `simp only [truth_norm]` (re-derive by grep; line numbers shift as edits land) *(all 28 converted, zero reclassified; grep re-derivation matched the plan's line list exactly)*
+- [x] Batch at most 10 sites, then `lake build FormalSystem.Metalogic.Soundness` *(deviation: altered — run through the mandatory build guard, detached. Batches of 10/10/8; all three green at 1344 jobs)*
+- [x] Reclassify-and-revert any site that does not close; leave it for Phase 5 *(no site required reverting)*
+- [x] Commit each green batch
 
 **Timing**: 1.5 hours
 
@@ -298,21 +298,21 @@ module green.
 
 ---
 
-### Phase 4: Soundness.lean — Class A sweep, second block [NOT STARTED]
+### Phase 4: Soundness.lean — Class A sweep, second block [COMPLETED]
 
 **Goal**: Convert the remaining 9 Class A sites in `Soundness.lean` (lines 692–1306), taking the
 criterion metric to its target. This is the phase at which the completion criterion should
 mechanically pass.
 
 **Tasks**:
-- [ ] Convert the 9 Class A sites at lines 692, 702, 792, 992, 1236, 1249, 1269, 1303, 1306 to
-      `simp only [truth_norm]` (re-derive by grep)
-- [ ] `lake build FormalSystem.Metalogic.Soundness` after the batch
-- [ ] Re-run the criterion metric across both files and record the running total in `baseline.txt`.
-      Expected: 60 → 4 (93% reduction) if nothing was reclassified
-- [ ] If the metric has not reached ≤ 12, identify which sites remain and whether any Class A site
-      was reclassified; state the number plainly rather than adjusting the target
-- [ ] Commit
+- [x] Convert the 9 Class A sites at lines 692, 702, 792, 992, 1236, 1249, 1269, 1303, 1306 to
+      `simp only [truth_norm]` (re-derive by grep) *(deviation: altered — 8 of the 9 converted. Line 992 is Class B, not Class A: its list mixes Formula.and/neg/kPlus/kMinus with TruthAt. The plan's own Class B enumeration omitted it; grep re-derivation caught it. 992 is deferred to Phase 5)*
+- [x] `lake build FormalSystem.Metalogic.Soundness` after the batch *(green, 1344 jobs)*
+- [x] Re-run the criterion metric across both files and record the running total in `baseline.txt`.
+      Expected: 60 → 4 (93% reduction) if nothing was reclassified *(observed 60 → 5, a 91.7% reduction. The 5 rather than 4 is the line-992 correction above, not a reclassification: zero Class A sites failed to convert)*
+- [x] If the metric has not reached ≤ 12, identify which sites remain and whether any Class A site
+      was reclassified; state the number plainly rather than adjusting the target *(metric reached 5, well inside ≤ 12; remaining sites are Soundness 992, 1022, 1027, 1094, 1099, all Class B)*
+- [x] Commit
 
 **Timing**: 1 hour
 
@@ -336,7 +336,7 @@ criterion metric across both files after the batch and writing the observed tota
 
 ---
 
-### Phase 5: Class B caveat sites and `swap_norm` collapse [NOT STARTED]
+### Phase 5: Class B caveat sites and `swap_norm` collapse [IN PROGRESS]
 
 **Goal**: Collapse the 13 `Formula.swap_temporal_*` lists to `swap_norm` (mechanical, probe-
 confirmed), and convert as many of the 26 Class B syntax-lemma-mixed sites as can be re-derived
