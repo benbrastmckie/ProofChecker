@@ -24,7 +24,8 @@ than deferred debt.
 | File | Lines | Description |
 |------|------:|-------------|
 | `Backward.lean` | 211 | <!-- TODO: add description --> |
-| `BaseLanguageSoundness.lean` | 551 | <!-- TODO: add description --> |
+| `BaseLanguageSoundness.lean` | 613 | <!-- TODO: add description --> |
+| `DenseObstructionTransfer.lean` | 287 | Machine-checked evidence that neither closed row's separating witness transfers to the dense classes: `Sp` is a theorem of both `TM_d` and `TM_dc` (`sp_derivable_dense`, `sp_derivable_rtime`), and `Z1` is refuted on the flow frame over ℚ (`not_blValidDense_z1`) |
 | `Fragment.lean` | 190 | <!-- TODO: add description --> |
 | `FragmentCompactness.lean` | 150 | <!-- TODO: add description --> |
 | `SpCountermodel.lean` | 390 | CEB's failing half: native BL soundness for TM against `Semantics/BLFrame.lean`'s `TaskFrame`-free semantics (`blFrameValid_of_axiom`, `blFrameValid_of_derivation`), the two-fibre countermodel `ℤ ⊕ ℝ`, and the deliverables `not_derivable_sp` and `tmCompleteBase_refuted` |
@@ -52,6 +53,11 @@ than deferred debt.
   `BLFrame` semantics, with `blFrameValid_of_derivation` supplying the soundness
   step the composition route could not
 - `not_bl_derivable_z1` / `tmCompleteZTime_refuted` — the same for the CEF row over ℤ-time
+- `sp_derivable_dense` / `sp_derivable_rtime` / `not_blValidDense_z1` — the two closed rows'
+  separating witnesses provably fail to transfer to `.Dense` and `.RTime`: `Sp` is a *theorem* of
+  both open systems, and `Z1` is not a validity of the dense class. Evidence about the two open
+  rows, and **not** a completeness result; the four-row status is in
+  `TMCompletenessReduction.lean`'s module docstring
 - `starDerivable_ofFormula_iff` — conservativity of TM⋆ over TM⁺ in both directions
 
 ## Related Documentation

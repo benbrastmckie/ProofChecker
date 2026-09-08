@@ -158,7 +158,7 @@ the deviation.
 
 ---
 
-### Phase 2: Neither closed row's obstruction transfers to Dense [NOT STARTED]
+### Phase 2: Neither closed row's obstruction transfers to Dense [COMPLETED]
 
 **Goal**: Machine-check report F5 in a new module: `Sp` (the `.Base` dichotomy witness) is a
 **TM_d theorem**, and `Z1` (the `.Discrete` witness) is **not `BLValidDense`**. Together these are
@@ -166,23 +166,34 @@ the positive evidence behind the Dense verdict — the Dense class does not spli
 H/G-definable subclasses, so no dichotomy witness is available.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` with the
+- [x] Create `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` with the
       standard copyright header (`bash scripts/check-copyright-headers.sh` must pass) and a module
       docstring naming this file as the F5 record.
-- [ ] Land `sp_derivable_dense` from report Appendix A.2. Use `le_refl FrameClass.Dense` and
+- [x] Land `sp_derivable_dense` from report Appendix A.2. Use `le_refl FrameClass.Dense` and
       `FrameClass.base_le _` for the `minFrameClass` side conditions — the report's Tactic Survey
       records that `by decide` **fails** here (free variables in the expected type); do not
       rediscover this.
-- [ ] Land `sp_derivable_rtime` by the `Dense ≤ RTime` lift.
-- [ ] Build the ℚ countermodel refuting `Z1` at `.Dense`: `TemporalOrder.of ℚ`,
+- [x] Land `sp_derivable_rtime` by the `Dense ≤ RTime` lift. *(deviation: altered — there is no
+      `DerivationTree` frame-class weakening lemma in the tree, so the `.Dense` derivation is
+      restated at `.RTime` with `show FrameClass.Dense ≤ FrameClass.RTime from trivial` as the
+      side condition, rather than transported along a lift.)*
+- [x] Build the ℚ countermodel refuting `Z1` at `.Dense`: `TemporalOrder.of ℚ`,
       `multiFamTaskFrameGen` at `Unit`, valuation `p ↦ 1 ≤ w.2`, history `multiFamHistoryGen () 0`.
       Mirror `Z1Countermodel.lean`'s structure (`_atom_iff`, `_gp_iff`, the three `Z1`-part lemmas)
       but **do not** reuse `z1D = ℚ ×ₗ ℤ`, which is not densely ordered.
-- [ ] Prove `not_blValidDense_z1 (p : Atom) : ¬ BLValidDense (Conservativity.Z1 (BLFormula.atom p))`
+- [x] Prove `not_blValidDense_z1 (p : Atom) : ¬ BLValidDense (Conservativity.Z1 (BLFormula.atom p))`
       by exhibiting that countermodel, with the `DenselyOrdered ℚ` instance discharging
       `FrameClass.Sat .Dense`.
-- [ ] Wire the module into `FormalSystem/Metalogic/Conservativity.lean`'s import list and add a row
+- [x] Wire the module into `FormalSystem/Metalogic/Conservativity.lean`'s import list and add a row
       to `FormalSystem/Metalogic/Conservativity/README.md`.
+
+- [x] *(deviation: added — `attribute [nolint defsWithUnderscore] sp_derivable_dense
+      sp_derivable_rtime`. The two Challenge signatures are `DerivationTree`-valued, hence `def`s,
+      and `check-module-invariants.sh`'s C16 `env_linter` gate rejects snake_case `def` names.
+      The plan's signatures are kept verbatim and the exemption is documented in-source with its
+      justification; the alternative — restating both at `BaseLanguage.Derivable`, i.e.
+      `Nonempty ∘ DerivationTree` — was tried, builds green, and was reverted because it weakens
+      the recorded Challenge statement from data to `Prop`.)*
 
 **Timing**: 2 hours
 
