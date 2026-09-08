@@ -1,7 +1,7 @@
 # Implementation Plan: Boneyard Disposition for Publication
 
 - **Task**: 551 - Boneyard disposition for publication
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 11 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/551_boneyard_disposition_for_publication/reports/01_boneyard-disposition-recommendation.md
@@ -131,26 +131,26 @@ owns the two live-tree files — no two phases in a wave write the same file. Ph
 all write `FormalSystem/Boneyard/README.md` and are therefore serialized against each other by
 construction, not by data dependency alone.
 
-### Phase 1: Record the KEEP Decision and Capture the Verified Baseline [NOT STARTED]
+### Phase 1: Record the KEEP Decision and Capture the Verified Baseline [COMPLETED]
 
 **Goal**: Convert the research recommendation into a durable decision record, and freeze the
 before-state that Phase 10 will re-verify against.
 
 **Tasks**:
-- [ ] Capture the baseline: run `bash scripts/check-module-invariants.sh` (with build) and record
+- [x] Capture the baseline: run `bash scripts/check-module-invariants.sh` (with build) and record
       the full output; record `find .lake/build -name '*.olean' | wc -l`,
       `find .lake -path '*Boneyard*' -name '*.olean' | wc -l`, the C3 live-sorry count, and the
       archive census (`.lean` file count, line count, top-level entry count).
-- [ ] Write `docs/architecture/ADR-009-Boneyard-Retention.md` (next free number; ADR-001, 004,
+- [x] Write `docs/architecture/ADR-009-Boneyard-Retention.md` (next free number; ADR-001, 004,
       005, 006, 007, 008 exist). Status: Accepted. Content: the KEEP verdict; why CUT ENTIRELY is
       unavailable (the `04-Metalogic.tex:389` citation, 46 live `.lean` docstrings, ADR-005's
       B0/C11 gates, `scripts/boneyard-import-waivers.txt`); why SPLIT is not worth its cost
       (~2% of archive lines removable, and its largest member records a *refuted* route — the
       category with the most scholarly value); what KEEP obliges (counts generated not typed,
       provenance keyed to durable anchors, a publication-facing framing).
-- [ ] Cross-link the new ADR from `docs/architecture/README.md` in whatever form that file already
+- [x] Cross-link the new ADR from `docs/architecture/README.md` in whatever form that file already
       uses for ADR-005 through ADR-008.
-- [ ] Confirm the ADR contains no task-number citations (`.claude/rules/no-task-references-in-deliverables.md`;
+- [x] Confirm the ADR contains no task-number citations (`.claude/rules/no-task-references-in-deliverables.md`;
       `docs/` is covered by C9D, computed and reported though not yet enforced).
 
 **Timing**: 1 hour
