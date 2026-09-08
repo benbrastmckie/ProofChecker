@@ -44,15 +44,16 @@ re-derives every hash below directly from the live paper file on every run.
 | Line count at the ten-anchor drift correction | 4867 |
 | Ten-anchor drift correction re-pin (UTC) | 2026-09-02T23:08Z (see "Drift correction (2026-09-02): ten-anchor re-pin" below) |
 | Base commit at the z/d/r rename-absorption re-pin (paper repo `git HEAD`; file dirty against it, and the last commit to touch the file is `acfa75fdd270dd69145c76b788144b1ce0aee98c`) | `f61bbd75d3aa0c777fdeb91804868145f7169684` |
-| **File checksum, re-pinned at the z/d/r rename-absorption (sha256, current authoritative pin)** | `c3846c1ef93991228f2e309c7d9831df732b5dec657157425cf593a0256d278e` |
-| Line count at the z/d/r rename-absorption | 4483 |
+| File checksum, first re-pin during the z/d/r rename-absorption (sha256, superseded within the hour) | `c3846c1ef93991228f2e309c7d9831df732b5dec657157425cf593a0256d278e` (line count 4483) |
+| **File checksum, re-pinned after the in-flight `def:BX-z` follow-on drift (sha256, current authoritative pin)** | `1b3c33a2b6a445b14e13e2f59b10c02b5140bb00280a3191ef27448e63460aa5` |
+| Line count at that re-pin | 4452 |
 | z/d/r rename-absorption re-pin (UTC) | 2026-09-08T01:30Z (15 entries re-hashed, 9 anchors retired, 3 renamed anchors newly pinned; see "Drift correction and rename absorption (2026-09-07)" below) |
 
 <!-- PAPER_PATH: /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex -->
 <!-- PAPER_REPO_ROOT: /home/benjamin/Philosophy/Papers/PossibleWorlds -->
 <!-- PINNED_COMMIT: f61bbd75d3aa0c777fdeb91804868145f7169684 -->
-<!-- FILE_CHECKSUM: c3846c1ef93991228f2e309c7d9831df732b5dec657157425cf593a0256d278e -->
-<!-- LINE_COUNT: 4483 -->
+<!-- FILE_CHECKSUM: 1b3c33a2b6a445b14e13e2f59b10c02b5140bb00280a3191ef27448e63460aa5 -->
+<!-- LINE_COUNT: 4452 -->
 
 ### Drift correction and rename absorption (2026-09-07): the z/d/r wave
 
@@ -138,12 +139,19 @@ failure of `UZ`/`Z1` over non-Archimedean discrete orders; it is a pen-and-paper
 repository does not check, and it is recorded as `LIVE-UNPINNED` (not pinned as verified) if and
 when tree prose cites it.
 
-**Moving target during absorption.** The paper file changed on disk *while this correction was
-being written* (checksum `f3acc3ad…` → `c3846c1e…` between the Phase 2 re-hash and the Phase 3
-re-pin). Every anchor was re-derived against the post-change file before the sentinels were
-pinned, and the checker was re-run afterwards to confirm the quiet case-(a) pass against exactly
-the pinned bytes. Hashes were derived only via `check-paper-definitions.sh --resolve`; none was
-hand-written.
+**Moving target during absorption.** The paper file changed on disk *four times while this
+correction was being written*: `f3acc3ad…` → `c3846c1e…` between the re-hash and the first
+sentinel re-pin, then `c485a615…`, then `1b3c33a2…`. The first three were case (b) — no recorded
+definition drifted — but the fourth genuinely drifted `def:BX-z`: the author deleted the two
+`%% NEW CHANGE […]` editorial comment lines and the three commented-out sentences from inside the
+`Ddef` environment, leaving the live prose word-for-word identical. Because `resolve_env` hashes
+the whole environment, comment-only deletions are hash-visible; `def:BX-z` was therefore
+re-quoted and re-hashed (`385f73e8…` → `3e2af812…`) and the sentinels re-pinned a second time.
+Every anchor was re-derived against the then-current file before each pin, and the checker was
+re-run afterwards. Hashes were derived only via `check-paper-definitions.sh --resolve`; none was
+hand-written. A reader should expect this file's pin to be behind the live paper again by the
+time they read it — that is the condition this infrastructure exists to detect, not a defect in
+the pin.
 
 ### Anchor classification (2026-09-07): four `LIVE-UNPINNED` rows for the C15 gate
 
@@ -1210,6 +1218,10 @@ sha256: `116725ac133c7ce7660d6c32e3654c2e8456c03dcd1cf97cd3b254238c2d4c03`
 
 ### `def:BX-z` — the discrete Burgess–Xu tense logic BX_z (RENAMED from `def:TMplus-f`), and its ℤ-time narrowing
 
+**Re-hashed twice on 2026-09-07**: the second time for a comment-only deletion inside the
+environment (the `%% NEW CHANGE` editorial lines and three commented-out sentences), which changes
+the hash without changing a word of the live prose. The text below is the post-deletion state.
+
 **Renamed** from `def:TMplus-f` by the paper's 2026-09 z/d/r wave. Two substantive changes came
 with the rename, and in-tree prose that predates them is stale rather than merely mis-labelled:
 the axiom statements are no longer inlined (the definition cites `\S`Extensions for `UZ` and
@@ -1221,14 +1233,10 @@ now cites `prop:archimedean` for the failure of `UZ`/`Z1` over non-Archimedean d
 ```latex
 \begin{Ddef} \label{def:BX-z}
   The \textit{Discrete Burgess--Xu Tense Logic} \textbf{BX}$_\textsc{z}$ is the smallest extension of the base logic \textbf{BX} to include all instances of \textbf{\aref{UZ}} and \textbf{\aref{Z1}} presented in \textbf{\S\ref{sub:Extension}}.
-  % NEW CHANGE [Hölder consolidation]: the Hölder clause is cut from this definition; the justification that the Archimedean discrete orders are exactly Z-time lives in the footnote of \S\ref{sub:Extension}, which the sentence now cites. The former sentence also misattributed the group-theoretic fact to Z1.
-  % NEW CHANGE [footnote to appendix]: the failure of UZ and Z1 over non-Archimedean discrete orders is now cited from prop:archimedean in this appendix rather than from a footnote in the body.
   Since \textbf{\aref{UZ}} and \textbf{\aref{Z1}} fail over every discrete temporal order that is not Archimedean (\textbf{\ref{prop:archimedean}}), and the Archimedean discrete orders are exactly $\Z$-time (\textbf{\S\ref{sub:Extension}}), the discrete task frames over which \textbf{BX}$_\textsc{z}$ and \textbf{TM}$_\textsc{z}$ are sound and complete are exactly those over $\Z$-time.
-  % \textbf{TM}$_\textsc{z}$, by contrast, is sound over the full class of discrete frames, since \textbf{\aref{DF}} is valid on every discrete order and not only on $\Z$-time; whether \textbf{TM}$_\textsc{z}$ is complete over that broader class remains open, as discussed at \textbf{\ref{cor:tm-completeness}}.
-  % \textbf{\aref{UZ}} and \textbf{\aref{Z1}} are not sound over non-Archimedean discrete orders: over $\Z \times_{\mathrm{lex}} \Z$, an atom true only in the second galaxy leaves \textbf{\aref{UZ}} without a first witness.
 \end{Ddef}
 ```
-sha256: `385f73e873489eb714c7d9ca548dbd20ecb000340af8a3c60f8316eb85909b54`
+sha256: `3e2af812eaf4319b349ed734d9b63ffa04f6c72545a9363504b2b9b89694248f`
 
 ### `def:BX-d` — the dense Burgess–Xu tense logic BX_d (RENAMED from `def:TMplus-d`)
 
@@ -1648,7 +1656,7 @@ def:logical-consequence|env|-|-|3af67167ee4a393d77fc8cfa8ddc065fe932bedf76a14feb
 CO|aitem|-|-|5c468c01776c449b212c98070b5bfc70951691a23905cd4d4c249bf1f5375d41
 def:S5|env|-|-|82ec82d7ef3c0e24732fe6216b3326998412c594984ce02639ea4030ceabdb38
 def:BX|env|-|-|e1617a218b03206e11ebb9886b9a6a2add44591ce47f719445664e608f39e13e
-def:BX-z|env|-|-|385f73e873489eb714c7d9ca548dbd20ecb000340af8a3c60f8316eb85909b54
+def:BX-z|env|-|-|3e2af812eaf4319b349ed734d9b63ffa04f6c72545a9363504b2b9b89694248f
 def:BX-d|env|-|-|555db844b3c15ca4f878406540d88c457f372a774bbb59776e3f1b0d0fb76394
 def:BX-r|env|-|-|b35751c79a502988f9f77880354c9ed5200e9751361f2f6c209fcc3247721284
 def:TMplus|env|-|-|c14cad798aac2c73319de9ccc0a34ce6ca07971dbb6427e5107a08f23cc4cea8

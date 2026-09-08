@@ -1,7 +1,7 @@
 # Implementation Plan: Task #548
 
 - **Task**: 548 - Re-pin the paper anchors changed by the paper's z/d/r refactor and its removal of the Past/Future fragment
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 5.5 hours
 - **Dependencies**: None
 - **Research Inputs**: specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md
@@ -390,24 +390,43 @@ boundary matches `-` and over-counts the bare form by roughly 15.
 
 ---
 
-### Phase 6: Full-gate verification [NOT STARTED]
+### Phase 6: Full-gate verification [COMPLETED]
 
 **Goal**: Every gate this task touches is confirmed green end to end, with the expensive one run
 exactly once.
 
 **Tasks**:
-- [ ] Standalone C15 reproduction (~1 second): extract the MANIFEST and KNOWN-ANCHORS blocks by
+- [x] Standalone C15 reproduction (~1 second): extract the MANIFEST and KNOWN-ANCHORS blocks by
       their HTML-comment sentinels, `cut -d'|' -f1`, strip comments, `sort -u`; sweep citations
       with `grep -rhoE '\b(def|thm|lem|cor|app|rmk):[A-Za-z0-9][A-Za-z0-9_-]*'` over
       `FormalSystem Tests typst docs README.md` (excluding `Boneyard`); `comm -23`. Expect empty.
-- [ ] `bash scripts/check-paper-definitions.sh; echo $?` — expect `0` and no output.
-- [ ] `lake build`, backgrounded, to confirm no docstring syntax breakage anywhere.
-- [ ] `bash scripts/check-module-invariants.sh`, backgrounded, budgeting **>15 minutes**. Wait
+- [x] `bash scripts/check-paper-definitions.sh; echo $?` — expect `0` and no output. *(deviation:
+      altered — the paper moved on disk four times during implementation. Three moves were case
+      (b); the fourth genuinely drifted `def:BX-z` (the author deleted the `% NEW CHANGE`
+      editorial comment lines from inside the environment, a hash-visible but word-identical
+      change), detected by this very gate at Phase 6. It was absorbed the same way as the rest —
+      re-`--resolve`d, re-quoted, re-hashed `385f73e8…` -> `3e2af812…` — and the sentinels re-pinned
+      a second time (`c3846c1e…` -> `1b3c33a2…`, line count 4483 -> 4452). The gate then gave the
+      quiet case-(a) pass again.)*
+- [x] `lake build`, backgrounded, to confirm no docstring syntax breakage anywhere.
+- [x] `bash scripts/check-module-invariants.sh`, backgrounded, budgeting **>15 minutes**. Wait
       with a single blocking `tail --pid=<pid> -f /dev/null`; never busy-poll. Confirm both C15
-      lines pass (citation resolution and theorem-index anchor coverage).
-- [ ] Confirm the three unrelated `LIVE-UNPINNED` anchors (`app:drift`, `cor:no-characterization`,
+      lines pass (citation resolution and theorem-index anchor coverage). *(deviation: altered —
+      both C15 lines pass (56 citations, 52 theorem-index rows). The first run also surfaced a
+      **C20 regression this task caused**: adding one line to `Syntax/Formula.lean`'s `untl`
+      docstring pushed 14 `Syntax/Formula.lean:163` / `:180` citations in six `Metalogic/` files
+      onto blank lines. Each was bumped by +1 to preserve its intended target, and the second run
+      reports `PASS C20 tier 1: all 1022 resolvable citations land on a real, non-blank line`.
+      The stale `INV` inventory blocks this task's own line-count deltas caused were regenerated
+      (`Syntax/README.md`, `Theorems/README.md`, and `Metalogic/README.md`'s `Algebraic/` row).
+      Two residual failures are **not this task's**: `INV` on `Metalogic/README.md` and root
+      `README.md`, and all of `C16`, are caused by concurrent task 550's 18 uncommitted new
+      modules under `Metalogic/Decidability/Verified/Termination/MintBound/`. The inventory
+      numbers committed here were deliberately restricted to this task's own +38-line delta
+      rather than absorbing another task's uncommitted files into a committed README.)*
+- [x] Confirm the three unrelated `LIVE-UNPINNED` anchors (`app:drift`, `cor:no-characterization`,
       `lem:deterministic-singleton`) are untouched by this task's diff.
-- [ ] Commit.
+- [x] Commit.
 
 **Timing**: 0.75 hours (mostly wall-clock wait)
 

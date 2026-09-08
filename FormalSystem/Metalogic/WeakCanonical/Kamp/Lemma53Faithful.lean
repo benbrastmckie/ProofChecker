@@ -31,7 +31,7 @@ with eq (5.2)
 
 **What changed, in one clause**: disjunct (2)'s left conjunct moved from the tree's `kplus`
 (`PriorINF.lean:86`, which carries an extra `¬P(z₀)` conjunct that neither source states) to the
-sources' own `K⁺` — `Formula.kPlus` (`Syntax/Formula.lean:180`) at the object level, `kplusOpen`
+sources' own `K⁺` — `Formula.kPlus` (`Syntax/Formula.lean:181`) at the object level, `kplusOpen`
 (`KPlusFaithful.lean:113`) at the `Prop` level. Nothing else about the transcription moved: the
 three printed disjuncts, the recursion on `(z₀,z₁)` in the boundary subcase, and eq (5.2)'s point
 condition `P(r₀) ∨ K⁺(P)(r₀)` — whose `K⁺` is *still* the tree's `kplus`, because
@@ -123,7 +123,7 @@ theorem kplusPred_eval {sig : MonadicSignature}
     actually asks for, and the one this module's disjunct (2) is now gated on.
 
     The object-language spelling needed no new formula: `Formula.kPlus`
-    (`Syntax/Formula.lean:180`) has been in the tree all along, and `kPlus_formula_correct`
+    (`Syntax/Formula.lean:181`) has been in the tree all along, and `kPlus_formula_correct`
     (`KPlusFaithful.lean:150`) is its correctness lemma against `kplusOpen`.
 
     ADAPTED-FROM `kplusPred` above, which is pinned at `kplusFormula` (`PriorINF.lean:93`). What
@@ -131,7 +131,7 @@ theorem kplusPred_eval {sig : MonadicSignature}
     Rabinovich 2014 (`K⁺` definition, PDF p.3 — *"`K+(F)` … is an abbreviation for
     `¬((¬F)UntilTrue)`"*) nor Reynolds 1992 (abbreviation table §1, printed p.168 — `K⁺A` for
     `¬U(⊤,¬A)`, *"`A` will be true arbitrarily soon"*) says anything about the point of
-    evaluation. `Syntax/Formula.lean:163-179` carries the standing name-collision warning between
+    evaluation. `Syntax/Formula.lean:164-179` carries the standing name-collision warning between
     the two spellings; this declaration is the `TemporalPred`-level side of that distinction.
 
     Source correspondence: Rabinovich 2014, Lemma 5.3, PDF p.8 — *"`K⁺(P₁)(z₀)` is an atomic (and
