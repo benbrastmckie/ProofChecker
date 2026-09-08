@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/552_align_history_vocabulary_with_paper/reports/01_align-history-vocabulary-paper.md",
+      "summary": "Research for the WorldHistory -> ConvexHistory rename: confirms the rename is pure alpha-conversion (0 structures extend it, no fixture/script coupling, ConvexHistory free), corrects three stale premises in the dispatch (the paper still says 'world history' on 8 body lines meaning the TOTAL tier; the definitions-of-record re-pin is already done with 43/43 anchors matching; check-paper-definitions.sh is currently a silent no-op gate), sizes the prose sweep at 181 occurrences over 175 lines with 35 'total world history' collapses, and records the ~250-module rebuild blast radius that forces a batch-then-build-once phase plan."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788840748_54b780",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
