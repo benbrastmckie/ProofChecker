@@ -11,7 +11,7 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,550,551,552 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,551,552 | -- | algebraic-representation, automation, dataset-enhancement, ... |
 | 2 | 178,231,282,296,465,497,537,553 | 193,298,464,502,535,552 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -89,7 +89,6 @@ next_project_number: 555
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-550 [IMPLEMENTING] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -227,12 +226,13 @@ CONSTRAINTS. Do not delete anything in the characterization or recommendation st
 ---
 
 ### 550. Decompose mintbound for publication legibility
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: Task 549, Task 554
 - **Research**: [550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md]
 - **Plan**: [550_decompose_mintbound_for_publication_legibility/plans/01_decompose-mintbound-publication-legibility.md]
+- **Summary**: [550_decompose_mintbound_for_publication_legibility/summaries/01_decompose-mintbound-publication-legibility-summary.md]
 
 **Description**: Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.
 

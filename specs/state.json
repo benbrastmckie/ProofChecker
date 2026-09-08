@@ -94,7 +94,7 @@
     {
       "project_number": 550,
       "project_name": "decompose_mintbound_for_publication_legibility",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.\n\nMEASURED, not estimated: `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean` is 15,759 lines. The next-largest file under `FormalSystem/` that is actually built is `GapDetection.lean` at 5,090; the only larger file anywhere in the tree is retired Boneyard code. The file also carries the C9 register (entries through 25), a running record of refuted approaches interleaved with the live development.\n\nWHY THIS MATTERS FOR PUBLICATION. This is a legibility problem, not a correctness one -- the file builds green, is sorry-free and axiom-free. But a single file of this size is effectively unreviewable, and the interleaving of live results with a register of refuted attempts means a reader cannot tell, locally, which of the two they are reading. The concrete failure mode is already on record: the six `_run` theorems are vacuous, and the only statement of that fact sits roughly 12,700 lines into the file, far from the declarations it invalidates.\n\nSCOPE:\n1. Characterize the file's actual composition before proposing any split -- live definitions and theorems, the C9 register, probe/measurement blocks, and long-form prose notes. Report the line budget of each. A split proposed without this measurement is guesswork.\n2. Propose a decomposition into modules with a stated organizing principle (by development layer, by frame class, or register-vs-live -- pick one and justify it against the alternatives). The C9 register is the strongest candidate for extraction: it is documentation of what did not work and need not sit inside the module carrying what did.\n3. Execute the split additively and verifiably: the public interface must be preserved exactly, every downstream importer must build unchanged, and the full `lake build` must stay green. Sorry-free, axiom-free.\n\nCONSTRAINTS. Preserve every existing declaration name -- this is a decomposition, not a rename or a cull; removing declarations is a separate decision and belongs to the disposition task. Do not weaken or drop C9 register content while relocating it; the register's value is that it prevents re-attempting refuted approaches, and a lossy move destroys exactly that. Expect expensive builds: this module has cost 5-25 minutes per pass under concurrent load, so batch verification rather than rebuilding per edit.\n\nDependencies: 549. If its disposition recommendation is to retire the six vacuous `_run` theorems, that removes a section of this file, and decomposing before knowing so is wasted work.\n\nDEPENDENCY UPDATE (added after the trace returned its verdict): also depends on the retirement task. The trace recommended RETIRE, and the retirement removes a section of this same file, so decomposing first would be wasted work and the two would collide on MintBound.lean. Note the count correction the trace established: the vacuous set is NINE, not six, as this description says above.",
       "topic": "publication-quality",
@@ -106,7 +106,7 @@
         "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean"
       ],
       "created": "2026-09-07T23:44:13Z",
-      "last_updated": "2026-09-08T01:35:46Z",
+      "last_updated": "2026-09-08T02:29:01Z",
       "session_id": "sess_1788827428_44fd7f",
       "artifacts": [
         {
@@ -118,9 +118,15 @@
           "path": "specs/550_decompose_mintbound_for_publication_legibility/plans/01_decompose-mintbound-publication-legibility.md",
           "type": "plan",
           "summary": "8-phase, 10.75-hour plan splitting MintBound.lean (15,684 lines) into 18 modules behind a retained aggregator, with de-privatization isolated to one phase and five batched build gates."
+        },
+        {
+          "path": "specs/550_decompose_mintbound_for_publication_legibility/summaries/01_decompose-mintbound-publication-legibility-summary.md",
+          "type": "summary",
+          "summary": "Split MintBound.lean (15,684 lines) into 18 modules plus a 121-line aggregator, extracting the C9 do-not-re-attempt register into its own declaration-free module, with all 751 declaration names and proof terms preserved."
         }
       ],
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Decomposed FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean from a single 15,684-line file into 18 modules under MintBound/, retaining MintBound.lean as a 121-line aggregator that declares nothing and preserves the downstream interface exactly (Decidability.lean has a zero-line diff). The C9 do-not-re-attempt register is now Register.lean, the only module with zero declarations, so a reader can tell locally whether a passage is a live result or a record of a refuted approach. All 751 declaration names and all proof terms are preserved byte-for-byte; the only semantic change is sixteen declarations losing a private modifier they could not keep across a module boundary. lake build is green, sorry-free and axiom-free, and scripts/check-module-invariants.sh now exits 0 — including INV and C9, which were failing before this task began."
     },
     {
       "project_number": 549,
