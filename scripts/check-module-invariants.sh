@@ -2755,8 +2755,12 @@ echo
 # FormalSystem/Automation/TraceExporter.lean -- deliberately NOT ProofStepExport,
 # the module the same change repairs, since a failure there would prove nothing
 # about the gate -- `FAIL C25` was observed together with a non-zero script exit
-# (both, not just the printed line), and the file was restored and the `PASS` and
-# exit 0 re-observed. Re-run that test after any change to this check's scope or to
+# (both, not just the printed line: `FAIL C25  1 of 13 lean_exe root module(s) do
+# not compile`, script exit 1), and the file was restored and the `PASS` and exit 0
+# re-observed. The sharpest part of that observation is what did NOT fail: C1
+# reported `lake build exits 0` in the same run, because the broken module is
+# outside the closure `lake build` walks. That is precisely the invisible-failure
+# condition this check exists to close. Re-run that test after any change to this check's scope or to
 # the root-scraping regex; check the shell's exit status as well as the printed
 # line, because C24's history is exactly a case of a check that could print a
 # failure while handing the shell a 0.

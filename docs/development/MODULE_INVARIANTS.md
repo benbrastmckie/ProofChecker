@@ -177,9 +177,11 @@ failure while handing the shell a `0` at any count that happened to be a multipl
 C25 ships enforced on the same precedent and was accepted only after the same negative test, run
 deliberately on a module *other* than the one the same change repaired: a one-character break was
 introduced in `FormalSystem/Automation/TraceExporter.lean` — not `ProofStepExport.lean`, since a
-failure in the module under repair would prove nothing about the gate — `FAIL C25` was observed
-**together with a non-zero script exit**, and the file was restored and the `PASS` and exit 0
-re-observed. Re-run that test after any change to C25's scope or to its root-scraping regex, and
+failure in the module under repair would prove nothing about the gate — `FAIL C25  1 of 13 lean_exe root module(s) do not compile` was observed
+**together with a script exit of 1**, and the file was restored and the `PASS` and exit 0
+re-observed. The sharpest part of that observation is what did *not* fail: C1 reported
+`lake build exits 0` in the very same run, because the broken module is outside the closure
+`lake build` walks — which is exactly the invisible-failure condition C25 exists to close. Re-run that test after any change to C25's scope or to its root-scraping regex, and
 check the shell's exit status as well as the printed line: C24's history above is exactly a case of
 a check that could print a failure while handing the shell a `0`.
 

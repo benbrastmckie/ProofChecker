@@ -257,7 +257,7 @@ rather than deferring — a red new gate is not an acceptable landing state.
 
 ---
 
-### Phase 4: The mandated negative test [NOT STARTED]
+### Phase 4: The mandated negative test [COMPLETED]
 
 **Goal**: Prove C25 actually catches a break, per `docs/development/MODULE_INVARIANTS.md`'s
 "Adding a Check" mandate, and record the observation the way C15 and C24 recorded theirs.
@@ -335,7 +335,7 @@ addition is named here deliberately rather than arriving unannounced. Note also 
 
 ---
 
-### Phase 6: Final gate and lint-closure non-regression [NOT STARTED]
+### Phase 6: Final gate and lint-closure non-regression [IN PROGRESS]
 
 **Goal**: Every acceptance criterion observed in one pass, and the compile-only boundary proven
 intact so tasks 557 and 558 can sequence off a green baseline.
