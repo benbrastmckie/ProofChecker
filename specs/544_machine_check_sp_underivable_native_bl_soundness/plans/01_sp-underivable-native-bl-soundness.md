@@ -180,19 +180,19 @@ apply. Neither number is a fact until confirmed.
 
 ---
 
-### Phase 2: Native BL soundness (`Conservativity/SpCountermodel.lean`, part 1) [NOT STARTED]
+### Phase 2: Native BL soundness (`Conservativity/SpCountermodel.lean`, part 1) [COMPLETED]
 
 **Goal**: Every TM axiom schema admissible at `FrameClass.Base` verified directly against
 `BLFrameValid`, and native soundness proved by recursion on `BaseLanguage.DerivationTree`.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` with the copyright header, `set_option autoImplicit false`, `namespace FormalSystem.Metalogic`, and imports `FormalSystem.Metalogic.Conservativity.SpWitness`, `FormalSystem.Metalogic.Conservativity.TMCompletenessReduction` (required explicitly — `SpWitness.lean` does not pull it in, and without it `TMCompleteBase` silently auto-binds), and `FormalSystem.Semantics.BLFrame`. Open `FormalSystem.Syntax`, `FormalSystem.BaseLanguage`, `FormalSystem.ProofSystem`, `FormalSystem.Semantics`. Do **not** import the `Conservativity.lean` aggregator.
-- [ ] Write the module docstring: the deliverable, the sharpened order-theoretic impossibility argument (a `DF` instance can fail at `t` only if `t` has no immediate successor; a `DN` instance only if it does — so on any single linear order the two failures are mutually exclusive at a fixed time, regardless of valuation, history count, or group structure), and the consequence that a CEB countermodel needs two order-shapes simultaneously `□`-accessible.
-- [ ] Prove `axiom_valid {φ} (ax : BaseLanguage.Axiom φ) (h_fc : ax.minFrameClass ≤ FrameClass.Base) : BLFrameValid φ` by `cases ax`, covering every constructor: the four propositional (`prop_k`, `prop_s`, `ex_falso`, `peirce`), the four modal (`modal_k`, `modal_t`, `modal_5`, `modal_future`), the five temporal (`temp_k`, `temp_4`, `temp_serial`, `temp_connect`, `temp_linearity`), and the three excluded by the side condition (`df`, `dn`, `co`, each `absurd h_fc (by decide)` against `FrameClass.ZTime`/`.Dense`/`.RTime` ≰ `.Base`).
-- [ ] `temp_linearity` is the longest branch: `rcases F.fut_lin` and select the matching disjunct in each of the three cases, using `and_iff`, `or_iff`, `someFuture_iff`.
-- [ ] Prove `blFrameValid_of_derivation {φ} (d : BaseLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ` as a `match d with` recursion over all seven constructors (`axiom`, `assumption`, `modus_ponens`, `necessitation`, `temporal_necessitation`, `temporal_duality`, `weakening`), with `termination_by d.height` and the `decreasing_by` block copied verbatim from `BaseLanguageSoundness.lean`'s `bl_derivable_valid_and_swap_valid_zTimeSucc`. `temporal_duality` is one line via `truth_swap` at `F.swap`; `weakening` goes through `DerivationTree.ofWeakeningNil` and `height_ofWeakeningNil_lt`.
-- [ ] Docstring every declaration including private helpers (C16 `docBlame`).
-- [ ] Verify: `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` clean.
+- [x] Create `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` with the copyright header, `set_option autoImplicit false`, `namespace FormalSystem.Metalogic`, and imports `FormalSystem.Metalogic.Conservativity.SpWitness`, `FormalSystem.Metalogic.Conservativity.TMCompletenessReduction` (required explicitly — `SpWitness.lean` does not pull it in, and without it `TMCompleteBase` silently auto-binds), and `FormalSystem.Semantics.BLFrame`. Open `FormalSystem.Syntax`, `FormalSystem.BaseLanguage`, `FormalSystem.ProofSystem`, `FormalSystem.Semantics`. Do **not** import the `Conservativity.lean` aggregator.
+- [x] Write the module docstring: the deliverable, the sharpened order-theoretic impossibility argument (a `DF` instance can fail at `t` only if `t` has no immediate successor; a `DN` instance only if it does — so on any single linear order the two failures are mutually exclusive at a fixed time, regardless of valuation, history count, or group structure), and the consequence that a CEB countermodel needs two order-shapes simultaneously `□`-accessible.
+- [x] *(deviation: altered — `FormalSystem.Metalogic.axiom_valid` already exists in scope (`Metalogic/Soundness.lean`, about `Formula`), so `axiom_valid` and `blFrameValid_of_derivation` live in a nested `namespace SpCountermodel` inside `FormalSystem.Metalogic`. Short names and signatures are exactly as pinned in Lean Challenge Statements; only the qualification gained one segment. The two deliverable theorems `not_derivable_sp` / `tmCompleteBase_refuted` and `sp_false` sit at `FormalSystem.Metalogic.*`, mirroring `Z1Countermodel`.)* Prove `axiom_valid {φ} (ax : BaseLanguage.Axiom φ) (h_fc : ax.minFrameClass ≤ FrameClass.Base) : BLFrameValid φ` by `cases ax`, covering every constructor: the four propositional (`prop_k`, `prop_s`, `ex_falso`, `peirce`), the four modal (`modal_k`, `modal_t`, `modal_5`, `modal_future`), the five temporal (`temp_k`, `temp_4`, `temp_serial`, `temp_connect`, `temp_linearity`), and the three excluded by the side condition (`df`, `dn`, `co`, each `absurd h_fc (by decide)` against `FrameClass.ZTime`/`.Dense`/`.RTime` ≰ `.Base`).
+- [x] `temp_linearity` is the longest branch: `rcases F.fut_lin` and select the matching disjunct in each of the three cases, using `and_iff`, `or_iff`, `someFuture_iff`.
+- [x] Prove `blFrameValid_of_derivation {φ} (d : BaseLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ` as a `match d with` recursion over all seven constructors (`axiom`, `assumption`, `modus_ponens`, `necessitation`, `temporal_necessitation`, `temporal_duality`, `weakening`), with `termination_by d.height` and the `decreasing_by` block copied verbatim from `BaseLanguageSoundness.lean`'s `bl_derivable_valid_and_swap_valid_zTimeSucc`. `temporal_duality` is one line via `truth_swap` at `F.swap`; `weakening` goes through `DerivationTree.ofWeakeningNil` and `height_ofWeakeningNil_lt`.
+- [x] Docstring every declaration including private helpers (C16 `docBlame`).
+- [x] Verify: `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` clean.
 
 **Timing**: 1.5 hours
 
@@ -226,24 +226,24 @@ are omitted from it but must be verified.
 
 ---
 
-### Phase 3: The two-fibre countermodel and the headline results [NOT STARTED]
+### Phase 3: The two-fibre countermodel and the headline results [COMPLETED]
 
 **Goal**: The concrete `ℤ ⊕ ℝ` frame, its valuation, the two disjunct refutations, and the two
 deliverable theorems — with their axiom profiles confirmed.
 
 **Tasks**:
-- [ ] Add the private trichotomy helpers `sum_tri` / `sum_tri'` over `ℤ ⊕ ℝ` (`rintro … <;> simp_all <;> exact lt_trichotomy _ _`; the cross-fibre cases die by `simp_all` on Mathlib's `Sum` order `@[simp]` set), with docstrings.
-- [ ] Define `@[reducible] def twoFibre : BLFrame` over `ℤ ⊕ ℝ` with `lt := (· < ·)`, discharging `no_max`/`no_min` by `rintro (n | x)` and `n ± 1` / `x ± 1`, and `fut_lin`/`past_lin` from the helpers. Document why `@[reducible]` is load-bearing (without it `rw [BLFrameTruth.and_iff]` fails on a transparency-level mismatch) and why the *disjoint* sum is required where the task description's *lexicographic* `ℤ + ℚ` is not (a lexicographic sum is a single linear order; `ℝ` over `ℚ` only because `linarith` is frictionless there).
-- [ ] Define `twoV : (ℤ ⊕ ℝ) → Atom → Prop` as `inl n ↦ n ≠ 1`, `inr r ↦ r ≤ 0` (atom-independent), with a docstring.
-- [ ] Add the two `@[simp]` bridges `twoFibre_lt` and `twoFibre_atom`.
-- [ ] Prove `df_fails (a : Atom)`: the `DF` instance is false at `inr 0` on the `ℝ`-fibre — `H p ∧ p ∧ F⊤` holds there while `F(H p)` fails, the witness contradiction closing by `linarith` on `r / 2`.
-- [ ] Prove `dn_fails (a : Atom)`: the `DN` instance is false at `inl 0` on the `ℤ`-fibre — `GG p` holds while `G p` fails at `inl 1`, closing by `omega`.
-- [ ] Prove `sp_false (a : Atom) (w : ℤ ⊕ ℝ) : ¬ BLFrameTruth twoFibre twoV w (Sp (.atom a) (.atom a))` by unfolding `Sp`, `or_iff`, `box_iff` twice and feeding the two failures. Record in its docstring that a *single* atom suffices for both disjuncts, so no second atom is introduced.
-- [ ] Prove `not_derivable_sp (a : Atom) : ¬ BaseLanguage.Derivable FrameClass.Base [] (Sp (.atom a) (.atom a))` by `rintro ⟨d⟩` and composing `blFrameValid_of_derivation` with `sp_false`.
-- [ ] Prove `tmCompleteBase_refuted (a : Atom) : ¬ TMCompleteBase` — `unfold TMCompleteBase TMComplete at h` first (direct application fails), then `not_derivable_sp a (h _ (blValid_sp _ _))`. Mirror `Z1Countermodel.tmCompleteZTime_refuted`'s statement shape exactly.
-- [ ] Add a docstring note on `sp_false` or `not_derivable_sp` recording that the *universally quantified* form ("no instance of `(Sp)` is a theorem") is **false**: `DF ⊤` is true at every point of every `BLFrame` (from `no_max`), so `□(DF ⊤)` holds and `Sp ⊤ ψ` is not refuted here. The claim is schema-level, witnessed by the atomic instance.
-- [ ] Confirm axiom profiles: `#print axioms` for `not_derivable_sp`, `tmCompleteBase_refuted` and `blFrameValid_of_derivation` all report `[propext, Classical.choice, Quot.sound]`. Remove the `#print axioms` lines before committing if the repository convention forbids them in live modules; otherwise keep them where `Z1Countermodel.lean` keeps its own.
-- [ ] Verify: `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` clean.
+- [x] Add the private trichotomy helpers `sum_tri` / `sum_tri'` over `ℤ ⊕ ℝ` (`rintro … <;> simp_all <;> exact lt_trichotomy _ _`; the cross-fibre cases die by `simp_all` on Mathlib's `Sum` order `@[simp]` set), with docstrings.
+- [x] Define `@[reducible] def twoFibre : BLFrame` over `ℤ ⊕ ℝ` with `lt := (· < ·)`, discharging `no_max`/`no_min` by `rintro (n | x)` and `n ± 1` / `x ± 1`, and `fut_lin`/`past_lin` from the helpers. Document why `@[reducible]` is load-bearing (without it `rw [BLFrameTruth.and_iff]` fails on a transparency-level mismatch) and why the *disjoint* sum is required where the task description's *lexicographic* `ℤ + ℚ` is not (a lexicographic sum is a single linear order; `ℝ` over `ℚ` only because `linarith` is frictionless there).
+- [x] Define `twoV : (ℤ ⊕ ℝ) → Atom → Prop` as `inl n ↦ n ≠ 1`, `inr r ↦ r ≤ 0` (atom-independent), with a docstring.
+- [x] Add the two `@[simp]` bridges `twoFibre_lt` and `twoFibre_atom`.
+- [x] Prove `df_fails (a : Atom)`: the `DF` instance is false at `inr 0` on the `ℝ`-fibre — `H p ∧ p ∧ F⊤` holds there while `F(H p)` fails, the witness contradiction closing by `linarith` on `r / 2`.
+- [x] Prove `dn_fails (a : Atom)`: the `DN` instance is false at `inl 0` on the `ℤ`-fibre — `GG p` holds while `G p` fails at `inl 1`, closing by `omega`.
+- [x] Prove `sp_false (a : Atom) (w : ℤ ⊕ ℝ) : ¬ BLFrameTruth twoFibre twoV w (Sp (.atom a) (.atom a))` by unfolding `Sp`, `or_iff`, `box_iff` twice and feeding the two failures. Record in its docstring that a *single* atom suffices for both disjuncts, so no second atom is introduced.
+- [x] Prove `not_derivable_sp (a : Atom) : ¬ BaseLanguage.Derivable FrameClass.Base [] (Sp (.atom a) (.atom a))` by `rintro ⟨d⟩` and composing `blFrameValid_of_derivation` with `sp_false`.
+- [x] Prove `tmCompleteBase_refuted (a : Atom) : ¬ TMCompleteBase` — `unfold TMCompleteBase TMComplete at h` first (direct application fails), then `not_derivable_sp a (h _ (blValid_sp _ _))`. Mirror `Z1Countermodel.tmCompleteZTime_refuted`'s statement shape exactly.
+- [x] Add a docstring note on `sp_false` or `not_derivable_sp` recording that the *universally quantified* form ("no instance of `(Sp)` is a theorem") is **false**: `DF ⊤` is true at every point of every `BLFrame` (from `no_max`), so `□(DF ⊤)` holds and `Sp ⊤ ψ` is not refuted here. The claim is schema-level, witnessed by the atomic instance.
+- [x] Confirm axiom profiles: `#print axioms` for `not_derivable_sp`, `tmCompleteBase_refuted` and `blFrameValid_of_derivation` all report `[propext, Classical.choice, Quot.sound]`. Remove the `#print axioms` lines before committing if the repository convention forbids them in live modules; otherwise keep them where `Z1Countermodel.lean` keeps its own. *(confirmed: all three report exactly that profile, verified in a scratch file; `Z1Countermodel.lean` carries no `#print axioms`, so the live module carries none either. `Semantics.truth_swap` is axiom-free.)*
+- [x] Verify: `lake env lean FormalSystem/Metalogic/Conservativity/SpCountermodel.lean` clean.
 
 **Timing**: 1.5 hours
 
