@@ -12,10 +12,10 @@ next_project_number: 563
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
 | 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,553,557 | -- | algebraic-representation, automation, code-quality, ... |
-| 2 | 178,231,282,296,465,497,558,562 | 193,298,464,502,557 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,428,498,499,500,534,537,559,561 | 231,465,497,562 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 4 | 125,429,543,560 | 428,498,499,500,537,559 | algebraic-representation, decidability, metalogic |
-| 5 | 410,501 | 125,429 | algebraic-representation, decidability |
+| 2 | 178,231,282,296,465,497,558 | 193,298,464,502,557 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,428,498,499,500,562 | 231,465,497,558 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 4 | 125,429,534,537,543,559,561 | 428,498,499,500,562 | algebraic-representation, decidability, metalogic, ... |
+| 5 | 410,501,560 | 125,429,537,559 | algebraic-representation, decidability, metalogic |
 | 6 | 411 | 410 | decidability |
 | 7 | 430 | 411 | decidability |
 | 8 | 177,412 | 193,430 | decidability, formula-refactor |
@@ -119,7 +119,7 @@ next_project_number: 563
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
-- **Dependencies**: Task 557
+- **Dependencies**: Task 557, Task 558
 
 **Description**: Rename this repository's object languages and proof systems so that their names mean what the paper's mean, under the language convention the author fixed on 2026-09-08. This is a name-and-prose sweep with no change to any proof term, in the manner of the completed history-vocabulary and z/d/r renames (archived tasks 546, 548, 552).
 
