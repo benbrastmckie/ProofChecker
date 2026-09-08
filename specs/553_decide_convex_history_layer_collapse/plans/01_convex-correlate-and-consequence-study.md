@@ -287,14 +287,14 @@ each, and a refutation is a reportable finding, not a phase failure.
 
 ---
 
-### Phase 3: The candidate consequence relations, defined and separated [NOT STARTED]
+### Phase 3: The candidate consequence relations, defined and separated [COMPLETED]
 
 **Goal**: The core of the User focus. Give precise definitions of the alternative consequence
 relations, and separate them from each other and from the current one with machine-checked
 validities and refutations.
 
 **Tasks**:
-- [ ] Write §3 of the report defining, side by side and in the repository's own notation, at
+- [x] Write §3 of the report defining, side by side and in the repository's own notation, at
       least these four:
       - **C1** (current / paper): `ConsequenceOnFrames` as it stands
         (`Semantics/Validity.lean:78`) — index total, tense over `D`, `□` over total histories,
@@ -307,16 +307,16 @@ validities and refutations.
       - **C4** (interval-indexed): C3 restricted to the closed bounded interval domains
         `[0, ℓ]` — that is, indexed by the sections of `Beh(F)`. This is the one that has a
         categorical reading, and it is the bridge to Phase 5.
-- [ ] Write `specs/553_decide_convex_history_layer_collapse/probes/02_alternative-consequence.lean`
+- [x] Write `specs/553_decide_convex_history_layer_collapse/probes/02_alternative-consequence.lean`
       giving C2, C3 and C4 as actual Lean definitions over the existing `ConvexHistory` /
       `Formula` types (a local `TruthAtConvex` recursion beside the library's `TruthAt`, not a
       modification of it), and proving the separating facts.
-- [ ] Establish at probe level, at minimum: `F⊤` (`Formula.someFuture Formula.top`, i.e.
+- [x] Establish at probe level, at minimum: `F⊤` (`Formula.someFuture Formula.top`, i.e.
       `untl ⊤ ⊤`) is C1-valid but **not** C3-valid, witnessed at the right endpoint of a bounded
       interval; and the S5 modal core (`modal_t`, `modal_4`, `modal_5_collapse`, `modal_b`)
       survives C3, because C3's `□` quantifies over a set determined by `x` alone and containing
       the index itself.
-- [ ] Record the structural observation and check it: under C3, `□φ` at `(τ, x)` does not depend
+- [x] Record the structural observation and check it: under C3, `□φ` at `(τ, x)` does not depend
       on `τ` at all, so `□` remains a universal modality; and because point histories `{⟨x,w⟩}`
       are legal C3 indices for every `w` (by Nullity), `□` at C3 ranges over strictly more
       indices than at C1. State what that does to formulas mixing `□` with tense.

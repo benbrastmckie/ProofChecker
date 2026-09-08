@@ -348,3 +348,118 @@ Class 3 is not a soundness defect and it is not, on its own, an argument for col
 layer. It is an argument that the generality is *unpaid-for*: 97 declarations carry an index
 they never use, and at the one place where the difference is observable the semantics is
 degenerate.
+
+---
+
+## §3. The candidate consequence relations, defined and separated
+
+This section is the core of the User focus: the logic that results from letting consequence range
+over convex histories, and the logic that results from additionally restricting the temporal
+quantifiers to the domain of the convex world.
+
+Machine-checked evidence:
+`specs/553_decide_convex_history_layer_collapse/probes/02_alternative-consequence.lean`,
+compiled sorry-free with
+
+```
+lake env lean specs/553_decide_convex_history_layer_collapse/probes/02_alternative-consequence.lean
+```
+
+Each of C2, C3 and C4 is an actual Lean definition in that probe, not only prose; C3's semantics
+is a local recursion `TruthAtConvex` written beside the library's `TruthAt`, never a modification
+of it.
+
+### §3.1 The four relations, side by side
+
+| | index | `□` ranges over | tenses range over | evaluation time `x` |
+|---|---|---|---|---|
+| **C1** (current / paper) | `τ` with `τ.IsTotal` | `{σ : σ.IsTotal}` = `H_F` | all of `D` | all of `D` |
+| **C2** (convex index, unrestricted tense) | any `τ : ConvexHistory F` | `{σ : σ.IsTotal}` = `H_F` | all of `D` | all of `D` |
+| **C3** (the paper's line-1102 alternative) | any `τ` with `x ∈ dom τ` | `{σ : x ∈ dom σ}` | `dom τ` | `dom τ` |
+| **C4** (interval-indexed) | interval `τ` with `x ∈ dom τ` | `{σ : x ∈ dom σ}` | `dom τ` | `dom τ` |
+
+C1 is the repository's `ConsequenceOnFrames` (`Semantics/Validity.lean:78`) and the paper's
+`def:logical-consequence`. C2 is not a design: it is what the tree's own `TruthAt` already
+computes when the `IsTotal` binder is dropped. C4 restricts C3's index to the closed bounded
+interval domains `[a, b]` — the domain shape of `Beh(F)(ℓ)`'s sections, up to translation — via
+the probe's `IsInterval` predicate.
+
+**The four do not collapse.** C1 ≠ C2 (§3.4), C1 ≠ C3 (§3.2), C3 ≠ C4 in *definition* though the
+containment `ValidC3 → ValidC4` is proved (`validC3_imp_validC4`) and no separating formula was
+found — §7.4 records that as open. The plan's instruction was to reduce the count rather than
+manufacture a distinction; the honest position is that C4 is C3's restriction to the presheaf's
+own index class, which matters for §5's categorical reading even where the two validity sets may
+coincide.
+
+### §3.2 The separating pair: `F⊤`
+
+- `valid_C1_someFuture_top` — `F⊤` is C1-valid. Its proof uses nothing about the index: C1's
+  `untl` clause quantifies over all of `D`, so the witness `t + 1` is always available. The
+  general statement over every frame is the library's `serial_future_axiom_valid`
+  (`Metalogic/Soundness.lean:261`); the probe proves the one-frame instance so the separating
+  pair is self-contained.
+- `refute_C3_someFuture_top` — `F⊤` is **not** C3-valid, refuted at the right endpoint of the
+  closed interval `[0, 0]`. C3's `untl` clause requires its witness to lie in `dom τ`, and there
+  is no time strictly after the right endpoint in that domain.
+- `refute_C3_somePast_top` — the past dual `P⊤` fails at the left endpoint, symmetrically.
+- `refute_C4_someFuture_top` — the same refutation lands for C4, since `bdd` is an interval
+  index (`bdd_isInterval`).
+
+This is exactly what the paper's own commented-out sentence at line 1102 predicts, now
+machine-checked rather than cited: "At the final move of a finished game there is no later time
+in that history's domain, and so `F⊤` — the seriality axiom TS of the logic TM presented below —
+and its past dual both fail, making `F⊥` satisfiable and the unboundedness of time contingent."
+
+### §3.3 The structural observations, checked
+
+**(1) C3's `□` does not depend on the index.** `truthC3_box_indep` proves
+`TruthAtConvex M τ x (□φ) = TruthAtConvex M τ' x (□φ)` by `rfl`: the clause reads its
+quantifier range off `x` alone. So C3 does not turn `□` into a relative modality; it keeps it
+universal and changes its *range*, from `H_F` to the convex histories through `x`.
+
+**(2) The range is strictly larger, and that is what breaks things.** For every world state `w`,
+the point history `{⟨x, w⟩}` is a convex history (`pointHist`), is a legal C3 index at its own
+point (`pointHist_domain_self`), is an *interval* history — a germ, `[x, x]`
+(`pointHist_isInterval`) — and is not total (`pointHist_not_isTotal`). So C3's box quantifies
+over indices that C1's does not, including maximally degenerate ones.
+
+**(3) Consequently `□F⊤` is C3-UNSATISFIABLE** (`c3_box_someFuture_top_unsat`), at every model,
+every convex index, and every time, over an arbitrary task frame. The proof is one line of
+mathematics: the germ at `x` is always in the box's range, and no germ has a later time in its
+own domain.
+
+This is the answer to "what that does to formulas mixing `□` with tense", and it is much stronger
+than the loss of TS. TM is closed under necessitation, so `⊢ F⊤` yields `⊢ □F⊤`. A semantics on
+which `□F⊤` is unsatisfiable cannot be repaired by deleting the seriality axiom: the necessitation
+rule itself would have to go, or the box's range would have to be cut back to exclude the germs.
+**C3 is a genuinely different logic, not TM minus seriality.** The same argument refutes `□ψ` for
+every `ψ` whose principal content is tense — every such `ψ` fails at germs, so its box is false
+everywhere.
+
+This is the most important single finding of §3, and it is the one the paper's footnote does not
+state. The footnote observes that TS fails; it does not observe that necessitation and the germ
+indices are jointly inconsistent with any tense theorem at all.
+
+**(4) The S5 modal core nevertheless survives C3**, for an arbitrary task frame:
+`c3_modal_t` (`□φ → φ`), `c3_modal_4` (`□φ → □□φ`), `c3_modal_b` (`φ → □◇φ`),
+`c3_modal_5_collapse` (`◇□φ → □φ`). All four are proved from (1) plus the C3 side condition
+`x ∈ dom τ`, which puts the index itself in the box's range. T needs exactly that side
+condition — it is the one place where C3's insistence on `x ∈ dom τ` earns its keep, and it is
+precisely the condition C2 omits (§3.4).
+
+So the picture for C3 is sharp: **the modal half is intact and the temporal half is broken**, and
+the breakage is not local to a couple of axioms.
+
+### §3.4 C2, diagnostically
+
+`valid_C1_modal_t` proves `□p → p` C1-valid; `refute_C2_modal_t` refutes it under C2, at the
+bounded index at the out-of-domain time `1`. This is probe 01's finding restated in this
+section's vocabulary, and it identifies the culprit precisely: C2 keeps C1's unrestricted
+evaluation time while weakening the index, so the atom clause and the box clause are evaluated
+against different domains (§2.2).
+
+C2 is therefore an **artifact to be eliminated, not an alternative to be developed**. It is not a
+design anyone chose; it is the reading the current clause set falls into when the `IsTotal` guard
+is removed, and it invalidates an axiom of the logic the repository proves sound. The one thing
+it is good for is the argument in §6: it is the concrete cost of carrying an evaluation index
+that is more general than the semantics can actually interpret.
