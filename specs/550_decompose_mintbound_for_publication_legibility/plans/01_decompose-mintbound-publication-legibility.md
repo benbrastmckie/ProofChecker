@@ -302,23 +302,23 @@ the per-module line accounting must total 15,684 plus the new per-module headers
 
 ---
 
-### Phase 4: Extract the measure and closure stack (4 modules) [NOT STARTED]
+### Phase 4: Extract the measure and closure stack (4 modules) [COMPLETED]
 
 **Goal**: Extract the C7-C10 and D1 mid-stack, the first point at which the import DAG gains real
 parallel branches (`TimeCensus` alongside `Terminus`/`ClosureResidual`).
 
 **Tasks**:
-- [ ] Extract `Measure.lean` from lines 3,887-5,129. Imports: `...MintBound.MintPotential`.
+- [x] Extract `Measure.lean` from lines 3,887-5,129. Imports: `...MintBound.MintPotential`.
       Contains `section MultiplicityRefutation` and `section BranchingNonVacuity` in full.
-- [ ] Extract `Terminus.lean` from lines 5,130-5,388. Imports: `...MintBound.Measure`.
-- [ ] Extract `ClosureResidual.lean` from lines 5,389-6,535. Imports: `...MintBound.Terminus`.
+- [x] Extract `Terminus.lean` from lines 5,130-5,388. Imports: `...MintBound.Measure`.
+- [x] Extract `ClosureResidual.lean` from lines 5,389-6,535. Imports: `...MintBound.Terminus`.
       Contains `section FreshWorldRefutation` in full.
-- [ ] Extract `TimeCensus.lean` from lines 6,536-7,218. Imports: `...MintBound.MintPotential`
+- [x] Extract `TimeCensus.lean` from lines 6,536-7,218. Imports: `...MintBound.MintPotential`
       (a parallel branch, not a chain link — do not import `ClosureResidual`).
-- [ ] Update the residual `MintBound.lean` imports; body now begins at what was line 7,219.
-- [ ] Re-run Phase 1 checks (a), (b), (c).
-- [ ] **Build gate** (detached + guarded).
-- [ ] Commit the batch as one objective once green.
+- [x] Update the residual `MintBound.lean` imports; body now begins at what was line 7,219.
+- [x] Re-run Phase 1 checks (a), (b), (c).
+- [x] **Build gate** (detached + guarded).
+- [x] Commit the batch as one objective once green.
 
 **Timing**: 1.5 hours
 
