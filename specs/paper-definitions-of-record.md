@@ -43,12 +43,107 @@ re-derives every hash below directly from the live paper file on every run.
 | **File checksum, re-pinned at the ten-anchor drift correction (sha256, current authoritative pin)** | `7303bc9e8529b84f881b17b6f0ef3027f104a6c9ab91315c573a15e00bac0143` |
 | Line count at the ten-anchor drift correction | 4867 |
 | Ten-anchor drift correction re-pin (UTC) | 2026-09-02T23:08Z (see "Drift correction (2026-09-02): ten-anchor re-pin" below) |
+| Base commit at the z/d/r rename-absorption re-pin (paper repo `git HEAD`; file dirty against it, and the last commit to touch the file is `acfa75fdd270dd69145c76b788144b1ce0aee98c`) | `f61bbd75d3aa0c777fdeb91804868145f7169684` |
+| **File checksum, re-pinned at the z/d/r rename-absorption (sha256, current authoritative pin)** | `c3846c1ef93991228f2e309c7d9831df732b5dec657157425cf593a0256d278e` |
+| Line count at the z/d/r rename-absorption | 4483 |
+| z/d/r rename-absorption re-pin (UTC) | 2026-09-08T01:30Z (15 entries re-hashed, 9 anchors retired, 3 renamed anchors newly pinned; see "Drift correction and rename absorption (2026-09-07)" below) |
 
 <!-- PAPER_PATH: /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex -->
 <!-- PAPER_REPO_ROOT: /home/benjamin/Philosophy/Papers/PossibleWorlds -->
-<!-- PINNED_COMMIT: fa0dbf7c053e6ecd22e9815180dd91beb2604e61 -->
-<!-- FILE_CHECKSUM: 7303bc9e8529b84f881b17b6f0ef3027f104a6c9ab91315c573a15e00bac0143 -->
-<!-- LINE_COUNT: 4867 -->
+<!-- PINNED_COMMIT: f61bbd75d3aa0c777fdeb91804868145f7169684 -->
+<!-- FILE_CHECKSUM: c3846c1ef93991228f2e309c7d9831df732b5dec657157425cf593a0256d278e -->
+<!-- LINE_COUNT: 4483 -->
+
+### Drift correction and rename absorption (2026-09-07): the z/d/r wave
+
+The paper's z/d/r wave is the largest single wave this record has absorbed: **15 pinned entries
+drifted, 9 pinned anchors went dangling, and 3 renamed anchors were newly pinned**, all in one
+correction. The checker was red (exit 1) before it and gives the quiet case-(a) pass after it.
+
+**What the paper did.** Three structural moves, each with record-side consequences:
+
+1. **`BL^+` collapsed into `BL`.** The paper stopped maintaining a separate since/until language:
+   `def:BLplus-language` now defines `BL` itself and absorbs the eight defined operators that
+   `def:BLplus-defined` used to carry; `def:BL-semantics` absorbs the `\since`/`\until` truth
+   clauses that `def:BLplus-semantics` used to carry (and drops the `\Past`/`\Future` clauses,
+   which are now defined rather than primitive); and the `TM`$^+$ family lost its superscript
+   throughout — `def:TMplus` now names **TM**, for **BL**, with extensions **TM**$_z$ / **TM**$_d$
+   / **TM**$_r$. The anchor id `def:TMplus` is unchanged; only its content moved.
+2. **The `f`/`d`/`c` subscripts became `z`/`d`/`r`, under new labels.** `def:TMplus-f` →
+   `def:BX-z`, `def:TMplus-d` → `def:BX-d`, `def:TMplus-c` → `def:BX-r`. These are renames with
+   content changes, not pure re-labellings: all three now cite `\S`Extensions for their axioms
+   instead of displaying them, `def:BX-z` defers the Hölder step and cites `prop:archimedean`,
+   and `def:BX-r` is re-titled *Dense and Complete* and presented as an extension of **BX**$_d$.
+3. **The correspondence theorems moved from frames to temporal orders.** `app:discrete`,
+   `app:dense`, `app:complete` are now stated as `$\vDash_{\D}$ … iff `$\D$` is …` over a
+   temporal order rather than `$\F \vDash$ … iff `$\F$` is a … task frame`, and
+   `def:frame-properties` defines Discrete/Dense/Complete on the temporal order first, deriving
+   the frame-level predicates from it. `app:discrete` also gained a long footnote explaining why
+   these cannot be sharpened to single task frames (the static frame is the counterexample) and
+   citing this repository for the fibre-level formulation.
+
+**Retired (manifest row removed, prose entry retained and marked `DANGLING`, `KNOWN-ANCHORS` row
+added):** `def:directed` (folded inline into `def:frame`'s opening clause), `def:BLplus-semantics`
+and `def:BLplus-defined` (absorbed as above), `thm:BLplus-PastFuture` and
+`thm:BLplus-NextPrevious` (removed with the `BL^+` cluster), `TMP-CO` (the `BL^+` restatement of
+`CO`; the plain `CO` anchor is still live and still pinned), and `def:TMplus-f` / `def:TMplus-d` /
+`def:TMplus-c` (renamed as above).
+
+**Newly pinned:** `def:BX-z` (`385f73e8…`), `def:BX-d` (`555db844…`), `def:BX-r` (`b35751c7…`).
+
+**Re-hashed:** `def:frame`, `def:world-history`, `thm:extension`, `cor:occurrence`,
+`def:BL-semantics`, `def:BLplus-language`, `def:S5`, `def:BX`, `def:TMplus`, `app:discrete`,
+`app:dense`, `app:complete`, `def:frame-properties`, `cor:saturation-finite`,
+`cor:tm-completeness`. Two of these are not mere re-quotes and carry their own notes at their
+entries: `cor:saturation-finite` changed **environment** (`Cthm` → `Lthm`) with its statement
+word-for-word unchanged, and `def:frame` both absorbed `def:directed` and **softened its
+ball-space footnote from "strictly stronger" to "at least as strong as"**, withdrawing the
+strictness claim.
+
+`cor:tm-completeness`'s list now reads: **TM** strongly complete over all task frames,
+**TM**$_d$ strongly complete over the dense task frames, **TM**$_z$ weakly complete over
+ℤ-time, **TM**$_r$ weakly complete over ℝ-time (previously "the dense-and-complete class").
+
+**Four corrections recorded so the next reader does not re-derive them:**
+
+- **The Z1 / Past–Future-fragment footnote is commented out, not live.** The paper's Logic
+  subsection carries the fragment claim and its footnote entirely behind `%` (paper lines
+  ~1332–1340), with an author note giving the reason: "footnote commented out until the
+  BimodalLogic repository establishes that the Past/Future language admits no complete
+  axiomatization; the repository currently shows only that one particular system in that language
+  is incomplete over ℤ-time." Nothing here is pinned as live, and no `KNOWN-ANCHORS` row is added
+  for it. This repository's `not_bl_derivable_z1`
+  (`FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean`) is what the commented-out footnote
+  *would* cite; the accompanying Kripke countermodel for the base class is a pen-and-paper claim
+  this repository does **not** check.
+- **`thm:TM-soundness` needed no re-hash.** It is not in the drifted list above, and that is
+  correct rather than an omission: everything the paper changed about it — the extension to
+  **TM** and its extensions, the new sentence that the since/until/next/previous schemata are
+  valid by their clauses as verified in this repository, and the footnote's re-aimed citation —
+  lives in the `\begin{proof}` block *after* `\end{Tthm}`, which `resolve_env` does not capture.
+  A future task that wants that text pinned must pin the proof block, which the current resolver
+  cannot do.
+- **`def:BX-r`'s second Reynolds axiom is `SEP`, not `SP`.** The displayed key is `Sep` and the
+  `\aitem` label is `SEP`.
+- **`prop:fragment` and `rmk:fragment` are gone and require no action.** An exhaustive grep of the
+  live paper finds no such labels, no manifest row pinned either, and no file in live tree scope
+  cites either name. No `DANGLING` row is added: the record's rule is that a row is a decision,
+  and there is no citation to make honest.
+
+**No repository-side consequence:** `lem:temporal-duality` (paper line 4061) and `thm:TD-valid`
+(line 4133) were restated for the since/until interchange with new inductive `U`/`S` cases, but
+neither has a manifest row and neither is cited anywhere in live tree scope, so this wave leaves
+them alone. `prop:archimedean` (line 3265) is a live `Pthm` that `def:BX-z` now cites for the
+failure of `UZ`/`Z1` over non-Archimedean discrete orders; it is a pen-and-paper result this
+repository does not check, and it is recorded as `LIVE-UNPINNED` (not pinned as verified) if and
+when tree prose cites it.
+
+**Moving target during absorption.** The paper file changed on disk *while this correction was
+being written* (checksum `f3acc3ad…` → `c3846c1e…` between the Phase 2 re-hash and the Phase 3
+re-pin). Every anchor was re-derived against the post-change file before the sentinels were
+pinned, and the checker was re-run afterwards to confirm the quiet case-(a) pass against exactly
+the pinned bytes. Hashes were derived only via `check-paper-definitions.sh --resolve`; none was
+hand-written.
 
 ### Anchor classification (2026-09-07): four `LIVE-UNPINNED` rows for the C15 gate
 
@@ -301,6 +396,15 @@ is recorded as the best-available provenance anchor (the base the dirty edit was
 not as a claim that the quoted content is byte-identical to that commit's committed blob — it is
 not (see the caveat's own diff above). Anyone citing this record should treat the checksum as
 ground truth and the commit SHA as "approximately where in history this sits."
+
+**Still dirty at the 2026-09-07 z/d/r rename-absorption re-pin.** `git status --porcelain`
+reported `M JPL/possible_worlds.tex` against `HEAD` = `f61bbd75`, and the last commit actually to
+touch the file is `acfa75fd`, an ancestor of neither the pinned content nor of `HEAD`'s tree for
+this path. The `PINNED_COMMIT` sentinel therefore again does **not** reproduce `FILE_CHECKSUM`,
+and that is expected rather than a defect. Stronger than in the earlier waves: the file changed on
+disk *during* the absorption itself (see the moving-target note in the 2026-09-07 narrative
+above), so the pin is a snapshot of a file under active edit. Use `--resolve` against the live
+file, never `--against <commit>`, when re-deriving anything from this wave.
 
 ### Drift correction (2026-08-11, found during independent verification)
 
@@ -1478,7 +1582,11 @@ surface without a consuming task yet:
 - `def:task-topology` and its topology properties (`T1`, `R0`, `Discrete`) — topology is not named
   in this task's "cover at minimum" list.
 - `def:derivability`, `def:soundness` — proof-theoretic, not semantic, definitions; not named in
-  this task's "cover at minimum" list.
+  this task's "cover at minimum" list. **Justification refreshed 2026-09-07**: the z/d/r wave
+  restated both for **TM** and the full language **BL** rather than for the retired Past/Future
+  fragment system (paper lines 4031 and 4035). The restatement makes them *more* relevant to this
+  repository, not less, but the exclusion stands on its original ground — they are proof-theoretic
+  — and no in-tree site quotes either. Promote them the moment one does.
 - `def:time-shift-histories` and the time-shift preservation lemmas.
 
 If a future task needs to cite paper text for any of the above, add it here first (see "How to

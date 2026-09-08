@@ -211,19 +211,19 @@ treat any mismatch as evidence the paper moved since the research run.
 
 ---
 
-### Phase 3: Re-pin sentinels and record the wave narrative [NOT STARTED]
+### Phase 3: Re-pin sentinels and record the wave narrative [COMPLETED]
 
 **Goal**: The record's file-level pin matches the live paper, and the wave — including the three
 corrected dispatch premises — is documented for the next reader.
 
 **Tasks**:
-- [ ] Compute the live paper's sha256 and its repo commit; update `FILE_CHECKSUM`, `PINNED_COMMIT`
+- [x] Compute the live paper's sha256 and its repo commit; update `FILE_CHECKSUM`, `PINNED_COMMIT`
       and `LINE_COUNT` in the record header to the freshly measured values (the report measured
       `93fd9b14…` at commit `f61bbd75`; re-measure rather than copy).
-- [ ] Add a dated `### Drift correction and rename absorption (2026-09-07)` narrative section,
+- [x] Add a dated `### Drift correction and rename absorption (2026-09-07)` narrative section,
       following the shape of the existing 2026-09-02 and 2026-08-25 sections: what the paper did,
       what was retired, what was newly pinned, what was re-hashed.
-- [ ] Record the three corrections in that section so a future reader does not re-derive them:
+- [x] Record the three corrections in that section so a future reader does not re-derive them:
       the Z1 footnote is **commented out** in the paper (author note at paper line 1334) and is
       not recorded as live; `thm:TM-soundness` needed no re-hash because the changed text lives in
       the `\begin{proof}` block outside the hashed environment; `def:BX-r`'s second axiom is
@@ -231,14 +231,14 @@ corrected dispatch premises — is documented for the next reader.
       repository-side consequence (0 in-tree hits, no manifest rows), and that `prop:archimedean`
       is a pen-and-paper `Pthm` this repository does not check — recorded as such, not pinned as
       verified.
-- [ ] Update the "Deliberately not covered" bullet for `def:derivability` / `def:soundness`: they
+- [x] Update the "Deliberately not covered" bullet for `def:derivability` / `def:soundness`: they
       are now stated for **TM** and the full language `BL` (paper lines 4016, 4020); the exclusion
       stands, its justification is refreshed.
-- [ ] Extend the existing `### Dirty-pin caveat` section with this wave's date, since the pinned
+- [x] Extend the existing `### Dirty-pin caveat` section with this wave's date, since the pinned
       source file is again uncommitted in its own repository.
-- [ ] Re-run `bash scripts/check-paper-definitions.sh` and confirm the **quiet case-(a) pass**
+- [x] Re-run `bash scripts/check-paper-definitions.sh` and confirm the **quiet case-(a) pass**
       (exit 0, no output). This is the task's acceptance gate.
-- [ ] Commit.
+- [x] Commit.
 
 **Timing**: 0.5 hours
 
