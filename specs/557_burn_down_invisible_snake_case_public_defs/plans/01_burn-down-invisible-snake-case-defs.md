@@ -226,22 +226,22 @@ worklist.
 
 ---
 
-### Phase 2: `ContextualProofs.lean` (66) and its call sites [NOT STARTED]
+### Phase 2: `ContextualProofs.lean` (66) and its call sites [COMPLETED]
 
 **Goal**: Rename all 66 public `def`s in `FormalSystem/Theorems/ContextualProofs.lean` and update
 the matching call sites in `FormalSystem/Automation/ProofStepExport.lean`, the file's only
 importer.
 
 **Tasks**:
-- [ ] Apply the 66 renames from the worklist inside `ContextualProofs.lean`, longest names first
+- [x] Apply the 66 renames from the worklist inside `ContextualProofs.lean`, longest names first
       so no rename catches a shorter name as a substring (`box_4_ctx_weak` before `box_4_ctx`,
       `identity_in_ctx_weak` before `identity_in_ctx`). Use word-boundary matching throughout.
-- [ ] Update the declaration docstrings and the module docstring in the same file wherever they
+- [x] Update the declaration docstrings and the module docstring in the same file wherever they
       name a renamed declaration.
-- [ ] Update every call site in `ProofStepExport.lean`. Leave every `mkEntry "…"` **string
+- [x] Update every call site in `ProofStepExport.lean`. Leave every `mkEntry "…"` **string
       literal** untouched — those are dataset labels, already distinct from the identifiers, and
       changing them is a data-format change.
-- [ ] Confirm no other file references any of the 66 names:
+- [x] Confirm no other file references any of the 66 names:
       `for n in <names>; do grep -rlwF "$n" --include=*.lean FormalSystem/ Tests/; done` returns
       only these two files.
 
