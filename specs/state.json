@@ -20,7 +20,8 @@
         562
       ],
       "created": "2026-09-03T19:24:26Z",
-      "last_updated": "2026-09-08T15:59:31Z"
+      "last_updated": "2026-09-08T15:59:31Z",
+      "priority": "low"
     },
     {
       "project_number": 534,
@@ -34,7 +35,8 @@
         562
       ],
       "created": "2026-09-03T19:14:55Z",
-      "last_updated": "2026-09-08T15:59:31Z"
+      "last_updated": "2026-09-08T15:59:31Z",
+      "priority": "low"
     },
     {
       "project_number": 506,
@@ -45,7 +47,8 @@
       "topic": "publication-quality",
       "created": "2026-08-27T04:46:28Z",
       "last_updated": "2026-09-01T06:06:56Z",
-      "session_id": "sess_1787806065_4e3a93"
+      "session_id": "sess_1787806065_4e3a93",
+      "priority": "high"
     },
     {
       "project_number": 504,
@@ -55,7 +58,8 @@
       "description": "Retry acquisition of the standard modal-representation sources that the representation-section literature research could not obtain because Semantic Scholar (literature-discover.sh Tier 3) was rate-limited (HTTP 429) for the whole session: Sambin & Vaccaro 1988 \"Topology and duality in modal logic\"; S. K. Thomason 1972 \"Semantic analysis of tense logics\" and 1975 \"Categories of frames for modal logic\"; Goldblatt 1976 \"Metamathematics of modal logic\" I-II; Fine 1975 \"Some connections between elementary and modal logic\"; Gehrke & Jonsson 2004 \"Bounded distributive lattice expansions\" (mscand.dk URLs 404; proxy gehrke_vosmaer_2011 already ingested); Gabbay & Shehtman \"Products of modal logics I\"; Marx & Venema 1997 \"Multi-dimensional modal logic\" (Zotero metadata only, no PDF). Use /literature \"<title>\" or literature-discover.sh once Tier 3 recovers (or after the S2_API_KEY / multi-provider fallback lands in the literature extension), ingest what is open-access or in Zotero, record paywalled items honestly as not acquired, and register every acquired doc in specs/literature-index.json with reason and citation_rule fields following the existing entries. Evidence and the full standard-sources checklist are in specs/503_revise_representation_section_with_literature/reports/01_representation-literature-research.md sections 2.2-2.3",
       "topic": "literature",
       "created": "2026-08-26T18:54:46Z",
-      "last_updated": "2026-08-26T18:54:46Z"
+      "last_updated": "2026-08-26T18:54:46Z",
+      "priority": "low"
     },
     {
       "project_number": 298,
@@ -256,7 +260,8 @@
       "created": "2026-05-11T19:35:39Z",
       "last_updated": "2026-09-02T03:30:31Z",
       "topic": "algebraic-representation",
-      "file_scope": null
+      "file_scope": null,
+      "priority": "low"
     },
     {
       "project_number": 127,
@@ -270,7 +275,8 @@
       "next_artifact_number": 1,
       "artifacts": [],
       "topic": "frame-extensions",
-      "file_scope": null
+      "file_scope": null,
+      "priority": "low"
     },
     {
       "project_number": 128,
@@ -284,14 +290,15 @@
       "next_artifact_number": 1,
       "artifacts": [],
       "topic": "frame-extensions",
-      "file_scope": null
+      "file_scope": null,
+      "priority": "low"
     },
     {
       "project_number": 177,
       "project_name": "update_readme_and_module_docstrings",
       "status": "not_started",
       "task_type": "lean4",
-      "priority": "medium",
+      "priority": "low",
       "description": "Update README.md, docs/, and FormalSystem/ module-level docstrings to their final post-refactor state, once the decidability chain (426, 428, 429, 430, 432, 433, 434) lands. This is the final polish pass, distinct from and run after task 472's already-completed immediate correction pass. Explicitly excludes: every item task 472 already corrected (the Decidability.lean Status block, Verified/README.md, FMP/README.md, DecisionProcedure.lean's decideAuto docstring, Verified/Decidable.lean's Status docstring, WeakCanonical.lean, RealModel/ShuffleReal.lean, Soundness.lean, PriorExpressivenessDense.lean) and the two Kamp files task 473 already swept (Kamp/EANegationClosure.lean, NfMultiAnchorBridge/NavigatedSpine.lean). This task's residual content is: re-auditing all touched documentation for drift accumulated during the decidability chain's landing (472/473 audited a snapshot; the chain's remaining tasks will touch further files after 472/473 ran), and the Axiom Reference update the charter names as part of 177's original scope.\n\nREALIGNMENT NOTE (task 468, 2026-08-25, verdict per specs/468_realign_task_programme_from_proof_state_audit/reports/02_stage1-verification-and-programme-realignment.md §6): DIVIDE, already half-executed exactly as specs/reviews/review-2026-08-24.md amendment 10f states -- tasks 472 (documentation correction pass) and 473 (Kamp vacuity deletion) already ran the ungated half; the description above is the remaining, gated half's text. `file_scope` (README.md, specs/ROADMAP.md, FormalSystem/, docs/) was already repaired by task 470 item (G) and is confirmed resolvable, no duplicate -- left unchanged here.\n\n=== DEPENDENCY ADDED 2026-09-01 ===\nTask 530 (documentation single source of truth + theorem index, from specs/reviews/review-2026-09-01-lean-engineering.md) is the UN-GATED metalogic half of this charter and is now a dependency; this task remains the gated post-decidability-chain pass and its residual shrinks to re-auditing drift the decidability chain introduces plus the Axiom Reference update.",
       "dependencies": [
         131,
@@ -330,7 +337,7 @@
       "project_name": "publication_examples_and_demo",
       "status": "not_started",
       "task_type": "lean4",
-      "priority": "low",
+      "priority": "high",
       "description": "Expand Examples/ with publication-quality demonstrations of the full verified pipeline. Complete worked example showing soundness and completeness on a concrete formula, plus decidability of the propositional fragment (genuinely complete today, per the soundness/completeness metatheory's axiom-clean status). Examples exercising each frame class with FrameClass-parameterized DerivationTree. Examples of the expressive completeness result. Update BimodalProofs.lean and TemporalStructures.lean. All examples sorry-free.\n\nREALIGNMENT CORRECTION (task 468, 2026-08-25, carried from specs/reviews/review-2026-08-24.md\namendment M-7, independently re-confirmed at realignment time): the struck original acceptance\ncriterion above (\"Complete worked example showing soundness-completeness-decidability on a\nconcrete formula\") is RESCOPED. Decidability of TM (the full bimodal logic) is still open --\nre-confirmed fresh this dispatch: grep -rn \"isValid\" FormalSystem/Metalogic/Decidability/ shows no\ndeclaration takes DecisionProcedure.isValid as its subject, and ruleSound_of_mem_allRulesForFC is\nnot lifted to any allClosed -> valid theorem. `truthAt_of_isValid`\n(Verified/Decidable.lean:2412) is NOT evidence of decidability -- it concerns a different,\nsemantic-side `SoundnessLemmas.IsValid`, not the decision procedure's `DecisionProcedure.isValid`.\nDo not cite it as such. This task's decidability example is therefore rescoped to the\npropositional-fragment case (genuinely decidable today) rather than the full logic; a full-logic\ndecidability example remains gated on the decidability/tableau front (410-465,\n480-482) landing.",
       "dependencies": [
         131,
@@ -375,7 +382,8 @@
         "FormalSystem/Metalogic/SoundnessLemmas/",
         "FormalSystem/Metalogic/Soundness.lean"
       ],
-      "description": "Apply validity-intro and truth-simp macros to the soundness layer.\n\nRE-SCOPED 2026-07-26 by the codebase tactic survey (now archived at specs/archive/196_codebase_tactic_survey/reports/02_automation-survey.md section 6.3). The original charter targeted Theorems/ using tm_prove. Theorems/ is 7,017 lines - 3.8% of the tree, half the relative share the 2026-05 research assumed - and is sorry-free and stable; tm_prove (task 192) is abandoned; and the search-family tactics it would have fallen back on have zero adoption. The task keeps its kind (an application pass that reduces existing proof text) and replaces its target and its instrument.\n\nDefine a small family of syntactic macros and apply them mechanically to the three files that concentrate the codebase two highest-frequency verbatim proof repetitions. This is an APPLICATION task: the deliverable is measured reduction in existing proof text at named files, not the existence of a macro.\n\nMacros to define (single-line `macro ... : tactic` declarations - no elaboration, no goal inspection):\n  - intros_validity           for `intro F M Omega _h_sc τ _h_mem t`\n  - intros_validity_framed    for the frame-condition-prefixed variant\n  - simp_truth                for the recurring `simp only [TruthAt, Truth.future_iff, Truth.past_iff, Truth.some_future_iff, Truth.some_past_iff]` bundle\n  - unfold_validity           composing intros_validity with simp_truth, for sites where the two appear consecutively\n\nNAMING NOTE (2026-07-27): the simp head symbol is `TruthAt`, not the pre-upgrade `truth_at` -- the systematic Mathlib naming upgrade renamed it. The `Truth.*_iff` names above are unchanged (declared in FormalSystem/Semantics/Truth.lean at :220 some_future_iff, :239 some_past_iff, :258 future_iff, :278 past_iff).\n\nMeasured target sites (re-verified 2026-07-27 against the working tree, Boneyard/ excluded; counts unchanged from the 2026-07-26 measurement, only the paths and the simp head symbol were restated):\n  - FormalSystem/Metalogic/SoundnessLemmas/DenseValidity.lean      - 92 `intro F M Omega`, 54 `simp only [TruthAt`\n  - FormalSystem/Metalogic/SoundnessLemmas/FrameClassVariants.lean - 56 `intro F M Omega`, 30 `simp only [TruthAt`\n  - FormalSystem/Metalogic/Soundness.lean                          -  0 `intro F M Omega`, 47 `simp only [TruthAt`\n\nDO BOTH MACRO GROUPS AS ONE PASS over the same files, not two. Splitting them edits the same two files twice and forfeits the unfold_validity collapse.\n\nCOMPLETION CRITERION: `intro F M Omega` occurrences in the two SoundnessLemmas/ files reach zero; `simp only [TruthAt` occurrences across the three files fall by at least 80%; lake build green; executable sorry count unchanged at 1, located BY CONTENT in FormalSystem/Metalogic/WeakCanonical/Transfer.lean, never by line number. A task that ends with working macros and unchanged proof text has FAILED.\n\nEXPLICITLY OUT OF SCOPE: Theorems/ refactoring, tm_prove, modal_search and every other search-family tactic, and any new elaborated tactic. See the survey report section 5 for the measured evidence (38 real proof-site invocations across ~5,800 lines of proof automation, all 38 in one file).\n\nDEPENDENCY ON THE SYSTEMATIC MATHLIB NAMING UPGRADE -- NOW DISCHARGED (2026-07-27): this task rewrites proof bodies at roughly 330 sites, and the naming-upgrade task rewrote the same reference graph at 24,364 sites while moving every file from Theories/Bimodal/ to FormalSystem/. A mass proof rewrite must not race a mass rename, so this task was held until that rename landed. It HAS landed -- the naming-upgrade task is status `completed` -- so the precondition is satisfied and this task is NOT blocked. Every path in this description, and every entry in file_scope, is now stated in its post-rename FormalSystem/ form; `Theories/Bimodal/` appears above only as the historical source of that move, never as a path to open.\n\nInventory groups drawn on: survey report section 4.2 groups 2 (intros_validity, score 153) and 3 (simp_truth, score 72.7).\n\n=== RE-SCOPED 2026-09-01 by specs/reviews/review-2026-09-01-lean-engineering.md (findings A-13, D-06, D-10, D-20) ===\nDROP the intros_validity / intros_validity_framed / unfold_validity macros: the tactics review (D-20) recommends AGAINST a binder macro (macro hygiene makes F/M/τ/t inaccessible at the call site, so it is strictly worse than `intro`); the 231 intro-chains are instead normalised to one spelling by task 522. KEEP the simp_truth half, but retarget it: task 521 DEFINES the truth simp-normal form (`Truth.and_iff` etc. as @[simp], `register_simp_attr truth_norm`, `macro truth_simp`) and rewrites the ten worst soundness proofs as its proof of concept; THIS task is the mechanical application pass of `truth_simp`/`swap_norm` across the REST of Metalogic/Soundness.lean and Metalogic/SoundnessLemmas/FrameClassVariants.lean. The original target DenseValidity.lean (92 intros / 54 simps) is DELETED by task 519, so do not touch it. DEPENDS ON 519 (deletion first, or 600 lines are rewritten and then removed) and 521 (the set must exist). COMPLETION CRITERION, restated: `simp only [TruthAt` occurrences across Soundness.lean and FrameClassVariants.lean fall by at least 80%; lake build green; C2 baseline unchanged."
+      "description": "Apply validity-intro and truth-simp macros to the soundness layer.\n\nRE-SCOPED 2026-07-26 by the codebase tactic survey (now archived at specs/archive/196_codebase_tactic_survey/reports/02_automation-survey.md section 6.3). The original charter targeted Theorems/ using tm_prove. Theorems/ is 7,017 lines - 3.8% of the tree, half the relative share the 2026-05 research assumed - and is sorry-free and stable; tm_prove (task 192) is abandoned; and the search-family tactics it would have fallen back on have zero adoption. The task keeps its kind (an application pass that reduces existing proof text) and replaces its target and its instrument.\n\nDefine a small family of syntactic macros and apply them mechanically to the three files that concentrate the codebase two highest-frequency verbatim proof repetitions. This is an APPLICATION task: the deliverable is measured reduction in existing proof text at named files, not the existence of a macro.\n\nMacros to define (single-line `macro ... : tactic` declarations - no elaboration, no goal inspection):\n  - intros_validity           for `intro F M Omega _h_sc τ _h_mem t`\n  - intros_validity_framed    for the frame-condition-prefixed variant\n  - simp_truth                for the recurring `simp only [TruthAt, Truth.future_iff, Truth.past_iff, Truth.some_future_iff, Truth.some_past_iff]` bundle\n  - unfold_validity           composing intros_validity with simp_truth, for sites where the two appear consecutively\n\nNAMING NOTE (2026-07-27): the simp head symbol is `TruthAt`, not the pre-upgrade `truth_at` -- the systematic Mathlib naming upgrade renamed it. The `Truth.*_iff` names above are unchanged (declared in FormalSystem/Semantics/Truth.lean at :220 some_future_iff, :239 some_past_iff, :258 future_iff, :278 past_iff).\n\nMeasured target sites (re-verified 2026-07-27 against the working tree, Boneyard/ excluded; counts unchanged from the 2026-07-26 measurement, only the paths and the simp head symbol were restated):\n  - FormalSystem/Metalogic/SoundnessLemmas/DenseValidity.lean      - 92 `intro F M Omega`, 54 `simp only [TruthAt`\n  - FormalSystem/Metalogic/SoundnessLemmas/FrameClassVariants.lean - 56 `intro F M Omega`, 30 `simp only [TruthAt`\n  - FormalSystem/Metalogic/Soundness.lean                          -  0 `intro F M Omega`, 47 `simp only [TruthAt`\n\nDO BOTH MACRO GROUPS AS ONE PASS over the same files, not two. Splitting them edits the same two files twice and forfeits the unfold_validity collapse.\n\nCOMPLETION CRITERION: `intro F M Omega` occurrences in the two SoundnessLemmas/ files reach zero; `simp only [TruthAt` occurrences across the three files fall by at least 80%; lake build green; executable sorry count unchanged at 1, located BY CONTENT in FormalSystem/Metalogic/WeakCanonical/Transfer.lean, never by line number. A task that ends with working macros and unchanged proof text has FAILED.\n\nEXPLICITLY OUT OF SCOPE: Theorems/ refactoring, tm_prove, modal_search and every other search-family tactic, and any new elaborated tactic. See the survey report section 5 for the measured evidence (38 real proof-site invocations across ~5,800 lines of proof automation, all 38 in one file).\n\nDEPENDENCY ON THE SYSTEMATIC MATHLIB NAMING UPGRADE -- NOW DISCHARGED (2026-07-27): this task rewrites proof bodies at roughly 330 sites, and the naming-upgrade task rewrote the same reference graph at 24,364 sites while moving every file from Theories/Bimodal/ to FormalSystem/. A mass proof rewrite must not race a mass rename, so this task was held until that rename landed. It HAS landed -- the naming-upgrade task is status `completed` -- so the precondition is satisfied and this task is NOT blocked. Every path in this description, and every entry in file_scope, is now stated in its post-rename FormalSystem/ form; `Theories/Bimodal/` appears above only as the historical source of that move, never as a path to open.\n\nInventory groups drawn on: survey report section 4.2 groups 2 (intros_validity, score 153) and 3 (simp_truth, score 72.7).\n\n=== RE-SCOPED 2026-09-01 by specs/reviews/review-2026-09-01-lean-engineering.md (findings A-13, D-06, D-10, D-20) ===\nDROP the intros_validity / intros_validity_framed / unfold_validity macros: the tactics review (D-20) recommends AGAINST a binder macro (macro hygiene makes F/M/τ/t inaccessible at the call site, so it is strictly worse than `intro`); the 231 intro-chains are instead normalised to one spelling by task 522. KEEP the simp_truth half, but retarget it: task 521 DEFINES the truth simp-normal form (`Truth.and_iff` etc. as @[simp], `register_simp_attr truth_norm`, `macro truth_simp`) and rewrites the ten worst soundness proofs as its proof of concept; THIS task is the mechanical application pass of `truth_simp`/`swap_norm` across the REST of Metalogic/Soundness.lean and Metalogic/SoundnessLemmas/FrameClassVariants.lean. The original target DenseValidity.lean (92 intros / 54 simps) is DELETED by task 519, so do not touch it. DEPENDS ON 519 (deletion first, or 600 lines are rewritten and then removed) and 521 (the set must exist). COMPLETION CRITERION, restated: `simp only [TruthAt` occurrences across Soundness.lean and FrameClassVariants.lean fall by at least 80%; lake build green; C2 baseline unchanged.",
+      "priority": "high"
     },
     {
       "project_number": 219,
@@ -479,7 +487,8 @@
         }
       ],
       "session_id": "sess_1785362916_22a871_410",
-      "topic": "decidability"
+      "topic": "decidability",
+      "priority": "low"
     },
     {
       "project_number": 411,
@@ -496,7 +505,8 @@
       "created": "2026-07-28T00:21:55Z",
       "last_updated": "2026-07-28T00:21:55Z",
       "artifacts": [],
-      "topic": "decidability"
+      "topic": "decidability",
+      "priority": "low"
     },
     {
       "project_number": 412,
@@ -516,7 +526,8 @@
       "created": "2026-07-28T00:21:55Z",
       "last_updated": "2026-07-28T00:21:55Z",
       "artifacts": [],
-      "topic": "decidability"
+      "topic": "decidability",
+      "priority": "low"
     },
     {
       "project_number": 428,
@@ -605,7 +616,8 @@
       "session_id": "sess_1786031793_a8d423",
       "blockers": "Orchestration paused at 4/5 cycles, NOT blocked. Plan v4 (plans/04_ordtimesknown-strengthening-totality.md) is FULLY EXECUTED: all 17 phase headings are [COMPLETED], MintBound.lean is 4512 lines, 0 sorry, 0 axiom, #print axioms on the terminus is exactly [propext, Classical.choice, Quot.sound], and lake build is green repo-wide (2333 jobs, 3m24s wall). Saturation.lean, Tableau.lean and Fuel.lean are byte-identical to task start; MintBound.lean is the only source file changed (+2709 lines, purely additive, no landed declaration deleted or edited). All five named risks R1/R2/R3/R4/R6/R8 are retired BY PROOF, none by narrowing and none by axiom.\n\nSTATUS IS DELIBERATELY partial, NOT completed. The terminus buildTableauAt_isSome_of_budget carries FOUR named residual hypotheses, each a def with an in-source docstring stating what would discharge it: (1) MintPaysForTime -- the open mathematical core; the sigma-hit/time-reuse question, PLUS a new obstruction found in the final cycle: 'not ruleMintsFreshLabel implies no new time' is FALSE, since densityRule and the active arms of untlNeg/snceNeg create times without being witness-guarded. (2) PostBlockingSettles -- subsumes resolveOpenArm's none via armSettlement_of_postBlockingSettles; ArmSettlement alone is provably too weak. (3) UniverseClosed -- closure of U under engine steps AND under an identification's relabelling; the second clause is genuinely new. (4) DifficultyBounded with beta >= 3 -- BLOCKED from being computed in MintBound.lean because temporalCount/modalCount are private to Saturation.lean, which this plan forbids touching. None is the unbranching restriction renamed; all four ExpansionResult shapes stay admissible under every one of them.\n\nTWO PLAN PREMISES DID NOT SURVIVE CONTACT WITH THE SOURCE. (A) BudgetedTotality is FALSE as stated, refuted in-source at beta = 0 by budgetedTotality_beta_zero_false: its beta-linear budget hypothesis degenerates to branchesUsed <= maxBranches while the engine's guard is strict. Its fuel figure is also SHORT. (B) The prior cycle's 'the path figure fits, no divergence needed' is WITHDRAWN -- it compared the wrong quantity (path_le_splitPathBound counts #extensions + #identifications, but fuel is spent by EVERY engine step including the ordered split's arms 1-2). The landed statements are therefore at the derived mintAwareFuel, with splitAwareFuel_le_mintAwareFuel proving it ENLARGES rather than replaces the landed figure, per plan 02's own instruction for orderedRunBound.\n\nNEXT STEP IS A HUMAN SCOPE DECISION, NOT ANOTHER IMPLEMENT DISPATCH: the plan has no phase left to dispatch against. Either /revise 428 to add phases for the residuals, or /spawn 428 to create separate tasks for them. MintPaysForTime is genuine open research; DifficultyBounded needs a decision about Saturation.lean's private definitions. Continuation handoff: handoffs/v4-phase-14-handoff-20260806.md (every other file in that directory is stale).",
       "researched": "2026-08-05T22:51:07Z",
-      "previous_status": "implementing"
+      "previous_status": "implementing",
+      "priority": "low"
     },
     {
       "project_number": 429,
@@ -627,7 +639,8 @@
       "artifacts": [],
       "title": null,
       "created": "2026-07-29T23:39:38Z",
-      "last_updated": "2026-07-29T23:39:38Z"
+      "last_updated": "2026-07-29T23:39:38Z",
+      "priority": "low"
     },
     {
       "project_number": 430,
@@ -650,7 +663,8 @@
       "artifacts": [],
       "title": null,
       "created": "2026-07-29T23:39:38Z",
-      "last_updated": "2026-07-29T23:39:38Z"
+      "last_updated": "2026-07-29T23:39:38Z",
+      "priority": "low"
     },
     {
       "project_number": 464,
@@ -670,7 +684,8 @@
         462,
         463
       ],
-      "artifacts": []
+      "artifacts": [],
+      "priority": "low"
     },
     {
       "project_number": 465,
@@ -690,7 +705,8 @@
         463,
         464
       ],
-      "artifacts": []
+      "artifacts": [],
+      "priority": "low"
     },
     {
       "project_number": 476,
@@ -698,7 +714,7 @@
       "status": "not_started",
       "task_type": "lean4",
       "topic": "decidability",
-      "priority": "medium",
+      "priority": "low",
       "effort": "large",
       "description": "THE BOX-FAITHFUL SMALL-MODEL THEOREM.\n\nCLASSIFICATION: OPEN MATHEMATICS. MULTI-MONTH. This is a genuine research problem in the same\ncategory as the audit's R4 \"semantic FMP\" entry. IT MAY NOT BE RE-DESCRIBED AS ENGINEERING, AND IT\nMAY NOT BE MERGED INTO THE BILASSO WIRING TASK OR THE CARRIER-NORMALIZATION TASK. Merging is\nprecisely how a research problem gets hidden behind an engineering description, and this task\nexists partly to prevent that.\n\nDO NOT BEGIN before the BiLasso wiring task and the carrier-normalization task (task 475) are\nlanded. Those two have standalone value; this one does not, and its cost is dominated by a problem\na two-day literature check might refute outright.\n\n=== LITERATURE GATE -- RUN FIRST, AND IT IS EMPOWERED TO STOP THE TASK ===\n\nAcquire Gabbay, Kurucz, Wolter, Zakharyaschev, *Many-Dimensional Modal Logics* (2003) and read its\ntemporal-products chapter. IF the two-dimensional `Until`/`Since` case is recorded there as\nundecidable or as lacking the finite model property, THIS TASK IS REFUTED and must be REPORTED AS\nSUCH rather than attempted. A negative result here is as valuable as a positive one and would\nredirect the whole decidability front.\n\nWhat is already firm from a prior search: products of THREE OR MORE modal logics are undecidable,\nwith no logic between K x K x K and S5 x S5 x S5 decidable, and S5 x S5 x S5 lacks the finite model\nproperty. What is NOT settled: the two-dimensional case with `Until`/`Since`, which is what this\nlogic is closest to. Note that TM is in any case NOT a full product -- its second dimension is the\npath space of a graph, not an arbitrary set of runs -- so a product-logic result would be evidence,\nnot a decision.\n\n=== THE TARGET ===\n\nBuild `cands : Formula -> List IntPresentation` and prove\n\n    not (ValidDiscrete phi) -> exists P in cands phi, exists w, SatAtState P w phi.neg\n\nThis is the SINGLE remaining obligation for decidability of `ValidDiscrete`. Everything else is\nalready compiled: given this hypothesis, `check`-over-`cands` is equivalent to `ValidDiscrete phi`\nand `decidable_of_iff` reads the `Decidable` instance off it. There is no bridge theorem, no\ntransfer lemma, no enumeration over `Atom`, and no `Fin n`-from-`Finite` extraction anywhere in the\nassembly; `check_correct` is the FINAL step.\n\n=== THE CONSTRUCTION (the tractable part) ===\n\nBuild `cands phi` from the CLOSURE-TYPE SPACE: subsets of `subformulaClosure phi` satisfying the\nlocal Hintikka conditions, with `step` given by `LocalCoherent`'s `untl`/`snce` unfolding clauses\n(`BiLasso/Annotation.lean` already states them, and they relate the label at `t` to the label at\n`t` plus-or-minus one only -- i.e. they ARE an adjacency relation), and the valuation read off the\nstate by deciding atom membership. Every ingredient is `Finset`/`Bool` data with `DecidableEq`.\nTwo real obligations, neither research-grade:\n\n  1. `fwd`/`bwd` SERIALITY OF THE TYPE GRAPH. Not free: a Hintikka type may have no locally\n     coherent successor, forcing an ITERATED PRUNING to a maximal serial subgraph. Standard,\n     bounded, fiddly.\n  2. INDEXING. `IntPresentation` demands `Fin card` specifically, so the type `Finset` must be\n     listed and indexed. Mechanical.\n\nEstimate for this part alone: two to four weeks.\n\nDO NOT instead try \"bound `card` by some `presentationBound phi`, then enumerate the presentations\nup to that bound\". That does not typecheck as stated: `IntPresentation.val : Atom -> Fin card ->\nBool` is a function on the `Infinite` type `Atom`, so presentations of a given `card` are not a\nfinite collection. Closing that would need a valuation-restriction lemma that is not in the tree.\nThe formula-indexed candidate list sidesteps the problem rather than solving it.\n\n=== THE CRUX: BOX-FAITHFULNESS (the research part) ===\n\nThe `box` clause of `TruthAt` quantifies universally over ALL total histories. Two landed facts\nmake this a GLOBAL modality rather than a local one:\n\n  - `Truth.box_const` (`Semantics/Truth.lean`): box truth is independent of both the history and\n    the time. Its own docstring: \"a model has one finite set of box facts, computed once.\"\n  - `Extension.occurrence` (`cor:occurrence`): every state occurs at every time in some total\n    history.\n\nThat collapse is why `BoxOracleSound P bx` types `bx` as `Formula -> Bool` -- one `Bool` per\nformula, per model. It is also the obstruction:\n\n  The box facts of the SOURCE model M and of the TARGET presentation P are each global constants\n  of their own model, and they need not agree. P admits every path of its graph. The subgraph of\n  types realized in M still generates paths that M does not realize, and along such a path a\n  `box chi` true in M can fail. When it fails, the type-map image is no longer a `LocalCoherent`\n  annotation, and the transfer breaks.\n\nRestricting `cands phi` to realized-type subgraphs does NOT by itself close this: the subshift\ngenerated by the realized edges properly contains the realized paths. So the residue is a genuine\nBOX-FAITHFUL small-model theorem -- in effect a bounded-model property for LTL(Until, Since) over\nbi-infinite paths of a graph, PLUS a universal path quantifier over the whole structure.\n\nIs it true? Almost certainly -- the shape is the classical automata-theoretic bounded-model\nsetting, and the analogous results (CTL*-style satisfiability, LTL with a universal modality) are\ndecidable with finite/bounded model properties. Is it in reach? Not routinely. Neither Mathlib nor\nthis tree carries omega-automata, Buchi complementation, or any language-inclusion machinery, so a\nLean proof must be hand-rolled.\n\n=== WHAT TO REUSE ===\n\n`BiLasso/GoodCycle.lean`'s good-cycle argument, `cycleBound`, and `exists_annot_of_truth` are\nexactly the fulfilment machinery a hand-rolled proof would reuse. Be clear-eyed that they operate\nINSIDE a presentation, not across the model boundary, which is the whole difficulty.\n\n=== DO NOT PROMISE A CHOICE-FREE RESULT ===\n\n`wlem_of_spherical` (`Tests/BimodalTest/Semantics/SphericalFiniteAxiomTest.lean`) derives weak\nexcluded middle from `Spherical R` at the finite carrier `Bool` over `D = ZZ`, from\n`[propext, Quot.sound]` alone. So NO finite-carrier frame with an arbitrarily shaped relation can\nbe choice-free, on any route. The cost is already paid by `IntPresentation.toTaskFrame`. Any spec\npromising choice-freedom here is promising something proved impossible. Note the separate\ndistinction: `instDecidableSatAtState` COMPUTES (kernel-evaluated `#guard`s prove it) while\nmeasuring `[propext, Classical.choice, Quot.sound]`. Computability and choice-freedom are different\nproperties.",
       "dependencies": [
@@ -719,7 +735,7 @@
       "status": "blocked",
       "task_type": "lean4",
       "topic": "decidability",
-      "priority": "medium",
+      "priority": "low",
       "effort": "large",
       "dependencies": [
         434,
@@ -766,7 +782,7 @@
       "status": "not_started",
       "task_type": "lean4",
       "topic": "decidability",
-      "priority": "medium",
+      "priority": "low",
       "effort": "large",
       "dependencies": [
         412
@@ -793,7 +809,8 @@
       ],
       "description": "Bring the Shift-closed Tense S5 Algebra class into live code and close the G-operator gap. Phase 1 groundwork for the Jonsson-Tarski representation. THE SEED: Boneyard/UltrafilterFrame/TenseS5Algebra.lean (361 lines, behind #exit) already contains the full class STSA extending BooleanAlgebra with fields box, G, H, sigma and axioms box_deflationary, box_monotone, box_idempotent, box_s5, G_monotone, H_monotone, sigma_involution, sigma_neg, sigma_sup, sigma_G, sigma_H, sigma_box, MF, TF, TA, TL. This is the exact algebraic signature the representation needs. IT CARRIES 3 SORRIES, AND THEY MUST NOT BE PROVED AS-IS: they are for temp_a and temp_l, axioms that have since been REMOVED or restructured; restate them against the current 45-constructor ProofSystem.Axiom set (Axioms.lean:115-464) rather than reviving the old shapes. THE G GAP: LindenbaumQuotient.lean supplies boxQuot (:305-ish), hQuot, and sigmaQuot (:346) with its four laws (sigma_quot_involution :353, sigma_quot_neg :362, sigma_quot_sup :373, sigma_quot_box :385) -- but there is NO gQuot. G on the Lindenbaum quotient must be constructed and its congruence proved before LindenbaumAlg can be an STSA instance. Boneyard/SorriedDeclExcisions/AlgebraicGQuotChain.lean is the excised prior attempt and should be consulted, not trusted. DESIGN REFERENCE: specs/archive/992_shift_closed_tense_s5_algebra/reports/01_stsa-algebraic-analysis.md (538 lines) gives the full axiom-to-equation translation table and the key structural claim that box a <= box(G a) meet G(box a) says the box-fixed points form a G-invariant subalgebra -- the algebraic encoding of Omega being shift-closed. It is stale on file names (references deleted AlgebraicRepresentation.lean and ParametricRepresentation.lean) but sound on the mathematics. ACCEPTANCE: STSA class live and sorry-free, gQuot constructed with congruence, instance STSA LindenbaumAlg, lake build green.\n\n=== DEPENDENCY ADDED 2026-09-01 ===\nTask 528 (Algebraic/ modernisation: propDecide in BooleanStructure.lean, SetMaximalConsistent.ultrafilterEquiv as a named Equiv, the bespoke `Ultrafilter` structure reconciled with Mathlib Order.PFilter/Ideal.IsPrime, Multiset.inf; from specs/reviews/review-2026-09-01-lean-engineering.md findings D-08, F-11, F-12, F-13) must land first so this task builds on the modernised algebra rather than inheriting a shadowed Ultrafilter name and ~430 lines of hand-built Boolean algebra.",
       "created": "2026-08-26T05:15:00Z",
-      "last_updated": "2026-09-02T03:30:31Z"
+      "last_updated": "2026-09-02T03:30:31Z",
+      "priority": "low"
     },
     {
       "project_number": 498,
@@ -807,7 +824,8 @@
       ],
       "description": "Phase 1 of the Jonsson-Tarski representation: the complex algebra Cm(F). Construct the powerset STSA over a TaskFrame -- carrier the powerset of the world-history space, with box, G, H and sigma defined from the frame relations -- and prove it satisfies every STSA axiom. GREENFIELD WARNING: Mathlib has NO Boolean algebras with operators, no complex algebras, no canonical extensions, and no modal-algebra machinery of any kind; a survey of the pinned v4.33.0-rc1 tree found nothing reusable for this. What Mathlib DOES supply and should be used: Order/BooleanAlgebra/ (already consumed by BooleanStructure.lean:421) and Order/CompleteBooleanAlgebra.lean:711 (CompleteAtomicBooleanAlgebra). CONSTRAINT FROM THE FOUR-AXIOM WORK (task 420, completed): TaskFrame (Semantics/TaskFrame.lean:474-577) now carries SEVEN fields, not five -- biconditional Compositionality, Seriality, Limit and Spherical plus a Nonempty WorldState field and [Nontrivial D]. The complex algebra must be built against the live seven-field structure, not the five-field shape the older design documents assume. ACCEPTANCE: Cm(F) defined, instance STSA (Cm F) proved, sorry-free, lake build green.",
       "created": "2026-08-26T05:15:00Z",
-      "last_updated": "2026-08-26T05:15:00Z"
+      "last_updated": "2026-08-26T05:15:00Z",
+      "priority": "low"
     },
     {
       "project_number": 499,
@@ -821,7 +839,8 @@
       ],
       "description": "HARD. Phase 2 of the Jonsson-Tarski representation: the ultrafilter frame Uf(A), and the proof that it is a TaskFrame. THE SEED: Boneyard/UltrafilterFrame/UltrafilterFrame.lean (1189 lines, behind #exit, 4 sorry hits) already has R_G (:82), R_Box (:90), R_H (:98) and a substantial body of proved structure -- R_Box_refl (:111), R_Box_euclidean (:127), R_Box_symm (:154), R_Box_trans (:164), R_G_R_H_converse (:179), the preimage and upward-closure lemmas (:229-251), R_G_trans (:281), R_H_trans (:304), and the F/P resolution lemmas (:515, :750). Port and revive rather than rebuild. THE GENUINELY NEW OBLIGATION, flagged in task 125's own FOUR-AXIOM EXPOSURE NOTE (2026-08-10): proving SPHERICAL for an ultrafilter frame is nontrivial and unattempted, and the paper's finite-W discharge pattern EXPLICITLY DOES NOT APPLY. Budget this as the dominant cost of the task; Compositionality, Seriality and Limit are expected to be far cheaper. MATHLIB HOOKS: Order/PrimeSeparator.lean:44 (DistribLattice.prime_ideal_of_disjoint_filter_ideal -- the Boolean prime ideal theorem in distributive-lattice form) is what a Zorn-free Uf(A)-nonemptiness argument should use; Order/Ideal.lean and Order/PrimeIdeal.lean (:156, :171) give the ultrafilter-as-prime-filter characterization. NOTE: Mathlib has NO Ultrafilter on an abstract Boolean algebra -- its Ultrafilter is Filter-on-Set-based. UltrafilterMCS.lean:44 rolls its own structure for exactly this reason, and its MCS-to-ultrafilter bijection (ultrafilter_correspondence :782) is available, though stated existentially rather than as a named Equiv. SHADOWING HAZARD: if Mathlib's Ultrafilter is opened in that namespace it collides with the bespoke one; keep them explicitly qualified.",
       "created": "2026-08-26T05:15:00Z",
-      "last_updated": "2026-08-26T05:15:00Z"
+      "last_updated": "2026-08-26T05:15:00Z",
+      "priority": "low"
     },
     {
       "project_number": 500,
@@ -836,7 +855,8 @@
       ],
       "description": "RESEARCH TASK. Prevent two parallel representation theorems from being developed and having to be reconciled after the fact. THE OBSERVATION: FormalSystem/Semantics/ShiftSet.lean -- landed by task 424 for the COMPACTNESS route -- is already a representation theorem. forward_repr (:263) and reverse_repr (:362) represent task models as shift sets, both directions, sorry-free. Separately, the STSA design report (specs/archive/992_shift_closed_tense_s5_algebra/reports/01_stsa-algebraic-analysis.md) identifies its key structural claim as: box a <= box(G a) meet G(box a) says the box-fixed points form a G-invariant subalgebra, which is the algebraic encoding of OMEGA BEING SHIFT-CLOSED. That is the same shift structure ShiftSet.lean makes explicit. These look like two views of one representation. SCOPE: determine whether they are, and if so, specify the shared infrastructure so the algebraic route consumes ShiftSet rather than duplicating it. Concretely: (a) is Cm(F) expressible as an algebra of shift-invariant subsets of a ShiftSet carrier? (b) does ShiftSet's sep hypothesis correspond to an STSA axiom, and if so which? (c) can the eta embedding be factored through reverse_repr? DELIVERABLE: a report with a verdict and, if affirmative, a concrete refactor specification. A NEGATIVE VERDICT IS A COMPLETE OUTCOME -- if the two representations are genuinely different objects, say so with evidence and record it so the question is not reopened. TIMING: run this after the Los-lemma work and the STSA port have both landed, so both sides are concrete rather than projected.",
       "created": "2026-08-26T05:15:00Z",
-      "last_updated": "2026-08-26T05:15:00Z"
+      "last_updated": "2026-08-26T05:15:00Z",
+      "priority": "low"
     },
     {
       "project_number": 501,
@@ -850,7 +870,8 @@
       ],
       "description": "Phase 4 of the Jonsson-Tarski representation: extend STSA with the binary Until and Since operators. The STSA class as seeded in Boneyard/UltrafilterFrame/TenseS5Algebra.lean carries only the unary box, G, H and sigma. The live object language's primitives are untl and snce (Formula, Syntax/Formula.lean), with allFuture and allPast DERIVED from them (:167, :177) -- so an STSA over the unary fragment alone does not represent the actual logic, and the representation theorem is incomplete without this. SCOPE: add binary operators to the STSA signature with their algebraic laws, extend the complex algebra Cm(F) to interpret them from the frame relations, extend the ultrafilter frame Uf(A) correspondingly, and re-prove the eta embedding at the extended signature. SEQUENCING: this deliberately follows the unary capstone rather than being folded into it -- the unary representation is a standalone result worth landing first, and folding the binary case in would make a single task that cannot complete in one dispatch. LITERATURE: Blackburn/de Rijke/Venema 2002 Chapter 5 (in the corpus as blackburn_2002, full text) is the standard reference for Jonsson-Tarski and its extensions to n-ary operators. Note the corpus warns blackburn_2002 exceeds a single context budget at 365,868 tokens -- a chapter-scoped sub-entry should be created before an agent consumes it.",
       "created": "2026-08-26T05:15:00Z",
-      "last_updated": "2026-08-26T05:15:00Z"
+      "last_updated": "2026-08-26T05:15:00Z",
+      "priority": "low"
     },
     {
       "project_number": 502,
@@ -864,7 +885,8 @@
       ],
       "description": "RESEARCH TASK. Ground the algebraic representation front in the literature BEFORE the STSA axiom set is fixed and before Uf(A) is constructed. Gates the STSA port; the complex-algebra and ultrafilter-frame tasks inherit the gate transitively.\n\nWHY THIS RUNS EARLY. Goldblatt 1989 is largely about which varieties of Boolean algebras with operators are complex algebras, and about canonicity. Those are design questions for the STSA axiomatization and for the Uf(A) construction, not questions the eta-embedding capstone can act on. On the pre-existing graph this paper was ingested in wave 1 and not opened until wave 4, by which point three tasks would have committed to designs it should have informed.\n\nPRIMARY SOURCE, WITH A HARD READING CONSTRAINT. Goldblatt, R. \"Varieties of complex algebras\", Annals of Pure and Applied Logic 44 (1989) 173-242, doi 10.1016/0168-0072(89)90032-8. The acquired PDF is an Acrobat 3.0 Capture scan (70 pages) whose OCR text layer is UNRELIABLE ON MATHEMATICS: symbols mangle, lines drop and reorder, and even the title page renders New Zealand as \"New 2Miand\". READ THE PAGE IMAGES via the Read tool's pages parameter. Do NOT grep the text layer for definitions or theorem statements, and do NOT accept a pdftotext- or /literature --convert-derived markdown as a faithful source for any axiom or equation. The text layer is usable only as a rough locator.\n\nPAGINATION. Journal page 173 is PDF page 1, so PDF page = journal page - 172. The paper's own table of contents is partly OCR-garbled in its page-number column; verify each section start against the actual page image rather than trusting the offsets below.\n\nSECTIONS IN SCOPE (do not read the whole paper):\n- 2.2 The dual space of a lattice (journal ~185) and 2.3 Bounded morphisms (~192) -- the duality machinery the eta embedding rests on.\n- 3.1 Canonical structures (~198) -- the canonical extension / Uf(A) construction. Bears directly on the ultrafilter-frame task.\n- 3.5 Canonical varieties (~208) -- IS THE STSA VARIETY CANONICAL? This is the single most load-bearing question for the STSA port, which must restate three Boneyard sorries against the current 45-constructor axiom set and should not do so blind.\n- 3.6 The elementary case (~210) and 3.8 First-order definability -- bears on whether the Spherical frame condition is first-order definable and preserved, which is the ultrafilter-frame task's dominant and explicitly unattempted obligation, and one the paper's finite-W discharge pattern does not cover.\n- 4.2 Preservation by bounded morphisms and inner substructures (~229) -- whether the TaskFrame axioms transfer along the constructions.\nEXPLICITLY OUT OF SCOPE: 2.4 Heyting algebras (intuitionistic, not this signature).\n\nCROSS-FRONT NOTE, RECORD BUT DO NOT PURSUE HERE: section 4.3 covers preservation by DISJOINT UNIONS, which may bear on the two-fibre structure named in Metalogic/Conservativity.lean as the CEB countermodel shape. That belongs to the TM-completeness research task on the metalogic front; if 4.3 looks relevant, record a pointer for that task rather than expanding this one.\n\nSECONDARY SOURCE: Blackburn/de Rijke/Venema 2002 Chapter 5 (corpus entry blackburn_2002, born-digital, full text) is the standard Jonsson-Tarski reference and should be read alongside. CAVEAT: the corpus warns this entry is 365,868 tokens and exceeds a single context budget -- create a chapter-scoped sub-entry before an agent consumes it.\n\nDELIVERABLE: a grounding report answering, with citations to specific pages read as images: (1) does the STSA axiom set as seeded in Boneyard/UltrafilterFrame/TenseS5Algebra.lean match the standard BAO presentation, and where does it diverge; (2) is the variety canonical, and what does that buy or cost the representation; (3) what the literature says about discharging a Spherical-style frame condition on an ultrafilter frame; (4) a concrete recommendation on how the three removed-axiom sorries (temp_a, temp_l) should be restated against the current axiom set. A finding that the literature does NOT settle one of these is a complete and valid answer for that item -- record it as unsettled rather than manufacturing a verdict.",
       "created": "2026-08-26T05:40:00Z",
-      "last_updated": "2026-08-26T05:40:00Z"
+      "last_updated": "2026-08-26T05:40:00Z",
+      "priority": "low"
     },
     {
       "project_number": 540,
@@ -872,7 +894,7 @@
       "status": "not_started",
       "task_type": "lean4",
       "topic": "documentation",
-      "priority": "medium",
+      "priority": "high",
       "description": "Close the three declaration categories that sit far below the repository's docstring-coverage floor. MEASURED STATE: C19 in scripts/check-module-invariants.sh reports 92.34% aggregate coverage over non-Boneyard FormalSystem/**/*.lean, against a 90% reporting floor, using a heuristic that counts a declaration documented if a `/-- -/` doc comment ends within the 3 lines above it OR it falls within an enclosing `/-! -/` section comment's scope. The aggregate passes, but it hides three categories that do not: class 16.3%, lemma 55.6%, instance 57.6%. For comparison the healthy categories are def 97.1%, abbrev 96.3%, inductive 96.3%, theorem 86.8%, structure 82.5%. `class` in particular is the worst-covered category in the tree and also the most consequential to a reader, since a typeclass's docstring is where its intended instances and laws are stated. Note also that the aggregate is dominated by theorem, which is 6429 of 10427 declarations, so category-level gaps do not move the headline number much. WORK: raise class, instance, and lemma coverage to at least the 90% floor by writing real docstrings -- what the declaration IS, present tense, with caller traps where they exist, per the repository's three-register docstring convention. Do not close the gap by widening C19's heuristic further; the heuristic was already deliberately refined once (to credit `/-!` sections) under explicit authorization, and a second widening to make a category pass would be fitting the measure to the data. Where a `lemma` is genuinely an internal step not worth documenting, consider whether it should be `private` rather than undocumented. ACCEPTANCE: C19 reports at least 90% for each of class, instance, and lemma individually, not merely in aggregate; the aggregate does not regress below its current 92.34%; no change to C19's counting rule.",
       "dependencies": [
         529
@@ -892,7 +914,7 @@
       "status": "not_started",
       "task_type": "lean4",
       "topic": "infrastructure",
-      "priority": "low",
+      "priority": "high",
       "description": "Triage the dead-declaration census that C17 produces, separating genuine dead code from the scan's known blind spot. MEASURED STATE: C17 in scripts/check-module-invariants.sh is a reporting-only token census: for each declared name it takes the last dot-segment as a base identifier and counts occurrences across FormalSystem/**/*.lean, Tests/**/*.lean, and repo-wide *.md. It currently flags 989 of 10346 declarations as having zero occurrences outside their own declaration site, in roughly 2 seconds. The census has a documented structural blind spot: it cannot see indirect usage through attributes. A spot-check of one flagged declaration, `release_unfold`, confirmed it has genuinely zero textual references yet is live via the `@[formula_unfold]` attribute and its simp-set mechanism -- exactly the pattern the scan cannot detect. So 989 is an upper bound on dead code, not a count of it, and the false-positive rate is unknown. WORK: (1) quantify the blind spot first -- enumerate the attribute and simp-set mechanisms in use (`@[formula_unfold]`, `@[simp]` sets, aesop rule sets, instance registration) and determine how many of the 989 are reachable only through one of them. This is the step that makes the rest of the triage meaningful; skipping it risks deleting live code. (2) Of the genuine remainder, delete what is dead or move it to Boneyard/ per the repository's existing convention. (3) Where a declaration is intentionally part of a public surface but currently unused internally, note that rather than deleting it. (4) If the attribute-reachability analysis is mechanizable, fold it into C17 so the reported number means something closer to actual dead code. ACCEPTANCE: C17's flagged count is materially reduced with every removal justified; no declaration removed that is reachable via an attribute or simp-set mechanism; `lake build` green and the test suite passing after removals; if C17 gained an attribute-awareness refinement, its new counting rule is documented in the script header the way the existing blind spot already is.",
       "dependencies": [
         529
@@ -918,7 +940,8 @@
         500
       ],
       "created": "2026-09-06T01:30:00Z",
-      "last_updated": "2026-09-06T01:30:00Z"
+      "last_updated": "2026-09-06T01:30:00Z",
+      "priority": "high"
     },
     {
       "project_number": 559,
@@ -931,7 +954,8 @@
         562
       ],
       "created": "2026-09-08T15:35:44Z",
-      "last_updated": "2026-09-08T15:59:31Z"
+      "last_updated": "2026-09-08T15:59:31Z",
+      "priority": "low"
     },
     {
       "project_number": 560,
@@ -945,7 +969,8 @@
         537
       ],
       "created": "2026-09-08T15:35:44Z",
-      "last_updated": "2026-09-08T15:35:44Z"
+      "last_updated": "2026-09-08T15:35:44Z",
+      "priority": "low"
     },
     {
       "project_number": 561,
@@ -958,7 +983,8 @@
         562
       ],
       "created": "2026-09-08T15:49:47Z",
-      "last_updated": "2026-09-08T15:59:31Z"
+      "last_updated": "2026-09-08T15:59:31Z",
+      "priority": "low"
     },
     {
       "project_number": 562,
@@ -972,7 +998,8 @@
         558
       ],
       "created": "2026-09-08T15:59:31Z",
-      "last_updated": "2026-09-08T16:11:03Z"
+      "last_updated": "2026-09-08T16:11:03Z",
+      "priority": "high"
     },
     {
       "project_number": 563,
@@ -983,7 +1010,8 @@
       "topic": "categorical-structure",
       "dependencies": [],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 564,
@@ -997,7 +1025,8 @@
         562
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 565,
@@ -1010,7 +1039,8 @@
         563
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 566,
@@ -1024,7 +1054,8 @@
         565
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 567,
@@ -1038,7 +1069,8 @@
         562
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 568,
@@ -1051,7 +1083,8 @@
         562
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 569,
@@ -1064,7 +1097,8 @@
         562
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "high"
     },
     {
       "project_number": 570,
@@ -1077,7 +1111,8 @@
         568
       ],
       "created": "2026-09-08T17:34:36Z",
-      "last_updated": "2026-09-08T17:34:36Z"
+      "last_updated": "2026-09-08T17:34:36Z",
+      "priority": "low"
     }
   ],
   "artifacts": [

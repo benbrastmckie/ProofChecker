@@ -50,6 +50,68 @@ tree — report it as such.
 
 ---
 
+## Near-Term Work Plan: Foundations and Small Results (author directive, 2026-09-08)
+
+**This is a temporary re-ordering, not a change to the phases below.** The author has directed
+that work for now concentrate on finishing already-scoped foundations and closing small, bounded
+results, and explicitly **avoid open mathematics and long-horizon fronts (decidability included)**
+until further notice. The `## Recommended Priority Order` section at the end of this document
+still states the *full-programme* ordering (decidability spine first) and is left unchanged as
+the durable record of that plan; this section is the near-term override that supersedes it for
+day-to-day task selection until the author lifts the restriction.
+
+**Deferred fronts (open mathematics or multi-wave/long-horizon — do not start these now):**
+
+| Front | Tasks | Why deferred |
+|---|---|---|
+| Decidability/tableau spine (Phase 2) | 410, 411, 412, 428, 429, 430, 464, 465, 481, 482 | The largest open front; 464/429/481/482 are explicitly labeled open mathematics in-source, and the rest are downstream of them on the critical path |
+| Semantic finite model property (Phase 4) | 476 | Explicitly classified "OPEN MATHEMATICS. MULTI-MONTH." in its own description |
+| TM⋆ completeness / non-definability | 537, 559, 560, 561 | Multi-phase completeness programme for the extended language, not a bounded result |
+| H/G-fragment finite axiomatizability | 534 | Open research question (Kamp/Burgess territory) |
+| C3 completeness question | 570 | Explicitly an "OPEN RESEARCH QUESTION, not an implementation task" |
+| Jønsson-Tarski algebraic representation | 125, 497, 498, 499, 500, 501, 502, 504 | Capstone + its five-phase groundwork; Phase 1 above already flags the underlying ultraproduct work as "not yet scoped as tasks" |
+| Object-language extensions | 127, 128 | Phase 6 above already recommends these for ABANDON or park — antagonistic to the (also-deferred) termination work |
+| Documentation final-polish | 177 | Explicitly gated in its own description on the decidability chain (426, 428, 429, 430, 432, 433, 434) landing — cannot start until that front resumes |
+
+**Recommended near-term order** (foundations and small, already-scoped results only; roughly
+cheapest/most-unblocked first):
+
+1. **562** `sync_language_names_with_paper_l_minus_plus_star` — pure rename/prose sweep, no proof
+   term changes; clears naming ambiguity that several other tasks below reference.
+2. **540** `docstring_coverage_class_instance_lemma` — close the three declaration categories
+   below the C19 docstring-coverage floor.
+3. **542** `dead_declaration_triage_c17_findings` — triage the C17 dead-declaration census.
+4. **506** `fix_typst_display_defects_via_playwright_visual_loop` — publication-quality display
+   fixes in the typst book, mechanical/visual verification loop.
+5. **178** `publication_examples_and_demo` — already rescoped to the propositional fragment
+   (genuinely decidable today); does not touch the deferred decidability front.
+6. **193** `codebase_tactic_refactor` — apply validity-intro/truth-simp macros to the soundness
+   layer; already rescoped to a bounded target.
+7. **568** `c3_c4_consequence_relations_as_library_definitions` — promote already-derived results
+   from `specs/553_.../probes/02_*.lean` and `03_*.lean` into the library.
+8. **569** `retarget_semantics_to_possible_world_index` — the correctness argument is already
+   machine-checked in a probe file; this promotes it.
+9. **565** `totality_and_directed_gluing_from_extension_theorem` — both target clauses are
+   wrappers on `thm:extension`, already fully proved.
+10. **566** `possible_worlds_clause_hf_as_limit` — uses an existing proved hook
+    (`FrameOver.mem_HF_iff_adjacent`) rather than new construction.
+11. **564** `sheaf_clause_gluing_and_starpasting_generalization` — the composition step is already
+    proved (`glue_seam`); remaining work is the two restriction identities plus uniqueness.
+12. **563** `formalize_interval_site_and_behavior_presheaf` — promotes the presheaf skeleton that
+    563-567 build on into the library (do before or alongside 564-567, whichever this task's own
+    dependencies require).
+13. **567** `determinism_clause_and_separatedness_asymmetry` — connects to the already-proved
+    `StarDeterminism.states_eq_of_deterministic`.
+14. **543** `formalize_mf_correspondence_rigidity` — machine-checks results already researched
+    (externally, in the PossibleWorlds paper repository) rather than open-ended research; largest
+    item in this list by the author's own description — re-confirm scope before starting.
+
+**Independent, non-mathematical track** (small and bounded, but dataset/tooling rather than proof
+foundations — pick up in parallel if useful, not ordered against the list above): the Phase 6
+dataset/training-infrastructure cluster (298 top-of-cluster, 296, 282, 257, 231, 219).
+
+---
+
 ## Phase 1: Weak and Strong Completeness (Low Priority — weak DONE, strong-completeness capstone open)
 
 **Current state, grounded in C2/C3 (re-verified 2026-08-25, task 468 Phase 1):**
@@ -68,7 +130,7 @@ tree — report it as such.
 - [x] **Dedekind weak/consequence completeness — DONE.** Task 408 (completed, archived): headline
       `completeness_rtime` and corollary `consequence_completeness_rtime`, both
       `sorryAx`-free.
-- [x] **Consequence-completeness capstone (task 362, not_started)** — Leg A: finite-context *(Completed: Task 362)*
+- [x] **Consequence-completeness capstone (task 362) — DONE.** Leg A: finite-context *(Completed: Task 362)*
       consequence completeness for all four frame classes, `Derivable`-stated corollaries of the
       four weak engines above, all now unblocked (the weak engines they build on are DONE). Legs
       B (genuine `Set Formula` strong completeness, Base/Dense only) and C/D (Discrete/Dedekind
@@ -783,10 +845,16 @@ cross-checked by `jq` at realignment time (2026-08-25).
 
 ## Recommended Priority Order
 
+**Superseded for near-term scheduling** by `## Near-Term Work Plan: Foundations and Small
+Results` above (author directive, 2026-09-08), which defers this entire ordering's #1 and #3
+until the open-mathematics/decidability restriction is lifted. This section remains the durable
+record of the full-programme plan.
+
 1. **Decidability/tableau spine** (Phase 2): 462 → 463 → 464 → 465 → 428 → 429 → 410 → 411 → 430
    → 412 → 482, plus parallel entries 480 (startable now) and 481 (before/alongside 462).
-2. **Consequence-completeness capstone** (task 362, Phase 1) — unblocked; all four weak engines
-   it builds on are DONE.
+2. **Consequence-completeness capstone** (task 362, Phase 1) — **DONE**, completed after this
+   ordering was written; the remaining Leg B/C/D scope (ultraproduct route, non-compactness
+   record, LaTeX alignment) is unscoped as tasks, see Phase 1 above.
 3. **Semantic FMP** (task 476, Phase 4) and **proof-extraction completeness** (task 482, Phase 2)
    — both open mathematics, multi-month, run in parallel with the spine rather than gating it.
 4. **Publication/documentation** (Phase 5) — gated on the decidability chain landing (177) or
