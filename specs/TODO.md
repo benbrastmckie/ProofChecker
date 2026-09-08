@@ -11,7 +11,7 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,542,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
 | 2 | 178,231,282,296,465,497,537 | 193,298,464,502,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -99,7 +99,6 @@ next_project_number: 555
 
 ### Infrastructure
 
-541 [PLANNED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
@@ -374,12 +373,13 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 541. Formalsystem init transitive import adoption
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: infrastructure
 - **Dependencies**: Task 529, Task 544, Task 545
 - **Research**: [541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md]
 - **Plan**: [541_formalsystem_init_transitive_import_adoption/plans/01_init-transitive-import-adoption.md]
+- **Summary**: [541_formalsystem_init_transitive_import_adoption/summaries/01_init-transitive-import-adoption-summary.md]
 
 **Description**: Make the Init.lean import invariant enforceable by adopting FormalSystem.Init across the module tree. MEASURED STATE: FormalSystem/Init.lean and a CSLib-style CheckInitImports executable exist (ported from leanprover/cslib's Cslib/Init.lean + scripts/CheckInitImports.lean, using the ImportGraph transitive-closure API, which is already an inherited transitive dependency via Mathlib so no new `require` was needed). The check currently runs reporting-only: 434 modules do not yet transitively import FormalSystem.Init. This was an explicit, recorded deferral -- the CI/linter-gates task landed the mechanism and excluded the tree-wide import rewrite as out of scope. The purpose of the Init root is to give every module a single place from which repository-wide linter options and syntax settings are inherited; until adoption is universal, that guarantee does not hold and the check cannot gate. WORK: add the FormalSystem.Init import to the 434 modules that lack it transitively, working bottom-up through the import graph so most files inherit it via an existing dependency rather than each acquiring a direct import -- the goal is transitive reachability, not 434 new import lines. Confirm no import cycle is introduced (Init.lean must stay above the rest of the tree). Then flip CheckInitImports from reporting-only to gating, and wire it into scripts/check-module-invariants.sh alongside the existing checks. Note FormalSystem/Automation/AxiomNames.lean currently has zero imports and will need explicit treatment. ACCEPTANCE: CheckInitImports reports zero modules missing FormalSystem.Init transitively; the check gates rather than reports; `lake build` green; `bash scripts/check-module-invariants.sh` still reports ALL CHECKS PASSED.
 

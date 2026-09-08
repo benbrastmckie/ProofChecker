@@ -1628,7 +1628,7 @@
     {
       "project_number": 541,
       "project_name": "formalsystem_init_transitive_import_adoption",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "topic": "infrastructure",
       "priority": "medium",
@@ -1644,7 +1644,7 @@
         "scripts/check-module-invariants.sh"
       ],
       "created": "2026-09-04T08:00:00Z",
-      "last_updated": "2026-09-08T07:37:04Z",
+      "last_updated": "2026-09-08T08:23:25Z",
       "artifacts": [
         {
           "path": "specs/541_formalsystem_init_transitive_import_adoption/reports/01_init-transitive-import-adoption.md",
@@ -1655,10 +1655,16 @@
           "path": "specs/541_formalsystem_init_transitive_import_adoption/plans/01_init-transitive-import-adoption.md",
           "type": "plan",
           "summary": "Six-phase plan adopting FormalSystem.Init across the module tree via 11 minimal-element import edits, fixing the checker's truncated exit status, and wiring it as enforced check C24 with a mandated negative test."
+        },
+        {
+          "path": "specs/541_formalsystem_init_transitive_import_adoption/summaries/01_init-transitive-import-adoption-summary.md",
+          "type": "summary",
+          "summary": "Eleven import lines give every FormalSystem module a transitive path to FormalSystem.Init; checkInitImports made exit-status-correct and wired into the invariants harness as enforced check C24."
         }
       ],
       "session_id": "sess_1788847801_97d6cb",
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Added `import FormalSystem.Init` at the eleven minimal elements of the FormalSystem import DAG, taking the count of modules with no transitive path to the root from 457 to 0. Fixed scripts/CheckInitImports.lean's 8-bit-truncating exit status to a constant, recorded FormalSystem.ForMathlib.Order.PFilter as an upstreaming-rule exception, and wired the checker into scripts/check-module-invariants.sh as enforced check C24, negative-tested in both directions."
     },
     {
       "project_number": 542,
