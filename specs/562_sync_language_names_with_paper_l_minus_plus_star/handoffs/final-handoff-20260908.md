@@ -5,6 +5,23 @@
 - **Gate**: `scripts/check-module-invariants.sh` (full, with build) exits **0**, ALL CHECKS PASSED,
   36 PASS / 0 FAIL, run against tree `b8502cfd2`. `lake build`: 2615 jobs, exit 0, same tree.
 
+## Guard gap: `git add -- <directory>` defeats a guard that blocks `git add -A`
+
+**The finding, stated plainly for whoever fixes it.** `.claude/hooks/guard-destructive-git.sh`
+blocks `git add -A` and `git add .` with the reason "stages the entire working tree; stage
+explicit task-scoped paths instead". That block is correct and it fired on this dispatch.
+But `git add -- <directory>` is not caught, and over a shared working tree it produces the
+**identical** failure mode: it stages every modified file beneath that directory, including
+another dispatch's uncommitted work, silently. This dispatch's `git add -- FormalSystem/` is
+what pulled 16 lines of task 193's work into `ea1a561c9`.
+
+This is a concrete, fixable gap in a guard that is otherwise working — not a reason to distrust
+the guard, and not merely an agent error to be absorbed by discipline. Suggested fix: extend the
+existing `git add` rule to reject any pathspec that is a directory (or any bare pathspec that
+expands to more than one modified file), with the same "stage explicit task-scoped paths"
+guidance the `-A` branch already emits. Until then, treat `git add -- <dir>` as carrying the
+same prohibition as `git add -A`.
+
 ## Message delivery (states why the stop order was not followed)
 
 All five orchestrator messages — the tree-reset advisory, the territory instruction, the
@@ -14,7 +31,7 @@ during execution. The stop order was therefore never received in time to obey; t
 fact, not a judgment call, and it is the only explanation offered. It does **not** excuse the two
 substantive errors below, which were mine independently of any message.
 
-## Confirmed: ea1a561c9 absorbed task 193's work
+## Confirmed: the commit absorption, and that it ran in BOTH directions
 
 Verified against the commit. `ea1a561c9` (task 562 phase 2) touches
 `FormalSystem/Metalogic/Soundness.lean` with 17 insertions / 13 deletions, of which **1 line is
@@ -39,7 +56,13 @@ The orchestrator's correction is right. `Semantics/Truth.lean`, `Semantics/LexCa
 (`BLTruth.always_iff` -> `MinusTruth.always_iff`, `bl_soundness_ztime_succ` ->
 `minus_soundness_ztime_succ`, `BLSchemaValidity.*` -> `MinusSchemaValidity.*`). Reporting them as
 a task-193 `file_scope` breach was an attribution error: the `git status` they were read from was
-taken after this task's own rename had run. Task 193 stayed inside its declared scope throughout.
+taken after this task's own rename had run.
+
+**Task 193 stayed inside its declared `file_scope` — `Automation/Tactics/`,
+`Metalogic/SoundnessLemmas/`, `Metalogic/Soundness.lean` — for the entirety of its
+dispatch.** There was no scope breach by it at any point. An earlier draft of the task-562
+summary recorded one; that claim was wrong, has been removed, and the corrected
+attribution is committed at `ddde1abe3`.
 
 ## One correction to the record: `--no-share` does not bypass the guard lock
 
