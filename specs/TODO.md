@@ -11,9 +11,9 @@ next_project_number: 571
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,562,563 | -- | algebraic-representation, automation, categorical-structure, ... |
-| 2 | 178,231,282,296,465,497,534,537,559,561,564,565,567,568,569 | 193,298,464,502,562,563 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
-| 3 | 219,428,498,499,500,560,566,570 | 231,465,497,537,559,565,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,537,540,542,559,561,563,568,569 | -- | algebraic-representation, automation, categorical-structure, ... |
+| 2 | 178,231,282,296,465,497,560,564,565,567,570 | 193,298,464,502,537,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
@@ -95,17 +95,16 @@ next_project_number: 571
 
 537 [NOT STARTED] — PRIORITY (2026-09-08): deliverable (1), deterministic completenes
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
-543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta (see above)
 561 [NOT STARTED] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
+543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
 
-562 [IMPLEMENTING] — Rename this repository's object languages and proof systems so th
-  └─ 569 [NOT STARTED] — Retarget the semantics from a convex index carrying an `IsTotal` 
+569 [NOT STARTED] — Retarget the semantics from a convex index carrying an `IsTotal` 
 
 ### Publication Quality
 
@@ -278,7 +277,7 @@ CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end 
 ---
 
 ### 562. Sync language names with paper l minus plus star
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 557, Task 558

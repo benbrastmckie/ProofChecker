@@ -1,7 +1,7 @@
 # Implementation Plan: Task #562
 
 - **Task**: 562 - Sync language names with the paper (L⁻ / L / L⁺ / L⋆)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 18 hours
 - **Dependencies**: Task 557 (in progress) — its `file_scope` includes `Syntax/Formula.lean`,
   `Metalogic/Conservativity/TMCompletenessReduction.lean` and
