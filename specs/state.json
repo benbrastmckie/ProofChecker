@@ -381,7 +381,10 @@
           "summary": "Verdicts for the two open H/G rows: Dense expected complete with a fully de-risked route (no obstruction found); Dedekind OPEN with the obstruction named at declaration granularity (Doets D1/D2 are discharged only from the BL-plus-only prior_U_gap/prior_S_gap/sep axioms, which have no H/G counterpart). Includes two machine-checked probes."
         }
       ],
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "dependencies": [
+        544
+      ]
     },
     {
       "project_number": 544,
@@ -1213,7 +1216,8 @@
       "last_updated": "2026-08-19T01:33:59Z",
       "session_id": "sess_1787103184_075b59",
       "file_scope": [
-        "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean"
+        "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean",
+        "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound/"
       ],
       "dependencies": [
         462,
@@ -1608,7 +1612,9 @@
       "priority": "medium",
       "description": "Make the Init.lean import invariant enforceable by adopting FormalSystem.Init across the module tree. MEASURED STATE: FormalSystem/Init.lean and a CSLib-style CheckInitImports executable exist (ported from leanprover/cslib's Cslib/Init.lean + scripts/CheckInitImports.lean, using the ImportGraph transitive-closure API, which is already an inherited transitive dependency via Mathlib so no new `require` was needed). The check currently runs reporting-only: 434 modules do not yet transitively import FormalSystem.Init. This was an explicit, recorded deferral -- the CI/linter-gates task landed the mechanism and excluded the tree-wide import rewrite as out of scope. The purpose of the Init root is to give every module a single place from which repository-wide linter options and syntax settings are inherited; until adoption is universal, that guarantee does not hold and the check cannot gate. WORK: add the FormalSystem.Init import to the 434 modules that lack it transitively, working bottom-up through the import graph so most files inherit it via an existing dependency rather than each acquiring a direct import -- the goal is transitive reachability, not 434 new import lines. Confirm no import cycle is introduced (Init.lean must stay above the rest of the tree). Then flip CheckInitImports from reporting-only to gating, and wire it into scripts/check-module-invariants.sh alongside the existing checks. Note FormalSystem/Automation/AxiomNames.lean currently has zero imports and will need explicit treatment. ACCEPTANCE: CheckInitImports reports zero modules missing FormalSystem.Init transitively; the check gates rather than reports; `lake build` green; `bash scripts/check-module-invariants.sh` still reports ALL CHECKS PASSED.",
       "dependencies": [
-        529
+        529,
+        544,
+        545
       ],
       "file_scope": [
         "FormalSystem/Init.lean",

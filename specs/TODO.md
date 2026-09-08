@@ -11,9 +11,9 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537 | 193,298,464,502,535 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,542,544,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,545 | 193,298,464,502,535,544 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 3 | 219,428,498,499,500,541 | 231,465,497,545 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
@@ -97,12 +97,12 @@ next_project_number: 555
 
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 544 [RESEARCHED] — Machine-check the failing half of CEB: no instance of the boxed d
-545 [RESEARCHED] — Decide, with machine-checked proof, whether the two H/G-language 
+  └─ 545 [RESEARCHED] — Decide, with machine-checked proof, whether the two H/G-language 
 
 ### Infrastructure
 
-541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
+541 [NOT STARTED] — Make the Init.lean import invariant enforceable by adopting Forma
 
 ## Tasks
 
@@ -333,7 +333,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 - **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: incompleteness
-- **Dependencies**: None
+- **Dependencies**: Task 544
 - **Research**: [545_hg_completeness_dense_and_dedekind_verdicts/reports/01_hg-completeness-dense-dedekind.md]
 
 **Description**: Decide, with machine-checked proof, whether the two H/G-language (Past/Future) systems that the paper leaves open are weakly complete: TM_d := TM + DN over the Dense frame class, and TM_dc := TM + DN + CO over the Dedekind (dense-and-complete, i.e. R-time) class, where TM is the BaseLanguage proof system (the paper's TM^-). These are the two remaining open rows of the paper's rmk:fragment; the Base row is the CEB task (Sp underivability) and the Discrete row is closed (tmCompleteDiscrete_refuted). A negative verdict with a machine-checked separating H/G-validity, or a positive verdict with a completeness proof, are both complete outcomes; an honest OPEN verdict must name the precise obstruction. EXPECTED VERDICT (to be tested, not assumed): both complete. Reasoning: unlike Base and Discrete, neither class splits into two H/G-definable subclasses, so no (Sp)/Z1-style dichotomy witness is available; every dense unbounded chain has the H/G logic of Q by downward Lowenheim-Skolem, and R is a single frame up to isomorphism. SUGGESTED ROUTE FOR DENSE: (1) Kripke-style completeness of TM + DN over frames whose Box-classes are R-closed unions of dense unbounded chains, via the Sahlqvist/canonical-model argument for the fusion S5 (x) Kt4.3 + seriality + density with the MF interaction (MF and its TD-mirror force each Box-class to be closed under R-successors and R-predecessors; the TM-completeness-status report section 5(i) records this as the Kripke-level answer, unformalized); bulldoze clusters into dense chains; (2) replace each chain by a countable elementary substructure, order-isomorphic to Q by Mathlib's Order.iso_of_countable_dense; (3) transform into a Dense task frame: world states := chain points, durations := Q, task relation := translation along each chain (a disjoint union of translation task frames, each satisfying Compositionality, Seriality, Limit, Saturation with singleton fibres), histories := all translates; show BL truth is preserved since Box over H_F at a time equals truth at every point of the class under translation closure. SUGGESTED ROUTE FOR DEDEKIND: the temporal part of TM_dc is Bull 1968 / Goldblatt's axiomatization of the H/G logic of R (CO is exactly the Dedekind axiom of that literature), so the target is Bull's completeness theorem for R plus the same product/translation transfer; NOTE that CO is not Sahlqvist, so the canonical-model route of the Dense case does not apply and a Bull/Burgess-style step-by-step or Dedekind-completion construction is required, making this the substantially harder half. EXISTING ASSETS: BL-side semantics and soundness (Semantics/BLTruth.lean, BLValidity.lean, Metalogic/Conservativity/BaseLanguageSoundness.lean), the Fragment theorem (Conservativity/Fragment.lean), the reduction tmComplete_iff_forward and its Dense/Dedekind rows (Conservativity/TMCompletenessReduction.lean), the BX-side canonical model and completeness_dense / completeness_dedekind (Metalogic/BXCanonical/), and LexCarrier.lean. RELATION TO OTHER TASKS: settling these two rows settles the Sigma_fc = empty case of the Hg-fragment finite-axiomatizability task at Dense and Dedekind, and is independent of the CEB task at Base. HARD CONSTRAINT inherited from Conservativity.lean: never state a completeness or forward-conservativity theorem and discharge it with sorry.
@@ -375,7 +375,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
 - **Topic**: infrastructure
-- **Dependencies**: Task 529
+- **Dependencies**: Task 529, Task 544, Task 545
 
 **Description**: Make the Init.lean import invariant enforceable by adopting FormalSystem.Init across the module tree. MEASURED STATE: FormalSystem/Init.lean and a CSLib-style CheckInitImports executable exist (ported from leanprover/cslib's Cslib/Init.lean + scripts/CheckInitImports.lean, using the ImportGraph transitive-closure API, which is already an inherited transitive dependency via Mathlib so no new `require` was needed). The check currently runs reporting-only: 434 modules do not yet transitively import FormalSystem.Init. This was an explicit, recorded deferral -- the CI/linter-gates task landed the mechanism and excluded the tree-wide import rewrite as out of scope. The purpose of the Init root is to give every module a single place from which repository-wide linter options and syntax settings are inherited; until adoption is universal, that guarantee does not hold and the check cannot gate. WORK: add the FormalSystem.Init import to the 434 modules that lack it transitively, working bottom-up through the import graph so most files inherit it via an existing dependency rather than each acquiring a direct import -- the goal is transitive reachability, not 434 new import lines. Confirm no import cycle is introduced (Init.lean must stay above the rest of the tree). Then flip CheckInitImports from reporting-only to gating, and wire it into scripts/check-module-invariants.sh alongside the existing checks. Note FormalSystem/Automation/AxiomNames.lean currently has zero imports and will need explicit treatment. ACCEPTANCE: CheckInitImports reports zero modules missing FormalSystem.Init transitively; the check gates rather than reports; `lake build` green; `bash scripts/check-module-invariants.sh` still reports ALL CHECKS PASSED.
 
