@@ -1,7 +1,7 @@
 # Implementation Plan: Burn down invisible snake_case defs
 
 - **Task**: 557 - burn_down_invisible_snake_case_public_defs
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 14 hours
 - **Dependencies**: 555 (completed)
 - **Research Inputs**: None for this task directly. Task 555's report
@@ -159,37 +159,43 @@ are genuinely parallel-safe. Phase 3 is serialized after Phase 2 solely because 
 
 ---
 
-### Phase 1: Baseline measurement and frozen worklist [NOT STARTED]
+### Phase 1: Baseline measurement and frozen worklist [COMPLETED]
 
 **Goal**: Record the pre-change baseline for every acceptance criterion, and freeze a worklist of
 all 174 declarations with their computed new names, so no later phase has to re-derive scope.
 
 **Tasks**:
-- [ ] Record the baseline of each acceptance gate, capturing the literal output:
+- [x] Record the baseline of each acceptance gate, capturing the literal output:
       `lake exe runLinter FormalSystem`; `bash scripts/check-module-invariants.sh`;
       `bash .claude/scripts/lean-sorry-census.sh`. Expect the linter to report 0 and the
       invariants to report ALL CHECKS PASSED — that contradiction *is* the defect.
-- [ ] Record the baseline `lake exe proof_extractor` output (theorem and proof-step counts).
-- [ ] Run the two authoritative scans and write both name lists to
+- [x] Record the baseline `lake exe proof_extractor` output (theorem and proof-step counts).
+- [x] Run the two authoritative scans and write both name lists to
       `specs/557_burn_down_invisible_snake_case_public_defs/worklists/01_rename-worklist.md`:
       public `grep -rnE "^\s*(noncomputable )?(protected )?(def|abbrev) [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`
       and private `grep -rnE "^\s*private (noncomputable )?def [A-Za-z][A-Za-z0-9']*_" FormalSystem/ --include=*.lean | grep -v /Boneyard/`.
-- [ ] For each name, compute the lowerCamelCase target by the mechanical rule: split on `_`;
+- [x] For each name, compute the lowerCamelCase target by the mechanical rule: split on `_`;
       lowercase the first character of the first segment; upper-case the first character of every
       later alphabetic segment; keep digit segments adjacent (`box_4_ctx` -> `box4Ctx`,
       `mp_chain_2` -> `mpChain2`, `until_F_ctx` -> `untilFCtx`, `perpetuity_1` -> `perpetuity1`,
       `is_Z_type` -> `isZType`, `F_top_and_absorb` -> `fTopAndAbsorb`,
       `sp_derivable_rtime` -> `spDerivableRTime` per the `ZTime`/`RTime` scheme's lowerCamel row).
-- [ ] For each target name, run a collision probe `grep -rwF "<newName>" FormalSystem/ Tests/` and
+- [x] For each target name, run a collision probe `grep -rwF "<newName>" FormalSystem/ Tests/` and
       flag any hit in the worklist. Resolve a genuine collision by choosing a longer descriptive
       name at that site, and record the choice in the worklist — never by leaving the snake_case
       name.
-- [ ] Record in the worklist the **measured** per-file private counts and the delta against the
+      *(deviation: altered — 8 target names produced grep hits; 7 were shown non-genuine by
+      namespace/import-closure evidence recorded in the worklist. The one genuine collision,
+      `ctx_mp` -> `ctxMp` against the opened `Combinators.ctxMp`, is resolved as `ctxMpLocal`.)*
+- [x] Record in the worklist the **measured** per-file private counts and the delta against the
       description's stated 47, naming the seven files the description omits.
-- [ ] Confirm the four names in the `FormalSystem/Syntax.lean` module docstring's fenced ```lean
+- [x] Confirm the four names in the `FormalSystem/Syntax.lean` module docstring's fenced ```lean
       example (`necessity_p`, `future_q`, `possibly_p`, `always_p`) are documentation examples,
       not declarations, and add them to the worklist as documentation-consistency renames so the
       Phase 10 textual scan comes back clean.
+      *(deviation: altered — confirmed. The public scan therefore measures **75**, not the 71 the
+      Scope Hypothesis states; the four extras are exactly these docstring examples, so the real
+      elaborated-declaration count is still 71 and the frozen total is 178, not 174.)*
 
 **Timing**: 1 hour
 
