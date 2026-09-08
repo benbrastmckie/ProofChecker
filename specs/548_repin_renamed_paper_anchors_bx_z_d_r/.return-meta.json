@@ -1,16 +1,28 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "agent_type": "planner-agent",
+  "delegation_path": ["orchestrator", "plan", "planner-agent"],
+  "task_number": 548,
+  "session_id": "sess_1788826208_cd9987_548",
+  "dispatch_seq": 6,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md",
-      "summary": "Measured baseline for the BX-z/d/r re-pin: C15 is already green (53/53 resolve), the actually-red gate is check-paper-definitions.sh (15 drifted entries + 9 dangling anchors), with all new hashes, a 32-site citation inventory across 17 files, a record-before-docstrings ordering rule, and four stale premises in the task description corrected."
+      "type": "plan",
+      "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/plans/01_repin-bx-z-d-r-anchors.md",
+      "summary": "Six-phase, strictly linear plan absorbing the paper's z/d/r rename and full drift wave into specs/paper-definitions-of-record.md, then re-labelling 32 in-tree citation sites and correcting the invalidated Hoelder/prop:archimedean prose."
     }
   ],
-  "metadata": {
-    "session_id": "sess_1788826208_cd9987_548",
-    "agent_type": "lean-research-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+  "phase_count": 6,
+  "estimated_hours": 5.5,
+  "dependency_waves": [[1], [2], [3], [4], [5], [6]],
+  "next_steps": "Run /implement 548 to execute the plan",
+  "memory_candidates": [
+    {
+      "content": "Paper-anchor drift in this repo is guarded by TWO gates with different jobs, and conflating them is the main source of scope error. scripts/check-module-invariants.sh C15 checks anchor NAMES against specs/paper-definitions-of-record.md and never touches the .tex, so a paper rename stays invisible to C15 for exactly as long as the stale manifest row survives -- C15 can be fully green while the record asserts anchors the paper no longer defines. scripts/check-paper-definitions.sh checks anchor HASHES against the live paper and is the only honest drift detector; its exit 0 (quiet case-(a) pass) is the real acceptance gate for any re-pin task. Two ordering rules follow: (1) record first, docstrings second -- re-labelling citation sites before the new manifest rows exist turns C15 red mid-implementation; (2) absorb a drift wave as one unit and force full anchor validation by re-running the checker with the OLD FILE_CHECKSUM still in place (expect a case-(b) notice pass) before re-pinning the sentinels. Also: C15 is cheap to reproduce standalone in ~1s by comm-ing the two sentinel-delimited record blocks against a grep sweep, whereas the full check-module-invariants.sh run exceeds 15 minutes -- background it.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/plans/01_repin-bx-z-d-r-anchors.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["paper-anchor", "C15", "check-paper-definitions", "drift-wave", "definitions-of-record", "re-pin"]
+    }
+  ]
 }

@@ -83,14 +83,14 @@ next_project_number: 555
 
 ### Paper Refactor
 
-548 [PLANNING] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
+548 [PLANNED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
   └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
     └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+550 [RESEARCHING] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -228,7 +228,7 @@ CONSTRAINTS. Do not delete anything in the characterization or recommendation st
 ---
 
 ### 550. Decompose mintbound for publication legibility
-- **Status**: [NOT STARTED]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: Task 549, Task 554
@@ -289,11 +289,12 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 548. Repin renamed paper anchors bx z d r
-- **Status**: [PLANNING]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 547
 - **Research**: [548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md]
+- **Plan**: [548_repin_renamed_paper_anchors_bx_z_d_r/plans/01_repin-bx-z-d-r-anchors.md]
 
 **Description**: Re-pin the paper anchors changed by the paper's z/d/r refactor and its removal of the Past/Future fragment, and update every citing docstring and the definitions-of-record so that scripts/check-module-invariants.sh C15 resolves them. RENAMED LABELS: def:TMplus-f, def:TMplus-d, def:TMplus-c are now def:BX-z, def:BX-d, def:BX-r; def:TMplus is unchanged and still names TM. CHANGED TEXT UNDER UNCHANGED LABELS: cor:tm-completeness now lists TM strongly complete over all task frames, TM_d strongly over the dense task frames, TM_z weakly over Z-time, and TM_r weakly over R-time; def:derivability and def:soundness are now stated for TM and the full language BL rather than for the fragment system; thm:TM-soundness now speaks of TM and its extensions, adds a sentence that the since/until/next/previous schemata are valid by their clauses as verified in this repository, and its footnote cites this repository for TM rather than for the fragment system; lem:temporal-duality and thm:TD-valid are now stated for the since/until interchange with new inductive cases for U and S. DELETED ANCHORS: prop:fragment and rmk:fragment no longer exist (no Lean file cites either, and neither is pinned -- verify). MEASURED STATE: specs/paper-definitions-of-record.md pins `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` with content hashes in the machine-readable manifest (rows near line 1431) and carries their full-text entries at lines 993, 1014, 1032, alongside `def:TMplus` (line 1056) and `cor:tm-completeness` (line 1175); `thm:TM-soundness` is cited by 2 Lean files and appears on 4 record lines; `def:soundness` and `def:derivability` each appear on 1 record line; `def:TMplus` is cited in 20 lines across 13 Lean files and `cor:tm-completeness` in 9 files; C15 resolves anchors against the record, not the paper. The paper's new text is at /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex: def:BX-z (Discrete Burgess-Xu logic BX_z, axioms UZ and Z1, Z-time footnote), def:BX-d (dense logic BX_d, axioms DN and NN), def:BX-r (Dense and Complete Burgess-Xu logic BX_r, the extension of BX_d by PU and SP, CO derived), def:TMplus (TM_z, TM_d, TM_r as the extensions of TM by the axioms distinguishing BX_z, BX_d, BX_r). The Semantics/FrameClassValidity.lean docstring quotes the closing sentence of the old def:TMplus-f verbatim ('the successor-Archimedean discrete class to which BX_f and TM⁺_f are sound and complete is exactly Z-time'); it now reads BX_z and TM_z and the quotation must be refreshed. The Logic-subsection footnote that replaced the fragment proposition cites this repository for the Z1 result (`not_bl_derivable_z1` in Metalogic/Conservativity/Z1Countermodel.lean); its Kripke countermodel for the base class is a pen-and-paper claim that this repository does not check -- record it as such, do not pin it as verified. WORK: follow the record's own 'How to extend this record' procedure to retire the three old anchors, pin the three renamed ones, and re-hash every changed entry named above; update every citing docstring to the new label names; re-run scripts/check-module-invariants.sh until C15 reports no unresolved anchor from this refactor. The three unrelated unresolved anchors (app:drift, cor:no-characterization, lem:deterministic-singleton) belong to a separate open task and must not be conflated with this one.
 

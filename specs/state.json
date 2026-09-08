@@ -94,7 +94,7 @@
     {
       "project_number": 550,
       "project_name": "decompose_mintbound_for_publication_legibility",
-      "status": "not_started",
+      "status": "researching",
       "task_type": "lean4",
       "description": "Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.\n\nMEASURED, not estimated: `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean` is 15,759 lines. The next-largest file under `FormalSystem/` that is actually built is `GapDetection.lean` at 5,090; the only larger file anywhere in the tree is retired Boneyard code. The file also carries the C9 register (entries through 25), a running record of refuted approaches interleaved with the live development.\n\nWHY THIS MATTERS FOR PUBLICATION. This is a legibility problem, not a correctness one -- the file builds green, is sorry-free and axiom-free. But a single file of this size is effectively unreviewable, and the interleaving of live results with a register of refuted attempts means a reader cannot tell, locally, which of the two they are reading. The concrete failure mode is already on record: the six `_run` theorems are vacuous, and the only statement of that fact sits roughly 12,700 lines into the file, far from the declarations it invalidates.\n\nSCOPE:\n1. Characterize the file's actual composition before proposing any split -- live definitions and theorems, the C9 register, probe/measurement blocks, and long-form prose notes. Report the line budget of each. A split proposed without this measurement is guesswork.\n2. Propose a decomposition into modules with a stated organizing principle (by development layer, by frame class, or register-vs-live -- pick one and justify it against the alternatives). The C9 register is the strongest candidate for extraction: it is documentation of what did not work and need not sit inside the module carrying what did.\n3. Execute the split additively and verifiably: the public interface must be preserved exactly, every downstream importer must build unchanged, and the full `lake build` must stay green. Sorry-free, axiom-free.\n\nCONSTRAINTS. Preserve every existing declaration name -- this is a decomposition, not a rename or a cull; removing declarations is a separate decision and belongs to the disposition task. Do not weaken or drop C9 register content while relocating it; the register's value is that it prevents re-attempting refuted approaches, and a lossy move destroys exactly that. Expect expensive builds: this module has cost 5-25 minutes per pass under concurrent load, so batch verification rather than rebuilding per edit.\n\nDependencies: 549. If its disposition recommendation is to retire the six vacuous `_run` theorems, that removes a section of this file, and decomposing before knowing so is wasted work.\n\nDEPENDENCY UPDATE (added after the trace returned its verdict): also depends on the retirement task. The trace recommended RETIRE, and the retirement removes a section of this same file, so decomposing first would be wasted work and the two would collide on MintBound.lean. Note the count correction the trace established: the vacuous set is NINE, not six, as this description says above.",
       "topic": "publication-quality",
@@ -106,7 +106,8 @@
         "FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean"
       ],
       "created": "2026-09-07T23:44:13Z",
-      "last_updated": "2026-09-08T00:26:49Z"
+      "last_updated": "2026-09-08T01:19:06Z",
+      "session_id": "sess_1788827428_44fd7f_550"
     },
     {
       "project_number": 549,
@@ -144,7 +145,7 @@
     {
       "project_number": 548,
       "project_name": "repin_renamed_paper_anchors_bx_z_d_r",
-      "status": "planning",
+      "status": "planned",
       "task_type": "lean4",
       "description": "Re-pin the paper anchors changed by the paper's z/d/r refactor and its removal of the Past/Future fragment, and update every citing docstring and the definitions-of-record so that scripts/check-module-invariants.sh C15 resolves them. RENAMED LABELS: def:TMplus-f, def:TMplus-d, def:TMplus-c are now def:BX-z, def:BX-d, def:BX-r; def:TMplus is unchanged and still names TM. CHANGED TEXT UNDER UNCHANGED LABELS: cor:tm-completeness now lists TM strongly complete over all task frames, TM_d strongly over the dense task frames, TM_z weakly over Z-time, and TM_r weakly over R-time; def:derivability and def:soundness are now stated for TM and the full language BL rather than for the fragment system; thm:TM-soundness now speaks of TM and its extensions, adds a sentence that the since/until/next/previous schemata are valid by their clauses as verified in this repository, and its footnote cites this repository for TM rather than for the fragment system; lem:temporal-duality and thm:TD-valid are now stated for the since/until interchange with new inductive cases for U and S. DELETED ANCHORS: prop:fragment and rmk:fragment no longer exist (no Lean file cites either, and neither is pinned -- verify). MEASURED STATE: specs/paper-definitions-of-record.md pins `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` with content hashes in the machine-readable manifest (rows near line 1431) and carries their full-text entries at lines 993, 1014, 1032, alongside `def:TMplus` (line 1056) and `cor:tm-completeness` (line 1175); `thm:TM-soundness` is cited by 2 Lean files and appears on 4 record lines; `def:soundness` and `def:derivability` each appear on 1 record line; `def:TMplus` is cited in 20 lines across 13 Lean files and `cor:tm-completeness` in 9 files; C15 resolves anchors against the record, not the paper. The paper's new text is at /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex: def:BX-z (Discrete Burgess-Xu logic BX_z, axioms UZ and Z1, Z-time footnote), def:BX-d (dense logic BX_d, axioms DN and NN), def:BX-r (Dense and Complete Burgess-Xu logic BX_r, the extension of BX_d by PU and SP, CO derived), def:TMplus (TM_z, TM_d, TM_r as the extensions of TM by the axioms distinguishing BX_z, BX_d, BX_r). The Semantics/FrameClassValidity.lean docstring quotes the closing sentence of the old def:TMplus-f verbatim ('the successor-Archimedean discrete class to which BX_f and TM⁺_f are sound and complete is exactly Z-time'); it now reads BX_z and TM_z and the quotation must be refreshed. The Logic-subsection footnote that replaced the fragment proposition cites this repository for the Z1 result (`not_bl_derivable_z1` in Metalogic/Conservativity/Z1Countermodel.lean); its Kripke countermodel for the base class is a pen-and-paper claim that this repository does not check -- record it as such, do not pin it as verified. WORK: follow the record's own 'How to extend this record' procedure to retire the three old anchors, pin the three renamed ones, and re-hash every changed entry named above; update every citing docstring to the new label names; re-run scripts/check-module-invariants.sh until C15 reports no unresolved anchor from this refactor. The three unrelated unresolved anchors (app:drift, cor:no-characterization, lem:deterministic-singleton) belong to a separate open task and must not be conflated with this one.",
       "topic": "paper-refactor",
@@ -152,7 +153,7 @@
         547
       ],
       "created": "2026-09-07T04:24:21Z",
-      "last_updated": "2026-09-08T01:16:02Z",
+      "last_updated": "2026-09-08T01:20:06Z",
       "file_scope": [
         "FormalSystem/Metalogic/Conservativity.lean",
         "FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean",
@@ -178,12 +179,17 @@
         "specs/paper-definitions-of-record.md",
         "README.md"
       ],
-      "session_id": "sess_1788826208_cd9987_548",
+      "session_id": "sess_1788826208_cd9987",
       "artifacts": [
         {
           "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md",
           "type": "report",
           "summary": "Measured baseline for the BX-z/d/r re-pin: C15 is already green (53/53 resolve), the actually-red gate is check-paper-definitions.sh (15 drifted entries + 9 dangling anchors), with all new hashes, a 32-site citation inventory across 17 files, a record-before-docstrings ordering rule, and four stale premises in the task description corrected."
+        },
+        {
+          "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/plans/01_repin-bx-z-d-r-anchors.md",
+          "type": "plan",
+          "summary": "Six-phase, strictly linear plan absorbing the paper's z/d/r rename and full drift wave into specs/paper-definitions-of-record.md, then re-labelling 32 in-tree citation sites and correcting the invalidated Hoelder/prop:archimedean prose."
         }
       ],
       "next_artifact_number": 2
