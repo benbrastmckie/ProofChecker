@@ -1,15 +1,40 @@
 {
-  "status": "in_progress",
-  "started_at": "2026-09-07T17:00:00Z",
-  "artifacts": [],
-  "partial_progress": {
-    "stage": "initializing",
-    "details": "Agent started, plan and dispatch read; beginning Phase 1 probe reproduction"
+  "status": "implemented",
+  "started_at": "2026-09-07T17:00:00-07:00",
+  "completed_at": "2026-09-07T17:30:00-07:00",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true,
+    "build_jobs": 2592,
+    "build_genuine_not_replay": true,
+    "baseline_note": "This task modified zero Lean files. Repo-wide pre-existing baselines, none attributable to task 549: sorry_count 160 (all under FormalSystem/Boneyard/, a non-built legacy quarantine; zero outside it); one single-line vacuous-pattern match at FormalSystem/Examples/TemporalStructures.lean:496 which is an honest proof, not a placeholder; zero actual axiom declarations in FormalSystem/ (the twelve '^axiom ' grep hits are all wrapped docstring/README prose, false positives). Build output carried zero error:, zero warning:, and zero \"declaration uses 'sorry'\" lines."
+  },
+  "artifacts": [
+    {
+      "type": "summary",
+      "path": "specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md",
+      "summary": "VERDICT: NO DEPENDENCY — decide reaches zero MintBound constants; docs/theorem-index.md:113 left untouched; disposition RETIRE the nine (not six) vacuous _run theorems."
+    }
+  ],
+  "completion_data": {
+    "completion_summary": "Mechanically traced whether FormalSystem.Metalogic.Decidability.decide depends on the vacuous _run theorems and returned a NO DEPENDENCY verdict backed by six re-runnable probes captured verbatim: zero suspect hits across six decision-procedure entry points, zero MintBound constants reached by decide, and zero reverse-dependents of the vacuous block anywhere in FormalSystem. docs/theorem-index.md:113-114 was adjudicated column by column against actual #print axioms output, found accurate on all ten substantive columns, and left untouched per the NO-DEPENDENCY branch. Also corrected the premise upward (the vacuous set is nine, not six, with the un-At gap now kernel-checked) and delivered the RETIRE disposition with an enumerated keep/delete boundary and two ready-to-execute follow-up briefs.",
+    "roadmap_items": []
   },
   "metadata": {
     "session_id": "sess_1788824812_856447",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "skipped",
+    "compliance_check_reason": "The plan's Goals bullets name no Lean identifiers to land — the plan's own 'Lean Challenge Statements' section states the identifier set is empty because the task is read-only with respect to FormalSystem/**. There is therefore nothing for the goal-name spot-check to resolve.",
+    "phases_completed": 6,
+    "phases_total": 6,
+    "read_only_constraint_held": true,
+    "files_modified_outside_specs": 0,
+    "commits": ["5efa7b0e4", "6a8118cef", "0e7ea7a1a"],
+    "agent_definition_defect": "The lean-implementation-agent definition documents the build invocation as 'lake-build-guard.sh build --timeout 1800 --', which exits 77 (usage error: build mode requires a lake subcommand). The lake subcommand must follow the '--', i.e. '... --timeout 1800 -- build'. Fix belongs in the agent-system/extensions/** source store, not .claude/**."
   }
 }

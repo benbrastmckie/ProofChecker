@@ -306,3 +306,167 @@ anything. Task 549's own committed writes — `probes/`, `summaries/`, `handoffs
 already in the tree as commits `5efa7b0e4` and `6a8118cef` and therefore do not appear here.
 
 **No file outside `specs/**` was created, modified, or deleted by this task.**
+
+---
+
+## Final gate — full `lake build` and read-only re-audit (Phase 6)
+
+### 1. Build
+
+**Command** (detached via `run_in_background`, routed through the build guard, per
+`context/project/lean4/operations/long-builds.md`):
+
+```
+bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- build
+```
+
+**Guard transcript** (`/tmp/.../build549.log`):
+
+```
+lake-build-guard: memory pressure detected; proceeding anyway (pass --defer-on-pressure to defer instead)
+lake-build-guard: REPLAY: sharing result from holder pid 145931, age 0s, recorded exit status 0
+EXIT=0
+```
+
+**Honest reading of the REPLAY line.** This dispatch's guard call did not itself spawn `lake`; it
+blocked on the guard lock, and when the in-flight holder finished it shared that holder's result
+at **age 0s**. That is not a stale cache hit. The holder (pid 145931) ran a genuine, complete
+`lake build` over this same working tree, and the guard's own fingerprints certify the tree did
+not move under it:
+
+```
+state=complete
+holder_pid=145931
+start_epoch=1788825812
+end_epoch=1788826724
+pre_fingerprint=f1104812fd84a098404838cce72b443f219b7d2a7b39ad85c941abe880ac1b2b
+post_fingerprint=f1104812fd84a098404838cce72b443f219b7d2a7b39ad85c941abe880ac1b2b
+scope_key=f143b23c7c7d67209063d91ad808180acf773f85d928d3bacd63549e08ff088c
+exit_status=0
+```
+
+`pre_fingerprint == post_fingerprint` and `exit_status=0`, over a 912-second window.
+
+**Build tail** (`.lake/build-guard.stdout`):
+
+```
+✔ [2582/2592] Built FormalSystem.Metalogic.Decidability.Verified.Bridge.TemporalGate (4.9s)
+✔ [2587/2592] Built FormalSystem.Metalogic.Decidability (941ms)
+✔ [2588/2592] Built FormalSystem.Metalogic (1.2s)
+✔ [2590/2592] Built FormalSystem.FormalSystem (1.3s)
+✔ [2591/2592] Built FormalSystem (1.3s)
+Build completed successfully (2592 jobs).
+```
+
+`grep -cE "^error" .lake/build-guard.stdout` -> `0`.
+
+**Verdict: GREEN.** 2592/2592 jobs, zero errors, exit 0. No per-module failure attribution is
+needed, so the plan's "red from concurrent 463 work" contingency (Phase 6 `[PARTIAL]`) did not
+fire.
+
+### 2. Bonus corroboration of the index adjudication
+
+The build's own `MainResults.lean` axiom dump independently reproduces the `pcq` column that
+Phase 3 adjudicated, without the probe:
+
+```
+info: FormalSystem/MainResults.lean:254:0: 'FormalSystem.Metalogic.Decidability.sound_of_isValid' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
+
+This is `Ax.lean`'s Probe 2 result arriving a second time through an independent channel (the
+library build rather than a standalone `lake env lean` script).
+
+### 3. `sorry` and axiom attribution
+
+This task modified **no** file under `FormalSystem/**`, so its attributable contribution to both
+surfaces is zero by construction rather than by census. Recorded for completeness:
+
+| Metric | Repo-wide count at HEAD | Attributable to task 549 |
+|--------|-------------------------|--------------------------|
+| `lean-sorry-census.sh FormalSystem/` -> `sorry_count` | 160 | **0** |
+| ... of those, outside `FormalSystem/Boneyard/` | **0** | **0** |
+| `^axiom ` declarations in `FormalSystem/` | 10 | **0** |
+| Single-line vacuous-definition grep hits | 1 (`Examples/TemporalStructures.lean:496`, `int_domain_universal … := trivial`, landed by task 523 and genuinely definitional for the `Int` domain) | **0** |
+
+A measurement note, so the figure is not misread later. A naive
+`grep -rnE '(^|[^a-zA-Z_.])sorry([^a-zA-Z_]|$)'` over `FormalSystem/` returns 990 lines, 331 of
+them outside `Boneyard/`, which looks alarming and is wrong: those 331 are prose occurrences of
+the word in docstrings and module headers (`- Combinators: PROVEN (zero sorry)`,
+`aggregates the sorry-free example files`), not proof terms. The census script's `sorry_count: 160`
+is the real figure, and its entire inventory lies under `FormalSystem/Boneyard/`, the legacy
+quarantine. **Zero actual `sorry` terms exist outside `Boneyard/`.**
+
+The 160 is a **pre-existing baseline, not a regression** — the count this task inherited and
+returns unchanged. It is recorded here rather than suppressed, because a bare "sorry count: 0"
+would be false about the repository even though it is true about this task.
+
+`probes/*.lean` are standalone scripts elaborated with `lake env lean`. They are not members of
+any lakefile target — the build above reports 2592 jobs with no probe module among them — so they
+contribute nothing to the library's axiom or `sorry` surface.
+
+### 4. Read-only re-audit against the Phase 2 baseline
+
+**HEAD at re-audit**: `755489043e21ebd357143003c2e4df07b25c71a9`
+
+```
+$ git status --porcelain
+ M .claude-extensions.json
+ D specs/433_discharge_postblockingsettles_residual/.return-meta.json
+ D specs/463_postblockingsettlesrun_verdict_at_terminus_fuel/.return-meta.json
+ M specs/549_trace_decide_dependency_on_vacuous_run_theorems/.return-meta.json
+ M specs/events.jsonl
+?? specs/547_replace_historical_system_names_in_docstrings/
+```
+
+Every entry is either a Phase 2 pre-existing dirty path, this dispatch's own orchestration
+metadata, or concurrent activity from another task. Line by line:
+
+| Entry | Attribution |
+|-------|-------------|
+| `.claude-extensions.json` | Pre-existing, named in the Phase 2 baseline |
+| `specs/433_.../.return-meta.json` (deleted) | Pre-existing, named in the Phase 2 baseline |
+| `specs/463_.../.return-meta.json` (deleted) | Pre-existing, named in the Phase 2 baseline |
+| `specs/549_.../.return-meta.json` | This dispatch's own return metadata |
+| `specs/events.jsonl` | Pre-existing, named in the Phase 2 baseline |
+| `specs/547_.../` (untracked) | **New since Phase 2** — a concurrent task's directory, not this task's |
+
+`specs/TODO.md` and `specs/state.json` were dirty at Phase 2 and are clean now; a concurrent
+orchestrator commit absorbed them. Nothing here is a `FormalSystem/` or `docs/` path.
+
+**Protected-tree checks**
+
+| Check | Command | Result |
+|-------|---------|--------|
+| No `FormalSystem/` modification | `git diff --quiet -- FormalSystem/` | exit **0** (CLEAN) |
+| No `docs/` modification | `git diff --quiet -- docs/` | exit **0** (CLEAN) |
+| No `docs/theorem-index.md` modification | `git diff --quiet -- docs/theorem-index.md` | exit **0** (CLEAN) |
+| Zero porcelain entries under the five protected roots | `git status --porcelain -- FormalSystem/ docs/ latex/ typst/ Tests/ \| wc -l` | **0** |
+
+### 5. Concurrency check on the build's validity
+
+HEAD advanced during the build window (`0aaf554b1` -> `755489043`, commit
+"task 552, 553: resync descriptions to the paper's possible-world convention"). That commit is
+**specs-only**, so the green build still describes the current tree:
+
+```
+$ git diff --stat 0aaf554b1..HEAD -- FormalSystem/ docs/
+(empty)
+
+$ git log --oneline --since=@1788825812 -- FormalSystem/ docs/
+(empty)
+```
+
+No Lean source and no documentation file changed between the build's start and this audit. The
+green result is current, not stale.
+
+### 6. Phase 6 verification criteria
+
+| Plan criterion | Result |
+|----------------|--------|
+| `lake build` exit status recorded | **0**, green, 2592 jobs, zero errors |
+| `git diff --quiet -- FormalSystem/ docs/` exits 0 | **Yes**, both |
+| No `sorry` and no axiom additions introduced | **Confirmed**, zero attributable to this task |
+
+**The read-only constraint held end to end.** This task's entire footprint is under
+`specs/549_trace_decide_dependency_on_vacuous_run_theorems/`. That is the intended end state of
+the NO-DEPENDENCY branch, not a shortfall.

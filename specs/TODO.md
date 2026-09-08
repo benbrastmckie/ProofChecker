@@ -11,8 +11,8 @@ next_project_number: 554
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,549,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537,548,550 | 193,298,464,502,535,547,549 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,550,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,548 | 193,298,464,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500,552 | 231,465,497,548 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 125,429,543,553 | 428,498,499,500,552 | algebraic-representation, decidability, metalogic, ... |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
@@ -60,7 +60,6 @@ next_project_number: 554
                 └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
-549 [IMPLEMENTING] — Trace whether `FormalSystem.Metalogic.Decidability.decide` depend
 
 ### Formula Refactor
 
@@ -84,7 +83,7 @@ next_project_number: 554
 
 ### Paper Refactor
 
-547 [RESEARCHED] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
+547 [PLANNING] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
   └─ 548 [NOT STARTED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
     └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
       └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
@@ -218,12 +217,13 @@ Dependencies: 549. If its disposition recommendation is to retire the six vacuou
 ---
 
 ### 549. Trace decide dependency on vacuous run theorems
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: decidability
 - **Dependencies**: Task 463
 - **Research**: [549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md]
 - **Plan**: [549_trace_decide_dependency_on_vacuous_run_theorems/plans/01_decide-dependency-verdict-disposition.md]
+- **Summary**: [549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md]
 
 **Description**: Trace whether `FormalSystem.Metalogic.Decidability.decide` depends on the six now-vacuous `_run` theorems, and correct the affected status claims if it does.
 
@@ -263,7 +263,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 547. Replace historical system names in docstrings
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 546

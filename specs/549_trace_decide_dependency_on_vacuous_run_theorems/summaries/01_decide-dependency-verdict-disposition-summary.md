@@ -330,10 +330,15 @@ status quo, and it preserves the option of a later `.ZTime` completion.
 
 ## Verification
 
-- Build: **Success** — `Build completed successfully (2592 jobs).`, exit 0. Run guarded and
-  detached with `--no-share`, so this is a genuine build, not a replayed result (no
-  `lake-build-guard: REPLAY:` marker). Zero `error:`, zero `warning:`, zero
-  `declaration uses 'sorry'` lines in the output.
+- Build: **Success** — `Build completed successfully (2592 jobs).`, exit 0, zero `error:` lines.
+  Run guarded and detached per `context/project/lean4/operations/long-builds.md`. Phase 6's own
+  guard call returned `REPLAY: sharing result from holder pid 145931, age 0s, recorded exit
+  status 0`: it blocked on the guard lock and adopted the in-flight holder's result the instant
+  that holder finished. This is a genuine full build of the current tree, not a stale cache hit —
+  the guard's `pre_fingerprint == post_fingerprint` over the holder's 912-second window certifies
+  the sources did not move under it, and HEAD's only advance during that window
+  (`0aaf554b1` -> `755489043`) was specs-only, with `git diff 0aaf554b1..HEAD -- FormalSystem/
+  docs/` empty. Full transcript and fingerprints: `probes/probe-evidence.md`, Phase 6 section.
 - Sorry count: **0** attributable to this task. Repo-wide baseline is `sorry_count: 160`, all
   under `FormalSystem/Boneyard/` (legacy quarantine, not a build target) and all pre-existing;
   zero outside `Boneyard/`. This task modified no Lean file.
