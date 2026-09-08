@@ -145,7 +145,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Algebraic/`](Algebraic/README.md) | 5 | 2,427 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
 | [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,150 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
-| [`Conservativity/`](Conservativity/README.md) | 15 | 3,501 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Conservativity/`](Conservativity/README.md) | 15 | 3,572 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 80 | 53,406 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 3,005 | Axiom-independence models |

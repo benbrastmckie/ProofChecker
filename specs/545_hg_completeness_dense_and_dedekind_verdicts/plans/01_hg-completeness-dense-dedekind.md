@@ -284,25 +284,32 @@ adjusted signature in the phase notes; the *content* of each statement must not 
 
 ---
 
-### Phase 4: The countermodel-transfer corollary at Dense and Dedekind [NOT STARTED]
+### Phase 4: The countermodel-transfer corollary at Dense and Dedekind [COMPLETED]
 
 **Goal**: Expose the one interface the future canonical-model task consumes —
 "a chain-model refutation of `φ` refutes `BLValidIn fc φ`" — and instantiate it at ℚ (Dense) and
 ℝ (Dedekind), so the transfer step is closed for both rows regardless of which is pursued.
 
 **Tasks**:
-- [ ] Prove `not_blValidIn_of_not_chainSat`: given `fc.Sat (multiFamTaskFrameGen D FamIdx)`, a
+- [x] Prove `not_blValidIn_of_not_chainSat`: given `fc.Sat (multiFamTaskFrameGen D FamIdx)`, a
       valuation `v`, a point `q` and `¬ chainSat v q φ`, conclude `¬ BLValidIn fc φ`. The model is
       just `⟨v⟩` (`TaskModel` has one field); the history is `multiFamHistoryGen`; totality is
       `multiFamHistoryGen_total`; the bridge is Phase 3's truth lemma.
-- [ ] Instantiate at `D := TemporalOrder.of ℚ` and check `FrameClass.Sat .Dense` reduces to
+- [x] Instantiate at `D := TemporalOrder.of ℚ` and check `FrameClass.Sat .Dense` reduces to
       `DenselyOrdered ℚ` (via the `@[reducible]` chain `Sat .Dense ⇝ TaskFrame.IsDense ⇝
       DenselyOrdered`; `sat_intro` is the intended entry point).
-- [ ] Instantiate at `D := TemporalOrder.of ℝ` and check `FrameClass.Sat .RTime` reduces to
+- [x] Instantiate at `D := TemporalOrder.of ℝ` and check `FrameClass.Sat .RTime` reduces to
       `F.IsDense ∧ F.IsComplete`. Record what the `IsComplete` half needs; if it does not fall out
       in under ~40 lines, leave the ℝ instantiation as an explicitly-noted gap in the phase notes
       rather than growing the phase — the Dense row is the one this task's verdict turns on.
-- [ ] Add a module-docstring paragraph stating that this corollary, not the frame construction, is
+      *(resolved: no gap. The `IsComplete` half is one line — `Real.exists_isLUB` — and
+      `Metalogic/DedekindNonCompactness.lean` already discharges `FrameClass.Sat .RTime` with
+      the identical term. Landed as `not_blValidRTime_of_not_chainSat`. The only cost was one
+      new Mathlib import, `Mathlib.Algebra.Order.Archimedean.Real.Basic`.)*
+      *(deviation: altered — both instantiations need an explicit `(fc := …)` ascription, since
+      `BLValidDense`/`BLValidRTime` are `def`s rather than `abbrev`s and so do not determine the
+      tag metavariable in time to elaborate the `hSat` argument.)*
+- [x] Add a module-docstring paragraph stating that this corollary, not the frame construction, is
       the brief's route step (3), and that the frame construction was already in-tree (F3/D4).
 
 **Timing**: 1 hour

@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
 import FormalSystem.Metalogic.Algebraic.FlowFrame
+import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
 /-!
 # The valuation-only chain-bundle truth lemma
@@ -175,5 +176,75 @@ theorem chainBundle_truth_lemma (M : TaskModel (multiFamTaskFrameGen D FamIdx))
       · intro h s hs
         exact (ih f w₀ s).mpr (h (w₀ + s) (show w₀ + t < w₀ + s from
           (add_lt_add_iff_left w₀).mpr hs))
+
+/-! ## The transfer corollary
+
+The brief's route step (3) — "transform into a Dense task frame" — turns out to be *only* this
+corollary. The frame construction it seems to call for was already in the tree and already
+generic: `multiFamTaskFrameGen` discharges Compositionality, Seriality, Limit and Saturation for
+an arbitrary temporal order, with singleton fibres, and `multiFamGen_total_eq_range` identifies
+its possible worlds with the translates. So nothing is built here; the only content is crossing
+from `chainSat` back to `BLValidIn`. -/
+
+/--
+**A chain-model refutation is a task-frame refutation.**
+
+The single interface a future base-language canonical model consumes. Given a valuation `v`, a
+point `q` at which `φ` fails, and *any* frame-class tag the flow frame over `D` satisfies, `φ` is
+not `fc`-BL-valid.
+
+Every ingredient is already generic: the model is `⟨v⟩` (`TaskModel` has one field), the history
+is `multiFamHistoryGen q.1 q.2`, its totality is `multiFamHistoryGen_total`, and the bridge is
+`chainBundle_truth_lemma` read at time `0`, where `q.2 + 0 = q.2` puts the base point back at `q`.
+
+**The converse is not proved here and is not available.** "Every `fc`-underivable formula has a
+chain-model refutation" is the completeness direction, and is exactly what
+`Conservativity/TMCompletenessReduction.lean` records as unasserted at all four tags.
+-/
+theorem not_blValidIn_of_not_chainSat {fc : FrameClass}
+    (hSat : fc.Sat (multiFamTaskFrameGen D FamIdx))
+    (v : FamIdx × (D : Type) → Atom → Prop) (q : FamIdx × (D : Type)) (φ : BLFormula)
+    (h : ¬ chainSat v q φ) : ¬ BLValidIn fc φ := by
+  intro hvalid
+  refine h ?_
+  have htrue := BLValidIn.apply_total hvalid (multiFamTaskFrameGen D FamIdx) hSat ⟨v⟩
+    (multiFamHistoryGen q.1 q.2) (multiFamHistoryGen_total _ _) 0
+  have h2 := (chainBundle_truth_lemma (D := D) ⟨v⟩ q.1 q.2 0 φ).mp htrue
+  simpa using h2
+
+/--
+**The `.Dense` instantiation**, at chains of rationals.
+
+`FrameClass.Sat .Dense` reduces to `DenselyOrdered ↑(TemporalOrder.of ℚ)` through the reducible
+chain `Sat .Dense ⇝ TaskFrame.IsDense ⇝ DenselyOrdered`, so the side condition is
+`inferInstance`. The `(fc := …)` ascription is required: `BLValidDense` is a `def`, not an
+`abbrev`, so the tag is not determined from the goal in time to elaborate `hSat`.
+-/
+theorem not_blValidDense_of_not_chainSat
+    (v : FamIdx × ((TemporalOrder.of ℚ) : Type) → Atom → Prop)
+    (q : FamIdx × ((TemporalOrder.of ℚ) : Type)) (φ : BLFormula)
+    (h : ¬ chainSat v q φ) : ¬ BLValidDense φ :=
+  not_blValidIn_of_not_chainSat (fc := FrameClass.Dense) (D := TemporalOrder.of ℚ)
+    inferInstance v q φ h
+
+/--
+**The `.RTime` instantiation**, at chains of reals.
+
+`FrameClass.Sat .RTime` is `TaskFrame.IsDense ∧ TaskFrame.IsComplete`, so unlike the `.Dense` case
+the side condition is a pair. The density half is `inferInstance`; the completeness half is
+`∀ s, s.Nonempty → BddAbove s → ∃ x, IsLUB s x`, which is Mathlib's `Real.exists_isLUB` verbatim.
+`Metalogic/DedekindNonCompactness.lean` already discharges `Sat .RTime` with the same term, so
+this row costs one line and no new mathematics.
+
+Landing both rows means the transfer step is closed for **both** open rows regardless of which is
+pursued — but note what that does and does not settle. The Dedekind row's obstruction is on the
+canonical-model side, not here; see `Conservativity/TMCompletenessReduction.lean`.
+-/
+theorem not_blValidRTime_of_not_chainSat
+    (v : FamIdx × ((TemporalOrder.of ℝ) : Type) → Atom → Prop)
+    (q : FamIdx × ((TemporalOrder.of ℝ) : Type)) (φ : BLFormula)
+    (h : ¬ chainSat v q φ) : ¬ BLValidRTime φ :=
+  not_blValidIn_of_not_chainSat (fc := FrameClass.RTime) (D := TemporalOrder.of ℝ)
+    ⟨inferInstance, fun _ hne hbdd => Real.exists_isLUB hne hbdd⟩ v q φ h
 
 end FormalSystem.Metalogic
