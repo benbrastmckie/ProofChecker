@@ -228,7 +228,7 @@ continuing rather than absorbed.
 
 ---
 
-### Phase 3: The valuation-only chain-bundle truth lemma [NOT STARTED]
+### Phase 3: The valuation-only chain-bundle truth lemma [COMPLETED]
 
 **Goal**: Land the single reusable interface any future BL canonical-model work will consume: a
 Kripke satisfaction predicate `chainSat` over `FamIdx × ↑D` (with `□` universal, per F1) and the
@@ -236,22 +236,22 @@ induction showing BL truth along a translate history matches it pointwise. Repor
 frame itself is already built and generic — only this induction is missing.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean`, importing
+- [x] Create `FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean`, importing
       `Conservativity.BaseLanguageSoundness` (for Phase 1's lemmas) and
       `FormalSystem.Metalogic.Algebraic.FlowFrame`. **Do not** add BL imports to `FlowFrame.lean` —
       it deliberately does not import BL semantics, and inverting that would couple
       `Metalogic/Algebraic/` to the base language.
-- [ ] Elaborate the `chainSat` and `chainBundle_truth_lemma` signatures with `lean_run_code`
+- [x] Elaborate the `chainSat` and `chainBundle_truth_lemma` signatures with `lean_run_code`
       *before* writing proofs, to settle the `FrameOver`→`TaskFrame` coercion question early.
-- [ ] Define `chainSat (v : FamIdx × ↑D → Atom → Prop) : FamIdx × ↑D → BLFormula → Prop` with six
+- [x] Define `chainSat (v : FamIdx × ↑D → Atom → Prop) : FamIdx × ↑D → BLFormula → Prop` with six
       clauses: `atom` = `v q p`; `bot` = `False`; `imp` = implication; **`box` = `∀ q', chainSat v q' φ`
       (universal over all points, both coordinates)**; `allPast`/`allFuture` = quantify the second
       coordinate within the fixed first coordinate by the `↑D` order.
-- [ ] Prove `chainBundle_truth_lemma` by induction on `φ` generalizing the base point. The
+- [x] Prove `chainBundle_truth_lemma` by induction on `φ` generalizing the base point. The
       `allPast`/`allFuture` cases are `BLTruth.past_iff`/`future_iff` plus the `w₀ + t` translation;
       the `box` case is `multiFamGen_total_eq_range` (total histories are exactly the translates)
       composed with Phase 1's `bl_box_universal` (truth is time-blind under `□`).
-- [ ] Wire into the `Conservativity.lean` aggregator and the `Conservativity/README.md`.
+- [x] Wire into the `Conservativity.lean` aggregator and the `Conservativity/README.md`.
 
 **Timing**: 2 hours
 

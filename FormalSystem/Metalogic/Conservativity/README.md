@@ -25,6 +25,7 @@ than deferred debt.
 |------|------:|-------------|
 | `Backward.lean` | 211 | <!-- TODO: add description --> |
 | `BaseLanguageSoundness.lean` | 613 | <!-- TODO: add description --> |
+| `ChainBundleTruth.lean` | 179 | The valuation-only truth lemma for the flow frames of `Metalogic/Algebraic/FlowFrame.lean`: `chainSat` (Kripke satisfaction on a disjoint union of `D`-chains, `□` universal) and `chainBundle_truth_lemma`, plus the transfer corollary `not_blValidIn_of_not_chainSat` and its ℚ/ℝ instantiations |
 | `DenseObstructionTransfer.lean` | 287 | Machine-checked evidence that neither closed row's separating witness transfers to the dense classes: `Sp` is a theorem of both `TM_d` and `TM_dc` (`sp_derivable_dense`, `sp_derivable_rtime`), and `Z1` is refuted on the flow frame over ℚ (`not_blValidDense_z1`) |
 | `Fragment.lean` | 190 | <!-- TODO: add description --> |
 | `FragmentCompactness.lean` | 150 | <!-- TODO: add description --> |
@@ -53,6 +54,11 @@ than deferred debt.
   `BLFrame` semantics, with `blFrameValid_of_derivation` supplying the soundness
   step the composition route could not
 - `not_bl_derivable_z1` / `tmCompleteZTime_refuted` — the same for the CEF row over ℤ-time
+- `chainSat` / `chainBundle_truth_lemma` / `not_blValidIn_of_not_chainSat` — the transfer half
+  of the standard completeness route over the dense classes, done once and generically: a
+  chain-model refutation is a task-frame refutation. The frame construction the route also needs
+  was already generic in `Metalogic/Algebraic/FlowFrame.lean`, and the canonical-model half is
+  **not** here
 - `sp_derivable_dense` / `sp_derivable_rtime` / `not_blValidDense_z1` — the two closed rows'
   separating witnesses provably fail to transfer to `.Dense` and `.RTime`: `Sp` is a *theorem* of
   both open systems, and `Z1` is not a validity of the dense class. Evidence about the two open

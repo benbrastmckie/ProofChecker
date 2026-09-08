@@ -87,7 +87,7 @@ Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside
 | `Algebraic.lean` | 40 | `Algebraic/` |
 | `BXCanonical.lean` | 43 | `BXCanonical/` |
 | `Bundle.lean` | 47 | `Bundle/` |
-| `Conservativity.lean` | 355 | `Conservativity/` |
+| `Conservativity.lean` | 356 | `Conservativity/` |
 | `Core.lean` | 37 | `Core/` |
 | `Decidability.lean` | 168 | `Decidability/` |
 | `Independence.lean` | 90 | `Independence/` |
@@ -102,7 +102,7 @@ sibling directory. The list is generated, so a file that moves out (four of them
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=non-aggregators -->
 | Loose non-aggregator | Lines | Role |
 |----------------------|------:|------|
-| `Conservativity.lean` | 355 | Conservativity of the extension |
+| `Conservativity.lean` | 356 | Conservativity of the extension |
 | `Compactness.lean` | 232 | Compactness and strong completeness for Base and Dense, by ultraproduct model existence |
 | `DedekindNonCompactness.lean` | 535 | Non-compactness of the Dedekind frame class — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤}` witness, finitely satisfiable over `ℝ` and unsatisfiable over every Dedekind-complete carrier, refuting `CompactDedekind` and `StrongCompletenessDedekind` |
 | `DiscreteNonCompactness.lean` | 329 | Non-compactness of the discrete frame class |
@@ -145,7 +145,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Algebraic/`](Algebraic/README.md) | 5 | 2,427 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
 | [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,150 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
-| [`Conservativity/`](Conservativity/README.md) | 14 | 3,322 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Conservativity/`](Conservativity/README.md) | 15 | 3,501 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 80 | 53,406 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 3,005 | Axiom-independence models |
