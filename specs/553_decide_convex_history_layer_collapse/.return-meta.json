@@ -1,0 +1,30 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/553_decide_convex_history_layer_collapse/plans/01_convex-correlate-and-consequence-study.md",
+      "summary": "7-phase study plan developing the categorical correlate of convex histories and the alternative consequence relations, with a proposed task-description revision and follow-on task specifications."
+    }
+  ],
+  "next_steps": "Run /implement 553 to execute the plan",
+  "metadata": {
+    "session_id": "sess_1788884518_794e4d_553",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 7,
+    "estimated_hours": 12,
+    "dependency_waves": [[1, 2], [3, 6], [4, 5], [7]]
+  },
+  "memory_candidates": [
+    {
+      "content": "When costing the formalization of a paper's categorical/structural appendix against an existing formal library, audit first for the apparatus already present in specialized or total-only disguise, before treating the work as greenfield. In the BimodalLogic tree the paper's behavior-presheaf appendix looked entirely absent (0 occurrences of 'presheaf'), yet the translation maps Tr p exist as ConvexHistory.timeShift, two-piece sheaf gluing exists as StarPasting.paste restricted to total histories, and the analytic input to the presheaf's Totality and Directed Gluing clauses is the already-proved Extension Theorem. The generalizable move: a categorical statement is usually assembled from concrete lemmas a library already carries under non-categorical names, so grep for the *operations* (translation, restriction, gluing, limit) rather than for the *vocabulary* (presheaf, site, functor). A zero-hit vocabulary grep is evidence about naming, not about content, and using it to justify deleting a layer as vestigial inverts the actual finding.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/553_decide_convex_history_layer_collapse/plans/01_convex-correlate-and-consequence-study.md",
+      "confidence": 0.75,
+      "suggested_keywords": ["presheaf", "formalization-cost", "vestigial-layer", "vocabulary-vs-content", "categorical-correlate", "grep-audit"]
+    }
+  ],
+  "dispatch_seq": 1
+}

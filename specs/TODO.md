@@ -90,7 +90,7 @@ next_project_number: 563
 
 ### Paper Refactor
 
-553 [NOT STARTED] — ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Sem
+553 [PLANNED] — ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Sem
 562 [NOT STARTED] — Rename this repository's object languages and proof systems so th
 
 ### Publication Quality
@@ -261,10 +261,11 @@ Dependencies: none outstanding. Task 463, which formerly owned this file, is com
 ---
 
 ### 553. Decide convex history layer collapse
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 552
+- **Plan**: [553_decide_convex_history_layer_collapse/plans/01_convex-correlate-and-consequence-study.md]
 
 **Description**: ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Semantics/{WorldHistory,PartialHistory,Truth,Validity,StarPasting,ShiftSet,IntTransfer}.lean, FormalSystem/Semantics/Ultraproduct, FormalSystem/Metalogic/Decidability/BiLasso, FormalSystem/Metalogic/WeakCanonical, FormalSystem/Metalogic/Soundness.lean. These were previously declared as this task file_scope, which mis-stated a reading surface as owned write territory -- the batch orchestrator treats file_scope as write ownership, so the over-declaration would collide with any concurrent task editing those trees (notably the snake_case burndown, which edits four files under Metalogic/WeakCanonical) and defer one of them for no real reason. Every other research-only task in this repository declares no file_scope; this one now matches. RESEARCH TASK, verdict-first --- report and probe files only; no change to `FormalSystem/` beyond probes. Decide whether the convex-history layer should exist in this repository at all, and, if it should not, specify how to collapse it. Deliver a reasoned recommendation with the evidence needed to act on it. Implementation, if the recommendation is accepted, is a follow-up task.
 
