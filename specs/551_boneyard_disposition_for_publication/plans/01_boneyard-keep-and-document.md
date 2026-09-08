@@ -497,23 +497,23 @@ Taxonomy, against the enumerated top-level directory list from Phase 5.
 
 ---
 
-### Phase 8: Publication-Facing Framing [NOT STARTED]
+### Phase 8: Publication-Facing Framing [COMPLETED]
 
 **Goal**: Give a reader who has never seen this repository the two paragraphs that turn 91,539
 archived lines from a red flag into evidence of a governed quarantine.
 
 **Tasks**:
-- [ ] Add an opening framing section at the top of `FormalSystem/Boneyard/README.md`, before the
+- [x] Add an opening framing section at the top of `FormalSystem/Boneyard/README.md`, before the
       CONVENTION WARNING, stating: what the archive is; that it is not built and no `.olean` is
       produced under any `Boneyard` path; that it carries every `sorry` in the tree **by design**
       while the live tree's structural sorry count is zero; that both facts are machine-checked
       (C1, C3, B0, C11) rather than asserted; and why it ships — retired-attempt provenance is
       evidence of what was tried and why it failed.
-- [ ] Promote and rewrite §When to Consult the Boneyard for an external reader, since it is already
+- [x] Promote and rewrite §When to Consult the Boneyard *(retitled "When to Consult the Archive"; now points at the classification table's Refuted class and at the paper's own citation)* for an external reader, since it is already
       close to the needed framing.
-- [ ] Link the framing to ADR-009 (the disposition decision) and ADR-005 (the single-archive
+- [x] Link the framing to ADR-009 (the disposition decision) and ADR-005 (the single-archive
       invariant), so the "why does this ship" question has a documented answer one click away.
-- [ ] Give `FormalSystem/README.md`'s Boneyard row and the top-level `README.md`, if it mentions
+- [x] Give `FormalSystem/README.md`'s Boneyard row *(the row was rewritten in Phase 9, which landed first as the plan directed; Phase 8 left it alone and edited the top-level `README.md` tree comment instead)* and the top-level `README.md`, if it mentions
       the archive, a one-line framing consistent with the above — pointing at the archive README
       rather than restating any number.
 

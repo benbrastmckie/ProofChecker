@@ -124,7 +124,8 @@ The task semantics is developed in ["The Construction of Possible Worlds"](https
 │   ├── Theorems/                 # Derived theorems (perpetuity, combinators, propositional)
 │   ├── Automation/               # Proof search tactics & training data pipeline
 │   ├── Examples/                 # Pedagogical examples
-│   └── Boneyard/                 # ARCHIVE — the single archive, excluded from every live count
+│   └── Boneyard/                 # ARCHIVE — retired approaches with the reason each failed;
+│                                 #   not built, no .olean under any Boneyard path (see its README)
 ├── Tests/BimodalTest/            # Test suite (the BimodalTest library)
 ├── scripts/                      # Repository invariant checks and tooling
 └── docs/                         # Repository documentation

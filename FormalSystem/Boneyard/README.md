@@ -1,8 +1,47 @@
-# Boneyard -- Archived Dead Code
+# Boneyard -- the Archive
 
-This directory contains archived Lean code that is no longer part of the active
-development path. Files are preserved for historical reference, documentation of
-dead-end approaches, and potential future consultation.
+## What this is, and why it ships
+
+This directory is the project's **archive**: the approaches that were tried and abandoned, kept
+with the reason each one failed written down beside the code that failed. It is about a quarter
+of the repository by line count, and it contains every `sorry` in the tree. Both of those facts
+are deliberate, and both are neutralized by properties a reader can check rather than take on
+trust.
+
+**It is not built.** `lakefile.lean`'s `lean_lib FormalSystem` roots only `FormalSystem`, nothing
+under a `Boneyard` directory is reachable from any Lake root, and a full `lake build` produces
+**zero** `.olean` files under any `Boneyard` path. Every archived file additionally carries `#exit`
+after its import block, so its inertness is visible in the file itself and does not depend on
+reading the import graph.
+
+**The live tree is sorry-free.** Check **C3** asserts, by content and never by line number, that
+the structural `sorry` count across `FormalSystem/` with the archive excluded is **zero**. The
+archive carries every `sorry` in the repository precisely *because* the live tree carries none:
+unfinished proofs were moved here rather than left in place.
+
+Neither claim is prose. Both are gate-enforced, together with **B0** (exactly one archive
+directory, and the exclusion removes a non-zero count) and **C11** (every archived import line
+resolves or is waived with a recorded reason):
+
+```bash
+lake build && find .lake -path '*Boneyard*' -name '*.olean' | wc -l   # 0
+bash scripts/check-module-invariants.sh                              # B0, C1, C3, C11, INV
+```
+
+**Why keep it at all.** A formalization's record of what was tried and shown impossible is
+frequently the most useful thing in it for a subsequent researcher -- it is the part that cannot
+be reconstructed from the finished proof, and the part that stops the next person spending months
+on a route that has already been closed. The largest provenance class in the classification below
+is *Refuted*: recorded negative results, each with its obstruction named. The decision to ship
+this tree rather than delete it is recorded in
+[`docs/architecture/ADR-009-Boneyard-Retention.md`](../../docs/architecture/ADR-009-Boneyard-Retention.md);
+the decision that there is exactly one archive, filtered by directory name, is
+[`ADR-005`](../../docs/architecture/ADR-005-Single-Boneyard.md).
+
+**Who should read further.** If you are looking for working code to import, stop here -- nothing
+in this tree compiles reliably and its identifiers predate the Mathlib naming migration. If you
+want to know whether an approach has been tried, or why a particular axiom or semantic choice was
+made, the classification table and the per-subtree READMEs below are what you are looking for.
 
 ## CONVENTION WARNING: this tree is EVENT-FIRST and predates the guard-first migration
 
@@ -613,21 +652,34 @@ inconsistent case requires BX9, which was removed as unsound under open guard
 semantics. Doubly obsolete: Xu 3.2.1 was later proved via `dcs_neg_union_consistent`.
 See subdirectory README for recovery options.
 
-## When to Consult the Boneyard
+## When to Consult the Archive
 
-**Do consult** when:
-- You are about to try an approach and want to check if it was already attempted
-  and failed
-- You need to understand why a particular axiom or semantic choice was made (the
-  archived code shows what breaks under alternatives)
-- You are writing documentation about the project's development history
+**Consult it** when:
 
-**Do not consult** when:
-- You are looking for working code to import or adapt (nothing here compiles
-  reliably)
-- You are trying to understand the current proof architecture (use the active
-  Metalogic/ directory instead)
-- You see a sorry in the Boneyard and think it needs fixing (it does not)
+- You are about to try an approach and want to know whether it has already been attempted and
+  closed. Start from the classification table above: anything in the **Refuted** provenance class
+  has its obstruction named, and the subtree's own README states what would have to change for
+  the route to reopen.
+- You want to understand why a particular axiom or semantic choice was made. The archived code
+  shows what breaks under the alternatives -- the T-axiom under strict temporal semantics, BX9
+  and BX1 under the irreflexive order, closed-guard `[t,s]` intervals -- rather than asserting
+  that they break.
+- You are reading the paper and have reached a passage that cites an archived route.
+  `latex/subfiles/04-Metalogic.tex` points here for the completeness approach that is a matter of
+  historical record rather than a current development.
+- You are writing about this project's development history.
+
+**Do not consult it** when:
+
+- You want working code to import or adapt. Nothing here compiles reliably; every file is
+  `#exit`-guarded and many reference removed imports and deleted definitions.
+- You are trying to understand the current proof architecture. Use the live `Metalogic/` tree and
+  its README.
+- You are auditing live identifier usage. This tree's identifiers predate the Mathlib naming
+  migration and will produce thousands of false positives -- see Identifiers Here Predate the
+  Mathlib Naming Migration above, which carries the measurement.
+- You have found a `sorry` here and think it needs fixing. It does not. That is what this tree is
+  for, and C3 is the check that says so.
 
 ## Provenance: When Each Subtree Was Archived
 
