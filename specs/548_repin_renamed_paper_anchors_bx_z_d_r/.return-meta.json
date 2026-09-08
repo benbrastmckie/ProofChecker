@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md",
+      "summary": "Measured baseline for the BX-z/d/r re-pin: C15 is already green (53/53 resolve), the actually-red gate is check-paper-definitions.sh (15 drifted entries + 9 dangling anchors), with all new hashes, a 32-site citation inventory across 17 files, a record-before-docstrings ordering rule, and four stale premises in the task description corrected."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788826208_cd9987_548",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
