@@ -7,7 +7,7 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Metalogic.WeakCanonical.Kamp.NfMultiAnchorBridge.CarrierK1V
 
 /-! Extracted from NfMultiAnchorBridge.lean lines 3604-4040.
-Depth-`k` V-carrier kit: `atomKindCastLE`, `nfkTake`/`nfkProjFresh`, `kv_body`,
+Depth-`k` V-carrier kit: `atomKindCastLE`, `nfkTake`/`nfkProjFresh`, `kvBody`,
 `bracketEndCharKv` with `_correct_zero`/`_correct_one`/`_factors`. Plus the sanctioned
 relocation of `nf_eval_depth1_fold_iff` (orig. lines 5333-5358) so faithful modules never
 import the quarantine. Byte-identical except 1 sanctioned `private ` removal
@@ -158,7 +158,7 @@ Correctness (`BracketCarrierCorrectV`, k0-mirror conditional form) is Phase 13 (
     `b` = the `efoldOfNf1` pointwise read (the `rfl` lemma `bracketEndChar_k1v_eq_kv_body`
     below), which is what makes the documented k=1 bridge `bracketEndChar_kv_one_eq` a pure
     split-kit computation. Structure and citations: see `bracketEndCharKv` above. -/
-private noncomputable def kv_body {sig : MonadicSignature} [Fintype sig.preds]
+private noncomputable def kvBody {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
     (charBase : NormalForm sig 0 1 → Formula)
     (charK : NormalForm sig k 1 → Formula)
@@ -245,8 +245,8 @@ to avoid it is retired, unwired, in `Boneyard/Arity4CharStackK.lean`. -/
 
 open Classical in
 /-- **The depth-`k` V-carrier**. See the doc-comment block above
-    `kv_body` for the full construction record and citations. `k = 0`: singleton-disjunct
-    wrapper of `bracketEndCharK0` (:1567). `k + 1`: the shared successor body `kv_body` at the
+    `kvBody` for the full construction record and citations. `k = 0`: singleton-disjunct
+    wrapper of `bracketEndCharK0` (:1567). `k + 1`: the shared successor body `kvBody` at the
     depth-`k` E[Σ]-atom provider `charF k`, the atom-layer off-fiber clause, and the
     fiber-existential fold-bit read (every read of `qnf.2` goes through it — no arity-4
     evaluation occurs). `open Classical in` (above this doc-comment): the fold-bit
@@ -261,13 +261,13 @@ noncomputable def bracketEndCharKv {sig : MonadicSignature} [Fintype sig.preds]
     (k : Nat) → BracketEndCharCarrierV sig k
   | 0 => fun qnf => { disjuncts := [⟨1, bracketEndCharK0 atomMap h_surj qnf⟩] }
   | k + 1 => fun qnf =>
-    kv_body (nfDepth0CharFormula atomMap h_surj) (charF k) qnf.1
+    kvBody (nfDepth0CharFormula atomMap h_surj) (charF k) qnf.1
       (∀ sub : NormalForm sig k 4,
         nf0DropFresh (NormalForm.atomAssgn sub) ≠ qnf.1 → qnf.2 sub = false)
       (fun zs χ => decide (∃ sub : NormalForm sig k 4, qnf.2 sub = true ∧
         nf0ZoneSpec (NormalForm.atomAssgn sub) = zs ∧ nfkProjFresh sub = χ))
 
-/-- `bracketEndCharK1v` (:1927) is definitionally the shared successor body `kv_body` at the
+/-- `bracketEndCharK1v` (:1927) is definitionally the shared successor body `kvBody` at the
     depth-0 providers, the depth-0 off-fiber clause, and the `efoldOfNf1` pointwise fold-bit
     read (`(efoldOfNf1 qnf).2 (zs, χ)` unfolds to `qnf.2 (nf0Assemble zs χ qnf.1)`,
     NfEFold:472). Pure `rfl` — no semantics. -/
@@ -277,7 +277,7 @@ private theorem bracketEndChar_k1v_eq_kv_body {sig : MonadicSignature} [Fintype 
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
     (qnf : NormalForm sig 1 3) :
     bracketEndCharK1v atomMap h_surj qnf =
-      kv_body (nfDepth0CharFormula atomMap h_surj) (nfDepth0CharFormula atomMap h_surj)
+      kvBody (nfDepth0CharFormula atomMap h_surj) (nfDepth0CharFormula atomMap h_surj)
         qnf.1
         (∀ sub : NormalForm sig 0 4, nf0DropFresh sub ≠ qnf.1 → qnf.2 sub = false)
         (fun zs χ => qnf.2 (nf0Assemble zs χ qnf.1)) := rfl
@@ -293,8 +293,8 @@ private theorem kv_body_gate_fail {sig : MonadicSignature} [Fintype sig.preds]
     (offFiber : Prop)
     (b : ZoneSpec 3 → NormalForm sig k 1 → Bool)
     (h : ¬ offFiber) :
-    kv_body charBase charK r offFiber b = { disjuncts := [] } := by
-  simp only [kv_body]
+    kvBody charBase charK r offFiber b = { disjuncts := [] } := by
+  simp only [kvBody]
   exact dif_neg (fun hg => h hg.1)
 
 open Classical in
@@ -322,7 +322,7 @@ theorem bracketEndChar_kv_one_eq {sig : MonadicSignature} [Fintype sig.preds]
     bracketEndCharKv atomMap h_surj charF 1 qnf = bracketEndCharK1v atomMap h_surj qnf := by
   by_cases hOFF : ∀ sub : NormalForm sig 0 4, nf0DropFresh sub ≠ qnf.1 → qnf.2 sub = false
   · -- On-gate branch: the fiber-existential bit equals the pointwise `efoldOfNf1` read
-    -- (split-kit bijection), so the two `kv_body` instances coincide argument-by-argument.
+    -- (split-kit bijection), so the two `kvBody` instances coincide argument-by-argument.
     have hbit : ∀ (zs : ZoneSpec 3) (χ : NormalForm sig 0 1),
         (decide (∃ sub : NormalForm sig 0 4, qnf.2 sub = true ∧
           nf0ZoneSpec (NormalForm.atomAssgn sub) = zs ∧ nfkProjFresh sub = χ) : Bool) =
@@ -358,11 +358,11 @@ theorem bracketEndChar_kv_one_eq {sig : MonadicSignature} [Fintype sig.preds]
         (fun zs χ => qnf.2 (nf0Assemble zs χ qnf.1)) :=
       funext fun zs => funext fun χ => hbit zs χ
     calc bracketEndCharKv atomMap h_surj charF 1 qnf
-        = kv_body (nfDepth0CharFormula atomMap h_surj) (charF 0) qnf.1
+        = kvBody (nfDepth0CharFormula atomMap h_surj) (charF 0) qnf.1
             (∀ sub : NormalForm sig 0 4, nf0DropFresh sub ≠ qnf.1 → qnf.2 sub = false)
             (fun zs χ => decide (∃ sub : NormalForm sig 0 4, qnf.2 sub = true ∧
               nf0ZoneSpec (NormalForm.atomAssgn sub) = zs ∧ nfkProjFresh sub = χ)) := rfl
-      _ = kv_body (nfDepth0CharFormula atomMap h_surj)
+      _ = kvBody (nfDepth0CharFormula atomMap h_surj)
             (nfDepth0CharFormula atomMap h_surj) qnf.1
             (∀ sub : NormalForm sig 0 4, nf0DropFresh sub ≠ qnf.1 → qnf.2 sub = false)
             (fun zs χ => qnf.2 (nf0Assemble zs χ qnf.1)) := by rw [h0, hb]
@@ -373,7 +373,7 @@ theorem bracketEndChar_kv_one_eq {sig : MonadicSignature} [Fintype sig.preds]
     calc bracketEndCharKv atomMap h_surj charF 1 qnf
         = ({ disjuncts := [] } : VVecEA2) := kv_body_gate_fail _ _ _ _ _ hOFF
       _ = bracketEndCharK1v atomMap h_surj qnf := by
-          -- The second step is a term-level `.symm`, not a second `rw`: `kv_body`'s `r`
+          -- The second step is a term-level `.symm`, not a second `rw`: `kvBody`'s `r`
           -- argument is `qnf.1`, elaborated at the unfolded component type, so the rewrite
           -- motive is not type-correct at `implicit` transparency and `rw` reports the
           -- (visibly present) pattern as absent.
@@ -444,7 +444,7 @@ open Classical in
     depth the carrier is a function of the atom layer `qnf.1`, the atom-layer off-fiber Prop,
     and the fiber-existential fold bits ONLY: two quant layers that agree on this data yield
     EQUAL carriers, even when they disagree on the marking of individual depth-`k` arity-4 subs
-    inside a shared `(zoneSpec, projFresh)` fiber. Pure congruence on `kv_body` (:3568) — no
+    inside a shared `(zoneSpec, projFresh)` fiber. Pure congruence on `kvBody` (:3568) — no
     semantics. This is the information-loss channel that refutes the unconditional k≥2
     soundness direction of the plan-v5 Phase 13 target (see F1 below). -/
 theorem bracketEndChar_kv_factors {sig : MonadicSignature} [Fintype sig.preds]
@@ -477,8 +477,8 @@ theorem bracketEndChar_kv_factors {sig : MonadicSignature} [Fintype sig.preds]
         decide (∃ sub : NormalForm sig k 4, qnf'.2 sub = true ∧
           nf0ZoneSpec (NormalForm.atomAssgn sub) = zs ∧ nfkProjFresh sub = χ)) :=
     funext fun zs => funext fun χ => decide_eq_decide.mpr (hb zs χ)
-  change kv_body (nfDepth0CharFormula atomMap h_surj) (charF k) qnf.1 _ _ =
-    kv_body (nfDepth0CharFormula atomMap h_surj) (charF k) qnf'.1 _ _
+  change kvBody (nfDepth0CharFormula atomMap h_surj) (charF k) qnf.1 _ _ =
+    kvBody (nfDepth0CharFormula atomMap h_surj) (charF k) qnf'.1 _ _
   rw [e2, e3, h1]
 
 /-- **Depth-1 per-sub obligation decomposition** (R3b sub-step — the exact literal

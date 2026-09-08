@@ -544,24 +544,32 @@ either number.
 
 ---
 
-### Phase 7: Private renames, cluster C — `WeakCanonical`, plus the public `nf_order_0_1` [NOT STARTED]
+### Phase 7: Private renames, cluster C — `WeakCanonical`, plus the public `nf_order_0_1` [COMPLETED]
 
 **Goal**: Rename the 31 private snake_case `def`s in the WeakCanonical cluster, and the one
 **public** straggler `nf_order_0_1` that the upstream `_1` heuristic hides. Both live in
 `StaviCompleteness.lean`, so they are done together to keep file territories disjoint.
 
 **Tasks**:
-- [ ] `FormalSystem/Metalogic/WeakCanonical/EFGames/StaviCompleteness.lean` — 11 private renames,
+- [x] `FormalSystem/Metalogic/WeakCanonical/EFGames/StaviCompleteness.lean` — 11 private renames,
       **plus** the public `nf_order_0_1` (declaration plus its two in-file `match` uses).
-- [ ] `FormalSystem/Metalogic/WeakCanonical/IntegerModel/GoodStructuresModelSurgery.lean` — 9
+- [x] `FormalSystem/Metalogic/WeakCanonical/IntegerModel/GoodStructuresModelSurgery.lean` — 9
       renames, including `is_Z_type` -> `isZType` and the `good_*` / `*_gap_*` family.
-- [ ] `FormalSystem/Metalogic/WeakCanonical/IntegerModel/ShiftAndGlue.lean` — 4 renames.
-- [ ] `FormalSystem/Metalogic/WeakCanonical/EFGames/CustomGame.lean` — 3 renames.
-- [ ] `FormalSystem/Metalogic/WeakCanonical/Kamp/NfMultiAnchorBridge/SubBracket2.lean` — 2 renames.
-- [ ] `FormalSystem/Metalogic/WeakCanonical/NormalForm.lean` — 1 rename.
-- [ ] `FormalSystem/Metalogic/WeakCanonical/Kamp/NfMultiAnchorBridge/CarrierKv.lean` — 1 rename.
-- [ ] Confirm `nf_order_0_1` has no reference outside `StaviCompleteness.lean`
+- [x] `FormalSystem/Metalogic/WeakCanonical/IntegerModel/ShiftAndGlue.lean` — 4 renames.
+- [x] `FormalSystem/Metalogic/WeakCanonical/EFGames/CustomGame.lean` — 3 renames.
+- [x] `FormalSystem/Metalogic/WeakCanonical/Kamp/NfMultiAnchorBridge/SubBracket2.lean` — 2 renames.
+- [x] `FormalSystem/Metalogic/WeakCanonical/NormalForm.lean` — 1 rename.
+- [x] `FormalSystem/Metalogic/WeakCanonical/Kamp/NfMultiAnchorBridge/CarrierKv.lean` — 1 rename.
+- [x] Confirm `nf_order_0_1` has no reference outside `StaviCompleteness.lean`
       (measured at plan time: it does not).
+      *(confirmed: the only remaining `nf_order_0_1` hits tree-wide are in two `Boneyard/`
+      modules, which declare their own copy and are out of scope by the plan's own scan filter.)*
+      *(deviation: added — `kv_body` -> `kvBody` is cited by name from
+      `Kamp/NfMultiAnchorBridge/InteriorGateGeneralK.lean` (31 docstring/comment citations, which
+      document a verbatim public replica of the frozen private body) and
+      `Kamp/NfMultiAnchorBridge/AggregateHookDischarge.lean` (2). Both were updated so the
+      citations stay accurate; the edits are comment-only, no token of either file's code
+      changed. Neither file is in the phase's declared file set.)*
 
 **Timing**: 1.5 hours
 

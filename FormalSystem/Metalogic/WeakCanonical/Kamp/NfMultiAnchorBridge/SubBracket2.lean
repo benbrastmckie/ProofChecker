@@ -151,7 +151,7 @@ def kvESub2ZWT : ZoneSpec 4 :=
 
 /-- Below-anchor witness slots of `kvESubBracket2` (`leftSlots`, defeq to the def's internal
     `let`). One witness point type per `zXU`-positive fold bit. Rabinovich Def 3.1 (md:61-74). -/
-private noncomputable def kvE_sub2_leftSlots {sig : MonadicSignature} [Fintype sig.preds]
+private noncomputable def kvESub2LeftSlots {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
     (charBase : NormalForm sig 0 1 → Formula) (σ : NormalForm sig 1 4) : List TemporalPred :=
   ((Finset.univ.toList : List (NormalForm sig 0 1)).filter
@@ -159,7 +159,7 @@ private noncomputable def kvE_sub2_leftSlots {sig : MonadicSignature} [Fintype s
 
 /-- Above-anchor witness slots of `kvESubBracket2` (`rightSlots`, defeq to the def's internal
     `let`), in zone order `zUW, zWT`. Rabinovich Def 3.1 (md:61-74). -/
-private noncomputable def kvE_sub2_rightSlots {sig : MonadicSignature} [Fintype sig.preds]
+private noncomputable def kvESub2RightSlots {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds]
     (charBase : NormalForm sig 0 1 → Formula) (σ : NormalForm sig 1 4) : List TemporalPred :=
   [kvESub2ZUW, kvESub2ZWT].flatMap (fun zs =>
@@ -193,8 +193,8 @@ private theorem kvE_subBracket2_extract {sig : MonadicSignature} [Fintype sig.pr
         ∃ u : M.carrier, w < u ∧ u < z1 ∧
           (⟨charBase χ⟩ : TemporalPred).EvalAt M atomMap u) := by
   -- Point-type list of the anchor-at-`x` bracket: `leftSlots ++ uSlot :: rightSlots`.
-  set lL := kvE_sub2_leftSlots charBase σ with hlL
-  set lR := kvE_sub2_rightSlots charBase σ with hlR
+  set lL := kvESub2LeftSlots charBase σ with hlL
+  set lR := kvESub2RightSlots charBase σ with hlR
   -- The constructed bracket's point-type function (rfl: the def sets `pointTypes` to exactly this).
   have hpt_eq : (kvESubBracket2 charBase charK σ).2.pointTypes =
       fun i => (lL ++ (⟨charK (nfkProjFresh σ)⟩ : TemporalPred) :: lR)[i.val]'(by
@@ -229,7 +229,7 @@ private theorem kvE_subBracket2_extract {sig : MonadicSignature} [Fintype sig.pr
   · -- Below-anchor: each `zXU`-positive point type realized strictly inside `(z0, w)`.
     intro χ hχ
     have hmem : (⟨charBase χ⟩ : TemporalPred) ∈ lL := by
-      rw [hlL, kvE_sub2_leftSlots]
+      rw [hlL, kvESub2LeftSlots]
       exact List.mem_map.mpr
         ⟨χ, List.mem_filter.mpr ⟨Finset.mem_toList.mpr (Finset.mem_univ _), hχ⟩, rfl⟩
     obtain ⟨j, hj, hjeq⟩ := List.mem_iff_getElem.mp hmem
@@ -241,7 +241,7 @@ private theorem kvE_subBracket2_extract {sig : MonadicSignature} [Fintype sig.pr
   · -- Above-anchor: each `zUW`/`zWT`-positive point type realized strictly inside `(w, z1)`.
     intro χ hχ
     have hmem : (⟨charBase χ⟩ : TemporalPred) ∈ lR := by
-      rw [hlR, kvE_sub2_rightSlots]
+      rw [hlR, kvESub2RightSlots]
       rcases hχ with h1 | h1
       · exact List.mem_flatMap.mpr ⟨kvESub2ZUW, List.mem_cons.mpr (Or.inl rfl),
           List.mem_map.mpr ⟨χ, List.mem_filter.mpr

@@ -59,7 +59,7 @@ engine (`nf_eval_depth1_fold_iff`, CarrierKv.lean:466): the whole population
 `∀ qnf : NormalForm sig 0 3, ((∃ w, NfEvalNf M 0 3 (zoneEnv3 w x t) qnf) ↔ sub_nf.2 qnf)`
 re-fibers losslessly (depth-0 split-kit bijection, `nf0_split_assemble`, NfEFold:235) into
 zone-bounded MONADIC fibers `(zs : ZoneSpec 2) × (χ : NormalForm sig 0 1)`, encoded by the
-`kv_body` device one arity down: biconditional `lit` literals at the two fixed anchors
+`kvBody` device one arity down: biconditional `lit` literals at the two fixed anchors
 (Since/Until for the exterior zones, plain characteristics for the point zones), one uniform
 exclusion segment plus arrangement witness slots for the single interior zone, and the
 two-conjunct gate (off-fiber honesty + order-conflict falsity). No `VVecEA2` conjunction and no
@@ -414,7 +414,7 @@ theorem aggBracket_construct {sig : MonadicSignature} [Fintype sig.preds] [Decid
 The "aggregate quantEnd/seg construction" at depth 0, past arm: a single `VVecEA2` whose
 Since-direction semantics `holdsRight` at the origin `t` is EXACTLY the past trichotomy
 disjunct `∃ x, x < t ∧ NfEvalNf M 1 2 (Fin.cons x (fun _ => t)) sub_nf`. Built by the
-`kv_body` device one arity down (`bracketEndCharK1v`, CarrierK1V.lean:433, is the template):
+`kvBody` device one arity down (`bracketEndCharK1v`, CarrierK1V.lean:433, is the template):
 
 - fold bits `agg2Bit` read `sub_nf.2` POINTWISE through the depth-0 split kit (`nf0Assemble`
   — lossless at depth 1, `nf0_split_assemble`); every read of `sub_nf.2` goes through them;

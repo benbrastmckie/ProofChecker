@@ -176,15 +176,15 @@ theorem interiorGate_hcb {sig : MonadicSignature} [Fintype sig.preds] [Decidable
 
 /-! ## Phase 3 — body-destructuring `holds_iff` at depth `k`
 
-The successor carrier `bracketEndCharKv … (k+1)` is DEFINITIONALLY `kv_body` at the depth-`k`
-providers (`CarrierKv.lean:244-249`), but `kv_body` is a `private noncomputable def` in the FROZEN
+The successor carrier `bracketEndCharKv … (k+1)` is DEFINITIONALLY `kvBody` at the depth-`k`
+providers (`CarrierKv.lean:244-249`), but `kvBody` is a `private noncomputable def` in the FROZEN
 `CarrierKv.lean:152` — its `let`-bound internal structure (`gate`, `S_L`/`S_R`, `mkDisjunct`,
 `epL`/`epR`/`segL`/`segR`/`ptW`) cannot be referenced by name from this sibling module, and no
 public
 holds-unfold lemma for `bracketEndCharKv (k+1)` exists. So this section builds a PUBLIC BODY
 REPLICA
 (`igBody`) from named public pieces (`igGate`, `igSL`, `igSR`, `igMkDisjunct`, …), each a verbatim
-copy of the corresponding `kv_body` `let`. The replica is proved DEFINITIONALLY EQUAL to the frozen
+copy of the corresponding `kvBody` `let`. The replica is proved DEFINITIONALLY EQUAL to the frozen
 successor carrier by `rfl` (`bracketEndChar_kv_succ_eq`) — the `@dite _ gate (Classical.dec gate)`
 decidability instance is reproduced EXACTLY so the defeq goes through. Once exposed, the carrier's
 `.holds` destructures (via the already-available `VVecEA2.holds_flatMap_map`,
@@ -196,38 +196,38 @@ into the off-fiber gate conjunct ∧ the `S_L`/`S_R` permutation-arrangement dis
 
 noncomputable section
 
-/-- Zone-order bit `<` (verbatim from `kv_body`'s `ltz`, `CarrierKv.lean:160`). -/
+/-- Zone-order bit `<` (verbatim from `kvBody`'s `ltz`, `CarrierKv.lean:160`). -/
 def igLtz : Bool × Bool := (true, false)
-/-- Zone-order bit `=` (verbatim from `kv_body`'s `eqz`, `CarrierKv.lean:161`). -/
+/-- Zone-order bit `=` (verbatim from `kvBody`'s `eqz`, `CarrierKv.lean:161`). -/
 def igEqz : Bool × Bool := (false, false)
-/-- Zone-order bit `>` (verbatim from `kv_body`'s `gtz`, `CarrierKv.lean:162`). -/
+/-- Zone-order bit `>` (verbatim from `kvBody`'s `gtz`, `CarrierKv.lean:162`). -/
 def igGtz : Bool × Bool := (false, true)
-/-- Zone-spec builder for env `[w, x, t]` (verbatim from `kv_body`'s `mk3`,
+/-- Zone-spec builder for env `[w, x, t]` (verbatim from `kvBody`'s `mk3`,
 `CarrierKv.lean:163`). -/
 def igMk3 (pw px pt : Bool × Bool) : ZoneSpec 3 := Fin.cons pw (Fin.cons px (fun _ => pt))
-/-- Zone `x_1 < x` (verbatim from `kv_body`'s `zPastX`, `CarrierKv.lean:165`). -/
+/-- Zone `x_1 < x` (verbatim from `kvBody`'s `zPastX`, `CarrierKv.lean:165`). -/
 def igZPastX : ZoneSpec 3 := igMk3 igLtz igLtz igLtz
-/-- Zone `x_1 = x` (verbatim from `kv_body`'s `zAtX`, `CarrierKv.lean:166`). -/
+/-- Zone `x_1 = x` (verbatim from `kvBody`'s `zAtX`, `CarrierKv.lean:166`). -/
 def igZAtX : ZoneSpec 3 := igMk3 igLtz igEqz igLtz
-/-- Zone `x < x_1 < w` (verbatim from `kv_body`'s `zXW`, `CarrierKv.lean:167`). -/
+/-- Zone `x < x_1 < w` (verbatim from `kvBody`'s `zXW`, `CarrierKv.lean:167`). -/
 def igZXW : ZoneSpec 3 := igMk3 igLtz igGtz igLtz
-/-- Zone `x_1 = w` (verbatim from `kv_body`'s `zAtW`, `CarrierKv.lean:168`). -/
+/-- Zone `x_1 = w` (verbatim from `kvBody`'s `zAtW`, `CarrierKv.lean:168`). -/
 def igZAtW : ZoneSpec 3 := igMk3 igEqz igGtz igLtz
-/-- Zone `w < x_1 < t` (verbatim from `kv_body`'s `zWT`, `CarrierKv.lean:169`). -/
+/-- Zone `w < x_1 < t` (verbatim from `kvBody`'s `zWT`, `CarrierKv.lean:169`). -/
 def igZWT : ZoneSpec 3 := igMk3 igGtz igGtz igLtz
-/-- Zone `x_1 = t` (verbatim from `kv_body`'s `zAtT`, `CarrierKv.lean:170`). -/
+/-- Zone `x_1 = t` (verbatim from `kvBody`'s `zAtT`, `CarrierKv.lean:170`). -/
 def igZAtT : ZoneSpec 3 := igMk3 igGtz igGtz igEqz
-/-- Zone `t < x_1` (verbatim from `kv_body`'s `zFutT`, `CarrierKv.lean:171`). -/
+/-- Zone `t < x_1` (verbatim from `kvBody`'s `zFutT`, `CarrierKv.lean:171`). -/
 def igZFutT : ZoneSpec 3 := igMk3 igGtz igGtz igGtz
 
-/-- Enumeration of complete depth-`k` 1-types (verbatim from `kv_body`'s `allTypes`,
+/-- Enumeration of complete depth-`k` 1-types (verbatim from `kvBody`'s `allTypes`,
     `CarrierKv.lean:172`). -/
 def igAllTypes (sig : MonadicSignature) [Fintype sig.preds] [DecidableEq sig.preds] (k : Nat) :
     List (NormalForm sig k 1) := Finset.univ.toList
-/-- Biconditional literal at an anchor (verbatim from `kv_body`'s `lit`, `CarrierKv.lean:174`). -/
+/-- Biconditional literal at an anchor (verbatim from `kvBody`'s `lit`, `CarrierKv.lean:174`). -/
 def igLit (bit : Bool) (f : Formula) : Formula := if bit then f else f.neg
 
-/-- Left endpoint predicate `epL` at the fixed left endpoint `x` (verbatim from `kv_body`,
+/-- Left endpoint predicate `epL` at the fixed left endpoint `x` (verbatim from `kvBody`,
     `CarrierKv.lean:178-182`). -/
 def igEpL {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charBase : NormalForm sig 0 1 → Formula) (charK : NormalForm sig k 1 → Formula)
@@ -237,7 +237,7 @@ def igEpL {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {
       :: (igAllTypes sig k).map (fun χ => igLit (b igZPastX χ) (Formula.snce Formula.top (charK χ)))
       ++ (igAllTypes sig k).map (fun χ => igLit (b igZAtX χ) (charK χ)))⟩
 
-/-- Right endpoint predicate `epR` at the fixed right endpoint `t` (verbatim from `kv_body`,
+/-- Right endpoint predicate `epR` at the fixed right endpoint `t` (verbatim from `kvBody`,
     `CarrierKv.lean:183-187`). -/
 def igEpR {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charBase : NormalForm sig 0 1 → Formula) (charK : NormalForm sig k 1 → Formula)
@@ -248,21 +248,21 @@ def igEpR {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {
       ++ (igAllTypes sig k).map (fun χ => igLit (b igZFutT χ)
           (Formula.untl Formula.top (charK χ))))⟩
 
-/-- Left segment exclusion `segL` (verbatim from `kv_body`, `CarrierKv.lean:189-191`). -/
+/-- Left segment exclusion `segL` (verbatim from `kvBody`, `CarrierKv.lean:189-191`). -/
 def igSegL {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charK : NormalForm sig k 1 → Formula) (b : ZoneSpec 3 → NormalForm sig k 1 → Bool) :
     TemporalPred :=
   ⟨formulaConjList ((igAllTypes sig k).map (fun χ =>
     if b igZXW χ then Formula.top else (charK χ).neg))⟩
 
-/-- Right segment exclusion `segR` (verbatim from `kv_body`, `CarrierKv.lean:192-194`). -/
+/-- Right segment exclusion `segR` (verbatim from `kvBody`, `CarrierKv.lean:192-194`). -/
 def igSegR {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charK : NormalForm sig k 1 → Formula) (b : ZoneSpec 3 → NormalForm sig k 1 → Bool) :
     TemporalPred :=
   ⟨formulaConjList ((igAllTypes sig k).map (fun χ =>
     if b igZWT χ then Formula.top else (charK χ).neg))⟩
 
-/-- Witness point type `ptW` at the interior anchor `w` (verbatim from `kv_body`,
+/-- Witness point type `ptW` at the interior anchor `w` (verbatim from `kvBody`,
     `CarrierKv.lean:197-200`). -/
 def igPtW {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charBase : NormalForm sig 0 1 → Formula) (charK : NormalForm sig k 1 → Formula)
@@ -271,7 +271,7 @@ def igPtW {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {
     (charBase (nfYProj r)
       :: (igAllTypes sig k).map (fun χ => igLit (b igZAtW χ) (charK χ)))⟩
 
-/-- The gate Prop: off-fiber honesty ∧ order-conflict falsity (verbatim from `kv_body`'s `gate`,
+/-- The gate Prop: off-fiber honesty ∧ order-conflict falsity (verbatim from `kvBody`'s `gate`,
     `CarrierKv.lean:206-208`, with `consistent` inlined, `CarrierKv.lean:202-203`). -/
 def igGate {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (offFiber : Prop) (b : ZoneSpec 3 → NormalForm sig k 1 → Bool) : Prop :=
@@ -281,22 +281,22 @@ def igGate {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] 
         zs = igZFutT) →
       b zs χ = false)
 
-/-- Interior-positive left enumeration `S_L` (verbatim from `kv_body`, `CarrierKv.lean:210`). -/
+/-- Interior-positive left enumeration `S_L` (verbatim from `kvBody`, `CarrierKv.lean:210`). -/
 def igSL {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (b : ZoneSpec 3 → NormalForm sig k 1 → Bool) : List (NormalForm sig k 1) :=
   (igAllTypes sig k).filter (fun χ => b igZXW χ)
 
-/-- Interior-positive right enumeration `S_R` (verbatim from `kv_body`, `CarrierKv.lean:211`). -/
+/-- Interior-positive right enumeration `S_R` (verbatim from `kvBody`, `CarrierKv.lean:211`). -/
 def igSR {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (b : ZoneSpec 3 → NormalForm sig k 1 → Bool) : List (NormalForm sig k 1) :=
   (igAllTypes sig k).filter (fun χ => b igZWT χ)
 
-/-- Per-type witness predicate `charP` (verbatim from `kv_body`, `CarrierKv.lean:212`). -/
+/-- Per-type witness predicate `charP` (verbatim from `kvBody`, `CarrierKv.lean:212`). -/
 def igCharP {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charK : NormalForm sig k 1 → Formula) : NormalForm sig k 1 → TemporalPred :=
   fun χ => ⟨charK χ⟩
 
-/-- One arrangement disjunct (verbatim from `kv_body`'s `mkDisjunct`, `CarrierKv.lean:215-220`). -/
+/-- One arrangement disjunct (verbatim from `kvBody`'s `mkDisjunct`, `CarrierKv.lean:215-220`). -/
 def igMkDisjunct {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds] {k : Nat}
     (charBase : NormalForm sig 0 1 → Formula) (charK : NormalForm sig k 1 → Formula)
     (r : NormalForm sig 0 3) (b : ZoneSpec 3 → NormalForm sig k 1 → Bool)
@@ -307,8 +307,8 @@ def igMkDisjunct {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.p
       bracket := bracketFromLists (lL.map (igCharP charK)) (igPtW charBase charK r b)
         (lR.map (igCharP charK)) (igSegL charK b) (igSegR charK b) }⟩
 
-/-- **PUBLIC body replica of `kv_body`'s successor branch**. Verbatim copy of
-    the frozen private `kv_body` (`CarrierKv.lean:221-226`) at the `@dite _ gate (Classical.dec
+/-- **PUBLIC body replica of `kvBody`'s successor branch**. Verbatim copy of
+    the frozen private `kvBody` (`CarrierKv.lean:221-226`) at the `@dite _ gate (Classical.dec
     gate)`
     gate, built from the named public pieces above so its internal structure is referenceable.
     Proved
@@ -365,9 +365,9 @@ set_option maxHeartbeats 1600000 in
 -- its full provider inventory in a single declaration; the default 200000-heartbeat budget is
 -- not enough to typecheck it.
 /-- **Defeq bridge: the successor carrier IS the public replica**. The `k+1`
-    branch of `bracketEndCharKv` (`CarrierKv.lean:244-249`) is `kv_body` at the depth-`k`
+    branch of `bracketEndCharKv` (`CarrierKv.lean:244-249`) is `kvBody` at the depth-`k`
     providers,
-    and `igBody` is a verbatim copy of `kv_body`'s body, so the two are DEFINITIONALLY EQUAL — pure
+    and `igBody` is a verbatim copy of `kvBody`'s body, so the two are DEFINITIONALLY EQUAL — pure
     `rfl`, no semantics. This exposes the frozen private carrier's structure for destructuring. -/
 theorem bracketEndChar_kv_succ_eq {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
@@ -378,7 +378,7 @@ theorem bracketEndChar_kv_succ_eq {sig : MonadicSignature} [Fintype sig.preds]
     bracketEndCharKv atomMap h_surj charF (k + 1) qnf =
       igBody (nfDepth0CharFormula atomMap h_surj) (charF k) qnf.1
         (igOffFiber qnf) (igFoldBit qnf) := by
-  -- `bracketEndCharKv (k+1)` reduces (equation lemma) to the frozen private `kv_body` at these
+  -- `bracketEndCharKv (k+1)` reduces (equation lemma) to the frozen private `kvBody` at these
   -- args; `igBody` is a verbatim public copy at the SAME args (the fold-bit instance is matched
   -- byte-for-byte by `igFoldBit`), so the two are definitionally equal. Pure `rfl`, no semantics.
   simp only [bracketEndCharKv]

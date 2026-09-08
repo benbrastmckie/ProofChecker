@@ -124,7 +124,7 @@ def muAll {sig : MonadicSignature} {n : Nat}
 /-- GHR93 FO table for U'(A,B), mu-relativized, taking pre-lifted arguments.
     Arguments are the sub-formula translations at various De Bruijn depths.
     ∃s. t < s ∧ [body] ∧ [fail] ∧ [init] -/
-private def stavi_untl_fo {sig : MonadicSignature}
+private def staviUntlFo {sig : MonadicSignature}
     (cA4 : MonadicFormula (muSig sig) 4)
     (cB3 : MonadicFormula (muSig sig) 3)
     (cB4 : MonadicFormula (muSig sig) 4)
@@ -177,8 +177,8 @@ private def stavi_untl_fo {sig : MonadicSignature}
                         (MonadicFormula.lt ⟨0, by omega⟩ ⟨1, by omega⟩)))
                 (MonadicFormula.not cB4)))))))))))
 
-/-- Past dual of stavi_untl_fo: S'(A,B), mu-relativized. -/
-private def stavi_snce_fo {sig : MonadicSignature}
+/-- Past dual of staviUntlFo: S'(A,B), mu-relativized. -/
+private def staviSnceFo {sig : MonadicSignature}
     (cA4 : MonadicFormula (muSig sig) 4)
     (cB3 : MonadicFormula (muSig sig) 3)
     (cB4 : MonadicFormula (muSig sig) 4)
@@ -313,12 +313,12 @@ noncomputable def staviTableMu {sig : MonadicSignature}
   | .stavi_untl A B =>
     let cA := staviTableMu atomMap A
     let cB := staviTableMu atomMap B
-    stavi_untl_fo (((cA.lift 1).lift 1).lift 1) ((cB.lift 1).lift 1)
+    staviUntlFo (((cA.lift 1).lift 1).lift 1) ((cB.lift 1).lift 1)
       (((cB.lift 1).lift 1).lift 1) ((((cB.lift 1).lift 1).lift 1).lift 1)
   | .stavi_snce A B =>
     let cA := staviTableMu atomMap A
     let cB := staviTableMu atomMap B
-    stavi_snce_fo (((cA.lift 1).lift 1).lift 1) ((cB.lift 1).lift 1)
+    staviSnceFo (((cA.lift 1).lift 1).lift 1) ((cB.lift 1).lift 1)
       (((cB.lift 1).lift 1).lift 1) ((((cB.lift 1).lift 1).lift 1).lift 1)
 
 /-- Correctness of tableMu: evaluating the mu-relativized table translation
@@ -529,11 +529,11 @@ theorem stavi_table_mu_depth {sig : MonadicSignature}
       lift_quantifier_depth, muPred]
     omega
   | stavi_untl A B ihA ihB =>
-    simp only [staviTableMu, stavi_untl_fo, MonadicFormula.quantifierDepth,
+    simp only [staviTableMu, staviUntlFo, MonadicFormula.quantifierDepth,
       staviFoDepth, lift_quantifier_depth]
     omega
   | stavi_snce A B ihA ihB =>
-    simp only [staviTableMu, stavi_snce_fo, MonadicFormula.quantifierDepth,
+    simp only [staviTableMu, staviSnceFo, MonadicFormula.quantifierDepth,
       staviFoDepth, lift_quantifier_depth]
     omega
 
@@ -766,7 +766,7 @@ theorem stavi_table_mu_correct {sig : MonadicSignature}
         StaviTemporalTruthMu M atomMap r w B := by
       intro s u v w; rw [lift4_eq]; exact ihB w
     -- Unfold FO encoding and semantic definition, then match structure
-    simp only [staviTableMu, stavi_untl_fo, eval, StaviTemporalTruthMu,
+    simp only [staviTableMu, staviUntlFo, eval, StaviTemporalTruthMu,
       extendedStructureWithMu, MuHolds]
     constructor
     · -- Forward: FO → semantic
@@ -928,7 +928,7 @@ theorem stavi_table_mu_correct {sig : MonadicSignature}
         StaviTemporalTruthMu M atomMap r w B := by
       intro s u v w; rw [lift4_eq]; exact ihB w
     -- Unfold FO encoding and semantic definition
-    simp only [staviTableMu, stavi_snce_fo, eval, StaviTemporalTruthMu,
+    simp only [staviTableMu, staviSnceFo, eval, StaviTemporalTruthMu,
       extendedStructureWithMu, MuHolds]
     constructor
     · -- Forward: FO → semantic (past dual of stavi_untl)
@@ -1074,10 +1074,10 @@ theorem stavi_table_mu_correct {sig : MonadicSignature}
         StaviTemporalTruthMu M atomMap r w B := by
       intro s u v w; rw [lift4_eq]; exact ihB w
     -- Now unfold. Do NOT reduce Fin.cons (causes Fin.induction terms).
-    -- Instead, unfold eval+stavi_untl_fo to get Fin.cons-based goals, then
+    -- Instead, unfold eval+staviUntlFo to get Fin.cons-based goals, then
     -- match the structure using the lift iff lemmas. Fin.cons ⟨0,_⟩ = x,
     -- Fin.cons ⟨1,_⟩ = s, etc. are definitionally equal so Lean matches them.
-    simp only [staviTableMu, stavi_untl_fo, eval, StaviTemporalTruthMu,
+    simp only [staviTableMu, staviUntlFo, eval, StaviTemporalTruthMu,
       extendedStructureWithMu, MuHolds]
     constructor
     · -- Forward: FO → semantic
@@ -1231,7 +1231,7 @@ theorem stavi_table_mu_correct {sig : MonadicSignature}
         StaviTemporalTruthMu M atomMap r w B := by
       intro s u v w; rw [lift4_eq]; exact ihB w
     -- Now unfold and reduce
-    simp only [staviTableMu, stavi_snce_fo, eval, StaviTemporalTruthMu,
+    simp only [staviTableMu, staviSnceFo, eval, StaviTemporalTruthMu,
       extendedStructureWithMu, MuHolds]
     simp only [Fin.cons, Fin.cases]
     constructor
@@ -1303,29 +1303,29 @@ theorem stavi_table_mu_correct {sig : MonadicSignature}
 
 /-! ## StaviFormula Disjunction Combinator -/
 
-private def sf_disj (A B : StaviFormula) : StaviFormula :=
+private def sfDisj (A B : StaviFormula) : StaviFormula :=
   .neg (.conj (.neg A) (.neg B))
 
-private def sf_disjList : List StaviFormula → StaviFormula
+private def sfDisjList : List StaviFormula → StaviFormula
   | [] => .base .bot
   | [a] => a
-  | a :: as => sf_disj a (sf_disjList as)
+  | a :: as => sfDisj a (sfDisjList as)
 
 /-! ## StaviFormula Conjunction Combinator -/
 
 /-- Top StaviFormula: always true. -/
-private def sf_top : StaviFormula := .base Formula.top
+private def sfTop : StaviFormula := .base Formula.top
 
-private def sf_conjList : List StaviFormula → StaviFormula
-  | [] => sf_top
+private def sfConjList : List StaviFormula → StaviFormula
+  | [] => sfTop
   | [a] => a
-  | a :: as => .conj a (sf_conjList as)
+  | a :: as => .conj a (sfConjList as)
 
 /-! ## Atom Literal StaviFormula -/
 
 /-- Build a StaviFormula for a single atom literal:
     if `val = true`, the atom formula; if `val = false`, its negation. -/
-private def sf_atom_literal (a : Atom) (val : Bool) : StaviFormula :=
+private def sfAtomLiteral (a : Atom) (val : Bool) : StaviFormula :=
   if val then .base (.atom a) else .neg (.base (.atom a))
 
 /-! ## Base-case NF characterization helpers -/
@@ -1340,7 +1340,7 @@ noncomputable def atomKindToSfLiteral
   match ak with
   | .pred p _ =>
     let a := Classical.choose (h_surj p)
-    sf_atom_literal a val
+    sfAtomLiteral a val
   | .order i j h => absurd (Fin.ext_iff.mpr (by omega : i.val = j.val)) h
 
 /-! ## Existence Formulas for Quantifier Part
@@ -1356,7 +1356,7 @@ predicates at x, predicates at t, and order between x and t.
     - some true if t < x (i.e., x is above t)
     - some false if x < t (i.e., x is below t)
     - none if x = t (both order atoms false) or impossible (both true). -/
-noncomputable def nf_order_0_1 {sig : MonadicSignature} {k : Nat}
+noncomputable def nfOrder01 {sig : MonadicSignature} {k : Nat}
     (sub_nf : NormalForm sig k 2) : Option Bool :=
   let atom_assgn := sub_nf.atomAssgn
   let x_lt_t := atom_assgn (.order ⟨0, by omega⟩ ⟨1, by omega⟩ (by decide))
@@ -1381,20 +1381,20 @@ noncomputable def nfTConsistent {sig : MonadicSignature} [Fintype sig.preds]
 /-- Build a StaviFormula for the predicates at the quantified variable (variable 0)
     in a 2-variable NormalForm at depth 0.
     This is a conjunction of atom literals for pred atoms at variable 0. -/
-private noncomputable def nf_x_preds_sf
+private noncomputable def nfXPredsSf
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
     (sub_nf : NormalForm sig 0 2) : StaviFormula :=
   let preds := (Fintype.elems (α := sig.preds)).val.toList
-  sf_conjList (preds.map fun p =>
+  sfConjList (preds.map fun p =>
     let a := Classical.choose (h_surj p)
     let val := sub_nf (.pred p ⟨0, by omega⟩)
-    sf_atom_literal a val)
+    sfAtomLiteral a val)
 
 /-- Build the existence StaviFormula for "∃x, NfEvalNf M 0 2 (Fin.cons x (fun _ => t)) sub_nf".
     Uses Until for x > t, Since for x < t, direct check for x = t. -/
-private noncomputable def nf_exist_sf_depth0
+private noncomputable def nfExistSfDepth0
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
@@ -1410,12 +1410,12 @@ private noncomputable def nf_exist_sf_depth0
     if x_lt_t && t_lt_x then
       .base .bot  -- impossible: x < t ∧ t < x
     else
-      let x_preds := nf_x_preds_sf atomMap h_surj sub_nf
-      match nf_order_0_1 sub_nf with
+      let x_preds := nfXPredsSf atomMap h_surj sub_nf
+      match nfOrder01 sub_nf with
       | some true =>  -- t < x: use Until
-        .std_untl x_preds sf_top
+        .std_untl x_preds sfTop
       | some false =>  -- x < t: use Since
-        .std_snce x_preds sf_top
+        .std_snce x_preds sfTop
       | none =>
         if x_lt_t == false && t_lt_x == false then
           -- x = t: predicates at x must match predicates at t (which is just the parent)
@@ -1435,8 +1435,8 @@ The formula construction proceeds in two stages:
 
 **Stage 1: Existence formulas for 2-variable sub_nfs.**
 For each sub_nf at depth k with 2 variables, build a StaviFormula
-`nf_exist_sf` expressing "∃x, NfEvalNf M k 2 (Fin.cons x (fun _ => t)) sub_nf".
-- Depth 0: nf_exist_sf_depth0 (purely atomic, using Until/Since)
+`nfExistSf` expressing "∃x, NfEvalNf M k 2 (Fin.cons x (fun _ => t)) sub_nf".
+- Depth 0: nfExistSfDepth0 (purely atomic, using Until/Since)
 - Depth k ≥ 1: use IH characteristic formulas + Until/Since
 
 **Stage 2: Assemble the full formula.**
@@ -1464,7 +1464,7 @@ Conjunction of:
     The backward direction (truth → NfEvalNf) requires the game-theoretic
     argument showing that the 1-variable type + temporal position determines
     the 2-variable type. -/
-private noncomputable def nf_exist_sf
+private noncomputable def nfExistSf
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (_h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
@@ -1493,12 +1493,12 @@ private noncomputable def nf_exist_sf
         sub_nf.atomAssgn (.pred p ⟨0, by omega⟩)
     let compat_formulas := all_nfs_k1.filterMap fun nf_x =>
       if atom_compat nf_x then some (char_k nf_x) else none
-    let witness_type := sf_disjList compat_formulas
-    match nf_order_0_1 sub_nf with
+    let witness_type := sfDisjList compat_formulas
+    match nfOrder01 sub_nf with
     | some true =>  -- t < x: use Until (exists x above t with type)
-      .std_untl witness_type sf_top
+      .std_untl witness_type sfTop
     | some false =>  -- x < t: use Since (exists x below t with type)
-      .std_snce witness_type sf_top
+      .std_snce witness_type sfTop
     | none =>
       -- x = t case: the existential is about x = t itself
       -- The 2-var NF is satisfied at (t, t), so we just check the witness type
@@ -1512,9 +1512,9 @@ private noncomputable def nf_exist_sf
 
     Conjunction of:
     1. Atom literals for predicates at t (matching nf.1)
-    2. For each sub_nf with nf.2 sub_nf = true: nf_exist_sf sub_nf
-    3. For each sub_nf with nf.2 sub_nf = false: ¬ nf_exist_sf sub_nf -/
-private noncomputable def nf_succ_sf
+    2. For each sub_nf with nf.2 sub_nf = true: nfExistSf sub_nf
+    3. For each sub_nf with nf.2 sub_nf = false: ¬ nfExistSf sub_nf -/
+private noncomputable def nfSuccSf
     {sig : MonadicSignature} [Fintype sig.preds] [DecidableEq sig.preds]
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p)
@@ -1526,13 +1526,13 @@ private noncomputable def nf_succ_sf
   -- Part 1: atom literals for predicates at t
   let atom_lits := (Fintype.elems (α := AtomKind sig 1)).val.toList.map fun ak =>
     atomKindToSfLiteral atomMap h_surj ak (atoms ak)
-  let atom_part := sf_conjList atom_lits
+  let atom_part := sfConjList atom_lits
   -- Part 2: quantifier constraints
   let all_sub_nfs := (Fintype.elems (α := NormalForm sig k 2)).val.toList
   let quant_formulas := all_sub_nfs.map fun sub_nf =>
-    let ef := nf_exist_sf atomMap h_surj k char_k atoms sub_nf
+    let ef := nfExistSf atomMap h_surj k char_k atoms sub_nf
     if quant sub_nf then ef else .neg ef
-  let quant_part := sf_conjList quant_formulas
+  let quant_part := sfConjList quant_formulas
   -- Full formula: atom part AND quantifier part
   .conj atom_part quant_part
 

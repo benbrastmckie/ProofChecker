@@ -591,13 +591,13 @@ The proof requires the full Reynolds model surgery argument (Lemmas 6-13):
 /-!
 #### Right Gap Class Infrastructure (Reynolds Lemma 6 prerequisites)
 
-The `right_gap_class_prop` predicate encodes "t's ContempEquiv class is bounded
+The `rightGapClassProp` predicate encodes "t's ContempEquiv class is bounded
 above and the class is succ-closed" (i.e., the upper boundary is a gap, not a
 successor-pair boundary). This is the predicate that Reynolds' Lemma 6 shows is
 expressible as a monadic FO formula, which then yields a temporal formula via
 US expressive completeness.
 
-The sorry-free infrastructure here establishes that right_gap_class_prop is:
+The sorry-free infrastructure here establishes that rightGapClassProp is:
 - Invariant within ContempEquiv classes (`right_gap_class_invariant`)
 - Preserved under successor (`right_gap_class_succ`)
 These properties are used in the proof of `gap_prior_UZ_contradiction`.
@@ -606,7 +606,7 @@ These properties are used in the proof of `gap_prior_UZ_contradiction`.
 /-- Right gap class property: t's ContempEquiv class is bounded above
     and the class is succ-closed (meaning the upper boundary is a gap,
     not a successor-pair boundary). -/
-private def right_gap_class_prop (sig : MonadicSignature) [Fintype sig.preds]
+private def rightGapClassProp (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (M : OrderedMonadicStructure sig) [SuccOrder M.carrier]
     (t : M.carrier) : Prop :=
@@ -624,8 +624,8 @@ private theorem right_gap_class_invariant (sig : MonadicSignature) [Fintype sig.
     [SuccOrder M.carrier] [NoMaxOrder M.carrier]
     (t s : M.carrier)
     (hts : ContempEquiv sig k M t s)
-    (h_rgc : right_gap_class_prop sig k M t) :
-    right_gap_class_prop sig k M s := by
+    (h_rgc : rightGapClassProp sig k M t) :
+    rightGapClassProp sig k M s := by
   obtain ⟨⟨b, htb, h_nb⟩, h_sc⟩ := h_rgc
   refine ⟨?_, ?_⟩
   · -- s's class is bounded above
@@ -660,8 +660,8 @@ private theorem right_gap_class_succ (sig : MonadicSignature) [Fintype sig.preds
     (M : OrderedMonadicStructure sig)
     [SuccOrder M.carrier] [NoMaxOrder M.carrier]
     (t : M.carrier)
-    (h_rgc : right_gap_class_prop sig k M t) :
-    right_gap_class_prop sig k M (Order.succ t) :=
+    (h_rgc : rightGapClassProp sig k M t) :
+    rightGapClassProp sig k M (Order.succ t) :=
   right_gap_class_invariant sig k M t (Order.succ t)
     (no_boundary_at_successor sig k M t) h_rgc
 
@@ -672,8 +672,8 @@ private theorem right_gap_class_pred (sig : MonadicSignature) [Fintype sig.preds
     (M : OrderedMonadicStructure sig)
     [SuccOrder M.carrier] [PredOrder M.carrier] [NoMaxOrder M.carrier]
     (t : M.carrier)
-    (h_rgc : right_gap_class_prop sig k M t) :
-    right_gap_class_prop sig k M (Order.pred t) := by
+    (h_rgc : rightGapClassProp sig k M t) :
+    rightGapClassProp sig k M (Order.pred t) := by
   apply right_gap_class_invariant sig k M t (Order.pred t) _ h_rgc
   -- Need: t ~M pred(t). contemp_equiv_pred_closed gives a ~M pred(c) from a ~M c.
   -- With a = t, c = t: t ~M pred(t).
@@ -683,12 +683,12 @@ private theorem right_gap_class_pred (sig : MonadicSignature) [Fintype sig.preds
 #### Good Sentence and Gap Formula Construction (Reynolds Lemma 6)
 
 Infrastructure for expressing `good`, `VeryGood`, `ContempEquiv`, and
-`right_gap_class_prop` as MonadicFormulas, then deriving the temporal
+`rightGapClassProp` as MonadicFormulas, then deriving the temporal
 formula R via `uSExpressivelyCompleteOverPrior`.
 -/
 
 /-- A NormalForm `nf` is a Z-type if some Z-interval structure satisfies it. -/
-private noncomputable def is_Z_type (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def isZType (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (nf : NormalForm sig k 0) : Bool :=
   @decide (∃ Z : ZIntervalStructure sig,
@@ -697,19 +697,19 @@ private noncomputable def is_Z_type (sig : MonadicSignature) [Fintype sig.preds]
 /-- MonadicSentence encoding `good sig k`: true in S iff S is good (k-equiv
     to some Z-interval structure). Defined as finite disjunction over Z-types
     of the NF-checking sentences. -/
-private noncomputable def good_sentence (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def goodSentence (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat) :
     MonadicSentence sig :=
   MonadicFormula.listDisj
-    ((Finset.univ.toList.filter (is_Z_type sig k)).map (nfToSentence (k := k)))
+    ((Finset.univ.toList.filter (isZType sig k)).map (nfToSentence (k := k)))
 
-/-- `good_sentence` correctly captures `good`: eval S Fin.elim0 (good_sentence sig k) ↔ good sig k
+/-- `goodSentence` correctly captures `good`: eval S Fin.elim0 (goodSentence sig k) ↔ good sig k
 S. -/
 private theorem good_sentence_correct (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (S : OrderedMonadicStructure sig) :
-    eval S Fin.elim0 (good_sentence sig k) ↔ good sig k S := by
-  simp only [good_sentence, eval_listDisj]
+    eval S Fin.elim0 (goodSentence sig k) ↔ good sig k S := by
+  simp only [goodSentence, eval_listDisj]
   constructor
   · -- Forward: eval of disjunction → good
     intro ⟨φ, hφ_mem, hφ_eval⟩
@@ -722,7 +722,7 @@ private theorem good_sentence_correct (sig : MonadicSignature) [Fintype sig.pred
     -- Since nf is a Z-type, there exists Z with NfEvalNf Z k 0 Fin.elim0 nf
     have h_z_type : ∃ Z : ZIntervalStructure sig,
         NfEvalNf (Z.toOrdered sig) k 0 Fin.elim0 nf := by
-      unfold is_Z_type at h_is_Z
+      unfold isZType at h_is_Z
       simp only [decide_eq_true_eq] at h_is_Z
       exact h_is_Z
     obtain ⟨Z, hZ⟩ := h_z_type
@@ -750,46 +750,46 @@ private theorem good_sentence_correct (sig : MonadicSignature) [Fintype sig.pred
     -- nf_S is a Z-type since Z satisfies it too
     have h_Z_sat : NfEvalNf (Z.toOrdered sig) k 0 Fin.elim0 nf_S :=
       (h_same_nf nf_S).mp h_S_char
-    have h_is_z : is_Z_type sig k nf_S = true := by
-      unfold is_Z_type
+    have h_is_z : isZType sig k nf_S = true := by
+      unfold isZType
       simp only [decide_eq_true_eq]
       exact ⟨Z, h_Z_sat⟩
     -- nfToSentence nf_S is in the filtered list
-    have h_in_filter : nf_S ∈ Finset.univ.toList.filter (is_Z_type sig k) :=
+    have h_in_filter : nf_S ∈ Finset.univ.toList.filter (isZType sig k) :=
       List.mem_filter.mpr ⟨Finset.mem_toList.mpr (Finset.mem_univ nf_S), h_is_z⟩
     have h_in : nfToSentence nf_S ∈
-        (Finset.univ.toList.filter (is_Z_type sig k)).map (nfToSentence (k := k)) :=
+        (Finset.univ.toList.filter (isZType sig k)).map (nfToSentence (k := k)) :=
       List.mem_map_of_mem h_in_filter
     exact ⟨nfToSentence nf_S, h_in,
       (nf_to_sentence_correct S nf_S).mpr h_S_char⟩
 
 /-- MonadicFormula sig 2 encoding `good sig k (M.subinterval sig (var 0) (var 1))`.
     Uses `relativizeSentence` to express good on a subinterval. -/
-private noncomputable def good_formula_relativized (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def goodFormulaRelativized (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat) :
     MonadicFormula sig 2 :=
-  relativizeSentence (good_sentence sig k)
+  relativizeSentence (goodSentence sig k)
 
-/-- `good_formula_relativized` correctly captures `good` on subintervals. -/
+/-- `goodFormulaRelativized` correctly captures `good` on subintervals. -/
 private theorem good_formula_relativized_correct (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (M : OrderedMonadicStructure sig) (lo hi : M.carrier) (h_le : lo ≤ hi) :
-    eval M (Fin.cons lo (Fin.cons hi Fin.elim0)) (good_formula_relativized sig k) ↔
+    eval M (Fin.cons lo (Fin.cons hi Fin.elim0)) (goodFormulaRelativized sig k) ↔
     good sig k (M.subinterval sig lo hi) := by
-  unfold good_formula_relativized
-  rw [relativize_sentence_correct M lo hi h_le (good_sentence sig k)]
+  unfold goodFormulaRelativized
+  rw [relativize_sentence_correct M lo hi h_le (goodSentence sig k)]
   exact good_sentence_correct sig k (M.subinterval sig lo hi)
 
-/-- Lift good_formula_relativized from MonadicFormula sig 2 to MonadicFormula sig 4,
+/-- Lift goodFormulaRelativized from MonadicFormula sig 2 to MonadicFormula sig 4,
     keeping references to var 0 (lo) and var 1 (hi) unchanged. -/
-private noncomputable def good_rel_lifted (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def goodRelLifted (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat) :
     MonadicFormula sig 4 :=
-  (good_formula_relativized sig k).lift 2 |>.lift 3
+  (goodFormulaRelativized sig k).lift 2 |>.lift 3
 
 /-- The MonadicFormula sig 1 encoding "class(t) is bounded above and not all
     elements above t are ContempEquiv to t". This is the first conjunct of
-    right_gap_class_prop (the second conjunct is trivially true by
+    rightGapClassProp (the second conjunct is trivially true by
     no_boundary_at_successor).
 
     Formula: ∃ b. (t < b ∧ ∃ b'. ∃ a'. (t ≤ a' ∧ a' ≤ b' ∧ b' ≤ b ∧
@@ -799,8 +799,8 @@ private noncomputable def good_rel_lifted (sig : MonadicSignature) [Fintype sig.
     - After ∃ b: t = var 1, b = var 0
     - After ∃ b': t = var 2, b = var 1, b' = var 0
     - After ∃ a': t = var 3, b = var 2, b' = var 1, a' = var 0
-    good_rel_lifted uses var 0 = a' = lo, var 1 = b' = hi -/
-private noncomputable def right_gap_class_formula (sig : MonadicSignature) [Fintype sig.preds]
+    goodRelLifted uses var 0 = a' = lo, var 1 = b' = hi -/
+private noncomputable def rightGapClassFormula (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat) :
     MonadicFormula sig 1 :=
   -- ∃ b > t, ¬VeryGood [t, b]
@@ -813,26 +813,26 @@ private noncomputable def right_gap_class_formula (sig : MonadicSignature) [Fint
           (MonadicFormula.leq ⟨3, by omega⟩ ⟨0, by omega⟩)  -- t ≤ a'
           (MonadicFormula.leq ⟨0, by omega⟩ ⟨1, by omega⟩)) -- a' ≤ b'
         (MonadicFormula.leq ⟨1, by omega⟩ ⟨2, by omega⟩))   -- b' ≤ b
-      (.not (good_rel_lifted sig k))))))                     -- ¬good [a', b']
+      (.not (goodRelLifted sig k))))))                       -- ¬good [a', b']
 
-/-- `good_rel_lifted` evaluates to `good_formula_relativized` on the first two
+/-- `goodRelLifted` evaluates to `goodFormulaRelativized` on the first two
     variables of the 4-variable environment. Since `.lift 2 |>.lift 3` only
     shifts variables at positions ≥ 2, vars 0 and 1 are preserved. -/
 private theorem eval_good_rel_lifted {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
     (M : OrderedMonadicStructure sig) (env : Fin 4 → M.carrier) :
-    eval M env (good_rel_lifted sig k) ↔
+    eval M env (goodRelLifted sig k) ↔
     eval M (Fin.cons (env 0) (Fin.cons (env 1) Fin.elim0))
-      (good_formula_relativized sig k) := by
-  unfold good_rel_lifted
+      (goodFormulaRelativized sig k) := by
+  unfold goodRelLifted
   -- Step 1: outer lift
-  have step1 : eval M env ((good_formula_relativized sig k).lift 2 |>.lift 3) ↔
+  have step1 : eval M env ((goodFormulaRelativized sig k).lift 2 |>.lift 3) ↔
       eval M (fun (i : Fin 3) => env i.castSucc)
-        ((good_formula_relativized sig k).lift 2) := by
+        ((goodFormulaRelativized sig k).lift 2) := by
     constructor <;> intro h
     all_goals {
       have key := @lift_eval _ _ M (fun i => env i.castSucc) ⟨3, by omega⟩ (env ⟨3, by omega⟩)
-        ((good_formula_relativized sig k).lift 2)
+        ((goodFormulaRelativized sig k).lift 2)
       have h_eq : insertEnv ⟨3, by omega⟩ (env ⟨3, by omega⟩)
           (fun (i : Fin 3) => env i.castSucc) = env := by
         funext ⟨i, hi⟩
@@ -847,13 +847,13 @@ private theorem eval_good_rel_lifted {sig : MonadicSignature} [Fintype sig.preds
       first | rwa [key] | rwa [← key] }
   -- Step 2: inner lift
   have step2 : eval M (fun (i : Fin 3) => env i.castSucc)
-      ((good_formula_relativized sig k).lift 2) ↔
+      ((goodFormulaRelativized sig k).lift 2) ↔
       eval M (fun (i : Fin 2) => env i.castSucc.castSucc)
-        (good_formula_relativized sig k) := by
+        (goodFormulaRelativized sig k) := by
     constructor <;> intro h
     all_goals {
       have key := @lift_eval _ _ M (fun i => env i.castSucc.castSucc) ⟨2, by omega⟩
-        (env ⟨2, by omega⟩) (good_formula_relativized sig k)
+        (env ⟨2, by omega⟩) (goodFormulaRelativized sig k)
       have h_eq : insertEnv ⟨2, by omega⟩ (env ⟨2, by omega⟩)
           (fun (i : Fin 2) => env i.castSucc.castSucc) =
           (fun (i : Fin 3) => env i.castSucc) := by
@@ -874,21 +874,21 @@ private theorem eval_good_rel_lifted {sig : MonadicSignature} [Fintype sig.preds
     funext i; fin_cases i <;> rfl
   rw [step1, step2, step3]
 
-/-- `right_gap_class_formula` correctly captures the semantic content:
+/-- `rightGapClassFormula` correctly captures the semantic content:
     there exists b > t and a subinterval [a', b'] with t ≤ a' ≤ b' ≤ b
     that is not good. -/
 private theorem right_gap_class_formula_correct {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
     (M : OrderedMonadicStructure sig) (t : M.carrier) :
-    eval M (fun _ => t) (right_gap_class_formula sig k) ↔
+    eval M (fun _ => t) (rightGapClassFormula sig k) ↔
     ∃ b : M.carrier, t < b ∧
       ∃ a' b' : M.carrier, t ≤ a' ∧ a' ≤ b' ∧ b' ≤ b ∧
         ¬ good sig k (M.subinterval sig a' b') := by
   -- Unfold the formula evaluation step by step
-  unfold right_gap_class_formula
+  unfold rightGapClassFormula
   simp only [eval, eval_leq]
   -- After simp: the goal should be about ∃ b, t < b ∧ ∃ b', ∃ a',
-  -- (t ≤ a' ∧ a' ≤ b') ∧ b' ≤ b ∧ ¬ eval ... (good_rel_lifted ...)
+  -- (t ≤ a' ∧ a' ≤ b') ∧ b' ≤ b ∧ ¬ eval ... (goodRelLifted ...)
   constructor
   · -- Forward
     intro ⟨b, h_tb, b', a', ⟨⟨h_ta, h_ab⟩, h_bb⟩, h_ng⟩
@@ -905,8 +905,8 @@ private theorem right_gap_class_formula_correct {sig : MonadicSignature} [Fintyp
     rw [eval_good_rel_lifted] at h_eval
     exact (good_formula_relativized_correct sig k M a' b' h_ab).mp h_eval
 
-/-- The semantic content of `right_gap_class_formula` implies the first conjunct of
-    `right_gap_class_prop`: ∃ b > t, ¬ ContempEquiv t b.
+/-- The semantic content of `rightGapClassFormula` implies the first conjunct of
+    `rightGapClassProp`: ∃ b > t, ¬ ContempEquiv t b.
 
     If there exists a bad subinterval [a', b'] ⊂ [t, b], then [t, b] is not very good,
     so ¬ ContempEquiv t b. -/
@@ -950,28 +950,28 @@ private theorem bounded_implies_right_gap_class_formula {sig : MonadicSignature}
       ⟨x, hx_lo, hx_hi⟩ ⟨y, hy_lo, hy_hi⟩).trans hZ⟩
   exact ⟨x, y, hx_lo, h_xy, hy_hi, h_not_good⟩
 
-/-- Temporal formula R detecting `right_gap_class_prop` via
+/-- Temporal formula R detecting `rightGapClassProp` via
     `uSExpressivelyCompleteOverPrior` (Reynolds Lemma 6).
 
     Given atomMap with h_surj, this produces a temporal Formula A such that
-    `TemporalTruth M atomMap t A ↔ eval M (fun _ => t) (right_gap_class_formula sig k)`
+    `TemporalTruth M atomMap t A ↔ eval M (fun _ => t) (rightGapClassFormula sig k)`
     on any Prior structure. -/
-private noncomputable def gap_formula_R (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def gapFormulaR (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (atomMap : Formula → sig.preds)
     (h_surj : ∀ p : sig.preds, ∃ a : Atom, atomMap (.atom a) = p) :
     Formula :=
   (uSExpressivelyCompleteOverPrior atomMap h_surj
-    (right_gap_class_formula sig k)).val
+    (rightGapClassFormula sig k)).val
 
-/-- `gap_formula_R` correctly detects `right_gap_class_prop` on Prior structures.
+/-- `gapFormulaR` correctly detects `rightGapClassProp` on Prior structures.
 
     The proof bridges the three levels:
-    1. TemporalTruth ↔ eval (right_gap_class_formula)  [by uSExpressivelyCompleteOverPrior]
-    2. eval (right_gap_class_formula) ↔ ∃ bad subinterval  [by right_gap_class_formula_correct]
-    3. ∃ bad subinterval ↔ right_gap_class_prop          [by helper lemmas]
+    1. TemporalTruth ↔ eval (rightGapClassFormula)  [by uSExpressivelyCompleteOverPrior]
+    2. eval (rightGapClassFormula) ↔ ∃ bad subinterval  [by right_gap_class_formula_correct]
+    3. ∃ bad subinterval ↔ rightGapClassProp          [by helper lemmas]
 
-    The second conjunct of right_gap_class_prop (succ-closed) is NOT encoded in
+    The second conjunct of rightGapClassProp (succ-closed) is NOT encoded in
     the formula. It must be established separately from the hypotheses. -/
 private theorem gap_formula_R_correct {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
@@ -982,13 +982,13 @@ private theorem gap_formula_R_correct {sig : MonadicSignature} [Fintype sig.pred
     (h_prior_UZ : SemanticPriorUZ M atomMap)
     (h_prior_SZ : SemanticPriorSZ M atomMap)
     (t : M.carrier) :
-    TemporalTruth M atomMap t (gap_formula_R sig k atomMap h_surj) ↔
-    eval M (fun _ => t) (right_gap_class_formula sig k) := by
-  unfold gap_formula_R
+    TemporalTruth M atomMap t (gapFormulaR sig k atomMap h_surj) ↔
+    eval M (fun _ => t) (rightGapClassFormula sig k) := by
+  unfold gapFormulaR
   exact ((uSExpressivelyCompleteOverPrior atomMap h_surj
-    (right_gap_class_formula sig k)).property M h_prior_UZ h_prior_SZ t).symm
+    (rightGapClassFormula sig k)).property M h_prior_UZ h_prior_SZ t).symm
 
-/-- Full correctness: gap_formula_R detects right_gap_class_prop when the
+/-- Full correctness: gapFormulaR detects rightGapClassProp when the
     succ-closed hypothesis is known. -/
 private theorem gap_formula_R_iff_rgcp {sig : MonadicSignature} [Fintype sig.preds]
     [DecidableEq sig.preds] {k : Nat}
@@ -1002,19 +1002,19 @@ private theorem gap_formula_R_iff_rgcp {sig : MonadicSignature} [Fintype sig.pre
     (t : M.carrier)
     (h_succ_closed : ∀ c, ContempEquiv sig k M t c →
       ContempEquiv sig k M t (Order.succ c)) :
-    TemporalTruth M atomMap t (gap_formula_R sig k atomMap h_surj) ↔
-    right_gap_class_prop sig k M t := by
+    TemporalTruth M atomMap t (gapFormulaR sig k atomMap h_surj) ↔
+    rightGapClassProp sig k M t := by
   rw [gap_formula_R_correct M atomMap h_surj h_prior_UZ h_prior_SZ,
       right_gap_class_formula_correct M t]
   constructor
-  · -- temporal R holds → right_gap_class_prop
+  · -- temporal R holds → rightGapClassProp
     intro ⟨b, h_tb, a', b', h_ta, h_ab, h_bb, h_ng⟩
     refine ⟨⟨b, h_tb, fun h_ce => h_ng ?_⟩, h_succ_closed⟩
     -- h_ce : ContempEquiv sig k M t b = VeryGood (subinterval (min t b) (max t b))
     have h_le : t ≤ b := le_of_lt h_tb
     simp only [ContempEquiv, min_eq_left h_le, max_eq_right h_le] at h_ce
     exact good_of_very_good_subinterval sig k M t b h_le h_ce a' b' h_ta h_bb h_ab
-  · -- right_gap_class_prop → temporal R holds
+  · -- rightGapClassProp → temporal R holds
     intro ⟨⟨b, h_tb, h_ne⟩, _⟩
     obtain ⟨a', b', h_ta, h_ab, h_bb, h_ng⟩ :=
       bounded_implies_right_gap_class_formula M t b h_tb h_ne
@@ -1029,7 +1029,7 @@ the universal quantifier form:
   ContempEquiv(x, y) ↔ ∀ c d, min(x,y) ≤ c → c ≤ d → d ≤ max(x,y) → good([c,d])
 
 By choosing ∀ d ∀ c (binding d first, then c), we get c at var 0 and d at var 1
-in the innermost scope, which matches `good_rel_lifted`'s convention
+in the innermost scope, which matches `goodRelLifted`'s convention
 (var 0 = lo, var 1 = hi). The guard `min(x,y) ≤ c` is encoded as `x ≤ c ∨ y ≤ c`
 and `d ≤ max(x,y)` as `d ≤ x ∨ d ≤ y`.
 -/
@@ -1038,8 +1038,8 @@ and `d ≤ max(x,y)` as `d ≤ x ∨ d ≤ y`.
     After two universal quantifiers (∀ d then ∀ c):
     sig 4 context: c=var0, d=var1, x=var2, y=var3.
     Guard: (x ≤ c ∨ y ≤ c) ∧ c ≤ d ∧ (d ≤ x ∨ d ≤ y).
-    Body: good([c, d]) via good_rel_lifted. -/
-private noncomputable def contemp_eq_body (sig : MonadicSignature) [Fintype sig.preds]
+    Body: good([c, d]) via goodRelLifted. -/
+private noncomputable def contempEqBody (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat) :
     MonadicFormula sig 2 :=
   .all (.all (MonadicFormula.imp
@@ -1049,19 +1049,19 @@ private noncomputable def contemp_eq_body (sig : MonadicSignature) [Fintype sig.
       (MonadicFormula.leq ⟨0, by omega⟩ ⟨1, by omega⟩))       -- c ≤ d
       (.or (MonadicFormula.leq ⟨1, by omega⟩ ⟨2, by omega⟩)   -- d ≤ x
            (MonadicFormula.leq ⟨1, by omega⟩ ⟨3, by omega⟩)))  -- d ≤ y
-    (good_rel_lifted sig k)))
+    (goodRelLifted sig k)))
 
-/-- Helper: the guard condition in contemp_eq_body is equivalent to
+/-- Helper: the guard condition in contempEqBody is equivalent to
     min(x,y) ≤ c ∧ c ≤ d ∧ d ≤ max(x,y). -/
 private theorem contemp_guard_iff {α : Type} [LinearOrder α] (x y c d : α) :
     ((x ≤ c ∨ y ≤ c) ∧ c ≤ d ∧ (d ≤ x ∨ d ≤ y)) ↔
     (min x y ≤ c ∧ c ≤ d ∧ d ≤ max x y) := by
   simp only [min_le_iff, le_max_iff]
 
-/-- Correctness of `contemp_eq_body`: evaluates to `ContempEquiv`.
+/-- Correctness of `contempEqBody`: evaluates to `ContempEquiv`.
 
-    The formula `contemp_eq_body sig k` uses `∀ d ∀ c` with guard
-    `(x ≤ c ∨ y ≤ c) ∧ c ≤ d ∧ (d ≤ x ∨ d ≤ y)` and body `good_rel_lifted`,
+    The formula `contempEqBody sig k` uses `∀ d ∀ c` with guard
+    `(x ≤ c ∨ y ≤ c) ∧ c ≤ d ∧ (d ≤ x ∨ d ≤ y)` and body `goodRelLifted`,
     which encodes `VeryGood(M.subinterval (min x y) (max x y))` = `ContempEquiv x y`.
 
     The proof bridges the formula evaluation (via `eval_good_rel_lifted` and
@@ -1071,9 +1071,9 @@ private theorem contemp_guard_iff {α : Type} [LinearOrder α] (x y c d : α) :
 private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (M : OrderedMonadicStructure sig) (x y : M.carrier) :
-    eval M (Fin.cons x (Fin.cons y Fin.elim0)) (contemp_eq_body sig k) ↔
+    eval M (Fin.cons x (Fin.cons y Fin.elim0)) (contempEqBody sig k) ↔
     ContempEquiv sig k M x y := by
-  -- contemp_eq_body = .all (.all (imp guard (good_rel_lifted sig k)))
+  -- contempEqBody = .all (.all (imp guard (goodRelLifted sig k)))
   -- After two ∀ quantifiers: env4 = Fin.cons c (Fin.cons d (Fin.cons x (Fin.cons y Fin.elim0)))
   -- with c=var0, d=var1, x=var2, y=var3.
   --
@@ -1093,8 +1093,8 @@ private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.pr
     · intro h_formula
       apply h_main.mp
       intro d c h_guard
-      -- h_formula : eval M (Fin.cons x (Fin.cons y Fin.elim0)) (contemp_eq_body sig k)
-      -- = ∀ d', ∀ c', eval env4 (imp guard good_rel_lifted)
+      -- h_formula : eval M (Fin.cons x (Fin.cons y Fin.elim0)) (contempEqBody sig k)
+      -- = ∀ d', ∀ c', eval env4 (imp guard goodRelLifted)
       -- We need to specialize and extract the conclusion.
       have h_spec : eval M (Fin.cons c (Fin.cons d (Fin.cons x (Fin.cons y Fin.elim0))))
           (MonadicFormula.imp
@@ -1104,7 +1104,7 @@ private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.pr
               (MonadicFormula.leq ⟨0, by omega⟩ ⟨1, by omega⟩))
               (.or (MonadicFormula.leq ⟨1, by omega⟩ ⟨2, by omega⟩)
                    (MonadicFormula.leq ⟨1, by omega⟩ ⟨3, by omega⟩)))
-            (good_rel_lifted sig k)) := h_formula d c
+            (goodRelLifted sig k)) := h_formula d c
       rw [eval_imp] at h_spec
       -- Build the eval guard from the semantic guard
       have h_eval_guard : eval M (Fin.cons c (Fin.cons d (Fin.cons x (Fin.cons y Fin.elim0))))
@@ -1125,11 +1125,11 @@ private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.pr
       -- definitionally Fin.cons c (Fin.cons d Fin.elim0).
       -- Use `show` to normalize, then apply good_formula_relativized_correct.
       have h_body' : eval M (Fin.cons c (Fin.cons d Fin.elim0))
-          (good_formula_relativized sig k) := h_body
+          (goodFormulaRelativized sig k) := h_body
       rw [good_formula_relativized_correct sig k M c d h_guard.2.1] at h_body'
       exact h_body'
     · intro h_ce d c
-      -- Need: eval M env4 (imp guard good_rel_lifted)
+      -- Need: eval M env4 (imp guard goodRelLifted)
       rw [eval_imp]
       intro h_eval_guard
       -- Extract semantic guard from eval guard.
@@ -1142,14 +1142,14 @@ private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.pr
       simp only [eval, eval_leq, eval_or] at h_eval_guard
       have h_guard : (x ≤ c ∨ y ≤ c) ∧ c ≤ d ∧ (d ≤ x ∨ d ≤ y) :=
         ⟨h_eval_guard.1.1, h_eval_guard.1.2, h_eval_guard.2⟩
-      -- Need: eval M env4 (good_rel_lifted sig k)
+      -- Need: eval M env4 (goodRelLifted sig k)
       -- Use eval_good_rel_lifted which gives eval on (env 0, env 1) = (c, d)
       rw [eval_good_rel_lifted]
-      -- Goal: eval M (Fin.cons (env 0) (Fin.cons (env 1) Fin.elim0)) (good_formula_relativized sig
+      -- Goal: eval M (Fin.cons (env 0) (Fin.cons (env 1) Fin.elim0)) (goodFormulaRelativized sig
       -- k)
       -- where env 0 = c, env 1 = d definitionally.
       -- Use `show` to normalize the env to Fin.cons c (Fin.cons d Fin.elim0)
-      change eval M (Fin.cons c (Fin.cons d Fin.elim0)) (good_formula_relativized sig k)
+      change eval M (Fin.cons c (Fin.cons d Fin.elim0)) (goodFormulaRelativized sig k)
       rw [good_formula_relativized_correct sig k M c d h_guard.2.1]
       exact h_main.mpr h_ce d c h_guard
   -- Now prove h_main: the purely semantic equivalence
@@ -1182,11 +1182,11 @@ private theorem contemp_eq_body_correct (sig : MonadicSignature) [Fintype sig.pr
 /-- MonadicFormula sig 1 encoding "∃ y ~M x, A(y)" where A is a temporal formula.
     This is the "spread formula" used in Reynolds Lemma 9.1.
     After .ex: sig 2 with y=var0, x=var1.
-    Body: contemp_eq_body(x, y) ∧ (table A)(y). -/
-private noncomputable def spread_formula (sig : MonadicSignature) [Fintype sig.preds]
+    Body: contempEqBody(x, y) ∧ (table A)(y). -/
+private noncomputable def spreadFormula (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (atomMap : Formula → sig.preds) (A : Formula) : MonadicFormula sig 1 :=
-  .ex (.and (contemp_eq_body sig k) ((table sig atomMap A).lift 1))
+  .ex (.and (contempEqBody sig k) ((table sig atomMap A).lift 1))
 
 /-!
 #### Reynolds Theorem 14: Gap contradiction
@@ -1197,13 +1197,13 @@ there exists y > a not in class(a), then False.
 
 The proof proceeds through:
 
-1. Construct temporal formula R detecting right_gap_class_prop (Lemma 6)
+1. Construct temporal formula R detecting rightGapClassProp (Lemma 6)
 2. Prove R holds everywhere (Lemmas 7-8)
 3. Prove invariant_formula_constant (Lemma 9 generalization)
 4. Construct surgery model N = class(a) restriction (Lemma 12 setup)
-5. Prove class spread using contemp_eq_body encoding (Lemma 9.1)
+5. Prove class spread using contempEqBody encoding (Lemma 9.1)
 6. Prove temporal truth preservation M ↔ N (Lemma 12)
-7. Derive contradiction: R true in N but right_gap_class_prop false (Lemma 13)
+7. Derive contradiction: R true in N but rightGapClassProp false (Lemma 13)
 -/
 
 private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig.preds]
@@ -1222,9 +1222,9 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
     (h_not_equiv : ¬ ContempEquiv sig k M a y) :
     False := by
   -- === Reynolds Lemmas 6-13, upward case ===
-  -- Step 1 (Lemma 6): Construct temporal formula R detecting right_gap_class_prop
-  let R := gap_formula_R sig k atomMap h_surj
-  -- Step 2: R holds at a (a has right_gap_class_prop)
+  -- Step 1 (Lemma 6): Construct temporal formula R detecting rightGapClassProp
+  let R := gapFormulaR sig k atomMap h_surj
+  -- Step 2: R holds at a (a has rightGapClassProp)
   have h_R_at_a : TemporalTruth M atomMap a R := by
     rw [gap_formula_R_correct M atomMap h_surj h_prior_UZ h_prior_SZ,
         right_gap_class_formula_correct M a]
@@ -1242,9 +1242,9 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
       ∀ d, ContempEquiv sig k M t d → ContempEquiv sig k M t (Order.succ d) :=
     fun t d hd => (contemp_equiv_is_equiv sig k M).trans hd
       (no_boundary_at_successor sig k M d)
-  -- Helper: R ↔ right_gap_class_prop at any point
+  -- Helper: R ↔ rightGapClassProp at any point
   have h_R_iff_rgcp : ∀ (t : M.carrier),
-      TemporalTruth M atomMap t R ↔ right_gap_class_prop sig k M t :=
+      TemporalTruth M atomMap t R ↔ rightGapClassProp sig k M t :=
     fun t => gap_formula_R_iff_rgcp M atomMap h_surj h_prior_UZ h_prior_SZ t
       (any_succ_closed t)
   have h_R_everywhere : ∀ z : M.carrier, TemporalTruth M atomMap z R := by
@@ -1256,7 +1256,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
     · -- z > a: prior_UZ_first_transition gives c with R at c, ¬R at succ(c).
       obtain ⟨c, _, h_R_c, h_not_R_sc⟩ :=
         prior_UZ_first_transition M atomMap h_prior_UZ a R h_R_at_a ⟨z, haz, h_not_R_z⟩
-      -- c ~M succ(c), so right_gap_class_prop is the same at both.
+      -- c ~M succ(c), so rightGapClassProp is the same at both.
       have h_ce := no_boundary_at_successor sig k M c
       have h_rgc_c := (h_R_iff_rgcp c).mp h_R_c
       have h_rgc_sc := right_gap_class_invariant sig k M c (Order.succ c) h_ce h_rgc_c
@@ -1352,7 +1352,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
   -- N is an OrderedMonadicStructure on the carrier {x | ContempEquiv sig k M a x}.
   -- Step 6: Prove temporal truth preservation (M ↔ N at points of class(a)).
   -- Step 7: Derive contradiction: R holds in N (truth preservation) but
-  --   right_gap_class_formula is false in N (N has only one class, no gaps).
+  --   rightGapClassFormula is false in N (N has only one class, no gaps).
 
   -- === Step 5: Surgery model N ===
   -- Define the carrier of N as the subtype of points ContempEquiv to a.
@@ -1446,7 +1446,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
   -- === Step 6: Class spread (Reynolds Lemma 9.1) ===
   -- For any temporal formula A, if A holds at some point of M,
   -- then A holds at some point of every ContempEquiv class.
-  -- Proof: The spread formula φ_spread = .ex (.and contemp_eq_body (table A).lift 1)
+  -- Proof: The spread formula φ_spread = .ex (.and contempEqBody (table A).lift 1)
   -- encodes "∃ y ~M x, A(y)". This is ContempEquiv-invariant and hence constant
   -- on M by invariant_formula_constant.
   have class_spread : ∀ (A : Formula) (s : M.carrier),
@@ -1458,7 +1458,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
     · exact ⟨s, h_same, h_A_s⟩
     -- Construct the spread formula φ_spread : MonadicFormula sig 1
     -- encoding "∃ y ~M x, A(y)".
-    let φ_spread := spread_formula sig k atomMap A
+    let φ_spread := spreadFormula sig k atomMap A
     -- Helper: the two natural representations of a 2-element env are equal
     have env2_eq : ∀ (v u : M.carrier),
         (Fin.cons v (fun (_ : Fin 1) => u) : Fin 2 → M.carrier) =
@@ -1491,9 +1491,9 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
       -- But 1 = (⟨1, _⟩ : Fin 2).val, so .lift 1 = .lift (⟨1,_⟩.val)
       rw [h_le]
       exact table_correctness M atomMap v A
-    -- Helper: contemp_eq_body at (v, u) env ↔ ContempEquiv v u
+    -- Helper: contempEqBody at (v, u) env ↔ ContempEquiv v u
     have ce_eval : ∀ (v u : M.carrier),
-        eval M (Fin.cons v (fun (_ : Fin 1) => u)) (contemp_eq_body sig k) ↔
+        eval M (Fin.cons v (fun (_ : Fin 1) => u)) (contempEqBody sig k) ↔
         ContempEquiv sig k M v u := by
       intro v u
       rw [env2_eq]
@@ -1503,7 +1503,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
         eval M (fun _ => u) φ_spread ↔
         ∃ v, ContempEquiv sig k M u v ∧ TemporalTruth M atomMap v A := by
       intro u
-      simp only [φ_spread, spread_formula, eval]
+      simp only [φ_spread, spreadFormula, eval]
       constructor
       · intro ⟨v, h_ce_eval, h_A_eval⟩
         exact ⟨v, (contemp_equiv_is_equiv sig k M).symm ((ce_eval v u).mp h_ce_eval),
@@ -1559,7 +1559,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
     exact table_correctness M atomMap v A
   -- Helper: ce_eval (reused from class_spread)
   have ce_eval : ∀ (v u : M.carrier),
-      eval M (Fin.cons v (fun (_ : Fin 1) => u)) (contemp_eq_body sig k) ↔
+      eval M (Fin.cons v (fun (_ : Fin 1) => u)) (contempEqBody sig k) ↔
       ContempEquiv sig k M v u := by
     intro v u
     rw [env2_eq]
@@ -1614,7 +1614,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
             ((contemp_equiv_is_equiv sig k M).symm hw)))
       -- Construct monadic formula Ψ encoding "∃ y ~M x, y < x, A(y)".
       let Ψ : MonadicFormula sig 1 :=
-        .ex (.and (.and (contemp_eq_body sig k)
+        .ex (.and (.and (contempEqBody sig k)
           (.lt ⟨0, by omega⟩ ⟨1, by omega⟩))
           ((table sig atomMap A).lift 1))
       -- Get temporal formula T_Ψ via uSExpressivelyCompleteOverPrior.
@@ -1742,7 +1742,7 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
             (contemp_equiv_convex sig k M s₀ t w (le_of_lt h_s₀t) h_ge hw)))
       -- Construct spread_above formula: ∃ y ~M x, x < y, A(y).
       let Ψ' : MonadicFormula sig 1 :=
-        .ex (.and (.and (contemp_eq_body sig k)
+        .ex (.and (.and (contempEqBody sig k)
           (.lt ⟨1, by omega⟩ ⟨0, by omega⟩))
           ((table sig atomMap A).lift 1))
       let T_Ψ' := (uSExpressivelyCompleteOverPrior atomMap h_surj Ψ').val
@@ -1976,24 +1976,24 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
       TemporalTruth N atomMap ⟨t, h_t⟩ R := by
     intro t h_t
     exact (truth_pres R t h_t).mp (h_R_everywhere t)
-  -- === Step 10: right_gap_class_formula is FALSE on N ===
+  -- === Step 10: rightGapClassFormula is FALSE on N ===
   -- All N-subintervals are good, so no bad subintervals exist.
-  -- right_gap_class_formula on N: ∃ b > t (b ∈ N), ∃ a' b' (∈ N), guard ∧ ¬good(N.sub a' b')
+  -- rightGapClassFormula on N: ∃ b > t (b ∈ N), ∃ a' b' (∈ N), guard ∧ ¬good(N.sub a' b')
   -- Since N.sub a' b' is k-equiv to M.sub a'.val b'.val (by subinterval_of_subinterval
   -- and convexity of class(a)), and M.sub a'.val b'.val is good (h_N_very_good),
   -- the formula is false.
   have h_rgcf_false_N : ∀ (t : M.carrier) (h_t : ContempEquiv sig k M a t),
-      ¬ eval N (fun _ => ⟨t, h_t⟩) (right_gap_class_formula sig k) := by
+      ¬ eval N (fun _ => ⟨t, h_t⟩) (rightGapClassFormula sig k) := by
     intro t h_t h_eval
     -- Unfold the formula evaluation on N step by step
-    simp only [right_gap_class_formula, eval, eval_leq] at h_eval
+    simp only [rightGapClassFormula, eval, eval_leq] at h_eval
     -- h_eval : ∃ b : N.carrier, t_N < b ∧ ∃ b' a' : N.carrier, guard ∧ ¬ eval N env4
-    -- (good_rel_lifted)
+    -- (goodRelLifted)
     obtain ⟨b, h_tb, b', a', ⟨⟨h_ta', h_a'b'⟩, h_b'b⟩, h_not_good⟩ := h_eval
     -- a', b' ∈ N.carrier = classA with a' ≤ b'.
-    -- ¬ eval N env4 (good_rel_lifted sig k)
-    -- eval_good_rel_lifted on N: eval N env4 (good_rel_lifted) ↔ eval N (Fin.cons a' (Fin.cons b'
-    -- Fin.elim0)) (good_formula_relativized)
+    -- ¬ eval N env4 (goodRelLifted sig k)
+    -- eval_good_rel_lifted on N: eval N env4 (goodRelLifted) ↔ eval N (Fin.cons a' (Fin.cons b'
+    -- Fin.elim0)) (goodFormulaRelativized)
     rw [eval_good_rel_lifted] at h_not_good
     -- good_formula_relativized_correct on N: eval N (...) ↔ good(N.subinterval a' b')
     -- But good_formula_relativized_correct requires a'.val ≤ b'.val (h_a'b')
@@ -2001,10 +2001,10 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
     -- Need: good(N.subinterval sig a' b')
     -- Use show to normalize the env after eval_good_rel_lifted
     have h_eval_form : eval N (Fin.cons a' (Fin.cons b' Fin.elim0))
-        (good_formula_relativized sig k) := by
+        (goodFormulaRelativized sig k) := by
       -- After eval_good_rel_lifted, the env has Fin.cons (env 0) (Fin.cons (env 1) Fin.elim0)
       -- where env 0 = a' and env 1 = b' definitionally.
-      show eval N (Fin.cons a' (Fin.cons b' Fin.elim0)) (good_formula_relativized sig k)
+      show eval N (Fin.cons a' (Fin.cons b' Fin.elim0)) (goodFormulaRelativized sig k)
       rw [good_formula_relativized_correct sig k N a' b' h_a'b']
       -- Need: good(N.subinterval sig a' b')
       -- N.subinterval a' b' has carrier {x : N.carrier // a' ≤ x ∧ x ≤ b'}
@@ -2031,14 +2031,14 @@ private theorem gap_prior_UZ_contradiction (sig : MonadicSignature) [Fintype sig
       }
       exact (k_equiv_of_iso sig k _ _ f (fun p ⟨⟨_, _⟩, _, _⟩ => Iff.rfl)).trans hZ
     exact h_not_good h_eval_form
-  -- === Step 11: R on N ↔ right_gap_class_formula on N ===
+  -- === Step 11: R on N ↔ rightGapClassFormula on N ===
   -- Use uSExpressivelyCompleteOverPrior.property directly (doesn't need SuccOrder on N).
   have h_R_iff_rgcf_N : ∀ (t : M.carrier) (h_t : ContempEquiv sig k M a t),
-      eval N (fun _ => ⟨t, h_t⟩) (right_gap_class_formula sig k) ↔
+      eval N (fun _ => ⟨t, h_t⟩) (rightGapClassFormula sig k) ↔
       TemporalTruth N atomMap ⟨t, h_t⟩ R := by
     intro t h_t
     exact (uSExpressivelyCompleteOverPrior atomMap h_surj
-      (right_gap_class_formula sig k)).property N h_prior_UZ_N h_prior_SZ_N ⟨t, h_t⟩
+      (rightGapClassFormula sig k)).property N h_prior_UZ_N h_prior_SZ_N ⟨t, h_t⟩
   -- === Step 12: Contradiction ===
   exact h_rgcf_false_N a h_a_class ((h_R_iff_rgcf_N a h_a_class).mpr (h_R_on_N a h_a_class))
 

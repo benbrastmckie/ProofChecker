@@ -175,7 +175,7 @@ def NormalForm.quantAssgn {sig : MonadicSignature} {k n : Nat}
 by induction on `k`. The mutual dependency arises because `Fintype (A → Bool)`
 requires `DecidableEq A`, and `DecidableEq (A → Bool)` requires `Fintype A`.
 -/
-private def normalForm_fintype_and_decEq (sig : MonadicSignature)
+private def normalFormFintypeAndDecEq (sig : MonadicSignature)
     [Fintype sig.preds] [DecidableEq sig.preds] (k n : Nat) :
     Fintype (NormalForm sig k n) × DecidableEq (NormalForm sig k n) := by
   induction k generalizing n with
@@ -191,12 +191,12 @@ private def normalForm_fintype_and_decEq (sig : MonadicSignature)
 instance normalFormFintype (sig : MonadicSignature) [Fintype sig.preds] [DecidableEq sig.preds]
     (k n : Nat) :
     Fintype (NormalForm sig k n) :=
-  (normalForm_fintype_and_decEq sig k n).1
+  (normalFormFintypeAndDecEq sig k n).1
 
 instance normalFormDecEq (sig : MonadicSignature) [Fintype sig.preds] [DecidableEq sig.preds]
     (k n : Nat) :
     DecidableEq (NormalForm sig k n) :=
-  (normalForm_fintype_and_decEq sig k n).2
+  (normalFormFintypeAndDecEq sig k n).2
 
 /-! ## Semantic Evaluation of Normal Forms -/
 

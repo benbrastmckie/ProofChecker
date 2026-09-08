@@ -25,7 +25,7 @@ open FormalSystem.Metalogic.Core
 /--
 Helper: Choose Z-interval witnesses for a family of good structures.
 -/
-private noncomputable def choose_good_witness (sig : MonadicSignature) [Fintype sig.preds]
+private noncomputable def chooseGoodWitness (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (ms : ℤ → OrderedMonadicStructure sig) (h : ∀ i, good sig k (ms i)) :
     (i : ℤ) → ZIntervalStructure sig :=
@@ -34,62 +34,62 @@ private noncomputable def choose_good_witness (sig : MonadicSignature) [Fintype 
 private theorem choose_good_witness_spec (sig : MonadicSignature) [Fintype sig.preds]
     [DecidableEq sig.preds] (k : Nat)
     (ms : ℤ → OrderedMonadicStructure sig) (h : ∀ i, good sig k (ms i)) :
-    ∀ i, KEquiv sig k (ms i) ((choose_good_witness sig k ms h i).toOrdered sig) :=
+    ∀ i, KEquiv sig k (ms i) ((chooseGoodWitness sig k ms h i).toOrdered sig) :=
   fun i => (h i).choose_spec
 
 /-- Positive half of cofinal sequence: strictly increasing, above all enumerated elements. -/
-private noncomputable def cofinal_pos_seq {α : Type} [LinearOrder α] [NoMaxOrder α]
+private noncomputable def cofinalPosSeq {α : Type} [LinearOrder α] [NoMaxOrder α]
     (enum : ℕ → α) : ℕ → α :=
   Nat.rec (enum 0) (fun n prev => (exists_gt (max prev (enum n))).choose)
 
 /-- Negative half of cofinal sequence: strictly decreasing, below all enumerated elements. -/
-private noncomputable def cofinal_neg_seq {α : Type} [LinearOrder α] [NoMinOrder α]
+private noncomputable def cofinalNegSeq {α : Type} [LinearOrder α] [NoMinOrder α]
     (start : α) (enum : ℕ → α) : ℕ → α :=
   Nat.rec (exists_lt (min start (enum 0))).choose
     (fun n prev => (exists_lt (min prev (enum (n + 1)))).choose)
 
 /-- Combined cofinal sequence: positive indices use pos_seq, negative use neg_seq. -/
-private noncomputable def mk_cofinal_seq {α : Type} [LinearOrder α]
+private noncomputable def mkCofinalSeq {α : Type} [LinearOrder α]
     [NoMaxOrder α] [NoMinOrder α] (enum : ℕ → α) : ℤ → α := fun i =>
-  if i ≥ 0 then cofinal_pos_seq enum i.toNat
-  else cofinal_neg_seq (enum 0) enum (-i - 1).toNat
+  if i ≥ 0 then cofinalPosSeq enum i.toNat
+  else cofinalNegSeq (enum 0) enum (-i - 1).toNat
 
 private theorem cofinal_pos_seq_lt_succ {α : Type} [LinearOrder α] [NoMaxOrder α]
-    (enum : ℕ → α) (n : ℕ) : cofinal_pos_seq enum n < cofinal_pos_seq enum (n + 1) := by
-  change cofinal_pos_seq enum n < (exists_gt (max (cofinal_pos_seq enum n) (enum n))).choose
+    (enum : ℕ → α) (n : ℕ) : cofinalPosSeq enum n < cofinalPosSeq enum (n + 1) := by
+  change cofinalPosSeq enum n < (exists_gt (max (cofinalPosSeq enum n) (enum n))).choose
   exact lt_of_le_of_lt (le_max_left _ _)
-    (exists_gt (max (cofinal_pos_seq enum n) (enum n))).choose_spec
+    (exists_gt (max (cofinalPosSeq enum n) (enum n))).choose_spec
 
 private theorem cofinal_pos_seq_above_enum {α : Type} [LinearOrder α] [NoMaxOrder α]
-    (enum : ℕ → α) (m : ℕ) : enum m < cofinal_pos_seq enum (m + 1) := by
-  change enum m < (exists_gt (max (cofinal_pos_seq enum m) (enum m))).choose
+    (enum : ℕ → α) (m : ℕ) : enum m < cofinalPosSeq enum (m + 1) := by
+  change enum m < (exists_gt (max (cofinalPosSeq enum m) (enum m))).choose
   exact lt_of_le_of_lt (le_max_right _ _)
-    (exists_gt (max (cofinal_pos_seq enum m) (enum m))).choose_spec
+    (exists_gt (max (cofinalPosSeq enum m) (enum m))).choose_spec
 
 private theorem cofinal_neg_seq_succ_lt {α : Type} [LinearOrder α] [NoMinOrder α]
     (start : α) (enum : ℕ → α) (n : ℕ) :
-    cofinal_neg_seq start enum (n + 1) < cofinal_neg_seq start enum n := by
-  change (exists_lt (min (cofinal_neg_seq start enum n) (enum (n + 1)))).choose <
-    cofinal_neg_seq start enum n
+    cofinalNegSeq start enum (n + 1) < cofinalNegSeq start enum n := by
+  change (exists_lt (min (cofinalNegSeq start enum n) (enum (n + 1)))).choose <
+    cofinalNegSeq start enum n
   exact lt_of_lt_of_le
-    (exists_lt (min (cofinal_neg_seq start enum n) (enum (n + 1)))).choose_spec
+    (exists_lt (min (cofinalNegSeq start enum n) (enum (n + 1)))).choose_spec
     (min_le_left _ _)
 
 private theorem cofinal_neg_seq_below_enum {α : Type} [LinearOrder α] [NoMinOrder α]
     (start : α) (enum : ℕ → α) (m : ℕ) :
-    cofinal_neg_seq start enum m < enum m := by
+    cofinalNegSeq start enum m < enum m := by
   induction m with
   | zero =>
     change (exists_lt (min start (enum 0))).choose < enum 0
     exact lt_of_lt_of_le (exists_lt (min start (enum 0))).choose_spec (min_le_right _ _)
   | succ n _ =>
-    change (exists_lt (min (cofinal_neg_seq start enum n) (enum (n + 1)))).choose < enum (n + 1)
+    change (exists_lt (min (cofinalNegSeq start enum n) (enum (n + 1)))).choose < enum (n + 1)
     exact lt_of_lt_of_le
-      (exists_lt (min (cofinal_neg_seq start enum n) (enum (n + 1)))).choose_spec
+      (exists_lt (min (cofinalNegSeq start enum n) (enum (n + 1)))).choose_spec
       (min_le_right _ _)
 
 private theorem cofinal_neg_seq_below_start {α : Type} [LinearOrder α] [NoMinOrder α]
-    (start : α) (enum : ℕ → α) : cofinal_neg_seq start enum 0 < start := by
+    (start : α) (enum : ℕ → α) : cofinalNegSeq start enum 0 < start := by
   change (exists_lt (min start (enum 0))).choose < start
   exact lt_of_lt_of_le (exists_lt (min start (enum 0))).choose_spec (min_le_left _ _)
 
@@ -142,14 +142,14 @@ private theorem exists_cofinal_sequence {α : Type} [LinearOrder α] [Countable 
   haveI : Inhabited α := Classical.inhabited_of_nonempty inferInstance
   let enum : ℕ → α := fun n => (Encodable.decode (α := α) n).getD default
   have h_surj : Function.Surjective enum := Encodable.surjective_decode_getD α default
-  let a := mk_cofinal_seq enum
+  let a := mkCofinalSeq enum
   refine ⟨a, ?_, ?_⟩
   · -- StrictMono: prove a(i) < a(i+1) for all i, then use strictMono_int_of_lt_succ
     apply strictMono_int_of_lt_succ
     intro i
-    simp only [a, mk_cofinal_seq]
+    simp only [a, mkCofinalSeq]
     by_cases h0 : i ≥ 0
-    · -- i ≥ 0: both i and i+1 use cofinal_pos_seq
+    · -- i ≥ 0: both i and i+1 use cofinalPosSeq
       have h1 : i + 1 ≥ 0 := by omega
       simp only [show (i ≥ 0) = True from eq_true h0, show (i + 1 ≥ 0) = True from eq_true h1,
 ]
@@ -164,12 +164,12 @@ private theorem exists_cofinal_sequence {α : Type} [LinearOrder α] [Countable 
         have h_tonat1 : (i + 1).toNat = 0 := by omega
         have h_tonat2 : (-i - 1).toNat = 0 := by omega
         rw [h_tonat1, h_tonat2]
-        -- Need: cofinal_neg_seq (enum 0) enum 0 < cofinal_pos_seq enum 0
-        -- cofinal_pos_seq enum 0 = enum 0
-        -- cofinal_neg_seq (enum 0) enum 0 < enum 0
-        change cofinal_neg_seq (enum 0) enum 0 < cofinal_pos_seq enum 0
+        -- Need: cofinalNegSeq (enum 0) enum 0 < cofinalPosSeq enum 0
+        -- cofinalPosSeq enum 0 = enum 0
+        -- cofinalNegSeq (enum 0) enum 0 < enum 0
+        change cofinalNegSeq (enum 0) enum 0 < cofinalPosSeq enum 0
         exact cofinal_neg_seq_below_start (enum 0) enum
-      · -- i ≤ -2: both use cofinal_neg_seq, strict anti gives the result
+      · -- i ≤ -2: both use cofinalNegSeq, strict anti gives the result
         simp only [show ¬(i ≥ 0) from h0, show ¬(i + 1 ≥ 0) from h1]
         have h_eq : (-i - 1).toNat = (-(i + 1) - 1).toNat + 1 := by omega
         rw [h_eq]
@@ -178,22 +178,22 @@ private theorem exists_cofinal_sequence {α : Type} [LinearOrder α] [Countable 
     intro x
     obtain ⟨m, hm⟩ := h_surj x
     -- x = enum(m). We have:
-    -- a(m+1) = cofinal_pos_seq enum (m+1) > enum(m) = x  (from cofinal_pos_seq_above_enum)
-    -- a(-(m+1)) = cofinal_neg_seq (enum 0) enum m < enum(m) = x (from cofinal_neg_seq_below_enum)
+    -- a(m+1) = cofinalPosSeq enum (m+1) > enum(m) = x  (from cofinal_pos_seq_above_enum)
+    -- a(-(m+1)) = cofinalNegSeq (enum 0) enum m < enum(m) = x (from cofinal_neg_seq_below_enum)
     have h_above : x < a (↑(m + 1)) := by
       rw [← hm]
-      simp only [a, mk_cofinal_seq, show (↑(m + 1) : ℤ) ≥ 0 from by omega, 
+      simp only [a, mkCofinalSeq, show (↑(m + 1) : ℤ) ≥ 0 from by omega, 
         show (↑(m + 1) : ℤ).toNat = m + 1 from by omega]
       exact cofinal_pos_seq_above_enum enum m
     have h_below : a (-(↑m + 1)) ≤ x := by
       rw [← hm]
-      simp only [a, mk_cofinal_seq, show ¬((-(↑m + 1) : ℤ) ≥ 0) from by omega, 
+      simp only [a, mkCofinalSeq, show ¬((-(↑m + 1) : ℤ) ≥ 0) from by omega, 
         show (-(-(↑m + 1) : ℤ) - 1).toNat = m from by omega]
       exact le_of_lt (cofinal_neg_seq_below_enum (enum 0) enum m)
     -- Apply find_last_index_below on the finite interval [-(m+1), m+1]
     obtain ⟨i, _, hi_le, hi_next⟩ :=
       find_last_index_below a (strictMono_int_of_lt_succ (fun j => by
-        simp only [a, mk_cofinal_seq]
+        simp only [a, mkCofinalSeq]
         by_cases h0 : j ≥ 0
         · have h1 : j + 1 ≥ 0 := by omega
           simp only [show (j ≥ 0) = True from eq_true h0, show (j + 1 ≥ 0) = True from eq_true h1,
@@ -382,9 +382,9 @@ private theorem witness_bounded (sig : MonadicSignature) [Fintype sig.preds]
     (h_has_max : ∀ i : ℤ, ∃ m : (ms i).carrier, ∀ x, x ≤ m)
     (h_has_min : ∀ i : ℤ, ∃ m : (ms i).carrier, ∀ x, m ≤ x)
     (i : ℤ) :
-    (∃ v, (choose_good_witness sig (k'' + 2) ms h_good i).hi = some v) ∧
-    (∃ v, (choose_good_witness sig (k'' + 2) ms h_good i).lo = some v) := by
-  let witnesses := choose_good_witness sig (k'' + 2) ms h_good
+    (∃ v, (chooseGoodWitness sig (k'' + 2) ms h_good i).hi = some v) ∧
+    (∃ v, (chooseGoodWitness sig (k'' + 2) ms h_good i).lo = some v) := by
+  let witnesses := chooseGoodWitness sig (k'' + 2) ms h_good
   have h_equiv := choose_good_witness_spec sig (k'' + 2) ms h_good
   -- Bridge KEquiv to NfEvalNf iff
   have h_same_nf : ∀ nf : NormalForm sig (k'' + 2) 0,
@@ -557,7 +557,7 @@ private theorem ordered_sum_of_good_bounded_is_good (sig : MonadicSignature) [Fi
       -- side (needed for orderIsoIntOfLinearSuccPredArch) are safe: the concatenated
       -- Z-intervals are explicitly integer-like by construction.
       -- Get Z-interval witnesses
-      let witnesses := choose_good_witness sig (k'' + 2) ms h_good
+      let witnesses := chooseGoodWitness sig (k'' + 2) ms h_good
       have h_equiv := choose_good_witness_spec sig (k'' + 2) ms h_good
       -- orderedSum ms ~k orderedSum witnesses via doets_lemma_1_4
       let wit_structs := fun i => (witnesses i).toOrdered sig

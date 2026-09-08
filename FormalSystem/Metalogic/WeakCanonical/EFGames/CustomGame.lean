@@ -368,7 +368,7 @@ with the appropriate coercion infrastructure.
 /-- Helper: embedding from Fin (n'+3) to Fin (n+3) for round monotonicity.
     Maps 0 -> 0, i (1..n') -> i, n'+1 -> n+1, n'+2 -> n+2.
     This preserves gameTuple values between the n'-game and the padded n-game. -/
-private def round_mono_emb (n n' : Nat) (hn : n' ≤ n) :
+private def roundMonoEmb (n n' : Nat) (hn : n' ≤ n) :
     Fin (n' + 3) → Fin (n + 3) := fun j =>
   if j.val = 0 then ⟨0, by omega⟩
   else if j.val ≤ n' then ⟨j.val, by omega⟩
@@ -384,8 +384,8 @@ private theorem game_tuple_emb_eq_M {sig : MonadicSignature}
     (b : M.carrier) (j : Fin (n' + 3)) :
     gameTuple x y a b j =
     gameTuple x y (fun i => if hi : i.val < n' then a ⟨i.val, hi⟩ else x) b
-      (round_mono_emb n n' hn j) := by
-  simp only [gameTuple, round_mono_emb]
+      (roundMonoEmb n n' hn j) := by
+  simp only [gameTuple, roundMonoEmb]
   -- 4 cases for j: j=0, 1≤j≤n', j=n'+1, j=n'+2
   have hj_bound := j.isLt  -- j.val < n' + 3
   by_cases h0 : j.val = 0
@@ -414,8 +414,8 @@ private theorem game_tuple_emb_eq_N {sig : MonadicSignature}
     (x' y' : ExtendedCarrier N atomMap r) (a'_full : Fin n → ExtendedCarrier N atomMap r)
     (b' : N.carrier) (j : Fin (n' + 3)) :
     gameTuple x' y' (fun i : Fin n' => a'_full ⟨i.val, Nat.lt_of_lt_of_le i.isLt hn⟩) b' j =
-    gameTuple x' y' a'_full b' (round_mono_emb n n' hn j) := by
-  simp only [gameTuple, round_mono_emb]
+    gameTuple x' y' a'_full b' (roundMonoEmb n n' hn j) := by
+  simp only [gameTuple, roundMonoEmb]
   have hj_bound := j.isLt
   by_cases h0 : j.val = 0
   · simp [h0]
@@ -483,17 +483,17 @@ theorem ghr93_duplicator_wins_round_mono {sig : MonadicSignature}
     · unfold SameOrderType at hord ⊢
       intro i j
       rw [h_eq_M i, h_eq_M j, h_eq_N i, h_eq_N j]
-      exact hord (round_mono_emb n n' hn i) (round_mono_emb n n' hn j)
+      exact hord (roundMonoEmb n n' hn i) (roundMonoEmb n n' hn j)
     -- GapPointAgreement: transfer via embedding
     · unfold GapPointAgreement at hgp ⊢
       intro i
       rw [h_eq_M i, h_eq_N i]
-      exact hgp (round_mono_emb n n' hn i)
+      exact hgp (roundMonoEmb n n' hn i)
     -- FormulaAgreement: transfer via embedding
     · unfold FormulaAgreement at hform ⊢
       intro i A hA
       rw [h_eq_M i, h_eq_N i]
-      exact hform (round_mono_emb n n' hn i) A hA
+      exact hform (roundMonoEmb n n' hn i) A hA
 
 /-! ## Rank Lifting Infrastructure (GHR93 Lemma 10 Components)
 
@@ -1175,7 +1175,7 @@ obtain_split_point_props).
     same (x and a(0)..a(n-1)). At n+1 (challenge point b), the full game
     has b at n+2. At n+2 (boundary c/d), the full game has a_pad(n) = c
     at n+1 (and a'_full(n) = d at n+1 on the N-side). -/
-private def restrict_emb_left (n : Nat) : Fin (n + 3) → Fin (n + 4) := fun i =>
+private def restrictEmbLeft (n : Nat) : Fin (n + 3) → Fin (n + 4) := fun i =>
   if i.val ≤ n then ⟨i.val, by omega⟩
   else if i.val = n + 1 then ⟨n + 2, by omega⟩
   else ⟨n + 1, by omega⟩ -- i = n + 2
@@ -1191,8 +1191,8 @@ private theorem restrict_left_game_tuple_M {sig : MonadicSignature}
     (ha_pad_eq : ∀ i : Fin n, a_pad ⟨i.val, by omega⟩ = a i)
     (hc_last : a_pad ⟨n, by omega⟩ = c)
     (j : Fin (n + 3)) :
-    gameTuple x c a b j = gameTuple x y a_pad b (restrict_emb_left n j) := by
-  simp only [gameTuple, restrict_emb_left]
+    gameTuple x c a b j = gameTuple x y a_pad b (restrictEmbLeft n j) := by
+  simp only [gameTuple, restrictEmbLeft]
   have hj := j.isLt  -- j.val < n + 3
   by_cases h0 : j.val = 0
   · simp [h0]
@@ -1219,8 +1219,8 @@ private theorem restrict_left_game_tuple_N {sig : MonadicSignature}
     (hd_eq : a'_full ⟨n, by omega⟩ = d)
     (j : Fin (n + 3)) :
     gameTuple x' d (fun i : Fin n => a'_full ⟨i.val, by omega⟩) b' j =
-    gameTuple x' y' a'_full b' (restrict_emb_left n j) := by
-  simp only [gameTuple, restrict_emb_left]
+    gameTuple x' y' a'_full b' (restrictEmbLeft n j) := by
+  simp only [gameTuple, restrictEmbLeft]
   have hj := j.isLt
   by_cases h0 : j.val = 0
   · simp [h0]
@@ -1393,19 +1393,19 @@ theorem ghr93_strategy_restrict_left {sig : MonadicSignature}
     exact ⟨
       -- SameOrderType transfer
       fun i j => by rw [h_eq_M i, h_eq_M j, h_eq_N i, h_eq_N j];
-                    exact hord_full (restrict_emb_left n i) (restrict_emb_left n j),
+                    exact hord_full (restrictEmbLeft n i) (restrictEmbLeft n j),
       -- GapPointAgreement transfer
       fun i => by rw [h_eq_M i, h_eq_N i];
-                  exact hgp_full (restrict_emb_left n i),
+                  exact hgp_full (restrictEmbLeft n i),
       -- FormulaAgreement transfer
       fun i A hA => by rw [h_eq_M i, h_eq_N i];
-                       exact hform_full (restrict_emb_left n i) A hA
+                       exact hform_full (restrictEmbLeft n i) A hA
     ⟩
 
 /-- Helper: index embedding for the right strategy restriction.
     Maps: 0 -> 1 (c position in padded), 1..n -> 2..n+1 (shifted selections),
     n+1 -> n+2 (b position), n+2 -> n+3 (y boundary, stays). -/
-private def restrict_emb_right (n : Nat) : Fin (n + 3) → Fin (n + 4) := fun i =>
+private def restrictEmbRight (n : Nat) : Fin (n + 3) → Fin (n + 4) := fun i =>
   if i.val = 0 then ⟨1, by omega⟩
   else if i.val ≤ n then ⟨i.val + 1, by omega⟩
   else if i.val = n + 1 then ⟨n + 2, by omega⟩
@@ -1425,8 +1425,8 @@ private theorem restrict_right_game_tuple_M {sig : MonadicSignature}
     (hc_first : a_pad ⟨0, by omega⟩ = c)
     (ha_pad_eq : ∀ i : Fin n, a_pad ⟨i.val + 1, by omega⟩ = a i)
     (j : Fin (n + 3)) :
-    gameTuple c y a b j = gameTuple x y a_pad b (restrict_emb_right n j) := by
-  simp only [gameTuple, restrict_emb_right]
+    gameTuple c y a b j = gameTuple x y a_pad b (restrictEmbRight n j) := by
+  simp only [gameTuple, restrictEmbRight]
   have hj := j.isLt
   by_cases h0 : j.val = 0
   · simp only [h0, ↓reduceDIte, ↓reduceIte, Fin.mk_one, Fin.coe_ofNat_eq_mod, Nat.one_mod,
@@ -1457,8 +1457,8 @@ private theorem restrict_right_game_tuple_N {sig : MonadicSignature}
     (hd_eq : a'_full ⟨0, by omega⟩ = d)
     (j : Fin (n + 3)) :
     gameTuple d y' (fun i : Fin n => a'_full ⟨i.val + 1, by omega⟩) b' j =
-    gameTuple x' y' a'_full b' (restrict_emb_right n j) := by
-  simp only [gameTuple, restrict_emb_right]
+    gameTuple x' y' a'_full b' (restrictEmbRight n j) := by
+  simp only [gameTuple, restrictEmbRight]
   have hj := j.isLt
   by_cases h0 : j.val = 0
   · simp only [h0, ↓reduceDIte, ↓reduceIte, Fin.mk_one, Fin.coe_ofNat_eq_mod, Nat.one_mod,
@@ -1597,11 +1597,11 @@ theorem ghr93_strategy_restrict_right {sig : MonadicSignature}
     have h_eq_N := @restrict_right_game_tuple_N sig N atomMap r n x' y' d a'_full b' hd_eq
     exact ⟨
       fun i j => by rw [h_eq_M i, h_eq_M j, h_eq_N i, h_eq_N j];
-                    exact hord_full (restrict_emb_right n i) (restrict_emb_right n j),
+                    exact hord_full (restrictEmbRight n i) (restrictEmbRight n j),
       fun i => by rw [h_eq_M i, h_eq_N i];
-                  exact hgp_full (restrict_emb_right n i),
+                  exact hgp_full (restrictEmbRight n i),
       fun i A hA => by rw [h_eq_M i, h_eq_N i];
-                       exact hform_full (restrict_emb_right n i) A hA
+                       exact hform_full (restrictEmbRight n i) A hA
     ⟩
 
 
