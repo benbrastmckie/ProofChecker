@@ -10,6 +10,7 @@ import Mathlib.Data.Countable.Basic
 import Mathlib.Tactic.DeriveCountable
 import Mathlib.Logic.Equiv.Basic
 import Mathlib.Logic.Equiv.List
+import FormalSystem.Init
 
 /-!
 # Atom Type for Bimodal Logic TM

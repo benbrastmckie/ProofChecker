@@ -244,7 +244,7 @@ invariant check allowlists it by name (check C8).
 | `Automation.lean` | 100 | Re-export for Automation submodule |
 | `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
-| `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
+| `ForMathlib.lean` | 29 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 27 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |

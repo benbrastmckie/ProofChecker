@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.ForMathlib.Order.PFilter
+import FormalSystem.Init
 
 /-!
 # ForMathlib — Mathlib-shaped extensions intended for upstreaming

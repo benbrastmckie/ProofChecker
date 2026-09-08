@@ -7,7 +7,7 @@ Core syntactic definitions for TM bimodal logic formulas.
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Syntax -->
 | File | Lines | Description |
 |------|-------|-------------|
-| `Atom.lean` | 214 | `Atom`: Propositional atom type with decidable equality |
+| `Atom.lean` | 215 | `Atom`: Propositional atom type with decidable equality |
 | `BigConj.lean` | 55 | `bigConj`: Big conjunction over a list of formulas |
 | `Context.lean` | 210 | `Context`: Type alias for `List Formula` (proof contexts) |
 | `Formula.lean` | 855 | `Formula`: Inductive formula type with modal and temporal operators |

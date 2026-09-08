@@ -291,7 +291,7 @@ monotonically. Note the fan-outs overlap heavily, so the count drop is not their
 
 ---
 
-### Phase 4: High-Fan-Out Leaves, the ForMathlib Aggregator, and Zero Missing [NOT STARTED]
+### Phase 4: High-Fan-Out Leaves, the ForMathlib Aggregator, and Zero Missing [COMPLETED]
 
 **Goal**: Adopt the last three edit sites — the two tree-invalidating leaves plus the `ForMathlib`
 aggregator — take the one unavoidable full rebuild, and reach zero modules missing
@@ -299,21 +299,21 @@ aggregator — take the one unavoidable full rebuild, and reach zero modules mis
 
 **Tasks**:
 
-- [ ] Add `import FormalSystem.Init` after the last existing `import` line in
+- [x] Add `import FormalSystem.Init` after the last existing `import` line in
       `FormalSystem/Syntax/Atom.lean` (fan-out 426).
-- [ ] Same for `FormalSystem/Automation/TruthNormAttr.lean` (fan-out 424) — the third and last
+- [x] Same for `FormalSystem/Automation/TruthNormAttr.lean` (fan-out 424) — the third and last
       `Lean`-only attribute module.
-- [ ] Same for `FormalSystem/ForMathlib.lean` — the sibling aggregator *beside* the directory, not
+- [x] Same for `FormalSystem/ForMathlib.lean` — the sibling aggregator *beside* the directory, not
       a file under it, so this does not violate the upstreaming rule.
-- [ ] Confirm `FormalSystem/ForMathlib/Order/PFilter.lean` is **untouched** and still has zero
+- [x] Confirm `FormalSystem/ForMathlib/Order/PFilter.lean` is **untouched** and still has zero
       `FormalSystem.*` imports.
-- [ ] Full rebuild through the guard, detached:
+- [x] Full rebuild through the guard, detached:
       `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 --` with no module argument.
-- [ ] Run `lake exe checkInitImports`; confirm zero missing and exit status `0`.
-- [ ] Run `bash scripts/check-metalogic-cycles.sh` and confirm the Metalogic directory-level cycle
+- [x] Run `lake exe checkInitImports`; confirm zero missing and exit status `0`.
+- [x] Run `bash scripts/check-metalogic-cycles.sh` and confirm the Metalogic directory-level cycle
       count is still exactly 1 (the documented `BXCanonical` ↔ `WeakCanonical` pair) — the
       mechanical half of the "no import cycle introduced" acceptance criterion.
-- [ ] Commit at green.
+- [x] Commit at green.
 
 **Timing**: 1.5 hours (dominated by the full rebuild)
 
