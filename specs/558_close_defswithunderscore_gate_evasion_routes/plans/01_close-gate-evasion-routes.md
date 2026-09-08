@@ -306,7 +306,7 @@ the file needs another row.
 
 ---
 
-### Phase 4: The `runLinter` target decision (route 1's second half) [NOT STARTED]
+### Phase 4: The `runLinter` target decision (route 1's second half) [COMPLETED]
 
 **Goal**: Answer the question the task description poses explicitly — whether the linter target
 is widened beyond the single `FormalSystem` root — with a measurement and a recorded decision,
@@ -314,13 +314,15 @@ sharing the root-scraping mechanism the completed out-of-closure-roots work alre
 than inventing a second.
 
 **Tasks**:
-- [ ] Reuse C25's existing `lakefile.lean` root scraper — do not write a second one. Extend or
+- [x] Reuse C25's existing `lakefile.lean` root scraper — do not write a second one. Extend or
       parameterize it if `lean_lib` roots are needed alongside `lean_exe` roots, keeping one
-      scraping site.
-- [ ] **Measure first**: run the env_linter batch against each additional root (`BimodalTest`
+      scraping site. *(deviation: altered — the scrape was HOISTED to a single site above C16,
+      which runs before C25 in the script; C25 now consumes `$LAKE_EXE_ROOTS` from it and the
+      new `lean_lib` scrape sits beside it, so there is still exactly one scraping site)*
+- [x] **Measure first**: run the env_linter batch against each additional root (`BimodalTest`
       and each `lean_exe` root module) and record what each reports today, plus the wall-clock
       cost with the tree already built by C1.
-- [ ] Decide and record, in the script's C16 header comment:
+- [x] Decide and record, in the script's C16 header comment:
       - If every additional root is already clean, widen C16's invocation to iterate the scraped
         root list and ship it enforced.
       - If additional roots carry pre-existing findings, ship the widening **reporting-only**
@@ -330,9 +332,9 @@ than inventing a second.
       - If the cost is prohibitive, record that as the decision with the measured number, and
         state plainly that route (1) is carried by C26's tree-wide textual scope alone — which is
         already true and sufficient for the naming invariant.
-- [ ] Whichever branch is taken, write the reason and the measurement into the comment. A future
+- [x] Whichever branch is taken, write the reason and the measurement into the comment. A future
       reader must be able to see that the question was answered, not skipped.
-- [ ] Never flip an existing `ENFORCE_` flag to 0 to accommodate this widening.
+- [x] Never flip an existing `ENFORCE_` flag to 0 to accommodate this widening.
 
 **Timing**: 1.5 hours
 

@@ -578,6 +578,19 @@ ENFORCE_C25=${ENFORCE_C25:-1} # every lean_exe root module compiles (enforced)
 # failure: rename the declaration, or -- for an attribute -- add a reasoned entry to
 # scripts/nolint-attribute-allowlist.txt, where the reason is read alongside the name it exempts.
 ENFORCE_C26=${ENFORCE_C26:-1} # no snake_case def/abbrev, no unlisted nolint attribute (enforced)
+# C16's second half widens the env_linter batch beyond the single `FormalSystem` library root to
+# every root declared in lakefile.lean -- the other library root and all thirteen `lean_exe`
+# roots -- because `runLinter FormalSystem` observes only the FormalSystem closure and a module
+# reachable only from an exe root is invisible to it. That is the same blind spot C26's textual
+# scan closes for declared names; this half is what closes it for shapes only ELABORATION can
+# judge, above all auto-generated structure-field projections, where whether an underscored name
+# is a violation depends on whether the field's type is a Prop.
+# NOT YET ENFORCED, on a measurement rather than a preference: the widened target carries 179
+# pre-existing findings today (see the C16 header for the per-root numbers), so enforcing it now
+# would turn the gate red on work this check's own change does not own. It is computed and
+# printed at every gate instead, on the ENFORCE_C9_DOCS model, so the debt is visible rather
+# than either force-passed or blocking. Flip to 1 once the count reaches zero.
+ENFORCE_C16_ROOTS=${ENFORCE_C16_ROOTS:-0} # env_linter batch over EVERY lakefile root (NOT yet enforced)
 
 FAILURES=0
 pass() { printf 'PASS  %-4s %s\n' "$1" "$2"; }
@@ -1912,6 +1925,38 @@ C20_STATUS=$?
 [ "$C20_STATUS" -ne 0 ] && FAILURES=$((FAILURES + 1))
 echo
 # ---------------------------------------------------------------------------
+# The lakefile root scrape: ONE site, two consumers.
+#
+# C25 compile-checks every `lean_exe` root; C16's second half lints every root of either kind.
+# Both read the list from here rather than each scraping `lakefile.lean` for itself, so a newly
+# declared target is covered by both the day it is added and there is no second regex to forget.
+# The `lean_exe` regex is the one C6's reachability walk already uses; the `lean_lib` form is
+# `roots := #[...]`, which that regex deliberately does not match (there `root` is followed by
+# an `s`, not by `:=`), so the two lists are disjoint by construction rather than by filtering.
+# ---------------------------------------------------------------------------
+LAKE_EXE_ROOTS=$(python3 - <<'PYEOF'
+import re
+try:
+    lf = open("lakefile.lean", encoding="utf-8").read()
+except OSError:
+    raise SystemExit(0)
+for m in re.findall(r"root\s*:=\s*`([A-Za-z0-9_.]+)", lf):
+    print(m)
+PYEOF
+)
+LAKE_LIB_ROOTS=$(python3 - <<'PYEOF'
+import re
+try:
+    lf = open("lakefile.lean", encoding="utf-8").read()
+except OSError:
+    raise SystemExit(0)
+for block in re.findall(r"roots\s*:=\s*#\[([^\]]*)\]", lf):
+    for m in re.findall(r"`([A-Za-z0-9_.]+)", block):
+        print(m)
+PYEOF
+)
+
+# ---------------------------------------------------------------------------
 # C16: environment linters (defsWithUnderscore, docBlame, simpNF, structureInType,
 # tacticDocs, unusedArguments, ...) via the configured lintDriver
 #
@@ -1953,8 +1998,38 @@ echo
 # one to reach for when this scanner's verdict on a file needs confirming. A
 # HARDCODED count was deliberately
 # rejected here: this script exists in part to catch hand-typed numbers drifting
-# from the tree (see C14, and the two documents Phase 6 of this task corrects),
-# so freezing dupNamespace's count would be the same defect class in miniature.
+# from the tree (see C14), so freezing dupNamespace's count would be the same
+# defect class in miniature.
+#
+# THE LINTER TARGET, AND WHY IT IS NO LONGER JUST `FormalSystem`.
+#
+# `runLinter <Module>` observes a package by IMPORTING it, so `runLinter FormalSystem` sees
+# exactly the FormalSystem library closure and nothing else. Every `lean_exe` root sits outside
+# that closure, and so does the `BimodalTest` library root -- the same structural gap C25 exists
+# to close for compilation, unclosed for linting. It is not hypothetical: 20 live
+# `defsWithUnderscore` findings sit in an out-of-closure module today (auto-generated
+# projections of one `structure` whose fields are snake_case and data-valued), and
+# `runLinter FormalSystem` reports 0 in the same breath.
+#
+# MEASURED BEFORE DECIDING. `lake exe runLinter <Module>` accepts any module name, library root
+# or exe root alike. Sweeping all fifteen roots with the tree already built by C1 -- which is
+# the position this check runs in -- costs 44s wall clock and reports:
+#
+#     FormalSystem 0   ProofStepExport 0   BenchmarkAnchors 0   TableauProofStepPipeline 0
+#     ProofFirstExporter 0   DatasetValidator 1   CheckInitImports 1   EnumBenchmark 4
+#     TraceExporter 5   BenchmarkOracle 9   TableauBridge 12   MachineAppendixExport 16
+#     DatasetExport 32   BimodalTest 85
+#
+# -- 179 findings outside the `FormalSystem` root, of which 56 are `defsWithUnderscore`
+# (DatasetExport 20, BimodalTest 36) and the rest are docBlame/unusedArguments-class.
+#
+# THE DECISION: widen, but REPORTING-ONLY, behind ENFORCE_C16_ROOTS, which defaults to 0. The
+# scope is not clean, so enforcing it would hold the gate hostage to a burndown this change does
+# not own; abandoning the widening would leave the elaboration-only shapes with no instrument at
+# all. Reporting it prints the debt at every gate, which is the ENFORCE_C9_DOCS pattern and the
+# reason that pattern exists. The first half above -- `runLinter FormalSystem` against
+# scripts/nolints.json -- stays ENFORCED and unchanged; this half neither relaxes it nor
+# depends on it, and no existing ENFORCE_ flag was flipped to accommodate the widening.
 # ---------------------------------------------------------------------------
 if [ "$RUN_BUILD" -eq 1 ]; then
   C16_LOG=$(mktemp)
@@ -1970,6 +2045,46 @@ if [ "$RUN_BUILD" -eq 1 ]; then
   rm -f "$C16_LOG"
 else
   info C16 "env_linter batch skipped (--no-build)"
+fi
+
+# C16, second half: the same env_linter batch over EVERY root declared in lakefile.lean.
+# Reporting-only while ENFORCE_C16_ROOTS is 0 -- see that flag and the decision recorded in this
+# check's header above. The root list comes from the single scrape site above, so a newly
+# declared target is covered the day it is added.
+if [ "$RUN_BUILD" -eq 1 ]; then
+  C16R_LOG=$(mktemp)
+  C16R_TOTAL=0
+  C16R_DIRTY=0
+  C16R_ROWS=""
+  C16R_COUNT=0
+  while IFS= read -r C16R_ROOT; do
+    [ -n "$C16R_ROOT" ] || continue
+    [ "$C16R_ROOT" = "FormalSystem" ] && continue   # the enforced half above already covers it
+    C16R_COUNT=$((C16R_COUNT + 1))
+    if lake exe runLinter "$C16R_ROOT" >"$C16R_LOG" 2>&1; then
+      continue
+    fi
+    C16R_N=$(grep -m1 -oE '^-- Found [0-9]+' "$C16R_LOG" | grep -oE '[0-9]+' || true)
+    [ -n "$C16R_N" ] || C16R_N=$(grep -c 'error: ' "$C16R_LOG" || true)
+    C16R_TOTAL=$((C16R_TOTAL + C16R_N))
+    C16R_DIRTY=$((C16R_DIRTY + 1))
+    C16R_ROWS="${C16R_ROWS}${C16R_ROOT}: ${C16R_N}"$'\n'
+  done <<< "$LAKE_EXE_ROOTS"$'\n'"$LAKE_LIB_ROOTS"
+  rm -f "$C16R_LOG"
+  if [ "$C16R_COUNT" -eq 0 ]; then
+    fail C16 "no non-FormalSystem root scraped from lakefile.lean -- the scraper regex or the lakefile's shape changed"
+  elif [ "$C16R_TOTAL" -eq 0 ]; then
+    pass C16 "env_linter batch is clean on all $C16R_COUNT non-FormalSystem lakefile root(s)"
+    note "every root is now clean; set ENFORCE_C16_ROOTS=1 to make this exit-code-affecting"
+  else
+    MSG="$C16R_TOTAL env_linter finding(s) across $C16R_DIRTY of $C16R_COUNT non-FormalSystem lakefile root(s)"
+    if [ "$ENFORCE_C16_ROOTS" -eq 1 ]; then fail C16 "$MSG"; else soft C16 "$MSG (not yet enforced)"; fi
+    printf '%s' "$C16R_ROWS" | sort -t: -k2 -rn | head -6 | while IFS= read -r l; do note "$l"; done
+    note "these roots are outside the FormalSystem closure, so \`runLinter FormalSystem\` reports 0 on them by construction"
+    note "set ENFORCE_C16_ROOTS=1 to make this exit-code-affecting once the count reaches zero"
+  fi
+else
+  info C16 "env_linter batch over the other lakefile roots skipped (--no-build)"
 fi
 # dupNamespace, and the C23 naming-regression assertions: one live textual pass over the tree,
 # sharing the namespace walk. Runs regardless of --no-build (no build needed). Exits non-zero
@@ -2797,16 +2912,9 @@ echo
 # failure while handing the shell a 0.
 # ---------------------------------------------------------------------------
 if [ "$RUN_BUILD" -eq 1 ]; then
-  C25_ROOTS=$(python3 - <<'PYEOF'
-import re
-try:
-    lf = open("lakefile.lean", encoding="utf-8").read()
-except OSError:
-    raise SystemExit(0)
-for m in re.findall(r"root\s*:=\s*`([A-Za-z0-9_.]+)", lf):
-    print(m)
-PYEOF
-)
+  # Scraped once, near C16 -- see "The lakefile root scrape" above. An empty list is still a
+  # failure here, not a silent pass: it means the regex or the lakefile's shape changed.
+  C25_ROOTS="$LAKE_EXE_ROOTS"
   C25_ROOT_COUNT=$(printf '%s\n' "$C25_ROOTS" | grep -c . || true)
   if [ "$C25_ROOT_COUNT" -eq 0 ]; then
     fail C25 "no lean_exe root scraped from lakefile.lean -- the scraper regex or the lakefile's shape changed"
