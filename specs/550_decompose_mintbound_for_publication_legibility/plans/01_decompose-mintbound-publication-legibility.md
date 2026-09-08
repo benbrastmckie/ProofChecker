@@ -230,7 +230,7 @@ revisiting.
 
 ---
 
-### Phase 3: Extract the register and the foundation head (4 modules) [NOT STARTED]
+### Phase 3: Extract the register and the foundation head (4 modules) [COMPLETED]
 
 **Goal**: Create `MintBound/`, land the highest-value extraction (the C9 register) and the three
 foundation modules, and prove the extraction shape works before committing to it fourteen more
@@ -243,24 +243,36 @@ the section's existing `## `-level header; `namespace FormalSystem.Metalogic.Dec
 `Register.lean` is the exception — zero declarations, so no namespace and no `open`.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound/`.
-- [ ] Extract `Register.lean` from the `/-! ## C9 ... -/` block (lines 14,777-15,682). Give it one
+- [x] Create `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound/`.
+- [x] Extract `Register.lean` from the `/-! ## C9 ... -/` block (lines 14,777-15,682). Give it one
       import (`...Termination.Fuel`) for `checkInitImports` hygiene. Promote its heading `## C9.`
       to `#`. **Re-append `end FormalSystem.Metalogic.Decidability` at the residual file's new
       tail** — line 15,684 does not travel with the register.
-- [ ] In `Register.lean` only, correct the register header's "Twenty-four statements" to
+- [x] In `Register.lean` only, correct the register header's "Twenty-four statements" to
       "Twenty-five". This is an additive correction of a demonstrably wrong count (the register
       carries 25 numbered entries), not a weakening of register content; no entry is altered,
       condensed, or dropped.
-- [ ] Extract `Invariants.lean` from lines **61**-1,068 (not 1-1,068). Imports: `...Termination.Fuel`.
-- [ ] Extract `OrderingTimes.lean` from lines 1,069-2,071. Imports: `...MintBound.Invariants`.
-- [ ] Extract `MintPotential.lean` from lines 2,072-3,886. Imports: `...MintBound.OrderingTimes`.
-- [ ] Update the residual `MintBound.lean`: keep lines 1-60 (license, module docstring, namespace,
+- [x] Extract `Invariants.lean` from lines **61**-1,068 (not 1-1,068). Imports: `...Termination.Fuel`.
+- [x] Extract `OrderingTimes.lean` from lines 1,069-2,071. Imports: `...MintBound.Invariants`.
+- [x] Extract `MintPotential.lean` from lines 2,072-3,886. Imports: `...MintBound.OrderingTimes`.
+- [x] Update the residual `MintBound.lean`: keep lines 1-60 (license, module docstring, namespace,
       `open`) and replace its single `Fuel` import with imports of the four new modules; the body
       now begins at what was line 3,887.
-- [ ] Re-run Phase 1 checks (a), (b), (c) against the split tree.
-- [ ] **Build gate** (detached + guarded, as in Phase 2).
-- [ ] Commit the batch as one objective once green.
+- [x] Re-run Phase 1 checks (a), (b), (c) against the split tree. *(deviation: altered — three
+      further checks were added and run alongside: (d) import-closure, which proves every
+      cross-module reference lands inside the referencing module's import closure; a line-multiset
+      provenance audit, which showed the only content difference between the split tree and the
+      pre-split snapshot is the four promoted `##`->`#` headings; and an axiom-set diff against the
+      Phase 2 build's 41 `#print axioms` rows.)*
+- [x] **Prose hygiene, not in the plan but forced by the split.** Four same-line docstring edits,
+      made before extraction so no line number shifts: the three self-citations
+      `MintBound.lean:1260` (once) and `MintBound.lean:1071` (twice) are replaced by the
+      declaration names they meant, because the aggregator will be ~40 lines and invariant C20
+      tier 1 gates out-of-range `file.lean:NNN` citations repo-wide; and the pre-existing C9
+      violation at `:12413` ("Task 433's narrowing") becomes "`PostBlockingSettlesRun`'s
+      narrowing", which is the durable anchor the same invariant asks for.
+- [x] **Build gate** (detached + guarded, as in Phase 2).
+- [x] Commit the batch as one objective once green.
 
 **Timing**: 1.5 hours
 
