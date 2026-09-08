@@ -1,0 +1,53 @@
+# In-source `nolint` attributes that C26 must not treat as an unreviewed suppression.
+#
+# An `@[nolint X]` or `attribute [nolint X] foo` produces NO linter finding at all. It is not a
+# suppressed finding that a baseline diff can show; it is the *absence* of a finding. Neither
+# `lake exe runLinter`, nor CI's `lake lint`, nor a `scripts/nolints.json` diff, nor C16 can see
+# one -- which is strictly worse than a JSON entry, since that at least shows up as a line in a
+# reviewable file. This file is what turns an in-source suppression back into such a line.
+#
+# The argument in `docs/development/NAMING_CONVENTION_DEVIATION.md` that an in-source attribute
+# is SAFER than the JSON -- because it is "reviewable in the diff that introduces it" -- assumes
+# a human reads that diff. That assumption does not hold for every route by which a change now
+# reaches this repository, which is the whole reason C26 asserts this file rather than trusting
+# the attribute site alone.
+#
+# ADMISSION BAR. An entry here is a PERMANENT DOCUMENTED EXEMPTION with its reason written at
+# the attribute site in the source. It is not a backlog row and not a debt ledger. "I do not
+# want to rename this" and "the linter is wrong about this in general" are both inadmissible;
+# the reason must say why THIS declaration cannot conform -- an auto-generated name with no
+# source position at which a docstring could be attached, a `Type`-valued structure that a
+# `Prop` could not replace, a tactic token that `docs/` already references as a user-facing
+# name. If the exemption is temporary, fix the declaration instead; a soft period belongs in an
+# `ENFORCE_` flag in scripts/check-module-invariants.sh, where it is visible at every gate,
+# never here.
+#
+# FORMAT: one entry per line, `<linter>:<declaration>`, where `<declaration>` is the name
+# EXACTLY as written at the attribute site -- that is the text a reviewer sees in the diff, and
+# matching on it is what keeps this file checkable against the source. `#` starts a comment;
+# blank lines are ignored. C26 fails on any in-source `nolint` attribute whose pair is absent
+# here, and reports any entry here that no longer matches anything as stale, so the file cannot
+# quietly rot into a dumping ground.
+
+# `MembershipWitness` is `Type`-valued rather than `Prop`-valued on purpose:
+# `findMembershipWitness` returns `Option (MembershipWitness Γ φ)` and the proof-search layer
+# eliminates that option in *data* position, which a `Prop`-valued structure could not support
+# (no large elimination). Automation/ProofSearch/Core.lean.
+structureInType:MembershipWitness
+
+# Three `let rec`/`where`-generated auxiliaries. Lean synthesizes each declaration, so there is
+# no source position at which a docstring could be attached -- the exemption is a fact about
+# where the declaration comes from, not a judgement about whether it deserves documentation.
+# Automation/ProofSearch/Core.lean and Automation/ProofSearch/Strategies.lean.
+docBlame:iddfsSearch.iterate
+docBlame:PriorityQueue.insert.insertSorted
+docBlame:bestFirstSearch.searchLoop
+
+# Three auto-generated tactic-syntax declarations, each named by Lean after the tactic token it
+# derives from. The tokens are snake_case because that is Lean and Mathlib practice for tactic
+# names, and each is referenced from `docs/`, so renaming one is a user-facing API break rather
+# than a naming cleanup. Renaming the token to camelCase would satisfy the linter while making
+# the tactic surface LESS conformant. Automation/Tactics/UserTactics.lean.
+defsWithUnderscore:tacticApply_axiom
+defsWithUnderscore:tacticModal_t
+defsWithUnderscore:tacticAssumption_search

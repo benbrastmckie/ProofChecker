@@ -2952,19 +2952,154 @@ for path in live_lean_files("FormalSystem"):
         if m and underscored(m.group(3)):
             bad.append((path, i, m.group(3), m.group(1) is not None))
 
+failed = False
+
 if not bad:
     print("PASS  C26  zero snake_case `def`/`abbrev` names in the live tree (textual scan:\n"
           "            out-of-closure modules, `private` declarations and `_1`/`_2`-shaped\n"
           "            names all in view)")
 else:
     print(f"FAIL  C26  {len(bad)} snake_case `def`/`abbrev` name(s) in the live tree")
-    for p, l, n, priv in bad[:10]:
-        print(f"            {p}:{l}: {'private ' if priv else ''}{n}")
+    for path, l, n, priv in bad[:10]:
+        print(f"            {path}:{l}: {'private ' if priv else ''}{n}")
     if len(bad) > 10:
         print(f"            ... and {len(bad) - 10} more")
     print("            rename to lowerCamelCase. A green `lake exe runLinter FormalSystem` is")
     print("            NOT evidence against this finding -- see the four blind spots at")
     print("            ENFORCE_C26 in this script.")
+    failed = True
+
+# --- C26 half two: the in-source `nolint` attribute inventory (blind spot 2) ----------------
+#
+# Both attribute forms are matched: `@[... nolint X ...]` decorating the declaration that
+# follows it, and `attribute [nolint X] a b c`, whose name list may run onto indented
+# continuation lines (the `defsWithUnderscore` site does exactly that, one name per line with a
+# trailing comment on each). A pair is keyed by (linter, name-as-written): the as-written form
+# is what a reviewer sees in the diff, and matching on it is what makes the allow-list checkable
+# against the source rather than against a resolved environment this half never builds.
+#
+# The failure is folded into the SAME check id and the same exit status as half one, and both
+# halves always print. Neither can mask the other.
+
+ALLOWLIST = os.path.join("scripts", "nolint-attribute-allowlist.txt")
+allowed, allow_seen = set(), set()
+try:
+    for entry in open(ALLOWLIST, encoding="utf-8"):
+        entry = entry.split("#", 1)[0].strip()
+        if entry:
+            allowed.add(entry)
+except OSError:
+    print(f"FAIL  C26  companion file {ALLOWLIST} is missing or unreadable")
+    print("            C26's second half asserts this file against the tree; without it every")
+    print("            in-source nolint attribute would silently become unreviewed again.")
+    failed = True
+
+NOLINT_ATTR = re.compile(r"^\s*attribute\s*\[([^\]]*)\]\s*(.*)$")
+DECORATOR = re.compile(r"^\s*@\[([^\]]*)\]\s*(.*)$")
+ANY_DECL = re.compile(
+    r"^\s*(?:private\s+|protected\s+|noncomputable\s+|scoped\s+|local\s+|partial\s+"
+    r"|unsafe\s+)*"
+    r"(?:def|abbrev|theorem|instance|structure|inductive|class|opaque|axiom)\s+"
+    r"([^\s\(\{\[:]+)")
+IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_'.!?]*$")
+
+def linters_in(bracket):
+    return re.findall(r"nolint\s+([A-Za-z_][A-Za-z0-9_']*)", bracket)
+
+def names_in(text):
+    text = text.split("--", 1)[0]
+    return [t for t in text.split() if IDENT.match(t)]
+
+unlisted = []
+for path in live_lean_files("FormalSystem"):
+    try:
+        lines = open(path, encoding="utf-8", errors="replace").readlines()
+    except OSError:
+        continue
+    depth = 0
+    i = 0
+    while i < len(lines):
+        raw = lines[i]
+        opens, closes = raw.count("/-"), raw.count("-/")
+        in_comment = depth > 0
+        depth += opens - closes
+        if depth < 0:
+            depth = 0
+        if in_comment or raw.strip().startswith("--"):
+            i += 1
+            continue
+
+        m = NOLINT_ATTR.match(raw)
+        if m and linters_in(m.group(1)):
+            names = names_in(m.group(2))
+            j = i + 1
+            while j < len(lines):
+                cont = lines[j]
+                if cont.strip() == "" or not cont[:1].isspace():
+                    break
+                got = names_in(cont)
+                if not got:
+                    break
+                names.extend(got)
+                j += 1
+            for lint in linters_in(m.group(1)):
+                for nm in names:
+                    key = f"{lint}:{nm}"
+                    allow_seen.add(key)
+                    if key not in allowed:
+                        unlisted.append((path, i + 1, key))
+            i = j
+            continue
+
+        m = DECORATOR.match(raw)
+        if m and linters_in(m.group(1)):
+            # The decorated declaration is the rest of this line, or the next declaration line.
+            target, j = None, i
+            rest = m.group(2)
+            d = ANY_DECL.match(rest)
+            if d:
+                target = d.group(1)
+            else:
+                j = i + 1
+                while j < len(lines) and j < i + 12:
+                    nxt = lines[j]
+                    if nxt.strip() == "" or nxt.strip().startswith("--"):
+                        j += 1
+                        continue
+                    d = ANY_DECL.match(nxt)
+                    if d:
+                        target = d.group(1)
+                    break
+            for lint in linters_in(m.group(1)):
+                key = f"{lint}:{target if target else '<unresolved>'}"
+                allow_seen.add(key)
+                if key not in allowed:
+                    unlisted.append((path, i + 1, key))
+        i += 1
+
+if unlisted:
+    print(f"FAIL  C26  {len(unlisted)} in-source `nolint` attribute(s) not on {ALLOWLIST}")
+    for path, l, key in unlisted[:10]:
+        print(f"            {path}:{l}: {key}")
+    if len(unlisted) > 10:
+        print(f"            ... and {len(unlisted) - 10} more")
+    print("            An in-source nolint produces NO finding, so nothing else in this")
+    print("            repository can see it. Either remove the attribute and fix the")
+    print("            declaration, or add a reasoned entry to the allow-list.")
+    failed = True
+else:
+    print(f"PASS  C26  all {len(allow_seen)} in-source `nolint` attribute pair(s) are on\n"
+          f"            {ALLOWLIST}")
+
+stale = sorted(allowed - allow_seen)
+if stale:
+    print(f"INFO  C26  {len(stale)} allow-list entr(y/ies) match nothing in the tree")
+    for key in stale[:10]:
+        print(f"            {key}")
+    print(f"            remove them from {ALLOWLIST}; a stale exemption is how such a file")
+    print("            turns into a dumping ground.")
+
+if failed:
     sys.exit(1)
 PYEOF
 C26_STATUS=$?

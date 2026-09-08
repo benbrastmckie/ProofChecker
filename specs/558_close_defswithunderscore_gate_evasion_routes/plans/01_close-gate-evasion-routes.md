@@ -256,27 +256,27 @@ disagree, the walk needs the correction and the discrepancy is recorded, not smo
 
 ---
 
-### Phase 3: C26 half two — the in-source `nolint` attribute inventory (route 2) [NOT STARTED]
+### Phase 3: C26 half two — the in-source `nolint` attribute inventory (route 2) [COMPLETED]
 
 **Goal**: Make an in-source suppression a reviewable line in a file rather than the absence of a
 finding, which is what makes route (2) invisible to all four existing instruments at once.
 
 **Tasks**:
-- [ ] Create `scripts/nolint-attribute-allowlist.txt`, seeded from Phase 1's exact inventory. One
+- [x] Create `scripts/nolint-attribute-allowlist.txt`, seeded from Phase 1's exact inventory. One
       entry per covered declaration, each carrying the linter name and the reason, following the
       shape and tone of `scripts/module-invariants-allowlist.txt` and
       `scripts/boneyard-import-waivers.txt`. Comment lines and blank lines ignored.
-- [ ] Add the C26 second-half scan: walk the same live `*.lean` file set, match both attribute
+- [x] Add the C26 second-half scan: walk the same live `*.lean` file set, match both attribute
       forms (`@[nolint X]` immediately preceding a declaration, and
       `attribute [nolint X] a b c` covering a list, possibly spanning lines), resolve the covered
       declaration name(s), and fail on any not present in the allow-list.
-- [ ] Report allow-list entries that no longer match anything as an `INFO` line, on the C5/C11
+- [x] Report allow-list entries that no longer match anything as an `INFO` line, on the C5/C11
       model, so the file cannot silently rot into a dumping ground.
-- [ ] Write the allow-list's admission bar into `MODULE_INVARIANTS.md` in Phase 6 and into the
+- [x] Write the allow-list's admission bar into `MODULE_INVARIANTS.md` in Phase 6 and into the
       file's own header now: an entry is a **permanent documented exemption with a reason at the
       site**, never a backlog row. Phrase it so "I do not want to fix this" is visibly
       inadmissible, as the existing companion files do.
-- [ ] Fold this half's failure into the same C26 exit status as Phase 2's half, so one check ID
+- [x] Fold this half's failure into the same C26 exit status as Phase 2's half, so one check ID
       carries both and neither can mask the other in the printed output.
 
 **Timing**: 1.5 hours
