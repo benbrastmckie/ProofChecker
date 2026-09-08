@@ -60,19 +60,23 @@ and the four Kamp-facing approach directories that used to sit at this level joi
 **This section is the single source for the archive's counts. Every other file that needs them
 links here rather than restating them.**
 
+<!-- BEGIN GENERATED: inventory dir=FormalSystem/Boneyard rows=totals desc=no -->
 | Quantity | Value |
 |----------|------:|
-| Archived `.lean` files | 163 |
-| Archived lines | 90,797 |
-| Top-level subdirectories | 37 |
+| Archived `.lean` files | 168 |
+| Archived lines | 91,618 |
+| Top-level subdirectories | 39 |
 | Archive directories in the repository | 1 |
+<!-- END GENERATED -->
 
-Those figures are a snapshot; the **live** source is the invariant script, which recomputes them
-on every run and is what any claim about them should cite:
+Those four rows are **generated, not typed**. `--emit-inventory` rewrites them from the tree and
+`INV` fails the gate if a single digit has drifted, so they cannot go stale the way the three
+mutually disagreeing hand-typed counts they replaced did. Regenerate and re-check with:
 
 ```bash
-bash scripts/check-module-invariants.sh              # B0 self-test + C7 live inventory
-bash scripts/check-module-invariants.sh --no-build   # structural checks only
+bash scripts/check-module-invariants.sh --emit-inventory          # rewrite the block above
+bash scripts/check-module-invariants.sh --emit-inventory --check  # fail if a byte has drifted
+bash scripts/check-module-invariants.sh                           # B0 self-test + C7 live inventory
 ```
 
 B0 asserts that the count of `Boneyard` directories is exactly **1** and reports how many `.lean`

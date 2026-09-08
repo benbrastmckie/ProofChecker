@@ -301,22 +301,22 @@ and reconcile any difference before acting on the list.
 
 ---
 
-### Phase 4: Generate the Archive's Counts at Their Single Source [NOT STARTED]
+### Phase 4: Generate the Archive's Counts at Their Single Source [COMPLETED]
 
 **Goal**: Replace the hand-typed counts table in §One Archive with a generated block, so D1's
 primary instance becomes a gate-enforced invariant.
 
 **Tasks**:
-- [ ] Wrap the §One Archive counts table in
+- [x] Wrap the §One Archive counts table in
       `<!-- BEGIN GENERATED: inventory dir=FormalSystem/Boneyard rows=totals ... -->` /
       `<!-- END GENERATED -->`, using the archive-shaped rows Phase 2 added.
-- [ ] Run `bash scripts/check-module-invariants.sh --emit-inventory` and inspect the rewritten
+- [x] Run `bash scripts/check-module-invariants.sh --emit-inventory` and inspect the rewritten
       block. Independently re-derive each emitted number
       (`find FormalSystem/Boneyard -name '*.lean' | wc -l`,
       `find FormalSystem/Boneyard -name '*.lean' -exec cat {} + | wc -l`) and confirm agreement.
-- [ ] Keep the surrounding prose that makes this section the single source, and keep the
+- [x] Keep the surrounding prose that makes this section the single source, and keep the
       `Archive directories in the repository | 1` claim tied to B0 rather than to a typed figure.
-- [ ] Preserve the existing narrative about the consolidated second archive and the `find` filter
+- [x] Preserve the existing narrative about the consolidated second archive and the `find` filter
       guidance — the generated block replaces the *table*, not the section.
 
 **Timing**: 1 hour
