@@ -11,14 +11,14 @@ next_project_number: 571
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,537,540,542,559,561,563,568,569 | -- | algebraic-representation, automation, categorical-structure, ... |
-| 2 | 178,231,282,296,465,497,560,564,565,567,570 | 193,298,464,502,537,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,537,540,542,559,561,563,568,569 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 2 | 231,282,296,465,497,560,564,565,567,570 | 298,464,502,537,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
 | 7 | 430 | 411 | decidability |
-| 8 | 177,412 | 193,430 | decidability, formula-refactor |
+| 8 | 177,412 | 430 | decidability, formula-refactor |
 | 9 | 482 | 412 | decidability |
 
 **Grouped by Topic** (indented = depends on parent):
@@ -33,10 +33,6 @@ next_project_number: 571
     └─ 499 [NOT STARTED] — HARD. Phase 2 of the Jonsson-Tarski representation: the ultrafilt
       └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson (see above)
     └─ 500 [NOT STARTED] — RESEARCH TASK. Prevent two parallel representation theorems from 
-
-### Automation
-
-193 [IMPLEMENTING] — Apply validity-intro and truth-simp macros to the soundness layer
 
 ### Categorical Structure
 
@@ -75,8 +71,8 @@ next_project_number: 571
 
 ### Formula Refactor
 
-177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level docstring
 178 [NOT STARTED] — Expand Examples/ with publication-quality demonstrations of the f
+177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level docstring
 
 ### Frame Extensions
 
@@ -1066,12 +1062,13 @@ without depending on agent-system context at all.
 ---
 
 ### 193. Codebase tactic refactor
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: automation
 - **Dependencies**: Task 165, Task 402, Task 448, Task 470, Task 508, Task 519, Task 521, Task 522
 - **Research**: [193_codebase_tactic_refactor/reports/01_codebase-refactor-seed.md]
 - **Plan**: [193_codebase_tactic_refactor/plans/01_truth-norm-application-sweep.md]
+- **Summary**: [193_codebase_tactic_refactor/summaries/01_truth-norm-application-sweep-summary.md]
 
 **Description**: Apply validity-intro and truth-simp macros to the soundness layer.
 
