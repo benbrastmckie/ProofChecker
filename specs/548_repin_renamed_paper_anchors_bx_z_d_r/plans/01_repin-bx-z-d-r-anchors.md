@@ -168,24 +168,24 @@ count differs, absorb the live set and record the divergence rather than the rep
 
 ---
 
-### Phase 2: Absorb the drifted-entry wave [NOT STARTED]
+### Phase 2: Absorb the drifted-entry wave [COMPLETED]
 
 **Goal**: Every pinned entry whose paper text changed is re-quoted and re-hashed, so the only
 remaining failure is the stale file-level sentinel.
 
 **Tasks**:
-- [ ] For each drifted anchor, run `check-paper-definitions.sh --resolve` to obtain live text plus
+- [x] For each drifted anchor, run `check-paper-definitions.sh --resolve` to obtain live text plus
       sha256. Rewrite the entry's latex fence **and** its sha line, plus the matching MANIFEST row.
       Do not hand-edit a hash without a `--resolve` run behind it.
-- [ ] Give particular attention to the two entries that are not mere re-quotes:
+- [x] Give particular attention to the two entries that are not mere re-quotes:
       `cor:saturation-finite` changed environment (`Cthm` → `Lthm`, so the row's `kind`/enclosing
       metadata must be re-checked, not only its hash), and `def:frame` absorbed the `⊇`-directed
       definition inline while softening "strictly stronger" to "at least as strong as" (so the
       prose entry's surrounding commentary must be re-read for accuracy, not only the fence).
-- [ ] Re-run `bash scripts/check-paper-definitions.sh` **with the old `FILE_CHECKSUM` sentinel
+- [x] Re-run `bash scripts/check-paper-definitions.sh` **with the old `FILE_CHECKSUM` sentinel
       still in place**. This forces full anchor validation; expect the case-(b) notice pass. Do
       not touch the sentinels in this phase.
-- [ ] Commit.
+- [x] Commit.
 
 **Timing**: 1.25 hours
 

@@ -537,7 +537,7 @@ sha256: `5164210f644bb467aadc3bd279a5774cc14b67e88bdee6b8373a2025a22031f1`
 
 ```latex
 \begin{Ddef} \label{def:frame}
-	A \textit{task frame} is any $\F = \tuple{W, \D, \Rightarrow}$ where $W$ is a nonempty set of world states, $\D$ is a temporal order, and $\Rightarrow$ is a task relation satisfying the following for $x, y \geq 0$:
+	Letting a nonempty family of sets $\mathcal{S}$ be \textit{$\supseteq$-directed} just in case $S \subseteq S_1 \cap S_2$ for some $S \in \mathcal{S}$ whenever $S_1, S_2 \in \mathcal{S}$, a \textit{task frame} is any $\F = \tuple{W, \D, \Rightarrow}$ where $W$ is a nonempty set of world states, $\D$ is a temporal order, and $\Rightarrow$ is a task relation satisfying the following for all positive durations $x, y \geq 0$:
 	\begin{enumerate}[wide=0pt, labelsep=.1in, itemsep=.075in]
 		\item[\it Compositionality:] $w \Rightarrow_{x + y} v$ if and only if $w \Rightarrow_x u$ and $u \Rightarrow_y v$ for some $u \in W$.
 		\item[\it Seriality:] $w \Rightarrow_x u$ and $v \Rightarrow_x w$ for some $u, v \in W$.
@@ -545,13 +545,13 @@ sha256: `5164210f644bb467aadc3bd279a5774cc14b67e88bdee6b8373a2025a22031f1`
 		\item[\it Saturation:] $\bigcap \mathcal{S} \neq \emptyset$ for any $\supseteq$-directed family $\mathcal{S}$ of nonempty fibers and segments.%
     \footnote{
       The nonempty fibers and segments form a \textit{ball space} on $W$ in the sense of \'{C}miel, Kuhlmann, and Kuhlmann~\cite{Cmiel2021}.
-      \textit{Saturation} is the downward-directed-intersection condition $\mathbf{S}_1^d$ of the ball-space hierarchy--- the nest condition $\mathbf{S}_1$ with a $\supseteq$-directed system of balls in place of a nest--- and so is strictly stronger than the standard \textit{spherically complete} condition, which is $\mathbf{S}_1$ itself.
+      \textit{Saturation} is the downward-directed-intersection condition $\mathbf{S}_1^d$ of the ball-space hierarchy--- the nest condition $\mathbf{S}_1$ with a $\supseteq$-directed system of balls in place of a nest--- and so is at least as strong as the standard \textit{spherically complete} condition, which is $\mathbf{S}_1$ itself.
     }
 	\end{enumerate}
   \vspace{-.1in}
 \end{Ddef}
 ```
-sha256: `ad9e4473a107a295ae23bdd23617523a0b24d2a64fd72d450b7711d71811e314`
+sha256: `b5d3bf93cf07486d239afcbc9379883fdbea1194e97d560b391ccbdc128b9d99`
 
 Four axioms, not more, not fewer — **Nullity is NOT an axiom**, it is `lem:nullity` below, DERIVED
 from Seriality and Limit. Each axiom is also tracked individually (sub-anchors of `def:frame`, no
@@ -568,6 +568,24 @@ flagging "`def:frame` changed":
 
 Note: **Compositionality is a biconditional**, not a one-directional implication — this is load
 bearing (the right-to-left direction is used directly in, e.g., the constraint-family proofs).
+
+**2026-09-07 wave — two changes inside this block, both load bearing:**
+
+1. **`def:directed` was folded in.** The opening clause now defines `$\supseteq$-directed`
+   inline ("Letting a nonempty family of sets $\mathcal{S}$ be *$\supseteq$-directed* just in
+   case …"), and the standalone `def:directed` label is gone (recorded `DANGLING` above). The
+   `$\subseteq$-directed` half was dropped entirely — the paper no longer defines it anywhere, so
+   any in-tree prose describing `def:directed` as "split into a `⊇` and a `⊆` clause" is
+   describing a definition that no longer exists.
+2. **The ball-space footnote was softened from "strictly stronger" to "at least as strong as".**
+   The paper now says *Saturation* ($\mathbf{S}_1^d$) "is at least as strong as the standard
+   *spherically complete* condition, which is $\mathbf{S}_1$ itself". The strictness claim was
+   withdrawn, not merely reworded: `\mathbf{S}_1^d \Rightarrow \mathbf{S}_1` is asserted, and
+   the converse is no longer denied. In-tree prose asserting **strict** strengthening now overstates
+   the paper. (The 2026-08-25 narrative table below records the *old*, strict wording; it is
+   historical and is deliberately left as written.)
+   Also in this block: "for $x, y \geq 0$" became "for all positive durations $x, y \geq 0$" —
+   wording only, no change to the quantifier's range.
 
 ### `lem:nullity` — DERIVED: `w ⇒₀ w` (Nullity is not an axiom)
 
@@ -586,14 +604,13 @@ below which needs Zorn's lemma.
 ```latex
 \begin{Ddef} \label{def:world-history}
 	A \textit{partial history} over a task frame $\F = \tuple{W, \D, \Rightarrow}$ is a function $\tau : X \to W$ on a nonempty set $X \subseteq D$ where $\tau(x) \Rightarrow_{y-x} \tau(y)$ for all times $x, y \in X$.
-	% Since the difference $y - x$ is negative whenever $y < x$, these instances are covered by the converse convention: $\tau(x) \Rightarrow_{y-x} \tau(y)$ then reads $\tau(y) \Rightarrow_{x-y} \tau(x)$.
-	A \textit{world history} is any partial history whose domain $X$ is \textit{convex}, so that $y \in X$ whenever $x, z \in X$ and $x < y < z$.
-  A world history is \textit{total}--- equivalently, a \textit{possible world}--- just in case $X = D$.
+	A \textit{convex history} is any partial history whose domain $X$ is \textit{convex}, so that $y \in X$ whenever $x, z \in X$ and $x < y < z$.
+  A \textit{possible world} is any convex history whose domain is total, so that $X = D$.
 	A partial history $\sigma$ \textit{extends} $\tau$ just in case $\dom{\tau} \subseteq \dom{\sigma}$ and $\tau(x) = \sigma(x)$ for all $x \in \dom{\tau}$.
 	The set of all possible worlds over $\F$ is denoted $H_{\F}$.
 \end{Ddef}
 ```
-sha256: `eda6a5b8704edbf3fdebe9aaa85f45de67d08d4e3ab644b94a289b04cff22d9a`
+sha256: `550661d3b388c3ef494ffb81c643ab5a550f996a5a86329afc557f41ed7872e7`
 
 Layering, exactly as the paper states it: **partial history** (nonempty domain, no convexity
 requirement) → **world history** (convex domain) → **total** / **possible world** (`X = D`). The
@@ -605,22 +622,22 @@ point). `H_F` denotes only the *total* histories.
 
 ```latex
 \begin{Tthm} \label{thm:extension}
-	Every partial history $\tau : X \to W$ over a task frame $\F = \tuple{W, \D, \Rightarrow}$ is extended by some total world history $\sigma \in H_{\F}$.%
+	Every partial history $\tau : X \to W$ over a task frame $\F = \tuple{W, \D, \Rightarrow}$ is extended by some possible world $\sigma \in H_{\F}$.%
 	  \footnote{
 	    The proof appeals to Zorn's lemma, and so the derivation of \textit{Occurrence} from \textit{Seriality} and \textit{Saturation} in \textbf{\ref{cor:occurrence}} is a theorem of ZFC, in contrast with the derivation of the zero loops in \textbf{\ref{lem:nullity}} and the derivation of \textit{Saturation} for finite $W$ in \textbf{\ref{cor:saturation-finite}}, both of which are choice-free.
 	  }
 \end{Tthm}
 ```
-sha256: `1d0131efbaef478c808b8a9ad5d141814aa25ddbb2fba426bce6d101bdabc4bb`
+sha256: `65811dcff91a3dd840058353b14667d8abfcf5d94c8be9979944f03be5234379`
 
 ### `cor:occurrence` — DERIVED: every world state occurs at any prescribed time in some total world history (renamed from `thm:occurrence`; see "Drift correction" below)
 
 ```latex
 \begin{Cthm} \label{cor:occurrence}
-	For any task frame $\F = \tuple{W, \D, \Rightarrow}$, world state $w \in W$, and time $x \in D$, there is a total world history $\tau \in H_{\F}$ where $\tau(x) = w$, and so $H_{\F} \neq \emptyset$.
+	For any task frame $\F = \tuple{W, \D, \Rightarrow}$, world state $w \in W$, and time $x \in D$, there is a possible world $\tau \in H_{\F}$ where $\tau(x) = w$, and so $H_{\F} \neq \emptyset$.
 \end{Cthm}
 ```
-sha256: `244bb2e5f6036bbe405549501390b90f432ece28c232fd18caa8b82ab3bb9a8c`
+sha256: `231c1d3cd0bf70a323775c623ed36761c6e0c4990bf72106c8323a9fe78842ec`
 
 Follows from `thm:extension`, hence is also a ZFC (not choice-free) result. The paper merged the
 former `thm:occurrence` (existential over both the history and the time) with a separate
@@ -756,13 +773,15 @@ sha256: `239fba0ff163b461e0d1bf3c0e94da0cb0b62e7b2d7f4519916af4cc50d6967f`
 		\item[($\bot$)] $\M,\tau,x \nvDash \bot$.
 		\item[($\shortrightarrow$)] $\M,\tau,x \vDash \varphi \rightarrow \psi$ \textit{iff} $\M,\tau,x \nvDash \varphi$ or $\M,\tau,x \vDash \psi$.
 		\item[($\Box$)] $\M,\tau,x \vDash \Box \varphi$ \textit{iff} $\M,\sigma,x \vDash \varphi$ for all $\sigma \in H_{\F}$.
-		\item[($\Past$)] $\M,\tau,x \vDash \Past \varphi$ \textit{iff} $\M,\tau,y \vDash \varphi$ for all $y\in D$ where $y < x$.
-		\item[($\Future$)] $\M,\tau,x \vDash \Future \varphi$ \textit{iff} $\M,\tau,y \vDash \varphi$ for all $y\in D$ where $x < y$.
+		\item[($\since$)] $\M,\tau,x \vDash \varphi\since\psi$ \textit{iff} $\M,\tau,z \vDash \psi$ for some time $z < x$ where $\M,\tau,y \vDash \varphi$\\
+      \strut\hspace{1.55in}for all $y \in D$ with $z < y < x$.
+		\item[($\until$)] $\M,\tau,x \vDash \varphi\until\psi$ \textit{iff} $\M,\tau,z \vDash \psi$ for some time $z > x$ where $\M,\tau,y \vDash \varphi$\\ 
+      \strut\hspace{1.55in}for all $y \in D$ with $x < y < z$.
 	\end{enumerate}
   \vspace{-.1in}
 \end{Ddef}
 ```
-sha256: `5f53774a3b8a04272bb3c8bf9d41f5cd777e8dc8b1ba30c92aa19113399b228b`
+sha256: `b64b782a61c9a9613b68f37ec2d12229e7df8498043faeb1cf1c2686b8dd5a75`
 
 **The box clause's quantifier domain is `H_F`** — the full set of *total* world histories, not a
 maximal-history set `H^max_F` (that vocabulary is retired; the block's own `%%` comment history
@@ -777,14 +796,29 @@ closes. See "Downstream consumers" below.
 
 ```latex
 \begin{Ddef} \label{def:BLplus-language}
-	The language $\BL^+ \coloneq \tuple{\SL,\bot,\rightarrow,\Box,\since,\until}$ where $\SL \coloneq \set{p_i: i\in \N}$ is a countable set of sentence letters as before where the remaining symbols denote falsity, material implication, the metaphysical necessity operator, the since operator, and the until operator, respectively.
-	Well-formed sentences of $\BL^+$ are defined by:
+	The language $\BL \coloneq \tuple{\SL,\bot,\rightarrow,\Box,\since,\until}$ where $\SL \coloneq \set{p_i: i\in \N}$ is a countable set of sentence letters and the remaining symbols denote falsity, material implication, the metaphysical necessity operator, the since operator, and the until operator, respectively.
+	Well-formed sentences of $\BL$ are defined by:
 	\[
 		\varphi, \psi \Coloneq p_i \mid \bot \mid \varphi \rightarrow \psi \mid \Box\varphi \mid \varphi\since\psi \mid \varphi\until\psi.
 	\]
+	The following operators are defined in $\BL$:
+  \vspace{-.125in}
+	\begin{enumerate}[wide=0pt, labelsep=.1in, itemsep=.075in]
+		\begin{multicols}{2}
+			\item[\it Past:] $\past\varphi \coloneq \top\since\varphi$.
+			\item[\it Future:] $\future\varphi \coloneq \top\until\varphi$.
+			\item[\it Historical:] $\Past\varphi \coloneq \neg\past\neg\varphi$.
+			\item[\it Henceforth:] $\Future\varphi \coloneq \neg\future\neg\varphi$.
+			\item[\it Always:] $\always\varphi \coloneq \Past\varphi \wedge \varphi \wedge \Future\varphi$.
+			\item[\it Sometimes:] $\sometimes\varphi \coloneq \past\varphi \vee \varphi \vee \future\varphi$.
+			\item[\it Next:] $\Next\varphi \coloneq \bot\until\varphi$.
+			\item[\it Previous:] $\Previous\varphi \coloneq \bot\since\varphi$.
+		\end{multicols}
+	\end{enumerate}
+  \vspace{-.25in}
 \end{Ddef}
 ```
-sha256: `a43b3df2ea2fcb96eeb156b3403a33ac51fcafd2ad4eb55e7915c07cf509f8b7`
+sha256: `574bc1ad10ca0957a5b76c0d74f7ff5b2ea6a09fa180475c9c22eb6ea5b3e8e2`
 
 ### `def:BLplus-semantics` — the `\since` / `\until` truth clauses (and the argument-order footnote) — **DANGLING as of the 2026-09-07 rename-absorption re-pin (removed from manifest)**
 
@@ -977,72 +1011,19 @@ by a live task at recording time.
 
 ```latex
 \begin{Ddef} \label{def:S5}
-  The \textbf{S5} \textit{Modal Logic} is the smallest extension of \textit{Classical Propositional Logic} \textbf{CPL} closed under the following rule schemata and metarule:
-  \vspace{-.125in}
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \begin{multicols}{2}
-      \aitem[MK]{TMP-MK} $\Box(\varphi \rightarrow \psi) \rightarrow (\Box\varphi \rightarrow \Box\psi)$.
-      \aitem[MT]{TMP-MT} $\Box\varphi \rightarrow \varphi$.
-      \aitem[M5]{TMP-M5} $\Diamond\Box\varphi \rightarrow \Box\varphi$.
-      \aitem[MP]{TMP-MP} $\varphi,\ \varphi \rightarrow \psi \vdash \psi$.
-      \aitem[MN]{TMP-MN} \textit{If} $\vdash \varphi$, \textit{then} $\vdash \Box\varphi$.
-    \end{multicols}
-  \end{enumerate}
-  \vspace{-.275in}
+  The \textbf{S5} \textit{Modal Logic} is the smallest extension of \textit{Classical Propositional Logic} \textbf{CPL} closed under all instances of the axiom schemata \textbf{\aref{MK}}, \textbf{\aref{MT}}, and \textbf{\aref{M5}}, the rule \textbf{\aref{MP}}, and the metarule \textbf{\aref{MN}} presented in \textbf{\S\ref{sub:Logic}}.
 \end{Ddef}
 ```
-sha256: `f588157a5ad86a277b73c29b682d66052db206bf75111acebeef80b34a40c946`
+sha256: `82ec82d7ef3c0e24732fe6216b3326998412c594984ce02639ea4030ceabdb38`
 
 ### `def:BX` — the Base Burgess–Xu tense logic
 
 ```latex
 \begin{Ddef} \label{def:BX}
-  Letting $\varphi_{\tuple{\textsc{s} | \textsc{u}}}$ denote the result of interchanging all occurrences of $\since$ and $\until$ in $\varphi$, \textbf{BX} is the \textit{Base Burgess--Xu Tense Logic} axiomatized below where the past/since direction of each axiom follows from the future/until direction:
-  \vspace{-.125in}
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \begin{multicols}{2}
-      \aitem[TN]{TMP-TN} \textit{If} $\vdash \varphi$, \textit{then} $\vdash \Future\varphi$.
-      \aitem[TD]{TMP-TD} \textit{If} $\vdash \varphi$, \textit{then} $\vdash \varphi_{\tuple{\textsc{s} | \textsc{u}}}$.
-    \end{multicols}
-  \end{enumerate}
-  \vspace{-.175in}
-  The seriality \textbf{\aref{TB}} and linearity \textbf{\aref{TL}} axioms from \textbf{TM}, together with connectedness:
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \aitem[TB]{TMP-SE} $\future\top$.
-    \aitem[TL]{TMP-LN} $(\future\varphi \wedge \future\psi) \rightarrow [\future(\varphi \wedge \psi) \vee \future(\varphi \wedge \future\psi) \vee \future(\future\varphi \wedge \psi)]$.
-    \aitem[CN]{TMP-CN} $[(\varphi\until\psi) \wedge (\chi\until\theta)] \rightarrow [(\varphi \wedge \chi)\until(\psi \wedge \theta) \vee (\varphi \wedge \chi)\until(\psi \wedge \chi) \vee (\varphi \wedge \chi)\until(\varphi \wedge \theta)]$.
-  \end{enumerate}
-  The primary axioms for $\since$ and $\until$ are:
-  \vspace{-.125in}
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \begin{multicols}{2}
-      \aitem[TA]{TMP-CV} $\varphi \rightarrow \Future\past\varphi$.
-      \aitem[UE]{TMP-UE} $(\varphi\until\psi) \rightarrow \future\psi$.
-      \aitem[UT]{TMP-UT} $\future\varphi \rightarrow (\top\until\varphi)$.
-      \aitem[UI]{TMP-UI} $\varphi\until(\varphi \wedge (\varphi\until\psi)) \rightarrow \varphi\until\psi$.
-
-      \aitem[UC]{TMP-UC} $\Future(\varphi \rightarrow \psi) \rightarrow ((\chi\until\varphi) \rightarrow (\chi\until\psi))$.
-      \aitem[UF]{TMP-UF} $(\varphi\until\psi) \rightarrow (\varphi \wedge (\varphi\until\psi))\until\psi$.
-      \aitem[UG]{TMP-UG} $\Future(\varphi \rightarrow \chi) \rightarrow ((\varphi\until\psi) \rightarrow (\chi\until\psi))$.
-      \aitem[SU]{TMP-SU} $\theta \wedge (\varphi\until\psi) \rightarrow \varphi\until(\psi \wedge (\varphi\since \theta))$.
-    \end{multicols}
-  \end{enumerate}
-  \vspace{-.175in}
-  The uniformity axioms, which hold vacuously unless the order is discrete, are:
-  \vspace{-.125in}
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \begin{multicols}{2}
-      \aitem[NP]{TMP-NP} $\Next\top \rightarrow \Previous\top$.
-      \aitem[NF]{TMP-NF} $\Next\top \rightarrow \Future\Next\top$.
-      \aitem[NA]{TMP-NA} $\Next\top \rightarrow \Past\Next\top$.
-      \aitem[NB]{TMP-NB} $\Next\top \rightarrow \Box\Next\top$.
-    \end{multicols}
-  \end{enumerate}
-  \vspace{-.175in}
-  The logic \textbf{BX} is smallest extension of \textbf{CPL} closed under all instances of the above.
+  The \textit{Base Burgess--Xu Tense Logic} \textbf{BX} is the smallest extension of \textbf{CPL} closed under the metarules \textbf{\aref{TN}} and \textbf{\aref{TD}} together with all instances of the axiom schemata \textbf{\aref{TS}}, \textbf{\aref{TL}}, \textbf{\aref{TC}}, \textbf{\aref{UE}}, \textbf{\aref{UT}}, \textbf{\aref{UI}}, \textbf{\aref{UC}}, \textbf{\aref{UF}}, \textbf{\aref{UG}}, \textbf{\aref{SU}}, \textbf{\aref{CN}}, \textbf{\aref{NP}}, \textbf{\aref{NF}}, \textbf{\aref{NA}}, and \textbf{\aref{NB}} presented in \textbf{\S\ref{sub:Logic}}.
 \end{Ddef}
 ```
-sha256: `9af6879e367d85e7732f2d699cb2fea1862f0efc44ea497fd25604405bc771f2`
+sha256: `e1617a218b03206e11ebb9886b9a6a2add44591ce47f719445664e608f39e13e`
 
 ### `def:TMplus-f` — the discrete Burgess–Xu tense logic BX_f, and its Z-time footnote — **DANGLING as of the 2026-09-07 rename-absorption re-pin: RENAMED to `def:BX-z` (removed from manifest)**
 
@@ -1181,14 +1162,11 @@ sha256: `b35751c79a502988f9f77880354c9ed5200e9751361f2f6c209fcc3247721284`
 
 ```latex
 \begin{Ddef} \label{def:TMplus}
-  The \textit{Base Logic of Tense and Modality} \textbf{TM}$^+$ for $\BL^+$ is the smallest extension of \textbf{S5} and the base logic \textbf{BX} that includes the following \textit{bimodal interaction} axiom:
-  \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \aitem[MF]{TMP-MF} $\Box\varphi \rightarrow \Box\Future\varphi$.
-  \end{enumerate}
-  Similarly, the discrete \textbf{TM}$^+_f$, dense \textbf{TM}$^+_d$, and complete \textbf{TM}$^+_c$ extensions of \textbf{TM}$^+$ include the additional axioms that distinguish \textbf{BX}$_f$, \textbf{BX}$_d$, and \textbf{BX}$_c$, respectively.
+  The \textit{Base Logic of Tense and Modality} \textbf{TM} for $\BL$ is the smallest extension of \textbf{S5} and the base logic \textbf{BX} that includes all instances of the \textit{bimodal interaction} axiom \textbf{\aref{MF}} presented in \textbf{\S\ref{sub:Logic}}.
+  Similarly, the discrete \textbf{TM}$_\textsc{z}$, dense \textbf{TM}$_\textsc{d}$, and dense and complete \textbf{TM}$_\textsc{r}$ extensions of \textbf{TM} include the additional axioms that distinguish \textbf{BX}$_\textsc{z}$, \textbf{BX}$_\textsc{d}$, and \textbf{BX}$_\textsc{r}$, respectively.
 \end{Ddef}
 ```
-sha256: `f7a811e63f644732b3e316541ca281ce1bdce81bd7d9c4358514470c8185fa4b`
+sha256: `c14cad798aac2c73319de9ccc0a34ce6ca07971dbb6427e5107a08f23cc4cea8`
 
 ### `thm:M5-valid` — the M5 axiom is valid
 
@@ -1212,28 +1190,33 @@ sha256: `23cae2b2fcd8c034b82c4f9294b21aa4d141429a278fa08d085cae2c53bf0529`
 
 ```latex
 \begin{Tthm} \label{app:discrete}
-	$\F \vDash (\Past\varphi \wedge \varphi \wedge \future\top) \rightarrow \future\Past\varphi$ iff $\F$ is a \textsc{Discrete} task frame.
+	For any temporal order $\D$, $\vDash_{\D} (\Past\varphi \wedge \varphi \wedge \future\top) \rightarrow \future\Past\varphi$ iff $\D$ is \textsc{Discrete}.%
+	  \footnote{
+	    The theorems of this kind cannot be sharpened to single task frames.
+	    The \textit{static} task frame over $\D$, in which $w \Rightarrow_x u$ just in case $w = u$, satisfies every clause of \textbf{\ref{def:frame}}--- each cone and each nonempty fiber and segment being a singleton--- yet its possible worlds are constant, so that every sentence of $\BL$ has the same truth value at every time along a possible world and \textbf{\aref{DF}}, \textbf{\aref{DN}}, and \textbf{\aref{CO}} are all valid over it whatever $\D$ may be.
+	    Since the tense operators see $\D$ only through the convex histories that $\Rightarrow$ admits, correspondence holds over the fibre $\Tcls{\D}$ rather than frame by frame, as the Lean 4 repository for this paper records.
+	  }
 \end{Tthm}
 ```
-sha256: `fa0634d7f914f5cf78be7524ee8ced0d70cabf2d634db3ddeabbfe13b2be74db`
+sha256: `23a54c163da3ed991258ccd9647ae153bb2704cd0f86c138c7e5381ac6190e0e`
 
 ### `app:dense` — the Dense correspondence theorem (DN)
 
 ```latex
 \begin{Tthm} \label{app:dense}
-	$\F \vDash \Future\Future\varphi \rightarrow \Future\varphi$ iff $\F$ is a \textsc{Dense} task frame.
+	For any temporal order $\D$, $\vDash_{\D} \Future\Future\varphi \rightarrow \Future\varphi$ iff $\D$ is \textsc{Dense}.
 \end{Tthm}
 ```
-sha256: `4f8bb793ec8d762013c413327c05c50e691c6d54fefdcb0bedd3076b3b782bfe`
+sha256: `751ad28ba753b718dad05beca27b6403a274977ff6e42a53e791d1770041b7d5`
 
 ### `app:complete` — the Complete correspondence theorem (CO)
 
 ```latex
 \begin{Tthm} \label{app:complete}
-	$\F \vDash \always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow (\Past\varphi \rightarrow \Future\varphi)$ iff $\F$ is a \textsc{Complete} task frame.
+	For any temporal order $\D$, $\vDash_{\D} \always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow (\Past\varphi \rightarrow \Future\varphi)$ iff $\D$ is \textsc{Complete}.
 \end{Tthm}
 ```
-sha256: `2fe5c5e879af2ae0e7ef1823d3c61b6d3608f21495525396b82a4350e349f168`
+sha256: `9d962cf8efb3530cad11939c690d0a704154f4ddaaa7904f21ea9b8226a1f2fe`
 
 #### Reading note (of record) on `app:discrete` / `app:dense` / `app:complete`
 
@@ -1260,15 +1243,16 @@ Adjudication of record:
 
 ```latex
 \begin{Ddef} \label{def:frame-properties}
-	A task frame $\F = \tuple{W, \D, \Rightarrow}$ is:
+	A temporal order $\D = \tuple{D, +, 0, \leq}$ is:
 	\begin{enumerate}[wide=0pt, labelsep=.05in, itemsep=.075in]
 		\item[\sc Discrete] if for any $x \in D$, whenever there exists $y > x$, there is a least such $y' > x$ satisfying $z \geq y'$ for all $z > x$.
 		\item[\sc Dense] if for any $x, y \in D$ where $x < y$, there exists $z \in D$ where $x < z < y$.
 		\item[\sc Complete] if every nonempty $S \subseteq D$ bounded above has a least upper bound in $D$.
 	\end{enumerate}
+	A task frame $\F = \tuple{W, \D, \Rightarrow}$ is \textsc{Discrete}, \textsc{Dense}, or \textsc{Complete} just in case its temporal order $\D$ is.
 \end{Ddef}
 ```
-sha256: `7820dd2fdaada72ff505787f47c049f63c24362cf25e48b7677724d850275086`
+sha256: `709cefc5c849b2fe6bb950cbde6b1a738181c48eeff25e89df0bb5a457e2f268`
 
 Note: promoted into coverage by this task (previously listed under "Deliberately not covered"
 below, which is updated accordingly).
@@ -1287,34 +1271,44 @@ citing `def:frame-properties` for determinism is now wrong.
 ```
 sha256: `3baae0ee62cee6a0bd81b18951efb3cd5d1097a017f9c60ccd2d8b87e4a3e175`
 
-### `cor:spherical-finite` — every frame with finite W satisfies Spherical, choice-free
+### `cor:saturation-finite` — every task frame with finite W satisfies Saturation, choice-free (renamed from `cor:spherical-finite`; **environment changed `Cthm` → `Lthm`** in the 2026-09-07 wave)
+
+The manifest row was re-keyed from `cor:spherical-finite` to `cor:saturation-finite` at the
+2026-09-02 rename absorption, but the prose entry below still quoted the pre-rename *Spherical*
+text; it is refreshed here. The 2026-09-07 wave additionally moved the result from a `Cthm`
+(corollary) to an `Lthm` (lemma) environment while leaving the statement itself word-for-word
+unchanged. That is a hash-visible change even though nothing mathematical moved, because
+`resolve_env` hashes the whole `\begin{…}`/`\end{…}` block. The manifest row's `kind` stays
+`env` — the resolver reads the environment name off the `\label{}` line rather than being told it
+— so no column but the sha256 needed re-checking. The anchor id is still `cor:` prefixed while the
+environment is now a lemma; that mismatch is the paper's, and this record follows the paper.
 
 ```latex
-\begin{Cthm} \label{cor:spherical-finite}
-	Every task frame $\F = \tuple{W, \D, \Rightarrow}$ with finite $W$ satisfies \textit{Spherical}, choice-free.
-\end{Cthm}
+\begin{Lthm} \label{cor:saturation-finite}
+	Every task frame $\F = \tuple{W, \D, \Rightarrow}$ with finite $W$ satisfies \textit{Saturation}, choice-free.
+\end{Lthm}
 ```
-sha256: `26ed8ff4c8b01f1dde980e075bc2e0bd45571951be82160bb184d59227b9f7b3`
+sha256: `ebf7547b10df6b764b1ccc5d965e0cf5c75cd8b09977ed1572b3d0fba48101c3`
 
 ### `cor:tm-completeness` — the Completeness corollary (TM sound but not complete; completeness carried by BL+)
 
 ```latex
 \begin{Cthm}[Completeness] \label{cor:tm-completeness}
-  Where $\Gamma \vDash_{\mathsf{C}} \varphi$ restricts \textbf{\ref{def:logical-consequence}} to models over task frames in a class $\mathsf{C}$, a proof system $\mathbf{S}$ is \textit{strongly complete} over $\mathsf{C}$ just in case $\Gamma \vDash_{\mathsf{C}} \varphi$ implies $\Gamma \vdash_{\mathbf{S}} \varphi$ for every set of sentences $\Gamma$, and \textit{weakly complete} over $\mathsf{C}$ just in case $\vDash_{\mathsf{C}} \varphi$ implies $\vdash_{\mathbf{S}} \varphi$.
-  Completeness is then carried by the following $\BL^+$ systems:
+  A proof system $\mathbf{S}$ is \textit{strongly complete} over a class $\mathsf{C}$ of task frames just in case $\Gamma \vDash_{\mathsf{C}} \varphi$ (\textbf{\ref{def:class-validity}}) implies $\Gamma \vdash_{\mathbf{S}} \varphi$ for every set of sentences $\Gamma$, and \textit{weakly complete} over $\mathsf{C}$ just in case $\vDash_{\mathsf{C}} \varphi$ implies $\vdash_{\mathbf{S}} \varphi$.
+  Completeness is then carried by the following $\BL$ systems:
   \begin{enumerate}[leftmargin=.5in,labelsep=.15in,itemsep=.075in]
-    \item[\bf TM$^+$] Strongly complete over all task frames.
-    \item[\bf TM$^+_\textsc{d}$] Strongly complete over the dense task frames.
-    \item[\bf TM$^+_\textsc{f}$] Weakly complete over $\Z$-time.
-    \item[\bf TM$^+_\textsc{c}$] Weakly complete over the dense-and-complete class.
+    \item[\bf TM] Strongly complete over all task frames.
+    \item[\bf TM$_\textsc{d}$] Strongly complete over the dense task frames.
+    \item[\bf TM$_\textsc{z}$] Weakly complete over $\Z$-time.
+    \item[\bf TM$_\textsc{r}$] Weakly complete over $\R$-time.
   \end{enumerate}
-  Strong completeness provably fails for $\Z$-time as well as for the dense-and-complete class $\R$ where compactness fails, and so weak completeness is the appropriate target.%
+  Strong completeness provably fails for $\Z$-time as well as $\R$-time where compactness fails, and so weak completeness is the appropriate target.%
     \footnote{
       These results, together with the soundness of the corresponding systems, have been established in the Lean 4 \href{https://github.com/benbrastmckie/BimodalLogic}{repository} for this paper, and so their proofs are not reproduced here.
     }
 \end{Cthm}
 ```
-sha256: `04255c86b60567dd33a9cc708351dc02af254f798f4e82663e60b83b6f41847d`
+sha256: `a374007e4006c6ae8388e9e0077e5579fc54d0b032b0369b546be1dfd0271643`
 
 ### `cor:tm-decidability` — the Decidability corollary (open) — **DANGLING as of the 2026-08-17 re-pin (removed from manifest)**
 
@@ -1523,42 +1517,42 @@ human readability and are not machine-parsed. Columns: `anchor_id|kind|enclosing
 # anchor_id|kind|enclosing|locator|sha256
 def:temporal-order|env|-|-|bc89eea5f9bafa1e326bc8bda93b6631c49212c1f0c3253208f0cfbdb049fb1f
 def:task-relation|env|-|-|f076d52a3b75a5cdacdc86ed815c006b6bcbf78483aebd36152d1c5b04ed5b33
-def:frame|env|-|-|ad9e4473a107a295ae23bdd23617523a0b24d2a64fd72d450b7711d71811e314
+def:frame|env|-|-|b5d3bf93cf07486d239afcbc9379883fdbea1194e97d560b391ccbdc128b9d99
 def:frame#Compositionality|item|def:frame|Compositionality|4b9248498399338eeaccb63c5e8952ca0928b87bb85bcd94f596d9c263bb64fa
 def:frame#Seriality|item|def:frame|Seriality|ad1863bf950f17906a79b469b40fddb102e4abf5bd1bfd828a2f4b4900c7dbad
 def:frame#Limit|item|def:frame|Limit|3eedd389d6cbdf5dff50f82ad9bafed30fe5eff5ec923cfdc165ca75dbe60a5f
 def:frame#Saturation|item|def:frame|Saturation|c293e9f830a2e1f0154d1ee7be2c7a121a7aa0ec4476266637e4fffaff345c60
 lem:nullity|env|-|-|94ed018343635a8ef6671daef07eaa72da1cb49fd11043fb3aa9b391a2c9c973
-def:world-history|env|-|-|eda6a5b8704edbf3fdebe9aaa85f45de67d08d4e3ab644b94a289b04cff22d9a
-thm:extension|env|-|-|1d0131efbaef478c808b8a9ad5d141814aa25ddbb2fba426bce6d101bdabc4bb
-cor:occurrence|env|-|-|244bb2e5f6036bbe405549501390b90f432ece28c232fd18caa8b82ab3bb9a8c
+def:world-history|env|-|-|550661d3b388c3ef494ffb81c643ab5a550f996a5a86329afc557f41ed7872e7
+thm:extension|env|-|-|65811dcff91a3dd840058353b14667d8abfcf5d94c8be9979944f03be5234379
+cor:occurrence|env|-|-|231c1d3cd0bf70a323775c623ed36761c6e0c4990bf72106c8323a9fe78842ec
 def:constraints|env|-|-|50aadae779c7d57c810e94209614b5cdfe2590fa82c1c0793db948e8d0917e28
 lem:nesting|env|-|-|ed036f28b70b99d4294515c0f1da64a62e471aa4795394cda4d9010b1f1971a7
 lem:nonempty|env|-|-|8067bf45a360f04db7a94280bde1b359dac58e8311f2fba1d58db15bf2336598
 lem:constraint|env|-|-|ca6719adfaad9f6dc3d1b6a57de013598dd80847014d9c2fb60ed626b895370f
 lem:admissible|env|-|-|9606ef1f1264887ed51358744df7e5fc290250dd8209f445fd138700da56de8e
 lem:step|env|-|-|b1f65f70cc243de5b32d4e2a46c35c986dd0322cf3ca0524fb76701af3e3be4b
-def:BL-semantics|env|-|-|5f53774a3b8a04272bb3c8bf9d41f5cd777e8dc8b1ba30c92aa19113399b228b
-def:BLplus-language|env|-|-|a43b3df2ea2fcb96eeb156b3403a33ac51fcafd2ad4eb55e7915c07cf509f8b7
+def:BL-semantics|env|-|-|b64b782a61c9a9613b68f37ec2d12229e7df8498043faeb1cf1c2686b8dd5a75
+def:BLplus-language|env|-|-|574bc1ad10ca0957a5b76c0d74f7ff5b2ea6a09fa180475c9c22eb6ea5b3e8e2
 def:time-shift-histories|env|-|-|0b5c05e8f579807c7701cd3d28cb8f7d00a2ec42d85eec2515c48edab355b88d
 def:frame-validity|env|-|-|86a0c4b220bc43d04a2bfc14ccd14f0dab0182ff735ffde9c660e3a0ce7b2259
 def:logical-consequence|env|-|-|3af67167ee4a393d77fc8cfa8ddc065fe932bedf76a14febb8608a9001af5486
 CO|aitem|-|-|5c468c01776c449b212c98070b5bfc70951691a23905cd4d4c249bf1f5375d41
-def:S5|env|-|-|f588157a5ad86a277b73c29b682d66052db206bf75111acebeef80b34a40c946
-def:BX|env|-|-|9af6879e367d85e7732f2d699cb2fea1862f0efc44ea497fd25604405bc771f2
+def:S5|env|-|-|82ec82d7ef3c0e24732fe6216b3326998412c594984ce02639ea4030ceabdb38
+def:BX|env|-|-|e1617a218b03206e11ebb9886b9a6a2add44591ce47f719445664e608f39e13e
 def:BX-z|env|-|-|385f73e873489eb714c7d9ca548dbd20ecb000340af8a3c60f8316eb85909b54
 def:BX-d|env|-|-|555db844b3c15ca4f878406540d88c457f372a774bbb59776e3f1b0d0fb76394
 def:BX-r|env|-|-|b35751c79a502988f9f77880354c9ed5200e9751361f2f6c209fcc3247721284
-def:TMplus|env|-|-|f7a811e63f644732b3e316541ca281ce1bdce81bd7d9c4358514470c8185fa4b
+def:TMplus|env|-|-|c14cad798aac2c73319de9ccc0a34ce6ca07971dbb6427e5107a08f23cc4cea8
 thm:M5-valid|env|-|-|bce3cc3be256f7b4c10e34a397e4b3b14abe4e8ed6728e8e91768e9a2ad8b2af
 thm:TM-soundness|env|-|-|23cae2b2fcd8c034b82c4f9294b21aa4d141429a278fa08d085cae2c53bf0529
-app:discrete|env|-|-|fa0634d7f914f5cf78be7524ee8ced0d70cabf2d634db3ddeabbfe13b2be74db
-app:dense|env|-|-|4f8bb793ec8d762013c413327c05c50e691c6d54fefdcb0bedd3076b3b782bfe
-app:complete|env|-|-|2fe5c5e879af2ae0e7ef1823d3c61b6d3608f21495525396b82a4350e349f168
-def:frame-properties|env|-|-|7820dd2fdaada72ff505787f47c049f63c24362cf25e48b7677724d850275086
+app:discrete|env|-|-|23a54c163da3ed991258ccd9647ae153bb2704cd0f86c138c7e5381ac6190e0e
+app:dense|env|-|-|751ad28ba753b718dad05beca27b6403a274977ff6e42a53e791d1770041b7d5
+app:complete|env|-|-|9d962cf8efb3530cad11939c690d0a704154f4ddaaa7904f21ea9b8226a1f2fe
+def:frame-properties|env|-|-|709cefc5c849b2fe6bb950cbde6b1a738181c48eeff25e89df0bb5a457e2f268
 def:deterministic|env|-|-|3baae0ee62cee6a0bd81b18951efb3cd5d1097a017f9c60ccd2d8b87e4a3e175
-cor:saturation-finite|env|-|-|6456eb11cb2adf8b06c929c3f6b5d19dc581f9ba7a33af8a28e61ec675567d74
-cor:tm-completeness|env|-|-|04255c86b60567dd33a9cc708351dc02af254f798f4e82663e60b83b6f41847d
+cor:saturation-finite|env|-|-|ebf7547b10df6b764b1ccc5d965e0cf5c75cd8b09977ed1572b3d0fba48101c3
+cor:tm-completeness|env|-|-|a374007e4006c6ae8388e9e0077e5579fc54d0b032b0369b546be1dfd0271643
 def:id|env|-|-|1a608153e9b78659db2bfc13b2c11c024dceb0acde9cfaa8b900345cda2af238
 def:strongest|env|-|-|57786b2c8758c3c7ea80ac7a80464b331ea77ff9b8c804a032504394bc800369
 thm:exist|env|-|-|fb6d83115f2effb62bc56a233e84212da50c0b692a60ebcdf2a0ea30fcfa9db9
