@@ -87,7 +87,7 @@ theorem mb_swap_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ hτ t
   simp only [Formula.swapTemporal, Formula.diamond, Formula.neg]
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_swap_φ σ _h_σ_mem h_all_not
   exact h_all_not τ hτ h_swap_φ
 
@@ -108,7 +108,7 @@ theorem mf_swap_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro h_box_swap σ h_σ_mem s h_s_lt_t
   have h_at_shifted :=
     h_box_swap (ConvexHistory.timeShift σ (s - t))
@@ -141,7 +141,7 @@ theorem modal_5_collapse_swap_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swapTemporal, Formula.diamond, Formula.neg]
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_diamond_box σ h_σ_mem
   by_contra h_not_psi
   apply h_diamond_box
@@ -193,7 +193,7 @@ theorem serial_future_swap_valid :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro _
   obtain ⟨s, hst⟩ := exists_lt t
   exact ⟨s, hst, fun h => h⟩
@@ -207,7 +207,7 @@ theorem serial_past_swap_valid :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_past, Formula.swapTemporal]
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro _
   obtain ⟨s, hts⟩ := exists_gt t
   exact ⟨s, hts, fun h => h⟩
@@ -220,7 +220,7 @@ theorem left_mono_until_G_swap_valid (φ χ ψ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro h_H ⟨s, hst, h_ψs, h_guard⟩
   exact ⟨s, hst, h_ψs, fun r hsr hrt => h_H r hrt (h_guard r hsr hrt)⟩
 
@@ -232,7 +232,7 @@ theorem left_mono_since_H_swap_valid (φ χ ψ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_G ⟨s, hts, h_ψs, h_guard⟩
   exact ⟨s, hts, h_ψs, fun r htr hrs => h_G r htr (h_guard r htr hrs)⟩
 
@@ -244,7 +244,7 @@ theorem right_mono_until_swap_valid (φ ψ χ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_future, Formula.swapTemporal]
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro h_H ⟨s, hst, h_φs, h_guard⟩
   exact ⟨s, hst, h_H s hst h_φs, h_guard⟩
 
@@ -256,7 +256,7 @@ theorem right_mono_since_swap_valid (φ ψ χ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_all_past, Formula.swapTemporal]
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_G ⟨s, hts, h_φs, h_guard⟩
   exact ⟨s, hts, h_G s hts h_φs, h_guard⟩
 
@@ -268,7 +268,7 @@ theorem connect_future_swap_valid (φ : Formula) :
   intro F _ M τ _hτ t
   simp only [Formula.swap_temporal_some_past, Formula.swap_temporal_all_future,
     Formula.swapTemporal]
-  simp only [TruthAt, Truth.past_iff, Truth.some_future_iff]
+  simp only [truth_norm]
   intro h_φt s hst
   exact ⟨t, hst, h_φt⟩
 
