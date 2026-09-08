@@ -13,21 +13,21 @@ assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.Deriva
   FormalSystem.ProofSystem.Derivable FormalSystem.ProofSystem.FrameClass
 
 /-!
-# `BLTruthAt` — native task semantics for the tense-primitive base language BL
+# `MinusTruthAt` — native task semantics for the tense-primitive base language BL
 
-This module defines truth evaluation for `FormalSystem.MinusLanguage.BLFormula` — the base
+This module defines truth evaluation for `FormalSystem.MinusLanguage.MinusFormula` — the base
 language BL of `def:BL-language`, whose `H`/`G` are *primitive* — directly by recursion on
-`BLFormula`'s six constructors, transcribing `def:BL-semantics` clause for clause.
+`MinusFormula`'s six constructors, transcribing `def:BL-semantics` clause for clause.
 
 ## This is a native recursion, not a composite
 
-`BLTruthAt` is **not** `TruthAt ∘ tr`. Every clause below quantifies in the base language's own
+`MinusTruthAt` is **not** `TruthAt ∘ tr`. Every clause below quantifies in the base language's own
 terms: the `allPast`/`allFuture` clauses state the paper's universal quantification over times
 directly rather than routing through BL⁺'s `untl`/`snce` abbreviations, and no clause mentions
 the translation. That is what makes the truth-transfer bridge
 (`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `truthAt_tr`) a *theorem* with content in
 its temporal cases, rather than a definitional unfolding — and it is what makes a BL soundness
-theorem stated against `BLTruthAt` a claim about BL rather than a restatement of the BL⁺ one.
+theorem stated against `MinusTruthAt` a claim about BL rather than a restatement of the BL⁺ one.
 
 ## Paper Specification Reference
 
@@ -37,10 +37,10 @@ theorem stated against `BLTruthAt` a claim about BL rather than a restatement of
 |---|---|---|
 | `pᵢ` | `τ(x)` lies in the extension of `pᵢ` | `∃ (ht : τ.domain t), M.valuation (τ.states t ht) p` |
 | `⊥` | `M,τ,x ⊭ ⊥` | `False` |
-| `→` | `M,τ,x ⊭ φ` or `M,τ,x ⊨ ψ` | `BLTruthAt … φ → BLTruthAt … ψ` |
-| `□` | `M,σ,x ⊨ φ` for all `σ ∈ H_F` | `∀ σ, σ.IsTotal → BLTruthAt M σ t φ` |
-| `H` (`\Past`) | `M,τ,y ⊨ φ` for all `y ∈ D` with `y < x` | `∀ s, s < t → BLTruthAt M τ s φ` |
-| `G` (`\Future`) | `M,τ,y ⊨ φ` for all `y ∈ D` with `x < y` | `∀ s, t < s → BLTruthAt M τ s φ` |
+| `→` | `M,τ,x ⊭ φ` or `M,τ,x ⊨ ψ` | `MinusTruthAt … φ → MinusTruthAt … ψ` |
+| `□` | `M,σ,x ⊨ φ` for all `σ ∈ H_F` | `∀ σ, σ.IsTotal → MinusTruthAt M σ t φ` |
+| `H` (`\Past`) | `M,τ,y ⊨ φ` for all `y ∈ D` with `y < x` | `∀ s, s < t → MinusTruthAt M τ s φ` |
+| `G` (`\Future`) | `M,τ,y ⊨ φ` for all `y ∈ D` with `x < y` | `∀ s, t < s → MinusTruthAt M τ s φ` |
 
 The paper's `H`/`G` clauses are **strict** (`y < x`, `x < y`), and so are these. The box clause's
 quantifier ranges over `H_F`, the frame's **total** histories, which `ConvexHistory.IsTotal` is the
@@ -63,11 +63,11 @@ about the converse; see `FormalSystem/MinusLanguage.lean`'s "Module Invariant" s
 
 ## Main Definitions
 
-- `BLTruthAt`: truth of a `BLFormula` at a model-history-time triple, by six-clause recursion
+- `MinusTruthAt`: truth of a `MinusFormula` at a model-history-time triple, by six-clause recursion
 
 ## Main Results
 
-`BLTruth.*` — characterization lemmas mirroring `Semantics/Truth.lean`'s `Truth` namespace:
+`MinusTruth.*` — characterization lemmas mirroring `Semantics/Truth.lean`'s `Truth` namespace:
 
 - `bot_false`, `imp_iff`, `box_iff`, `past_iff`, `future_iff` — the primitive clauses
 - `neg_iff`, `top_true`, `and_iff`, `or_iff` — the derived Boolean operators
@@ -79,11 +79,11 @@ about the converse; see `FormalSystem/MinusLanguage.lean`'s "Module Invariant" s
 
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:BL-language`
 * `FormalSystem/Semantics/Truth.lean` — the BL⁺ truth definition this mirrors
-* `FormalSystem/MinusLanguage/Formula.lean` — `BLFormula` and its derived operators
+* `FormalSystem/MinusLanguage/Formula.lean` — `MinusFormula` and its derived operators
 
 ## Tags
 
-truth · base-language · BLTruthAt · def:BL-semantics
+truth · base-language · MinusTruthAt · def:BL-semantics
 -/
 
 namespace FormalSystem.Semantics
@@ -95,7 +95,7 @@ variable {F : TaskFrame}
 /--
 Truth of a base-language formula at a model-history-time triple.
 
-Six clauses, one per `BLFormula` constructor, transcribing `def:BL-semantics`. See the module
+Six clauses, one per `MinusFormula` constructor, transcribing `def:BL-semantics`. See the module
 docstring for the clause-by-clause correspondence with the paper, for why the atom clause carries
 a domain conjunct the paper's does not, and for why this is a native recursion rather than
 `TruthAt ∘ tr`.
@@ -104,61 +104,61 @@ The `box` clause recurses at a different history and the temporal clauses at a d
 the equation compiler handles both exactly as it already does for `TruthAt`, so no termination
 annotation is required.
 -/
-def BLTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : BLFormula → Prop
+def MinusTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : MinusFormula → Prop
   | .atom p => ∃ (ht : τ.domain t), M.valuation (τ.states t ht) p
   | .bot => False
-  | .imp φ ψ => BLTruthAt M τ t φ → BLTruthAt M τ t ψ
-  | .box φ => ∀ (σ : ConvexHistory F), σ.IsTotal → BLTruthAt M σ t φ
-  | .allPast φ => ∀ s : F.Duration, s < t → BLTruthAt M τ s φ
-  | .allFuture φ => ∀ s : F.Duration, t < s → BLTruthAt M τ s φ
+  | .imp φ ψ => MinusTruthAt M τ t φ → MinusTruthAt M τ t ψ
+  | .box φ => ∀ (σ : ConvexHistory F), σ.IsTotal → MinusTruthAt M σ t φ
+  | .allPast φ => ∀ s : F.Duration, s < t → MinusTruthAt M τ s φ
+  | .allFuture φ => ∀ s : F.Duration, t < s → MinusTruthAt M τ s φ
 
-namespace BLTruth
+namespace MinusTruth
 
 variable {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
 
 /-! ### The primitive clauses -/
 
 /-- Bot (`⊥`) is false everywhere. -/
-theorem bot_false : ¬ BLTruthAt M τ t BLFormula.bot := id
+theorem bot_false : ¬ MinusTruthAt M τ t MinusFormula.bot := id
 
 /-- Truth of implication is the material conditional. -/
-theorem imp_iff (φ ψ : BLFormula) :
-    BLTruthAt M τ t (φ.imp ψ) ↔ (BLTruthAt M τ t φ → BLTruthAt M τ t ψ) := Iff.rfl
+theorem imp_iff (φ ψ : MinusFormula) :
+    MinusTruthAt M τ t (φ.imp ψ) ↔ (MinusTruthAt M τ t φ → MinusTruthAt M τ t ψ) := Iff.rfl
 
 /-- Truth of `□φ`: `φ` holds at every **total** history at the current time.
 
 `def:BL-semantics`'s box clause, "M,τ,x ⊨ □φ *iff* M,σ,x ⊨ φ for all σ ∈ H_F", with `H_F`
 membership read off `ConvexHistory.IsTotal`. -/
-theorem box_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.box ↔ ∀ (σ : ConvexHistory F), σ.IsTotal → BLTruthAt M σ t φ := Iff.rfl
+theorem box_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.box ↔ ∀ (σ : ConvexHistory F), σ.IsTotal → MinusTruthAt M σ t φ := Iff.rfl
 
 /-- Truth of `Hφ` (universal past): `φ` holds at every **strictly** past time. -/
-theorem past_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.allPast ↔ ∀ s : F.Duration, s < t → BLTruthAt M τ s φ := Iff.rfl
+theorem past_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.allPast ↔ ∀ s : F.Duration, s < t → MinusTruthAt M τ s φ := Iff.rfl
 
 /-- Truth of `Gφ` (universal future): `φ` holds at every **strictly** future time. -/
-theorem future_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.allFuture ↔ ∀ s : F.Duration, t < s → BLTruthAt M τ s φ := Iff.rfl
+theorem future_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.allFuture ↔ ∀ s : F.Duration, t < s → MinusTruthAt M τ s φ := Iff.rfl
 
 /-! ### The derived Boolean operators -/
 
 /-- Truth of `¬φ`. -/
-@[simp] theorem neg_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.neg ↔ ¬ BLTruthAt M τ t φ := Iff.rfl
+@[simp] theorem neg_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.neg ↔ ¬ MinusTruthAt M τ t φ := Iff.rfl
 
 /-- `⊤` is true everywhere. -/
-@[simp] theorem top_true : BLTruthAt M τ t BLFormula.top := id
+@[simp] theorem top_true : MinusTruthAt M τ t MinusFormula.top := id
 
 /-- Truth of `φ ∧ ψ`. Classical: `and` is the double-negated implication. -/
-@[simp] theorem and_iff (φ ψ : BLFormula) :
-    BLTruthAt M τ t (φ.and ψ) ↔ (BLTruthAt M τ t φ ∧ BLTruthAt M τ t ψ) := by
-  simp only [BLFormula.and, BLFormula.neg, BLTruthAt]
+@[simp] theorem and_iff (φ ψ : MinusFormula) :
+    MinusTruthAt M τ t (φ.and ψ) ↔ (MinusTruthAt M τ t φ ∧ MinusTruthAt M τ t ψ) := by
+  simp only [MinusFormula.and, MinusFormula.neg, MinusTruthAt]
   tauto
 
 /-- Truth of `φ ∨ ψ`. Classical: `or` is `¬φ → ψ`. -/
-@[simp] theorem or_iff (φ ψ : BLFormula) :
-    BLTruthAt M τ t (φ.or ψ) ↔ (BLTruthAt M τ t φ ∨ BLTruthAt M τ t ψ) := by
-  simp only [BLFormula.or, BLFormula.neg, BLTruthAt]
+@[simp] theorem or_iff (φ ψ : MinusFormula) :
+    MinusTruthAt M τ t (φ.or ψ) ↔ (MinusTruthAt M τ t φ ∨ MinusTruthAt M τ t ψ) := by
+  simp only [MinusFormula.or, MinusFormula.neg, MinusTruthAt]
   tauto
 
 /-! ### The derived existential operators
@@ -169,25 +169,25 @@ witnesses with the derived existentials `P`, `F` and `◇`, so having them once 
 re-deriving the classical step at every evaluation site. -/
 
 /-- Truth of `◇φ` (`¬□¬φ`): `φ` holds at *some* total history at the current time. -/
-@[simp] theorem diamond_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ BLTruthAt M σ t φ := by
-  simp only [BLFormula.diamond, BLFormula.neg, BLTruthAt]
+@[simp] theorem diamond_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ MinusTruthAt M σ t φ := by
+  simp only [MinusFormula.diamond, MinusFormula.neg, MinusTruthAt]
   constructor
   · intro h; by_contra hc; push Not at hc; exact h (fun σ hσ hφ => hc σ hσ hφ)
   · rintro ⟨σ, hσ, hφ⟩ h; exact h σ hσ hφ
 
 /-- Truth of `Pφ` (`¬H¬φ`): `φ` held at *some* strictly past time. -/
-@[simp] theorem somePast_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.somePast ↔ ∃ s : F.Duration, s < t ∧ BLTruthAt M τ s φ := by
-  simp only [BLFormula.somePast, BLFormula.neg, BLTruthAt]
+@[simp] theorem somePast_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.somePast ↔ ∃ s : F.Duration, s < t ∧ MinusTruthAt M τ s φ := by
+  simp only [MinusFormula.somePast, MinusFormula.neg, MinusTruthAt]
   constructor
   · intro h; by_contra hc; push Not at hc; exact h (fun s hs hφ => hc s hs hφ)
   · rintro ⟨s, hs, hφ⟩ h; exact h s hs hφ
 
 /-- Truth of `Fφ` (`¬G¬φ`): `φ` holds at *some* strictly future time. -/
-@[simp] theorem someFuture_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.someFuture ↔ ∃ s : F.Duration, t < s ∧ BLTruthAt M τ s φ := by
-  simp only [BLFormula.someFuture, BLFormula.neg, BLTruthAt]
+@[simp] theorem someFuture_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.someFuture ↔ ∃ s : F.Duration, t < s ∧ MinusTruthAt M τ s φ := by
+  simp only [MinusFormula.someFuture, MinusFormula.neg, MinusTruthAt]
   constructor
   · intro h; by_contra hc; push Not at hc; exact h (fun s hs hφ => hc s hs hφ)
   · rintro ⟨s, hs, hφ⟩ h; exact h s hs hφ
@@ -196,13 +196,13 @@ re-deriving the classical step at every evaluation site. -/
 
 /-- Truth of `△φ` (`Hφ ∧ (φ ∧ Gφ)`): `φ` holds at every time, past, present and future.
 
-The association mirrors `BLFormula.always`, hence `Formula.always`. -/
-@[simp] theorem always_iff (φ : BLFormula) :
-    BLTruthAt M τ t φ.always ↔
-      (∀ s : F.Duration, s < t → BLTruthAt M τ s φ) ∧ BLTruthAt M τ t φ ∧
-        (∀ s : F.Duration, t < s → BLTruthAt M τ s φ) := by
-  simp only [BLFormula.always, and_iff, past_iff, future_iff]
+The association mirrors `MinusFormula.always`, hence `Formula.always`. -/
+@[simp] theorem always_iff (φ : MinusFormula) :
+    MinusTruthAt M τ t φ.always ↔
+      (∀ s : F.Duration, s < t → MinusTruthAt M τ s φ) ∧ MinusTruthAt M τ t φ ∧
+        (∀ s : F.Duration, t < s → MinusTruthAt M τ s φ) := by
+  simp only [MinusFormula.always, and_iff, past_iff, future_iff]
 
-end BLTruth
+end MinusTruth
 
 end FormalSystem.Semantics

@@ -24,13 +24,13 @@ This module machine-checks that **neither witness survives the move to `FrameCla
 two different and independent reasons:
 
 * `Sp` becomes a **theorem** of the dense system. Its right disjunct's inner formula *is* the
-  density axiom `Axiom.dn`, so `⊢ᴮᴸ[.Dense] □(DN ψ)` by necessitation, and `Sp` follows by
+  density axiom `Axiom.dn`, so `⊢⁻[.Dense] □(DN ψ)` by necessitation, and `Sp` follows by
   `Axiom.prop_s` and modus ponens. A schema derivable in the system cannot witness the system's
   incompleteness. Since `Dense ≤ RTime`, the same derivation runs at `.RTime`
   (`spDerivableRTime`), so this half covers both open rows at once.
 * `Z1` stops being **valid**. It is refuted here on the flow frame over ℚ, at the same valuation
   `p := {x | 1 ≤ x}` that makes `Gp ↔ p` pointwise on any dense unbounded chain. So it is not
-  `BLValidDense`, and a formula that is not valid over the class cannot witness a validity the
+  `MinusValidDense`, and a formula that is not valid over the class cannot witness a validity the
   system fails to derive.
 
 ## What this is evidence for, and what it is not
@@ -43,7 +43,7 @@ schemata are provably unavailable.
 
 Negatively: **this is not a completeness proof and does not approach one.** Ruling out the two
 witnesses that happen to be in the tree says nothing about the existence of some third witness.
-No theorem here concludes in `TMComplete _` or `Forward _`, and the standing prohibition in
+No theorem here concludes in `TMMinusComplete _` or `Forward _`, and the standing prohibition in
 `Metalogic/Conservativity.lean` — never state a completeness or forward-conservativity theorem
 and discharge it with `sorry` — applies to this module in full. The current status of all four
 rows, with the residual content of the dense route and the named obstruction at the Dedekind
@@ -71,11 +71,11 @@ are not variants of one another.
 - `q_atom_iff`, `q_gp_iff_p` — the ℚ model's valuation lemma and the pointwise `Gp ↔ p` collapse
 - `q_G_Gp_imp_p`, `q_F_Gp`, `q_not_Gp`, `q_not_true_at_zero` — the three `Z1` parts and their
   combination at the base point `0`
-- `not_blValidDense_z1` — the `.ZTime` witness is not dense-valid, hence separates nothing here
+- `not_minusValidDense_z1` — the `.ZTime` witness is not dense-valid, hence separates nothing here
 
 ## References
 
-* `FormalSystem/Metalogic/Conservativity/SpWitness.lean` — `Sp`, `blValid_sp`
+* `FormalSystem/Metalogic/Conservativity/SpWitness.lean` — `Sp`, `minusValid_sp`
 * `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — `Z1`'s discrete countermodel, the
   structural template for the ℚ model below
 * `FormalSystem/Metalogic/Algebraic/FlowFrame.lean` — `multiFamTaskFrameGen`,
@@ -115,18 +115,18 @@ Consequence: `Sp` cannot be the `.Dense` row's separating witness, because it is
 SpCountermodel.lean`'s `not_derivable_sp`, which is the `.Base` row, where `Axiom.dn` is not
 available and the derivation below does not exist.)
 
-Stated at the bare `DerivationTree` (`⊢ᴮᴸ[fc] φ`) rather than at `MinusLanguage.Derivable`, so the
+Stated at the bare `DerivationTree` (`⊢⁻[fc] φ`) rather than at `MinusLanguage.Derivable`, so the
 derivation term itself is available to any consumer; see the naming-exemption note below on what
 that costs.
 -/
-noncomputable def spDerivableDense (φ ψ : BLFormula) :
-    ⊢ᴮᴸ[FrameClass.Dense] Sp φ ψ :=
-  let dn : ⊢ᴮᴸ[FrameClass.Dense] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
+noncomputable def spDerivableDense (φ ψ : MinusFormula) :
+    ⊢⁻[FrameClass.Dense] Sp φ ψ :=
+  let dn : ⊢⁻[FrameClass.Dense] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
     .axiom [] _ (Axiom.dn ψ) (le_refl FrameClass.Dense)
   let boxdn := DerivationTree.necessitation _ dn
-  let s : ⊢ᴮᴸ[FrameClass.Dense]
+  let s : ⊢⁻[FrameClass.Dense]
       ((ψ.allFuture.allFuture.imp ψ.allFuture).box.imp
-        ((((φ.allPast.and φ).and BLFormula.top.someFuture).imp
+        ((((φ.allPast.and φ).and MinusFormula.top.someFuture).imp
           φ.allPast.someFuture).box.neg.imp
           (ψ.allFuture.allFuture.imp ψ.allFuture).box)) :=
     .axiom [] _ (Axiom.prop_s _ _) (FrameClass.base_le _)
@@ -143,14 +143,14 @@ replace both at once.
 
 Together with `spDerivableDense` this closes the `Sp` half for **both** open rows.
 -/
-noncomputable def spDerivableRTime (φ ψ : BLFormula) :
-    ⊢ᴮᴸ[FrameClass.RTime] Sp φ ψ :=
-  let dn : ⊢ᴮᴸ[FrameClass.RTime] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
+noncomputable def spDerivableRTime (φ ψ : MinusFormula) :
+    ⊢⁻[FrameClass.RTime] Sp φ ψ :=
+  let dn : ⊢⁻[FrameClass.RTime] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
     .axiom [] _ (Axiom.dn ψ) (show FrameClass.Dense ≤ FrameClass.RTime from trivial)
   let boxdn := DerivationTree.necessitation _ dn
-  let s : ⊢ᴮᴸ[FrameClass.RTime]
+  let s : ⊢⁻[FrameClass.RTime]
       ((ψ.allFuture.allFuture.imp ψ.allFuture).box.imp
-        ((((φ.allPast.and φ).and BLFormula.top.someFuture).imp
+        ((((φ.allPast.and φ).and MinusFormula.top.someFuture).imp
           φ.allPast.someFuture).box.neg.imp
           (ψ.allFuture.allFuture.imp ψ.allFuture).box)) :=
     .axiom [] _ (Axiom.prop_s _ _) (FrameClass.base_le _)
@@ -166,9 +166,9 @@ given.
 
 They read as derivability facts rather than as constructions, and every neighbouring result in
 this namespace that says something about what TM does or does not derive is snake_case —
-`z1_translate`, `not_derivable_sp`, `not_bl_derivable_z1`, `blValid_sp`. Those are snake_case
+`z1_translate`, `not_derivable_sp`, `not_minus_derivable_z1`, `minusValid_sp`. Those are snake_case
 because they are `Prop`-valued proofs; these two say the same kind of thing but are `def`s only
-because `⊢ᴮᴸ[fc] φ` is `DerivationTree` rather than `Nonempty ∘ DerivationTree`. That is a fact
+because `⊢⁻[fc] φ` is `DerivationTree` rather than `Nonempty ∘ DerivationTree`. That is a fact
 about the notation, not about what the declarations assert, and the naming rule keys on the
 former.
 
@@ -200,9 +200,9 @@ noncomputable abbrev qτ : ConvexHistory qF := multiFamHistoryGen () (0 : (qD : 
 theorem qτ_total : qτ.IsTotal := multiFamHistoryGen_total (D := qD) () 0
 
 /-- **The valuation lemma.** `p` holds at time `t` along `qτ` iff `1 ≤ t`. The domain conjunct of
-`BLTruthAt`'s atom clause is `trivial` here, since `qτ` is total. -/
+`MinusTruthAt`'s atom clause is `trivial` here, since `qτ` is total. -/
 theorem q_atom_iff (p : Atom) (t : (qD : Type)) :
-    BLTruthAt qTM qτ t (BLFormula.atom p) ↔ (1 : ℚ) ≤ t := by
+    MinusTruthAt qTM qτ t (MinusFormula.atom p) ↔ (1 : ℚ) ≤ t := by
   constructor
   · rintro ⟨_, h⟩
     simpa [qTM, multiFamHistoryGen] using h
@@ -220,8 +220,8 @@ discrete carrier `ℚ ×ₗ ℤ` the corresponding witness was the lexicographic
 `(t.1, t.2 + 1)` instead, which is why the two models are not variants of one another.
 -/
 theorem q_gp_iff_p (p : Atom) (t : (qD : Type)) :
-    BLTruthAt qTM qτ t (BLFormula.atom p).allFuture ↔ BLTruthAt qTM qτ t (BLFormula.atom p) := by
-  rw [BLTruth.future_iff, q_atom_iff]
+    MinusTruthAt qTM qτ t (MinusFormula.atom p).allFuture ↔ MinusTruthAt qTM qτ t (MinusFormula.atom p) := by
+  rw [MinusTruth.future_iff, q_atom_iff]
   constructor
   · intro h
     by_contra hc
@@ -237,50 +237,50 @@ theorem q_gp_iff_p (p : Atom) (t : (qD : Type)) :
 /-- `Z1`'s antecedent `G(Gp → p)` is true at `0`: immediate from `q_gp_iff_p` at each future
 point. -/
 theorem q_G_Gp_imp_p (p : Atom) :
-    BLTruthAt qTM qτ (0 : (qD : Type))
-      ((BLFormula.atom p).allFuture.imp (BLFormula.atom p)).allFuture := by
-  rw [BLTruth.future_iff]
+    MinusTruthAt qTM qτ (0 : (qD : Type))
+      ((MinusFormula.atom p).allFuture.imp (MinusFormula.atom p)).allFuture := by
+  rw [MinusTruth.future_iff]
   intro s _
-  rw [BLTruth.imp_iff]
+  rw [MinusTruth.imp_iff]
   exact (q_gp_iff_p p s).mp
 
 /-- `F(Gp)` is true at `0`, witnessed by `1`: `Gp` holds at `1` because `p` does. -/
 theorem q_F_Gp (p : Atom) :
-    BLTruthAt qTM qτ (0 : (qD : Type)) (BLFormula.atom p).allFuture.someFuture := by
-  rw [BLTruth.someFuture_iff]
+    MinusTruthAt qTM qτ (0 : (qD : Type)) (MinusFormula.atom p).allFuture.someFuture := by
+  rw [MinusTruth.someFuture_iff]
   refine ⟨(1 : ℚ), by norm_num, ?_⟩
   rw [(q_gp_iff_p p _), q_atom_iff]
 
 /-- `Gp` is false at `0`: by `q_gp_iff_p` it is equivalent to `p` at `0`, and `¬ (1 ≤ 0)`. -/
 theorem q_not_Gp (p : Atom) :
-    ¬ BLTruthAt qTM qτ (0 : (qD : Type)) (BLFormula.atom p).allFuture := by
+    ¬ MinusTruthAt qTM qτ (0 : (qD : Type)) (MinusFormula.atom p).allFuture := by
   rw [(q_gp_iff_p p _), q_atom_iff]
   norm_num
 
 /-- **`Z1 p` is false at `0` in the ℚ model.** The antecedent `G(Gp → p)` holds while the
 consequent `F(Gp) → Gp` fails, since `F(Gp)` holds and `Gp` does not. -/
 theorem q_not_true_at_zero (p : Atom) :
-    ¬ BLTruthAt qTM qτ (0 : (qD : Type)) (Conservativity.Z1 (BLFormula.atom p)) := by
+    ¬ MinusTruthAt qTM qτ (0 : (qD : Type)) (Conservativity.Z1 (MinusFormula.atom p)) := by
   intro h
   unfold Conservativity.Z1 at h
-  rw [BLTruth.imp_iff] at h
+  rw [MinusTruth.imp_iff] at h
   have h_cons := h (q_G_Gp_imp_p p)
-  rw [BLTruth.imp_iff] at h_cons
+  rw [MinusTruth.imp_iff] at h_cons
   exact q_not_Gp p (h_cons (q_F_Gp p))
 
 /--
 **The `.ZTime` witness is not dense-valid.**
 
-`BLValidDense` is `BLValidIn .Dense`, so one `.Dense`-satisfying frame carrying a refutation
-suffices; `BLValidIn.apply_total` supplies the elimination and the `FrameClass.Sat .Dense qF` side
+`MinusValidDense` is `MinusValidIn .Dense`, so one `.Dense`-satisfying frame carrying a refutation
+suffices; `MinusValidIn.apply_total` supplies the elimination and the `FrameClass.Sat .Dense qF` side
 condition is `inferInstance` through the reducible chain to `DenselyOrdered ℚ`.
 
 With `spDerivableDense`, this is the machine-checked half of the record that the `.Dense` row
 has no known separating witness: one of the two candidates is a theorem of the system, the other
 is not a validity of the class.
 -/
-theorem not_blValidDense_z1 (p : Atom) :
-    ¬ BLValidDense (Conservativity.Z1 (BLFormula.atom p)) := fun h =>
-  q_not_true_at_zero p (BLValidIn.apply_total h qF inferInstance qTM qτ qτ_total 0)
+theorem not_minusValidDense_z1 (p : Atom) :
+    ¬ MinusValidDense (Conservativity.Z1 (MinusFormula.atom p)) := fun h =>
+  q_not_true_at_zero p (MinusValidIn.apply_total h qF inferInstance qTM qτ qτ_total 0)
 
 end FormalSystem.Metalogic

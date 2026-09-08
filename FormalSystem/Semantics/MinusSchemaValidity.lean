@@ -11,13 +11,13 @@ import FormalSystem.Semantics.DurationClassification
 # DF and DN semantic lemmas, and their past-duals
 
 The four semantic facts consumed by both `Metalogic/Conservativity/SpWitness.lean` (the (Sp) validity witness)
-and `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `bl_soundness_ztime_succ` — the shared
+and `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `minus_soundness_ztime_succ` — the shared
 mathematical core of the TM-completeness task (report §4.1 Lemmas B and C, plus §6.1's
 past-dual obligation).
 
 ## The two axiom shapes, pinned
 
-`MinusLanguage.Axiom.df φ : Axiom (((φ.allPast.and φ).and BLFormula.top.someFuture).imp
+`MinusLanguage.Axiom.df φ : Axiom (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp
 φ.allPast.someFuture)` — **DF**, `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`. `MinusLanguage.Axiom.dn φ :
 Axiom (φ.allFuture.allFuture.imp φ.allFuture)` — **DN**, `GGφ → Gφ`. Every lemma below states
 truth of exactly these formula expressions (not through the `Axiom` type, which is
@@ -32,7 +32,7 @@ association is checked by elaboration against `MinusLanguage/Axioms.lean`'s own 
   via `DurationClassification.isLeast_pos_succ_zero`.
 - `dn_valid_of_denselyOrdered` — **Lemma C**: if `F.Duration` is densely ordered, DN is true
   everywhere.
-- `swapBL_df_valid_of_predOrder` — **the past-dual of Lemma B**: `swapBL (Axiom.df φ)` —
+- `swapMinus_df_valid_of_predOrder` — **the past-dual of Lemma B**: `swapMinus (Axiom.df φ)` —
   `(Gφ ∧ φ ∧ P⊤) → P(Gφ)` — is true everywhere under `[PredOrder F.Duration]`.
 
 ## References
@@ -64,10 +64,10 @@ Witness `F(Hφ)` at `s := t + d`: `t < s` since `0 < d`; and every `u < s` satis
 `φ` itself (at `u = t`) supplies `φ(u)` in both sub-cases.
 -/
 theorem df_valid_of_isLeast_pos {d : F.Duration} (hd : IsLeast {x : F.Duration | 0 < x} d)
-    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
-    BLTruthAt M τ t
-      (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) := by
-  simp only [BLTruth.imp_iff, BLTruth.and_iff, BLTruth.someFuture_iff, BLTruth.past_iff]
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : MinusFormula) :
+    MinusTruthAt M τ t
+      (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp φ.allPast.someFuture) := by
+  simp only [MinusTruth.imp_iff, MinusTruth.and_iff, MinusTruth.someFuture_iff, MinusTruth.past_iff]
   rintro ⟨⟨hHφ, hφ⟩, -⟩
   refine ⟨t + d, lt_add_of_pos_right t hd.1, ?_⟩
   intro u hu
@@ -94,9 +94,9 @@ transfer theorems in `Metalogic/Conservativity/MinusLanguageSoundness.lean` do n
 stay native. Do not delete either as a duplicate of a BL⁺ result.
 -/
 theorem df_valid_of_succOrder [SuccOrder F.Duration] [Nontrivial F.Duration]
-    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
-    BLTruthAt M τ t
-      (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) :=
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : MinusFormula) :
+    MinusTruthAt M τ t
+      (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp φ.allPast.someFuture) :=
   df_valid_of_isLeast_pos (isLeast_pos_succ_zero (D := F.Duration)) M τ t φ
 
 /-! ## Lemma C — DN -/
@@ -107,8 +107,8 @@ history and time.
 
 **Kept as a direct proof, deliberately.** DN mentions only `G` and `→`, on which `tr` *is* exact,
 so this statement is in principle `Metalogic/Soundness.lean`'s `density_valid` transported across
-`blValidOnFrames_iff_validOnFrames_tr`. It is not derived that way, because the transport would
-require `Semantics/BLSchemaValidity.lean` to import `Metalogic/Soundness.lean` — inverting the
+`minusValidOnFrames_iff_validOnFrames_tr`. It is not derived that way, because the transport would
+require `Semantics/MinusSchemaValidity.lean` to import `Metalogic/Soundness.lean` — inverting the
 `Semantics/` → `Metalogic/` layering that the whole development rests on, to replace a five-line
 self-contained proof. The two statements agree; that they are proved independently is a feature
 here, not duplication to be collapsed.
@@ -117,9 +117,9 @@ Given `GGφ` at `t` and `t < s`, density supplies `t < r < s`; apply `GGφ` at `
 `r`) then at `s`.
 -/
 theorem dn_valid_of_denselyOrdered [DenselyOrdered F.Duration]
-    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
-    BLTruthAt M τ t (φ.allFuture.allFuture.imp φ.allFuture) := by
-  simp only [BLTruth.imp_iff, BLTruth.future_iff]
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : MinusFormula) :
+    MinusTruthAt M τ t (φ.allFuture.allFuture.imp φ.allFuture) := by
+  simp only [MinusTruth.imp_iff, MinusTruth.future_iff]
   intro hGG s hs
   obtain ⟨r, htr, hrs⟩ := exists_between hs
   exact hGG r htr s hrs
@@ -143,7 +143,7 @@ private theorem isGreatest_neg_pred_zero {D : Type} [AddCommGroup D] [LinearOrde
   ⟨Order.pred_lt (0 : D), fun _ hy => Order.le_pred_of_lt hy⟩
 
 /--
-**The past-dual of Lemma B.** Under `[PredOrder F.Duration]`, `swapBL (Axiom.df φ)` — which
+**The past-dual of Lemma B.** Under `[PredOrder F.Duration]`, `swapMinus (Axiom.df φ)` — which
 unfolds to `(Gφ ∧ φ ∧ P⊤) → P(Gφ)`, the `H`/`G` and `F`/`P` interchange of DF — is true at every
 model, history and time.
 
@@ -152,11 +152,11 @@ The `Order.pred` mirror of `df_valid_of_isLeast_pos`: witness `P(Gφ)` at `s := 
 `≤ d`, while `s < u` forces `d < u - t`, contradicting `d`'s maximality among negative elements),
 so `Gφ` (future of `t`) or `φ` itself (at `u = t`) supplies `φ(u)`.
 -/
-theorem swapBL_df_valid_of_predOrder [PredOrder F.Duration] [Nontrivial F.Duration]
-    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
-    BLTruthAt M τ t
-      (((φ.allFuture.and φ).and BLFormula.top.somePast).imp φ.allFuture.somePast) := by
-  simp only [BLTruth.imp_iff, BLTruth.and_iff, BLTruth.somePast_iff, BLTruth.future_iff]
+theorem swapMinus_df_valid_of_predOrder [PredOrder F.Duration] [Nontrivial F.Duration]
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : MinusFormula) :
+    MinusTruthAt M τ t
+      (((φ.allFuture.and φ).and MinusFormula.top.somePast).imp φ.allFuture.somePast) := by
+  simp only [MinusTruth.imp_iff, MinusTruth.and_iff, MinusTruth.somePast_iff, MinusTruth.future_iff]
   rintro ⟨⟨hGφ, hφ⟩, -⟩
   set d := Order.pred (0 : F.Duration) with hd_def
   have hd : IsGreatest {y : F.Duration | y < 0} d := isGreatest_neg_pred_zero

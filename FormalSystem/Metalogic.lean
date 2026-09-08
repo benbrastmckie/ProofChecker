@@ -49,17 +49,17 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Because the forward
   direction is refuted, TM is not the complete logic of base-language validity; the fragment
   `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` is — sound (`tmFrag_sound`), complete at all four classes
-  (`tmFrag_complete_*`), containing TM everywhere (`tm_le_tmFrag`) and strictly at `.ZTime`
-  (`tm_lt_tmFrag_ztime`). Its consequence relation is compact at `.Base` and `.Dense`
-  (`blCompactBase`, `blCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
+  (`tmFrag_complete_*`), containing TM everywhere (`tmMinus_le_tmFrag`) and strictly at `.ZTime`
+  (`tmMinus_lt_tmFrag_ztime`). Its consequence relation is compact at `.Base` and `.Dense`
+  (`minusCompactBase`, `minusCompactDense`, `Metalogic/Conservativity/FragmentCompactness.lean`); the
   Discrete/Dedekind non-compactness witnesses lie outside `range tr` and do not transfer.
-- **The stability extension L⋆ / TM⋆** (`Metalogic/Conservativity/Star.lean`, over
-  `FormalSystem/StarLanguage/` and `Semantics/Star*.lean`): SORRY-FREE (axioms: exactly
+- **The stability extension L⋆ / TM⋆** (`Metalogic/Conservativity/Plus.lean`, over
+  `FormalSystem/PlusLanguage/` and `Semantics/Star*.lean`): SORRY-FREE (axioms: exactly
   `propext`, `Classical.choice`, `Quot.sound`). Soundness of TM⋆ at every frame class
-  (`star_soundness_validIn`), TD discharged semantically by the companion recursion with the
+  (`plus_soundness_validIn`), TD discharged semantically by the companion recursion with the
   TM⁺ schemata over L⋆ handled by atomization; semantic conservativity
-  (`Semantics.starValidIn_ofFormula_iff`); and **proof-theoretic conservativity of TM⋆ over TM⁺
-  in both directions at all four classes** (`starDerivable_ofFormula_iff`) — the forward
+  (`Semantics.plusValidIn_ofFormula_iff`); and **proof-theoretic conservativity of TM⋆ over TM⁺
+  in both directions at all four classes** (`plusDerivable_ofFormula_iff`) — the forward
   direction from TM⋆ soundness and the four completeness engines, needing no TM⋆ completeness.
   TM⋆ completeness and decidability are open. One durable fact bears on any future attempt: the
   countermodels of all four completeness engines are **deterministic** — `multiFamTaskFrameGen`
@@ -72,16 +72,16 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
 - **Soundness** (`soundness`): SORRY-FREE
 - **Soundness (dense)** (`soundness_dense`): SORRY-FREE
 - **Soundness (discrete)** (`soundness_ztime`): SORRY-FREE
-- **Soundness, base language BL** (`bl_soundness`, `bl_soundness_dense`,
-  `bl_soundness_ztime`, `bl_soundness_rtime`, plus the empty-context validity forms and the
-  consistency corollaries `bl_not_derivable_nil_bot` / `bl_not_derivable_nil_bot_ztime`):
+- **Soundness, base language BL** (`minus_soundness`, `minus_soundness_dense`,
+  `minus_soundness_ztime`, `minus_soundness_rtime`, plus the empty-context validity forms and the
+  consistency corollaries `minus_not_derivable_nil_bot` / `minus_not_derivable_nil_bot_ztime`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). Stated against the
-  **native** BL semantics `BLTruthAt` of `Semantics/BLTruth.lean` — a six-clause recursion on
-  `BLFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
+  **native** BL semantics `MinusTruthAt` of `Semantics/MinusTruth.lean` — a six-clause recursion on
+  `MinusFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
-  induction in `Metalogic/Conservativity/MinusLanguageSoundness.lean`. `bl_soundness_rtime` carries
-  `ValidRTime`'s binder set and its validity form concludes at `BLValidRTime`,
-  inheriting `soundness_rtime`'s target; a density-free `BLValidComplete` is deliberately not
+  induction in `Metalogic/Conservativity/MinusLanguageSoundness.lean`. `minus_soundness_rtime` carries
+  `ValidRTime`'s binder set and its validity form concludes at `MinusValidRTime`,
+  inheriting `soundness_rtime`'s target; a density-free `MinusValidComplete` is deliberately not
   defined because it would be refutable
 - **Completeness** (`completeness`): SORRY-FREE (sorryAx-free; axioms: exactly `propext`,
   `Classical.choice`, `Quot.sound`). Its Base-frame discrete branch,
@@ -155,13 +155,13 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   strong completeness at that class — do not read one off the other. The exposition is in
   `README.md`'s "Characterization and Definability" section and is not repeated here;
   per-theorem status is in `docs/theorem-index.md`.
-- **Non-definability of determinism** (`deterministic_not_starDefinable`,
-  `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `StarFormula`s
+- **Non-definability of determinism** (`deterministic_not_plusDefinable`,
+  `Metalogic/Independence/DeterminismUndefinable.lean`): SORRY-FREE. No set of `PlusFormula`s
   defines the class of frames satisfying `TaskFrame.Deterministic`, witnessed by the
   indistinguishable pair `F°` (a drift band over `ℝ`) and `F¹` (translation over `ℝ`), which
   validate exactly the same L⋆ formulas while differing in determinism. The same pair refutes the
   converse of the deterministic collapse `determined_of_deterministic`
-  (`Semantics/StarDeterminism.lean`): validity of *Determined* holds on a class strictly larger
+  (`Semantics/PlusDeterminism.lean`): validity of *Determined* holds on a class strictly larger
   than the deterministic frames. Uniform substitution is unsound in this setting, so no proof
   here argues by substitution.
 - **Expressive completeness (Kamp, Prior structures)** (`kampPriorExpressiveCompleteness`,

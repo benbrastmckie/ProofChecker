@@ -8,7 +8,7 @@ import FormalSystem.Syntax.Formula
 import FormalSystem.Syntax.Context
 
 /-!
-# `StarFormula` — the language L⋆: L⁺ plus the stability modal `⊡`
+# `PlusFormula` — the language L⋆: L⁺ plus the stability modal `⊡`
 
 This module defines the language **L⋆** obtained from the until/since-primitive language L⁺
 (`FormalSystem.Syntax.Formula`) by adding one primitive unary operator, the **stability modal**
@@ -31,28 +31,28 @@ truth-definition signature; they are **out of scope** for this component.
 
 ## Design
 
-`StarFormula` is a **separate inductive** with a constructor-to-constructor embedding
-`ofFormula : Formula → StarFormula`, mirroring the landed `BLFormula`/`tr` pattern of
+`PlusFormula` is a **separate inductive** with a constructor-to-constructor embedding
+`ofFormula : Formula → PlusFormula`, mirroring the landed `MinusFormula`/`tr` pattern of
 `FormalSystem/MinusLanguage/`. Every derived operator below has the **same right-hand side** as
 its `Formula` namesake in `Syntax/Formula.lean`, so that `ofFormula` pushes through each of them
 by `rfl` — the `rfl` pins at the end of this file are what the proof-system embedding
-(`StarLanguage/Derivation.lean`) and the atomization transfer
-(`Metalogic/Conservativity/Star/Atomization.lean`) rely on.
+(`PlusLanguage/Derivation.lean`) and the atomization transfer
+(`Metalogic/Conservativity/Plus/Atomization.lean`) rely on.
 
 ## Main Definitions
 
-- `StarFormula`: seven-constructor inductive type for L⋆; `StarContext := List StarFormula`
+- `PlusFormula`: seven-constructor inductive type for L⋆; `PlusContext := List PlusFormula`
 - Derived operators with `Formula`'s right-hand sides: `top`, `neg`, `and`, `or`, `iff`,
   `diamond`, `someFuture`, `somePast`, `allFuture`, `allPast`, `kPlus`, `kMinus`, `always`,
   `sometimes`, `next`, `prev`
 - The `⊡`-specific operators `dstab` (`⟐`), `Will`, `will`, `Could`, `could`
-- `StarFormula.swapTemporal`: the past/future interchange for the TD rule (`stab ↦ stab`)
+- `PlusFormula.swapTemporal`: the past/future interchange for the TD rule (`stab ↦ stab`)
 - `IsPureFuture`, `IsPurePast`: the syntactic purity predicates that guard the pasting axioms
 - `ofFormula`, `ofCtx`: the embedding of L⁺ into L⋆
 
 ## Main Results
 
-- `DecidableEq`, `Countable`, `Infinite`, `Denumerable` for `StarFormula`
+- `DecidableEq`, `Countable`, `Infinite`, `Denumerable` for `PlusFormula`
 - `swap_temporal_involution` and the push-through lemmas for every derived operator
 - `IsPureFuture.swapTemporal`, `IsPurePast.swapTemporal`: `swapTemporal` exchanges the purity
   predicates
@@ -60,12 +60,12 @@ by `rfl` — the `rfl` pins at the end of this file are what the proof-system em
 
 ## Module Invariant
 
-**Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
+**Nothing under `FormalSystem/PlusLanguage/` imports anything from `FormalSystem/Semantics/`.**
 This mirrors the `MinusLanguage/ → Semantics/` prohibition recorded in
 `FormalSystem/MinusLanguage/Formula.lean`, and for the same reason: the proof system and its
 embedding are purely syntactic. The invariant is **directional** — the converse edge is
-permitted and used: `FormalSystem/Semantics/StarTruth.lean` imports this module to define
-`StarTruthAt` natively on the seven constructors.
+permitted and used: `FormalSystem/Semantics/PlusTruth.lean` imports this module to define
+`PlusTruthAt` natively on the seven constructors.
 
 ## References
 
@@ -75,7 +75,7 @@ permitted and used: `FormalSystem/Semantics/StarTruth.lean` imports this module 
 * `FormalSystem/MinusLanguage/Formula.lean` — the pattern this component follows
 -/
 
-namespace FormalSystem.StarLanguage
+namespace FormalSystem.PlusLanguage
 
 open FormalSystem.Syntax
 
@@ -85,41 +85,41 @@ Formula type for the language L⋆: the six constructors of `Formula` plus the s
 Constructor order and argument order (guard first, event second for `untl`/`snce`) are those of
 `FormalSystem.Syntax.Formula`, so that `ofFormula` is constructor-to-constructor.
 -/
-inductive StarFormula : Type where
+inductive PlusFormula : Type where
   /-- Propositional atom (variable). -/
-  | atom : Atom → StarFormula
+  | atom : Atom → PlusFormula
   /-- Bottom (`⊥`, falsum). -/
-  | bot : StarFormula
+  | bot : PlusFormula
   /-- Implication (`φ → ψ`). -/
-  | imp : StarFormula → StarFormula → StarFormula
+  | imp : PlusFormula → PlusFormula → PlusFormula
   /-- Modal necessity (`□φ`). -/
-  | box : StarFormula → StarFormula
+  | box : PlusFormula → PlusFormula
   /-- Until, `φ U ψ`, guard first and event second, exactly as `Formula.untl`. -/
-  | untl : StarFormula → StarFormula → StarFormula
+  | untl : PlusFormula → PlusFormula → PlusFormula
   /-- Since, `φ S ψ`, guard first and event second, exactly as `Formula.snce`. -/
-  | snce : StarFormula → StarFormula → StarFormula
+  | snce : PlusFormula → PlusFormula → PlusFormula
   /-- The stability modal `⊡φ` (paper line 1114): `φ` holds in every world sharing the present
       world state. -/
-  | stab : StarFormula → StarFormula
+  | stab : PlusFormula → PlusFormula
   deriving Repr, DecidableEq, Countable
 
-/-- `StarFormula.atom` is injective. -/
-theorem StarFormula.atom_injective : Function.Injective StarFormula.atom := by
+/-- `PlusFormula.atom` is injective. -/
+theorem PlusFormula.atom_injective : Function.Injective PlusFormula.atom := by
   intro a b h
   injection h
 
-/-- `StarFormula` is infinite, via the injection of atoms. -/
-instance : Infinite StarFormula :=
-  Infinite.of_injective StarFormula.atom StarFormula.atom_injective
+/-- `PlusFormula` is infinite, via the injection of atoms. -/
+instance : Infinite PlusFormula :=
+  Infinite.of_injective PlusFormula.atom PlusFormula.atom_injective
 
-/-- `StarFormula` is denumerable (countable + infinite), exactly as `Formula` obtains it. -/
-noncomputable instance : Denumerable StarFormula :=
-  Classical.choice (nonempty_denumerable StarFormula)
+/-- `PlusFormula` is denumerable (countable + infinite), exactly as `Formula` obtains it. -/
+noncomputable instance : Denumerable PlusFormula :=
+  Classical.choice (nonempty_denumerable PlusFormula)
 
 /-- Contexts of L⋆ formulas. -/
-abbrev StarContext := List StarFormula
+abbrev PlusContext := List PlusFormula
 
-namespace StarFormula
+namespace PlusFormula
 
 /-! ### Derived operators
 
@@ -127,72 +127,72 @@ Each right-hand side is copied verbatim from `Syntax/Formula.lean`, so that `ofF
 commutes with it by `rfl` (see the pins at the end of the file). -/
 
 /-- Top (`⊤`): `⊥ → ⊥`. Mirrors `Formula.top`. -/
-def top : StarFormula := StarFormula.bot.imp StarFormula.bot
+def top : PlusFormula := PlusFormula.bot.imp PlusFormula.bot
 
 /-- Negation (`¬φ`): `φ → ⊥`. Mirrors `Formula.neg`. -/
-def neg (φ : StarFormula) : StarFormula := φ.imp bot
+def neg (φ : PlusFormula) : PlusFormula := φ.imp bot
 
 /-- Existential future (`Fφ`): `⊤ U φ`. Mirrors `Formula.someFuture`. -/
-def someFuture (φ : StarFormula) : StarFormula := StarFormula.untl StarFormula.top φ
+def someFuture (φ : PlusFormula) : PlusFormula := PlusFormula.untl PlusFormula.top φ
 
 /-- Existential past (`Pφ`): `⊤ S φ`. Mirrors `Formula.somePast`. -/
-def somePast (φ : StarFormula) : StarFormula := StarFormula.snce StarFormula.top φ
+def somePast (φ : PlusFormula) : PlusFormula := PlusFormula.snce PlusFormula.top φ
 
 /-- Universal future (`Gφ`): `¬F¬φ`. Mirrors `Formula.allFuture`. -/
-def allFuture (φ : StarFormula) : StarFormula := (someFuture φ.neg).neg
+def allFuture (φ : PlusFormula) : PlusFormula := (someFuture φ.neg).neg
 
 /-- Universal past (`Hφ`): `¬P¬φ`. Mirrors `Formula.allPast`. -/
-def allPast (φ : StarFormula) : StarFormula := (somePast φ.neg).neg
+def allPast (φ : PlusFormula) : PlusFormula := (somePast φ.neg).neg
 
 /-- Reynolds' `K⁺`: `¬U(¬φ, ⊤)` in guard-first order. Mirrors `Formula.kPlus`. -/
-def kPlus (φ : StarFormula) : StarFormula := (StarFormula.untl φ.neg StarFormula.top).neg
+def kPlus (φ : PlusFormula) : PlusFormula := (PlusFormula.untl φ.neg PlusFormula.top).neg
 
 /-- Reynolds' `K⁻`: `¬S(¬φ, ⊤)` in guard-first order. Mirrors `Formula.kMinus`. -/
-def kMinus (φ : StarFormula) : StarFormula := (StarFormula.snce φ.neg StarFormula.top).neg
+def kMinus (φ : PlusFormula) : PlusFormula := (PlusFormula.snce φ.neg PlusFormula.top).neg
 
 /-- Conjunction (`φ ∧ ψ`): `¬(φ → ¬ψ)`. Mirrors `Formula.and`. -/
-def and (φ ψ : StarFormula) : StarFormula := (φ.imp ψ.neg).neg
+def and (φ ψ : PlusFormula) : PlusFormula := (φ.imp ψ.neg).neg
 
 /-- Disjunction (`φ ∨ ψ`): `¬φ → ψ`. Mirrors `Formula.or`. -/
-def or (φ ψ : StarFormula) : StarFormula := φ.neg.imp ψ
+def or (φ ψ : PlusFormula) : PlusFormula := φ.neg.imp ψ
 
 /-- Biconditional (`φ ↔ ψ`): `(φ → ψ) ∧ (ψ → φ)`. -/
-def iff (φ ψ : StarFormula) : StarFormula := (φ.imp ψ).and (ψ.imp φ)
+def iff (φ ψ : PlusFormula) : PlusFormula := (φ.imp ψ).and (ψ.imp φ)
 
 /-- Modal possibility (`◇φ`): `¬□¬φ`. Mirrors `Formula.diamond`. -/
-def diamond (φ : StarFormula) : StarFormula := φ.neg.box.neg
+def diamond (φ : PlusFormula) : PlusFormula := φ.neg.box.neg
 
 /-- Temporal `always` (`△φ`): `Hφ ∧ (φ ∧ Gφ)`. Mirrors `Formula.always`. -/
-def always (φ : StarFormula) : StarFormula := φ.allPast.and (φ.and φ.allFuture)
+def always (φ : PlusFormula) : PlusFormula := φ.allPast.and (φ.and φ.allFuture)
 
 /-- Temporal `sometimes` (`▽φ`): `¬△¬φ`. Mirrors `Formula.sometimes`. -/
-def sometimes (φ : StarFormula) : StarFormula := φ.neg.always.neg
+def sometimes (φ : PlusFormula) : PlusFormula := φ.neg.always.neg
 
 /-- Next-step (`Xφ`): `⊥ U φ`. Mirrors `Formula.next`. -/
-def next (φ : StarFormula) : StarFormula := StarFormula.untl StarFormula.bot φ
+def next (φ : PlusFormula) : PlusFormula := PlusFormula.untl PlusFormula.bot φ
 
 /-- Previous-step (`Yφ`): `⊥ S φ`. Mirrors `Formula.prev`. -/
-def prev (φ : StarFormula) : StarFormula := StarFormula.snce StarFormula.bot φ
+def prev (φ : PlusFormula) : PlusFormula := PlusFormula.snce PlusFormula.bot φ
 
 /-! ### The `⊡`-specific operators (paper lines 1121, 1125-1129) -/
 
 /-- The dual stability modal `⟐φ := ¬⊡¬φ` (paper line 1121): `φ` holds in *some* world sharing
 the present world state. -/
-def dstab (φ : StarFormula) : StarFormula := neg (.stab (neg φ))
+def dstab (φ : PlusFormula) : PlusFormula := neg (.stab (neg φ))
 
 /-- `Will φ := ⊡Gφ` (paper line 1125): settled to hold at every future time. -/
-def Will (φ : StarFormula) : StarFormula := .stab (allFuture φ)
+def Will (φ : PlusFormula) : PlusFormula := .stab (allFuture φ)
 
 /-- `will φ := ⊡Fφ` (paper line 1126): settled to hold at some future time. -/
-def will (φ : StarFormula) : StarFormula := .stab (someFuture φ)
+def will (φ : PlusFormula) : PlusFormula := .stab (someFuture φ)
 
 /-- `Could φ := ⟐Gφ` (paper line 1128): possibly, relative to the present state, always
 future. -/
-def Could (φ : StarFormula) : StarFormula := dstab (allFuture φ)
+def Could (φ : PlusFormula) : PlusFormula := dstab (allFuture φ)
 
 /-- `could φ := ⟐Fφ` (paper line 1129): possibly, relative to the present state, sometime
 future. -/
-def could (φ : StarFormula) : StarFormula := dstab (someFuture φ)
+def could (φ : PlusFormula) : PlusFormula := dstab (someFuture φ)
 
 /-! ### Temporal duality -/
 
@@ -203,7 +203,7 @@ Mirrors `Formula.swapTemporal` constructor for constructor; the new case sends `
 `stab φ.swapTemporal` — `⊡` is fixed by time reversal because `⟨τ⟩_x` is defined by a
 same-time condition on world states.
 -/
-def swapTemporal : StarFormula → StarFormula
+def swapTemporal : PlusFormula → PlusFormula
   | atom s => atom s
   | bot => bot
   | imp φ ψ => imp φ.swapTemporal ψ.swapTemporal
@@ -213,7 +213,7 @@ def swapTemporal : StarFormula → StarFormula
   | stab φ => stab φ.swapTemporal
 
 /-- `swapTemporal` is an involution. -/
-theorem swap_temporal_involution (φ : StarFormula) :
+theorem swap_temporal_involution (φ : PlusFormula) :
     φ.swapTemporal.swapTemporal = φ := by
   induction φ with
   | atom _ => rfl
@@ -228,91 +228,91 @@ theorem swap_temporal_involution (φ : StarFormula) :
 
 theorem swap_temporal_top : top.swapTemporal = top := rfl
 
-theorem swap_temporal_neg (φ : StarFormula) :
+theorem swap_temporal_neg (φ : PlusFormula) :
     φ.neg.swapTemporal = φ.swapTemporal.neg := by
   simp only [neg, swapTemporal]
 
-theorem swap_temporal_diamond (φ : StarFormula) :
+theorem swap_temporal_diamond (φ : PlusFormula) :
     φ.diamond.swapTemporal = φ.swapTemporal.diamond := by
   simp only [diamond, neg, swapTemporal]
 
 @[simp]
-theorem swap_temporal_some_future (φ : StarFormula) :
+theorem swap_temporal_some_future (φ : PlusFormula) :
     (someFuture φ).swapTemporal = somePast φ.swapTemporal := by
   simp only [someFuture, somePast, top, swapTemporal]
 
 @[simp]
-theorem swap_temporal_some_past (φ : StarFormula) :
+theorem swap_temporal_some_past (φ : PlusFormula) :
     (somePast φ).swapTemporal = someFuture φ.swapTemporal := by
   simp only [somePast, someFuture, top, swapTemporal]
 
 @[simp]
-theorem swap_temporal_all_future (φ : StarFormula) :
+theorem swap_temporal_all_future (φ : PlusFormula) :
     (allFuture φ).swapTemporal = allPast φ.swapTemporal := by
   simp only [allFuture, allPast, someFuture, somePast, neg, top, swapTemporal]
 
 @[simp]
-theorem swap_temporal_all_past (φ : StarFormula) :
+theorem swap_temporal_all_past (φ : PlusFormula) :
     (allPast φ).swapTemporal = allFuture φ.swapTemporal := by
   simp only [allPast, allFuture, somePast, someFuture, neg, top, swapTemporal]
 
-theorem swap_temporal_next (φ : StarFormula) :
+theorem swap_temporal_next (φ : PlusFormula) :
     φ.next.swapTemporal = φ.swapTemporal.prev := by
   simp only [next, prev, swapTemporal]
 
-theorem swap_temporal_prev (φ : StarFormula) :
+theorem swap_temporal_prev (φ : PlusFormula) :
     φ.prev.swapTemporal = φ.swapTemporal.next := by
   simp only [prev, next, swapTemporal]
 
-theorem swap_temporal_and (φ ψ : StarFormula) :
+theorem swap_temporal_and (φ ψ : PlusFormula) :
     (φ.and ψ).swapTemporal = φ.swapTemporal.and ψ.swapTemporal := by
   simp only [and, neg, swapTemporal]
 
-theorem swap_temporal_or (φ ψ : StarFormula) :
+theorem swap_temporal_or (φ ψ : PlusFormula) :
     (φ.or ψ).swapTemporal = φ.swapTemporal.or ψ.swapTemporal := by
   simp only [or, neg, swapTemporal]
 
-theorem swap_temporal_kPlus (φ : StarFormula) :
+theorem swap_temporal_kPlus (φ : PlusFormula) :
     φ.kPlus.swapTemporal = φ.swapTemporal.kMinus := by
   simp only [kPlus, kMinus, neg, top, swapTemporal]
 
-theorem swap_temporal_kMinus (φ : StarFormula) :
+theorem swap_temporal_kMinus (φ : PlusFormula) :
     φ.kMinus.swapTemporal = φ.swapTemporal.kPlus := by
   simp only [kMinus, kPlus, neg, top, swapTemporal]
 
 /-- `swapTemporal` fixes `⟐`, as it fixes `⊡`. -/
-theorem swap_temporal_dstab (φ : StarFormula) :
+theorem swap_temporal_dstab (φ : PlusFormula) :
     (dstab φ).swapTemporal = dstab φ.swapTemporal := by
   simp only [dstab, neg, swapTemporal]
 
 /-! ### Purity predicates
 
-The side conditions of the pasting axioms (`StarLanguage/Axioms.lean`, `paste` and
+The side conditions of the pasting axioms (`PlusLanguage/Axioms.lean`, `paste` and
 `untl_paste`). A formula is **pure-future** if it contains no `snce` outside a `box`/`stab`
 scope, and **pure-past** if it contains no `untl` outside such a scope. `box ψ` and `stab ψ` are
 leaves for any `ψ`: `□ψ` is history-independent, and `⊡ψ` depends on the present world state
 alone, so neither looks along the history in either direction. -/
 
 /-- Pure-future formulas: no `snce` outside a `box`/`stab` scope. -/
-inductive IsPureFuture : StarFormula → Prop
+inductive IsPureFuture : PlusFormula → Prop
   | atom (p : Atom) : IsPureFuture (.atom p)
   | bot : IsPureFuture .bot
-  | imp {φ ψ : StarFormula} : IsPureFuture φ → IsPureFuture ψ → IsPureFuture (.imp φ ψ)
-  | box (φ : StarFormula) : IsPureFuture (.box φ)
-  | stab (φ : StarFormula) : IsPureFuture (.stab φ)
-  | untl {ψ φ : StarFormula} : IsPureFuture ψ → IsPureFuture φ → IsPureFuture (.untl ψ φ)
+  | imp {φ ψ : PlusFormula} : IsPureFuture φ → IsPureFuture ψ → IsPureFuture (.imp φ ψ)
+  | box (φ : PlusFormula) : IsPureFuture (.box φ)
+  | stab (φ : PlusFormula) : IsPureFuture (.stab φ)
+  | untl {ψ φ : PlusFormula} : IsPureFuture ψ → IsPureFuture φ → IsPureFuture (.untl ψ φ)
 
 /-- Pure-past formulas: no `untl` outside a `box`/`stab` scope. -/
-inductive IsPurePast : StarFormula → Prop
+inductive IsPurePast : PlusFormula → Prop
   | atom (p : Atom) : IsPurePast (.atom p)
   | bot : IsPurePast .bot
-  | imp {φ ψ : StarFormula} : IsPurePast φ → IsPurePast ψ → IsPurePast (.imp φ ψ)
-  | box (φ : StarFormula) : IsPurePast (.box φ)
-  | stab (φ : StarFormula) : IsPurePast (.stab φ)
-  | snce {ψ φ : StarFormula} : IsPurePast ψ → IsPurePast φ → IsPurePast (.snce ψ φ)
+  | imp {φ ψ : PlusFormula} : IsPurePast φ → IsPurePast ψ → IsPurePast (.imp φ ψ)
+  | box (φ : PlusFormula) : IsPurePast (.box φ)
+  | stab (φ : PlusFormula) : IsPurePast (.stab φ)
+  | snce {ψ φ : PlusFormula} : IsPurePast ψ → IsPurePast φ → IsPurePast (.snce ψ φ)
 
 /-- `swapTemporal` sends pure-future formulas to pure-past ones. -/
-theorem IsPureFuture.swapTemporal {φ : StarFormula} (h : IsPureFuture φ) :
+theorem IsPureFuture.swapTemporal {φ : PlusFormula} (h : IsPureFuture φ) :
     IsPurePast φ.swapTemporal := by
   induction h with
   | atom p => exact IsPurePast.atom p
@@ -323,7 +323,7 @@ theorem IsPureFuture.swapTemporal {φ : StarFormula} (h : IsPureFuture φ) :
   | untl _ _ ih1 ih2 => exact IsPurePast.snce ih1 ih2
 
 /-- `swapTemporal` sends pure-past formulas to pure-future ones. -/
-theorem IsPurePast.swapTemporal {φ : StarFormula} (h : IsPurePast φ) :
+theorem IsPurePast.swapTemporal {φ : PlusFormula} (h : IsPurePast φ) :
     IsPureFuture φ.swapTemporal := by
   induction h with
   | atom p => exact IsPureFuture.atom p
@@ -337,44 +337,44 @@ theorem IsPurePast.swapTemporal {φ : StarFormula} (h : IsPurePast φ) :
 
 theorem IsPureFuture.top : IsPureFuture top := IsPureFuture.imp IsPureFuture.bot IsPureFuture.bot
 
-theorem IsPureFuture.neg {φ : StarFormula} (h : IsPureFuture φ) : IsPureFuture φ.neg :=
+theorem IsPureFuture.neg {φ : PlusFormula} (h : IsPureFuture φ) : IsPureFuture φ.neg :=
   IsPureFuture.imp h IsPureFuture.bot
 
-theorem IsPureFuture.and {φ ψ : StarFormula} (hφ : IsPureFuture φ) (hψ : IsPureFuture ψ) :
+theorem IsPureFuture.and {φ ψ : PlusFormula} (hφ : IsPureFuture φ) (hψ : IsPureFuture ψ) :
     IsPureFuture (φ.and ψ) :=
   (IsPureFuture.imp hφ hψ.neg).neg
 
-theorem IsPureFuture.someFuture {φ : StarFormula} (h : IsPureFuture φ) :
+theorem IsPureFuture.someFuture {φ : PlusFormula} (h : IsPureFuture φ) :
     IsPureFuture (someFuture φ) :=
   IsPureFuture.untl IsPureFuture.top h
 
-theorem IsPureFuture.allFuture {φ : StarFormula} (h : IsPureFuture φ) :
+theorem IsPureFuture.allFuture {φ : PlusFormula} (h : IsPureFuture φ) :
     IsPureFuture (allFuture φ) :=
   h.neg.someFuture.neg
 
 theorem IsPurePast.top : IsPurePast top := IsPurePast.imp IsPurePast.bot IsPurePast.bot
 
-theorem IsPurePast.neg {φ : StarFormula} (h : IsPurePast φ) : IsPurePast φ.neg :=
+theorem IsPurePast.neg {φ : PlusFormula} (h : IsPurePast φ) : IsPurePast φ.neg :=
   IsPurePast.imp h IsPurePast.bot
 
-theorem IsPurePast.and {φ ψ : StarFormula} (hφ : IsPurePast φ) (hψ : IsPurePast ψ) :
+theorem IsPurePast.and {φ ψ : PlusFormula} (hφ : IsPurePast φ) (hψ : IsPurePast ψ) :
     IsPurePast (φ.and ψ) :=
   (IsPurePast.imp hφ hψ.neg).neg
 
-theorem IsPurePast.somePast {φ : StarFormula} (h : IsPurePast φ) :
+theorem IsPurePast.somePast {φ : PlusFormula} (h : IsPurePast φ) :
     IsPurePast (somePast φ) :=
   IsPurePast.snce IsPurePast.top h
 
-theorem IsPurePast.allPast {φ : StarFormula} (h : IsPurePast φ) :
+theorem IsPurePast.allPast {φ : PlusFormula} (h : IsPurePast φ) :
     IsPurePast (allPast φ) :=
   h.neg.somePast.neg
 
-end StarFormula
+end PlusFormula
 
 /-! ## The embedding of L⁺ into L⋆ -/
 
 /-- The embedding of L⁺ into L⋆, constructor to constructor. -/
-def ofFormula : Formula → StarFormula
+def ofFormula : Formula → PlusFormula
   | .atom a => .atom a
   | .bot => .bot
   | .imp φ ψ => .imp (ofFormula φ) (ofFormula ψ)
@@ -404,8 +404,8 @@ theorem ofFormula_injective : Function.Injective ofFormula := by
 
 /-- Nothing in the range of `ofFormula` is a top-level `stab`. The L⋆ mirror of
 `MinusLanguage.tr_ne_untl`. -/
-@[simp] theorem ofFormula_ne_stab (φ : Formula) (ψ : StarFormula) :
-    ofFormula φ ≠ StarFormula.stab ψ := by
+@[simp] theorem ofFormula_ne_stab (φ : Formula) (ψ : PlusFormula) :
+    ofFormula φ ≠ PlusFormula.stab ψ := by
   cases φ <;> simp [ofFormula]
 
 /-- `ofFormula` commutes with temporal duality, which is what the `temporal_duality` case of the
@@ -415,13 +415,13 @@ theorem ofFormula_swapTemporal (φ : Formula) :
   induction φ with
   | atom _ => rfl
   | bot => rfl
-  | imp _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, StarFormula.swapTemporal, ih1, ih2]
-  | box _ ih => simp only [Formula.swapTemporal, ofFormula, StarFormula.swapTemporal, ih]
-  | untl _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, StarFormula.swapTemporal, ih1, ih2]
-  | snce _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, StarFormula.swapTemporal, ih1, ih2]
+  | imp _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, PlusFormula.swapTemporal, ih1, ih2]
+  | box _ ih => simp only [Formula.swapTemporal, ofFormula, PlusFormula.swapTemporal, ih]
+  | untl _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, PlusFormula.swapTemporal, ih1, ih2]
+  | snce _ _ ih1 ih2 => simp only [Formula.swapTemporal, ofFormula, PlusFormula.swapTemporal, ih1, ih2]
 
 /-- The embedding lifted to contexts. Definitionally `List.map ofFormula`. -/
-abbrev ofCtx (Γ : Context) : StarContext := List.map ofFormula Γ
+abbrev ofCtx (Γ : Context) : PlusContext := List.map ofFormula Γ
 
 @[simp] theorem ofCtx_nil : ofCtx [] = [] := rfl
 
@@ -436,24 +436,24 @@ theorem mem_ofCtx {φ : Formula} {Γ : Context} (h : φ ∈ Γ) : ofFormula φ �
 
 `ofFormula` commutes with every derived operator **definitionally**, because each L⋆ operator
 was given `Formula`'s right-hand side verbatim. These `example`s are the contract the
-`StarAxiom.ofPlus` arms (`StarLanguage/Derivation.lean`) and the atomization push-through
+`PlusAxiom.ofTM` arms (`PlusLanguage/Derivation.lean`) and the atomization push-through
 lemmas rely on; if one of them stops being `rfl`, the fix is in the operator's right-hand side
 above, never at the use site. -/
 
-example : ofFormula Formula.top = StarFormula.top := rfl
+example : ofFormula Formula.top = PlusFormula.top := rfl
 example (φ : Formula) : ofFormula φ.neg = (ofFormula φ).neg := rfl
 example (φ ψ : Formula) : ofFormula (φ.and ψ) = (ofFormula φ).and (ofFormula ψ) := rfl
 example (φ ψ : Formula) : ofFormula (φ.or ψ) = (ofFormula φ).or (ofFormula ψ) := rfl
 example (φ : Formula) : ofFormula φ.diamond = (ofFormula φ).diamond := rfl
-example (φ : Formula) : ofFormula (Formula.someFuture φ) = StarFormula.someFuture (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.somePast φ) = StarFormula.somePast (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.allFuture φ) = StarFormula.allFuture (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.allPast φ) = StarFormula.allPast (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.kPlus φ) = StarFormula.kPlus (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.kMinus φ) = StarFormula.kMinus (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.always φ) = StarFormula.always (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.sometimes φ) = StarFormula.sometimes (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.next φ) = StarFormula.next (ofFormula φ) := rfl
-example (φ : Formula) : ofFormula (Formula.prev φ) = StarFormula.prev (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.someFuture φ) = PlusFormula.someFuture (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.somePast φ) = PlusFormula.somePast (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.allFuture φ) = PlusFormula.allFuture (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.allPast φ) = PlusFormula.allPast (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.kPlus φ) = PlusFormula.kPlus (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.kMinus φ) = PlusFormula.kMinus (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.always φ) = PlusFormula.always (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.sometimes φ) = PlusFormula.sometimes (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.next φ) = PlusFormula.next (ofFormula φ) := rfl
+example (φ : Formula) : ofFormula (Formula.prev φ) = PlusFormula.prev (ofFormula φ) := rfl
 
-end FormalSystem.StarLanguage
+end FormalSystem.PlusLanguage

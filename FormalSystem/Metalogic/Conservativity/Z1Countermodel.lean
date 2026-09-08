@@ -13,7 +13,7 @@ import FormalSystem.Metalogic.Algebraic.FlowFrame
 /-!
 # The `Z1` countermodel and the two CEF deliverables
 
-Machine-checks `¬ ⊢ᴮᴸ[Discrete] Z1 p` at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ`, closing
+Machine-checks `¬ ⊢⁻[Discrete] Z1 p` at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ`, closing
 CEF with **both** halves in-tree (`Conservativity.z1_translate` is the other half, already
 sorry-free), and refutes `TM_z`'s weak completeness over ℤ-time (report §6.1).
 
@@ -24,7 +24,7 @@ sorry-free), and refutes `TM_z`'s weak completeness over ℤ-time (report §6.1)
 `M.valuation w _ := 1 ≤ (ofLex w.2).1`. The refuting structure **is** a task frame — a
 lexicographic product of ordered abelian groups is an ordered abelian group — so the CEF
 refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `SuccOrder`/
-`PredOrder` instances `bl_soundness_ztime_succ` needs, and `Metalogic/BXCanonical/
+`PredOrder` instances `minus_soundness_ztime_succ` needs, and `Metalogic/BXCanonical/
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
@@ -39,15 +39,15 @@ conclusion is unchanged. See `Metalogic/Conservativity.lean` for the full statem
 
 - `z1_atom_iff` — the valuation lemma
 - `z1_gp_iff_p` — `Gp ↔ p`, pointwise
-- `not_bl_derivable_z1` — **Deliverable 1**: `¬ ⊢ᴮᴸ[Discrete] Z1 p`
-- `blValidZTime_z1` — **Deliverable 2**: `BLValidZTime (Z1 p)`, stated as the negation of
-  `TMCompleteZTime` (Phase 4's `Prop`), so the two phases visibly compose
+- `not_minus_derivable_z1` — **Deliverable 1**: `¬ ⊢⁻[Discrete] Z1 p`
+- `minusValidZTime_z1` — **Deliverable 2**: `MinusValidZTime (Z1 p)`, stated as the negation of
+  `TMMinusCompleteZTime` (Phase 4's `Prop`), so the two phases visibly compose
 
 ## References
 
 * The TM-completeness status report (`01_tm-completeness-status.md`), §6.1
 * `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_z half)
-* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteZTime`
+* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMMinusCompleteZTime`
 -/
 
 namespace FormalSystem.Metalogic
@@ -81,7 +81,7 @@ theorem z1τ_total : z1τ.IsTotal := multiFamHistoryGen_total (D := z1D) () 0
 
 /-- `p` holds at `t` along `z1τ` iff `t`'s `ℚ`-coordinate is `≥ 1`. -/
 theorem z1_atom_iff (p : Atom) (t : (z1D : Type)) :
-    BLTruthAt z1TM z1τ t (BLFormula.atom p) ↔ 1 ≤ (ofLex t).1 := by
+    MinusTruthAt z1TM z1τ t (MinusFormula.atom p) ↔ 1 ≤ (ofLex t).1 := by
   constructor
   · rintro ⟨_, h⟩
     simpa [z1TM, multiFamHistoryGen] using h
@@ -96,8 +96,8 @@ coordinate is monotone under `<`, by `Prod.Lex.monotone_fst`). If `t.1 < 1`, the
 `s := (t.1, t.2 + 1)` is `> t` (same first coordinate, second coordinate strictly larger) and
 `s.1 = t.1 < 1`, so `p` fails there. -/
 theorem z1_gp_iff_p (p : Atom) (t : (z1D : Type)) :
-    BLTruthAt z1TM z1τ t (BLFormula.atom p).allFuture ↔ BLTruthAt z1TM z1τ t (BLFormula.atom p) := by
-  rw [BLTruth.future_iff, z1_atom_iff]
+    MinusTruthAt z1TM z1τ t (MinusFormula.atom p).allFuture ↔ MinusTruthAt z1TM z1τ t (MinusFormula.atom p) := by
+  rw [MinusTruth.future_iff, z1_atom_iff]
   constructor
   · intro h
     by_contra hc
@@ -127,16 +127,16 @@ noncomputable abbrev z1pt2 : (z1D : Type) := toLex ((0 : ℚ), (1 : ℤ))
 
 /-- `G(Gp → p)` is true at `(0, 0)`: immediate from `z1_gp_iff_p`. -/
 theorem z1_G_Gp_imp_p (p : Atom) :
-    BLTruthAt z1TM z1τ z1pt ((BLFormula.atom p).allFuture.imp (BLFormula.atom p)).allFuture := by
-  rw [BLTruth.future_iff]
+    MinusTruthAt z1TM z1τ z1pt ((MinusFormula.atom p).allFuture.imp (MinusFormula.atom p)).allFuture := by
+  rw [MinusTruth.future_iff]
   intro s _
-  rw [BLTruth.imp_iff]
+  rw [MinusTruth.imp_iff]
   exact (z1_gp_iff_p p s).mp
 
 /-- `F(Gp)` is true at `(0, 0)`, witnessed by `(1, 0)`. -/
 theorem z1_F_Gp (p : Atom) :
-    BLTruthAt z1TM z1τ z1pt (BLFormula.atom p).allFuture.someFuture := by
-  rw [BLTruth.someFuture_iff]
+    MinusTruthAt z1TM z1τ z1pt (MinusFormula.atom p).allFuture.someFuture := by
+  rw [MinusTruth.someFuture_iff]
   refine ⟨z1pt1, ?_, ?_⟩
   · show z1pt < z1pt1
     rw [Prod.Lex.lt_iff]
@@ -146,8 +146,8 @@ theorem z1_F_Gp (p : Atom) :
 
 /-- `Gp` is false at `(0, 0)`, witnessed by `(0, 1)`. -/
 theorem z1_not_Gp (p : Atom) :
-    ¬ BLTruthAt z1TM z1τ z1pt (BLFormula.atom p).allFuture := by
-  rw [BLTruth.future_iff]
+    ¬ MinusTruthAt z1TM z1τ z1pt (MinusFormula.atom p).allFuture := by
+  rw [MinusTruth.future_iff]
   push_neg
   refine ⟨z1pt2, ?_, ?_⟩
   · show z1pt < z1pt2
@@ -156,50 +156,50 @@ theorem z1_not_Gp (p : Atom) :
   · rw [z1_atom_iff]
     exact not_le.mpr (by norm_num : (0:ℚ) < 1)
 
-/-- **`¬ BLTruthAt z1TM z1τ (0,0) (Z1 p)`.** The antecedent `G(Gp → p)` holds, but the
+/-- **`¬ MinusTruthAt z1TM z1τ (0,0) (Z1 p)`.** The antecedent `G(Gp → p)` holds, but the
 consequent `F(Gp) → Gp` fails: `F(Gp)` holds while `Gp` does not. -/
 theorem z1_not_true_at_zero (p : Atom) :
-    ¬ BLTruthAt z1TM z1τ z1pt (Conservativity.Z1 (BLFormula.atom p)) := by
+    ¬ MinusTruthAt z1TM z1τ z1pt (Conservativity.Z1 (MinusFormula.atom p)) := by
   intro h
   unfold Conservativity.Z1 at h
-  rw [BLTruth.imp_iff] at h
+  rw [MinusTruth.imp_iff] at h
   have h_cons := h (z1_G_Gp_imp_p p)
-  rw [BLTruth.imp_iff] at h_cons
+  rw [MinusTruth.imp_iff] at h_cons
   exact z1_not_Gp p (h_cons (z1_F_Gp p))
 
 /-! ## The two CEF deliverables -/
 
 /--
-**Deliverable 1.** `Z1 p` is not `TM_z`-derivable: soundness of `bl_soundness_ztime_succ`
+**Deliverable 1.** `Z1 p` is not `TM_z`-derivable: soundness of `minus_soundness_ztime_succ`
 against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 `Semantics/LexCarrier.lean`. Combined with `Conservativity.z1_translate`, this is CEF refuted
 with both halves machine-checked.
 -/
-theorem not_bl_derivable_z1 (p : Atom) :
-    ¬ MinusLanguage.Derivable FrameClass.ZTime [] (Conservativity.Z1 (BLFormula.atom p)) := by
+theorem not_minus_derivable_z1 (p : Atom) :
+    ¬ MinusLanguage.Derivable FrameClass.ZTime [] (Conservativity.Z1 (MinusFormula.atom p)) := by
   rintro ⟨d⟩
   exact z1_not_true_at_zero p
-    (bl_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
+    (minus_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))
 
 /--
-**Deliverable 2.** `Z1 p` is `BLValidZTime`: from `Conservativity.z1_translate`
+**Deliverable 2.** `Z1 p` is `MinusValidZTime`: from `Conservativity.z1_translate`
 (`⊢[Discrete] tr (Z1 p)`), `soundness_ztime_valid` (BL⁺'s empty-context discrete soundness)
-gives `ValidZTime (tr (Z1 p))`, and `blValidZTime_iff_validZTime_tr` crosses the
+gives `ValidZTime (tr (Z1 p))`, and `minusValidZTime_iff_validZTime_tr` crosses the
 bridge.
 
-Combined with `not_bl_derivable_z1`, this refutes the `.ZTime` row of Phase 4's reduction:
-**`TM_z` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
+Combined with `not_minus_derivable_z1`, this refutes the `.ZTime` row of Phase 4's reduction:
+**`TM_z` is not weakly complete over ℤ-time.** Stated as the negation of `TMMinusCompleteZTime`
 so the two phases visibly compose.
 -/
-theorem blValidZTime_z1 (p : Atom) : BLValidZTime (Conservativity.Z1 (BLFormula.atom p)) := by
-  rw [blValidZTime_iff_validZTime_tr]
-  obtain ⟨d⟩ := Conservativity.z1_translate (BLFormula.atom p)
+theorem minusValidZTime_z1 (p : Atom) : MinusValidZTime (Conservativity.Z1 (MinusFormula.atom p)) := by
+  rw [minusValidZTime_iff_validZTime_tr]
+  obtain ⟨d⟩ := Conservativity.z1_translate (MinusFormula.atom p)
   exact soundness_ztime_valid d
 
-/-- **TM_z is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteZTime`,
-witnessed by `Z1 p`: `BLValidZTime (Z1 p)` holds (`blValidZTime_z1`) yet `Z1 p` is not
-`TM_z`-derivable (`not_bl_derivable_z1`). -/
-theorem tmCompleteZTime_refuted (p : Atom) : ¬ TMCompleteZTime :=
-  fun h => not_bl_derivable_z1 p (h _ (blValidZTime_z1 p))
+/-- **TM_z is not weakly complete over ℤ-time.** The negation of Phase 4's `TMMinusCompleteZTime`,
+witnessed by `Z1 p`: `MinusValidZTime (Z1 p)` holds (`minusValidZTime_z1`) yet `Z1 p` is not
+`TM_z`-derivable (`not_minus_derivable_z1`). -/
+theorem tmMinusCompleteZTime_refuted (p : Atom) : ¬ TMMinusCompleteZTime :=
+  fun h => not_minus_derivable_z1 p (h _ (minusValidZTime_z1 p))
 
 end FormalSystem.Metalogic

@@ -14,7 +14,7 @@ import FormalSystem.Metalogic.Conservativity.ChainBundleTruth
 import FormalSystem.Metalogic.Conservativity.SpCountermodel
 import FormalSystem.Metalogic.Conservativity.Fragment
 import FormalSystem.Metalogic.Conservativity.FragmentCompactness
-import FormalSystem.Metalogic.Conservativity.Star
+import FormalSystem.Metalogic.Conservativity.Plus
 
 /-!
 # The TM/TM⁺ conservativity bridge — backward direction
@@ -90,7 +90,7 @@ an approximation of it.
 
 **Cross-reference**: `Metalogic/Conservativity/TMCompletenessReduction.lean` pins "TM (resp. TM_z) is complete
 over task frames" as *the same proposition* as `forward` above, restricted to `fc := .Base`
-(resp. `.ZTime`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteZTime_iff_forwardZTime`
+(resp. `.ZTime`) — its `tmMinusCompleteBase_iff_forwardBase` / `tmMinusCompleteZTime_iff_forwardZTime`
 are equivalences between two unasserted `Prop`s, proving neither side. A future dispatch
 attempting to prove TM-completeness directly is thereby attempting `forward` under a different
 name, and falls under this same prohibition.
@@ -110,7 +110,7 @@ the TM⁺_z half.
 
 The other half — `TM_z ⊢ Z1 φ` fails, because `TM_z = TM + DF` is sound over *every* discrete
 frame while `Z1` is unsound over non-Archimedean discrete orders — is now **also** a theorem:
-`Metalogic/Conservativity/Z1Countermodel.lean`'s `not_bl_derivable_z1`, via `bl_soundness_ztime_succ`
+`Metalogic/Conservativity/Z1Countermodel.lean`'s `not_minus_derivable_z1`, via `minus_soundness_ztime_succ`
 (`Metalogic/Conservativity/MinusLanguageSoundness.lean`, the binder-weakened discrete BL soundness theorem
 dropping the Archimedean instances) applied to a countermodel over `ℚ ×_lex ℤ`
 (`Semantics/LexCarrier.lean`), **not** `ℤ ×_lex ℤ` as an earlier draft of this section and the
@@ -137,14 +137,14 @@ this repository does not reconstruct that TMP-NB/M5 derivation; instead `Metalog
 reaches the same TM⁺ half by a different, and independently informative, route: `(Sp)` (its own
 reconstruction of the witness, since the source formula's own `\label` was deleted from the
 paper — see Provenance below) is BL-**valid** on every task frame for a purely order-theoretic
-reason (`SpWitness.blValid_sp`, from `Semantics/DurationClassification.lean`'s
+reason (`SpWitness.minusValid_sp`, from `Semantics/DurationClassification.lean`'s
 `duration_dense_or_least_pos` dichotomy), and composing with `BXCanonical.completeness` yields
 `⊢[Base] tr (Sp φ ψ)` (`SpWitness.sp_translate`) with **no appeal to TMP-NB or M5 at all**.
 
 The failing half — the schema `(Sp)` is not a TM-theorem — is **now machine-checked** in
 `Metalogic/Conservativity/SpCountermodel.lean`: `not_derivable_sp` at the atomic instance, and
-its corollary `tmCompleteBase_refuted : ¬ TMCompleteBase`, the `.Base` mirror of
-`Z1Countermodel.tmCompleteZTime_refuted`.
+its corollary `tmMinusCompleteBase_refuted : ¬ TMMinusCompleteBase`, the `.Base` mirror of
+`Z1Countermodel.tmMinusCompleteZTime_refuted`.
 
 The two-fibre description this section previously gave as a wish list is what the implementation
 vindicates, and it is the *explanation* of why the result took the shape it did. The refutation
@@ -155,17 +155,17 @@ countermodel needs a structure where `□` sees differently-shaped time, which n
 `tr`: **TM⁺ is unsound on the two-fibre class**, so the `translate`-then-`soundness` route this
 module supplies is unavailable in principle for this half. What closed it instead is exactly what
 this section previously said was missing — a frame notion outside `TaskFrame`
-(`Semantics/BLFrame.lean`'s `BLFrame`: a nonempty point set with an unbounded, transitive,
+(`Semantics/MinusFrame.lean`'s `MinusFrame`: a nonempty point set with an unbounded, transitive,
 irreflexive, forward- and backward-linear order and **no group structure**, with `□` read as the
 universal modality over the points) plus a *native*, non-composed BL soundness theorem over it
-(`blFrameValid_of_derivation`, by recursion on `MinusLanguage.DerivationTree`, with
+(`minusFrameValid_of_derivation`, by recursion on `MinusLanguage.DerivationTree`, with
 `Semantics.truth_swap` discharging the temporal-duality rule). The countermodel is the disjoint
 sum `ℤ ⊕ ℝ` — a discrete fibre refuting the `DN` disjunct and a dense-complete fibre refuting the
 `DF` disjunct, both `□`-accessible. Note that the native soundness theorem is about **TM**
 (`MinusLanguage.DerivationTree`), never about TM⁺; the two must not be blurred.
 
 One caveat is recorded so it is never re-attempted: the *universally quantified* reading — "no
-instance of `(Sp)` is a TM-theorem" — is **false**. `□(DF ⊤)` holds on every `BLFrame` (its
+instance of `(Sp)` is a TM-theorem" — is **false**. `□(DF ⊤)` holds on every `MinusFrame` (its
 consequent follows from `no_max`), so `Sp ⊤ ψ` is not refuted. The claim is schema-level,
 witnessed by the atomic instance, which is all a completeness refutation needs.
 
@@ -188,7 +188,7 @@ provenance, never as something this tree has machine-checked.
   wording, which reached that conclusion through Hölder's theorem and spoke of a
   "successor-Archimedean discrete class", has been cut from the paper; the conclusion is
   unchanged, and is restated here rather than quoted.) This is what makes
-  `Z1Countermodel.tmCompleteZTime_refuted` read as the `TM_z`-vs-`TM⁺_z` completeness *gap*,
+  `Z1Countermodel.tmMinusCompleteZTime_refuted` read as the `TM_z`-vs-`TM⁺_z` completeness *gap*,
   rather than a weaker claim about some other class.
 - **A commented (non-live) line** inside `def:BX-z` gives the author's own position in the
   author's own words: `TM⁺_z`, by contrast, is sound over the full class of discrete frames,
@@ -196,17 +196,17 @@ provenance, never as something this tree has machine-checked.
   over that broader class remains open, as discussed at `cor:tm-completeness`. Cited as the
   author's stated position and flagged explicitly as **commented out**, therefore not live text —
   the open verdict it records matches this module's own CEF finding
-  (`Z1Countermodel.tmCompleteZTime_refuted`) that `TM_z` is not weakly complete over the
+  (`Z1Countermodel.tmMinusCompleteZTime_refuted`) that `TM_z` is not weakly complete over the
   *broader* (non-Archimedean) discrete class, only over `ℤ`-time.
 
 ## The H/G-fragment logic
 
-Because the forward direction is refuted, TM is **not** the complete logic of `BLValidIn`. The
+Because the forward direction is refuted, TM is **not** the complete logic of `MinusValidIn`. The
 logic that is — at every frame class carrying a `WeakCompleteness` engine — is the **H/G-fragment
 of TM⁺**, `TMFrag fc φ := TM⁺ ⊢[fc] tr φ` (`Conservativity/Fragment.lean`). Its soundness,
 completeness at four rows, containment of TM, and the strictness of that containment at `.ZTime`
 are rows in `docs/theorem-index.md`, which is the status of record and is not restated here.
-`tmComplete_iff_tmFrag_le_tm` restates the reduction above in fragment terms with `Forward`
+`tmMinusComplete_iff_tmFrag_le_tmMinus` restates the reduction above in fragment terms with `Forward`
 unfolded, never asserted. Compactness of the base-language consequence relation transfers along
 `tr` at `.Base` and `.Dense` **only** (`Conservativity/FragmentCompactness.lean`): the Discrete
 and Dedekind non-compactness witnesses lie outside `range tr`, so nothing transfers there.
@@ -214,14 +214,14 @@ and Dedekind non-compactness witnesses lie outside `range tr`, so nothing transf
 ## The stability extension L⋆ (Star)
 
 The other extension direction, L⁺ ⊂ L⋆ (L⁺ plus the paper's stability modal `⊡`, line 1114;
-`FormalSystem/StarLanguage/`), is the mirror image of L ⊂ L⁺ with the hard direction *available*:
-`Conservativity/Star.lean` (aggregating `Star/{Atomization,AxiomValidity,StarSoundness,Forward}.lean`)
+`FormalSystem/PlusLanguage/`), is the mirror image of L ⊂ L⁺ with the hard direction *available*:
+`Conservativity/Plus.lean` (aggregating `Plus/{Atomization,AxiomValidity,PlusSoundness,Forward}.lean`)
 proves soundness of TM⋆ at every frame class and **proof-theoretic conservativity of TM⋆ over
 TM⁺ in both directions** at all four classes; both are rows in `docs/theorem-index.md`. What
 matters here is *why* the forward half is available: backward is the embedding of derivations,
 and forward is TM⋆ soundness plus the truth-transfer bridge plus the TM⁺ completeness engine —
 the very composition that fails for L ⊂ L⁺ because TM is incomplete. So `Forward⋆` holds
-everywhere, unlike `Forward`; the composed pair L ⊂ L⋆ (`star_of_tm`) inherits this module's
+everywhere, unlike `Forward`; the composed pair L ⊂ L⋆ (`plus_of_tmMinus`) inherits this module's
 forward status unchanged. TM⋆ completeness and decidability are open and not asserted anywhere.
 
 ## CED / CEC — open
@@ -236,30 +236,30 @@ merely unattempted here.
 ## What a machine-checked refutation would need — now row-dependent, not a single narrowing
 
 A BL-side semantics and a BL-side soundness theorem now exist tree-wide
-(`FormalSystem/Semantics/BLTruth.lean`'s `BLTruthAt`, and
-`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `bl_soundness` family), but what each row
+(`FormalSystem/Semantics/MinusTruth.lean`'s `MinusTruthAt`, and
+`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `minus_soundness` family), but what each row
 still needs beyond that differs, and reading it as one shared "countermodels alone" gap is no
 longer accurate for either row:
 
 - **CEF (`FrameClass.ZTime`) — done, both halves machine-checked.** The missing prerequisite
-  was a *binder-weakened* BL soundness theorem — `bl_soundness_ztime_succ`
+  was a *binder-weakened* BL soundness theorem — `minus_soundness_ztime_succ`
   (`Metalogic/Conservativity/MinusLanguageSoundness.lean`), dropping `IsSuccArchimedean`/`IsPredArchimedean` so
   it applies to a non-Archimedean carrier — plus the countermodel itself, assembled over
   `multiFamTaskFrameGen` at the non-Archimedean discrete carrier `ℚ ×_lex ℤ`
   (`Semantics/LexCarrier.lean`, `Metalogic/Conservativity/Z1Countermodel.lean`). **Both are now landed**: `z1_translate`
-  below is the TM⁺_z half, and `Z1Countermodel.not_bl_derivable_z1` is the TM_z half — the
+  below is the TM⁺_z half, and `Z1Countermodel.not_minus_derivable_z1` is the TM_z half — the
   refutation is machine-checked, not merely documented.
 - **CEB (`FrameClass.Base`) — done, both halves machine-checked.** The missing prerequisite was
   a **frame notion outside `TaskFrame`** plus a **native** (non-composed) BL soundness theorem
-  over it, and both are now landed: `Semantics/BLFrame.lean` supplies `BLFrame`/`BLFrameTruth`/
-  `BLFrameValid` and the order-reversal transfer lemma `truth_swap`, and
+  over it, and both are now landed: `Semantics/MinusFrame.lean` supplies `MinusFrame`/`MinusFrameTruth`/
+  `MinusFrameValid` and the order-reversal transfer lemma `truth_swap`, and
   `Metalogic/Conservativity/SpCountermodel.lean` supplies
-  `blFrameValid_of_derivation` together with the `ℤ ⊕ ℝ` countermodel. The TM⁺
-  half is `Metalogic/Conservativity/SpWitness.lean`'s `blValid_sp`/`sp_translate`; the TM half is
+  `minusFrameValid_of_derivation` together with the `ℤ ⊕ ℝ` countermodel. The TM⁺
+  half is `Metalogic/Conservativity/SpWitness.lean`'s `minusValid_sp`/`sp_translate`; the TM half is
   `not_derivable_sp`, and the two compose into
-  `tmCompleteBase_refuted`.
+  `tmMinusCompleteBase_refuted`.
   Why the composition route this module supplies could **not** serve here, in one line:
-  `BLTruthAt`/`bl_soundness` are `TaskFrame`-bound, `(Sp) := □(DF φ) ∨ □(DN ψ)` is BL-valid on
+  `MinusTruthAt`/`minus_soundness` are `TaskFrame`-bound, `(Sp) := □(DF φ) ∨ □(DN ψ)` is BL-valid on
   *every* task frame, and **TM⁺ is unsound on the two-fibre class** — so
   `translate`-then-`soundness` was unavailable in principle, and a native soundness theorem was
   mandatory rather than merely convenient. See `Metalogic/Conservativity/SpWitness.lean`'s module
@@ -271,8 +271,8 @@ The **forward direction remains refuted** at both rows and must still not be sta
 `sorry`-ed here — nothing about the CEF closure changes that; it closes CEF's specific
 row-refutation with a machine-checked witness, while leaving the general prohibition (this
 module's own `forward` schema, for every frame class) exactly as forbidden as before. See also
-`Metalogic/Conservativity/TMCompletenessReduction.lean`, whose `tmCompleteBase_iff_forwardBase` /
-`tmCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_z) complete over task frames" as the
+`Metalogic/Conservativity/TMCompletenessReduction.lean`, whose `tmMinusCompleteBase_iff_forwardBase` /
+`tmMinusCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_z) complete over task frames" as the
 *same proposition* as this module's forward-conservativity prohibition, at `.Base` and
 `.ZTime` respectively — so a future dispatch attempting TM-completeness directly is thereby
 attempting the forbidden claim, under a different name.
@@ -310,7 +310,7 @@ touches no truth definition, frame, or validity predicate, so the bridge compose
 with whatever the totality-based validity definition becomes. The intended composition is
 
 ```
-BL-validity over C  ⟸[bl_soundness…]  ⊢ᴮᴸ[fc] φ  ⟶[translate]  ⊢[fc] tr φ
+BL-validity over C  ⟸[minus_soundness…]  ⊢⁻[fc] φ  ⟶[translate]  ⊢[fc] tr φ
                                                           ⟸[completeness_*]  BL⁺-validity over C
 ```
 
@@ -331,23 +331,23 @@ and CEF — and re-exports the nine modules that make up the BL-vs-TM and TM⁺-
 | Module | Contents |
 |--------|----------|
 | `Conservativity/Backward.lean` | `translate`, `derivable_translate`, the four `*_backward` rows, `Z1`, `z1_translate` |
-| `Conservativity/MinusLanguageSoundness.lean` | the `bl_soundness` family and the `truthAt_tr` transfer bridge |
-| `Conservativity/TMCompletenessReduction.lean` | `TMComplete` / `Forward` and their equivalence |
+| `Conservativity/MinusLanguageSoundness.lean` | the `minus_soundness` family and the `truthAt_tr` transfer bridge |
+| `Conservativity/TMCompletenessReduction.lean` | `TMMinusComplete` / `Forward` and their equivalence |
 | `Conservativity/SpWitness.lean` | the reconstructed `(Sp)` witness for the CEB row |
-| `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteZTime_refuted` |
-| `Conservativity/SpCountermodel.lean` | `not_derivable_sp` and `tmCompleteBase_refuted`, over the native `BLFrame` semantics |
+| `Conservativity/Z1Countermodel.lean` | `not_minus_derivable_z1` and `tmMinusCompleteZTime_refuted` |
+| `Conservativity/SpCountermodel.lean` | `not_derivable_sp` and `tmMinusCompleteBase_refuted`, over the native `MinusFrame` semantics |
 | `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM⁺: soundness, completeness at all four classes, `TM ⊆ TMFrag`, `TM ⊊ TMFrag` at `.ZTime` |
-| `Conservativity/FragmentCompactness.lean` | `BLCompact`, `blCompactBase`, `blCompactDense` — base-language compactness transferred along `tr` |
-| `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`starDerivable_ofFormula_iff`) |
+| `Conservativity/FragmentCompactness.lean` | `MinusCompact`, `minusCompactBase`, `minusCompactDense` — base-language compactness transferred along `tr` |
+| `Conservativity/Plus.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class and conservativity of TM⋆ over TM⁺ in both directions (`plusDerivable_ofFormula_iff`) |
 
 **The children must never import this file.** Each imports
 `FormalSystem.Metalogic.Conservativity.Backward` directly; importing the aggregator from a child
 is an import cycle, because the aggregator imports every child. The chain the children preserve
 is `Backward ← MinusLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ←
-FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `MinusLanguageSoundness`,
+FragmentCompactness ← Plus/Forward`, with `SpWitness` hanging off `MinusLanguageSoundness`,
 `SpCountermodel` hanging off `SpWitness` and `TMCompletenessReduction` jointly (it also imports
-`Semantics/BLFrame.lean`, which is outside this directory and reaches nothing in `ProofSystem/`),
-and the `Star/` chain `Atomization ← AxiomValidity ← StarSoundness ← Forward` hanging off
+`Semantics/MinusFrame.lean`, which is outside this directory and reaches nothing in `ProofSystem/`),
+and the `Plus/` chain `Atomization ← AxiomValidity ← PlusSoundness ← Forward` hanging off
 `Fragment`.
 
 The namespace is unchanged by the reorganization: `Backward.lean` still opens

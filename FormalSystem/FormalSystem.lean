@@ -9,7 +9,7 @@ import FormalSystem.ForMathlib
 import FormalSystem.Syntax
 import FormalSystem.ProofSystem
 import FormalSystem.MinusLanguage
-import FormalSystem.StarLanguage
+import FormalSystem.PlusLanguage
 import FormalSystem.Semantics
 import FormalSystem.Metalogic
 import FormalSystem.Theorems
@@ -35,7 +35,7 @@ with linear temporal logic.
 (base/dense/discrete)
 and 7 inference rules
 - `FormalSystem.MinusLanguage`: The tense-primitive base language BL (`H`/`G` primitive) with
-  TM's Hilbert system and the translation `tr : BLFormula → Formula` into BL⁺, supporting the
+  TM's Hilbert system and the translation `tr : MinusFormula → Formula` into BL⁺, supporting the
   backward conservativity bridge in `Metalogic/Conservativity/Backward.lean`. Imports nothing from
   `Semantics/`
 - `FormalSystem.Semantics`: Task frame semantics with convex histories, truth evaluation, and

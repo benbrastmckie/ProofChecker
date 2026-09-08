@@ -29,7 +29,7 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 |------|-------|-------------|
 | `ClockFrame.lean` | 236 | The periodic clock frame: temporal order `D = ℚ`, world-state carrier the rational circle `W = ℚ ⧸ ℤ`, task relation the deterministic translation flow. All `TaskFrame` obligations discharged, with a reference total history. |
 | `CoNotPriorU.lean` | 552 | The symmetric irrational arc valuation on the clock frame, the refutation of `Axiom.prior_U_gap` in that model, and the two independence statements. |
-| `DeterminismUndefinable.lean` | 189 | The instantiation at `F°`/`F¹`: (T3) `determined_valid_on_non_deterministic`, (T4) `fzero_starValidOn_iff_f1`, and `deterministic_not_starDefinable`. |
+| `DeterminismUndefinable.lean` | 189 | The instantiation at `F°`/`F¹`: (T3) `determined_valid_on_non_deterministic`, (T4) `fzero_plusValidOn_iff_f1`, and `deterministic_not_plusDefinable`. |
 | `DriftFrame.lean` | 254 | `F°`, the drift band `x ≤ u - w ≤ 2x` over `ℝ`, with all six `FrameOver` axioms (`limit` and `saturation` included) and `fzero_not_deterministic`. |
 | `DriftHistories.lean` | 178 | `F°`'s total histories are strictly increasing bi-Lipschitz bijections of `ℝ` (`fzero_hits_future` is the crux, by IVT); (H1) `fzero_orderFlow` and (H2) `fzero_stateOccurs`, the latter by an explicit affine witness. |
 | `LexIntWitness.lean` | 206 | The discrete, non-Archimedean carrier `ℤ ×ₗ ℤ`, the static frame over it as a member of `Mod (AxiomSet .Discrete)` outside `Sat .Discrete`, the semantic upper-bound engine `validOn_nextTop_of_mem_mod_discrete`, and the Discrete sandwich. |
@@ -37,7 +37,7 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 | `OrderTransfer.lean` | 197 | The frame-independent layer: `OrderFlow` (H1), `StateOccurs` (H2), and the order-transfer lemmas — `future_image`, `past_image`, `between`, `between_past`, `state_image`. |
 | `RationalWitness.lean` | 206 | `rat_not_complete` — `ℚ` is not Dedekind-complete, written out because Mathlib carries no statement in this shape — and the static frame over `ℚ` as a member of `Mod (AxiomSet .Dedekind)` outside `Sat .Dedekind`, with the Dedekind sandwich. |
 | `RealTranslationFrame.lean` | 189 | `realOrder`; `F¹`, the deterministic translation flow over `ℝ`, built through `ShiftSet` (the only route on which the world-set characterization elaborates); `f1_deterministic`, `f1_total_eq_orbit`, `f1_eq_of_states_eq`. |
-| `StateSetTruth.lean` | 240 | `satSet` and `starTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⋆ truth depends only on the world state of evaluation. Plus `starValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
+| `StateSetTruth.lean` | 240 | `satSet` and `plusTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⋆ truth depends only on the world state of evaluation. Plus `plusValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
 | `StaticFrame.lean` | 323 | The static frame at an arbitrary duration group: every nonzero duration loops, so truth is time-invariant, and the `untl`/`snce` clauses collapse into a small constant-truth calculus (general, dense and discrete forms, plus `K⁺`/`K⁻` and `Axiom.z1`). Turns every later axiom check into a rewrite. |
 <!-- END GENERATED -->
 
@@ -54,13 +54,13 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
   `sat_discrete_ssubset_mod_axiomSet` (`LexIntWitness.lean`) — `Sat .Dedekind` and
   `Sat .Discrete` are strictly smaller than the model classes of their axiom sets, hence not
   Galois-closed.
-- `deterministic_not_starDefinable` (`DeterminismUndefinable.lean`) — no set of `StarFormula`s
+- `deterministic_not_plusDefinable` (`DeterminismUndefinable.lean`) — no set of `PlusFormula`s
   defines the deterministic frames (`cor:no-characterization`), via the `F°`/`F¹`
   indistinguishable pair.
 - `determined_valid_on_non_deterministic` (`DeterminismUndefinable.lean`) — `F°` validates
   *Determined* without being deterministic, refuting the converse of `determined_of_deterministic`
-  (`Semantics/StarDeterminism.lean`).
-- `starTruthAt_iff_mem_satSet` (`StateSetTruth.lean`) — the state-set bridge, proved once against
+  (`Semantics/PlusDeterminism.lean`).
+- `plusTruthAt_iff_mem_satSet` (`StateSetTruth.lean`) — the state-set bridge, proved once against
   (H1)+(H2) and instantiated twice; `[propext]` alone.
 
 ## Dependencies

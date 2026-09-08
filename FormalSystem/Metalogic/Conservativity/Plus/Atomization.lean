@@ -4,31 +4,31 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.PlusValidity
 import FormalSystem.Metalogic.Soundness
 
 /-!
 # Atomization — TM⁺ schema soundness over L⋆ in one lemma
 
-The TM⁺ schemata of TM⋆ (`StarLanguage/Axioms.lean`) range over all of `StarFormula`, so their
-instances may contain `⊡`. Rather than re-proving all 45 schemata over `StarTruthAt`, this
+The TM⁺ schemata of TM⋆ (`PlusLanguage/Axioms.lean`) range over all of `PlusFormula`, so their
+instances may contain `⊡`. Rather than re-proving all 45 schemata over `PlusTruthAt`, this
 module transfers the landed L⁺ validity lemmas `axiom_validIn_min` / `axiom_swap_validIn_min`
 (`Metalogic/Soundness.lean`) through **atomization**:
 
 1. `⊡χ` depends on the world state alone (`Semantics.stab_state_only`), so it behaves like a
    state-valued atom.
-2. `atomize e : StarFormula → Formula` replaces each maximal `⊡χ` by a fresh atom `e.ι (inr χ)`
+2. `atomize e : PlusFormula → Formula` replaces each maximal `⊡χ` by a fresh atom `e.ι (inr χ)`
    and each atom `p` by `e.ι (inl p)`, for an injective **encoding**
-   `e.ι : Atom ⊕ StarFormula → Atom` (`Encoding`; one exists classically because both sides are
+   `e.ι : Atom ⊕ PlusFormula → Atom` (`Encoding`; one exists classically because both sides are
    denumerable).
 3. `TaskModel.atomModel M e` is the L⁺ model on the same frame whose valuation reads `e.ι (inl p)`
    as `p` and `e.ι (inr χ)` as "`⊡χ` holds at some total history through this state, at some
    time" — well defined by (1).
-4. `starTruthAt_iff_atomize`: `StarTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ)`.
+4. `plusTruthAt_iff_atomize`: `PlusTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ)`.
 
 A TM⁺ schema instance over L⋆ then holds in `M` iff its L⁺ instance at the atomized parameters
 holds in `M.atomModel e`, which is the landed lemma applied on the same frame — so `fc.Sat` is
-inherited. `starValidIn_of_plus` packages this, and `starValidIn_swap_of_plus` its swap form via
+inherited. `plusValidIn_of_tm` packages this, and `plusValidIn_swap_of_tm` its swap form via
 `atomize_swapTemporal` (atomization commutes with temporal duality up to swapping the encoding,
 `Encoding.swap`).
 
@@ -39,23 +39,23 @@ inherited. `starValidIn_of_plus` packages this, and `starValidIn_swap_of_plus` i
 
 ## Main Results
 
-- `starTruthAt_iff_atomize` — the transfer lemma
+- `plusTruthAt_iff_atomize` — the transfer lemma
 - `atomize_swapTemporal` — `atomize e φ.swapTemporal = (atomize e.swap φ).swapTemporal`
-- `starValidIn_of_plus`, `starValidIn_swap_of_plus` — the two helpers the dispatch lemmas of
-  `Conservativity/Star/AxiomValidity.lean` consume
+- `plusValidIn_of_tm`, `plusValidIn_swap_of_tm` — the two helpers the dispatch lemmas of
+  `Conservativity/Plus/AxiomValidity.lean` consume
 
 ## References
 
 * `FormalSystem/Metalogic/Soundness.lean` — `axiom_validIn`, `axiom_swap_validIn`
-* `FormalSystem/Semantics/StarTruth.lean` — `stab_state_only`
+* `FormalSystem/Semantics/PlusTruth.lean` — `stab_state_only`
 -/
 
 namespace FormalSystem.Metalogic.Conservativity
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.StarLanguage
-open FormalSystem.StarLanguage.StarFormula
+open FormalSystem.PlusLanguage
+open FormalSystem.PlusLanguage.PlusFormula
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
 
@@ -64,31 +64,31 @@ open FormalSystem.Metalogic
 /-- An injective encoding of atoms and `⊡`-formulas into atoms. -/
 structure Encoding where
   /-- The encoding map. -/
-  ι : Atom ⊕ StarFormula → Atom
+  ι : Atom ⊕ PlusFormula → Atom
   /-- Injectivity. -/
   inj : Function.Injective ι
 
-/-- An encoding exists: both `Atom ⊕ StarFormula` and `Atom` are denumerable. -/
+/-- An encoding exists: both `Atom ⊕ PlusFormula` and `Atom` are denumerable. -/
 theorem Encoding.nonempty : Nonempty Encoding := by
   haveI : Denumerable Atom := Classical.choice (nonempty_denumerable Atom)
-  exact ⟨⟨(Denumerable.eqv (Atom ⊕ StarFormula)).trans (Denumerable.eqv Atom).symm,
+  exact ⟨⟨(Denumerable.eqv (Atom ⊕ PlusFormula)).trans (Denumerable.eqv Atom).symm,
     Equiv.injective _⟩⟩
 
 /-- `swapTemporal` is injective, being an involution. -/
-theorem swapTemporal_injective : Function.Injective StarFormula.swapTemporal :=
+theorem swapTemporal_injective : Function.Injective PlusFormula.swapTemporal :=
   Function.Involutive.injective swap_temporal_involution
 
 /-- The encoding conjugated by temporal duality on the `⊡`-formula side: `e.swap.ι (inr χ) =
 e.ι (inr χ.swapTemporal)`. Injective because `swapTemporal` is an involution. -/
 def Encoding.swap (e : Encoding) : Encoding where
-  ι := e.ι ∘ Sum.map id StarFormula.swapTemporal
+  ι := e.ι ∘ Sum.map id PlusFormula.swapTemporal
   inj := e.inj.comp (Sum.map_injective.mpr ⟨fun _ _ h => h, swapTemporal_injective⟩)
 
 /-! ## Atomization -/
 
 /-- Replace each atom `p` by `e.ι (inl p)` and each maximal `⊡χ` by the fresh atom
 `e.ι (inr χ)`; structural on the six L⁺ constructors. -/
-def atomize (e : Encoding) : StarFormula → Formula
+def atomize (e : Encoding) : PlusFormula → Formula
   | .atom p => .atom (e.ι (.inl p))
   | .bot => .bot
   | .imp φ ψ => .imp (atomize e φ) (atomize e ψ)
@@ -97,42 +97,42 @@ def atomize (e : Encoding) : StarFormula → Formula
   | .snce φ ψ => .snce (atomize e φ) (atomize e ψ)
   | .stab χ => .atom (e.ι (.inr χ))
 
-/-! Push-through equations, all `rfl`: the derived operators of `StarFormula` carry `Formula`'s
+/-! Push-through equations, all `rfl`: the derived operators of `PlusFormula` carry `Formula`'s
 right-hand sides, and `atomize` is structural on the L⁺ constructors. -/
 
 @[simp] theorem atomize_top (e : Encoding) : atomize e top = Formula.top := rfl
-@[simp] theorem atomize_neg (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_neg (e : Encoding) (φ : PlusFormula) :
     atomize e φ.neg = (atomize e φ).neg := rfl
-@[simp] theorem atomize_and (e : Encoding) (φ ψ : StarFormula) :
+@[simp] theorem atomize_and (e : Encoding) (φ ψ : PlusFormula) :
     atomize e (φ.and ψ) = (atomize e φ).and (atomize e ψ) := rfl
-@[simp] theorem atomize_or (e : Encoding) (φ ψ : StarFormula) :
+@[simp] theorem atomize_or (e : Encoding) (φ ψ : PlusFormula) :
     atomize e (φ.or ψ) = (atomize e φ).or (atomize e ψ) := rfl
-@[simp] theorem atomize_diamond (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_diamond (e : Encoding) (φ : PlusFormula) :
     atomize e φ.diamond = (atomize e φ).diamond := rfl
-@[simp] theorem atomize_someFuture (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_someFuture (e : Encoding) (φ : PlusFormula) :
     atomize e (someFuture φ) = Formula.someFuture (atomize e φ) := rfl
-@[simp] theorem atomize_somePast (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_somePast (e : Encoding) (φ : PlusFormula) :
     atomize e (somePast φ) = Formula.somePast (atomize e φ) := rfl
-@[simp] theorem atomize_allFuture (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_allFuture (e : Encoding) (φ : PlusFormula) :
     atomize e (allFuture φ) = Formula.allFuture (atomize e φ) := rfl
-@[simp] theorem atomize_allPast (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_allPast (e : Encoding) (φ : PlusFormula) :
     atomize e (allPast φ) = Formula.allPast (atomize e φ) := rfl
-@[simp] theorem atomize_kPlus (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_kPlus (e : Encoding) (φ : PlusFormula) :
     atomize e (kPlus φ) = Formula.kPlus (atomize e φ) := rfl
-@[simp] theorem atomize_kMinus (e : Encoding) (φ : StarFormula) :
+@[simp] theorem atomize_kMinus (e : Encoding) (φ : PlusFormula) :
     atomize e (kMinus φ) = Formula.kMinus (atomize e φ) := rfl
 
 /-- Atomization commutes with temporal duality, up to conjugating the encoding: the fresh atom
 for `⊡χ.swapTemporal` under `e` is the fresh atom for `⊡χ` under `e.swap`. -/
-theorem atomize_swapTemporal (e : Encoding) (φ : StarFormula) :
+theorem atomize_swapTemporal (e : Encoding) (φ : PlusFormula) :
     atomize e φ.swapTemporal = (atomize e.swap φ).swapTemporal := by
   induction φ with
   | atom p => rfl
   | bot => rfl
-  | imp φ ψ ihφ ihψ => simp only [StarFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
-  | box φ ih => simp only [StarFormula.swapTemporal, atomize, Formula.swapTemporal, ih]
-  | untl φ ψ ihφ ihψ => simp only [StarFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
-  | snce φ ψ ihφ ihψ => simp only [StarFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
+  | imp φ ψ ihφ ihψ => simp only [PlusFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
+  | box φ ih => simp only [PlusFormula.swapTemporal, atomize, Formula.swapTemporal, ih]
+  | untl φ ψ ihφ ihψ => simp only [PlusFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
+  | snce φ ψ ihφ ihψ => simp only [PlusFormula.swapTemporal, atomize, Formula.swapTemporal, ihφ, ihψ]
   | stab χ _ => rfl
 
 /-! ## The atomized model -/
@@ -147,7 +147,7 @@ def _root_.FormalSystem.Semantics.TaskModel.atomModel (M : TaskModel F) (e : Enc
   valuation w a :=
     (∃ p, e.ι (.inl p) = a ∧ M.valuation w p) ∨
     (∃ χ, e.ι (.inr χ) = a ∧ ∃ (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration),
-      τ.states t (hτ t) = w ∧ StarTruthAt M τ t (.stab χ))
+      τ.states t (hτ t) = w ∧ PlusTruthAt M τ t (.stab χ))
 
 /--
 **The transfer lemma.** At a total history, an L⋆ formula is true in `M` iff its atomization is
@@ -156,9 +156,9 @@ congruence (the `box` case ranges over total `σ`), the `atom` case is injectivi
 encoding, and the `stab` case is `stab_state_only` — the `→` direction witnesses `τ` itself, the
 `←` direction transports the witnessing history's `⊡χ` to `τ` through the shared state.
 -/
-theorem starTruthAt_iff_atomize (M : TaskModel F) (e : Encoding) (φ : StarFormula) :
+theorem plusTruthAt_iff_atomize (M : TaskModel F) (e : Encoding) (φ : PlusFormula) :
     ∀ (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration),
-      StarTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ) := by
+      PlusTruthAt M τ t φ ↔ TruthAt (M.atomModel e) τ t (atomize e φ) := by
   induction φ with
   | atom p =>
     intro τ hτ t
@@ -201,26 +201,26 @@ theorem starTruthAt_iff_atomize (M : TaskModel F) (e : Encoding) (φ : StarFormu
 
 /--
 **TM⁺ schema soundness over L⋆.** If the atomization of `φ` is a TM⁺ axiom instance admissible
-at `fc`, then `φ` is `StarValidIn fc`: `axiom_validIn` on the atomized model (same frame, so
-`fc.Sat` is inherited), transported back through `starTruthAt_iff_atomize`.
+at `fc`, then `φ` is `PlusValidIn fc`: `axiom_validIn` on the atomized model (same frame, so
+`fc.Sat` is inherited), transported back through `plusTruthAt_iff_atomize`.
 -/
-theorem starValidIn_of_plus {fc : FrameClass} (e : Encoding) (φ : StarFormula)
-    (ax : Axiom (atomize e φ)) (h : ax.minFrameClass ≤ fc) : StarValidIn fc φ :=
-  StarValidIn.of_forall_total fun F hF M τ hτ t =>
-    (starTruthAt_iff_atomize M e φ τ hτ t).mpr
+theorem plusValidIn_of_tm {fc : FrameClass} (e : Encoding) (φ : PlusFormula)
+    (ax : Axiom (atomize e φ)) (h : ax.minFrameClass ≤ fc) : PlusValidIn fc φ :=
+  PlusValidIn.of_forall_total fun F hF M τ hτ t =>
+    (plusTruthAt_iff_atomize M e φ τ hτ t).mpr
       ((axiom_validIn ax h).apply_total F hF (M.atomModel e) τ hτ t)
 
 /--
 **TM⁺ schema swap-soundness over L⋆.** If the atomization of `φ` **under the conjugated
 encoding** is a TM⁺ axiom instance admissible at `fc`, then `φ.swapTemporal` is
-`StarValidIn fc`: `axiom_swap_validIn` on the atomized model, with `atomize_swapTemporal`
+`PlusValidIn fc`: `axiom_swap_validIn` on the atomized model, with `atomize_swapTemporal`
 rewriting the target.
 -/
-theorem starValidIn_swap_of_plus {fc : FrameClass} (e : Encoding) (φ : StarFormula)
+theorem plusValidIn_swap_of_tm {fc : FrameClass} (e : Encoding) (φ : PlusFormula)
     (ax : Axiom (atomize e.swap φ)) (h : ax.minFrameClass ≤ fc) :
-    StarValidIn fc φ.swapTemporal :=
-  StarValidIn.of_forall_total fun F hF M τ hτ t =>
-    (starTruthAt_iff_atomize M e φ.swapTemporal τ hτ t).mpr
+    PlusValidIn fc φ.swapTemporal :=
+  PlusValidIn.of_forall_total fun F hF M τ hτ t =>
+    (plusTruthAt_iff_atomize M e φ.swapTemporal τ hτ t).mpr
       (by
         rw [atomize_swapTemporal]
         exact (axiom_swap_validIn ax h).apply_total F hF (M.atomModel e) τ hτ t)
@@ -228,14 +228,14 @@ theorem starValidIn_swap_of_plus {fc : FrameClass} (e : Encoding) (φ : StarForm
 /-! ## Acceptance test
 
 `□⊡p → □G⊡p` — MF at a `⊡`-formula — is sound over every task frame, by one application of
-`starValidIn_of_plus` to `Axiom.modal_future` at the fresh atom for `⊡p`. -/
+`plusValidIn_of_tm` to `Axiom.modal_future` at the fresh atom for `⊡p`. -/
 
 example (p : Atom) :
-    StarValidIn FrameClass.Base
-      ((StarFormula.box (StarFormula.stab (StarFormula.atom p))).imp
-        (StarFormula.box (allFuture (StarFormula.stab (StarFormula.atom p))))) :=
+    PlusValidIn FrameClass.Base
+      ((PlusFormula.box (PlusFormula.stab (PlusFormula.atom p))).imp
+        (PlusFormula.box (allFuture (PlusFormula.stab (PlusFormula.atom p))))) :=
   let e : Encoding := Classical.choice Encoding.nonempty
-  starValidIn_of_plus e _ (Axiom.modal_future (Formula.atom (e.ι (.inr (StarFormula.atom p)))))
+  plusValidIn_of_tm e _ (Axiom.modal_future (Formula.atom (e.ι (.inr (PlusFormula.atom p)))))
     le_rfl
 
 end FormalSystem.Metalogic.Conservativity

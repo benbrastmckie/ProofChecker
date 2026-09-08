@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.PlusValidity
 import Mathlib.Algebra.Order.Group.Int
 import Mathlib.Data.Int.SuccPred
 
@@ -12,7 +12,7 @@ import Mathlib.Data.Int.SuccPred
 # Non-validities of `⊡` on the permissive frame over ℤ
 
 Machine-checked refutations of the candidate `⊡`/tense interaction principles that are **not**
-axioms of TM⋆ (`StarLanguage/Axioms.lean`). Every refutation lives on one countermodel: the
+axioms of TM⋆ (`PlusLanguage/Axioms.lean`). Every refutation lives on one countermodel: the
 permissive frame `natFrame` over `ℤ` (`Semantics/TaskFrame.lean`), where every function
 `ℤ → ℕ` is a total history, so `⟨τ⟩_t` is as large as it can be; the valuation makes every atom
 true at world state `0` and nowhere else.
@@ -30,7 +30,7 @@ On `refute_determined`: this module lands only the refutation over a non-determi
 schema over deterministic frames is **not** formalized here, and no claim about the class of
 frames validating it is made.
 
-On `refute_allFuture_stab` / `refute_stab_allFuture_past`: GS (`Semantics/StarPasting.lean`,
+On `refute_allFuture_stab` / `refute_stab_allFuture_past`: GS (`Semantics/PlusPasting.lean`,
 `stab_allFuture_valid`) is `⊡Gφ → G⊡φ` for **pure-future** `φ`. The second refutation shows the
 restriction is necessary — with `φ := Pp` the pasted history keeps `τ`'s past, not the
 witness's, and `Pp` flips — and the first shows the converse direction is simply wrong.
@@ -57,9 +57,9 @@ star-language · refutation · stability-modal · upper-bound
 namespace FormalSystem.Semantics
 
 open FormalSystem.Syntax
-open FormalSystem.StarLanguage
-open FormalSystem.StarLanguage.StarFormula
-open StarTruth
+open FormalSystem.PlusLanguage
+open FormalSystem.PlusLanguage.PlusFormula
+open PlusTruth
 
 /-- The permissive frame over `ℤ`: every function `ℤ → ℕ` is a total history. -/
 abbrev NF : TaskFrame := FrameOver.natFrame (D := ℤ)
@@ -81,10 +81,10 @@ def natModel : TaskModel NF where
 
 /-- `⊡p → □⊡p` is refuted: `⊡` does not collapse into `□`. -/
 theorem refute_stab_box (p : Atom) :
-    ¬ StarValid (.imp (.stab (.atom p)) (.box (.stab (.atom p)))) := by
+    ¬ PlusValid (.imp (.stab (.atom p)) (.box (.stab (.atom p)))) := by
   intro h
   have hv := h.apply NF natModel (natHist fun _ => 0) (natHist_isTotal _) 0
-  have h1 : StarTruthAt natModel (natHist fun _ => 0) 0 (.stab (.atom p)) := by
+  have h1 : PlusTruthAt natModel (natHist fun _ => 0) 0 (.stab (.atom p)) := by
     intro σ hσ hs
     exact ⟨hσ 0, (hs trivial (hσ 0)).symm⟩
   have h2 := hv h1 (natHist fun _ => 1) (natHist_isTotal _) (natHist fun _ => 1)
@@ -96,10 +96,10 @@ theorem refute_stab_box (p : Atom) :
 
 /-- `G⊡p → ⊡Gp` is refuted: the converse of GS fails even for atoms. -/
 theorem refute_allFuture_stab (p : Atom) :
-    ¬ StarValid (.imp (allFuture (.stab (.atom p))) (.stab (allFuture (.atom p)))) := by
+    ¬ PlusValid (.imp (allFuture (.stab (.atom p))) (.stab (allFuture (.atom p)))) := by
   intro h
   have hv := h.apply NF natModel (natHist fun _ => 0) (natHist_isTotal _) 0
-  have hA : StarTruthAt natModel (natHist fun _ => 0) 0 (allFuture (.stab (.atom p))) := by
+  have hA : PlusTruthAt natModel (natHist fun _ => 0) 0 (allFuture (.stab (.atom p))) := by
     rw [allFuture_iff]
     intro y _ ρ hρ hs
     exact ⟨hρ y, (hs trivial (hρ y)).symm⟩
@@ -114,11 +114,11 @@ theorem refute_allFuture_stab (p : Atom) :
 
 /-- `⊡GPp → G⊡Pp` is refuted: GS genuinely needs its pure-future side condition. -/
 theorem refute_stab_allFuture_past (p : Atom) :
-    ¬ StarValid (.imp (.stab (allFuture (somePast (.atom p))))
+    ¬ PlusValid (.imp (.stab (allFuture (somePast (.atom p))))
         (allFuture (.stab (somePast (.atom p))))) := by
   intro h
   have hv := h.apply NF natModel (natHist fun _ => 0) (natHist_isTotal _) 0
-  have hA : StarTruthAt natModel (natHist fun _ => 0) 0
+  have hA : PlusTruthAt natModel (natHist fun _ => 0) 0
       (.stab (allFuture (somePast (.atom p)))) := by
     intro σ hσ hs
     rw [allFuture_iff]
@@ -143,7 +143,7 @@ theorem refute_stab_allFuture_past (p : Atom) :
 *Determined* `Fp → ⊡Fp` is refuted over a non-deterministic frame: the **negative half** of
 `app:deterministic`, in the `natFrame` shape.
 
-The positive half **is** formalized, in `FormalSystem/Semantics/StarDeterminism.lean` — see
+The positive half **is** formalized, in `FormalSystem/Semantics/PlusDeterminism.lean` — see
 `determined_of_deterministic`, which shows the schema valid on every frame satisfying
 `TaskFrame.Deterministic` (`Semantics/FrameProperty.lean`). The two halves are the two sides of
 `app:deterministic` and cite each other; neither statement claims the other's converse, and in
@@ -153,7 +153,7 @@ is exhibited under `Metalogic/Independence/`).
 Two things the refutation depends on, recorded because both are easy to lose:
 
 * **The refuting instance is `Fp`, not an atom.** At an atom the schema `p → ⊡p` holds on *every*
-  frame (`stab_atom_of_atom`, `Semantics/StarTruth.lean`): an atom's truth depends on the world
+  frame (`stab_atom_of_atom`, `Semantics/PlusTruth.lean`): an atom's truth depends on the world
   state alone, which is exactly what `⊡` quantifies over. So no uniform-substitution argument is
   available here — a schema can be frame-valid at its atomic instances and refutable at a
   genuinely temporal one, and it is. Every refutation in this family must exhibit a temporal
@@ -164,10 +164,10 @@ Two things the refutation depends on, recorded because both are easy to lose:
   witness does not survive relaxing the carrier.
 -/
 theorem refute_determined (p : Atom) :
-    ¬ StarValid (.imp (someFuture (.atom p)) (.stab (someFuture (.atom p)))) := by
+    ¬ PlusValid (.imp (someFuture (.atom p)) (.stab (someFuture (.atom p)))) := by
   intro h
   have hv := h.apply NF natModel (natHist fun _ => 0) (natHist_isTotal _) 0
-  have hA : StarTruthAt natModel (natHist fun _ => 0) 0 (someFuture (.atom p)) := by
+  have hA : PlusTruthAt natModel (natHist fun _ => 0) 0 (someFuture (.atom p)) := by
     rw [someFuture_iff]; exact ⟨(1 : ℤ), (one_pos : (0 : ℤ) < 1), trivial, (rfl : (0 : ℕ) = 0)⟩
   have hB := hv hA (natHist fun s => if s ≤ 0 then 0 else 1) (natHist_isTotal _)
     (fun _ _ => by show (0 : ℕ) = (if (0 : ℤ) ≤ 0 then 0 else 1); simp)
@@ -184,10 +184,10 @@ theorem refute_determined (p : Atom) :
 the single tense/modal interaction axiom of T×W / Ockhamist logic (Kamp's AK12 in Thomason
 1984 §4, Reynolds 2003's HN). -/
 theorem refute_somePast_stab (p : Atom) :
-    ¬ StarValid (.imp (somePast (.stab (.atom p))) (.stab (somePast (.atom p)))) := by
+    ¬ PlusValid (.imp (somePast (.stab (.atom p))) (.stab (somePast (.atom p)))) := by
   intro h
   have hv := h.apply NF natModel (natHist fun _ => 0) (natHist_isTotal _) 0
-  have hA : StarTruthAt natModel (natHist fun _ => 0) 0 (somePast (.stab (.atom p))) := by
+  have hA : PlusTruthAt natModel (natHist fun _ => 0) 0 (somePast (.stab (.atom p))) := by
     rw [somePast_iff]
     refine ⟨(-1 : ℤ), (by decide : (-1 : ℤ) < 0), ?_⟩
     intro ρ hρ hs

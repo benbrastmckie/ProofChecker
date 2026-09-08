@@ -19,17 +19,17 @@ boxed dichotomy
   `(Sp) := □(DF φ) ∨ □(DN ψ)`
 
 is **not** a theorem of TM, the tense-primitive base proof system
-`MinusLanguage.DerivationTree FrameClass.Base`. Together with `SpWitness.blValid_sp` (`(Sp)` is
+`MinusLanguage.DerivationTree FrameClass.Base`. Together with `SpWitness.minusValid_sp` (`(Sp)` is
 BL-valid on every task frame) this refutes TM's weak completeness over the task-frame class:
-`tmCompleteBase_refuted : ¬ TMCompleteBase`, the `.Base` mirror of
-`Z1Countermodel.tmCompleteZTime_refuted`.
+`tmMinusCompleteBase_refuted : ¬ TMMinusCompleteBase`, the `.Base` mirror of
+`Z1Countermodel.tmMinusCompleteZTime_refuted`.
 
 ## Why no task-frame refutation can exist
 
 `(Sp)` is valid on *every* task frame, so the refuting structure must lie outside the class. The
-route taken here is a native semantics: `Semantics/BLFrame.lean` supplies a frame notion with no
+route taken here is a native semantics: `Semantics/MinusFrame.lean` supplies a frame notion with no
 group structure on time, native BL soundness for TM is proved directly against it
-(`blFrameValid_of_derivation`), and the countermodel is an instance of that class. Note the
+(`minusFrameValid_of_derivation`), and the countermodel is an instance of that class. Note the
 contrast with the `TaskFrame`-bound stack: **TM⁺ is unsound** on the two-fibre structure below,
 so no composition through `tr` and BL⁺ soundness is available. The soundness theorem in this
 module is about TM (`MinusLanguage.DerivationTree`), never about TM⁺, and the two must not be
@@ -56,10 +56,10 @@ lexicographic sum is again a single linear order and is refuted by the argument 
 ## The claim is schema-level, not universally quantified
 
 "No instance of `(Sp)` is a theorem of TM" is **false as literally stated**, and must not be
-re-attempted. `DF ⊤` is true at every point of every `BLFrame` (its consequent `F(H⊤)` follows
+re-attempted. `DF ⊤` is true at every point of every `MinusFrame` (its consequent `F(H⊤)` follows
 from `no_max`), so `□(DF ⊤)` holds everywhere and `Sp ⊤ ψ` is not refuted here — indeed it is
 TM-derivable. The deliverable is the schema-level claim, witnessed by the atomic instance
-`Sp (.atom a) (.atom a)`. Refuting `TMCompleteBase` needs exactly one BL-valid non-theorem, so
+`Sp (.atom a) (.atom a)`. Refuting `TMMinusCompleteBase` needs exactly one BL-valid non-theorem, so
 nothing is lost.
 
 ## Main Definitions
@@ -69,18 +69,18 @@ nothing is lost.
 
 ## Main Results
 
-- `blFrameValid_of_axiom` — every TM axiom schema admissible at `FrameClass.Base` is `BLFrameValid`
-- `blFrameValid_of_derivation` — **native BL soundness**: every TM theorem is `BLFrameValid`
+- `minusFrameValid_of_axiom` — every TM axiom schema admissible at `FrameClass.Base` is `MinusFrameValid`
+- `minusFrameValid_of_derivation` — **native BL soundness**: every TM theorem is `MinusFrameValid`
 - `df_fails`, `dn_fails` — the two disjuncts fail, on the `ℝ` and `ℤ` fibres respectively
 - `sp_false` — `(Sp)` is false at every point of `twoFibre`
 - `not_derivable_sp` — **CEB's failing half**: `(Sp)` is not a TM-theorem
-- `tmCompleteBase_refuted` — `¬ TMCompleteBase`
+- `tmMinusCompleteBase_refuted` — `¬ TMMinusCompleteBase`
 
 ## References
 
-* `FormalSystem/Semantics/BLFrame.lean` — the native frame notion and `truth_swap`
-* `FormalSystem/Metalogic/Conservativity/SpWitness.lean` — `Sp`, `blValid_sp`, `sp_translate`
-* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteBase`
+* `FormalSystem/Semantics/MinusFrame.lean` — the native frame notion and `truth_swap`
+* `FormalSystem/Metalogic/Conservativity/SpWitness.lean` — `Sp`, `minusValid_sp`, `sp_translate`
+* `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMMinusCompleteBase`
 * `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — the `.ZTime` mirror
 * `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — the `TaskFrame`-bound
   soundness theorems this one deliberately does not route through
@@ -99,11 +99,11 @@ open FormalSystem.Semantics
 
 /-! ## Native BL soundness for TM
 
-Naming note: the axiom-validity lemma is `blFrameValid_of_axiom`, not the bare `axiom_valid` a
+Naming note: the axiom-validity lemma is `minusFrameValid_of_axiom`, not the bare `axiom_valid` a
 reader might expect by analogy with `Metalogic/Soundness.lean`. That base name is already taken
-there by the BL⁺ lemma (about `Formula`, not `BLFormula`), and the repository's C23 invariant
+there by the BL⁺ lemma (about `Formula`, not `MinusFormula`), and the repository's C23 invariant
 additionally forbids resolving the clash by nesting a namespace — a shadowed base name defeats
-the dead-declaration census. The `blFrameValid_of_*` pair also reads better together.
+the dead-declaration census. The `minusFrameValid_of_*` pair also reads better together.
 -/
 
 /--
@@ -121,8 +121,8 @@ The remaining three (`df`, `dn`, `co`) carry `minFrameClass` `.ZTime`, `.Dense`,
 which is `≤ .Base`, so the side condition `h_fc` is absurd for them. Exhaustiveness of `cases ax`
 is what confirms the census — a missed constructor is a compile error, not an oversight.
 -/
-theorem blFrameValid_of_axiom {φ : BLFormula} (ax : MinusLanguage.Axiom φ)
-    (h_fc : ax.minFrameClass ≤ FrameClass.Base) : BLFrameValid φ := by
+theorem minusFrameValid_of_axiom {φ : MinusFormula} (ax : MinusLanguage.Axiom φ)
+    (h_fc : ax.minFrameClass ≤ FrameClass.Base) : MinusFrameValid φ := by
   cases ax with
   | prop_k φ ψ χ => intro F V w h1 h2 h3; exact h1 h3 (h2 h3)
   | prop_s φ ψ => intro F V w h1 _; exact h1
@@ -135,7 +135,7 @@ theorem blFrameValid_of_axiom {φ : BLFormula} (ax : MinusLanguage.Axiom φ)
   | modal_t φ => intro F V w h; exact h w
   | modal_5 φ =>
       intro F V w h v
-      rw [BLFrameTruth.diamond_iff] at h
+      rw [MinusFrameTruth.diamond_iff] at h
       obtain ⟨u, hu⟩ := h
       exact hu v
   | modal_future φ => intro F V w h v u _; exact h u
@@ -143,35 +143,35 @@ theorem blFrameValid_of_axiom {φ : BLFormula} (ax : MinusLanguage.Axiom φ)
   | temp_4 φ => intro F V w h v hv u hu; exact h u (F.lt_trans hv hu)
   | temp_serial =>
       intro F V w
-      rw [BLFrameTruth.someFuture_iff]
+      rw [MinusFrameTruth.someFuture_iff]
       obtain ⟨v, hv⟩ := F.no_max w
-      exact ⟨v, hv, BLFrameTruth.top_true⟩
+      exact ⟨v, hv, MinusFrameTruth.top_true⟩
   | temp_connect φ =>
       intro F V w h v hv
-      rw [BLFrameTruth.somePast_iff]
+      rw [MinusFrameTruth.somePast_iff]
       exact ⟨w, hv, h⟩
   | temp_linearity φ ψ =>
       intro F V w h
-      rw [BLFrameTruth.and_iff, BLFrameTruth.someFuture_iff, BLFrameTruth.someFuture_iff] at h
+      rw [MinusFrameTruth.and_iff, MinusFrameTruth.someFuture_iff, MinusFrameTruth.someFuture_iff] at h
       obtain ⟨⟨s, hws, hφ⟩, ⟨u, hwu, hψ⟩⟩ := h
       rcases F.fut_lin hws hwu with hlt | heq | hgt
       · -- `s < u` : third disjunct, `F(φ ∧ Fψ)` at `s`
-        refine (BLFrameTruth.or_iff _ _).mpr (Or.inr ((BLFrameTruth.or_iff _ _).mpr (Or.inr ?_)))
-        rw [BLFrameTruth.someFuture_iff]
+        refine (MinusFrameTruth.or_iff _ _).mpr (Or.inr ((MinusFrameTruth.or_iff _ _).mpr (Or.inr ?_)))
+        rw [MinusFrameTruth.someFuture_iff]
         refine ⟨s, hws, ?_⟩
-        rw [BLFrameTruth.and_iff, BLFrameTruth.someFuture_iff]
+        rw [MinusFrameTruth.and_iff, MinusFrameTruth.someFuture_iff]
         exact ⟨hφ, u, hlt, hψ⟩
       · -- `s = u` : second disjunct
-        refine (BLFrameTruth.or_iff _ _).mpr (Or.inr ((BLFrameTruth.or_iff _ _).mpr (Or.inl ?_)))
-        rw [BLFrameTruth.someFuture_iff]
+        refine (MinusFrameTruth.or_iff _ _).mpr (Or.inr ((MinusFrameTruth.or_iff _ _).mpr (Or.inl ?_)))
+        rw [MinusFrameTruth.someFuture_iff]
         refine ⟨s, hws, ?_⟩
-        rw [BLFrameTruth.and_iff]
+        rw [MinusFrameTruth.and_iff]
         exact ⟨hφ, heq ▸ hψ⟩
       · -- `u < s` : first disjunct
-        refine (BLFrameTruth.or_iff _ _).mpr (Or.inl ?_)
-        rw [BLFrameTruth.someFuture_iff]
+        refine (MinusFrameTruth.or_iff _ _).mpr (Or.inl ?_)
+        rw [MinusFrameTruth.someFuture_iff]
         refine ⟨u, hwu, ?_⟩
-        rw [BLFrameTruth.and_iff, BLFrameTruth.someFuture_iff]
+        rw [MinusFrameTruth.and_iff, MinusFrameTruth.someFuture_iff]
         exact ⟨⟨s, hgt, hφ⟩, hψ⟩
   | df _ => exact absurd h_fc (show ¬ (FrameClass.ZTime ≤ FrameClass.Base) by decide)
   | dn _ => exact absurd h_fc (show ¬ (FrameClass.Dense ≤ FrameClass.Base) by decide)
@@ -183,28 +183,28 @@ on the whole native BL frame class.
 
 Recursion over all seven `MinusLanguage.DerivationTree` constructors. `assumption` is vacuous at
 the empty context; `modus_ponens`, `necessitation` and `temporal_necessitation` are immediate
-from the corresponding truth clauses (the last two because `BLFrameValid` already quantifies over
+from the corresponding truth clauses (the last two because `MinusFrameValid` already quantifies over
 every point). `temporal_duality` is one line via `Semantics.truth_swap` at `F.swap`, which is
 available precisely because the frame class is converse-closed. `weakening` routes through
 `DerivationTree.ofWeakeningNil`, with `height_ofWeakeningNil_lt` supplying termination.
 -/
-theorem blFrameValid_of_derivation {φ : BLFormula}
-    (d : MinusLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ := by
+theorem minusFrameValid_of_derivation {φ : MinusFormula}
+    (d : MinusLanguage.DerivationTree FrameClass.Base [] φ) : MinusFrameValid φ := by
   match d with
-  | .axiom _ _ h_ax h_fc => exact blFrameValid_of_axiom h_ax h_fc
+  | .axiom _ _ h_ax h_fc => exact minusFrameValid_of_axiom h_ax h_fc
   | .assumption _ _ h_mem => exact absurd h_mem (by simp)
   | .modus_ponens _ ψ' _ d1 d2 =>
       exact fun F V w =>
-        (blFrameValid_of_derivation d1 F V w) (blFrameValid_of_derivation d2 F V w)
-  | .necessitation _ d' => exact fun F V _ v => blFrameValid_of_derivation d' F V v
+        (minusFrameValid_of_derivation d1 F V w) (minusFrameValid_of_derivation d2 F V w)
+  | .necessitation _ d' => exact fun F V _ v => minusFrameValid_of_derivation d' F V v
   | .temporal_necessitation _ d' =>
-      exact fun F V _ v _ => blFrameValid_of_derivation d' F V v
+      exact fun F V _ v _ => minusFrameValid_of_derivation d' F V v
   | .temporal_duality φ' d' =>
       intro F V w
-      exact (truth_swap F V w φ').mp (blFrameValid_of_derivation d' F.swap V w)
+      exact (truth_swap F V w φ').mp (minusFrameValid_of_derivation d' F.swap V w)
   | .weakening Γ' _ _ d' h_sub =>
       have h_term := MinusLanguage.DerivationTree.height_ofWeakeningNil_lt d' h_sub
-      exact blFrameValid_of_derivation (d'.ofWeakeningNil h_sub)
+      exact minusFrameValid_of_derivation (d'.ofWeakeningNil h_sub)
 termination_by d.height
 decreasing_by
   all_goals first
@@ -236,9 +236,9 @@ do.
 
 `@[reducible]` is load-bearing, not decoration: without it the valuation's type
 `ℤ ⊕ ℝ → Atom → Prop` and the expected `twoFibre.Point → Atom → Prop` sit at different
-transparency levels, and `rw [BLFrameTruth.and_iff]` fails on the mismatch.
+transparency levels, and `rw [MinusFrameTruth.and_iff]` fails on the mismatch.
 -/
-@[reducible] def twoFibre : BLFrame where
+@[reducible] def twoFibre : MinusFrame where
   Point := ℤ ⊕ ℝ
   lt := (· < ·)
   lt_trans := fun h1 h2 => lt_trans h1 h2
@@ -267,7 +267,7 @@ def twoV : (ℤ ⊕ ℝ) → Atom → Prop
 
 /-- The atom clause on `twoFibre` is the valuation; a `rfl` bridge for `simp`. -/
 @[simp] theorem twoFibre_atom (w : ℤ ⊕ ℝ) (a : Atom) :
-    BLFrameTruth twoFibre twoV w (BLFormula.atom a) ↔ twoV w a := Iff.rfl
+    MinusFrameTruth twoFibre twoV w (MinusFormula.atom a) ↔ twoV w a := Iff.rfl
 
 /--
 **`DF` fails on the `ℝ` fibre.** At `inr 0` the antecedent `Hp ∧ p ∧ F⊤` holds — `p` is true
@@ -278,15 +278,15 @@ with `p` false there, so `Hp` fails at every witness.
 This is the disjunct that needs a time with no immediate successor.
 -/
 theorem df_fails (a : Atom) :
-    ¬ BLFrameTruth twoFibre twoV (Sum.inr 0)
-      (((((BLFormula.atom a).allPast).and (BLFormula.atom a)).and
-          BLFormula.top.someFuture).imp ((BLFormula.atom a).allPast).someFuture) := by
+    ¬ MinusFrameTruth twoFibre twoV (Sum.inr 0)
+      (((((MinusFormula.atom a).allPast).and (MinusFormula.atom a)).and
+          MinusFormula.top.someFuture).imp ((MinusFormula.atom a).allPast).someFuture) := by
   intro h
-  have hante : BLFrameTruth twoFibre twoV (Sum.inr 0)
-      ((((BLFormula.atom a).allPast).and (BLFormula.atom a)).and BLFormula.top.someFuture) := by
-    rw [BLFrameTruth.and_iff, BLFrameTruth.and_iff, BLFrameTruth.someFuture_iff]
-    refine ⟨⟨?_, ?_⟩, ⟨Sum.inr 1, by simp, BLFrameTruth.top_true⟩⟩
-    · rw [BLFrameTruth.past_iff]
+  have hante : MinusFrameTruth twoFibre twoV (Sum.inr 0)
+      ((((MinusFormula.atom a).allPast).and (MinusFormula.atom a)).and MinusFormula.top.someFuture) := by
+    rw [MinusFrameTruth.and_iff, MinusFrameTruth.and_iff, MinusFrameTruth.someFuture_iff]
+    refine ⟨⟨?_, ?_⟩, ⟨Sum.inr 1, by simp, MinusFrameTruth.top_true⟩⟩
+    · rw [MinusFrameTruth.past_iff]
       rintro (n | r) hlt
       · simp at hlt
       · simp only [Sum.inr_lt_inr_iff] at hlt
@@ -294,13 +294,13 @@ theorem df_fails (a : Atom) :
     · show twoV (Sum.inr 0) a
       exact le_refl 0
   have hcons := h hante
-  rw [BLFrameTruth.someFuture_iff] at hcons
+  rw [MinusFrameTruth.someFuture_iff] at hcons
   obtain ⟨v, hv, hHp⟩ := hcons
   match v, hv with
   | Sum.inl n, hv => simp at hv
   | Sum.inr r, hv =>
       simp only [Sum.inr_lt_inr_iff] at hv
-      rw [BLFrameTruth.past_iff] at hHp
+      rw [MinusFrameTruth.past_iff] at hHp
       have h2 : twoV (Sum.inr (r / 2)) a := by
         refine hHp (Sum.inr (r / 2)) ?_
         simp only [Sum.inr_lt_inr_iff]
@@ -317,14 +317,14 @@ This is the disjunct that needs a time with an immediate successor, which is why
 a fibre with `df_fails`.
 -/
 theorem dn_fails (a : Atom) :
-    ¬ BLFrameTruth twoFibre twoV (Sum.inl 0)
-      (((BLFormula.atom a).allFuture.allFuture).imp (BLFormula.atom a).allFuture) := by
+    ¬ MinusFrameTruth twoFibre twoV (Sum.inl 0)
+      (((MinusFormula.atom a).allFuture.allFuture).imp (MinusFormula.atom a).allFuture) := by
   intro h
-  have hante : BLFrameTruth twoFibre twoV (Sum.inl 0)
-      ((BLFormula.atom a).allFuture.allFuture) := by
-    rw [BLFrameTruth.future_iff]
+  have hante : MinusFrameTruth twoFibre twoV (Sum.inl 0)
+      ((MinusFormula.atom a).allFuture.allFuture) := by
+    rw [MinusFrameTruth.future_iff]
     rintro (n | x) hn
-    · rw [BLFrameTruth.future_iff]
+    · rw [MinusFrameTruth.future_iff]
       rintro (m | y) hm
       · simp only [Sum.inl_lt_inl_iff] at hn hm
         show m ≠ 1
@@ -332,7 +332,7 @@ theorem dn_fails (a : Atom) :
       · simp at hm
     · simp at hn
   have hcons := h hante
-  rw [BLFrameTruth.future_iff] at hcons
+  rw [MinusFrameTruth.future_iff] at hcons
   have := hcons (Sum.inl 1) (by simp)
   have h1 : (1 : ℤ) ≠ 1 := this
   exact h1 rfl
@@ -347,9 +347,9 @@ A *single* atom witnesses both disjuncts, because `twoV` is uniform in the atom;
 is introduced.
 -/
 theorem sp_false (a : Atom) (w : twoFibre.Point) :
-    ¬ BLFrameTruth twoFibre twoV w (Sp (BLFormula.atom a) (BLFormula.atom a)) := by
+    ¬ MinusFrameTruth twoFibre twoV w (Sp (MinusFormula.atom a) (MinusFormula.atom a)) := by
   intro h
-  rw [Sp, BLFrameTruth.or_iff, BLFrameTruth.box_iff, BLFrameTruth.box_iff] at h
+  rw [Sp, MinusFrameTruth.or_iff, MinusFrameTruth.box_iff, MinusFrameTruth.box_iff] at h
   rcases h with hl | hr
   · exact df_fails a (hl (Sum.inr 0))
   · exact dn_fails a (hr (Sum.inl 0))
@@ -357,34 +357,34 @@ theorem sp_false (a : Atom) (w : twoFibre.Point) :
 /--
 **CEB's failing half: `(Sp)` is not a theorem of TM.**
 
-The atomic instance `Sp p p` is `BLFrameValid`-refuted by `twoFibre`, and native BL soundness
-(`blFrameValid_of_derivation`) says every TM theorem is `BLFrameValid`. This is
+The atomic instance `Sp p p` is `MinusFrameValid`-refuted by `twoFibre`, and native BL soundness
+(`minusFrameValid_of_derivation`) says every TM theorem is `MinusFrameValid`. This is
 the claim `SpWitness.lean` disclaims as out of scope; it is now discharged.
 
 The statement is deliberately **schema-level**, witnessed by an atomic instance. The universally
 quantified reading — "no instance of `(Sp)` is a TM-theorem" — is *false*: `□(DF ⊤)` holds on
-every `BLFrame` (its consequent follows from `no_max`), so `Sp ⊤ ψ` is not refuted here. See the
+every `MinusFrame` (its consequent follows from `no_max`), so `Sp ⊤ ψ` is not refuted here. See the
 module docstring.
 -/
 theorem not_derivable_sp (a : Atom) :
-    ¬ MinusLanguage.Derivable FrameClass.Base [] (Sp (BLFormula.atom a) (BLFormula.atom a)) := by
+    ¬ MinusLanguage.Derivable FrameClass.Base [] (Sp (MinusFormula.atom a) (MinusFormula.atom a)) := by
   rintro ⟨d⟩
-  exact sp_false a (Sum.inl 0) (blFrameValid_of_derivation d twoFibre twoV (Sum.inl 0))
+  exact sp_false a (Sum.inl 0) (minusFrameValid_of_derivation d twoFibre twoV (Sum.inl 0))
 
 /--
 **TM is not weakly complete over the task-frame class.** The negation of
-`TMCompletenessReduction`'s `TMCompleteBase`, witnessed by `Sp p p`: `BLValid (Sp p p)` holds
-(`SpWitness.blValid_sp`) yet `Sp p p` is not TM-derivable (`not_derivable_sp`).
+`TMCompletenessReduction`'s `TMMinusCompleteBase`, witnessed by `Sp p p`: `MinusValid (Sp p p)` holds
+(`SpWitness.minusValid_sp`) yet `Sp p p` is not TM-derivable (`not_derivable_sp`).
 
-Mirrors `Z1Countermodel.tmCompleteZTime_refuted` in shape. Only the **negation** is stated: per
+Mirrors `Z1Countermodel.tmMinusCompleteZTime_refuted` in shape. Only the **negation** is stated: per
 `Metalogic/Conservativity.lean`'s standing prohibition, forward conservativity is refuted, not
-open, and no theorem here concludes `TMCompleteBase`, `ForwardBase` or `forward` positively.
+open, and no theorem here concludes `TMMinusCompleteBase`, `ForwardBase` or `forward` positively.
 
-`TMCompleteBase` does not apply directly as a function, hence the `unfold` first.
+`TMMinusCompleteBase` does not apply directly as a function, hence the `unfold` first.
 -/
-theorem tmCompleteBase_refuted (a : Atom) : ¬ TMCompleteBase := by
+theorem tmMinusCompleteBase_refuted (a : Atom) : ¬ TMMinusCompleteBase := by
   intro h
-  unfold TMCompleteBase TMComplete at h
-  exact not_derivable_sp a (h _ (blValid_sp (BLFormula.atom a) (BLFormula.atom a)))
+  unfold TMMinusCompleteBase TMMinusComplete at h
+  exact not_derivable_sp a (h _ (minusValid_sp (MinusFormula.atom a) (MinusFormula.atom a)))
 
 end FormalSystem.Metalogic

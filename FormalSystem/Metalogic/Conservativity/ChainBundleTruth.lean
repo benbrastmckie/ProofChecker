@@ -15,14 +15,14 @@ A base-language formula evaluated on the flow frames of `Metalogic/Algebraic/Flo
 see only a very simple Kripke structure: an indexed family of copies of the duration order, with
 `H`/`G` quantifying *within* a copy and `□` quantifying over *everything*. This module states that
 structure as a bare satisfaction predicate `chainSat` over `FamIdx × ↑D` — no maximal-consistent
-sets, no proof-theoretic data, just a valuation — and proves that `BLTruthAt` along a translate
+sets, no proof-theoretic data, just a valuation — and proves that `MinusTruthAt` along a translate
 history agrees with it pointwise.
 
 ## Why `□` is universal and carries no time argument
 
 `chainSat`'s `box` clause is `∀ q', chainSat v q' φ`, quantifying **both** coordinates and taking
 no time argument at all. That is not a simplification: it is what
-`Conservativity/MinusLanguageSoundness.lean`'s `bl_box_universal` establishes. `BLTruthAt`'s box
+`Conservativity/MinusLanguageSoundness.lean`'s `minus_box_universal` establishes. `MinusTruthAt`'s box
 clause is history-blind by definition (it does not mention `τ`) and time-blind by
 `Semantics.Truth.box_const`, so `□φ` holds at one total history-and-time exactly when `φ` holds at
 every total history and every time. On a flow frame the total histories are *exactly* the
@@ -36,7 +36,7 @@ over task frames look like a product logic with same-time alignment validities, 
 
 It is **the transfer half** of the standard route to a completeness theorem over the dense or
 Dedekind classes: given a chain-model refutation of `φ`, produce a task-frame refutation. That
-half is closed here, generically in `D` and `FamIdx`, and `not_blValidIn_of_not_chainSat` is the
+half is closed here, generically in `D` and `FamIdx`, and `not_minusValidIn_of_not_chainSat` is the
 single interface any future canonical-model work consumes. The frame construction the route also
 needs was already in-tree and generic (`multiFamTaskFrameGen` discharges all four frame axioms for
 an arbitrary temporal order), so no frame-building appears here either.
@@ -44,12 +44,12 @@ an arbitrary temporal order), so no frame-building appears here either.
 It is **not** a completeness proof and does not approach one. The missing content is entirely on
 the other side: a canonical model built from base-language maximal-consistent sets, canonicity for
 the eleven Base axioms plus `DN`, bulldozing, and a countable-ℚ realization. None of that is here,
-no theorem in this module concludes in `TMComplete _` or `Forward _`, and the standing prohibition
+no theorem in this module concludes in `TMMinusComplete _` or `Forward _`, and the standing prohibition
 in `Metalogic/Conservativity.lean` — never state a completeness or forward-conservativity theorem
 and discharge it with `sorry` — applies in full. The current four-row status is recorded in
 `Conservativity/TMCompletenessReduction.lean`'s module docstring.
 
-In particular, the converse of `not_blValidIn_of_not_chainSat` is **not** proved and is not
+In particular, the converse of `not_minusValidIn_of_not_chainSat` is **not** proved and is not
 available: nothing here says that a formula underivable in the system has a chain-model
 refutation. That implication is the completeness direction itself.
 
@@ -57,19 +57,19 @@ refutation. That implication is the completeness direction itself.
 
 - `chainSat` — Kripke satisfaction on a disjoint union of `D`-chains, with `□` universal over all
   points and `H`/`G` quantifying the second coordinate within a fixed first coordinate
-- `chainBundle_truth_lemma` — `BLTruthAt` along `multiFamHistoryGen f w₀` at time `t` matches
+- `chainBundle_truth_lemma` — `MinusTruthAt` along `multiFamHistoryGen f w₀` at time `t` matches
   `chainSat` at the point `(f, w₀ + t)`
-- `not_blValidIn_of_not_chainSat` — the transfer corollary: a chain-model refutation refutes
-  `BLValidIn fc` at every `fc` the flow frame satisfies
-- `not_blValidDense_of_not_chainSat`, `not_blValidRTime_of_not_chainSat` — its instantiations at
+- `not_minusValidIn_of_not_chainSat` — the transfer corollary: a chain-model refutation refutes
+  `MinusValidIn fc` at every `fc` the flow frame satisfies
+- `not_minusValidDense_of_not_chainSat`, `not_minusValidRTime_of_not_chainSat` — its instantiations at
   ℚ and at ℝ, so the transfer step is closed for both of the two open rows
 
 ## References
 
 * `FormalSystem/Metalogic/Algebraic/FlowFrame.lean` — `multiFamTaskFrameGen`,
   `multiFamHistoryGen`, `multiFamHistoryGen_total`, `multiFamGen_total_eq_range`
-* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `bl_box_universal`
-* `FormalSystem/Semantics/BLTruth.lean` — the six `BLTruthAt` clauses `chainSat` mirrors
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `minus_box_universal`
+* `FormalSystem/Semantics/MinusTruth.lean` — the six `MinusTruthAt` clauses `chainSat` mirrors
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — the four-row status table
 
 ## Tags
@@ -91,19 +91,19 @@ variable {D : TemporalOrder} {FamIdx : Type} [Nonempty FamIdx]
 **Kripke satisfaction on a disjoint union of `D`-chains.**
 
 Points are pairs `(f, x)`: `f` names the chain, `x` the position along it. Six clauses, one per
-`BLFormula` constructor, mirroring `Semantics.BLTruthAt`:
+`MinusFormula` constructor, mirroring `Semantics.MinusTruthAt`:
 
-* `atom` — read off the bare valuation `v`. Unlike `BLTruthAt`'s atom clause there is no domain
+* `atom` — read off the bare valuation `v`. Unlike `MinusTruthAt`'s atom clause there is no domain
   side condition, because a chain point is always in the "domain" of its own chain.
 * `bot`, `imp` — as usual.
 * `box` — `∀ q', chainSat v q' φ`, over **all** points of **all** chains, with no time argument.
-  See the module docstring: this is `bl_box_universal`, not a simplification.
+  See the module docstring: this is `minus_box_universal`, not a simplification.
 * `allPast`, `allFuture` — quantify the second coordinate strictly below/above `q.2`, holding the
   first coordinate `q.1` fixed. This is the sense in which the chains are disjoint for `H`/`G`
   while being merged for `□`.
 -/
 def chainSat (v : FamIdx × (D : Type) → Atom → Prop) :
-    FamIdx × (D : Type) → BLFormula → Prop
+    FamIdx × (D : Type) → MinusFormula → Prop
   | q, .atom p => v q p
   | _, .bot => False
   | q, .imp φ ψ => chainSat v q φ → chainSat v q ψ
@@ -125,7 +125,7 @@ Case by case:
   definitionally `(f, w₀ + t)`. The domain conjunct is `trivial` (`multiFamHistoryGen` carries
   `domain := fun _ => True`).
 * `bot`, `imp` — `Iff.rfl` and congruence.
-* `box` — the two interesting halves. Forwards, `bl_box_universal` turns `□φ` at `(τ, t)` into
+* `box` — the two interesting halves. Forwards, `minus_box_universal` turns `□φ` at `(τ, t)` into
   truth at *every* total history and *every* time, so it can be instantiated at
   `multiFamHistoryGen q'.1 q'.2` and time `0`, landing on `chainSat v (q'.1, q'.2 + 0)`.
   Backwards, an arbitrary total `σ` is a translate by `multiFamGen_total_eq_range`, and the
@@ -136,8 +136,8 @@ Case by case:
   position within the chain `f` and never leaves it.
 -/
 theorem chainBundle_truth_lemma (M : TaskModel (multiFamTaskFrameGen D FamIdx))
-    (f : FamIdx) (w₀ t : (D : Type)) (φ : BLFormula) :
-    BLTruthAt M (multiFamHistoryGen (D := D) f w₀) t φ ↔ chainSat M.valuation (f, w₀ + t) φ := by
+    (f : FamIdx) (w₀ t : (D : Type)) (φ : MinusFormula) :
+    MinusTruthAt M (multiFamHistoryGen (D := D) f w₀) t φ ↔ chainSat M.valuation (f, w₀ + t) φ := by
   induction φ generalizing f w₀ t with
   | atom p =>
       constructor
@@ -148,7 +148,7 @@ theorem chainBundle_truth_lemma (M : TaskModel (multiFamTaskFrameGen D FamIdx))
   | box φ ih =>
       constructor
       · intro h q'
-        have huniv := (bl_box_universal M _ t (multiFamHistoryGen_total f w₀) φ).mp h
+        have huniv := (minus_box_universal M _ t (multiFamHistoryGen_total f w₀) φ).mp h
         have hq := (ih q'.1 q'.2 0).mp
           (huniv (multiFamHistoryGen q'.1 q'.2) (multiFamHistoryGen_total _ _) 0)
         simpa using hq
@@ -184,7 +184,7 @@ corollary. The frame construction it seems to call for was already in the tree a
 generic: `multiFamTaskFrameGen` discharges Compositionality, Seriality, Limit and Saturation for
 an arbitrary temporal order, with singleton fibres, and `multiFamGen_total_eq_range` identifies
 its possible worlds with the translates. So nothing is built here; the only content is crossing
-from `chainSat` back to `BLValidIn`. -/
+from `chainSat` back to `MinusValidIn`. -/
 
 /--
 **A chain-model refutation is a task-frame refutation.**
@@ -201,13 +201,13 @@ is `multiFamHistoryGen q.1 q.2`, its totality is `multiFamHistoryGen_total`, and
 chain-model refutation" is the completeness direction, and is exactly what
 `Conservativity/TMCompletenessReduction.lean` records as unasserted at all four tags.
 -/
-theorem not_blValidIn_of_not_chainSat {fc : FrameClass}
+theorem not_minusValidIn_of_not_chainSat {fc : FrameClass}
     (hSat : fc.Sat (multiFamTaskFrameGen D FamIdx))
-    (v : FamIdx × (D : Type) → Atom → Prop) (q : FamIdx × (D : Type)) (φ : BLFormula)
-    (h : ¬ chainSat v q φ) : ¬ BLValidIn fc φ := by
+    (v : FamIdx × (D : Type) → Atom → Prop) (q : FamIdx × (D : Type)) (φ : MinusFormula)
+    (h : ¬ chainSat v q φ) : ¬ MinusValidIn fc φ := by
   intro hvalid
   refine h ?_
-  have htrue := BLValidIn.apply_total hvalid (multiFamTaskFrameGen D FamIdx) hSat ⟨v⟩
+  have htrue := MinusValidIn.apply_total hvalid (multiFamTaskFrameGen D FamIdx) hSat ⟨v⟩
     (multiFamHistoryGen q.1 q.2) (multiFamHistoryGen_total _ _) 0
   have h2 := (chainBundle_truth_lemma (D := D) ⟨v⟩ q.1 q.2 0 φ).mp htrue
   simpa using h2
@@ -217,14 +217,14 @@ theorem not_blValidIn_of_not_chainSat {fc : FrameClass}
 
 `FrameClass.Sat .Dense` reduces to `DenselyOrdered ↑(TemporalOrder.of ℚ)` through the reducible
 chain `Sat .Dense ⇝ TaskFrame.IsDense ⇝ DenselyOrdered`, so the side condition is
-`inferInstance`. The `(fc := …)` ascription is required: `BLValidDense` is a `def`, not an
+`inferInstance`. The `(fc := …)` ascription is required: `MinusValidDense` is a `def`, not an
 `abbrev`, so the tag is not determined from the goal in time to elaborate `hSat`.
 -/
-theorem not_blValidDense_of_not_chainSat
+theorem not_minusValidDense_of_not_chainSat
     (v : FamIdx × ((TemporalOrder.of ℚ) : Type) → Atom → Prop)
-    (q : FamIdx × ((TemporalOrder.of ℚ) : Type)) (φ : BLFormula)
-    (h : ¬ chainSat v q φ) : ¬ BLValidDense φ :=
-  not_blValidIn_of_not_chainSat (fc := FrameClass.Dense) (D := TemporalOrder.of ℚ)
+    (q : FamIdx × ((TemporalOrder.of ℚ) : Type)) (φ : MinusFormula)
+    (h : ¬ chainSat v q φ) : ¬ MinusValidDense φ :=
+  not_minusValidIn_of_not_chainSat (fc := FrameClass.Dense) (D := TemporalOrder.of ℚ)
     inferInstance v q φ h
 
 /--
@@ -240,11 +240,11 @@ Landing both rows means the transfer step is closed for **both** open rows regar
 pursued — but note what that does and does not settle. The Dedekind row's obstruction is on the
 canonical-model side, not here; see `Conservativity/TMCompletenessReduction.lean`.
 -/
-theorem not_blValidRTime_of_not_chainSat
+theorem not_minusValidRTime_of_not_chainSat
     (v : FamIdx × ((TemporalOrder.of ℝ) : Type) → Atom → Prop)
-    (q : FamIdx × ((TemporalOrder.of ℝ) : Type)) (φ : BLFormula)
-    (h : ¬ chainSat v q φ) : ¬ BLValidRTime φ :=
-  not_blValidIn_of_not_chainSat (fc := FrameClass.RTime) (D := TemporalOrder.of ℝ)
+    (q : FamIdx × ((TemporalOrder.of ℝ) : Type)) (φ : MinusFormula)
+    (h : ¬ chainSat v q φ) : ¬ MinusValidRTime φ :=
+  not_minusValidIn_of_not_chainSat (fc := FrameClass.RTime) (D := TemporalOrder.of ℝ)
     ⟨inferInstance, fun _ hne hbdd => Real.exists_isLUB hne hbdd⟩ v q φ h
 
 end FormalSystem.Metalogic

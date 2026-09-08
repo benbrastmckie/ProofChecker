@@ -138,7 +138,7 @@ while producing a `DerivationTree` (itself a `Type`). A `Prop`-valued inductive 
 ## Polarity
 
 `allPast` is the universal H and `allFuture` the universal G; `someFuture`/`somePast` are the
-*derived* existentials F/P (`BLFormula.someFuture φ = ¬G¬φ`). See the polarity warning in
+*derived* existentials F/P (`MinusFormula.someFuture φ = ¬G¬φ`). See the polarity warning in
 `MinusLanguage/Formula.lean`.
 
 ## References
@@ -162,45 +162,45 @@ that the discharge in `MinusLanguage/AxiomDischarge.lean` is a one-line match on
 MP, MN and TD are **rules**, not axioms; they are constructors of
 `MinusLanguage.DerivationTree`.
 -/
-inductive Axiom : BLFormula → Type where
+inductive Axiom : MinusFormula → Type where
   -- Propositional (CPL), matching `ProofSystem.Axiom`'s basis exactly
   /-- Propositional K: `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))`. -/
-  | prop_k (φ ψ χ : BLFormula) :
+  | prop_k (φ ψ χ : MinusFormula) :
       Axiom ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ)))
   /-- Propositional S (weakening): `φ → (ψ → φ)`. -/
-  | prop_s (φ ψ : BLFormula) : Axiom (φ.imp (ψ.imp φ))
+  | prop_s (φ ψ : MinusFormula) : Axiom (φ.imp (ψ.imp φ))
   /-- Ex falso quodlibet: `⊥ → φ`. -/
-  | ex_falso (φ : BLFormula) : Axiom (BLFormula.bot.imp φ)
+  | ex_falso (φ : MinusFormula) : Axiom (MinusFormula.bot.imp φ)
   /-- Peirce's law: `((φ → ψ) → φ) → φ`. -/
-  | peirce (φ ψ : BLFormula) : Axiom (((φ.imp ψ).imp φ).imp φ)
+  | peirce (φ ψ : MinusFormula) : Axiom (((φ.imp ψ).imp φ).imp φ)
   -- Modal (S5 fragment of TM)
   /-- **MK**: `□(φ → ψ) → (□φ → □ψ)`. -/
-  | modal_k (φ ψ : BLFormula) :
+  | modal_k (φ ψ : MinusFormula) :
       Axiom ((φ.imp ψ).box.imp (φ.box.imp ψ.box))
   /-- **MT**: `□φ → φ`. -/
-  | modal_t (φ : BLFormula) : Axiom (φ.box.imp φ)
+  | modal_t (φ : MinusFormula) : Axiom (φ.box.imp φ)
   /-- **M5**: `◇□φ → □φ`. -/
-  | modal_5 (φ : BLFormula) : Axiom (φ.box.diamond.imp φ.box)
+  | modal_5 (φ : MinusFormula) : Axiom (φ.box.diamond.imp φ.box)
   /-- **MF**: `□φ → □Gφ`. The modal-temporal interaction axiom. -/
-  | modal_future (φ : BLFormula) : Axiom (φ.box.imp φ.allFuture.box)
+  | modal_future (φ : MinusFormula) : Axiom (φ.box.imp φ.allFuture.box)
   -- Temporal
   /-- **TK**: `G(φ → ψ) → (Gφ → Gψ)`. -/
-  | temp_k (φ ψ : BLFormula) :
+  | temp_k (φ ψ : MinusFormula) :
       Axiom ((φ.imp ψ).allFuture.imp (φ.allFuture.imp ψ.allFuture))
   /-- **T4**: `Gφ → GGφ`. -/
-  | temp_4 (φ : BLFormula) : Axiom (φ.allFuture.imp φ.allFuture.allFuture)
+  | temp_4 (φ : MinusFormula) : Axiom (φ.allFuture.imp φ.allFuture.allFuture)
   /-- **TS**: `F⊤`. Future seriality, stated as a bare theorem rather than an implication. -/
-  | temp_serial : Axiom BLFormula.top.someFuture
+  | temp_serial : Axiom MinusFormula.top.someFuture
   /-- **TC**: `φ → G P φ`. Temporal connectedness: the present is always in the past of the
       future. -/
-  | temp_connect (φ : BLFormula) : Axiom (φ.imp φ.somePast.allFuture)
+  | temp_connect (φ : MinusFormula) : Axiom (φ.imp φ.somePast.allFuture)
   /-- **TL**: `(Fφ ∧ Fψ) → [F(Fφ ∧ ψ) ∨ F(φ ∧ ψ) ∨ F(φ ∧ Fψ)]`.
 
       The disjunct order and right-association here are the **paper's**, transcribed verbatim.
       This repository's `ProofSystem.Axiom.temp_linearity` carries the same three disjuncts in a
       different order and association; the reshuffle happens once, in
       `MinusLanguage/AxiomDischarge.lean`, and is deliberately not pre-applied here. -/
-  | temp_linearity (φ ψ : BLFormula) :
+  | temp_linearity (φ ψ : MinusFormula) :
       Axiom ((φ.someFuture.and ψ.someFuture).imp
         (((φ.someFuture.and ψ).someFuture).or
           (((φ.and ψ).someFuture).or ((φ.and ψ.someFuture).someFuture))))
@@ -209,16 +209,16 @@ inductive Axiom : BLFormula → Type where
 
       Association `((Hφ ∧ φ) ∧ F⊤)` is pinned to match
       `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, which discharges its translation. -/
-  | df (φ : BLFormula) :
-      Axiom (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture)
+  | df (φ : MinusFormula) :
+      Axiom (((φ.allPast.and φ).and MinusFormula.top.someFuture).imp φ.allPast.someFuture)
   /-- **DN** (`TM_d`, dense): `GGφ → Gφ`. -/
-  | dn (φ : BLFormula) : Axiom (φ.allFuture.allFuture.imp φ.allFuture)
+  | dn (φ : MinusFormula) : Axiom (φ.allFuture.allFuture.imp φ.allFuture)
   /-- **CO** (`TM_r`, complete order): `△(Hφ → F Hφ) → (Hφ → Gφ)`.
 
-      `△` is `BLFormula.always` (`Hχ ∧ (χ ∧ Gχ)`), the *temporal* triangle, not the modal box —
+      `△` is `MinusFormula.always` (`Hχ ∧ (χ ∧ Gχ)`), the *temporal* triangle, not the modal box —
       the same operator-resolution trap flagged on `Formula.co`. The association mirrors
       `Formula.always` so that the translation is `Formula.co` up to the `F`-bridge alone. -/
-  | co (φ : BLFormula) :
+  | co (φ : MinusFormula) :
       Axiom ((φ.allPast.imp φ.allPast.someFuture).always.imp
         (φ.allPast.imp φ.allFuture))
   deriving Repr
@@ -232,7 +232,7 @@ catch-all, exactly as in `ProofSystem.Axiom.minFrameClass`. The invariant
 `TM`, `TM_z`, `TM_d` and `TM_r` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
 `.RTime` of a single derivation type.
 -/
-def Axiom.minFrameClass {φ : BLFormula} : Axiom φ → FrameClass
+def Axiom.minFrameClass {φ : MinusFormula} : Axiom φ → FrameClass
   | df _ => .ZTime
   | dn _ => .Dense
   | co _ => .RTime
@@ -243,21 +243,21 @@ def Axiom.minFrameClass {φ : BLFormula} : Axiom φ → FrameClass
 These pin the three non-`Base` assignments and one `Base` representative, so that a future edit
 to the catch-all cannot silently move an extension axiom into the base system. -/
 
-example (φ : BLFormula) : (Axiom.df φ).minFrameClass = FrameClass.ZTime := rfl
-example (φ : BLFormula) : (Axiom.dn φ).minFrameClass = FrameClass.Dense := rfl
-example (φ : BLFormula) : (Axiom.co φ).minFrameClass = FrameClass.RTime := rfl
-example (φ : BLFormula) : (Axiom.modal_future φ).minFrameClass = FrameClass.Base := rfl
+example (φ : MinusFormula) : (Axiom.df φ).minFrameClass = FrameClass.ZTime := rfl
+example (φ : MinusFormula) : (Axiom.dn φ).minFrameClass = FrameClass.Dense := rfl
+example (φ : MinusFormula) : (Axiom.co φ).minFrameClass = FrameClass.RTime := rfl
+example (φ : MinusFormula) : (Axiom.modal_future φ).minFrameClass = FrameClass.Base := rfl
 
 -- The `≤` side conditions the `axiom` rule demands. `decide` cannot act on a goal carrying the
 -- free `φ`, so each is routed through `show` at the already-reduced frame class first — the
 -- same shape `MinusLanguage/AxiomDischarge.lean` uses at every discharge site.
-example (φ : BLFormula) : (Axiom.df φ).minFrameClass ≤ FrameClass.ZTime :=
+example (φ : MinusFormula) : (Axiom.df φ).minFrameClass ≤ FrameClass.ZTime :=
   show FrameClass.ZTime ≤ FrameClass.ZTime by decide
-example (φ : BLFormula) : ¬ ((Axiom.df φ).minFrameClass ≤ FrameClass.Base) :=
+example (φ : MinusFormula) : ¬ ((Axiom.df φ).minFrameClass ≤ FrameClass.Base) :=
   show ¬ (FrameClass.ZTime ≤ FrameClass.Base) by decide
-example (φ : BLFormula) : (Axiom.dn φ).minFrameClass ≤ FrameClass.RTime :=
+example (φ : MinusFormula) : (Axiom.dn φ).minFrameClass ≤ FrameClass.RTime :=
   show FrameClass.Dense ≤ FrameClass.RTime by decide
-example (φ : BLFormula) : (Axiom.co φ).minFrameClass ≤ FrameClass.RTime :=
+example (φ : MinusFormula) : (Axiom.co φ).minFrameClass ≤ FrameClass.RTime :=
   show FrameClass.RTime ≤ FrameClass.RTime by decide
 
 end FormalSystem.MinusLanguage

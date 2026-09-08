@@ -19,9 +19,9 @@ The two headline results, obtained by instantiating the generic state-set bridge
 
 - `fzero_determined` together with `fzero_not_deterministic` — **(T3)**: a frame that validates
   *Determined* without being deterministic, so the converse of
-  `determined_of_deterministic` (`Semantics/StarDeterminism.lean`) fails
-- `fzero_starValidOn_iff_f1` — **(T4)**: `F°` and `F¹` validate exactly the same `StarFormula`s
-- `deterministic_not_starDefinable` — the conclusion: no set of L⋆ formulas defines the
+  `determined_of_deterministic` (`Semantics/PlusDeterminism.lean`) fails
+- `fzero_plusValidOn_iff_f1` — **(T4)**: `F°` and `F¹` validate exactly the same `PlusFormula`s
+- `deterministic_not_plusDefinable` — the conclusion: no set of L⋆ formulas defines the
   deterministic frames
 
 ## The three-way split the "exactly" claim conflates
@@ -36,7 +36,7 @@ three different regions, and only the first two coincide:
    containing** them. `F°` is in that class (`fzero_determined`) and not deterministic
    (`fzero_not_deterministic`): its histories through a given state at a given time are many, but
    they all agree on every L⋆ formula, which is all validity can see.
-3. Neither region is **L⋆-definable** (`deterministic_not_starDefinable`).
+3. Neither region is **L⋆-definable** (`deterministic_not_plusDefinable`).
 
 So the ⇒ direction of the claim holds (`determined_of_deterministic`), the ⇐ direction is false,
 and no repair by a different formula set is possible.
@@ -44,7 +44,7 @@ and no repair by a different formula set is possible.
 ## Uniform substitution is unsound here
 
 `p → ⊡p` is frame-valid over `F°`, while `Fp → ⊡Fp` is refutable over `natFrame`
-(`refute_determined`, `Semantics/StarNonValidities.lean`). A schema's validity at atomic
+(`refute_determined`, `Semantics/PlusNonValidities.lean`). A schema's validity at atomic
 instances therefore does not transfer to its substitution instances in this setting — atoms are
 state formulas by definition of the valuation, and general formulas are not. **No proof in this
 development argues by substitution**, and none may.
@@ -55,8 +55,8 @@ Recorded from `#print axioms` at the time of writing, and re-checkable by uncomm
 
 ```
 #print axioms FormalSystem.Metalogic.Independence.fzero_determined
-#print axioms FormalSystem.Metalogic.Independence.fzero_starValidOn_iff_f1
-#print axioms FormalSystem.Metalogic.Independence.deterministic_not_starDefinable
+#print axioms FormalSystem.Metalogic.Independence.fzero_plusValidOn_iff_f1
+#print axioms FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable
 ```
 
 All three report `[propext, Classical.choice, Quot.sound]`, and the `Classical.choice` is
@@ -66,7 +66,7 @@ that actually matters:
 * `#print axioms fzero_not_deterministic` — a statement whose entire proof is two `norm_num`
   facts about `1` and `2` — already reports `Classical.choice`. It comes with `ℝ` itself, whose
   order and field structure are classical in Mathlib.
-* `#print axioms starTruthAt_iff_mem_satSet` reports `[propext]` **alone**, and
+* `#print axioms plusTruthAt_iff_mem_satSet` reports `[propext]` **alone**, and
   `#print axioms determined_of_orderFlow` reports `[propext, Quot.sound]`. The entire generic
   argument — the state-set recursion, the bridge, and the validity corollary — is therefore
   choice-free; only its *instantiation* at a real carrier is not.
@@ -75,13 +75,13 @@ that actually matters:
   rather than by `cor:occurrence`.
 
 So no step here is a "validity ⟹ frame condition" step, and nothing reintroduces the ZFC
-direction that `Semantics/StarDeterminism.lean`'s docstring stays clear of; that module's own
+direction that `Semantics/PlusDeterminism.lean`'s docstring stays clear of; that module's own
 collapse theorems still report `[propext]` alone.
 
 ## References
 
 * JPL paper `cor:no-characterization`, `app:deterministic`, `app:drift`
-* `FormalSystem/Semantics/StarDeterminism.lean` — the positive half whose converse fails here
+* `FormalSystem/Semantics/PlusDeterminism.lean` — the positive half whose converse fails here
 
 ## Tags
 
@@ -92,7 +92,7 @@ namespace FormalSystem.Metalogic.Independence
 
 open FormalSystem.Syntax
 open FormalSystem.Semantics
-open FormalSystem.StarLanguage
+open FormalSystem.PlusLanguage
 
 /-! ## (H1) and (H2) for F¹ -/
 
@@ -141,17 +141,17 @@ theorem f1_stateOccurs : StateOccurs F1 := by
 
 /-- **`F°` validates *Determined*** — every instance, `φ` arbitrary — by the generic
 `determined_of_orderFlow`. -/
-theorem fzero_determined (φ : StarFormula) : F0.StarValidOn (.imp φ (.stab φ)) :=
+theorem fzero_determined (φ : PlusFormula) : F0.PlusValidOn (.imp φ (.stab φ)) :=
   determined_of_orderFlow fzero_orderFlow fzero_stateOccurs φ
 
 /--
 **(T3): the "exactly" claim is false.** `F°` validates every instance of *Determined* and is not
 deterministic, so the converse of `determined_of_deterministic`
-(`Semantics/StarDeterminism.lean`) fails — validity of the schema does **not** characterize
+(`Semantics/PlusDeterminism.lean`) fails — validity of the schema does **not** characterize
 `TaskFrame.Deterministic`.
 -/
 theorem determined_valid_on_non_deterministic :
-    (∀ φ : StarFormula, F0.StarValidOn (.imp φ (.stab φ))) ∧ ¬ F0.Deterministic :=
+    (∀ φ : PlusFormula, F0.PlusValidOn (.imp φ (.stab φ))) ∧ ¬ F0.Deterministic :=
   ⟨fzero_determined, fzero_not_deterministic⟩
 
 /-! ## (T4) — F° and F¹ are L⋆-indistinguishable -/
@@ -159,18 +159,18 @@ theorem determined_valid_on_non_deterministic :
 /--
 **(T4): `F°` and `F¹` validate exactly the same L⋆ formulas.**
 
-Both sides reduce, by `starValidOn_iff_satSet_univ`, to the *same* frame-free condition — that
+Both sides reduce, by `plusValidOn_iff_satSet_univ`, to the *same* frame-free condition — that
 `satSet V φ` is all of `ℝ` for every valuation `V` — because the state-set recursion mentions
 only the order on `ℝ` and neither task relation.
 -/
-theorem fzero_starValidOn_iff_f1 (φ : StarFormula) : F0.StarValidOn φ ↔ F1.StarValidOn φ := by
-  rw [starValidOn_iff_satSet_univ fzero_orderFlow fzero_stateOccurs φ,
-      starValidOn_iff_satSet_univ f1_orderFlow f1_stateOccurs φ]
+theorem fzero_plusValidOn_iff_f1 (φ : PlusFormula) : F0.PlusValidOn φ ↔ F1.PlusValidOn φ := by
+  rw [plusValidOn_iff_satSet_univ fzero_orderFlow fzero_stateOccurs φ,
+      plusValidOn_iff_satSet_univ f1_orderFlow f1_stateOccurs φ]
 
 /--
 **`Deterministic` is not L⋆-definable** (`cor:no-characterization`).
 
-No set `Γ` of `StarFormula`s has "`F` validates every member of `Γ`" equivalent to
+No set `Γ` of `PlusFormula`s has "`F` validates every member of `Γ`" equivalent to
 `F.Deterministic`. Any such `Γ` would be validated by `F¹`, which is deterministic; by (T4) it
 would then be validated by `F°`; and `F°` is not deterministic.
 
@@ -179,11 +179,11 @@ L⋆ sentence, which is precisely why no such sentence set can tell determinism 
 
 Paper: `app:deterministic`
 -/
-theorem deterministic_not_starDefinable :
-    ¬ ∃ Γ : Set StarFormula, ∀ F : TaskFrame, F.Deterministic ↔ ∀ φ ∈ Γ, F.StarValidOn φ := by
+theorem deterministic_not_plusDefinable :
+    ¬ ∃ Γ : Set PlusFormula, ∀ F : TaskFrame, F.Deterministic ↔ ∀ φ ∈ Γ, F.PlusValidOn φ := by
   rintro ⟨Γ, hΓ⟩
-  have h1 : ∀ φ ∈ Γ, F1.StarValidOn φ := (hΓ F1).mp f1_deterministic
-  have h0 : ∀ φ ∈ Γ, F0.StarValidOn φ := fun φ hφ => (fzero_starValidOn_iff_f1 φ).mpr (h1 φ hφ)
+  have h1 : ∀ φ ∈ Γ, F1.PlusValidOn φ := (hΓ F1).mp f1_deterministic
+  have h0 : ∀ φ ∈ Γ, F0.PlusValidOn φ := fun φ hφ => (fzero_plusValidOn_iff_f1 φ).mpr (h1 φ hφ)
   exact fzero_not_deterministic ((hΓ F0).mpr h0)
 
 end FormalSystem.Metalogic.Independence

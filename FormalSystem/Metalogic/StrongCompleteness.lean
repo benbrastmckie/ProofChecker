@@ -779,7 +779,7 @@ This agrees definitionally with `completeness_rtime_of_engine` at the same engin
 `WeakCompleteness FrameClass.RTime` (`Metalogic/SetConsequence.lean`) on the nose — no
 transport, no `rfl` lemma, and no change at any application site, since `WeakCompleteness fc`
 unfolds to exactly the `(φ) (h) : Derivable fc [] φ` shape this theorem used to spell out. It is
-in that form that `consequence_completeness_rtime` above and `tmComplete_iff_forward`
+in that form that `consequence_completeness_rtime` above and `tmMinusComplete_iff_forward`
 (`Metalogic/Conservativity/TMCompletenessReduction.lean`) consume it.
 
 Paper: `cor:tm-completeness`
@@ -885,7 +885,7 @@ The vacuous `∀ ψ ∈ [], _` premise binder is discharged by `simpa`.
 (`Semantics/Validity.lean`), so this declaration inhabits `WeakCompleteness FrameClass.Base`
 (`Metalogic/SetConsequence.lean`) on the nose — no transport and no `rfl` lemma — and it is in
 that form that `strongCompletenessBase` (`Metalogic/Compactness.lean`) and
-`tmCompleteBase_iff_forwardBase`
+`tmMinusCompleteBase_iff_forwardBase`
 (`Metalogic/Conservativity/TMCompletenessReduction.lean`) consume it. Application sites are
 unaffected: `WeakCompleteness fc` unfolds to exactly the `(φ) (h) : Derivable fc [] φ` shape
 this theorem used to spell out.

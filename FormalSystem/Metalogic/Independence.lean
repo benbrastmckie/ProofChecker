@@ -34,7 +34,7 @@ to say "the one result carried here", which stopped being true three witnesses a
 3. `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)`, witnessed by the static frame over `ℤ ×ₗ ℤ`.
 4. `TaskFrame.Deterministic` is **not L⋆-definable** (`cor:no-characterization`), witnessed by
    the indistinguishable pair `F°`/`F¹` over `ℝ`. The same pair refutes the converse of the
-   deterministic collapse (`Semantics/StarDeterminism.lean`): `F°` validates *Determined*
+   deterministic collapse (`Semantics/PlusDeterminism.lean`): `F°` validates *Determined*
    without being deterministic.
 
 Results 2 and 3 are the two halves of the finding that the frame-class *narrowings* are not
@@ -69,7 +69,7 @@ Galois-closed, in contrast with the paper's bare classes.
 * `Independence/StateSetTruth.lean` — `satSet` and the state-set bridge: over an (H1)+(H2) frame,
   L⋆ truth depends only on the world state of evaluation.
 * `Independence/DeterminismUndefinable.lean` — the instantiation at `F°` and `F¹`, and
-  `deterministic_not_starDefinable`.
+  `deterministic_not_plusDefinable`.
 
 ## The method
 

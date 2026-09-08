@@ -119,7 +119,7 @@ once.
 
 **`always` has two forms, and only one may carry the attribute.** `always_iff` (the collected
 `∀ s` form) is the normal form and is the tagged one. `always_iff_tri` (the three-conjunct
-past/present/future form, mirroring `BLTruth.always_iff`) is the **introduction** form and is
+past/present/future form, mirroring `MinusTruth.always_iff`) is the **introduction** form and is
 deliberately left plain. The two are logically equivalent but syntactically distinct, so tagging
 both makes `simp` apply whichever was declared first and silently strand every proof written
 against the other; that failure was reproduced rather than merely anticipated. Build an `always`
@@ -494,13 +494,13 @@ equivalent but syntactically distinct normal forms, so tagging both makes `simp`
 was declared first and silently strand every proof written against the other — a failure that was
 reproduced, not hypothesised. The **collected `∀ s` form, `always_iff`, is the normal form** and
 is the one that carries the attribute. `always_iff_tri` is the three-conjunct introduction form
-that mirrors `BLTruth.always_iff` and is the proof route to the collected form; it is deliberately
+that mirrors `MinusTruth.always_iff` and is the proof route to the collected form; it is deliberately
 plain, and must stay untagged by both `@[simp]` and `@[truth_norm]`. -/
 
 /-- Truth of `△φ` (`Hφ ∧ (φ ∧ Gφ)`) in three-conjunct form: past, present, future.
 
 The **introduction** form — this is the shape you build an `always` from, and the association
-mirrors `Formula.always` and `BLTruth.always_iff`. It is **not** the simp normal form and must
+mirrors `Formula.always` and `MinusTruth.always_iff`. It is **not** the simp normal form and must
 never be tagged; see the section note above. Use `always_iff` for elimination. -/
 theorem always_iff_tri
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}

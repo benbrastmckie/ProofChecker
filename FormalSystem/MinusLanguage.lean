@@ -20,11 +20,11 @@ language* BL (`def:BL-language`), in which `H` and `G` are primitive rather than
 
 ## Modules
 
-- `MinusLanguage.Formula` — `BLFormula`, derived operators, `swapBL`
+- `MinusLanguage.Formula` — `MinusFormula`, derived operators, `swapMinus`
 - `MinusLanguage.Axioms` — `MinusLanguage.Axiom` (TM's schemata plus DF/DN/CO) and its
   `minFrameClass`, routed through the *existing* `ProofSystem.FrameClass`
-- `MinusLanguage.Derivation` — `MinusLanguage.DerivationTree`, `Derivable`, `⊢ᴮᴸ[fc]` notation
-- `MinusLanguage.Translation` — `tr : BLFormula → Formula` and its commutation lemmas
+- `MinusLanguage.Derivation` — `MinusLanguage.DerivationTree`, `Derivable`, `⊢⁻[fc]` notation
+- `MinusLanguage.Translation` — `tr : MinusFormula → Formula` and its commutation lemmas
 - `MinusLanguage.AxiomDischarge` — a BL⁺ derivation of `tr` of every BL axiom
 
 ## Module Invariant
@@ -36,8 +36,8 @@ are prose mentions in docstrings such as this one — no `import` line matches.
 The invariant is **directional**, and reading it as a blanket separation of the two directories
 is a mistake. It forbids the edge `MinusLanguage/ → Semantics/`. It says nothing about the
 converse edge, which is permitted and is exactly how the base language's semantics is sited:
-`FormalSystem/Semantics/BLTruth.lean` imports `FormalSystem.MinusLanguage.Formula` in order to
-define `BLTruthAt` natively on `BLFormula`, `FormalSystem/Semantics/BLValidity.lean` builds the
+`FormalSystem/Semantics/MinusTruth.lean` imports `FormalSystem.MinusLanguage.Formula` in order to
+define `MinusTruthAt` natively on `MinusFormula`, `FormalSystem/Semantics/MinusValidity.lean` builds the
 BL validity predicates on top of it, and `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`
 composes those with `Metalogic/Conservativity/Backward.lean`'s `translate` to give BL soundness. Meeting
 those modules is not evidence that this invariant has been violated.

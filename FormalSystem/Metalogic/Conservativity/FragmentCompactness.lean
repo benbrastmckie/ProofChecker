@@ -16,18 +16,18 @@ The base-language mirror of `Metalogic/SetConsequence.lean`'s consequence-form c
 
 ## Main Definitions
 
-- `BLSetConsequenceOnFrames`, `BLSetSemanticConsequenceOn` — set-premise consequence for
-  `BLFormula`, binder for binder against `SetConsequenceOnFrames` / `SetSemanticConsequenceOn`
-- `BLCompact fc` — the consequence form of compactness: a set-consequence yields a finite premise
-  list whose `foldr`-implication into the conclusion is `BLValidIn fc`
+- `MinusSetConsequenceOnFrames`, `MinusSetSemanticConsequenceOn` — set-premise consequence for
+  `MinusFormula`, binder for binder against `SetConsequenceOnFrames` / `SetSemanticConsequenceOn`
+- `MinusCompact fc` — the consequence form of compactness: a set-consequence yields a finite premise
+  list whose `foldr`-implication into the conclusion is `MinusValidIn fc`
 
 ## Main Results
 
-- `blSetConsequence_iff_image` — BL set-consequence is BL⁺ set-consequence of the `tr`-image
+- `minusSetConsequence_iff_image` — BL set-consequence is BL⁺ set-consequence of the `tr`-image
 - `tr_foldr_imp` — `tr` commutes with the `foldr`-implication
-- `blCompact_of_compact` — `Compact fc → BLCompact fc`, by pulling the BL⁺ witness list back
+- `minusCompact_of_compact` — `Compact fc → MinusCompact fc`, by pulling the BL⁺ witness list back
   along `tr`
-- `blCompactBase`, `blCompactDense` — the two positive rows
+- `minusCompactBase`, `minusCompactDense` — the two positive rows
 
 ## Which form landed
 
@@ -43,15 +43,15 @@ BL⁺'s non-compactness at `.ZTime` (`notCompactZTime`, witness `{F p} ∪ {¬X�
 **outside the range of `tr`**: `Formula.next` is `untl bot _` and `K⁺` is a top-level `untl`,
 while by `MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
 refutation transfers to the base language, and no BL non-compactness claim is made at those two
-classes here. Only the two positive rows are delivered; whether `BLCompact .ZTime` or
-`BLCompact .RTime` holds is left open.
+classes here. Only the two positive rows are delivered; whether `MinusCompact .ZTime` or
+`MinusCompact .RTime` holds is left open.
 
 ## References
 
 * `FormalSystem/Metalogic/SetConsequence.lean` — `SetConsequenceOnFrames`, `Compact`
 * `FormalSystem/Metalogic/Compactness.lean` — `compactBase`, `compactDense`
 * `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `truthAt_tr`,
-  `blValidIn_iff_validIn_tr`
+  `minusValidIn_iff_validIn_tr`
 -/
 
 namespace FormalSystem.Metalogic.Conservativity
@@ -63,30 +63,30 @@ open FormalSystem.Semantics
 open FormalSystem.Metalogic
 
 /-- Set-premise consequence for the base language over the frames satisfying `P`. Binder-for-binder
-mirror of `SetConsequenceOnFrames`, against `BLTruthAt`. -/
-def BLSetConsequenceOnFrames (P : TaskFrame → Prop) (Γ : Set BLFormula) (φ : BLFormula) : Prop :=
+mirror of `SetConsequenceOnFrames`, against `MinusTruthAt`. -/
+def MinusSetConsequenceOnFrames (P : TaskFrame → Prop) (Γ : Set MinusFormula) (φ : MinusFormula) : Prop :=
   ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F)
     (τ : ConvexHistory F) (_ : τ.IsTotal) (t : F.Duration),
-    (∀ ψ ∈ Γ, BLTruthAt M τ t ψ) → BLTruthAt M τ t φ
+    (∀ ψ ∈ Γ, MinusTruthAt M τ t ψ) → MinusTruthAt M τ t φ
 
 /-- Set-premise consequence for the base language at a `FrameClass` tag. Mirror of
 `SetSemanticConsequenceOn`. -/
-def BLSetSemanticConsequenceOn (fc : FrameClass) (Γ : Set BLFormula) (φ : BLFormula) : Prop :=
-  BLSetConsequenceOnFrames fc.Sat Γ φ
+def MinusSetSemanticConsequenceOn (fc : FrameClass) (Γ : Set MinusFormula) (φ : MinusFormula) : Prop :=
+  MinusSetConsequenceOnFrames fc.Sat Γ φ
 
 /-- **Compactness of the base-language consequence relation at `fc`**, in the consequence form:
 a set-consequence yields a finite premise list whose `foldr`-implication into the conclusion is
-`BLValidIn fc`. Mirror of `Compact`. -/
-def BLCompact (fc : FrameClass) : Prop :=
-  ∀ (Γ : Set BLFormula) (φ : BLFormula), BLSetSemanticConsequenceOn fc Γ φ →
-    ∃ L : List BLFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ BLValidIn fc (L.foldr BLFormula.imp φ)
+`MinusValidIn fc`. Mirror of `Compact`. -/
+def MinusCompact (fc : FrameClass) : Prop :=
+  ∀ (Γ : Set MinusFormula) (φ : MinusFormula), MinusSetSemanticConsequenceOn fc Γ φ →
+    ∃ L : List MinusFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ MinusValidIn fc (L.foldr MinusFormula.imp φ)
 
 /-- BL set-consequence over the frames satisfying `P` is BL⁺ set-consequence of the `tr`-image
 over the same frames, by the truth-transfer bridge `truthAt_tr` on every premise and on the
 conclusion. -/
-theorem blSetConsequenceOnFrames_iff_image (P : TaskFrame → Prop) (Γ : Set BLFormula)
-    (φ : BLFormula) :
-    BLSetConsequenceOnFrames P Γ φ ↔ SetConsequenceOnFrames P (tr '' Γ) (tr φ) := by
+theorem minusSetConsequenceOnFrames_iff_image (P : TaskFrame → Prop) (Γ : Set MinusFormula)
+    (φ : MinusFormula) :
+    MinusSetConsequenceOnFrames P Γ φ ↔ SetConsequenceOnFrames P (tr '' Γ) (tr φ) := by
   constructor
   · intro h F hF M τ hτ t hΓ
     refine (truthAt_tr M φ τ t).mpr (h F hF M τ hτ t ?_)
@@ -98,23 +98,23 @@ theorem blSetConsequenceOnFrames_iff_image (P : TaskFrame → Prop) (Γ : Set BL
     obtain ⟨ψ, hψ, rfl⟩ := hψ'
     exact (truthAt_tr M ψ τ t).mpr (hΓ ψ hψ)
 
-/-- `blSetConsequenceOnFrames_iff_image` at a `FrameClass` tag. -/
-theorem blSetConsequence_iff_image (fc : FrameClass) (Γ : Set BLFormula) (φ : BLFormula) :
-    BLSetSemanticConsequenceOn fc Γ φ ↔ SetSemanticConsequenceOn fc (tr '' Γ) (tr φ) :=
-  blSetConsequenceOnFrames_iff_image fc.Sat Γ φ
+/-- `minusSetConsequenceOnFrames_iff_image` at a `FrameClass` tag. -/
+theorem minusSetConsequence_iff_image (fc : FrameClass) (Γ : Set MinusFormula) (φ : MinusFormula) :
+    MinusSetSemanticConsequenceOn fc Γ φ ↔ SetSemanticConsequenceOn fc (tr '' Γ) (tr φ) :=
+  minusSetConsequenceOnFrames_iff_image fc.Sat Γ φ
 
 /-- `tr` commutes with the `foldr`-implication of a premise list, because `tr` is definitional on
 `imp`. -/
-theorem tr_foldr_imp (L : List BLFormula) (φ : BLFormula) :
-    tr (L.foldr BLFormula.imp φ) = (L.map tr).foldr Formula.imp (tr φ) := by
+theorem tr_foldr_imp (L : List MinusFormula) (φ : MinusFormula) :
+    tr (L.foldr MinusFormula.imp φ) = (L.map tr).foldr Formula.imp (tr φ) := by
   induction L with
   | nil => rfl
   | cons ψ L ih => simp only [List.foldr_cons, List.map_cons, tr_imp, ih]
 
 /-- Every list of BL⁺ formulas drawn from `tr '' Γ` is the `tr`-image of a list drawn from `Γ`. -/
-theorem exists_preimage_list (Γ : Set BLFormula) :
+theorem exists_preimage_list (Γ : Set MinusFormula) :
     ∀ L' : List Formula, (∀ ψ ∈ L', ψ ∈ tr '' Γ) →
-      ∃ L : List BLFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ L.map tr = L'
+      ∃ L : List MinusFormula, (∀ ψ ∈ L, ψ ∈ Γ) ∧ L.map tr = L'
   | [], _ => ⟨[], fun _ h => absurd h List.not_mem_nil, rfl⟩
   | ψ :: L', h => by
       obtain ⟨χ, hχ, rfl⟩ := h ψ List.mem_cons_self
@@ -129,22 +129,22 @@ theorem exists_preimage_list (Γ : Set BLFormula) :
 /--
 **Transfer of compactness along `tr`.** From `Compact fc`, obtain the BL⁺ witness list for the
 image consequence `tr '' Γ ⊨ tr φ`, pull it back along `tr` (`exists_preimage_list`), and read
-the `BLValidIn` conclusion off `blValidIn_iff_validIn_tr` after rewriting with `tr_foldr_imp`.
+the `MinusValidIn` conclusion off `minusValidIn_iff_validIn_tr` after rewriting with `tr_foldr_imp`.
 -/
-theorem blCompact_of_compact {fc : FrameClass} (h : Compact fc) : BLCompact fc := by
+theorem minusCompact_of_compact {fc : FrameClass} (h : Compact fc) : MinusCompact fc := by
   intro Γ φ hcons
-  obtain ⟨L', hL', hval⟩ := h (tr '' Γ) (tr φ) ((blSetConsequence_iff_image fc Γ φ).mp hcons)
+  obtain ⟨L', hL', hval⟩ := h (tr '' Γ) (tr φ) ((minusSetConsequence_iff_image fc Γ φ).mp hcons)
   obtain ⟨L, hL, rfl⟩ := exists_preimage_list Γ L' hL'
-  refine ⟨L, hL, (blValidIn_iff_validIn_tr fc _).mpr ?_⟩
+  refine ⟨L, hL, (minusValidIn_iff_validIn_tr fc _).mpr ?_⟩
   rw [tr_foldr_imp]
   exact hval
 
 /-- **Compactness of the base-language consequence relation at `.Base`.** -/
-theorem blCompactBase : BLCompact FrameClass.Base :=
-  blCompact_of_compact compactBase
+theorem minusCompactBase : MinusCompact FrameClass.Base :=
+  minusCompact_of_compact compactBase
 
 /-- **Compactness of the base-language consequence relation at `.Dense`.** -/
-theorem blCompactDense : BLCompact FrameClass.Dense :=
-  blCompact_of_compact compactDense
+theorem minusCompactDense : MinusCompact FrameClass.Dense :=
+  minusCompact_of_compact compactDense
 
 end FormalSystem.Metalogic.Conservativity

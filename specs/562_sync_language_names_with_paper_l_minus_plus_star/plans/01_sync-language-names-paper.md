@@ -316,14 +316,14 @@ before and after; the after-count outside `Boneyard/` must be 0.
 
 ---
 
-### Phase 3: L⁻ declarations and notation [IN PROGRESS]
+### Phase 3: L⁻ declarations and notation [COMPLETED]
 
 **Goal**: Rename all 63 BL-family declarations to their `Minus`/`minus` forms and the `⊢ᴮᴸ`
 notation to `⊢⁻`.
 
 **Tasks**:
 - [ ] Rename `BLFormula` → `MinusFormula`, including its `namespace BLFormula` block.
-- [ ] Rename the semantics family: `BLTruthAt`, `BLFrame`, `BLFrameTruth`, `BLFrameValid`,
+- [x] Rename the semantics family: `BLTruthAt`, `BLFrame`, `BLFrameTruth`, `BLFrameValid`,
       `BLValid*`, `BLValidIn*`, `BLValidOnFrames*`, `BLValidZTime*`, `BLValidDense`,
       `BLValidRTime`, `BLSemanticConsequence`, `BLSetConsequenceOnFrames`,
       `BLSetSemanticConsequenceOn`, `TaskFrame.BLValidOn` → `Minus*` forms.
@@ -360,7 +360,7 @@ must be 0. Rename longest-name-first to avoid prefix-shadowing (`BLValidIn` befo
 
 ---
 
-### Phase 4: tm-family split (TM⁻ vs TM) [NOT STARTED]
+### Phase 4: tm-family split (TM⁻ vs TM) [COMPLETED]
 
 **Goal**: Move every `tm`-prefixed name that denotes the H/G system onto its `tmMinus` form,
 leaving `TMFrag`, `tmFrag_*` and every S/U-denoting `tm` name alone.
@@ -404,7 +404,7 @@ declaration's statement — the test is whether the statement quantifies over `M
 
 ---
 
-### Phase 5: L⁺ structural layer — directories, aggregators, modules, namespaces [NOT STARTED]
+### Phase 5: L⁺ structural layer — directories, aggregators, modules, namespaces [COMPLETED]
 
 **Goal**: Move the ⊡-extension's files and namespace onto the `Plus` names, freeing
 `StarLanguage/` entirely. Declaration names untouched in this phase.
@@ -454,7 +454,7 @@ after; the after-count outside `Boneyard/` must be 0.
 
 ---
 
-### Phase 6: L⁺ declarations and notation [NOT STARTED]
+### Phase 6: L⁺ declarations and notation [COMPLETED]
 
 **Goal**: Rename all 66 Star-family declarations to their `Plus`/`plus` forms, the `⊢⋆` notation
 to `⊢⁺`, and resolve `ofPlus` per Decision 1.
@@ -817,6 +817,23 @@ hits in each; the two counts must be equal.
 - The freed-name assertions above all return zero hits.
 
 ---
+
+**Deviations recorded during execution**:
+- Phase 3 gained an item the inventory did not anticipate: the `swapBL` family (13 tokens,
+  83 occurrences — `swapBL`, `swapBL_involution`, `tr_swapBL`, the nine `MinusFormula.swapBL_*`
+  simp lemmas, and `swapBL_df_valid_of_predOrder`) carries `BL` as a *suffix*, so the Phase 1
+  token scan (anchored at `^` or `_`) missed it. Renamed to the `swapMinus` family in the same
+  phase. *(deviation: altered — scope widened by 13 tokens)*
+- Phases 3–6 share ONE `lake build FormalSystem` at the close of Phase 6 rather than one build
+  each. *(deviation: altered — build cadence)* Forced by a concurrency collision with task 193,
+  which was editing `Metalogic/SoundnessLemmas/FrameClassVariants.lean` and
+  `Metalogic/Soundness.lean` throughout: two full builds were killed mid-run and a third failed
+  on 193's own in-progress broken proof term, none of them on anything this task changed. Each
+  phase's rename is instead verified by a **mechanical purity proof** — the phase-2 commit's
+  content, put through this task's explicit token map, is byte-identical to the working tree for
+  all 54 files this task owns. The two files where it is not identical
+  (`Metalogic/Soundness.lean`, `SoundnessLemmas/FrameClassVariants.lean`) differ only by task
+  193's `truth_norm` tactic edits, which this task did not make and does not commit.
 
 ## Lean Challenge Statements
 

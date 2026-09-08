@@ -21,9 +21,9 @@ repository's metalogic is proved in.
 |------|-------|-------------|
 | `AxiomDischarge.lean` | 381 | `dischargeAxiom` — for each `MinusLanguage.Axiom` constructor, a primary-language derivation of that axiom's translation. Seven rows are exact; the rest go through the `F`/`P` bridge. |
 | `Axioms.lean` | 171 | `MinusLanguage.Axiom` — TM's axiom schemata over BL (MK, MT, M5, MF, TK, T4, TB, TA, TL), plus the three extension axioms routed to their frame classes by `Axiom.minFrameClass`. This is a second `inductive Axiom`, distinct from the primary language's. |
-| `Derivation.lean` | 189 | `MinusLanguage.DerivationTree` — a constructor-for-constructor mirror of the primary `DerivationTree`, with the same 7 inference rules, over `BLFormula`. |
-| `Formula.lean` | 210 | `BLFormula`, the tense-primitive base language, with `allPast`/`allFuture` as constructors rather than abbreviations. |
-| `Translation.lean` | 266 | `tr : BLFormula → Formula` and `trCtx` — the translation into the primary language, sending each BL primitive to the primary operator of the same name. |
+| `Derivation.lean` | 189 | `MinusLanguage.DerivationTree` — a constructor-for-constructor mirror of the primary `DerivationTree`, with the same 7 inference rules, over `MinusFormula`. |
+| `Formula.lean` | 210 | `MinusFormula`, the tense-primitive base language, with `allPast`/`allFuture` as constructors rather than abbreviations. |
+| `Translation.lean` | 266 | `tr : MinusFormula → Formula` and `trCtx` — the translation into the primary language, sending each BL primitive to the primary operator of the same name. |
 
 ## Where the BL semantics lives
 
@@ -35,11 +35,11 @@ permitted edge:
 
 | File | What it carries |
 |------|-----------------|
-| `FormalSystem/Semantics/BLTruth.lean` | `BLTruthAt`, a native six-clause recursion on `BLFormula` per `def:BL-semantics` — **not** `TruthAt ∘ tr` |
-| `FormalSystem/Semantics/BLValidity.lean` | `BLValid`, `BLSemanticConsequence`, and the Dense / Discrete / Dedekind-dense validity predicates |
+| `FormalSystem/Semantics/MinusTruth.lean` | `MinusTruthAt`, a native six-clause recursion on `MinusFormula` per `def:BL-semantics` — **not** `TruthAt ∘ tr` |
+| `FormalSystem/Semantics/MinusValidity.lean` | `MinusValid`, `MinusSemanticConsequence`, and the Dense / Discrete / Dedekind-dense validity predicates |
 | `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` | the truth-transfer bridge `truthAt_tr`, and BL soundness at `FrameClass.Base` and its three extensions, by composition through `Conservativity.translate` |
 
-`Semantics/BLTruth.lean` imports `Formula.lean` only — a leaf whose own sole import is
+`Semantics/MinusTruth.lean` imports `Formula.lean` only — a leaf whose own sole import is
 `FormalSystem.Syntax.Atom` — so the edge introduces no cycle.
 
 ## Key Results
@@ -54,14 +54,14 @@ permitted edge:
 
 - **Imports from**: `FormalSystem.Syntax`, `FormalSystem.ProofSystem`, `FormalSystem.Theorems`
 - **Imported by**: `FormalSystem.Metalogic.Conservativity` (whole directory);
-  `FormalSystem.Semantics.BLTruth` (`Formula.lean` only, for `BLFormula`)
+  `FormalSystem.Semantics.MinusTruth` (`Formula.lean` only, for `MinusFormula`)
 
 ## Related Documentation
 
 - [FormalSystem README](../README.md)
 - [Syntax README](../Syntax/README.md) — the primary, until/since-primitive language
 - [ProofSystem README](../ProofSystem/README.md)
-- [Semantics README](../Semantics/README.md) — where `BLTruth.lean` and `BLValidity.lean` live
+- [Semantics README](../Semantics/README.md) — where `MinusTruth.lean` and `MinusValidity.lean` live
 - [Metalogic README](../Metalogic/README.md) — where `MinusLanguageSoundness.lean` lives
 
 ---

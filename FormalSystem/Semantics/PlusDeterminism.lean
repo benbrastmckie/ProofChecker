@@ -5,13 +5,13 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.FrameProperty
-import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.PlusValidity
 
 /-!
 # The deterministic collapse of the stability modal — `app:deterministic`, positive half
 
 Over a frame satisfying `def:deterministic` the stability modal `⊡` is *semantically trivial*:
-`⊡φ ↔ φ` is valid, for every `StarFormula φ`. This module carries that result, together with the
+`⊡φ ↔ φ` is valid, for every `PlusFormula φ`. This module carries that result, together with the
 singleton bridge it rests on.
 
 ## Main Results
@@ -23,7 +23,7 @@ singleton bridge it rests on.
   total history and time
 - `determined_of_deterministic` — *Determined* `φ → ⊡φ` is frame-valid on every deterministic
   frame
-- `stab_biconditional_starValidOn_of_deterministic` — both halves of `⊡φ ↔ φ` as frame validities
+- `stab_biconditional_plusValidOn_of_deterministic` — both halves of `⊡φ ↔ φ` as frame validities
 
 Those four names are the stable import surface of this module; downstream work consumes them
 rather than re-deriving the collapse.
@@ -51,8 +51,8 @@ below.
 that the histories are equal. That is weaker than `lem:deterministic-singleton`'s `⟨τ⟩_x = {τ}`,
 and it is free — it follows from `respects_task` at the pair `(t, s)` and determinism at the
 possibly negative duration `s - t`. It is also sufficient: `truth_congr_ext`
-(`Semantics/StarTruth.lean`) already converts pointwise state agreement into agreement on every
-`StarFormula`, the `stab` clause included, so nothing downstream needs the stronger form.
+(`Semantics/PlusTruth.lean`) already converts pointwise state agreement into agreement on every
+`PlusFormula`, the `stab` clause included, so nothing downstream needs the stronger form.
 
 Note where the unrestricted duration binder of `TaskFrame.Deterministic` is used: at `s - t`,
 which is negative whenever `s < t`. A determinism predicate guarded by `0 ≤ d` would not close
@@ -66,7 +66,7 @@ Recorded from `#print axioms` at the time of writing, and re-checkable by uncomm
 #print axioms FormalSystem.Semantics.states_eq_of_deterministic
 #print axioms FormalSystem.Semantics.stab_iff_of_deterministic
 #print axioms FormalSystem.Semantics.determined_of_deterministic
-#print axioms FormalSystem.Semantics.stab_biconditional_starValidOn_of_deterministic
+#print axioms FormalSystem.Semantics.stab_biconditional_plusValidOn_of_deterministic
 ```
 
 All four report `[propext]` only — in particular **no `Classical.choice`**.
@@ -75,7 +75,7 @@ All four report `[propext]` only — in particular **no `Classical.choice`**.
 
 * JPL paper `def:deterministic`, `lem:deterministic-singleton`, `app:deterministic`
 * `FormalSystem/Semantics/FrameProperty.lean` — `TaskFrame.Deterministic`
-* `FormalSystem/Semantics/StarNonValidities.lean` — `refute_determined`, the negative half of
+* `FormalSystem/Semantics/PlusNonValidities.lean` — `refute_determined`, the negative half of
   `app:deterministic`
 
 ## Tags
@@ -85,7 +85,7 @@ star-language · determinism · stability-modal · app:deterministic
 
 namespace FormalSystem.Semantics
 
-open FormalSystem.StarLanguage
+open FormalSystem.PlusLanguage
 
 variable {F : TaskFrame}
 
@@ -111,15 +111,15 @@ theorem states_eq_of_deterministic (hD : F.Deterministic)
 
 /--
 **The collapse at a point**: over a deterministic frame `⊡φ` and `φ` are equivalent at every total
-history and time, for every `StarFormula φ`.
+history and time, for every `PlusFormula φ`.
 
 (⇒) is `of_stab` — T for `⊡` — and holds on every frame. (⇐) is where determinism enters: any
 `σ ∈ ⟨τ⟩_t` agrees with `τ` at every time by `states_eq_of_deterministic`, so `truth_congr_ext`
 transports the truth of `φ` from `τ` to `σ`.
 -/
 theorem stab_iff_of_deterministic (hD : F.Deterministic) (M : TaskModel F)
-    {τ : ConvexHistory F} (hτ : τ.IsTotal) (t : F.Duration) (φ : StarFormula) :
-    StarTruthAt M τ t (.stab φ) ↔ StarTruthAt M τ t φ := by
+    {τ : ConvexHistory F} (hτ : τ.IsTotal) (t : F.Duration) (φ : PlusFormula) :
+    PlusTruthAt M τ t (.stab φ) ↔ PlusTruthAt M τ t φ := by
   constructor
   · intro h; exact of_stab M τ hτ t φ h
   · intro h σ hσ hsame
@@ -129,24 +129,24 @@ theorem stab_iff_of_deterministic (hD : F.Deterministic) (M : TaskModel F)
 
 /--
 **`app:deterministic`, positive half.** *Determined* — `φ → ⊡φ` — is valid on every deterministic
-frame, at every instance, `φ` an arbitrary `StarFormula`.
+frame, at every instance, `φ` an arbitrary `PlusFormula`.
 
-The negative half is `refute_determined` (`Semantics/StarNonValidities.lean`), which refutes the
+The negative half is `refute_determined` (`Semantics/PlusNonValidities.lean`), which refutes the
 *same schema* over a non-deterministic frame. Note that the two halves do **not** compose into a
 characterization: the converse fails, and demonstrably so — see `Metalogic/Independence/`, where
 a non-deterministic frame validating this schema is exhibited.
 -/
-theorem determined_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
-    F.StarValidOn (.imp φ (.stab φ)) :=
+theorem determined_of_deterministic (hD : F.Deterministic) (φ : PlusFormula) :
+    F.PlusValidOn (.imp φ (.stab φ)) :=
   fun M τ t h => (stab_iff_of_deterministic hD M τ.prop t φ).mpr h
 
 /--
 **The full collapse** `⊡φ ↔ φ`, as the pair of frame validities. The first component holds on
 every frame (it is T for `⊡`); only the second needs determinism.
 -/
-theorem stab_biconditional_starValidOn_of_deterministic (hD : F.Deterministic)
-    (φ : StarFormula) :
-    F.StarValidOn (.imp (.stab φ) φ) ∧ F.StarValidOn (.imp φ (.stab φ)) :=
+theorem stab_biconditional_plusValidOn_of_deterministic (hD : F.Deterministic)
+    (φ : PlusFormula) :
+    F.PlusValidOn (.imp (.stab φ) φ) ∧ F.PlusValidOn (.imp φ (.stab φ)) :=
   ⟨fun M τ t h => (stab_iff_of_deterministic hD M τ.prop t φ).mp h,
    determined_of_deterministic hD φ⟩
 

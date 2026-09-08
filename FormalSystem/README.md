@@ -251,7 +251,7 @@ invariant check allowlists it by name (check C8).
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 255 | Re-export for Semantics submodule |
-| `StarLanguage.lean` | 49 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
+| `PlusLanguage.lean` | 49 | Re-export for PlusLanguage submodule (L⋆ = L⁺ plus the stability modal `⊡`, and its logic TM⋆) |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |
 | `Theorems.lean` | 90 | Re-export for Theorems submodule |
 <!-- END GENERATED -->
@@ -263,7 +263,7 @@ invariant check allowlists it by name (check C8).
 | ForMathlib | `ForMathlib.lean` | Mathlib-shaped extensions intended for upstreaming (proper/maximal/prime-filter API of `Order.PFilter`, `Order.PrimeFilter`); imports nothing from `FormalSystem.*` |
 | Syntax | `Syntax.lean` | Formula type, atoms, contexts, subformula closure |
 | ProofSystem | `ProofSystem.lean` | 45 axiom constructors, 7 inference rules, derivation trees |
-| StarLanguage | `StarLanguage.lean` | `StarFormula` (L⁺ plus `⊡`), `StarAxiom` (the 45 TM⁺ schemata over `StarFormula` plus the `⊡` schemata), `StarDerivationTree`, the embedding `ofFormula` and backward conservativity |
+| PlusLanguage | `PlusLanguage.lean` | `PlusFormula` (L⁺ plus `⊡`), `PlusAxiom` (the 45 TM⁺ schemata over `PlusFormula` plus the `⊡` schemata), `PlusDerivationTree`, the embedding `ofFormula` and backward conservativity |
 
 ### Layer 1 — Semantics
 
@@ -308,7 +308,7 @@ invariant check allowlists it by name (check C8).
 | [Examples/](Examples/README.md) | Yes | Pedagogical examples |
 | `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
 | `MinusLanguage/` | No | Shared base-language definitions (no README yet) |
-| [StarLanguage/](StarLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
+| [PlusLanguage/](PlusLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
 | [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — retired code, excluded from the live build; no `.olean` is produced under any `Boneyard` path. Its README is the single source for its counts |
 
 ## Quick Reference
@@ -322,13 +322,13 @@ invariant check allowlists it by name (check C8).
 - **Task Frames**: `Semantics/TaskFrame.lean` - Task frame structure
 - **Models**: `Semantics/TaskModel.lean` - Models with valuation
 - **Truth**: `Semantics/Truth.lean` - Truth evaluation
-- **BL truth**: `Semantics/BLTruth.lean` - Native truth evaluation for the base language BL
+- **BL truth**: `Semantics/MinusTruth.lean` - Native truth evaluation for the base language BL
 - **Validity**: `Semantics/Validity.lean` - Semantic consequence
-- **BL validity**: `Semantics/BLValidity.lean` - Base-language validity predicates
+- **BL validity**: `Semantics/MinusValidity.lean` - Base-language validity predicates
 - **Soundness**: `Metalogic/Soundness.lean` - Soundness theorem
 - **BL soundness**: `Metalogic/Conservativity/MinusLanguageSoundness.lean` - Soundness for BL, by composition
-- **L⋆ truth and validity**: `Semantics/StarTruth.lean`, `Semantics/StarValidity.lean` - Native truth evaluation and validity for L⋆
-- **TM⋆ soundness and conservativity**: `Metalogic/Conservativity/Star.lean` - Soundness of TM⋆ at every class, conservativity over TM⁺ in both directions
+- **L⋆ truth and validity**: `Semantics/PlusTruth.lean`, `Semantics/PlusValidity.lean` - Native truth evaluation and validity for L⋆
+- **TM⋆ soundness and conservativity**: `Metalogic/Conservativity/Plus.lean` - Soundness of TM⋆ at every class, conservativity over TM⁺ in both directions
 - **Completeness**: `Metalogic/BXCanonical/Completeness.lean` - Canonical model
 - **Perpetuity**: `Theorems/Perpetuity.lean` - P1-P6 principles
 - **Tactics**: `Automation/Tactics/Commands.lean` - Custom tactics

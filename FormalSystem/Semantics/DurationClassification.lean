@@ -200,7 +200,7 @@ duration dichotomy, the two `LexInt` lemmas from a hand-built witness at `ℤ ×
 them has a successor structure available at the point of use — that is what they are building.
 
 **Direction A is deliberately not merged here.** `isLeast_pos_succ_zero` below and
-`BLSchemaValidity.isGreatest_neg_pred_zero` go the *converse* way — from a successor structure
+`MinusSchemaValidity.isGreatest_neg_pred_zero` go the *converse* way — from a successor structure
 to the least positive element — are three to four lines each, and the latter's docstring records
 its duplication as a deliberate territory split from an earlier task. Merging them would need an
 explicit note superseding that docstring.

@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.ShiftSet
-import FormalSystem.Semantics.StarDeterminism
+import FormalSystem.Semantics.PlusDeterminism
 import Mathlib.Data.Real.Basic
 
 /-!
@@ -84,14 +84,14 @@ statement. Only `oneShift.frame` is consumed. The valuation field is discharged 
 
 * JPL paper `def:deterministic`, `app:deterministic`, `cor:no-characterization`
 * `FormalSystem/Semantics/ShiftSet.lean` — `ShiftSet.fibre`, `ShiftSet.frame`, `total_eq_orbit`
-* `FormalSystem/Semantics/StarDeterminism.lean` — the collapse this frame instantiates
+* `FormalSystem/Semantics/PlusDeterminism.lean` — the collapse this frame instantiates
 * `FormalSystem/Semantics/Frames/Standard.lean` — `translationFrame`, the route not taken
 -/
 
 namespace FormalSystem.Metalogic.Independence
 
 open FormalSystem.Semantics
-open FormalSystem.StarLanguage
+open FormalSystem.PlusLanguage
 
 /-- The temporal order `ℝ`. Both annotations are load-bearing, exactly as at
 `Metalogic/DedekindNonCompactness.lean`'s copy: without `@[reducible]`, `(0 : F1.WorldState)`
@@ -175,15 +175,15 @@ theorem f1_eq_of_states_eq {τ σ : ConvexHistory F1} (hτ : τ.IsTotal) (hσ : 
 
 /--
 **Deliverable (a) at F¹**, as a smoke test of Phase 1 against a concrete frame: *Determined*
-`φ → ⊡φ` is valid on `F¹` for every `StarFormula φ`, with no bespoke frame construction and no
+`φ → ⊡φ` is valid on `F¹` for every `PlusFormula φ`, with no bespoke frame construction and no
 new axiom obligation.
 -/
-theorem f1_determined (φ : StarFormula) : F1.StarValidOn (.imp φ (.stab φ)) :=
+theorem f1_determined (φ : PlusFormula) : F1.PlusValidOn (.imp φ (.stab φ)) :=
   determined_of_deterministic f1_deterministic φ
 
 /-- The full collapse at `F¹`: `⊡φ ↔ φ` is valid, both directions. -/
-theorem f1_stab_biconditional (φ : StarFormula) :
-    F1.StarValidOn (.imp (.stab φ) φ) ∧ F1.StarValidOn (.imp φ (.stab φ)) :=
-  stab_biconditional_starValidOn_of_deterministic f1_deterministic φ
+theorem f1_stab_biconditional (φ : PlusFormula) :
+    F1.PlusValidOn (.imp (.stab φ) φ) ∧ F1.PlusValidOn (.imp φ (.stab φ)) :=
+  stab_biconditional_plusValidOn_of_deterministic f1_deterministic φ
 
 end FormalSystem.Metalogic.Independence

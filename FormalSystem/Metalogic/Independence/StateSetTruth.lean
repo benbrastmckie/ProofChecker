@@ -15,17 +15,17 @@ depends **only on the world state of evaluation** — not on which history passe
 not on the time.
 
 That is made precise by a recursion `satSet` computing, from a valuation alone, the set of world
-states at which a formula holds, together with the bridge theorem identifying `StarTruthAt` with
+states at which a formula holds, together with the bridge theorem identifying `PlusTruthAt` with
 membership in it.
 
 ## Main Definitions
 
-- `satSet V φ` — the state set of `φ` under the valuation `V`, by recursion on `StarFormula`
+- `satSet V φ` — the state set of `φ` under the valuation `V`, by recursion on `PlusFormula`
 
 ## Main Results
 
-- `starTruthAt_iff_mem_satSet` — **the bridge**: `StarTruthAt M τ t φ ↔ τ(t) ∈ satSet M.valuation φ`
-- `starValidOn_iff_satSet_univ` — the validity corollary: `F ⊨ φ` iff `satSet V φ` is everything,
+- `plusTruthAt_iff_mem_satSet` — **the bridge**: `PlusTruthAt M τ t φ ↔ τ(t) ∈ satSet M.valuation φ`
+- `plusValidOn_iff_satSet_univ` — the validity corollary: `F ⊨ φ` iff `satSet V φ` is everything,
   for every `V`
 - `determined_of_orderFlow` — *Determined* is valid over **any** (H1)+(H2) frame, deterministic or
   not
@@ -34,7 +34,7 @@ membership in it.
 
 Every clause but two is the obvious one. The two worth pausing on:
 
-* **`box`.** `StarTruthAt`'s `□` clause quantifies over all total histories at the *same* time,
+* **`box`.** `PlusTruthAt`'s `□` clause quantifies over all total histories at the *same* time,
   and under (H2) the states those histories occupy at that time exhaust `W`. So `□φ` is true
   everywhere or nowhere, according as `satSet φ` is everything or not. That is written here as
   `{_w | ∀ v, v ∈ satSet V φ}` — a set whose defining condition ignores its own argument. This
@@ -66,7 +66,7 @@ namespace FormalSystem.Metalogic.Independence
 
 open FormalSystem.Syntax
 open FormalSystem.Semantics
-open FormalSystem.StarLanguage
+open FormalSystem.PlusLanguage
 
 /--
 The **state set** of an L⋆ formula under a valuation `V` on a linearly ordered carrier `W`: the
@@ -77,7 +77,7 @@ The recursion mentions only the order on `W`. That is the crux of `cor:no-charac
 frames with the same state order and (H1)+(H2) satisfy the same recursion, hence validate exactly
 the same formulas, however differently their task relations behave.
 -/
-def satSet {W : Type} [LinearOrder W] (V : W → Atom → Prop) : StarFormula → Set W
+def satSet {W : Type} [LinearOrder W] (V : W → Atom → Prop) : PlusFormula → Set W
   | .atom p => {w | V w p}
   | .bot => ∅
   | .imp φ ψ => {w | w ∈ satSet V φ → w ∈ satSet V ψ}
@@ -95,22 +95,22 @@ variable {W : Type} [LinearOrder W] (V : W → Atom → Prop)
 
 @[simp] theorem mem_satSet_bot (w : W) : w ∈ satSet V .bot ↔ False := Iff.rfl
 
-@[simp] theorem mem_satSet_imp (φ ψ : StarFormula) (w : W) :
+@[simp] theorem mem_satSet_imp (φ ψ : PlusFormula) (w : W) :
     w ∈ satSet V (.imp φ ψ) ↔ (w ∈ satSet V φ → w ∈ satSet V ψ) := Iff.rfl
 
-@[simp] theorem mem_satSet_box (φ : StarFormula) (w : W) :
+@[simp] theorem mem_satSet_box (φ : PlusFormula) (w : W) :
     w ∈ satSet V (.box φ) ↔ ∀ v : W, v ∈ satSet V φ := Iff.rfl
 
-@[simp] theorem mem_satSet_untl (ψ φ : StarFormula) (w : W) :
+@[simp] theorem mem_satSet_untl (ψ φ : PlusFormula) (w : W) :
     w ∈ satSet V (.untl ψ φ) ↔
       ∃ v, w < v ∧ v ∈ satSet V φ ∧ ∀ u, w < u → u < v → u ∈ satSet V ψ := Iff.rfl
 
-@[simp] theorem mem_satSet_snce (ψ φ : StarFormula) (w : W) :
+@[simp] theorem mem_satSet_snce (ψ φ : PlusFormula) (w : W) :
     w ∈ satSet V (.snce ψ φ) ↔
       ∃ v, v < w ∧ v ∈ satSet V φ ∧ ∀ u, v < u → u < w → u ∈ satSet V ψ := Iff.rfl
 
 /-- **The `⊡` clause**: stability adds nothing to a state set. -/
-@[simp] theorem satSet_stab (φ : StarFormula) : satSet V (.stab φ) = satSet V φ := rfl
+@[simp] theorem satSet_stab (φ : PlusFormula) : satSet V (.stab φ) = satSet V φ := rfl
 
 end Clauses
 
@@ -122,14 +122,14 @@ variable {F : TaskFrame} [LinearOrder F.WorldState]
 **The state-set bridge.** Over a frame satisfying (H1) and (H2), an L⋆ formula is true at a total
 history and a time exactly when the world state occupied there lies in the formula's state set.
 
-By induction on `StarFormula`, with the history and the time universally quantified inside the
+By induction on `PlusFormula`, with the history and the time universally quantified inside the
 induction (module docstring). Every constructor has a case: `atom`, `bot`, `imp`, `box`, `untl`,
 `snce`, `stab`.
 -/
-theorem starTruthAt_iff_mem_satSet (h1 : OrderFlow F) (h2 : StateOccurs F)
-    (M : TaskModel F) (φ : StarFormula) :
+theorem plusTruthAt_iff_mem_satSet (h1 : OrderFlow F) (h2 : StateOccurs F)
+    (M : TaskModel F) (φ : PlusFormula) :
     ∀ (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration),
-      StarTruthAt M τ t φ ↔ τ.states t (hτ t) ∈ satSet M.valuation φ := by
+      PlusTruthAt M τ t φ ↔ τ.states t (hτ t) ∈ satSet M.valuation φ := by
   induction φ with
   | atom p =>
     intro τ hτ t
@@ -206,17 +206,17 @@ set is the whole carrier under every valuation.
 The right-hand side mentions no frame at all — which is what makes two such frames over the same
 ordered carrier validate the same formulas.
 -/
-theorem starValidOn_iff_satSet_univ (h1 : OrderFlow F) (h2 : StateOccurs F) (φ : StarFormula) :
-    F.StarValidOn φ ↔ ∀ V : F.WorldState → Atom → Prop, satSet V φ = Set.univ := by
+theorem plusValidOn_iff_satSet_univ (h1 : OrderFlow F) (h2 : StateOccurs F) (φ : PlusFormula) :
+    F.PlusValidOn φ ↔ ∀ V : F.WorldState → Atom → Prop, satSet V φ = Set.univ := by
   constructor
   · intro hv V
     ext w
     simp only [Set.mem_univ, iff_true]
     obtain ⟨τ, hτ, hst⟩ := h2 w 0
-    have h := (starTruthAt_iff_mem_satSet h1 h2 ⟨V⟩ φ τ hτ 0).mp (hv ⟨V⟩ ⟨τ, hτ⟩ 0)
+    have h := (plusTruthAt_iff_mem_satSet h1 h2 ⟨V⟩ φ τ hτ 0).mp (hv ⟨V⟩ ⟨τ, hτ⟩ 0)
     rwa [hst] at h
   · intro h M τ t
-    refine (starTruthAt_iff_mem_satSet h1 h2 M φ τ.val τ.prop t).mpr ?_
+    refine (plusTruthAt_iff_mem_satSet h1 h2 M φ τ.val τ.prop t).mpr ?_
     rw [h M.valuation]
     exact Set.mem_univ _
 
@@ -229,9 +229,9 @@ tracks "truth depends on the state alone", which is strictly weaker than determi
 relation. `Independence/DeterminismUndefinable.lean` instantiates it at a frame that is not
 deterministic.
 -/
-theorem determined_of_orderFlow (h1 : OrderFlow F) (h2 : StateOccurs F) (φ : StarFormula) :
-    F.StarValidOn (.imp φ (.stab φ)) := by
-  rw [starValidOn_iff_satSet_univ h1 h2]
+theorem determined_of_orderFlow (h1 : OrderFlow F) (h2 : StateOccurs F) (φ : PlusFormula) :
+    F.PlusValidOn (.imp φ (.stab φ)) := by
+  rw [plusValidOn_iff_satSet_univ h1 h2]
   intro V
   ext w
   simp only [mem_satSet_imp, satSet_stab, Set.mem_univ, iff_true]
