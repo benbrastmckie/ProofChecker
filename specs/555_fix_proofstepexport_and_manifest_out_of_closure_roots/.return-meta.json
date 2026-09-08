@@ -1,21 +1,40 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/reports/01_proofstepexport-out-of-closure-gate.md",
-      "summary": "Diagnoses ProofStepExport.lean's elaboration failure (3 reported errors mask 873 more), records an end-to-end verified 77-line repair, maps the lean_exe out-of-closure gate topology, and shows why the module-invariants manifest is the wrong mechanism."
-    },
+      "type": "plan",
+      "path": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/plans/01_proofstepexport-repair-exe-root-gate.md",
+      "summary": "Six-phase plan: 77-line ProofStepExport repair (mkEntry/mkEntryAt split), real build+exe verification, new self-maintaining invariant C25 over lakefile lean_exe roots, mandated negative test on TraceExporter, CI step, and a compile-only final gate."
+    }
+  ],
+  "next_steps": "Run /implement 555 to execute the plan",
+  "user_decision": {
+    "question": "Task 558 will widen the lint closure, at which point 93 defsWithUnderscore/docBlame findings in the out-of-closure exe roots (20 of them JSON-field structure projections in DatasetExport, a data-format change rather than a cosmetic rename) become CI failures. Those 93 are in no current task's file_scope. How should they be scoped before 557 starts?",
+    "options": [
+      "Spawn a dedicated exe-root lint burndown task off 555, sequenced before 558 — keeps DatasetExport's JSON-field rename decision in its own task",
+      "Widen task 558's file_scope to absorb the 93 findings — no new task, but couples the gate-hardening work to a data-format change",
+      "Defer and let 558 discover it — accepts a red CI window mid-sequence"
+    ],
+    "recommended": "Spawn a dedicated exe-root lint burndown task off 555, sequenced before 558 — keeps DatasetExport's JSON-field rename decision in its own task",
+    "blocking": false
+  },
+  "memory_candidates": [
     {
-      "type": "reference",
-      "path": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/verified-repair.patch",
-      "summary": "Verified unified diff for FormalSystem/Automation/ProofStepExport.lean: zero elaboration errors, lake exe proof_extractor processes 487/487 theorems. git apply --check clean."
+      "content": "Gate-topology blind spot in Lake-based Lean repos: a reachability walk that seeds itself from every `root :=` in lakefile.lean (as scripts/check-module-invariants.sh's C6 block does) classifies every lean_exe root as REACHABLE, while `lake build` only builds targets marked @[default_target] (typically the lean_lib alone). The two definitions of 'covered' disagree, and the gap is exactly the set of lean_exe roots: they are invisible to `lake build` AND excluded from the unreachable-module rot guard by the guard's own definition. Symptom observed here: FormalSystem/Automation/ProofStepExport.lean failed to elaborate indefinitely with no gate able to observe it, and dragged a 66-declaration module (ContextualProofs) out of the build and lint closure with it. The correct fix is a NEW check that scrapes `root :=` at run time and runs `lake build <module>` per root (self-maintaining, module targets only — linked exe binaries are 240-310 MB each). The wrong fix is adding the root to the unreachable-module manifest: the guard fails such an entry as stale-by-construction. Generalizes to any build system with a distinction between default targets and declared-but-not-default roots.",
+      "category": "INSIGHT",
+      "source_artifact": "specs/555_fix_proofstepexport_and_manifest_out_of_closure_roots/plans/01_proofstepexport-repair-exe-root-gate.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["lake", "lean_exe", "default_target", "reachability", "gate-coverage", "module-invariants"]
     }
   ],
   "metadata": {
     "session_id": "sess_1788880178_8201de_555",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 6,
+    "estimated_hours": 6.5,
+    "dependency_waves": 5
+  },
+  "dispatch_seq": 3
 }
