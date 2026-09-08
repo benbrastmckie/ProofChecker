@@ -420,7 +420,7 @@ theory, semantics and decidability results teach *about* that categorical struct
 - [x] Write `specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`:
       the interval-domain convex history (`domain := fun z => 0 ≤ z ∧ z ≤ ℓ`), the restriction
       along `Tr p`, presheaf functoriality (identity and composition), and the *Germs* clause
-      (`Beh(F)(0) ≅ W`). Stop there — see Scope Hypothesis.
+      (`Beh(F)(0) ≅ W`). Stop there — see Scope Hypothesis. *(deviation: altered — functoriality and Germs delivered as planned; the Scope Hypothesis's budget-permitting two-piece gluing was delivered as its composition step `glue_seam` only, the section assembly and restriction identities handed to the §7.3 follow-on task)*
 - [x] Write §5.2, the reverse direction, developing at least these three connections and
       stating for each what is established, what is conjectural, and what a follow-on task would
       have to prove:
@@ -478,28 +478,28 @@ the phase must say which clauses those three actually reach and which they do no
 
 ---
 
-### Phase 6: Costing the structural options [NOT STARTED]
+### Phase 6: Costing the structural options [COMPLETED]
 
 **Goal**: Settle questions (c) and (d). Cost each option by file and by obligation class,
 against the counterfactual of doing nothing.
 
 **Tasks**:
-- [ ] Partition the cost of retargeting the semantics to a total index into: (i) mechanical
+- [x] Partition the cost of retargeting the semantics to a total index into: (i) mechanical
       rewrites (`τ.states t ht` → `τ.states t`, dropped `IsTotal` binders, deleted
       bundled/predicate bridges), and (ii) proofs that must genuinely be rethought. Give a file
       list with a count for each class, derived from Phase 1's measurements.
-- [ ] Confirm or refute the description's expectation that the change removes code rather than
+- [x] Confirm or refute the description's expectation that the change removes code rather than
       adding it, with a measured net-line estimate.
-- [ ] Cost all four options — COLLAPSE, KEEP, COLLAPSE-PARTIALLY, DEVELOP-AND-RETARGET — on the
+- [x] Cost all four options — COLLAPSE, KEEP, COLLAPSE-PARTIALLY, DEVELOP-AND-RETARGET — on the
       same basis, including what each forecloses. Cost the middle answers as carefully as the
       extremes, per the description's instruction, and do not let DEVELOP-AND-RETARGET escape
       costing merely because this plan proposed it.
-- [ ] Cost the counterfactual explicitly: what the ongoing per-site tax of the status quo is,
+- [x] Cost the counterfactual explicitly: what the ongoing per-site tax of the status quo is,
       and what it would cost to *not* decide.
-- [ ] Note the constraint every proposed COLLAPSE-shaped plan must meet: each phase one agent
+- [x] Note the constraint every proposed COLLAPSE-shaped plan must meet: each phase one agent
       run, `lake build FormalSystem` green with no new `sorry` at each phase end, and
       `PartialHistory` and the Extension Theorem untouched.
-- [ ] Write §6 of the report.
+- [x] Write §6 of the report.
 
 **Timing**: 1.5 hours
 

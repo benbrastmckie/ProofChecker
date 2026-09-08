@@ -127,11 +127,17 @@ theorem in the tree uses convexity to prove anything else. The description under
 `IsTotal`: 305 lines / 326 occurrences across 58 files (description: "322 lines"; the figure is
 reproducible today as an occurrence count, not a line count, and both have moved with the tree).
 `.domain`: 228 lines / 295 occurrences (description: "198 lines"). `.states` with an explicit
-second (domain-proof) argument: 249 sites, by
-`grep -rno "\.states [a-zA-Z0-9_']* [a-zA-Z0-9_']*" FormalSystem/ --include=*.lean | wc -l`
-(description: "roughly 85"). That last divergence is large and in the direction that makes the
-description's case *stronger*, not weaker; the description's figure appears to predate the
-history-vocabulary rename.
+second (domain-proof) argument: **133** sites over the live tree, by
+
+```
+grep -rnoE "\.states [a-zA-Z0-9_']+ [a-zA-Z0-9_']+" FormalSystem/ --include=*.lean | grep -v Boneyard | wc -l
+```
+
+(description: "roughly 85"). *A loose variant of the same grep, with `*` in place of `+`, returns
+247 because it admits empty tokens; 133 is the correct figure and §6 uses it.* The divergence
+from the description's 85 is real but modest, and §6.1 shows that only 64 of the 133 sit in files
+that mention `ConvexHistory` at all — the rest are at the `PartialHistory` layer, which the
+task's own constraint puts out of scope.
 
 The atom clause does carry the domain existential, as claimed
 (`Semantics/Truth.lean`, `TruthAt`'s `Formula.atom` case:
@@ -208,7 +214,7 @@ Result: **none found.** Every surface below was searched with
 |---|---|
 | 1. The convex layer looks vestigial | **CONFIRMED**, and strengthened: the bounded convex tier is not merely unused but unreachable, since the tree's one partial→convex promotion (`toConvexHistory`) requires `IsTotal`. |
 | 2. `convex` discharged 22×, consumed never | **CORRECTED**: discharged 18× at the `ConvexHistory` layer (16 live, 2 in `Boneyard/`); consumed at exactly 3 sites, all of which are convexity re-establishment inside the two generic transports. Stronger than claimed. |
-| 3. The generality has a real price | **CONFIRMED**, with figures restated: `IsTotal` 305 lines / 326 occurrences / 58 files; `.domain` 228 lines / 295 occurrences; dependent `.states` applications 249 (not ~85); 12 bridge declarations in six matched pairs in `Validity.lean` alone. |
+| 3. The generality has a real price | **CONFIRMED**, with figures restated: `IsTotal` 305 lines / 326 occurrences / 58 files; `.domain` 228 lines / 295 occurrences; dependent `.states` applications 133 (not ~85), of which only 64 are at the convex layer; 12 bridge declarations in six matched pairs in `Validity.lean` alone. |
 | 4. Nothing formalizes the presheaf appendix | **CONFIRMED as a fact, REFUTED as an inference**: `presheaf` occurs 0 times, but `timeShift`, `StarPasting.paste`, the Extension Theorem, `TaskFrame.HF` and the determinism material already supply most of `app:presheaf-dictionary`'s analytic input under non-categorical names. |
 
 **Question (a) is therefore settled in the negative**: there is no site in the repository that
@@ -767,3 +773,118 @@ site, and the failure is detected at the coverage's germ objects. That is a clea
 the paper's own *Sheaf* clause read backwards through the logic, and it is a genuine contribution
 from this side to that one. **It is stated here as a formulation, not proved as a theorem**;
 §7.3 proposes it.
+
+---
+
+## §6. Costing the structural options
+
+Every figure below is followed by the command that produced it. Nothing is carried over from the
+task description without re-measurement; §1.3 and §6.1 record two places where re-measurement
+changed the number.
+
+### §6.1 The retarget, by obligation class
+
+The change costed here is: replace the evaluation index of `TruthAt` (and hence of `Valid`,
+`ValidIn`, `ValidOnFrames`, `ConsequenceOnFrames`, `SetConsequenceOnFrames`, `TaskFrame.ValidOn`
+and the satisfiability definitions) by a total-by-construction type — the paper's `PossibleWorld`
+— leaving `PartialHistory` and the Extension Theorem untouched, as the task's constraints
+require.
+
+**Class (i): mechanical rewrites.**
+
+| Item | Measure | Command |
+|---|---:|---|
+| `IsTotal` occurrences in *code* (not docstrings) | 239 lines across 55 files | `python3 specs/553_decide_convex_history_layer_collapse/probes/scan-istotal-code-vs-doc.py` |
+| `IsTotal` occurrences in docstrings/comments | 66 lines | same script |
+| dependent `.states t ht` applications, whole tree | 133 | `grep -rnoE "\.states [A-Za-z0-9_']+ [A-Za-z0-9_']+" FormalSystem/ --include=*.lean \| grep -v Boneyard \| wc -l` |
+| …of which are in files that mention `ConvexHistory` | **64** | same script |
+| …of which are in `PartialHistory`-only files (OUT OF SCOPE) | 69 | same script |
+| `.domain` occurrences | 228 lines, 35 files | `grep -rn "\.domain" … \| wc -l`; `grep -rl … \| wc -l` |
+| `convex :=` discharges at the convex layer, live | 16 | §1.1's classification |
+| bridge declarations to delete | 12, in `Semantics/Validity.lean` | §1.3's table |
+| **bridge CALL SITES to rewrite** | **~280** (`of_forall_total` 201, `apply_total` 78, `Valid.apply` 7, `SemanticConsequence.of_forall` 8, `.apply` 1, `validOn_iff_total` 3), across **26 files** | `grep -rn "<name>" FormalSystem/ --include=*.lean \| grep -v Boneyard \| wc -l` per name; file span by `grep -rln` on the disjunction |
+| files touching `IsTotal` ∪ `.domain` ∪ `.states` | 75 | `grep -rl "IsTotal\|\.domain\|\.states" … \| grep -v Boneyard \| wc -l` |
+| live tree size, for scale | 283,541 lines | `find FormalSystem -name '*.lean' -not -path '*/Boneyard/*' \| xargs wc -l \| tail -1` |
+
+**Two corrections to the description's cost picture, both material.**
+
+1. The description's "roughly 85 dependent `.states t ht` applications" is 133 by a strict grep
+   (the loose variant that returns 247 admits empty tokens and should not be used). But **only 64
+   of the 133 are at the convex layer at all** — the other 69 are in `Extension/Constraint.lean`
+   (33), `Extension/PeriodicExtension.lean` (13), `FrameAxioms.lean` (11),
+   `PartialHistoryOrder.lean` (4), `Extension/Admissible.lean` (4) and friends, which are
+   `PartialHistory`-layer files the task's constraints put out of scope. The mechanical
+   `.states` cost of the retarget is therefore **less than half** what the raw grep suggests.
+
+2. Conversely, the description does not count the **bridge call sites**, and they dominate.
+   `of_forall_total` alone is applied 201 times. Deleting the 12 bridge declarations means
+   rewriting roughly 280 call sites across 26 files. That is the single largest mechanical item
+   in the change and the description's costing omits it entirely.
+
+**Class (ii): proofs that must genuinely be rethought.** Short list, and it is short:
+
+- **The `Extension/` interface.** `thm:extension` concludes at the partial layer and produces a
+  totality proof; `PartialHistory.toConvexHistory` promotes across it. Under a total index that
+  promotion becomes `PartialHistory → PossibleWorld` with the totality proof as its input — the
+  same theorem with a different target type. `Extension.lean:213` is the one call site. **One
+  interface, mechanical, but it must be got right because it is the only route into the index
+  type.**
+- **`Semantics/IntTransfer.lean`.** This is the tree's only genuinely domain-generic transport,
+  and `Truth.lean:593-597` records that its `alignedCorr` "states its relation on arbitrary
+  `ConvexHistory`s, which is what lets `TimeShift.timeShift_preserves_truth` and
+  `IntTransfer.truthAt_map` keep their" generality. Retargeting the index makes those statements
+  total-only. Whether the ℤ-transfer machinery (`validZTime_iff_validInt`, consumed by
+  `DurationClassification.lean` and the decidability branch) still goes through at the narrower
+  type is **the one real question in the whole change**, and it is not answerable by grep.
+- **`ConvexHistory.timeShift` and its convexity re-establishment** (`ConvexHistory.lean:336-343`)
+  become unnecessary — a total index's shift is total by `isTotal_timeShift` and there is no
+  domain to reshape. This is a *simplification*, not a rethink.
+
+Everything else in the 55 code files is binder deletion and proof-term forwarding.
+
+**Net lines.** The description expected the change to remove code. That is **confirmed but
+smaller than implied**: deleting the 12 bridge declarations with their docstrings removes on the
+order of 120–160 lines from `Validity.lean` (which is 950 lines); deleting the 16 live `convex :=`
+discharges removes 16; dropping 239 in-code `IsTotal` occurrences mostly shortens existing lines
+rather than deleting them; the 64 domain-proof arguments likewise. Against that, a
+`structure PossibleWorld` with its API costs perhaps 40–80 lines. **Estimated net: −150 to −250
+lines out of 283,541**, i.e. under 0.1% of the tree. The description's expectation that "volume
+rather than depth is the likely difficulty" is **confirmed**: roughly 600 individual touch points
+in 55–75 files, almost none of them hard, and one genuinely open question (`IntTransfer`).
+
+### §6.2 The four options, costed on the same basis
+
+| Option | Cost | What it forecloses |
+|---|---|---|
+| **COLLAPSE** — retarget the semantics to a total index and delete `ConvexHistory` | The §6.1 change, **plus** deleting `ConvexHistory` itself and rehoming `timeShift` (used by `BiLasso/BoxOracle.lean:252`, `ShiftSet`, `ReynoldsBridge`) and `IntTransfer` onto the new type or onto `PartialHistory`. Adds perhaps 20% to §6.1's touch count. | **The presheaf appendix outright.** `Beh(F)(ℓ)`'s sections are convex histories with bounded domain; with no convex layer there is no type for them. Probe 04 would not typecheck. Also forecloses C3/C4 as anything but a from-scratch redefinition. |
+| **KEEP** — change nothing, record the reason in the module docstring | ~10 lines of docstring, once. | Nothing structurally. But it keeps C2 reachable: 97 declarations continue to bind an index at which `modal_t` is false (§2, §3.4), and the 305-line `IsTotal` tax continues to be paid at every validity, soundness, completeness and decidability site. |
+| **COLLAPSE-PARTIALLY** — retarget the semantics; retain `ConvexHistory` as an unused definition | Exactly §6.1, no more: `ConvexHistory` stays as a type, `timeShift`/`IntTransfer` stay on it, and the semantics moves off it. ~600 touch points, −150 to −250 lines. | Nothing that matters. `Beh(F)` still has a home. C3/C4 can still be defined on it. |
+| **DEVELOP-AND-RETARGET** — §6.1, and *also* grow the convex layer into the interval-site/presheaf apparatus and add C3/C4 as named definitions | §6.1 **plus** new work, all of it additive and none of it blocking: the site + presheaf + Germs is ~150 lines (probe 04 is 200 including docstrings and it proves functoriality and Germs already); the *Sheaf* clause is ~120 more on top of `glue_seam`; *Totality* and *Directed Gluing* are wrappers on `thm:extension`; C3/C4 as library definitions with the §4 survival theorems is ~400 lines (probe 03 is ~460 including docstrings). | Nothing. It is the union of COLLAPSE-PARTIALLY's foreclosures (none) with strictly more capability. |
+
+**The counterfactual — the cost of not deciding.** Measured, not asserted:
+
+- 239 in-code `IsTotal` occurrences across 55 files, each one a binder that must be written,
+  threaded and discharged at every new validity/soundness/completeness statement. The heaviest
+  file is `Semantics/Validity.lean` at 35.
+- ~280 bridge applications across 26 files, each existing only to convert between two spellings
+  of one notion.
+- 97 declarations binding an index whose semantics is degenerate (§2.4, class 3), a number that
+  grows monotonically with the tree.
+- The `presheaf`-grep-0 misreading of §1.4, which nearly produced the wrong verdict, is itself a
+  cost of the layer's namelessness: the apparatus is there but nothing points at it.
+
+The status quo is not free, and its cost is proportional to future work rather than fixed.
+
+### §6.3 The constraint any COLLAPSE-shaped plan must meet
+
+Recorded here so §7.3's proposals inherit it:
+
+- Each phase is one agent run — on §6.1's numbers, that is roughly "one module cluster per
+  phase", not "one obligation class per phase": the 26 bridge-call-site files alone are two or
+  three phases.
+- `lake build FormalSystem` green with no new `sorry` at the end of **every** phase. This is the
+  binding constraint on phase decomposition, and it rules out the obvious slicing (change the
+  index type first, fix call sites after): the type change is not green until its call sites
+  are. A compatibility `abbrev` plus a deprecation sweep is the shape that satisfies it.
+- `PartialHistory` and the Extension Theorem untouched. §6.1 shows this is compatible with the
+  change and in fact removes 69 of the 133 `.states` sites from scope.
