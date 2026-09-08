@@ -63,8 +63,8 @@ which the roadmap does not currently carry a row for. Recommendation 2's canonic
 
 ## Goals & Non-Goals
 
-**Goals**: land `blTruthAt_timeShift`, `bl_box_universal`, `sp_derivable_dense`,
-`sp_derivable_rtime`, `not_blValidDense_z1`, `chainSat`, `chainBundle_truth_lemma`,
+**Goals**: land `blTruthAt_timeShift`, `bl_box_universal`, `spDerivableDense`,
+`spDerivableRTime`, `not_blValidDense_z1`, `chainSat`, `chainBundle_truth_lemma`,
 `not_blValidIn_of_not_chainSat` — all sorry-free — and record the Dense/Dedekind verdicts in-tree.
 
 **Non-Goals**:
@@ -169,11 +169,11 @@ H/G-definable subclasses, so no dichotomy witness is available.
 - [x] Create `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` with the
       standard copyright header (`bash scripts/check-copyright-headers.sh` must pass) and a module
       docstring naming this file as the F5 record.
-- [x] Land `sp_derivable_dense` from report Appendix A.2. Use `le_refl FrameClass.Dense` and
+- [x] Land `spDerivableDense` from report Appendix A.2. Use `le_refl FrameClass.Dense` and
       `FrameClass.base_le _` for the `minFrameClass` side conditions — the report's Tactic Survey
       records that `by decide` **fails** here (free variables in the expected type); do not
       rediscover this.
-- [x] Land `sp_derivable_rtime` by the `Dense ≤ RTime` lift. *(deviation: altered — there is no
+- [x] Land `spDerivableRTime` by the `Dense ≤ RTime` lift. *(deviation: altered — there is no
       `DerivationTree` frame-class weakening lemma in the tree, so the `.Dense` derivation is
       restated at `.RTime` with `show FrameClass.Dense ≤ FrameClass.RTime from trivial` as the
       side condition, rather than transported along a lift.)*
@@ -194,6 +194,12 @@ H/G-definable subclasses, so no dichotomy witness is available.
       justification; the alternative — restating both at `BaseLanguage.Derivable`, i.e.
       `Nonempty ∘ DerivationTree` — was tried, builds green, and was reverted because it weakens
       the recorded Challenge statement from data to `Prop`.)*
+      *(later resolved: the attribute was deleted and the two declarations were renamed to
+      `spDerivableDense` / `spDerivableRTime`. The rule table in
+      `docs/development/NAMING_CONVENTION_DEVIATION.md` keys on what a declaration **produces** —
+      data, `DerivationTree`-valued results included, takes lowerCamelCase — so the exemption was
+      never the rule's intent. Both signatures are unchanged; only the identifiers moved, and the
+      `Nonempty`-wrapped restatement remains deliberately not provided.)*
 
 **Timing**: 2 hours
 
@@ -349,7 +355,7 @@ obstruction named at declaration granularity*.
       docstring with a four-row table: `.Base` refuted (`SpCountermodel`/CEB), `.ZTime` refuted
       (`tmCompleteZTime_refuted`), `.Dense` expected complete, `.RTime` open.
 - [x] For the `.Dense` row, state: no obstruction found; both closed rows' witnesses provably fail
-      to transfer (cite `sp_derivable_dense` and `not_blValidDense_z1` by name); the residual
+      to transfer (cite `spDerivableDense` and `not_blValidDense_z1` by name); the residual
       content is a BL-side canonical model — a BL-MCS layer over `BLFormula` (the
       `Metalogic/Core/` apparatus is `Formula`-only and does not transfer), canonicity for the
       eleven Base axioms plus DN, bulldozing, and a countable-ℚ realization via
@@ -486,11 +492,11 @@ theorem bl_box_universal {F : TaskFrame} (M : TaskModel F) (τ : ConvexHistory F
 
 /-- Phase 2: the `.Base` dichotomy witness `Sp` is a TM_d theorem, so it cannot separate at
 `.Dense`. -/
-noncomputable def sp_derivable_dense (φ ψ : BLFormula) :
+noncomputable def spDerivableDense (φ ψ : BLFormula) :
     ⊢ᴮᴸ[FrameClass.Dense] Sp φ ψ := sorry
 
 /-- Phase 2: the same, lifted along `Dense ≤ RTime`. -/
-noncomputable def sp_derivable_rtime (φ ψ : BLFormula) :
+noncomputable def spDerivableRTime (φ ψ : BLFormula) :
     ⊢ᴮᴸ[FrameClass.RTime] Sp φ ψ := sorry
 
 /-- Phase 2: the `.Discrete` witness `Z1` is refutable on ℚ, so it is not `.Dense`-valid and
@@ -541,7 +547,7 @@ theorem not_blValidIn_of_not_chainSat {fc : FrameClass} {D : TemporalOrder}
 - `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` (modified) —
   `blTruthAt_timeShift`, `bl_box_universal`.
 - `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` (new) —
-  `sp_derivable_dense`, `sp_derivable_rtime`, `not_blValidDense_z1`, plus the ℚ countermodel.
+  `spDerivableDense`, `spDerivableRTime`, `not_blValidDense_z1`, plus the ℚ countermodel.
 - `FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean` (new) — `chainSat`,
   `chainBundle_truth_lemma`, `not_blValidIn_of_not_chainSat`, plus the ℚ/ℝ instantiations.
 - `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` (modified, docstring only) —

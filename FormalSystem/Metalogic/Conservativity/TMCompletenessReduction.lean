@@ -89,8 +89,8 @@ open in the direction they are.
 **No obstruction is known, and both known witnesses provably fail to transfer.**
 `Conservativity/DenseObstructionTransfer.lean` machine-checks both halves:
 
-* `sp_derivable_dense` — the `.Base` witness `Sp` is a **theorem** of TM_d (its right disjunct's
-  inner formula is `Axiom.dn`), so it is not an underivable validity. `sp_derivable_rtime` says
+* `spDerivableDense` — the `.Base` witness `Sp` is a **theorem** of TM_d (its right disjunct's
+  inner formula is `Axiom.dn`), so it is not an underivable validity. `spDerivableRTime` says
   the same at `.RTime`.
 * `not_blValidDense_z1` — the `.ZTime` witness `Z1` is **not** dense-valid, refuted on the flow
   frame over ℚ, so it is not a validity of the class at all.
@@ -178,8 +178,8 @@ module is a `def`, referenced as a statement and never the conclusion of a theor
 * `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`,
   `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — the two closed rows'
   refutations, `tmCompleteBase_refuted` and `tmCompleteZTime_refuted`
-* `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` — `sp_derivable_dense`,
-  `sp_derivable_rtime`, `not_blValidDense_z1`: neither closed row's witness transfers
+* `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` — `spDerivableDense`,
+  `spDerivableRTime`, `not_blValidDense_z1`: neither closed row's witness transfers
 * `FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean` —
   `not_blValidIn_of_not_chainSat` and its ℚ/ℝ instantiations, the transfer half of the
   canonical-model route

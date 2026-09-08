@@ -27,7 +27,7 @@ two different and independent reasons:
   density axiom `Axiom.dn`, so `⊢ᴮᴸ[.Dense] □(DN ψ)` by necessitation, and `Sp` follows by
   `Axiom.prop_s` and modus ponens. A schema derivable in the system cannot witness the system's
   incompleteness. Since `Dense ≤ RTime`, the same derivation runs at `.RTime`
-  (`sp_derivable_rtime`), so this half covers both open rows at once.
+  (`spDerivableRTime`), so this half covers both open rows at once.
 * `Z1` stops being **valid**. It is refuted here on the flow frame over ℚ, at the same valuation
   `p := {x | 1 ≤ x}` that makes `Gp ↔ p` pointwise on any dense unbounded chain. So it is not
   `BLValidDense`, and a formula that is not valid over the class cannot witness a validity the
@@ -66,7 +66,7 @@ are not variants of one another.
 
 ## Main Results
 
-- `sp_derivable_dense`, `sp_derivable_rtime` — the `.Base` witness is a theorem of both open
+- `spDerivableDense`, `spDerivableRTime` — the `.Base` witness is a theorem of both open
   systems, hence separates neither
 - `q_atom_iff`, `q_gp_iff_p` — the ℚ model's valuation lemma and the pointwise `Gp ↔ p` collapse
 - `q_G_Gp_imp_p`, `q_F_Gp`, `q_not_Gp`, `q_not_true_at_zero` — the three `Z1` parts and their
@@ -119,7 +119,7 @@ Stated at the bare `DerivationTree` (`⊢ᴮᴸ[fc] φ`) rather than at `BaseLan
 derivation term itself is available to any consumer; see the naming-exemption note below on what
 that costs.
 -/
-noncomputable def sp_derivable_dense (φ ψ : BLFormula) :
+noncomputable def spDerivableDense (φ ψ : BLFormula) :
     ⊢ᴮᴸ[FrameClass.Dense] Sp φ ψ :=
   let dn : ⊢ᴮᴸ[FrameClass.Dense] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
     .axiom [] _ (Axiom.dn ψ) (le_refl FrameClass.Dense)
@@ -136,14 +136,14 @@ noncomputable def sp_derivable_dense (φ ψ : BLFormula) :
 **`Sp` is a `TM_dc` theorem**, by the same derivation at `.RTime`.
 
 `Axiom.dn`'s `minFrameClass` is `.Dense` and `Dense ≤ RTime` holds definitionally, so the only
-change from `sp_derivable_dense` is the side-condition term. There is no frame-class weakening
+change from `spDerivableDense` is the side-condition term. There is no frame-class weakening
 lemma for `DerivationTree` in this tree, so the derivation is restated rather than transported;
 the two proofs are deliberately kept literally parallel so that a future weakening lemma can
 replace both at once.
 
-Together with `sp_derivable_dense` this closes the `Sp` half for **both** open rows.
+Together with `spDerivableDense` this closes the `Sp` half for **both** open rows.
 -/
-noncomputable def sp_derivable_rtime (φ ψ : BLFormula) :
+noncomputable def spDerivableRTime (φ ψ : BLFormula) :
     ⊢ᴮᴸ[FrameClass.RTime] Sp φ ψ :=
   let dn : ⊢ᴮᴸ[FrameClass.RTime] (ψ.allFuture.allFuture.imp ψ.allFuture) :=
     .axiom [] _ (Axiom.dn ψ) (show FrameClass.Dense ≤ FrameClass.RTime from trivial)
@@ -156,27 +156,26 @@ noncomputable def sp_derivable_rtime (φ ψ : BLFormula) :
     .axiom [] _ (Axiom.prop_s _ _) (FrameClass.base_le _)
   DerivationTree.modus_ponens [] _ _ s boxdn
 
-/-! ### Naming exemption
+/-! ### Why these two are `def`s, and why they are not restated
 
-`sp_derivable_dense` and `sp_derivable_rtime` are `DerivationTree`-valued, hence `def`s rather
-than `theorem`s, and `defsWithUnderscore` fires on their snake_case names. The exemption below is
-per-declaration and justified rather than a bulk suppression, on two grounds:
+`spDerivableDense` and `spDerivableRTime` are `DerivationTree`-valued, hence `def`s rather than
+`theorem`s. They now carry lowerCamelCase names, which is what the rule table in
+`docs/development/NAMING_CONVENTION_DEVIATION.md` requires of anything a declaration *produces*
+as data — `DerivationTree`-valued results included — so no linter exemption is needed and none is
+given.
 
-* **Both names are fixed by the implementation contract** that specified these two declarations,
-  and are cited by name from `Conservativity/TMCompletenessReduction.lean`'s status table and
-  from this directory's README. Renaming them to `spDerivableDense`/`spDerivableRTime` would
-  break those citations for a cosmetic gain.
-* **They read as derivability facts, not as constructions.** Every neighbouring result in this
-  namespace that says something about what TM does or does not derive is snake_case —
-  `z1_translate`, `not_derivable_sp`, `not_bl_derivable_z1`, `blValid_sp` — and is snake_case only
-  because it happens to be `Prop`-valued. These two say the same kind of thing; the sole reason
-  they are `def`s is that `⊢ᴮᴸ[fc] φ` is `DerivationTree` rather than `Nonempty ∘ DerivationTree`,
-  which is a fact about the notation, not about what the declarations assert.
+They read as derivability facts rather than as constructions, and every neighbouring result in
+this namespace that says something about what TM does or does not derive is snake_case —
+`z1_translate`, `not_derivable_sp`, `not_bl_derivable_z1`, `blValid_sp`. Those are snake_case
+because they are `Prop`-valued proofs; these two say the same kind of thing but are `def`s only
+because `⊢ᴮᴸ[fc] φ` is `DerivationTree` rather than `Nonempty ∘ DerivationTree`. That is a fact
+about the notation, not about what the declarations assert, and the naming rule keys on the
+former.
 
 The `Nonempty`-wrapped restatement at `BaseLanguage.Derivable` is deliberately **not** provided:
-it would be a second name for the same fact, and a plain `⟨sp_derivable_dense φ ψ⟩` at any use
-site is shorter than the wrapper would be. -/
-attribute [nolint defsWithUnderscore] sp_derivable_dense sp_derivable_rtime
+it would be a second name for the same fact under a strictly weaker statement, and a plain
+`⟨spDerivableDense φ ψ⟩` at any use site is shorter than the wrapper would be. That prohibition is
+still in force — the rename resolved the naming question without touching either signature. -/
 
 /-! ## The ℚ model refuting the `.ZTime` witness -/
 
@@ -276,7 +275,7 @@ theorem q_not_true_at_zero (p : Atom) :
 suffices; `BLValidIn.apply_total` supplies the elimination and the `FrameClass.Sat .Dense qF` side
 condition is `inferInstance` through the reducible chain to `DenselyOrdered ℚ`.
 
-With `sp_derivable_dense`, this is the machine-checked half of the record that the `.Dense` row
+With `spDerivableDense`, this is the machine-checked half of the record that the `.Dense` row
 has no known separating witness: one of the two candidates is a theorem of the system, the other
 is not a validity of the class.
 -/

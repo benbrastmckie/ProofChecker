@@ -353,40 +353,46 @@ excluding `.lake/` and `specs/`; the site count is the hypothesis under test.
 
 ---
 
-### Phase 4: `sp_derivable_*`, the nolint attribute, and the originating plan record [NOT STARTED]
+### Phase 4: `sp_derivable_*`, the nolint attribute, and the originating plan record [COMPLETED]
 
 **Goal**: Rename `sp_derivable_dense` / `sp_derivable_rtime` to `spDerivableDense` /
 `spDerivableRTime`, delete the in-source `attribute [nolint defsWithUnderscore]`, and update every
 citation including the recorded Challenge/Goals identifiers in task 545's plan artifact.
 
 **Tasks**:
-- [ ] Rename both declarations in
+- [x] Rename both declarations in
       `FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean` and update the six
       in-file docstring citations (module docstring lines naming both, the `sp_derivable_rtime`
       docstring's back-reference, and the closing `not_blValidDense_z1` paragraph).
-- [ ] Delete the `attribute [nolint defsWithUnderscore] sp_derivable_dense sp_derivable_rtime`
+- [x] Delete the `attribute [nolint defsWithUnderscore] sp_derivable_dense sp_derivable_rtime`
       line and rewrite the `/-! ### Naming exemption` section it justifies. Keep the **second**
       argument (why the declarations read as derivability facts) and the closing paragraph (why
       the `Nonempty`-wrapped restatement is deliberately not provided — that prohibition is still
       in force and is this task's own Non-Goal). Delete the first argument (that the names are
       fixed by the implementation contract and cited by name), which the rename falsifies. Retitle
       the section so it no longer announces an exemption that no longer exists.
-- [ ] Update `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`'s module
+- [x] Update `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`'s module
       docstring at both cited locations (the `.Dense` status-table row, and the file-inventory
       bullet naming `DenseObstructionTransfer.lean`).
-- [ ] Update `FormalSystem/Metalogic/Conservativity/README.md`'s module table row and its
+- [x] Update `FormalSystem/Metalogic/Conservativity/README.md`'s module table row and its
       `sp_derivable_*` bullet.
-- [ ] Update `specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md`:
+      *(deviation: altered — that row sits inside a `<!-- BEGIN GENERATED: inventory -->` block
+      whose Lines column went stale when the docstring rewrite shortened the file by one line, so
+      the row was regenerated with `bash scripts/check-module-invariants.sh --emit-inventory`
+      rather than hand-edited. That regeneration also refreshed the derived totals in
+      `FormalSystem/Metalogic/README.md` and the repo-root `README.md`; both are one-line
+      count corrections, not content edits.)*
+- [x] Update `specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md`:
       the two identifiers in the `**Goals**:` bullet list **and** the two `noncomputable def`
       signatures in the ```lean fenced `## Lean Challenge Statements` block, so the two identifier
       sets still agree as `plan-format.md` requires. Update the Phase 2 task bullets and the
       Phase 5 citation line naming them.
-- [ ] **Retain the divergence note.** Leave the existing
+- [x] **Retain the divergence note.** Leave the existing
       `*(deviation: added — attribute [nolint defsWithUnderscore] …)*` annotation verbatim as the
       historical record, and *append* a short bracketed sentence recording that the attribute was
       later deleted and the two declarations renamed to lowerCamelCase, with the reason (the rule
       table keys on what the declaration produces). Do not delete or reword the original note.
-- [ ] Do **not** edit `specs/545_.../summaries/01_hg-completeness-dense-dedekind-summary.md`
+- [x] Do **not** edit `specs/545_.../summaries/01_hg-completeness-dense-dedekind-summary.md`
       beyond leaving it as-is: an execution summary records what happened at the time, and its
       "One reviewer decision, non-blocking" note is now simply resolved. If the implementer judges
       a pointer useful, append one sentence; do not rewrite the summary's narrative.

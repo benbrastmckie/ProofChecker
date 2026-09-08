@@ -31,7 +31,7 @@ than deferred debt.
 | `Backward.lean` | 211 | <!-- TODO: add description --> |
 | `BaseLanguageSoundness.lean` | 613 | <!-- TODO: add description --> |
 | `ChainBundleTruth.lean` | 250 | The valuation-only truth lemma for the flow frames of `Metalogic/Algebraic/FlowFrame.lean`: `chainSat` (Kripke satisfaction on a disjoint union of `D`-chains, `□` universal) and `chainBundle_truth_lemma`, plus the transfer corollary `not_blValidIn_of_not_chainSat` and its ℚ/ℝ instantiations |
-| `DenseObstructionTransfer.lean` | 287 | Machine-checked evidence that neither closed row's separating witness transfers to the dense classes: `Sp` is a theorem of both `TM_d` and `TM_dc` (`sp_derivable_dense`, `sp_derivable_rtime`), and `Z1` is refuted on the flow frame over ℚ (`not_blValidDense_z1`) |
+| `DenseObstructionTransfer.lean` | 286 | Machine-checked evidence that neither closed row's separating witness transfers to the dense classes: `Sp` is a theorem of both `TM_d` and `TM_dc` (`spDerivableDense`, `spDerivableRTime`), and `Z1` is refuted on the flow frame over ℚ (`not_blValidDense_z1`) |
 | `Fragment.lean` | 190 | <!-- TODO: add description --> |
 | `FragmentCompactness.lean` | 150 | <!-- TODO: add description --> |
 | `SpCountermodel.lean` | 390 | CEB's failing half: native BL soundness for TM against `Semantics/BLFrame.lean`'s `TaskFrame`-free semantics (`blFrameValid_of_axiom`, `blFrameValid_of_derivation`), the two-fibre countermodel `ℤ ⊕ ℝ`, and the deliverables `not_derivable_sp` and `tmCompleteBase_refuted` |
@@ -64,7 +64,7 @@ than deferred debt.
   chain-model refutation is a task-frame refutation. The frame construction the route also needs
   was already generic in `Metalogic/Algebraic/FlowFrame.lean`, and the canonical-model half is
   **not** here
-- `sp_derivable_dense` / `sp_derivable_rtime` / `not_blValidDense_z1` — the two closed rows'
+- `spDerivableDense` / `spDerivableRTime` / `not_blValidDense_z1` — the two closed rows'
   separating witnesses provably fail to transfer to `.Dense` and `.RTime`: `Sp` is a *theorem* of
   both open systems, and `Z1` is not a validity of the dense class. Evidence about the two open
   rows, and **not** a completeness result; the four-row status is in
