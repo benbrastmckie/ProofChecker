@@ -156,7 +156,7 @@ theorem prop_k_valid (φ ψ χ : Formula) :
     ⊨ ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h1 h2 h_phi
   exact h1 h_phi (h2 h_phi)
 
@@ -164,7 +164,7 @@ theorem prop_k_valid (φ ψ χ : Formula) :
 theorem prop_s_valid (φ ψ : Formula) : ⊨ (φ.imp (ψ.imp φ)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_phi _
   exact h_phi
 
@@ -172,7 +172,7 @@ theorem prop_s_valid (φ ψ : Formula) : ⊨ (φ.imp (ψ.imp φ)) := by
 theorem modal_t_valid (φ : Formula) : ⊨ (φ.box.imp φ) := by
   refine Valid.of_forall_total ?_
   intro F M τ hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_box
   exact h_box τ hτ
 
@@ -180,7 +180,7 @@ theorem modal_t_valid (φ : Formula) : ⊨ (φ.box.imp φ) := by
 theorem modal_4_valid (φ : Formula) : ⊨ ((φ.box).imp (φ.box.box)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_box σ h_σ_mem ρ h_ρ_mem
   exact h_box ρ h_ρ_mem
 
@@ -189,7 +189,7 @@ theorem modal_b_valid (φ : Formula) : ⊨ (φ.imp (φ.diamond.box)) := by
   refine Valid.of_forall_total ?_
   intro F M τ hτ t
   simp only [Formula.diamond, Formula.neg]
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_phi σ _h_σ_mem h_box_neg
   exact h_box_neg τ hτ h_phi
 
@@ -198,7 +198,7 @@ theorem modal_5_collapse_valid (φ : Formula) : ⊨ (φ.box.diamond.imp φ.box) 
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
   simp only [Formula.diamond, Formula.neg]
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_diamond_box ρ h_ρ_mem
   by_contra h_not_phi
   apply h_diamond_box
@@ -209,7 +209,7 @@ theorem modal_5_collapse_valid (φ : Formula) : ⊨ (φ.box.diamond.imp φ.box) 
 theorem ex_falso_valid (φ : Formula) : ⊨ (Formula.bot.imp φ) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_bot
   exfalso
   exact h_bot
@@ -218,12 +218,12 @@ theorem ex_falso_valid (φ : Formula) : ⊨ (Formula.bot.imp φ) := by
 theorem peirce_valid (φ ψ : Formula) : ⊨ (((φ.imp ψ).imp φ).imp φ) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_peirce
   by_cases h : TruthAt M τ t φ
   · exact h
   · have h_imp : TruthAt M τ t (φ.imp ψ) := by
-      simp only [TruthAt]
+      simp only [truth_norm]
       intro h_phi
       exfalso
       exact h h_phi
@@ -234,7 +234,7 @@ theorem modal_k_dist_valid (φ ψ : Formula) :
     ⊨ ((φ.imp ψ).box.imp (φ.box.imp ψ.box)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro h_box_imp h_box_phi σ h_σ_mem
   exact h_box_imp σ h_σ_mem (h_box_phi σ h_σ_mem)
 
