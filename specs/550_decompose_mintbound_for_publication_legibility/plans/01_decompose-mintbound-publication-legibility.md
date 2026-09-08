@@ -178,28 +178,33 @@ invalidates the partition table and must be reported before Phase 2 begins rathe
 
 ---
 
-### Phase 2: De-privatize the 16 cross-boundary declarations, in place [NOT STARTED]
+### Phase 2: De-privatize the 16 cross-boundary declarations, in place [COMPLETED]
 
 **Goal**: Make the one and only semantic change of this task, in the file's current single-module
 form, so that every subsequent phase is a pure relocation and any later build failure is
 unambiguously an extraction error.
 
 **Tasks**:
-- [ ] Drop the leading `private ` modifier from exactly these 16 declarations in
+- [x] Drop the leading `private ` modifier from exactly these 16 declarations in
       `MintBound.lean`, changing nothing else on those lines or in those proofs: `pickOrd`
       (`:963`), `pick_ord_eq` (`:972`), `pickBranches` (`:1132`), `pick_branches_eq` (`:1139`),
       `pick_stage_source` (`:1163`), `pickOrd_mono` (`:1928`), `mfp` (`:4634`), `mfq` (`:4635`),
       `fwp` (`:5819`), `rm_bn` (`:5859`), `mwE` (`:7286`), `mwG` (`:7287`), `mwP` (`:7288`),
       `mwQ` (`:7289`), `pickBranches_time_dichotomy` (`:7157`),
       `pickBranches_knownTimes_subset` (`:13335`).
-- [ ] Re-run Phase 1 check (a): the declaration-name set must be unchanged; only the private count
+- [x] Re-run Phase 1 check (a): the declaration-name set must be unchanged; only the private count
       changes, 92 to 76.
-- [ ] **Build gate.** Detached and guarded:
+- [x] **Build gate.** Detached and guarded:
       `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- FormalSystem` under
       `Bash(run_in_background: true)`. Never a plain foreground `lake build`.
-- [ ] Confirm the build is green, sorry count unchanged, and the C2 `#print axioms` baseline
+      *(deviation: altered — the plan's argument vector is rejected by the guard, which requires a
+      recognized lake subcommand as the first argument after `--` and exits 77 without building.
+      The corrected form, used at every gate in this task, is
+      `bash .claude/scripts/lake-build-guard.sh build --timeout 2400 --no-share -- build FormalSystem`,
+      with the exit code captured directly rather than through a pipe that would mask it.)*
+- [x] Confirm the build is green, sorry count unchanged, and the C2 `#print axioms` baseline
       unchanged.
-- [ ] Commit.
+- [x] Commit.
 
 **Timing**: 0.75 hours (edits are minutes; the build gate is a passive wait)
 

@@ -960,7 +960,7 @@ coming from `List.mem_of_find?_eq_some` at each stage. -/
 
 /-- The ordering a pick hands on: the input ordering when nothing was picked, and the picked
 rule's own new ordering otherwise. -/
-private def pickOrd (ord : TimeOrdering) :
+def pickOrd (ord : TimeOrdering) :
     Option (TableauRule × RuleResult × TimeOrdering) → TimeOrdering
   | none => ord
   | some (_, _, o) => o
@@ -969,7 +969,7 @@ private def pickOrd (ord : TimeOrdering) :
 all five `RuleResult` shapes. Stated over an abstract `pick` for the same reason `pick_extended`
 is: a hypothesis about the three-stage `match` as a whole is not something the per-stage lemmas
 can consume. -/
-private theorem pick_ord_eq {b : Branch} {ord : TimeOrdering}
+theorem pick_ord_eq {b : Branch} {ord : TimeOrdering}
     {pick : Option (TableauRule × RuleResult × TimeOrdering)} :
     (match pick with
       | none => (ExpansionResult.saturated, ord)
@@ -1129,14 +1129,14 @@ def unorderedSuccessorBranches : ExpansionResult → List Branch
   | _ => []
 
 /-- The branches a pick hands on, assembled from the two per-shape selectors. -/
-private def pickBranches (b : Branch) :
+def pickBranches (b : Branch) :
     Option (TableauRule × RuleResult × TimeOrdering) → List Branch
   | none => []
   | some (_, res, _) => (nonBranchingResultBranch b res).toList ++ branchingResultBranches b res
 
 /-- The branch half of `pick_ord_eq`: uniformly across all five `RuleResult` shapes, the
 result-tail's successor branches are `pickBranches`. -/
-private theorem pick_branches_eq {b : Branch} {ord : TimeOrdering}
+theorem pick_branches_eq {b : Branch} {ord : TimeOrdering}
     {pick : Option (TableauRule × RuleResult × TimeOrdering)} :
     unorderedSuccessorBranches
       (match pick with
@@ -1160,7 +1160,7 @@ engine-level proofs free of the nested-`match` reduction problem: `rw … at h` 
 hypothesis is the pattern `expandOnceUnblocked_extended_mem` already uses, whereas case-splitting
 the same `match` in the goal leaves outer `match none with …` layers that block unification at the
 application site. No `none` case is needed — the statement quantifies over a `some`. -/
-private theorem pick_stage_source (b : Branch) (ord : TimeOrdering)
+theorem pick_stage_source (b : Branch) (ord : TimeOrdering)
     (fc : FormalSystem.ProofSystem.FrameClass) (tr : EventualityTracker) :
     ∀ r res o,
       (match findUnexpandedUnblockedWith b ord fc (blockedTimes b ord fc tr) with
@@ -1925,7 +1925,7 @@ theorem applyRule_ord_mono (rule : TableauRule) (sf : SignedFormula)
 /-- One pick stage never deletes an ordering constraint. The `none` stage threads `ord` through
 unchanged; a `some` stage hands on `applyRule`'s own ordering, and `pick_stage_source` supplies the
 formula it was called with. -/
-private theorem pickOrd_mono {b : Branch} {ord : TimeOrdering}
+theorem pickOrd_mono {b : Branch} {ord : TimeOrdering}
     {p : Option (TableauRule × RuleResult × TimeOrdering)}
     (hp : ∀ r res o, p = some (r, res, o) → ∃ sf, sf ∈ b ∧ applyRule r sf b ord = (res, o)) :
     ∀ q ∈ ord.constraints, q ∈ (pickOrd ord p).constraints := by
@@ -4631,8 +4631,8 @@ already carrying `T p`, and `expandOnceUnblocked_multBranch` for any `n ≥ 1`. 
 
 section MultiplicityRefutation
 
-private def mfp : Formula := .atom (Atom.mkBase "p")
-private def mfq : Formula := .atom (Atom.mkBase "q")
+def mfp : Formula := .atom (Atom.mkBase "p")
+def mfq : Formula := .atom (Atom.mkBase "q")
 
 /-- `F(p → q)` at the initial label: the formula the refutation duplicates. `.impNeg` fires on it at
 every frame class, and its two outputs are neither of them equal to it. -/
@@ -5816,7 +5816,7 @@ register entry 11 records. -/
 
 section FreshWorldRefutation
 
-private def fwp : Formula := .atom (Atom.mkBase "p")
+def fwp : Formula := .atom (Atom.mkBase "p")
 
 /-- `F(□p)` at the initial label: the smallest branch whose step leaves every fixed label set. -/
 def freshWorldWitness : SignedFormula := SignedFormula.neg (Formula.box fwp) Label.initial
@@ -5856,7 +5856,7 @@ private theorem ia_bn (fc : FormalSystem.ProofSystem.FrameClass) :
 private theorem ar_bn :
     applyRule .boxNeg freshWorldWitness freshWorldBranch TimeOrdering.empty
       = (RuleResult.linear freshWorldEmitted, TimeOrdering.empty) := rfl
-private theorem rm_bn : ruleMintsFreshLabel .boxNeg = true := rfl
+theorem rm_bn : ruleMintsFreshLabel .boxNeg = true := rfl
 private theorem wp_bn :
     witnessPresent .boxNeg freshWorldWitness freshWorldBranch TimeOrdering.empty = false := rfl
 /-- The fresh-label suppression test is `witnessPresent … || trivialEventWitnessed …`. The second
@@ -7154,7 +7154,7 @@ routes through the same invariant-agnostic machinery `expandOnceUnblocked_ordTim
 `pick_branches_eq`, `pick_stage_source`, `resultBranch_sub` — so the three-stage pick is never
 destructured a second time. -/
 
-private theorem pickBranches_time_dichotomy {b : Branch} {ord : TimeOrdering}
+theorem pickBranches_time_dichotomy {b : Branch} {ord : TimeOrdering}
     {p : Option (TableauRule × RuleResult × TimeOrdering)}
     (haux : OrdTimesKnown b ord)
     (hp : ∀ r res o, p = some (r, res, o) → ∃ sf, sf ∈ b ∧ applyRule r sf b ord = (res, o)) :
@@ -7283,10 +7283,10 @@ is what `OrdTimesKnown` needs; atoms fire no rule, so nothing pre-empts the trig
 the witness quantifies over `fc` and the four cases are decided separately. It also quantifies over
 `Tmax`: disjunct 1 fails at its *first* conjunct, which does not mention `Tmax` at all. -/
 
-private def mwE : Formula := .atom (Atom.mkBase "e")
-private def mwG : Formula := .atom (Atom.mkBase "g")
-private def mwP : Formula := .atom (Atom.mkBase "p")
-private def mwQ : Formula := .atom (Atom.mkBase "q")
+def mwE : Formula := .atom (Atom.mkBase "e")
+def mwG : Formula := .atom (Atom.mkBase "g")
+def mwP : Formula := .atom (Atom.mkBase "p")
+def mwQ : Formula := .atom (Atom.mkBase "q")
 
 /-- The trigger: `F(U(e,g))` at the initial label. -/
 def mintWitnessTrigger : SignedFormula := SignedFormula.neg (Formula.untl mwG mwE) ⟨0, 0⟩
@@ -13332,7 +13332,7 @@ theorem applyRule_emitted_time_mem_of_untlSnceFree {rule : TableauRule} {sf : Si
 /-- One pick stage adds no known time, given that its rule mints none. The join of
 `applyRule_emitted_time_mem` with the no-mint source, in the shape `pickBranches_world_dichotomy`
 uses for the world coordinate. -/
-private theorem pickBranches_knownTimes_subset {b : Branch} {ord : TimeOrdering}
+theorem pickBranches_knownTimes_subset {b : Branch} {ord : TimeOrdering}
     {p : Option (TableauRule × RuleResult × TimeOrdering)}
     (haux : OrdTimesKnown b ord)
     (hp : ∀ r res o, p = some (r, res, o) → ∃ sf, sf ∈ b ∧ applyRule r sf b ord = (res, o) ∧
