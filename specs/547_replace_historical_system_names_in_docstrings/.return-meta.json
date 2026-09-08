@@ -1,16 +1,47 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "dispatch_seq": 3,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/547_replace_historical_system_names_in_docstrings/reports/01_historical-system-name-sweep.md",
-      "summary": "Occurrence census, live-paper verification of the z/d/r convention, and a three-class triage (5 mechanical-rename files, 12 editorial rewrites, 2 additions) with the 548 anchor-label scope boundary and a scoped verification grep."
+      "type": "plan",
+      "path": "specs/547_replace_historical_system_names_in_docstrings/plans/01_replace-historical-system-names.md",
+      "summary": "7-phase, 7-hour comment-and-docstring-only sweep replacing the historical TM/BX f/c/dc subscripts with the paper's z/d/r vocabulary, partitioned into mechanical rename, editorial rewrites of 12 retracted-claim passages, and a canonical two-base-systems mapping paragraph."
     }
   ],
+  "next_steps": "Run /implement 547 to execute the plan",
+  "user_decision": {
+    "question": "The task description says the mapping paragraph should describe this repository's TM (BaseLanguage, H/G primitive) as the paper's Past/Future footnote system, but research verified that footnote is entirely commented out in the live possible_worlds.tex (lines 1331-1341), pending the non-axiomatizability result. How should the mapping paragraph describe the BaseLanguage systems?",
+    "options": [
+      "Say they have no paper name today, plus one sentence noting the paper carries a commented-out Past/Future footnote pending the non-axiomatizability result",
+      "Say flatly that TM, TM_z, TM_d and TM_r on the BaseLanguage side have no paper name, with no mention of the commented-out footnote",
+      "Follow the task description literally and describe them as the footnote's Past/Future system, treating the footnote as forthcoming"
+    ],
+    "recommended": "Say they have no paper name today, plus one sentence noting the paper carries a commented-out Past/Future footnote pending the non-axiomatizability result",
+    "blocking": false
+  },
   "metadata": {
     "session_id": "sess_1788826208_cd9987_547",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "task_number": 547,
+    "phase_count": 7,
+    "estimated_hours": 7,
+    "dependency_waves": [[1], [2, 3], [4, 5, 6], [7]],
+    "complexity": "medium",
+    "research_integrated": true,
+    "plan_version": 1
+  },
+  "modified_files": [
+    "specs/547_replace_historical_system_names_in_docstrings/plans/01_replace-historical-system-names.md"
+  ],
+  "memory_candidates": [
+    {
+      "content": "Planning a rename sweep of prose that characterizes an external paper: partition by claim class, not by token count. Class A (mechanical) is files whose occurrences are pure labels — safe for scripted literal replacement. Class B (editorial) is passages that assert something about the source which the source's revision retracted: verbatim quotations of deleted text, 'gap'/'open question' paragraphs the revision closed, and two-name contrasts whose names collapse to one (a naive sed there yields the nonsense 'this is X, not X'). Class C is additive (a canonical mapping passage placed first, so every later phase references rather than reinvents wording). Two structural rules make the phases parallelizable and safe: give each phase a disjoint file territory even when a single file carries both mechanical and editorial work, and write the completeness grep scoped to live source directories — a repo-wide grep can never pass because the task's own specs/ artifacts quote every retired name by construction. Cite source anchors, never source line numbers, in the rewritten prose.",
+      "category": "PATTERN",
+      "source_artifact": "specs/547_replace_historical_system_names_in_docstrings/plans/01_replace-historical-system-names.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["rename-sweep", "paper-drift", "docstring-sweep", "phase-decomposition", "file-territory", "scoped-grep"]
+    }
+  ]
 }
