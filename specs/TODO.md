@@ -96,7 +96,7 @@ next_project_number: 555
 ### Incompleteness
 
 534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
-544 [RESEARCHED] — Machine-check the failing half of CEB: no instance of the boxed d
+544 [PLANNED] — Machine-check the failing half of CEB: no instance of the boxed d
   └─ 545 [RESEARCHED] — Decide, with machine-checked proof, whether the two H/G-language 
 
 ### Infrastructure
@@ -341,11 +341,12 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 544. Machine check sp underivable native bl soundness
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: incompleteness
 - **Dependencies**: None
 - **Research**: [544_machine_check_sp_underivable_native_bl_soundness/reports/01_sp-underivable-native-bl-soundness.md]
+- **Plan**: [544_machine_check_sp_underivable_native_bl_soundness/plans/01_sp-underivable-native-bl-soundness.md]
 
 **Description**: Machine-check the failing half of CEB: no instance of the boxed dichotomy (Sp) := Box(DF phi) or Box(DN psi) is a theorem of TM, the BaseLanguage Past/Future proof system (the paper's TM^-). SpWitness.lean already records (Sp) as BL-valid (blValid_sp) and TM+-derivable (sp_translate); its TM-underivability is the one claim in the paper's fragment-system discussion (possible_worlds.tex, sub:Logic, second footnote of the TM^- paragraph) that is stated as NOT verified, and the paper wants to cite this repository for it. WHY IT IS UNAVAILABLE TODAY: (Sp) is valid on every task frame, so no TaskFrame-bound refutation exists; a countermodel must be a structure OUTSIDE the task-frame class on which every TM schema remains sound but whose temporal order is neither discrete nor dense (e.g. the lexicographic sum Z + Q, or the two-fibre structure named in Metalogic/Conservativity.lean). SCOPE, following the follow-up proposed but not created by the TM-completeness-status task: (1) a native BL frame notion not bound to TaskFrame; (2) a native BL truth definition over it; (3) a native BL soundness theorem verifying all TM axiom schemata directly (MK, MT, M5, MF, TD, TK, T4, TB, TA, TL) plus MP, MN, and temporal necessitation, via swap-strengthened induction for TD; (4) the concrete countermodel instance and the evaluation of some (Sp) instance as false there; (5) the theorem not_derivable_sp and its corollary tmCompleteBase_refuted : not TMCompleteBase, mirroring Z1Countermodel.tmCompleteDiscrete_refuted. HARD CONSTRAINT inherited from Conservativity.lean: never state a forward-conservativity theorem and discharge it with sorry; it is refuted, not open. OUT OF SCOPE: whether TM^-_d and TM^-_dc are complete over the dense and dense-and-complete classes remains a separate open question.
 

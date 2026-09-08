@@ -1,21 +1,46 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "dispatch_seq": 1,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/544_machine_check_sp_underivable_native_bl_soundness/reports/01_sp-underivable-native-bl-soundness.md",
-      "summary": "Research for machine-checking (Sp)'s TM-underivability: a native BL frame notion, native BL soundness, and a verified ℤ ⊕ ℝ two-fibre countermodel; includes a compiling sorry-free end-to-end prototype and three corrections to the task description."
-    },
-    {
-      "type": "other",
-      "path": "specs/544_machine_check_sp_underivable_native_bl_soundness/prototype/SpCountermodelPrototype.lean",
-      "summary": "340-line sorry-free Lean prototype covering all five scope items; compiles with lake env lean and reports the standard [propext, Classical.choice, Quot.sound] axiom profile."
+      "type": "plan",
+      "path": "specs/544_machine_check_sp_underivable_native_bl_soundness/plans/01_sp-underivable-native-bl-soundness.md",
+      "summary": "Four-phase, ~6h plan promoting the research prototype into two new Lean modules (Semantics/BLFrame.lean, Metalogic/Conservativity/SpCountermodel.lean) delivering a native BL frame class, native BL soundness, the two-fibre countermodel, not_derivable_sp and tmCompleteBase_refuted, plus repository record correction."
     }
   ],
   "metadata": {
-    "session_id": "sess_1788807358_25f89d_544",
-    "agent_type": "lean-research-agent",
+    "session_id": "sess_1788847801_97d6cb_544",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 4,
+    "estimated_hours": 6,
+    "dependency_waves": [[1], [2], [3], [4]],
+    "plan_metadata": {
+      "phases": 4,
+      "total_effort_hours": 6,
+      "complexity": "complex",
+      "research_integrated": true,
+      "plan_version": 1,
+      "dependency_waves": [[1], [2], [3], [4]],
+      "reports_integrated": [
+        {
+          "path": "reports/01_sp-underivable-native-bl-soundness.md",
+          "integrated_in_plan_version": 1,
+          "integrated_date": "2026-09-07"
+        }
+      ],
+      "skeleton": false,
+      "follow_up_tasks": []
+    }
+  },
+  "memory_candidates": [
+    {
+      "content": "Pattern for machine-checking an UNDERIVABILITY claim when the target formula is valid throughout the repository's primary semantic class: no countermodel can exist inside that class, so define a MINIMAL NATIVE frame notion outside it (a bare structure with only the order conditions the axioms actually need), give it its own truth recursion (not a reindexing of the existing truth relation), prove soundness of the object proof system against it by recursion on the derivation tree with termination_by height, then evaluate the target there. The native class need not be the intended semantics -- underivability only needs SOME class on which the proof system is sound, and reaching a given axiom by a different route on the new class (e.g. a universal modality underwriting an axiom that the primary semantics underwrites via group structure) is a feature, not a mismatch. Two structural helpers recur: (a) if the new frame class is closed under order reversal, a swap-TRANSFER lemma (truth on the reversed frame iff truth of the syntactically dualized formula) discharges a temporal-duality rule in one line, replacing a swap-strengthened simultaneous induction; (b) refuting a boxed dichotomy needs two order-shapes simultaneously accessible, which is a DISJOINT sum, never a lexicographic one -- a lexicographic sum is still a single linear order. Worked examples in this repo: Metalogic/Conservativity/Z1Countermodel.lean and the (Sp)/CEB two-fibre countermodel over Z (+) R.",
+      "category": "PATTERN",
+      "source_artifact": "specs/544_machine_check_sp_underivable_native_bl_soundness/plans/01_sp-underivable-native-bl-soundness.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["underivability", "native-semantics", "countermodel", "soundness-by-recursion", "frame-class", "swap-transfer"]
+    }
+  ]
 }
