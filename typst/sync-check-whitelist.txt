@@ -84,11 +84,14 @@ def:BL-model
 def:BLplus-defined
 thm:BLplus-PastFuture
 
-# --- External paper definition labels (def:TMplus-f, def:TMplus-d): the
-# discrete/dense BX extensions. def:TMplus and def:TMplus-c happen to
-# resolve on their own via Lean doc-comment citations; these two do not. ---
-def:TMplus-f
-def:TMplus-d
+# --- External paper definition labels: the discrete/dense BX extensions.
+# The paper's 2026-09 z/d/r wave renamed def:TMplus-f/-d/-c to def:BX-z/-d/-r,
+# and no typst source cites any of the three any more (measured: the only
+# def:TMplus* span left in typst/ is the unsuffixed def:TMplus, in a comment).
+# The two entries that used to sit here are therefore removed rather than
+# re-keyed: a whitelist entry earns its place by suppressing a real Check 1
+# violation, and these suppress nothing. Re-add under the new names if a
+# typst chapter starts citing def:BX-z or def:BX-d in a backtick span. ---
 
 # --- More external paper anchors cited only in typst/FormalFoundations.typ,
 # same category as above: no matching Lean identifier to grep. ---

@@ -49,7 +49,7 @@ The two corollaries below are the **closed** half of a four-part picture; the ot
 `TaskFrame.IsDiscrete` — `def:frame-properties`' bare Discrete clause, guarded by `(∃ y, x < y)` —
 is the class `X⊤` indicates, and it *is* Galois-closed (`galoisClosed_isDiscrete`).
 
-`FrameClass.Sat FrameClass.ZTime` is `TaskFrame.IsZTime`, `def:TMplus-f`'s Hölder
+`FrameClass.Sat FrameClass.ZTime` is `TaskFrame.IsZTime`, `def:BX-z`'s Hölder
 narrowing to ℤ-time. It is strictly stronger, and it is **not** Galois-closed —
 `Metalogic/Independence/LexIntWitness.lean` exhibits a frame over `ℤ ×ₗ ℤ` inside
 `Mod (AxiomSet .ZTime)` and outside it. Stating the closure corollary below over

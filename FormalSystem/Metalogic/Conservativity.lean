@@ -29,11 +29,11 @@ Two families of system name run through this directory, and only one of them is 
   `TM` (`def:TMplus`). Its extensions `TM⁺_z`, `TM⁺_d` and `TM⁺_r` are the paper's `TM_z`, `TM_d`
   and `TM_r`, each named for the class it is complete over (`cor:tm-completeness`): `ℤ`-time, the
   dense task frames, and `ℝ`-time — the dense and Dedekind-complete orders. They rest on the
-  Burgess–Xu cores `BX_z`, `BX_d` and `BX_r` (`def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` —
-  anchor labels as pinned in `specs/paper-definitions-of-record.md`, which the paper has since
-  relabelled; the record's re-pin is separate work), where `BX_r` extends `BX_d` by `PU` and `SEP`
-  with `CO` a *derived* theorem rather than a further axiom — which is exactly this tree's own
-  Dedekind-class arrangement (`Theorems/DedekindDerived.lean`).
+  Burgess–Xu cores `BX_z`, `BX_d` and `BX_r` (`def:BX-z`, `def:BX-d`, `def:BX-r`, pinned under
+  those names in `specs/paper-definitions-of-record.md`; the paper's earlier labels for them were
+  `def:TMplus-f`, `def:TMplus-d` and `def:TMplus-c`, now recorded `DANGLING`), where `BX_r`
+  extends `BX_d` by `PU` and `SEP` with `CO` a *derived* theorem rather than a further axiom —
+  which is exactly this tree's own Dedekind-class arrangement (`Theorems/DedekindDerived.lean`).
 - **`TM` and its extensions answer to no paper system.** `TM` is this repository's name for the
   system over the Past/Future fragment, with `H` and `G` primitive (`BaseLanguage/`), and its
   extensions `TM_z`, `TM_d` and `TM_r` add `DF`, `DN`, and `DN` together with `CO`. The paper
@@ -161,7 +161,7 @@ provenance, never as something this tree has machine-checked.
 
 ## Two live-paper facts bearing on the discrete rows
 
-- **The paper pins the `ℤ`-time class exactly** (`def:TMplus-f`, live text). Its closing sentence
+- **The paper pins the `ℤ`-time class exactly** (`def:BX-z`, live text). Its closing sentence
   reasons that `UZ` and `Z1` fail over every discrete temporal order that is not Archimedean, and
   that the Archimedean discrete orders are exactly `ℤ`-time, so the discrete task frames over
   which `BX_z` and `TM⁺_z` are sound and complete are exactly those over `ℤ`-time. (The earlier
@@ -170,7 +170,7 @@ provenance, never as something this tree has machine-checked.
   unchanged, and is restated here rather than quoted.) This is what makes
   `Z1Countermodel.tmCompleteZTime_refuted` read as the `TM_z`-vs-`TM⁺_z` completeness *gap*,
   rather than a weaker claim about some other class.
-- **A commented (non-live) line** inside `def:TMplus-f` gives the author's own position in the
+- **A commented (non-live) line** inside `def:BX-z` gives the author's own position in the
   author's own words: `TM⁺_z`, by contrast, is sound over the full class of discrete frames,
   since `DF` is valid on every discrete order and not only on `ℤ`-time; whether it is complete
   over that broader class remains open, as discussed at `cor:tm-completeness`. Cited as the

@@ -481,7 +481,7 @@ The paper's **CO** formula (Cauchy/completeness-of-order principle), as a *named
 
   `CO(φ) := △(Hφ → F(Hφ)) → (Hφ → Gφ)`
 
-**Source**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside `def:TMplus-c`;
+**Source**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside `def:BX-r`;
 displayed key CO), verbatim:
 "`\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
 (\Past\varphi \rightarrow \Future\varphi)$.`"

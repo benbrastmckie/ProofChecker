@@ -392,7 +392,7 @@ inductive Axiom : Formula → Type where
   -- that just looking at the behaviour of temporal formulas". They are the axiomatic proxy.
   --
   -- RELATIONSHIP TO THE PAPER'S CO AXIOM.
-  -- The JPL paper's `def:TMplus-c` bases its complete-order extension BX_r on the dense logic
+  -- The JPL paper's `def:BX-r` bases its complete-order extension BX_r on the dense logic
   -- BX_d extended by PU and SEP, with CO = `△(Hφ → F(Hφ)) → (Hφ → Gφ)` (`Formula.co`) a
   -- DERIVED THEOREM rather than a further axiom. That is this tree's own arrangement: the
   -- repository keeps the Reynolds triple as the OFFICIAL basis, and CO is derived
@@ -424,7 +424,7 @@ inductive Axiom : Formula → Type where
   -- This matches Reynolds' own "definably Dedekind-complete" caveat quoted above.
   --
   -- CONSEQUENCE FOR THE PAPER -- DISCHARGED. An earlier revision of this note recorded that
-  -- `def:TMplus-c` was deductively too weak for `cor:tm-completeness`, and that correcting it
+  -- `def:BX-r` was deductively too weak for `cor:tm-completeness`, and that correcting it
   -- meant switching the paper's basis for the complete-order extension to the Reynolds axioms,
   -- as an amendment routed through the fix.md C4 process. The paper has since made exactly that
   -- switch: BX_r is now BX_d plus PU and SEP, with CO derived. Repository and paper agree, and

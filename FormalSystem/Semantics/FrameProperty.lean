@@ -25,7 +25,7 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
 
 - `TaskFrame.IsDense` — `def:frame-properties`' Dense clause
 - `TaskFrame.IsDiscrete` — `def:frame-properties`' Discrete clause, verbatim
-- `TaskFrame.IsZTime` — `def:TMplus-f`'s narrowing of the discrete class to
+- `TaskFrame.IsZTime` — `def:BX-z`'s narrowing of the discrete class to
   `ℤ`-time; strictly stronger than `IsDiscrete`, and the predicate the proof side's
   `FrameClass.ZTime` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
@@ -39,7 +39,7 @@ Two of `def:frame-properties`' clauses each split in this tree, and in both case
 split would silently widen a soundness target:
 
 - **Discrete splits.** `def:frame-properties`' bare Discrete clause is `IsDiscrete`.
-  `def:TMplus-f` narrows the class its axioms are sound over: the discrete task frames over which
+  `def:BX-z` narrows the class its axioms are sound over: the discrete task frames over which
   BX_z and TM⁺_z are sound and complete are exactly those over `ℤ`-time, because the axioms `UZ`
   and `Z1` fail over every non-Archimedean discrete order. That narrowed class is `IsZTime`, and
   only the narrowed one is a sound interpretation of the proof side's `FrameClass.ZTime`.
@@ -55,7 +55,7 @@ the implication from `IsZTime` to `IsDiscrete` recorded on the former's docstrin
 
 `def:frame-properties`' bare Discrete and Complete clauses are `IsDiscrete` and `IsComplete`, and
 each keeps the paper's name. The two *narrowed* classes the proof side's tags denote are named
-separately: `IsZTime` for `def:TMplus-f`'s ℤ-time class and `IsRTime` for the dense-and-complete
+separately: `IsZTime` for `def:BX-z`'s ℤ-time class and `IsRTime` for the dense-and-complete
 `ℝ`-time class. See `TaskFrame.IsZTime` and `TaskFrame.IsRTime`.
 
 ## Why `IsDense` is an `abbrev`
@@ -128,9 +128,9 @@ def TaskFrame.IsDiscrete (F : TaskFrame) : Prop :=
   ∀ x : F.Duration, (∃ y, x < y) → ∃ y', IsLeast {z | x < z} y'
 
 /--
-The **successor-Archimedean discrete** class: `def:TMplus-f`'s narrowing of `IsDiscrete`.
+The **successor-Archimedean discrete** class: `def:BX-z`'s narrowing of `IsDiscrete`.
 
-`def:TMplus-f` closes by narrowing the discrete class over which `BX_z` and `TM⁺_z` are sound and
+`def:BX-z` closes by narrowing the discrete class over which `BX_z` and `TM⁺_z` are sound and
 complete to exactly the frames over `ℤ`-time: the axioms `UZ` and `Z1` fail over every discrete
 temporal order that is not Archimedean, and the Archimedean discrete orders are exactly `ℤ`-time.
 (An earlier revision of the paper reached the same conclusion by way of Hölder's theorem, which is
@@ -156,7 +156,7 @@ alternative, `structure TaskFrame.IsZTime (F : TaskFrame) : Prop where [succ :
 SuccOrder F.Duration] …`, does not compile: a `Prop`-valued structure cannot project a
 `Type`-valued field, for exactly the reason `Nonempty` has no `.val`. An `inductive` reformulation
 does compile but buys only `⟨⟩`-introduction and has no projections either, so it changes a
-`def:TMplus-f`-citing definition for nothing. The existential therefore stays, and the two bridge
+`def:BX-z`-citing definition for nothing. The existential therefore stays, and the two bridge
 lemmas below — `isZTime_of_instances` and `IsZTime.elim` — are the
 introduction and elimination interface in place of accessors. Use `.elim` or `obtain`; do not
 expect a `.succ` field to appear later.

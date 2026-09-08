@@ -65,7 +65,7 @@ polymorphic over temporal types.
   is preserved by delegating accessors
 - `FrameProperty`: `def:frame-properties` as predicates on a *frame* — `TaskFrame.IsDense`,
   `IsDiscrete`, `IsComplete`, plus the two narrowings the tree's soundness targets actually need
-  (`IsZTime`, `def:TMplus-f`'s Hölder narrowing to ℤ-time; `IsRTime`,
+  (`IsZTime`, `def:BX-z`'s Hölder narrowing to ℤ-time; `IsRTime`,
   dense-and-complete). Possible as ordinary predicates because `TaskFrame` carries `Duration` as a
   field rather than as an index. Each narrowing records at its definition site why it is named
   for its carrier rather than for the paper's clause

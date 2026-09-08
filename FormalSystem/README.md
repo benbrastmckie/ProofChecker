@@ -196,10 +196,10 @@ weakly complete over `ℝ`-time, the dense and Dedekind-complete orders, and `Fr
 exactly that class (`DenselyOrdered D` plus Dedekind completeness). An earlier revision of this
 file described the paper's complete-order system as completeness *simpliciter*, with models
 `{ℤ, ℝ}` and theory `Th(ℤ) ∩ Th(ℝ)`, and concluded that no element of `FrameClass` picked it out.
-Both halves are stale: that footnote is commented out in the live `def:TMplus-c`, and the class
+Both halves are stale: that footnote is commented out in the live `def:BX-r`, and the class
 the paper names is dense-and-complete.
 
-The axiom-basis question this file used to record as open is answered too. `def:TMplus-c` now
+The axiom-basis question this file used to record as open is answered too. `def:BX-r` now
 builds BX_r on the *dense* logic BX_d extended by `TMP-PU` and `TMP-SEP`, so the density axioms
 are present on the paper's side as well as under `FrameClass.RTime`, and `completeness_rtime`
 proves the corollary's own statement rather than a stronger-premise variant. CO is a derived

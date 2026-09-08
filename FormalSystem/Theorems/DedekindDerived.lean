@@ -329,7 +329,7 @@ private noncomputable def coEventBot {fc : FrameClass} (φ : Formula) :
 `⊢[fc] △(Hφ → F(Hφ)) → (Hφ → Gφ)` whenever `FrameClass.RTime ≤ fc`.
 
 **Source of the formula**: JPL paper anchor `TMP-CO` (the `\aitem[CO]{TMP-CO}` entry inside
-`def:TMplus-c`; displayed key CO), verbatim:
+`def:BX-r`; displayed key CO), verbatim:
 "`\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
 (\Past\varphi \rightarrow \Future\varphi)$.`"
 In the paper's current text CO is a *derived* theorem of the complete-order extension `BX_r`,

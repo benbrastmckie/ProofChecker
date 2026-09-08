@@ -31,7 +31,7 @@ below.
 |-------------|-------|--------|
 | `.Base` | `True` | — (unconstrained: `def:logical-consequence`'s own class) |
 | `.Dense` | `TaskFrame.IsDense` | `def:frame-properties`, Dense clause |
-| `.ZTime` | `TaskFrame.IsZTime` | `def:TMplus-f` (narrowing to ℤ-time) |
+| `.ZTime` | `TaskFrame.IsZTime` | `def:BX-z` (narrowing to ℤ-time) |
 | `.RTime` | `TaskFrame.IsRTime` | `def:frame-properties` Complete + Dense; `cor:tm-completeness`'s TM⁺_r clause |
 
 Two of these are the *narrowed* member of a split pair, and deliberately so — interpreting
@@ -91,7 +91,7 @@ Per-constructor anchors:
   here.
 * `.Dense ↦ TaskFrame.IsDense`. `def:frame-properties`' Dense clause. `Axiom.density` (`GGφ → Gφ`)
   and `Axiom.dense_indicator` (`¬(⊥ U ⊤)`) carry `.Dense`.
-* `.ZTime ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:TMplus-f`'s closing
+* `.ZTime ↦ TaskFrame.IsZTime`, **not** `TaskFrame.IsDiscrete`. `def:BX-z`'s closing
   sentence narrows the discrete class over which BX_z and TM⁺_z are sound and complete to exactly
   the frames over ℤ-time — `UZ` and `Z1` fail over every discrete order that is not Archimedean —
   and it is that narrowed class `Axiom.prior_UZ`, `Axiom.prior_SZ` and `Axiom.z1` are sound over.

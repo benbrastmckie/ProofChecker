@@ -9,7 +9,7 @@ import FormalSystem.Semantics.Validity
 /-!
 # Semantic Validity of the Paper's CO Principle
 
-The JPL paper's `def:TMplus-c` singles out one extra axiom, **CO**, for the complete-order
+The JPL paper's `def:BX-r` singles out one extra axiom, **CO**, for the complete-order
 extension of the base tense logic:
 
   `CO(φ) := △(Hφ → F(Hφ)) → (Hφ → Gφ)`

@@ -35,9 +35,9 @@ the mapping.
 | task relation `w ⇒ₓ v` | `TaskFrame.TaskRel` | `def:task-relation` |
 | duration group `D` | `FormalSystem.Semantics.TemporalOrder` | `def:temporal-order`; a nontrivial totally ordered abelian group |
 | TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus` |
-| TM⁺_d (dense) | `FrameClass.Dense` | `def:TMplus-d` |
-| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:TMplus-f`. The tree says `ZTime`, not `Discrete` |
-| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:TMplus-c`. The tree says `RTime`, not `Dedekind` |
+| TM⁺_d (dense) | `FrameClass.Dense` | `def:BX-d` |
+| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:BX-z`. The tree says `ZTime`, not `Discrete` |
+| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r`. The tree says `RTime`, not `Dedekind` |
 | BL (tense-primitive base language) | `FormalSystem.BaseLanguage` | `def:BL-semantics`; its truth relation is `Semantics.BLTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr` |
 | L⋆ / TM⋆ (stability modal `⊡`) | `FormalSystem.StarLanguage` | truth relation `Semantics.StarTruthAt` |
 | `U(φ, ψ)` (until) | `Formula.untl ψ φ` | guard-first: `untl guard event` |

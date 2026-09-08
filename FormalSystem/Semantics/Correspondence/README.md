@@ -19,7 +19,7 @@ Two distinctions are load-bearing throughout and are documented at their stateme
 
 - **`TaskFrame.IsDiscrete` versus `FrameClass.Sat FrameClass.Discrete`.** The first is
   `def:frame-properties`' bare Discrete clause and *is* Galois-closed; the second is
-  `def:TMplus-f`'s Hölder narrowing to ℤ-time and is *not*, as
+  `def:BX-z`'s Hölder narrowing to ℤ-time and is *not*, as
   `Metalogic/Independence/LexIntWitness.lean` witnesses.
 - **(T0) versus (T1).** The per-frame reading of the three correspondence theorems is false in
   its (⇒) direction; only the temporal-order-level reading is true. See `DurationFrames.lean`'s

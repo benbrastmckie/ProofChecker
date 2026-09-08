@@ -256,7 +256,7 @@ corrected dispatch premises — is documented for the next reader.
 
 ---
 
-### Phase 4: Re-label the in-tree citation sites [NOT STARTED]
+### Phase 4: Re-label the in-tree citation sites [COMPLETED]
 
 **Goal**: No file outside `specs/` cites `def:TMplus-f`, `def:TMplus-d`, or `def:TMplus-c`.
 
@@ -265,18 +265,23 @@ block returns a row. Do not begin this phase otherwise — re-labelling before t
 C15 red.
 
 **Tasks**:
-- [ ] Re-take the citation census (`grep -rn` for each of the three old labels over
+- [x] Re-take the citation census (`grep -rn` for each of the three old labels over
       `FormalSystem Tests typst docs README.md`, excluding `Boneyard`) and diff it against the
-      report's inventory before editing anything.
-- [ ] Replace `def:TMplus-f` → `def:BX-z`, `def:TMplus-d` → `def:BX-d`, `def:TMplus-c` →
+      report's inventory before editing anything. *(deviation: altered — the live census measured
+      32 matching lines across **18** files, not the report's 17. The extra file is
+      `typst/sync-check-whitelist.txt`, which whitelisted `def:TMplus-f` / `def:TMplus-d` as
+      Check-1 backtick spans. No typst source cites either any more, so the two entries were
+      retired with an explanatory comment rather than re-keyed to the new names;
+      `typst-sync-check.sh` Check 1 still reports the same 4 pre-existing, unrelated violations.)*
+- [x] Replace `def:TMplus-f` → `def:BX-z`, `def:TMplus-d` → `def:BX-d`, `def:TMplus-c` →
       `def:BX-r` at every site. Use a bounded pattern that cannot also match bare `def:TMplus`.
-- [ ] Update `FormalSystem/Metalogic/Conservativity.lean:32-34`, whose prose explicitly defers
+- [x] Update `FormalSystem/Metalogic/Conservativity.lean:32-34`, whose prose explicitly defers
       this rename ("the record's re-pin is separate work") — that sentence becomes stale the
       moment this phase lands and must be rewritten, not merely re-labelled.
-- [ ] Build each touched Lean module (`lake build FormalSystem.<Module>`) to confirm no docstring
+- [x] Build each touched Lean module (`lake build FormalSystem.<Module>`) to confirm no docstring
       was broken.
-- [ ] Re-run the standalone C15 reproduction (seconds, see Phase 6) and confirm it is still green.
-- [ ] Commit.
+- [x] Re-run the standalone C15 reproduction (seconds, see Phase 6) and confirm it is still green.
+- [x] Commit.
 
 **Timing**: 0.75 hours
 

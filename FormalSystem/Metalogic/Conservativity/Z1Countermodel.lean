@@ -28,7 +28,7 @@ refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `S
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
-The paper's `def:TMplus-f` pins the discrete class over which `BX_z` and `TM⁺_z` are sound and
+The paper's `def:BX-z` pins the discrete class over which `BX_z` and `TM⁺_z` are sound and
 complete to exactly `ℤ`-time, so `ValidZTime` is validity over `ℤ`-time up to isomorphism — which
 is what makes Deliverable 2 the `TM_z`-vs-`TM⁺_z` completeness gap rather than a weaker claim.
 (The paper reached that conclusion through Hölder's theorem in an earlier revision; the argument
