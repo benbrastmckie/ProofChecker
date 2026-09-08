@@ -67,7 +67,7 @@ variable {F : TaskFrame}
     Unfolding the `untl` clause of `TruthAt`, `TruthAt t (next φ)` reads
     `∃ s > t, φ(s) ∧ ∀ r ∈ (t, s), ⊥` — the empty-gap condition forces `s = Order.succ t`. -/
 theorem truthAt_next_iff [SuccOrder F.Duration] [NoMaxOrder F.Duration]
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : Formula) :
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : Formula) :
     TruthAt M τ t (Formula.next φ) ↔ TruthAt M τ (Order.succ t) φ := by
   constructor
   · rintro ⟨s, hts, hs, hgap⟩
@@ -81,7 +81,7 @@ theorem truthAt_next_iff [SuccOrder F.Duration] [NoMaxOrder F.Duration]
 
 /-- Iterated form of `truthAt_next_iff`: `Xⁿ φ` at `t` is `φ` at the `n`-th successor of `t`. -/
 theorem truthAt_next_iterate [SuccOrder F.Duration] [NoMaxOrder F.Duration]
-    (M : TaskModel F) (τ : WorldHistory F) :
+    (M : TaskModel F) (τ : ConvexHistory F) :
     ∀ (n : ℕ) (t : F.Duration) (φ : Formula),
       TruthAt M τ t (Formula.next^[n] φ) ↔ TruthAt M τ (Order.succ^[n] t) φ := by
   intro n
@@ -155,13 +155,13 @@ theorem witIdx_neg_next_iterate (p : Atom) (n : ℕ) :
 
 `FrameOver.natFrame` (`Semantics/TaskFrame.lean`) is the right frame off the shelf: its relation
 `TaskRel w d u := d ≠ 0 ∨ w = u` is permissive, so an **arbitrary** state function respects it —
-which is exactly what the non-constant history below needs. `WorldHistory.universalNatFrame` is
+which is exactly what the non-constant history below needs. `ConvexHistory.universalNatFrame` is
 constant-state and so cannot separate the times; `staticFrame` is worse still, its relation
 forcing constant histories outright.
 -/
 
 /-- The history over `ℤ` whose world-state flips from `0` to `1` strictly after `N`. -/
-def zHistory (N : ℤ) : WorldHistory (FrameOver.natFrame (D := ℤ)) where
+def zHistory (N : ℤ) : ConvexHistory (FrameOver.natFrame (D := ℤ)) where
   domain := fun _ => True
   nonempty_domain := ⟨0, True.intro⟩
   convex := fun _ _ _ _ _ _ _ => True.intro

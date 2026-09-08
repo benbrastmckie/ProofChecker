@@ -115,7 +115,7 @@ Together with a model whose valuation is the characteristic function of a set `A
 realizes `A` as the truth set of an atom — which is what makes the translation frame a witness
 for the (⇒) directions of `app:discrete` and `app:complete`.
 -/
-def translationHist (D : TemporalOrder) : WorldHistory (translationFrame D).toTaskFrame where
+def translationHist (D : TemporalOrder) : ConvexHistory (translationFrame D).toTaskFrame where
   domain := fun _ => True
   nonempty_domain := ⟨0, trivial⟩
   states := fun t _ => t
@@ -184,7 +184,7 @@ the task relation holds at every nonzero duration, and at duration `0` the two e
 coincide.
 -/
 def permissiveHist (D : TemporalOrder) (so : SuccOrder ↑D) (nm : NoMaxOrder ↑D)
-    (f : ↑D → Bool) : WorldHistory (permissiveFrame D so nm).toTaskFrame where
+    (f : ↑D → Bool) : ConvexHistory (permissiveFrame D so nm).toTaskFrame where
   domain := fun _ => True
   nonempty_domain := ⟨0, trivial⟩
   states := fun t _ => f t

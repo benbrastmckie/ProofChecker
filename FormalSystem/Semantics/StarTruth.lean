@@ -72,33 +72,33 @@ variable {F : TaskFrame}
 /-- `σ ∈ ⟨τ⟩_t` (paper line 1108): `τ` and `σ` carry the same world state at `t`. Stated over
 both domain proofs, so that it is meaningful for partial histories and reduces to a plain state
 equation at total ones (`sameStateAt_iff_of_total`). -/
-def SameStateAt (τ σ : WorldHistory F) (t : F.Duration) : Prop :=
+def SameStateAt (τ σ : ConvexHistory F) (t : F.Duration) : Prop :=
   ∀ (hτ : τ.domain t) (hσ : σ.domain t), τ.states t hτ = σ.states t hσ
 
 /-- At total histories, `SameStateAt` is the state equation at `t`. -/
-theorem sameStateAt_iff_of_total {τ σ : WorldHistory F} (hτ : τ.IsTotal) (hσ : σ.IsTotal)
+theorem sameStateAt_iff_of_total {τ σ : ConvexHistory F} (hτ : τ.IsTotal) (hσ : σ.IsTotal)
     (t : F.Duration) :
     SameStateAt τ σ t ↔ τ.states t (hτ t) = σ.states t (hσ t) :=
   ⟨fun h => h _ _, fun h _ _ => h⟩
 
-theorem SameStateAt.refl (τ : WorldHistory F) (t : F.Duration) : SameStateAt τ τ t :=
+theorem SameStateAt.refl (τ : ConvexHistory F) (t : F.Duration) : SameStateAt τ τ t :=
   fun _ _ => rfl
 
-theorem SameStateAt.symm {τ σ : WorldHistory F} {t : F.Duration} (h : SameStateAt τ σ t) :
+theorem SameStateAt.symm {τ σ : ConvexHistory F} {t : F.Duration} (h : SameStateAt τ σ t) :
     SameStateAt σ τ t :=
   fun hσ hτ => (h hτ hσ).symm
 
 /-- Transitivity, given that the middle history is defined at `t` (automatic at a total one). -/
-theorem SameStateAt.trans {τ σ ρ : WorldHistory F} {t : F.Duration} (hσ : σ.domain t)
+theorem SameStateAt.trans {τ σ ρ : ConvexHistory F} {t : F.Duration} (hσ : σ.domain t)
     (h₁ : SameStateAt τ σ t) (h₂ : SameStateAt σ ρ t) : SameStateAt τ ρ t :=
   fun hτ hρ => (h₁ hτ hσ).trans (h₂ hσ hρ)
 
 /-- `∼_t` commutes with time shift; `Iff.rfl` because `timeShift.states` is definitional. -/
-theorem sameStateAt_timeShift (τ σ : WorldHistory F) (t Δ : F.Duration) :
+theorem sameStateAt_timeShift (τ σ : ConvexHistory F) (t Δ : F.Duration) :
     SameStateAt (τ.timeShift Δ) (σ.timeShift Δ) t ↔ SameStateAt τ σ (t + Δ) := Iff.rfl
 
 /-- Replacing the left history by one with the same state at `t` does not change the relation. -/
-theorem sameStateAt_congr_left {τ σ ρ : WorldHistory F} {t : F.Duration}
+theorem sameStateAt_congr_left {τ σ ρ : ConvexHistory F} {t : F.Duration}
     (hτ : τ.domain t) (hσ : σ.domain t) (h : τ.states t hτ = σ.states t hσ) :
     SameStateAt τ ρ t ↔ SameStateAt σ ρ t := by
   constructor
@@ -114,22 +114,22 @@ The six L⁺ clauses are `TruthAt`'s verbatim (`Semantics/Truth.lean`). The `sta
 paper's `($\Stability$)`, line 1114: `⊡φ` holds at `(τ, t)` iff `φ` holds at `(σ, t)` for every
 **total** history `σ` with `SameStateAt τ σ t`.
 -/
-def StarTruthAt (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) : StarFormula → Prop
+def StarTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : StarFormula → Prop
   | .atom p => ∃ (ht : τ.domain t), M.valuation (τ.states t ht) p
   | .bot => False
   | .imp φ ψ => StarTruthAt M τ t φ → StarTruthAt M τ t ψ
-  | .box φ => ∀ (σ : WorldHistory F), σ.IsTotal → StarTruthAt M σ t φ
+  | .box φ => ∀ (σ : ConvexHistory F), σ.IsTotal → StarTruthAt M σ t φ
   | .untl ψ φ => ∃ s : F.Duration, t < s ∧ StarTruthAt M τ s φ ∧
       ∀ r : F.Duration, t < r → r < s → StarTruthAt M τ r ψ
   | .snce ψ φ => ∃ s : F.Duration, s < t ∧ StarTruthAt M τ s φ ∧
       ∀ r : F.Duration, s < r → r < t → StarTruthAt M τ r ψ
-  | .stab φ => ∀ (σ : WorldHistory F), σ.IsTotal → SameStateAt τ σ t → StarTruthAt M σ t φ
+  | .stab φ => ∀ (σ : ConvexHistory F), σ.IsTotal → SameStateAt τ σ t → StarTruthAt M σ t φ
 
 namespace StarTruth
 
 /-! ### Clause lemmas, mirroring `BLTruth.*` -/
 
-variable (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration)
+variable (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
 
 theorem atom_iff (p : Atom) :
     StarTruthAt M τ t (.atom p) ↔ ∃ (ht : τ.domain t), M.valuation (τ.states t ht) p := Iff.rfl
@@ -140,7 +140,7 @@ theorem imp_iff (φ ψ : StarFormula) :
     StarTruthAt M τ t (.imp φ ψ) ↔ (StarTruthAt M τ t φ → StarTruthAt M τ t ψ) := Iff.rfl
 
 theorem box_iff (φ : StarFormula) :
-    StarTruthAt M τ t (.box φ) ↔ ∀ σ : WorldHistory F, σ.IsTotal → StarTruthAt M σ t φ := Iff.rfl
+    StarTruthAt M τ t (.box φ) ↔ ∀ σ : ConvexHistory F, σ.IsTotal → StarTruthAt M σ t φ := Iff.rfl
 
 theorem untl_iff (ψ φ : StarFormula) :
     StarTruthAt M τ t (.untl ψ φ) ↔ ∃ s, t < s ∧ StarTruthAt M τ s φ ∧
@@ -152,7 +152,7 @@ theorem snce_iff (ψ φ : StarFormula) :
 
 theorem stab_iff (φ : StarFormula) :
     StarTruthAt M τ t (.stab φ) ↔
-      ∀ σ : WorldHistory F, σ.IsTotal → SameStateAt τ σ t → StarTruthAt M σ t φ := Iff.rfl
+      ∀ σ : ConvexHistory F, σ.IsTotal → SameStateAt τ σ t → StarTruthAt M σ t φ := Iff.rfl
 
 theorem top_true : StarTruthAt M τ t top := fun h => h
 
@@ -172,7 +172,7 @@ theorem or_iff (φ ψ : StarFormula) :
 /-- `⟐φ` (paper line 1121): some total history in `⟨τ⟩_t` satisfies `φ`. -/
 theorem dstab_iff (φ : StarFormula) :
     StarTruthAt M τ t (dstab φ) ↔
-      ∃ σ : WorldHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ StarTruthAt M σ t φ := by
+      ∃ σ : ConvexHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ StarTruthAt M σ t φ := by
   simp [dstab, neg, StarTruthAt]
 
 theorem someFuture_iff (φ : StarFormula) :
@@ -192,7 +192,7 @@ theorem allPast_iff (φ : StarFormula) :
   simp [allPast, somePast, neg, top, StarTruthAt]
 
 theorem diamond_iff (φ : StarFormula) :
-    StarTruthAt M τ t (diamond φ) ↔ ∃ σ : WorldHistory F, σ.IsTotal ∧ StarTruthAt M σ t φ := by
+    StarTruthAt M τ t (diamond φ) ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ StarTruthAt M σ t φ := by
   simp [diamond, neg, StarTruthAt]
 
 end StarTruth
@@ -202,24 +202,24 @@ open StarTruth
 /-! ## The definitional validities of `⊡` (paper lines 1118-1119) -/
 
 /-- **`□φ → ⊡φ`**: `⟨τ⟩_x ⊆ H_F` (paper line 1108). -/
-theorem stab_of_box (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : StarFormula)
+theorem stab_of_box (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : StarFormula)
     (h : StarTruthAt M τ t (.box φ)) : StarTruthAt M τ t (.stab φ) :=
   fun σ hσ _ => h σ hσ
 
 /-- **T for `⊡`**: `⊡φ → φ`, at a total history (`τ ∈ ⟨τ⟩_t`). -/
-theorem of_stab (M : TaskModel F) (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration)
+theorem of_stab (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration)
     (φ : StarFormula) (h : StarTruthAt M τ t (.stab φ)) : StarTruthAt M τ t φ :=
   h τ hτ (SameStateAt.refl τ t)
 
 /-- **4 for `⊡`**: `⊡φ → ⊡⊡φ`, by transitivity of `∼_t`. -/
-theorem stab_four (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration)
+theorem stab_four (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
     (φ : StarFormula) (h : StarTruthAt M τ t (.stab φ)) :
     StarTruthAt M τ t (.stab (.stab φ)) := by
   intro σ hσ hσsame ρ hρ hρsame
   exact h ρ hρ (fun hτ' hρ' => by rw [hσsame hτ' (hσ t), hρsame (hσ t) hρ'])
 
 /-- **5 for `⊡`**: `¬⊡φ → ⊡¬⊡φ`, at a total history, by symmetry and transitivity of `∼_t`. -/
-theorem stab_five (M : TaskModel F) (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration)
+theorem stab_five (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration)
     (φ : StarFormula) (h : ¬ StarTruthAt M τ t (.stab φ)) :
     StarTruthAt M τ t (.stab (.imp (.stab φ) .bot)) := by
   intro σ hσ hσsame hstab
@@ -229,7 +229,7 @@ theorem stab_five (M : TaskModel F) (τ : WorldHistory F) (hτ : τ.IsTotal) (t 
 
 /-- **Atom stability**: `p → ⊡p` for atoms (paper footnote, line 1119): an atom's truth depends
 on the world state alone. -/
-theorem stab_atom_of_atom (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (p : Atom)
+theorem stab_atom_of_atom (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (p : Atom)
     (h : StarTruthAt M τ t (.atom p)) : StarTruthAt M τ t (.stab (.atom p)) := by
   intro σ hσ hsame
   obtain ⟨hτ, hv⟩ := h
@@ -238,7 +238,7 @@ theorem stab_atom_of_atom (M : TaskModel F) (τ : WorldHistory F) (t : F.Duratio
 /-! ## `⊡φ` is a state formula at each time; `□⊡ ↔ □`; `□ → ⊡□` -/
 
 /-- The truth of `⊡φ` at `(τ, t)` depends only on the `∼_t`-class of `τ`. -/
-theorem stab_congr_sameState (M : TaskModel F) (τ σ : WorldHistory F) (t : F.Duration)
+theorem stab_congr_sameState (M : TaskModel F) (τ σ : ConvexHistory F) (t : F.Duration)
     (hτ : τ.domain t) (hσ : σ.domain t) (h : SameStateAt τ σ t) (φ : StarFormula) :
     StarTruthAt M τ t (.stab φ) ↔ StarTruthAt M σ t (.stab φ) := by
   constructor
@@ -248,26 +248,26 @@ theorem stab_congr_sameState (M : TaskModel F) (τ σ : WorldHistory F) (t : F.D
     exact hσs ρ hρ (fun hσ' hρ' => by rw [← h hτ hσ', hρs hτ hρ'])
 
 /-- `□⊡φ ↔ □φ` semantically (derivable from K, T for `⊡`, 4 for `□`, and `□φ → ⊡φ`). -/
-theorem box_stab_iff (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : StarFormula) :
+theorem box_stab_iff (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : StarFormula) :
     StarTruthAt M τ t (.box (.stab φ)) ↔ StarTruthAt M τ t (.box φ) := by
   constructor
   · intro h σ hσ; exact h σ hσ σ hσ (SameStateAt.refl σ t)
   · intro h σ hσ ρ hρ _; exact h ρ hρ
 
 /-- `□φ → ⊡□φ` (derivable from 4 for `□` and `□φ → ⊡φ`). -/
-theorem stab_box_of_box (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : StarFormula)
+theorem stab_box_of_box (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : StarFormula)
     (h : StarTruthAt M τ t (.box φ)) : StarTruthAt M τ t (.stab (.box φ)) :=
   fun _ _ _ => h
 
 /-! ## Time-shift invariance: `⊡φ` depends on the world state alone -/
 
 /-- Transport of a state along an equation of times. -/
-theorem states_congr (ρ : WorldHistory F) {s s' : F.Duration} (h : s = s') (hs : ρ.domain s) :
+theorem states_congr (ρ : ConvexHistory F) {s s' : F.Duration} (h : s = s') (hs : ρ.domain s) :
     ρ.states s hs = ρ.states s' (h ▸ hs) := by subst h; rfl
 
 /-- Pointwise-equal histories (same domain, same states) satisfy the same L⋆ formulas. -/
 theorem truth_congr_ext (M : TaskModel F) (φ : StarFormula) :
-    ∀ (τ σ : WorldHistory F) (t : F.Duration),
+    ∀ (τ σ : ConvexHistory F) (t : F.Duration),
       (∀ s, τ.domain s ↔ σ.domain s) →
       (∀ s (hτ : τ.domain s) (hσ : σ.domain s), τ.states s hτ = σ.states s hσ) →
       (StarTruthAt M τ t φ ↔ StarTruthAt M σ t φ) := by
@@ -295,15 +295,15 @@ theorem truth_congr_ext (M : TaskModel F) (φ : StarFormula) :
     · intro h hτ' hρ'; rw [hs t hτ' ((hd t).mp hτ')]; exact h _ _
 
 /-- A time shift of a total history is total. -/
-theorem timeShift_isTotal' (σ : WorldHistory F) (hσ : σ.IsTotal) (Δ : F.Duration) :
+theorem timeShift_isTotal' (σ : ConvexHistory F) (hσ : σ.IsTotal) (Δ : F.Duration) :
     (σ.timeShift Δ).IsTotal := fun z => hσ (z + Δ)
 
-theorem shift_neg_shift_domain (ρ : WorldHistory F) (Δ s : F.Duration) :
+theorem shift_neg_shift_domain (ρ : ConvexHistory F) (Δ s : F.Duration) :
     ((ρ.timeShift (-Δ)).timeShift Δ).domain s ↔ ρ.domain s := by
   show ρ.domain (s + Δ + -Δ) ↔ ρ.domain s
   rw [add_neg_cancel_right]
 
-theorem shift_neg_shift_states (ρ : WorldHistory F) (Δ s : F.Duration)
+theorem shift_neg_shift_states (ρ : ConvexHistory F) (Δ s : F.Duration)
     (h1 : ((ρ.timeShift (-Δ)).timeShift Δ).domain s) (h2 : ρ.domain s) :
     ((ρ.timeShift (-Δ)).timeShift Δ).states s h1 = ρ.states s h2 := by
   show ρ.states (s + Δ + -Δ) h1 = ρ.states s h2
@@ -314,7 +314,7 @@ theorem shift_neg_shift_states (ρ : WorldHistory F) (Δ s : F.Duration)
 and `stab` cases need the inverse shift and `truth_congr_ext`, since `timeShift` is not
 definitionally involutive. -/
 theorem starTruthAt_timeShift (M : TaskModel F) (φ : StarFormula) :
-    ∀ (σ : WorldHistory F) (t Δ : F.Duration),
+    ∀ (σ : ConvexHistory F) (t Δ : F.Duration),
       StarTruthAt M (σ.timeShift Δ) t φ ↔ StarTruthAt M σ (t + Δ) φ := by
   induction φ with
   | atom p => intros; exact Iff.rfl
@@ -382,7 +382,7 @@ theorem starTruthAt_timeShift (M : TaskModel F) (φ : StarFormula) :
 then `⊡φ` has the same truth value at `(τ, t)` and `(σ, s)`. This is what licenses treating each
 `⊡φ` as a fresh state-valued atom: the atomization route to TM⁺-schema soundness over L⋆
 (`Metalogic/Conservativity/Star/Atomization.lean`). -/
-theorem stab_state_only (M : TaskModel F) (τ σ : WorldHistory F) (hτ : τ.IsTotal)
+theorem stab_state_only (M : TaskModel F) (τ σ : ConvexHistory F) (hτ : τ.IsTotal)
     (hσ : σ.IsTotal) (t s : F.Duration) (h : τ.states t (hτ t) = σ.states s (hσ s))
     (φ : StarFormula) :
     StarTruthAt M τ t (.stab φ) ↔ StarTruthAt M σ s (.stab φ) := by

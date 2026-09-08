@@ -9,9 +9,9 @@ import FormalSystem.Semantics.TaskFrame
 /-!
 # PartialHistory — the paper's partial-history layer
 
-This module lands the layer the JPL paper puts *below* world histories: a partial history is a
+This module lands the layer the JPL paper puts *below* convex histories: a partial history is a
 task-respecting function on a **nonempty** subset of the duration type, with **no** convexity
-requirement. `WorldHistory` is the convex special case (see `FormalSystem/Semantics/WorldHistory.lean`).
+requirement. `ConvexHistory` is the convex special case (see `FormalSystem/Semantics/ConvexHistory.lean`).
 
 ## Paper Specification Reference
 
@@ -22,20 +22,22 @@ this repository cites — never the paper file directly, and never by line numbe
 > $\tau : X \to W$ on a nonempty set $X \subseteq D$ where $\tau(x) \Rightarrow_{y-x} \tau(y)$ for
 > all times $x, y \in X$.`
 >
-> `% Since the difference $y - x$ is negative whenever $y < x$, these instances are covered by the
-> converse convention: $\tau(x) \Rightarrow_{y-x} \tau(y)$ then reads
-> $\tau(y) \Rightarrow_{x-y} \tau(x)$.`
->
-> `A \textit{world history} is any partial history whose domain $X$ is \textit{convex}, so that
+> `A \textit{convex history} is any partial history whose domain $X$ is \textit{convex}, so that
 > $y \in X$ whenever $x, z \in X$ and $x < y < z$.`
 >
-> `A world history is \textit{total}--- equivalently, a \textit{possible world}--- just in case
-> $X = D$.`
+> `A \textit{possible world} is any convex history whose domain is total, so that $X = D$.`
 >
 > `A partial history $\sigma$ \textit{extends} $\tau$ just in case
 > $\dom{\tau} \subseteq \dom{\sigma}$ and $\tau(x) = \sigma(x)$ for all $x \in \dom{\tau}$.`
 >
 > `The set of all possible worlds over $\F$ is denoted $H_{\F}$.`
+
+The paper's three tiers are therefore *partial history* -> *convex history* -> *possible world*,
+and "history" is the generic term for all three wherever the distinction is immaterial. The tier
+this module defines is the first; the middle tier is `ConvexHistory` and the top tier is
+`TaskFrame.HF`. The name this repository previously gave the middle tier was one tier too high,
+which is exactly what the `ConvexHistory` rename corrects. The `def:world-history` label id
+survives only for cross-reference stability across the paper's own `\ref` sites.
 
 ## Two transcription decisions, both settled and recorded
 
@@ -47,10 +49,15 @@ they are not re-litigated here or in the four-axiom frame alignment work.
    hypothesis a faithful transcription rather than an empty-case argument the paper never makes.
 2. **`respects_task` is stated unconditionally** — "for all times `x, y ∈ X`", with no `s ≤ t`
    guard. This is the form the Fiber and Admissibility lemmas consume, both of which are stated
-   with no sign proviso. The paper's own `%` comment (quoted above) is the justification: the
-   negative-difference instances are *covered by the converse convention*, i.e. by
-   `FrameOver.converse`, so the unconditional statement is not a strengthening of the paper's
-   requirement — it is the paper's requirement, read as written.
+   with no sign proviso. The paper's **converse convention** is the justification:
+   `def:task-relation` extends the task relation to negative durations by
+   `$w \Rightarrow_{-x} u \coloneq u \Rightarrow_{x} w$ for $x \geq 0$`, so the
+   negative-difference instances of `$\tau(x) \Rightarrow_{y-x} \tau(y)$` are *covered by the
+   converse convention*, i.e. by `FrameOver.converse`, and the unconditional statement is not a
+   strengthening of the paper's requirement — it is the paper's requirement, read as written.
+   (`def:world-history` formerly carried an inline `%` gloss saying exactly this, which this
+   docstring used to block-quote; the paper has since deleted that gloss, and the convention it
+   restated lives on at `def:task-relation`.)
 
    The guarded form is *derived* here as `respects_task_le`, and `PartialHistory.ofLe` is a smart
    constructor letting a site that already has a guarded proof discharge the unconditional field.
@@ -69,14 +76,14 @@ they are not re-litigated here or in the four-axiom frame alignment work.
 
 ## Implementation Notes
 
-- Nothing imports this module yet; it is self-contained new material. `WorldHistory` is re-based
+- Nothing imports this module yet; it is self-contained new material. `ConvexHistory` is re-based
   onto it in a subsequent step.
 - The type-parameter discipline (`D` with `AddCommGroup`, `LinearOrder`, `IsOrderedAddMonoid`)
-  matches `WorldHistory` exactly, so the re-basing is a structural change only.
+  matches `ConvexHistory` exactly, so the re-basing is a structural change only.
 
 ## Tags
 
-world-history · partial-history · convexity
+partial-history · convex-history · convexity
 -/
 
 namespace FormalSystem.Semantics
@@ -85,12 +92,12 @@ namespace FormalSystem.Semantics
 A **partial history** over a task frame `F`: a task-respecting state assignment on a nonempty
 set of times, with **no** convexity requirement.
 
-**Paper Reference**: `def:world-history` (verbatim: "A \textit{partial history} over a frame
+**Paper Reference**: `def:world-history` (verbatim: "A \textit{partial history} over a task frame
 $\F = \tuple{W, \D, \Rightarrow}$ is a function $\tau : X \to W$ on a nonempty set
 $X \subseteq D$ where $\tau(x) \Rightarrow_{y-x} \tau(y)$ for all times $x, y \in X$.").
 
-The paper's `\textit{world history}` is the **convex** special case of this structure; see
-`FormalSystem.Semantics.WorldHistory`.
+The paper's `\textit{convex history}` is the **convex** special case of this structure; see
+`FormalSystem.Semantics.ConvexHistory`.
 -/
 structure PartialHistory (F : TaskFrame) where
   /-- Domain predicate: which times are in the history, i.e. the paper's `X ⊆ D`. -/
@@ -128,7 +135,7 @@ variable {F : TaskFrame}
 /--
 The guarded form of task-respect, **derived** from the unconditional field.
 
-This is the shape `WorldHistory.respects_task` has historically carried. It is a projection, not a
+This is the shape `ConvexHistory.respects_task` has historically carried. It is a projection, not a
 weakening: the unconditional field simply ignores the `s ≤ t` hypothesis.
 -/
 theorem respects_task_le (τ : PartialHistory F) (s t : F.Duration) (hs : τ.domain s) (ht : τ.domain t)
@@ -168,8 +175,8 @@ def ofLe (domain : F.Duration → Prop) (nonempty_domain : ∃ t, domain t)
 /--
 The paper's **totality** predicate.
 
-**Paper Reference**: `def:world-history` (verbatim: "A world history is \textit{total}---
-equivalently, a \textit{possible world}--- just in case $X = D$.").
+**Paper Reference**: `def:world-history` (verbatim: "A \textit{possible world} is any convex
+history whose domain is total, so that $X = D$.").
 
 Note that this is `∀ t, τ.domain t` — the domain *is* all of `D` — and is deliberately **not**
 Mathlib's `IsMax` or any order-theoretic maximality predicate. Maximality under the extension

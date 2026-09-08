@@ -111,7 +111,7 @@ expression (including the domain conjunct — see `Semantics/BLTruth.lean` on De
 `box` are congruence under `tr`'s `rfl` push-through equations; `allPast` and `allFuture` are the
 only two cases with content, and `Truth.past_iff` / `Truth.future_iff` supply it.
 -/
-theorem truthAt_tr (M : TaskModel F) (φ : BLFormula) (τ : WorldHistory F) (t : F.Duration) :
+theorem truthAt_tr (M : TaskModel F) (φ : BLFormula) (τ : ConvexHistory F) (t : F.Duration) :
     TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ := by
   induction φ generalizing τ t with
   | atom p => exact Iff.rfl
@@ -132,7 +132,7 @@ The context-level form of the bridge: if every formula of a BL context is true, 
 of its translation is true. This is the side-condition discharger each of the four soundness
 compositions below calls.
 -/
-theorem truthAt_trCtx (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration)
+theorem truthAt_trCtx (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
     {Γ : BaseLanguage.Context} (h : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     ∀ ψ ∈ trCtx Γ, TruthAt M τ t ψ := by
   intro ψ hψ
@@ -236,7 +236,7 @@ Composition of `Conservativity.translate` with `soundness_in`, across `truthAt_t
 theorem bl_soundness_in {fc : FrameClass} (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree fc Γ φ)
     (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ :=
   (truthAt_tr M φ τ t).mp
@@ -263,7 +263,7 @@ Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but 
 theorem bl_soundness (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.Base Γ φ)
     (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ :=
   bl_soundness_in Γ φ d F trivial M τ h_mem t h_ctx
@@ -278,7 +278,7 @@ Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but 
 theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.Dense Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ :=
   bl_soundness_in Γ φ d F ‹DenselyOrdered F.Duration› M τ h_mem t h_ctx
@@ -294,7 +294,7 @@ theorem bl_soundness_ztime (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration]
     [IsSuccArchimedean F.Duration] [IsPredArchimedean F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ :=
   bl_soundness_in Γ φ d F
@@ -318,7 +318,7 @@ theorem bl_soundness_rtime (Γ : BaseLanguage.Context) (φ : BLFormula)
     (F : TaskFrame) [DenselyOrdered F.Duration]
     (h_lub : ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x)
     (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ :=
   bl_soundness_in Γ φ d F ⟨‹DenselyOrdered F.Duration›, h_lub⟩ M τ h_mem t h_ctx
@@ -441,7 +441,7 @@ call into `bl_derivable_valid_and_swap_valid_zTimeSucc` mirror that lemma's own 
 theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
     (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     BLTruthAt M τ t φ := by
   induction d generalizing τ t with

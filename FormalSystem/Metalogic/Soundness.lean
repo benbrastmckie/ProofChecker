@@ -62,7 +62,7 @@ task semantic models. The MF and TF axioms use time-shift invariance
   `axiom_*_valid` names are one-line instances of it
 
 **Key Techniques**:
-- Time-shift invariance (MF, TF): Uses `WorldHistory.timeShift` and
+- Time-shift invariance (MF, TF): Uses `ConvexHistory.timeShift` and
   `TimeShift.timeShift_preserves_truth` to relate truth at different times
 - Classical logic helpers for conjunction extraction (TL)
 - Derivation-indexed induction for temporal duality soundness
@@ -71,7 +71,7 @@ task semantic models. The MF and TF axioms use time-shift invariance
 Validity and semantic consequence quantify over the frame's **total** histories
 (`τ.IsTotal`, the predicate form of `H_F` membership), matching `def:logical-consequence`.
 There is no admissible-history parameter and no shift-closure side condition: totality is
-preserved by `timeShift` (`WorldHistory.isTotal_timeShift`), so time-shift invariance carries
+preserved by `timeShift` (`ConvexHistory.isTotal_timeShift`), so time-shift invariance carries
 no hypothesis to quantify over. `TruthAt` takes four arguments — `TruthAt M τ t φ` — and no set
 argument at all.
 
@@ -299,15 +299,15 @@ theorem temp_l_valid (φ : Formula) :
   exact fun h_always _ _ r _ => h_always r
 
 /-- MF axiom validity: `□φ → □(Fφ)` is valid. Time-shift invariance carries no side condition:
-totality of the shifted history is `WorldHistory.isTotal_timeShift`. -/
+totality of the shifted history is `ConvexHistory.isTotal_timeShift`. -/
 theorem modal_future_valid (φ : Formula) : ⊨ ((φ.box).imp ((φ.allFuture).box)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
   simp only [TruthAt, Truth.future_iff]
   intro h_box_phi σ h_σ_mem s hts
   have h_phi_at_shifted :=
-    h_box_phi (WorldHistory.timeShift σ (s - t))
-      (WorldHistory.isTotal_timeShift h_σ_mem (s - t))
+    h_box_phi (ConvexHistory.timeShift σ (s - t))
+      (ConvexHistory.isTotal_timeShift h_σ_mem (s - t))
   exact (TimeShift.timeShift_preserves_truth M σ t s φ).mp h_phi_at_shifted
 
 /-- Temporal A Dual axiom is valid: `⊨ φ → H(Fφ)`.
@@ -1290,7 +1290,7 @@ decreasing_by
 theorem soundness_in {fc : FrameClass} (Γ : Context) (φ : Formula)
     (d : DerivationTree fc Γ φ)
     (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     TruthAt M τ t φ := by
   induction d generalizing τ t with
@@ -1382,7 +1382,7 @@ Paper: `thm:TM-soundness`
 theorem soundness (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.Base Γ φ)
     (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     TruthAt M τ t φ := by
   exact soundness_in Γ φ d F trivial M τ h_mem t h_ctx
@@ -1437,7 +1437,7 @@ Paper: `thm:TM-soundness`
 theorem soundness_dense (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.Dense Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     TruthAt M τ t φ := by
   exact soundness_in Γ φ d F ‹DenselyOrdered F.Duration› M τ h_mem t h_ctx
@@ -1477,7 +1477,7 @@ theorem soundness_ztime (Γ : Context) (φ : Formula)
     (d : DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration]
     [IsSuccArchimedean F.Duration] [IsPredArchimedean F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     TruthAt M τ t φ := by
   exact soundness_in Γ φ d F
@@ -1525,7 +1525,7 @@ theorem soundness_rtime (Γ : Context) (φ : Formula)
     (F : TaskFrame) [DenselyOrdered F.Duration]
     (h_lub : ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x)
     (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     TruthAt M τ t φ := by
   exact soundness_in Γ φ d F ⟨‹DenselyOrdered F.Duration›, h_lub⟩ M τ h_mem t h_ctx

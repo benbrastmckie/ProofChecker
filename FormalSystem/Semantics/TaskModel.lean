@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.TaskFrame
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 import FormalSystem.Syntax.Formula
 
 /-!

@@ -9,7 +9,7 @@ over the set's finite sublists, and `compactBase` / `compactDense` follow throug
 class-generic bridge `compact_of_modelExistence`.
 
 Łoś is deliberately proved at the **shift-set** level rather than at `TruthAt` directly: a shift
-set quantifies over its own carrier, where `TruthAt` quantifies over total world histories, and
+set quantifies over its own carrier, where `TruthAt` quantifies over possible worlds, and
 `ShiftSet.forward_repr` reconciles the two on both sides. `los_truthAt` is the conjugated form.
 
 ## Modules

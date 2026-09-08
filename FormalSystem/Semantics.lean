@@ -18,7 +18,7 @@ import FormalSystem.Semantics.Extension.Admissible
 import FormalSystem.Semantics.Extension.Step
 import FormalSystem.Semantics.Extension.Extension
 import FormalSystem.Semantics.Extension.PeriodicExtension
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 import FormalSystem.Semantics.TaskModel
 import FormalSystem.Semantics.Truth
 import FormalSystem.Semantics.BLTruth
@@ -49,7 +49,7 @@ import FormalSystem.Semantics.Correspondence.FwdRecBridge
 # FormalSystem.Semantics - Task Frame Semantics
 
 Aggregates all semantic components for bimodal logic TM (Tense and Modality). Provides
-task frame semantics with world histories, truth evaluation, and validity definitions
+task frame semantics with convex histories, truth evaluation, and validity definitions
 polymorphic over temporal types.
 
 ## Submodules
@@ -98,14 +98,15 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
 - `Extension.Step`: `lem:step` — every partial history extends by one arbitrary duration; the
   join of `lem:constraint`, *Saturation*, and `lem:admissible`, and **the sole application site of
   the *Saturation* axiom** in the development
-- `Extension.Extension`: `thm:extension` — every partial history is extended by some total world
-  history, proved from Zorn over the extension order plus `lem:step` and nothing else — and
+- `Extension.Extension`: `thm:extension` — every partial history is extended by some possible
+  world, proved from Zorn over the extension order plus `lem:step` and nothing else — and
   `cor:occurrence` in **hypothesis form**: every world state occurs at any prescribed time in some
-  total world history, by extending the one-point partial history `{⟨x, w⟩}`. The frame-intrinsic
+  possible world, by extending the one-point partial history `{⟨x, w⟩}`. The frame-intrinsic
   form of `cor:occurrence` is deliberately not provided; it is gated on the frame-axiom-field
   refactor described in `Extension.Step`
-- `WorldHistory`: World histories `τ: X → W` as functions from convex time domains to
-  world states, respecting the task relation
+- `ConvexHistory`: Convex histories `τ: X → W` as functions from convex time domains to
+  world states, respecting the task relation; `TaskFrame.HF` cuts out the *possible worlds*,
+  the total ones
 - `TaskModel`: Task models extending frames with valuation functions `V: W × String → Prop`
 - `Truth`: Recursive truth evaluation `M,τ,t ⊨ φ` for formulas at model-history-time triples
 - `BLTruth`: the same recursion for the tense-primitive base language — `BLTruthAt`, defined
@@ -164,9 +165,9 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   and `los_truthAt`, the same statement at `TruthAt` obtained by conjugating `los` with
   `ShiftSet.forward_repr` on both sides. Łoś is deliberately not attacked at `TruthAt` directly:
   `ShiftTruth`'s `box` clause quantifies over the carrier the ultraproduct quotients, while
-  `TruthAt`'s quantifies over total world histories, and `forward_repr` already reconciles the two
+  `TruthAt`'s quantifies over possible worlds, and `forward_repr` already reconciles the two
 - `IntTransfer`: carrier normalization for the discrete branch -- a generic transport of
-  frames, `TaskModel`, `WorldHistory`, and `TruthAt` along any ordered-group isomorphism
+  frames, `TaskModel`, `ConvexHistory`, and `TruthAt` along any ordered-group isomorphism
   `e : D ≃+o E` (via the `HEq`-free `Aligned` relation rather than a history `Equiv`), composed
   with `DurationClassification`'s `intIso` to give `validZTime_iff_validInt`: quantifying over
   every discrete duration carrier is the same as quantifying over `ℤ` alone
@@ -182,7 +183,8 @@ The semantics follows the JPL paper "The Perpetuity Calculus of Agency":
 | Seriality | `w ⇒_x u` and `v ⇒_x w` for some `u, v` | `serial` field |
 | Limit | `⋂_{x > 0} (w)_x = {w}` | `limit` field |
 | Saturation | `⋂ S ≠ ∅` for a `⊇`-directed family of nonempty fibers and segments | `saturation` field |
-| World History | `τ : X → W` convex | `WorldHistory F` with `convex` proof |
+| Convex History | `τ : X → W` convex (`def:world-history`) | `ConvexHistory F` with `convex` proof |
+| Possible World | convex history with `X = D` (`def:world-history`) | `TaskFrame.HF`; predicate form `ConvexHistory.IsTotal` |
 | Truth | `M,τ,x ⊨ φ` | `TruthAt M τ t φ` |
 | Validity | True in all models, at every total history | `Valid φ` |
 
@@ -231,7 +233,7 @@ open FormalSystem.Syntax
 #check ([Formula.atomS "p"] ⊨ Formula.atomS "p" : Prop)  -- Valid
 
 -- Truth at a specific frame. `TruthAt` takes four arguments, not five.
-variable {F : TaskFrame} (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration)
+variable {F : TaskFrame} (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
 
 #check TruthAt M τ t (Formula.box (Formula.atomS "p"))
 ```
@@ -239,7 +241,7 @@ variable {F : TaskFrame} (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration
 ## References
 
 * [TaskFrame.lean](Semantics/TaskFrame.lean) - Task frame structure
-* [WorldHistory.lean](Semantics/WorldHistory.lean) - World history definition
+* [ConvexHistory.lean](Semantics/ConvexHistory.lean) - Convex history definition and `TaskFrame.HF`
 * [TaskModel.lean](Semantics/TaskModel.lean) - Task model with valuation
 * [Truth.lean](Semantics/Truth.lean) - Truth evaluation
 * [Validity.lean](Semantics/Validity.lean) - Validity and semantic consequence

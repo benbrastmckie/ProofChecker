@@ -16,7 +16,7 @@ Tests for task frame semantics.
 ## Coverage
 
 - Task frame construction and accessibility
-- Truth evaluation at world-histories
+- Truth evaluation at convex histories
 - Validity checking
 - Performance benchmarks
 - Axiom profiles of the finite-carrier *Saturation* discharge and the ultraproduct construction

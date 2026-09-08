@@ -122,7 +122,7 @@ recursion. -/
 theorem star_soundness_in {fc : FrameClass} (Γ : StarContext) (φ : StarFormula)
     (d : StarDerivationTree fc Γ φ)
     (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, StarTruthAt M τ t ψ) :
     StarTruthAt M τ t φ := by
   induction d generalizing τ t with
@@ -153,7 +153,7 @@ theorem star_soundness_valid {φ : StarFormula} (h : StarDerivable FrameClass.Ba
 /-- Soundness of TM⋆ at `.Base` (context form). -/
 theorem star_soundness_base (Γ : StarContext) (φ : StarFormula)
     (d : StarDerivationTree FrameClass.Base Γ φ) (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
+    (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, StarTruthAt M τ t ψ) : StarTruthAt M τ t φ :=
   star_soundness_in Γ φ d F trivial M τ h_mem t h_ctx
 

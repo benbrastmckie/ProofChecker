@@ -141,7 +141,7 @@ theorem countermodel_dense_enriched {fc : FrameClass} (A : Set Formula)
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_dense : Formula.box Chronicle.nextTop.neg ∈ A) :
     ∃ (F : FrameOver (TemporalOrder.of Rat)) (TM : TaskModel F)
-      (τ : WorldHistory F) (_ : τ.IsTotal) (t : Rat),
+      (τ : ConvexHistory F) (_ : τ.IsTotal) (t : Rat),
       ¬TruthAt TM τ t φ := by
   let bfmcs := Chronicle.cantorBfmcsDense fc A h_mcs h_box_dense
   let fam₀ := Chronicle.rootedCantorFmcsDense fc A h_mcs h_box_dense 0

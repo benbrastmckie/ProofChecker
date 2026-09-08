@@ -77,7 +77,7 @@ Binder-for-binder mirror of `Semantics.SemanticConsequence`.
 -/
 def BLSemanticConsequence (Γ : BaseLanguage.Context) (φ : BLFormula) : Prop :=
   ∀ (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (_ : τ.IsTotal) (t : F.Duration),
+    (τ : ConvexHistory F) (_ : τ.IsTotal) (t : F.Duration),
     (∀ ψ ∈ Γ, BLTruthAt M τ t ψ) →
     BLTruthAt M τ t φ
 
@@ -130,14 +130,14 @@ def BLValid (φ : BLFormula) : Prop :=
 /-- Introduce `BLValid` from its pre-abbreviation binder shape; the `Sat .Base` argument (`True`)
 is discharged here rather than at each call site. The BL mirror of `Valid.of_forall_total`. -/
 theorem BLValid.of_forall_total {φ : BLFormula}
-    (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ) :
     BLValid φ :=
   fun F _ M τ t => h F M τ.val τ.property t
 
 /-- Eliminate `BLValid` into its pre-abbreviation binder shape. The BL mirror of `Valid.apply`. -/
 theorem BLValid.apply {φ : BLFormula} (h : BLValid φ) (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
   h F trivial M ⟨τ, hτ⟩ t
 
 /-- **The one monotonicity lemma for BL⁺**: `BLValidOnFrames` is antitone in its frame predicate.
@@ -157,7 +157,7 @@ theorem BLValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : BLFormula} (
 The BL mirrors of `Semantics.ValidOnFrames.of_forall_total` / `.apply_total` and their
 `FrameClass`-tagged forms. `BLValidOnFrames` is stated over the bundled `(τ : TaskFrame.HF F)`;
 every proof that consumes or produces it works with the unbundled pair
-`(τ : WorldHistory F) (hτ : τ.IsTotal)`. The two spellings are not definitionally equal, so these
+`(τ : ConvexHistory F) (hτ : τ.IsTotal)`. The two spellings are not definitionally equal, so these
 four are the shape adapters, exactly as on the full-language side: a goal site becomes
 `refine BLValidIn.of_forall_total ?_; intro F hF M τ hτ t`, and a hypothesis site becomes
 `h.apply_total F hF M τ hτ t`.
@@ -165,25 +165,25 @@ four are the shape adapters, exactly as on the full-language side: a goal site b
 Unlike the per-class `.of_forall`/`.apply` pairs further down, these are generic in the frame
 predicate, which is what lets one pair serve every class at once. -/
 
-/-- Introduce `BLValidOnFrames` from the unbundled `(τ : WorldHistory F) (hτ : τ.IsTotal)` shape.
+/-- Introduce `BLValidOnFrames` from the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape.
 The BL mirror of `Semantics.ValidOnFrames.of_forall_total`. -/
 theorem BLValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : BLFormula}
-    (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ) :
     BLValidOnFrames P φ :=
   fun F hF M τ t => h F hF M τ.val τ.property t
 
-/-- Eliminate `BLValidOnFrames` into the unbundled `(τ : WorldHistory F) (hτ : τ.IsTotal)` shape.
+/-- Eliminate `BLValidOnFrames` into the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape.
 The BL mirror of `Semantics.ValidOnFrames.apply_total`. -/
 theorem BLValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : BLFormula}
     (h : BLValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
   h F hF M ⟨τ, hτ⟩ t
 
 /-- `BLValidOnFrames.of_forall_total` at a `FrameClass` tag. The BL mirror of
 `Semantics.ValidIn.of_forall_total`. -/
 theorem BLValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : BLFormula}
-    (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ) :
     BLValidIn fc φ :=
   BLValidOnFrames.of_forall_total h
@@ -192,7 +192,7 @@ theorem BLValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : BLFormula}
 `Semantics.ValidIn.apply_total`. -/
 theorem BLValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : BLFormula}
     (h : BLValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : BLTruthAt M τ t φ :=
   BLValidOnFrames.apply_total h F hF M τ hτ t
 
 /--
@@ -236,7 +236,7 @@ assume Archimedean structure, so it applies to the non-Archimedean carrier `ℚ 
 -/
 def BLValidZTimeSucc (φ : BLFormula) : Prop :=
   ∀ (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration] (M : TaskModel F)
-    (τ : WorldHistory F), τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ
+    (τ : ConvexHistory F), τ.IsTotal → ∀ t : F.Duration, BLTruthAt M τ t φ
 
 /-- `BLValid` weakens to `BLValidZTimeSucc`, mirroring `BLValidity.blValid_implies_blValidZTime`
 and its dense/RTime siblings.

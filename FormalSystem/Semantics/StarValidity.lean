@@ -105,12 +105,12 @@ theorem StarValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : StarFormul
 /-! ### Binder-shape adapters
 
 `StarValidOnFrames` is stated over the bundled `(τ : TaskFrame.HF F)`; every proof that consumes
-or produces it works with the unbundled pair `(τ : WorldHistory F) (hτ : τ.IsTotal)`. These four
+or produces it works with the unbundled pair `(τ : ConvexHistory F) (hτ : τ.IsTotal)`. These four
 are the adapters, exactly as on the L⁺ and BL sides. -/
 
 /-- Introduce `StarValidOnFrames` from the unbundled shape. -/
 theorem StarValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : StarFormula}
-    (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, StarTruthAt M τ t φ) :
     StarValidOnFrames P φ :=
   fun F hF M τ t => h F hF M τ.val τ.property t
@@ -118,12 +118,12 @@ theorem StarValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : StarFor
 /-- Eliminate `StarValidOnFrames` into the unbundled shape. -/
 theorem StarValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : StarFormula}
     (h : StarValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
   h F hF M ⟨τ, hτ⟩ t
 
 /-- `StarValidOnFrames.of_forall_total` at a `FrameClass` tag. -/
 theorem StarValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
-    (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, StarTruthAt M τ t φ) :
     StarValidIn fc φ :=
   StarValidOnFrames.of_forall_total h
@@ -131,20 +131,20 @@ theorem StarValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : StarForm
 /-- `StarValidOnFrames.apply_total` at a `FrameClass` tag. -/
 theorem StarValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
     (h : StarValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
   StarValidOnFrames.apply_total h F hF M τ hτ t
 
 /-- Introduce `StarValid` from the unbundled shape; the `Sat .Base` argument (`True`) is
 discharged here. Mirror of `Valid.of_forall_total`. -/
 theorem StarValid.of_forall_total {φ : StarFormula}
-    (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : WorldHistory F),
+    (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, StarTruthAt M τ t φ) :
     StarValid φ :=
   fun F _ M τ t => h F M τ.val τ.property t
 
 /-- Eliminate `StarValid` into the unbundled shape. Mirror of `Valid.apply`. -/
 theorem StarValid.apply {φ : StarFormula} (h : StarValid φ) (F : TaskFrame) (M : TaskModel F)
-    (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : StarTruthAt M τ t φ :=
   h F trivial M ⟨τ, hτ⟩ t
 
 /-! ## The truth-transfer bridge along `ofFormula` -/
@@ -161,7 +161,7 @@ six L⁺ clauses of `StarTruthAt` are `TruthAt`'s verbatim and `ofFormula` is
 constructor-to-constructor.
 -/
 theorem starTruthAt_ofFormula (M : TaskModel F) (φ : Formula) :
-    ∀ (τ : WorldHistory F) (t : F.Duration),
+    ∀ (τ : ConvexHistory F) (t : F.Duration),
       StarTruthAt M τ t (ofFormula φ) ↔ TruthAt M τ t φ := by
   induction φ with
   | atom p => intro τ t; exact Iff.rfl
@@ -180,7 +180,7 @@ theorem starTruthAt_ofFormula (M : TaskModel F) (φ : Formula) :
         (forall_congr' fun r => imp_congr_right fun _ => imp_congr_right fun _ => ihψ τ r)
 
 /-- The context-level form of the bridge. -/
-theorem starTruthAt_ofCtx (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration)
+theorem starTruthAt_ofCtx (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
     {Γ : Context} (h : ∀ ψ ∈ Γ, TruthAt M τ t ψ) :
     ∀ ψ ∈ ofCtx Γ, StarTruthAt M τ t ψ := by
   intro ψ hψ

@@ -1,8 +1,8 @@
-# Extension — the Extension Theorem for partial world histories
+# Extension — the Extension Theorem for partial histories
 
-Every partial world history extends to a **total** one. This directory proves that, in the
+Every partial history extends to a **possible world**. This directory proves that, in the
 paper's own decomposition, and closes with the occurrence corollary: every world state occurs
-at any prescribed time in some total world history.
+at any prescribed time in some possible world.
 
 The chain is: the constraints a partial history imposes on a new duration form a directed,
 nonempty family (`Constraint.lean`); membership in every constraint is the same as membership
@@ -22,7 +22,7 @@ over a finite carrier both must eventually repeat.
 |------|-------|-------------|
 | `Admissible.lean` | 312 | `lem:fibers` (RETIRED paper anchor; resolves against the record's DANGLING entry, not a live `\label`) and `lem:admissible` — rewrites membership in *every* constraint as membership in a plain fiber, turning that into a one-point extension of the partial history. |
 | `Constraint.lean` | 398 | `lem:constraint` — the constraints a partial history imposes on a new duration form a *directed* family of *nonempty* sets. That is the whole of the lemma; the admissibility characterization is split out into `Admissible.lean`. |
-| `Extension.lean` | 272 | `thm:extension` and `cor:occurrence` — every partial history is extended by some total world history, and every world state occurs at any prescribed time in some total world history. |
+| `Extension.lean` | 272 | `thm:extension` and `cor:occurrence` — every partial history is extended by some possible world, and every world state occurs at any prescribed time in some possible world. |
 | `PeriodicExtension.lean` | 444 | A constructive alternative over `ℤ`-time with a finite carrier: a bounded history's two departing orbits must repeat, giving a periodic total extension without Zorn's lemma. |
 | `Step.lean` | 136 | `lem:step` — the Step Lemma: every partial history extends by one arbitrary duration. The join point of the chain, and the sole *Saturation* application site. |
 
@@ -30,13 +30,13 @@ over a finite carrier both must eventually repeat.
 
 - `thm:extension` (`Extension.lean`) — the Extension Theorem.
 - `cor:occurrence` (`Extension.lean`) — every world state occurs at any prescribed time in some
-  total world history.
+  possible world.
 - `lem:step` (`Step.lean`) — the one-duration extension, and the only consumer of *Saturation*.
 
 ## Dependencies
 
 - **Imports from**: `FormalSystem.Semantics.TaskFrame`,
-  `FormalSystem.Semantics.WorldHistory`, `FormalSystem.Semantics.PartialHistory`,
+  `FormalSystem.Semantics.ConvexHistory`, `FormalSystem.Semantics.PartialHistory`,
   Mathlib's Zorn's lemma
 - **Imported by**: `FormalSystem.Semantics` aggregators and the metalogic countermodel
   constructions, which need total histories to evaluate `valid` against
@@ -48,7 +48,7 @@ over a finite carrier both must eventually repeat.
 
 ---
 
-**Last verified**: 2026-08-25
+**Last verified**: 2026-09-07
 
 ---
 

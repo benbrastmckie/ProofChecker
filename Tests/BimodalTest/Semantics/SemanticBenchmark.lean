@@ -54,7 +54,7 @@ def benchModel : TaskModel benchFrame where
   valuation := fun _ p => p = "p"
 
 /-- Benchmark history: trivial (universal domain) -/
-def benchHistory : WorldHistory benchFrame := WorldHistory.trivial
+def benchHistory : ConvexHistory benchFrame := ConvexHistory.trivial
 
 /-- Domain proof for time 0 -/
 def domainProof0 : benchHistory.domain (0 : Int) := trivial

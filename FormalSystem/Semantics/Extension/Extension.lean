@@ -6,14 +6,14 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Semantics.Extension.Step
 import FormalSystem.Semantics.PartialHistoryOrder
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 
 /-!
 # `thm:extension` and `cor:occurrence` — closing the extension chain
 
 This module closes the chain the preceding extension modules build: every partial history is
-extended by some **total** world history, and every world state occurs at any prescribed time in
-some total world history.
+extended by some **possible world**, and every world state occurs at any prescribed time in
+some possible world.
 
 The chain, in order, is
 
@@ -27,7 +27,7 @@ Anchors are `\label` keys into `specs/paper-definitions-of-record.md`, which —
 source — is the citation source of record.
 
 - `thm:extension` (verbatim): "Every partial history $\tau : X \to W$ over a task frame
-  $\F = \tuple{W, \D, \Rightarrow}$ is extended by some total world history $\sigma \in H_{\F}$."
+  $\F = \tuple{W, \D, \Rightarrow}$ is extended by some possible world $\sigma \in H_{\F}$."
   Its footnote (verbatim): "The proof appeals to Zorn's lemma, and so the derivation of
   \textit{Occurrence} from \textit{Seriality} and \textit{Saturation} in
   \textbf{\ref{cor:occurrence}} is a theorem of ZFC, in contrast with the derivation of the zero
@@ -37,7 +37,7 @@ source — is the citation source of record.
   say the derivation is a theorem of ZFC, and widened the choice-free contrast class to include
   `cor:saturation-finite`. The earlier wording must not be reintroduced.
 - `cor:occurrence` (verbatim): "For any task frame $\F = \tuple{W, \D, \Rightarrow}$, world state
-  $w \in W$, and time $x \in D$, there is a total world history $\tau \in H_{\F}$ where
+  $w \in W$, and time $x \in D$, there is a possible world $\tau \in H_{\F}$ where
   $\tau(x) = w$, and so $H_{\F} \neq \emptyset$."
 
 ## What `thm:extension` consumes — Zorn plus `lem:step`, and nothing else
@@ -57,7 +57,7 @@ The maximal-to-total direction is isolated as `isTotal_of_isMax`, the converse c
 `PartialHistoryOrder`'s `isMax_of_total`. That companion is exactly where `lem:step` is spent:
 maximality plus the ability to extend by one arbitrary duration forces the domain to be all of
 `D`. Totality then yields convexity for free (`total_isConvex`), so the promotion of the maximal
-partial history to a `WorldHistory`, and thence to an `F.HF` element, is immediate.
+partial history to a `ConvexHistory`, and thence to an `F.HF` element, is immediate.
 
 ## What the finite-carrier *Saturation* discharge costs, by contrast
 
@@ -101,12 +101,12 @@ time-shifting a history witnessed at one time — is **gone from this chain and 
 reintroduced**. The anchors that carried it (`thm:occurrence`, `app:nonempty`) no longer exist;
 the paper merged them into the single, strictly stronger `cor:occurrence`, in which the time `x`
 is universally given rather than existentially witnessed. Time-shift machinery survives
-separately (`PartialHistory.timeShift`, `WorldHistory.timeShift`, `TaskFrame.HF.timeShift`) but
+separately (`PartialHistory.timeShift`, `ConvexHistory.timeShift`, `TaskFrame.HF.timeShift`) but
 plays no role here.
 
 ## Main Definitions
 
-- `PartialHistory.toWorldHistory` — promotion of a total partial history to a `WorldHistory`
+- `PartialHistory.toConvexHistory` — promotion of a total partial history to a `ConvexHistory`
 - `PartialHistory.point` — the one-point partial history `{⟨x, w⟩}`
 
 ## Main Results
@@ -123,42 +123,42 @@ namespace PartialHistory
 
 open TaskFrame
 
-/-! ## From totality to `WorldHistory` -/
+/-! ## From totality to `ConvexHistory` -/
 
 /--
 A **total** domain is convex: every time whatsoever is in it, so in particular every time between
 two domain times is.
 
-**Paper Reference**: `def:world-history` (verbatim: "A \textit{world history} is any partial
+**Paper Reference**: `def:world-history` (verbatim: "A \textit{convex history} is any partial
 history whose domain $X$ is \textit{convex}, so that $y \in X$ whenever $x, z \in X$ and
-$x < y < z$." together with "A world history is \textit{total}--- equivalently, a
-\textit{possible world}--- just in case $X = D$.").
+$x < y < z$." together with "A \textit{possible world} is any convex history whose domain is
+total, so that $X = D$.").
 
 This is what makes the last step of `thm:extension` immediate: once `lem:step` has forced the
 maximal partial history to be total, no separate convexity argument is needed to view it as a
-world history.
+convex history — and, being total, as a possible world.
 -/
 theorem total_isConvex {F : TaskFrame} {τ : PartialHistory F} (h : τ.IsTotal) :
     ∀ (x z : F.Duration), τ.domain x → τ.domain z → ∀ (y : F.Duration), x ≤ y → y ≤ z → τ.domain y :=
   fun _ _ _ _ y _ _ => h y
 
 /--
-Promotion of a **total** partial history to a `WorldHistory`, via `total_isConvex`.
+Promotion of a **total** partial history to a `ConvexHistory`, via `total_isConvex`.
 
 The underlying `PartialHistory` is unchanged — this adds the `convex` field and nothing else, so
-`(τ.toWorldHistory h).toPartialHistory` is `τ` definitionally.
+`(τ.toConvexHistory h).toPartialHistory` is `τ` definitionally.
 -/
-def toWorldHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) : WorldHistory F where
+def toConvexHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) : ConvexHistory F where
   toPartialHistory := τ
   convex := total_isConvex h
 
 @[simp]
-theorem toWorldHistory_toPartialHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) :
-    (τ.toWorldHistory h).toPartialHistory = τ := rfl
+theorem toConvexHistory_toPartialHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) :
+    (τ.toConvexHistory h).toPartialHistory = τ := rfl
 
 /-- A promoted total partial history is a total *world* history. -/
-theorem isTotal_toWorldHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) :
-    (τ.toWorldHistory h).IsTotal := h
+theorem isTotal_toConvexHistory {F : TaskFrame} (τ : PartialHistory F) (h : τ.IsTotal) :
+    (τ.toConvexHistory h).IsTotal := h
 
 /-! ## Maximal implies total — where `lem:step` is spent -/
 
@@ -185,10 +185,10 @@ theorem isTotal_of_isMax (F : TaskFrame) {τ : PartialHistory F} (hmax : IsMax �
 /-! ## `thm:extension` -/
 
 /--
-`thm:extension`: every partial history is extended by some total world history.
+`thm:extension`: every partial history is extended by some possible world.
 
 Recorded source (`thm:extension`, verbatim): "Every partial history $\tau : X \to W$ over a task
-frame $\F = \tuple{W, \D, \Rightarrow}$ is extended by some total world history
+frame $\F = \tuple{W, \D, \Rightarrow}$ is extended by some possible world
 $\sigma \in H_{\F}$."
 
 Recorded footnote of the source (verbatim): "The proof appeals to Zorn's lemma, and so the
@@ -200,7 +200,8 @@ loops in \textbf{\ref{lem:nullity}} and the derivation of \textit{Saturation} fo
 **Proof recipe, exactly as recorded**: Zorn's lemma over the extension order
 (`exists_maximal_extension`) produces a maximal extension; `lem:step` forces that maximal partial
 history to be total (`isTotal_of_isMax`); totality yields convexity (`total_isConvex`), so the
-result is a world history, and totality is exactly its `H_F` membership.
+result is a convex history, and totality is exactly its `H_F` membership, i.e. its being a
+possible world.
 
 **These two are the whole proof.** *Saturation* is not threaded in directly — `step`, which remains
 its sole application site, reads it off the frame as `F.saturation`.
@@ -209,7 +210,7 @@ theorem extension (F : TaskFrame) (τ : PartialHistory F) :
     ∃ σ : F.HF, Extends σ.val.toPartialHistory τ := by
   obtain ⟨μ, hle, hmax⟩ := exists_maximal_extension τ
   have htot : μ.IsTotal := isTotal_of_isMax F hmax
-  exact ⟨⟨μ.toWorldHistory htot, isTotal_toWorldHistory μ htot⟩, le_def.mp hle⟩
+  exact ⟨⟨μ.toConvexHistory htot, isTotal_toConvexHistory μ htot⟩, le_def.mp hle⟩
 
 /-! ## `cor:occurrence`, frame-intrinsic form -/
 
@@ -239,11 +240,11 @@ theorem point_states (F : TaskFrame) (w : F.WorldState) (x : F.Duration) (t : F.
 
 /--
 `cor:occurrence`, in **frame-intrinsic form**: every world state occurs at any prescribed time in some
-total world history.
+possible world.
 
-Recorded source (`cor:occurrence`, verbatim): "For any frame
-$\F = \tuple{W, \D, \Rightarrow}$, world state $w \in W$, and time $x \in D$, there is a total
-world history $\tau \in H_{\F}$ where $\tau(x) = w$, and so $H_{\F} \neq \emptyset$."
+Recorded source (`cor:occurrence`, verbatim): "For any task frame
+$\F = \tuple{W, \D, \Rightarrow}$, world state $w \in W$, and time $x \in D$, there is a possible
+world $\tau \in H_{\F}$ where $\tau(x) = w$, and so $H_{\F} \neq \emptyset$."
 
 **Proof recipe, exactly as recorded**: extend the one-point partial history `{⟨x, w⟩}` directly
 via `thm:extension`. The extension agrees with the one-point history at `x`, which is the claim.

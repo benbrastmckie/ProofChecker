@@ -40,7 +40,7 @@ other two. This module encodes that as a fibration, in three declarations:
 constructor: `⟨D, F⟩`. Structure eta makes the projection an identity rather than an isomorphism
 up to transport — `⟨G.Duration, G.toFibre⟩ = G`, `(F.toTaskFrame).toFibre = F` and
 `(F.toTaskFrame).Duration = D` all hold by `rfl`, pinned as `example`s at the end of this module.
-`instCoeOutFrameOver` lets a fibre value be handed to `WorldHistory`, `TaskModel` and `TruthAt`,
+`instCoeOutFrameOver` lets a fibre value be handed to `ConvexHistory`, `TaskModel` and `TruthAt`,
 which are stated over the total space.
 
 **Why a component and not a type parameter.** A property of the temporal order alone cannot be
@@ -903,7 +903,7 @@ radii over the carrier turns this into a single positive `x` that works for ever
 nothing but `w` is reachable from `w` within `x`.
 
 **Consequence.** A finite frame satisfying *Limit* over a densely ordered duration type is
-temporally *rigid*: a world history through `w` at time `t` is constant on `(t - x, t + x)`, so
+temporally *rigid*: a convex history through `w` at time `t` is constant on `(t - x, t + x)`, so
 over a dense duration domain histories are locally constant. That is the correct content of the
 axiom, not a defect — but it means the filtration and FMP frames cannot remain
 dense-polymorphic once *Limit* is carried as a frame axiom. The move of FMP to `ℤ` is
@@ -1615,7 +1615,7 @@ Polymorphic over temporal type `D`.
 The `[SuccOrder D] [NoMaxOrder D]` binders are carried because `natFrame_limit` requires them:
 over a dense `D` the permissive relation puts every state in every cone of every other state and
 *Limit* (`def:frame#Limit`) fails outright. Every reference to this frame outside
-`WorldHistory.universalNatFrame` elaborates at `Int`, which supplies both instances.
+`ConvexHistory.universalNatFrame` elaborates at `Int`, which supplies both instances.
 -/
 def natFrame {D : Type} [AddCommGroup D] [LinearOrder D] [IsOrderedAddMonoid D]
     [Nontrivial D] [SuccOrder D] [NoMaxOrder D] :
@@ -1660,7 +1660,7 @@ in the literal transcribed shape — **over a discrete duration type only**.
 restriction is not an artifact: over a dense `D` the permissive relation puts every state in
 every cone of every other state, and *Limit* fails outright. `natFrame` itself now carries these
 two instances, so that this lemma discharges the frame's *Limit* field; the only declaration that
-propagation reached is `WorldHistory.universalNatFrame`, which is itself polymorphic in `D` and
+propagation reached is `ConvexHistory.universalNatFrame`, which is itself polymorphic in `D` and
 has no consumers of its own. Every other reference to `natFrame` in the library and test suite
 elaborates at `Int`, which carries both instances.
 -/
@@ -1767,7 +1767,7 @@ end FrameOver
 /--
 **A fibre value is usable wherever the total space is expected**, via the inclusion.
 
-`WorldHistory`, `TaskModel` and `TruthAt` are stated over `TaskFrame`, so every fibre-typed frame
+`ConvexHistory`, `TaskModel` and `TruthAt` are stated over `TaskFrame`, so every fibre-typed frame
 has to reach the total space to be used with them. Writing `.toTaskFrame` at each such site would
 be pure noise: the inclusion is the constructor and carries no content.
 

@@ -66,7 +66,7 @@ is proved with it.
 
 ## Tags
 
-world-history · partial-history · order
+convex-history · partial-history · order
 -/
 
 namespace FormalSystem.Semantics
@@ -119,7 +119,7 @@ theorem states_eq_of_time_eq (τ : PartialHistory F) {t₁ t₂ : F.Duration} (h
 Time-shifted partial history: `(τ.timeShift Δ)` is `τ` viewed `Δ` later, i.e. its domain at `z`
 is `τ`'s domain at `z + Δ`.
 
-Unlike the world-history case there is no convexity obligation, and `nonempty_domain` transports
+Unlike the convex-history case there is no convexity obligation, and `nonempty_domain` transports
 by `t ↦ t - Δ`.
 -/
 def timeShift (τ : PartialHistory F) (Δ : F.Duration) : PartialHistory F where

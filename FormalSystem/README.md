@@ -245,7 +245,7 @@ invariant check allowlists it by name (check C8).
 | `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 28 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
-| `FormalSystem.lean` | 109 | Library aggregator: imports all submodules for unified access |
+| `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 22 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |
 | `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
@@ -309,7 +309,7 @@ invariant check allowlists it by name (check C8).
 | `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
 | `BaseLanguage/` | No | Shared base-language definitions (no README yet) |
 | [StarLanguage/](StarLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
-| [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — 156 archived `.lean` files, excluded from the live build |
+| [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — retired code, excluded from the live build; no `.olean` is produced under any `Boneyard` path. Its README is the single source for its counts |
 
 ## Quick Reference
 

@@ -20,7 +20,7 @@ live file and subdirectory here, and no row for anything else.
 | FrameClassValidity.lean | `FrameClass.Sat` and the `sat_intro` binder adapters: validity relative to a frame class |
 | IntNormalForm.lean | The ℤ-frame normal form: over `D = ℤ` a frame is its one-step relation |
 | TaskModel.lean | Task models with valuation functions |
-| WorldHistory.lean | World histories for temporal evaluation |
+| ConvexHistory.lean | Convex histories for temporal evaluation, and `TaskFrame.HF` — the paper's possible worlds |
 | Truth.lean | `TruthAt`, the truth relation for formula evaluation, with its `truth_norm` simp-normal form; the relational truth transport `TruthCorr` / `Truth.truthAt_of_truthCorr` (one `induction φ`) from which `timeShift_preserves_truth`, `truthAt_of_truthIso`, and `IntTransfer.truthAt_map` are derived; `TruthIso`/`TruthAntiIso` |
 | BLTruth.lean | `BLTruthAt` — the same truth relation for the tense-primitive base language, by native six-clause recursion on `BLFormula` per `def:BL-semantics` (not `TruthAt ∘ tr`) |
 | ShiftSet.lean | Shift-set representation theorem: task models ↔ shift sets, both directions with truth correspondence |
@@ -36,7 +36,7 @@ live file and subdirectory here, and no row for anything else.
 | LexCarrier.lean | `LexInt`: `SuccOrder`/`PredOrder` instances, `isLeast_pos`, and the three non-Archimedean theorems for `α ×ₗ ℤ` at an arbitrary ordered abelian group `α` — instantiated at `ℚ` for the CEF countermodel and at `ℤ` for the `Sat .Discrete` separation |
 | FrameAxioms.lean | The frame axioms (nullity, compositionality, reflection) as standalone statements |
 | IntTransfer.lean | Transfer of ℤ-frame facts across the normal form |
-| PartialHistory.lean | Partial world-histories on convex subsets of the duration group |
+| PartialHistory.lean | Partial histories on arbitrary nonempty subsets of the duration group — the tier *below* convexity |
 | PartialHistoryOrder.lean | The order structure on partial histories |
 | Extension/ | Extension of partial histories: `Admissible`, `Constraint`, `Extension`, `PeriodicExtension`, `Step` (5 files) |
 | Ultraproduct/ | The dependent ultraproduct of shift sets and Łoś's theorem: `Carrier`, `IndexFilter`, `ShiftSetProduct`, `Los` (4 files) |
@@ -46,9 +46,9 @@ live file and subdirectory here, and no row for anything else.
 
 - `TaskFrame`: Frame structure with world-time pairs and accessibility
 - `TaskModel`: Frame with valuation function for atoms
-- `WorldHistory`: Infinite sequence of worlds indexed by time
-- `truth_at`: Truth of formula at world-history and time
-- `valid`: Formula true in all models at all world-histories
+- `ConvexHistory`: World states indexed by a convex set of times; the domain need not be all of `D`, so a convex history may be bounded
+- `truth_at`: Truth of formula at convex history and time
+- `valid`: Formula true in all models at all possible worlds
 
 ## The ℤ-frame normal form
 

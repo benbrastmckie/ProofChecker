@@ -48,12 +48,12 @@ opening clause; the standalone `def:directed` is retired — `DANGLING`)**
 are consumed from `Semantics/TaskFrame.lean` (`TaskFrame.Fib`, `TaskFrame.Seg`,
 `TaskFrame.DirectedFamily`, `TaskFrame.IsFiber`, `TaskFrame.IsSegment`).
 
-**Totality (`def:world-history`)**: "A world history is *total* — equivalently, a *possible
-world* — just in case X = D. ... The set of all possible worlds over F is denoted
+**Possible worlds (`def:world-history`)**: "A *possible world* is any convex history whose domain
+is total, so that X = D. ... The set of all possible worlds over F is denoted
 H_F." `multiFamGen_total_eq` characterizes the total histories of the flow frame: every
 history with full domain IS a flow line `multiFamHistoryGen f w₀`. Since the flow lines are
-total by construction, the frame's total-history set H_F coincides exactly with the flow-line
-family — the internalization on which the total-history countermodel constructions rest.
+total by construction, the frame's set of possible worlds H_F coincides exactly with the
+flow-line family — the internalization on which the total-history countermodel constructions rest.
 
 **Derived, not cited**: the segment identity `w ⇒_{x+y} v ↔ [w,v]_x^y ≠ ∅`
 (`taskRel_add_iff_seg_nonempty`) is DERIVED here from the compositionality biconditional, the
@@ -173,10 +173,11 @@ noncomputable def multiFamTaskFrameGen (D : TemporalOrder) (FamIdx : Type) [None
       (fun w u h => Prod.ext h.1.symm (by rw [h.2, add_zero]))
   saturation := TaskFrame.saturation_of_fib_subsingleton (flowRel_fib_subsingleton D FamIdx)
 
-/-- World history for `multiFamTaskFrameGen`, visiting `(f, w₀ + t)` at each time `t`.
+/-- Convex history for `multiFamTaskFrameGen`, visiting `(f, w₀ + t)` at each time `t`; total by
+construction, hence a possible world.
 Generic form of `multiFamHistory` (`ReynoldsBridge.lean`). -/
 noncomputable def multiFamHistoryGen {FamIdx : Type} [Nonempty FamIdx] (f : FamIdx) (w₀ : ↑D) :
-    WorldHistory (multiFamTaskFrameGen D FamIdx) where
+    ConvexHistory (multiFamTaskFrameGen D FamIdx) where
   domain := fun _ => True
   nonempty_domain := ⟨0, trivial⟩
   convex := fun _ _ _ _ _ _ _ => trivial
@@ -189,21 +190,21 @@ noncomputable def multiFamHistoryGen {FamIdx : Type} [Nonempty FamIdx] (f : FamI
 /-- Time-shifting `multiFamHistoryGen f w₀` by `Δ` gives `multiFamHistoryGen f (w₀ + Δ)`.
 Generic form of `multiFamHistory_shift_eq` (`ReynoldsBridge.lean`). -/
 theorem multiFamHistoryGen_shift_eq {FamIdx : Type} [Nonempty FamIdx] (f : FamIdx) (w₀ Δ : ↑D) :
-    WorldHistory.timeShift
-        (multiFamHistoryGen f w₀ : WorldHistory (multiFamTaskFrameGen D FamIdx)) Δ =
+    ConvexHistory.timeShift
+        (multiFamHistoryGen f w₀ : ConvexHistory (multiFamTaskFrameGen D FamIdx)) Δ =
       multiFamHistoryGen f (w₀ + Δ) := by
   have h_states : (fun (t : ↑D) (_ : True) => ((f, w₀ + (t + Δ)) : FamIdx × ↑D)) =
       (fun (t : ↑D) (_ : True) => ((f, w₀ + Δ + t) : FamIdx × ↑D)) := by
     funext t _; congr 1; abel
-  change WorldHistory.mk (PartialHistory.mk _ _ _ _) _ =
-    WorldHistory.mk (PartialHistory.mk _ _ _ _) _
+  change ConvexHistory.mk (PartialHistory.mk _ _ _ _) _ =
+    ConvexHistory.mk (PartialHistory.mk _ _ _ _) _
   congr 2
 
 /-- Every generic multi-family history is total (`def:world-history`'s cut `X = D`, spelled
 `∀ t, σ.domain t`). Definitional: `multiFamHistoryGen` carries `domain := fun _ => True`. This
 is what the totality-targeted box clause (`def:BL-semantics`) consumes. -/
 theorem multiFamHistoryGen_total {FamIdx : Type} [Nonempty FamIdx] (f : FamIdx) (w₀ : ↑D) :
-    (multiFamHistoryGen f w₀ : WorldHistory (multiFamTaskFrameGen D FamIdx)).IsTotal :=
+    (multiFamHistoryGen f w₀ : ConvexHistory (multiFamTaskFrameGen D FamIdx)).IsTotal :=
   fun _ => trivial
 
 /-! ## The derived segment identity
@@ -346,8 +347,8 @@ theorem multiFamTaskFrameGen_saturation {FamIdx : Type} [Nonempty FamIdx] :
 
 /-! ## The totality characterization
 
-`def:world-history`: "A world history is *total* — equivalently, a *possible world* — just
-in case X = D." For the deterministic flow frame, every total history is a flow line: the
+`def:world-history`: "A *possible world* is any convex history whose domain is total, so that
+X = D." For the deterministic flow frame, every total history is a flow line: the
 state at time `0` fixes the family index and the offset, and `respects_task` propagates the
 clock to every other time. Together with the (definitional) totality of
 `multiFamHistoryGen`, this identifies the frame's total-history set H_F with the flow-line
@@ -357,7 +358,7 @@ family — the internalization the total-history countermodels rest on. -/
 (`def:world-history`'s totality, X = D), then `σ = multiFamHistoryGen f w₀` for the family
 index and offset read off from `σ` at time `0`. -/
 theorem multiFamGen_total_eq {FamIdx : Type} [Nonempty FamIdx]
-    (σ : WorldHistory (multiFamTaskFrameGen D FamIdx)) (htot : ∀ t, σ.domain t) :
+    (σ : ConvexHistory (multiFamTaskFrameGen D FamIdx)) (htot : ∀ t, σ.domain t) :
     ∃ f w₀, σ = multiFamHistoryGen f w₀ := by
   -- The state at any time is the state at time 0 advanced by the clock.
   have key : ∀ (t : ↑D) (ht : σ.domain t),
@@ -379,23 +380,23 @@ theorem multiFamGen_total_eq {FamIdx : Type} [Nonempty FamIdx]
   have h_states : sts = fun t (_ : True) =>
       ((sts 0 (htot 0)).1, (sts 0 (htot 0)).2 + t) :=
     funext fun t => funext fun ht => key t ht
-  change WorldHistory.mk (PartialHistory.mk _ _ _ _) _ =
-    WorldHistory.mk (PartialHistory.mk _ _ _ _) _
+  change ConvexHistory.mk (PartialHistory.mk _ _ _ _) _ =
+    ConvexHistory.mk (PartialHistory.mk _ _ _ _) _
   congr 2
 
 /-- The generic flow frame's total-history set `H_F` **is** the set of flow lines, as a set
 equation.
 
-`def:world-history` fixes `H_F` as the totality-cut of the world histories: "A world history is
-*total* --- equivalently, a *possible world* --- just in case $X = D$. ... The set of all total
-world histories over $\F$ is denoted $H_{\F}$." Here the totality predicate `X = D` is spelled
+`def:world-history` fixes `H_F` as the totality-cut of the convex histories: "A \textit{possible
+world} is any convex history whose domain is total, so that $X = D$. ... The set of all possible
+worlds over $\F$ is denoted $H_{\F}$." Here the totality predicate `X = D` is spelled
 `∀ t, σ.domain t`.
 
 The `⊇` direction is definitional: `multiFamHistoryGen` carries `domain := fun _ => True`. The
 `⊆` direction is `multiFamGen_total_eq`. This is the extensional content the box clause
 (`def:BL-semantics`, "for all $\sigma \in H_{\F}$") quantifies over on this carrier. -/
 theorem multiFamGen_total_eq_range (FamIdx : Type) [Nonempty FamIdx] :
-    {σ : WorldHistory (multiFamTaskFrameGen D FamIdx) | ∀ t, σ.domain t} =
+    {σ : ConvexHistory (multiFamTaskFrameGen D FamIdx) | ∀ t, σ.domain t} =
       Set.range (fun (p : FamIdx × ↑D) => multiFamHistoryGen p.1 p.2) := by
   ext σ
   constructor
@@ -456,7 +457,7 @@ noncomputable def bundleFlowFrame (B : BFMCS (fc := fc) D) :
 history visiting `(fam, w₀ + t)` at each time `t`. -/
 noncomputable def bundleFlowHistory {B : BFMCS (fc := fc) D}
     (fam : {fam : FMCS (fc := fc) D // fam ∈ B.families}) (w₀ : D) :
-    WorldHistory (bundleFlowFrame B) :=
+    ConvexHistory (bundleFlowFrame B) :=
   multiFamHistoryGen fam w₀
 
 /-- The bundle flow model: an atom holds at `(fam, w)` exactly when it is in `fam`'s MCS at
@@ -516,7 +517,7 @@ theorem bundleFlow_saturation {B : BFMCS (fc := fc) D}
 line through a bundle family. Together with `bundleFlowHistory_total`, this identifies the
 frame's total-history set H_F (`def:world-history`) with the bundle's flow-line family. -/
 theorem bundleFlow_total_eq {B : BFMCS (fc := fc) D}
-    (σ : WorldHistory (bundleFlowFrame B)) (htot : ∀ t, σ.domain t) :
+    (σ : ConvexHistory (bundleFlowFrame B)) (htot : ∀ t, σ.domain t) :
     ∃ fam w₀, σ = bundleFlowHistory fam w₀ :=
   multiFamGen_total_eq σ htot
 
@@ -526,13 +527,13 @@ The bundle flow frame's total-history set H_F (`def:world-history`) is exactly i
 lines, by `bundleFlowHistory_total` and `bundleFlow_total_eq`. This is what the box clause
 quantifies over per `def:BL-semantics` ("M,σ,x ⊨ φ for all σ ∈ H_F"). -/
 
-/-- The bundle flow frame's total-history set `H_F` (`def:world-history`: "The set of all total
-world histories over $\F$ is denoted $H_{\F}$") **is** its set of flow lines.
+/-- The bundle flow frame's set of possible worlds `H_F` (`def:world-history`: "The set of all
+possible worlds over $\F$ is denoted $H_{\F}$") **is** its set of flow lines.
 
 Immediate specialization of `multiFamGen_total_eq_range` at the bundle index, since
 `bundleFlowFrame` is `multiFamTaskFrameGen` at that index by definition. -/
 theorem bundleFlow_total_eq_range (B : BFMCS (fc := fc) D) :
-    {σ : WorldHistory (bundleFlowFrame B) | ∀ t, σ.domain t} =
+    {σ : ConvexHistory (bundleFlowFrame B) | ∀ t, σ.domain t} =
       Set.range (fun (p : {fam : FMCS (fc := fc) D // fam ∈ B.families} × D) =>
         bundleFlowHistory p.1 p.2) :=
   multiFamGen_total_eq_range _

@@ -837,7 +837,7 @@ theorem extend_periodic (P : IntPresentation) (win : List (Fin P.card)) (hne : w
 ### The `PartialHistory` wrapper
 
 `extend_periodic` takes the window as a list plus an absolute origin, which is the form a search
-produces it in. The paper's hypothesis is a bounded world history, so the statement is also given
+produces it in. The paper's hypothesis is a bounded convex history, so the statement is also given
 here in `PartialHistory` vocabulary, over a domain that is exactly an integer interval `[a, b]`.
 
 **Tier A is contiguous-window-only, and deliberately so.** `PartialHistory.domain` is an arbitrary

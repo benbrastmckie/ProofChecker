@@ -7,14 +7,14 @@ Authors: Benjamin Brast-McKie
 import Mathlib.Algebra.Order.Group.Int
 import Mathlib.Data.Int.SuccPred
 import FormalSystem.Semantics.TaskFrame
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 
 /-!
 # Temporal Structures - Example Frame Instantiations
 
 This module provides examples demonstrating the use of different temporal types
 with ProofChecker's generalized semantics. The fibre `FrameOver D` and
-`WorldHistory F` structures can be instantiated with various temporal types.
+`ConvexHistory F` structures can be instantiated with various temporal types.
 
 ## Paper Alignment
 
@@ -44,9 +44,9 @@ includes:
 ## Main Definitions
 
 - `intTimeFrame`: Example task frame using `Int` as temporal type
-- `intTimeHistory`: Example world history using `Int`
+- `intTimeHistory`: Example convex history using `Int`
 - `genericTimeFrame`: Polymorphic task frame (works with any `D`)
-- `genericTimeHistory`: Polymorphic world history (works with any `D`)
+- `genericTimeHistory`: Polymorphic convex history (works with any `D`)
 
 ## Implementation Notes
 
@@ -57,7 +57,7 @@ includes:
 ## References
 
 * [TaskFrame.lean](../ProofChecker/Semantics/TaskFrame.lean) - FrameOver definition
-* [WorldHistory.lean](../ProofChecker/Semantics/WorldHistory.lean) - WorldHistory definition
+* [ConvexHistory.lean](../ProofChecker/Semantics/ConvexHistory.lean) - ConvexHistory definition
 * JPL Paper anchors `def:temporal-order` (temporal structure, quoted verbatim above) and
   `def:frame` (frame definition; see TaskFrame.lean's module docstring for the verbatim
   four-axiom statement) — cited by `\label` anchor, never by raw line number
@@ -305,11 +305,11 @@ theorem intBoolFrame_saturation : TaskFrame.Saturation intBoolFrame.TaskRel :=
   TaskFrame.saturation_of_permissive intBoolFrame_rel_iff
 
 /--
-Integer time world history with universal domain.
+Integer time convex history with universal domain (total, hence a possible world).
 
 All integer times are in the domain. This is the simplest possible history.
 -/
-def intTimeHistory : WorldHistory intTimeFrame where
+def intTimeHistory : ConvexHistory intTimeFrame where
   domain := fun _ => True
   nonempty_domain := ⟨0, trivial⟩
   convex := fun _ _ _ _ _ _ _ => trivial
@@ -423,11 +423,11 @@ theorem genericNatFrame_saturation [SuccOrder D] [NoMaxOrder D] :
   TaskFrame.saturation_of_permissive (genericNatFrame_rel_iff D)
 
 /--
-Generic polymorphic world history with universal domain.
+Generic polymorphic convex history with universal domain (total, hence a possible world).
 
 Works with the genericTimeFrame, demonstrating polymorphism over the temporal type.
 -/
-def genericTimeHistory : WorldHistory (genericTimeFrame D) where
+def genericTimeHistory : ConvexHistory (genericTimeFrame D) where
   domain := fun _ => True
   nonempty_domain := ⟨0, trivial⟩
   convex := fun _ _ _ _ _ _ _ => trivial

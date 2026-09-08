@@ -128,7 +128,7 @@ induction (module docstring). Every constructor has a case: `atom`, `bot`, `imp`
 -/
 theorem starTruthAt_iff_mem_satSet (h1 : OrderFlow F) (h2 : StateOccurs F)
     (M : TaskModel F) (φ : StarFormula) :
-    ∀ (τ : WorldHistory F) (hτ : τ.IsTotal) (t : F.Duration),
+    ∀ (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration),
       StarTruthAt M τ t φ ↔ τ.states t (hτ t) ∈ satSet M.valuation φ := by
   induction φ with
   | atom p =>

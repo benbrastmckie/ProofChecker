@@ -66,7 +66,7 @@ open FormalSystem.Metalogic
 mirror of `SetConsequenceOnFrames`, against `BLTruthAt`. -/
 def BLSetConsequenceOnFrames (P : TaskFrame → Prop) (Γ : Set BLFormula) (φ : BLFormula) : Prop :=
   ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F)
-    (τ : WorldHistory F) (_ : τ.IsTotal) (t : F.Duration),
+    (τ : ConvexHistory F) (_ : τ.IsTotal) (t : F.Duration),
     (∀ ψ ∈ Γ, BLTruthAt M τ t ψ) → BLTruthAt M τ t φ
 
 /-- Set-premise consequence for the base language at a `FrameClass` tag. Mirror of

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 import Mathlib.Algebra.Order.Group.Int
 import Mathlib.Data.Int.SuccPred
 
@@ -38,8 +38,8 @@ synthesis from a bare bi-serial relation, and computable model checking — rest
   `iter R (n+1) w u = ∃ v, iter R n w v ∧ R v u`
 - `FrameOver.step` — the one-step relation of a `FrameOver intOrder`
 - `IsStepPath` — a bi-infinite walk `f : ℤ → WorldState` stepping between consecutive times
-- `TaskFrame.HF.path` — the bare path underlying a total world history
-- `FrameOver.HFofStepPath` — the total world history determined by a bi-infinite step-path
+- `TaskFrame.HF.path` — the bare path underlying a possible world
+- `FrameOver.HFofStepPath` — the possible world determined by a bi-infinite step-path
 
 ## Main Results
 
@@ -77,7 +77,7 @@ That route has since been taken. `Semantics/DurationClassification.lean` carries
 `archimedean_of_lub` for the Dedekind-complete branch and now also the discrete branch's
 successor-based analogue: `archimedean_of_succ` (the `Archimedean D` instance),
 `isLeast_pos_succ_zero` (the witness), and `intIso : D ≃+o ℤ` packaging both.
-`Semantics/IntTransfer.lean` transports the frame, `TaskModel`, `WorldHistory`, and `TruthAt`
+`Semantics/IntTransfer.lean` transports the frame, `TaskModel`, `ConvexHistory`, and `TruthAt`
 along that isomorphism, yielding `validZTime_iff_validInt : ValidZTime φ ↔ ValidInt φ`.
 
 ## What buying the right to work over ℤ is worth
@@ -250,7 +250,7 @@ end FrameOver
 /-!
 ## `H_F` over ℤ is exactly the set of bi-infinite step-paths
 
-`def:world-history` makes a total world history a task-respecting assignment on *all* of `D`, with
+`def:world-history` makes a possible world a task-respecting assignment on *all* of `D`, with
 an all-pairs obligation. Over ℤ that all-pairs obligation is redundant: adjacency at consecutive
 integers implies it, by `taskRel_eq_iter`. This is what makes both the truth lemma and the model
 checker tractable — a total history over a finite carrier becomes a bi-infinite walk in a finite
@@ -273,7 +273,7 @@ namespace FrameOver
 
 open TaskFrame
 
-/-- The bare path underlying a total world history: totality makes the domain proof uniform, so
+/-- The bare path underlying a possible world: totality makes the domain proof uniform, so
 the dependent `states` field collapses to a plain function `ℤ → WorldState`. -/
 def _root_.FormalSystem.Semantics.TaskFrame.HF.path {F : FrameOver intOrder}
     (τ : TaskFrame.HF F) : ℤ → F.WorldState :=
@@ -307,7 +307,7 @@ theorem respects_of_isStepPath {F : FrameOver intOrder} {f : ℤ → F.WorldStat
     rwa [← hst] at hgo
 
 /--
-The total world history determined by a bi-infinite step-path. Every field is discharged from
+The possible world determined by a bi-infinite step-path. Every field is discharged from
 adjacency: the domain is all of ℤ (so `nonempty_domain` and `convex` are trivial), and
 `respects_task` is `respects_of_isStepPath`.
 -/
@@ -319,7 +319,7 @@ def HFofStepPath (F : FrameOver intOrder) (f : ℤ → F.WorldState) (h : IsStep
 theorem HFofStepPath.path (F : FrameOver intOrder) (f : ℤ → F.WorldState) (h : IsStepPath F f) :
     (HFofStepPath F f h).path = f := rfl
 
-/-- Every total world history over ℤ is a bi-infinite step-path. -/
+/-- Every possible world over ℤ is a bi-infinite step-path. -/
 theorem _root_.FormalSystem.Semantics.TaskFrame.HF.isStepPath {F : FrameOver intOrder}
     (τ : TaskFrame.HF F) : IsStepPath F τ.path := by
   intro n
@@ -329,7 +329,7 @@ theorem _root_.FormalSystem.Semantics.TaskFrame.HF.isStepPath {F : FrameOver int
 /--
 **`H_F` over ℤ is exactly the set of bi-infinite step-paths.**
 
-A function `f : ℤ → WorldState` is the underlying path of some total world history if and only if
+A function `f : ℤ → WorldState` is the underlying path of some possible world if and only if
 it steps between consecutive times. The forward direction instantiates `def:world-history`'s
 all-pairs task-respect at consecutive times; the converse rebuilds the all-pairs obligation from
 adjacency alone, by `taskRel_eq_iter` and induction on the gap.
@@ -341,7 +341,7 @@ theorem mem_HF_iff_adjacent (F : FrameOver intOrder) (f : ℤ → F.WorldState) 
   · intro h; exact ⟨HFofStepPath F f h, rfl⟩
 
 /--
-The predicate-on-histories form of `mem_HF_iff_adjacent`: for a world history already known to be
+The predicate-on-histories form of `mem_HF_iff_adjacent`: for a convex history already known to be
 total, task-respect at consecutive times is equivalent to task-respect at all pairs. The `←`
 direction is the substantive one — it is what lets a construction discharge `respects_task` from a
 single adjacency hypothesis.

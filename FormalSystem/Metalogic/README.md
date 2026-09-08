@@ -142,7 +142,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=subdirs cols=files-lines link=yes -->
 | Directory | Files | Lines | Role |
 |-----------|------:|------:|------|
-| [`Algebraic/`](Algebraic/README.md) | 5 | 2,426 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
+| [`Algebraic/`](Algebraic/README.md) | 5 | 2,427 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
 | [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,150 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
 | [`Conservativity/`](Conservativity/README.md) | 12 | 2,573 | Conservativity of TM⁺ over the base language BL: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
@@ -150,7 +150,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Decidability/`](Decidability/README.md) | 80 | 53,406 | Tableau decision procedure and countermodel extraction |
 | [`Independence/`](Independence/README.md) | 12 | 3,005 | Axiom-independence models |
 | [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,457 | Per-axiom validity lemmas feeding `Soundness.lean` |
-| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,136 | Kamp/Reynolds route, including all of `Kamp/` |
+| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,137 | Kamp/Reynolds route, including all of `Kamp/` |
 <!-- END GENERATED -->
 
 C7's `Metalogic` rollup is larger than the sum of the table above, because it also counts the
@@ -198,7 +198,7 @@ dominates everything else in the repository:
 | `Expressiveness/` | 5 | 9,501 |
 | `DenseModelSurgery/` | 9 | 7,571 |
 | `RealModel/` | 7 | 6,643 |
-| `IntegerModel/` | 6 | 5,664 |
+| `IntegerModel/` | 6 | 5,665 |
 | `GroupModel/` | 6 | 3,364 |
 | `Separation/` | 3 | 926 |
 <!-- END GENERATED -->

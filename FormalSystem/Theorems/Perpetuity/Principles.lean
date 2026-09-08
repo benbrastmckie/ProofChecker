@@ -692,7 +692,7 @@ This is derived syntactically from the TM axioms; it is not axiomatized.
 
 **Semantic Justification** (Corollary 2.11, paper line 2373):
 P5 is semantically valid in task semantics. In any task model, if ◇▽φ holds at (M,τ,t),
-then there exists a world history ρ and time s where φ holds. By the S5 structure of
+then there exists a possible world ρ and time s where φ holds. By the S5 structure of
 possibility and time-invariance of worlds, this means φ is possible at all times in τ.
 -/
 noncomputable def persistence {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.diamond.imp φ.diamond.always := by
@@ -806,7 +806,7 @@ P5: `◇▽φ → △◇φ` (persistent possibility)
 P5 is semantically valid in task semantics:
 1. S5 modal structure ensures possibility is stable across worlds
 2. Temporal homogeneity ensures time-invariance of modal facts
-3. Therefore: ◇▽φ at t implies ◇φ at all times in any world history
+3. Therefore: ◇▽φ at t implies ◇φ at all times in any possible world
 -/
 noncomputable def perpetuity5 {fc : FrameClass} (φ : Formula) : ⊢[fc] φ.sometimes.diamond.imp φ.diamond.always :=
   impTrans (perpetuity4 φ) (persistence φ)

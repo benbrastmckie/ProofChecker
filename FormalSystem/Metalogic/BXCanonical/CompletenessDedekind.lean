@@ -88,7 +88,7 @@ noncomputable example (B : BFMCS (fc := fc) ℝ) : TaskModel (bundleFlowFrame B)
 /-- The flow-line history space — the frame's total-history set `H_F`
 (`def:world-history`) — elaborates at `D := ℝ`. -/
 noncomputable example (B : BFMCS (fc := fc) ℝ) :
-    Set (WorldHistory (bundleFlowFrame B)) :=
+    Set (ConvexHistory (bundleFlowFrame B)) :=
   {σ | ∀ t, σ.domain t}
 
 /--
@@ -324,7 +324,7 @@ theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.RTime �
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_dense : Formula.box Chronicle.nextTop.neg ∈ A) :
     ∃ (F : FrameOver (TemporalOrder.of ℝ)) (TM : TaskModel F)
-      (τ : WorldHistory F) (_ : τ.IsTotal) (t : ℝ),
+      (τ : ConvexHistory F) (_ : τ.IsTotal) (t : ℝ),
       ¬TruthAt TM τ t φ := by
   classical
   -- The finite monadic language and the depth Reynolds sets "one greater than the depth".

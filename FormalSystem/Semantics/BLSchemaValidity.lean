@@ -64,7 +64,7 @@ Witness `F(Hφ)` at `s := t + d`: `t < s` since `0 < d`; and every `u < s` satis
 `φ` itself (at `u = t`) supplies `φ(u)` in both sub-cases.
 -/
 theorem df_valid_of_isLeast_pos {d : F.Duration} (hd : IsLeast {x : F.Duration | 0 < x} d)
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : BLFormula) :
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
     BLTruthAt M τ t
       (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) := by
   simp only [BLTruth.imp_iff, BLTruth.and_iff, BLTruth.someFuture_iff, BLTruth.past_iff]
@@ -94,7 +94,7 @@ transfer theorems in `Metalogic/Conservativity/BaseLanguageSoundness.lean` do no
 stay native. Do not delete either as a duplicate of a BL⁺ result.
 -/
 theorem df_valid_of_succOrder [SuccOrder F.Duration] [Nontrivial F.Duration]
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : BLFormula) :
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
     BLTruthAt M τ t
       (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) :=
   df_valid_of_isLeast_pos (isLeast_pos_succ_zero (D := F.Duration)) M τ t φ
@@ -117,7 +117,7 @@ Given `GGφ` at `t` and `t < s`, density supplies `t < r < s`; apply `GGφ` at `
 `r`) then at `s`.
 -/
 theorem dn_valid_of_denselyOrdered [DenselyOrdered F.Duration]
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : BLFormula) :
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
     BLTruthAt M τ t (φ.allFuture.allFuture.imp φ.allFuture) := by
   simp only [BLTruth.imp_iff, BLTruth.future_iff]
   intro hGG s hs
@@ -153,7 +153,7 @@ The `Order.pred` mirror of `df_valid_of_isLeast_pos`: witness `P(Gφ)` at `s := 
 so `Gφ` (future of `t`) or `φ` itself (at `u = t`) supplies `φ(u)`.
 -/
 theorem swapBL_df_valid_of_predOrder [PredOrder F.Duration] [Nontrivial F.Duration]
-    (M : TaskModel F) (τ : WorldHistory F) (t : F.Duration) (φ : BLFormula) :
+    (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ : BLFormula) :
     BLTruthAt M τ t
       (((φ.allFuture.and φ).and BLFormula.top.somePast).imp φ.allFuture.somePast) := by
   simp only [BLTruth.imp_iff, BLTruth.and_iff, BLTruth.somePast_iff, BLTruth.future_iff]

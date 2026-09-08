@@ -9,7 +9,7 @@ import FormalSystem.Metalogic.Decidability.BiLasso.Orbit
 /-!
 # Window Agreement: What a Lasso Certificate Does and Does Not License
 
-A placed bi-lasso decodes to a total world history, and if it agrees with a bounded partial
+A placed bi-lasso decodes to a possible world, and if it agrees with a bounded partial
 history on that history's own domain then it **extends** it in the paper's sense. That is the
 theorem in this module, and it is what a model checker cites when it reports that a bounded
 observation really is a fragment of a possible world.
@@ -71,9 +71,9 @@ and a failing check. It is quoted here verbatim instead, and recorded as an untr
 Verbatim, from the unanchored footnote in `JPL/possible_worlds.tex`, in the discussion of the
 finite case:
 
-> In this case the conclusion of \textbf{\ref{thm:extension}} becomes effective without appeal to
-> Zorn's lemma: since $W$ is finite, the forward and backward orbits extending a bounded world
-> history must each revisit a world state, so every bounded world history extends to a possible
+> In this case, the conclusion of \textbf{\ref{thm:extension}} becomes effective without appeal to
+> Zorn's lemma: since $W$ is finite, the forward and backward orbits extending a bounded convex
+> history must each revisit a world state, so every bounded convex history extends to a possible
 > world that is eventually periodic in both directions--- a finite prefix plus a finite cycle each
 > way--- and is therefore finitely representable, licensing a finite certificate that a given
 > bounded history is a fragment of a possible world.

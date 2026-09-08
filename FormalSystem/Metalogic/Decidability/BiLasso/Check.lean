@@ -23,7 +23,7 @@ adjacency matrix together with a valuation; `check` answers a question about tha
 ### Stated the other way: this layer performs no part of the finite-model step
 
 Its *input* is already a presentation — see `exists_annot_of_truth`
-(`BiLasso/Extraction.lean`), which takes a `WorldHistory P.toTaskFrame` and compresses it. The
+(`BiLasso/Extraction.lean`), which takes a `ConvexHistory P.toTaskFrame` and compresses it. The
 whole layer is a **model checker for one given finite graph**: it compresses histories *within* a
 presentation. Producing the presentation in the first place, from an arbitrary countermodel, is a
 different theorem that lives nowhere in this directory. Any account of the decidability of
@@ -138,7 +138,7 @@ variable {P : IntPresentation} {φ : Formula}
 /-! ## The specification -/
 
 /--
-**The predicate `check` decides**: `φ` holds at some time of some total world history of the
+**The predicate `check` decides**: `φ` holds at some time of some possible world of the
 presented frame, at which that history is in state `w`.
 
 Stated as its own definition rather than left implicit in `check_correct`, so that a reader can
@@ -148,7 +148,7 @@ Note the existential over the time. It is there in *either* shape of `check` —
 specification, not an artefact of the windowed enumeration.
 -/
 def SatAtState (P : IntPresentation) (w : Fin P.card) (φ : Formula) : Prop :=
-  ∃ (τ : WorldHistory P.toTaskFrame) (hτ : τ.IsTotal) (t : ℤ),
+  ∃ (τ : ConvexHistory P.toTaskFrame) (hτ : τ.IsTotal) (t : ℤ),
     τ.states t (hτ t) = w ∧ TruthAt P.toModel τ t φ
 
 /-! ## The procedure -/

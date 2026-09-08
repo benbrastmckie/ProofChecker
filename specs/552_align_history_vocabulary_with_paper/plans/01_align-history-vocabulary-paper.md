@@ -180,36 +180,43 @@ numbers will have drifted if any sibling task has landed since this plan was wri
 
 ---
 
-### Phase 2: Lean identifier and file rename [IN PROGRESS]
+### Phase 2: Lean identifier and file rename [COMPLETED]
 
 **Goal**: `ConvexHistory` becomes the name of the convex-tier structure, namespace, module file
 and every derived identifier, with a green `lake build FormalSystem` and zero proof-term change.
 
 **Tasks**:
-- [ ] `git mv FormalSystem/Semantics/WorldHistory.lean FormalSystem/Semantics/ConvexHistory.lean`.
-- [ ] Build the explicit target list:
+- [x] `git mv FormalSystem/Semantics/WorldHistory.lean FormalSystem/Semantics/ConvexHistory.lean`.
+- [x] Build the explicit target list:
       `git ls-files 'FormalSystem/**/*.lean' 'FormalSystem/*.lean' 'Tests/**/*.lean' | grep -v '/Boneyard/'`.
-- [ ] Apply `s/WorldHistory/ConvexHistory/g` over that list only. This correctly handles every
+- [x] Apply `s/WorldHistory/ConvexHistory/g` over that list only. This correctly handles every
       CamelCase site including `toWorldHistory`, `isTotal_toWorldHistory` and
       `toWorldHistory_toPartialHistory`.
-- [ ] Apply the separate lowercase rule `s/worldHistory_ext/convexHistory_ext/g` over the same
+- [x] Apply the separate lowercase rule `s/worldHistory_ext/convexHistory_ext/g` over the same
       list (4 sites: `Metalogic/Decidability/Verified/Bridge/RegionFrame.lean` ×3,
       `Semantics/ShiftSet.lean` ×1).
-- [ ] Confirm the 7 `import FormalSystem.Semantics.ConvexHistory` lines resolved
+- [x] Confirm the 7 `import FormalSystem.Semantics.ConvexHistory` lines resolved
       (`Semantics.lean`, `Semantics/Truth.lean`, `Semantics/IntNormalForm.lean`,
       `Semantics/TaskModel.lean`, `Semantics/Extension/Extension.lean`,
       `Metalogic/Decidability/Propositional/Decidable.lean`, `Examples/TemporalStructures.lean`).
-- [ ] Update `FormalSystem/Semantics.lean:242`'s markdown link target
+- [x] Update `FormalSystem/Semantics.lean:242`'s markdown link target
       `[WorldHistory.lean](Semantics/WorldHistory.lean)` -> `ConvexHistory.lean` path.
-- [ ] Update `FormalSystem/Semantics/README.md:23`'s file reference to the renamed module (same
+- [x] Update `FormalSystem/Semantics/README.md:23`'s file reference to the renamed module (same
       commit as the rename, so `readme-lint.sh` broken-file-references stays at 0).
-- [ ] Confirm `PartialHistory`, `toPartialHistory`, `IsTotal`, `ofTotal`, `timeShift` and
+- [x] Confirm `PartialHistory`, `toPartialHistory`, `IsTotal`, `ofTotal`, `timeShift` and
       `TaskFrame.HF` are all unchanged.
-- [ ] `git diff` review confirming **no proof term changed** — every hunk is an identifier, an
+- [x] `git diff` review confirming **no proof term changed** — every hunk is an identifier, an
       import path, or a comment. If a tactic block or term body differs, STOP and record.
-- [ ] Single guarded background build:
+- [x] Single guarded background build:
       `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- lake build FormalSystem`
       under `run_in_background: true`. Do not close the phase before the completion notification.
+      *(deviation: altered — the first attempt was SIGTERM-killed (Lean exit 143) under host memory
+      pressure at module 1008 of 1008 on
+      `Metalogic/Decidability/Verified/Termination/MintBound/MintPotential.lean`, a module this
+      task never touches and which contains zero `ConvexHistory` occurrences. Rather than pay a
+      second ~250-module cycle for the same evidence, Phase 2's build was merged into Phase 5's
+      single `--memory-bound` rebuild, which covers both. Every rename-affected module compiled
+      in the first attempt: it logged exactly one error, the unrelated SIGTERM.)*
 
 **Timing**: 1.5 hours (dominated by the ~250-module rebuild)
 
@@ -240,40 +247,40 @@ below the pre-edit `WorldHistory` count means the target list was too narrow.
 
 ---
 
-### Phase 3: Lean prose, docstrings and paper re-quotation [IN PROGRESS]
+### Phase 3: Lean prose, docstrings and paper re-quotation [COMPLETED]
 
 **Goal**: Every live Lean docstring and `FormalSystem/` README states the paper's three tiers
 correctly, with all `verbatim:` quotations copied fresh from the current paper text.
 
 **Tasks**:
-- [ ] First pass: collapse all `total world histor*` occurrences under `FormalSystem/` to
+- [x] First pass: collapse all `total world histor*` occurrences under `FormalSystem/` to
       "possible world(s)". The modifier is absorbed; do not translate it.
-- [ ] Second pass: remaining bare "world history" occurrences -> "convex history" where the convex
+- [x] Second pass: remaining bare "world history" occurrences -> "convex history" where the convex
       tier is meant, "possible world" where the total tier is meant. Classify each; do not batch.
-- [ ] Re-quote the `PartialHistory.lean` module docstring (lines ~20-35) by **copying** the
+- [x] Re-quote the `PartialHistory.lean` module docstring (lines ~20-35) by **copying** the
       current `def:world-history` block from `possible_worlds.tex:2880-2886` (sha256
       `550661d3…`), not by adjusting in place. Note the paper's two additional changes: "over a
       frame" -> "over a **task** frame", and the deleted inline `%` converse-convention comment
       that lines 24-26 still block-quote — remove that quotation, it no longer exists in source.
-- [ ] Re-quote the same block in the `ConvexHistory.lean` module docstring (lines ~20-30), and add
+- [x] Re-quote the same block in the `ConvexHistory.lean` module docstring (lines ~20-30), and add
       the one-time record that the paper's own body prose (lines 1014-1052) still says "world
       history" for the *total* tier while the settled appendix definition governs — citing line
       1049's collapse sentence. No reconciliation footnote.
-- [ ] Fix the remaining stale-`verbatim:` sites: `PartialHistory.lean:88-90, 92, 171`;
+- [x] Fix the remaining stale-`verbatim:` sites: `PartialHistory.lean:88-90, 92, 171`;
       `ConvexHistory.lean:119` (the `convex` field docstring), `:355`, `:370` (`IsTotal`);
       `Semantics/Extension/Extension.lean:132-134`;
       `Metalogic/Algebraic/FlowFrame.lean:51, 349, 389`;
       `Metalogic/Decidability/Verified/Bridge/RegionFrame.lean:386`.
-- [ ] Dispatch item (c): rewrite the `TaskFrame.HF` docstring (`ConvexHistory.lean` ~405-420) to
+- [x] Dispatch item (c): rewrite the `TaskFrame.HF` docstring (`ConvexHistory.lean` ~405-420) to
       say that an element of `F.HF` **is a possible world** and that `IsTotal` is the predicate
       form of the same notion. **Keep** the already-current quotation at ~425-426 ("The set of all
       possible worlds over $\F$ is denoted $H_{\F}$") and build the rewrite around it. Introduce
       no `abbrev PossibleWorld`.
-- [ ] Dispatch item (d): split `FormalSystem/Semantics.lean:185`'s single row
+- [x] Dispatch item (d): split `FormalSystem/Semantics.lean:185`'s single row
       `| World History | τ : X → W convex | WorldHistory F with convex proof |` into two rows,
       one per tier (convex history -> `ConvexHistory F`; possible world -> `F.HF` / `IsTotal`).
       Update the surrounding lines 107 and 167 prose to match.
-- [ ] Fix the four substantive (non-terminological) README errors:
+- [x] Fix the four substantive (non-terminological) README errors:
       - `FormalSystem/Semantics/README.md:39` — "Partial world-histories **on convex subsets**"
         is doubly wrong; partial histories are precisely the tier without a convexity requirement.
       - `FormalSystem/Semantics/README.md:49` — "`WorldHistory`: **Infinite sequence** of worlds"
@@ -284,9 +291,23 @@ correctly, with all `verbatim:` quotations copied fresh from the current paper t
       - Re-stamp the dates on `FormalSystem/Semantics/README.md` and
         `FormalSystem/Semantics/Extension/README.md` (both already flagged STALE DATE by
         `readme-lint.sh`, and both edited here).
-- [ ] Confirm no docstring was net-shortened by deletion — every change is a replacement (C19
+- [x] Confirm no docstring was net-shortened by deletion — every change is a replacement (C19
       headroom is 2.33 points).
-- [ ] Do **not** build in this phase; the docstring invalidations are paid once in Phase 5.
+- [x] Do **not** build in this phase; the docstring invalidations are paid once in Phase 5.
+- [x] *(deviation: added — `specs/paper-definitions-of-record.md`'s "Untracked sources" block,
+      which Phase 1 was told to leave unchanged as a hashed verbatim quotation, was found to carry
+      the **superseded** text of the finite-case footnote: the live paper
+      (`possible_worlds.tex:1772`) now reads "bounded convex history" where the block reads
+      "bounded world history", and gained a comma after "In this case". The block is in fact
+      **untracked** — no `sha256:` line, no manifest row, not read by
+      `check-paper-definitions.sh` — so re-quoting it moves no pin. It was re-quoted here together
+      with `Metalogic/Decidability/BiLasso/Agreement.lean`, which block-quotes the same footnote,
+      so the two copies agree and both are verbatim against the live paper.)*
+- [x] *(deviation: altered — Phases 2 and 3 landed in one commit. Phase 3 edits docstrings inside
+      the same ~30 files Phase 2 renames identifiers in, and Phase 2's close slipped past Phase 3's
+      start when its build was OOM-killed; the two edit sets are not separable by pathspec after
+      that. Phase 2's atomic-batch guarantee is preserved in substance: the pure-rename property was
+      verified before any Phase 3 edit, by diffing every changed line with the rename applied.)*
 
 **Timing**: 2 hours
 

@@ -101,7 +101,7 @@ determinism at the duration `s - t` identifies the two targets. `s - t` is negat
 `s < t`, which is precisely why `TaskFrame.Deterministic` quantifies `d` over all of `F.Duration`.
 -/
 theorem states_eq_of_deterministic (hD : F.Deterministic)
-    {τ σ : WorldHistory F} (hτ : τ.IsTotal) (hσ : σ.IsTotal) {t : F.Duration}
+    {τ σ : ConvexHistory F} (hτ : τ.IsTotal) (hσ : σ.IsTotal) {t : F.Duration}
     (h : SameStateAt τ σ t) (s : F.Duration) :
     τ.states s (hτ s) = σ.states s (hσ s) := by
   have hτr := τ.respects_task t s (hτ t) (hτ s)
@@ -118,7 +118,7 @@ history and time, for every `StarFormula φ`.
 transports the truth of `φ` from `τ` to `σ`.
 -/
 theorem stab_iff_of_deterministic (hD : F.Deterministic) (M : TaskModel F)
-    {τ : WorldHistory F} (hτ : τ.IsTotal) (t : F.Duration) (φ : StarFormula) :
+    {τ : ConvexHistory F} (hτ : τ.IsTotal) (t : F.Duration) (φ : StarFormula) :
     StarTruthAt M τ t (.stab φ) ↔ StarTruthAt M τ t φ := by
   constructor
   · intro h; exact of_stab M τ hτ t φ h

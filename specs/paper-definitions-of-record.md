@@ -575,9 +575,11 @@ was re-run after the edit and its drifted-anchor set was unchanged (the six `def
 `def:BX-z`, `def:BX-d`, `def:BX-r`, `def:TMplus` anchors owned by the separate re-pin work);
 `def:world-history`, `thm:extension` and `cor:occurrence` do not appear in it.
 
-Two occurrences of "world history" survive below and are deliberate: the drift-log row under
-"Drift correction and rename absorption (2026-09-07)" quotes the *superseded* wording as archival
-evidence, and the `>`-quoted footnote under "Untracked sources" is verbatim paper text.
+One occurrence of the superseded wording survives below and is deliberate: the drift-log row
+under "Drift correction and rename absorption (2026-09-07)" quotes it as archival evidence of what
+the paper used to say. The `>`-quoted footnote under "Untracked sources" was found to be quoting
+the *superseded* text of a footnote the paper has since revised, and was re-quoted from the live
+paper in the same change; see the note recorded there.
 
 ## How to read this file
 
@@ -1782,12 +1784,20 @@ the passage has acquired a resolvable anchor upstream first.
   frames) and `FormalSystem.Semantics.TaskFrame.extend_periodic` (general finite carrier).
 - **Text**:
 
-  > In this case the conclusion of \textbf{\ref{thm:extension}} becomes effective without appeal
+  > In this case, the conclusion of \textbf{\ref{thm:extension}} becomes effective without appeal
   > to Zorn's lemma: since $W$ is finite, the forward and backward orbits extending a bounded
-  > world history must each revisit a world state, so every bounded world history extends to a
+  > convex history must each revisit a world state, so every bounded convex history extends to a
   > possible world that is eventually periodic in both directions--- a finite prefix plus a finite
   > cycle each way--- and is therefore finitely representable, licensing a finite certificate that
   > a given bounded history is a fragment of a possible world.
+
+  Re-quoted 2026-09-07 from the live paper alongside the `def:world-history` vocabulary
+  alignment: the footnote formerly read "bounded world history" in both places and now reads
+  "bounded convex history", and it gained a comma after "In this case". This source is
+  **untracked** — it carries no `sha256:` line and no manifest row, and is not read by
+  `scripts/check-paper-definitions.sh` — so re-quoting it moves no pin and re-runs no checker.
+  `FormalSystem/Metalogic/Decidability/BiLasso/Agreement.lean`, which block-quotes the same
+  footnote in its module docstring, was re-quoted in the same change.
 
 - **What the formalisation preserves**: the doubly ultimately-periodic extension and the finite
   certificate, both in full. "Without appeal to Zorn's lemma" is preserved as *no Zorn* — an
