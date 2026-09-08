@@ -412,7 +412,7 @@ than attempted.
 
 ---
 
-### Phase 6: Full gate, measurement report, and summary [NOT STARTED]
+### Phase 6: Full gate, measurement report, and summary [IN PROGRESS]
 
 **Goal**: Run the complete repository gate set, score the completion criterion against the frozen
 baseline, and write the execution summary.
