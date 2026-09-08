@@ -410,32 +410,32 @@ changes the name set and is caught before the build gate.
 
 ---
 
-### Phase 6: Extract the residual tail and finalize the aggregator (5 modules) [NOT STARTED]
+### Phase 6: Extract the residual tail and finalize the aggregator (5 modules) [COMPLETED]
 
 **Goal**: Move the last five sections out and reduce `MintBound.lean` to a BiLasso-shaped
 aggregator: license, 18 imports, and a reader-facing `## Submodules` map.
 
 **Tasks**:
-- [ ] Extract `LabelHeadroom.lean` from lines 11,163-11,577. Imports:
+- [x] Extract `LabelHeadroom.lean` from lines 11,163-11,577. Imports:
       `...MintBound.ClosureResidual`, `...MintBound.TimeCensus`. Contains
       `section FreshWorldRefutationAtEveryLabel` in full.
-- [ ] Extract `PostBlocking.lean` from lines 11,578-12,912. Imports: `...MintBound.SigmaFixed`.
+- [x] Extract `PostBlocking.lean` from lines 11,578-12,912. Imports: `...MintBound.SigmaFixed`.
       Contains `section PostBlockingSettlesRefutation` and its nested `section
       PostBlockingRunProbe` in full.
-- [ ] Extract `UntlSnceFree.lean` from lines 12,913-13,598. Imports: `...MintBound.SigmaFixed`.
-- [ ] Extract `BoxFree.lean` from lines 13,599-14,128. Imports: `...MintBound.UntlSnceFree`.
-- [ ] Extract `MintPaysAssembly.lean` from lines 14,129-14,776. Imports:
+- [x] Extract `UntlSnceFree.lean` from lines 12,913-13,598. Imports: `...MintBound.SigmaFixed`.
+- [x] Extract `BoxFree.lean` from lines 13,599-14,128. Imports: `...MintBound.UntlSnceFree`.
+- [x] Extract `MintPaysAssembly.lean` from lines 14,129-14,776. Imports:
       `...MintBound.UntlSnceFree`.
-- [ ] Reduce `MintBound.lean` to the aggregator: keep the license header; replace the body with 18
+- [x] Reduce `MintBound.lean` to the aggregator: keep the license header; replace the body with 18
       `import FormalSystem.Metalogic.Decidability.Verified.Termination.MintBound.*` lines; adapt
       the existing 47-line module docstring (lines 9-55) into a `## Submodules` map with one entry
       per module, matching `FormalSystem/Metalogic/Decidability/BiLasso.lean`'s shape. Drop
       `namespace` and `open` — the aggregator declares nothing.
-- [ ] Confirm `FormalSystem/Metalogic/Decidability.lean` is **not** edited: the aggregator
+- [x] Confirm `FormalSystem/Metalogic/Decidability.lean` is **not** edited: the aggregator
       re-exports everything, so the single downstream edge is preserved automatically.
-- [ ] Re-run Phase 1 checks (a), (b), (c). Check (c) must now return empty.
-- [ ] **Build gate** (detached + guarded).
-- [ ] Commit the batch as one objective once green.
+- [x] Re-run Phase 1 checks (a), (b), (c). Check (c) must now return empty.
+- [x] **Build gate** (detached + guarded).
+- [x] Commit the batch as one objective once green.
 
 **Timing**: 2 hours
 
@@ -469,26 +469,28 @@ was missed and Phase 2's set was short.
 
 ---
 
-### Phase 7: Documentation — directory README and module tables [NOT STARTED]
+### Phase 7: Documentation — directory README and module tables [COMPLETED]
 
 **Goal**: Bring the two READMEs into agreement with the 18-module result, in parallel with the
 extraction phases. Markdown only; zero compile surface.
 
 **Tasks**:
-- [ ] Add `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound/README.md` following
+- [x] Add `FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound/README.md` following
       the repo's directory-README convention, carrying the 18-module table (module, lines,
       declarations, one-line role) and the import DAG's shape, including its parallel branches.
-- [ ] Update `Termination/README.md`: the `| MintBound.lean | 14770 | ... |` row is already stale
+- [x] Update `Termination/README.md`: the `| MintBound.lean | 14770 | ... |` row is already stale
       against 15,684 and must now describe the aggregator plus its directory.
-- [ ] Cite declaration names and file names only. **No task-number citations** anywhere under
+- [x] Cite declaration names and file names only. **No task-number citations** anywhere under
       `FormalSystem/` — invariant C9 of `docs/development/MODULE_INVARIANTS.md` and
       `.claude/rules/no-task-references-in-deliverables.md`.
-- [ ] Verify every module name and path written here resolves against the tree as it stands when
+- [x] Verify every module name and path written here resolves against the tree as it stands when
       this phase runs; leave line counts to Phase 8 to confirm.
 
 **Timing**: 1 hour
 
-**Depends on**: 3
+**Depends on**: 3 *(deviation: altered — run after Phase 6 rather than overlapped with Phase 4,
+so that every module path the READMEs cite already resolves and no intermediate commit can leave
+C5/C12/C13 red. There is no second agent here, so the overlap bought nothing.)*
 
 **Verification Tier**: prose
 
