@@ -339,10 +339,11 @@ perpetual deferral obstruction -- an Until obligation can be perpetually deferre
 to later chain stages without ever being fulfilled.
 
 ### StageInductionGapAnalysis
-Dead-end proof attempts for `IsSuccArchimedean` of the chronicle limit domain
+Dead-end proof attempts for `IsSuccArchimedean` of the chronicle limit domain.
 Analysis confirmed the gap scenario is genuine: the constant-MCS case
-is consistent with all axioms including Z1 and Prior-UZ. Task 129 (weak/reflexive
-completeness) bypasses this via a Henkin canonical model.
+is consistent with all axioms including Z1 and Prior-UZ. The weak/reflexive completeness
+route bypasses this via a Henkin canonical model instead -- see
+`Metalogic/WeakCanonical/README.md`.
 
 ### SorriedDeclExcisions
 Dead-sorry closure excisions: verified-dead declaration closures (each carrying
@@ -438,29 +439,87 @@ See subdirectory README for recovery options.
   Metalogic/ directory instead)
 - You see a sorry in the Boneyard and think it needs fixing (it does not)
 
-## Task Cross-References
+## Provenance: When Each Subtree Was Archived
 
-| Task | What It Archived | When |
-|------|-----------------|------|
-| 80 | UltrafilterDeadCode (23 sorries from UltrafilterChain.lean) | 2026-03-31 |
-| 83 | TAxiomDependentCode (strict semantics migration) | 2026-04-03 |
-| 85 | DiscreteXY (x_content/y_content removal) | 2026-04-05 |
-| 93 | ChainCompleteness, additional dead code | 2026-04-10 |
-| 94 | StrictSemanticsLegacy (9 files, 107 sorries) | 2026-04-12 |
-| 105 | DenseChronicle (dense chronicle attempts) | 2026-04-22 |
-| 107 | QuasimodelOracle, NonBurgessSeed, DefectDirectedChain | 2026-04-28 |
-| 109 | ClosedGuardLegacy | 2026-04-30 |
-| 113 | DeadCanonicalModel (enriched seed) | 2026-05-02 |
-| 115 | Made XuLemma321Legacy doubly obsolete | 2026-05-13 |
-| 123 | StageInductionGapAnalysis | 2026-05-13 |
-| 132 | Consolidated root Boneyard/ into this location | 2026-05-13 |
-| 21 | UltrafilterFrame (TenseS5Algebra + UltrafilterFrame from Algebraic/) | 2026-05-20 |
-| 173 | OpenGuardInvalid (27 sorry-tainted definitions from TemporalDerived.lean) | 2026-05-20 |
-| 225 | BXPipelineGapAnalysis (ChronicleNoGaps + HenkinDiscreteChain, dead BX pipeline) | 2026-05-30 |
-| 268 | BXPipelineDeadCode/ReynoldsModelSurgery.lean (deprecated no_gaps_faithful) | 2026-06-02 |
-| 255 | BXPipelineDeadCode/ReynoldsNoGapsDeprecated.lean (4 dead definitions from ReynoldsNoGaps.lean) | 2026-06-04 |
-| 301 | DeadChronicleGapElimination (GapElimination.lean from ChronicleToCountermodel) | 2026-06-15 |
-| 302 | KampNegationClosure (4 files), RabinovichPath (4), StaviDiscretePath (3), BXCanonicalQuasimodel (1), DeadConvergenceProof relocate, TransferDead.lean, inline dead blocks | 2026-06-16 |
+Every row below is keyed on a **date and a commit SHA**, which an external reader of this
+formalization can follow with `git show`. This table used to be keyed on repository-internal
+task numbers instead -- integers that resolve only against `specs/`, are renumbered by archive
+operations, and mean nothing to anyone outside this working copy. Date and SHA are deliberately
+paired: the pair is redundant enough that the date still locates the event if the history is
+ever rewritten.
+
+Recovering these needed one non-obvious step, recorded here so it does not have to be
+rediscovered. `git log --follow` against a *current* path stops at `5359fef7d`, the tree-wide
+rename `Theories/Bimodal -> FormalSystem`; the per-event history survives under the pre-rename
+path. Query all three prefixes at once:
+
+```bash
+git log --format='%h %ad' --date=short --reverse -- \
+  "Theories/Bimodal/Boneyard/<name>" "Boneyard/<name>" "FormalSystem/Boneyard/<name>" | head -1
+```
+
+| Archived | Commit | What arrived |
+|----------|--------|--------------|
+| 2026-03-31 | `6cd694b36` | `UltrafilterDeadCode/` -- 23 sorries removed from `UltrafilterChain.lean` |
+| 2026-03-31 | `2c1d9d6b3` | `BundleTemporalCoherence/` -- bundle-level coherence, semantically wrong for TM |
+| 2026-04-03 | `d518abe8a` | `TAxiomDependentCode/` -- the strict-semantics migration |
+| 2026-04-07 | `8c3cddb33` | `ChainCompleteness/` -- the earlier chain completeness iteration |
+| 2026-04-08 | `8a0c51a58` | `DiscreteXY/` -- `x_content`/`y_content` removal |
+| 2026-04-12 | `b75a264ff` | `StrictSemanticsLegacy/` -- 9 files moved as a unit |
+| 2026-04-16 | `d06951f1e` | `RoundRobinChain/` -- blocked by the BX11 perpetual-deferral obstruction |
+| 2026-04-20 | `0527ce5a4` | `DefectDirectedChain/` -- the defect metric failed to decrease |
+| 2026-04-20 | `e76e2d332` | `DeadCanonicalModel/` -- the enriched seed approach |
+| 2026-04-20 | `c5aee214a` | `QuasimodelOracle/` -- oracle chains, backward transfer invalid |
+| 2026-04-27 | `9226a59ae` | `ClosedGuardLegacy/` -- closed-guard `[t,s]` interval semantics |
+| 2026-05-01 | `2e85aa64f` | `NonBurgessSeed/` -- legacy `g_content`/`h_content` |
+| 2026-05-08 | `11220eb1c` | `DenseChronicle/` -- dense chronicle attempts, hit the density gap |
+| 2026-05-13 | `10555237c` | `XuLemma321Legacy/` -- made doubly obsolete by `dcs_neg_union_consistent` |
+| 2026-05-13 | `658283450` | `StageInductionGapAnalysis/` -- the gap scenario confirmed genuine |
+| 2026-05-15 | `ed0910179` | `VacuousKEquiv.lean` -- two theorems whose proofs were reflexivity |
+| 2026-05-20 | `2dbbd43c8` | `BX1DependentCode/` -- BX1 removed under irreflexive semantics |
+| 2026-05-20 | `b1f63cf4e` | `FiltrationOrdering/` -- Sigma-restricted ordering for filtration |
+| 2026-05-20 | `eded6388a` | `OpenGuardInvalid/` -- 27 sorry-tainted definitions from `TemporalDerived.lean` |
+| 2026-05-20 | `07c38c6a0` | `UltrafilterFrame/` and `ScheduleBasedBFMCS/` |
+| 2026-05-29 | `bcb2b36f9` | `DeadConvergenceProof/` -- the dead convergence proof for `succ_cofinal` |
+| 2026-05-30 | `654270043` | `BXPipelineGapAnalysis/` -- blocked by the falsity of `no_gaps_faithful` |
+| 2026-06-03 | `6afa16e18` | `BXPipelineDeadCode/` -- deprecated Reynolds model surgery and dead definitions |
+| 2026-06-16 | `95c67593f` | `DeadChronicleGapElimination/` -- the 10-declaration `sorryAx` closure |
+| 2026-06-16 | `82d7bf6f2` | `KampNegationClosure/` and `RabinovichPath/` (now under `Kamp/`) |
+| 2026-06-16 | `e94c38ca7` | `StaviDiscretePath/` and `BXCanonicalQuasimodel/` |
+| 2026-07-08 | `8845f0623` | `MergedBracketQuarantine/` -- the refuted merged-bracket route |
+| 2026-07-14 | `c29fa7465` | `RestrictedMCSDeferral/` -- the deferral-restricted MCS variant |
+| 2026-07-24 | `56e9f62ff` | `ConservativeExtension/`, `FMPVariants/`, `SoundnessVariants/` -- the orphan sweep |
+| 2026-07-24 | `95dd182e1` | `SorriedDeclExcisions/` -- the first dead-sorry closure excisions |
+| 2026-07-26 | `29d49f42d` | `BundleSuccessorSeed/` -- 72 declarations with zero live consumers |
+| 2026-07-26 | `4fa3f7912` | `SupersededCompleteness/` -- `Metalogic/Completeness.lean`, zero live importers |
+| 2026-08-24 | `94da79d88` | `Kamp/` -- the two archives consolidated and the flat Kamp files regrouped |
+| 2026-09-02 | `ab24de633` | `BundleDeadHalf/` -- the cascade after breaking the `Core -> Bundle` cycle |
+| 2026-09-03 | `cabe89a9e` | `LimitMCSCoherenceDeadCases/` -- five theorems from the `TemporalSide` parameterization |
+| 2026-09-03 | `4bebf5796` | `RestrictedMCSBoundedness/` -- retired alongside its already-archived consumer |
+| 2026-09-07 | `1ff119610` | `RetiredTactics/` -- fourteen tactic declarations with zero real invocations |
+
+### A note on task-number citations inside this tree
+
+At the start of this repair the archive carried 90 task-number citations across 34 of its files.
+**Two** of them were in this file; both are gone. That leaves **88 across 33 files** -- 24
+subdirectory READMEs and 9 archived `.lean` docstrings -- each sitting next to the code it
+describes.
+
+Check **C9** (zero task-number citations under `FormalSystem/`) therefore keeps its
+`grep -v '/Boneyard/'` exclusion, and this is a recorded decision rather than an oversight.
+Narrowing the exclusion today would turn a green gate red over those 88 occurrences, and clearing
+them would mean rewriting the provenance prose of 33 archived files -- work with a real cost and
+little reader benefit. A red gate is a
+worse publication state than a documented exclusion. The measurement is reproducible:
+
+```bash
+grep -rniE --include='*.lean' --include='*.md' \
+  '\b(tasks?[[:space:]]+#?[0-9]+|task-[0-9]+)\b|specs/[0-9]{3}_[A-Za-z0-9_]+' \
+  FormalSystem/Boneyard | wc -l
+```
+
+If that count is ever driven to zero, drop the `grep -v '/Boneyard/'` filter from C9 and the rule
+becomes gate-enforced across the whole of `FormalSystem/`.
 
 ## Git Retrieval
 

@@ -403,23 +403,23 @@ Phase 8 rather than carrying them forward untested.
 
 ---
 
-### Phase 6: Re-Key Provenance to Durable Anchors [NOT STARTED]
+### Phase 6: Re-Key Provenance to Durable Anchors [COMPLETED]
 
 **Goal**: Fix D4 — replace provenance keyed to repository-internal task numbers with anchors an
 external reader of a published formalization can actually follow.
 
 **Tasks**:
-- [ ] Recover a commit SHA for each archival event, following renames
+- [x] Recover a commit SHA for each archival event, following renames
       (`git log --follow --diff-filter=A -- <path>`, `git log --diff-filter=R`), and pair each SHA
       with the date already present in the §Task Cross-References `When` column.
-- [ ] Rewrite §Task Cross-References as a provenance table keyed on date + short SHA, with the
+- [x] Rewrite §Task Cross-References as a provenance table *(retitled "Provenance: When Each Subtree Was Archived"; grew from 19 rows to 37, one per archival event, covering all 40 top-level entries)* keyed on date + short SHA, with the
       "What It Archived" text preserved verbatim. Retitle the section accordingly — "Task
       Cross-References" is itself the internal framing being retired.
-- [ ] Drop or re-key the `Task` column in §Directory Inventory (Phase 5's structure decides which);
+- [x] Drop the `Task` column in §Directory Inventory *(dropped in Phase 5: generation preserves exactly one hand-written trailing column)* (Phase 5's structure decides which);
       if the mechanism chosen there is generation, this column must be folded into the single
       hand-written trailing column or dropped.
-- [ ] Sweep the top-level README for the remaining C9-shaped citations and clear them.
-- [ ] Measure whether C9's `/Boneyard/` exclusion can now be narrowed (for example, to `.md` files
+- [x] Sweep the top-level README for the remaining C9-shaped citations and clear them.
+- [x] Measure whether C9's `/Boneyard/` exclusion can now be narrowed *(measured: 88 occurrences across 33 files remain after clearing this README's two. Recorded the exclusion and its reason in the README rather than tightening C9 into a red gate; `scripts/check-module-invariants.sh` NOT modified in this phase.)* (for example, to `.md` files
       only, or dropped entirely). Then either tighten `scripts/check-module-invariants.sh`'s C9
       filter so this repair is gate-enforced, or record in the README why it stays excluded. Do not
       tighten C9 into a red gate.
@@ -441,7 +441,7 @@ before deciding the scope of any C9 tightening — a naive tightening would pull
 
 **Files to modify**:
 - `FormalSystem/Boneyard/README.md` - §Task Cross-References re-keyed; `Task` column resolved
-- `scripts/check-module-invariants.sh` - C9 filter, only if the measurement supports narrowing it
+- `scripts/check-module-invariants.sh` - C9 filter *(NOT modified: the measurement did not support narrowing it)*
 
 **Verification**:
 - `bash scripts/check-module-invariants.sh --no-build` reports ALL CHECKS PASSED, with C9 green
