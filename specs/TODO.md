@@ -1,5 +1,5 @@
 ---
-next_project_number: 554
+next_project_number: 555
 ---
 
 # TODO
@@ -11,8 +11,8 @@ next_project_number: 554
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,550,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537,548 | 193,298,464,502,535,547 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,547,551,554 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,548,550 | 193,298,464,502,535,547,554 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500,552 | 231,465,497,548 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 125,429,543,553 | 428,498,499,500,552 | algebraic-representation, decidability, metalogic, ... |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
@@ -83,7 +83,7 @@ next_project_number: 554
 
 ### Paper Refactor
 
-547 [PLANNED] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
+547 [IMPLEMENTING] — Replace the historical extension names TM⁺_f, TM⁺_c, TM⁺_dc, TM_f
   └─ 548 [NOT STARTED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
     └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
       └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
@@ -91,7 +91,8 @@ next_project_number: 554
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+554 [NOT STARTED] — Retire the nine vacuous `_run` theorems in `MintBound.lean`, land
+  └─ 550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -113,6 +114,38 @@ next_project_number: 554
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 554. Retire the nine vacuous _run theorems and correct the register count
+- **Effort**: 3-5 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: publication-quality
+- **Dependencies**: None
+
+**Description**: Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count.
+
+WHY THIS EXISTS. The dependency trace recorded in `specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md` established NO DEPENDENCY: `FormalSystem.Metalogic.Decidability.decide` reaches zero constants from `MintBound.lean`, and a whole-environment reverse-dependency scan found zero dependents of the nine outside the nine themselves. Its recommended disposition, on the NO-DEPENDENCY branch, is RETIRE. Zero reverse-dependents makes the removal cost-free. Consume that summary's Section 4 (delete set / keep set, enumerated with no overlap) rather than re-deriving it.
+
+THE PROBLEM RETIREMENT SOLVES. The nine read as headline results ("the tableau construction succeeds") while establishing nothing -- they carry an unsatisfiable hypothesis. A reader meeting `buildTableauAt_isSome_of_budget_fixed_run` at its declaration site gets no local signal of that; the refutation is recorded thousands of lines away in the C9 register. In a publication-facing library that is worse than the theorems being absent.
+
+SCOPE:
+1. Delete the nine per the summary's enumerated delete set (`MintBound.lean:12311-12487`, prose `:12288-12309`, forward reference `:5194-5195` -- re-locate by name, not by line number; the trace already found research line numbers stale once).
+2. Preserve the summary's keep set exactly: the `PostBlockingSettlesRun` predicate itself, the whole refutation apparatus, the live `PostBlockingSettlesSeedRun` successor line, and C9 entries 22/24/25.
+3. Land amendment (a): move `one_le_mintAwareFuel'` and `postBlockingSettlesRun_mintAwareFuel_false` from `specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/Widen.lean` into `MintBound.lean` (six lines, already proved, axioms `[propext, Classical.choice, Quot.sound]`). This closes the register's vacuity claim over the un-`At` `mintAwareFuel` figure, not only `mintAwareFuelAt`. These were deliberately not landed during the trace because that task could not write to this file.
+4. Land amendment (b): record row 2 (`buildTableauAt_isSome_of_budget_of_run`) separately in the register. It carries the unrestricted `PostBlockingSettles` and is refuted by `postBlockingSettles_fuel_zero_false` at ALL FOUR frame classes, so entry 25's `.ZTime` caveat does not apply to it. It currently reads as one of a uniform block; it is not.
+5. Correct the count wherever it appears: the vacuous set is NINE, not six. "Its five `_run` siblings" is an undercount.
+
+PRECISION REQUIRED IN THE COMMIT MESSAGE AND THE REGISTER. Rows 1 and 3-9 are established vacuous at `.Base`, `.Dense` and `.RTime` only, and are undecided but equally undelivering, with zero dependents, at `.ZTime`. Row 2 is unconditionally vacuous at all four. Do not flatten these into one claim.
+
+EXPLICITLY OUT OF SCOPE. Do not execute the `.ZTime` strengthening -- its only justification was the DEPENDS-at-`.ZTime` branch, which the trace ruled out. Do not touch `docs/theorem-index.md:113`: the trace confirmed it correct on a ten-of-ten column check and the NO-DEPENDENCY branch mandates leaving it alone. Do not decompose the file; that is a separate task.
+
+IF DELETION IS UNWANTED. Retiring nine named theorems from a publication-facing library is a call a human may prefer to make. The summary's Section 7 records the fallback in full: keep the nine and add a vacuity notice at each declaration site naming the refutation by name and the frame classes at which vacuity is established. That fallback is strictly worse on the publication criterion but strictly better than the status quo. If the fallback is chosen, execute Section 7 instead of steps 1-2 and still land steps 3-5.
+
+ACCEPTANCE. The nine are gone (or annotated, on the fallback); full `lake build` green; no `sorry`, no axiom additions; `#print axioms` unchanged for every surviving `Decidability` result. Note that re-running `probes/RevDep.lean` will report 0 trivially once the names no longer resolve -- the meaningful regression check is that `probes/DepTrace2.lean` still reports `constants from MintBound reached by decide: 0`.
+
+Dependencies: none outstanding. Task 463, which formerly owned this file, is complete.
+
+---
 
 ### 553. Decide convex history layer collapse
 - **Status**: [NOT STARTED]
@@ -197,7 +230,7 @@ CONSTRAINTS. Do not delete anything in the characterization or recommendation st
 - **Status**: [NOT STARTED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
-- **Dependencies**: Task 549
+- **Dependencies**: Task 549, Task 554
 
 **Description**: Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.
 
@@ -213,6 +246,8 @@ SCOPE:
 CONSTRAINTS. Preserve every existing declaration name -- this is a decomposition, not a rename or a cull; removing declarations is a separate decision and belongs to the disposition task. Do not weaken or drop C9 register content while relocating it; the register's value is that it prevents re-attempting refuted approaches, and a lossy move destroys exactly that. Expect expensive builds: this module has cost 5-25 minutes per pass under concurrent load, so batch verification rather than rebuilding per edit.
 
 Dependencies: 549. If its disposition recommendation is to retire the six vacuous `_run` theorems, that removes a section of this file, and decomposing before knowing so is wasted work.
+
+DEPENDENCY UPDATE (added after the trace returned its verdict): also depends on the retirement task. The trace recommended RETIRE, and the retirement removes a section of this same file, so decomposing first would be wasted work and the two would collide on MintBound.lean. Note the count correction the trace established: the vacuous set is NINE, not six, as this description says above.
 
 ---
 
@@ -263,7 +298,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 547. Replace historical system names in docstrings
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 546
