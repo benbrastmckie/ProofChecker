@@ -15,7 +15,7 @@ import FormalSystem.Metalogic.Algebraic.FlowFrame
 
 Machine-checks `¬ ⊢ᴮᴸ[Discrete] Z1 p` at the non-Archimedean discrete carrier `ℚ ×ₗ ℤ`, closing
 CEF with **both** halves in-tree (`Conservativity.z1_translate` is the other half, already
-sorry-free), and refutes `TM_f`'s weak completeness over ℤ-time (report §6.1).
+sorry-free), and refutes `TM_z`'s weak completeness over ℤ-time (report §6.1).
 
 ## The countermodel
 
@@ -28,9 +28,12 @@ refutation never leaves `TaskFrame`; `Semantics/LexCarrier.lean` supplies the `S
 DiscreteCarrierProbe.lean` already probes this carrier for the four `FrameClass.Base` binders,
 so the two modules read as one story.
 
-By Hölder (paper `def:TMplus-f`, line 4613) `ValidZTime` is validity over ℤ-time up to
-isomorphism, which is what makes Deliverable 2 the `TM_f`-vs-`TM⁺_f` completeness gap rather
-than a weaker claim.
+The paper's `def:TMplus-f` pins the discrete class over which `BX_z` and `TM⁺_z` are sound and
+complete to exactly `ℤ`-time, so `ValidZTime` is validity over `ℤ`-time up to isomorphism — which
+is what makes Deliverable 2 the `TM_z`-vs-`TM⁺_z` completeness gap rather than a weaker claim.
+(The paper reached that conclusion through Hölder's theorem in an earlier revision; the argument
+now runs through the failure of `UZ` and `Z1` over non-Archimedean discrete orders, and the
+conclusion is unchanged. See `Metalogic/Conservativity.lean` for the full statement.)
 
 ## Main Results
 
@@ -43,7 +46,7 @@ than a weaker claim.
 ## References
 
 * The TM-completeness status report (`01_tm-completeness-status.md`), §6.1
-* `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_f half)
+* `FormalSystem/Metalogic/Conservativity/Backward.lean` — `Z1`, `z1_translate` (the TM⁺_z half)
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteZTime`
 -/
 
@@ -167,7 +170,7 @@ theorem z1_not_true_at_zero (p : Atom) :
 /-! ## The two CEF deliverables -/
 
 /--
-**Deliverable 1.** `Z1 p` is not `TM_f`-derivable: soundness of `bl_soundness_ztime_succ`
+**Deliverable 1.** `Z1 p` is not `TM_z`-derivable: soundness of `bl_soundness_ztime_succ`
 against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 `Semantics/LexCarrier.lean`. Combined with `Conservativity.z1_translate`, this is CEF refuted
 with both halves machine-checked.
@@ -185,7 +188,7 @@ gives `ValidZTime (tr (Z1 p))`, and `blValidZTime_iff_validZTime_tr` crosses the
 bridge.
 
 Combined with `not_bl_derivable_z1`, this refutes the `.ZTime` row of Phase 4's reduction:
-**`TM_f` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
+**`TM_z` is not weakly complete over ℤ-time.** Stated as the negation of `TMCompleteZTime`
 so the two phases visibly compose.
 -/
 theorem blValidZTime_z1 (p : Atom) : BLValidZTime (Conservativity.Z1 (BLFormula.atom p)) := by
@@ -193,9 +196,9 @@ theorem blValidZTime_z1 (p : Atom) : BLValidZTime (Conservativity.Z1 (BLFormula.
   obtain ⟨d⟩ := Conservativity.z1_translate (BLFormula.atom p)
   exact soundness_ztime_valid d
 
-/-- **TM_f is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteZTime`,
+/-- **TM_z is not weakly complete over ℤ-time.** The negation of Phase 4's `TMCompleteZTime`,
 witnessed by `Z1 p`: `BLValidZTime (Z1 p)` holds (`blValidZTime_z1`) yet `Z1 p` is not
-`TM_f`-derivable (`not_bl_derivable_z1`). -/
+`TM_z`-derivable (`not_bl_derivable_z1`). -/
 theorem tmCompleteZTime_refuted (p : Atom) : ¬ TMCompleteZTime :=
   fun h => not_bl_derivable_z1 p (h _ (blValidZTime_z1 p))
 

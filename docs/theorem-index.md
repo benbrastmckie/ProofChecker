@@ -36,8 +36,8 @@ the mapping.
 | duration group `D` | `FormalSystem.Semantics.TemporalOrder` | `def:temporal-order`; a nontrivial totally ordered abelian group |
 | TM⁺ | `FormalSystem.ProofSystem` over `FrameClass.Base` | `def:TMplus` |
 | TM⁺_d (dense) | `FrameClass.Dense` | `def:TMplus-d` |
-| TM⁺_f (ℤ-time) | `FrameClass.ZTime` | `def:TMplus-f`. The tree says `ZTime`, not `Discrete` |
-| TM⁺_c (dense and Dedekind-complete) | `FrameClass.RTime` | `def:TMplus-c`. The tree says `RTime`, not `Dedekind` |
+| TM⁺_z (ℤ-time) | `FrameClass.ZTime` | `def:TMplus-f`. The tree says `ZTime`, not `Discrete` |
+| TM⁺_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:TMplus-c`. The tree says `RTime`, not `Dedekind` |
 | BL (tense-primitive base language) | `FormalSystem.BaseLanguage` | `def:BL-semantics`; its truth relation is `Semantics.BLTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr` |
 | L⋆ / TM⋆ (stability modal `⊡`) | `FormalSystem.StarLanguage` | truth relation `Semantics.StarTruthAt` |
 | `U(φ, ψ)` (until) | `Formula.untl ψ φ` | guard-first: `untl guard event` |
@@ -58,8 +58,8 @@ the mapping.
 |-------------|-----------|-----------|------|-------------|--------|
 | `thm:TM-soundness` | TM⁺ is sound over all task frames | `FormalSystem.Metalogic.soundness` | `FormalSystem/Metalogic/Soundness.lean` | Base | pcq pinned:C14 |
 | `thm:TM-soundness` | TM⁺_d is sound over the densely ordered task frames | `FormalSystem.Metalogic.soundness_dense` | `FormalSystem/Metalogic/Soundness.lean` | Dense | pcq pinned:C14 |
-| `thm:TM-soundness` | TM⁺_f is sound over ℤ-time | `FormalSystem.Metalogic.soundness_ztime` | `FormalSystem/Metalogic/Soundness.lean` | ZTime | pcq pinned:C14 |
-| `thm:TM-soundness` | TM⁺_c is sound over the dense Dedekind-complete task frames | `FormalSystem.Metalogic.soundness_rtime` | `FormalSystem/Metalogic/Soundness.lean` | RTime | pcq pinned:C14 |
+| `thm:TM-soundness` | TM⁺_z is sound over ℤ-time | `FormalSystem.Metalogic.soundness_ztime` | `FormalSystem/Metalogic/Soundness.lean` | ZTime | pcq pinned:C14 |
+| `thm:TM-soundness` | TM⁺_r is sound over the dense Dedekind-complete task frames | `FormalSystem.Metalogic.soundness_rtime` | `FormalSystem/Metalogic/Soundness.lean` | RTime | pcq pinned:C14 |
 
 ### Weak completeness — the engines
 

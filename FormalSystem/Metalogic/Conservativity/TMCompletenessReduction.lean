@@ -154,7 +154,7 @@ theorem tmCompleteBase_iff_forwardBase : TMCompleteBase ↔ ForwardBase :=
 /-! ## `FrameClass.ZTime` -/
 
 /--
-**"TM_f is complete over `FrameClass.ZTime` task frames."** `TMComplete` at `.ZTime`;
+**"TM_z is complete over `FrameClass.ZTime` task frames."** `TMComplete` at `.ZTime`;
 `BLValidZTime` is `BLValidIn .ZTime` definitionally. **Unasserted**, exactly as
 `TMCompleteBase`.
 -/

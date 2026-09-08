@@ -40,7 +40,7 @@ than asserting it.
 ## Frame-class parameterization
 
 Exactly as on the BL⁺ side: `axiom` carries `ax.minFrameClass ≤ fc`, and `lift` moves a
-derivation up the `FrameClass` order. TM, TM_f, TM_d and TM_dc are `fc := .Base`, `.ZTime`,
+derivation up the `FrameClass` order. TM, TM_z, TM_d and TM_r are `fc := .Base`, `.ZTime`,
 `.Dense`, `.RTime`.
 
 ## Notation
@@ -98,7 +98,7 @@ Lift a derivation from `fc₁` to `fc₂` when `fc₁ ≤ fc₂`.
 
 Mirrors `ProofSystem.DerivationTree.lift`: the only interesting case is `axiom`, where
 transitivity composes the two `≤` proofs. Used by the row corollaries in
-`Metalogic/Conservativity/Backward.lean` to move a TM theorem into `TM_f` / `TM_d` / `TM_dc`.
+`Metalogic/Conservativity/Backward.lean` to move a TM theorem into `TM_z` / `TM_d` / `TM_r`.
 -/
 def lift {fc₁ fc₂ : FrameClass} (h_le : fc₁ ≤ fc₂)
     {Γ : Context} {φ : BLFormula} : DerivationTree fc₁ Γ φ → DerivationTree fc₂ Γ φ
@@ -207,7 +207,7 @@ example (φ : BLFormula) :
       (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture) :=
   .axiom [] _ (Axiom.df φ) (show FrameClass.ZTime ≤ FrameClass.ZTime by decide)
 
-/-- Lifting a `Base` theorem into `TM_f`. -/
+/-- Lifting a `Base` theorem into `TM_z`. -/
 example (φ : BLFormula) : ⊢ᴮᴸ[FrameClass.ZTime] φ.box.imp φ :=
   DerivationTree.lift (fc₁ := FrameClass.Base) (by decide)
     (.axiom [] _ (Axiom.modal_t φ) (FrameClass.base_le _))

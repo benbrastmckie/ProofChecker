@@ -214,7 +214,7 @@ editing.
 
 ---
 
-### Phase 3: Class A mechanical rename [NOT STARTED]
+### Phase 3: Class A mechanical rename [COMPLETED]
 
 **Goal**: Apply the literal rename over the files whose occurrences are pure labels carrying no
 retracted claim, where a scripted replacement is provably safe.
@@ -223,14 +223,14 @@ retracted claim, where a scripted replacement is provably safe.
 `BX_f`→`BX_z`, `TM⁺_c`→`TM⁺_r`, `TM⁺_dc`→`TM⁺_r`, `TM_c`→`TM_r`, `TM_dc`→`TM_r`, `BX_c`→`BX_r`.
 
 **Tasks**:
-- [ ] Apply the rules to `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean`.
-- [ ] Apply the rules to `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`.
-- [ ] Apply the rules to `FormalSystem/BaseLanguage/Derivation.lean`.
-- [ ] Apply the rules to `docs/theorem-index.md`.
-- [ ] Read each resulting diff for a collapsed-distinction artefact of the form "X, not X" (the
+- [x] Apply the rules to `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean`. *(deviation: altered — also de-staled the adjacent "By Hölder (paper `def:TMplus-f`, line 4613)" sentence, which cites a line number that has moved and an argument the paper has replaced)*
+- [x] Apply the rules to `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean`.
+- [x] Apply the rules to `FormalSystem/BaseLanguage/Derivation.lean`.
+- [x] Apply the rules to `docs/theorem-index.md`.
+- [x] Read each resulting diff for a collapsed-distinction artefact of the form "X, not X" (the
       `TM⁺_c`/`TM⁺_dc` collapse); if one appears, that passage is Class B and must be hand-written
       here rather than left as produced.
-- [ ] Confirm no anchor label and no `Star/` file was touched.
+- [x] Confirm no anchor label and no `Star/` file was touched.
 
 **Timing**: 0.5 hours
 
