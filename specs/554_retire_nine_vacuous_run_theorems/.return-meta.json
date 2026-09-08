@@ -1,33 +1,29 @@
 {
-  "status": "planned",
+  "status": "implemented",
+  "started_at": "2026-09-07T17:40:00Z",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true
+  },
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md",
-      "summary": "Six-phase plan to retire nine vacuous _run theorems behind a retirement record, land two un-At widening lemmas, repair six collateral prose sites, and amend C9 register entries 23/24/25."
+      "type": "summary",
+      "path": "specs/554_retire_nine_vacuous_run_theorems/summaries/01_retire-vacuous-run-theorems-summary.md",
+      "summary": "Retired the nine vacuous _run termini behind a named retirement record, landed the two un-`At` widening lemmas, repaired six prose sites and amended C9 entries 23/24/25."
     }
   ],
-  "next_steps": "Run /implement 554 to execute the plan",
-  "dispatch_seq": 2,
-  "metadata": {
-    "session_id": "sess_1788827428_44fd7f_554",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 6,
-    "estimated_hours": 5,
-    "dependency_waves": [[1],[2],[3],[4],[5],[6]]
+  "completion_data": {
+    "completion_summary": "Deleted the nine vacuous buildTableauAt_isSome_*_run theorems from MintBound.lean and replaced them with a single named retirement record in the repository's established house pattern, landed one_le_mintAwareFuel and postBlockingSettlesRun_mintAwareFuel_false so the vacuity claim covers both fuel figures rather than only the `At` one, repaired six collateral prose sites plus two orphan-consumer notes, and amended C9 register entries 23, 24 and 25 for the corrected count of nine and the non-uniform frame-class split. Full lake build green at 2592 jobs with the 41 #print axioms obligations byte-identical to baseline, zero sorries, zero axiom additions, and probes/DepTrace2.lean still reporting zero constants from MintBound reached by decide.",
+    "roadmap_items": []
   },
-  "memory_candidates": [
-    {
-      "content": "When a plan's phases all edit a single large file, the dependency-wave table is necessarily degenerate (one phase per wave) regardless of the phases' logical independence: shared-file write contention serializes dispatch even where the work is independent. State this explicitly in the wave table rather than letting a reader mistake the degenerate shape for an analysis failure, and separate the two reasons a phase is serialized (substantive dependency vs. file-contention) in its 'Depends on' justification. Observed on a 15,759-line Lean module where two prose-repair phases were logically independent but could not be parallelised.",
-      "category": "PATTERN",
-      "source_artifact": "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md",
-      "confidence": 0.7,
-      "suggested_keywords": ["dependency-waves", "single-file-serialization", "plan-decomposition", "parallel-dispatch", "phase-independence"]
-    }
-  ],
-  "modified_files": [
-    "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md"
-  ]
+  "metadata": {
+    "session_id": "sess_1788827428_44fd7f",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed"
+  }
 }

@@ -11,8 +11,8 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,548,551,554 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,537,550,552 | 193,298,464,502,535,548,554 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,548,550,551 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 2 | 178,231,282,296,465,497,537,552 | 193,298,464,502,535,548 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500,553 | 231,465,497,552 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
@@ -83,15 +83,14 @@ next_project_number: 555
 
 ### Paper Refactor
 
-548 [RESEARCHED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
+548 [PLANNING] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
   └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
     └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-554 [PLANNED] — Retire the nine vacuous `_run` theorems in `MintBound.lean`, land
-  └─ 550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+550 [NOT STARTED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -116,12 +115,13 @@ next_project_number: 555
 
 ### 554. Retire the nine vacuous _run theorems and correct the register count
 - **Effort**: 3-5 hours
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: None
 - **Research**: [554_retire_nine_vacuous_run_theorems/reports/01_retire-nine-vacuous-run-theorems.md]
 - **Plan**: [554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md]
+- **Summary**: [554_retire_nine_vacuous_run_theorems/summaries/01_retire-vacuous-run-theorems-summary.md]
 
 **Description**: Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count.
 
@@ -289,7 +289,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 548. Repin renamed paper anchors bx z d r
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 547

@@ -144,7 +144,7 @@
     {
       "project_number": 548,
       "project_name": "repin_renamed_paper_anchors_bx_z_d_r",
-      "status": "researched",
+      "status": "planning",
       "task_type": "lean4",
       "description": "Re-pin the paper anchors changed by the paper's z/d/r refactor and its removal of the Past/Future fragment, and update every citing docstring and the definitions-of-record so that scripts/check-module-invariants.sh C15 resolves them. RENAMED LABELS: def:TMplus-f, def:TMplus-d, def:TMplus-c are now def:BX-z, def:BX-d, def:BX-r; def:TMplus is unchanged and still names TM. CHANGED TEXT UNDER UNCHANGED LABELS: cor:tm-completeness now lists TM strongly complete over all task frames, TM_d strongly over the dense task frames, TM_z weakly over Z-time, and TM_r weakly over R-time; def:derivability and def:soundness are now stated for TM and the full language BL rather than for the fragment system; thm:TM-soundness now speaks of TM and its extensions, adds a sentence that the since/until/next/previous schemata are valid by their clauses as verified in this repository, and its footnote cites this repository for TM rather than for the fragment system; lem:temporal-duality and thm:TD-valid are now stated for the since/until interchange with new inductive cases for U and S. DELETED ANCHORS: prop:fragment and rmk:fragment no longer exist (no Lean file cites either, and neither is pinned -- verify). MEASURED STATE: specs/paper-definitions-of-record.md pins `def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` with content hashes in the machine-readable manifest (rows near line 1431) and carries their full-text entries at lines 993, 1014, 1032, alongside `def:TMplus` (line 1056) and `cor:tm-completeness` (line 1175); `thm:TM-soundness` is cited by 2 Lean files and appears on 4 record lines; `def:soundness` and `def:derivability` each appear on 1 record line; `def:TMplus` is cited in 20 lines across 13 Lean files and `cor:tm-completeness` in 9 files; C15 resolves anchors against the record, not the paper. The paper's new text is at /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex: def:BX-z (Discrete Burgess-Xu logic BX_z, axioms UZ and Z1, Z-time footnote), def:BX-d (dense logic BX_d, axioms DN and NN), def:BX-r (Dense and Complete Burgess-Xu logic BX_r, the extension of BX_d by PU and SP, CO derived), def:TMplus (TM_z, TM_d, TM_r as the extensions of TM by the axioms distinguishing BX_z, BX_d, BX_r). The Semantics/FrameClassValidity.lean docstring quotes the closing sentence of the old def:TMplus-f verbatim ('the successor-Archimedean discrete class to which BX_f and TM⁺_f are sound and complete is exactly Z-time'); it now reads BX_z and TM_z and the quotation must be refreshed. The Logic-subsection footnote that replaced the fragment proposition cites this repository for the Z1 result (`not_bl_derivable_z1` in Metalogic/Conservativity/Z1Countermodel.lean); its Kripke countermodel for the base class is a pen-and-paper claim that this repository does not check -- record it as such, do not pin it as verified. WORK: follow the record's own 'How to extend this record' procedure to retire the three old anchors, pin the three renamed ones, and re-hash every changed entry named above; update every citing docstring to the new label names; re-run scripts/check-module-invariants.sh until C15 reports no unresolved anchor from this refactor. The three unrelated unresolved anchors (app:drift, cor:no-characterization, lem:deterministic-singleton) belong to a separate open task and must not be conflated with this one.",
       "topic": "paper-refactor",
@@ -152,7 +152,7 @@
         547
       ],
       "created": "2026-09-07T04:24:21Z",
-      "last_updated": "2026-09-08T01:15:44Z",
+      "last_updated": "2026-09-08T01:16:02Z",
       "file_scope": [
         "FormalSystem/Metalogic/Conservativity.lean",
         "FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean",
@@ -178,7 +178,7 @@
         "specs/paper-definitions-of-record.md",
         "README.md"
       ],
-      "session_id": "sess_1788826208_cd9987",
+      "session_id": "sess_1788826208_cd9987_548",
       "artifacts": [
         {
           "path": "specs/548_repin_renamed_paper_anchors_bx_z_d_r/reports/01_repin-bx-z-d-r-anchors.md",
@@ -1586,7 +1586,7 @@
     {
       "project_number": 554,
       "project_name": "retire_nine_vacuous_run_theorems",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "title": "Retire the nine vacuous _run theorems and correct the register count",
       "topic": "publication-quality",
@@ -1606,13 +1606,19 @@
           "path": "specs/554_retire_nine_vacuous_run_theorems/plans/01_retire-vacuous-run-theorems.md",
           "type": "plan",
           "summary": "Six-phase plan to retire nine vacuous _run theorems behind a retirement record, land two un-At widening lemmas, repair six collateral prose sites, and amend C9 register entries 23/24/25."
+        },
+        {
+          "path": "specs/554_retire_nine_vacuous_run_theorems/summaries/01_retire-vacuous-run-theorems-summary.md",
+          "type": "summary",
+          "summary": "Retired the nine vacuous _run termini behind a named retirement record, landed the two un-`At` widening lemmas, repaired six prose sites and amended C9 entries 23/24/25."
         }
       ],
       "description": "Retire the nine vacuous `_run` theorems in `MintBound.lean`, land the two un-`At` widening lemmas, and amend C9 register entries 24/25 for the corrected count.\n\nWHY THIS EXISTS. The dependency trace recorded in `specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md` established NO DEPENDENCY: `FormalSystem.Metalogic.Decidability.decide` reaches zero constants from `MintBound.lean`, and a whole-environment reverse-dependency scan found zero dependents of the nine outside the nine themselves. Its recommended disposition, on the NO-DEPENDENCY branch, is RETIRE. Zero reverse-dependents makes the removal cost-free. Consume that summary's Section 4 (delete set / keep set, enumerated with no overlap) rather than re-deriving it.\n\nTHE PROBLEM RETIREMENT SOLVES. The nine read as headline results (\"the tableau construction succeeds\") while establishing nothing -- they carry an unsatisfiable hypothesis. A reader meeting `buildTableauAt_isSome_of_budget_fixed_run` at its declaration site gets no local signal of that; the refutation is recorded thousands of lines away in the C9 register. In a publication-facing library that is worse than the theorems being absent.\n\nSCOPE:\n1. Delete the nine per the summary's enumerated delete set (`MintBound.lean:12311-12487`, prose `:12288-12309`, forward reference `:5194-5195` -- re-locate by name, not by line number; the trace already found research line numbers stale once).\n2. Preserve the summary's keep set exactly: the `PostBlockingSettlesRun` predicate itself, the whole refutation apparatus, the live `PostBlockingSettlesSeedRun` successor line, and C9 entries 22/24/25.\n3. Land amendment (a): move `one_le_mintAwareFuel'` and `postBlockingSettlesRun_mintAwareFuel_false` from `specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/Widen.lean` into `MintBound.lean` (six lines, already proved, axioms `[propext, Classical.choice, Quot.sound]`). This closes the register's vacuity claim over the un-`At` `mintAwareFuel` figure, not only `mintAwareFuelAt`. These were deliberately not landed during the trace because that task could not write to this file.\n4. Land amendment (b): record row 2 (`buildTableauAt_isSome_of_budget_of_run`) separately in the register. It carries the unrestricted `PostBlockingSettles` and is refuted by `postBlockingSettles_fuel_zero_false` at ALL FOUR frame classes, so entry 25's `.ZTime` caveat does not apply to it. It currently reads as one of a uniform block; it is not.\n5. Correct the count wherever it appears: the vacuous set is NINE, not six. \"Its five `_run` siblings\" is an undercount.\n\nPRECISION REQUIRED IN THE COMMIT MESSAGE AND THE REGISTER. Rows 1 and 3-9 are established vacuous at `.Base`, `.Dense` and `.RTime` only, and are undecided but equally undelivering, with zero dependents, at `.ZTime`. Row 2 is unconditionally vacuous at all four. Do not flatten these into one claim.\n\nEXPLICITLY OUT OF SCOPE. Do not execute the `.ZTime` strengthening -- its only justification was the DEPENDS-at-`.ZTime` branch, which the trace ruled out. Do not touch `docs/theorem-index.md:113`: the trace confirmed it correct on a ten-of-ten column check and the NO-DEPENDENCY branch mandates leaving it alone. Do not decompose the file; that is a separate task.\n\nIF DELETION IS UNWANTED. Retiring nine named theorems from a publication-facing library is a call a human may prefer to make. The summary's Section 7 records the fallback in full: keep the nine and add a vacuity notice at each declaration site naming the refutation by name and the frame classes at which vacuity is established. That fallback is strictly worse on the publication criterion but strictly better than the status quo. If the fallback is chosen, execute Section 7 instead of steps 1-2 and still land steps 3-5.\n\nACCEPTANCE. The nine are gone (or annotated, on the fallback); full `lake build` green; no `sorry`, no axiom additions; `#print axioms` unchanged for every surviving `Decidability` result. Note that re-running `probes/RevDep.lean` will report 0 trivially once the names no longer resolve -- the meaningful regression check is that `probes/DepTrace2.lean` still reports `constants from MintBound reached by decide: 0`.\n\nDependencies: none outstanding. Task 463, which formerly owned this file, is complete.",
       "created": "2026-09-08T00:26:38Z",
-      "last_updated": "2026-09-08T00:45:34Z",
+      "last_updated": "2026-09-08T01:18:43Z",
       "session_id": "sess_1788827428_44fd7f",
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Deleted the nine vacuous buildTableauAt_isSome_*_run theorems from MintBound.lean and replaced them with a single named retirement record in the repository's established house pattern, landed one_le_mintAwareFuel and postBlockingSettlesRun_mintAwareFuel_false so the vacuity claim covers both fuel figures rather than only the `At` one, repaired six collateral prose sites plus two orphan-consumer notes, and amended C9 register entries 23, 24 and 25 for the corrected count of nine and the non-uniform frame-class split. Full lake build green at 2592 jobs with the 41 #print axioms obligations byte-identical to baseline, zero sorries, zero axiom additions, and probes/DepTrace2.lean still reporting zero constants from MintBound reached by decide."
     }
   ],
   "artifacts": [
