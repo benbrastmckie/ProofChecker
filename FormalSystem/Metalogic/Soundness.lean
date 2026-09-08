@@ -122,12 +122,12 @@ comes from `SoundnessLemmas`' well-founded descent on succ/pred chains, reached 
 
 The four theorems here are stated over `FormalSystem.Syntax.Formula`, the `untl`/`snce`-primitive
 language BL⁺. Their counterparts for the tense-primitive base language BL live in
-`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`: `bl_soundness`, `bl_soundness_dense`,
-`bl_soundness_ztime` and `bl_soundness_rtime`, each obtained by composing
+`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`: `minus_soundness`, `minus_soundness_dense`,
+`minus_soundness_ztime` and `minus_soundness_rtime`, each obtained by composing
 `Metalogic/Conservativity/Backward.lean`'s `translate` with the theorem of the same frame class below,
 then crossing the truth-transfer bridge `truthAt_tr` into the native BL semantics of
-`Semantics/BLTruth.lean`. That module also carries the BL consistency corollaries
-`bl_not_derivable_nil_bot` and `bl_not_derivable_nil_bot_ztime`, which mirror
+`Semantics/MinusTruth.lean`. That module also carries the BL consistency corollaries
+`minus_not_derivable_nil_bot` and `minus_not_derivable_nil_bot_ztime`, which mirror
 `not_derivable_nil_bot` and `not_derivable_nil_bot_ztime` below — and inherit their
 frame-class asymmetry, for the same reason: there is no dense or Dedekind-complete witness frame
 in the tree.
@@ -407,7 +407,7 @@ theorem dense_indicator_valid :
     ValidDense (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)).neg := by
   refine ValidIn.of_forall_total ?_
   intro F h_dense M τ _hτ t
-  simp only [Formula.neg, TruthAt]
+  simp only [truth_norm]
   intro ⟨s, hts, _h_top, h_guard⟩
   obtain ⟨r, htr, hrs⟩ := @DenselyOrdered.dense F.Duration _ h_dense t s hts
   exact h_guard r htr hrs
@@ -1111,18 +1111,10 @@ theorem density_swap_valid (φ : Formula) :
     ValidDense ((φ.allFuture.allFuture.imp φ.allFuture).swapTemporal) := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, Formula.allFuture, Formula.someFuture,
-    Formula.neg, TruthAt]
-  intro h_HH ⟨s, hst, h_neg_phi_s, h_guard_s⟩
-  apply h_HH
-  obtain ⟨r, hrs, hrt⟩ := exists_between hst
-  refine ⟨r, hrt, ?_, ?_⟩
-  · -- Need: ¬¬P(¬φ) at r, i.e., ¬Hφ at r; witness `s < r` with `¬φ(s)`
-    intro h_Hphi_r
-    exact h_Hphi_r ⟨s, hrs, h_neg_phi_s, fun q hq1 hq2 => h_guard_s q hq1 (lt_trans hq2 hrt)⟩
-  · -- Guard: all between r and t satisfy ⊤
-    intro q hq1 hq2
-    exact h_guard_s q (lt_trans hrs hq1) hq2
+  simp only [swap_norm, Formula.swapTemporal, truth_norm]
+  intro h_HH s hst
+  obtain ⟨r, hsr, hrt⟩ := exists_between hst
+  exact h_HH r hrt s hsr
 
 /-- **Dense-indicator axiom swap-validity**: the swap of `¬U(⊤,⊥)` is `¬S(⊤,⊥)`, the past density
 indicator. `S(⊤,⊥)` at `t` needs an `s < t` with `(s,t)` empty, which density refutes. -/
@@ -1243,7 +1235,7 @@ theorem derivable_valid_and_swap_validIn {fc : FrameClass} {φ : Formula}
       intro F hF M τ hτ t
       have h1' := h1.2.apply_total F hF M τ hτ t
       have h2' := h2.2.apply_total F hF M τ hτ t
-      simp only [Formula.swapTemporal, TruthAt] at h1' ⊢
+      simp only [Formula.swapTemporal, truth_norm] at h1' ⊢
       exact h1' h2'
   | .necessitation psi' d' =>
     have h := derivable_valid_and_swap_validIn d'
@@ -1255,7 +1247,7 @@ theorem derivable_valid_and_swap_validIn {fc : FrameClass} {φ : Formula}
       exact h.1.apply_total F hF M sigma h_sigma_mem t
     · refine ValidIn.of_forall_total ?_
       intro F hF M τ hτ t
-      simp only [Formula.swapTemporal, TruthAt]
+      simp only [Formula.swapTemporal, truth_norm]
       intro sigma h_sigma_mem
       exact h.2.apply_total F hF M sigma h_sigma_mem t
   | .temporal_necessitation psi' d' =>

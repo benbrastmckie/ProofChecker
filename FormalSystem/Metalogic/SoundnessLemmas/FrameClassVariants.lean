@@ -50,7 +50,7 @@ theorem mt_swap_valid (φ : Formula) :
     ValidIn FrameClass.Base ((Formula.box φ).imp φ).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro h_box_swap_φ
   exact h_box_swap_φ τ hτ
 
@@ -68,7 +68,7 @@ theorem m4_swap_valid (φ : Formula) :
     ValidIn FrameClass.Base ((Formula.box φ).imp (Formula.box (Formula.box φ))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro h_box_swap_φ σ h_σ_mem ρ h_ρ_mem
   exact h_box_swap_φ ρ h_ρ_mem
 
@@ -164,7 +164,7 @@ theorem peirce_swap_valid (φ ψ : Formula) :
     ValidIn FrameClass.Base (((φ.imp ψ).imp φ).imp φ).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro h_peirce
   by_cases h : TruthAt M τ t φ.swapTemporal
   · exact h
@@ -496,7 +496,7 @@ theorem discrete_symm_fwd_swap_valid :
       (Formula.snce Formula.bot (Formula.bot.imp Formula.bot))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩
   refine ⟨t + (t - r), lt_add_of_pos_right t (sub_pos.mpr hrt), fun h => h, fun c htc hcs => ?_⟩
   have h1 : r < c - (t - r) := by
@@ -514,7 +514,7 @@ theorem discrete_symm_bwd_swap_valid :
       (Formula.untl Formula.bot (Formula.bot.imp Formula.bot))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro ⟨s, hts, _h_top_s, h_guard⟩
   refine ⟨t - (s - t), sub_lt_self t (sub_pos.mpr hts), fun h => h, fun c hrc hct => ?_⟩
   have h1 : t < c + (s - t) :=
@@ -573,7 +573,7 @@ theorem discrete_box_necessity_swap_valid :
       (Formula.box (Formula.untl Formula.bot (Formula.bot.imp Formula.bot)))).swapTemporal := by
   refine ValidIn.of_forall_total ?_
   intro F _ M τ _hτ t
-  simp only [Formula.swapTemporal, TruthAt]
+  simp only [Formula.swapTemporal, truth_norm]
   intro ⟨r, hrt, _h_top_r, h_guard⟩ σ _h_σ_mem
   exact ⟨r, hrt, fun h => h, h_guard⟩
 
@@ -782,7 +782,7 @@ theorem prior_UZ_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [Formula.neg, TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro ⟨s, hts, hs⟩
   exact exists_nearest_gt (P := fun x => TruthAt M τ x φ) hts hs
 
@@ -797,7 +797,7 @@ theorem prior_SZ_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [Formula.neg, TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro ⟨s, hst, hs⟩
   exact exists_nearest_lt (P := fun x => TruthAt M τ x φ) hst hs
 
