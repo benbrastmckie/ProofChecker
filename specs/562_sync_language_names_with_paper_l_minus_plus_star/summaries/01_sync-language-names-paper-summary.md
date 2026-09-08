@@ -99,7 +99,8 @@ not by inspection (see Verification).
 
 ## Verification
 
-- **Build**: `lake build` — **success**, 2615 jobs, zero errors.
+- **Build**: `lake build` — **success**, 2615 jobs, zero errors, run against the exact tree
+  that was committed.
 - **Sorry count**: **0** new; C3 green. Every `sorry` string in the live tree is a docstring
   mention of historical work; `FormalSystem/Boneyard/` is out of scope by design.
 - **Vacuous count**: **0**. The single `:= trivial` hit tree-wide
@@ -108,9 +109,13 @@ not by inspection (see Verification).
 - **Axiom count**: **unchanged** (8 before, 8 after, excluding `Boneyard/`). No axiom set on any
   C2 or C14 baseline row changed — only 17 row NAMES moved, verified by diffing the two heredocs'
   `depends on axioms: [...]` tails byte-for-byte.
-- **Gates**: `bash scripts/check-module-invariants.sh` — **ALL CHECKS PASSED**, including C2, C3,
-  C5, C9, C12, C14, C15, C23, C24, C26 and the aggregator convention.
-  `bash scripts/readme-lint.sh` — **PASS**.
+- **Gates**: `bash scripts/check-module-invariants.sh` (full, with build) — **exit 0, ALL CHECKS
+  PASSED**, 36 PASS lines and zero FAIL. The ones this task's correctness turns on:
+  C1 `lake build` exits 0 (both libraries); C2 all four flagship axiom sets match baseline;
+  C3 structural sorry inventory is ZERO across `FormalSystem/`; C8 every subdirectory has
+  exactly one sibling aggregator; C14 **every pinned declaration matches its axiom baseline**;
+  C15 all 58 paper-anchor citations resolve; C24 every module transitively imports
+  `FormalSystem.Init`; C26 zero snake_case `def`/`abbrev`. `bash scripts/readme-lint.sh` — **PASS**.
 - **`check-paper-definitions.sh`**: case (b), drift detected, with the **same six** anchors the
   separate re-pin work already owns (`def:S5`, `def:BX`, `def:BX-z`, `def:BX-d`, `def:BX-r`,
   `def:TMplus`). No anchor entered or left that set because of this task.

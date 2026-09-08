@@ -1,16 +1,34 @@
 {
-  "status": "in_progress",
+  "status": "implemented",
   "started_at": "2026-09-08T18:20:00Z",
-  "partial_progress": {
-    "stage": "phase_12_final_verification",
-    "details": "Phases 1-11 applied and committed through phase 11; phases 7-8 staged in the working tree; final full lake build in flight",
-    "phases_completed": 11,
-    "phases_total": 12
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true
+  },
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/562_sync_language_names_with_paper_l_minus_plus_star/reports/01_rename-inventory.md",
+      "summary": "Name-by-name rename inventory: 169 declaration tokens, 16 file/directory moves, 4 notation sites, the false-positive exclusions, and the hand-classified prose sites."
+    },
+    {
+      "type": "summary",
+      "path": "specs/562_sync_language_names_with_paper_l_minus_plus_star/summaries/01_sync-language-names-paper-summary.md",
+      "summary": "Renamed the repository's object languages to the paper's convention: Formula/TM -> L/TM, BaseLanguage -> L-minus/TM-minus, StarLanguage -> L-plus/TM-plus, freeing the Star names for the genuine store/recall L-star."
+    }
+  ],
+  "completion_data": {
+    "completion_summary": "Renamed this repository's object languages and proof systems so their names mean what the paper's mean: the S/U language Formula and its logic are now L and TM (the paper's own 𝓛 and TM), the H/G language is L⁻/TM⁻ in MinusLanguage/, and the ⊡-extension is L⁺/TM⁺ in PlusLanguage/ — which frees StarLanguage/, StarFormula, StarAxiom, StarDerivationTree, ⊢⋆ and TM⋆ for the genuine store/recall L⋆ that task 561 builds. 169 declaration tokens, 16 file and directory moves, 4 notation declarations, 55 .lean docstrings, 20 markdown files and one .typ file were rewritten, with zero proof-term changes established mechanically twice over. lake build is green over all 2615 jobs and scripts/check-module-invariants.sh exits 0 with ALL CHECKS PASSED.",
+    "roadmap_items": []
   },
   "metadata": {
     "session_id": "sess_1788890905_c2bc06",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"]
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed"
   }
 }
