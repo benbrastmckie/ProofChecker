@@ -484,24 +484,36 @@ PointInsertion. Confirm per file at phase start with the private scan restricted
 
 ---
 
-### Phase 6: Private renames, cluster B — `Decidability`, `Syntax`, `Core`, `Automation` [NOT STARTED]
+### Phase 6: Private renames, cluster B — `Decidability`, `Syntax`, `Core`, `Automation` [COMPLETED]
 
 **Goal**: Rename the 31 private snake_case `def`s in the Saturation / Formula / DeductionTheorem /
 Automation cluster.
 
 **Tasks**:
-- [ ] `FormalSystem/Metalogic/Decidability/Saturation.lean` — 17 renames.
-- [ ] `FormalSystem/Syntax/Formula.lean` — 5 renames. Several are local probe fixtures
+- [x] `FormalSystem/Metalogic/Decidability/Saturation.lean` — 17 renames.
+- [x] `FormalSystem/Syntax/Formula.lean` — 5 renames. Several are local probe fixtures
       (`probe_p`, `p_test`, `q_atom`, and similar). The rule does not exempt fixtures; rename them
       unless a reason to exempt is stated at the declaration site, in which case record it as a
       Reasoned Exclusion rather than skipping silently.
-- [ ] `FormalSystem/Metalogic/Core/DeductionTheorem.lean` — 3 renames, including
+- [x] `FormalSystem/Metalogic/Core/DeductionTheorem.lean` — 3 renames, including
       `weaken_under_imp` and `weaken_under_imp_ctx`, the two the task description names as the
       measured proof that the blind spot is visibility, not closure.
-- [ ] `FormalSystem/Automation/DatasetGenerator.lean` — 4 renames.
-- [ ] `FormalSystem/Automation/Normalization.lean` — 2 renames.
-- [ ] Per file: longest-first word-boundary renames, docstring/comment updates, and a
+- [x] `FormalSystem/Automation/DatasetGenerator.lean` — 4 renames.
+- [x] `FormalSystem/Automation/Normalization.lean` — 2 renames.
+- [x] Per file: longest-first word-boundary renames, docstring/comment updates, and a
       cross-file-reference check that comes back empty.
+      *(deviation: added — `FormalSystem/Syntax.lean`'s four module-docstring example names
+      (`necessity_p`, `future_q`, `possibly_p`, `always_p`, lines 61-66) were renamed here too.
+      Phase 1 put them on the worklist as documentation-consistency renames but no phase owned
+      them; this is the Syntax cluster, and Phase 10's acceptance scan counts them.)*
+      *(deviation: added — renaming shortened many `#eval … -- comment` lines, breaking the
+      trailing-comment alignment in `DatasetGenerator.lean` (45 lines), `Formula.lean` (20) and
+      `Normalization.lean` (1). Each was re-padded to its original comment column. Whitespace
+      inside comments only; no token changed.)*
+      *(deviation: altered — no fixture was excluded. All five `Formula.lean` names
+      (`p_cmplx`, `q_cmplx`, `p_cmplx2`, `q_cmplx2`, `p_cmplx3`) and all fixture-shaped names in
+      `Saturation.lean`, `DatasetGenerator.lean` and `Normalization.lean` were renamed; no
+      declaration site stated a reason to exempt, so there are no Reasoned Exclusions here.)*
 
 **Timing**: 1.5 hours
 

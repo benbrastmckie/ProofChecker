@@ -967,283 +967,283 @@ def structuralInvalidPrefilter : Formula → Option (Bool × String)
 /-! ### Pre-filter unit tests -/
 
 -- Test atoms for #eval tests
-private def p_test : Formula := .atom ⟨"p", none⟩
-private def q_test : Formula := .atom ⟨"q", none⟩
+private def pTest : Formula := .atom ⟨"p", none⟩
+private def qTest : Formula := .atom ⟨"q", none⟩
 
 -- isUnsatBotTemporal: recursive cases
 #eval isUnsatBotTemporal (.bot)                                   -- true  (base case)
-#eval isUnsatBotTemporal (.untl p_test (.box .bot))               -- true  (U(□⊥, p))
-#eval isUnsatBotTemporal (.snce p_test (.untl q_test .bot))       -- true  (S(U(⊥, q), p))
-#eval isUnsatBotTemporal (.box (.untl p_test .bot))               -- true  (□(U(⊥, p)))
-#eval isUnsatBotTemporal (.untl q_test p_test)                    -- false (U(p, q) is satisfiable)
-#eval isUnsatBotTemporal p_test                                   -- false (atom is satisfiable)
+#eval isUnsatBotTemporal (.untl pTest (.box .bot))                -- true  (U(□⊥, p))
+#eval isUnsatBotTemporal (.snce pTest (.untl qTest .bot))         -- true  (S(U(⊥, q), p))
+#eval isUnsatBotTemporal (.box (.untl pTest .bot))                -- true  (□(U(⊥, p)))
+#eval isUnsatBotTemporal (.untl qTest pTest)                      -- false (U(p, q) is satisfiable)
+#eval isUnsatBotTemporal pTest                                    -- false (atom is satisfiable)
 
 -- isStructurallyValid: tautology detection
-#eval isStructurallyValid (.imp p_test p_test)                    -- true  (p → p)
-#eval isStructurallyValid (.imp q_test (.imp p_test p_test))      -- true  (q → (p → p))
-#eval isStructurallyValid (.box (.imp p_test p_test))             -- true  (□(p → p))
-#eval isStructurallyValid p_test                                  -- false (atom is not valid)
-#eval isStructurallyValid (.imp p_test q_test)                    -- false (p → q, p ≠ q)
+#eval isStructurallyValid (.imp pTest pTest)                      -- true  (p → p)
+#eval isStructurallyValid (.imp qTest (.imp pTest pTest))         -- true  (q → (p → p))
+#eval isStructurallyValid (.box (.imp pTest pTest))               -- true  (□(p → p))
+#eval isStructurallyValid pTest                                   -- false (atom is not valid)
+#eval isStructurallyValid (.imp pTest qTest)                      -- false (p → q, p ≠ q)
 
 -- structuralPrefilter: integration tests
-#eval structuralPrefilter (.imp (.untl p_test (.box .bot)) q_test) -- some true (recursive unsat
+#eval structuralPrefilter (.imp (.untl pTest (.box .bot)) qTest) -- some true (recursive unsat
 -- antecedent)
-#eval structuralPrefilter (.imp p_test (.imp q_test q_test))       -- some true (valid consequent)
-#eval structuralPrefilter (.imp p_test (.box (.imp q_test q_test)))-- some true (valid consequent
+#eval structuralPrefilter (.imp pTest (.imp qTest qTest))          -- some true (valid consequent)
+#eval structuralPrefilter (.imp pTest (.box (.imp qTest qTest)))-- some true (valid consequent
 -- under box)
-#eval structuralPrefilter (.imp p_test q_test)                     -- none  (unknown)
+#eval structuralPrefilter (.imp pTest qTest)                       -- none  (unknown)
 
 -- structuralPrefilterWithAxiom: axiom attribution tests
-#eval structuralPrefilterWithAxiom (.imp (.untl p_test (.box .bot)) q_test)
+#eval structuralPrefilterWithAxiom (.imp (.untl pTest (.box .bot)) qTest)
   -- some (true, "structural_bot_temporal")
-#eval structuralPrefilterWithAxiom (.imp p_test (.imp q_test q_test))
+#eval structuralPrefilterWithAxiom (.imp pTest (.imp qTest qTest))
   -- some (true, "structural_tautology")
-#eval structuralPrefilterWithAxiom (.imp (.box (.box .bot)) q_test)
+#eval structuralPrefilterWithAxiom (.imp (.box (.box .bot)) qTest)
   -- some (true, "structural_bot_temporal") — box(box(bot)) is caught by isUnsatBotTemporal first
-#eval structuralPrefilterWithAxiom (.imp (.box (.box p_test)) p_test)
+#eval structuralPrefilterWithAxiom (.imp (.box (.box pTest)) pTest)
   -- some (true, "structural_modal_4")
-#eval structuralPrefilterWithAxiom (.imp (.box p_test) (.imp q_test p_test))
+#eval structuralPrefilterWithAxiom (.imp (.box pTest) (.imp qTest pTest))
   -- some (true, "structural_modal_t_weakening")
-#eval structuralPrefilterWithAxiom (.imp p_test q_test)
+#eval structuralPrefilterWithAxiom (.imp pTest qTest)
   -- none (unknown)
 
 -- Phase 1 tests
 
 -- collectTopLevelConjuncts
-#eval collectTopLevelConjuncts (p_test.and q_test)
+#eval collectTopLevelConjuncts (pTest.and qTest)
   -- [p, q]
-#eval collectTopLevelConjuncts (p_test.and (q_test.and (.imp p_test p_test)))
+#eval collectTopLevelConjuncts (pTest.and (qTest.and (.imp pTest pTest)))
   -- [p, q, p → p]
 
 -- isAllFutureShape / isSomeFutureShape / isAllPastShape / isSomePastShape
-#eval isAllFutureShape p_test.allFuture                -- some p
-#eval isSomeFutureShape p_test.someFuture             -- some p
-#eval isAllPastShape p_test.allPast                   -- some p
-#eval isSomePastShape p_test.somePast                 -- some p
+#eval isAllFutureShape pTest.allFuture                 -- some p
+#eval isSomeFutureShape pTest.someFuture              -- some p
+#eval isAllPastShape pTest.allPast                    -- some p
+#eval isSomePastShape pTest.somePast                  -- some p
 
 -- S5 reflexive shortcutting
-#eval structuralPrefilterWithAxiom (.imp (Formula.and (Formula.box p_test) (Formula.neg p_test))
-    q_test)
+#eval structuralPrefilterWithAxiom (.imp (Formula.and (Formula.box pTest) (Formula.neg pTest))
+    qTest)
   -- some (true, "structural_s5_reflexive_conflict")
 
 -- Temporal loop detection (until)
 #eval structuralPrefilterWithAxiom (.imp
-    (Formula.and (Formula.untl q_test p_test) (Formula.allFuture (Formula.neg q_test)))
+    (Formula.and (Formula.untl qTest pTest) (Formula.allFuture (Formula.neg qTest)))
         (Formula.atom (Atom.mkBase "r")))
   -- some (true, "structural_temporal_loop_until")
 
 -- Temporal loop detection (since)
 #eval structuralPrefilterWithAxiom (.imp
-    (Formula.and (Formula.snce q_test p_test) (Formula.allPast (Formula.neg q_test)))
+    (Formula.and (Formula.snce qTest pTest) (Formula.allPast (Formula.neg qTest)))
         (Formula.atom (Atom.mkBase "r")))
   -- some (true, "structural_temporal_loop_since")
 
 -- Subsumption rules
-#eval structuralPrefilterWithAxiom (.imp (p_test.allFuture) p_test)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allFuture) pTest)
   -- some (true, "structural_subsumption_gt")
-#eval structuralPrefilterWithAxiom (.imp (p_test.allPast) p_test)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allPast) pTest)
   -- some (true, "structural_subsumption_ht")
-#eval structuralPrefilterWithAxiom (.imp (p_test.allFuture) p_test.someFuture)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allFuture) pTest.someFuture)
   -- some (true, "structural_subsumption_gf")
-#eval structuralPrefilterWithAxiom (.imp (p_test.allPast) p_test.somePast)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allPast) pTest.somePast)
   -- some (true, "structural_subsumption_hp")
-#eval structuralPrefilterWithAxiom (.imp (p_test.allFuture) p_test.allFuture.allFuture)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allFuture) pTest.allFuture.allFuture)
   -- some (true, "structural_subsumption_g4")
-#eval structuralPrefilterWithAxiom (.imp (p_test.allPast) p_test.allPast.allPast)
+#eval structuralPrefilterWithAxiom (.imp (pTest.allPast) pTest.allPast.allPast)
   -- some (true, "structural_subsumption_h4")
-#eval structuralPrefilterWithAxiom (.imp (p_test.someFuture.someFuture) p_test.someFuture)
+#eval structuralPrefilterWithAxiom (.imp (pTest.someFuture.someFuture) pTest.someFuture)
   -- some (true, "structural_subsumption_ff")
-#eval structuralPrefilterWithAxiom (.imp (p_test.somePast.somePast) p_test.somePast)
+#eval structuralPrefilterWithAxiom (.imp (pTest.somePast.somePast) pTest.somePast)
   -- some (true, "structural_subsumption_pp")
-#eval structuralPrefilterWithAxiom (.imp (.box p_test) p_test)
+#eval structuralPrefilterWithAxiom (.imp (.box pTest) pTest)
   -- some (true, "structural_subsumption_modal_t")
-#eval structuralPrefilterWithAxiom (.imp (.box p_test) (.box (.box p_test)))
+#eval structuralPrefilterWithAxiom (.imp (.box pTest) (.box (.box pTest)))
   -- some (true, "structural_subsumption_modal_4")
-#eval structuralPrefilterWithAxiom (.imp (.box p_test) (p_test.diamond))
+#eval structuralPrefilterWithAxiom (.imp (.box pTest) (pTest.diamond))
   -- some (true, "structural_subsumption_modal_d")
 
 -- Temporal implication pattern tests
-private def r_test : Formula := .atom ⟨"r", none⟩
-private def s_test : Formula := .atom ⟨"s", none⟩
+private def rTest : Formula := .atom ⟨"r", none⟩
+private def sTest : Formula := .atom ⟨"s", none⟩
 
 -- U(p, q) → F(q): Until implies Future of event
-#eval structuralPrefilterWithAxiom (.imp (.untl q_test p_test) q_test.someFuture)
+#eval structuralPrefilterWithAxiom (.imp (.untl qTest pTest) qTest.someFuture)
   -- some (true, "structural_until_implies_future")
 
 -- S(p, q) → P(q): Since implies Past of event
-#eval structuralPrefilterWithAxiom (.imp (.snce q_test p_test) q_test.somePast)
+#eval structuralPrefilterWithAxiom (.imp (.snce qTest pTest) qTest.somePast)
   -- some (true, "structural_since_implies_past")
 
 -- U(p, q) → F(p): NOT valid (Until does not guarantee F(guard) -- Y could hold immediately)
-#eval structuralPrefilterWithAxiom (.imp (.untl q_test p_test) p_test.someFuture)
+#eval structuralPrefilterWithAxiom (.imp (.untl qTest pTest) pTest.someFuture)
   -- none
 
 -- G(p) → F(p): Always implies Sometimes (caught by isSubsumptionPattern as G→F)
-#eval structuralPrefilterWithAxiom (.imp p_test.allFuture p_test.someFuture)
+#eval structuralPrefilterWithAxiom (.imp pTest.allFuture pTest.someFuture)
   -- some (true, "structural_subsumption_gf")
 
 -- H(p) → P(p): Always-past implies Sometimes-past (caught by isSubsumptionPattern as H→P)
-#eval structuralPrefilterWithAxiom (.imp p_test.allPast p_test.somePast)
+#eval structuralPrefilterWithAxiom (.imp pTest.allPast pTest.somePast)
   -- some (true, "structural_subsumption_hp")
 
 -- U(p, q) → U(p, q): identity (caught by structural_identity)
-#eval structuralPrefilterWithAxiom (.imp (.untl q_test p_test) (.untl q_test p_test))
+#eval structuralPrefilterWithAxiom (.imp (.untl qTest pTest) (.untl qTest pTest))
   -- some (true, "structural_identity")
 
 -- U(p, q) → U(r, s): all different atoms — not structurally decidable
-#eval structuralPrefilterWithAxiom (.imp (.untl q_test p_test) (.untl s_test r_test))
+#eval structuralPrefilterWithAxiom (.imp (.untl qTest pTest) (.untl sTest rTest))
   -- none (mixed validity, falls through to tableau)
 
 -- U(p, q) → U(r, q): shared event, different guard — NOT valid, not caught
-#eval structuralPrefilterWithAxiom (.imp (.untl q_test p_test) (.untl q_test r_test))
+#eval structuralPrefilterWithAxiom (.imp (.untl qTest pTest) (.untl qTest rTest))
   -- none (U(p,q) does not imply U(r,q))
 
 -- Phase 2 tests: polarity analysis
 
 -- collectPolarities
-#eval collectPolarities (Formula.imp p_test q_test) .pos
+#eval collectPolarities (Formula.imp pTest qTest) .pos
   -- [(p→q, pos), (p, neg), (q, pos)]
-#eval collectPolarities (Formula.neg p_test) .pos
+#eval collectPolarities (Formula.neg pTest) .pos
   -- [(¬p, pos), (p, neg)]
 
 -- appearsOnlyPositively / appearsOnlyNegatively
-#eval appearsOnlyPositively (collectPolarities (Formula.imp p_test q_test) .pos) p_test
+#eval appearsOnlyPositively (collectPolarities (Formula.imp pTest qTest) .pos) pTest
   -- false (p appears negatively)
-#eval appearsOnlyNegatively (collectPolarities (Formula.imp p_test q_test) .pos) p_test
+#eval appearsOnlyNegatively (collectPolarities (Formula.imp pTest qTest) .pos) pTest
   -- true
 
 -- isStructurallyValidDeep: nested unsat antecedent
-#eval isStructurallyValidDeep (Formula.imp (Formula.untl q_test Formula.bot) p_test)
+#eval isStructurallyValidDeep (Formula.imp (Formula.untl qTest Formula.bot) pTest)
   -- true (unsat → anything is valid)
-#eval structuralPrefilterWithAxiom (.imp p_test
-    (Formula.imp (Formula.untl q_test Formula.bot) p_test))
+#eval structuralPrefilterWithAxiom (.imp pTest
+    (Formula.imp (Formula.untl qTest Formula.bot) pTest))
   -- some (true, "structural_polarity_drop_tautology")
 
 -- hasBotConjunct
-#eval structuralPrefilterWithAxiom (.imp (Formula.and p_test Formula.bot) q_test)
+#eval structuralPrefilterWithAxiom (.imp (Formula.and pTest Formula.bot) qTest)
   -- some (true, "structural_polarity_bot_neg")
 
 -- Phase 3 tests: lightweight propositional contradiction
-#eval hasPropContradiction [p_test, Formula.neg p_test]                    -- true
-#eval hasPropContradiction [p_test, Formula.imp p_test Formula.bot]        -- true (¬p derived as
+#eval hasPropContradiction [pTest, Formula.neg pTest]                      -- true
+#eval hasPropContradiction [pTest, Formula.imp pTest Formula.bot]          -- true (¬p derived as
 -- p→⊥)
-#eval hasPropContradiction [p_test, q_test]                                -- false
-#eval structuralPrefilterWithAxiom (.imp (Formula.and p_test (Formula.neg p_test)) q_test)
+#eval hasPropContradiction [pTest, qTest]                                  -- false
+#eval structuralPrefilterWithAxiom (.imp (Formula.and pTest (Formula.neg pTest)) qTest)
   -- some (true, "structural_prop_contradiction")
 
 -- Extended tautology detection (φ → ⊤ and φ → □⊤)
-#eval isStructurallyValid (.imp p_test Formula.top)                     -- true
-#eval isStructurallyValid (.imp p_test (.box Formula.top))              -- true
-#eval structuralPrefilterWithAxiom (.imp p_test Formula.top)             -- some (true,
+#eval isStructurallyValid (.imp pTest Formula.top)                      -- true
+#eval isStructurallyValid (.imp pTest (.box Formula.top))               -- true
+#eval structuralPrefilterWithAxiom (.imp pTest Formula.top)              -- some (true,
 -- "structural_tautology")
-#eval structuralPrefilterWithAxiom (.imp p_test (.box Formula.top))      -- some (true,
+#eval structuralPrefilterWithAxiom (.imp pTest (.box Formula.top))       -- some (true,
 -- "structural_tautology")
 
 /-! ### Invalid prefilter unit tests -/
 
 -- isTrivialSatisfiable: positive cases
-#eval isTrivialSatisfiable p_test                                          -- true  (atom)
+#eval isTrivialSatisfiable pTest                                           -- true  (atom)
 #eval isTrivialSatisfiable (Formula.imp .bot .bot)                         -- true  (top)
-#eval isTrivialSatisfiable (.box p_test)                                   -- true  (box(atom))
-#eval isTrivialSatisfiable (Formula.and p_test q_test)                     -- true  (and of atoms)
-#eval isTrivialSatisfiable (.box (.box p_test))                            -- true  (box(box(atom)))
+#eval isTrivialSatisfiable (.box pTest)                                    -- true  (box(atom))
+#eval isTrivialSatisfiable (Formula.and pTest qTest)                       -- true  (and of atoms)
+#eval isTrivialSatisfiable (.box (.box pTest))                             -- true  (box(box(atom)))
 #eval isTrivialSatisfiable (Formula.neg .bot)                              -- true  (neg(bot) =
 -- top, isUnsatBotTemporal bot = true)
 -- isTrivialSatisfiable: negative cases
-#eval isTrivialSatisfiable (.untl q_test p_test)                           -- false (Until needs 2+
+#eval isTrivialSatisfiable (.untl qTest pTest)                             -- false (Until needs 2+
 -- times)
-#eval isTrivialSatisfiable (.snce q_test p_test)                           -- false (Since needs 2+
+#eval isTrivialSatisfiable (.snce qTest pTest)                             -- false (Since needs 2+
 -- times)
-#eval isTrivialSatisfiable (.imp p_test q_test)                            -- false (imp not a
+#eval isTrivialSatisfiable (.imp pTest qTest)                              -- false (imp not a
 -- known-sat shape)
 #eval isTrivialSatisfiable .bot                                            -- false (bot is never
 -- true)
 
 -- isTemporalContradiction: positive cases (invalid formulas)
-#eval isTemporalContradiction (.imp p_test (.untl q_test .bot))            -- true  (p → U(⊥,q):
+#eval isTemporalContradiction (.imp pTest (.untl qTest .bot))              -- true  (p → U(⊥,q):
 -- conseq always false)
-#eval isTemporalContradiction (.imp p_test (.box .bot))                    -- true  (p → □⊥: conseq
+#eval isTemporalContradiction (.imp pTest (.box .bot))                     -- true  (p → □⊥: conseq
 -- always false)
-#eval isTemporalContradiction (.imp (.box p_test) .bot)                    -- true  (□p → ⊥: conseq
+#eval isTemporalContradiction (.imp (.box pTest) .bot)                     -- true  (□p → ⊥: conseq
 -- false, antecedent not)
-#eval isTemporalContradiction (.imp p_test (.snce q_test .bot))            -- true  (p → S(⊥,q):
+#eval isTemporalContradiction (.imp pTest (.snce qTest .bot))              -- true  (p → S(⊥,q):
 -- conseq always false)
-#eval isTemporalContradiction (.imp (.box (.untl q_test p_test)) (.untl r_test .bot))
+#eval isTemporalContradiction (.imp (.box (.untl qTest pTest)) (.untl rTest .bot))
   -- true  (□(U(p,q)) → U(⊥,r): consequent always false, antecedent satisfiable)
 -- isTemporalContradiction: negative cases
-#eval isTemporalContradiction (.imp (.untl p_test .bot) (.untl q_test .bot))
+#eval isTemporalContradiction (.imp (.untl pTest .bot) (.untl qTest .bot))
   -- false (both sides always false → vacuously valid, not invalid)
-#eval isTemporalContradiction (.imp p_test q_test)                         -- false (q not always
+#eval isTemporalContradiction (.imp pTest qTest)                           -- false (q not always
 -- false)
-#eval isTemporalContradiction p_test                                       -- false (not an
+#eval isTemporalContradiction pTest                                        -- false (not an
 -- implication)
 #eval isTemporalContradiction (.imp .bot .bot)                             -- false (bot → bot is
 -- valid)
 
 -- isObviousSatisfiable: positive cases (invalid formulas)
-#eval isObviousSatisfiable (.imp p_test .bot)                              -- true  (p → ⊥: p
+#eval isObviousSatisfiable (.imp pTest .bot)                               -- true  (p → ⊥: p
 -- satisfiable)
-#eval isObviousSatisfiable (.imp (.box p_test) .bot)                       -- true  (□p → ⊥:
+#eval isObviousSatisfiable (.imp (.box pTest) .bot)                        -- true  (□p → ⊥:
 -- sat in reflexive model)
-#eval isObviousSatisfiable (.imp (Formula.and p_test q_test) .bot)         -- true  ((p∧q) → ⊥: sat)
-#eval isObviousSatisfiable (.imp p_test (.untl q_test .bot))               -- true  (p → U(⊥,q):
+#eval isObviousSatisfiable (.imp (Formula.and pTest qTest) .bot)           -- true  ((p∧q) → ⊥: sat)
+#eval isObviousSatisfiable (.imp pTest (.untl qTest .bot))                 -- true  (p → U(⊥,q):
 -- sat antecedent, false conseq)
 #eval isObviousSatisfiable (.imp (Formula.imp .bot .bot) .bot)             -- true  (⊤ → ⊥: top is
 -- satisfiable)
 -- isObviousSatisfiable: negative cases
-#eval isObviousSatisfiable (.imp (.untl q_test p_test) .bot)               -- false (U(p,q) not
+#eval isObviousSatisfiable (.imp (.untl qTest pTest) .bot)                 -- false (U(p,q) not
 -- trivially sat)
-#eval isObviousSatisfiable (.imp p_test q_test)                            -- false (q not always
+#eval isObviousSatisfiable (.imp pTest qTest)                              -- false (q not always
 -- false)
 #eval isObviousSatisfiable (.imp .bot .bot)                                -- false (bot not
 -- trivially sat)
-#eval isObviousSatisfiable p_test                                          -- false (not an
+#eval isObviousSatisfiable pTest                                           -- false (not an
 -- implication)
 
 -- hasUnfulfillableEventuality: positive cases (invalid formulas)
-#eval hasUnfulfillableEventuality (.imp (Formula.allFuture (Formula.neg p_test))
-    (.untl q_test p_test))
+#eval hasUnfulfillableEventuality (.imp (Formula.allFuture (Formula.neg pTest))
+    (.untl qTest pTest))
   -- true  (G(¬p) → U(p,q): p never true in future, Until unfulfillable)
-#eval hasUnfulfillableEventuality (.imp (Formula.and (Formula.allFuture (Formula.neg p_test))
-    r_test) (.untl q_test p_test))
+#eval hasUnfulfillableEventuality (.imp (Formula.and (Formula.allFuture (Formula.neg pTest))
+    rTest) (.untl qTest pTest))
   -- true  (G(¬p) ∧ r → U(p,q): G(¬p) is a conjunct)
-#eval hasUnfulfillableEventuality (.imp (Formula.allPast (Formula.neg p_test))
-    (.snce q_test p_test))
+#eval hasUnfulfillableEventuality (.imp (Formula.allPast (Formula.neg pTest))
+    (.snce qTest pTest))
   -- true  (H(¬p) → S(p,q): symmetric past case)
-#eval hasUnfulfillableEventuality (.imp (Formula.and (Formula.allPast (Formula.neg p_test)) r_test)
-    (.snce q_test p_test))
+#eval hasUnfulfillableEventuality (.imp (Formula.and (Formula.allPast (Formula.neg pTest)) rTest)
+    (.snce qTest pTest))
   -- true  (H(¬p) ∧ r → S(p,q): H(¬p) is a conjunct)
 -- hasUnfulfillableEventuality: negative cases
-#eval hasUnfulfillableEventuality (.imp (Formula.allFuture (Formula.neg q_test))
-    (.untl q_test p_test))
+#eval hasUnfulfillableEventuality (.imp (Formula.allFuture (Formula.neg qTest))
+    (.untl qTest pTest))
   -- false (G(¬q), not G(¬p) — wrong atom)
-#eval hasUnfulfillableEventuality (.imp p_test (.untl r_test q_test))
+#eval hasUnfulfillableEventuality (.imp pTest (.untl rTest qTest))
   -- false (no G(¬q) in antecedent)
-#eval hasUnfulfillableEventuality (.imp p_test q_test)                     -- false (consequent not
+#eval hasUnfulfillableEventuality (.imp pTest qTest)                       -- false (consequent not
 -- Until/Since)
-#eval hasUnfulfillableEventuality p_test                                   -- false (not an
+#eval hasUnfulfillableEventuality pTest                                    -- false (not an
 -- implication)
 
 -- structuralInvalidPrefilter: integration tests
-#eval structuralInvalidPrefilter (.imp p_test (.untl q_test .bot))
+#eval structuralInvalidPrefilter (.imp pTest (.untl qTest .bot))
   -- some (false, "invalid_satisfiable_neg") — atom is trivially satisfiable, so Pattern 2b fires
-#eval structuralInvalidPrefilter (.imp p_test .bot)
+#eval structuralInvalidPrefilter (.imp pTest .bot)
   -- some (false, "invalid_satisfiable_neg") — atom is trivially satisfiable
-#eval structuralInvalidPrefilter (.imp (.untl q_test p_test) (.untl r_test .bot))
+#eval structuralInvalidPrefilter (.imp (.untl qTest pTest) (.untl rTest .bot))
   -- some (false, "invalid_false_consequent") — U(p,q) not trivially satisfiable, falls to Pattern 1
-#eval structuralInvalidPrefilter (.imp (Formula.allFuture (Formula.neg p_test))
-    (.untl q_test p_test))
+#eval structuralInvalidPrefilter (.imp (Formula.allFuture (Formula.neg pTest))
+    (.untl qTest pTest))
   -- some (false, "invalid_unfulfillable_eventuality") — G(¬p) makes U(p,q) unfulfillable
-#eval structuralInvalidPrefilter (.imp p_test q_test)
+#eval structuralInvalidPrefilter (.imp pTest qTest)
   -- none (undetermined)
 #eval structuralInvalidPrefilter (.imp .bot .bot)
   -- none (vacuously valid, not invalid — bot is not trivially satisfiable)
-#eval structuralInvalidPrefilter (.imp (.untl p_test .bot) (.untl q_test .bot))
+#eval structuralInvalidPrefilter (.imp (.untl pTest .bot) (.untl qTest .bot))
   -- none (both sides always false → valid, not caught as invalid)
 
 -- structuralInvalidPrefilter: constructTrivialCountermodel test
 #eval do
-  let cm := constructTrivialCountermodel (.imp p_test (.untl q_test .bot))
+  let cm := constructTrivialCountermodel (.imp pTest (.untl qTest .bot))
   return (cm.trueAtoms.length, cm.falseAtoms.length)
   -- (2, 0) — both atoms p and q set to true
 

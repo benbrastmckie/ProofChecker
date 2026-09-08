@@ -282,27 +282,27 @@ def complexity : Formula → Nat
 
 /-! ### Complexity verification: unary temporal operators -/
 
-private def p_cmplx : Formula := .atom (Atom.mkBase "p")
-private def q_cmplx : Formula := .atom (Atom.mkBase "q")
+private def pCmplx : Formula := .atom (Atom.mkBase "p")
+private def qCmplx : Formula := .atom (Atom.mkBase "q")
 
 -- F(atom) should be 2 (was 5)
-#eval p_cmplx.someFuture.complexity  -- 2
+#eval pCmplx.someFuture.complexity   -- 2
 
 -- P(atom) should be 2 (was 5)
-#eval p_cmplx.somePast.complexity  -- 2
+#eval pCmplx.somePast.complexity   -- 2
 
 -- G(atom) should be 2 (was 9)
-#eval p_cmplx.allFuture.complexity  -- 2
+#eval pCmplx.allFuture.complexity   -- 2
 
 -- H(atom) should be 2 (was 9)
-#eval p_cmplx.allPast.complexity  -- 2
+#eval pCmplx.allPast.complexity   -- 2
 
 -- box(G(atom)) should be 3 (was 11)
-#eval p_cmplx.allFuture.box.complexity  -- 3
+#eval pCmplx.allFuture.box.complexity   -- 3
 
 -- Regular untl/snce still work correctly
-#eval (Formula.untl q_cmplx p_cmplx).complexity  -- 3
-#eval (Formula.snce q_cmplx p_cmplx).complexity  -- 3
+#eval (Formula.untl qCmplx pCmplx).complexity    -- 3
+#eval (Formula.snce qCmplx pCmplx).complexity    -- 3
 
 /-!
 ### BEq Reflexivity
@@ -583,26 +583,26 @@ def strongTrigger (φ ψ : Formula) : Formula := Formula.snce ψ (Formula.and ψ
 
 /-! ### Complexity verification: binary derived operators -/
 
-private def p_cmplx2 : Formula := .atom (Atom.mkBase "p")
-private def q_cmplx2 : Formula := .atom (Atom.mkBase "q")
+private def pCmplx2 : Formula := .atom (Atom.mkBase "p")
+private def qCmplx2 : Formula := .atom (Atom.mkBase "q")
 
 -- R(atom, atom) should be 3 (was 9)
-#eval (Formula.release p_cmplx2 q_cmplx2).complexity  -- 3
+#eval (Formula.release pCmplx2 qCmplx2).complexity    -- 3
 
 -- T(atom, atom) should be 3 (was 9)
-#eval (Formula.trigger p_cmplx2 q_cmplx2).complexity  -- 3
+#eval (Formula.trigger pCmplx2 qCmplx2).complexity    -- 3
 
 -- WU(atom, atom) should be 3 (was 8)
-#eval (Formula.weakUntil p_cmplx2 q_cmplx2).complexity  -- 3
+#eval (Formula.weakUntil pCmplx2 qCmplx2).complexity    -- 3
 
 -- WS(atom, atom) should be 3 (was 8)
-#eval (Formula.weakSince p_cmplx2 q_cmplx2).complexity  -- 3
+#eval (Formula.weakSince pCmplx2 qCmplx2).complexity    -- 3
 
 -- M(atom, atom) should be 4
-#eval (Formula.strongRelease p_cmplx2 q_cmplx2).complexity  -- 4
+#eval (Formula.strongRelease pCmplx2 qCmplx2).complexity    -- 4
 
 -- ST(atom, atom) should be 4
-#eval (Formula.strongTrigger p_cmplx2 q_cmplx2).complexity  -- 4
+#eval (Formula.strongTrigger pCmplx2 qCmplx2).complexity    -- 4
 
 /--
 Temporal 'sometimes' operator (▽φ, "at some time" - φ holds at some time).
@@ -636,28 +636,28 @@ prefix:80 "▽" => Formula.sometimes
 
 /-! ### Complexity verification: modal and compound temporal operators -/
 
-private def p_cmplx3 : Formula := .atom (Atom.mkBase "p")
+private def pCmplx3 : Formula := .atom (Atom.mkBase "p")
 
 -- diamond(atom) should be 2 (was 6)
-#eval p_cmplx3.diamond.complexity  -- 2
+#eval pCmplx3.diamond.complexity   -- 2
 
 -- always(atom) should be 2 (was 15)
-#eval p_cmplx3.always.complexity  -- 2
+#eval pCmplx3.always.complexity   -- 2
 
 -- sometimes(atom) should be 2 (was 23)
-#eval p_cmplx3.sometimes.complexity  -- 2
+#eval pCmplx3.sometimes.complexity   -- 2
 
 -- next(atom) should be 2 (was 3)
-#eval p_cmplx3.next.complexity  -- 2
+#eval pCmplx3.next.complexity   -- 2
 
 -- prev(atom) should be 2 (was 3)
-#eval p_cmplx3.prev.complexity  -- 2
+#eval pCmplx3.prev.complexity   -- 2
 
 -- weakFuture(atom) should be 2 (was 8)
-#eval p_cmplx3.weakFuture.complexity  -- 2
+#eval pCmplx3.weakFuture.complexity   -- 2
 
 -- weakPast(atom) should be 2 (was 8)
-#eval p_cmplx3.weakPast.complexity  -- 2
+#eval pCmplx3.weakPast.complexity   -- 2
 
 /--
 Swap temporal operators (past ↔ future) in a formula.

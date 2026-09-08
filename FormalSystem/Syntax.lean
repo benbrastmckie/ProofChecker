@@ -58,12 +58,12 @@ import FormalSystem.Syntax
 open FormalSystem.Syntax
 
 -- Build formulas using constructors
-def necessity_p : Formula := Formula.box (Formula.atomS "p")
-def future_q : Formula := Formula.allFuture (Formula.atomS "q")
+def necessityP : Formula := Formula.box (Formula.atomS "p")
+def futureQ : Formula := Formula.allFuture (Formula.atomS "q")
 
 -- Use method syntax for derived operators
-def possibly_p : Formula := (Formula.atomS "p").diamond
-def always_p : Formula := (Formula.atomS "p").always
+def possiblyP : Formula := (Formula.atomS "p").diamond
+def alwaysP : Formula := (Formula.atomS "p").always
 
 -- Contexts for derivations
 def assumptions : Context := [Formula.atomS "p", Formula.atomS "q"]

@@ -60,7 +60,7 @@ If `⊢ φ` then `⊢ A → φ` for any A.
 
 This uses the S axiom (weakening): `φ → (A → φ)`.
 -/
-private def weaken_under_imp {fc : FrameClass} {φ A : Formula} (h : ⊢[fc] φ) : ⊢[fc] A.imp φ := by
+private def weakenUnderImp {fc : FrameClass} {φ A : Formula} (h : ⊢[fc] φ) : ⊢[fc] A.imp φ := by
   have s_ax : ⊢[fc] φ.imp (A.imp φ) := DerivationTree.axiom [] _ (Axiom.prop_s φ A) trivial
   exact DerivationTree.modus_ponens [] φ (A.imp φ) s_ax h
 
@@ -68,10 +68,10 @@ private def weaken_under_imp {fc : FrameClass} {φ A : Formula} (h : ⊢[fc] φ)
 Helper: Lift weakening to contexts.
 If `Γ ⊢ φ` then `Γ ⊢ A → φ` for formulas φ that are axioms.
 -/
-private def weaken_under_imp_ctx {fc : FrameClass} {Γ : Context} {φ A : Formula}
+private def weakenUnderImpCtx {fc : FrameClass} {Γ : Context} {φ A : Formula}
     (h : Axiom φ) (h_fc : h.minFrameClass ≤ fc) : Γ ⊢[fc] A.imp φ := by
   have ax_deriv : ⊢[fc] φ := DerivationTree.axiom [] φ h h_fc
-  have weakened : ⊢[fc] A.imp φ := weaken_under_imp ax_deriv
+  have weakened : ⊢[fc] A.imp φ := weakenUnderImp ax_deriv
   exact DerivationTree.weakening [] Γ (A.imp φ) weakened (List.nil_subset Γ)
 
 /--
@@ -163,7 +163,7 @@ Deduction case for axioms: If φ is an axiom, then `Γ ⊢ A → φ`.
 def deductionAxiom {fc : FrameClass} (Γ : Context) (A φ : Formula) (h_ax : Axiom φ)
     (h_fc : h_ax.minFrameClass ≤ fc) :
     Γ ⊢[fc] A.imp φ := by
-  exact weaken_under_imp_ctx h_ax h_fc
+  exact weakenUnderImpCtx h_ax h_fc
 
 /--
 Deduction case for same assumption: `Γ ⊢ A → A`.
@@ -218,7 +218,7 @@ This is the key lemma for handling the weakening case where A appears in Γ'
 but not at the front. By recursing on the structure of the derivation (not using
 exchange), all recursive calls have strictly smaller height.
 -/
-private noncomputable def deduction_with_mem {fc : FrameClass} (Γ' : Context) (A φ : Formula)
+private noncomputable def deductionWithMem {fc : FrameClass} (Γ' : Context) (A φ : Formula)
     (h : Γ' ⊢[fc] φ) (hA : A ∈ Γ') :
     (removeAll Γ' A) ⊢[fc] A.imp φ := by
   haveI : Decidable (A ∈ Γ') := Classical.propDecidable _
@@ -242,8 +242,8 @@ private noncomputable def deduction_with_mem {fc : FrameClass} (Γ' : Context) (
         exact deductionAssumptionOther (removeAll Γ' A) A ψ h_mem'
   | DerivationTree.modus_ponens _ ψ χ h1 h2 =>
       -- Recursive calls on subderivations
-      have ih1 := deduction_with_mem Γ' A (ψ.imp χ) h1 hA
-      have ih2 := deduction_with_mem Γ' A ψ h2 hA
+      have ih1 := deductionWithMem Γ' A (ψ.imp χ) h1 hA
+      have ih2 := deductionWithMem Γ' A ψ h2 hA
       exact deductionMp (removeAll Γ' A) A ψ χ ih1 ih2
   | DerivationTree.necessitation ψ h_deriv =>
       simp at hA
@@ -255,7 +255,7 @@ private noncomputable def deduction_with_mem {fc : FrameClass} (Γ' : Context) (
       haveI : Decidable (A ∈ Γ'') := Classical.propDecidable _
       by_cases hA' : A ∈ Γ''
       · -- Case: A ∈ Γ'', recurse on h1
-        have ih := deduction_with_mem Γ'' A ψ h1 hA'
+        have ih := deductionWithMem Γ'' A ψ h1 hA'
         -- Weaken to removeAll Γ' A
         have h_sub : removeAll Γ'' A ⊆ removeAll Γ' A := by
           intro x hx
@@ -285,9 +285,9 @@ termination_by h.height
 decreasing_by
   -- Prove termination for each recursive call
   -- The recursive calls are:
-  -- 1. modus_ponens case: deduction_with_mem Γ' A (ψ.imp χ) h1 hA
-  -- 2. modus_ponens case: deduction_with_mem Γ' A ψ h2 hA
-  -- 3. weakening case (A ∈ Γ''): deduction_with_mem Γ'' A ψ h1 hA'
+  -- 1. modus_ponens case: deductionWithMem Γ' A (ψ.imp χ) h1 hA
+  -- 2. modus_ponens case: deductionWithMem Γ' A ψ h2 hA
+  -- 3. weakening case (A ∈ Γ''): deductionWithMem Γ'' A ψ h1 hA'
   · -- Goal 1: h1.height < h.height (modus_ponens left)
     exact DerivationTree.mp_height_gt_left h1 h2
   · -- Goal 2: h2.height < h.height (modus_ponens right)
@@ -392,7 +392,7 @@ noncomputable def deductionTheorem {fc : FrameClass} (Γ : Context) (A B : Formu
           -- SOLUTION: Don't use exchange! Instead, prove a helper lemma that
           -- directly shows: if Γ' ⊢ φ and A ∈ Γ', then (removeAll Γ' A) ⊢ A → φ
           -- This helper will recurse on h1, which has strictly smaller height.
-          have ih := deduction_with_mem Γ' A φ h1 hA
+          have ih := deductionWithMem Γ' A φ h1 hA
           -- Weaken to Γ
           have h_sub : removeAll Γ' A ⊆ Γ :=
             removeAll_subset hA h2

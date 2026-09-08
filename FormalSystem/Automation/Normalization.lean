@@ -555,13 +555,13 @@ def _root_.FormalSystem.Syntax.Formula.foldFormulaFull (f : Formula) : EnrichedF
 section FoldTests
 
 -- Helper: create test atoms
-private def p_atom : Atom := Atom.mkBase "p"
-private def q_atom : Atom := Atom.mkBase "q"
+private def pAtom : Atom := Atom.mkBase "p"
+private def qAtom : Atom := Atom.mkBase "q"
 
 -- Test: foldFormula on neg
 -- `imp (atom p) bot` folds to `neg (atom p)`
 #eval do
-  let f := Formula.imp (Formula.atom p_atom) Formula.bot
+  let f := Formula.imp (Formula.atom pAtom) Formula.bot
   let r := f.foldFormula
   return repr r  -- should show neg (atom ...)
 
@@ -575,59 +575,59 @@ private def q_atom : Atom := Atom.mkBase "q"
 -- Test: foldFormula on diamond
 -- `imp (box (imp (atom p) bot)) bot` folds to `diamond (atom p)`
 #eval do
-  let f := Formula.diamond (Formula.atom p_atom)  -- unfolds to the primitive
+  let f := Formula.diamond (Formula.atom pAtom)   -- unfolds to the primitive
   let r := f.foldFormula
   return repr r  -- should show diamond (atom ...)
 
 -- Test: foldFormula on and
 -- `imp (imp (atom p) (imp (atom q) bot)) bot` folds to `and_ (atom p) (atom q)`
 #eval do
-  let f := Formula.and (Formula.atom p_atom) (Formula.atom q_atom)
+  let f := Formula.and (Formula.atom pAtom) (Formula.atom qAtom)
   let r := f.foldFormula
   return repr r  -- should show and_ (atom ...) (atom ...)
 
 -- Test: foldFormula on or
 -- `imp (imp (atom p) bot) (atom q)` folds to `or_ (atom p) (atom q)`
 #eval do
-  let f := Formula.or (Formula.atom p_atom) (Formula.atom q_atom)
+  let f := Formula.or (Formula.atom pAtom) (Formula.atom qAtom)
   let r := f.foldFormula
   return repr r  -- should show or_ (atom ...) (atom ...)
 
 -- Test: foldFormula on someFuture
 -- `untl (atom p) (imp bot bot)` folds to `someFuture (atom p)`
 #eval do
-  let f := Formula.someFuture (Formula.atom p_atom)
+  let f := Formula.someFuture (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show someFuture (atom ...)
 
 -- Test: foldFormula on somePast
 -- `snce (atom p) (imp bot bot)` folds to `somePast (atom p)`
 #eval do
-  let f := Formula.somePast (Formula.atom p_atom)
+  let f := Formula.somePast (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show somePast (atom ...)
 
 -- Test: foldFormula on allFuture
 #eval do
-  let f := Formula.allFuture (Formula.atom p_atom)
+  let f := Formula.allFuture (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show allFuture (atom ...)
 
 -- Test: foldFormula on allPast
 #eval do
-  let f := Formula.allPast (Formula.atom p_atom)
+  let f := Formula.allPast (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show allPast (atom ...)
 
 -- Test: foldFormula on next
 #eval do
-  let f := Formula.next (Formula.atom p_atom)
+  let f := Formula.next (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show next (atom ...)
 
 -- Test: foldFormula on prev
 #eval do
-  let f := Formula.prev (Formula.atom p_atom)
+  let f := Formula.prev (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show prev (atom ...)
 
@@ -635,17 +635,17 @@ private def q_atom : Atom := Atom.mkBase "q"
 -- for formulas built with derived operators
 #eval do
   let formulas : List Formula := [
-    Formula.neg (Formula.atom p_atom),
+    Formula.neg (Formula.atom pAtom),
     Formula.top,
-    Formula.and (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.or (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.diamond (Formula.atom p_atom),
-    Formula.someFuture (Formula.atom p_atom),
-    Formula.somePast (Formula.atom p_atom),
-    Formula.allFuture (Formula.atom p_atom),
-    Formula.allPast (Formula.atom p_atom),
-    Formula.next (Formula.atom p_atom),
-    Formula.prev (Formula.atom p_atom)
+    Formula.and (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.or (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.diamond (Formula.atom pAtom),
+    Formula.someFuture (Formula.atom pAtom),
+    Formula.somePast (Formula.atom pAtom),
+    Formula.allFuture (Formula.atom pAtom),
+    Formula.allPast (Formula.atom pAtom),
+    Formula.next (Formula.atom pAtom),
+    Formula.prev (Formula.atom pAtom)
   ]
   let results := formulas.map fun f =>
     let folded := Formula.foldFormula f
@@ -655,35 +655,35 @@ private def q_atom : Atom := Atom.mkBase "q"
 
 -- Test: weakFuture fold
 #eval do
-  let f := Formula.weakFuture (Formula.atom p_atom)
+  let f := Formula.weakFuture (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show weakFuture (atom ...)
 
 -- Test: weakPast fold
 #eval do
-  let f := Formula.weakPast (Formula.atom p_atom)
+  let f := Formula.weakPast (Formula.atom pAtom)
   let r := f.foldFormula
   return repr r  -- should show weakPast (atom ...)
 
 -- Test: always fold (requires recognizeComposites)
 #eval do
-  let f := Formula.always (Formula.atom p_atom)
+  let f := Formula.always (Formula.atom pAtom)
   let r := f.foldFormulaFull
   return repr r  -- should show always (atom ...)
 
 -- Test: sometimes fold (requires recognizeComposites)
 #eval do
-  let f := Formula.sometimes (Formula.atom p_atom)
+  let f := Formula.sometimes (Formula.atom pAtom)
   let r := f.foldFormulaFull
   return repr r  -- should show sometimes (atom ...)
 
 -- Test: full round-trip with composites
 #eval do
   let formulas : List Formula := [
-    Formula.always (Formula.atom p_atom),
-    Formula.sometimes (Formula.atom p_atom),
-    Formula.weakFuture (Formula.atom p_atom),
-    Formula.weakPast (Formula.atom p_atom)
+    Formula.always (Formula.atom pAtom),
+    Formula.sometimes (Formula.atom pAtom),
+    Formula.weakFuture (Formula.atom pAtom),
+    Formula.weakPast (Formula.atom pAtom)
   ]
   let results := formulas.map fun f =>
     let folded := Formula.foldFormulaFull f
@@ -693,33 +693,33 @@ private def q_atom : Atom := Atom.mkBase "q"
 
 -- Derived binary operators fold to their own tags (not neg(untl ...) etc.).
 -- Each assertion checks (a) the correct enriched tag and (b) round-trip identity.
-#guard Formula.foldFormulaFull (Formula.release (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.release (.atom p_atom) (.atom q_atom)
-#guard Formula.foldFormulaFull (Formula.weakUntil (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.weak_until (.atom p_atom) (.atom q_atom)
-#guard Formula.foldFormulaFull (Formula.trigger (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.trigger (.atom p_atom) (.atom q_atom)
-#guard Formula.foldFormulaFull (Formula.weakSince (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.weak_since (.atom p_atom) (.atom q_atom)
-#guard Formula.foldFormulaFull (Formula.strongRelease (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.strong_release (.atom p_atom) (.atom q_atom)
-#guard Formula.foldFormulaFull (Formula.strongTrigger (Formula.atom p_atom) (Formula.atom q_atom))
-  == EnrichedFormula.strong_trigger (.atom p_atom) (.atom q_atom)
+#guard Formula.foldFormulaFull (Formula.release (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.release (.atom pAtom) (.atom qAtom)
+#guard Formula.foldFormulaFull (Formula.weakUntil (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.weak_until (.atom pAtom) (.atom qAtom)
+#guard Formula.foldFormulaFull (Formula.trigger (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.trigger (.atom pAtom) (.atom qAtom)
+#guard Formula.foldFormulaFull (Formula.weakSince (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.weak_since (.atom pAtom) (.atom qAtom)
+#guard Formula.foldFormulaFull (Formula.strongRelease (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.strong_release (.atom pAtom) (.atom qAtom)
+#guard Formula.foldFormulaFull (Formula.strongTrigger (Formula.atom pAtom) (Formula.atom qAtom))
+  == EnrichedFormula.strong_trigger (.atom pAtom) (.atom qAtom)
 
 -- Round-trip: toPrimitive ∘ foldFormulaFull = id for all 6 binary operators.
 #guard [
-    Formula.release (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.weakUntil (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.trigger (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.weakSince (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.strongRelease (Formula.atom p_atom) (Formula.atom q_atom),
-    Formula.strongTrigger (Formula.atom p_atom) (Formula.atom q_atom)
+    Formula.release (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.weakUntil (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.trigger (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.weakSince (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.strongRelease (Formula.atom pAtom) (Formula.atom qAtom),
+    Formula.strongTrigger (Formula.atom pAtom) (Formula.atom qAtom)
   ].all (fun f => f == EnrichedFormula.toPrimitive (Formula.foldFormulaFull f))
 
 -- Regression (report §8 / plan risk): release(p, ⊥) still folds to allFuture p,
 -- because `neg ⊥` collapses to ⊤ and the someFuture ⊥-guard fires first.
-#guard Formula.foldFormulaFull (Formula.release (Formula.atom p_atom) Formula.bot)
-  == EnrichedFormula.all_future (.atom p_atom)
+#guard Formula.foldFormulaFull (Formula.release (Formula.atom pAtom) Formula.bot)
+  == EnrichedFormula.all_future (.atom pAtom)
 
 end FoldTests
 
