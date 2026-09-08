@@ -1,12 +1,13 @@
 # Implementation Plan: Task #552
 
 - **Task**: 552 - Align history vocabulary with paper (`WorldHistory` -> `ConvexHistory`)
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 7 hours
 - **Dependencies**: None (the paper-anchor re-pin dependency is discharged for this task's three
   anchors — see Research Integration; the sibling task's six drifted anchors are disjoint)
 - **Research Inputs**: `specs/552_align_history_vocabulary_with_paper/reports/01_align-history-vocabulary-paper.md`
-- **Artifacts**: plans/01_align-history-vocabulary-paper.md (this file)
+- **Artifacts**: plans/01_align-history-vocabulary-paper.md (this file),
+  summaries/01_align-history-vocabulary-paper-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -411,35 +412,41 @@ files were never written.
 
 ---
 
-### Phase 5: Full gate and invariant reconciliation [NOT STARTED]
+### Phase 5: Full gate and invariant reconciliation [COMPLETED]
 
 **Goal**: Prove the whole change green against the complete gate set with no regression on any
 recorded baseline.
 
 **Tasks**:
-- [ ] Single guarded background rebuild (pays for Phase 3's ~250-module docstring invalidation):
+- [x] Single guarded background rebuild (pays for Phase 3's ~250-module docstring invalidation):
       `bash .claude/scripts/lake-build-guard.sh build --timeout 1800 -- lake build FormalSystem`
       under `run_in_background: true`. Wait for the completion notification before proceeding.
-- [ ] `sorry` count over the live tree excluding `Boneyard/` equals **348** (the gate is "no *new*
-      sorry", not zero).
-- [ ] `bash scripts/check-module-invariants.sh` — expect `ALL CHECKS PASSED`, exit 0, and a C19
-      refined docstring-coverage figure **>= 92.33%**.
-- [ ] `bash scripts/typst-sync-check.sh` — `TOTAL_VIOLATIONS` must be **<= 4**. Do not read the
+- [x] `sorry` count over the live tree excluding `Boneyard/` equals **348** (the gate is "no *new*
+      sorry", not zero). *(deviation: altered — the baseline is **331**, not 348; 331 was
+      re-measured against the merge-base before any edit and is unchanged after. C3 separately
+      confirms the *structural* sorry inventory is zero, so all 331 are comment/marker tokens.)*
+- [x] `bash scripts/check-module-invariants.sh` — expect `ALL CHECKS PASSED`, exit 0, and a C19
+      refined docstring-coverage figure **>= 92.33%**. *(deviation: added — the first run failed
+      C11 and C20, both regressions caused by this task and both repaired; see the summary's Plan
+      Deviations. The rerun is `ALL CHECKS PASSED`, exit 0, C19 refined 92.33%.)*
+- [x] `bash scripts/typst-sync-check.sh` — `TOTAL_VIOLATIONS` must be **<= 4**. Do not read the
       exit code.
-- [ ] `bash scripts/readme-lint.sh` — `RESULT: PASS`, broken file references **0**, stale-date
-      count **<= 2** (the two READMEs re-stamped in Phase 3 should have cleared).
-- [ ] `bash scripts/check-paper-definitions.sh` — drifted set must be **exactly**
+- [x] `bash scripts/readme-lint.sh` — `RESULT: PASS`, broken file references **0**, stale-date
+      count **<= 2** (the two READMEs re-stamped in Phase 3 should have cleared). *(deviation:
+      altered — the stale-date baseline is **11**, not 2; it is now **9**, having cleared the two
+      re-stamped READMEs plus the Bridge README. The plan's "<= 2" figure was a mis-measure.)*
+- [x] `bash scripts/check-paper-definitions.sh` — drifted set must be **exactly**
       `{def:S5, def:BX, def:BX-z, def:BX-d, def:BX-r, def:TMplus}`, 0 unresolved. Exit 1 is the
       baseline, not a failure. Appearance of `def:world-history`, `thm:extension` or
       `cor:occurrence` in the drift set is a hard failure and must be repaired before closing.
-- [ ] Identifier-absence grep: `grep -rn 'WorldHistory\|worldHistory' --exclude-dir=.git .` returns
+- [x] Identifier-absence grep: `grep -rn 'WorldHistory\|worldHistory' --exclude-dir=.git .` returns
       hits ONLY under `Boneyard/`, `specs/` (archival, plus the two live `specs/ROADMAP.md`
       mentions), and `latex/**/build/` generated artifacts.
-- [ ] Prose-absence grep: `grep -rin 'world histor' --exclude-dir=.git . | grep -v '/Boneyard/' |
+- [x] Prose-absence grep: `grep -rin 'world histor' --exclude-dir=.git . | grep -v '/Boneyard/' |
       grep -v '^specs/' | grep -v '/build/'` returns nothing.
-- [ ] Confirm no proof term changed across the whole task: `git diff <base>..HEAD` hunks are
+- [x] Confirm no proof term changed across the whole task: `git diff <base>..HEAD` hunks are
       identifiers, imports, comments, docstrings and markdown only.
-- [ ] Record in the summary, without acting on them: (a) `specs/ROADMAP.md:223, 742` name
+- [x] Record in the summary, without acting on them: (a) `specs/ROADMAP.md:223, 742` name
       `WorldHistory` in live steering prose and are left stale by the dispatch's `specs/` scope
       boundary — recommend a follow-up; (b) the paper's own body prose (`possible_worlds.tex`
       lines 1014-1052) still uses "world history" for the total tier, which is the paper's drift,

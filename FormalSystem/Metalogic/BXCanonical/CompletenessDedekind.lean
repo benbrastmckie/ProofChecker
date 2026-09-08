@@ -199,7 +199,7 @@ theorem's own standing hypothesis. `staviFoDepth`/`tableMu`
 Stavi development and is **not** what §9 needs; the plain `table` layer is.
 
 **ADAPTED-FROM**: `countermodel_discrete_reynolds_v2`
-(`WeakCanonical/IntegerModel/ReynoldsBridge.lean:739`), statement-for-statement with
+(`WeakCanonical/IntegerModel/ReynoldsBridge.lean`), statement-for-statement with
 `ℤ → ℝ`. The `ℤ` original is untouched and still consumed by `derivable_of_validZTime`. Three
 things change beyond the carrier: the per-family monadic structure is the chronicle bridge
 rather than the limit-domain structure, so the truth correspondence is
@@ -215,7 +215,7 @@ The point of an `ℝ`-flowed interval structure at a given real.
 
 `IsRealFlow` is `carrierSet = Set.univ` (`RealModel/DoetsTheorem.lean`), so every real is in
 the carrier and this is total. It is the dense analogue of `toCarrier`
-(`ReynoldsBridge.lean:663`), which needs `lo = none` and `hi = none` separately because a
+(`ReynoldsBridge.lean`), which needs `lo = none` and `hi = none` separately because a
 `ZIntervalStructure` records its bounds.
 
 No source: bookkeeping, original work.

@@ -1,6 +1,6 @@
 import FormalSystem.Boneyard.StrictSemanticsLegacy.Bundle.SuccChainFMCS
 import FormalSystem.Boneyard.ChainCompleteness.Bundle.SuccChainTaskFrame
-import FormalSystem.Semantics.WorldHistory
+import FormalSystem.Semantics.ConvexHistory
 
 /-!
 ARCHIVED (Boneyard) — never compiled. Archived material; see the Boneyard README inventory.
