@@ -1,5 +1,5 @@
 ---
-next_project_number: 563
+next_project_number: 571
 ---
 
 # TODO
@@ -11,9 +11,9 @@ next_project_number: 563
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,562 | -- | algebraic-representation, automation, dataset-enhancement, ... |
-| 2 | 178,231,282,296,465,497,534,537,559,561 | 193,298,464,502,562 | algebraic-representation, dataset-enhancement, decidability, ... |
-| 3 | 219,428,498,499,500,560 | 231,465,497,537,559 | algebraic-representation, dataset-enhancement, decidability, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,540,542,562,563 | -- | algebraic-representation, automation, categorical-structure, ... |
+| 2 | 178,231,282,296,465,497,534,537,559,561,564,565,567,568,569 | 193,298,464,502,562,563 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 3 | 219,428,498,499,500,560,566,570 | 231,465,497,537,559,565,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
@@ -38,6 +38,14 @@ next_project_number: 563
 
 193 [NOT STARTED] — Apply validity-intro and truth-simp macros to the soundness layer
 
+### Categorical Structure
+
+563 [NOT STARTED] — Promote the presheaf skeleton into the library. DELIVER: the sect
+  └─ 564 [NOT STARTED] — Prove `app:gluing` for two interval sections whose germs agree at
+  └─ 565 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Totality and Directed Gluing cl
+    └─ 566 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Possible Worlds clause: `H_F is
+  └─ 567 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Determinism clause -- `F` deter
+
 ### Dataset Enhancement
 
 257 [BLOCKED] — Complete the Hugging Face Hub migration for large dataset storage
@@ -61,6 +69,10 @@ next_project_number: 563
 476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
 481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
 
+### Documentation
+
+540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
+
 ### Formula Refactor
 
 177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level docstring
@@ -70,6 +82,10 @@ next_project_number: 563
 
 127 [NOT STARTED] — Add time addition operator (+) to the bimodal logic TM. φ + ψ is 
 128 [NOT STARTED] — Add topological open set (interior) operator for dense and contin
+
+### Incompleteness
+
+534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 
 ### Literature
 
@@ -83,28 +99,183 @@ next_project_number: 563
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta (see above)
 561 [NOT STARTED] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
+568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
+  └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
 
 ### Paper Refactor
 
 562 [NOT STARTED] — Rename this repository's object languages and proof systems so th
+  └─ 569 [NOT STARTED] — Retarget the semantics from a convex index carrying an `IsTotal` 
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-
-### Documentation
-
-540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
-
-### Incompleteness
-
-534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
 
 ### Infrastructure
 
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
 
 ## Tasks
+
+### 570. C3 completeness question
+- **Status**: [NOT STARTED]
+- **Task Type**: formal
+- **Topic**: metalogic
+- **Dependencies**: Task 568
+
+**Description**: OPEN RESEARCH QUESTION, not an implementation task. Is the logic of C3 -- the domain-restricted consequence relation -- equal to Burgess-Xu without the unboundedness assumption, plus S5?
+
+WHAT IS ALREADY ESTABLISHED (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 4.2) is the CONTAINMENT: C3 includes classical propositional logic, S5 for box, the whole Burgess-Xu monotonicity, enrichment, accumulation, absorption and linearity block, and `modal_future`; and C3 excludes seriality and the uniformity layer. The study explicitly DECLINES the completeness claim. Establishing or refuting it is this task, and the honest starting position is that it is open.
+
+THE FIRST OBSTACLE, which any canonical-model construction will hit immediately (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 4.3): the germ constraint. Every C3-validity holds at every one-point germ, and `box (phi U psi)` and `box (phi S psi)` are C3-UNSATISFIABLE for every `phi` and `psi`. That is stronger than the loss of seriality: it constrains what any axiomatization of C3 could look like, since no boxed binary-tense formula can ever be a theorem. A canonical model for C3 must either accommodate germs in the box range or the box range must be cut back first.
+
+SEQUENCING. Do not start before the box-range design choice recorded in the C3/C4 library task is settled by the author. If the box range is cut back, this task is about a DIFFERENT logic and this description must be revised before any work begins.
+
+LITERATURE. Burgess 1982 and Xu 1988 axiomatize `U`/`S` over an arbitrary linear order BEFORE unboundedness is added, which is exactly the setting C3 lives in. Check the Literature/ index for both before starting; acquire them if absent.
+
+---
+
+### 569. Retarget semantics to possible world index
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: paper-refactor
+- **Dependencies**: Task 562
+
+**Description**: Retarget the semantics from a convex index carrying an `IsTotal` side hypothesis to a total-by-construction index.
+
+THE CORRECTNESS ARGUMENT, machine-checked in `specs/553_decide_convex_history_layer_collapse/probes/01_bounded-index-diagnosis.lean`: the current bounded-index reading is INCOHERENT, not merely unused. `refute_modal_t_at_bounded_index` proves that `box p implies p` -- an axiom of TM -- is FALSE at a bounded convex index at a point off its domain, because `TruthAt`'s atom clause is domain-relative (`exists ht : tau.domain t`) while its box clause re-indexes to `H_F`, which is total. The degeneracy is exactly `x not in dom tau`; on the domain the axiom holds. The `IsTotal` guard (239 in-code occurrences across 55 files) is load-bearing, and this is precisely what it guards. This is a correctness argument, not a tidiness one.
+
+TARGET: `structure PossibleWorld (F : TaskFrame) where states : F.Duration -> F.WorldState ; respects_task : forall s t, F.TaskRel (states s) (t - s) (states t)` -- named for the paper's own term, the paper having withdrawn `world history` entirely -- so that `PossibleWorld F` and `F.HF` coincide definitionally exactly as they do in the paper, with no side condition and no bridging apparatus.
+
+`ConvexHistory` SURVIVES as a definition. This is the retarget half of DEVELOP-AND-RETARGET, not a collapse: the presheaf front and the C3/C4 front both continue to use the convex layer, and removing it would foreclose both.
+
+GATE, BEFORE ANY OTHER PHASE: a one-phase spike resolving whether the Z-transfer machinery in `FormalSystem/Semantics/IntTransfer.lean` survives a narrower index (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 6.1, obligation class (ii)). This is the ONE item in the whole retarget that grep cannot answer. It is a spike inside this task, not a task of its own. If it comes back negative, revise this description before continuing rather than absorbing the surprise.
+
+SUGGESTED PHASE DECOMPOSITION, each one agent run, each leaving the build green: (1) introduce `PossibleWorld` with an `abbrev` bridge and prove the round trip against `TaskFrame.HF`; (2) retarget `TruthAt` and `Truth.lean`'s lemma block; (3) retarget `Validity.lean` and delete the 12 bridges (`TaskFrame.HF.val`/`.property`, `SemanticConsequence.of_forall`/`.apply`, `SemanticConsequenceIn.of_forall_total`/`.apply_total`, `Valid.of_forall_total`/`.apply`, `validOn_iff_total` and the rest), keeping deprecated aliases; (4-6) sweep the roughly 280 bridge call sites across 26 files, ONE module cluster per phase, with `Metalogic/Soundness.lean` and `Metalogic/Decidability/` LAST; (7) delete the deprecated aliases and run the `assert_not_exists` audit.
+
+MEASURED SIZE (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 6.1): roughly 600 touch points across 55-75 files, net MINUS 150 to MINUS 250 lines out of 283,541. Volume, not depth. Two corrections to the original costing: only 64 of 133 dependent `.states` sites are at the convex layer, and the roughly 280 bridge call sites across 26 files -- which the original costing omitted entirely -- dominate the work.
+
+HARD CONSTRAINTS. Leave `PartialHistory` and the Extension Theorem untouched: the Extension Theorem's conclusion is stated at the partial layer and is unaffected either way. lake build FormalSystem must be green with no new sorry at the end of every phase.
+
+---
+
+### 568. C3 c4 consequence relations as library definitions
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: metalogic
+- **Dependencies**: Task 562
+
+**Description**: Promote the alternative consequence relations into the library, from `specs/553_decide_convex_history_layer_collapse/probes/02_alternative-consequence.lean` and `specs/553_decide_convex_history_layer_collapse/probes/03_axiom-survival.lean`. This is the task the author's own reframing most directly asks for: it is what makes C3 and C4 things this repository HAS rather than things a probe file mentions.
+
+THE FOUR RELATIONS (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 3.1). C1 (current, and the paper's `def:logical-consequence`): total index, box over `H_F`, tenses over all of `D`. C2: any convex index, box over `H_F`, tenses over all of `D` -- DIAGNOSTIC ONLY, and strictly worse than both C1 and C3, since it invalidates `modal_t`; do not promote it as a candidate semantics. C3 (the paper's footnote at possible_worlds.tex line 1102): index any convex `tau` with `x` in `dom tau`, box over the convex histories whose domain contains `x`, tenses and evaluation time restricted to `dom tau`. C4: C3 with the index restricted to closed bounded interval domains -- the domain shape of `Beh(F)(l)`'s sections up to translation.
+
+DELIVER: `TruthAtConvex` (a local recursion written BESIDE the library's `TruthAt`, never a modification of it), `ValidC3`, `ValidC4`; the germ theorems `germ_untl_false`, `c3_box_untl_unsat`, `c3_box_snce_unsat`, `c3_valid_imp_germ_valid`, `c3_nec`; the shift-invariance lemma `truthC3_timeShift`; the separations `valid_C1_someFuture_top`, `refute_C3_someFuture_top`, `refute_C3_somePast_top`, `refute_C4_someFuture_top`; the containment `validC3_imp_validC4`; and the section 4.1 axiom-survival table as theorems, INCLUDING the six machine-checked failures (`serial_future`, `serial_past`, `discrete_symm_fwd`, `discrete_symm_bwd`, `discrete_propagate_fwd`, `discrete_box_necessity`).
+
+CLOSE THE FOUR GAPS section 4.1 leaves open: `discrete_propagate_bwd` and `z1` are CONDITIONAL; `prior_U_gap`, `prior_S_gap` and `sep` are UNRESOLVED. The RTime layer is genuine work -- `K+` is itself a restricted `U`/`S` formula whose endpoint behaviour was never checked.
+
+WORKING DEFAULT ON THE BOX-RANGE DESIGN CHOICE, revisable by the author and recorded here so it is not settled by accident: keep the footnote's own reading as the PRIMARY C3 -- box ranging over ALL convex histories through `x`, one-point germs included -- and add the cut-back variant (interval sections of some minimum length, or those whose domain contains `dom tau`) as a NAMED ALTERNATIVE. Rationale: the footnote is the definition of record, and the germ result is more interesting stated than avoided. If the author overrides this, the override changes what the completeness sequel is about, so it must be recorded here BEFORE that sequel starts.
+
+WHAT C3 IS, for docstrings (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 4.2): TM's S5 modal layer over a bounded-interval tense logic. Every axiom failure is an EXISTENCE ASSERTION about the temporal order, and boundedness is exactly what makes existence assertions fail. `modal_future` SURVIVES, because C3 is time-uniform -- `truthC3_timeShift` is the C3 analogue of `app:auto_existence`. Do NOT claim that C3 equals Burgess-Xu-without-seriality plus S5; that is a completeness question and it belongs to the sequel task.
+
+CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end of every phase. C1 -- the library's own `TruthAt` and `ConsequenceOnFrames` -- must be left semantically unchanged by this task.
+
+---
+
+### 567. Determinism clause and separatedness asymmetry
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: categorical-structure
+- **Dependencies**: Task 563, Task 562
+
+**Description**: Prove `app:presheaf-dictionary`'s Determinism clause -- `F` deterministic iff every restriction map of `Beh(F)` is injective -- and connect it to `StarDeterminism.states_eq_of_deterministic`.
+
+THE DELIVERABLE THAT MAKES THIS WORTH DOING is not the dictionary row but the asymmetry the study found (`specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 5.2.1): SEPARATEDNESS of `Beh(F)` is STRICTLY STRONGER than the validity of `Determined` on `F`. The witness for the failure of the converse is the drift frame already living in `FormalSystem/Metalogic/Independence/` -- this repository's own countermodel, not a new construction. State the result as a THEOREM PAIR (one direction proved, the converse refuted by that countermodel), not as a single clause.
+
+WHY IT MATTERS. This is one of only two results the study found running FROM this repository's semantics TO the paper's category theory rather than the reverse. That direction is the point of the categorical front, not a by-product of it.
+
+OPEN QUESTION TO POSE, NOT TO SETTLE: does any `BL-star` formula characterize separatedness of `Beh(F)` exactly? `StarDeterminism.lean`'s own choice-dependence note suggests it does not. Record the question in the module docstring; do not spend phases attacking it.
+
+DEPENDENCY NOTE. Waits on the language-name sync, which renames `Semantics/StarDeterminism.lean` to `PlusDeterminism.lean` under its mapping (c).
+
+CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end of every phase.
+
+---
+
+### 566. Possible worlds clause hf as limit
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: categorical-structure
+- **Dependencies**: Task 563, Task 565
+
+**Description**: Prove `app:presheaf-dictionary`'s Possible Worlds clause: `H_F iso lim Beh(F)(2x)` along the central restrictions.
+
+EXISTING HOOK, to be used rather than rebuilt: over `D = Z` this connects to `FrameOver.mem_HF_iff_adjacent`, already proved in `FormalSystem/Semantics/IntTransfer.lean`. Do not re-derive the adjacency argument.
+
+DEPENDS on the interval-site/presheaf cluster and on the Totality clause, since the limit construction consumes Totality.
+
+CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end of every phase. Background: `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 5.1.
+
+---
+
+### 565. Totality and directed gluing from extension theorem
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: categorical-structure
+- **Dependencies**: Task 563
+
+**Description**: Prove `app:presheaf-dictionary`'s Totality and Directed Gluing clauses. Both are WRAPPERS on `thm:extension`, which is fully proved in this repository under `FormalSystem/Semantics/Extension/`: translate a section to its subinterval, extend to a possible world, restrict.
+
+WHY THIS MATTERS OUT OF PROPORTION TO ITS SIZE. It is the task that demonstrates the Extension Theorem was the presheaf appendix's analytic content all along -- the strongest structural claim the study makes about the relationship between this repository and `app:Structure`, and the clearest single piece of evidence that the categorical material was already present here under non-categorical names. Small (1-2 phases), high explanatory value.
+
+RECORD explicitly, rather than leaving it implicit in the proof terms, which clauses are choice-free: Sheaf is; Directed Gluing is NOT.
+
+HARD CONSTRAINT. Leave `PartialHistory` and the Extension Theorem themselves untouched. This task CONSUMES `thm:extension`; it does not restate, strengthen or reprove it. lake build FormalSystem must be green with no new sorry at the end of every phase.
+
+Background: `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 5.1.
+
+---
+
+### 564. Sheaf clause gluing and starpasting generalization
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: categorical-structure
+- **Dependencies**: Task 563, Task 562
+
+**Description**: Prove `app:gluing` for two interval sections whose germs agree at the seam, plus the two restriction identities and uniqueness.
+
+THE COMPOSITION STEP IS ALREADY PROVED as `glue_seam` in `specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`. The remainder is assembling the glued section by cases and applying `ShiftSet.wh_ext`.
+
+THE DE-DUPLICATION THAT MAKES THIS WORTH DOING, and which is part of the deliverable rather than optional: generalize `StarPasting.paste` off its totality hypothesis. `FormalSystem/Semantics/StarPasting.lean`'s `paste_rel_le_lt` is the SAME ARGUMENT as the interval-site gluing step. The study established that the general-convex and interval-site versions share one proof and should not be written twice; delivering the Sheaf clause while leaving `paste` untouched creates exactly the duplication this task exists to prevent.
+
+RECORD in the module docstring which dictionary clauses are choice-free. Sheaf is.
+
+DEPENDENCY NOTE. Waits on the language-name sync because that task renames `Semantics/StarPasting.lean` to `PlusPasting.lean` under its mapping (c). Doing this generalization first would write it against a filename and a declaration prefix that are about to change, forcing a second pass.
+
+CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end of every phase. Background: `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` sections 5.1 and 5.2.
+
+---
+
+### 563. Formalize interval site and behavior presheaf
+- **Status**: [NOT STARTED]
+- **Task Type**: lean4
+- **Topic**: categorical-structure
+- **Dependencies**: None
+
+**Description**: Promote the presheaf skeleton into the library. DELIVER: the section type `Beh F l` (the convex histories with domain exactly [0, l]), restriction along the translation `Tr p`, presheaf functoriality (`restrict_id`, `restrict_comp`), and the Germs clause `Beh(F)(0) iso W`.
+
+ALL FOUR ARE ALREADY PROVED, sorry-free, against the live tree in roughly 200 lines in `specs/553_decide_convex_history_layer_collapse/probes/04_presheaf-skeleton.lean`. The work here is siting, naming and docstrings -- not discovery. Read that probe before planning.
+
+SITING. A new `FormalSystem/Semantics/Presheaf/` cluster, placed BELOW `Truth.lean` in the module layering so that the existing `assert_not_exists` on the proof system still holds. Two repo conventions apply: a directory `X/` has exactly one sibling aggregator `X.lean`, and `scripts/check-module-invariants.sh` C24 requires every module to stay in the root closure.
+
+PAPER ANCHORS: `app:Structure`'s `def:interval-site` and `def:behavior-presheaf` in /home/benjamin/Philosophy/Papers/PossibleWorlds/JPL/possible_worlds.tex. Docstrings must cite those labels. NOTE that `app:Structure` carries a `% TODO: review in full` marker in the LaTeX source, so this task tracks material the author has not finished reviewing -- flag that in the module docstring rather than silently depending on it.
+
+OPTIONAL, only if cheap: `BD+` and the twisted-arrow category with `lem:interval-twisted-arrow`. That lemma is pure order algebra and needs no frame.
+
+WHY THIS FIRST. It is the cheapest task on the categorical front -- the theorems already exist -- and it gates the Sheaf, Totality/Directed Gluing, Possible Worlds and Determinism clauses. Background and the full `app:Structure`-to-tree dictionary: `specs/553_decide_convex_history_layer_collapse/reports/01_convex-correlate-and-consequence.md` section 5.1.
+
+CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end of every phase.
+
+---
 
 ### 562. Sync language names with paper l minus plus star
 - **Status**: [NOT STARTED]
@@ -262,24 +433,22 @@ Dependencies: none outstanding. Task 463, which formerly owned this file, is com
 - **Plan**: [553_decide_convex_history_layer_collapse/plans/01_convex-correlate-and-consequence-study.md]
 - **Summary**: [553_decide_convex_history_layer_collapse/summaries/01_convex-correlate-and-consequence-summary.md]
 
-**Description**: ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Semantics/{WorldHistory,PartialHistory,Truth,Validity,StarPasting,ShiftSet,IntTransfer}.lean, FormalSystem/Semantics/Ultraproduct, FormalSystem/Metalogic/Decidability/BiLasso, FormalSystem/Metalogic/WeakCanonical, FormalSystem/Metalogic/Soundness.lean. These were previously declared as this task file_scope, which mis-stated a reading surface as owned write territory -- the batch orchestrator treats file_scope as write ownership, so the over-declaration would collide with any concurrent task editing those trees (notably the snake_case burndown, which edits four files under Metalogic/WeakCanonical) and defer one of them for no real reason. Every other research-only task in this repository declares no file_scope; this one now matches. RESEARCH TASK, verdict-first --- report and probe files only; no change to `FormalSystem/` beyond probes. Decide whether the convex-history layer should exist in this repository at all, and, if it should not, specify how to collapse it. Deliver a reasoned recommendation with the evidence needed to act on it. Implementation, if the recommendation is accepted, is a follow-up task.
+**Description**: ANALYSIS SURFACE (read-only; NOT a write scope): FormalSystem/Semantics/{ConvexHistory,PartialHistory,Truth,Validity,StarPasting,ShiftSet,IntTransfer,StarDeterminism}.lean, FormalSystem/Semantics/Extension, FormalSystem/Metalogic/Decidability/BiLasso, FormalSystem/Metalogic/WeakCanonical, FormalSystem/Metalogic/Soundness.lean, FormalSystem/ProofSystem/Axioms.lean. These are a READING surface. This task declares no file_scope: the batch orchestrator treats file_scope as write ownership, and over-declaring a reading surface would collide with any concurrent task editing those trees. Every other research-only task in this repository declares no file_scope; this one matches.
 
-THE QUESTION. Once the history-vocabulary rename has landed, `ConvexHistory` is the evaluation index of `TruthAt` and `IsTotal` is carried as a side hypothesis at every validity, soundness, completeness and decidability site. The paper evaluates sentences only at possible worlds --- only at total ones. The alternative is to make the evaluation index total by construction, `structure PossibleWorld (F : TaskFrame) where states : F.Duration -> F.WorldState ; respects_task : forall s t, F.TaskRel (states s) (t - s) (states t)` --- named for the paper's term, the paper having withdrawn "world history" entirely --- so that `PossibleWorld F` and `F.HF` coincide definitionally exactly as they do in the paper, with `ConvexHistory` surviving only for material that genuinely needs a bounded domain. That would make the repository's central type mean the paper's central notion with no side condition and no bridging apparatus. It would also foreclose things. Decide which way it goes.
+RESEARCH TASK --- report and probe files only; no change to FormalSystem/ beyond probes under this task's directory.
 
-EVIDENCE ALREADY GATHERED --- verify it, do not re-derive it from scratch, and report any of it that turns out to be wrong.
-1. The convex layer looks vestigial. Every concrete construction with a non-total domain in the repository lives at the `PartialHistory` layer: `Semantics/Extension/Extension.lean:227` (`point`), `Semantics/Extension/Admissible.lean:239` (`adjoinDomain`), `Semantics/PartialHistoryOrder.lean:126` and `:193`. The only convex-layer constructions whose `domain` field is anything other than `fun _ => True` are the two generic transports --- `timeShift` (`Semantics/WorldHistory.lean:305`) and the two directions of `Semantics/IntTransfer.lean` (`:199`, `:255`) --- and those merely carry through whatever domain they were handed. Every CONCRETE convex-layer value built anywhere in the tree is total.
-2. The `convex` field is discharged 22 times and consumed essentially never. A grep for `.convex` applied to a history value returns only those transports and their re-establishment lemmas; the remaining hits belong to unrelated `convex` fields in `Metalogic/WeakCanonical/DenseModelSurgery/` and `Metalogic/WeakCanonical/RealModel/`.
-3. The generality has a real price. `IsTotal` occurs on 322 lines. `TruthAt`'s atom clause carries `exists (ht : tau.domain t)` (`Semantics/Truth.lean:234`), and there are roughly 85 dependent `.states t ht` applications; `.domain` occurs on 198 lines. The bundled/predicate split exists only to manage the same thing: `TaskFrame.HF.val`/`.property`, `SemanticConsequence.of_forall`/`.apply`, `SemanticConsequenceIn.of_forall_total`/`.apply_total`, `Valid.of_forall_total`/`.apply`, and `validOn_iff_total` are all bridges between the two spellings of one notion.
-4. Nothing in the repository formalizes the paper's presheaf appendix --- the behavior presheaf Beh(F), the interval site, the gluing lemma, the path-category correspondence. "presheaf" occurs 0 times in `FormalSystem/`. That appendix is the paper's principal consumer of bounded convex histories, so the strongest argument for keeping the layer is prospective rather than actual, and its weight depends on whether that appendix is ever going to be formalized here.
+THE AIM, as reframed. Develop the categorical correlate of convex histories rather than suppress it, in both directions: draw on the paper's app:Structure (the task topology, the interval site Int(D), the behavior presheaf Beh(F), the twisted-arrow and path categories) for insight into the logic, AND draw on this repository's proof theory, semantics and decidability results for insight into that categorical structure. Alongside that, study the alternative consequence relations the paper floats: one ranging over convex histories, and one additionally restricting the temporal quantifiers to the domain of the convex world. What is wanted are the most natural definitions and the best insights about them.
+
+PAPER ANCHORS. app:Structure (def:task-topology, app:topology-t1, app:topology-r0, app:gluing, def:interval-site, def:behavior-presheaf, def:twisted-arrow, lem:interval-twisted-arrow, app:presheaf-dictionary with its seven clauses Germs/Sheaf/Directed Gluing/Totality/Possible Worlds/Determinism/Reflection, def:conduche, def:path-category, fact:conduche-equivalence, cor:path-fibration). NOTE: app:Structure carries a "% TODO: review in full" marker in the LaTeX source, so anything proposed against it tracks material the author has not finished reviewing. The alternative semantics is the footnote at possible_worlds.tex line 1102; its own commented-out sentence predicts that F-top and its past dual fail, making F-bot satisfiable.
 
 WHAT THIS TASK MUST SETTLE.
-(a) Is the vestigial finding correct AND complete? Hunt specifically for any site that needs a convex, non-total, non-partial history: check `Semantics/StarPasting.lean`, `Semantics/ShiftSet.lean`, `Semantics/Ultraproduct/`, `Metalogic/Decidability/BiLasso/`, `Metalogic/WeakCanonical/`, and any `Boneyard/` subtree that a live task might revive. One genuine consumer changes the answer.
-(b) What actually happens to `TruthAt` at a total index? The atom clause loses its `exists ht`; the box clause loses its `sigma.IsTotal ->` guard; the `untl` and `snce` clauses already quantify over all of `D` with no domain guard (`Semantics/Truth.lean:238-241`) rather than over `tau.domain`. Establish what those tense clauses currently MEAN at a non-total index --- an atom outside the domain is false rather than ill-formed, so the clauses are well-defined, but that is not the paper's footnoted alternative semantics either. If the current reading at a bounded index is degenerate rather than intended, say so plainly: that is an argument for collapsing on correctness grounds and not merely on tidiness, and it should be weighed as such.
-(c) Cost the change honestly, by file and by obligation class, separating mechanical rewrites (`tau.states t ht` -> `tau.states t`, dropped `IsTotal` binders) from proofs that must genuinely be rethought. Compare against the counterfactual of doing nothing. Note that the change is expected to REMOVE code rather than add it, so volume rather than depth is the likely difficulty --- confirm or refute that expectation with measurements.
-(d) Weigh what is lost. Collapsing forecloses evaluating at a bounded convex history, which is the alternative semantics the paper floats in a footnote --- box quantifying over the convex histories whose domain contains the time, the tense operators restricted to that domain, and logical consequence relativised from D to the domain --- and it forecloses formalizing the presheaf appendix without first reintroducing a layer. Assess whether retaining `ConvexHistory` as a structure that the semantics simply no longer uses preserves those options at acceptable cost. That middle answer is the likeliest one and deserves to be costed as carefully as the two extremes rather than adopted by default.
-(e) Recommend exactly one of: COLLAPSE, with a phased plan sized so that each phase is one agent run and leaves `lake build FormalSystem` green; KEEP, with the reason recorded once in the `ConvexHistory` module docstring so the question is not silently reopened a third time; or COLLAPSE-PARTIALLY, retaining `ConvexHistory` as a definition while retargeting the semantics to a total index. State the reasoning, not just the verdict, and state it well enough that a follow-up task can execute without re-deriving it.
+(a) Is the convex layer vestigial, and is the finding complete? Hunt for any site needing a convex, non-total, non-partial history.
+(b) What does TruthAt MEAN at a bounded index? Establish it with machine-checked probes and say plainly whether the reading is degenerate.
+(c) Cost the retarget honestly, by file and by obligation class, separating mechanical rewrites from proofs that must be rethought, against the counterfactual of doing nothing.
+(d) Weigh what each option forecloses --- including the presheaf appendix and the alternative semantics.
+(e) Recommend exactly one of: COLLAPSE; KEEP (with the reason recorded once in the ConvexHistory module docstring); COLLAPSE-PARTIALLY (retain ConvexHistory as a definition, retarget the semantics); or DEVELOP-AND-RETARGET (retarget the semantics AND grow the convex layer into the presheaf apparatus, adding the alternative consequence relations as named second definitions). State the reasoning well enough that a follow-up task can execute without re-deriving it.
 
-CONSTRAINTS. Do not begin the refactor as part of this research; probe files under this task's directory are fine, edits to the live tree are not. The history-vocabulary rename must land first --- costing this against a tree in which `WorldHistory` still names the convex layer would produce a plan that reads as its own opposite. Any plan this task proposes must leave `PartialHistory` and the Extension Theorem untouched: the Extension Theorem's conclusion is stated at the partial layer and is unaffected either way. `lake build FormalSystem` must be green with no new `sorry` at the end of every phase of any plan proposed here.
+CONSTRAINTS. Do not begin the refactor here; probe files under this task's directory are fine, edits to the live tree are not. Any plan proposed must leave PartialHistory and the Extension Theorem untouched --- the Extension Theorem's conclusion is stated at the partial layer and is unaffected either way. lake build FormalSystem must be green with no new sorry at the end of every phase of any plan proposed here.
 
 ---
 
