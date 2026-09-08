@@ -52,7 +52,7 @@ G-distribution `G(φ→ψ) → (Gφ → Gψ)` derived from BX3 (right_mono_until
 and propositional contraposition. Defined here to avoid circular imports with
 TemporalDerived.lean. -/
 
-private noncomputable def temp_k_dist_local {fc : FrameClass} (φ ψ : Formula) :
+private noncomputable def tempKDistLocal {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (φ.imp ψ).allFuture.imp (φ.allFuture.imp ψ.allFuture) :=
   -- Step 1: ⊢ ¬(¬ψ→¬φ) → ¬(φ→ψ) (negated contrapositive)
   let neg_contra := mp (contraposeImp φ ψ) (contraposeImp (φ.imp ψ) (ψ.neg.imp φ.neg))
@@ -116,7 +116,7 @@ noncomputable def pastKDist {fc : FrameClass} (A B : Formula) :
   -- Apply derived temp_k_dist to swapped formulas, already at `fc`
   have fk_fc : ⊢[fc] (A.swapTemporal.imp B.swapTemporal).allFuture.imp
                (A.swapTemporal.allFuture.imp B.swapTemporal.allFuture) :=
-    temp_k_dist_local A.swapTemporal B.swapTemporal
+    tempKDistLocal A.swapTemporal B.swapTemporal
   -- Apply temporal duality
   have td : DerivationTree fc [] ((A.swapTemporal.imp B.swapTemporal).allFuture.imp
                 (A.swapTemporal.allFuture.imp B.swapTemporal.allFuture)).swapTemporal :=
@@ -189,7 +189,7 @@ noncomputable def generalizedTemporalK {fc : FrameClass} : (Γ : Context) → (�
       generalizedTemporalK Γ' (A.imp φ) h_deduction
     let k_dist : ⊢[fc] (Formula.allFuture (A.imp φ)).imp
         ((Formula.allFuture A).imp (Formula.allFuture φ)) :=
-      temp_k_dist_local A φ
+      tempKDistLocal A φ
     let k_dist_weak :
       (Context.map Formula.allFuture Γ') ⊢[fc]
       (Formula.allFuture (A.imp φ)).imp

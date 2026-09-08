@@ -164,7 +164,7 @@ private noncomputable def allFutureBotImpNegDeriv {fc : FrameClass} (chi : Formu
 /--
 Past dual of `allFutureBotImpNegDeriv`: `⊢ H(⊥) → H(¬psi)`, obtained by
 `Formula.swapTemporal` + `DerivationTree.temporal_duality` + `Formula.swap_temporal_involution`
--- the `past_tf_deriv` technique (`Algebraic/FlowFrame.lean`) -- applied to the future core
+-- the `pastTfDeriv` technique (`Algebraic/FlowFrame.lean`) -- applied to the future core
 above at the swapped formula `psi.swapTemporal`, then unswapped back to `psi` by involution.
 -/
 private noncomputable def allPastBotImpNegDeriv {fc : FrameClass} (psi : Formula) :

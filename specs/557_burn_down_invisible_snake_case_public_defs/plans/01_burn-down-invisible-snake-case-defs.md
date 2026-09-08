@@ -606,23 +606,30 @@ to `StaviCompleteness.lean` and lists neither `ShiftAndGlue.lean`, `SubBracket2.
 
 ---
 
-### Phase 8: Private renames, cluster D — `Theorems` and `Algebraic` [NOT STARTED]
+### Phase 8: Private renames, cluster D — `Theorems` and `Algebraic` [COMPLETED]
 
 **Goal**: Rename the 14 remaining private snake_case `def`s, in the `Theorems/` and
 `Metalogic/Algebraic/` files not already owned by another phase.
 
 **Tasks**:
-- [ ] `FormalSystem/Theorems/TemporalDerived.lean` — 10 renames. Five carry a `TENSE_PREFIX`-shaped
+- [x] `FormalSystem/Theorems/TemporalDerived.lean` — 10 renames. Five carry a `TENSE_PREFIX`-shaped
       uppercase head (`F_neg_contra_imp_F_neg`, `G_imp_to_G_contra`, `G_contra_to_GK`,
       `FF_to_F_top_and`, `F_top_and_absorb`); renaming them to lowerCamelCase
       (`fNegContraImpFNeg`, …) removes them from C23's tense-operator leave-alone class, which is
       strictly fewer findings, not a new one. `dne_lift_F`, `ctx_mp`, `ctx_thm`, `top_and_intro`
       complete the set.
-- [ ] `FormalSystem/Metalogic/Algebraic/FlowFrame.lean` — 3 renames.
-- [ ] `FormalSystem/Theorems/GeneralizedNecessitation.lean` — 1 rename.
-- [ ] Confirm C23's `UPPER_ALLOW` set (`CAggOdSwap_clause_iff`,
+- [x] `FormalSystem/Metalogic/Algebraic/FlowFrame.lean` — 3 renames.
+- [x] `FormalSystem/Theorems/GeneralizedNecessitation.lean` — 1 rename.
+- [x] Confirm C23's `UPPER_ALLOW` set (`CAggOdSwap_clause_iff`,
       `CAggOdSwap_clause_iff_faithful`, `O_zero_correct`) contains none of the renamed names, so no
       allow-list entry goes stale.
+      *(confirmed at `scripts/check-module-invariants.sh:2071`: the set is exactly those three
+      names and none is a rename target.)*
+      *(deviation: added — `past_tf_deriv` -> `pastTfDeriv` is cited by name from a comment in
+      `FormalSystem/Metalogic/Bundle/WitnessSeed.lean:167`, which was updated so the citation
+      stays accurate. Comment-only; that file is not in this phase's declared file set.
+      Separately, `ProofStepExport.lean:1381`'s `mkEntry "ctx_mp"` is a dataset **label**, not a
+      reference to the renamed private `ctx_mp`, and was correctly left unchanged.)*
 
 **Timing**: 1 hour
 

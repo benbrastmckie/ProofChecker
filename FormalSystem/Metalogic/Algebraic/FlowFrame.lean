@@ -545,7 +545,7 @@ helpers of the retired restricted parametric truth-lemma module (deleted with th
 parametric canonical stack; this module's truth lemma is its replacement). -/
 
 /-- Classical tautology: `neg (ψ → χ) → ψ`. -/
-private noncomputable def neg_imp_antecedent (ψ χ : Formula) :
+private noncomputable def negImpAntecedent (ψ χ : Formula) :
     DerivationTree fc [] ((ψ.imp χ).neg.imp ψ) := by
   have h_efq : DerivationTree FrameClass.Base [] (ψ.neg.imp (ψ.imp χ)) :=
     FormalSystem.Theorems.Propositional.impOfNeg ψ χ
@@ -575,7 +575,7 @@ private noncomputable def neg_imp_antecedent (ψ χ : Formula) :
   exact h_base.lift (by cases fc <;> trivial)
 
 /-- Classical tautology: `neg (ψ → χ) → neg χ`. -/
-private noncomputable def neg_imp_neg_consequent (ψ χ : Formula) :
+private noncomputable def negImpNegConsequent (ψ χ : Formula) :
     DerivationTree fc [] ((ψ.imp χ).neg.imp χ.neg) := by
   have h_prop_s : [] ⊢ χ.imp (ψ.imp χ) :=
     DerivationTree.axiom [] _ (Axiom.prop_s χ ψ) trivial
@@ -601,7 +601,7 @@ temporal dual (`□φ → H□φ`). Relocated from the superseded parametric tru
 purely MCS-level, frame-independent. -/
 
 /-- Past analog of TF axiom: `□φ → H(□φ)`, derived via temporal duality. -/
-private def past_tf_deriv (φ : Formula) :
+private def pastTfDeriv (φ : Formula) :
     DerivationTree fc [] ((Formula.box φ).imp (Formula.box φ).allPast) := by
   have h_tf_swap : DerivationTree fc [] _ :=
       FormalSystem.Theorems.Combinators.temporalFutureDerived (Formula.swapTemporal φ)
@@ -628,7 +628,7 @@ theorem fmcs_box_persistent
   have h_G_box : (Formula.box φ).allFuture ∈ fam.mcs t :=
     SetMaximalConsistent.implication_property (fam.is_mcs t) h_tf h_box
   have h_past_tf : (Formula.box φ).imp (Formula.box φ).allPast ∈ fam.mcs t :=
-    theorem_in_mcs (fam.is_mcs t) (past_tf_deriv φ)
+    theorem_in_mcs (fam.is_mcs t) (pastTfDeriv φ)
   have h_H_box : (Formula.box φ).allPast ∈ fam.mcs t :=
     SetMaximalConsistent.implication_property (fam.is_mcs t) h_past_tf h_box
   rcases lt_trichotomy t s with h_lt | h_eq | h_gt
@@ -700,13 +700,13 @@ theorem bundleFlow_truth_lemma (B : BFMCS (fc := fc) D) (root : Formula)
           SetMaximalConsistent.closed_under_derivation h_mcs [(ψ.imp χ).neg]
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
-              (DerivationTree.weakening [] _ _ (neg_imp_antecedent ψ χ) (by intro; simp))
+              (DerivationTree.weakening [] _ _ (negImpAntecedent ψ χ) (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_neg_χ_mcs : χ.neg ∈ fam.val.mcs (w₀ + t) :=
           SetMaximalConsistent.closed_under_derivation h_mcs [(ψ.imp χ).neg]
             (by simp [h_neg_imp])
             (DerivationTree.modus_ponens _ _ _
-              (DerivationTree.weakening [] _ _ (neg_imp_neg_consequent ψ χ) (by intro; simp))
+              (DerivationTree.weakening [] _ _ (negImpNegConsequent ψ χ) (by intro; simp))
               (DerivationTree.assumption _ _ (by simp)))
         have h_χ_mcs : χ ∈ fam.val.mcs (w₀ + t) :=
           (ih_χ h_χ_sub fam w₀ t).mpr (h_truth_imp ((ih_ψ h_ψ_sub fam w₀ t).mp h_ψ_mcs))

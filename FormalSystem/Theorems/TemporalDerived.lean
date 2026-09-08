@@ -132,13 +132,13 @@ section DerivedAxioms
 
 /-- `⊢ ¬(¬ψ→¬φ) → ¬(φ→ψ)`: Negation of the contrapositive implies negation of the original.
 This is the contrapositive of the contrapositive theorem, composed with itself. -/
-private noncomputable def neg_contrapositive_imp_neg {fc : FrameClass} (φ ψ : Formula) :
+private noncomputable def negContrapositiveImpNeg {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (ψ.neg.imp φ.neg).neg.imp (φ.imp ψ).neg :=
   mp (contraposeImp φ ψ) (contraposeImp (φ.imp ψ) (ψ.neg.imp φ.neg))
 
 /-- `⊢ X → ⊤ ∧ X`: Any formula implies its conjunction with ⊤.
 From pairing and the theorem `⊢ ⊤`. -/
-private def top_and_intro {fc : FrameClass} (X : Formula) : ⊢[fc] X.imp (Formula.top.and X) :=
+private def topAndIntro {fc : FrameClass} (X : Formula) : ⊢[fc] X.imp (Formula.top.and X) :=
   mp (identity Formula.bot) (pairing Formula.top X)
 
 /-! ### temp_k_dist: G-distribution derived from BX3
@@ -153,26 +153,26 @@ private def top_and_intro {fc : FrameClass} (X : Formula) : ⊢[fc] X.imp (Formu
 
 From the tautology `¬(¬ψ→¬φ) → ¬(φ→ψ)`, lift through G via temporal necessitation,
 then apply BX3 (right_mono_until) to obtain F-monotonicity. -/
-private noncomputable def F_neg_contra_imp_F_neg {fc : FrameClass} (φ ψ : Formula) :
+private noncomputable def fNegContraImpFNeg {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (Formula.someFuture (ψ.neg.imp φ.neg).neg).imp
       (Formula.someFuture (φ.imp ψ).neg) :=
-  mp (DerivationTree.temporal_necessitation _ (neg_contrapositive_imp_neg φ ψ))
+  mp (DerivationTree.temporal_necessitation _ (negContrapositiveImpNeg φ ψ))
      (DerivationTree.axiom [] _
        (Axiom.right_mono_until (ψ.neg.imp φ.neg).neg (φ.imp ψ).neg Formula.top) trivial)
 
 /-- `⊢ G(φ→ψ) → G(¬ψ→¬φ)`: G distributes over propositional equivalences.
 
-From `F(¬(¬ψ→¬φ)) → F(¬(φ→ψ))` (F_neg_contra_imp_F_neg), take the contrapositive:
+From `F(¬(¬ψ→¬φ)) → F(¬(φ→ψ))` (fNegContraImpFNeg), take the contrapositive:
 `¬F(¬(φ→ψ)) → ¬F(¬(¬ψ→¬φ))`, which is `G(φ→ψ) → G(¬ψ→¬φ)` by definition of G. -/
-private noncomputable def G_imp_to_G_contra {fc : FrameClass} (φ ψ : Formula) :
+private noncomputable def gImpToGContra {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (φ.imp ψ).allFuture.imp (ψ.neg.imp φ.neg).allFuture :=
-  contraposition (F_neg_contra_imp_F_neg φ ψ)
+  contraposition (fNegContraImpFNeg φ ψ)
 
 /-- `⊢ G(¬ψ→¬φ) → (Gφ → Gψ)`: From the contrapositive under G, derive K-distribution.
 
 BX3 with `α := ¬ψ, β := ¬φ, γ := ⊤` gives `G(¬ψ→¬φ) → (F(¬ψ) → F(¬φ))`.
 The propositional contrapositive of `F(¬ψ) → F(¬φ)` is `¬F(¬φ) → ¬F(¬ψ)` = `Gφ → Gψ`. -/
-private noncomputable def G_contra_to_GK {fc : FrameClass} (φ ψ : Formula) :
+private noncomputable def gContraToGK {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (ψ.neg.imp φ.neg).allFuture.imp (φ.allFuture.imp ψ.allFuture) :=
   impTrans
     (DerivationTree.axiom [] _ (Axiom.right_mono_until ψ.neg φ.neg Formula.top) (FrameClass.base_le fc))
@@ -187,7 +187,7 @@ contraposition. Replaces the primitive `Axiom.temp_k_dist` constructor.
 @[tmLemma]
 noncomputable def temporalKDistDerived {fc : FrameClass} (φ ψ : Formula) :
     ⊢[fc] (φ.imp ψ).allFuture.imp (φ.allFuture.imp ψ.allFuture) :=
-  impTrans (G_imp_to_G_contra φ ψ) (G_contra_to_GK φ ψ)
+  impTrans (gImpToGContra φ ψ) (gContraToGK φ ψ)
 
 /-! ### temp_4: G-transitivity derived from BX6
 
@@ -202,7 +202,7 @@ Decompose into three steps using BX3 and BX6:
 
 From the propositional tautology `¬¬X → X` at `X = F(¬φ)`, apply temporal
 necessitation and BX3 to obtain F-monotonicity. -/
-private noncomputable def dne_lift_F {fc : FrameClass} (φ : Formula) :
+private noncomputable def dneLiftF {fc : FrameClass} (φ : Formula) :
     ⊢[fc] (Formula.someFuture (Formula.someFuture φ.neg).neg.neg).imp
       (Formula.someFuture (Formula.someFuture φ.neg)) :=
   mp (DerivationTree.temporal_necessitation _ (doubleNegation (Formula.someFuture φ.neg)))
@@ -214,10 +214,10 @@ private noncomputable def dne_lift_F {fc : FrameClass} (φ : Formula) :
 
 From the propositional tautology `X → ⊤ ∧ X` at `X = F(¬φ)`, apply temporal
 necessitation and BX3 to lift through F. -/
-private noncomputable def FF_to_F_top_and {fc : FrameClass} (φ : Formula) :
+private noncomputable def fFToFTopAnd {fc : FrameClass} (φ : Formula) :
     ⊢[fc] (Formula.someFuture (Formula.someFuture φ.neg)).imp
       (Formula.someFuture (Formula.top.and (Formula.someFuture φ.neg))) :=
-  mp (DerivationTree.temporal_necessitation _ (top_and_intro (Formula.someFuture φ.neg)))
+  mp (DerivationTree.temporal_necessitation _ (topAndIntro (Formula.someFuture φ.neg)))
      (DerivationTree.axiom [] _
        (Axiom.right_mono_until
          (Formula.someFuture φ.neg)
@@ -227,7 +227,7 @@ private noncomputable def FF_to_F_top_and {fc : FrameClass} (φ : Formula) :
 
 BX6 at `φ := ⊤, ψ := ¬φ_orig` gives `U(⊤ ∧ U(¬φ, ⊤), ⊤) → U(¬φ, ⊤)`,
 which is `F(⊤ ∧ F(¬φ)) → F(¬φ)`. -/
-private def F_top_and_absorb {fc : FrameClass} (φ : Formula) :
+private def fTopAndAbsorb {fc : FrameClass} (φ : Formula) :
     ⊢[fc] (Formula.someFuture (Formula.top.and (Formula.someFuture φ.neg))).imp
       (Formula.someFuture φ.neg) :=
   DerivationTree.axiom [] _ (Axiom.absorb_until Formula.top φ.neg) (FrameClass.base_le fc)
@@ -243,7 +243,7 @@ three F-monotonicity steps, then negated to obtain `Gφ → GGφ`. -/
 @[tmLemma]
 noncomputable def temporal4Derived {fc : FrameClass} (φ : Formula) :
     ⊢[fc] φ.allFuture.imp φ.allFuture.allFuture :=
-  contraposition (impTrans (impTrans (dne_lift_F φ) (FF_to_F_top_and φ)) (F_top_and_absorb φ))
+  contraposition (impTrans (impTrans (dneLiftF φ) (fFToFTopAnd φ)) (fTopAndAbsorb φ))
 
 end DerivedAxioms
 
@@ -368,11 +368,11 @@ noncomputable def contrapositive {fc : FrameClass} (A B : Formula) : ⊢[fc] (A.
   mp bCombinator
     (theoremFlip (A := (B.imp Formula.bot)) (B := (A.imp B)) (C := (A.imp Formula.bot)))
 
-private noncomputable def ctx_mp {fc : FrameClass} {Γ : Context} {A B : Formula}
+private noncomputable def ctxMpLocal {fc : FrameClass} {Γ : Context} {A B : Formula}
     (h1 : Γ ⊢[fc] A.imp B) (h2 : Γ ⊢[fc] A) : Γ ⊢[fc] B :=
   DerivationTree.modus_ponens Γ A B h1 h2
 
-private noncomputable def ctx_thm {fc : FrameClass} {Γ : Context} {A : Formula}
+private noncomputable def ctxThm {fc : FrameClass} {Γ : Context} {A : Formula}
     (h : ⊢[fc] A) : Γ ⊢[fc] A :=
   DerivationTree.weakening [] Γ A h (List.nil_subset Γ)
 
@@ -386,8 +386,8 @@ noncomputable def formulaOrComm {fc : FrameClass} (A B : Formula) : ⊢[fc] (A.o
   apply FormalSystem.Metalogic.Core.deductionTheorem [A.neg.imp B] B.neg A
   have h1 : [B.neg, A.neg.imp B] ⊢[fc] A.neg.imp B := DerivationTree.assumption _ _ (by simp)
   have h2 : [B.neg, A.neg.imp B] ⊢[fc] B.neg := DerivationTree.assumption _ _ (by simp)
-  have h3 : [B.neg, A.neg.imp B] ⊢[fc] A.neg.neg := ctx_mp (ctx_mp (ctx_thm bCombinator) h2) h1
-  exact ctx_mp (ctx_thm (FormalSystem.Theorems.Propositional.doubleNegation A)) h3
+  have h3 : [B.neg, A.neg.imp B] ⊢[fc] A.neg.neg := ctxMpLocal (ctxMpLocal (ctxThm bCombinator) h2) h1
+  exact ctxMpLocal (ctxThm (FormalSystem.Theorems.Propositional.doubleNegation A)) h3
 
 /-!
 ## Category B: Temporal Monotonicity (4 computable theorems)
