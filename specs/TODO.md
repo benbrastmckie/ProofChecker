@@ -40,7 +40,7 @@ next_project_number: 562
 
 ### Code Quality
 
-557 [PLANNED] — Burn down snake_case public defs that the defsWithUnderscore gate
+557 [IMPLEMENTING] — Burn down snake_case public defs that the defsWithUnderscore gate
 
 ### Dataset Enhancement
 
@@ -169,7 +169,7 @@ GROUND TRUTH to read first: 535's report §3-4 and §7.3 with its probes; 533's 
 ---
 
 ### 557. Burn down invisible snake case public defs
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: code-quality
 - **Dependencies**: Task 555
