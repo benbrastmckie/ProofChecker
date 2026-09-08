@@ -452,7 +452,7 @@ theorem seriality_future_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [TruthAt, Truth.future_iff, Truth.some_future_iff]
+  simp only [truth_norm]
   intro h_G
   have : NoMaxOrder F.Duration := inferInstance
   obtain ⟨s, hts⟩ := exists_gt t
@@ -465,7 +465,7 @@ theorem seriality_past_valid (φ : Formula) :
   refine ValidIn.of_forall_total ?_
   intro F hF M τ _hτ t
   sat_intro hF
-  simp only [TruthAt, Truth.past_iff, Truth.some_past_iff]
+  simp only [truth_norm]
   intro h_H
   have : NoMinOrder F.Duration := inferInstance
   obtain ⟨s, hst⟩ := exists_lt t
@@ -497,7 +497,7 @@ theorem left_mono_until_G_valid (φ χ ψ : Formula) :
     ⊨ ((φ.imp χ).allFuture.imp ((Formula.untl φ ψ).imp (Formula.untl χ ψ))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_G ⟨s, hts, h_event, h_guard⟩
   exact ⟨s, hts, h_event, fun r htr hrs => h_G r htr (h_guard r htr hrs)⟩
 
@@ -508,7 +508,7 @@ theorem left_mono_since_H_valid (φ χ ψ : Formula) :
     ⊨ ((φ.imp χ).allPast.imp ((Formula.snce φ ψ).imp (Formula.snce χ ψ))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro h_H ⟨s, hst, h_event, h_guard⟩
   exact ⟨s, hst, h_event, fun r hsr hrt => h_H r hrt (h_guard r hsr hrt)⟩
 
@@ -518,7 +518,7 @@ theorem right_mono_until_valid (φ ψ χ : Formula) :
     ⊨ ((φ.imp ψ).allFuture.imp ((Formula.untl χ φ).imp (Formula.untl χ ψ))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff]
+  simp only [truth_norm]
   intro h_G ⟨s, hts, h_φs, h_guard⟩
   exact ⟨s, hts, h_G s hts h_φs, h_guard⟩
 
@@ -527,7 +527,7 @@ theorem right_mono_since_valid (φ ψ χ : Formula) :
     ⊨ ((φ.imp ψ).allPast.imp ((Formula.snce χ φ).imp (Formula.snce χ ψ))) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.past_iff]
+  simp only [truth_norm]
   intro h_H ⟨s, hst, h_φs, h_guard⟩
   exact ⟨s, hst, h_H s hst h_φs, h_guard⟩
 
@@ -538,7 +538,7 @@ theorem connect_future_valid (φ : Formula) :
     ⊨ (φ.imp (φ.somePast.allFuture)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.future_iff, Truth.some_past_iff]
+  simp only [truth_norm]
   intro h_φt s hts
   exact ⟨t, hts, h_φt⟩
 
@@ -549,7 +549,7 @@ theorem connect_past_valid (φ : Formula) :
     ⊨ (φ.imp (φ.someFuture.allPast)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.past_iff, Truth.some_future_iff]
+  simp only [truth_norm]
   intro h_φt s hst
   exact ⟨t, hst, h_φt⟩
 
@@ -689,7 +689,7 @@ theorem until_F_valid (φ ψ : Formula) :
     ⊨ ((Formula.untl φ ψ).imp (Formula.someFuture ψ)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_future_iff]
+  simp only [truth_norm]
   intro ⟨s, hts, h_ψs, _⟩
   exact ⟨s, hts, h_ψs⟩
 
@@ -699,7 +699,7 @@ theorem since_P_valid (φ ψ : Formula) :
     ⊨ ((Formula.snce φ ψ).imp (Formula.somePast ψ)) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt, Truth.some_past_iff]
+  simp only [truth_norm]
   intro ⟨s, hst, h_ψs, _⟩
   exact ⟨s, hst, h_ψs⟩
 
@@ -789,7 +789,7 @@ This is semantic: if φ holds at all (M, τ, hτ, t), then for any model at any 
 theorem necessitation_preserves_valid {φ : Formula} (h : ⊨ φ) : ⊨ (Formula.box φ) := by
   refine Valid.of_forall_total ?_
   intro F M τ _hτ t
-  simp only [TruthAt]
+  simp only [truth_norm]
   intro σ h_σ_mem
   exact h |>.apply F M σ h_σ_mem t
 
@@ -1233,7 +1233,7 @@ theorem derivable_valid_and_swap_validIn {fc : FrameClass} {φ : Formula}
       intro F hF M τ hτ t
       have h1' := h1.1.apply_total F hF M τ hτ t
       have h2' := h2.1.apply_total F hF M τ hτ t
-      simp only [TruthAt] at h1'
+      simp only [truth_norm] at h1'
       exact h1' h2'
     · refine ValidIn.of_forall_total ?_
       intro F hF M τ hτ t
@@ -1246,7 +1246,7 @@ theorem derivable_valid_and_swap_validIn {fc : FrameClass} {φ : Formula}
     constructor
     · refine ValidIn.of_forall_total ?_
       intro F hF M τ hτ t
-      simp only [TruthAt]
+      simp only [truth_norm]
       intro sigma h_sigma_mem
       exact h.1.apply_total F hF M sigma h_sigma_mem t
     · refine ValidIn.of_forall_total ?_
@@ -1266,7 +1266,7 @@ theorem derivable_valid_and_swap_validIn {fc : FrameClass} {φ : Formula}
       intro F hF M τ hτ t
       simp only [Formula.allFuture, Formula.someFuture, Formula.swapTemporal,
         Formula.neg, Formula.top] at *
-      simp only [TruthAt] at *
+      simp only [truth_norm] at *
       intro hcontra
       obtain ⟨s, hts, hs, _⟩ := hcontra
       exact hs (h.2.apply_total F hF M τ hτ s)
@@ -1300,10 +1300,10 @@ theorem soundness_in {fc : FrameClass} (Γ : Context) (φ : Formula)
   | modus_ponens Γ' φ' ψ' _ _ ih1 ih2 =>
     have h1 := ih1 τ h_mem t h_ctx
     have h2 := ih2 τ h_mem t h_ctx
-    simp only [TruthAt] at h1
+    simp only [truth_norm] at h1
     exact h1 h2
   | necessitation φ' _ ih =>
-    simp only [TruthAt]
+    simp only [truth_norm]
     intro σ h_σ_mem
     exact ih σ h_σ_mem t (by simp)
   | temporal_necessitation φ' _ ih =>
