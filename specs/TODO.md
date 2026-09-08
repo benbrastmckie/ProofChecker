@@ -83,14 +83,14 @@ next_project_number: 555
 
 ### Paper Refactor
 
-548 [PLANNED] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
+548 [IMPLEMENTING] — Re-pin the paper anchors changed by the paper's z/d/r refactor an
   └─ 552 [NOT STARTED] — Rename this repository's semantic history layer so that its names
     └─ 553 [NOT STARTED] — RESEARCH TASK, verdict-first --- report and probe files only; no 
 
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-550 [RESEARCHING] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
+550 [RESEARCHED] — Decompose `MintBound.lean` for publication legibility -- 15,759 l
 
 ### Repo Hygiene
 
@@ -228,10 +228,11 @@ CONSTRAINTS. Do not delete anything in the characterization or recommendation st
 ---
 
 ### 550. Decompose mintbound for publication legibility
-- **Status**: [RESEARCHING]
+- **Status**: [RESEARCHED]
 - **Task Type**: lean4
 - **Topic**: publication-quality
 - **Dependencies**: Task 549, Task 554
+- **Research**: [550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md]
 
 **Description**: Decompose `MintBound.lean` for publication legibility -- 15,759 lines, 2.5x the next-largest live file in the repository.
 
@@ -289,7 +290,7 @@ WHY THIS IS ONE TASK AND NOT TWO. The `.ZTime` strengthening is worth doing in e
 ---
 
 ### 548. Repin renamed paper anchors bx z d r
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: paper-refactor
 - **Dependencies**: Task 547

@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/550_decompose_mintbound_for_publication_legibility/reports/01_decompose-mintbound-publication-legibility.md",
+      "summary": "Measured composition of MintBound.lean (15,684 lines, 45% prose, 751 decls, 30 sections) and a file-order decomposition into 18 modules behind a retained aggregator, with the 16 cross-boundary `private` declarations that must be de-privatized."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788827428_44fd7f_550",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
