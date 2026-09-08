@@ -1,7 +1,7 @@
 # Implementation Plan: Task #549
 
 - **Task**: 549 - Trace whether `FormalSystem.Metalogic.Decidability.decide` depends on the six now-vacuous `_run` theorems, and correct the affected status claims if it does
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 3.75 hours
 - **Dependencies**: 463 (mathematical premise + `file_scope` serialization edge on `MintBound.lean`)
 - **Research Inputs**: `specs/549_trace_decide_dependency_on_vacuous_run_theorems/reports/01_trace-decide-dependency-vacuous-run.md`
@@ -124,23 +124,23 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 1: Reproduce and capture the mechanical trace evidence [NOT STARTED]
+### Phase 1: Reproduce and capture the mechanical trace evidence [COMPLETED]
 
 **Goal**: Turn the research report's quoted probe results into a committed, verbatim,
 re-runnable evidence log, and confirm the verdict still reproduces against the current tree.
 
 **Tasks**:
-- [ ] Record the baseline: `git rev-parse HEAD`, `git status --short`, and
+- [x] Record the baseline: `git rev-parse HEAD`, `git status --short`, and
       `git log -1 --format=%h -- FormalSystem/Metalogic/Decidability/Verified/Termination/MintBound.lean`.
-- [ ] Re-run each probe from the repo root, capturing stdout+stderr verbatim:
+- [x] Re-run each probe from the repo root, capturing stdout+stderr verbatim:
       `lake env lean specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/{Exists,Ax,DepTrace,DepTrace2,RevDep,Widen}.lean`.
-- [ ] Write `specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/probe-evidence.md`:
+- [x] Write `specs/549_trace_decide_dependency_on_vacuous_run_theorems/probes/probe-evidence.md`:
       HEAD sha, one section per probe with the exact command and its unedited output, and a one-line
       reading of what each output establishes.
-- [ ] Confirm the four load-bearing numbers reproduce: zero suspect hits for all six traced
+- [x] Confirm the four load-bearing numbers reproduce: zero suspect hits for all six traced
       targets; `constants from MintBound reached by decide: 0`; `direct reverse-dependents … : 0`;
       `Widen.lean` axioms `[propext, Classical.choice, Quot.sound]` with no `sorry`.
-- [ ] If any probe fails to resolve a declaration name, stop and re-derive that name from the
+- [x] If any probe fails to resolve a declaration name, stop and re-derive that name from the
       current `MintBound.lean` before continuing; do not edit `MintBound.lean` to make a probe pass.
 
 **Timing**: 0.75 hours
@@ -166,18 +166,18 @@ a terminus now at `:12449`).
 
 ---
 
-### Phase 2: Read-only compliance baseline [NOT STARTED]
+### Phase 2: Read-only compliance baseline [COMPLETED]
 
 **Goal**: Establish, mechanically, that the task's read-only constraint holds — and give Phase 6 a
 baseline to re-check against.
 
 **Tasks**:
-- [ ] Capture `git status --porcelain` and confirm zero entries under `FormalSystem/`, `docs/`,
+- [x] Capture `git status --porcelain` and confirm zero entries under `FormalSystem/`, `docs/`,
       `latex/`, `typst/`, `Tests/`.
-- [ ] Confirm `docs/theorem-index.md` is byte-identical to HEAD (`git diff --quiet -- docs/theorem-index.md`).
-- [ ] Note any pre-existing dirty paths (e.g. `specs/events.jsonl`, `.claude-extensions.json`) so a
+- [x] Confirm `docs/theorem-index.md` is byte-identical to HEAD (`git diff --quiet -- docs/theorem-index.md`).
+- [x] Note any pre-existing dirty paths (e.g. `specs/events.jsonl`, `.claude-extensions.json`) so a
       later diff is not misattributed to this task.
-- [ ] Append the baseline to `probes/probe-evidence.md` (or a sibling section) so it is committed.
+- [x] Append the baseline to `probes/probe-evidence.md` (or a sibling section) so it is committed.
 
 **Timing**: 0.25 hours
 
