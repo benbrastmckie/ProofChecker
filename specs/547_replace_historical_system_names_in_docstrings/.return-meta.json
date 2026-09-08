@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/547_replace_historical_system_names_in_docstrings/reports/01_historical-system-name-sweep.md",
+      "summary": "Occurrence census, live-paper verification of the z/d/r convention, and a three-class triage (5 mechanical-rename files, 12 editorial rewrites, 2 additions) with the 548 anchor-label scope boundary and a scoped verification grep."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788826208_cd9987_547",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
