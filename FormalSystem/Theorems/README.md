@@ -13,7 +13,7 @@ derivations), organized by topic. These are distinguished from metalogical resul
 |------|-------|-------------|
 | `Combinators.lean` | 747 | Propositional combinator lemmas: I, K, S, B, C, composition |
 | `ContextualProofs.lean` | 474 | Derivations carried out under a nonempty context |
-| `DedekindDerived.lean` | 413 | Dedekind-class derived theorems: `△`-eliminators, the `F(Hψ) → ψ` / `F(Hψ) → U(⊤,ψ)` / `S(Hψ∧ψ,ψ) → Hψ` point-shifting lemmas, and `coDerived` (the paper's CO principle derived from the Reynolds gap basis) |
+| `DedekindDerived.lean` | 415 | Dedekind-class derived theorems: `△`-eliminators, the `F(Hψ) → ψ` / `F(Hψ) → U(⊤,ψ)` / `S(Hψ∧ψ,ψ) → Hψ` point-shifting lemmas, and `coDerived` (the paper's CO principle derived from the Reynolds gap basis) |
 | `DiscreteUnfolding.lean` | 500 | The ℤ-exact one-step unfolding of `untl` at `FrameClass.Discrete` |
 | `GeneralizedNecessitation.lean` | 241 | Generalized necessitation rules for modal and temporal operators |
 | `ModalDerived.lean` | 219 | Closed object-logic derivation helpers (`dneTheorem`, `boxDneTheorem`, the `G`/`H` analogues) collected out of `Metalogic/Bundle/` so canonical-model modules can reach them without the bundle machinery |
