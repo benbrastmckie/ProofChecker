@@ -11,7 +11,7 @@ next_project_number: 555
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,551,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
+| 1 | 127,128,193,257,298,464,476,481,502,504,506,534,535,540,541,542,544,545,553 | -- | algebraic-representation, automation, dataset-enhancement, ... |
 | 2 | 178,231,282,296,465,497,537 | 193,298,464,502,535 | algebraic-representation, dataset-enhancement, decidability, ... |
 | 3 | 219,428,498,499,500 | 231,465,497 | algebraic-representation, dataset-enhancement, decidability |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -88,10 +88,6 @@ next_project_number: 555
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-
-### Repo Hygiene
-
-551 [IMPLEMENTING] — Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 line
 
 ### Documentation
 
@@ -206,12 +202,13 @@ DEPENDENCY NOTE. The dependency on the paper-anchor re-pin task is for file seri
 ---
 
 ### 551. Boneyard disposition for publication
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: repo-hygiene
 - **Dependencies**: None
 - **Research**: [551_boneyard_disposition_for_publication/reports/01_boneyard-disposition-recommendation.md]
 - **Plan**: [551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md]
+- **Summary**: [551_boneyard_disposition_for_publication/summaries/01_boneyard-keep-and-document-summary.md]
 
 **Description**: Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 lines, roughly a quarter of the repository, carrying every `sorry` in the tree.
 

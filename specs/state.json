@@ -101,7 +101,7 @@
     {
       "project_number": 551,
       "project_name": "boneyard_disposition_for_publication",
-      "status": "implementing",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Decide the disposition of `FormalSystem/Boneyard/` -- 91,539 lines, roughly a quarter of the repository, carrying every `sorry` in the tree.\n\nMEASURED, not estimated. `FormalSystem/Boneyard/` is 168 Lean files totalling 91,539 lines, against 373,234 lines for `FormalSystem/` as a whole. It is genuinely excluded from the build, not merely nominally: a full `lake build` produces ZERO Boneyard `.olean` files. A sorry census over the live tree (`Metalogic`, `Syntax`, `Semantics`, `ProofSystem`, `Theorems`, `Automation`) reports `sorry_count: 0`, while 39 Boneyard files contain sorries in proof position. The quarantine works exactly as designed.\n\nTHE DECISION, and it is a judgement call rather than a cleanup. Boneyard doubles the apparent size of what a reviewer must navigate and contains the only unfinished proofs in the repository, yet retired-attempt provenance has real scholarly value -- it is evidence of what was tried and why it failed, which is often the most useful part of a formalization for a subsequent researcher. Both keeping and cutting are defensible; what is not defensible is shipping it undecided and unexplained.\n\nDELIVER A REASONED RECOMMENDATION, with the evidence to act on it:\n1. Characterize what is actually in there. The two Boneyard trees are already distinguished in `FormalSystem/FormalSystem.lean` and `Boneyard/README.md` (there is a documented \"two-Boneyard counting caveat\") -- start from those rather than re-deriving. Which subtrees are genuinely superseded, which record refuted approaches still cited elsewhere, and which are merely unfinished?\n2. Check for live references before proposing any removal. `scripts/audit-deletion-references.sh` exists for this; a subtree cited by live documentation or by a C9-style register is not free to delete even though nothing imports it.\n3. Recommend one of: KEEP AS-IS with a clearer top-level framing of what the tree is and why it ships; SPLIT, retaining the subtrees with provenance value and cutting the rest; or CUT ENTIRELY, with the history preserved in git and a pointer recorded. State the reasoning, not just the verdict.\n4. Only if the recommendation is to cut, and only after it is accepted: execute, and verify a full green `lake build` plus an unchanged live-tree sorry census of 0.\n\nCONSTRAINTS. Do not delete anything in the characterization or recommendation stages -- steps 1 through 3 are read-only, and step 4 is gated on acceptance of the recommendation rather than following automatically from it. Removal must go through git history preservation, never an untracked deletion. The live tree's sorry-free status is a headline property of this repository and must be preserved and re-verified by census, not assumed.",
       "topic": "repo-hygiene",
@@ -109,7 +109,7 @@
         "FormalSystem/Boneyard/"
       ],
       "created": "2026-09-07T23:44:13Z",
-      "last_updated": "2026-09-08T04:32:08Z",
+      "last_updated": "2026-09-08T05:08:01Z",
       "session_id": "sess_1788840970_70e80d",
       "artifacts": [
         {
@@ -121,9 +121,15 @@
           "path": "specs/551_boneyard_disposition_for_publication/plans/01_boneyard-keep-and-document.md",
           "type": "plan",
           "summary": "10-phase plan executing the KEEP disposition for FormalSystem/Boneyard/: an ADR recording the decision, an archive-aware inventory generator, and repair of the four documentation-integrity defects (D1-D4) that ship today."
+        },
+        {
+          "path": "specs/551_boneyard_disposition_for_publication/summaries/01_boneyard-keep-and-document-summary.md",
+          "type": "summary",
+          "summary": "KEEP disposition recorded as ADR-009; the archive's counts made generated and gate-enforced, its inventory, taxonomy, subdirectory coverage and provenance repaired, and a publication-facing framing added."
         }
       ],
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Decided and recorded the disposition of FormalSystem/Boneyard/ as KEEP, in ADR-009: cutting was unavailable (96 citing files outside the archive, including the published LaTeX and 45 live .lean docstrings) and splitting would have traded ADR-005's single-archive invariant for ~2% of the archive's lines while preferentially deleting refuted routes. Then repaired what shipped badly about it: the inventory generator is now archive-aware, so the archive's counts are generated and INV-gated instead of three mutually disagreeing hand-typed figures; the Directory Inventory is a generated 40-row block with no phantom or missing entries; all 39 subtrees have a README, a taxonomy classification and a subdirectory-detail entry; provenance is re-keyed from repository-internal task numbers to 37 date-plus-commit-SHA rows; all 168 archived files now carry #exit and an archival banner; and the README opens with the two machine-checked facts (zero .olean under any Boneyard path, zero structural sorry in the live tree) that neutralize its size. Nothing was deleted: 168 archived files before and after, and the full gate plus lake build are green."
     },
     {
       "project_number": 550,
