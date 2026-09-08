@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/551_boneyard_disposition_for_publication/reports/01_boneyard-disposition-recommendation.md",
+      "summary": "Recommends KEEP with a documentation-integrity repair: measures the archive (168 files / 91,539 lines / 24.5% of FormalSystem), shows CUT and SPLIT are blocked by 96 external citations including the published LaTeX, and documents four shipping documentation defects plus their mechanical root cause in the inventory generator's Boneyard pruning."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788840970_70e80d",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
