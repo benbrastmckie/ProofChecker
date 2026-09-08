@@ -353,7 +353,7 @@ def noBlockingTriple (p q r s : Formula) :
 (Hφ ∧ φ ∧ F⊤)  →  F (Hφ)
 ```
 
-`DF` is the axiom distinguishing the paper's `TM_f` from `TM`
+`DF` is the axiom distinguishing this tree's `TM_z` from `TM`
 (JPL paper, `\S sub:Extension`). It is the one TM-side schema with no ready-made counterpart in
 this tree, and `FormalSystem.BaseLanguage.AxiomDischarge` consumes `dfSchema` to close the
 `Discrete` row of the backward conservativity bridge.

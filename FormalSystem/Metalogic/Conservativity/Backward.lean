@@ -115,9 +115,9 @@ theorem ceb_backward {φ : BLFormula}
   derivable_translate h
 
 /--
-**CEF**: `TM_f ⊢ φ ⟹ TM⁺_f ⊢ tr φ`, at `FrameClass.ZTime`.
+**CEF**: `TM_z ⊢ φ ⟹ TM⁺_z ⊢ tr φ`, at `FrameClass.ZTime`.
 
-`TM_f` is TM + **DF**; its translation is discharged by
+`TM_z` is TM + **DF**; its translation is discharged by
 `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, derived syntactically (Route A) with no
 appeal to the completeness machinery.
 
@@ -141,17 +141,16 @@ theorem ced_backward {φ : BLFormula}
   derivable_translate h
 
 /--
-**CEC**: `TM_dc ⊢ φ ⟹ TM⁺_dc ⊢ tr φ`, at `FrameClass.RTime`.
+**CEC**: `TM_r ⊢ φ ⟹ TM⁺_r ⊢ tr φ`, at `FrameClass.RTime`.
 
-**Fidelity caveat — this row is TM_dc, not the paper's TM_c.** This repository's
-`FrameClass.RTime` sits strictly *above* `FrameClass.Dense` (`Dense ≤ Dedekind`, see
-`ProofSystem/Axioms.lean`), so a `.RTime` derivation may use `Axiom.density` and
-`Axiom.dense_indicator` as well as the Reynolds gap axioms. The row therefore reads
-`TM_dc ⟶ TM⁺_dc` — the dense complete / real-flow system — and **not** the paper's TM_c,
-which is completeness *simpliciter* with no density binder. There is no repository frame class
-for "complete but not dense"; `ProofSystem/Axioms.lean`'s `FrameClass` docstring explains why
-that is a genuine gap rather than an omission. Do not read `cec_backward` as establishing the
-TM_c row.
+**Why the row is the dense-and-complete one.** This repository's `FrameClass.RTime` sits
+strictly *above* `FrameClass.Dense` (`Dense ≤ RTime`, see `ProofSystem/Axioms.lean`), so a
+`.RTime` derivation may use `Axiom.density` and `Axiom.dense_indicator` as well as the Reynolds
+gap axioms. The row is therefore `TM_r ⟶ TM⁺_r` — the dense complete / real-flow system — and
+`TM⁺_r` is the paper's `TM_r`, the `ℝ`-time row of `cor:tm-completeness`, so nothing is lost in
+translation here. There is no repository frame class for density-free completeness; that binder
+set is `Semantics/Validity.lean`'s repository-only `ValidComplete`, which answers to no paper
+system.
 
 The BL-side CO axiom's translation is discharged by
 `FormalSystem.Theorems.DedekindDerived.coDerived`, itself sorry-free over the Reynolds triple.
@@ -165,18 +164,18 @@ theorem cec_backward {φ : BLFormula}
 
 /-! ## The CEF forward-direction witness
 
-Not part of the bridge: this is the TM⁺_f half of the CEF refutation. The other half — that
-`TM_f ⊬ Z1` — is **also machine-checked**, in the sibling module
+Not part of the bridge: this is the TM⁺_z half of the CEF refutation. The other half — that
+`TM_z ⊬ Z1` — is **also machine-checked**, in the sibling module
 `Conservativity/Z1Countermodel.lean`, as `not_bl_derivable_z1`; the BL-side soundness theorem it
 needed, `bl_soundness_ztime_succ`, is in `Conservativity/BaseLanguageSoundness.lean`.
 `tmCompleteZTime_refuted`, in that same countermodel module, reads the pair off as an outright
-refutation of TM_f-completeness over the discrete class. Neither half is outstanding. -/
+refutation of TM_z-completeness over the discrete class. Neither half is outstanding. -/
 
 /--
 The BL-side **Z1** schema, `G(Gφ → φ) → (F(Gφ) → Gφ)`, with BL's *derived* `F`.
 
 This is the paper's TMP-Z1 written in the base language. It is the CEF forward-direction
-witness: its translation is a `TM⁺_f` theorem (`z1_translate` below) while it is not a `TM_f`
+witness: its translation is a `TM⁺_z` theorem (`z1_translate` below) while it is not a `TM_z`
 theorem — the latter by soundness over `ℚ ×_lex ℤ` (`Semantics/LexCarrier.lean`), which **is**
 formalized in this tree, as `Z1Countermodel.not_bl_derivable_z1`
 (`Conservativity/Z1Countermodel.lean`). The carrier is `ℚ ×_lex ℤ`, not the `ℤ ×_lex ℤ` an
@@ -187,7 +186,7 @@ def Z1 (φ : BLFormula) : BLFormula :=
   (φ.allFuture.imp φ).allFuture.imp (φ.allFuture.someFuture.imp φ.allFuture)
 
 /--
-`⊢[Discrete] tr (Z1 φ)` — the translation of the BL-side Z1 schema is a `TM⁺_f` theorem.
+`⊢[Discrete] tr (Z1 φ)` — the translation of the BL-side Z1 schema is a `TM⁺_z` theorem.
 
 Two steps: `ProofSystem.Axiom.z1` at `FrameClass.ZTime`, then
 `BaseLanguage.notGNotImpF` pushed into the antecedent of the consequent by

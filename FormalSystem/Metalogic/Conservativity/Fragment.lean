@@ -32,7 +32,7 @@ mechanically through the landed truth-transfer bridge `blValidIn_iff_validIn_tr`
 - **`TM ⊆ TMFrag`** at every class (`tm_le_tmFrag`, the `Γ = []` instance of
   `derivable_translate`);
 - **`TM ⊊ TMFrag` at `.ZTime`** (`tm_lt_tmFrag_ztime`): the Z1 schema is in the fragment
-  (`z1_translate`) but not a TM_f theorem (`not_bl_derivable_z1`);
+  (`z1_translate`) but not a TM_z theorem (`not_bl_derivable_z1`);
 - the reduction restated in fragment terms (`tmComplete_iff_tmFrag_le_tm`): TM is complete at
   `fc` iff the fragment collapses onto TM at `fc` — with `Forward` unfolded, never asserted.
 
@@ -70,6 +70,12 @@ open FormalSystem.Metalogic
 /--
 **The H/G-fragment of TM⁺.** A base-language formula `φ` is a theorem of the fragment at `fc`
 iff its translation `tr φ` is a TM⁺ theorem at `fc`.
+
+Since `TM⁺` is the paper's `TM` (`def:TMplus`; see `Metalogic/Conservativity.lean` for the
+mapping between the two families of system name), this is the set of Past/Future theorems of the
+paper's `TM` at `fc` — the `H`/`G`-expressible part of what that system proves. It is **not** a
+fragment of any *named* paper system: nothing on the `H`/`G` side of this tree — `TM`, `TM_z`,
+`TM_d`, `TM_r` — carries a paper name.
 
 This — not TM — is the complete logic of `BLValidIn fc`: by `tmComplete_iff_forward`
 (`Conservativity/TMCompletenessReduction.lean`), TM-completeness at `fc` is equivalent to forward
@@ -142,13 +148,13 @@ theorem tmFrag_z1_ztime (p : Atom) : TMFrag FrameClass.ZTime (Z1 (.atom p)) :=
   z1_translate _
 
 /--
-**`TM ⊊ TMFrag` at `.ZTime`.** Every TM_f theorem is in the fragment, and the fragment
-contains a formula — `Z1 p` — that TM_f does not derive (`not_bl_derivable_z1`,
+**`TM ⊊ TMFrag` at `.ZTime`.** Every TM_z theorem is in the fragment, and the fragment
+contains a formula — `Z1 p` — that TM_z does not derive (`not_bl_derivable_z1`,
 `Conservativity/Z1Countermodel.lean`, by soundness over the non-Archimedean carrier
 `ℚ ×ₗ ℤ`).
 
-This is the fragment-logic reading of the CEF refutation: the H/G-fragment of TM⁺_f is
-strictly larger than TM_f.
+This is the fragment-logic reading of the CEF refutation: the H/G-fragment of TM⁺_z is
+strictly larger than TM_z.
 
 Paper: — (formalization-native; the H/G-fragment is this tree's construction)
 -/

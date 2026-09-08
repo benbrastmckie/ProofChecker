@@ -323,8 +323,8 @@ def dischargeDn {fc : FrameClass} (h_fc : FrameClass.Dense ≤ fc) (a : BLFormul
 BL's CO differs from it only in the inner `F(HA)`, which the bridge repairs — pushed under `→`
 by `impMono` and then under `△` by `alwaysMono`.
 
-Because this repository's `Dedekind` admits the dense axioms, the row lands at the paper's
-**TM_dc**, not TM_c; see `Metalogic/Conservativity/Backward.lean`'s `cec_backward`. -/
+Because this repository's `RTime` class admits the dense axioms, the row lands at **`TM_r`**;
+see `Metalogic/Conservativity/Backward.lean`'s `cec_backward`. -/
 def dischargeCo {fc : FrameClass} (h_fc : FrameClass.RTime ≤ fc) (a : BLFormula) :
     ⊢[fc] tr ((a.allPast.imp a.allPast.someFuture).always.imp (a.allPast.imp a.allFuture)) :=
   impTrans

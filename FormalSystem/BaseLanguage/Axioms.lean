@@ -18,11 +18,17 @@ and the rules MP, MN, TD. This module carries the **axiom** half of that list; M
 The three extension axioms of `\S sub:Extension` are included in the same inductive, routed to
 their frame classes by `Axiom.minFrameClass`:
 
-| Key | Schema | Frame class | Paper system |
+| Key | Schema | Frame class | System |
 |---|---|---|---|
-| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.ZTime` | `TM_f` |
+| DF | `(Hφ ∧ φ ∧ F⊤) → F(Hφ)` | `.ZTime` | `TM_z` |
 | DN | `GGφ → Gφ` | `.Dense` | `TM_d` |
-| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.RTime` | `TM_c` (see the caveat below) |
+| CO | `△(Hφ → F Hφ) → (Hφ → Gφ)` | `.RTime` | `TM_r` |
+
+**These four system names are Lean-only and have no paper counterpart.** The paper names no
+Past/Future system, so `TM`, `TM_z`, `TM_d` and `TM_r` on this side of the tree name nothing in
+it; the `z`/`d`/`r` subscripts were chosen to run parallel to the `TM⁺` side and to the frame-class
+tags. `FormalSystem/Metalogic/Conservativity.lean`'s module docstring states the mapping between
+the two families of name in full, and is the place to read it.
 
 ## Paper Name Correspondence
 
@@ -116,10 +122,11 @@ what makes the backward bridge one theorem with four instantiations rather than 
 developments. Only `FrameClass`, its order, and `FrameClass.base_le` are used from
 `ProofSystem.Axioms`; no BL⁺ `Axiom` constructor is referenced here.
 
-**CEC fidelity caveat.** This repository's `Dedekind` class satisfies `Dense ≤ Dedekind`, so a
-`.RTime` derivation admits the dense axioms too. `Axiom.co ↦ .RTime` therefore lands the
-CO row at the paper's **TM_dc**, not at TM_c; there is no repository frame class for "complete
-but not dense". See `FormalSystem/Metalogic/Conservativity/Backward.lean`'s `cec_backward`.
+**Where the CO row lands.** This repository's `RTime` class satisfies `Dense ≤ RTime`, so a
+`.RTime` derivation admits the dense axioms too, and `Axiom.co ↦ .RTime` lands the CO row at
+`TM_r`. There is no repository frame class for "complete but not dense", and none is wanted: the
+`ℝ`-time row is the dense-and-complete one on both sides of the bridge. See
+`FormalSystem/Metalogic/Conservativity/Backward.lean`'s `cec_backward`.
 
 ## `Type` rather than `Prop`
 
@@ -198,7 +205,7 @@ inductive Axiom : BLFormula → Type where
         (((φ.someFuture.and ψ).someFuture).or
           (((φ.and ψ).someFuture).or ((φ.and ψ.someFuture).someFuture))))
   -- Extension axioms (`\S sub:Extension`)
-  /-- **DF** (`TM_f`, discrete): `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`.
+  /-- **DF** (`TM_z`, discrete): `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`.
 
       Association `((Hφ ∧ φ) ∧ F⊤)` is pinned to match
       `FormalSystem.Theorems.DiscreteUnfolding.dfSchema`, which discharges its translation. -/
@@ -206,7 +213,7 @@ inductive Axiom : BLFormula → Type where
       Axiom (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture)
   /-- **DN** (`TM_d`, dense): `GGφ → Gφ`. -/
   | dn (φ : BLFormula) : Axiom (φ.allFuture.allFuture.imp φ.allFuture)
-  /-- **CO** (`TM_c`, complete order): `△(Hφ → F Hφ) → (Hφ → Gφ)`.
+  /-- **CO** (`TM_r`, complete order): `△(Hφ → F Hφ) → (Hφ → Gφ)`.
 
       `△` is `BLFormula.always` (`Hχ ∧ (χ ∧ Gχ)`), the *temporal* triangle, not the modal box —
       the same operator-resolution trap flagged on `Formula.co`. The association mirrors
@@ -222,7 +229,7 @@ Minimum frame class for each BL axiom constructor.
 Only the three extension axioms are non-`Base`; every TM axiom proper falls through the
 catch-all, exactly as in `ProofSystem.Axiom.minFrameClass`. The invariant
 `ax.minFrameClass ≤ fc` in `BaseLanguage.DerivationTree`'s `axiom` constructor is what makes
-`TM`, `TM_f`, `TM_d` and `TM_dc` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
+`TM`, `TM_z`, `TM_d` and `TM_r` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
 `.RTime` of a single derivation type.
 -/
 def Axiom.minFrameClass {φ : BLFormula} : Axiom φ → FrameClass

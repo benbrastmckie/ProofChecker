@@ -332,8 +332,10 @@ private noncomputable def coEventBot {fc : FrameClass} (φ : Formula) :
 `def:TMplus-c`; displayed key CO), verbatim:
 "`\aitem[CO]{TMP-CO} $\always(\Past\varphi \rightarrow \future\Past\varphi) \rightarrow
 (\Past\varphi \rightarrow \Future\varphi)$.`"
-There CO is the extra axiom of the paper's complete-order extension BX_c. The
-`△` is the temporal triangle `Formula.always`, not `Formula.box`; see `Formula.co`.
+In the paper's current text CO is a *derived* theorem of the complete-order extension `BX_r`,
+which is `BX_d` extended by PU and SEP — the same arrangement as this tree's, and the reason this
+module exists. The `△` is the temporal triangle `Formula.always`, not `Formula.box`; see
+`Formula.co`.
 
 **CO is derived here, not primitive.** No `Axiom.co` constructor exists; the official
 Dedekind-class basis remains `Axiom.prior_U_gap` / `Axiom.prior_S_gap` / `Axiom.sep`.

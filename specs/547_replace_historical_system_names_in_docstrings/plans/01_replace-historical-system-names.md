@@ -317,30 +317,30 @@ passage count at implementation time.
 
 ---
 
-### Phase 5: BaseLanguage, Fragment and Theorems rewrites [NOT STARTED]
+### Phase 5: BaseLanguage, Fragment and Theorems rewrites [COMPLETED]
 
 **Goal**: Retire the `TM_dc`-vs-`TM_c` fidelity caveats on the BaseLanguage side, reword the
 `TMFrag` docstring, and place the one-time "no paper name" sentence at the system table where
 `TM_z`/`TM_d`/`TM_r` are first tabulated.
 
 **Tasks**:
-- [ ] `BaseLanguage/Axioms.lean` (B6, ~lines 25, 121, 209): the CO row becomes `TM_r`; delete the
+- [x] `BaseLanguage/Axioms.lean` (B6, ~lines 25, 121, 209): the CO row becomes `TM_r`; delete the
       "`TM_c` (see the caveat below)" annotation and the "at the paper's `TM_dc`, not at `TM_c`"
       caveat. Add here, once, the sentence that `TM_z`/`TM_d`/`TM_r` on the BaseLanguage side are
       Lean-only names with no paper counterpart, pointing at `Metalogic/Conservativity.lean`'s
       mapping paragraph for the full statement.
-- [ ] `BaseLanguage/AxiomDischarge.lean` (B7, ~line 327): replace the "`TM_dc`, not `TM_c`"
+- [x] `BaseLanguage/AxiomDischarge.lean` (B7, ~line 327): replace the "`TM_dc`, not `TM_c`"
       contrast with the single name `TM_r`.
-- [ ] `Metalogic/Conservativity/Backward.lean` (B5, ~lines 144-155): the CEC "fidelity caveat"
+- [x] `Metalogic/Conservativity/Backward.lean` (B5, ~lines 144-155): the CEC "fidelity caveat"
       evaporates — the row is `TM_r ⟶ TM⁺_r` at `.RTime`, and `TM⁺_r` *is* the paper's `TM_r`.
       Keep only the still-true content (`.RTime` sits above `.Dense`; CO's translation via
       `coDerived`) and rename the remaining occurrences.
-- [ ] `Metalogic/Conservativity/Fragment.lean`: rename the historical names, and reword the
+- [x] `Metalogic/Conservativity/Fragment.lean`: rename the historical names, and reword the
       `TMFrag` docstring so it describes the H/G-fragment of `TM⁺` as **the set of Past/Future
       theorems of the paper's `TM`**, not as a fragment of a named paper system.
-- [ ] `Theorems/DedekindDerived.lean` (B12, ~line 335): CO is *derived* in `BX_r`, not "the extra
+- [x] `Theorems/DedekindDerived.lean` (B12, ~line 335): CO is *derived* in `BX_r`, not "the extra
       axiom of the paper's complete-order extension `BX_c`".
-- [ ] `Theorems/DiscreteUnfolding.lean` (B12, ~line 356): DF distinguishes this tree's `TM_z` from
+- [x] `Theorems/DiscreteUnfolding.lean` (B12, ~line 356): DF distinguishes this tree's `TM_z` from
       `TM` — drop "the paper's", since the BaseLanguage systems have no paper name.
 
 **Timing**: 1.25 hours
