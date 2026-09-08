@@ -1,7 +1,7 @@
 # Implementation Plan: Task #193
 
 - **Task**: 193 - Codebase tactic refactor (truth-layer simp-normal-form application sweep)
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 7.5 hours
 - **Dependencies**: 165, 402, 448, 470, 508, 519, 521, 522 — all archived/completed; verified at plan time
 - **Research Inputs**: `specs/193_codebase_tactic_refactor/reports/01_codebase-refactor-seed.md` (2026-05-22 seed report — **superseded**, see Research Integration)
@@ -184,27 +184,27 @@ matters at this size.
 
 ---
 
-### Phase 1: Baseline capture and conversion harness [NOT STARTED]
+### Phase 1: Baseline capture and conversion harness [COMPLETED]
 
 **Goal**: Freeze the measured baseline in a reproducible artifact and confirm the preconditions,
 so every later phase's claim is checkable rather than asserted.
 
 **Tasks**:
-- [ ] Write `specs/193_codebase_tactic_refactor/baseline.txt` recording, per file: the criterion
+- [x] Write `specs/193_codebase_tactic_refactor/baseline.txt` recording, per file: the criterion
       metric (`grep -c 'simp only \[TruthAt'`), the broad metric (`simp only [...]` lists
       containing `TruthAt`), the `Formula.swap_temporal_*` count, the `truth_norm` count, and the
-      file line count. Expect 41/19, 46/35, 0/13, 0/0, 1598/836
-- [ ] Record the enumerated Class B line numbers (Soundness: 410, 594, 605, 1022, 1027, 1094,
+      file line count. Expect 41/19, 46/35, 0/13, 0/0, 1598/836 *(deviation: altered — criterion 41/19 and swap 0/13 confirmed exactly; observed broad metric is 48/37, not 46/35, a grep-shape difference recorded as authoritative in baseline.txt)*
+- [x] Record the enumerated Class B line numbers (Soundness: 410, 594, 605, 1022, 1027, 1094,
       1099, 1129, 1242, 1254; FrameClassVariants: 53, 71, 167, 294, 312, 332, 345, 360, 382, 408,
       445, 501, 519, 578, 787, 802) into `baseline.txt`, re-derived by grep rather than copied
-      from this plan
-- [ ] Run `lake build` and record the job count and error count as the green baseline
-- [ ] Run `bash scripts/check-module-invariants.sh` and record the result
-- [ ] Record the C2 axiom baseline for the flagship theorems (`#print axioms`, expected
+      from this plan *(deviation: altered — re-derivation found 30 Class B sites, not 26: the plan omitted Soundness 354 and 992 and FrameClassVariants 606 and 641. Observed split recorded as authoritative; Soundness Class A is therefore 36, not 37)*
+- [x] Run `lake build` and record the job count and error count as the green baseline
+- [x] Run `bash scripts/check-module-invariants.sh` and record the result
+- [x] Record the C2 axiom baseline for the flagship theorems (`#print axioms`, expected
       `[propext, Classical.choice, Quot.sound]`) and the executable-`sorry` inventory located **by
       content**, not by line number — the description's expected single executable sorry is in
-      `FormalSystem/Metalogic/WeakCanonical/Transfer.lean`
-- [ ] Confirm `truth_norm` and `swap_norm` resolve in both target files with no import edit
+      `FormalSystem/Metalogic/WeakCanonical/Transfer.lean` *(deviation: altered — the description's "1 sorry in Transfer.lean" is stale. By-content search finds ZERO executable sorries outside Boneyard/; Transfer.lean's `sorry` hits are all prose in docstrings. The invariant to preserve is zero, not one. C2/C3 are both asserted by check-module-invariants.sh, which passed)*
+- [x] Confirm `truth_norm` and `swap_norm` resolve in both target files with no import edit
       (a one-site `lean_multi_attempt` in each file suffices; do not add imports)
 
 **Timing**: 0.5 hours

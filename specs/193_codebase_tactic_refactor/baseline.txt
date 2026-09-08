@@ -1,0 +1,111 @@
+# Task 193 — truth-norm application sweep: measured baseline
+# Captured at implementation time (Phase 1), clean FormalSystem/ tree, warm .lake cache.
+# All numbers below are OBSERVED. Where an observation differs from the plan's
+# plan-time figure, the observed number is authoritative and the discrepancy is noted.
+
+## Per-file metrics (BEFORE)
+
+                                        Soundness.lean   FrameClassVariants.lean   Total
+criterion  grep -c 'simp only \[TruthAt'      41                 19                  60
+broad      grep -c 'simp only \[.*TruthAt'    48                 37                  85
+swap       grep -c 'Formula.swap_temporal_'    1*                13                  14
+truth_norm grep -c 'truth_norm'                0                  0                   0
+swap_norm  grep -c 'swap_norm'                 0                  0                   0
+lines      wc -l                            1598                836                2434
+
+  * The single Soundness.lean `Formula.swap_temporal_` hit is `rw [Formula.swap_temporal_involution]`
+    at line 1276 — a rw, NOT a simp list. Class C (simp-list) count for Soundness.lean is 0,
+    which matches the plan. Class C total = 13, all in FrameClassVariants.lean.
+
+  Plan-time broad metric was 46/35 (81); observed 48/37 (85). The broad metric is not the
+  completion criterion and the discrepancy is a grep-shape difference, not a tree change.
+  Criterion metric 41/19 = 60 matches the plan exactly.
+
+## Criterion metric: 80%-reduction target
+
+  Baseline 60 → target ≤ 12 (a fall of ≥ 48).
+
+## Site classification (re-derived by grep, NOT copied from the plan)
+
+### Class A — clean drop-in (`simp only [truth_norm]` goal-identical)
+  List names only `TruthAt` and `Truth.*_iff`.
+
+  Soundness.lean (36):
+    159 167 175 183 192 201 212 221 226 237 246 255 265 276 286 306 318 389 399 422
+    455 468 500 511 521 530 541 552 692 702 792 1236 1249 1269 1303 1306
+  FrameClassVariants.lean (19):
+    90 111 144 196 210 223 235 247 259 271 283 479 489 539 559 675 688 816 831
+
+  Class A total = 55.
+
+  DISCREPANCY vs plan: plan said Soundness Class A = 37. Observed 36. Soundness:992
+  (`simp only [TruthAt, Formula.and, Formula.neg, Formula.kPlus, Formula.kMinus, ...`)
+  leads with TruthAt but mixes syntax-unfolding lemmas, so it is Class B, not Class A.
+  The plan's own Class B enumeration omitted it. Observed split of the 41 Soundness
+  criterion sites is 36 Class A + 5 Class B (992, 1022, 1027, 1094, 1099), not 37 + 4.
+
+### Class B — syntax-lemma-mixed (Truth.lean caveat class)
+  List mixes Formula.and/or/neg/top/kPlus/kMinus/swapTemporal with TruthAt.
+  Converting changes goal shape; the proof body below may not survive.
+
+  Soundness.lean (12): 354 410 594 605 992 1022 1027 1094 1099 1129 1242 1254
+    — inside the criterion metric (lead with `[TruthAt`): 992 1022 1027 1094 1099  (5)
+    — outside the criterion metric:                       354 410 594 605 1129 1242 1254  (7)
+  FrameClassVariants.lean (18): 53 71 167 294 312 332 345 360 382 408 445 501 519 578
+                                606 641 787 802
+    — all 18 are outside the criterion metric (none lead with `[TruthAt`).
+
+  Class B total = 30.
+
+  DISCREPANCY vs plan: plan said 26 Class B (Soundness 10, FCV 16). Observed 30
+  (Soundness 12, FCV 18). Plan omitted Soundness 354, 992 and FCV 606, 641.
+
+### Class C — `swap_norm` collapse (FrameClassVariants.lean only, 13 sites)
+  110 195 209 222 234 246 258 269 281 478 488 538 558
+  Lines 269 and 281 are MULTI-LINE simp lists (the swap names wrap to the next line).
+  Class C total = 13 — matches the plan exactly.
+
+## Criterion arithmetic (restated against the OBSERVED split)
+
+  Converting Class A alone: 60 → 5 remaining (992, 1022, 1027, 1094, 1099).
+  That is a 91.7% reduction against a required 80% (≤ 12). Margin: 7 sites.
+  Phase 5 (Class B) remains upside, not load-bearing, exactly as the plan reasoned —
+  the observed split shrinks the margin from 8 sites to 7, which does not change that.
+
+## Green baseline (Phase 1)
+
+  lake build (via .claude/scripts/lake-build-guard.sh build --timeout 1800, detached):
+      exit 0, no errors.
+  bash scripts/check-module-invariants.sh:
+      ALL CHECKS PASSED (exit 0).
+      This script's C2 check IS the flagship-theorem `#print axioms` baseline
+      (four flagship theorems vs the recorded baseline) and its C3 check IS the
+      structural-sorry inventory, asserted BY CONTENT. Both passed at Phase 1.
+
+## Executable sorry inventory (BY CONTENT, never by line number)
+
+  grep -rn '^\s*sorry\s*$\|all_goals sorry' FormalSystem/ --include=*.lean | grep -v '/Boneyard/'
+      -> ZERO matches.
+
+  DISCREPANCY vs task description: the description expects "executable sorry count
+  unchanged at 1, located in FormalSystem/Metalogic/WeakCanonical/Transfer.lean".
+  That expectation is STALE. Transfer.lean contains no `sorry` tactic — only prose
+  occurrences of the word in docstrings ("is `sorryAx`-free", "avoids the sorry at
+  CaseAnalysis.lean"). FormalSystem/ outside Boneyard/ is sorry-free, which
+  FormalSystem/Metalogic/WeakCanonical.lean:120-121 states directly and
+  check-module-invariants.sh check C3 asserts mechanically. The 91 raw `sorry`
+  matches under FormalSystem/ are ALL under FormalSystem/Boneyard/, which is excluded
+  from the build closure and from C3.
+  The invariant this task must preserve is therefore ZERO executable sorries, not one.
+
+## Precondition probes (lean_multi_attempt, no import edits made)
+
+  Soundness.lean:159        `simp only [TruthAt]`  vs `simp only [truth_norm]`
+                            -> IDENTICAL goal. `truth_norm` resolves; no import needed.
+  FrameClassVariants:111    `simp only [TruthAt, Truth.past_iff]` vs `simp only [truth_norm]`
+                            -> IDENTICAL goal. `truth_norm` resolves; no import needed.
+  FrameClassVariants:111    `simp only [swap_norm, Formula.swapTemporal]`
+                            -> `simp` made no progress (error). Confirms swap_norm is NOT a
+                            substitute for truth_norm at TruthAt-headed sites; the two sets are
+                            disjoint in effect, as the plan's FCV:294 probe already showed.
+
