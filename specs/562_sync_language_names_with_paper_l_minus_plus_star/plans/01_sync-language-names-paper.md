@@ -1,7 +1,7 @@
 # Implementation Plan: Task #562
 
 - **Task**: 562 - Sync language names with the paper (L⁻ / L / L⁺ / L⋆)
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 18 hours
 - **Dependencies**: Task 557 (in progress) — its `file_scope` includes `Syntax/Formula.lean`,
   `Metalogic/Conservativity/TMCompletenessReduction.lean` and
@@ -209,7 +209,7 @@ and 11 touch disjoint files (`specs/paper-definitions-of-record.md` vs `specs/st
 
 ---
 
-### Phase 1: Rename inventory and hand-classified docstring map [NOT STARTED]
+### Phase 1: Rename inventory and hand-classified docstring map [COMPLETED]
 
 **Goal**: Produce deliverable (1) — the inventory mapping every affected directory, file,
 declaration, notation and docstring phrase to its new name, with every ambiguous `L⁺`/`TM`/`TM⁺`
@@ -262,7 +262,7 @@ affected later phase rather than silently absorbing the difference.
 
 ---
 
-### Phase 2: L⁻ structural layer — directories, aggregators, modules, namespaces [NOT STARTED]
+### Phase 2: L⁻ structural layer — directories, aggregators, modules, namespaces [IN PROGRESS]
 
 **Goal**: Move the H/G language's files and namespace to the `Minus` names, leaving every
 declaration name untouched. `lake build FormalSystem` green at phase close.
