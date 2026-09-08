@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
+import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.Conservativity.TMCompletenessReduction
 import FormalSystem.Metalogic.Soundness
 import FormalSystem.Semantics.LexCarrier
@@ -54,7 +54,7 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic.Algebraic
 
@@ -176,7 +176,7 @@ against the countermodel, whose `SuccOrder`/`PredOrder` instances come from
 with both halves machine-checked.
 -/
 theorem not_bl_derivable_z1 (p : Atom) :
-    ¬ BaseLanguage.Derivable FrameClass.ZTime [] (Conservativity.Z1 (BLFormula.atom p)) := by
+    ¬ MinusLanguage.Derivable FrameClass.ZTime [] (Conservativity.Z1 (BLFormula.atom p)) := by
   rintro ⟨d⟩
   exact z1_not_true_at_zero p
     (bl_soundness_ztime_succ [] _ d z1F z1TM z1τ z1τ_total z1pt (by simp))

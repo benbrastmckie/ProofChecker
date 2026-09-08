@@ -14,7 +14,7 @@ import FormalSystem.StarLanguage.Derivation
 This component is a self-contained mirror of `Syntax` + `ProofSystem` for the language **L⋆**:
 L⁺ (`FormalSystem.Syntax.Formula`) extended by the paper's **stability modal** `⊡`
 (`possible_worlds.tex` line 1114), read "settled at the present world state". It follows the
-pattern of `FormalSystem.BaseLanguage`: a separate inductive with an embedding, and a
+pattern of `FormalSystem.MinusLanguage`: a separate inductive with an embedding, and a
 proof system mirroring `ProofSystem.DerivationTree` constructor for constructor.
 
 ## Modules
@@ -44,6 +44,6 @@ proof system mirroring `ProofSystem.DerivationTree` constructor for constructor.
 **Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
 Checkable by `grep -rn 'FormalSystem.Semantics' FormalSystem/StarLanguage/`, whose only matches
 are prose mentions in docstrings — no `import` line matches. The invariant is directional,
-exactly as for `BaseLanguage/`: the converse edge is permitted and is how L⋆ acquires its
+exactly as for `MinusLanguage/`: the converse edge is permitted and is how L⋆ acquires its
 semantics.
 -/

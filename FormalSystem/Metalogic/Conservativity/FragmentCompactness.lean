@@ -41,7 +41,7 @@ commutes with `imp` definitionally.
 BL⁺'s non-compactness at `.ZTime` (`notCompactZTime`, witness `{F p} ∪ {¬Xⁿ p}`) and at
 `.RTime` (`notCompactRTime`, witness built from `K⁺`-shaped `untl` guards) uses formulas
 **outside the range of `tr`**: `Formula.next` is `untl bot _` and `K⁺` is a top-level `untl`,
-while by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
+while by `MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. So neither
 refutation transfers to the base language, and no BL non-compactness claim is made at those two
 classes here. Only the two positive rows are delivered; whether `BLCompact .ZTime` or
 `BLCompact .RTime` holds is left open.
@@ -50,7 +50,7 @@ classes here. Only the two positive rows are delivered; whether `BLCompact .ZTim
 
 * `FormalSystem/Metalogic/SetConsequence.lean` — `SetConsequenceOnFrames`, `Compact`
 * `FormalSystem/Metalogic/Compactness.lean` — `compactBase`, `compactDense`
-* `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `truthAt_tr`,
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `truthAt_tr`,
   `blValidIn_iff_validIn_tr`
 -/
 
@@ -58,7 +58,7 @@ namespace FormalSystem.Metalogic.Conservativity
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
 

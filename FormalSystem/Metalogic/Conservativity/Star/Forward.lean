@@ -54,7 +54,7 @@ namespace FormalSystem.Metalogic.Conservativity
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.StarLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
@@ -131,28 +131,28 @@ at `.Dense` and `.RTime` (`Metalogic/Conservativity.lean`); it is **not asserted
 /-- **L ⊂ L⋆, backward**: a TM theorem embeds, through `tr` and `ofFormula`, into a TM⋆ theorem
 at the same class. -/
 theorem star_of_tm {fc : FrameClass} (φ : BLFormula)
-    (h : BaseLanguage.Derivable fc [] φ) : StarDerivable fc [] (ofFormula (tr φ)) :=
+    (h : MinusLanguage.Derivable fc [] φ) : StarDerivable fc [] (ofFormula (tr φ)) :=
   starDerivable_of_derivable (derivable_translate h)
 
 /-- L ⊂ L⋆ backward at `.Base`. -/
-theorem star_of_tm_base (φ : BLFormula) (h : BaseLanguage.Derivable FrameClass.Base [] φ) :
+theorem star_of_tm_base (φ : BLFormula) (h : MinusLanguage.Derivable FrameClass.Base [] φ) :
     StarDerivable FrameClass.Base [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
 /-- L ⊂ L⋆ backward at `.Dense`. -/
-theorem star_of_tm_dense (φ : BLFormula) (h : BaseLanguage.Derivable FrameClass.Dense [] φ) :
+theorem star_of_tm_dense (φ : BLFormula) (h : MinusLanguage.Derivable FrameClass.Dense [] φ) :
     StarDerivable FrameClass.Dense [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
 /-- L ⊂ L⋆ backward at `.ZTime`. -/
 theorem star_of_tm_ztime (φ : BLFormula)
-    (h : BaseLanguage.Derivable FrameClass.ZTime [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.ZTime [] φ) :
     StarDerivable FrameClass.ZTime [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 
 /-- L ⊂ L⋆ backward at `.RTime`. -/
 theorem star_of_tm_rtime (φ : BLFormula)
-    (h : BaseLanguage.Derivable FrameClass.RTime [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.RTime [] φ) :
     StarDerivable FrameClass.RTime [] (ofFormula (tr φ)) :=
   star_of_tm φ h
 

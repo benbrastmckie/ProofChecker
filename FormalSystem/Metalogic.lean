@@ -38,7 +38,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
 - **Backward TM/TM⁺ bridge** (`Conservativity.translate`, `derivable_translate`, and the four
   row corollaries `ceb_backward` / `cef_backward` / `ced_backward` / `cec_backward`):
   SORRY-FREE (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`). `TM ⊢ φ ⟹
-  TM⁺ ⊢ tr φ` over the tense-primitive base language of `FormalSystem/BaseLanguage/`. The
+  TM⁺ ⊢ tr φ` over the tense-primitive base language of `FormalSystem/MinusLanguage/`. The
   **forward** direction is refuted for the Base and Discrete rows and open for the other two;
   `Metalogic/Conservativity.lean`'s module docstring is the standing record of why it must not
   be attempted or `sorry`-ed. That record is row-dependent and is not restated here: CEF is
@@ -79,7 +79,7 @@ temporal analogs (G phi -> phi, H phi -> phi) are NOT valid under irreflexive se
   **native** BL semantics `BLTruthAt` of `Semantics/BLTruth.lean` — a six-clause recursion on
   `BLFormula`, not `TruthAt ∘ tr` — and obtained by composing `Conservativity.translate` with the
   four theorems above across the truth-transfer bridge `Semantics.truthAt_tr`, which is proved by
-  induction in `Metalogic/Conservativity/BaseLanguageSoundness.lean`. `bl_soundness_rtime` carries
+  induction in `Metalogic/Conservativity/MinusLanguageSoundness.lean`. `bl_soundness_rtime` carries
   `ValidRTime`'s binder set and its validity form concludes at `BLValidRTime`,
   inheriting `soundness_rtime`'s target; a density-free `BLValidComplete` is deliberately not
   defined because it would be refutable

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage
+import FormalSystem.MinusLanguage
 
 /-!
 # The backward TM/TM⁺ conservativity bridge
@@ -14,7 +14,7 @@ whole narrative this file's declarations sit inside — in particular the
 **forward-conservativity prohibition**, which states that
 
 ```
-theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
+theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → MinusLanguage.Derivable fc [] φ
 ```
 
 is refuted at `fc := .Base` and `fc := .ZTime`, and that a `sorry`-ed proof of it would be an
@@ -30,10 +30,10 @@ sibling module.
 
 ## No semantics
 
-Nothing here — nor anything under `FormalSystem/BaseLanguage/`, transitively — imports
+Nothing here — nor anything under `FormalSystem/MinusLanguage/`, transitively — imports
 `FormalSystem.Semantics`. `translate` is a function between two `DerivationTree` types and
 touches no truth definition, frame, or validity predicate. The semantics-facing half of the
-story lives in the sibling `Conservativity/BaseLanguageSoundness.lean`, which is where the
+story lives in the sibling `Conservativity/MinusLanguageSoundness.lean`, which is where the
 `FormalSystem.Semantics` import enters.
 
 ## Tags
@@ -45,7 +45,7 @@ namespace FormalSystem.Metalogic.Conservativity
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 
 /--
 **The backward conservativity bridge.**
@@ -55,28 +55,28 @@ the same frame class and over the translated context.
 
 Seven cases, one per BL rule:
 
-- `axiom` — `BaseLanguage.dischargeAxiom`, the lookup table of
-  `BaseLanguage/AxiomDischarge.lean`, weakened from the empty context.
-- `assumption` — membership transported through `tr` by `BaseLanguage.mem_trCtx`.
+- `axiom` — `MinusLanguage.dischargeAxiom`, the lookup table of
+  `MinusLanguage/AxiomDischarge.lean`, weakened from the empty context.
+- `assumption` — membership transported through `tr` by `MinusLanguage.mem_trCtx`.
 - `modus_ponens`, `weakening` — structural.
 - `necessitation`, `temporal_necessitation` — structural; both rules are empty-context on both
   sides and `trCtx [] = []` definitionally.
 - `temporal_duality` — the load-bearing case. TM's **TD** concludes `⊢ swapBL φ` while BL⁺'s
-  rule concludes `⊢ swapTemporal (tr φ)`; `BaseLanguage.tr_swapBL` is exactly the equation that
+  rule concludes `⊢ swapTemporal (tr φ)`; `MinusLanguage.tr_swapBL` is exactly the equation that
   makes those the same formula, and without it this case does not typecheck.
 -/
-noncomputable def translate {fc : FrameClass} {Γ : BaseLanguage.Context} {φ : BLFormula} :
-    BaseLanguage.DerivationTree fc Γ φ → ProofSystem.DerivationTree fc (trCtx Γ) (tr φ)
+noncomputable def translate {fc : FrameClass} {Γ : MinusLanguage.Context} {φ : BLFormula} :
+    MinusLanguage.DerivationTree fc Γ φ → ProofSystem.DerivationTree fc (trCtx Γ) (tr φ)
   | .axiom Γ _ h h_fc =>
       ProofSystem.DerivationTree.weakening [] (trCtx Γ) _
-        (BaseLanguage.dischargeAxiom h h_fc) (List.nil_subset _)
-  | .assumption _ _ h => .assumption _ _ (BaseLanguage.mem_trCtx h)
+        (MinusLanguage.dischargeAxiom h h_fc) (List.nil_subset _)
+  | .assumption _ _ h => .assumption _ _ (MinusLanguage.mem_trCtx h)
   | .modus_ponens _ φ ψ d1 d2 =>
       .modus_ponens _ (tr φ) (tr ψ) (translate d1) (translate d2)
   | .necessitation φ d => .necessitation (tr φ) (translate d)
   | .temporal_necessitation φ d => .temporal_necessitation (tr φ) (translate d)
   | .temporal_duality φ d =>
-      (BaseLanguage.tr_swapBL φ).symm ▸
+      (MinusLanguage.tr_swapBL φ).symm ▸
         ProofSystem.DerivationTree.temporal_duality (tr φ) (translate d)
   | .weakening _ _ _ d h =>
       .weakening _ _ _ (translate d)
@@ -91,8 +91,8 @@ at the same frame class.
 
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
-theorem derivable_translate {fc : FrameClass} {Γ : BaseLanguage.Context} {φ : BLFormula}
-    (h : BaseLanguage.Derivable fc Γ φ) :
+theorem derivable_translate {fc : FrameClass} {Γ : MinusLanguage.Context} {φ : BLFormula}
+    (h : MinusLanguage.Derivable fc Γ φ) :
     ProofSystem.Derivable fc (trCtx Γ) (tr φ) :=
   h.elim fun d => ⟨translate d⟩
 
@@ -110,7 +110,7 @@ The base row: no extension axiom is available on either side.
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem ceb_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.Base [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.Base [] φ) :
     ProofSystem.Derivable FrameClass.Base [] (tr φ) :=
   derivable_translate h
 
@@ -124,7 +124,7 @@ appeal to the completeness machinery.
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem cef_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.ZTime [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.ZTime [] φ) :
     ProofSystem.Derivable FrameClass.ZTime [] (tr φ) :=
   derivable_translate h
 
@@ -136,7 +136,7 @@ theorem cef_backward {φ : BLFormula}
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem ced_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.Dense [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.Dense [] φ) :
     ProofSystem.Derivable FrameClass.Dense [] (tr φ) :=
   derivable_translate h
 
@@ -158,7 +158,7 @@ The BL-side CO axiom's translation is discharged by
 Paper: — (formalization-native; the paper states no TM/TM-plus proof-theoretic bridge)
 -/
 theorem cec_backward {φ : BLFormula}
-    (h : BaseLanguage.Derivable FrameClass.RTime [] φ) :
+    (h : MinusLanguage.Derivable FrameClass.RTime [] φ) :
     ProofSystem.Derivable FrameClass.RTime [] (tr φ) :=
   derivable_translate h
 
@@ -167,7 +167,7 @@ theorem cec_backward {φ : BLFormula}
 Not part of the bridge: this is the TM⁺_z half of the CEF refutation. The other half — that
 `TM_z ⊬ Z1` — is **also machine-checked**, in the sibling module
 `Conservativity/Z1Countermodel.lean`, as `not_bl_derivable_z1`; the BL-side soundness theorem it
-needed, `bl_soundness_ztime_succ`, is in `Conservativity/BaseLanguageSoundness.lean`.
+needed, `bl_soundness_ztime_succ`, is in `Conservativity/MinusLanguageSoundness.lean`.
 `tmCompleteZTime_refuted`, in that same countermodel module, reads the pair off as an outright
 refutation of TM_z-completeness over the discrete class. Neither half is outstanding. -/
 
@@ -189,8 +189,8 @@ def Z1 (φ : BLFormula) : BLFormula :=
 `⊢[Discrete] tr (Z1 φ)` — the translation of the BL-side Z1 schema is a `TM⁺_z` theorem.
 
 Two steps: `ProofSystem.Axiom.z1` at `FrameClass.ZTime`, then
-`BaseLanguage.notGNotImpF` pushed into the antecedent of the consequent by
-`BaseLanguage.impMono`, converting the axiom's `F(Gφ)` into the `¬G¬(Gφ)` shape `tr` produces.
+`MinusLanguage.notGNotImpF` pushed into the antecedent of the consequent by
+`MinusLanguage.impMono`, converting the axiom's `F(Gφ)` into the `¬G¬(Gφ)` shape `tr` produces.
 
 **This is not the forward direction and does not approach it.** It is one half of the CEF
 witness, and it is the half proved *here*; the other half is `not_bl_derivable_z1`
@@ -203,8 +203,8 @@ theorem z1_translate (φ : BLFormula) :
   ⟨FormalSystem.Theorems.Combinators.impTrans
     (ProofSystem.DerivationTree.axiom [] _ (ProofSystem.Axiom.z1 (tr φ))
       (show FrameClass.ZTime ≤ FrameClass.ZTime from le_refl _))
-    (BaseLanguage.impMono
-      (BaseLanguage.notGNotImpF (tr φ).allFuture)
+    (MinusLanguage.impMono
+      (MinusLanguage.notGNotImpF (tr φ).allFuture)
       (FormalSystem.Theorems.Combinators.identity (tr φ).allFuture))⟩
 
 end FormalSystem.Metalogic.Conservativity

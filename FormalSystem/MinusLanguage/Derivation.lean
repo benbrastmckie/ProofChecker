@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage.Axioms
+import FormalSystem.MinusLanguage.Axioms
 
 /-!
-# `BaseLanguage.DerivationTree` — TM's proof system over BL
+# `MinusLanguage.DerivationTree` — TM's proof system over BL
 
 A constructor-for-constructor mirror of `FormalSystem.ProofSystem.DerivationTree`, over
 `BLFormula` instead of `Formula`. The mirror is deliberate: it is what makes
@@ -25,7 +25,7 @@ case per rule and no bookkeeping.
 7. `weakening`
 
 **TD uses `swapBL`, not `swapTemporal`.** `swapTemporal` acts on BL⁺'s `untl`/`snce`; the BL
-side has no such constructors. The two are intertwined by `BaseLanguage.tr_swapBL`.
+side has no such constructors. The two are intertwined by `MinusLanguage.tr_swapBL`.
 
 ## Fidelity note: `temporal_necessitation` is not a strengthening
 
@@ -34,7 +34,7 @@ rule** — its rules are exactly MP, MN and TD. Including `temporal_necessitatio
 looks like an addition, but it changes no theorem of TM: `⊢ φ ⟹ ⊢ Gφ` is already *derivable*
 in TM from MN + MF + MT, by necessitating `φ` to `□φ`, applying **MF** (`□φ → □Gφ`) and then
 **MT** (`□Gφ → Gφ`). The rule is carried as a primitive purely to keep the seven-rule mirror,
-and `FormalSystem.BaseLanguage.temporalNecessitationDerivable` below proves the claim rather
+and `FormalSystem.MinusLanguage.temporalNecessitationDerivable` below proves the claim rather
 than asserting it.
 
 ## Frame-class parameterization
@@ -55,7 +55,7 @@ that a file opening both namespaces cannot silently mean the wrong system. There
 * `FormalSystem/ProofSystem/Derivation.lean` — the BL⁺ counterpart being mirrored
 -/
 
-namespace FormalSystem.BaseLanguage
+namespace FormalSystem.MinusLanguage
 
 open FormalSystem.ProofSystem (FrameClass)
 
@@ -123,7 +123,7 @@ def height {fc : FrameClass} {Γ : Context} {φ : BLFormula} : DerivationTree fc
 /--
 Re-target a derivation whose context is a subset of the empty context.
 
-Mirror of `ProofSystem.DerivationTree.ofWeakeningNil`. `BaseLanguage.DerivationTree`
+Mirror of `ProofSystem.DerivationTree.ofWeakeningNil`. `MinusLanguage.DerivationTree`
 is a distinct inductive type, so the twin is required rather than optional.
 -/
 def ofWeakeningNil {fc : FrameClass} {Γ' : Context} {φ : BLFormula}
@@ -156,7 +156,7 @@ def Derivable (fc : FrameClass) (Γ : Context) (φ : BLFormula) : Prop :=
 
 `Γ ⊢ᴮᴸ[fc] φ` / `⊢ᴮᴸ[fc] φ`. The `ᴮᴸ` marker keeps these from colliding with BL⁺'s `⊢[fc]`
 even in a file that has opened both `FormalSystem.ProofSystem` and
-`FormalSystem.BaseLanguage`. -/
+`FormalSystem.MinusLanguage`. -/
 
 /-- Derivability in TM from context `Γ` at frame class `fc`. -/
 notation:50 Γ " ⊢ᴮᴸ[" fc "] " φ => DerivationTree fc Γ φ
@@ -212,4 +212,4 @@ example (φ : BLFormula) : ⊢ᴮᴸ[FrameClass.ZTime] φ.box.imp φ :=
   DerivationTree.lift (fc₁ := FrameClass.Base) (by decide)
     (.axiom [] _ (Axiom.modal_t φ) (FrameClass.base_le _))
 
-end FormalSystem.BaseLanguage
+end FormalSystem.MinusLanguage

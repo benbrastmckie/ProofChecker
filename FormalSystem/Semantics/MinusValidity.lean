@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.BLTruth
+import FormalSystem.Semantics.MinusTruth
 import FormalSystem.Semantics.Validity
 
 /-!
@@ -27,9 +27,9 @@ There is deliberately **no** density-free `BLValidComplete`, and the soundness t
 `FrameClass.RTime` targets `BLValidRTime`. A density-free target would be
 **refutable**, and on the BL side one axiom suffices to refute it:
 
-- `(BaseLanguage.Axiom.dn φ).minFrameClass = FrameClass.Dense` and
+- `(MinusLanguage.Axiom.dn φ).minFrameClass = FrameClass.Dense` and
   `FrameClass.Dense ≤ FrameClass.RTime` (pinned by an `example` in
-  `FormalSystem/BaseLanguage/Axioms.lean`), so `dn` — the density axiom `GGφ → Gφ` — is
+  `FormalSystem/MinusLanguage/Axioms.lean`), so `dn` — the density axiom `GGφ → Gφ` — is
   admissible in any `FrameClass.RTime` BL derivation.
 - `dn` is false on `ℤ`: take `φ` true exactly at the times `≥ t + 2`. Then `GGφ` holds at `t`
   while `Gφ` fails at `t`, because `t + 1` is strictly future and `φ` is false there.
@@ -58,7 +58,7 @@ since BL has no `untl`. Do not "simplify" the target.
 
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:logical-consequence`
 * `FormalSystem/Semantics/Validity.lean` — the BL⁺ predicates these mirror
-* `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — the soundness theorems targeting these
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — the soundness theorems targeting these
 
 ## Tags
 
@@ -67,7 +67,7 @@ validity · base-language · frame-class
 
 namespace FormalSystem.Semantics
 
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 
 /--
 Semantic consequence in the base language: `φ` is true at every model, **total** history and time
@@ -75,7 +75,7 @@ at which every formula of `Γ` is true.
 
 Binder-for-binder mirror of `Semantics.SemanticConsequence`.
 -/
-def BLSemanticConsequence (Γ : BaseLanguage.Context) (φ : BLFormula) : Prop :=
+def BLSemanticConsequence (Γ : MinusLanguage.Context) (φ : BLFormula) : Prop :=
   ∀ (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (_ : τ.IsTotal) (t : F.Duration),
     (∀ ψ ∈ Γ, BLTruthAt M τ t ψ) →
@@ -147,7 +147,7 @@ theorem BLValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : BLFormula} (h : �
   fun F hF => hP F (h F hF)
 
 /-- BL⁺ validity is monotone in the `FrameClass` order, pointing the same direction as
-`BaseLanguage.DerivationTree.lift`. The BL mirror of `Semantics.ValidIn.mono`. -/
+`MinusLanguage.DerivationTree.lift`. The BL mirror of `Semantics.ValidIn.mono`. -/
 theorem BLValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : BLFormula} (h : fc₁ ≤ fc₂)
     (hv : BLValidIn fc₁ φ) : BLValidIn fc₂ φ :=
   BLValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
@@ -229,7 +229,7 @@ this is stated directly in the pre-abbreviation shape rather than as an abbrevia
 (`TaskFrame.IsZTime` bundles all four), so no `.of_forall`/`.apply` pair is needed —
 a value of this type already **is** the binder-shape statement.
 
-**Why this exists.** `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_ztime_succ` is the
+**Why this exists.** `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `bl_soundness_ztime_succ` is the
 single prerequisite CEF was missing (report §6.1): a discrete BL soundness theorem that does not
 assume Archimedean structure, so it applies to the non-Archimedean carrier `ℚ ×ₗ ℤ`
 (`Semantics/LexCarrier.lean`) that `Metalogic/Conservativity/Z1Countermodel.lean`'s countermodel is built over.
@@ -242,7 +242,7 @@ def BLValidZTimeSucc (φ : BLFormula) : Prop :=
 and its dense/RTime siblings.
 
 **Documented exception to the transfer-theorem collapse.** Its three siblings are corollaries of
-`BLValidIn.mono`, and every BL/BL⁺ equivalence in `Metalogic/Conservativity/BaseLanguageSoundness.lean` is a
+`BLValidIn.mono`, and every BL/BL⁺ equivalence in `Metalogic/Conservativity/MinusLanguageSoundness.lean` is a
 corollary of `blValidIn_iff_validIn_tr`. This one is neither, and cannot be made either:
 `BLValidZTimeSucc` is **not** any `BLValidIn fc` — no `FrameClass.Sat` variant bundles just
 `SuccOrder` + `PredOrder` without the two Archimedean conditions, which is exactly the weakening
@@ -309,7 +309,7 @@ theorem blValid_implies_blValidRTime {φ : BLFormula} (h : BLValid φ) :
 orthogonal `Prop` shape, not a `BLValidIn` at any tag: it takes the history `τ` unbundled, carries
 no `FrameClass` index, and mentions no `tr`. So neither
 `blValidOnFrames_iff_validOnFrames_tr` nor `blValidIn_iff_validIn_tr`
-(`Metalogic/Conservativity/BaseLanguageSoundness.lean`) can prove it, and this two-branch script stays. -/
+(`Metalogic/Conservativity/MinusLanguageSoundness.lean`) can prove it, and this two-branch script stays. -/
 theorem blValid_iff_empty_consequence (φ : BLFormula) :
     BLValid φ ↔ BLSemanticConsequence [] φ := by
   constructor

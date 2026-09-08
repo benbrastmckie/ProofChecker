@@ -4,25 +4,25 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.BLTruth
+import FormalSystem.Semantics.MinusTruth
 import FormalSystem.Semantics.DurationClassification
 
 /-!
 # DF and DN semantic lemmas, and their past-duals
 
 The four semantic facts consumed by both `Metalogic/Conservativity/SpWitness.lean` (the (Sp) validity witness)
-and `Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness_ztime_succ` — the shared
+and `Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `bl_soundness_ztime_succ` — the shared
 mathematical core of the TM-completeness task (report §4.1 Lemmas B and C, plus §6.1's
 past-dual obligation).
 
 ## The two axiom shapes, pinned
 
-`BaseLanguage.Axiom.df φ : Axiom (((φ.allPast.and φ).and BLFormula.top.someFuture).imp
-φ.allPast.someFuture)` — **DF**, `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`. `BaseLanguage.Axiom.dn φ :
+`MinusLanguage.Axiom.df φ : Axiom (((φ.allPast.and φ).and BLFormula.top.someFuture).imp
+φ.allPast.someFuture)` — **DF**, `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`. `MinusLanguage.Axiom.dn φ :
 Axiom (φ.allFuture.allFuture.imp φ.allFuture)` — **DN**, `GGφ → Gφ`. Every lemma below states
 truth of exactly these formula expressions (not through the `Axiom` type, which is
 proof-relevant and indexed by the formula rather than a function producing one), so that the
-association is checked by elaboration against `BaseLanguage/Axioms.lean`'s own definitions.
+association is checked by elaboration against `MinusLanguage/Axioms.lean`'s own definitions.
 
 ## Main Results
 
@@ -39,7 +39,7 @@ association is checked by elaboration against `BaseLanguage/Axioms.lean`'s own d
 
 * The TM-completeness status report (`01_tm-completeness-status.md`),
   §4.1 (Lemmas B and C), §6.1 (the past-dual obligation)
-* `FormalSystem/BaseLanguage/Axioms.lean` — `Axiom.df`, `Axiom.dn`
+* `FormalSystem/MinusLanguage/Axioms.lean` — `Axiom.df`, `Axiom.dn`
 * `FormalSystem/Semantics/DurationClassification.lean` — `isLeast_pos_succ_zero`
 
 ## Tags
@@ -49,7 +49,7 @@ validity · base-language · density · discreteness
 
 namespace FormalSystem.Semantics
 
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 
 variable {F : TaskFrame}
 
@@ -89,8 +89,8 @@ least strictly positive element, so this is a corollary rather than a second dir
 a BL⁺ theorem across `tr`.** `tr` is exact only on `□, G, H, →, ⊥`; on `someFuture` it is not.
 `tr φ.someFuture` is `(Formula.allFuture (tr φ).neg).neg`, a different constructor tree from
 `Formula.someFuture (tr φ)` — recorded by proof as `tr_someFuture_ne`
-(`BaseLanguage/Translation.lean`). Both DF statements have `F⊤` and `F(Hφ)` in them, so the
-transfer theorems in `Metalogic/Conservativity/BaseLanguageSoundness.lean` do not reach them, and both proofs
+(`MinusLanguage/Translation.lean`). Both DF statements have `F⊤` and `F(Hφ)` in them, so the
+transfer theorems in `Metalogic/Conservativity/MinusLanguageSoundness.lean` do not reach them, and both proofs
 stay native. Do not delete either as a duplicate of a BL⁺ result.
 -/
 theorem df_valid_of_succOrder [SuccOrder F.Duration] [Nontrivial F.Duration]

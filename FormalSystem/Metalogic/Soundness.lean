@@ -122,7 +122,7 @@ comes from `SoundnessLemmas`' well-founded descent on succ/pred chains, reached 
 
 The four theorems here are stated over `FormalSystem.Syntax.Formula`, the `untl`/`snce`-primitive
 language BL⁺. Their counterparts for the tense-primitive base language BL live in
-`FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`: `bl_soundness`, `bl_soundness_dense`,
+`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`: `bl_soundness`, `bl_soundness_dense`,
 `bl_soundness_ztime` and `bl_soundness_rtime`, each obtained by composing
 `Metalogic/Conservativity/Backward.lean`'s `translate` with the theorem of the same frame class below,
 then crossing the truth-transfer bridge `truthAt_tr` into the native BL semantics of
@@ -1019,14 +1019,16 @@ theorem sep_valid (φ : Formula) :
     · exact Or.inl hR
     · refine Or.inr ?_
       have ha : TruthAt M τ u (Formula.kPlus φ) := by
-        simp only [TruthAt, Formula.kPlus, Formula.neg, Formula.top]
-        rintro ⟨v, huv, -, hw⟩
-        exact hR ⟨v, huv, fun w huw hwv => hw w huw hwv⟩
+        simp only [truth_norm]
+        intro s hus
+        by_contra hc
+        exact hR ⟨s, hus, fun w huw hws hw => hc ⟨w, huw, hws, hw⟩⟩
       have hb := hAB ha
       refine Classical.byContradiction (fun hns => hb ?_)
-      simp only [TruthAt, Formula.kMinus, Formula.neg, Formula.top]
-      rintro ⟨v, hvu, -, hw⟩
-      exact hns ⟨v, hvu, fun w hvw hwu => hw w hvw hwu⟩
+      simp only [truth_norm]
+      intro s hsu
+      by_contra hc
+      exact hns ⟨s, hsu, fun w hsw hwu hw => hc ⟨w, hsw, hwu, hw⟩⟩
 
 /-- **Sep⁻ validity**: the temporal dual of `sep_valid`, needed by `temporal_duality`.
 
@@ -1091,14 +1093,16 @@ theorem sep_swap_valid (φ : Formula) :
     · exact Or.inl hL
     · refine Or.inr ?_
       have ha : TruthAt M τ u (Formula.kMinus φ.swapTemporal) := by
-        simp only [TruthAt, Formula.kMinus, Formula.neg, Formula.top]
-        rintro ⟨v, hvu, -, hw⟩
-        exact hL ⟨v, hvu, fun w hvw hwu => hw w hvw hwu⟩
+        simp only [truth_norm]
+        intro s hsu
+        by_contra hc
+        exact hL ⟨s, hsu, fun w hsw hwu hw => hc ⟨w, hsw, hwu, hw⟩⟩
       have hb := hAB ha
       refine Classical.byContradiction (fun hns => hb ?_)
-      simp only [TruthAt, Formula.kPlus, Formula.neg, Formula.top]
-      rintro ⟨v, huv, -, hw⟩
-      exact hns ⟨v, huv, fun w huw hwv => hw w huw hwv⟩
+      simp only [truth_norm]
+      intro s hus
+      by_contra hc
+      exact hns ⟨s, hus, fun w huw hws hw => hc ⟨w, huw, hws, hw⟩⟩
 
 /-- **Density axiom swap-validity**: the swap of `GGφ → Gφ` is `HHφ → Hφ`, valid on every densely
 ordered frame. Given a `¬φ` point `s < t`, density supplies `r` with `s < r < t`, and `r` then

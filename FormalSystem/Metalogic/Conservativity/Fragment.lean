@@ -10,7 +10,7 @@ import FormalSystem.Metalogic.Conservativity.Z1Countermodel
 # `TMFrag` — the H/G-fragment of TM⁺, and its metatheory
 
 **Read `Metalogic/Conservativity.lean`'s module docstring first.** Forward proof-theoretic
-conservativity of TM⁺ over TM — `Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ` —
+conservativity of TM⁺ over TM — `Derivable fc [] (tr φ) → MinusLanguage.Derivable fc [] φ` —
 is refuted at `.ZTime` (`tmCompleteZTime_refuted`), refuted in the source at `.Base`, and
 by `tmComplete_iff_forward` it is *the same proposition* as "TM is complete over the frames of
 `fc`". Nothing in this file states, approaches, or `sorry`s it.
@@ -24,7 +24,7 @@ TMFrag fc φ  :=  TM⁺ ⊢[fc] tr φ
 
 the set of base-language formulas whose translation is a TM⁺ theorem. Its metatheory transfers
 mechanically through the landed truth-transfer bridge `blValidIn_iff_validIn_tr`
-(`Conservativity/BaseLanguageSoundness.lean`):
+(`Conservativity/MinusLanguageSoundness.lean`):
 
 - **soundness** (`tmFrag_sound`) from `soundness_validIn`;
 - **completeness** (`tmFrag_complete`) from any `WeakCompleteness fc` engine — instantiated at
@@ -63,7 +63,7 @@ namespace FormalSystem.Metalogic.Conservativity
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic
 
@@ -140,7 +140,7 @@ theorem tmFrag_complete_rtime (φ : BLFormula) (h : BLValidIn FrameClass.RTime �
 Paper: — (formalization-native; the H/G-fragment is this tree's construction)
 -/
 theorem tm_le_tmFrag {fc : FrameClass} (φ : BLFormula)
-    (h : BaseLanguage.Derivable fc [] φ) : TMFrag fc φ :=
+    (h : MinusLanguage.Derivable fc [] φ) : TMFrag fc φ :=
   derivable_translate h
 
 /-- The Z1 schema is in the fragment at `.ZTime`: this is `z1_translate`. -/
@@ -159,22 +159,22 @@ strictly larger than TM_z.
 Paper: — (formalization-native; the H/G-fragment is this tree's construction)
 -/
 theorem tm_lt_tmFrag_ztime :
-    (∀ φ : BLFormula, BaseLanguage.Derivable FrameClass.ZTime [] φ →
+    (∀ φ : BLFormula, MinusLanguage.Derivable FrameClass.ZTime [] φ →
         TMFrag FrameClass.ZTime φ) ∧
       ∃ φ : BLFormula, TMFrag FrameClass.ZTime φ ∧
-        ¬ BaseLanguage.Derivable FrameClass.ZTime [] φ :=
+        ¬ MinusLanguage.Derivable FrameClass.ZTime [] φ :=
   ⟨fun φ h => tm_le_tmFrag φ h,
    ⟨Z1 (.atom (Atom.mkBase "p")), tmFrag_z1_ztime _, not_bl_derivable_z1 _⟩⟩
 
 /--
 **The reduction, in fragment terms.** TM is complete over the frames of `fc` iff the fragment
 collapses onto TM at `fc`. This is `tmComplete_iff_forward` with `Forward fc` unfolded to its
-definition — `∀ φ, TMFrag fc φ → BaseLanguage.Derivable fc [] φ` — and, exactly as there,
+definition — `∀ φ, TMFrag fc φ → MinusLanguage.Derivable fc [] φ` — and, exactly as there,
 **neither side is asserted**: at `.ZTime` both are false (`tmCompleteZTime_refuted`,
 `tm_lt_tmFrag_ztime`).
 -/
 theorem tmComplete_iff_tmFrag_le_tm {fc : FrameClass} (engine : WeakCompleteness fc) :
-    TMComplete fc ↔ ∀ φ : BLFormula, TMFrag fc φ → BaseLanguage.Derivable fc [] φ :=
+    TMComplete fc ↔ ∀ φ : BLFormula, TMFrag fc φ → MinusLanguage.Derivable fc [] φ :=
   tmComplete_iff_forward engine
 
 /-! ### Acceptance checks -/

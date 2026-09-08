@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage.Formula
+import FormalSystem.MinusLanguage.Formula
 import FormalSystem.Syntax.Formula
 import FormalSystem.Syntax.Context
 
@@ -19,7 +19,7 @@ name. For `allPast`/`allFuture` the target is BL⁺'s *derived* `Formula.allPast
 ## Main Definitions
 
 - `tr : BLFormula → Formula`
-- `trCtx : BaseLanguage.Context → Syntax.Context` (`List.map tr`)
+- `trCtx : MinusLanguage.Context → Syntax.Context` (`List.map tr`)
 
 ## Main Results
 
@@ -47,16 +47,16 @@ and these are not merely differently associated, they are *different constructor
 The consequence is that the research report's claim that TC discharges by an "exact syntactic
 match" against `Axiom.connect_future`, and the analogous claim for TS, are **refuted**. Every
 TM axiom mentioning `F` or `P` needs the derivable equivalence `¬G¬ψ ↔ Fψ` instead, supplied
-once by `BaseLanguage/AxiomDischarge.lean`'s bridge lemmas. Axioms mentioning only `□`, `G`,
+once by `MinusLanguage/AxiomDischarge.lean`'s bridge lemmas. Axioms mentioning only `□`, `G`,
 `H`, `→` and `⊥` (MK, MT, M5, MF, TK, T4, DN) *are* exact.
 
 ## References
 
 * Research report §7 — the prototypes transcribed below
-* `FormalSystem/BaseLanguage/AxiomDischarge.lean` — where the `F`/`P` bridge is discharged
+* `FormalSystem/MinusLanguage/AxiomDischarge.lean` — where the `F`/`P` bridge is discharged
 -/
 
-namespace FormalSystem.BaseLanguage
+namespace FormalSystem.MinusLanguage
 
 open FormalSystem.Syntax
 
@@ -263,4 +263,4 @@ example (a : Atom) : tr (BLFormula.allFuture (BLFormula.atom a))
 example (a : Atom) : tr (BLFormula.allPast (BLFormula.atom a))
     = Formula.allPast (Formula.atom a) := rfl
 
-end FormalSystem.BaseLanguage
+end FormalSystem.MinusLanguage

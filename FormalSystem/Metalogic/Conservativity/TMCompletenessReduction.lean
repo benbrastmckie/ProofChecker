@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
+import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.BXCanonical
 import FormalSystem.Metalogic.StrongCompleteness
 
@@ -15,7 +15,7 @@ import FormalSystem.Metalogic.StrongCompleteness
 proves the tree must never state or `sorry`, the **forward-conservativity prohibition**:
 
 ```
-theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
+theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → MinusLanguage.Derivable fc [] φ
 ```
 
 is refuted at `fc := .Base` and `fc := .ZTime`, and a `sorry`-ed proof of it would be an
@@ -173,7 +173,7 @@ module is a `def`, referenced as a statement and never the conclusion of a theor
 * `FormalSystem/Metalogic/Conservativity.lean` — the forward-conservativity prohibition this
   module strengthens
 * `FormalSystem/Metalogic/BXCanonical/Completeness.lean` — `completeness`, `completeness_ztime`
-* `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `blValid_iff_valid_tr`,
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `blValid_iff_valid_tr`,
   `blValidZTime_iff_validZTime_tr`
 * `FormalSystem/Metalogic/Conservativity/SpCountermodel.lean`,
   `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — the two closed rows'
@@ -192,7 +192,7 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic.Conservativity
 
@@ -209,7 +209,7 @@ and `.RTime` rows did not exist. -/
 `Forward` below; it is never the conclusion of a `theorem` in this tree, at any tag.
 -/
 def TMComplete (fc : FrameClass) : Prop :=
-  ∀ φ : BLFormula, BLValidIn fc φ → BaseLanguage.Derivable fc [] φ
+  ∀ φ : BLFormula, BLValidIn fc φ → MinusLanguage.Derivable fc [] φ
 
 /--
 **"Forward conservativity holds at `fc`."** Literally the `forward` theorem
@@ -217,7 +217,7 @@ def TMComplete (fc : FrameClass) : Prop :=
 one tag. **Unasserted**, for the same reason.
 -/
 def Forward (fc : FrameClass) : Prop :=
-  ∀ φ : BLFormula, ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
+  ∀ φ : BLFormula, ProofSystem.Derivable fc [] (tr φ) → MinusLanguage.Derivable fc [] φ
 
 /--
 **The reduction, generically.** `TMComplete fc` and `Forward fc` are the same proposition, given
@@ -225,7 +225,7 @@ a weak-completeness engine at `fc`.
 
 Forward (`TMComplete fc → Forward fc`): given `⊢[fc] tr φ`, `soundness_validIn`
 (`Metalogic/Soundness.lean`) gives `ValidIn fc (tr φ)`, and `blValidIn_iff_validIn_tr`
-(`Metalogic/Conservativity/BaseLanguageSoundness.lean`) crosses to `BLValidIn fc φ`; apply the hypothesis. This
+(`Metalogic/Conservativity/MinusLanguageSoundness.lean`) crosses to `BLValidIn fc φ`; apply the hypothesis. This
 direction does not use the engine.
 
 Backward (`Forward fc → TMComplete fc`): given `BLValidIn fc φ`, `blValidIn_iff_validIn_tr` gives

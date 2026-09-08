@@ -57,7 +57,7 @@ engines; it needs no TM⋆ completeness.
 ## References
 
 * `FormalSystem/ProofSystem/Derivation.lean` — the TM⁺ counterpart being mirrored
-* `FormalSystem/BaseLanguage/Derivation.lean` — the base-language mirror, the same shape
+* `FormalSystem/MinusLanguage/Derivation.lean` — the base-language mirror, the same shape
 -/
 
 namespace FormalSystem.StarLanguage

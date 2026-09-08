@@ -6,7 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Metalogic.Conservativity.SpWitness
 import FormalSystem.Metalogic.Conservativity.TMCompletenessReduction
-import FormalSystem.Semantics.BLFrame
+import FormalSystem.Semantics.MinusFrame
 
 set_option autoImplicit false
 
@@ -19,7 +19,7 @@ boxed dichotomy
   `(Sp) := □(DF φ) ∨ □(DN ψ)`
 
 is **not** a theorem of TM, the tense-primitive base proof system
-`BaseLanguage.DerivationTree FrameClass.Base`. Together with `SpWitness.blValid_sp` (`(Sp)` is
+`MinusLanguage.DerivationTree FrameClass.Base`. Together with `SpWitness.blValid_sp` (`(Sp)` is
 BL-valid on every task frame) this refutes TM's weak completeness over the task-frame class:
 `tmCompleteBase_refuted : ¬ TMCompleteBase`, the `.Base` mirror of
 `Z1Countermodel.tmCompleteZTime_refuted`.
@@ -32,7 +32,7 @@ group structure on time, native BL soundness for TM is proved directly against i
 (`blFrameValid_of_derivation`), and the countermodel is an instance of that class. Note the
 contrast with the `TaskFrame`-bound stack: **TM⁺ is unsound** on the two-fibre structure below,
 so no composition through `tr` and BL⁺ soundness is available. The soundness theorem in this
-module is about TM (`BaseLanguage.DerivationTree`), never about TM⁺, and the two must not be
+module is about TM (`MinusLanguage.DerivationTree`), never about TM⁺, and the two must not be
 blurred.
 
 ## Why the countermodel needs *two* order shapes
@@ -82,7 +82,7 @@ nothing is lost.
 * `FormalSystem/Metalogic/Conservativity/SpWitness.lean` — `Sp`, `blValid_sp`, `sp_translate`
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — `TMCompleteBase`
 * `FormalSystem/Metalogic/Conservativity/Z1Countermodel.lean` — the `.ZTime` mirror
-* `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — the `TaskFrame`-bound
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — the `TaskFrame`-bound
   soundness theorems this one deliberately does not route through
 
 ## Tags
@@ -93,7 +93,7 @@ conservativity · CEB · countermodel · underivability · native-soundness
 namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.ProofSystem
 open FormalSystem.Semantics
 
@@ -109,7 +109,7 @@ the dead-declaration census. The `blFrameValid_of_*` pair also reads better toge
 /--
 **Every TM axiom admissible at `FrameClass.Base` is valid on the native BL frame class.**
 
-Sixteen `BaseLanguage.Axiom` constructors, thirteen of which have `minFrameClass = .Base`:
+Sixteen `MinusLanguage.Axiom` constructors, thirteen of which have `minFrameClass = .Base`:
 
 * propositional — `prop_k`, `prop_s`, `ex_falso`, `peirce` (`peirce` is the one classical step);
 * modal — `modal_k`, `modal_t`, `modal_5`, `modal_future`, all immediate because `□` is the
@@ -121,7 +121,7 @@ The remaining three (`df`, `dn`, `co`) carry `minFrameClass` `.ZTime`, `.Dense`,
 which is `≤ .Base`, so the side condition `h_fc` is absurd for them. Exhaustiveness of `cases ax`
 is what confirms the census — a missed constructor is a compile error, not an oversight.
 -/
-theorem blFrameValid_of_axiom {φ : BLFormula} (ax : BaseLanguage.Axiom φ)
+theorem blFrameValid_of_axiom {φ : BLFormula} (ax : MinusLanguage.Axiom φ)
     (h_fc : ax.minFrameClass ≤ FrameClass.Base) : BLFrameValid φ := by
   cases ax with
   | prop_k φ ψ χ => intro F V w h1 h2 h3; exact h1 h3 (h2 h3)
@@ -181,7 +181,7 @@ theorem blFrameValid_of_axiom {φ : BLFormula} (ax : BaseLanguage.Axiom φ)
 **Native BL soundness for TM.** Every closed `FrameClass.Base` derivation yields a formula valid
 on the whole native BL frame class.
 
-Recursion over all seven `BaseLanguage.DerivationTree` constructors. `assumption` is vacuous at
+Recursion over all seven `MinusLanguage.DerivationTree` constructors. `assumption` is vacuous at
 the empty context; `modus_ponens`, `necessitation` and `temporal_necessitation` are immediate
 from the corresponding truth clauses (the last two because `BLFrameValid` already quantifies over
 every point). `temporal_duality` is one line via `Semantics.truth_swap` at `F.swap`, which is
@@ -189,7 +189,7 @@ available precisely because the frame class is converse-closed. `weakening` rout
 `DerivationTree.ofWeakeningNil`, with `height_ofWeakeningNil_lt` supplying termination.
 -/
 theorem blFrameValid_of_derivation {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ := by
+    (d : MinusLanguage.DerivationTree FrameClass.Base [] φ) : BLFrameValid φ := by
   match d with
   | .axiom _ _ h_ax h_fc => exact blFrameValid_of_axiom h_ax h_fc
   | .assumption _ _ h_mem => exact absurd h_mem (by simp)
@@ -203,13 +203,13 @@ theorem blFrameValid_of_derivation {φ : BLFormula}
       intro F V w
       exact (truth_swap F V w φ').mp (blFrameValid_of_derivation d' F.swap V w)
   | .weakening Γ' _ _ d' h_sub =>
-      have h_term := BaseLanguage.DerivationTree.height_ofWeakeningNil_lt d' h_sub
+      have h_term := MinusLanguage.DerivationTree.height_ofWeakeningNil_lt d' h_sub
       exact blFrameValid_of_derivation (d'.ofWeakeningNil h_sub)
 termination_by d.height
 decreasing_by
   all_goals first
     | omega
-    | (simp only [BaseLanguage.DerivationTree.height]; omega)
+    | (simp only [MinusLanguage.DerivationTree.height]; omega)
 
 /-! ## The two-fibre countermodel: `ℤ ⊕ ℝ` -/
 
@@ -367,7 +367,7 @@ every `BLFrame` (its consequent follows from `no_max`), so `Sp ⊤ ψ` is not re
 module docstring.
 -/
 theorem not_derivable_sp (a : Atom) :
-    ¬ BaseLanguage.Derivable FrameClass.Base [] (Sp (BLFormula.atom a) (BLFormula.atom a)) := by
+    ¬ MinusLanguage.Derivable FrameClass.Base [] (Sp (BLFormula.atom a) (BLFormula.atom a)) := by
   rintro ⟨d⟩
   exact sp_false a (Sum.inl 0) (blFrameValid_of_derivation d twoFibre twoV (Sum.inl 0))
 

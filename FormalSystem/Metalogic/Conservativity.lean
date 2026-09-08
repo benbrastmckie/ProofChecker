@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Metalogic.Conservativity.Backward
-import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
+import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.Conservativity.TMCompletenessReduction
 import FormalSystem.Metalogic.Conservativity.SpWitness
 import FormalSystem.Metalogic.Conservativity.Z1Countermodel
@@ -38,7 +38,7 @@ Two families of system name run through this directory, and only one of them is 
   extends `BX_d` by `PU` and `SEP` with `CO` a *derived* theorem rather than a further axiom —
   which is exactly this tree's own Dedekind-class arrangement (`Theorems/DedekindDerived.lean`).
 - **`TM` and its extensions answer to no paper system.** `TM` is this repository's name for the
-  system over the Past/Future fragment, with `H` and `G` primitive (`BaseLanguage/`), and its
+  system over the Past/Future fragment, with `H` and `G` primitive (`MinusLanguage/`), and its
   extensions `TM_z`, `TM_d` and `TM_r` add `DF`, `DN`, and `DN` together with `CO`. The paper
   names no Past/Future system at all: the passage that once did is commented out in the live
   source, pending exactly the kind of result this directory supplies. The `z`/`d`/`r` subscripts
@@ -52,7 +52,7 @@ having collapsed into one. No system name in this tree carries an `_f`, `_c` or 
 
 ## Main Definitions
 
-- `translate` : the recursion, `BaseLanguage.DerivationTree fc Γ φ →
+- `translate` : the recursion, `MinusLanguage.DerivationTree fc Γ φ →
   ProofSystem.DerivationTree fc (trCtx Γ) (tr φ)`
 
 ## Main Results
@@ -80,7 +80,7 @@ appeal to the source.
 Writing
 
 ```
-theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → BaseLanguage.Derivable fc [] φ
+theorem forward {fc} {φ} : ProofSystem.Derivable fc [] (tr φ) → MinusLanguage.Derivable fc [] φ
 ```
 
 and discharging it with `sorry` would place a `sorry` on a statement that is **provably
@@ -111,7 +111,7 @@ the TM⁺_z half.
 The other half — `TM_z ⊢ Z1 φ` fails, because `TM_z = TM + DF` is sound over *every* discrete
 frame while `Z1` is unsound over non-Archimedean discrete orders — is now **also** a theorem:
 `Metalogic/Conservativity/Z1Countermodel.lean`'s `not_bl_derivable_z1`, via `bl_soundness_ztime_succ`
-(`Metalogic/Conservativity/BaseLanguageSoundness.lean`, the binder-weakened discrete BL soundness theorem
+(`Metalogic/Conservativity/MinusLanguageSoundness.lean`, the binder-weakened discrete BL soundness theorem
 dropping the Archimedean instances) applied to a countermodel over `ℚ ×_lex ℤ`
 (`Semantics/LexCarrier.lean`), **not** `ℤ ×_lex ℤ` as an earlier draft of this section and the
 research report both suggested — `ℚ ×_lex ℤ` is the carrier `BXCanonical/DiscreteCarrierProbe.lean`
@@ -121,8 +121,8 @@ machine-checked**, not merely documented.
 
 **One correction to the research report.** The report asserted `z1 φ = tr (Z1 φ')` as a
 syntactic identity. It is not, and cannot be: `Formula.someFuture` is a top-level `untl`, and
-by `BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. The bridge
-`BaseLanguage.notGNotImpF` closes the gap derivably instead — see `z1_translate`.
+by `MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. The bridge
+`MinusLanguage.notGNotImpF` closes the gap derivably instead — see `z1_translate`.
 
 ## CEB / `FrameClass.Base` — refuted, and **both halves are now machine-checked**
 
@@ -158,11 +158,11 @@ this section previously said was missing — a frame notion outside `TaskFrame`
 (`Semantics/BLFrame.lean`'s `BLFrame`: a nonempty point set with an unbounded, transitive,
 irreflexive, forward- and backward-linear order and **no group structure**, with `□` read as the
 universal modality over the points) plus a *native*, non-composed BL soundness theorem over it
-(`blFrameValid_of_derivation`, by recursion on `BaseLanguage.DerivationTree`, with
+(`blFrameValid_of_derivation`, by recursion on `MinusLanguage.DerivationTree`, with
 `Semantics.truth_swap` discharging the temporal-duality rule). The countermodel is the disjoint
 sum `ℤ ⊕ ℝ` — a discrete fibre refuting the `DN` disjunct and a dense-complete fibre refuting the
 `DF` disjunct, both `□`-accessible. Note that the native soundness theorem is about **TM**
-(`BaseLanguage.DerivationTree`), never about TM⁺; the two must not be blurred.
+(`MinusLanguage.DerivationTree`), never about TM⁺; the two must not be blurred.
 
 One caveat is recorded so it is never re-attempted: the *universally quantified* reading — "no
 instance of `(Sp)` is a TM-theorem" — is **false**. `□(DF ⊤)` holds on every `BLFrame` (its
@@ -237,13 +237,13 @@ merely unattempted here.
 
 A BL-side semantics and a BL-side soundness theorem now exist tree-wide
 (`FormalSystem/Semantics/BLTruth.lean`'s `BLTruthAt`, and
-`FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `bl_soundness` family), but what each row
+`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `bl_soundness` family), but what each row
 still needs beyond that differs, and reading it as one shared "countermodels alone" gap is no
 longer accurate for either row:
 
 - **CEF (`FrameClass.ZTime`) — done, both halves machine-checked.** The missing prerequisite
   was a *binder-weakened* BL soundness theorem — `bl_soundness_ztime_succ`
-  (`Metalogic/Conservativity/BaseLanguageSoundness.lean`), dropping `IsSuccArchimedean`/`IsPredArchimedean` so
+  (`Metalogic/Conservativity/MinusLanguageSoundness.lean`), dropping `IsSuccArchimedean`/`IsPredArchimedean` so
   it applies to a non-Archimedean carrier — plus the countermodel itself, assembled over
   `multiFamTaskFrameGen` at the non-Archimedean discrete carrier `ℚ ×_lex ℤ`
   (`Semantics/LexCarrier.lean`, `Metalogic/Conservativity/Z1Countermodel.lean`). **Both are now landed**: `z1_translate`
@@ -304,7 +304,7 @@ two drifted and six dangling anchors the research report recorded, none of them 
 
 ## No semantics
 
-Nothing here — nor anything under `FormalSystem/BaseLanguage/`, transitively — imports
+Nothing here — nor anything under `FormalSystem/MinusLanguage/`, transitively — imports
 `FormalSystem.Semantics`. `translate` is a function between two `DerivationTree` types and
 touches no truth definition, frame, or validity predicate, so the bridge composes unchanged
 with whatever the totality-based validity definition becomes. The intended composition is
@@ -315,10 +315,10 @@ BL-validity over C  ⟸[bl_soundness…]  ⊢ᴮᴸ[fc] φ  ⟶[translate]  ⊢[
 ```
 
 and this module is the middle arrow only. The left arrow is now built, in
-`FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`, which is where the `FormalSystem.Semantics`
+`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`, which is where the `FormalSystem.Semantics`
 import lives; it composes `translate` with `Metalogic/Soundness.lean`'s four theorems across the
 truth-transfer bridge `truthAt_tr`. This module and everything under
-`FormalSystem/BaseLanguage/` remain semantics-free.
+`FormalSystem/MinusLanguage/` remain semantics-free.
 -/
 
 /-!
@@ -331,7 +331,7 @@ and CEF — and re-exports the nine modules that make up the BL-vs-TM and TM⁺-
 | Module | Contents |
 |--------|----------|
 | `Conservativity/Backward.lean` | `translate`, `derivable_translate`, the four `*_backward` rows, `Z1`, `z1_translate` |
-| `Conservativity/BaseLanguageSoundness.lean` | the `bl_soundness` family and the `truthAt_tr` transfer bridge |
+| `Conservativity/MinusLanguageSoundness.lean` | the `bl_soundness` family and the `truthAt_tr` transfer bridge |
 | `Conservativity/TMCompletenessReduction.lean` | `TMComplete` / `Forward` and their equivalence |
 | `Conservativity/SpWitness.lean` | the reconstructed `(Sp)` witness for the CEB row |
 | `Conservativity/Z1Countermodel.lean` | `not_bl_derivable_z1` and `tmCompleteZTime_refuted` |
@@ -343,8 +343,8 @@ and CEF — and re-exports the nine modules that make up the BL-vs-TM and TM⁺-
 **The children must never import this file.** Each imports
 `FormalSystem.Metalogic.Conservativity.Backward` directly; importing the aggregator from a child
 is an import cycle, because the aggregator imports every child. The chain the children preserve
-is `Backward ← BaseLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ←
-FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `BaseLanguageSoundness`,
+is `Backward ← MinusLanguageSoundness ← TMCompletenessReduction ← Z1Countermodel ← Fragment ←
+FragmentCompactness ← Star/Forward`, with `SpWitness` hanging off `MinusLanguageSoundness`,
 `SpCountermodel` hanging off `SpWitness` and `TMCompletenessReduction` jointly (it also imports
 `Semantics/BLFrame.lean`, which is outside this directory and reaches nothing in `ProofSystem/`),
 and the `Star/` chain `Atomization ← AxiomValidity ← StarSoundness ← Forward` hanging off

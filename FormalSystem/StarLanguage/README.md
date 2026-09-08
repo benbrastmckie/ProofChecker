@@ -13,7 +13,7 @@ at `x`. The paper's own `\BL^\star` (line 1374) additionally carries store/recal
 those are **out of scope** — L⋆ here is L⁺ plus `⊡` only.
 
 L⋆ is a **separate inductive** (`StarFormula`) with a constructor-to-constructor embedding
-`ofFormula : Formula → StarFormula`, following the landed `BaseLanguage/` pattern
+`ofFormula : Formula → StarFormula`, following the landed `MinusLanguage/` pattern
 (`BLFormula` and `tr`). Every derived operator has `Formula`'s right-hand side verbatim, so the
 embedding commutes with each of them by `rfl` — the contract the proof-system embedding and the
 atomization transfer rely on.
@@ -52,7 +52,7 @@ side of the permitted import edge:
 
 **Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
 Checkable by `grep -rn 'FormalSystem.Semantics' FormalSystem/StarLanguage/`: only prose matches.
-The invariant is directional, exactly as for `BaseLanguage/`; the converse edge is permitted and
+The invariant is directional, exactly as for `MinusLanguage/`; the converse edge is permitted and
 is how L⋆ acquires its semantics.
 
 ## Extension recipe: adding a `StarAxiom` constructor
@@ -76,7 +76,7 @@ instead.
 ## Related Documentation
 
 - [FormalSystem README](../README.md)
-- [BaseLanguage README](../BaseLanguage/README.md) — the pattern this component follows
+- [MinusLanguage README](../MinusLanguage/README.md) — the pattern this component follows
 - [Syntax README](../Syntax/README.md) — the L⁺ side being embedded
 - [Semantics README](../Semantics/README.md) — where the `Star*.lean` semantics modules live
 - [Metalogic README](../Metalogic/README.md) — where `Conservativity/Star/` lives

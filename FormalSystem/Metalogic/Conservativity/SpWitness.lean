@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Semantics.BLSchemaValidity
-import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
+import FormalSystem.Semantics.MinusSchemaValidity
+import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.BXCanonical
 
 /-!
@@ -73,13 +73,13 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 
 /--
 **The `(Sp)` witness**: `□(DF φ) ∨ □(DN ψ)`, reusing the exact `Axiom.df`/`Axiom.dn` formula
 shapes pinned in `Semantics/BLSchemaValidity.lean` (which are themselves pinned to
-`BaseLanguage/Axioms.lean`'s own definitions).
+`MinusLanguage/Axioms.lean`'s own definitions).
 -/
 def Sp (φ ψ : BLFormula) : BLFormula :=
   (((φ.allPast.and φ).and BLFormula.top.someFuture).imp φ.allPast.someFuture).box.or

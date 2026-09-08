@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.Metalogic.Conservativity.BaseLanguageSoundness
+import FormalSystem.Metalogic.Conservativity.MinusLanguageSoundness
 import FormalSystem.Metalogic.Algebraic.FlowFrame
 import Mathlib.Algebra.Order.Archimedean.Real.Basic
 
@@ -22,7 +22,7 @@ history agrees with it pointwise.
 
 `chainSat`'s `box` clause is `∀ q', chainSat v q' φ`, quantifying **both** coordinates and taking
 no time argument at all. That is not a simplification: it is what
-`Conservativity/BaseLanguageSoundness.lean`'s `bl_box_universal` establishes. `BLTruthAt`'s box
+`Conservativity/MinusLanguageSoundness.lean`'s `bl_box_universal` establishes. `BLTruthAt`'s box
 clause is history-blind by definition (it does not mention `τ`) and time-blind by
 `Semantics.Truth.box_const`, so `□φ` holds at one total history-and-time exactly when `φ` holds at
 every total history and every time. On a flow frame the total histories are *exactly* the
@@ -68,7 +68,7 @@ refutation. That implication is the completeness direction itself.
 
 * `FormalSystem/Metalogic/Algebraic/FlowFrame.lean` — `multiFamTaskFrameGen`,
   `multiFamHistoryGen`, `multiFamHistoryGen_total`, `multiFamGen_total_eq_range`
-* `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean` — `bl_box_universal`
+* `FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean` — `bl_box_universal`
 * `FormalSystem/Semantics/BLTruth.lean` — the six `BLTruthAt` clauses `chainSat` mirrors
 * `FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean` — the four-row status table
 
@@ -81,7 +81,7 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic.Algebraic
 

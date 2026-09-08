@@ -262,7 +262,7 @@ affected later phase rather than silently absorbing the difference.
 
 ---
 
-### Phase 2: L⁻ structural layer — directories, aggregators, modules, namespaces [IN PROGRESS]
+### Phase 2: L⁻ structural layer — directories, aggregators, modules, namespaces [COMPLETED]
 
 **Goal**: Move the H/G language's files and namespace to the `Minus` names, leaving every
 declaration name untouched. `lake build FormalSystem` green at phase close.
@@ -316,7 +316,7 @@ before and after; the after-count outside `Boneyard/` must be 0.
 
 ---
 
-### Phase 3: L⁻ declarations and notation [NOT STARTED]
+### Phase 3: L⁻ declarations and notation [IN PROGRESS]
 
 **Goal**: Rename all 63 BL-family declarations to their `Minus`/`minus` forms and the `⊢ᴮᴸ`
 notation to `⊢⁻`.

@@ -6,8 +6,8 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Metalogic.Soundness
 import FormalSystem.Metalogic.Conservativity.Backward
-import FormalSystem.Semantics.BLValidity
-import FormalSystem.Semantics.BLSchemaValidity
+import FormalSystem.Semantics.MinusValidity
+import FormalSystem.Semantics.MinusSchemaValidity
 
 /-!
 # Soundness for the base language BL, by composition
@@ -32,7 +32,7 @@ states directly.
 ## What composition certifies, and what it does not
 
 These theorems inherit per-axiom validity from `Metalogic/Soundness.lean`'s BL⁺ validity lemmas
-together with `BaseLanguage/AxiomDischarge.lean`'s discharge table. That is mathematically
+together with `MinusLanguage/AxiomDischarge.lean`'s discharge table. That is mathematically
 complete — every BL axiom's translation is a BL⁺ theorem, and every BL⁺ theorem is valid — but it
 does mean **no BL axiom is ever evaluated directly against `BLTruthAt` by the composition
 itself**. The three native `example`s at the end of this module are the standing evidence that
@@ -97,7 +97,7 @@ soundness · base-language · truth-transfer · def:BL-semantics
 namespace FormalSystem.Semantics
 
 open FormalSystem.Syntax
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 
 variable {F : TaskFrame}
 
@@ -137,7 +137,7 @@ of its translation is true. This is the side-condition discharger each of the fo
 compositions below calls.
 -/
 theorem truthAt_trCtx (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
-    {Γ : BaseLanguage.Context} (h : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
+    {Γ : MinusLanguage.Context} (h : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
     ∀ ψ ∈ trCtx Γ, TruthAt M τ t ψ := by
   intro ψ hψ
   obtain ⟨χ, hχ, rfl⟩ := List.mem_map.mp hψ
@@ -276,7 +276,7 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 
 /-! ## Soundness of BL, parameterized by `FrameClass`
@@ -295,8 +295,8 @@ formula of `Γ` is true.
 
 Composition of `Conservativity.translate` with `soundness_in`, across `truthAt_tr`.
 -/
-theorem bl_soundness_in {fc : FrameClass} (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree fc Γ φ)
+theorem bl_soundness_in {fc : FrameClass} (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree fc Γ φ)
     (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
@@ -308,7 +308,7 @@ theorem bl_soundness_in {fc : FrameClass} (Γ : BaseLanguage.Context) (φ : BLFo
 /-- Empty-context form of `bl_soundness_in`: a BL theorem at `fc` is `BLValidIn fc`. The four
 `bl_soundness*_valid` theorems below are its instances. -/
 theorem bl_soundness_validIn {fc : FrameClass} {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree fc [] φ) : BLValidIn fc φ :=
+    (d : MinusLanguage.DerivationTree fc [] φ) : BLValidIn fc φ :=
   BLValidIn.of_forall_total fun F hF M τ h_mem t =>
     bl_soundness_in [] φ d F hF M τ h_mem t (by simp)
 
@@ -322,8 +322,8 @@ model, **total** history and time at which every formula of `Γ` is true.
 
 Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
-theorem bl_soundness (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.Base Γ φ)
+theorem bl_soundness (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree FrameClass.Base Γ φ)
     (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
@@ -337,8 +337,8 @@ theorem bl_soundness (Γ : BaseLanguage.Context) (φ : BLFormula)
 
 Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
-theorem bl_soundness_dense (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.Dense Γ φ)
+theorem bl_soundness_dense (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree FrameClass.Dense Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration] (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
@@ -352,8 +352,8 @@ four order instances bundled into the `Sat .ZTime` witness; the binder bundle is
 
 Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
-theorem bl_soundness_ztime (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
+theorem bl_soundness_ztime (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration]
     [IsSuccArchimedean F.Duration] [IsPredArchimedean F.Duration] (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
@@ -375,8 +375,8 @@ The `[DenselyOrdered D]` binder is load-bearing, not decorative — see the modu
 
 Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL soundness theorem)
 -/
-theorem bl_soundness_rtime (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.RTime Γ φ)
+theorem bl_soundness_rtime (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree FrameClass.RTime Γ φ)
     (F : TaskFrame) [DenselyOrdered F.Duration]
     (h_lub : ∀ s : Set F.Duration, s.Nonempty → BddAbove s → ∃ x, IsLUB s x)
     (M : TaskModel F)
@@ -389,22 +389,22 @@ theorem bl_soundness_rtime (Γ : BaseLanguage.Context) (φ : BLFormula)
 
 /-- Empty-context form of `bl_soundness`: a BL theorem at `FrameClass.Base` is BL-valid. -/
 theorem bl_soundness_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Base [] φ) : BLValid φ :=
+    (d : MinusLanguage.DerivationTree FrameClass.Base [] φ) : BLValid φ :=
   bl_soundness_validIn d
 
 /-- Empty-context form of `bl_soundness_dense`. -/
 theorem bl_soundness_dense_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.Dense [] φ) : BLValidDense φ :=
+    (d : MinusLanguage.DerivationTree FrameClass.Dense [] φ) : BLValidDense φ :=
   bl_soundness_validIn d
 
 /-- Empty-context form of `bl_soundness_ztime`. -/
 theorem bl_soundness_ztime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTime φ :=
+    (d : MinusLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTime φ :=
   bl_soundness_validIn d
 
 /-- Empty-context form of `bl_soundness_rtime`, at `BLValidRTime`. -/
 theorem bl_soundness_rtime_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.RTime [] φ) : BLValidRTime φ :=
+    (d : MinusLanguage.DerivationTree FrameClass.RTime [] φ) : BLValidRTime φ :=
   bl_soundness_validIn d
 
 /-! ## `bl_soundness_ztime_succ` — binder-weakened discrete BL soundness
@@ -418,7 +418,7 @@ countermodel is built over.
 `bl_soundness_rtime` above, `bl_soundness_ztime_succ` cannot be obtained by translating and
 invoking `Soundness.soundness_ztime`, because that theorem's own binder bundle carries the very
 two Archimedean instances being dropped here. It is proved instead by induction on
-`BaseLanguage.DerivationTree FrameClass.ZTime`, directly against `BLTruthAt`.
+`MinusLanguage.DerivationTree FrameClass.ZTime`, directly against `BLTruthAt`.
 
 The only genuinely new semantic content is `Semantics.BLSchemaValidity`'s DF lemma
 (`df_valid_of_succOrder`) and its `PredOrder` past-dual (`swapBL_df_valid_of_predOrder`), needed
@@ -448,7 +448,7 @@ composed with the `TD` proof rule — from the three that are not, without enume
 constructors by name.
 -/
 private theorem bl_derivable_valid_and_swap_valid_zTimeSucc {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) :
+    (d : MinusLanguage.DerivationTree FrameClass.ZTime [] φ) :
     BLValidZTimeSucc φ ∧ BLValidZTimeSucc φ.swapBL := by
   match d with
   | .axiom _ _ h_ax h_fc =>
@@ -482,13 +482,13 @@ private theorem bl_derivable_valid_and_swap_valid_zTimeSucc {φ : BLFormula}
     obtain ⟨h_valid, h_swap⟩ := bl_derivable_valid_and_swap_valid_zTimeSucc d'
     exact ⟨h_swap, by rw [BLFormula.swapBL_involution]; exact h_valid⟩
   | .weakening Γ' _ _ d' h_sub =>
-    have h_term := BaseLanguage.DerivationTree.height_ofWeakeningNil_lt d' h_sub
+    have h_term := MinusLanguage.DerivationTree.height_ofWeakeningNil_lt d' h_sub
     exact bl_derivable_valid_and_swap_valid_zTimeSucc (d'.ofWeakeningNil h_sub)
 termination_by d.height
 decreasing_by
   all_goals first
     | omega
-    | (simp only [BaseLanguage.DerivationTree.height]; omega)
+    | (simp only [MinusLanguage.DerivationTree.height]; omega)
 
 /--
 **Soundness of BL at `FrameClass.ZTime`, binder-weakened.** A BL derivation of `φ` from `Γ`
@@ -500,8 +500,8 @@ By induction on `d`, directly against `BLTruthAt` (see the module docstring abov
 cannot be a composition). The `axiom` case's `by_cases` split and the `temporal_duality` case's
 call into `bl_derivable_valid_and_swap_valid_zTimeSucc` mirror that lemma's own proof exactly.
 -/
-theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
-    (d : BaseLanguage.DerivationTree FrameClass.ZTime Γ φ)
+theorem bl_soundness_ztime_succ (Γ : MinusLanguage.Context) (φ : BLFormula)
+    (d : MinusLanguage.DerivationTree FrameClass.ZTime Γ φ)
     (F : TaskFrame) [SuccOrder F.Duration] [PredOrder F.Duration] (M : TaskModel F)
     (τ : ConvexHistory F) (h_mem : τ.IsTotal) (t : F.Duration)
     (h_ctx : ∀ ψ ∈ Γ, BLTruthAt M τ t ψ) :
@@ -533,14 +533,14 @@ theorem bl_soundness_ztime_succ (Γ : BaseLanguage.Context) (φ : BLFormula)
 
 /-- Empty-context form of `bl_soundness_ztime_succ`. -/
 theorem bl_soundness_ztime_succ_valid {φ : BLFormula}
-    (d : BaseLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTimeSucc φ :=
+    (d : MinusLanguage.DerivationTree FrameClass.ZTime [] φ) : BLValidZTimeSucc φ :=
   fun F so po M τ h_mem t => bl_soundness_ztime_succ [] φ d F M τ h_mem t (by simp)
 
 /-! ## Consistency
 
 Two corollaries only, at `FrameClass.Base` and `FrameClass.ZTime`; the module docstring
 explains why the dense and Dedekind cases are deliberately absent. Both are phrased as
-`¬ BaseLanguage.Derivable …` rather than through `Metalogic.Core.Consistent`, for the same
+`¬ MinusLanguage.Derivable …` rather than through `Metalogic.Core.Consistent`, for the same
 import-graph reason `not_derivable_nil_bot` records on the BL⁺ side. -/
 
 /--
@@ -553,7 +553,7 @@ the bridge is invisible here because `tr BLFormula.bot` is `Formula.bot` definit
 Paper: — (formalization-native; the paper defines BL (`def:BL-semantics`) but states no BL consistency corollary)
 -/
 theorem bl_not_derivable_nil_bot :
-    ¬ BaseLanguage.Derivable FrameClass.Base ([] : BaseLanguage.Context) BLFormula.bot := by
+    ¬ MinusLanguage.Derivable FrameClass.Base ([] : MinusLanguage.Context) BLFormula.bot := by
   rintro ⟨d⟩
   refine TaskFrame.not_validOn_bot (FrameOver.trivialFrame (D := Int)) ?_
   intro M τ x
@@ -568,7 +568,7 @@ The witness is again `trivialFrame` over `ℤ`, with the single total history su
 `TaskFrame.hF_nonempty_of_frameAxioms` and the valuation by `TaskModel.allFalse`.
 -/
 theorem bl_not_derivable_nil_bot_ztime :
-    ¬ BaseLanguage.Derivable FrameClass.ZTime ([] : BaseLanguage.Context) BLFormula.bot := by
+    ¬ MinusLanguage.Derivable FrameClass.ZTime ([] : MinusLanguage.Context) BLFormula.bot := by
   rintro ⟨d⟩
   obtain ⟨τ⟩ := TaskFrame.hF_nonempty_of_frameAxioms (FrameOver.trivialFrame (D := ℤ))
   exact BLValidIn.apply_total (bl_soundness_ztime_valid d) (FrameOver.trivialFrame (D := ℤ))

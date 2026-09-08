@@ -5,7 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.Truth
-import FormalSystem.BaseLanguage.Formula
+import FormalSystem.MinusLanguage.Formula
 
 -- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
 -- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
@@ -15,7 +15,7 @@ assert_not_exists FormalSystem.ProofSystem.Axiom FormalSystem.ProofSystem.Deriva
 /-!
 # `BLTruthAt` — native task semantics for the tense-primitive base language BL
 
-This module defines truth evaluation for `FormalSystem.BaseLanguage.BLFormula` — the base
+This module defines truth evaluation for `FormalSystem.MinusLanguage.BLFormula` — the base
 language BL of `def:BL-language`, whose `H`/`G` are *primitive* — directly by recursion on
 `BLFormula`'s six constructors, transcribing `def:BL-semantics` clause for clause.
 
@@ -25,7 +25,7 @@ language BL of `def:BL-language`, whose `H`/`G` are *primitive* — directly by 
 terms: the `allPast`/`allFuture` clauses state the paper's universal quantification over times
 directly rather than routing through BL⁺'s `untl`/`snce` abbreviations, and no clause mentions
 the translation. That is what makes the truth-transfer bridge
-(`FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`'s `truthAt_tr`) a *theorem* with content in
+(`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`'s `truthAt_tr`) a *theorem* with content in
 its temporal cases, rather than a definitional unfolding — and it is what makes a BL soundness
 theorem stated against `BLTruthAt` a claim about BL rather than a restatement of the BL⁺ one.
 
@@ -56,10 +56,10 @@ purpose; do not "correct" it away.
 
 ## Module Placement
 
-This module sits under `FormalSystem/Semantics/` and imports `FormalSystem.BaseLanguage.Formula`,
+This module sits under `FormalSystem/Semantics/` and imports `FormalSystem.MinusLanguage.Formula`,
 a leaf that itself imports only `FormalSystem.Syntax.Atom`. This is the permitted direction of the
-`BaseLanguage/` module invariant, which forbids `BaseLanguage/ → Semantics/` and says nothing
-about the converse; see `FormalSystem/BaseLanguage.lean`'s "Module Invariant" section.
+`MinusLanguage/` module invariant, which forbids `MinusLanguage/ → Semantics/` and says nothing
+about the converse; see `FormalSystem/MinusLanguage.lean`'s "Module Invariant" section.
 
 ## Main Definitions
 
@@ -79,7 +79,7 @@ about the converse; see `FormalSystem/BaseLanguage.lean`'s "Module Invariant" se
 
 * JPL paper `\S sub:Logic` — `def:BL-semantics`, `def:BL-language`
 * `FormalSystem/Semantics/Truth.lean` — the BL⁺ truth definition this mirrors
-* `FormalSystem/BaseLanguage/Formula.lean` — `BLFormula` and its derived operators
+* `FormalSystem/MinusLanguage/Formula.lean` — `BLFormula` and its derived operators
 
 ## Tags
 
@@ -88,7 +88,7 @@ truth · base-language · BLTruthAt · def:BL-semantics
 
 namespace FormalSystem.Semantics
 
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 
 variable {F : TaskFrame}
 

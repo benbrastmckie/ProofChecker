@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage.Formula
+import FormalSystem.MinusLanguage.Formula
 import Mathlib.Tactic.Push
 import Mathlib.Tactic.Tauto
 
@@ -107,7 +107,7 @@ frame · base-language · BLFrame · universal-modality · order-reversal
 
 namespace FormalSystem.Semantics
 
-open FormalSystem.Syntax FormalSystem.BaseLanguage
+open FormalSystem.Syntax FormalSystem.MinusLanguage
 
 /--
 A native BL frame: a nonempty set of points carrying a strict order that is transitive,

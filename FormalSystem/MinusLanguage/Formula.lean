@@ -18,7 +18,7 @@ This module defines the *base language* `BL` of the paper's `\S sub:Logic`
 
 This is deliberately *not* `FormalSystem.Syntax.Formula`, whose primitives are `untl`/`snce`
 and whose `allPast`/`allFuture` are derived abbreviations. The two languages are related by the
-translation `FormalSystem.BaseLanguage.tr` (`BaseLanguage/Translation.lean`), which is the
+translation `FormalSystem.MinusLanguage.tr` (`MinusLanguage/Translation.lean`), which is the
 substance of the backward conservativity bridge in
 `FormalSystem/Metalogic/Conservativity/Backward.lean`.
 
@@ -45,12 +45,12 @@ the other way round transcribes a different logic.
 
 ## Module Invariant
 
-**Nothing under `FormalSystem/BaseLanguage/` imports anything from `FormalSystem/Semantics/`.**
+**Nothing under `FormalSystem/MinusLanguage/` imports anything from `FormalSystem/Semantics/`.**
 The bridge is purely proof-theoretic: it is a map between two `DerivationTree` types and
 touches no truth definition, frame, or validity predicate. Keeping the invariant means the
 bridge composes unchanged with whatever the totality-based validity definition becomes.
 
-The invariant is **directional**. It forbids the edge `BaseLanguage/ → Semantics/` and says
+The invariant is **directional**. It forbids the edge `MinusLanguage/ → Semantics/` and says
 nothing about the converse, which is permitted and is how this file's `BLFormula` acquires a
 semantics: `FormalSystem/Semantics/BLTruth.lean` imports *this module* — a leaf that itself
 imports only `FormalSystem.Syntax.Atom` — and defines `BLTruthAt` by recursion on the six
@@ -63,7 +63,7 @@ constructors below. Nothing flows back the other way, so the `grep` check above 
 * `FormalSystem/Syntax/Formula.lean` — the BL⁺ (until/since-primitive) side
 -/
 
-namespace FormalSystem.BaseLanguage
+namespace FormalSystem.MinusLanguage
 
 open FormalSystem.Syntax
 
@@ -137,7 +137,7 @@ Interchange the two universal temporal operators `H` and `G` throughout a formul
 This is the BL-side analogue of `Formula.swapTemporal` and is what TM's **TD** rule
 ("if `⊢ φ` then `⊢ φ⟨P|F⟩`") transforms by. Note that on the BL⁺ side the corresponding
 operation swaps the *primitive* `untl`/`snce`; the commutation of the two is
-`BaseLanguage.tr_swapBL`.
+`MinusLanguage.tr_swapBL`.
 -/
 def swapBL : BLFormula → BLFormula
   | atom a => atom a
@@ -203,8 +203,8 @@ end BLFormula
 
 /-- BL-side proof contexts, mirroring `FormalSystem.Syntax.Context`.
 
-Defined here rather than in `BaseLanguage/Derivation.lean` because both `Derivation.lean` and
+Defined here rather than in `MinusLanguage/Derivation.lean` because both `Derivation.lean` and
 `Translation.lean` need it and neither imports the other. -/
 abbrev Context := List BLFormula
 
-end FormalSystem.BaseLanguage
+end FormalSystem.MinusLanguage

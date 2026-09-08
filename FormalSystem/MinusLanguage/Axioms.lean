@@ -4,16 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage.Formula
+import FormalSystem.MinusLanguage.Formula
 import FormalSystem.ProofSystem.Axioms
 
 /-!
-# `BaseLanguage.Axiom` — TM's axiom schemata over the base language BL
+# `MinusLanguage.Axiom` — TM's axiom schemata over the base language BL
 
 TM, the *Logic of Tense and Modality*, is (JPL paper, `\S sub:Logic`) the smallest extension of
 **CPL** over the base language BL closed under the schemata MK, MT, M5, MF, TK, T4, TS, TC, TL
 and the rules MP, MN, TD. This module carries the **axiom** half of that list; MP, MN and TD are
-*rules* and live in `BaseLanguage/Derivation.lean`.
+*rules* and live in `MinusLanguage/Derivation.lean`.
 
 The three extension axioms of `\S sub:Extension` are included in the same inductive, routed to
 their frame classes by `Axiom.minFrameClass`:
@@ -60,16 +60,16 @@ the paper's `TP`/`CT` → `TP1`/`TP2`, `P9`/`P10` → `P7`/`P8`, `TB`/`TA` → `
 | `MK` | `Axiom.modal_k` | |
 | `MT` | `Axiom.modal_t` | |
 | `M5` | `Axiom.modal_5` | |
-| `MP` | `BaseLanguage.DerivationTree.modus_ponens` | Rule, in `BaseLanguage/Derivation.lean`. |
-| `MN` | `BaseLanguage.DerivationTree.necessitation` | Rule, in `BaseLanguage/Derivation.lean`. |
+| `MP` | `MinusLanguage.DerivationTree.modus_ponens` | Rule, in `MinusLanguage/Derivation.lean`. |
+| `MN` | `MinusLanguage.DerivationTree.necessitation` | Rule, in `MinusLanguage/Derivation.lean`. |
 
 **Bimodal Logic (`\S sub:Logic`) — BX temporal group** (`BX` = Burgess–Xu tense system,
 `def:BX` in the paper):
 
 | Paper key | Lean identifier | Notes |
 |---|---|---|
-| `TN` | `BaseLanguage.DerivationTree.temporal_necessitation` | Rule; content matches, paper key not quoted verbatim in the doc-comment. |
-| `TD` | `BaseLanguage.DerivationTree.temporal_duality` | Rule. |
+| `TN` | `MinusLanguage.DerivationTree.temporal_necessitation` | Rule; content matches, paper key not quoted verbatim in the doc-comment. |
+| `TD` | `MinusLanguage.DerivationTree.temporal_duality` | Rule. |
 | `TS` | `Axiom.temp_serial` | |
 | `TC` | `Axiom.temp_connect` | |
 | `TL` | `Axiom.temp_linearity` | Disjunct order/association is the paper's, transcribed verbatim (see the doc-comment above). |
@@ -139,7 +139,7 @@ while producing a `DerivationTree` (itself a `Type`). A `Prop`-valued inductive 
 
 `allPast` is the universal H and `allFuture` the universal G; `someFuture`/`somePast` are the
 *derived* existentials F/P (`BLFormula.someFuture φ = ¬G¬φ`). See the polarity warning in
-`BaseLanguage/Formula.lean`.
+`MinusLanguage/Formula.lean`.
 
 ## References
 
@@ -148,7 +148,7 @@ while producing a `DerivationTree` (itself a `Type`). A `Prop`-valued inductive 
 * `FormalSystem/ProofSystem/Axioms.lean` — the BL⁺ (Burgess-Xu) counterpart
 -/
 
-namespace FormalSystem.BaseLanguage
+namespace FormalSystem.MinusLanguage
 
 open FormalSystem.ProofSystem (FrameClass)
 
@@ -157,10 +157,10 @@ TM's axiom schemata over the base language BL, plus the three extension axioms D
 
 The propositional group (`prop_k`, `prop_s`, `ex_falso`, `peirce`) is transcribed
 constructor-for-constructor from `FormalSystem.ProofSystem.Axiom`'s own propositional layer, so
-that the discharge in `BaseLanguage/AxiomDischarge.lean` is a one-line match on each.
+that the discharge in `MinusLanguage/AxiomDischarge.lean` is a one-line match on each.
 
 MP, MN and TD are **rules**, not axioms; they are constructors of
-`BaseLanguage.DerivationTree`.
+`MinusLanguage.DerivationTree`.
 -/
 inductive Axiom : BLFormula → Type where
   -- Propositional (CPL), matching `ProofSystem.Axiom`'s basis exactly
@@ -199,7 +199,7 @@ inductive Axiom : BLFormula → Type where
       The disjunct order and right-association here are the **paper's**, transcribed verbatim.
       This repository's `ProofSystem.Axiom.temp_linearity` carries the same three disjuncts in a
       different order and association; the reshuffle happens once, in
-      `BaseLanguage/AxiomDischarge.lean`, and is deliberately not pre-applied here. -/
+      `MinusLanguage/AxiomDischarge.lean`, and is deliberately not pre-applied here. -/
   | temp_linearity (φ ψ : BLFormula) :
       Axiom ((φ.someFuture.and ψ.someFuture).imp
         (((φ.someFuture.and ψ).someFuture).or
@@ -228,7 +228,7 @@ Minimum frame class for each BL axiom constructor.
 
 Only the three extension axioms are non-`Base`; every TM axiom proper falls through the
 catch-all, exactly as in `ProofSystem.Axiom.minFrameClass`. The invariant
-`ax.minFrameClass ≤ fc` in `BaseLanguage.DerivationTree`'s `axiom` constructor is what makes
+`ax.minFrameClass ≤ fc` in `MinusLanguage.DerivationTree`'s `axiom` constructor is what makes
 `TM`, `TM_z`, `TM_d` and `TM_r` the four instantiations `fc := .Base`, `.ZTime`, `.Dense`,
 `.RTime` of a single derivation type.
 -/
@@ -250,7 +250,7 @@ example (φ : BLFormula) : (Axiom.modal_future φ).minFrameClass = FrameClass.Ba
 
 -- The `≤` side conditions the `axiom` rule demands. `decide` cannot act on a goal carrying the
 -- free `φ`, so each is routed through `show` at the already-reduced frame class first — the
--- same shape `BaseLanguage/AxiomDischarge.lean` uses at every discharge site.
+-- same shape `MinusLanguage/AxiomDischarge.lean` uses at every discharge site.
 example (φ : BLFormula) : (Axiom.df φ).minFrameClass ≤ FrameClass.ZTime :=
   show FrameClass.ZTime ≤ FrameClass.ZTime by decide
 example (φ : BLFormula) : ¬ ((Axiom.df φ).minFrameClass ≤ FrameClass.Base) :=
@@ -260,4 +260,4 @@ example (φ : BLFormula) : (Axiom.dn φ).minFrameClass ≤ FrameClass.RTime :=
 example (φ : BLFormula) : (Axiom.co φ).minFrameClass ≤ FrameClass.RTime :=
   show FrameClass.RTime ≤ FrameClass.RTime by decide
 
-end FormalSystem.BaseLanguage
+end FormalSystem.MinusLanguage

@@ -39,7 +39,7 @@ are already derivable at `FrameClass.Base`, and `nextConj` is stated `{fc}`-poly
 - `nextAllFuture` / `prevAllPast` — `X (Gφ ∧ φ) → Gφ` and its free past dual
   `Y (Hφ ∧ φ) → Hφ`, obtained through `DerivationTree.temporal_duality`.
 - `dfSchema` — the paper's **DF** schema `(Hφ ∧ φ ∧ F⊤) → F(Hφ)`, consumed by
-  `FormalSystem.BaseLanguage.AxiomDischarge` for the `Discrete` row of the backward
+  `FormalSystem.MinusLanguage.AxiomDischarge` for the `Discrete` row of the backward
   conservativity bridge. Derived syntactically; no completeness dependency.
 
 ## Why `FrameClass.ZTime` is essential here
@@ -355,7 +355,7 @@ def noBlockingTriple (p q r s : Formula) :
 
 `DF` is the axiom distinguishing this tree's `TM_z` from `TM`
 (JPL paper, `\S sub:Extension`). It is the one TM-side schema with no ready-made counterpart in
-this tree, and `FormalSystem.BaseLanguage.AxiomDischarge` consumes `dfSchema` to close the
+this tree, and `FormalSystem.MinusLanguage.AxiomDischarge` consumes `dfSchema` to close the
 `Discrete` row of the backward conservativity bridge.
 
 The derivation is **syntactic** and uses only `succIndicator`, `unfoldForward`, `nextConj`,
@@ -470,10 +470,10 @@ Three steps, in the order of the module note above:
 
 The `F⊤` conjunct of the antecedent is not consumed: at `FrameClass.ZTime` the stronger
 `X ⊤` is already a theorem. It is retained because the schema, not the derivation, is what the
-translation of `BaseLanguage.Axiom.df` must match.
+translation of `MinusLanguage.Axiom.df` must match.
 
 Association is pinned to `((Hφ ∧ φ) ∧ F⊤) → F(Hφ)` so that
-`FormalSystem.BaseLanguage.AxiomDischarge` can use it without reassociating. -/
+`FormalSystem.MinusLanguage.AxiomDischarge` can use it without reassociating. -/
 def dfSchema (φ : Formula) :
     ⊢[FrameClass.ZTime]
       ((φ.allPast.and φ).and Formula.top.someFuture).imp (φ.allPast.someFuture) := by

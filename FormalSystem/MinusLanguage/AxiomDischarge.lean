@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
-import FormalSystem.BaseLanguage.Axioms
-import FormalSystem.BaseLanguage.Translation
+import FormalSystem.MinusLanguage.Axioms
+import FormalSystem.MinusLanguage.Translation
 import FormalSystem.Theorems.Combinators
 import FormalSystem.Theorems.Propositional.Core
 import FormalSystem.Theorems.TemporalDerived
@@ -19,7 +19,7 @@ import FormalSystem.Metalogic.Core.DeductionTheorem
 
 `dischargeAxiom` is the lookup table that makes the `axiom` case of
 `FormalSystem.Metalogic.Conservativity.translate` a one-line match. For each constructor of
-`BaseLanguage.Axiom` it produces a `FormalSystem.ProofSystem` derivation of that axiom's
+`MinusLanguage.Axiom` it produces a `FormalSystem.ProofSystem` derivation of that axiom's
 translation, at the frame class the BL-side side condition already supplies.
 
 ## Which rows are exact and which need the `F`/`P` bridge
@@ -46,8 +46,8 @@ is a single `DerivationTree.axiom` or a single named theorem.
 The research report predicted "exact syntactic match" for TC and TS. That is **refuted**, and
 structurally so rather than by accident: BL's `F`/`P` are *derived* (`Fφ = ¬G¬φ`), so `tr (Fφ)`
 is `¬G¬(tr φ)`, whereas `Formula.someFuture` is a top-level `untl` — and by
-`BaseLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. No choice of
-BL-side abbreviation could have closed that gap. See `BaseLanguage/Translation.lean`'s
+`MinusLanguage.tr_ne_untl` nothing in the range of `tr` is a top-level `untl`. No choice of
+BL-side abbreviation could have closed that gap. See `MinusLanguage/Translation.lean`'s
 `tr_someFuture_ne`.
 
 What *does* close it is the derivable equivalence `¬G¬ψ ↔ Fψ` (`notGNotImpF` / `fImpNotGNot`
@@ -66,10 +66,10 @@ it is `Dense ≤ fc`, which is what `Axiom.density`'s own side condition wants; 
 
 Nothing here imports `FormalSystem.Semantics`. The `Theorems.*` and `Metalogic.Core.*` modules
 pulled in above are Semantics-free transitively, so the invariant of
-`FormalSystem/BaseLanguage.lean` survives this file's larger import list.
+`FormalSystem/MinusLanguage.lean` survives this file's larger import list.
 -/
 
-namespace FormalSystem.BaseLanguage
+namespace FormalSystem.MinusLanguage
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
@@ -378,4 +378,4 @@ def dischargeAxiom {fc : FrameClass} {φ : BLFormula} (h : Axiom φ)
 
 end -- noncomputable section
 
-end FormalSystem.BaseLanguage
+end FormalSystem.MinusLanguage

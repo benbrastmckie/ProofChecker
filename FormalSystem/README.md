@@ -242,7 +242,7 @@ invariant check allowlists it by name (check C8).
 |------|------:|-------------|
 | `../FormalSystem.lean` | 50 | Repository-root Lake root module for `lean_lib FormalSystem` |
 | `Automation.lean` | 100 | Re-export for Automation submodule |
-| `BaseLanguage.lean` | 44 | Re-export for BaseLanguage submodule |
+| `MinusLanguage.lean` | 44 | Re-export for MinusLanguage submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 29 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
 | `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
@@ -307,7 +307,7 @@ invariant check allowlists it by name (check C8).
 | [Automation/](Automation/README.md) | Yes | Proof tactics and ML pipeline |
 | [Examples/](Examples/README.md) | Yes | Pedagogical examples |
 | `ForMathlib/` | No | Mathlib-shaped extensions intended for upstreaming; the dependency rule (`Mathlib → ForMathlib → FormalSystem`) is stated in `ForMathlib.lean` (no README yet) |
-| `BaseLanguage/` | No | Shared base-language definitions (no README yet) |
+| `MinusLanguage/` | No | Shared base-language definitions (no README yet) |
 | [StarLanguage/](StarLanguage/README.md) | Yes | L⋆ — L⁺ plus the stability modal `⊡` — and its logic TM⋆ |
 | [Boneyard/](Boneyard/README.md) | Yes | ARCHIVE — retired code, excluded from the live build; no `.olean` is produced under any `Boneyard` path. Its README is the single source for its counts |
 
@@ -326,7 +326,7 @@ invariant check allowlists it by name (check C8).
 - **Validity**: `Semantics/Validity.lean` - Semantic consequence
 - **BL validity**: `Semantics/BLValidity.lean` - Base-language validity predicates
 - **Soundness**: `Metalogic/Soundness.lean` - Soundness theorem
-- **BL soundness**: `Metalogic/Conservativity/BaseLanguageSoundness.lean` - Soundness for BL, by composition
+- **BL soundness**: `Metalogic/Conservativity/MinusLanguageSoundness.lean` - Soundness for BL, by composition
 - **L⋆ truth and validity**: `Semantics/StarTruth.lean`, `Semantics/StarValidity.lean` - Native truth evaluation and validity for L⋆
 - **TM⋆ soundness and conservativity**: `Metalogic/Conservativity/Star.lean` - Soundness of TM⋆ at every class, conservativity over TM⁺ in both directions
 - **Completeness**: `Metalogic/BXCanonical/Completeness.lean` - Canonical model

@@ -33,7 +33,7 @@ truth-definition signature; they are **out of scope** for this component.
 
 `StarFormula` is a **separate inductive** with a constructor-to-constructor embedding
 `ofFormula : Formula → StarFormula`, mirroring the landed `BLFormula`/`tr` pattern of
-`FormalSystem/BaseLanguage/`. Every derived operator below has the **same right-hand side** as
+`FormalSystem/MinusLanguage/`. Every derived operator below has the **same right-hand side** as
 its `Formula` namesake in `Syntax/Formula.lean`, so that `ofFormula` pushes through each of them
 by `rfl` — the `rfl` pins at the end of this file are what the proof-system embedding
 (`StarLanguage/Derivation.lean`) and the atomization transfer
@@ -61,8 +61,8 @@ by `rfl` — the `rfl` pins at the end of this file are what the proof-system em
 ## Module Invariant
 
 **Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
-This mirrors the `BaseLanguage/ → Semantics/` prohibition recorded in
-`FormalSystem/BaseLanguage/Formula.lean`, and for the same reason: the proof system and its
+This mirrors the `MinusLanguage/ → Semantics/` prohibition recorded in
+`FormalSystem/MinusLanguage/Formula.lean`, and for the same reason: the proof system and its
 embedding are purely syntactic. The invariant is **directional** — the converse edge is
 permitted and used: `FormalSystem/Semantics/StarTruth.lean` imports this module to define
 `StarTruthAt` natively on the seven constructors.
@@ -72,7 +72,7 @@ permitted and used: `FormalSystem/Semantics/StarTruth.lean` imports this module 
 * JPL paper `possible_worlds.tex` lines 1108-1129 — `⟨τ⟩_x`, the `⊡` clause, `⟐`, and the
   defined modals; line 1374 — the (out-of-scope) store/recall operators
 * `FormalSystem/Syntax/Formula.lean` — the L⁺ side whose derived operators are mirrored here
-* `FormalSystem/BaseLanguage/Formula.lean` — the pattern this component follows
+* `FormalSystem/MinusLanguage/Formula.lean` — the pattern this component follows
 -/
 
 namespace FormalSystem.StarLanguage
@@ -403,7 +403,7 @@ theorem ofFormula_injective : Function.Injective ofFormula := by
     rw [ih₁ h.1, ih₂ h.2]
 
 /-- Nothing in the range of `ofFormula` is a top-level `stab`. The L⋆ mirror of
-`BaseLanguage.tr_ne_untl`. -/
+`MinusLanguage.tr_ne_untl`. -/
 @[simp] theorem ofFormula_ne_stab (φ : Formula) (ψ : StarFormula) :
     ofFormula φ ≠ StarFormula.stab ψ := by
   cases φ <;> simp [ofFormula]

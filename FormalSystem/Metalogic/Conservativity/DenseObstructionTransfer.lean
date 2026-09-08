@@ -92,7 +92,7 @@ namespace FormalSystem.Metalogic
 
 open FormalSystem.Syntax
 open FormalSystem.ProofSystem
-open FormalSystem.BaseLanguage
+open FormalSystem.MinusLanguage
 open FormalSystem.Semantics
 open FormalSystem.Metalogic.Algebraic
 
@@ -115,7 +115,7 @@ Consequence: `Sp` cannot be the `.Dense` row's separating witness, because it is
 SpCountermodel.lean`'s `not_derivable_sp`, which is the `.Base` row, where `Axiom.dn` is not
 available and the derivation below does not exist.)
 
-Stated at the bare `DerivationTree` (`⊢ᴮᴸ[fc] φ`) rather than at `BaseLanguage.Derivable`, so the
+Stated at the bare `DerivationTree` (`⊢ᴮᴸ[fc] φ`) rather than at `MinusLanguage.Derivable`, so the
 derivation term itself is available to any consumer; see the naming-exemption note below on what
 that costs.
 -/
@@ -172,7 +172,7 @@ because `⊢ᴮᴸ[fc] φ` is `DerivationTree` rather than `Nonempty ∘ Derivat
 about the notation, not about what the declarations assert, and the naming rule keys on the
 former.
 
-The `Nonempty`-wrapped restatement at `BaseLanguage.Derivable` is deliberately **not** provided:
+The `Nonempty`-wrapped restatement at `MinusLanguage.Derivable` is deliberately **not** provided:
 it would be a second name for the same fact under a strictly weaker statement, and a plain
 `⟨spDerivableDense φ ψ⟩` at any use site is shorter than the wrapper would be. That prohibition is
 still in force — the rename resolved the naming question without touching either signature. -/
