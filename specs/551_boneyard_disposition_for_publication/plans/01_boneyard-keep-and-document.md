@@ -534,25 +534,25 @@ archived lines from a red flag into evidence of a governed quarantine.
 
 ---
 
-### Phase 9: Retire the Duplicate Counts and the Stale Two-Archive Docstring [NOT STARTED]
+### Phase 9: Retire the Duplicate Counts and the Stale Two-Archive Docstring [COMPLETED]
 
 **Goal**: Fix D1's second instance and D3 — the two live-tree files that state wrong facts about
 the archive, one of which is the first file a reviewer opens.
 
 **Tasks**:
-- [ ] Replace `FormalSystem/README.md:312`'s "ARCHIVE — 156 archived `.lean` files, excluded from
+- [x] Replace `FormalSystem/README.md:312`'s "ARCHIVE — 156 archived `.lean` files, excluded from
       the live build" with a description carrying **no number**, pointing to
       `Boneyard/README.md` as the single source. This restores ADR-005 decision 4, which the
       duplicate figure already violates.
-- [ ] Correct `FormalSystem/FormalSystem.lean`'s module docstring (the `FormalSystem.Metalogic`
+- [x] Correct `FormalSystem/FormalSystem.lean`'s module docstring (the `FormalSystem.Metalogic`
       bullet and the two sentences following it): drop "the two-Boneyard counting caveat", "Both
       Boneyard trees", and "either tree"; restate in the single-archive present tense and cite
       ADR-005. Keep the substantive claim that archived identifiers predate the Mathlib naming
       migration and were deliberately left untouched.
-- [ ] Correct the same docstring's stale "(210 live files)" for `FormalSystem.Metalogic` — the
+- [x] Correct the same docstring's stale "(210 live files)" *(took the remove-the-parenthetical option: it points at `Metalogic/README.md` instead, since no gate owns that number)* for `FormalSystem.Metalogic` — the
       measured live count is 348 — or remove the parenthetical entirely and point at
       `Metalogic/README.md`, which is the better fix since no gate owns this number.
-- [ ] Sweep for any other hand-typed archive count outside `Boneyard/README.md` and retire it the
+- [x] Sweep for any other hand-typed archive count outside `Boneyard/README.md` and retire it the
       same way.
 
 **Timing**: 1 hour
