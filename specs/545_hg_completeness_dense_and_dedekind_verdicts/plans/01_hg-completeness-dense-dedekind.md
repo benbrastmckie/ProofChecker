@@ -1,7 +1,7 @@
 # Implementation Plan: H/G completeness verdicts at Dense and Dedekind
 
 - **Task**: 545 - Decide whether TM_d (Dense) and TM_dc (Dedekind) are weakly complete
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 9 hours
 - **Dependencies**: 544
 - **Research Inputs**: `specs/545_hg_completeness_dense_and_dedekind_verdicts/reports/01_hg-completeness-dense-dedekind.md`
@@ -104,25 +104,29 @@ which the roadmap does not currently carry a row for. Recommendation 2's canonic
 
 Phases within the same wave can execute in parallel.
 
-### Phase 1: BL time-shift and the universal-modality lemma [NOT STARTED]
+### Phase 1: BL time-shift and the universal-modality lemma [COMPLETED]
 
 **Goal**: Land the two BL-semantics lemmas the rest of the round depends on — time-homogeneity of
 `BLTruthAt`, and the machine-checked statement that `□` is the universal modality over the whole
 model (report F1/F4).
 
 **Tasks**:
-- [ ] Elaborate both signatures against the live project with `lean_run_code` before editing any
+- [x] Elaborate both signatures against the live project with `lean_run_code` before editing any
       file; confirm `ConvexHistory F` (not `WorldHistory F`) and drop the vestigial `σ₀` binder.
-- [ ] Add `blTruthAt_timeShift` to `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`,
+- [x] Add `blTruthAt_timeShift` to `FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean`,
       immediately after `truthAt_tr`, proved by the report's F4 chain:
       `(truthAt_tr …).symm` → `TimeShift.timeShift_preserves_truth` → `truthAt_tr`.
-- [ ] Add `bl_box_universal` to the same module, proved by `truthAt_tr` + `Truth.box_const`
+      *(deviation: altered — landed immediately after `truthAt_trCtx` rather than between
+      `truthAt_tr` and `truthAt_trCtx`, so the bridge and its context-level corollary stay
+      adjacent; the F4 chain itself went through as written, as a two-way `rw` through
+      `truthAt_tr` rather than a `.symm`/`trans` composition.)*
+- [x] Add `bl_box_universal` to the same module, proved by `truthAt_tr` + `Truth.box_const`
       (no induction). Keep `hτ : τ.IsTotal` in the signature — `Truth.box_const` binds it even
       though it does not consume it.
-- [ ] Write docstrings citing `Semantics/Truth.lean`'s `box_const` and
+- [x] Write docstrings citing `Semantics/Truth.lean`'s `box_const` and
       `TimeShift.timeShift_preserves_truth`, and stating the consequence (BL over task frames is
       not a product logic in the hard sense).
-- [ ] Confirm `#print axioms` on both is `[propext]` or a subset of the tree's standard set.
+- [x] Confirm `#print axioms` on both is `[propext]` or a subset of the tree's standard set.
 
 **Timing**: 1.5 hours
 

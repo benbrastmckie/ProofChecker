@@ -64,6 +64,10 @@ consistency lemma in the tree yet"), and the BL side inherits it exactly.
 
 - `truthAt_tr` — the bridge: `TruthAt M τ t (tr φ) ↔ BLTruthAt M τ t φ`
 - `truthAt_trCtx`, `blValid_iff_valid_tr` — its context-level and validity-level corollaries
+- `blTruthAt_timeShift` — time-homogeneity of `BLTruthAt`, the BL mirror of
+  `Semantics.TimeShift.timeShift_preserves_truth`
+- `bl_box_universal` — `□` is the **universal** modality over the whole model: history-blind by
+  definition, time-blind by `Truth.box_const`
 - `blValidZTime_iff_validZTime_tr` — the `.ZTime` mirror of `blValid_iff_valid_tr`,
   consumed by `Metalogic/Conservativity/TMCompletenessReduction.lean`
 - `bl_soundness`, `bl_soundness_dense`, `bl_soundness_ztime`, `bl_soundness_rtime` — the
@@ -138,6 +142,64 @@ theorem truthAt_trCtx (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration)
   intro ψ hψ
   obtain ⟨χ, hχ, rfl⟩ := List.mem_map.mp hψ
   exact (truthAt_tr M χ τ t).mpr (h χ hχ)
+
+/-! ### Two structural corollaries of the bridge
+
+Both are BL mirrors of facts `Semantics/Truth.lean` already carries for BL⁺, and both are obtained
+by pushing the statement through `truthAt_tr` in each direction rather than by a fresh induction
+on `BLFormula`. They are grouped here, immediately after the bridge, because that is the only
+reason they are cheap: `Semantics/BLTruth.lean` cannot state either of them, since it sits below
+the translation in the import order.
+-/
+
+/--
+**Time-homogeneity of `BLTruthAt`** — the BL mirror of
+`Semantics.TimeShift.timeShift_preserves_truth`.
+
+Shifting a history by `y - x` moves the truth value at time `y` to time `x`, for every BL formula
+and at an *arbitrary* history: no totality, convexity-beyond-the-structure, or shift-closure
+hypothesis is needed, exactly as on the BL⁺ side, because `ShiftRel` is pointwise.
+
+**Proof**: rewrite both sides through `truthAt_tr` and apply the BL⁺ statement at `tr φ`. No
+induction — the induction was already paid for once, in `truthAt_tr`.
+-/
+theorem blTruthAt_timeShift (M : TaskModel F) (σ : ConvexHistory F)
+    (x y : F.Duration) (φ : BLFormula) :
+    BLTruthAt M (ConvexHistory.timeShift σ (y - x)) x φ ↔ BLTruthAt M σ y φ := by
+  rw [← truthAt_tr M φ (ConvexHistory.timeShift σ (y - x)) x, ← truthAt_tr M φ σ y]
+  exact TimeShift.timeShift_preserves_truth M σ x y (tr φ)
+
+/--
+**`□` is the universal modality over the whole model.**
+
+`BLTruthAt`'s box clause quantifies over all total histories at the *current* time, so
+history-independence is definitional. Time-independence is the substantive half and is
+`Truth.box_const`, itself time-homogeneity (`blTruthAt_timeShift` is the same fact stated at the
+BL level). Composing the two: `□φ` holds at one total history-and-time exactly when `φ` holds at
+*every* total history and *every* time.
+
+**Consequence, and the reason this lemma is stated rather than left implicit.** BL over task
+frames is not a product logic in the hard sense: the `□`/`H`,`G` interaction contributes no
+"same-time alignment" validities, because `□` ranges over the whole model rather than over a
+time-indexed fibre. The Kripke structure a BL formula can see is therefore an indexed family of
+`F.Duration`-chains with a *universal* box, which is what makes a valuation-only truth lemma over
+the translation frames of `Metalogic/Algebraic/FlowFrame.lean` possible at all — see
+`Metalogic/Conservativity/ChainBundleTruth.lean`.
+
+`hτ` is stated because every consumer has it to hand and because `Truth.box_const` binds it; like
+`box_const`'s own two totality binders it is **not consumed**, the statement holding for an
+arbitrary `τ`.
+-/
+theorem bl_box_universal (M : TaskModel F) (τ : ConvexHistory F)
+    (t : F.Duration) (hτ : τ.IsTotal) (φ : BLFormula) :
+    BLTruthAt M τ t φ.box ↔ ∀ (σ : ConvexHistory F), σ.IsTotal → ∀ s, BLTruthAt M σ s φ := by
+  constructor
+  · intro h σ hσ s
+    have hb : TruthAt M τ t (tr φ).box := (truthAt_tr M φ.box τ t).mpr h
+    have h2 := (Truth.box_const M τ σ hτ hσ t s (tr φ)).mp hb
+    exact (truthAt_tr M φ σ s).mp (h2 σ hσ)
+  · intro h σ hσ
+    exact h σ hσ t
 
 /-! ### The two transfer theorems
 
