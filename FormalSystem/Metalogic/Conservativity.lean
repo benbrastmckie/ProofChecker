@@ -20,6 +20,33 @@ import FormalSystem.Metalogic.Conservativity.Star
 existing `ProofSystem.FrameClass` so that the paper's four rows are four instantiations of one
 theorem rather than four developments.
 
+## System names, and how they map onto the paper
+
+Two families of system name run through this directory, and only one of them is the paper's.
+
+- **`TM⁺` is the paper's `TM`.** `TM⁺` is this repository's name for the proof system over the
+  full language `BL`, with `S` and `U` primitive (`ProofSystem/`); the paper calls that system
+  `TM` (`def:TMplus`). Its extensions `TM⁺_z`, `TM⁺_d` and `TM⁺_r` are the paper's `TM_z`, `TM_d`
+  and `TM_r`, each named for the class it is complete over (`cor:tm-completeness`): `ℤ`-time, the
+  dense task frames, and `ℝ`-time — the dense and Dedekind-complete orders. They rest on the
+  Burgess–Xu cores `BX_z`, `BX_d` and `BX_r` (`def:TMplus-f`, `def:TMplus-d`, `def:TMplus-c` —
+  anchor labels as pinned in `specs/paper-definitions-of-record.md`, which the paper has since
+  relabelled; the record's re-pin is separate work), where `BX_r` extends `BX_d` by `PU` and `SEP`
+  with `CO` a *derived* theorem rather than a further axiom — which is exactly this tree's own
+  Dedekind-class arrangement (`Theorems/DedekindDerived.lean`).
+- **`TM` and its extensions answer to no paper system.** `TM` is this repository's name for the
+  system over the Past/Future fragment, with `H` and `G` primitive (`BaseLanguage/`), and its
+  extensions `TM_z`, `TM_d` and `TM_r` add `DF`, `DN`, and `DN` together with `CO`. The paper
+  names no Past/Future system at all: the passage that once did is commented out in the live
+  source, pending exactly the kind of result this directory supplies. The `z`/`d`/`r` subscripts
+  on this side are Lean-only labels, chosen to run parallel to the `TM⁺` side and to the
+  `FrameClass` tags `.ZTime`, `.Dense` and `.RTime`. Do not read `TM_z` as a paper system.
+
+The `⁺` superscript carries that whole distinction and is load-bearing throughout this directory.
+The historical subscripts are retired on both sides: what was written `_f` is now `_z`, and what
+was written `_c` or `_dc` is now `_r` — the two former names for the dense-and-complete extension
+having collapsed into one. No system name in this tree carries an `_f`, `_c` or `_dc` subscript.
+
 ## Main Definitions
 
 - `translate` : the recursion, `BaseLanguage.DerivationTree fc Γ φ →
@@ -58,7 +85,7 @@ false** at `fc := .Base` and `fc := .ZTime`. That is an unsound placeholder, not
 debt, and the repository's zero-debt policy forbids it. Do not state the theorem; do not state
 an approximation of it.
 
-**Cross-reference**: `Metalogic/Conservativity/TMCompletenessReduction.lean` pins "TM (resp. TM_f) is complete
+**Cross-reference**: `Metalogic/Conservativity/TMCompletenessReduction.lean` pins "TM (resp. TM_z) is complete
 over task frames" as *the same proposition* as `forward` above, restricted to `fc := .Base`
 (resp. `.ZTime`) — its `tmCompleteBase_iff_forwardBase` / `tmCompleteZTime_iff_forwardZTime`
 are equivalences between two unasserted `Prop`s, proving neither side. A future dispatch
@@ -76,9 +103,9 @@ G(Gφ → φ) → (F(Gφ) → Gφ)
 built entirely from `allFuture`, `someFuture` and `imp`. Take the BL-side schema `Z1` below —
 the same formula with BL's *derived* `F` — and `z1_translate` proves
 `⊢[Discrete] tr (Z1 φ)` outright, in two lines: the axiom, plus the standing `F`-bridge. That is
-the TM⁺_f half.
+the TM⁺_z half.
 
-The other half — `TM_f ⊢ Z1 φ` fails, because `TM_f = TM + DF` is sound over *every* discrete
+The other half — `TM_z ⊢ Z1 φ` fails, because `TM_z = TM + DF` is sound over *every* discrete
 frame while `Z1` is unsound over non-Archimedean discrete orders — is now **also** a theorem:
 `Metalogic/Conservativity/Z1Countermodel.lean`'s `not_bl_derivable_z1`, via `bl_soundness_ztime_succ`
 (`Metalogic/Conservativity/BaseLanguageSoundness.lean`, the binder-weakened discrete BL soundness theorem
@@ -134,21 +161,23 @@ provenance, never as something this tree has machine-checked.
 
 ## Two live-paper facts bearing on the discrete rows
 
-- **`def:TMplus-f`** (paper `\S sub:Extension`, live text) pins TM⁺_f's Hölder-classified
-  completeness class to `ℤ`-time precisely: "It follows by Hölder's theorem that a nontrivial
-  discrete Archimedean totally ordered abelian group is isomorphic to `ℤ`, and so the
-  successor-Archimedean discrete class to which `BX`_f and `TM⁺`_f are sound and complete is
-  exactly `ℤ`-time." This is what makes `Z1Countermodel.tmCompleteZTime_refuted` read as the
-  `TM_f`-vs-`TM⁺_f` completeness *gap*, rather than a weaker claim about some other class.
-- **A commented (non-live) line**, `possible_worlds.tex:4614` immediately below `def:TMplus-f`,
-  gives the author's own position in the author's own words: "`TM`_f, by contrast, is sound
-  over the full class of discrete frames, since **DF** is valid on every discrete order and not
-  only on `ℤ`-time; whether `TM`_f is complete over that broader class remains open, as
-  discussed at `cor:tm-completeness`." Cited as the author's stated position, flagged
-  explicitly as **commented out** and therefore not live text — the open verdict it records
-  matches this module's own CEF finding (`Z1Countermodel.tmCompleteZTime_refuted`) that
-  `TM_f` is not weakly complete over the *broader* (non-Archimedean) discrete class, only over
-  `ℤ`-time.
+- **The paper pins the `ℤ`-time class exactly** (`def:TMplus-f`, live text). Its closing sentence
+  reasons that `UZ` and `Z1` fail over every discrete temporal order that is not Archimedean, and
+  that the Archimedean discrete orders are exactly `ℤ`-time, so the discrete task frames over
+  which `BX_z` and `TM⁺_z` are sound and complete are exactly those over `ℤ`-time. (The earlier
+  wording, which reached that conclusion through Hölder's theorem and spoke of a
+  "successor-Archimedean discrete class", has been cut from the paper; the conclusion is
+  unchanged, and is restated here rather than quoted.) This is what makes
+  `Z1Countermodel.tmCompleteZTime_refuted` read as the `TM_z`-vs-`TM⁺_z` completeness *gap*,
+  rather than a weaker claim about some other class.
+- **A commented (non-live) line** inside `def:TMplus-f` gives the author's own position in the
+  author's own words: `TM⁺_z`, by contrast, is sound over the full class of discrete frames,
+  since `DF` is valid on every discrete order and not only on `ℤ`-time; whether it is complete
+  over that broader class remains open, as discussed at `cor:tm-completeness`. Cited as the
+  author's stated position and flagged explicitly as **commented out**, therefore not live text —
+  the open verdict it records matches this module's own CEF finding
+  (`Z1Countermodel.tmCompleteZTime_refuted`) that `TM_z` is not weakly complete over the
+  *broader* (non-Archimedean) discrete class, only over `ℤ`-time.
 
 ## The H/G-fragment logic
 
@@ -198,7 +227,7 @@ longer accurate for either row:
   it applies to a non-Archimedean carrier — plus the countermodel itself, assembled over
   `multiFamTaskFrameGen` at the non-Archimedean discrete carrier `ℚ ×_lex ℤ`
   (`Semantics/LexCarrier.lean`, `Metalogic/Conservativity/Z1Countermodel.lean`). **Both are now landed**: `z1_translate`
-  below is the TM⁺_f half, and `Z1Countermodel.not_bl_derivable_z1` is the TM_f half — the
+  below is the TM⁺_z half, and `Z1Countermodel.not_bl_derivable_z1` is the TM_z half — the
   refutation is machine-checked, not merely documented.
 - **CEB (`FrameClass.Base`) — still not machine-checkable in this tree, and not close.** The
   missing prerequisite is a **frame notion outside `TaskFrame`** plus a **native** (non-composed)
@@ -217,7 +246,7 @@ The **forward direction remains refuted** at both rows and must still not be sta
 row-refutation with a machine-checked witness, while leaving the general prohibition (this
 module's own `forward` schema, for every frame class) exactly as forbidden as before. See also
 `Metalogic/Conservativity/TMCompletenessReduction.lean`, whose `tmCompleteBase_iff_forwardBase` /
-`tmCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_f) complete over task frames" as the
+`tmCompleteZTime_iff_forwardZTime` pin "TM (resp. TM_z) complete over task frames" as the
 *same proposition* as this module's forward-conservativity prohibition, at `.Base` and
 `.ZTime` respectively — so a future dispatch attempting TM-completeness directly is thereby
 attempting the forbidden claim, under a different name.

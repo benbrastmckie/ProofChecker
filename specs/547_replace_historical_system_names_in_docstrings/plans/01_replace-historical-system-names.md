@@ -164,31 +164,31 @@ if the counts differ, reconcile the affected phase's file list before proceeding
 
 ---
 
-### Phase 2: Canonical mapping passage [NOT STARTED]
+### Phase 2: Canonical mapping passage [COMPLETED]
 
 **Goal**: Fix the canonical vocabulary and the two-base-systems mapping in one place first, so
 every later phase's prose can reference it rather than re-inventing wording.
 
 **Tasks**:
-- [ ] Write the mapping paragraph into `FormalSystem/Metalogic/Conservativity.lean`'s module
+- [x] Write the mapping paragraph into `FormalSystem/Metalogic/Conservativity.lean`'s module
       docstring. Substance (polish the wording, keep the claims):
       `TM⁺` (`ProofSystem/`, full language `BL`, `S`/`U` primitive) **is the paper's `TM`**
       (`def:TMplus`); its extensions `TM⁺_z`, `TM⁺_d`, `TM⁺_r` are the paper's `TM_z`, `TM_d`,
       `TM_r`, named for the class each is complete over (ℤ-time, dense task frames, ℝ-time), built
-      on the Burgess-Xu cores `BX_z`, `BX_d`, `BX_r` (`def:BX-z`, `def:BX-d`, `def:BX-r`), where
+      on the Burgess-Xu cores `BX_z`, `BX_d`, `BX_r` *(deviation: altered — cited as `def:TMplus-f`/`def:TMplus-d`/`def:TMplus-c`, the labels pinned in `specs/paper-definitions-of-record.md`; citing the paper's live `def:BX-*` labels would turn C15 red before task 548 re-pins the record)*, where
       `BX_r = BX_d + PU + SEP` with `CO` derived. `TM` (`BaseLanguage/`, Past/Future fragment,
       `H`/`G` primitive) and its extensions `TM_z`, `TM_d`, `TM_r` (adding `DF`, `DN`, and
       `DN`+`CO`) **have no paper name**; the `z`/`d`/`r` subscripts there are Lean-only, chosen to
       run parallel to the `TM⁺` side and to the `FrameClass` tags `.ZTime`, `.Dense`, `.RTime`.
       Do not read `TM_z` as a paper system.
-- [ ] In the same docstring, rewrite the "Two live-paper facts bearing on the discrete rows" block
+- [x] In the same docstring, rewrite the "Two live-paper facts bearing on the discrete rows" block
       (research item B11, currently ~lines 135-152): the quoted `def:TMplus-f` Hölder sentence has
       been cut from the paper, so restate the ℤ-time conclusion from the live `def:BX-z` closing
       sentence in the tree's own voice, and either update the commented-line citation (now
-      `possible_worlds.tex:4274`, reading `TM_z`) or drop the line number entirely.
-- [ ] Rename the remaining historical names in this file to `z`/`d`/`r`.
-- [ ] Add the same mapping paragraph (prose-adapted) to `docs/README.md`.
-- [ ] Run `bash scripts/readme-lint.sh` and fix any structural-lint complaint about the new
+      `possible_worlds.tex:4274`, reading `TM_z`) or drop the line number entirely. *(deviation: altered — the line number was dropped; the commented line sits inside the definition the record pins as `def:TMplus-f`, not at 4274, which is a different comment)*
+- [x] Rename the remaining historical names in this file to `z`/`d`/`r`.
+- [x] Add the same mapping paragraph (prose-adapted) to `docs/README.md`.
+- [x] Run `bash scripts/readme-lint.sh` and fix any structural-lint complaint about the new
       section.
 
 **Timing**: 1.25 hours

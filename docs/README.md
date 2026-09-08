@@ -23,6 +23,35 @@ available uniformly -- see
 
 **Getting Started**: See the [Bimodal documentation](.) for tutorials, examples, and reference materials.
 
+## System Names and the Paper's Mapping
+
+Two families of system name appear in this repository, and only one of them is the paper's. The
+full statement lives in the module docstring of
+[FormalSystem/Metalogic/Conservativity.lean](../FormalSystem/Metalogic/Conservativity.lean); the
+short version:
+
+| Repository | Language | Paper |
+|------------|----------|-------|
+| `TM⁺` | `BL`, with `S` and `U` primitive (`FormalSystem/ProofSystem/`) | the paper's `TM` |
+| `TM⁺_z`, `TM⁺_d`, `TM⁺_r` | the same, plus the discrete / dense / dense-and-complete axioms | the paper's `TM_z`, `TM_d`, `TM_r` |
+| `BX_z`, `BX_d`, `BX_r` | the Burgess–Xu tense cores underneath those | the paper's `BX_z`, `BX_d`, `BX_r` |
+| `TM` | the Past/Future fragment, with `H` and `G` primitive (`FormalSystem/BaseLanguage/`) | none |
+| `TM_z`, `TM_d`, `TM_r` | the same, plus `DF` / `DN` / `DN` and `CO` | none |
+
+The subscripts on the `TM⁺` side name the class each system is complete over: `z` for `ℤ`-time,
+`d` for the dense task frames, `r` for `ℝ`-time — the dense and Dedekind-complete orders. `BX_r`
+extends `BX_d` by `PU` and `SEP`, with `CO` a derived theorem rather than an axiom, which is how
+this repository arranges its Dedekind-class derivations too.
+
+On the `TM` side the same three subscripts are Lean-only labels. The paper names no Past/Future
+system, so `TM_z` should not be read as one; the subscripts were chosen only to run parallel to
+the `TM⁺` side and to the frame-class tags `.ZTime`, `.Dense` and `.RTime`.
+
+The `⁺` superscript is what separates the two families and is load-bearing throughout
+`FormalSystem/Metalogic/Conservativity/`. Earlier revisions of this documentation used `_f` where
+`_z` now stands, and used two names, `_c` and `_dc`, where a single `_r` now stands; those
+subscripts have been retired everywhere.
+
 ## Theory-Specific Documentation
 
 For documentation specific to the bimodal logic theory, see:
