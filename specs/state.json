@@ -1012,6 +1012,11 @@
           "path": "specs/562_sync_language_names_with_paper_l_minus_plus_star/plans/01_sync-language-names-paper.md",
           "type": "plan",
           "summary": "12-phase plan for the L/L-minus/L-plus/L-star rename sweep: inventory, two structural+declaration rename chains, tm-family split, three prose waves, paper-record re-pin, dependent-task rewording, and a full check-module-invariants gate."
+        },
+        {
+          "path": "specs/562_sync_language_names_with_paper_l_minus_plus_star/reports/01_rename-inventory.md",
+          "type": "report",
+          "summary": "Name-by-name rename inventory: 169 declaration tokens, 16 file/directory moves, 4 notation sites, the false-positive exclusions, and the hand-classified prose sites."
         }
       ]
     },

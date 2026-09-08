@@ -283,6 +283,7 @@ CONSTRAINTS. lake build FormalSystem must be green with no new sorry at the end 
 - **Topic**: paper-refactor
 - **Dependencies**: Task 557, Task 558
 - **Plan**: [562_sync_language_names_with_paper_l_minus_plus_star/plans/01_sync-language-names-paper.md]
+- **Research**: [562_sync_language_names_with_paper_l_minus_plus_star/reports/01_rename-inventory.md]
 
 **Description**: Rename this repository's object languages and proof systems so that their names mean what the paper's mean, under the language convention the author fixed on 2026-09-08. This is a name-and-prose sweep with no change to any proof term, in the manner of the completed history-vocabulary and z/d/r renames (archived tasks 546, 548, 552).
 
