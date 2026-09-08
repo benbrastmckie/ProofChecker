@@ -657,7 +657,7 @@ and omits `GeneralizedNecessitation.lean` entirely. Confirm per file.
 
 ---
 
-### Phase 9: Correct `NAMING_CONVENTION_DEVIATION.md` [NOT STARTED]
+### Phase 9: Correct `NAMING_CONVENTION_DEVIATION.md` [COMPLETED]
 
 **Goal**: Make the document's claims true again. Its `defsWithUnderscore — CLOSED` header, its
 "closed at 0 by genuine conformance" claim, and its burndown table are all measurably wrong as
@@ -665,30 +665,30 @@ written, and the "What would reopen this" section records only two reopenings wh
 been three.
 
 **Tasks**:
-- [ ] Rewrite the `## defsWithUnderscore — CLOSED` opening so the closure claim is stated as what
+- [x] Rewrite the `## defsWithUnderscore — CLOSED` opening so the closure claim is stated as what
       it is: a claim about a *measurement taken through a particular instrument*, and name the
       instrument's four blind spots (out-of-closure modules; the upstream `_1`/`_2`/`_mathlib`
       heuristic; in-source `nolint` attributes, which produce no finding at all; and `private`
       declarations, which no `env_linter` can ever observe because `runLinter` reads a package by
       importing it). State that the fourth is an upstream property Mathlib shares, not a decision
       by this repository.
-- [ ] Correct the burndown table's `defsWithUnderscore` row: it is not a two-column
+- [x] Correct the burndown table's `defsWithUnderscore` row: it is not a two-column
       before/after story. Add the re-measured post-burndown state (71 public + 103 private
       declarations invisible to the instrument at the time the row claimed 0) and the state after
       this task.
-- [ ] Extend the `## What would reopen this` section's "It has already reopened once" paragraph to
+- [x] Extend the `## What would reopen this` section's "It has already reopened once" paragraph to
       record the **third** reopening and what made it different: the standing gate the previous
       paragraph credits (`lint: true` in CI, plus C16) reported green throughout, because none of
       the four routes above produces a finding for a gate to see.
-- [ ] Update the `## The surviving exemptions` section: the `DenseObstructionTransfer.lean`
+- [x] Update the `## The surviving exemptions` section: the `DenseObstructionTransfer.lean`
       `nolint defsWithUnderscore` attribute is gone, so the "Four further in-source exemptions"
       inventory must not imply it survives. The three `docBlame` and one `structureInType`
       exemptions are unaffected; the three `UserTactics.lean` tactic-token exemptions are
       unaffected.
-- [ ] Do **not** add a section naming the four evasion routes and the gates that close them —
+- [x] Do **not** add a section naming the four evasion routes and the gates that close them —
       that section is task 558's charter, and 558's own description assigns this document's
       burndown-table correction to this task and the new section to itself. Keep the boundary.
-- [ ] Cite declaration names and file paths only; no task numbers (this file is under `docs/`, so
+- [x] Cite declaration names and file paths only; no task numbers (this file is under `docs/`, so
       `.claude/rules/no-task-references-in-deliverables.md` applies).
 
 **Timing**: 1 hour
