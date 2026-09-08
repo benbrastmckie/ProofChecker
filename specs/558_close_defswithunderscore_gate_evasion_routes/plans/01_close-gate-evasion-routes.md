@@ -193,39 +193,42 @@ Phase 2 exempts anything on its strength.
 
 ---
 
-### Phase 2: C26 half one — the tree-wide snake_case scan (routes 1, 3, 4) [NOT STARTED]
+### Phase 2: C26 half one — the tree-wide snake_case scan (routes 1, 3, 4) [COMPLETED]
 
 **Goal**: Add the repo-local textual check that sees what `runLinter` structurally cannot:
 out-of-closure modules, `private` declarations, and names the upstream heuristic skips.
 
 **Tasks**:
-- [ ] Add an `ENFORCE_C26` variable to the script's `ENFORCE_*` block, with the header comment
+- [x] Add an `ENFORCE_C26` variable to the script's `ENFORCE_*` block, with the header comment
       the neighbouring flags all carry: what the check asserts, why it exists, and — following
       the C24/C25 precedent — why it ships enforced with no soft window.
-- [ ] Implement the scanner as a Python heredoc in the C23 style, reusing that block's proven
+- [x] Implement the scanner as a Python heredoc in the C23 style, reusing that block's proven
       namespace/comment/`section`/`end` walk rather than writing a fourth independent scanner.
       Do **not** merge it into C23's pass: C23 asserts three different things and merging would
       make one failure mask another.
-- [ ] Scope: every `*.lean` file under `FormalSystem/`, with `Boneyard/` excluded by the same
+- [x] Scope: every `*.lean` file under `FormalSystem/`, with `Boneyard/` excluded by the same
       directory filter every other traversal uses. This scope is what closes route (1) — no
       import closure is consulted at any point.
-- [ ] Declaration kinds: `def`, `abbrev`, and (subject to Phase 1's answer) `instance`. `theorem`
+- [x] Declaration kinds: `def`, `abbrev`, and (subject to Phase 1's answer) `instance`. `theorem`
       and `lemma` are out of scope — the upstream linter's `isDefinition` guard excludes them and
-      snake_case is the correct convention for propositions.
-- [ ] Visibility: `private` declarations are **in** scope. This is route (4), and it is the one
+      snake_case is the correct convention for propositions. *(deviation: altered — `instance`
+      is EXCLUDED, on Phase 1's elaboration evidence that all 23 live snake_case instances are
+      `thmInfo`; structure fields are also excluded, with the 188-textual-vs-20-real measurement
+      recorded at the exemption site and the shape reassigned to Phase 4's elaboration sweep)*
+- [x] Visibility: `private` declarations are **in** scope. This is route (4), and it is the one
       thing an `env_linter` can never do.
-- [ ] Naming rule, deliberately **not** inheriting `isBadNameWithUnderscore`: strip a leading
+- [x] Naming rule, deliberately **not** inheriting `isBadNameWithUnderscore`: strip a leading
       `_root_.`, take the last dot-component, and flag it if it contains an underscore that is not
       in trailing position. This flags a name ending `_1`/`_2`/`_mathlib` (route 3) while leaving
       keyword-disambiguating trailing-underscore names alone. Record the two measured
       trailing-underscore names at the exemption site as the evidence for that carve-out.
-- [ ] Exemptions: apply Phase 1's answer on `instance`. Whatever is exempted gets its reason
+- [x] Exemptions: apply Phase 1's answer on `instance`. Whatever is exempted gets its reason
       written at the site in the C23 style — the script's existing exemption comments are the
       length and specificity bar, and "the linter does not flag it" is not a reason.
-- [ ] Failure output: a `FAIL C26` line naming the count, then up to ten `path:line: name` rows,
+- [x] Failure output: a `FAIL C26` line naming the count, then up to ten `path:line: name` rows,
       then a `... and N more` line. Exit non-zero from the heredoc and wire the status into
       `FAILURES` exactly as the C23 block does.
-- [ ] The check must run under `--no-build` — it needs no build, like C23's textual half.
+- [x] The check must run under `--no-build` — it needs no build, like C23's textual half.
 
 **Timing**: 2 hours
 
