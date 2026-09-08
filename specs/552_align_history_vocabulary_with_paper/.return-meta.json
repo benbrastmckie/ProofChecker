@@ -26,15 +26,28 @@
     "session_id": "sess_1788840748_54b780",
     "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "delegation_path": [
+      "orchestrator",
+      "implement",
+      "skill-lean-implementation"
+    ],
     "compliance_check": "passed",
     "phases_completed": 5,
     "phases_total": 5,
-    "commits": ["ed20a9814", "c580a0bf7", "b9fd6f15c", "995567d05", "f8c031989"],
+    "commits": [
+      "ed20a9814",
+      "c580a0bf7",
+      "b9fd6f15c",
+      "995567d05",
+      "f8c031989"
+    ],
     "follow_ups": [
       "specs/ROADMAP.md:223 and :742 name WorldHistory in live steering prose and are now stale identifiers; deliberately not edited because the dispatch's scope boundary excludes specs/.",
       "scripts/check-module-invariants.sh spawns its own UNGUARDED `lake build`, which contends with a guarded build and cost this task two failed build cycles (one SIGTERM/OOM kill, one .olean output-path race on ShiftAndGlue.lean). Worth routing through lake-build-guard.sh.",
       "The paper's own body prose (possible_worlds.tex:1014-1052) still uses the older two-word phrase for the total tier before collapsing it at line 1049; that is the paper's residual drift, recorded once in ConvexHistory.lean's module docstring so it is not 'corrected' back into the tree."
-    ]
+    ],
+    "cycles_used": 3,
+    "final_state": "completed",
+    "detected_defects": []
   }
 }
