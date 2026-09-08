@@ -194,22 +194,22 @@ baseline to re-check against.
 
 ---
 
-### Phase 3: Adjudicate the `docs/theorem-index.md` decidability rows [NOT STARTED]
+### Phase 3: Adjudicate the `docs/theorem-index.md` decidability rows [COMPLETED]
 
 **Goal**: Check the `decide` row (and its `sound_of_isValid` neighbour) column by column against
 observed fact, and record the mandated no-edit decision with its justification.
 
 **Tasks**:
-- [ ] Read the two rows in the `### Decidability` table (`docs/theorem-index.md:113-114`) and
+- [x] Read the two rows in the `### Decidability` table (`docs/theorem-index.md:113-114`) and
       enumerate their five substantive columns: statement, Lean name, file, frame class, axioms.
-- [ ] Check each column against evidence: Lean name resolves (`Exists.lean`); file path matches
+- [x] Check each column against evidence: Lean name resolves (`Exists.lean`); file path matches
       the declaration site (`DecisionProcedure.lean:176`, `Correctness.lean`); axioms column
       `pcq pinned:C14` matches the captured `#print axioms` output; the statement wording claims
       nothing about totality at a derived fuel figure that the `_isSome` family would underwrite.
-- [ ] Record explicitly that `decide` returns `.fuelExhausted` as an answer, so no totality claim
+- [x] Record explicitly that `decide` returns `.fuelExhausted` as an answer, so no totality claim
       exists for a vacuous fuel bound to have propped up — the durable reason the exposure could
       not have existed, independent of the current import graph.
-- [ ] Conclude: **no edit**, per the dispatch's NO-DEPENDENCY branch. Write the adjudication as a
+- [x] Conclude: **no edit**, per the dispatch's NO-DEPENDENCY branch. Write the adjudication as a
       section for Phase 5's deliverable; do not touch `docs/theorem-index.md`.
 
 **Timing**: 0.5 hours
@@ -232,13 +232,13 @@ the actual line if it has moved.
 
 ---
 
-### Phase 4: Author the follow-up task briefs [NOT STARTED]
+### Phase 4: Author the follow-up task briefs [COMPLETED]
 
 **Goal**: Name the deferred work precisely enough that a follow-up task executes it without
 re-deriving this task's reasoning — the dispatch's "named, not attempted here" requirement.
 
 **Tasks**:
-- [ ] Brief A — **Retire the nine `_run` theorems**. Include: the delete set (the nine at
+- [x] Brief A — **Retire the nine `_run` theorems**. Include: the delete set (the nine at
       `MintBound.lean:12312-12488`, the block prose at `:12290-12309`, the forward reference at
       `:5194-5195`); the explicit keep set (`PostBlockingSettlesRun` and its bridge, the whole
       refutation apparatus, the `PostBlockingSettlesSeedRun` successor line, C9 entries 22/24/25);
@@ -246,18 +246,18 @@ re-deriving this task's reasoning — the dispatch's "named, not attempted here"
       dependency on 463 as a serialization edge; and the commit-message note that rows 1-8 are not
       *established* vacuous at `.ZTime` but are equally undelivering there with zero dependents,
       while row 9 is unconditionally vacuous at all four classes.
-- [ ] Brief A, amendment (a) — land `one_le_mintAwareFuel` and
+- [x] Brief A, amendment (a) — land `one_le_mintAwareFuel` and
       `postBlockingSettlesRun_mintAwareFuel_false` (already proved, six lines, in
       `probes/Widen.lean`) so the register's vacuity claim covers the un-`At` figure, and correct
       "its five `_run` siblings" to the true count.
-- [ ] Brief A, amendment (b) — record row 9 separately in the register: it is vacuous via
+- [x] Brief A, amendment (b) — record row 9 separately in the register: it is vacuous via
       `postBlockingSettles_fuel_zero_false` at all four classes, so entry 25's `.ZTime` caveat does
       not apply to it.
-- [ ] Brief B — optional, low priority: add `context/project/lean4/patterns/dependency-tracing.md`
+- [x] Brief B — optional, low priority: add `context/project/lean4/patterns/dependency-tracing.md`
       to the **`agent-system/extensions/**` source store** (never `.claude/**` directly), carrying
       the closure-traversal recipe, the module-index variant, the reverse-dependency scan, and the
       warning that `#print axioms` is not a dependency tracer.
-- [ ] Do **not** create the tasks here. Record each brief with a ready-to-paste one-line
+- [x] Do **not** create the tasks here. Record each brief with a ready-to-paste one-line
       description so `/task` can create it in a single step.
 
 **Timing**: 0.5 hours
@@ -276,30 +276,30 @@ re-deriving this task's reasoning — the dispatch's "named, not attempted here"
 
 ---
 
-### Phase 5: Write the verdict and disposition deliverable [NOT STARTED]
+### Phase 5: Write the verdict and disposition deliverable [COMPLETED]
 
 **Goal**: Produce the durable record — the binary verdict, its evidence, the count correction, the
 disposition recommendation, and the follow-up briefs — as this task's summary artifact.
 
 **Tasks**:
-- [ ] Write `specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md`.
-- [ ] Section 1 — **VERDICT: NO DEPENDENCY**, stated as a retired open question, with the evidence
+- [x] Write `specs/549_trace_decide_dependency_on_vacuous_run_theorems/summaries/01_decide-dependency-verdict-disposition-summary.md`.
+- [x] Section 1 — **VERDICT: NO DEPENDENCY**, stated as a retired open question, with the evidence
       named (forward closure, module-level count, reverse-dependency scan, import closure, module
       ordering) and each item pointing at its section of `probes/probe-evidence.md`.
-- [ ] Section 2 — the count correction: the vacuous set is nine, not six; rows 1-4 via the un-`At`
+- [x] Section 2 — the count correction: the vacuous set is nine, not six; rows 1-4 via the un-`At`
       figure (kernel-checked here), row 9 via `PostBlockingSettles` at all four classes. State this
       as an upward correction to task 463's premise, with the reason 463 undercounted.
-- [ ] Section 3 — the index adjudication from Phase 3 and the recorded **no edit** to
+- [x] Section 3 — the index adjudication from Phase 3 and the recorded **no edit** to
       `docs/theorem-index.md:113`.
-- [ ] Section 4 — **DISPOSITION: RETIRE the nine**, with the keep/delete boundary, the publication
+- [x] Section 4 — **DISPOSITION: RETIRE the nine**, with the keep/delete boundary, the publication
       argument (a headline-shaped theorem whose hypothesis is unsatisfiable, with the refutation
       ~3,300 lines downstream), and why the other two dispositions are excluded.
-- [ ] Section 5 — the explicit instruction **not** to execute the `.ZTime` strengthening, and why.
-- [ ] Section 6 — the follow-up briefs from Phase 4.
-- [ ] Section 7 — the fallback, flagged as an explicit user choice and not a default: if deletion
+- [x] Section 5 — the explicit instruction **not** to execute the `.ZTime` strengthening, and why.
+- [x] Section 6 — the follow-up briefs from Phase 4.
+- [x] Section 7 — the fallback, flagged as an explicit user choice and not a default: if deletion
       is unwanted, mark vacuity in each of the nine docstrings, cross-referencing
       `postBlockingSettlesRun_terminusFuel_false` by name.
-- [ ] State the read-only outcome plainly: zero modifications outside `specs/**`, by design.
+- [x] State the read-only outcome plainly: zero modifications outside `specs/**`, by design.
 
 **Timing**: 1.0 hours
 
@@ -318,7 +318,7 @@ disposition recommendation, and the follow-up briefs — as this task's summary 
 
 ---
 
-### Phase 6: Final gate — build green, read-only re-audit [NOT STARTED]
+### Phase 6: Final gate — build green, read-only re-audit [IN PROGRESS]
 
 **Goal**: Discharge the dispatch's build constraint and prove the tree is unchanged.
 
