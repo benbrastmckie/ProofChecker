@@ -1,16 +1,46 @@
 {
-  "status": "researched",
+  "status": "planned",
+  "dispatch_seq": 3,
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/545_hg_completeness_dense_and_dedekind_verdicts/reports/01_hg-completeness-dense-dedekind.md",
-      "summary": "Verdicts for the two open H/G rows: Dense expected complete with a fully de-risked route (no obstruction found); Dedekind OPEN with the obstruction named at declaration granularity (Doets D1/D2 are discharged only from the BL-plus-only prior_U_gap/prior_S_gap/sep axioms, which have no H/G counterpart). Includes two machine-checked probes."
+      "type": "plan",
+      "path": "specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md",
+      "summary": "Six-phase, 9-hour plan landing the sorry-free de-risking round for the two open H/G rows (eight new declarations), recording Dense as expected-complete-no-obstruction and Dedekind as OPEN with the Doets D1/D2 obstruction named, and scoping the expensive remainder as follow-up briefs."
     }
   ],
+  "next_steps": "Run /implement 545 to execute the plan",
   "metadata": {
-    "session_id": "sess_1788807358_25f89d_545",
-    "agent_type": "lean-research-agent",
+    "session_id": "sess_1788847801_97d6cb_545",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "task_number": 545,
+    "task_type": "lean4",
+    "phase_count": 6,
+    "estimated_hours": 9,
+    "dependency_waves": [[1, 2], [3], [4], [5], [6]],
+    "complexity": "complex",
+    "research_integrated": true,
+    "plan_version": 1
+  },
+  "modified_files": [
+    "specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md"
+  ],
+  "proposed_file_scope": [
+    "FormalSystem/Metalogic/Conservativity/BaseLanguageSoundness.lean",
+    "FormalSystem/Metalogic/Conservativity/DenseObstructionTransfer.lean",
+    "FormalSystem/Metalogic/Conservativity/ChainBundleTruth.lean",
+    "FormalSystem/Metalogic/Conservativity/TMCompletenessReduction.lean",
+    "FormalSystem/Metalogic/Conservativity.lean",
+    "FormalSystem/Metalogic/Conservativity/README.md"
+  ],
+  "memory_candidates": [
+    {
+      "content": "Phase-decomposition strategy for 'decide an open metalogical question' tasks in this Lean tree, where the honest verdict is expected-but-unproved: do NOT plan a phase that states the headline theorem. Instead decompose into (1) sorry-free infrastructure that is reusable by any future proof route and is machine-checked evidence for the verdict, (2) machine-checked demonstrations that each already-closed row's separating witness fails to transfer to the open row, (3) a docstring-only phase recording the verdict plus the obstruction at declaration granularity (which declaration consumes which axiom that the target language cannot express), and (4) a final gate whose prohibition audit greps the whole diff for any theorem concluding in the forbidden statement. The expensive proof is scoped as a follow-up task, never as a phase. This keeps the Conservativity.lean 'never state a completeness theorem and discharge it with sorry' constraint mechanically enforced rather than merely intended, and it makes an OPEN verdict a committable, evidenced outcome instead of a stall.",
+      "category": "PATTERN",
+      "source_artifact": "specs/545_hg_completeness_dense_and_dedekind_verdicts/plans/01_hg-completeness-dense-dedekind.md",
+      "confidence": 0.72,
+      "suggested_keywords": ["open-verdict", "plan-decomposition", "sorry-prohibition", "lean4", "completeness", "obstruction-record"]
+    }
+  ]
 }
