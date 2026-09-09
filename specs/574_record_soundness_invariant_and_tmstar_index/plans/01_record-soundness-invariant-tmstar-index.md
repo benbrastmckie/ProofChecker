@@ -1,7 +1,7 @@
 # Implementation Plan: Record the Soundness Invariant and the TM⋆ Index Rows
 
 - **Task**: 574 - Record the load-bearing soundness invariant and close the TM-star documentation gaps
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 5 hours
 - **Dependencies**: None
 - **Research Inputs**: None (no research phase dispatched; the task description carries the
@@ -197,7 +197,7 @@ must state the confirmed count, and the count that lands there is the one Phase 
 
 ---
 
-### Phase 2: Propagate the verified count to the two READMEs [NOT STARTED]
+### Phase 2: Propagate the verified count to the two READMEs [COMPLETED]
 
 **Goal**: Mirror the invariant as a one-line pointer in `FormalSystem/Metalogic/README.md`, and
 annotate the `ofBase` design rationale in `FormalSystem/StarLanguage/README.md` so it agrees with
@@ -434,23 +434,23 @@ pass the gate rather than to change what the gate asserts:
 
 ---
 
-### Phase 6: Full gate and constraint sweep [NOT STARTED]
+### Phase 6: Full gate and constraint sweep [COMPLETED]
 
 **Goal**: Run the complete acceptance bar and confirm every hard constraint holds across the whole
 change set.
 
 **Tasks**:
-- [ ] `lake build` green from a clean invocation.
-- [ ] `bash scripts/check-module-invariants.sh` exits 0; capture the summary line and the C14/C15
+- [x] `lake build` green from a clean invocation.
+- [x] `bash scripts/check-module-invariants.sh` exits 0; capture the summary line and the C14/C15
       PASS lines as evidence.
-- [ ] No new `sorry`: `grep -rn '\bsorry\b' FormalSystem/ scripts/ docs/` shows no addition
+- [x] No new `sorry`: `grep -rn '\bsorry\b' FormalSystem/ scripts/ docs/` shows no addition
       relative to `main`.
-- [ ] No task-number citations under `FormalSystem/`, `docs/`, or `scripts/`:
+- [x] No task-number citations under `FormalSystem/`, `docs/`, or `scripts/`:
       `bash .claude/scripts/check-task-references.sh` (and C9/C9D within the invariant script).
-- [ ] Confirm the C14 baseline edits added names only: `git diff scripts/check-module-invariants.sh`
+- [x] Confirm the C14 baseline edits added names only: `git diff scripts/check-module-invariants.sh`
       shows no altered axiom list on any pre-existing line.
-- [ ] Confirm the three prose surfaces state one consistent time-shift consumer count.
-- [ ] Record in the summary: the confirmed consumer count and how it differed from the
+- [x] Confirm the three prose surfaces state one consistent time-shift consumer count.
+- [x] Record in the summary: the confirmed consumer count and how it differed from the
       description's claim; whether the Phase 3 move succeeded or the docstring-correction fallback
       applied; the file set actually touched, including the three files outside the declared
       TERRITORY and why.
@@ -504,17 +504,16 @@ one-line delegations `StarValidOnFrames.of_forall_total h` and
 
 ## Testing & Validation
 
-- [ ] `lake build` green.
-- [ ] `bash scripts/check-module-invariants.sh` exits 0.
-- [ ] C14 PASS with the new TM⋆ entries in both heredocs, same order.
-- [ ] C15 both assertions PASS; the second's row count includes the new TM⋆ rows.
-- [ ] C9 / C9D report zero task-number citations under `FormalSystem/`, `docs/`, `scripts/`.
-- [ ] `bash scripts/check-module-invariants.sh --emit-inventory --check` reports no byte change
+- [x] `lake build` green.
+- [x] `bash scripts/check-module-invariants.sh` exits 0.
+- [x] C14 PASS with the new TM⋆ entries in both heredocs, same order.
+- [x] C15 both assertions PASS; the second's row count includes the new TM⋆ rows.
+- [x] C9 / C9D report zero task-number citations under `FormalSystem/`, `docs/`, `scripts/`.
+- [x] `bash scripts/check-module-invariants.sh --emit-inventory --check` reports no byte change
       (generated README blocks untouched).
-- [ ] `grep -rn 'starValidIn_of_forall_total\|starValidIn_apply_total' FormalSystem Tests` empty
-      (unless the Phase 3 fallback branch applied, in which case the docstring correction is
-      verified instead).
-- [ ] No new `sorry` anywhere in the diff.
+- [x] `grep -rn 'starValidIn_of_forall_total\|starValidIn_apply_total' FormalSystem Tests` empty
+      (the Phase 3 move succeeded; the fallback branch did not apply).
+- [x] No new `sorry` anywhere in the diff.
 
 ## Artifacts & Outputs
 
