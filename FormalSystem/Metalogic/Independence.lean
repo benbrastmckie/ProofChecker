@@ -17,6 +17,9 @@ import FormalSystem.Metalogic.Independence.OrderTransfer
 import FormalSystem.Metalogic.Independence.StateSetTruth
 import FormalSystem.Metalogic.Independence.DeterminismUndefinable
 import FormalSystem.Metalogic.Independence.StabUndefinable
+import FormalSystem.Metalogic.Independence.NaiveSystem
+import FormalSystem.Metalogic.Independence.CoarsenedModels
+import FormalSystem.Metalogic.Independence.PastingIndependence
 
 /-!
 # Independence results

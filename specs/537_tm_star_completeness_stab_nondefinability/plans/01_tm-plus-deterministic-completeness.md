@@ -516,30 +516,29 @@ by transcribing 535 §6.2's two models and relating them with the tree's own `Tr
 
 ---
 
-### Phase 11: Coarsened-state models and the naive-derivability predicate [NOT STARTED]
+### Phase 11: Coarsened-state models and the naive-derivability predicate [COMPLETED]
 
 **Goal**: Build the semantics and the syntactic restriction that the underivability argument
 needs, and gate the next phase on an explicit feasibility check.
 
 **Tasks**:
-- [ ] Define `NaiveDerivable` as a predicate on the *existing* derivation trees: a recursive
+- [x] Define `NaiveDerivable` as a predicate on the *existing* derivation trees: a recursive
       `PlusDerivationTree.NaiveOnly` requiring every `axiom` node's `PlusAxiom` to be outside
       `{paste, untl_paste}`, and `NaiveDerivable fc Γ φ := ∃ d, d.NaiveOnly`. This keeps the naive
       system out of the live proof system entirely — no second axiom inductive is introduced
-- [ ] Define the coarsened-state truth relation: given a frame `F` and a map `π` on world states,
+- [x] Define the coarsened-state truth relation: given a frame `F` and a map `π` on world states,
       a truth recursion identical to `PlusTruthAt` except that the `stab` clause quantifies over
       total histories agreeing with the current one under `π ∘ σ` at the evaluation time
-- [ ] Prove the state-determinacy lemma: the coarsened `⊡` is a state formula (its value at
+- [x] Prove the state-determinacy lemma: the coarsened `⊡` is a state formula (its value at
       `(τ,t)` depends only on `τ(t)`), the coarsened analogue of 535's probe E2, using the same
       time-shift argument
-- [ ] Mirror `Conservativity/Plus/Atomization.lean` for the coarsened semantics, obtaining that
+- [x] Mirror `Conservativity/Plus/Atomization.lean` for the coarsened semantics, obtaining that
       every TM⁺ schema instance is valid in every coarsened-state model
-- [ ] Prove the six naive ⊡-axioms valid in every coarsened-state model whose valuation is
+- [x] Prove the six naive ⊡-axioms valid in every coarsened-state model whose valuation is
       `π`-invariant: SK from the quantifier shape, ST from reflexivity, S4/S5 because `π`-agreement
       is an equivalence, MS because the class is contained in all histories, AS from
       `π`-invariance of the valuation
-- [ ] **Gate**: before Phase 12 starts, confirm the atomization step actually closes. If it does
-      not, stop and record the obstruction rather than weakening any statement
+- [x] **Gate**: before Phase 12 starts, confirm the atomization step actually closes *(gate PASSED: `cTruthAt_iff_atomize` compiles, and with it `cValid_of_tm` / `cValid_swap_of_tm`; the coarsened `⊡` is a state formula by `c_stab_state_only`, exactly as the standard one is, so `Atomization.lean`'s route transfers unchanged)*
 
 **Timing**: 2 hours
 
@@ -557,23 +556,21 @@ needs, and gate the next phase on an explicit feasibility check.
 
 ---
 
-### Phase 12: Underivability of the pasting axioms [NOT STARTED]
+### Phase 12: Underivability of the pasting axioms [COMPLETED]
 
 **Goal**: Machine-check that PS and US are not derivable from the naive set plus TM⁺.
 
 **Tasks**:
-- [ ] Build the concrete coarsened-state model: a small frame with a coarsening class containing
-      two states, one whose histories carry the pure-future witness and one whose histories carry
-      the pure-past witness, with no history carrying both, and a `π`-invariant valuation
-- [ ] Refute PS in it: both `⟐`-conjuncts hold at the evaluation point while the pasted
+- [x] Build the concrete coarsened-state model *(deviation: altered — the frame is `multiFamTaskFrameGen (TemporalOrder.of ℤ) Unit`, the deterministic clock over ℤ, so no `FrameOver` obligation had to be discharged; the coarsening is `π ((), x) = |x|`, whose class at time 0 contains exactly the flow lines of offsets `-1` and `+1`)*
+- [x] Refute PS in it: both `⟐`-conjuncts hold at the evaluation point while the pasted
       conjunction fails, precisely because the two witnesses sit at different states of the same
       coarsening class and so cannot be pasted
-- [ ] Refute US in it by the same construction at a future evaluation time
-- [ ] Prove naive soundness over coarsened-state models by induction on `NaiveOnly` derivations,
+- [x] Refute US in it by the same construction at a future evaluation time *(the instance is `α⁻ := ⊤`, `φ⁺ := Fp`; the antecedent is witnessed at time 2 by the flow line of offset `-3`)*
+- [x] Prove naive soundness over coarsened-state models by induction on `NaiveOnly` derivations,
       then conclude `pasteNotNaiveDerivable` and `untlPasteNotNaiveDerivable`
-- [ ] Docstring: this records the non-redundancy of the axiom set; the pasting axioms remain valid
+- [x] Docstring: this records the non-redundancy of the axiom set; the pasting axioms remain valid
       on every task frame (`Semantics/PlusPasting.lean`), so nothing here weakens TM⁺
-- [ ] If the argument does not close, mark the phase `[COMPLETED WITH EXCLUSIONS]` with a
+- [x] If the argument does not close, mark the phase `[COMPLETED WITH EXCLUSIONS]` with a
       `#### Reasoned Exclusions` record naming the obstruction and its evidence — never a `sorry`
 
 **Timing**: 2 hours
