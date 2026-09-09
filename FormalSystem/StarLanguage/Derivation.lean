@@ -35,22 +35,21 @@ and the soundness recursion rely on. The same applies to the classical hybrid `�
 hazard, which does not arise here: the hazard is *uniform substitution*, and TM⁺ is already not
 substitution-closed (`PlusAxiom.atom_stab`), so no argument anywhere in this component uses it.
 
-## `⊡`-necessitation, and exactly how far it reaches
+## `⊡`-necessitation, at every formula
 
 In TM⁺, `⊢ φ ⟹ ⊢ ⊡φ` is derivable at every formula — `necessitation` to `⊢ □φ`, then MS
 (`□φ → ⊡φ`) and modus ponens — which is why `PlusDerivationTree` carries no `⊡` rule of its own.
-In TM⋆ the derivation goes through **only at embedded formulas**, and `stabNecessitationOfPlus`
-below is stated at exactly that strength. The reason is the `ofBase` design (see
-`StarLanguage/Axioms.lean`): MS reaches TM⋆ only as `StarAxiom.ofBase _ (PlusAxiom.box_stab _)`,
-whose instances are `□(ofPlus ψ) → ⊡(ofPlus ψ)`. At a register-containing `φ`, `⊢⋆ φ ⟹ ⊢⋆ ⊡φ`
-remains **sound** (the `stab` clause restricts the `box` clause's quantifier, so validity
-transfers) but is not derivable from this axiom set.
+The same now holds in TM⋆, at every `ψ : StarFormula`, registers included: `stabNecessitation`
+below is the unrestricted rule.
 
-That is not a defect to be repaired by weakening a statement: it is one more instance of the
-recorded cost of the `ofBase` embedding, and it is recorded here rather than papered over. A
-native `box_stab` schema over `StarFormula` would remove the restriction and would be sound; it
-is deliberately not declared, because `StarAxiom`'s constructor list is fixed at one embedding
-arm plus the register block.
+It was not always so, and the history is worth keeping. TM⋆ used to reach the TM⁺ schema block
+through a single embedding constructor `StarAxiom.ofBase`, so MS arrived only as
+`□(ofPlus ψ) → ⊡(ofPlus ψ)` and the derived rule was correspondingly confined to embedded
+formulas. The rule was *sound* at every formula throughout — the `stab` clause restricts the
+`box` clause's quantifier, so validity transfers unconditionally — and the restriction was an
+artefact of axiom packaging, not of the logic. Re-declaring the schemata directly over
+`StarFormula` (`StarLanguage/Axioms.lean`) removed the artefact: `StarAxiom.box_stab` is now a
+native schema at arbitrary `φ`, and the restricted form no longer exists.
 
 ## Notation
 
@@ -182,19 +181,26 @@ theorem StarDerivable.mono {fc₁ fc₂ : FrameClass} (h : fc₁ ≤ fc₂) {Γ 
     {φ : StarFormula} (hd : StarDerivable fc₁ Γ φ) : StarDerivable fc₂ Γ φ :=
   hd.elim fun d => ⟨d.lift h⟩
 
-/-! ## The derived `⊡`-necessitation rule, at embedded formulas -/
+/-! ## The derived `⊡`-necessitation rule, at every formula -/
 
-/-- **`⊡`-necessitation, at `ofPlus` instances**: `⊢⋆ ofPlus ψ ⟹ ⊢⋆ ⊡(ofPlus ψ)`, by
-`necessitation` to `⊢⋆ □(ofPlus ψ)` and then MS through `StarAxiom.ofBase`.
+/-- **`⊡`-necessitation**: `⊢⋆[fc] ψ ⟹ ⊢⋆[fc] ⊡ψ`, at **every** `ψ : StarFormula` — by
+`necessitation` to `⊢⋆[fc] □ψ` and then MS (`StarAxiom.box_stab`) and modus ponens. Derived, not
+a rule of the system, exactly as `PlusLanguage.stabNecessitation` is one level down.
 
-The restriction to embedded formulas is exactly the reach of `ofBase`, which supplies
-`PlusAxiom.box_stab` only at `ofPlus` instances; see this module's docstring for why the general
-rule is sound but not derivable here, and why it is recorded rather than assumed. -/
-def stabNecessitationOfPlus {fc : FrameClass} {ψ : PlusFormula}
-    (d : ⊢⋆[fc] (ofPlus ψ)) : ⊢⋆[fc] StarFormula.stab (ofPlus ψ) :=
+`box_stab` is a native TM⋆ schema at arbitrary `φ` (`StarLanguage/Axioms.lean`), so nothing here
+restricts `ψ` to the image of `ofPlus`. The earlier `ofPlus`-restricted form of this rule is
+**deleted, not retained alongside**: see this module's docstring for why the restriction existed
+and what removed it. -/
+def stabNecessitation {fc : FrameClass} {ψ : StarFormula}
+    (d : ⊢⋆[fc] ψ) : ⊢⋆[fc] StarFormula.stab ψ :=
   .modus_ponens [] _ _
-    (.axiom [] _ (StarAxiom.ofBase _ (PlusAxiom.box_stab ψ)) (FrameClass.base_le fc))
+    (.axiom [] _ (StarAxiom.box_stab ψ) (FrameClass.base_le fc))
     (.necessitation _ d)
+
+/-- The rule at a register-carrying formula — an instance the `ofPlus`-restricted form could not
+reach, and the concrete content of the widening. -/
+example (fc : FrameClass) (i : ℕ) (φ : StarFormula) (d : ⊢⋆[fc] StarFormula.timeRecall i φ) :
+    ⊢⋆[fc] StarFormula.stab (StarFormula.timeRecall i φ) := stabNecessitation d
 
 /-! ### Smoke tests -/
 
@@ -203,10 +209,14 @@ example (fc : FrameClass) (i : ℕ) (φ : StarFormula) :
     ⊢⋆[fc] (StarFormula.timeStore i (.box φ)).iff (StarFormula.box (.timeStore i φ)) :=
   .axiom [] _ (StarAxiom.store_box i φ) (FrameClass.base_le fc)
 
-/-- MF reaches TM⋆ through `ofBase`, at an embedded formula — and only there. -/
-example (fc : FrameClass) (ψ : PlusFormula) :
-    ⊢⋆[fc] ofPlus ((PlusFormula.box ψ).imp (PlusFormula.box (PlusFormula.allFuture ψ))) :=
-  .axiom [] _ (StarAxiom.ofBase _ (PlusAxiom.modal_future ψ)) (FrameClass.base_le fc)
+/-- MF reaches TM⋆ at every `↓ⁱ`-free formula, not only at embedded ones. The witness is
+`□↑¹p → □G↑¹p`: `↑¹p` is `RecallFree` and, by `ofPlus_ne_timeStore`, is **not** an `ofPlus`
+image, so this instance is outside the reach of any embedding-only route. -/
+example (fc : FrameClass) (p : Atom) :
+    ⊢⋆[fc] (StarFormula.box (StarFormula.timeStore 1 (.atom p))).imp
+      (StarFormula.box (StarFormula.allFuture (StarFormula.timeStore 1 (.atom p)))) :=
+  .axiom [] _ (StarAxiom.modal_future _ (RecallFree.timeStore 1 (RecallFree.atom p)))
+    (FrameClass.base_le fc)
 
 /-- Temporal duality applies to a register formula: the dual of forward rigidity is backward
 rigidity, and it is reached by the rule rather than by a second axiom. -/

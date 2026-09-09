@@ -72,8 +72,6 @@ obligation on this inductive is that every constructor's `swapTemporal` is again
 and by the strongest available route — every arm's dual is an *instance of a constructor of this
 same inductive*:
 
-* `ofBase` — `swapTemporal` commutes with `ofPlus` (`ofPlus_swapTemporal`), so the dual of an
-  `ofBase φ ax` instance is the TM⁺ schema's own dual, supplied by `plusAxiom_swap_validIn_min`.
 * `store_recall_same`, `recall_store_same`, `recall_recall`, `store_store_comm`, `store_k`,
   `recall_k`, `store_box`, `recall_box`, `store_stab`, `store_atom` — **self-dual**: each is an
   `.iff` of formulas built from `imp`, `box`, `stab` and the two registers, none of which
@@ -161,9 +159,6 @@ the schema inventory, and the swap-closure invariant.
 Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
 -/
 inductive StarAxiom : StarFormula → Type where
-  /-- Every TM⁺ schema, at its embedded instance. MF (`□φ → □Gφ`) reaches TM⋆ through this arm
-  and only through it; it is refuted at register-containing formulas. -/
-  | ofBase (φ : PlusFormula) (ax : PlusAxiom φ) : StarAxiom (ofPlus φ)
   -- ## The TM⁺ mirror block
   -- Every TM⁺ schema (`PlusLanguage/Axioms.lean`), re-declared directly over `StarFormula`,
   -- constructor for constructor and argument for argument. `modal_future` alone carries a side
@@ -462,7 +457,6 @@ def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
   | .prior_UZ _ => .ZTime
   | .prior_SZ _ => .ZTime
   | .z1 _ => .ZTime
-  | .ofBase _ ax => ax.minFrameClass
   | _ => .Base
 
 /-! ### Pins -/
@@ -502,11 +496,6 @@ example (φ : StarFormula) : (StarAxiom.prior_SZ φ).minFrameClass = .ZTime := r
 example (φ : StarFormula) : (StarAxiom.z1 φ).minFrameClass = .ZTime := rfl
 
 example : StarAxiom.discrete_box_necessity.minFrameClass = .Base := rfl
-
-example (φ : PlusFormula) : (StarAxiom.ofBase _ (PlusAxiom.density φ)).minFrameClass = .Dense :=
-  rfl
-
-example (φ : PlusFormula) : (StarAxiom.ofBase _ (PlusAxiom.stab_t φ)).minFrameClass = .Base := rfl
 
 example (i : ℕ) (φ : StarFormula) : (StarAxiom.store_box i φ).minFrameClass = .Base := rfl
 

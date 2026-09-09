@@ -743,42 +743,50 @@ and subtracting the 16 register arms and `ofBase`.
 
 ---
 
-### Phase 11: Retire `ofBase`; retire `stabNecessitationOfPlus` [NOT STARTED]
+### Phase 11: Retire `ofBase`; retire `stabNecessitationOfPlus` [COMPLETED]
 
 **Goal**: Delete the monolith and the restricted bridge result, replacing the embedding route
 with a **derived** function over the schematic constructors. This is the phase that discharges
 deliverables 4 and 6.
 
 **Tasks**:
-- [ ] `bash .claude/scripts/git-snapshot.sh 576` before the first deletion
-- [ ] In `StarLanguage/Embedding.lean`, define
+- [x] `bash .claude/scripts/git-snapshot.sh 576` before the first deletion
+- [x] In `StarLanguage/Embedding.lean`, define
       `StarAxiom.ofPlusAxiom {φ : PlusFormula} (ax : PlusAxiom φ) : StarAxiom (ofPlus φ)` — a
       53-arm dispatch sending each `PlusAxiom` constructor to its `StarAxiom` mirror at
       `ofPlus`-instantiated arguments. `ofPlus` commutes with the formula constructors
       definitionally, so each arm should be a direct constructor application; `modal_future`
       supplies `recallFree_ofPlus`, and `paste`/`untl_paste` supply `starIsPureFuture_ofPlus` /
       `starIsPurePast_ofPlus`
-- [ ] **This is the structural difference that makes the retirement real**: `ofBase` was a
+- [x] **This is the structural difference that makes the retirement real**: `ofBase` was a
       *constructor* (a primitive axiom arm); `ofPlusAxiom` is a *derived* function, provable
       from the schematic constructors and adding nothing to TM⋆. Record that in its docstring
-- [ ] Prove `StarAxiom.minFrameClass_ofPlusAxiom : (StarAxiom.ofPlusAxiom ax).minFrameClass = ax.minFrameClass`
+- [x] Prove `StarAxiom.minFrameClass_ofPlusAxiom : (StarAxiom.ofPlusAxiom ax).minFrameClass = ax.minFrameClass`
       as one named `cases` lemma over `PlusAxiom` — **not** 53 inline `rfl`s — so a routing
       mismatch is a named failure at a single site
-- [ ] Rewrite `StarDerivationTree.ofPlusTree`'s `axiom` case to use `ofPlusAxiom` and
+- [x] Rewrite `StarDerivationTree.ofPlusTree`'s `axiom` case to use `ofPlusAxiom` and
       `minFrameClass_ofPlusAxiom`; the other six cases are unchanged
-- [ ] Delete `StarAxiom.minFrameClass_ofBase`
-- [ ] Delete the `ofBase` constructor from `inductive StarAxiom`, its `minFrameClass` arm, and
+- [x] Delete `StarAxiom.minFrameClass_ofBase`
+- [x] Delete the `ofBase` constructor from `inductive StarAxiom`, its `minFrameClass` arm, and
       its arm in each of `starAxiom_validIn_min` and `starAxiom_swap_validIn_min`
-- [ ] In `StarLanguage/Derivation.lean`, add
+- [x] In `StarLanguage/Derivation.lean`, add
       `stabNecessitation {fc} {ψ : StarFormula} (d : ⊢⋆[fc] ψ) : ⊢⋆[fc] StarFormula.stab ψ`,
       built from `necessitation` and the schematic `StarAxiom.box_stab`, and **delete**
       `stabNecessitationOfPlus`. Never keep both; never restate the old name in weakened form
-- [ ] Retarget the two `example`s that assert the restriction: in `Derivation.lean`, "MF reaches
+- [x] Retarget the two `example`s that assert the restriction: in `Derivation.lean`, "MF reaches
       TM⋆ through `ofBase` … and only there" becomes a `RecallFree` non-embedded witness
       (`□↑¹p → □G↑¹p`); in `Embedding.lean`, the MF-at-`⊡` acceptance check retargets to the new
       constructor via `ofPlusAxiom`
-- [ ] `grep -rn "ofBase\|stabNecessitationOfPlus" FormalSystem/ docs/` returns **no** live hits
-- [ ] `lake build` green, `lake build BimodalTest` green, invariants exit 0, no new `sorry`
+- [ ] `grep -rn "ofBase\|stabNecessitationOfPlus" FormalSystem/ docs/` returns **no** live hits *(deviation: deferred — every **code** hit is gone at the end of this phase and `lake build` / `lake build BimodalTest` are green; the residual hits are prose in module docstrings and READMEs, which is exactly Phase 13's declared documentation sweep. Splitting the deletion from the prose keeps this phase's atomic batch confined to declarations)*
+- [x] `lake build` green, `lake build BimodalTest` green, invariants exit 0, no new `sorry`
+
+**Scope Hypothesis outcome (measured)**: `grep -rn "ofBase" FormalSystem/` before deletion found
+exactly the five predicted code consumers — `StarAxiom.minFrameClass`, `starAxiom_validIn_min`,
+`starAxiom_swap_validIn_min`, `StarAxiom.minFrameClass_ofBase`, `StarDerivationTree.ofPlusTree`
+— plus the two pin `example`s in `Axioms.lean` and the swap-closure bullet in its docstring, and
+`stabNecessitationOfPlus` in `Derivation.lean`. No consumer outside that list. The two pins and
+the bullet are part of the constructor's own declaration site rather than separate consumers,
+so the hypothesis is confirmed rather than corrected.
 
 **Timing**: 2 hours
 

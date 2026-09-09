@@ -1059,7 +1059,6 @@ wildcard. -/
 theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     StarValidIn ax.minFrameClass φ := by
   cases ax with
-  | ofBase ψ ax => exact (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min ax)
   | prop_k φ ψ χ => exact starValid_prop_k φ ψ χ
   | prop_s φ ψ => exact starValid_prop_s φ ψ
   | ex_falso φ => exact starValid_ex_falso φ
@@ -1144,9 +1143,6 @@ of `StarLanguage/Axioms.lean`, discharged constructor by constructor. -/
 theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     StarValidIn ax.minFrameClass φ.swapTemporal := by
   cases ax with
-  | ofBase ψ ax =>
-    rw [← ofPlus_swapTemporal]
-    exact (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_swap_validIn_min ax)
   | prop_k φ ψ χ =>
     simp only [StarFormula.swapTemporal]
     exact starValid_prop_k φ.swapTemporal ψ.swapTemporal χ.swapTemporal
