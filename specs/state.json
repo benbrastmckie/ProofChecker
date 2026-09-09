@@ -78,7 +78,7 @@
     {
       "project_number": 574,
       "project_name": "record_soundness_invariant_and_tmstar_index",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Record the load-bearing soundness invariant and close the TM-star documentation gaps. GROUND TRUTH: `modal_future_valid` (FormalSystem/Metalogic/Soundness.lean:303-311) is the sole consumer of time-shift homogeneity in the TM schema block. That single fact determined the entire architecture of the newest object language -- it is why `StarAxiom` embeds the TM-plus schemata through one `ofBase` arm (FormalSystem/StarLanguage/Axioms.lean:136) rather than re-declaring them -- and it is currently recorded in NO docstring, NO README, and NO invariant check. It is discoverable only by grepping Soundness.lean. The next language extension will either re-derive it or get it wrong.\n\nTwo further gaps, both artifacts of concurrent edits rather than decisions: (a) `StarValidIn.of_forall_total` and `StarValidIn.apply_total` are defined locally inside FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean, while FormalSystem/Semantics/StarValidity.lean's own docstring advertises them as living there; (b) docs/theorem-index.md carries no rows for any TM-star result, because index rows require `pinned:C14` baseline entries in scripts/check-module-invariants.sh.\n\nDELIVERABLES, each phase one agent run with lake build green and no new sorry: (1) State the time-shift invariant where the next language extension will find it -- the Soundness.lean module docstring must name `modal_future_valid` as the sole timeShift consumer, say why that matters to any language extension, and point at `refute_modal_future` (Semantics/StarNonValidities.lean) as the realized consequence. Mirror a one-line pointer in FormalSystem/Metalogic/README.md. (2) VERIFY THE INVARIANT BEFORE RECORDING IT: establish by direct inspection whether any OTHER soundness proof in the tree consumes time-shift homogeneity. Do not trust the claim as stated here. If more than `modal_future_valid` does, the recorded invariant must say so, and the `ofBase` design rationale in StarLanguage/README.md must be annotated to match. A corrected count is a successful deliverable, not a failure. (3) Move `of_forall_total`/`apply_total` to Semantics/StarValidity.lean, where the docstring already advertises them, and have StarSoundness.lean consume them from there. If an import cycle makes the move impossible, do NOT leave the docstring stale -- correct the docstring instead and record the cycle as the reason. (4) Add docs/theorem-index.md rows for the TM-star headline results (`StarAxiom`, `StarDerivationTree`, star soundness, `starDerivable_ofFormula_iff`, `starConservative_of_plusComplete`, `plusIncomplete_of_starNonconservative`, and the completeness OPEN row) with the C14 baseline entries they require.\n\nHARD CONSTRAINTS: no `sorry`; `lake build` green and `scripts/check-module-invariants.sh` exit 0; C14 baseline edits add NAMES only -- measure every axiom set, never invent or alter one; no task numbers under FormalSystem/ or docs/. TERRITORY: Metalogic/Soundness.lean (docstring only, no proof edits), Metalogic/README.md, Semantics/StarValidity.lean, Metalogic/Conservativity/Star/StarSoundness.lean, StarLanguage/README.md (annotation only), docs/theorem-index.md, scripts/check-module-invariants.sh.",
       "topic": "repo-hygiene",
@@ -93,15 +93,21 @@
       ],
       "priority": "high",
       "created": "2026-09-09T11:48:18Z",
-      "last_updated": "2026-09-09T12:03:33Z",
+      "last_updated": "2026-09-09T12:54:31Z",
       "session_id": "sess_1788954800_f0042b",
       "artifacts": [
         {
           "path": "specs/574_record_soundness_invariant_and_tmstar_index/plans/01_record-soundness-invariant-tmstar-index.md",
           "type": "plan",
           "summary": "Six-phase plan: audit and record the time-shift consumer invariant, propagate it to two READMEs, relocate the StarValidIn adapters, extend the C14 baseline, add TM-star theorem-index rows with their Paper: anchors, and run the full gate."
+        },
+        {
+          "path": "specs/574_record_soundness_invariant_and_tmstar_index/summaries/01_record-soundness-invariant-tmstar-index-summary.md",
+          "type": "summary",
+          "summary": "Records the audited time-shift consumer set in Soundness.lean, relocates the StarValidIn adapters, and adds machine-pinned TM-star rows to docs/theorem-index.md."
         }
-      ]
+      ],
+      "completion_summary": "Audited the time-shift consumer set and corrected the task's central claim: modal_future_valid is one of two declarations (with mf_swap_valid) belonging to the one schema Axiom.modal_future, and the corrected enumeration is now recorded in Soundness.lean's module docstring together with why the set's size matters to a language extension and refute_modal_future as the realized consequence, mirrored in Metalogic/README.md and StarLanguage/README.md. Relocated StarValidIn.of_forall_total and StarValidIn.apply_total from StarSoundness.lean to Semantics/StarValidity.lean with no import cycle, and added five machine-pinned TM-star rows plus an explicit TM-star-completeness OPEN record to docs/theorem-index.md, backed by five new C14 baseline entries measured from the tree. lake build green, check-module-invariants.sh exits 0 with ALL CHECKS PASSED, no sorry, axiom set byte-identical."
     },
     {
       "project_number": 573,

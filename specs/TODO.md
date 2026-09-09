@@ -11,9 +11,9 @@ next_project_number: 578
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,574,575 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
-| 2 | 231,282,296,465,497,560,564,565,567,570,576 | 298,464,502,559,563,568,574 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
-| 3 | 219,428,498,499,500,566,577 | 231,465,497,565,575,576 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,575,576 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 2 | 231,282,296,465,497,560,564,565,567,570,577 | 298,464,502,559,563,568,575,576 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
 | 6 | 411 | 410 | decidability |
@@ -94,8 +94,8 @@ next_project_number: 578
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 576 [NOT STARTED] — Split the ofBase monolith and eliminate the ofPlus-restricted bri
+543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
 
@@ -104,10 +104,6 @@ next_project_number: 578
 ### Publication Quality
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
-
-### Repo Hygiene
-
-574 [PLANNED] — Record the load-bearing soundness invariant and close the TM-star
 
 ### Semantics
 
@@ -173,11 +169,12 @@ HARD CONSTRAINTS: MUST NOT break the atomization route -- `stab_state_only` is c
 ---
 
 ### 574. Record soundness invariant and tmstar index
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: repo-hygiene
 - **Dependencies**: None
 - **Plan**: [574_record_soundness_invariant_and_tmstar_index/plans/01_record-soundness-invariant-tmstar-index.md]
+- **Summary**: [574_record_soundness_invariant_and_tmstar_index/summaries/01_record-soundness-invariant-tmstar-index-summary.md]
 
 **Description**: Record the load-bearing soundness invariant and close the TM-star documentation gaps. GROUND TRUTH: `modal_future_valid` (FormalSystem/Metalogic/Soundness.lean:303-311) is the sole consumer of time-shift homogeneity in the TM schema block. That single fact determined the entire architecture of the newest object language -- it is why `StarAxiom` embeds the TM-plus schemata through one `ofBase` arm (FormalSystem/StarLanguage/Axioms.lean:136) rather than re-declaring them -- and it is currently recorded in NO docstring, NO README, and NO invariant check. It is discoverable only by grepping Soundness.lean. The next language extension will either re-derive it or get it wrong.
 
