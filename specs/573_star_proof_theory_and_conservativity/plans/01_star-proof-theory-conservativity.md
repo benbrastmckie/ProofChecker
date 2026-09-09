@@ -1,7 +1,7 @@
 # Implementation Plan: Star proof theory and conservativity
 
 - **Task**: 573 - Star proof theory and conservativity
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 14 hours
 - **Dependencies**: None (every consumed asset is landed)
 - **Research Inputs**: `specs/573_star_proof_theory_and_conservativity/reports/01_star-proof-theory-conservativity.md`
@@ -137,7 +137,7 @@ No `roadmap_path` was supplied in this dispatch and no roadmap consultation was 
 Phases within the same wave can execute in parallel. Each phase owns a disjoint file set; the
 owning file is named in every phase's **Files to modify** block.
 
-### Phase 1: `StarFormula.swapTemporal` and the `ofPlus` pin [NOT STARTED]
+### Phase 1: `StarFormula.swapTemporal` and the `ofPlus` pin [COMPLETED]
 
 **Goal**: Give `StarFormula` the temporal-duality involution that `StarDerivationTree`'s
 `temporal_duality` rule and the whole swap-validity half of soundness require, with the `ofPlus`

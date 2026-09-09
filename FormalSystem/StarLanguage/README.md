@@ -32,7 +32,7 @@ the whole point of this language, and it must be broken in a *separate* type.
 
 | File | Description |
 |------|-------------|
-| `Formula.lean` | `StarFormula`, the derived operators (with `PlusFormula`'s right-hand sides), the `⊡`-specific `dstab`/`Will`/`will`/`Could`/`could`, and the embedding `ofPlus`/`ofStarCtx` with `ofPlus_injective`, `ofPlus_ne_timeStore`, `ofPlus_ne_timeRecall` and the `rfl` commutation pins |
+| `Formula.lean` | `StarFormula`, the derived operators (with `PlusFormula`'s right-hand sides), the `⊡`-specific `dstab`/`Will`/`will`/`Could`/`could`, `swapTemporal` (`stab ↦ stab`, and both registers structural) with `swap_temporal_involution` and the `swap_temporal_*` push-through family, and the embedding `ofPlus`/`ofStarCtx` with `ofPlus_injective`, `ofPlus_ne_timeStore`, `ofPlus_ne_timeRecall`, `ofPlus_swapTemporal` and the `rfl` commutation pins |
 
 The sibling aggregator is `FormalSystem/StarLanguage.lean`.
 

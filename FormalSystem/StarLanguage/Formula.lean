@@ -43,6 +43,8 @@ too, so no consumer has to reach back into `PlusFormula` for them.
 ## Main Definitions
 
 - `StarFormula`: nine-constructor inductive type for L⋆; `StarContext := List StarFormula`
+- `StarFormula.swapTemporal`: the past/future interchange for the TD rule
+  (`stab ↦ stab`, `timeStore ↦ timeStore`, `timeRecall ↦ timeRecall`)
 - Derived operators with `PlusFormula`'s right-hand sides: `top`, `neg`, `and`, `or`, `iff`,
   `diamond`, `someFuture`, `somePast`, `allFuture`, `allPast`, `kPlus`, `kMinus`, `always`,
   `sometimes`, `next`, `prev`, `dstab`, `Will`, `will`, `Could`, `could`
@@ -53,6 +55,8 @@ too, so no consumer has to reach back into `PlusFormula` for them.
 - `DecidableEq`, `Countable`, `Infinite`, `Denumerable` for `StarFormula`
 - `ofPlus_injective`, and the `rfl`-shaped commutation lemmas `ofPlus_neg`, `ofPlus_allFuture`,
   `ofPlus_always`, `ofPlus_someFuture`, `ofPlus_or`, `ofPlus_top`
+- `StarFormula.swapTemporal` with `swap_temporal_involution`, the `swap_temporal_*`
+  push-through family, and the commutation pin `ofPlus_swapTemporal`
 - `ofPlus_ne_timeStore`, `ofPlus_ne_timeRecall`: nothing in the image of the embedding is a
   top-level register operator
 
@@ -208,6 +212,103 @@ def Could (φ : StarFormula) : StarFormula := dstab (allFuture φ)
 /-- `could φ := ⟐Fφ`. Mirrors `PlusFormula.could`. -/
 def could (φ : StarFormula) : StarFormula := dstab (someFuture φ)
 
+/-! ### Temporal duality
+
+`swapTemporal` interchanges past and future. It is what the `temporal_duality` rule of TM⋆
+(`FormalSystem/StarLanguage/Derivation.lean`) applies to a theorem, and what the swap half of
+TM⋆ soundness (`Metalogic/Conservativity/Star/StarSoundness.lean`) carries alongside validity.
+
+The two register cases are **structural**, exactly as `stab ↦ stab` is: registers hold *times*
+and carry no orientation of their own, so neither `↑ⁱ` nor `↓ⁱ` is exchanged for anything. -/
+
+/--
+Swap temporal operators (past ↔ future) in an L⋆ formula.
+
+Mirrors `PlusFormula.swapTemporal` constructor for constructor, with `timeStore i φ ↦
+timeStore i φ.swapTemporal` and `timeRecall i φ ↦ timeRecall i φ.swapTemporal`.
+-/
+def swapTemporal : StarFormula → StarFormula
+  | atom p => atom p
+  | bot => bot
+  | imp φ ψ => imp φ.swapTemporal ψ.swapTemporal
+  | box φ => box φ.swapTemporal
+  | untl ψ φ => snce ψ.swapTemporal φ.swapTemporal
+  | snce ψ φ => untl ψ.swapTemporal φ.swapTemporal
+  | stab φ => stab φ.swapTemporal
+  | timeStore i φ => timeStore i φ.swapTemporal
+  | timeRecall i φ => timeRecall i φ.swapTemporal
+
+/-- `swapTemporal` is an involution. -/
+theorem swap_temporal_involution (φ : StarFormula) :
+    φ.swapTemporal.swapTemporal = φ := by
+  induction φ with
+  | atom _ => rfl
+  | bot => rfl
+  | imp _ _ ihp ihq => simp only [swapTemporal, ihp, ihq]
+  | box _ ih => simp only [swapTemporal, ih]
+  | untl _ _ ih2 ih1 => simp only [swapTemporal, ih1, ih2]
+  | snce _ _ ih2 ih1 => simp only [swapTemporal, ih1, ih2]
+  | stab _ ih => simp only [swapTemporal, ih]
+  | timeStore _ _ ih => simp only [swapTemporal, ih]
+  | timeRecall _ _ ih => simp only [swapTemporal, ih]
+
+/-! The push-through lemmas, mirroring the `PlusFormula.swap_temporal_*` family. -/
+
+theorem swap_temporal_top : top.swapTemporal = top := rfl
+
+theorem swap_temporal_neg (φ : StarFormula) :
+    φ.neg.swapTemporal = φ.swapTemporal.neg := by
+  simp only [neg, swapTemporal]
+
+theorem swap_temporal_diamond (φ : StarFormula) :
+    φ.diamond.swapTemporal = φ.swapTemporal.diamond := by
+  simp only [diamond, neg, swapTemporal]
+
+@[simp]
+theorem swap_temporal_some_future (φ : StarFormula) :
+    (someFuture φ).swapTemporal = somePast φ.swapTemporal := by
+  simp only [someFuture, somePast, top, swapTemporal]
+
+@[simp]
+theorem swap_temporal_some_past (φ : StarFormula) :
+    (somePast φ).swapTemporal = someFuture φ.swapTemporal := by
+  simp only [somePast, someFuture, top, swapTemporal]
+
+@[simp]
+theorem swap_temporal_all_future (φ : StarFormula) :
+    (allFuture φ).swapTemporal = allPast φ.swapTemporal := by
+  simp only [allFuture, allPast, someFuture, somePast, neg, top, swapTemporal]
+
+@[simp]
+theorem swap_temporal_all_past (φ : StarFormula) :
+    (allPast φ).swapTemporal = allFuture φ.swapTemporal := by
+  simp only [allPast, allFuture, somePast, someFuture, neg, top, swapTemporal]
+
+theorem swap_temporal_and (φ ψ : StarFormula) :
+    (φ.and ψ).swapTemporal = φ.swapTemporal.and ψ.swapTemporal := by
+  simp only [and, neg, swapTemporal]
+
+theorem swap_temporal_or (φ ψ : StarFormula) :
+    (φ.or ψ).swapTemporal = φ.swapTemporal.or ψ.swapTemporal := by
+  simp only [or, neg, swapTemporal]
+
+theorem swap_temporal_iff (φ ψ : StarFormula) :
+    (φ.iff ψ).swapTemporal = φ.swapTemporal.iff ψ.swapTemporal := by
+  simp only [StarFormula.iff, and, neg, swapTemporal]
+
+/-- `swapTemporal` fixes `⟐`, as it fixes `⊡`. -/
+theorem swap_temporal_dstab (φ : StarFormula) :
+    (dstab φ).swapTemporal = dstab φ.swapTemporal := by
+  simp only [dstab, neg, swapTemporal]
+
+/-- The store register is unoriented: `swapTemporal` passes straight through it. -/
+theorem swap_temporal_timeStore (i : ℕ) (φ : StarFormula) :
+    (StarFormula.timeStore i φ).swapTemporal = StarFormula.timeStore i φ.swapTemporal := rfl
+
+/-- The recall register is unoriented: `swapTemporal` passes straight through it. -/
+theorem swap_temporal_timeRecall (i : ℕ) (φ : StarFormula) :
+    (StarFormula.timeRecall i φ).swapTemporal = StarFormula.timeRecall i φ.swapTemporal := rfl
+
 end StarFormula
 
 /-! ## The embedding of L⁺ into L⋆ -/
@@ -256,6 +357,24 @@ theorem ofPlus_injective : Function.Injective ofPlus := by
 @[simp] theorem ofPlus_ne_timeRecall (φ : PlusFormula) (i : ℕ) (ψ : StarFormula) :
     ofPlus φ ≠ StarFormula.timeRecall i ψ := by
   cases φ <;> simp [ofPlus]
+
+/-- `ofPlus` commutes with temporal duality — the pin the `temporal_duality` case of the
+proof-system embedding (`StarLanguage/Embedding.lean`) and the `ofBase` arm of swap-validity
+(`Metalogic/Conservativity/Star/StarAxiomValidity.lean`) both route through. Mirrors
+`ofFormula_swapTemporal`. -/
+theorem ofPlus_swapTemporal (φ : PlusFormula) :
+    ofPlus φ.swapTemporal = (ofPlus φ).swapTemporal := by
+  induction φ with
+  | atom _ => rfl
+  | bot => rfl
+  | imp _ _ ih1 ih2 =>
+    simp only [PlusFormula.swapTemporal, ofPlus, StarFormula.swapTemporal, ih1, ih2]
+  | box _ ih => simp only [PlusFormula.swapTemporal, ofPlus, StarFormula.swapTemporal, ih]
+  | untl _ _ ih1 ih2 =>
+    simp only [PlusFormula.swapTemporal, ofPlus, StarFormula.swapTemporal, ih1, ih2]
+  | snce _ _ ih1 ih2 =>
+    simp only [PlusFormula.swapTemporal, ofPlus, StarFormula.swapTemporal, ih1, ih2]
+  | stab _ ih => simp only [PlusFormula.swapTemporal, ofPlus, StarFormula.swapTemporal, ih]
 
 /-- The embedding lifted to contexts. Definitionally `List.map ofPlus`. -/
 abbrev ofStarCtx (Γ : PlusContext) : StarContext := List.map ofPlus Γ
