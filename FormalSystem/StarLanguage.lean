@@ -22,7 +22,7 @@ separate inductive with a constructor-to-constructor embedding.
 
 - `StarLanguage.Formula` — `StarFormula`, the derived operators (with `PlusFormula`'s right-hand
   sides), `swapTemporal`, and the embedding `ofPlus`
-- `StarLanguage.Axioms` — `StarAxiom`, the axiom schemata of TM⋆: one `ofBase` arm carrying
+- `StarLanguage.Axioms` — `StarAxiom`, the axiom schemata of TM⋆: 53 mirror constructors carrying
   every TM⁺ schema at its `ofPlus` instances, plus the sixteen register schemata, with
   `StarAxiom.minFrameClass`
 - `StarLanguage.Derivation` — `StarDerivationTree`, the notation `⊢⋆[fc]`, `StarDerivable`, and

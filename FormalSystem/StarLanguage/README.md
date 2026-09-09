@@ -33,9 +33,9 @@ the whole point of this language, and it must be broken in a *separate* type.
 | File | Description |
 |------|-------------|
 | `Formula.lean` | `StarFormula`, the derived operators (with `PlusFormula`'s right-hand sides), the `⊡`-specific `dstab`/`Will`/`will`/`Could`/`could`, `swapTemporal` (`stab ↦ stab`, and both registers structural) with `swap_temporal_involution` and the `swap_temporal_*` push-through family, and the embedding `ofPlus`/`ofStarCtx` with `ofPlus_injective`, `ofPlus_ne_timeStore`, `ofPlus_ne_timeRecall`, `ofPlus_swapTemporal` and the `rfl` commutation pins |
-| `Axioms.lean` | `StarAxiom` — TM⋆'s axiom set: one `ofBase` arm carrying every TM⁺ schema at its `ofPlus` instances, plus the sixteen register schemata of the store/recall block; `StarAxiom.minFrameClass` |
-| `Derivation.lean` | `StarDerivationTree` (the seven TM⁺ rules, verbatim), the notation `⊢⋆[fc]`, `StarDerivable` with `StarDerivable.mono`, the structural apparatus `lift`/`height`/`ofWeakeningNil`, and the derived `stabNecessitationOfPlus` |
-| `Embedding.lean` | `StarAxiom.minFrameClass_ofBase`, `StarDerivationTree.ofPlusTree`, `starDerivable_of_plusDerivable`, `starDerivable_of_derivable` — every TM⁺ theorem is a TM⋆ theorem at its embedded formula |
+| `Axioms.lean` | `StarAxiom` — TM⋆'s axiom set: the 53 TM⁺ schemata re-declared directly over `StarFormula` (`modal_future` alone under a `RecallFree` side condition), plus the sixteen register schemata of the store/recall block; `StarAxiom.minFrameClass` |
+| `Derivation.lean` | `StarDerivationTree` (the seven TM⁺ rules, verbatim), the notation `⊢⋆[fc]`, `StarDerivable` with `StarDerivable.mono`, the structural apparatus `lift`/`height`/`ofWeakeningNil`, and the derived, **unrestricted** `stabNecessitation` |
+| `Embedding.lean` | `StarAxiom.ofPlusAxiom` and `StarAxiom.minFrameClass_ofPlusAxiom`, `StarDerivationTree.ofPlusTree`, `starDerivable_of_plusDerivable`, `starDerivable_of_derivable` — every TM⁺ theorem is a TM⋆ theorem at its embedded formula |
 
 The sibling aggregator is `FormalSystem/StarLanguage.lean`.
 
@@ -46,30 +46,43 @@ The sibling aggregator is `FormalSystem/StarLanguage.lean`.
 formalization-native system, built to the shape of `PlusAxiom`/`PlusDerivationTree` so that the
 two are structurally comparable and the L⁺ ⊂ L⋆ questions can be *stated*.
 
-The one structural decision worth naming here is the **`ofBase` embedding**. `PlusAxiom`
-re-declares the 45 TM schemata over `PlusFormula`; `StarAxiom` does not re-declare them over
-`StarFormula`, because one of them — `modal_future`, `□φ → □Gφ` — is *refuted* there
+The one structural decision worth naming here is that `StarAxiom` **re-declares** the TM⁺
+schemata over `StarFormula` rather than embedding them, exactly as `PlusAxiom` re-declares the 45
+TM schemata over `PlusFormula`. Fifty-two of the 53 are valid at arbitrary `StarFormula`
+metavariables, each proved individually; `paste` and `untl_paste` carry L⋆ counterparts of the
+purity conditions their `PlusAxiom` mirrors already carry.
+
+`modal_future` (`□φ → □Gφ`) is the sole exception: it is *refuted* over `StarFormula`
 (`refute_modal_future`, `Semantics/StarNonValidities.lean`). MF is the only schema in the TM
 block whose soundness proof consumes time-shift homogeneity — audited, and recorded in the
 `Metalogic/Soundness.lean` module docstring's *The time-shift consumer set* section, which is the
 authority: one schema, two declarations (`modal_future_valid` and `mf_swap_valid`, the latter
 carrying TF, which is not a separate `Axiom` constructor) — and the L⋆ time-shift lemma shifts
-the stored-time vector with the history. A single `ofBase` constructor therefore carries every
-TM⁺ schema at exactly the `ofPlus` instances where it is sound. **The recorded cost**: TM⋆'s
-inherited temporal schemata are available only at register-free instances.
+the stored-time vector with the history, which a `↓ⁱ` can observe. It is therefore carried alone
+under a `RecallFree` (`↓ⁱ`-free) side condition. That fragment is **strictly wider** than the
+embedded one: `□↑¹p → □G↑¹p` is an instance, and `↑¹p` is not an `ofPlus` image
+(`ofPlus_ne_timeStore`). The embedding survives as the derived function `StarAxiom.ofPlusAxiom`
+(`Embedding.lean`), which adds nothing to TM⋆.
+
+**No L⋆ atomization, ever.** The TM⁺ soundness arms go through
+`Metalogic/Conservativity/Plus/Atomization.lean`, which rests on `stab_state_only` — the
+invariant `StarFormula` is built to break, since neither `↓ⁱχ` nor `↑ⁱχ` is state-determined.
+There is no L⋆ analogue and there cannot be one. Facing 53 schematic arms this is the shortcut a
+future contributor is most likely to reach for; every arm is a fresh direct proof against
+`StarTruthAt` instead, and uniform substitution is unavailable too (TM⁺ is not
+substitution-closed, via `atom_stab`).
 
 `StarDerivationTree`, the notation `⊢⋆[fc]` and the name TM⋆ for the resulting system are
 declared in `Derivation.lean`: the same seven inference rules as TM⁺ and TM, constructor for
 constructor, with `StarAxiom` in the `axiom` rule.
 
-**One consequence of `ofBase` worth stating in the open.** In TM⁺, `⊡`-necessitation
-(`⊢ φ ⟹ ⊢ ⊡φ`) is derivable at every formula, via `necessitation` and MS (`□φ → ⊡φ`). In TM⋆ the
-derivation reaches only embedded formulas — `stabNecessitationOfPlus` is stated at exactly that
-strength — because MS arrives only as `StarAxiom.ofBase _ (PlusAxiom.box_stab _)`. At a
-register-containing `φ` the rule is still **sound** (the `stab` clause merely restricts the `box`
-clause's quantifier) but is not derivable from this axiom set. Nothing in the metatheory below
-consumes it; it is recorded rather than repaired by a native `box_stab` schema, which would be
-sound but would widen `StarAxiom` beyond one embedding arm plus the register block.
+**`⊡`-necessitation reaches every formula.** In TM⁺, `⊢ φ ⟹ ⊢ ⊡φ` is derivable at every formula
+via `necessitation` and MS (`□φ → ⊡φ`); the same now holds in TM⋆ at every `ψ : StarFormula`,
+registers included (`stabNecessitation`, `Derivation.lean`). Under the earlier embedding-only
+design the derived rule reached embedded formulas only, because MS arrived only at `ofPlus`
+instances. The rule was *sound* at every formula throughout — the `stab` clause merely restricts
+the `box` clause's quantifier — so that restriction was an artefact of axiom packaging rather
+than of the logic, and declaring `box_stab` natively removed it.
 
 ## Where the L⋆ semantics lives
 
@@ -112,7 +125,7 @@ exclusion. Anchors are cited by `\label` only, never by line number.
 | `sent:det` defines only *forward* determinism (report-level) | separating frame `F^N`, with the validity widened from sentence letters to the whole **state-locality** fragment and the two-sided bound recorded as one object | `FN`, `fn_forwardDeterministic`, `fn_not_deterministic`, `fn_sentDet_stateLocal`, `fn_separates`, `fn_sentDet_bounds` (`Metalogic/Independence/ForwardDeterministicFrame.lean`) |
 | state-locality of L⋆ (no paper anchor) | a state-local `φ` is already `⊡`-stable: `φ ↔ ⊡φ` is valid on the fragment, and `□`/`⊡` belong to it for an *arbitrary* argument | `StarFormula.StateLocal`, `isStateLocal_of_stateLocal`, `stateLocal_starValid_iff_stab` (`Semantics/StarStateLocal.lean`) — **not a manuscript result**; it is the structural closure of the reason the sentence-letter form gave for itself |
 | TM⋆ (a proof system for L⋆) | — | **Formalization-native**, not a manuscript result: the manuscript supplies no proof system for `\BL^\star`. `StarAxiom` (`Axioms.lean`), `StarDerivationTree` and `⊢⋆[fc]` (`Derivation.lean`) present TM⋆, shaped after `PlusAxiom`/`PlusDerivationTree` so the two systems are structurally comparable |
-| MF over L⋆ (formalization-native) | `□φ → □Gφ` is **not** valid over `StarFormula` | `refute_modal_future` (`Semantics/StarNonValidities.lean`) — which is why `StarAxiom` embeds the TM⁺ block through `ofBase` instead of re-declaring it, and why TM⋆'s inherited temporal schemata reach only register-free instances |
+| MF over L⋆ (formalization-native) | `□φ → □Gφ` is **not** valid over `StarFormula`, and is valid at every `↓ⁱ`-free formula | `refute_modal_future` (`Semantics/StarNonValidities.lean`) — which is why `StarAxiom.modal_future` alone among the 53 mirror constructors carries a `RecallFree` side condition; the fragment is strictly wider than the `ofPlus` image |
 | TM⋆ soundness (formalization-native) | every TM⋆ theorem at `fc` is `StarValidIn fc` | `star_soundness_validIn` (`Metalogic/Conservativity/Star/StarSoundness.lean`), at all four classes, with `star_not_derivable_nil_bot` for consistency at `.Base` |
 | L⁺ ⊂ L⋆, backward (formalization-native) | every TM⁺ theorem is a TM⋆ theorem at its embedding | `starDerivable_of_plusDerivable` (`StarLanguage/Embedding.lean`) |
 | L ⊂ L⋆, conservativity (formalization-native) | TM⋆ is a conservative extension of TM, both directions, all four classes, **unconditionally** | `starDerivable_ofFormula_iff` (`Metalogic/Conservativity/Star/Forward.lean`) |
@@ -141,12 +154,26 @@ that reason cut as a syntactic fragment, and `fn_sentDet_bounds` records the res
 bound as a single machine-checked object: valid at every state-local instance, refuted at `P p`,
 which the middle conjunct certifies lies outside the fragment.
 
-## Module Invariant
+## Module Invariants
 
-**Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
+**1. Nothing under `FormalSystem/StarLanguage/` imports anything from `FormalSystem/Semantics/`.**
 Checkable by `grep -rn 'import FormalSystem.Semantics' FormalSystem/StarLanguage/`. The invariant
 is directional, exactly as for `MinusLanguage/` and `PlusLanguage/`; the converse edge is
 permitted and is how L⋆ acquires its semantics.
+
+**2. No L⋆ atomization, ever, and no argument by uniform substitution.** Both shortcuts are
+permanently unavailable, not merely unused:
+
+- *Atomization* rests on `stab_state_only` (`Metalogic/Conservativity/Plus/Atomization.lean`) —
+  the very invariant `StarFormula` is built to break, since neither `↓ⁱχ` nor `↑ⁱχ` is
+  state-determined. There is no L⋆ analogue and there cannot be one.
+- *Uniform substitution* is unsound over this family: TM⁺ is already not substitution-closed via
+  `PlusAxiom.atom_stab`.
+
+The 53 schematic validity arms in `Metalogic/Conservativity/Star/StarAxiomValidity.lean` are each
+a fresh direct proof against `StarTruthAt`. Facing that many arms, atomization is the shortcut a
+future contributor is most likely to reach for; it is recorded here so the reach is stopped at
+the invariant list rather than at a failed proof.
 
 ## References
 

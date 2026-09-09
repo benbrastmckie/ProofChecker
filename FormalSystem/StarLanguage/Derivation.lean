@@ -43,13 +43,13 @@ The same now holds in TM⋆, at every `ψ : StarFormula`, registers included: `s
 below is the unrestricted rule.
 
 It was not always so, and the history is worth keeping. TM⋆ used to reach the TM⁺ schema block
-through a single embedding constructor `StarAxiom.ofBase`, so MS arrived only as
+through a single monolithic embedding constructor, so MS arrived only as
 `□(ofPlus ψ) → ⊡(ofPlus ψ)` and the derived rule was correspondingly confined to embedded
 formulas. The rule was *sound* at every formula throughout — the `stab` clause restricts the
 `box` clause's quantifier, so validity transfers unconditionally — and the restriction was an
 artefact of axiom packaging, not of the logic. Re-declaring the schemata directly over
-`StarFormula` (`StarLanguage/Axioms.lean`) removed the artefact: `StarAxiom.box_stab` is now a
-native schema at arbitrary `φ`, and the restricted form no longer exists.
+`StarFormula` (`StarLanguage/Axioms.lean`) removed the artefact: `StarAxiom.box_stab` is a native
+schema at arbitrary `φ`, and the restricted form no longer exists.
 
 ## Notation
 

@@ -10,27 +10,57 @@ import FormalSystem.PlusLanguage.Axioms
 /-!
 # `StarAxiom` — the axiom schemata of TM⋆ over `StarFormula`
 
-The axiom system **TM⋆** for the language L⋆ (`StarLanguage/Formula.lean`): one constructor
-`ofBase` carrying every TM⁺ schema (`PlusLanguage/Axioms.lean`) at its `ofPlus` instances, plus
-sixteen schemata governing the two time registers `↑ⁱ` and `↓ⁱ` of `def:BLstar-semantics`.
+The axiom system **TM⋆** for the language L⋆ (`StarLanguage/Formula.lean`): the 53 schemata of
+TM⁺ (`PlusLanguage/Axioms.lean`) **re-declared directly over `StarFormula`**, constructor for
+constructor, plus sixteen schemata governing the two time registers `↑ⁱ` and `↓ⁱ` of
+`def:BLstar-semantics`. Seventy constructors in all.
 
-## Why the TM⁺ schemata are embedded rather than re-declared
+## Why the TM⁺ schemata are re-declared rather than embedded
 
-This is the **opposite** decision to `PlusAxiom`'s, and for a reason that is not a matter of
-convenience. `PlusAxiom` re-declares the 45 TM schemata over `PlusFormula` because TM⁺ needs
-them at `⊡`-formulas, and every one of them remains valid there. Over `StarFormula` that is
-false: `modal_future` (`□φ → □Gφ`) is **refuted** — see `refute_modal_future`
-(`Semantics/StarNonValidities.lean`), which fails it already at `φ := ↓¹p → p` over a
-two-state frame. MF is the sole schema in the TM block whose soundness proof consumes time-shift
-homogeneity, and the L⋆ time-shift lemma shifts the stored-time vector along with the history,
-so the argument no longer reaches the conclusion — and the gap is real, not an artefact.
+The same decision `PlusAxiom` makes one level down, and for the same reason: an embedding
+constructor `PlusAxiom φ → StarAxiom (ofPlus φ)` would supply each schema only at
+register-**free** instances, and TM⋆ needs them at register-carrying formulas. `⊡ψ` is derivable
+from `ψ` at every `ψ : StarFormula` precisely because MS (`□φ → ⊡φ`) is declared here at
+arbitrary `φ`, and that rule (`StarLanguage/Derivation.lean`, `stabNecessitation`) is exactly
+what an embedding-only route cannot reach.
 
-A re-declared TM block over `StarFormula` would therefore contain an unsound schema, and no
-weakened restatement of MF appears here in its place. `ofBase` supplies every TM⁺ schema
-exactly at the register-free instances where it is sound, which is everything the embedding
-(`StarLanguage/Embedding.lean`) and the conservativity results
-(`Metalogic/Conservativity/Star/`) consume. **The recorded cost**: TM⋆'s inherited temporal
-schemata are available only at `ofPlus` instances, never at a formula containing a register.
+**Fifty-two of the 53 are schematic without any new side condition.** Each was proved valid, and
+swap-valid, at arbitrary `StarFormula` metavariables — directly against `StarTruthAt`, never by
+transporting a TM⁺ instance and never by uniform substitution (see
+`Metalogic/Conservativity/Star/StarAxiomValidity.lean`).
+
+## The one exception, and the two mirrored side conditions
+
+`modal_future` (`□φ → □Gφ`) is **refuted** over `StarFormula` — see `refute_modal_future`
+(`Semantics/StarNonValidities.lean`), which fails it already at `φ := ↓¹p → p` over a two-state
+frame. MF is the sole schema in the TM block whose soundness proof consumes time-shift
+homogeneity, and the L⋆ time-shift lemma shifts the stored-time vector along with the history, so
+a `↓ⁱ` can observe the shift. The gap is real, not an artefact.
+
+It is carried here under an explicit `RecallFree` side condition
+(`StarLanguage/Formula.lean`) — the `↓ⁱ`-free fragment, which is exactly the fragment on which
+the stored-time vector is inert. **That is strictly wider than the embedded fragment**: `□↑¹p →
+□G↑¹p` is an instance and `↑¹p` is not an `ofPlus` image (`ofPlus_ne_timeStore`). A register-free
+side condition would have discarded that instance for no reason; `↑ⁱ` writes the *current* time,
+which the shift moves along with everything else. No weakened restatement of MF appears anywhere
+under its own name.
+
+`paste` and `untl_paste` carry `StarIsPureFuture`/`StarIsPurePast`, which **mirror** the purity
+conditions `PlusAxiom.paste`/`untl_paste` already carry rather than adding new ones. They too
+widen: `StarIsPureFuture.box` admits an arbitrary body, so `□↓¹p` is pure-future.
+
+**No residual embedding arm exists**, and none is needed: the list of schemata that cannot be
+stated schematically over `StarFormula` is empty. The embedding survives as the *derived*
+function `StarAxiom.ofPlusAxiom` (`StarLanguage/Embedding.lean`), provable from these
+constructors and adding nothing to TM⋆.
+
+## No L⋆ atomization, ever
+
+The TM⁺ arms of `plusAxiom_validIn_min` go through `Conservativity/Plus/Atomization.lean`, which
+rests on `stab_state_only` — the invariant `StarFormula` is built to break, since neither `↓ⁱχ`
+nor `↑ⁱχ` is state-determined. **There is no L⋆ analogue and there cannot be one.** Facing 53
+arms, this is the shortcut a future reader is most likely to reach for; every arm here is a
+fresh direct proof against `StarTruthAt` instead.
 
 ## The register schemata
 
@@ -114,10 +144,16 @@ swap dispatch lemma will not close.
 
 ## Frame classes
 
-`StarAxiom.minFrameClass` sends `ofBase _ ax` to `ax.minFrameClass`, inheriting TM⁺'s routing of
-the Dense, Discrete and Dedekind schemata, and every register schema to `.Base` — the register
-clauses appeal to no order property beyond forward and backward seriality, which every task
-frame has.
+`StarAxiom.minFrameClass` routes the mirror block exactly as `PlusAxiom.minFrameClass` routes its
+own: `density`/`dense_indicator` to `.Dense`, `prior_UZ`/`prior_SZ`/`z1` to `.ZTime`,
+`prior_U_gap`/`prior_S_gap`/`sep` to `.RTime`, everything else to `.Base`. Every register schema
+is `.Base` — the register clauses appeal to no order property beyond forward and backward
+seriality, which every task frame has.
+
+That the two routings **agree** is not assumed: `StarAxiom.minFrameClass_ofPlusAxiom`
+(`StarLanguage/Embedding.lean`) proves it as one named `cases` lemma over all 53 arms, so a
+mismatch — which would silently break backward conservativity — is a named failure at a single
+site rather than 53 inline `rfl`s scattered across consumers.
 
 ## Extension recipe
 
@@ -126,7 +162,8 @@ constructors: `StarAxiom.minFrameClass` below, and the two dispatch lemmas
 `starAxiom_validIn_min` / `starAxiom_swap_validIn_min`
 (`Metalogic/Conservativity/Star/StarAxiomValidity.lean`), neither of which carries a wildcard
 arm. Adding a constructor means one constructor line, one `minFrameClass` arm, one arm in each
-dispatch lemma, and one row in the swap-closure list above.
+dispatch lemma, and one row in the swap-closure list above. The absence of a wildcard is a
+deliberate build gate, not an oversight: it is what makes an unsupplied arm a compile error.
 
 ## Module Invariant
 
@@ -135,9 +172,11 @@ The semantic modules cited in this docstring are cited in prose only.
 
 ## References
 
-* `FormalSystem/PlusLanguage/Axioms.lean` — `PlusAxiom`, the schema block `ofBase` carries
-* `FormalSystem/Semantics/StarNonValidities.lean` — `refute_modal_future`, the reason no TM
-  schema is re-declared here
+* `FormalSystem/PlusLanguage/Axioms.lean` — `PlusAxiom`, the 53 schemata mirrored here
+* `FormalSystem/Semantics/StarNonValidities.lean` — `refute_modal_future`, the reason
+  `modal_future` alone carries a side condition
+* `FormalSystem/StarLanguage/Embedding.lean` — `StarAxiom.ofPlusAxiom`, the embedding recovered
+  as a derived function over these constructors
 * JPL paper `possible_worlds.tex` — `def:BLstar-semantics` (the store/recall clauses)
 
 ## Tags
@@ -152,9 +191,10 @@ open FormalSystem.ProofSystem (FrameClass)
 open FormalSystem.PlusLanguage
 
 /--
-Axiom schemata of TM⋆ over `StarFormula`: one `ofBase` arm carrying every TM⁺ schema at its
-`ofPlus` instances, then the sixteen register schemata. See the module docstring for the design,
-the schema inventory, and the swap-closure invariant.
+Axiom schemata of TM⋆ over `StarFormula`: the 53 TM⁺ schemata re-declared directly over
+`StarFormula`, then the sixteen register schemata — 70 constructors. See the module docstring for
+the design, the schema inventory, the one side condition that has no `PlusAxiom` counterpart, and
+the swap-closure invariant.
 
 Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
 -/
@@ -445,8 +485,10 @@ inductive StarAxiom : StarFormula → Type where
         ((StarFormula.timeRecall i φ).and (StarFormula.snce ψ StarFormula.top)))
 
 /--
-Minimum frame class of each TM⋆ schema. The `ofBase` arm inherits `PlusAxiom.minFrameClass`;
-every register schema is valid over every task frame and is routed to `.Base`.
+Minimum frame class of each TM⋆ schema. The mirror block routes exactly as
+`PlusAxiom.minFrameClass` does — proved, not assumed, by `StarAxiom.minFrameClass_ofPlusAxiom`
+(`StarLanguage/Embedding.lean`); every register schema is valid over every task frame and is
+routed to `.Base`.
 -/
 def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
   | .prior_U_gap _ => .RTime

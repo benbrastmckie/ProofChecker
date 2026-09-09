@@ -27,28 +27,36 @@ already not substitution-closed via `PlusAxiom.atom_stab`, and nothing here need
 
 ## How the arms close
 
-- **The `ofBase` arm is two lines, in each lemma.** `starValidOnFrames_ofPlus`
-  (`Semantics/StarValidity.lean`) says L⋆ validity of an embedded formula *is* L⁺ validity, so
-  the whole TM⁺ schema block transports from `plusAxiom_validIn_min` /
-  `plusAxiom_swap_validIn_min` without re-proving a single schema. This is the return on the
-  `ofBase` design.
+- **The 53 TM⁺ mirror arms** are named `starValid_*` lemmas, proved **directly against
+  `StarTruthAt` at arbitrary `StarFormula` metavariables**. The five closed uniformity schemata
+  and the two seriality schemata are parameterless formulas, hence literally `ofPlus` images, and
+  transport along `starValidOnFrames_ofPlus` (`Semantics/StarValidity.lean`); everything else is
+  a fresh proof. The order-theoretic content is never inlined: `prior_UZ`/`prior_SZ`/`z1` consume
+  `SoundnessLemmas/DiscreteOrder.lean` and `sep` consumes `SoundnessLemmas/Separability.lean`,
+  each at a `StarTruthAt` predicate.
 
   **No L⋆ atomization is used, and none can exist.** The TM⁺ arms of `plusAxiom_validIn_min` go
   through `Conservativity/Plus/Atomization.lean`, which rests on `stab_state_only` — the
-  invariant `StarFormula` is built to break. The transport above consumes `plusAxiom_validIn_min`
-  as a black box at `PlusFormula`, and never lifts the atomization itself to `StarFormula`.
+  invariant `StarFormula` is built to break, since neither `↓ⁱχ` nor `↑ⁱχ` is state-determined.
+  Facing 53 arms this is the shortcut a reader is most likely to reach for; it is unavailable,
+  and so is uniform substitution (TM⁺ is not substitution-closed via `atom_stab`).
 
 - **The sixteen register arms** are the named `starValid_*` lemmas below, one per constructor,
   proved directly from the two clauses of `def:BLstar-semantics`. Ten of them are definitional
   (`Iff.rfl`, or one `Function.update` identity); the four rigidity arms use forward and backward
   seriality; the two export arms are a six-line `constructor`.
 
-- **The swap arms reuse the validity arms.** Every register schema's temporal dual is an
-  instance of a constructor of the same inductive — the ten `.iff` schemata are self-dual, the
-  four rigidity arms pair G↔H, and the two export arms pair U↔S — so each swap arm normalises
-  `swapTemporal` through the `StarFormula.swap_temporal_*` family and then applies the matching
-  validity lemma at swapped arguments. That is the swap-closure invariant of
-  `StarLanguage/Axioms.lean`, discharged.
+- **Most swap arms reuse a validity arm; the rest have named duals.** Where a schema's temporal
+  dual *is* an instance of a constructor of this inductive — the ten `.iff` register schemata are
+  self-dual, the rigidity arms pair G↔H, the export arms pair U↔S, and the mirror block supplies
+  fifteen dual pairs — the swap arm normalises `swapTemporal` through the
+  `StarFormula.swap_temporal_*` family and applies the matching validity lemma at swapped
+  arguments. Eleven schemata have **no** dual constructor (`discrete_propagate_fwd`/`_bwd`,
+  `discrete_box_necessity`, `dense_indicator`, `density`, `z1`, `sep`, `modal_future`, `paste`,
+  `untl_paste`), exactly as at the L level, where `SoundnessLemmas/FrameClassVariants.lean`
+  carries a `*_swap_valid` lemma for each; the corresponding `starValid_*_swap` lemmas below
+  supply those duals. That is the swap-closure invariant of `StarLanguage/Axioms.lean`,
+  discharged.
 
 ## References
 

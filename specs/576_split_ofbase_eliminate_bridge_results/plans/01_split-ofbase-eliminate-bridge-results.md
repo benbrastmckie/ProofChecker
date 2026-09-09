@@ -1,7 +1,7 @@
 # Implementation Plan: Split the ofBase monolith and eliminate the ofPlus-restricted bridge results
 
 - **Task**: 576 - Split the ofBase monolith and eliminate the ofPlus-restricted bridge results from TM-star
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 23 hours
 - **Dependencies**: Task 574 (landed), Task 575 (landed)
 - **Research Inputs**: `specs/576_split_ofbase_eliminate_bridge_results/reports/01_ofbase-split-schema-measurement.md`
@@ -276,11 +276,11 @@ and records a complete 53-row verdict table. **This phase gates everything after
 - [x] Record the complete **53-row verdict table** in this plan file as a `#### Measurement`
       subsection under this phase: constructor, verdict (schematic / conditional / failing),
       side condition if any, and the probe file + theorem name that establishes it
-- [ ] If any schema fails at arbitrary `φ`, report the corrected measurement honestly in the
+- [x] If any schema fails at arbitrary `φ`, report the corrected measurement honestly in the
       table and in the phase notes, adjust the affected group phase's constructor list, and state
       whether the failing schema is carried under a side condition or excluded with its
       obstruction named. **A corrected count is a successful gate, never a reason to stub**
-- [ ] `lake env lean` green on all eight probe files; no `sorry` anywhere in them
+- [x] `lake env lean` green on all eight probe files; no `sorry` anywhere in them
 
 
 #### Measurement
@@ -920,43 +920,76 @@ predicted.
 
 ---
 
-### Phase 13: Documentation sweep and full gate [NOT STARTED]
+### Phase 13: Documentation sweep and full gate [COMPLETED]
 
 **Goal**: Bring every docstring, README and index into agreement with the new axiom set, and run
 the complete gate.
 
 **Tasks**:
-- [ ] Rewrite `StarLanguage/Axioms.lean`'s module docstring: the "Why the TM⁺ schemata are
+- [x] Rewrite `StarLanguage/Axioms.lean`'s module docstring: the "Why the TM⁺ schemata are
       embedded rather than re-declared" section is now false and is replaced by the split's
       rationale — 52 schematic, `modal_future` alone at `RecallFree`, `paste`/`untl_paste` at the
       L⋆ purity predicates, no residual embedding arm. Update the "Extension recipe" and the
       "Frame classes" sections to the new arm counts
-- [ ] Correct the `ofBase` prose in `StarLanguage/README.md` (l.36, 38, 49, 57, 65-68, 115),
+- [x] Correct the `ofBase` prose in `StarLanguage/README.md` (l.36, 38, 49, 57, 65-68, 115),
       `StarLanguage/Derivation.lean` (the `⊡`-necessitation section),
       `StarLanguage/Formula.lean` (l.76, 362), `Semantics/StarNonValidities.lean` (l.54, 128 —
       MF now reaches every `↓ⁱ`-free formula, not only `ofPlus` instances),
       `Metalogic/Conservativity/Star/README.md` (l.12, 34) and
       `Star/StarAxiomValidity.lean` (l.29-33 — the "return on the `ofBase` design" paragraph is
       now the cost this task paid)
-- [ ] Mirror the **"no L⋆ atomization, ever"** prohibition into `StarLanguage/README.md`'s
+- [x] Mirror the **"no L⋆ atomization, ever"** prohibition into `StarLanguage/README.md`'s
       invariant list (research Context Extension recommendation); it is the single most likely
       shortcut a future agent reaches for when facing 53 arms
-- [ ] Sweep the six out-of-territory prose consumers (Territory note assumption 2):
+- [x] Sweep the six out-of-territory prose consumers (Territory note assumption 2):
       `FormalSystem/StarLanguage.lean` (l.25), `FormalSystem/Metalogic/README.md` (l.291),
       `FormalSystem/Metalogic/Soundness.lean` (l.126),
       `FormalSystem/Metalogic/Conservativity.lean` (l.369),
       `FormalSystem/Metalogic/Conservativity/Star.lean` (l.15), `docs/theorem-index.md` (l.184)
-- [ ] Add `docs/theorem-index.md` rows for the new headline declarations and re-anchor any row
-      naming a deleted one
-- [ ] Regenerate inventories where the gate requires it (`--emit-inventory`) after adding
+- [x] Add `docs/theorem-index.md` rows for the new headline declarations and re-anchor any row
+      naming a deleted one *(deviation: partially skipped — the re-anchoring half is done and was
+      the load-bearing half: no row named `ofBase`, `minFrameClass_ofBase` or
+      `stabNecessitationOfPlus`, and the section's prose now describes the re-declared axiom set.
+      **No new rows were added**, for two reasons stated rather than assumed. (a) The page states
+      its own invariant — "this page admits no unpinned row" — and pinning a row means adding a
+      name and its printed axiom set to the `C14_BASELINE` heredoc inside
+      `scripts/check-module-invariants.sh`, a file outside this task's declared territory and the
+      very baseline the hard constraints direct me not to alter beyond a rename. (b) The page's
+      granularity is metatheory rows (soundness, conservativity); `ofPlusAxiom`,
+      `minFrameClass_ofPlusAxiom` and `stabNecessitation` are an embedding function, its
+      frame-class lemma and a derived rule — finer than any row the page carries, and none of the
+      metatheory rows it does carry changed. Adding them is recorded as follow-up work, not
+      stubbed.)*
+- [x] Regenerate inventories where the gate requires it (`--emit-inventory`) after adding
       `StarPasting.lean`
-- [ ] Run the full gate: `lake build`, `lake build BimodalTest`,
+- [x] Run the full gate: `lake build`, `lake build BimodalTest`,
       `bash scripts/check-module-invariants.sh` exit 0 with **C2, C3, C9, C14, C15, C24, C26 all
       green**. If a C2/C14 pinned name changed because a declaration was renamed, update the
       baseline **NAME only, never its axiom set**
-- [ ] `grep -rn "ofBase\|stabNecessitationOfPlus" . --include=*.lean --include=*.md` returns hits
+- [x] `grep -rn "ofBase\|stabNecessitationOfPlus" . --include=*.lean --include=*.md` returns hits
       only under `specs/`
-- [ ] Zero task-number citations under `FormalSystem/` (C9)
+- [x] Zero task-number citations under `FormalSystem/` (C9)
+
+#### Phase 13 outcome
+
+- `grep -rn "ofBase\|stabNecessitationOfPlus" --include=*.lean --include=*.md FormalSystem/ docs/ README.md`
+  returns **no hits**. Both names are gone from every deliverable file, code and prose. Where the
+  old design is still worth narrating — `StarLanguage/Derivation.lean`'s `⊡`-necessitation
+  section, `StarLanguage/Embedding.lean`'s two `ofPlusAxiom` paragraphs — it is described as "a
+  single monolithic embedding constructor" rather than by the dead identifier, so the history
+  survives without a dangling name.
+- The **"no L⋆ atomization, ever"** prohibition is mirrored into `StarLanguage/README.md`'s
+  invariant list as invariant 2, alongside the ban on uniform substitution and with both
+  obstructions named (`stab_state_only` has no L⋆ analogue; `PlusAxiom.atom_stab` breaks
+  substitution-closure).
+- `bash scripts/check-module-invariants.sh --emit-inventory` rewrote four generated inventory
+  blocks after `StarPasting.lean` was added (`README.md`, `Metalogic/README.md`,
+  `Metalogic/Conservativity/README.md`, `Metalogic/Conservativity/Star/README.md`).
+- **No C2/C14 pinned name changed**, so no baseline was touched at all — neither a name nor an
+  axiom set. `#print axioms` for the two pinned TM⋆ rows
+  (`StarLanguage.StarDerivationTree`, `Conservativity.star_soundness_validIn`) is unchanged,
+  which is the substantive check: the new predicates are plain inductives contributing no
+  axioms.
 
 **Timing**: 1.5 hours
 
@@ -1084,29 +1117,29 @@ structurally comparable.
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0
-- [ ] `lake build BimodalTest` exits 0
-- [ ] `bash scripts/check-module-invariants.sh` exits 0, with C2, C3, C9, C14, C15, C24 and C26
+- [x] `lake build` exits 0
+- [x] `lake build BimodalTest` exits 0
+- [x] `bash scripts/check-module-invariants.sh` exits 0, with C2, C3, C9, C14, C15, C24 and C26
       all green
-- [ ] Zero new `sorry` anywhere (C3); every unreachable result recorded as a reasoned exclusion
+- [x] Zero new `sorry` anywhere (C3); every unreachable result recorded as a reasoned exclusion
       with its obstruction named, never stubbed
-- [ ] `grep -rn "ofBase" . --include=*.lean --include=*.md` returns hits only under `specs/`
-- [ ] `grep -rn "stabNecessitationOfPlus" . --include=*.lean --include=*.md` returns hits only
+- [x] `grep -rn "ofBase" . --include=*.lean --include=*.md` returns hits only under `specs/`
+- [x] `grep -rn "stabNecessitationOfPlus" . --include=*.lean --include=*.md` returns hits only
       under `specs/`
-- [ ] `inductive StarAxiom` has exactly 53 mirror constructors + 16 register constructors and no
+- [x] `inductive StarAxiom` has exactly 53 mirror constructors + 16 register constructors and no
       `ofBase`
-- [ ] `starAxiom_validIn_min` and `starAxiom_swap_validIn_min` are both wildcard-free and have
+- [x] `starAxiom_validIn_min` and `starAxiom_swap_validIn_min` are both wildcard-free and have
       one arm per constructor
-- [ ] `StarAxiom.minFrameClass` routes each mirror constructor to the same `FrameClass` as
+- [x] `StarAxiom.minFrameClass` routes each mirror constructor to the same `FrameClass` as
       `PlusAxiom.minFrameClass` routes its mirror — proved by `minFrameClass_ofPlusAxiom`, not
       asserted
-- [ ] `modal_future` is the sole constructor carrying a `RecallFree` hypothesis; `paste` and
+- [x] `modal_future` is the sole constructor carrying a `RecallFree` hypothesis; `paste` and
       `untl_paste` are the sole constructors carrying purity hypotheses
-- [ ] `refute_modal_future` is unchanged and still refutes MF at `↓¹p → p`
-- [ ] The three conservativity results build unchanged; any direction that breaks is stated as a
+- [x] `refute_modal_future` is unchanged and still refutes MF at `↓¹p → p`
+- [x] The three conservativity results build unchanged; any direction that breaks is stated as a
       theorem, never silently weakened
-- [ ] Zero task-number citations under `FormalSystem/` (C9)
-- [ ] `git diff --stat` shows no change to `FormalSystem/PlusLanguage/Axioms.lean`,
+- [x] Zero task-number citations under `FormalSystem/` (C9)
+- [x] `git diff --stat` shows no change to `FormalSystem/PlusLanguage/Axioms.lean`,
       `FormalSystem/Metalogic/Soundness.lean`'s proofs, `FormalSystem/Metalogic/SoundnessLemmas/**`
       or `FormalSystem/Semantics/PlusPasting.lean`
 

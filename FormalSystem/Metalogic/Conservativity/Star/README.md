@@ -9,33 +9,36 @@ earlier L⋆ deliverable in this tree was semantic. It is built to the shape of
 are structurally comparable and the L⁺ ⊂ L⋆ questions can be *stated* — which, before it existed,
 they could not be.
 
-Its axiom set is **one `ofBase` constructor** carrying every TM⁺ schema at its `ofPlus`
-instances, plus sixteen register schemata. The TM block is embedded rather than re-declared
-because `modal_future` (`□φ → □Gφ`) is *refuted* over `StarFormula` (`refute_modal_future`,
-`Semantics/StarNonValidities.lean`): MF is the only schema in that block whose soundness proof
-consumes time-shift homogeneity, and the L⋆ time-shift lemma shifts the stored-time vector along
-with the history. The recorded cost is that TM⋆'s inherited temporal schemata are available only
-at register-free instances. The return is that soundness for the whole TM block is a two-line
-transport, and that the embedding of TM⁺ derivations is a one-line `axiom` case.
+Its axiom set is the **53 TM⁺ schemata re-declared directly over `StarFormula`**, plus sixteen
+register schemata — 70 constructors. Fifty-two of the 53 are schematic without any new side
+condition. `modal_future` (`□φ → □Gφ`) is the exception: it is *refuted* over `StarFormula`
+(`refute_modal_future`, `Semantics/StarNonValidities.lean`), because it is the only schema in
+that block whose soundness proof consumes time-shift homogeneity and the L⋆ time-shift lemma
+shifts the stored-time vector along with the history. It is carried alone under a `RecallFree`
+(`↓ⁱ`-free) side condition — a fragment strictly wider than the `ofPlus` image, since `↑¹p` is
+`RecallFree` and is not embedded. The embedding of TM⁺ derivations survives as the **derived**
+function `StarAxiom.ofPlusAxiom` (`StarLanguage/Embedding.lean`), which adds nothing to TM⋆.
 
 ## Modules
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/Conservativity/Star -->
 | File | Lines | Description |
 |------|------:|-------------|
-| `Forward.lean` | 201 | Conservativity: `forward_star` and `starDerivable_ofFormula_iff` over TM, unconditional in both directions at all four classes; the conditional pair `starConservative_of_plusComplete` / `plusIncomplete_of_starNonconservative` over TM⁺. |
-| `StarPasting.lean` | 176 | The two L⋆ purity congruences and PS / US over `StarFormula`, reusing `Semantics/PlusPasting.lean`'s formula-independent construction read-only. |
-| `StarAxiomValidity.lean` | 322 | The two dispatch lemmas, one arm per `StarAxiom` constructor and no wildcard, plus the sixteen named register-schema validities they dispatch to. |
+| `Forward.lean` | 228 | Conservativity: `forward_star` and `starDerivable_ofFormula_iff` over TM, unconditional in both directions at all four classes; the conditional pair `starConservative_of_plusComplete` / `plusIncomplete_of_starNonconservative` over TM⁺. |
+| `StarAxiomValidity.lean` | 1,379 | The two dispatch lemmas, one arm per `StarAxiom` constructor and no wildcard, plus the sixteen named register-schema validities they dispatch to. |
+| `StarPasting.lean` | 245 | The two L⋆ purity congruences and PS / US over `StarFormula`, reusing `Semantics/PlusPasting.lean`'s formula-independent construction read-only. |
 | `StarSoundness.lean` | 186 | Soundness of TM⋆ at every frame class, by the companion recursion carrying validity and swap-validity, plus the four rows and consistency at `.Base`. |
 <!-- END GENERATED -->
 
 ## Key Results
 
 - `starAxiom_validIn_min` / `starAxiom_swap_validIn_min` — every schema and every temporal dual is
-  valid at its own minimum frame class. The `ofBase` arm transports
-  `plusAxiom_validIn_min` / `plusAxiom_swap_validIn_min` along `starValidOnFrames_ofPlus`; **no
-  L⋆ atomization is used, and none can exist** (neither `↓ⁱχ` nor `↑ⁱχ` is state-determined, so
-  `stab_state_only` has no L⋆ analogue).
+  valid at its own minimum frame class, one named `starValid_*` lemma per constructor and no
+  wildcard arm. Every schematic arm is a **fresh direct proof against `StarTruthAt`** at
+  arbitrary metavariables; only the closed (parameterless) schemata transport along
+  `starValidOnFrames_ofPlus`. **No L⋆ atomization is used, and none can exist** (neither `↓ⁱχ`
+  nor `↑ⁱχ` is state-determined, so `stab_state_only` has no L⋆ analogue), and no argument
+  anywhere uses uniform substitution.
 - `star_soundness_validIn` — soundness of TM⋆ at every frame class, TD discharged semantically.
 - `starDerivable_ofFormula_iff` — **TM⋆ is a conservative extension of TM**, both directions, at
   all four classes, unconditionally.

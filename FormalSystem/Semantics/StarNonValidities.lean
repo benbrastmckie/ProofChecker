@@ -50,8 +50,10 @@ shifts the **stored-time vector with the history** — it must, since `↓ⁱ` e
 the unshifted frame of reference — so the shift argument delivers `φ` at a shifted vector, never
 at the original one. `refute_modal_future` shows the gap is real and not an artefact of the
 proof: MF fails over `NF` already at `φ := ↓¹p → p`, whose `□`-antecedent is valid on *every*
-frame and model. This is why `StarAxiom` declares no native MF schema and reaches MF only
-through `StarAxiom.ofBase`, at `ofPlus` instances.
+frame and model. This is why `StarAxiom.modal_future` is the one TM⋆ schema carrying a side
+condition its `PlusAxiom` mirror does not: it is declared at every `RecallFree` (`↓ⁱ`-free)
+formula, a fragment that excludes this witness and is nevertheless strictly wider than the
+`ofPlus` image, since `↑¹p` is `RecallFree` and is not embedded (`ofPlus_ne_timeStore`).
 
 **Register erasure is not a conservativity translation.** The obvious syntactic route from L⋆ to
 L⁺ — delete every `↑ⁱ` and `↓ⁱ` — does not preserve validity in either useful direction:
@@ -125,7 +127,8 @@ at the history `σ = (s ↦ if s ≤ 0 then 0 else 1)` and the future time `s = 
 reads time `0`, where `σ` has state `0 ∈ |p|`, while `p` reads time `1`, where `σ` has state
 `1 ∉ |p|`.
 
-MF is therefore available in TM⋆ only through `StarAxiom.ofBase`, at `ofPlus` instances. -/
+MF is therefore carried in TM⋆ by `StarAxiom.modal_future`, at every `↓ⁱ`-free formula and no
+further. This witness is precisely a formula outside that fragment. -/
 theorem refute_modal_future (p : Atom) :
     ¬ NF.StarValidOn
       ((StarFormula.box (mfWitness p)).imp

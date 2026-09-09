@@ -21,11 +21,11 @@ table is needed: `StarAxiom.ofPlusAxiom` sends each TM⁺ schema to its TM⋆ **
 at `ofPlus`-instantiated arguments, exactly as `PlusAxiom.ofTM` does one level down.
 
 **`ofPlusAxiom` is a derived function, not a constructor.** TM⋆ used to carry the TM⁺ block as a
-single primitive arm `ofBase : PlusAxiom φ → StarAxiom (ofPlus φ)`, which made this recursion's
+single primitive arm of shape `PlusAxiom φ → StarAxiom (ofPlus φ)`, which made this recursion's
 `axiom` case one line but confined every inherited schema to `ofPlus` instances. That arm is
-gone: the schemata are now declared directly over `StarFormula` (`StarLanguage/Axioms.lean`), and
-the embedding is *recovered* here as a theorem about them. It adds nothing to TM⋆ — every arm is
-a constructor application at embedded arguments — while the schemata themselves now reach
+gone: the schemata are declared directly over `StarFormula` (`StarLanguage/Axioms.lean`), and the
+embedding is *recovered* here as a theorem about them. It adds nothing to TM⋆ — every arm is a
+constructor application at embedded arguments — while the schemata themselves reach
 register-carrying formulas.
 
 Three arms consume a side condition, and each gets it from a transfer lemma in
@@ -82,11 +82,11 @@ open FormalSystem.PlusLanguage
 derived operator definitionally (`StarLanguage/Formula.lean`'s `rfl` pins), so each arm is a bare
 constructor application.
 
-**Derived, not primitive.** This was a *constructor* of `StarAxiom` (`ofBase`) until the schema
-block was re-declared over `StarFormula`; it is now a function provable from those constructors,
-and it adds nothing whatever to TM⋆. That is what makes the retirement real rather than a
-rename: the embedding survives as a theorem, and the schemata it embeds are no longer confined
-to its image.
+**Derived, not primitive.** This was a *constructor* of `StarAxiom` until the schema block was
+re-declared over `StarFormula`; it is now a function provable from those constructors, and it
+adds nothing whatever to TM⋆. That is what makes the retirement real rather than a rename: the
+embedding survives as a theorem, and the schemata it embeds are no longer confined to its
+image.
 
 Three arms discharge a side condition the `PlusAxiom` mirror does not carry, or carries in its
 L⁺ form: `modal_future` supplies `recallFree_ofPlus` (no embedded formula contains a `↓ⁱ`), and

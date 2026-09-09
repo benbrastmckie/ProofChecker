@@ -146,7 +146,7 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Algebraic/`](Algebraic/README.md) | 5 | 2,448 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
 | [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,160 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
-| [`Conservativity/`](Conservativity/README.md) | 20 | 4,665 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Conservativity/`](Conservativity/README.md) | 21 | 5,996 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 80 | 53,407 | Tableau decision procedure and countermodel extraction |
 | [`Deterministic/`](Deterministic/README.md) | 7 | 1,599 | The deterministic metatheory of TM⁺: validity narrowed to `TaskFrame.Deterministic`, the narrowed completeness engines, the `⊡`-erasure, the extended system TM⁺ + *Determined*, and its soundness and completeness |
@@ -288,9 +288,9 @@ what a paper can use — is that the two classes have the same logic.
 ### The TM⋆ metatheory rows — `Conservativity/Star/`
 
 TM⋆ is L⁺ plus the manuscript's time registers `↑ⁱ`/`↓ⁱ` (`FormalSystem/StarLanguage/`). Its
-axiom set embeds the TM⁺ schemata through a single `ofBase` constructor rather than re-declaring
-them, because `modal_future` is *refuted* over `StarFormula`
-(`Semantics/StarNonValidities.lean`, `refute_modal_future`).
+axiom set re-declares the TM⁺ schemata directly over `StarFormula` rather than embedding them,
+with `modal_future` alone under a `RecallFree` (`↓ⁱ`-free) side condition — it is *refuted* at
+arbitrary `φ` (`Semantics/StarNonValidities.lean`, `refute_modal_future`).
 
 | Row | Status |
 |-----|--------|

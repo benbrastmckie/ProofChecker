@@ -73,7 +73,8 @@ permitted and is how L⋆ acquires its semantics
 `StarAxiom` (`StarLanguage/Axioms.lean`) and `StarDerivationTree` with the notation `⊢⋆[fc]`
 (`StarLanguage/Derivation.lean`) present **TM⋆**, the proof system for L⋆. Nothing in this file
 depends on them; `swapTemporal` and `ofPlus_swapTemporal` are declared here because they are
-syntax, and the `temporal_duality` rule and the `ofBase` swap arm both consume them from above.
+syntax, and the `temporal_duality` rule and the swap-validity dispatch both consume them from
+above.
 See `FormalSystem/StarLanguage/README.md`.
 
 ## References
@@ -370,7 +371,7 @@ theorem ofPlus_injective : Function.Injective ofPlus := by
   cases φ <;> simp [ofPlus]
 
 /-- `ofPlus` commutes with temporal duality — the pin the `temporal_duality` case of the
-proof-system embedding (`StarLanguage/Embedding.lean`) and the `ofBase` arm of swap-validity
+proof-system embedding (`StarLanguage/Embedding.lean`) and the swap arms of validity
 (`Metalogic/Conservativity/Star/StarAxiomValidity.lean`) both route through. Mirrors
 `ofFormula_swapTemporal`. -/
 theorem ofPlus_swapTemporal (φ : PlusFormula) :
@@ -606,7 +607,7 @@ theorem starIsPurePast_ofPlus {ψ : PlusFormula} (h : PlusFormula.IsPurePast ψ)
 
 The `RecallFree` fragment is **strictly between** the embedded fragment and all of L⋆. Both
 inclusions are strict, and both `example`s below are load-bearing: the first says the widening
-past `ofBase`'s reach is real rather than cosmetic, the second says the side condition cannot be
+past the embedded fragment is real rather than cosmetic, the second says it cannot be
 dropped. -/
 
 /-- `↑¹p` is `↓ⁱ`-free, so MF holds there — and it is **not** an `ofPlus` image, so this is an

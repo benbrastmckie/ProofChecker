@@ -181,8 +181,9 @@ class — see `deterministic_not_plusDefinable` above.
 ### TM⋆ over L⋆ — the store/recall language
 
 TM⋆ is TM⁺ plus the manuscript's time registers `↑ⁱ`/`↓ⁱ` (`FormalSystem/StarLanguage/`). Its
-axiom set embeds the TM⁺ schemata through a single `ofBase` arm rather than re-declaring them,
-because `modal_future` is refuted over `StarFormula` — see the refutations section below.
+axiom set re-declares the TM⁺ schemata directly over `StarFormula`, with `modal_future` alone
+under a `RecallFree` (`↓ⁱ`-free) side condition because it is refuted at arbitrary `φ` — see the
+refutations section below.
 
 `FormalSystem.StarLanguage.StarAxiom` has **no row here**, and its absence is deliberate rather
 than an oversight: `#print axioms` reports it as `does not depend on any axioms`, a line the C14

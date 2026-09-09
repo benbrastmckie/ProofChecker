@@ -13,8 +13,8 @@ import FormalSystem.Metalogic.Conservativity.Star.Forward
 # The register extension L⋆ / TM⋆ — soundness and conservativity
 
 **TM⋆** is the logic of the language L⋆ = L⁺ + the time registers `↑ⁱ`/`↓ⁱ`
-(`FormalSystem/StarLanguage/`): one `ofBase` constructor carrying every TM⁺ schema at its
-`ofPlus` instances, plus sixteen register schemata, under the seven rules of TM⁺ and TM. Its
+(`FormalSystem/StarLanguage/`): the 53 TM⁺ schemata re-declared directly over `StarFormula`,
+plus sixteen register schemata, under the seven rules of TM⁺ and TM. Its
 semantics is `def:BLstar-semantics` over points `(τ, x, v⃗)`
 (`FormalSystem/Semantics/StarTruth.lean`).
 

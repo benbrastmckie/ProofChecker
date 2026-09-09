@@ -123,7 +123,7 @@ with the history, because `↓ⁱ` evaluates at a time in the unshifted frame of
 shift argument no longer reaches MF's conclusion. The gap is real and not an artefact of the
 proof: `refute_modal_future` (`Semantics/StarNonValidities.lean`) refutes MF over `StarFormula`
 already at `φ := ↓¹p → p`. That single fact is why `StarAxiom` (`StarLanguage/Axioms.lean`)
-reaches the TM⁺ schema block through one `ofBase` arm at `ofPlus` instances, rather than
+re-declares the TM⁺ schema block directly over `StarFormula`, rather than
 re-declaring the TM schemata over `StarFormula` as `PlusAxiom` does over `PlusFormula` — a
 re-declared block would contain an unsound schema.
 

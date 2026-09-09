@@ -366,8 +366,8 @@ FragmentCompactness ← Plus/Forward`, with `SpWitness` hanging off `MinusLangua
 and the `Plus/` chain `Atomization ← AxiomValidity ← PlusSoundness ← Forward` hanging off
 `Fragment`. The `Star/` chain `StarAxiomValidity ← StarSoundness ← Forward` hangs off the `Plus/`
 one at two points: `Star/StarAxiomValidity` imports `Plus/AxiomValidity` (for the two TM⁺
-dispatch lemmas the `ofBase` arm transports) and `Star/Forward` imports `Plus/Forward` (for the
-four completeness engines and `plusValidIn_ofFormula_iff`).
+dispatch lemmas the closed uniformity arms transport) and `Star/Forward` imports `Plus/Forward`
+(for the four completeness engines and `plusValidIn_ofFormula_iff`).
 
 The namespace is unchanged by the reorganization: `Backward.lean` still opens
 `namespace FormalSystem.Metalogic.Conservativity`, so every declaration keeps its
