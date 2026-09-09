@@ -106,3 +106,94 @@ theorem StateLocal.or {φ ψ : PlusFormula} (hφ : φ.StateLocal) (hψ : ψ.Stat
   ⟨⟨hφ, trivial⟩, hψ⟩
 
 end FormalSystem.PlusLanguage
+
+namespace FormalSystem.Semantics
+
+open FormalSystem.Syntax
+open FormalSystem.PlusLanguage
+
+/-! ## The semantic property -/
+
+/--
+**State-locality, semantically.** `φ` is state-local when, at every frame and model, any two
+possible worlds carrying the same world state at `t` agree about `φ` at `t`.
+
+L⁺ has no time registers, so this is `IsStateLocal` (`Semantics/StarStateLocal.lean`) with the
+stored-time vector deleted and nothing else changed; the two are arm-for-arm comparable.
+
+The hypotheses could be weakened from `τ.IsTotal`/`σ.IsTotal` to `τ.domain t`/`σ.domain t` —
+every proof below uses totality only at `t`, except `plusStateLocal_stab_iff`'s right-to-left
+half, which needs `τ ∈ ⟨τ⟩ₜ` and therefore genuinely needs `τ` total. The stronger hypotheses
+are kept deliberately, so that this definition and `IsStateLocal` differ in exactly one respect
+(the register vector) rather than two.
+-/
+def IsPlusStateLocal (φ : PlusFormula) : Prop :=
+  ∀ (F : TaskFrame) (M : TaskModel F) (τ σ : ConvexHistory F), τ.IsTotal → σ.IsTotal →
+    ∀ t : F.Duration, SameStateAt τ σ t →
+      (PlusTruthAt M τ t φ ↔ PlusTruthAt M σ t φ)
+
+/-! ## `□` and `⊡` are state-local for an arbitrary argument -/
+
+/--
+**`□φ` is state-local, whatever `φ` is.** The `box` clause quantifies over *every* total history
+and never mentions `τ`, so the two sides are literally the same proposition.
+
+This settles, positively and by proof rather than by analogy with L⋆, the question of whether
+`□` belongs in the fragment: it does, and without a hypothesis on `φ`.
+
+Paper: — (the formalization's own: the manuscript classifies no L⁺ constructor for
+state-locality)
+-/
+theorem isPlusStateLocal_box (φ : PlusFormula) : IsPlusStateLocal (.box φ) :=
+  fun _ _ _ _ _ _ _ _ => Iff.rfl
+
+/--
+**`⊡φ` is state-local, whatever `φ` is.** Discharged from `stab_congr_sameState`
+(`Semantics/PlusTruth.lean`), which is exactly this statement at domain hypotheses rather than
+totality: the truth of `⊡φ` at `(τ, t)` depends only on the `∼ₜ`-class of `τ`.
+
+That proof dependency is the first of the three relations this module records: the L⁺ fragment's
+`stab` arm *is* `stab_congr_sameState`, not a re-derivation of it.
+
+Paper: — (the formalization's own; the underlying clause is `def:BLstar-semantics`)
+-/
+theorem isPlusStateLocal_stab (φ : PlusFormula) : IsPlusStateLocal (.stab φ) :=
+  fun _ M τ σ hτ hσ t h => stab_congr_sameState M τ σ t (hτ t) (hσ t) h φ
+
+/-! ## Soundness of the syntactic fragment -/
+
+/--
+**The soundness theorem.** Every formula in the syntactic fragment has the semantic property.
+
+Seven cases, one per constructor. `box` and `stab` discharge to the two lemmas above with no
+inductive hypothesis; `untl` and `snce` are vacuous, the syntactic predicate being `False`
+there.
+
+Paper: — (the formalization's own: the manuscript has no fragment of L⁺ and no state-locality
+predicate; this is the L⁺ twin of `isStateLocal_of_stateLocal`)
+-/
+theorem isPlusStateLocal_of_stateLocal :
+    ∀ {φ : PlusFormula}, φ.StateLocal → IsPlusStateLocal φ := by
+  intro φ
+  induction φ with
+  | atom p =>
+    intro _ _ M τ σ hτ hσ t h
+    constructor
+    · rintro ⟨ht, hv⟩
+      refine ⟨hσ t, ?_⟩
+      rw [← h ht (hσ t)]
+      exact hv
+    · rintro ⟨ht, hv⟩
+      refine ⟨hτ t, ?_⟩
+      rw [h (hτ t) ht]
+      exact hv
+  | bot => intro _ _ _ _ _ _ _ _ _; exact Iff.rfl
+  | imp φ ψ ihφ ihψ =>
+    rintro ⟨hφ, hψ⟩ F M τ σ hτ hσ t h
+    exact imp_congr (ihφ hφ F M τ σ hτ hσ t h) (ihψ hψ F M τ σ hτ hσ t h)
+  | box φ _ => intro _; exact isPlusStateLocal_box φ
+  | untl ψ φ _ _ => intro hφ; exact absurd hφ (not_stateLocal_untl ψ φ)
+  | snce ψ φ _ _ => intro hφ; exact absurd hφ (not_stateLocal_snce ψ φ)
+  | stab φ _ => intro _; exact isPlusStateLocal_stab φ
+
+end FormalSystem.Semantics

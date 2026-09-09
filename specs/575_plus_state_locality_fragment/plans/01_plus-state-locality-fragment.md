@@ -215,31 +215,31 @@ count here is superseded.
 
 ---
 
-### Phase 2: The semantic property and the soundness induction [IN PROGRESS]
+### Phase 2: The semantic property and the soundness induction [COMPLETED]
 
 **Goal**: Define `IsPlusStateLocal`, settle `box` and `stab` **by proof** for arbitrary
 arguments, and prove the seven-case soundness induction `isPlusStateLocal_of_stateLocal`.
 
 **Tasks**:
-- [ ] Define `IsPlusStateLocal (φ : PlusFormula) : Prop` in `namespace FormalSystem.Semantics`,
+- [x] Define `IsPlusStateLocal (φ : PlusFormula) : Prop` in `namespace FormalSystem.Semantics`,
       mirroring `IsStateLocal`'s shape minus the register vector (L⁺ has no registers): quantify
       `F`, `M`, `τ`, `σ`, `τ.IsTotal`, `σ.IsTotal`, `t`, `SameStateAt τ σ t`, conclude the
       `PlusTruthAt` biconditional
-- [ ] Docstring the deliberate non-weakening: the hypotheses could be `τ.domain t`/`σ.domain t`
+- [x] Docstring the deliberate non-weakening: the hypotheses could be `τ.domain t`/`σ.domain t`
       rather than totality; totality is kept for arm-for-arm comparability with `IsStateLocal`
-- [ ] Prove `isPlusStateLocal_box` for an arbitrary `φ`. Expected `Iff.rfl` — the `box` clause
+- [x] Prove `isPlusStateLocal_box` for an arbitrary `φ`. Expected `Iff.rfl` — the `box` clause
       never mentions `τ`. **If it does not go through**, stop, produce a countermodel, exclude
       `box` from Phase 1's recursion, and record the finding prominently (see Scope Hypothesis)
-- [ ] Prove `isPlusStateLocal_stab` for an arbitrary `φ` **from `stab_congr_sameState`**
+- [x] Prove `isPlusStateLocal_stab` for an arbitrary `φ` **from `stab_congr_sameState`**
       (`Semantics/PlusTruth.lean`) rather than re-deriving it from `sameStateAt_congr_left`; this
       proof dependency is itself one of deliverable 6's three relations
-- [ ] Prove `isPlusStateLocal_of_stateLocal : ∀ {φ}, φ.StateLocal → IsPlusStateLocal φ` by
+- [x] Prove `isPlusStateLocal_of_stateLocal : ∀ {φ}, φ.StateLocal → IsPlusStateLocal φ` by
       induction, seven cases: `atom` by the valuation transfer, `bot` `Iff.rfl`, `imp` by
       `imp_congr` on the two IHs, `box`/`stab` by the two lemmas above with no IH, `untl`/`snce`
       vacuous via `not_stateLocal_untl`/`not_stateLocal_snce`
-- [ ] Give each declaration a `Paper:` anchor line or the literal `Paper: —` plus a reason,
+- [x] Give each declaration a `Paper:` anchor line or the literal `Paper: —` plus a reason,
       mirroring `isStateLocal_of_stateLocal`'s
-- [ ] `lake build FormalSystem.Semantics.PlusStateLocal` green
+- [x] `lake build FormalSystem.Semantics.PlusStateLocal` green
 
 **Timing**: 1.5 hours
 
@@ -263,7 +263,7 @@ Phase 1's recursion is amended, and Phase 3 gains a third exclusion.
 
 ---
 
-### Phase 3: The countermodel exclusions [NOT STARTED]
+### Phase 3: The countermodel exclusions [IN PROGRESS]
 
 **Goal**: Exclude the failing constructors by **theorem**, not by stipulation:
 `not_isPlusStateLocal_someFuture` and `not_isPlusStateLocal_somePast` on `NF` with `natModel`.
