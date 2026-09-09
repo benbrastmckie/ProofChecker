@@ -94,7 +94,7 @@ next_project_number: 578
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-576 [RESEARCHED] — Split the ofBase monolith and eliminate the ofPlus-restricted bri
+576 [PLANNED] — Split the ofBase monolith and eliminate the ofPlus-restricted bri
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
@@ -130,11 +130,12 @@ HARD CONSTRAINTS: MUST NOT merge, unify, or weaken the separation between the fo
 ---
 
 ### 576. Split ofbase eliminate bridge results
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 574
 - **Research**: [576_split_ofbase_eliminate_bridge_results/reports/01_ofbase-split-schema-measurement.md]
+- **Plan**: [576_split_ofbase_eliminate_bridge_results/plans/01_split-ofbase-eliminate-bridge-results.md]
 
 **Description**: Split the ofBase monolith and eliminate the ofPlus-restricted bridge results from TM-star. GROUND TRUTH: `StarAxiom.ofBase (phi : PlusFormula) (ax : PlusAxiom phi) : StarAxiom (ofPlus phi)` (FormalSystem/StarLanguage/Axioms.lean:136) carries ALL 45 TM-plus schemata at `ofPlus` instances only. The research that produced this design established that EXACTLY ONE of those schemata fails schematically over `StarFormula`: `modal_future` (box-phi implies box-G-phi), refuted by `refute_modal_future` (Semantics/StarNonValidities.lean) at phi := recall-1-p implies p. The other 44 are sound at arbitrary phi : StarFormula. One failing schema currently restricts the entire block.
 
