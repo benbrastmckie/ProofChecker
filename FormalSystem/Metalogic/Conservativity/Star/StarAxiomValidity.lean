@@ -324,6 +324,77 @@ theorem starValid_atom_stab (p : Atom) :
   obtain ⟨ht, hval⟩ := h
   exact ⟨hσ x, by rw [← hsame ht (hσ x)]; exact hval⟩
 
+/-! ## The TM⁺ mirror block — seriality, monotonicity, connection
+
+Transcriptions of the corresponding L-level proofs (`Metalogic/Soundness.lean`) under the
+substitution `TruthAt M τ t ↦ StarTruthAt M τ t v`, `Truth.*_iff ↦ StarTruth.*_iff`. The two
+seriality schemata are closed formulas, hence literally `ofPlus` images, and transport. -/
+
+/-- Serial future over L⋆. The formula is closed, so it *is* an `ofPlus` image and the L⁺
+validity transports along `starValidOnFrames_ofPlus`. -/
+theorem starValid_serial_future :
+    StarValid ((StarFormula.bot.imp StarFormula.bot).imp
+      (StarFormula.someFuture (StarFormula.bot.imp StarFormula.bot))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.serial_future)
+
+/-- Serial past over L⋆, likewise by transport. -/
+theorem starValid_serial_past :
+    StarValid ((StarFormula.bot.imp StarFormula.bot).imp
+      (StarFormula.somePast (StarFormula.bot.imp StarFormula.bot))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.serial_past)
+
+/-- BX2G over L⋆: the guard of an `until` may be weakened under `G`. -/
+theorem starValid_left_mono_until_G (φ χ ψ : StarFormula) :
+    StarValid ((φ.imp χ).allFuture.imp
+      ((StarFormula.untl φ ψ).imp (StarFormula.untl χ ψ))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allFuture_iff, StarTruth.untl_iff]
+  rintro h_G ⟨s, hts, h_event, h_guard⟩
+  exact ⟨s, hts, h_event, fun r htr hrs => h_G r htr (h_guard r htr hrs)⟩
+
+/-- BX2H over L⋆, the past mirror of `starValid_left_mono_until_G`. -/
+theorem starValid_left_mono_since_H (φ χ ψ : StarFormula) :
+    StarValid ((φ.imp χ).allPast.imp
+      ((StarFormula.snce φ ψ).imp (StarFormula.snce χ ψ))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allPast_iff, StarTruth.snce_iff]
+  rintro h_H ⟨s, hst, h_event, h_guard⟩
+  exact ⟨s, hst, h_event, fun r hsr hrt => h_H r hrt (h_guard r hsr hrt)⟩
+
+/-- BX3 over L⋆: the event of an `until` may be weakened under `G`. -/
+theorem starValid_right_mono_until (φ ψ χ : StarFormula) :
+    StarValid ((φ.imp ψ).allFuture.imp
+      ((StarFormula.untl χ φ).imp (StarFormula.untl χ ψ))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allFuture_iff, StarTruth.untl_iff]
+  rintro h_G ⟨s, hts, h_event, h_guard⟩
+  exact ⟨s, hts, h_G s hts h_event, h_guard⟩
+
+/-- BX3' over L⋆, the past mirror of `starValid_right_mono_until`. -/
+theorem starValid_right_mono_since (φ ψ χ : StarFormula) :
+    StarValid ((φ.imp ψ).allPast.imp
+      ((StarFormula.snce χ φ).imp (StarFormula.snce χ ψ))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allPast_iff, StarTruth.snce_iff]
+  rintro h_H ⟨s, hst, h_event, h_guard⟩
+  exact ⟨s, hst, h_H s hst h_event, h_guard⟩
+
+/-- BX4 over L⋆: what is true now is always going to have been true. -/
+theorem starValid_connect_future (φ : StarFormula) :
+    StarValid (φ.imp (φ.somePast.allFuture)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allFuture_iff, StarTruth.somePast_iff]
+  intro h s hts
+  exact ⟨t, hts, h⟩
+
+/-- BX4' over L⋆, the past mirror of `starValid_connect_future`. -/
+theorem starValid_connect_past (φ : StarFormula) :
+    StarValid (φ.imp (φ.someFuture.allPast)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allPast_iff, StarTruth.someFuture_iff]
+  intro h s hst
+  exact ⟨t, hst, h⟩
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -347,6 +418,14 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | stab_5 φ => exact starValid_stab_5 φ
   | box_stab φ => exact starValid_box_stab φ
   | atom_stab p => exact starValid_atom_stab p
+  | serial_future => exact starValid_serial_future
+  | serial_past => exact starValid_serial_past
+  | left_mono_until_G φ χ ψ => exact starValid_left_mono_until_G φ χ ψ
+  | left_mono_since_H φ χ ψ => exact starValid_left_mono_since_H φ χ ψ
+  | right_mono_until φ ψ χ => exact starValid_right_mono_until φ ψ χ
+  | right_mono_since φ ψ χ => exact starValid_right_mono_since φ ψ χ
+  | connect_future φ => exact starValid_connect_future φ
+  | connect_past φ => exact starValid_connect_past φ
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -426,6 +505,32 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | atom_stab p =>
     simp only [StarFormula.swapTemporal]
     exact starValid_atom_stab p
+  | serial_future =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_some_future]
+    exact starValid_serial_past
+  | serial_past =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_some_past]
+    exact starValid_serial_future
+  | left_mono_until_G φ χ ψ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_future]
+    exact starValid_left_mono_since_H φ.swapTemporal χ.swapTemporal ψ.swapTemporal
+  | left_mono_since_H φ χ ψ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_past]
+    exact starValid_left_mono_until_G φ.swapTemporal χ.swapTemporal ψ.swapTemporal
+  | right_mono_until φ ψ χ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_future]
+    exact starValid_right_mono_since φ.swapTemporal ψ.swapTemporal χ.swapTemporal
+  | right_mono_since φ ψ χ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_past]
+    exact starValid_right_mono_until φ.swapTemporal ψ.swapTemporal χ.swapTemporal
+  | connect_future φ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_future,
+      StarFormula.swap_temporal_some_past]
+    exact starValid_connect_past φ.swapTemporal
+  | connect_past φ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_past,
+      StarFormula.swap_temporal_some_future]
+    exact starValid_connect_future φ.swapTemporal
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal

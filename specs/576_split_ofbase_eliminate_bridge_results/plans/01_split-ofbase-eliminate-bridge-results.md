@@ -502,7 +502,7 @@ group must move to the phase holding its dual, and the wave table updated.
 
 ---
 
-### Phase 5: Group B — seriality, monotonicity, connection [NOT STARTED]
+### Phase 5: Group B — seriality, monotonicity, connection [COMPLETED]
 
 **Goal**: The next 8 mirror constructors, arms and swap arms; build green.
 
@@ -511,14 +511,14 @@ group must move to the phase holding its dual, and the wave table updated.
 Swap-closed: the four G/H and U/S pairs are both present.
 
 **Tasks**:
-- [ ] Add the 8 constructors with docstrings mirroring `PlusAxiom`'s arms
-- [ ] Add the 8 `starValid_*` lemmas — transcriptions of the corresponding L-level proofs in
+- [x] Add the 8 constructors with docstrings mirroring `PlusAxiom`'s arms
+- [x] Add the 8 `starValid_*` lemmas — transcriptions of the corresponding L-level proofs in
       `Metalogic/Soundness.lean` under the substitution `TruthAt M τ t ↦ StarTruthAt M τ t v`,
       `Truth.*_iff ↦ StarTruth.*_iff`. `serial_future`, `left_mono_until_G` and `connect_future`
       are already in `.probes/02`/`.probes/03`; `left_mono_since_H` is in `.probes/06`
-- [ ] Add the 8 arms to each dispatch lemma; each swap arm lands on its dual member's validity
+- [x] Add the 8 arms to each dispatch lemma; each swap arm lands on its dual member's validity
       lemma at swapped arguments
-- [ ] Extend the swap-closure list; `lake build` green; invariants exit 0; commit
+- [x] Extend the swap-closure list; `lake build` green; invariants exit 0; commit
 
 **Timing**: 2 hours
 

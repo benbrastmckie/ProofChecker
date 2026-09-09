@@ -87,6 +87,9 @@ same inductive*:
     `modal_5_collapse`, `modal_k_dist`, `stab_k`, `stab_t`, `stab_4`, `stab_5`, `box_stab`,
     `atom_stab` — **self-dual**: each is built from `imp`, `box`, `stab`, `bot` and `atom`, none
     of which `swapTemporal` exchanges.
+  * `serial_future` ↔ `serial_past`, `left_mono_until_G` ↔ `left_mono_since_H`,
+    `right_mono_until` ↔ `right_mono_since`, `connect_future` ↔ `connect_past` — four **dual
+    pairs**, since `swapTemporal` exchanges `untl`/`snce` and `allFuture`/`allPast`.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -189,6 +192,33 @@ inductive StarAxiom : StarFormula → Type where
   own content, not an artefact of L⋆. -/
   | atom_stab (p : Atom) :
       StarAxiom ((StarFormula.atom p).imp (StarFormula.stab (StarFormula.atom p)))
+  -- Layer 3: BX Temporal — seriality, monotonicity, connection (8)
+  /-- Serial future: `⊤ → F(⊤)`. Mirrors `PlusAxiom.serial_future`. -/
+  | serial_future :
+      StarAxiom ((StarFormula.bot.imp StarFormula.bot).imp
+        (StarFormula.someFuture (StarFormula.bot.imp StarFormula.bot)))
+  /-- Serial past: `⊤ → P(⊤)`. Mirrors `PlusAxiom.serial_past`. -/
+  | serial_past :
+      StarAxiom ((StarFormula.bot.imp StarFormula.bot).imp
+        (StarFormula.somePast (StarFormula.bot.imp StarFormula.bot)))
+  /-- BX2G: `G(φ→χ) → ((φ U ψ) → (χ U ψ))`. Mirrors `PlusAxiom.left_mono_until_G`. -/
+  | left_mono_until_G (φ χ ψ : StarFormula) :
+      StarAxiom ((φ.imp χ).allFuture.imp ((StarFormula.untl φ ψ).imp (StarFormula.untl χ ψ)))
+  /-- BX2H: `H(φ→χ) → ((φ S ψ) → (χ S ψ))`. Mirrors `PlusAxiom.left_mono_since_H`. -/
+  | left_mono_since_H (φ χ ψ : StarFormula) :
+      StarAxiom ((φ.imp χ).allPast.imp ((StarFormula.snce φ ψ).imp (StarFormula.snce χ ψ)))
+  /-- BX3: `G(φ → ψ) → ((χ U φ) → (χ U ψ))`. Mirrors `PlusAxiom.right_mono_until`. -/
+  | right_mono_until (φ ψ χ : StarFormula) :
+      StarAxiom ((φ.imp ψ).allFuture.imp ((StarFormula.untl χ φ).imp (StarFormula.untl χ ψ)))
+  /-- BX3': `H(φ → ψ) → ((χ S φ) → (χ S ψ))`. Mirrors `PlusAxiom.right_mono_since`. -/
+  | right_mono_since (φ ψ χ : StarFormula) :
+      StarAxiom ((φ.imp ψ).allPast.imp ((StarFormula.snce χ φ).imp (StarFormula.snce χ ψ)))
+  /-- BX4: `φ → G(P(φ))`. Mirrors `PlusAxiom.connect_future`. -/
+  | connect_future (φ : StarFormula) :
+      StarAxiom (φ.imp (φ.somePast.allFuture))
+  /-- BX4': `φ → H(F(φ))`. Mirrors `PlusAxiom.connect_past`. -/
+  | connect_past (φ : StarFormula) :
+      StarAxiom (φ.imp (φ.someFuture.allPast))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))
