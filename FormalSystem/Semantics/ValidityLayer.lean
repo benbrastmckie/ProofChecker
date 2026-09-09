@@ -39,32 +39,105 @@ below.
 - `GenericValidOnFrames.of_not`, `GenericValidIn.of_not`, `GenericValid.of_not` — the
   countermodel-extraction contrapositives
 
-## Design Invariants
+## Design Invariants — the extension contract
 
-*Initial wording; re-verified against the landed instantiations once every language has been
-instantiated. See the corresponding section of `Semantics/TruthClauses.lean` for the clause
-layer's half of the contract.*
+**Written from the four instantiations actually performed** (`Semantics/Validity.lean`,
+`MinusValidity.lean`, `PlusValidity.lean`, `StarValidity.lean`), not aspirationally. Each claim
+below cites the instance it is drawn from. See the corresponding section of
+`Semantics/TruthClauses.lean` for the clause layer's half of the contract.
 
-**What a language must supply.** One instance, with one field:
+### What a fifth language must supply
+
+Exactly one instance, with exactly one field:
 
 ```
 instance : PointTruth MyFormula where
   sat M τ t φ := MyTruthAt M τ t φ
 ```
 
-A language whose truth recursion carries parameters beyond `(M, τ, t)` supplies the
-**universally closed** form of its relation — `sat {F} M τ t φ := ∀ e, MyTruthAt M τ t e φ`.
+That is the whole obligation for the `(M, τ, t)` point shape; it is verbatim what L, L⁻ and L⁺
+supply. A language whose truth recursion carries **extra per-point parameters** supplies the
+universally closed form instead, as L⋆ does for its stored-time vector:
 
-**Naming.** The generic notions are top-level in `FormalSystem.Semantics` under a `Generic`
-prefix, mirroring the tree's own `Minus`/`Plus`/`Star` prefix convention. A bare `Valid`,
-`ValidIn` or `ValidOnFrames` inside a namespace nested under `FormalSystem.Semantics` would
-reproduce the outer-shadows-inner bare-declaration ambiguity that `check-module-invariants.sh`'s
-C23 exists to prevent, and must not be introduced.
+```
+instance : PointTruth StarFormula where
+  sat {F} M τ t φ := ∀ v : ℕ → F.Duration, StarTruthAt M τ t v φ
+```
 
-**What is deliberately not abstracted.** The class abstracts the truth *relation*, not the
-inductive *type*, so it exposes no recursor. Anything proved by induction on a formula — time
-shift, truth congruence, state locality, the embedding bridges — stays per-language. That is the
-honest boundary of this layer, not a gap in it.
+### The two obligations on an extra parameter
+
+Both are needed only by the L⋆ instance; L, L⁻ and L⁺ discharge them vacuously, having no extra
+parameter. They are stated as obligations rather than as observations because a fifth language
+with an extra parameter must check them.
+
+**O1 — innermost binder.** Every extra per-point parameter must be the *innermost* binder of the
+language's own `ValidOn` and of every one of its adapters. `TaskFrame.StarValidOn` reads
+`∀ M τ x v, …`, and as a `Pi` telescope that is literally `∀ M τ x, (∀ v, …)`; the `∀ v` of the
+instance is therefore the same term, not a re-derivation. This is what makes the fold
+*statement*-preserving rather than merely provably equivalent, and it is pinned by
+`example : TaskFrame.StarValidOn F φ = TaskFrame.GenericValidOn F φ := rfl` in
+`Tests/BimodalTest/Semantics/ValidityLayerTest.lean`. If a language puts the parameter anywhere
+but innermost, the `rfl` fails and this layer does not apply to it.
+
+**O2 — inert threading.** The extra parameter must be threaded unchanged through every *shared*
+operator clause. L⋆ satisfies this for `imp`/`box`/`untl`/`snce`/`stab`; its two register
+operators `timeStore`/`timeRecall` do **not** thread `v` unchanged, which is exactly why nothing
+about them is instantiated (see `TruthClauses.lean`'s contract). O2 constrains the shared core
+only — a language is free to have operators that manipulate the parameter, provided they stay
+outside the shared clause classes.
+
+### What the instance buys — the inherited names
+
+All eighteen, for that one field:
+
+- `TaskFrame.GenericValidOn`, `GenericValidOnFrames`, `GenericValidIn`, `GenericValid`
+- `genericValidOn_iff_total`
+- `GenericValidOnFrames.mono`, `GenericValidIn.mono`
+- `TaskFrame.GenericValidOn.of_forall_total` / `.apply_total`
+- `GenericValidOnFrames.of_forall_total` / `.apply_total`
+- `GenericValidIn.of_forall_total` / `.apply_total`
+- `GenericValid.of_forall_total`, `GenericValid.apply`
+- `GenericValidOnFrames.of_not`, `GenericValidIn.of_not`, `GenericValid.of_not`
+
+Measured payoff across the four landed instantiations: **38 per-language theorem bodies** became
+one-line delegations (12 for L, 8 for L⁻, 8 for L⁺, 10 for L⋆) against 14 generic theorems
+written once. A fifth language pays one instance and inherits the lot.
+
+### What is NOT inherited — the honest boundary
+
+One criterion decides it: this class abstracts the truth *relation*, not the inductive *type*, so
+it exposes **no recursor**. Anything provable only by `induction φ` stays per-language. In the
+landed tree that is:
+
+- time shift — `timeShift_preserves_truth`, `plusTruthAt_timeShift`, `starTruthAt_timeShift`
+  (whose *statement*, uniquely, differs between languages: it shifts the vector alongside the
+  history)
+- truth congruence — `truth_congr_ext`, `star_truth_congr_ext`
+- state locality — `stab_state_only`, the `PlusStateLocal`/`StarStateLocal` families, `SameStateAt`
+- the embedding bridges — `plusTruthAt_ofFormula`, `starTruthAt_ofPlus`, `starValidOn_ofPlus`,
+  `starValidOnFrames_ofPlus`
+
+Two further families sit outside for a second reason, and are likewise not defects:
+`MinusFrameTruth` (a frame notion that is not a `TaskFrame`, and this class is `TaskFrame`-pointed)
+and `Metalogic/Independence/CoarsenedModels.lean`'s `CTruth.*`.
+
+### Naming and reducibility invariants
+
+**No bare namesake.** The generic notions are top-level in `FormalSystem.Semantics` under a
+`Generic` prefix, mirroring the tree's own `Minus`/`Plus`/`Star` convention. A bare `Valid`,
+`ValidIn` or `ValidOnFrames` in a namespace nested under `FormalSystem.Semantics` would reproduce
+the outer-shadows-inner ambiguity that `check-module-invariants.sh` C23 exists to prevent, and
+must not be introduced — including by writing the dot-qualified form to evade the walker.
+
+**No `abbrev` promotion.** Each language's four validity `def`s keep their bodies and their
+reducibility. Only the *theorem* bodies delegate. Promoting `Valid` to an `abbrev`, or replacing
+its body with a call to `GenericValid`, would change `unfold`/`simp` behaviour at every one of its
+~787 occurrences; the delegation is deliberately confined to proof-irrelevant declarations, which
+is why no downstream file needed editing.
+
+**If you find yourself wanting a bridge lemma** between a per-language notion and its generic
+counterpart, a statement has moved: the two are definitionally equal, and the fix is to restore
+that, not to add an elimination API.
 
 ## References
 

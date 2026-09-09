@@ -189,4 +189,131 @@ example : StarFormula.dstab φ = TruthClauses.dstab φ := rfl
 
 end LStarOperators
 
+/-! ## A toy fifth language: the extension contract, exercised end to end
+
+The deliverable that pays for the refactor is the contract in the two modules' `## Design
+Invariants` sections: *exactly what a fifth object language must supply in order to inherit the
+validity layer for free*. This section is that claim, checked rather than asserted — a minimal
+language declared here in the test tree, with nothing but the instances the contract names, and
+`example`s that the inherited names elaborate at it.
+
+`Toy` deliberately has **only** `atom`/`bot`/`imp`/`box`: no temporal operators at all. That makes
+it a check of the tiering as well as of the contract — it takes the Boolean tier and nothing else,
+and is not required to supply `untl`, `snce` or the tenses in order to get it. -/
+
+namespace FifthLanguage
+
+open FormalSystem FormalSystem.Semantics
+
+/-- A minimal fifth object language: propositional atoms, falsum, implication, and the modal box.
+No temporal operators, so it exercises the Boolean tier alone. -/
+inductive Toy where
+  /-- A propositional atom. -/
+  | atom : Syntax.Atom → Toy
+  /-- Falsum. -/
+  | bot : Toy
+  /-- Material implication. -/
+  | imp : Toy → Toy → Toy
+  /-- The modal box. -/
+  | box : Toy → Toy
+
+/-- The truth recursion for `Toy`, with the same four clause shapes as every other language in
+the tree. -/
+def ToyTruthAt {F : TaskFrame} (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) :
+    Toy → Prop
+  | .atom p => ∃ (ht : τ.domain t), M.valuation (τ.states t ht) p
+  | .bot => False
+  | .imp φ ψ => ToyTruthAt M τ t φ → ToyTruthAt M τ t ψ
+  | .box φ => ∀ (σ : ConvexHistory F), σ.IsTotal → ToyTruthAt M σ t φ
+
+/-! ### Everything the contract asks for, and nothing else -/
+
+/-- Obligation 1 of the validity-layer contract: one instance, one field. -/
+instance : PointTruth Toy where
+  sat M τ t φ := ToyTruthAt M τ t φ
+
+/-- Obligation 1 of the clause-layer contract: the pointed relation with a trivial environment. -/
+instance : TruthEnv Toy where
+  Env _ := PUnit
+  T M τ t _ φ := ToyTruthAt M τ t φ
+
+/-- Obligation 2 of the clause-layer contract: the Boolean bundle, every clause field `Iff.rfl`
+or `fun h => h` — which is the compiler confirming `ToyTruthAt` has the shared clause shapes. -/
+instance : BoolClauses Toy where
+  bot := Toy.bot
+  imp := Toy.imp
+  box := Toy.box
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+
+/-! ### What that bought
+
+Every `example` below elaborates from the three instances above and nothing else. -/
+
+section Inherited
+variable (F : TaskFrame) (P : TaskFrame → Prop) (fc : ProofSystem.FrameClass)
+  (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (φ ψ : Toy)
+
+-- The four validity notions.
+example : Prop := TaskFrame.GenericValidOn F φ
+example : Prop := GenericValidOnFrames P φ
+example : Prop := GenericValidIn fc φ
+example : Prop := GenericValid φ
+
+-- The bundled/unbundled bridge, both monotonicity lemmas, and a representative adapter from
+-- each of the four families.
+example : TaskFrame.GenericValidOn F φ ↔
+    ∀ (M : TaskModel F) (τ : ConvexHistory F), τ.IsTotal →
+      ∀ x : F.Duration, PointTruth.sat M τ x φ :=
+  genericValidOn_iff_total F φ
+
+example {Q : TaskFrame → Prop} (h : ∀ G, Q G → P G) (hP : GenericValidOnFrames P φ) :
+    GenericValidOnFrames Q φ :=
+  GenericValidOnFrames.mono h hP
+
+example {fc₁ fc₂ : ProofSystem.FrameClass} (h : fc₁ ≤ fc₂) (hv : GenericValidIn fc₁ φ) :
+    GenericValidIn fc₂ φ :=
+  GenericValidIn.mono h hv
+
+example (h : TaskFrame.GenericValidOn F φ) (hτ : τ.IsTotal) : PointTruth.sat M τ t φ :=
+  TaskFrame.GenericValidOn.apply_total h M τ hτ t
+
+example (h : GenericValidOnFrames P φ) (hF : P F) (hτ : τ.IsTotal) : PointTruth.sat M τ t φ :=
+  GenericValidOnFrames.apply_total h F hF M τ hτ t
+
+example (h : GenericValidIn fc φ) (hF : fc.Sat F) (hτ : τ.IsTotal) : PointTruth.sat M τ t φ :=
+  GenericValidIn.apply_total h F hF M τ hτ t
+
+example (h : GenericValid φ) (hτ : τ.IsTotal) : PointTruth.sat M τ t φ :=
+  GenericValid.apply h F M τ hτ t
+
+example (h : ¬ GenericValid φ) :
+    ¬ ∀ (G : TaskFrame) (N : TaskModel G) (σ : ConvexHistory G), σ.IsTotal →
+        ∀ x : G.Duration, PointTruth.sat N σ x φ :=
+  GenericValid.of_not h
+
+-- The whole Boolean clause tier, at the toy language's own truth relation.
+example : ToyTruthAt M τ t (TruthClauses.neg φ) ↔ ¬ ToyTruthAt M τ t φ :=
+  TruthClauses.neg_iff (L := Toy) M τ t PUnit.unit φ
+
+example : ToyTruthAt M τ t (TruthClauses.top : Toy) :=
+  TruthClauses.top_true (L := Toy) M τ t PUnit.unit
+
+example : ToyTruthAt M τ t (TruthClauses.and φ ψ) ↔
+    (ToyTruthAt M τ t φ ∧ ToyTruthAt M τ t ψ) :=
+  TruthClauses.and_iff (L := Toy) M τ t PUnit.unit φ ψ
+
+example : ToyTruthAt M τ t (TruthClauses.or φ ψ) ↔
+    (ToyTruthAt M τ t φ ∨ ToyTruthAt M τ t ψ) :=
+  TruthClauses.or_iff (L := Toy) M τ t PUnit.unit φ ψ
+
+example : ToyTruthAt M τ t (TruthClauses.diamond φ) ↔
+    ∃ σ : ConvexHistory F, σ.IsTotal ∧ ToyTruthAt M σ t φ :=
+  TruthClauses.diamond_iff (L := Toy) M τ t PUnit.unit φ
+
+end Inherited
+
+end FifthLanguage
+
 end BimodalTest.Semantics.ValidityLayerTest

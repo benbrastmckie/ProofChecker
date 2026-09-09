@@ -1,7 +1,7 @@
 # Implementation Plan: Task #577
 
 - **Task**: 577 - Abstract the per-language validity layer over a truth-relation class
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 16 hours
 - **Dependencies**: 576 (completed; the enumeration in the research report was taken against the post-576 tree at HEAD `e3a2c0f1a`)
 - **Research Inputs**: specs/577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md (plus the three compiled probes under `specs/577_abstract_validity_layer_over_truth_class/probes/`)
@@ -534,7 +534,7 @@ class.
 
 ---
 
-### Phase 10: Extension contract from the instantiations performed, fifth-language conformance check, and the final sweep [NOT STARTED]
+### Phase 10: Extension contract from the instantiations performed, fifth-language conformance check, and the final sweep [COMPLETED]
 
 **Goal**: Write deliverable 6 from what Phases 2-4 and 6-9 actually did, prove the contract
 sufficient with a toy fifth language in the test tree, confirm nothing superseded remains and

@@ -119,6 +119,18 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   world states, respecting the task relation; `TaskFrame.HF` cuts out the *possible worlds*,
   the total ones
 - `TaskModel`: Task models extending frames with valuation functions `V: W × String → Prop`
+- `ValidityLayer`: `PointTruth` — the class abstracting "truth at a point `(M, τ, x)`" — and the
+  validity layer written **once** against it: `TaskFrame.GenericValidOn`, `GenericValidOnFrames`,
+  `GenericValidIn`, `GenericValid`, both monotonicity lemmas, the eight binder-shape adapters and
+  the three countermodel contrapositives. All four object languages instantiate it with a single
+  `sat` field and delegate their own theorem bodies to it, L⋆ folding its stored-time vector in as
+  the innermost binder. The module docstring carries the extension contract: what a fifth language
+  must supply to inherit the layer
+- `TruthClauses`: the same idea one level down, for the derived-operator clause lemmas —
+  `TruthEnv` (the pointed relation with an inert environment parameter) and one class per
+  primitive operator, with the derived operators and their characterization lemmas proved once and
+  tiered by which primitives a language has. L⁻ takes the tense-primitive tier, L⁺ and L⋆ the
+  stability tier, and L⋆'s environment is its stored-time vector
 - `Truth`: Recursive truth evaluation `M,τ,t ⊨ φ` for formulas at model-history-time triples
 - `MinusTruth`: the same recursion for the tense-primitive base language — `MinusTruthAt`, defined
   natively on `MinusFormula`'s six constructors per `def:BL-semantics` (H and G quantify over

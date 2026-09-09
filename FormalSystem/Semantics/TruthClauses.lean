@@ -47,39 +47,110 @@ operators behave identically in both point shapes.
 - `TruthClauses.someFuture_iff_of_allFuture`, `.somePast_iff_of_allPast`, `.always_iff_of_tense`
   — the tense-primitive tier
 
-## Design Invariants
+## Design Invariants — the extension contract
 
-*Initial wording; re-verified against the landed instantiations once every language has been
-instantiated. See `Semantics/ValidityLayer.lean` for the validity layer's half of the contract.*
+**Written from the four instantiations actually performed** (`Semantics/Truth.lean`,
+`MinusTruth.lean`, `PlusTruth.lean`, `StarTruth.lean`), not aspirationally. See
+`Semantics/ValidityLayer.lean` for the validity layer's half of the contract.
 
-**What a language must supply.** A `TruthEnv` instance, then one instance per primitive operator
-it has. Every clause field is discharged by `Iff.rfl` or `fun h => h` when the language's truth
-recursion has the clause shapes below — which is the real requirement, and is checked by the
-compiler at the instance, not assumed here.
+### What a fifth language must supply
 
-**Which tier a language inherits.** `bot`/`imp`/`box` give the five Boolean lemmas; adding
-`untl`/`snce` gives five more; adding `stab` gives `dstab_iff`; having `allFuture`/`allPast`
-primitive instead of `untl`/`snce` gives the primed tense tier.
+A `TruthEnv` instance, then one bundle instance covering the primitive operators it has. The
+whole of L's obligation, verbatim:
 
-**The `rfl` bridges.** A language's own derived-operator `def`s coincide with the `abbrev`s here
-only because they are the same Łukasiewicz/`untl` encodings character for character. That
-coincidence is what lets a wrapper delegate without a `show`, and it is pinned as a test in
-`Tests/BimodalTest/Semantics/ValidityLayerTest.lean`, not assumed.
+```
+instance : TruthEnv Formula where
+  Env _ := PUnit
+  T M τ t _ φ := TruthAt M τ t φ
 
-**Attributes.** The generic lemmas carry **no** attributes. Each language's wrapper keeps exactly
-the attributes it has today; tagging a generic lemma `@[simp]` would silently change every
-downstream simp set at once.
+instance : UntlClauses Formula where
+  bot := Formula.bot;  imp := Formula.imp;  box := Formula.box
+  untl := Formula.untl;  snce := Formula.snce
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+  untl_clause _ _ _ _ _ _ := Iff.rfl
+  snce_clause _ _ _ _ _ _ := Iff.rfl
+```
 
-**Classical discipline.** `neg_iff` and `top_true` are proved by `rw` plus explicit terms, never
-by `by_contra`/`push_neg`. This is not style: those two are `[propext]` in every language today,
-and a classical route would drift their wrappers' axiom sets.
+Every clause field is `Iff.rfl` or `fun h => h` in **all four** landed instances. That is the real
+requirement, and it is the compiler that checks it: a field that needs a genuine proof means the
+language's recursion does not have the shared clause shape, and the corresponding tier does not
+apply to it.
 
-**No recursor.** These classes abstract the truth *relation* and the operator *constructors*, not
-the inductive type. Nothing provable only by `induction φ` belongs here.
+### The tiers, and which language takes which
 
-**A note on grain.** The operator classes are deliberately *not* composed into `extends` bundles.
-Every generic lemma names exactly the operator classes its proof consumes, so a bundle would add
-a redundant per-language instance and a parent-projection diamond while buying nothing.
+| Bundle | Primitives | Lemmas inherited | Instantiated by |
+|--------|-----------|------------------|-----------------|
+| `BoolClauses` | `bot`, `imp`, `box` | `neg_iff`, `top_true`, `and_iff`, `or_iff`, `diamond_iff` | (via the three below) |
+| `UntlClauses` | + `untl`, `snce` | + `someFuture_iff`, `somePast_iff`, `allFuture_iff`, `allPast_iff`, `always_iff_tri` | L |
+| `StabClauses` | + `stab` | + `dstab_iff` | L⁺, L⋆ |
+| `TenseClauses` | `allFuture`, `allPast` **primitive** instead of `untl`/`snce` | the five Boolean ones, plus `someFuture_iff_of_allFuture`, `somePast_iff_of_allPast`, `always_iff_of_tense` | L⁻ |
+
+L⁻ is the case that justifies the tense tier's existence: it has the universal tenses as
+constructors, so its existential tenses are derived in the *opposite* duality direction
+(`Fφ := ¬G¬φ` rather than `Fφ := ⊤ U φ`), and both presentations had to be supported without
+merging the two formula types.
+
+Measured payoff across the four landed instantiations: **39 per-language theorem bodies** became
+one-line delegations (10 for L, 8 for L⁻, 10 for L⁺, 11 for L⋆) against 14 generic lemmas written
+once.
+
+### The environment parameter
+
+`Env` is `fun _ => PUnit` for L, L⁻ and L⁺, and `fun F => ℕ → F.Duration` for L⋆. Wrappers in the
+first three pass `PUnit.unit` for `e` **inside the proof body**, so `PUnit` never appears in a
+preserved statement; L⋆'s wrappers pass the file's own `v`.
+
+**The obligation this carries** is the clause-layer form of `ValidityLayer.lean`'s O2: the extra
+parameter must be threaded *unchanged* through every operator instantiated here. L⋆'s
+`timeStore`/`timeRecall` do not — they update and read the vector — so they are deliberately
+absent from every class above, and every lemma about them stays in `StarTruth.lean`. A fifth
+language may have as many parameter-manipulating operators as it likes, provided none of them is
+offered to a shared clause class.
+
+### The `rfl` bridges
+
+A language's own derived-operator `def`s coincide with the `abbrev`s here only because they are
+the same Łukasiewicz/`untl` encodings **character for character** — `neg φ := imp φ bot`,
+`and φ ψ := neg (imp φ (neg ψ))`, `someFuture φ := untl top φ`, and so on. That coincidence is
+what lets a wrapper delegate without a `show`. All four languages satisfy it today, for every
+operator; it is pinned by ~40 `example … := rfl` lines in
+`Tests/BimodalTest/Semantics/ValidityLayerTest.lean` rather than assumed. A fifth language that
+encodes a derived operator differently keeps its own proof for that one lemma and inherits the
+rest.
+
+### Attributes
+
+The generic lemmas carry **no** attributes, and must not acquire any. Each language's wrapper
+keeps exactly the attributes it has today — `@[simp, truth_norm]` on L's ten, `@[simp]` on L⁻'s
+eight, none on L⁺'s and L⋆'s. Tagging a generic lemma `@[simp]` would change every downstream simp
+set at once, and L's two `always` forms are a live example of why that matters: only the collected
+`always_iff` may carry the attribute, and it is L-only precisely because collapsing the three
+cases needs the frame's trichotomy, which no generic lemma has.
+
+### Classical discipline
+
+`neg_iff` and `top_true` are proved by `rw` plus explicit terms, never by `by_contra`/`push Not`.
+This is not style: both are `[propext]` in all four languages, and a classical route here would
+drift every wrapper's axiom set at once. Measured outcome of the refactor: **no name gained an
+axiom**, and four (`PlusTruth`/`StarTruth`'s `someFuture_iff`/`somePast_iff`) lost `Quot.sound`,
+because the generic proofs discharge the `⊤` guard through `top_true` where the originals reached
+for `simp`.
+
+### No recursor
+
+These classes abstract the truth *relation* and the operator *constructors*, not the inductive
+type. Nothing provable only by `induction φ` belongs here; that boundary is enumerated in
+`ValidityLayer.lean`'s contract and is the same boundary for both layers.
+
+### A note on grain
+
+The operator classes are fine-grained — one per operator — and every generic lemma names exactly
+the classes its proof consumes, rather than a bundle. The bundles exist for the *instance* side
+only, so a language declares one instance instead of six. Stating the lemmas against the bundles
+would force a fifth language to supply operators it may not have in order to use a lemma that does
+not need them.
 
 ## References
 
