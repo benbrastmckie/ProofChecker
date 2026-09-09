@@ -1,7 +1,7 @@
 # Implementation Plan: Lift the state-locality fragment to L⁺
 
 - **Task**: 575 - Lift the state-locality fragment to L-plus and retire the atom-restricted stability lemma
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 10 hours
 - **Dependencies**: None
 - **Research Inputs**: None (Stage 1.5 assessment: the task description is a specification, not a research question — see "Research Integration" below)
@@ -540,33 +540,33 @@ direction and record the obstruction rather than asserting the biconditional.
 
 ---
 
-### Phase 8: Documentation, indices, and the full gate [IN PROGRESS]
+### Phase 8: Documentation, indices, and the full gate [COMPLETED]
 
 **Goal**: Bring every docstring, README and index into agreement with the tree, and pass the
 repository gate.
 
 **Tasks**:
-- [ ] Complete `PlusStateLocal.lean`'s module docstring: `Main Definitions`, `Main Results`, the
+- [x] Complete `PlusStateLocal.lean`'s module docstring: `Main Definitions`, `Main Results`, the
       seven-row constructor table (`Constructor | State-local? | Why`) mirroring
       `StarStateLocal.lean`'s nine-row one, a "Sound, not complete" note, a note that both
       exclusions live on one frame, the **three-notion relation** from Phase 7's draft, References
       and Tags
-- [ ] Complete `StateLocalTransfer.lean`'s docstring symmetrically
-- [ ] `FormalSystem/Semantics.lean`: add both imports and both module-index bullets, mirroring the
+- [x] Complete `StateLocalTransfer.lean`'s docstring symmetrically
+- [x] `FormalSystem/Semantics.lean`: add both imports and both module-index bullets, mirroring the
       `StarStateLocal` bullet at `:153-160`
-- [ ] `FormalSystem/Semantics/README.md`: add a row for each new module to the module table,
+- [x] `FormalSystem/Semantics/README.md`: add a row for each new module to the module table,
       mirroring the `StarStateLocal.lean` row at `:41`
-- [ ] `docs/theorem-index.md`: add rows for `isPlusStateLocal_of_stateLocal`,
+- [x] `docs/theorem-index.md`: add rows for `isPlusStateLocal_of_stateLocal`,
       `plusStateLocal_plusValid_iff_stab` and `stateLocal_ofPlus_iff`, mirroring rows `:154-155`;
       each row's declaration must carry its anchor at the declaration itself (C15's second
       assertion) — `Paper: —` plus a reason is the correct anchor here
-- [ ] `bash scripts/check-module-invariants.sh --emit-inventory` to refresh generated inventory
+- [x] `bash scripts/check-module-invariants.sh --emit-inventory` to refresh generated inventory
       blocks (`README.md`'s totals row moves when files are added), then re-run with `--check`
-- [ ] Confirm zero task-number citations under `FormalSystem/` (C9) — this plan's phases are the
+- [x] Confirm zero task-number citations under `FormalSystem/` (C9) — this plan's phases are the
       only place task numbers may appear
-- [ ] `lake build` green with zero `sorry`
-- [ ] `bash scripts/check-module-invariants.sh` exits 0
-- [ ] Write the execution summary to
+- [x] `lake build` green with zero `sorry`
+- [x] `bash scripts/check-module-invariants.sh` exits 0
+- [x] Write the execution summary to
       `specs/575_plus_state_locality_fragment/summaries/01_plus-state-locality-fragment-summary.md`
 
 **Timing**: 1.5 hours
@@ -648,18 +648,18 @@ the `StarStateLocal.lean` twin arm for arm; the propositional content may not.
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0
-- [ ] Zero new `sorry` anywhere (`scripts/check-module-invariants.sh` C3)
-- [ ] `bash scripts/check-module-invariants.sh` exits 0
-- [ ] `grep -rn "stab_atom_of_atom" --include=*.lean --include=*.md .` returns hits only under
+- [x] `lake build` exits 0
+- [x] Zero new `sorry` anywhere (`scripts/check-module-invariants.sh` C3)
+- [x] `bash scripts/check-module-invariants.sh` exits 0
+- [x] `grep -rn "stab_atom_of_atom" --include=*.lean --include=*.md .` returns hits only under
       `specs/`
-- [ ] `stab_state_only`'s statement is unchanged; `Metalogic/Conservativity/Plus/Atomization.lean`
+- [x] `stab_state_only`'s statement is unchanged; `Metalogic/Conservativity/Plus/Atomization.lean`
       builds and still cites it
-- [ ] `FormalSystem/Semantics/PlusStateLocal.lean` contains no `StarLanguage` import
-- [ ] `git diff --stat` shows no change under `FormalSystem/StarLanguage/` and none to
+- [x] `FormalSystem/Semantics/PlusStateLocal.lean` contains no `StarLanguage` import
+- [x] `git diff --stat` shows no change under `FormalSystem/StarLanguage/` and none to
       `FormalSystem/Semantics/StarStateLocal.lean`
-- [ ] Zero task-number citations under `FormalSystem/`
-- [ ] Every `False` arm of `PlusFormula.StateLocal` has a matching `not_isPlusStateLocal_*`
+- [x] Zero task-number citations under `FormalSystem/`
+- [x] Every `False` arm of `PlusFormula.StateLocal` has a matching `not_isPlusStateLocal_*`
       theorem
 
 ## Artifacts & Outputs

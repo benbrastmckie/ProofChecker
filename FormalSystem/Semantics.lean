@@ -36,12 +36,14 @@ import FormalSystem.Semantics.PlusValidity
 import FormalSystem.Semantics.PlusPasting
 import FormalSystem.Semantics.PlusNonValidities
 import FormalSystem.Semantics.PlusDeterminism
+import FormalSystem.Semantics.PlusStateLocal
 import FormalSystem.Semantics.DeterministicBridge
 import FormalSystem.Semantics.StarTruth
 import FormalSystem.Semantics.StarValidity
 import FormalSystem.Semantics.StarDeterminism
 import FormalSystem.Semantics.StarNonValidities
 import FormalSystem.Semantics.StarStateLocal
+import FormalSystem.Semantics.StateLocalTransfer
 import FormalSystem.Semantics.DurationClassification
 import FormalSystem.Semantics.LexCarrier
 import FormalSystem.Semantics.IntTransfer
@@ -150,6 +152,15 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   `states_eq_of_deterministic` and the deterministic collapse `⊡φ ↔ φ`
   (`determined_of_deterministic`, `stab_biconditional_plusValidOn_of_deterministic`), valid on
   every frame satisfying `TaskFrame.Deterministic`, and choice-free
+- `PlusStateLocal`: the **state-locality** fragment of L⁺ — `PlusFormula.StateLocal`, the
+  syntactic predicate cut by structural recursion over all seven constructors (`atom`, `bot`,
+  `imp` propositionally; `box` and `stab` for an *arbitrary* argument; `untl`, `snce` excluded),
+  and `IsPlusStateLocal`, the semantic property it approximates: two possible worlds carrying the
+  same world state at `t` agree about `φ` at `t`. Carries the soundness induction
+  `isPlusStateLocal_of_stateLocal`, a non-preservation witness for each excluded constructor, and
+  the headline `φ ↔ ⊡φ` (`plusStateLocal_stab_iff`, `plusStateLocal_plusValid_iff_stab`) together
+  with its argument-shaped half `stab_of_stateLocal`, which is what discharges the AS arm of TM⁺
+  soundness and which strictly generalizes the atom-level `p → ⊡p` this tower used to carry
 - `StarStateLocal`: the **state-locality** fragment of L⋆ — `StarFormula.StateLocal`, the
   syntactic predicate cut by structural recursion (`atom`, `bot`, `imp`, `timeStore` recursively;
   `box` and `stab` for an *arbitrary* argument; `untl`, `snce`, `timeRecall` excluded), and
@@ -159,6 +170,10 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   excluded constructor, and the headline `φ ↔ ⊡φ` (`stateLocal_stab_iff`,
   `stateLocal_starValid_iff_stab`) — the companion facing the other way to `stab_state_only`,
   which says `⊡φ` is state-local where this says a state-local `φ` is already `⊡`-stable
+- `StateLocalTransfer`: `stateLocal_ofPlus_iff` — the two state-locality fragments agree along
+  `ofPlus`, as a **biconditional**, so the L⁺ fragment is exactly the `ofPlus`-preimage of the L⋆
+  one. Its own module rather than either fragment's, so that the L⁺ conservativity route does not
+  acquire an L⋆ dependency
 - `DurationClassification`: Hölder classification of Dedekind-complete duration groups --
   completeness implies Archimedean, and the discrete-or-dense dichotomy pinning the discrete
   branch to `ℤ`

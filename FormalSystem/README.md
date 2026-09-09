@@ -251,7 +251,7 @@ invariant check allowlists it by name (check C8).
 | `MinusLanguage.lean` | 45 | Re-export for MinusLanguage submodule |
 | `PlusLanguage.lean` | 54 | Re-export for PlusLanguage submodule (L⁺ = L plus the stability modal `⊡`, and its logic TM⁺) |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
-| `Semantics.lean` | 270 | Re-export for Semantics submodule |
+| `Semantics.lean` | 285 | Re-export for Semantics submodule |
 | `StarLanguage.lean` | 60 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the time store/recall operators `↑ⁱ`/`↓ⁱ`, and its logic TM⋆) |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |
 | `Theorems.lean` | 90 | Re-export for Theorems submodule |

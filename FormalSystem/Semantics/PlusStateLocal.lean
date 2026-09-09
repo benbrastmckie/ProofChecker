@@ -22,17 +22,114 @@ agree about `φ`. That is exactly the class `⊡` quantifies over, so a state-lo
 
 ## Main Results
 
-- `isPlusStateLocal_box`, `isPlusStateLocal_stab`
-- `isPlusStateLocal_of_stateLocal`
-- `not_isPlusStateLocal_someFuture`, `not_isPlusStateLocal_somePast`
-- `plusStateLocal_stab_iff`, `plusStateLocal_plusValid_iff_stab`
-- `stab_of_stateLocal`
+- `isPlusStateLocal_box`, `isPlusStateLocal_stab` — `□` and `⊡` are state-local for an
+  **arbitrary** argument, which is why the recursion admits them without a recursive hypothesis
+- `isPlusStateLocal_of_stateLocal` — soundness of the syntactic fragment against the semantics
+- `not_isPlusStateLocal_someFuture`, `not_isPlusStateLocal_somePast` — the two excluded
+  constructors are excluded by *theorem*, not by stipulation
+- `plusStateLocal_stab_iff` — the headline, pointwise: `φ ↔ ⊡φ` at every point, for state-local
+  `φ`
+- `plusStateLocal_plusValid_iff_stab` — the headline as a validity
+- `stab_of_stateLocal` — the `→` half in argument shape, and the strict generalization of the
+  atom-level `p → ⊡p` this tower used to carry
+
+## Which constructors are state-local, and why
+
+Read off `PlusTruthAt` (`Semantics/PlusTruth.lean`) clause by clause, at the **same** evaluation
+time on both sides:
+
+| Constructor | State-local? | Why |
+|---|---|---|
+| `atom p` | yes | `M.valuation (τ.states t ht) p` reads the state at `t` and nothing else |
+| `bot` | yes | constant |
+| `imp φ ψ` | yes if both are | pointwise |
+| `box φ` | yes, for arbitrary `φ` | `∀ σ, σ.IsTotal → …` does not mention `τ` at all |
+| `stab φ` | yes, for arbitrary `φ` | the class `⟨τ⟩ₜ` is unchanged by replacing `τ` with any history agreeing at `t` (`stab_congr_sameState`) |
+| `untl ψ φ` | no | quantifies over `s > t`, where the two histories may diverge |
+| `snce ψ φ` | no | quantifies over `s < t`, likewise |
+
+`box` and `stab` are the two entries a reader is most likely to expect a recursive hypothesis on.
+They do not need one: `isPlusStateLocal_box` and `isPlusStateLocal_stab` are proved for an
+arbitrary argument, so the fragment is strictly larger than a naive "every subformula is
+state-local" reading would give. Both were settled here **by proof**, not by analogy with the L⋆
+twin.
+
+## Sound, not complete
+
+`PlusFormula.StateLocal` is a **sufficient** syntactic condition, not a characterization. For
+instance `Fp → Fp` is semantically state-local — it is a tautology, so both sides of the
+biconditional hold at every point — yet it is syntactically rejected, because `imp` recurses into
+two `untl`s and the `untl` clause is `False` unconditionally. Recorded here so the gap reads as a
+design choice: the fragment is the one the consumers need, kept small enough that its soundness
+proof is a seven-case induction with no side conditions.
+
+The gap runs the other way too, and in the fragment's favour: `⊡Fp` *is* accepted, even though
+its subformula `Fp` is not, because the `stab` arm is `True` at an arbitrary argument. Acceptance
+turns on the outermost constructor, not on the whole subformula tree.
+
+## The two exclusions live on one frame
+
+`not_isPlusStateLocal_someFuture` and `not_isPlusStateLocal_somePast` are both witnessed on the
+permissive frame `NF` over `ℤ` (`Semantics/PlusNonValidities.lean`), where every function `ℤ → ℕ`
+is a possible world and `natModel` makes each atom true at world state `0` and nowhere else. No
+second countermodel frame is built: two possible worlds agreeing at `0` and disagreeing away from
+`0` refute both.
+
+L⁺ has no time registers, so the L⋆ module's third exclusion — `not_isStateLocal_timeRecall` —
+has no counterpart here. Two exclusions are all the seven-constructor recursion needs.
+
+## How this fragment relates to the other two shapes of the concept
+
+State-locality had, before this module, three incompatible presentations across the tower. Here
+is how each relates to `PlusFormula.StateLocal`, so the tower is systematic rather than merely
+parallel.
+
+**1. To the L⋆ fragment, along `ofPlus`.** `stateLocal_ofPlus_iff`
+(`Semantics/StateLocalTransfer.lean`) proves `(ofPlus φ).StateLocal ↔ φ.StateLocal` — a
+**biconditional**, not merely preservation. `ofPlus` maps the seven L⁺ constructors onto the
+seven matching L⋆ ones and the two recursions assign each of them the same arm, so the L⁺
+fragment is exactly the `ofPlus`-preimage of the L⋆ fragment. The two L⋆ constructors that have
+no L⁺ source, `timeStore` (admitted recursively) and `timeRecall` (excluded), are precisely the
+difference between the nine-arm and seven-arm recursions. The transfer lives in its own module,
+not here: `Metalogic/Conservativity/Plus/AxiomValidity.lean` imports this one, and an L⋆ import
+here would invert the L → L⁺ → L⋆ layering.
+
+**2. To `stab_state_only` (`Semantics/PlusTruth.lean`).** That lemma is a **different-times**
+statement: `τ(t) = σ(s)` transfers `⊡φ` from `(τ, t)` to `(σ, s)`, which is what the atomization
+route (`Metalogic/Conservativity/Plus/Atomization.lean`) consumes. This module's `stab` arm,
+`isPlusStateLocal_stab`, is its **same-time shadow**: one `t` on both sides. The two are related
+by `plusTruthAt_timeShift`, and share a common core — `stab_congr_sameState`, which
+`stab_state_only` is proved from and which `isPlusStateLocal_stab` is literally an instance of.
+The different-times shape does **not** generalize to this fragment: `box φ` at `t` and at `s` can
+differ. So the two face opposite ways: `stab_state_only` says `⊡φ` is state-local, this module
+says a state-local `φ` is already `⊡`-stable.
+
+**3. To `c_stab_state_only` (`Metalogic/Independence/CoarsenedModels.lean`).** That is the
+**coarsened port** of (2), and it is the one relation that is *not* covered by anything here.
+`CTruthAt` differs from `PlusTruthAt` in the `stab` clause alone: it quantifies over `SameUnder K`
+(agreement of the states' `π`-images) rather than over `SameStateAt` (agreement of the states
+themselves), which is strictly weaker. `IsPlusStateLocal` transfers truth along state equality
+only, so no instantiation of the results here produces a `CTruthAt` goal, and the coarsened `atom`
+case rests on `CoarseModel.atom_inv` — a field of the coarsened model that this fragment has no
+access to. A coarsened twin of `isPlusStateLocal_of_stateLocal` is provable (its `atom` arm from
+`atom_inv`, its `stab` arm from `c_stab_congr_sameUnder`, its `box` arm from the history-free
+clause), but it is a second induction rather than a consequence of this one, and it is not built
+here.
+
+## References
+
+* JPL paper `def:BLstar-semantics` — the truth clauses being classified; the atom-level
+  `p → ⊡p` of its footnote (line 1119) is the `stateLocal_atom` instance of `stab_of_stateLocal`
+* `FormalSystem/Semantics/PlusTruth.lean` — `PlusTruthAt`, `SameStateAt`, `stab_congr_sameState`,
+  `stab_state_only`
+* `FormalSystem/Semantics/StarStateLocal.lean` — the L⋆ twin this module mirrors arm for arm
+* `FormalSystem/Semantics/StateLocalTransfer.lean` — `stateLocal_ofPlus_iff`
+* `FormalSystem/Semantics/PlusNonValidities.lean` — `NF`, `natHist`, `natModel`
 
 ## Tags
 
 plus-language · state-locality · stability-modal · fragment
 -/
-
 namespace FormalSystem.PlusLanguage
 
 open FormalSystem.Syntax
