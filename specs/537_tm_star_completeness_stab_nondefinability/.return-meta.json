@@ -1,0 +1,30 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/537_tm_star_completeness_stab_nondefinability/plans/01_tm-plus-deterministic-completeness.md",
+      "summary": "15-phase plan for TM+ deterministic completeness, the axiomatize-without-defining coincidence corollary, non-definability of the stability modal, pasting-axiom underivability, and the conservativity corollaries."
+    }
+  ],
+  "dispatch_seq": 1,
+  "next_steps": "Run /implement 537 to execute the plan",
+  "phase_count": 15,
+  "estimated_hours": 26,
+  "dependency_waves": [[1, 2, 5, 6], [3, 4, 7, 8], [9], [10, 11, 13], [12], [14], [15]],
+  "memory_candidates": [
+    {
+      "content": "When a Lean completeness engine ends in a single application of its validity hypothesis to a concretely constructed countermodel frame (the shape `h_valid.apply F TM tau h_tot t`), the engine can be re-read with an arbitrarily narrowed validity hypothesis at near-zero cost: add one existential binder carrying the frame property to the countermodel producer and supply the witness. In this tree every completeness countermodel frame already carried a proved fibre-subsingleton lemma, which is definitionally the determinism predicate, so class-restricted completeness was a signature widening rather than a new proof. The corollary generalises: before planning a new canonical-model construction for a restricted frame class, check whether the existing engine's countermodel already lies in that class.",
+      "category": "PATTERN",
+      "source_artifact": "specs/537_tm_star_completeness_stab_nondefinability/plans/01_tm-plus-deterministic-completeness.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["completeness-engine", "countermodel-frame", "hypothesis-narrowing", "frame-class-restriction", "lean-metatheory"]
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788912523_4f6783_537",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  }
+}

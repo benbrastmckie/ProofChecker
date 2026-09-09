@@ -6,7 +6,7 @@ next_project_number: 571
 
 ## Task Order
 
-*Updated 2026-09-08. Generated from state.json dependency graph.*
+*Updated 2026-09-09. Generated from state.json dependency graph.*
 
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
@@ -89,7 +89,7 @@ next_project_number: 571
 
 ### Metalogic
 
-537 [NOT STARTED] — PRIORITY (2026-09-08): deliverable (1), deterministic completenes
+537 [PLANNED] — PRIORITY (2026-09-08): deliverable (1), deterministic completenes
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta (see above)
@@ -371,10 +371,11 @@ GROUND TRUTH to read first: 535's report §3-4 and §7.3 with its probes; 533's 
 ---
 
 ### 537. Tm star completeness stab nondefinability
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 533, Task 535, Task 536, Task 562
+- **Plan**: [537_tm_star_completeness_stab_nondefinability/plans/01_tm-plus-deterministic-completeness.md]
 
 **Description**: PRIORITY (2026-09-08): deliverable (1), deterministic completeness, is the paper-facing result of this task and goes FIRST, as its own phase, before (2)-(4); 535's suggestion to do non-definability first is superseded. PAPER-FACING STATEMENT to land alongside (1): although Determined does not DEFINE the deterministic frames (536's T3: the drift frame F0 validates it without being deterministic), it does AXIOMATIZE their logic -- TM⁺ + Determined is sound over every frame validating Determined (a class strictly containing the deterministic frames) and complete over the deterministic frames, so the logic of the deterministic frames and the logic of the Determined-valid frames coincide and both equal TM⁺ + Determined; state and prove this coincidence as a corollary, since it is the sentence the manuscript can actually use (its appendix currently has app:deterministic and cor:no-characterization but no axiomatization claim). NOT THIS TASK: the manuscript's characterization theorem for the deterministic frames -- lem:deterministic-singleton as a biconditional, the store/recall sentence sent:det and app:deterministic-future, the F0/F1 discrimination footnote, and PossibleWorlds task 105's Theorem C (Det-pm defines the deterministic frames) -- needs store and recall operators that PlusFormula does not have; that is task 561, independent of this one. RESCOPED 2026-09-08 (second rescope): this task is now the MECHANICAL TM⁺ metatheory only. General TM⁺ completeness over the paper's all-histories semantics -- adapting the chronicle engines so the canonical frame admits nondeterminism -- is owned by research task 559 and its gated implementation task 560, which depend on this one. The former deliverable (5), the one-dispatch Lifting-Lemma spike over ℤ, is REMOVED from this task and absorbed into 559 as a full research question; do not attempt it here, and do not touch the Lifting/naming-rule/bundled-semantics questions at all. Everything this task lands is the baseline that 559/560 must specialize to and stay consistent with: deterministic completeness is the ⊡ = id special case of any nondeterministic result, and the PS/US underivability record tells the nondeterministic construction which pasting principles it must realize.
 
