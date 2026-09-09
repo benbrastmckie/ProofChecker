@@ -422,30 +422,30 @@ new constructors' side conditions need, plus the two missing `swapTemporal` clau
 
 ---
 
-### Phase 3: L⋆ pasting — the two purity congruences, PS and US [NOT STARTED]
+### Phase 3: L⋆ pasting — the two purity congruences, PS and US [COMPLETED]
 
 **Goal**: Create `FormalSystem/Metalogic/Conservativity/Star/StarPasting.lean` holding the
 semantic content the `paste` and `untl_paste` arms consume, reusing
 `Semantics/PlusPasting.lean`'s formula-independent construction read-only.
 
 **Tasks**:
-- [ ] Create the file with the standard copyright header (`bash scripts/check-copyright-headers.sh`
+- [x] Create the file with the standard copyright header (`bash scripts/check-copyright-headers.sh`
       must accept it) and a module docstring stating why it lives here rather than in
       `Semantics/StarPasting.lean` (report D-4: territory, and the precedent `StarAxiomValidity.lean`
       already sets for `starTruth_iff_iff`)
-- [ ] Import `FormalSystem.Semantics.PlusPasting` and `FormalSystem.Semantics.StarValidity`;
+- [x] Import `FormalSystem.Semantics.PlusPasting` and `FormalSystem.Semantics.StarValidity`;
       reuse `paste`, `paste_isTotal`, `paste_agreeFrom`, `paste_agreeUpTo`, `AgreeFrom`,
       `AgreeUpTo`, `agreeFrom_mono`, `agreeUpTo_mono` **read-only** — no edit to `PlusPasting.lean`
-- [ ] Prove `star_truth_congr_agreeFrom` by induction on `StarIsPureFuture`, with the register
+- [x] Prove `star_truth_congr_agreeFrom` by induction on `StarIsPureFuture`, with the register
       vector **universally quantified in the motive** so the `timeStore` case recurses at
       `Function.update v i t` (lifted from `.probes/05`)
-- [ ] Prove `star_truth_congr_agreeUpTo`, its `StarIsPurePast` twin
-- [ ] Prove `star_paste_valid` (PS over `StarFormula`) and `star_untl_paste_valid` (US), both
+- [x] Prove `star_truth_congr_agreeUpTo`, its `StarIsPurePast` twin
+- [x] Prove `star_paste_valid` (PS over `StarFormula`) and `star_untl_paste_valid` (US), both
       lifted from `.probes/05`
-- [ ] Register the module in `FormalSystem/Metalogic/Conservativity/Star.lean` and in
+- [x] Register the module in `FormalSystem/Metalogic/Conservativity/Star.lean` and in
       `FormalSystem/Metalogic/Conservativity/Star/README.md`'s module index
-- [ ] Every declaration carries a docstring and, where one applies, a `Paper:` anchor
-- [ ] `lake build FormalSystem.Metalogic.Conservativity.Star.StarPasting` green, then
+- [x] Every declaration carries a docstring and, where one applies, a `Paper:` anchor
+- [x] `lake build FormalSystem.Metalogic.Conservativity.Star.StarPasting` green, then
       `lake build` green
 
 **Timing**: 2 hours

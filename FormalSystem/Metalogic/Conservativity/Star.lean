@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
+import FormalSystem.Metalogic.Conservativity.Star.StarPasting
 import FormalSystem.Metalogic.Conservativity.Star.StarAxiomValidity
 import FormalSystem.Metalogic.Conservativity.Star.StarSoundness
 import FormalSystem.Metalogic.Conservativity.Star.Forward
@@ -21,6 +22,7 @@ semantics is `def:BLstar-semantics` over points `(τ, x, v⃗)`
 
 | Module | Contents |
 |--------|----------|
+| `Conservativity/Star/StarPasting.lean` | `star_truth_congr_agreeFrom`, `star_truth_congr_agreeUpTo`, `star_paste_valid`, `star_untl_paste_valid` — the two L⋆ purity congruences and the PS / US validities the pasting schemata consume |
 | `Conservativity/Star/StarAxiomValidity.lean` | `starAxiom_validIn_min`, `starAxiom_swap_validIn_min` — validity and swap-validity of every `StarAxiom` constructor, one arm each and no wildcard |
 | `Conservativity/Star/StarSoundness.lean` | `star_derivable_valid_and_swap_validIn`, `star_soundness_validIn`, the four rows, `star_not_derivable_nil_bot` — soundness of TM⋆ at every class, TD discharged semantically |
 | `Conservativity/Star/Forward.lean` | `forward_star`, `starDerivable_ofFormula_iff` — TM⋆ conservative over TM in both directions, unconditionally; `starConservative_of_plusComplete` and `plusIncomplete_of_starNonconservative` — the conditional pair over TM⁺ |
