@@ -150,6 +150,15 @@ against `specs/paper-definitions-of-record.md`'s DANGLING entry, not a live `\la
   `states_eq_of_deterministic` and the deterministic collapse `⊡φ ↔ φ`
   (`determined_of_deterministic`, `stab_biconditional_plusValidOn_of_deterministic`), valid on
   every frame satisfying `TaskFrame.Deterministic`, and choice-free
+- `StarStateLocal`: the **state-locality** fragment of L⋆ — `StarFormula.StateLocal`, the
+  syntactic predicate cut by structural recursion (`atom`, `bot`, `imp`, `timeStore` recursively;
+  `box` and `stab` for an *arbitrary* argument; `untl`, `snce`, `timeRecall` excluded), and
+  `IsStateLocal`, the semantic property it approximates: two possible worlds carrying the same
+  world state at `t` agree about `φ` at `t`, under one and the same stored-time vector. Carries
+  the soundness induction `isStateLocal_of_stateLocal`, a non-preservation witness for each
+  excluded constructor, and the headline `φ ↔ ⊡φ` (`stateLocal_stab_iff`,
+  `stateLocal_starValid_iff_stab`) — the companion facing the other way to `stab_state_only`,
+  which says `⊡φ` is state-local where this says a state-local `φ` is already `⊡`-stable
 - `DurationClassification`: Hölder classification of Dedekind-complete duration groups --
   completeness implies Archimedean, and the discrete-or-dense dichotomy pinning the discrete
   branch to `ℤ`

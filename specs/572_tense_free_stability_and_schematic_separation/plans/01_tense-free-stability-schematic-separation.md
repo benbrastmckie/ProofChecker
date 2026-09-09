@@ -1,7 +1,7 @@
 # Implementation Plan: Tense-Free Stability and the Schematic Separation
 
 - **Task**: 572 - Tense-free stability and schematic separation
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 9 hours
 - **Dependencies**: Task 571 (schematic `Det-pm`) — `[COMPLETED]`, so `Semantics/StarDeterminism.lean` and `StarLanguage/README.md` are released territory
 - **Research Inputs**: None (no research artifact for this round; the description is a specification and every structural question it raises was settled by direct reads of the tree — see Overview)
@@ -366,33 +366,29 @@ there from the concurrent `StarFormula.swapTemporal` work), and the pre-scan mis
 
 ---
 
-### Phase 6: Documentation, indices, and the full gate [NOT STARTED]
+### Phase 6: Documentation, indices, and the full gate [COMPLETED]
 
 **Goal**: Bring every index, README and docstring into agreement with the tree, and pass the
 repository gate.
 
 **Tasks**:
-- [ ] `FormalSystem/Semantics.lean`: add the `StarStateLocal` bullet to the module index docstring
+- [x] `FormalSystem/Semantics.lean`: add the `StarStateLocal` bullet to the module index docstring
       (matching the `PlusTruth`/`StarTruth` bullet style)
-- [ ] `FormalSystem/Semantics/README.md`: add the `StarStateLocal.lean` table row
-- [ ] `FormalSystem/Semantics/StarTruth.lean`: refine design note **(b)**. It currently says the
+- [x] `FormalSystem/Semantics/README.md`: add the `StarStateLocal.lean` table row
+- [x] `FormalSystem/Semantics/StarTruth.lean`: refine design note **(b)**. It currently says the
       `stab_state_only` analogue "must not be sought", which a reader would take as forbidding
       this work. State precisely what fails (the **different-times** transfer, inside a recall
       scope) and what now holds (same-time state-locality for the `StateLocal` fragment), with a
       pointer to the new module. Do not weaken the existing warning about extending the
       atomization route to `StarFormula`
-- [ ] `FormalSystem/StarLanguage/README.md`: update the three `fn_sentDet_atom` rows (module
-      inventory, correspondence table, and the "One recorded divergence" paragraph). Re-read the
-      file immediately before editing — task 573 is active in this neighbourhood
-- [ ] `FormalSystem/Metalogic/Independence/README.md`: regenerate the inventory block
-      (`bash scripts/readme-inventory.sh`) so the `ForwardDeterministicFrame.lean` line count and
-      summary are current
-- [ ] `docs/theorem-index.md`: add rows for the new public declarations, each carrying its paper
+- [x] `FormalSystem/StarLanguage/README.md`: update the three `fn_sentDet_atom` rows (module inventory, correspondence table, and the "One recorded divergence" paragraph) *(deviation: altered — the collision risk the plan flagged materialised: the concurrent task in this neighbourhood committed the file, carrying these edits in under its own commit message. The content is in `HEAD` and verified; only the attribution differs.)*
+- [x] `FormalSystem/Metalogic/Independence/README.md`: regenerate the inventory block so the `ForwardDeterministicFrame.lean` line count and summary are current *(deviation: altered — `scripts/readme-inventory.sh` is deprecated and prints a pointer instead of regenerating; the live command is `bash scripts/check-module-invariants.sh --emit-inventory`, which was used. The hand-written summary text in that row still named `fn_sentDet_atom` and was edited by hand, since only the line count is generated.)*
+- [x] `docs/theorem-index.md`: add rows for the new public declarations, each carrying its paper
       anchor or the literal `Paper: —` plus a reason (this result is not a manuscript theorem;
       it is the structural closure of `fn_sentDet_atom`'s docstring reason)
-- [ ] Run `#print axioms` on every new declaration and write the **actual** axiom set into any
+- [x] Run `#print axioms` on every new declaration and write the **actual** axiom set into any
       docstring that makes an axiom claim — never an aspirational one (C14)
-- [ ] Run the full gate
+- [x] Run the full gate
 
 **Timing**: 1.5 hours
 
@@ -492,14 +488,14 @@ end FormalSystem.Metalogic.Independence
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0
-- [ ] `bash scripts/check-module-invariants.sh` exits 0
-- [ ] Zero `sorry` in every file touched
-- [ ] `grep -rn 'fn_sentDet_atom' FormalSystem/ Tests/` returns nothing (the old statement is
+- [x] `lake build` exits 0
+- [x] `bash scripts/check-module-invariants.sh` exits 0
+- [x] Zero `sorry` in every file touched
+- [x] `grep -rn 'fn_sentDet_atom' FormalSystem/ Tests/` returns nothing (the old statement is
       retired, not duplicated)
-- [ ] `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` are unchanged in `git diff`
-- [ ] Every excluded constructor has a non-preservation witness theorem, or a recorded reason
-- [ ] No task-number citation under `FormalSystem/`
+- [x] `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` are unchanged in `git diff`
+- [x] Every excluded constructor has a non-preservation witness theorem, or a recorded reason
+- [x] No task-number citation under `FormalSystem/`
 
 ## Artifacts & Outputs
 

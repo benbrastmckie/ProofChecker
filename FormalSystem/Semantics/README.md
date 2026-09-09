@@ -38,6 +38,7 @@ live file and subdirectory here, and no row for anything else.
 | StarValidity.lean | `TaskFrame.StarValidOn`, `StarValidOnFrames`, `StarValidIn`, `StarValid` — L⋆ mirrors of Validity.lean with the stored-time vector as an extra binder; `starValidOn_ofPlus`; `settledDisj`, `sentDet` (`sent:det`), `sentDet_unfold` (the paper's `(∗)` chain), and `not_starValidOn_sentDet` |
 | StarDeterminism.lean | `app:deterministic-future`'s positive half (`sentDet_of_deterministic`) and Theorem C's `Det-pm` half: `star_congr_of_deterministic`, `detPM` (schematic in `φ : StarFormula`), `detPM_unfold`, `detPM_of_deterministic` (schematic), `deterministic_of_detPM` (hypothesis at atoms), `deterministic_starDefinable` (the three-way equivalence: the atomic fragment forces determinism, determinism delivers the full schema) — the last two theorems of ZFC |
 | StarNonValidities.lean | `app:deterministic-future`'s negative half: `refute_sentDet` over `NF`, the same countermodel `refute_determined` uses, and `not_starValid_sentDet` |
+| StarStateLocal.lean | The **state-locality** fragment of L⋆: `StarFormula.StateLocal` (syntactic, by structural recursion — `box` and `stab` admitted for an *arbitrary* argument, `untl`/`snce`/`timeRecall` excluded) and `IsStateLocal` (semantic); `isStateLocal_box`, `isStateLocal_stab`, the soundness induction `isStateLocal_of_stateLocal`, the three non-preservation witnesses `not_isStateLocal_someFuture` / `not_isStateLocal_somePast` / `not_isStateLocal_timeRecall` on `NF`, and the headline `φ ↔ ⊡φ` (`stateLocal_stab_iff`, `stateLocal_starValid_iff_stab`) |
 | DurationClassification.lean | Classification of Dedekind-complete duration groups: discrete (`≃+o ℤ`) or densely ordered; also `duration_dense_or_least_pos`, the Archimedean-free order dichotomy |
 | LexCarrier.lean | `LexInt`: `SuccOrder`/`PredOrder` instances, `isLeast_pos`, and the three non-Archimedean theorems for `α ×ₗ ℤ` at an arbitrary ordered abelian group `α` — instantiated at `ℚ` for the CEF countermodel and at `ℤ` for the `Sat .Discrete` separation |
 | FrameAxioms.lean | The frame axioms (nullity, compositionality, reflection) as standalone statements |
@@ -86,4 +87,4 @@ directed graph — the presentation `Metalogic/Decidability/IntPresentation.lean
 
 ---
 
-*Last verified: 2026-09-08*
+*Last verified: 2026-09-09*

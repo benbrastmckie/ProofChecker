@@ -53,15 +53,28 @@ correspondence-record-and-store-recall-recommendation report, §II.3 (which name
 report's pre-rename file names — `StarTruth.lean` there is this tree's `PlusTruth.lean`); the L⋆
 module it names is this one.
 
-**(b) `stab_state_only` fails inside a recall scope, by design.**
+**(b) `stab_state_only`'s *different-times* transfer has no L⋆ analogue; its *same-time*
+restriction does, on a fragment.**
 `stab_state_only` (`Semantics/PlusTruth.lean`) says `⊡φ`'s truth depends on the world state
-alone, at any two times — which is what licenses the atomization route to TM⁺ soundness
-(`Metalogic/Conservativity/Plus/Atomization.lean`). It has **no L⋆ analogue and must not be
-sought**: `⊡↓ⁱφ` reaches back to a time the register names, and two points with the same world
-state but different register contents disagree on it. Breaking that invariant is exactly what
-this language is built to do — it is what lets `sent:det` discriminate frames that no
-`PlusFormula` can (`Metalogic/Independence/StarDiscrimination.lean`) — and it is why the
-atomization route must never be extended to `StarFormula`.
+alone, **at any two times** — `τ(t) = σ(s)` transfers `⊡φ` from `(τ, t)` to `(σ, s)` — which is
+what licenses the atomization route to TM⁺ soundness
+(`Metalogic/Conservativity/Plus/Atomization.lean`).
+
+*What fails.* The different-times statement has no L⋆ analogue and must not be sought: `⊡↓ⁱφ`
+reaches back to a time the register names, and two points with the same world state but
+different register contents disagree on it. Breaking that invariant is exactly what this
+language is built to do — it is what lets `sent:det` discriminate frames that no `PlusFormula`
+can (`Metalogic/Independence/StarDiscrimination.lean`) — and it is why the **atomization route
+must never be extended to `StarFormula`**. That warning stands unchanged.
+
+*What holds.* The **same-time** statement — one `t`, one register vector `v⃗` on both sides —
+does hold, and holds of a syntactic fragment rather than only of `⊡`-formulas:
+`Semantics/StarStateLocal.lean`'s `isStateLocal_of_stateLocal`, over the fragment
+`StarFormula.StateLocal`. On that fragment `φ ↔ ⊡φ` is valid (`stateLocal_starValid_iff_stab`).
+The two statements are not in tension: the fragment excludes `↓ⁱ` outright
+(`not_isStateLocal_timeRecall` is the countermodel), which is precisely the constructor the
+different-times transfer founders on. Nothing there recovers an atomization route; a same-time
+congruence does not let a `⊡`-formula be treated as a fresh state-valued atom across times.
 
 ## References
 

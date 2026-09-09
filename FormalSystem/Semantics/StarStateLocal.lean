@@ -223,6 +223,10 @@ Nine cases, one per constructor. `box` and `stab` discharge to the two lemmas ab
 inductive hypothesis; `untl`, `snce` and `timeRecall` are vacuous, the syntactic predicate being
 `False` there; `timeStore` uses its inductive hypothesis at the *updated* register vector, which
 is why `IsStateLocal` quantifies the vector internally.
+
+Paper: — (the formalization's own: the manuscript has no fragment of L⋆ and no state-locality
+predicate, and this result exists to close the reason the sentence-letter form of the
+forward-determinism separation gave for its own restriction)
 -/
 theorem isStateLocal_of_stateLocal : ∀ {φ : StarFormula}, φ.StateLocal → IsStateLocal φ := by
   intro φ
@@ -362,6 +366,10 @@ theorem stateLocal_stab_iff {F : TaskFrame} {φ : StarFormula} (hφ : φ.StateLo
 The companion facing the other way to `stab_state_only` (`Semantics/PlusTruth.lean`): that lemma
 says `⊡φ` depends on the world state alone, this one says a formula that already depends on the
 world state alone is `⊡`-stable.
+
+Paper: — (the formalization's own: the manuscript states no fragment-level `φ ↔ ⊡φ`, and the
+nearest paper-anchored statement is the atom-level `p → ⊡p` of `def:BLstar-semantics`'s footnote,
+which this strictly extends)
 -/
 theorem stateLocal_starValid_iff_stab {φ : StarFormula} (hφ : φ.StateLocal) :
     StarValid (StarFormula.iff φ (.stab φ)) := by

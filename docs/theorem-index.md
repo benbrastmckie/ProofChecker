@@ -151,6 +151,10 @@ class — see `deterministic_not_plusDefinable` above.
 | `app:discrete` | `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)` — the narrowing is not Galois-closed | `FormalSystem.Metalogic.Independence.sat_ztime_ssubset_mod_axiomSet` | `FormalSystem/Metalogic/Independence/LexIntWitness.lean` | ZTime | pcq pinned:C14 |
 | `app:deterministic` | No set of `PlusFormula`s defines `TaskFrame.Deterministic` | `FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable` | `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean` | — | pcq pinned:C14 |
 | `def:BLstar-semantics` | No `Formula` of L is equivalent to `⊡Fp` over all task models — the stability modal is not L-definable | `FormalSystem.Metalogic.Independence.stabNotDefinable` | `FormalSystem/Metalogic/Independence/StabUndefinable.lean` | — | pcq |
+| — | Every formula of the syntactic **state-locality** fragment of L⋆ has the semantic property: possible worlds sharing a world state at `t` agree about it at `t` | `FormalSystem.Semantics.isStateLocal_of_stateLocal` | `FormalSystem/Semantics/StarStateLocal.lean` | — | `[propext]` |
+| — | `φ ↔ ⊡φ` is valid for every state-local `φ` — the fragment-level strengthening of the atom-level `p → ⊡p` | `FormalSystem.Semantics.stateLocal_starValid_iff_stab` | `FormalSystem/Semantics/StarStateLocal.lean` | Base | pcq |
+| — | `sent:det` is valid over the forward-deterministic `F^N` at **every** state-local instance, not only at sentence letters | `FormalSystem.Metalogic.Independence.fn_sentDet_stateLocal` | `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean` | — | pcq |
+| — | The two-sided bound: valid at every state-local instance, refuted at `P p`, which lies outside the fragment | `FormalSystem.Metalogic.Independence.fn_sentDet_bounds` | `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean` | — | pcq |
 
 ### Conservativity — TM⁻ over L⁻, TM over TM⁻, TM⁺ over TM
 

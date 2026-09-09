@@ -294,6 +294,10 @@ The fragment is strictly wider than the atoms: it contains `⊥`, is closed unde
 `¬`, `∧`, `∨`), admits `□φ` and `⊡φ` for **arbitrary** `φ`, and admits `↑ⁱ`. What it excludes —
 `U`, `S` and `↓ⁱ` — it excludes by theorem, each with a countermodel
 (`not_isStateLocal_someFuture`, `not_isStateLocal_somePast`, `not_isStateLocal_timeRecall`).
+
+Paper: — (the manuscript has no forward-determinism separation: the result is report-level, from
+the PossibleWorlds determinism-axiom-correspondence report, §3.2, Theorem A, and this statement is
+strictly stronger than that report's, which is stated at sentence letters)
 -/
 theorem fn_sentDet_stateLocal (φ : StarFormula) (hφ : φ.StateLocal) :
     FN.StarValidOn (sentDet φ) := by
@@ -456,6 +460,10 @@ positive side and demonstrably not everything on the negative side.
 The middle conjunct is what makes the pair non-vacuous: it certifies that the refuting instance
 really does fall outside the fragment the first conjunct quantifies over, so the two halves
 cannot be contradicting each other.
+
+Paper: — (the manuscript has no forward-determinism separation, so it has no two-sided bound on
+one either: both halves are report-level results of the PossibleWorlds
+determinism-axiom-correspondence report, §3.2-§3.3)
 -/
 theorem fn_sentDet_bounds (p : Atom) :
     (∀ φ : StarFormula, φ.StateLocal → FN.StarValidOn (sentDet φ)) ∧
