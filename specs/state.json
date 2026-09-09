@@ -31,7 +31,7 @@
     {
       "project_number": 576,
       "project_name": "split_ofbase_eliminate_bridge_results",
-      "status": "not_started",
+      "status": "researched",
       "task_type": "lean4",
       "description": "Split the ofBase monolith and eliminate the ofPlus-restricted bridge results from TM-star. GROUND TRUTH: `StarAxiom.ofBase (phi : PlusFormula) (ax : PlusAxiom phi) : StarAxiom (ofPlus phi)` (FormalSystem/StarLanguage/Axioms.lean:136) carries ALL 45 TM-plus schemata at `ofPlus` instances only. The research that produced this design established that EXACTLY ONE of those schemata fails schematically over `StarFormula`: `modal_future` (box-phi implies box-G-phi), refuted by `refute_modal_future` (Semantics/StarNonValidities.lean) at phi := recall-1-p implies p. The other 44 are sound at arbitrary phi : StarFormula. One failing schema currently restricts the entire block.\n\nTHE VISIBLE COST IS A BRIDGE RESULT, and removing it is the point of this task: `stabNecessitationOfPlus` (StarLanguage/Derivation.lean) is stab-necessitation derivable only at `ofPlus` instances, because MS reaches TM-star only through `ofBase`. The rule is SOUND at every formula -- its restriction is an artifact of axiom packaging, not of mathematics. The originating research report itself gestured at the finer split, recommending that `modal_future` be re-declared under a `RegFree` side condition and noting that `ofBase` already supplies MF at register-free instances.\n\nDELIVERABLES, each phase one agent run with lake build green and no new sorry: (1) VERIFY FIRST, AND THIS GATES EVERYTHING AFTER IT: re-establish BY PROOF that exactly 44 of the 45 TM-plus schemata are sound at arbitrary phi : StarFormula. Do NOT trust the prior count. If more than `modal_future` fails, the split changes shape -- report the true measurement honestly and proceed with whatever it supports; a corrected count is a successful gate, not a failure. (2) Re-declare the schematically-sound schemata directly over `StarFormula`, each with its own constructor mirroring `PlusAxiom`'s corresponding arm, so the two axiom sets stay structurally comparable. (3) Carry `modal_future` ALONE under an explicit register-free side condition. `RegFree` and `IsPureFuture`/`IsPurePast` over `StarFormula` were moved to Non-Goals under the `ofBase` design and must now be defined. (4) RETIRE the monolithic `ofBase`. If a residual embedding arm is still required, it must carry ONLY the schemata that genuinely cannot be stated schematically, and its docstring must name them exhaustively with the reason for each. (5) Re-prove soundness: validity and swap-validity for every newly schematic arm. This is precisely the cost the `ofBase` design avoided; here it is the deliverable, not an obstacle. (6) RETIRE `stabNecessitationOfPlus` in favour of an unrestricted `stabNecessitation`. Delete the restricted name; never keep both. (7) Survey every OTHER `ofPlus`-instance-restricted result reachable from StarLanguage/ and Metalogic/Conservativity/Star/ and widen each one the split covers, rather than widening only the headline. Any that remain restricted must be reported with the specific reason. (8) RE-VERIFY the conservativity results against the new axiom set -- `starDerivable_ofFormula_iff`, `starConservative_of_plusComplete`, `plusIncomplete_of_starNonconservative`. If widening the axiom set breaks a conservativity direction, that is a REAL FINDING about the language and must be reported as a theorem, never silently weakened or worked around.\n\nHARD CONSTRAINTS: no `sorry` -- an unreachable result is recorded as a reasoned exclusion with its obstruction named, never stubbed; never restate a theorem under its own name in weakened form (.claude/rules/plan-compliance.md); never argue by uniform substitution (unsound here); no task numbers under FormalSystem/; `lake build` green, `lake build BimodalTest` green, and `scripts/check-module-invariants.sh` exit 0 with C2/C3/C9/C14/C15/C24/C26 all green -- if a pinned name changes, update the baseline NAME only and never its axiom set. TERRITORY: StarLanguage/Axioms.lean, StarLanguage/Derivation.lean, StarLanguage/Formula.lean (the register-free and purity predicates), Semantics/StarNonValidities.lean, Metalogic/Conservativity/Star/**, StarLanguage/README.md. Sequenced after the invariant-record task so that StarSoundness.lean's lemma relocation settles before this task rewrites the soundness block.",
       "topic": "metalogic",
@@ -48,7 +48,16 @@
       ],
       "priority": "high",
       "created": "2026-09-09T11:48:41Z",
-      "last_updated": "2026-09-09T11:48:41Z"
+      "last_updated": "2026-09-09T13:18:22Z",
+      "session_id": "sess_1788954800_f0042b",
+      "artifacts": [
+        {
+          "path": "specs/576_split_ofbase_eliminate_bridge_results/reports/01_ofbase-split-schema-measurement.md",
+          "type": "report",
+          "summary": "Machine-checked re-measurement of the ofBase split: ofBase carries 53 PlusAxiom constructors (not 45); 52 are schematically sound at arbitrary StarFormula and modal_future is sound at every timeRecall-free formula, so ofBase retires with no residual arm; includes cslib pattern transfer verdicts, territory gaps, and a 9-phase plan."
+        }
+      ],
+      "next_artifact_number": 2
     },
     {
       "project_number": 575,

@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/576_split_ofbase_eliminate_bridge_results/reports/01_ofbase-split-schema-measurement.md",
+      "summary": "Machine-checked re-measurement of the ofBase split: ofBase carries 53 PlusAxiom constructors (not 45); 52 are schematically sound at arbitrary StarFormula and modal_future is sound at every timeRecall-free formula, so ofBase retires with no residual arm; includes cslib pattern transfer verdicts, territory gaps, and a 9-phase plan."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788954800_f0042b_576",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
