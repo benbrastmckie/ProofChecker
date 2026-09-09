@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Semantics.Truth
 import FormalSystem.MinusLanguage.Formula
+import FormalSystem.Semantics.TruthClauses
 
 -- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
 -- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
@@ -112,6 +113,32 @@ def MinusTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : Min
   | .allPast φ => ∀ s : F.Duration, s < t → MinusTruthAt M τ s φ
   | .allFuture φ => ∀ s : F.Duration, t < s → MinusTruthAt M τ s φ
 
+/-! ### The abstract clause layer, instantiated
+
+L⁻'s instances of `Semantics/TruthClauses.lean`. This is the first genuine syntax-side
+divergence in the tower: `allPast`/`allFuture` are **primitive** constructors here, not
+`untl`/`snce` derivatives, so L⁻ instantiates `TenseClauses` and inherits the primed tense tier
+rather than the `untl` one. The environment is trivial, exactly as for L. -/
+
+/-- L⁻'s pointed truth relation, with the trivial environment. -/
+instance : TruthEnv MinusFormula where
+  Env _ := PUnit
+  T M τ t _ φ := MinusTruthAt M τ t φ
+
+/-- L⁻'s five primitive operators and their clauses; the tenses are `allFuture`/`allPast`
+themselves, not `untl`/`snce`. -/
+instance : TenseClauses MinusFormula where
+  bot := MinusFormula.bot
+  imp := MinusFormula.imp
+  box := MinusFormula.box
+  allFuture := MinusFormula.allFuture
+  allPast := MinusFormula.allPast
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+  allFuture_clause _ _ _ _ _ := Iff.rfl
+  allPast_clause _ _ _ _ _ := Iff.rfl
+
 namespace MinusTruth
 
 variable {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
@@ -144,22 +171,22 @@ theorem future_iff (φ : MinusFormula) :
 
 /-- Truth of `¬φ`. -/
 @[simp] theorem neg_iff (φ : MinusFormula) :
-    MinusTruthAt M τ t φ.neg ↔ ¬ MinusTruthAt M τ t φ := Iff.rfl
+    MinusTruthAt M τ t φ.neg ↔ ¬ MinusTruthAt M τ t φ :=
+  TruthClauses.neg_iff (L := MinusFormula) M τ t PUnit.unit φ
 
 /-- `⊤` is true everywhere. -/
-@[simp] theorem top_true : MinusTruthAt M τ t MinusFormula.top := id
+@[simp] theorem top_true : MinusTruthAt M τ t MinusFormula.top :=
+  TruthClauses.top_true (L := MinusFormula) M τ t PUnit.unit
 
 /-- Truth of `φ ∧ ψ`. Classical: `and` is the double-negated implication. -/
 @[simp] theorem and_iff (φ ψ : MinusFormula) :
-    MinusTruthAt M τ t (φ.and ψ) ↔ (MinusTruthAt M τ t φ ∧ MinusTruthAt M τ t ψ) := by
-  simp only [MinusFormula.and, MinusFormula.neg, MinusTruthAt]
-  tauto
+    MinusTruthAt M τ t (φ.and ψ) ↔ (MinusTruthAt M τ t φ ∧ MinusTruthAt M τ t ψ) :=
+  TruthClauses.and_iff (L := MinusFormula) M τ t PUnit.unit φ ψ
 
 /-- Truth of `φ ∨ ψ`. Classical: `or` is `¬φ → ψ`. -/
 @[simp] theorem or_iff (φ ψ : MinusFormula) :
-    MinusTruthAt M τ t (φ.or ψ) ↔ (MinusTruthAt M τ t φ ∨ MinusTruthAt M τ t ψ) := by
-  simp only [MinusFormula.or, MinusFormula.neg, MinusTruthAt]
-  tauto
+    MinusTruthAt M τ t (φ.or ψ) ↔ (MinusTruthAt M τ t φ ∨ MinusTruthAt M τ t ψ) :=
+  TruthClauses.or_iff (L := MinusFormula) M τ t PUnit.unit φ ψ
 
 /-! ### The derived existential operators
 
@@ -170,27 +197,18 @@ re-deriving the classical step at every evaluation site. -/
 
 /-- Truth of `◇φ` (`¬□¬φ`): `φ` holds at *some* total history at the current time. -/
 @[simp] theorem diamond_iff (φ : MinusFormula) :
-    MinusTruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ MinusTruthAt M σ t φ := by
-  simp only [MinusFormula.diamond, MinusFormula.neg, MinusTruthAt]
-  constructor
-  · intro h; by_contra hc; push Not at hc; exact h (fun σ hσ hφ => hc σ hσ hφ)
-  · rintro ⟨σ, hσ, hφ⟩ h; exact h σ hσ hφ
+    MinusTruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ MinusTruthAt M σ t φ :=
+  TruthClauses.diamond_iff (L := MinusFormula) M τ t PUnit.unit φ
 
 /-- Truth of `Pφ` (`¬H¬φ`): `φ` held at *some* strictly past time. -/
 @[simp] theorem somePast_iff (φ : MinusFormula) :
-    MinusTruthAt M τ t φ.somePast ↔ ∃ s : F.Duration, s < t ∧ MinusTruthAt M τ s φ := by
-  simp only [MinusFormula.somePast, MinusFormula.neg, MinusTruthAt]
-  constructor
-  · intro h; by_contra hc; push Not at hc; exact h (fun s hs hφ => hc s hs hφ)
-  · rintro ⟨s, hs, hφ⟩ h; exact h s hs hφ
+    MinusTruthAt M τ t φ.somePast ↔ ∃ s : F.Duration, s < t ∧ MinusTruthAt M τ s φ :=
+  TruthClauses.somePast_iff_of_allPast (L := MinusFormula) M τ t PUnit.unit φ
 
 /-- Truth of `Fφ` (`¬G¬φ`): `φ` holds at *some* strictly future time. -/
 @[simp] theorem someFuture_iff (φ : MinusFormula) :
-    MinusTruthAt M τ t φ.someFuture ↔ ∃ s : F.Duration, t < s ∧ MinusTruthAt M τ s φ := by
-  simp only [MinusFormula.someFuture, MinusFormula.neg, MinusTruthAt]
-  constructor
-  · intro h; by_contra hc; push Not at hc; exact h (fun s hs hφ => hc s hs hφ)
-  · rintro ⟨s, hs, hφ⟩ h; exact h s hs hφ
+    MinusTruthAt M τ t φ.someFuture ↔ ∃ s : F.Duration, t < s ∧ MinusTruthAt M τ s φ :=
+  TruthClauses.someFuture_iff_of_allFuture (L := MinusFormula) M τ t PUnit.unit φ
 
 /-! ### Temporal `always` -/
 
@@ -200,8 +218,8 @@ The association mirrors `MinusFormula.always`, hence `Formula.always`. -/
 @[simp] theorem always_iff (φ : MinusFormula) :
     MinusTruthAt M τ t φ.always ↔
       (∀ s : F.Duration, s < t → MinusTruthAt M τ s φ) ∧ MinusTruthAt M τ t φ ∧
-        (∀ s : F.Duration, t < s → MinusTruthAt M τ s φ) := by
-  simp only [MinusFormula.always, and_iff, past_iff, future_iff]
+        (∀ s : F.Duration, t < s → MinusTruthAt M τ s φ) :=
+  TruthClauses.always_iff_of_tense (L := MinusFormula) M τ t PUnit.unit φ
 
 end MinusTruth
 

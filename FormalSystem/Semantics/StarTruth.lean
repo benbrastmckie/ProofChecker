@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Semantics.PlusTruth
 import FormalSystem.StarLanguage.Formula
+import FormalSystem.Semantics.TruthClauses
 
 /-!
 # `StarTruthAt` — truth for L⋆ over the manuscript's points `(τ, x, v⃗)`
@@ -121,6 +122,39 @@ def StarTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (v : �
   | .timeStore i φ => StarTruthAt M τ t (Function.update v i t) φ
   | .timeRecall i φ => StarTruthAt M τ (v i) v φ
 
+/-! ### The abstract clause layer, instantiated
+
+L⋆'s instances of `Semantics/TruthClauses.lean`, and the case the environment parameter exists
+for: `Env F` is the **stored-time vector type** rather than `PUnit`, and every shared clause
+threads it through unchanged. That inertness is exactly what the six clause fields being
+`Iff.rfl` records.
+
+`timeStore` and `timeRecall` are the two constructors that do *not* thread `v` inertly, and
+nothing about them is instantiated here — the shared clause layer never mentions them, which is
+the honest boundary of the abstraction on this language. -/
+
+/-- L⋆'s pointed truth relation. The environment is the stored-time vector. -/
+instance : TruthEnv StarFormula where
+  Env F := ℕ → F.Duration
+  T M τ t v φ := StarTruthAt M τ t v φ
+
+/-- L⋆'s six **shared** primitive operators and their clauses, identical to L⁺'s with `v`
+threaded inert. The two register operators are deliberately absent. -/
+instance : StabClauses StarFormula where
+  bot := StarFormula.bot
+  imp := StarFormula.imp
+  box := StarFormula.box
+  untl := StarFormula.untl
+  snce := StarFormula.snce
+  stab := StarFormula.stab
+  sameState := SameStateAt
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+  untl_clause _ _ _ _ _ _ := Iff.rfl
+  snce_clause _ _ _ _ _ _ := Iff.rfl
+  stab_clause _ _ _ _ _ := Iff.rfl
+
 namespace StarTruth
 
 variable (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (v : ℕ → F.Duration)
@@ -157,52 +191,52 @@ theorem timeStore_iff (i : ℕ) (φ : StarFormula) :
 theorem timeRecall_iff (i : ℕ) (φ : StarFormula) :
     StarTruthAt M τ t v (.timeRecall i φ) ↔ StarTruthAt M τ (v i) v φ := Iff.rfl
 
-theorem top_true : StarTruthAt M τ t v top := fun h => h
+theorem top_true : StarTruthAt M τ t v top :=
+  TruthClauses.top_true (L := StarFormula) M τ t v
 
 theorem neg_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (neg φ) ↔ ¬ StarTruthAt M τ t v φ := Iff.rfl
+    StarTruthAt M τ t v (neg φ) ↔ ¬ StarTruthAt M τ t v φ :=
+  TruthClauses.neg_iff (L := StarFormula) M τ t v φ
 
 theorem and_iff (φ ψ : StarFormula) :
-    StarTruthAt M τ t v (φ.and ψ) ↔ StarTruthAt M τ t v φ ∧ StarTruthAt M τ t v ψ := by
-  simp [StarFormula.and, neg, StarTruthAt]
+    StarTruthAt M τ t v (φ.and ψ) ↔ StarTruthAt M τ t v φ ∧ StarTruthAt M τ t v ψ :=
+  TruthClauses.and_iff (L := StarFormula) M τ t v φ ψ
 
 theorem or_iff (φ ψ : StarFormula) :
-    StarTruthAt M τ t v (φ.or ψ) ↔ StarTruthAt M τ t v φ ∨ StarTruthAt M τ t v ψ := by
-  simp only [StarFormula.or, neg, StarTruthAt]
-  exact ⟨fun h => by_cases (fun hφ => Or.inl hφ) (fun hφ => Or.inr (h hφ)),
-    fun h hn => h.elim (fun hφ => absurd hφ hn) id⟩
+    StarTruthAt M τ t v (φ.or ψ) ↔ StarTruthAt M τ t v φ ∨ StarTruthAt M τ t v ψ :=
+  TruthClauses.or_iff (L := StarFormula) M τ t v φ ψ
 
 theorem someFuture_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (someFuture φ) ↔ ∃ s, t < s ∧ StarTruthAt M τ s v φ := by
-  simp [someFuture, top, StarTruthAt]
+    StarTruthAt M τ t v (someFuture φ) ↔ ∃ s, t < s ∧ StarTruthAt M τ s v φ :=
+  TruthClauses.someFuture_iff (L := StarFormula) M τ t v φ
 
 theorem allFuture_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (allFuture φ) ↔ ∀ s, t < s → StarTruthAt M τ s v φ := by
-  simp [allFuture, someFuture, neg, top, StarTruthAt]
+    StarTruthAt M τ t v (allFuture φ) ↔ ∀ s, t < s → StarTruthAt M τ s v φ :=
+  TruthClauses.allFuture_iff (L := StarFormula) M τ t v φ
 
 theorem somePast_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (somePast φ) ↔ ∃ s, s < t ∧ StarTruthAt M τ s v φ := by
-  simp [somePast, top, StarTruthAt]
+    StarTruthAt M τ t v (somePast φ) ↔ ∃ s, s < t ∧ StarTruthAt M τ s v φ :=
+  TruthClauses.somePast_iff (L := StarFormula) M τ t v φ
 
 theorem allPast_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (allPast φ) ↔ ∀ s, s < t → StarTruthAt M τ s v φ := by
-  simp [allPast, somePast, neg, top, StarTruthAt]
+    StarTruthAt M τ t v (allPast φ) ↔ ∀ s, s < t → StarTruthAt M τ s v φ :=
+  TruthClauses.allPast_iff (L := StarFormula) M τ t v φ
 
 theorem diamond_iff (φ : StarFormula) :
-    StarTruthAt M τ t v (diamond φ) ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ StarTruthAt M σ t v φ := by
-  simp [diamond, neg, StarTruthAt]
+    StarTruthAt M τ t v (diamond φ) ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ StarTruthAt M σ t v φ :=
+  TruthClauses.diamond_iff (L := StarFormula) M τ t v φ
 
 theorem dstab_iff (φ : StarFormula) :
     StarTruthAt M τ t v (dstab φ) ↔
-      ∃ σ : ConvexHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ StarTruthAt M σ t v φ := by
-  simp [dstab, neg, StarTruthAt]
+      ∃ σ : ConvexHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ StarTruthAt M σ t v φ :=
+  TruthClauses.dstab_iff (L := StarFormula) M τ t v φ
 
 /-- `△φ` unfolds three ways, exactly as in L⁺: past, present, and future. -/
 theorem always_iff (φ : StarFormula) :
     StarTruthAt M τ t v (always φ) ↔
       (∀ s, s < t → StarTruthAt M τ s v φ) ∧ StarTruthAt M τ t v φ ∧
-        (∀ s, t < s → StarTruthAt M τ s v φ) := by
-  rw [always, and_iff, and_iff, allPast_iff, allFuture_iff]
+        (∀ s, t < s → StarTruthAt M τ s v φ) :=
+  TruthClauses.always_iff_tri (L := StarFormula) M τ t v φ
 
 end StarTruth
 

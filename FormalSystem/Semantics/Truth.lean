@@ -8,6 +8,7 @@ import FormalSystem.Semantics.TaskModel
 import FormalSystem.Semantics.ConvexHistory
 import FormalSystem.Syntax.Formula
 import FormalSystem.Automation.TruthNormAttr
+import FormalSystem.Semantics.TruthClauses
 
 -- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
 -- is the one documented seam that imports `ProofSystem.Axioms`; nothing below it may.
@@ -251,6 +252,32 @@ def TruthAt (M : TaskModel F)
 -- Note: We avoid defining a notation for TruthAt as it causes parsing conflicts
 -- with the validity notation in Validity.lean. Use TruthAt directly.
 
+/-! ### The abstract clause layer, instantiated
+
+L's instances of `Semantics/TruthClauses.lean`. The environment is trivial (`PUnit`), since
+`TruthAt` evaluates at `(M, τ, t)` alone; every clause field is `Iff.rfl` or `fun h => h`, which
+is the compiler checking that `TruthAt`'s six clauses really do have the shared shapes. The
+derived-operator lemmas below then delegate to the generic ones. -/
+
+/-- L's pointed truth relation, with the trivial environment. -/
+instance : TruthEnv Formula where
+  Env _ := PUnit
+  T M τ t _ φ := TruthAt M τ t φ
+
+/-- L's five shared primitive operators and their clauses; `bot`/`imp`/`box` plus the strict
+`untl`/`snce` pair. -/
+instance : UntlClauses Formula where
+  bot := Formula.bot
+  imp := Formula.imp
+  box := Formula.box
+  untl := Formula.untl
+  snce := Formula.snce
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+  untl_clause _ _ _ _ _ _ := Iff.rfl
+  snce_clause _ _ _ _ _ _ := Iff.rfl
+
 namespace Truth
 
 /--
@@ -328,13 +355,8 @@ F(φ) = U(φ, ⊤) is true iff there exists a strictly future time where φ hold
     {t : F.Duration}
     (φ : Formula) :
     TruthAt M τ t (Formula.someFuture φ) ↔
-      ∃ s, t < s ∧ TruthAt M τ s φ := by
-  simp only [Formula.someFuture, Formula.top, TruthAt]
-  constructor
-  · rintro ⟨s, hlt, hevent, _⟩
-    exact ⟨s, hlt, hevent⟩
-  · rintro ⟨s, hlt, hs⟩
-    exact ⟨s, hlt, hs, fun _ _ _ => id⟩
+      ∃ s, t < s ∧ TruthAt M τ s φ :=
+  TruthClauses.someFuture_iff (L := Formula) M τ t PUnit.unit φ
 
 /--
 Truth of somePast: existential past operator.
@@ -345,13 +367,8 @@ P(φ) = S(φ, ⊤) is true iff there exists a strictly past time where φ held.
     {t : F.Duration}
     (φ : Formula) :
     TruthAt M τ t (Formula.somePast φ) ↔
-      ∃ s, s < t ∧ TruthAt M τ s φ := by
-  simp only [Formula.somePast, Formula.top, TruthAt]
-  constructor
-  · rintro ⟨s, hlt, hevent, _⟩
-    exact ⟨s, hlt, hevent⟩
-  · rintro ⟨s, hlt, hs⟩
-    exact ⟨s, hlt, hs, fun _ _ _ => id⟩
+      ∃ s, s < t ∧ TruthAt M τ s φ :=
+  TruthClauses.somePast_iff (L := Formula) M τ t PUnit.unit φ
 
 /--
 Truth of allFuture: universal future operator.
@@ -362,14 +379,8 @@ G(φ) = ¬F(¬φ) is true iff φ holds at all strictly future times.
     {t : F.Duration}
     (φ : Formula) :
     TruthAt M τ t φ.allFuture ↔
-      ∀ (s : F.Duration), t < s → TruthAt M τ s φ := by
-  simp only [Formula.allFuture, Formula.neg, Formula.someFuture, Formula.top, TruthAt]
-  constructor
-  · intro h s hlt
-    by_contra hns
-    exact h ⟨s, hlt, fun hs => hns hs, fun _ _ _ => id⟩
-  · intro h ⟨s, hlt, hevent, _⟩
-    exact hevent (h s hlt)
+      ∀ (s : F.Duration), t < s → TruthAt M τ s φ :=
+  TruthClauses.allFuture_iff (L := Formula) M τ t PUnit.unit φ
 
 /--
 Truth of allPast: universal past operator.
@@ -380,14 +391,8 @@ H(φ) = ¬P(¬φ) is true iff φ holds at all strictly past times.
     {t : F.Duration}
     (φ : Formula) :
     TruthAt M τ t φ.allPast ↔
-      ∀ (s : F.Duration), s < t → TruthAt M τ s φ := by
-  simp only [Formula.allPast, Formula.neg, Formula.somePast, Formula.top, TruthAt]
-  constructor
-  · intro h s hlt
-    by_contra hns
-    exact h ⟨s, hlt, fun hs => hns hs, fun _ _ _ => id⟩
-  · intro h ⟨s, hlt, hevent, _⟩
-    exact hevent (h s hlt)
+      ∀ (s : F.Duration), s < t → TruthAt M τ s φ :=
+  TruthClauses.allPast_iff (L := Formula) M τ t PUnit.unit φ
 
 /--
 Truth of strongRelease: M(φ, ψ) = ψ U (ψ ∧ φ).
@@ -429,39 +434,36 @@ this family retires. -/
 @[simp, truth_norm] theorem neg_iff
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
     (φ : Formula) :
-    TruthAt M τ t φ.neg ↔ ¬ TruthAt M τ t φ := Iff.rfl
+    TruthAt M τ t φ.neg ↔ ¬ TruthAt M τ t φ :=
+  TruthClauses.neg_iff (L := Formula) M τ t PUnit.unit φ
 
 /-- `⊤` is true everywhere. -/
 @[simp, truth_norm] theorem top_true
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration} :
-    TruthAt M τ t Formula.top := id
+    TruthAt M τ t Formula.top :=
+  TruthClauses.top_true (L := Formula) M τ t PUnit.unit
 
 /-- Truth of `φ ∧ ψ`. Classical: `and` is the double-negated implication. -/
 @[simp, truth_norm] theorem and_iff
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
     (φ ψ : Formula) :
-    TruthAt M τ t (φ.and ψ) ↔ (TruthAt M τ t φ ∧ TruthAt M τ t ψ) := by
-  simp only [Formula.and, Formula.neg, TruthAt]
-  tauto
+    TruthAt M τ t (φ.and ψ) ↔ (TruthAt M τ t φ ∧ TruthAt M τ t ψ) :=
+  TruthClauses.and_iff (L := Formula) M τ t PUnit.unit φ ψ
 
 /-- Truth of `φ ∨ ψ`. Classical: `or` is `¬φ → ψ`. -/
 @[simp, truth_norm] theorem or_iff
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
     (φ ψ : Formula) :
-    TruthAt M τ t (φ.or ψ) ↔ (TruthAt M τ t φ ∨ TruthAt M τ t ψ) := by
-  simp only [Formula.or, Formula.neg, TruthAt]
-  tauto
+    TruthAt M τ t (φ.or ψ) ↔ (TruthAt M τ t φ ∨ TruthAt M τ t ψ) :=
+  TruthClauses.or_iff (L := Formula) M τ t PUnit.unit φ ψ
 
 /-- Truth of `◇φ` (`¬□¬φ`): `φ` holds at *some* total history at the current time. The classical
 `¬∀¬ ↔ ∃` step over `box_iff`. -/
 @[simp, truth_norm] theorem diamond_iff
     {F : TaskFrame} {M : TaskModel F} {τ : ConvexHistory F} {t : F.Duration}
     (φ : Formula) :
-    TruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ TruthAt M σ t φ := by
-  simp only [Formula.diamond, Formula.neg, TruthAt]
-  constructor
-  · intro h; by_contra hc; push Not at hc; exact h (fun σ hσ hφ => hc σ hσ hφ)
-  · rintro ⟨σ, hσ, hφ⟩ h; exact h σ hσ hφ
+    TruthAt M τ t φ.diamond ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ TruthAt M σ t φ :=
+  TruthClauses.diamond_iff (L := Formula) M τ t PUnit.unit φ
 
 /-! ### The primitive temporal clauses
 
@@ -507,8 +509,8 @@ theorem always_iff_tri
     (φ : Formula) :
     TruthAt M τ t φ.always ↔
       (∀ s : F.Duration, s < t → TruthAt M τ s φ) ∧ TruthAt M τ t φ ∧
-        (∀ s : F.Duration, t < s → TruthAt M τ s φ) := by
-  simp only [Formula.always, and_iff, past_iff, future_iff]
+        (∀ s : F.Duration, t < s → TruthAt M τ s φ) :=
+  TruthClauses.always_iff_tri (L := Formula) M τ t PUnit.unit φ
 
 /-- Truth of `△φ`, collected: `φ` holds at **every** time. The simp normal form for `always`.
 

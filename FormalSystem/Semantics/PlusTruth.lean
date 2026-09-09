@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Semantics.Truth
 import FormalSystem.PlusLanguage.Formula
+import FormalSystem.Semantics.TruthClauses
 
 /-!
 # `PlusTruthAt` — truth for the language L⁺ (L plus the stability modal `⊡`)
@@ -128,6 +129,35 @@ def PlusTruthAt (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) : Plus
       ∀ r : F.Duration, s < r → r < t → PlusTruthAt M τ r ψ
   | .stab φ => ∀ (σ : ConvexHistory F), σ.IsTotal → SameStateAt τ σ t → PlusTruthAt M σ t φ
 
+/-! ### The abstract clause layer, instantiated
+
+L⁺'s instances of `Semantics/TruthClauses.lean`. L⁺ adds the stability modal to L's six clauses,
+so it instantiates the `stab` tier and inherits `dstab_iff` on top of everything L gets. The
+class's `sameState` field is supplied with `SameStateAt` here, which is why
+`PlusTruth.dstab_iff`'s statement below is unchanged: the generic lemma's `sameState` reduces to
+`SameStateAt` at this instance. -/
+
+/-- L⁺'s pointed truth relation, with the trivial environment. -/
+instance : TruthEnv PlusFormula where
+  Env _ := PUnit
+  T M τ t _ φ := PlusTruthAt M τ t φ
+
+/-- L⁺'s six primitive operators and their clauses: L's five plus the stability modal. -/
+instance : StabClauses PlusFormula where
+  bot := PlusFormula.bot
+  imp := PlusFormula.imp
+  box := PlusFormula.box
+  untl := PlusFormula.untl
+  snce := PlusFormula.snce
+  stab := PlusFormula.stab
+  sameState := SameStateAt
+  bot_clause _ _ _ _ := fun h => h
+  imp_clause _ _ _ _ _ _ := Iff.rfl
+  box_clause _ _ _ _ _ := Iff.rfl
+  untl_clause _ _ _ _ _ _ := Iff.rfl
+  snce_clause _ _ _ _ _ _ := Iff.rfl
+  stab_clause _ _ _ _ _ := Iff.rfl
+
 namespace PlusTruth
 
 /-! ### Clause lemmas, mirroring `MinusTruth.*` -/
@@ -157,46 +187,46 @@ theorem stab_iff (φ : PlusFormula) :
     PlusTruthAt M τ t (.stab φ) ↔
       ∀ σ : ConvexHistory F, σ.IsTotal → SameStateAt τ σ t → PlusTruthAt M σ t φ := Iff.rfl
 
-theorem top_true : PlusTruthAt M τ t top := fun h => h
+theorem top_true : PlusTruthAt M τ t top :=
+  TruthClauses.top_true (L := PlusFormula) M τ t PUnit.unit
 
 theorem neg_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (neg φ) ↔ ¬ PlusTruthAt M τ t φ := Iff.rfl
+    PlusTruthAt M τ t (neg φ) ↔ ¬ PlusTruthAt M τ t φ :=
+  TruthClauses.neg_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem and_iff (φ ψ : PlusFormula) :
-    PlusTruthAt M τ t (φ.and ψ) ↔ PlusTruthAt M τ t φ ∧ PlusTruthAt M τ t ψ := by
-  simp [PlusFormula.and, neg, PlusTruthAt]
+    PlusTruthAt M τ t (φ.and ψ) ↔ PlusTruthAt M τ t φ ∧ PlusTruthAt M τ t ψ :=
+  TruthClauses.and_iff (L := PlusFormula) M τ t PUnit.unit φ ψ
 
 theorem or_iff (φ ψ : PlusFormula) :
-    PlusTruthAt M τ t (φ.or ψ) ↔ PlusTruthAt M τ t φ ∨ PlusTruthAt M τ t ψ := by
-  simp only [PlusFormula.or, neg, PlusTruthAt]
-  exact ⟨fun h => by_cases (fun hφ => Or.inl hφ) (fun hφ => Or.inr (h hφ)),
-    fun h hn => h.elim (fun hφ => absurd hφ hn) id⟩
+    PlusTruthAt M τ t (φ.or ψ) ↔ PlusTruthAt M τ t φ ∨ PlusTruthAt M τ t ψ :=
+  TruthClauses.or_iff (L := PlusFormula) M τ t PUnit.unit φ ψ
 
 /-- `⟐φ` (paper line 1121): some total history in `⟨τ⟩_t` satisfies `φ`. -/
 theorem dstab_iff (φ : PlusFormula) :
     PlusTruthAt M τ t (dstab φ) ↔
-      ∃ σ : ConvexHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ PlusTruthAt M σ t φ := by
-  simp [dstab, neg, PlusTruthAt]
+      ∃ σ : ConvexHistory F, σ.IsTotal ∧ SameStateAt τ σ t ∧ PlusTruthAt M σ t φ :=
+  TruthClauses.dstab_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem someFuture_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (someFuture φ) ↔ ∃ s, t < s ∧ PlusTruthAt M τ s φ := by
-  simp [someFuture, top, PlusTruthAt]
+    PlusTruthAt M τ t (someFuture φ) ↔ ∃ s, t < s ∧ PlusTruthAt M τ s φ :=
+  TruthClauses.someFuture_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem allFuture_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (allFuture φ) ↔ ∀ s, t < s → PlusTruthAt M τ s φ := by
-  simp [allFuture, someFuture, neg, top, PlusTruthAt]
+    PlusTruthAt M τ t (allFuture φ) ↔ ∀ s, t < s → PlusTruthAt M τ s φ :=
+  TruthClauses.allFuture_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem somePast_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (somePast φ) ↔ ∃ s, s < t ∧ PlusTruthAt M τ s φ := by
-  simp [somePast, top, PlusTruthAt]
+    PlusTruthAt M τ t (somePast φ) ↔ ∃ s, s < t ∧ PlusTruthAt M τ s φ :=
+  TruthClauses.somePast_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem allPast_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (allPast φ) ↔ ∀ s, s < t → PlusTruthAt M τ s φ := by
-  simp [allPast, somePast, neg, top, PlusTruthAt]
+    PlusTruthAt M τ t (allPast φ) ↔ ∀ s, s < t → PlusTruthAt M τ s φ :=
+  TruthClauses.allPast_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 theorem diamond_iff (φ : PlusFormula) :
-    PlusTruthAt M τ t (diamond φ) ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ PlusTruthAt M σ t φ := by
-  simp [diamond, neg, PlusTruthAt]
+    PlusTruthAt M τ t (diamond φ) ↔ ∃ σ : ConvexHistory F, σ.IsTotal ∧ PlusTruthAt M σ t φ :=
+  TruthClauses.diamond_iff (L := PlusFormula) M τ t PUnit.unit φ
 
 end PlusTruth
 

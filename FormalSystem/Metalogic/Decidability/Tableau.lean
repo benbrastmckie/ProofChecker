@@ -1029,7 +1029,7 @@ def applyRule (rule : TableauRule) (sf : SignedFormula) (branch : Branch := [])
         --
         -- WHY IT IS GONE. It was UNSOUND, independently of both deleted copy blocks and of the
         -- ACTIVE arm's deleted self-propagation. For `a < c`, `¬U(e,g)@a` licenses only
-        -- `¬e@c ∨ ∃z ∈ (a,c). ¬g@z` (`Semantics/Truth.lean:134-135`) — the guard failure lies
+        -- `¬e@c ∨ ∃z ∈ (a,c). ¬g@z` (`TruthAt`'s `untl` clause in `Semantics/Truth.lean`) — the guard failure lies
         -- STRICTLY BETWEEN `a` and `c`. This arm placed it AT `c`, and additionally re-asserted
         -- `¬U(e,g)@c`. Over `ℤ` with `e` true exactly at `3` and `g` false exactly at `1`,
         -- `¬U(e,g)@0` holds while `e@3` and `g@3` are both true, so BOTH emitted arms fail on a
@@ -1116,7 +1116,7 @@ def applyRule (rule : TableauRule) (sf : SignedFormula) (branch : Branch := [])
           -- was UNSOUND, independently of the deleted `untlNegProps` block above: this is the
           -- arm re-asserting its OWN negative Until at the time it just minted, not a copy of
           -- some other one. `¬U(e,g)@A` licenses, at a chosen `C > A`, exactly the classical
-          -- split `¬e@C ∨ ¬g@C` (`Semantics/Truth.lean:134-135`); it does NOT license
+          -- split `¬e@C ∨ ¬g@C` (`TruthAt`'s `untl` clause in `Semantics/Truth.lean`); it does NOT license
           -- `¬U(e,g)@C`, because `U` is interval-relative along a single history and the
           -- interval `(C,·)` is a *sub*-interval of `(A,·)` — the very reason the guard could
           -- fail below `C` while `U(e,g)@C` is true.

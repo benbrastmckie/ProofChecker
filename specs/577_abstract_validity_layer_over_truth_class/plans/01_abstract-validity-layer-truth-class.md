@@ -408,7 +408,7 @@ the `#print axioms` table recorded in the phase's commit message or the summary.
 
 ---
 
-### Phase 6: Instantiate the clause layer for L (`Semantics/Truth.lean`) [NOT STARTED]
+### Phase 6: Instantiate the clause layer for L (`Semantics/Truth.lean`) [COMPLETED]
 
 **Goal**: Instantiate `TruthEnv Formula` (`Env _ := PUnit`) and the clause classes, then
 delegate the ten L derived-clause lemmas while preserving `@[simp, truth_norm]` on every one that
@@ -439,7 +439,7 @@ carries it today and leaving the collected `always_iff` alone.
 
 ---
 
-### Phase 7: Instantiate the clause layer for L⁻ via the tense-primitive bundle (`Semantics/MinusTruth.lean`) [NOT STARTED]
+### Phase 7: Instantiate the clause layer for L⁻ via the tense-primitive bundle (`Semantics/MinusTruth.lean`) [COMPLETED]
 
 **Goal**: Instantiate the first genuine syntax-side divergence: L⁻ has `allPast`/`allFuture` as
 primitive constructors, so it instantiates `TenseClauses`, not `UntlClauses`, and its two
@@ -448,7 +448,7 @@ existential-tense lemmas are derived in the opposite duality direction.
 **Tasks**:
 - [ ] Add the import; after `MinusTruthAt` (`:107`), instances `TruthEnv MinusFormula` (`Env _ := PUnit`), `BotClause`, `ImpClause`, `BoxClause`, `AllFutureClause`, `AllPastClause` (hence `TenseClauses MinusFormula`); `past_iff` (`:136`) and `future_iff` (`:140`) remain as the payload names they are today.
 - [ ] Delegate, preserving `@[simp]`: `MinusTruth.neg_iff` (`:146`), `top_true` (`:150`), `and_iff` (`:153`), `or_iff` (`:159`), `diamond_iff` (`:172`), `always_iff` (`:200`, tri form, via `always_iff_of_tense`).
-- [ ] Attempt `somePast_iff` (`:180`) and `someFuture_iff` (`:188`) via `somePast_iff_of_allPast`/`someFuture_iff_of_allFuture`, contingent on the `rfl` bridges `MinusFormula.someFuture φ = TruthClauses.someFuture' φ` (and past). If a bridge fails, leave both bodies as they stand and record a `#### Reasoned Exclusions` row with the failing `rfl` goal as evidence; close the phase `[COMPLETED WITH EXCLUSIONS]`. Both outcomes are acceptable per the report.
+- [x] Attempt `somePast_iff` (`:180`) and `someFuture_iff` (`:188`) via `somePast_iff_of_allPast`/`someFuture_iff_of_allFuture`, contingent on the `rfl` bridges `MinusFormula.someFuture φ = TruthClauses.someFuture' φ` (and past). If a bridge fails, leave both bodies as they stand and record a `#### Reasoned Exclusions` row with the failing `rfl` goal as evidence; close the phase `[COMPLETED WITH EXCLUSIONS]`. Both outcomes are acceptable per the report. *(both bridges HOLD: `MinusFormula.someFuture φ = TruthClauses.someFuture' φ` and the past sibling close by bare `rfl`, pinned in `ValidityLayerTest.lean`; both lemmas delegate, so no exclusion was needed and the phase closes `[COMPLETED]`)*
 - [ ] Extend the test module with the L⁻ bridges (`neg`, `top`, `and`, `or`, `diamond`, `always`, and the two tense ones if they hold).
 - [ ] Signature diff; orphaned-`private` sweep; axiom-parity diff empty.
 
@@ -471,7 +471,7 @@ Exclusions table.
 
 ---
 
-### Phase 8: Instantiate the clause layer for L⁺ (`Semantics/PlusTruth.lean`) [NOT STARTED]
+### Phase 8: Instantiate the clause layer for L⁺ (`Semantics/PlusTruth.lean`) [COMPLETED]
 
 **Goal**: Instantiate `StabClauses PlusFormula` (`Env _ := PUnit`) and delegate the ten L⁺
 derived-clause lemmas, including the first `dstab_iff`.
@@ -500,7 +500,7 @@ derived-clause lemmas, including the first `dstab_iff`.
 
 ---
 
-### Phase 9: Instantiate the clause layer for L⋆ with `Env F := ℕ → F.Duration` (`Semantics/StarTruth.lean`) [NOT STARTED]
+### Phase 9: Instantiate the clause layer for L⋆ with `Env F := ℕ → F.Duration` (`Semantics/StarTruth.lean`) [COMPLETED]
 
 **Goal**: The phase that validates the `Env` design: the stored-time vector is the environment,
 threaded inert through every shared clause, and the eleven L⋆ derived-clause lemmas delegate with

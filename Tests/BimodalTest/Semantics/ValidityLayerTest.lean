@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Benjamin Brast-McKie
 -/
 
+import FormalSystem.Semantics.TruthClauses
 import FormalSystem.Semantics.StarValidity
 import FormalSystem.Semantics.MinusValidity
 
@@ -107,5 +108,85 @@ example : StarValidIn fc φ = GenericValidIn fc φ := rfl
 example : StarValid φ = GenericValid φ := rfl
 
 end LStar
+
+/-! ## The derived-operator coincidences, one group per object language
+
+Each language's own derived-operator `def`s are the same Łukasiewicz/`untl` encodings as the
+generic `abbrev`s of `Semantics/TruthClauses.lean`. That character-for-character agreement is
+what lets the clause-lemma wrappers delegate without a `show`; nothing in the library states it,
+so it is pinned here. -/
+
+section LOperators
+variable (φ ψ : Syntax.Formula)
+
+example : Syntax.Formula.neg φ = TruthClauses.neg φ := rfl
+example : (Syntax.Formula.top : Syntax.Formula) = TruthClauses.top := rfl
+example : Syntax.Formula.and φ ψ = TruthClauses.and φ ψ := rfl
+example : Syntax.Formula.or φ ψ = TruthClauses.or φ ψ := rfl
+example : Syntax.Formula.diamond φ = TruthClauses.diamond φ := rfl
+example : Syntax.Formula.someFuture φ = TruthClauses.someFuture φ := rfl
+example : Syntax.Formula.somePast φ = TruthClauses.somePast φ := rfl
+example : Syntax.Formula.allFuture φ = TruthClauses.allFuture φ := rfl
+example : Syntax.Formula.allPast φ = TruthClauses.allPast φ := rfl
+example : Syntax.Formula.always φ = TruthClauses.always φ := rfl
+
+end LOperators
+
+/-! ### L⁻ — the tense-primitive presentation
+
+`allFuture`/`allPast` are **primitive** constructors in L⁻, so its existential tenses and its
+`always` are the *primed* generic operators, derived in the opposite duality direction. These
+four bridges are what make L⁻'s two existential-tense lemmas and its `always_iff` delegate. -/
+
+section LMinusOperators
+open MinusLanguage
+variable (φ ψ : MinusFormula)
+
+example : MinusFormula.neg φ = TruthClauses.neg φ := rfl
+example : (MinusFormula.top : MinusFormula) = TruthClauses.top := rfl
+example : MinusFormula.and φ ψ = TruthClauses.and φ ψ := rfl
+example : MinusFormula.or φ ψ = TruthClauses.or φ ψ := rfl
+example : MinusFormula.diamond φ = TruthClauses.diamond φ := rfl
+example : MinusFormula.someFuture φ = TruthClauses.someFuture' φ := rfl
+example : MinusFormula.somePast φ = TruthClauses.somePast' φ := rfl
+example : MinusFormula.always φ = TruthClauses.always' φ := rfl
+
+end LMinusOperators
+
+section LPlusOperators
+open PlusLanguage
+variable (φ ψ : PlusFormula)
+
+example : PlusFormula.neg φ = TruthClauses.neg φ := rfl
+example : (PlusFormula.top : PlusFormula) = TruthClauses.top := rfl
+example : PlusFormula.and φ ψ = TruthClauses.and φ ψ := rfl
+example : PlusFormula.or φ ψ = TruthClauses.or φ ψ := rfl
+example : PlusFormula.diamond φ = TruthClauses.diamond φ := rfl
+example : PlusFormula.someFuture φ = TruthClauses.someFuture φ := rfl
+example : PlusFormula.somePast φ = TruthClauses.somePast φ := rfl
+example : PlusFormula.allFuture φ = TruthClauses.allFuture φ := rfl
+example : PlusFormula.allPast φ = TruthClauses.allPast φ := rfl
+example : PlusFormula.always φ = TruthClauses.always φ := rfl
+example : PlusFormula.dstab φ = TruthClauses.dstab φ := rfl
+
+end LPlusOperators
+
+section LStarOperators
+open StarLanguage
+variable (φ ψ : StarFormula)
+
+example : StarFormula.neg φ = TruthClauses.neg φ := rfl
+example : (StarFormula.top : StarFormula) = TruthClauses.top := rfl
+example : StarFormula.and φ ψ = TruthClauses.and φ ψ := rfl
+example : StarFormula.or φ ψ = TruthClauses.or φ ψ := rfl
+example : StarFormula.diamond φ = TruthClauses.diamond φ := rfl
+example : StarFormula.someFuture φ = TruthClauses.someFuture φ := rfl
+example : StarFormula.somePast φ = TruthClauses.somePast φ := rfl
+example : StarFormula.allFuture φ = TruthClauses.allFuture φ := rfl
+example : StarFormula.allPast φ = TruthClauses.allPast φ := rfl
+example : StarFormula.always φ = TruthClauses.always φ := rfl
+example : StarFormula.dstab φ = TruthClauses.dstab φ := rfl
+
+end LStarOperators
 
 end BimodalTest.Semantics.ValidityLayerTest
