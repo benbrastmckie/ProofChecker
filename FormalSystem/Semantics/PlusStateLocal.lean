@@ -267,4 +267,66 @@ theorem not_isPlusStateLocal_somePast (p : Atom) :
   rw [if_pos hs] at hval'
   exact one_ne_zero hval'
 
+/-! ## The headline: a state-local formula is already `⊡`-stable -/
+
+/--
+**`φ ↔ ⊡φ` for state-local `φ`**, pointwise.
+
+Left to right is `isPlusStateLocal_of_stateLocal`: every `σ ∈ ⟨τ⟩ₜ` agrees with `τ` about `φ`.
+Right to left instantiates the `⊡` clause at `τ` itself, via `SameStateAt.refl` — and that is the
+only place the totality of `τ` is used.
+
+Paper: — (the formalization's own; the nearest paper-anchored statement is the atom-level
+`p → ⊡p` of `def:BLstar-semantics`'s footnote, line 1119, which this strictly extends)
+-/
+theorem plusStateLocal_stab_iff {F : TaskFrame} {φ : PlusFormula} (hφ : φ.StateLocal)
+    (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) :
+    PlusTruthAt M τ t φ ↔ PlusTruthAt M τ t (.stab φ) := by
+  constructor
+  · intro hh σ hσ hs
+    exact (isPlusStateLocal_of_stateLocal hφ F M τ σ hτ hσ t hs).mp hh
+  · intro hh
+    exact hh τ hτ (SameStateAt.refl τ t)
+
+/--
+**`φ ↔ ⊡φ` for state-local `φ`**, as a validity of L⁺.
+
+The companion facing the other way to `stab_state_only` (`Semantics/PlusTruth.lean`): that lemma
+says `⊡φ` depends on the world state alone, this one says a formula that already depends on the
+world state alone is `⊡`-stable.
+
+Paper: — (the formalization's own: the manuscript states no fragment-level `φ ↔ ⊡φ` for L⁺; the
+nearest paper-anchored statement is the atom-level `p → ⊡p` of line 1119, which this strictly
+extends)
+-/
+theorem plusStateLocal_plusValid_iff_stab {φ : PlusFormula} (hφ : φ.StateLocal) :
+    PlusValid (PlusFormula.iff φ (.stab φ)) := by
+  refine PlusValid.of_forall_total ?_
+  intro F M τ hτ x
+  have hiff := plusStateLocal_stab_iff hφ M τ hτ x
+  simp only [PlusFormula.iff]
+  rw [PlusTruth.and_iff, PlusTruth.imp_iff, PlusTruth.imp_iff]
+  exact ⟨hiff.mp, hiff.mpr⟩
+
+/--
+**`φ → ⊡φ` for state-local `φ`**, in the pointwise argument shape the consumers use.
+
+This is the **strict generalization** of the atom-level stability lemma the L⁺ tower used to
+carry: that lemma was `p → ⊡p` at an atom `p`, and this is `φ → ⊡φ` at every formula the
+seven-constructor recursion admits — every Boolean combination of atoms, `□`-formulas and
+`⊡`-formulas, at arbitrary arguments under the two modals. `stateLocal_atom p` recovers the atom
+instance in one application, which is how `Metalogic/Conservativity/Plus/AxiomValidity.lean`
+discharges the `PlusAxiom.atom_stab` arm.
+
+The one hypothesis the atom-restricted statement did not carry is `hτ`: totality is needed for
+the right-to-left half of `plusStateLocal_stab_iff` and hence, harmlessly, here. Both consumers
+sit inside `PlusValidIn.of_forall_total`, which already binds it.
+
+Paper: — (the formalization's own; the atom instance is the footnote at line 1119)
+-/
+theorem stab_of_stateLocal {F : TaskFrame} {φ : PlusFormula} (hφ : φ.StateLocal)
+    (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration)
+    (h : PlusTruthAt M τ t φ) : PlusTruthAt M τ t (.stab φ) :=
+  (plusStateLocal_stab_iff hφ M τ hτ t).mp h
+
 end FormalSystem.Semantics

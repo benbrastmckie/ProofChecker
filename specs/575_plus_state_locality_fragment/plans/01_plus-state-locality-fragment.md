@@ -304,26 +304,26 @@ missing exclusion must be added.
 
 ---
 
-### Phase 4: The headline biconditional and the generalized stability lemma [IN PROGRESS]
+### Phase 4: The headline biconditional and the generalized stability lemma [COMPLETED]
 
 **Goal**: `φ ↔ ⊡φ` on the fragment, pointwise and as a validity, plus the one-directional
 `stab_of_stateLocal` that Phase 5 substitutes for the retired atom-restricted lemma.
 
 **Tasks**:
-- [ ] Prove `plusStateLocal_stab_iff`: pointwise `PlusTruthAt M τ t φ ↔ PlusTruthAt M τ t
+- [x] Prove `plusStateLocal_stab_iff`: pointwise `PlusTruthAt M τ t φ ↔ PlusTruthAt M τ t
       (.stab φ)` for `φ.StateLocal` at a total `τ`. `→` from `isPlusStateLocal_of_stateLocal`;
       `←` by instantiating the `stab` clause at `τ` itself via `SameStateAt.refl` — the only
       place `τ.IsTotal` is used
-- [ ] Prove `plusStateLocal_plusValid_iff_stab : PlusValid (PlusFormula.iff φ (.stab φ))` from it,
+- [x] Prove `plusStateLocal_plusValid_iff_stab : PlusValid (PlusFormula.iff φ (.stab φ))` from it,
       via `PlusValid.of_forall_total` and the `PlusTruth.and_iff`/`imp_iff` clause lemmas,
       mirroring `stateLocal_starValid_iff_stab`
-- [ ] Prove `stab_of_stateLocal` — the `→` half in the argument shape the retired lemma had
+- [x] Prove `stab_of_stateLocal` — the `→` half in the argument shape the retired lemma had
       (`M`, `τ`, `hτ`, `t`, hypothesis `PlusTruthAt M τ t φ`, conclusion `PlusTruthAt M τ t
       (.stab φ)`) — so Phase 5's call sites are a one-line substitution
-- [ ] Docstring `stab_of_stateLocal` as the strict generalization of the retired atom-restricted
+- [x] Docstring `stab_of_stateLocal` as the strict generalization of the retired atom-restricted
       lemma, naming what it strictly extends
-- [ ] `Paper: —` anchors with reasons on the two headline results, mirroring the L⋆ twins
-- [ ] `lake build FormalSystem.Semantics.PlusStateLocal` green
+- [x] `Paper: —` anchors with reasons on the two headline results, mirroring the L⋆ twins
+- [x] `lake build FormalSystem.Semantics.PlusStateLocal` green
 
 **Timing**: 1 hour
 
@@ -341,7 +341,7 @@ missing exclusion must be added.
 
 ---
 
-### Phase 5: Retire `stab_atom_of_atom` [NOT STARTED]
+### Phase 5: Retire `stab_atom_of_atom` [IN PROGRESS]
 
 **Goal**: Delete the atom-restricted statement, redirect both proof consumers to
 `stab_of_stateLocal`, update every prose reference, and verify explicitly that the atomization
