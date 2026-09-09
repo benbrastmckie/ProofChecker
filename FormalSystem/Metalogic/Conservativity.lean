@@ -227,6 +227,18 @@ the very composition that fails for L⁻ ⊂ L because TM⁻ is incomplete. So `
 everywhere, unlike `Forward`; the composed pair L⁻ ⊂ L⁺ (`plus_of_tmMinus`) inherits this module's
 forward status unchanged. TM⁺ completeness and decidability are open and not asserted anywhere.
 
+## The register extension L⋆
+
+One level further out, L⁺ ⊂ L⋆ adds the manuscript's time registers `↑ⁱ`/`↓ⁱ`
+(`def:BLstar-semantics`; `FormalSystem/StarLanguage/`), and `Conservativity/Star.lean` carries
+TM⋆'s soundness and its two conservativity rows. The rows split, and the split is the same
+completeness-engine fact as above read one level up: over **TM** the composition ends in a TM
+engine and there are four, so `starDerivable_ofFormula_iff` is unconditional at all four classes;
+over **TM⁺** it ends in a TM⁺ engine and there is none, so that row is a proved conditional pair
+whose unconditional half says any separating witness for non-conservativity is a witness of TM⁺
+incompleteness. TM⋆ completeness is open under two named obstructions and is asserted nowhere;
+see `Conservativity/Star/README.md`.
+
 ## CED / CEC — open
 
 No counterexample analogous to the CEB and CEF witnesses is known for CED. CEC inherits that
@@ -342,6 +354,7 @@ and CEF — and re-exports the nine modules that make up the L⁻-vs-TM⁻ and T
 | `Conservativity/Fragment.lean` | `TMFrag`, the H/G-fragment of TM: soundness, completeness at all four classes, `TM⁻ ⊆ TMFrag`, `TM⁻ ⊊ TMFrag` at `.ZTime` |
 | `Conservativity/FragmentCompactness.lean` | `MinusCompact`, `minusCompactBase`, `minusCompactDense` — base-language compactness transferred along `tr` |
 | `Conservativity/Plus.lean` | aggregator for the L⁺ side: TM⁺ soundness at every class and conservativity of TM⁺ over TM in both directions (`plusDerivable_ofFormula_iff`) |
+| `Conservativity/Star.lean` | aggregator for the L⋆ side: TM⋆ soundness at every class, conservativity of TM⋆ over TM in both directions (`starDerivable_ofFormula_iff`), and the conditional pair over TM⁺ |
 
 **The children must never import this file.** Each imports
 `FormalSystem.Metalogic.Conservativity.Backward` directly; importing the aggregator from a child
@@ -351,7 +364,10 @@ FragmentCompactness ← Plus/Forward`, with `SpWitness` hanging off `MinusLangua
 `SpCountermodel` hanging off `SpWitness` and `TMCompletenessReduction` jointly (it also imports
 `Semantics/MinusFrame.lean`, which is outside this directory and reaches nothing in `ProofSystem/`),
 and the `Plus/` chain `Atomization ← AxiomValidity ← PlusSoundness ← Forward` hanging off
-`Fragment`.
+`Fragment`. The `Star/` chain `StarAxiomValidity ← StarSoundness ← Forward` hangs off the `Plus/`
+one at two points: `Star/StarAxiomValidity` imports `Plus/AxiomValidity` (for the two TM⁺
+dispatch lemmas the `ofBase` arm transports) and `Star/Forward` imports `Plus/Forward` (for the
+four completeness engines and `plusValidIn_ofFormula_iff`).
 
 The namespace is unchanged by the reorganization: `Backward.lean` still opens
 `namespace FormalSystem.Metalogic.Conservativity`, so every declaration keeps its

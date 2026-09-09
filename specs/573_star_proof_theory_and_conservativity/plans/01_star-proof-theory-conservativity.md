@@ -1,11 +1,11 @@
 # Implementation Plan: Star proof theory and conservativity
 
 - **Task**: 573 - Star proof theory and conservativity
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 14 hours
 - **Dependencies**: None (every consumed asset is landed)
 - **Research Inputs**: `specs/573_star_proof_theory_and_conservativity/reports/01_star-proof-theory-conservativity.md`
-- **Artifacts**: plans/01_star-proof-theory-conservativity.md (this file)
+- **Artifacts**: plans/01_star-proof-theory-conservativity.md (this file), summaries/01_star-proof-theory-conservativity-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: false
@@ -521,7 +521,7 @@ baseline must be re-measured and the divergence treated as a HARD STOP, not re-b
 
 ---
 
-### Phase 9: Documentation, metatheory rows, and the completeness OPEN record [NOT STARTED]
+### Phase 9: Documentation, metatheory rows, and the completeness OPEN record [COMPLETED]
 
 **Goal**: Make the tree's prose say exactly what landed — including that TM⋆ completeness is open,
 under two named obstructions with citations, and not a shortfall.
@@ -562,7 +562,14 @@ under two named obstructions with citations, and not a shortfall.
 
 **Scope Hypothesis**: 5 documentation sites are enumerated above (`StarLanguage/README.md`,
 `Conservativity/Plus/README.md`, `Conservativity/README.md`, new `Conservativity/Star/README.md`,
-`Metalogic/README.md`). Confirm the list is complete at implementation time by
+`Metalogic/README.md`). *(Confirmed at implementation time: `grep -rln 'reserved, unbuilt\|StarAxiom\|TM⋆'
+FormalSystem/ --include=*.md` found no site outside the enumerated list. Two `.lean` sites were
+additionally updated, both of them created by this task's own edits rather than found by that
+grep: `FormalSystem/Metalogic/Conservativity.lean`, whose module table and import-chain paragraph
+had to gain the `Star/` child added in Phase 6, and `FormalSystem/README.md`, whose hand-written
+`StarLanguage.lean` row still read "semantic-only, no proof system". The `README.md`,
+`FormalSystem/README.md`, `Metalogic/README.md` and `Conservativity/README.md` inventory blocks
+were refreshed with `check-module-invariants.sh --emit-inventory`.)* Confirm the list is complete at implementation time by
 `grep -rln 'reserved, unbuilt\|StarAxiom\|TM⋆' FormalSystem/ --include=*.md` and by re-running
 the invariant script — any site the grep finds that is not on this list is in scope.
 

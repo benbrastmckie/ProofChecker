@@ -37,9 +37,11 @@ than deferred debt.
 | `Plus.lean` | 66 | <!-- TODO: add description --> |
 | `SpCountermodel.lean` | 390 | CEB's failing half: native L⁻ soundness for TM⁻ against `Semantics/MinusFrame.lean`'s `TaskFrame`-free semantics (`minusFrameValid_of_axiom`, `minusFrameValid_of_derivation`), the two-fibre countermodel `ℤ ⊕ ℝ`, and the deliverables `not_derivable_sp` and `tmMinusCompleteBase_refuted` |
 | `SpWitness.lean` | 138 | <!-- TODO: add description --> |
+| `Star.lean` | 48 | Aggregator for the L⋆ metatheory; holds no declarations. |
 | `TMCompletenessReduction.lean` | 309 | <!-- TODO: add description --> |
 | `Z1Countermodel.lean` | 205 | <!-- TODO: add description --> |
 | `Plus/` | — | <!-- TODO: add description --> |
+| `Star/` | — | The register extension L⋆ = L⁺ + `↑ⁱ`/`↓ⁱ` and its logic TM⋆: axiom validity, soundness, conservativity over TM (unconditional) and over TM⁺ (a conditional pair), and the completeness OPEN record. |
 <!-- END GENERATED -->
 
 ## Key Results
@@ -70,11 +72,16 @@ than deferred debt.
   rows, and **not** a completeness result; the four-row status is in
   `TMCompletenessReduction.lean`'s module docstring
 - `plusDerivable_ofFormula_iff` — conservativity of TM⁺ over TM in both directions
+- `starDerivable_ofFormula_iff` — conservativity of **TM⋆** over TM in both directions, at all
+  four classes and unconditionally; with `starConservative_of_plusComplete` and its unconditional
+  contrapositive `plusIncomplete_of_starNonconservative`, which place the L⁺ ⊂ L⋆ question inside
+  the tree's own open TM⁺-completeness problem rather than asserting or denying it
 
 ## Related Documentation
 
 - [Metalogic README](../README.md)
 - [`Plus/`](Plus/README.md) — the L⁺ half
+- [`Star/`](Star/README.md) — the L⋆ half: TM⋆'s soundness, the two conservativity rows, and the completeness OPEN record
 - [`../Conservativity.lean`](../Conservativity.lean) — the aggregator and the standing prohibition
 - [`docs/theorem-index.md`](../../../docs/theorem-index.md) — per-theorem status
 

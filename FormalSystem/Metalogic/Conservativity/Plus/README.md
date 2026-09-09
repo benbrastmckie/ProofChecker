@@ -62,6 +62,19 @@ does not define the deterministic frames, and no L⁺ formula set does
 | the two pasting schemata are not derivable from the naive `⊡`-set | **landed** | `Metalogic/Independence/PastingIndependence.lean` |
 | **general (nondeterministic) TM⁺ completeness, any class** | **OPEN** — never stated, never sorried | — (Reynolds 2003, Zanardo 1991 are the nearest) |
 | **TM⁺ decidability** | **OPEN** | — |
+| TM⋆ soundness, all four classes | **landed** | `../Star/StarSoundness.lean` |
+| TM⋆ conservative over TM, both directions, all four classes | **landed** | `../Star/Forward.lean` |
+| TM⋆ conservative over TM⁺ | **CONDITIONAL on general TM⁺ completeness** — `starConservative_of_plusComplete`, with the unconditional contrapositive `plusIncomplete_of_starNonconservative`: any separating witness *is* a witness of TM⁺ incompleteness | `../Star/Forward.lean` |
+| **TM⋆ completeness, any class** | **OPEN** — two obstructions named, never stated, never sorried | `../Star/README.md` |
+
+## The L⋆ rows sit on top of this open problem
+
+The register extension L⋆ = L⁺ + `↑ⁱ`/`↓ⁱ` and its logic TM⋆ (`../Star/`) inherit this
+directory's status exactly, and the inheritance is precise rather than approximate. TM⋆ over the
+**base** language is unconditional, because that composition ends in a *TM* completeness engine
+and TM has four. TM⋆ over **L⁺** ends in a TM⁺ engine, and there is none; given TM⋆ soundness the
+two questions coincide, so the row is stated as a conditional pair. Settling general TM⁺
+completeness settles it; nothing else will.
 
 ## Related Documentation
 

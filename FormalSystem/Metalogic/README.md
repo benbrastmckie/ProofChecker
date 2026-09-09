@@ -87,7 +87,7 @@ Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside
 | `Algebraic.lean` | 40 | `Algebraic/` |
 | `BXCanonical.lean` | 43 | `BXCanonical/` |
 | `Bundle.lean` | 47 | `Bundle/` |
-| `Conservativity.lean` | 358 | `Conservativity/` |
+| `Conservativity.lean` | 375 | `Conservativity/` |
 | `Core.lean` | 37 | `Core/` |
 | `Decidability.lean` | 168 | `Decidability/` |
 | `Deterministic.lean` | 25 | <!-- TODO: add description --> |
@@ -103,7 +103,7 @@ sibling directory. The list is generated, so a file that moves out (four of them
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=loose filter=non-aggregators -->
 | Loose non-aggregator | Lines | Role |
 |----------------------|------:|------|
-| `Conservativity.lean` | 358 | Conservativity of the extension |
+| `Conservativity.lean` | 375 | Conservativity of the extension |
 | `Compactness.lean` | 232 | Compactness and strong completeness for Base and Dense, by ultraproduct model existence |
 | `DedekindNonCompactness.lean` | 535 | Non-compactness of the Dedekind frame class — the `{G(⊤ S ¬q), F(G ¬q)} ∪ {Xqⁿ⊤}` witness, finitely satisfiable over `ℝ` and unsatisfiable over every Dedekind-complete carrier, refuting `CompactDedekind` and `StrongCompletenessDedekind` |
 | `DiscreteNonCompactness.lean` | 329 | Non-compactness of the discrete frame class |
@@ -146,11 +146,11 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 | [`Algebraic/`](Algebraic/README.md) | 5 | 2,448 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
 | [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,160 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
-| [`Conservativity/`](Conservativity/README.md) | 16 | 3,904 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Conservativity/`](Conservativity/README.md) | 20 | 4,671 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 80 | 53,407 | Tableau decision procedure and countermodel extraction |
 | [`Deterministic/`](Deterministic/README.md) | 7 | 1,599 | The deterministic metatheory of TM⁺: validity narrowed to `TaskFrame.Deterministic`, the narrowed completeness engines, the `⊡`-erasure, the extended system TM⁺ + *Determined*, and its soundness and completeness |
-| [`Independence/`](Independence/README.md) | 18 | 5,043 | Axiom-independence models |
+| [`Independence/`](Independence/README.md) | 18 | 5,086 | Axiom-independence models |
 | [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,456 | Per-axiom validity lemmas feeding `Soundness.lean` |
 | [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,157 | Kamp/Reynolds route, including all of `Kamp/` |
 <!-- END GENERATED -->
@@ -279,6 +279,35 @@ The deterministic row is an **axiomatization, not a characterization**. *Determi
 is valid on a class strictly larger than the deterministic frames, and no L⁺ formula set defines
 the deterministic frames at all (`Independence/DeterminismUndefinable.lean`). What holds — and is
 what a paper can use — is that the two classes have the same logic.
+
+### The TM⋆ metatheory rows — `Conservativity/Star/`
+
+TM⋆ is L⁺ plus the manuscript's time registers `↑ⁱ`/`↓ⁱ` (`FormalSystem/StarLanguage/`). Its
+axiom set embeds the TM⁺ schemata through a single `ofBase` constructor rather than re-declaring
+them, because `modal_future` is *refuted* over `StarFormula`
+(`Semantics/StarNonValidities.lean`, `refute_modal_future`).
+
+| Row | Status |
+|-----|--------|
+| soundness at all four classes | **landed** — `Conservativity/Star/StarSoundness.lean` |
+| consistency at `.Base` | **landed** — `Conservativity/Star/StarSoundness.lean` |
+| every TM⁺ theorem is a TM⋆ theorem at its embedding | **landed** — `StarLanguage/Embedding.lean` |
+| conservativity over **TM**, both directions, all four classes | **landed** — `Conservativity/Star/Forward.lean` |
+| conservativity over **TM⁺** | **CONDITIONAL** on general TM⁺ completeness, with an unconditional contrapositive — `Conservativity/Star/Forward.lean` |
+| **TM⋆ completeness, at any class** | **OPEN** |
+
+The TM⋆ conservativity split is not an asymmetry of effort. Over TM the composition ends in a TM
+completeness engine and there are four of them; over TM⁺ it ends in a TM⁺ engine and there are
+none. Given TM⋆ soundness, a separating witness for non-conservativity over TM⁺ *is* a witness of
+TM⁺ incompleteness (`plusIncomplete_of_starNonconservative`), so that row cannot be settled
+either way without settling the open row above it.
+
+The TM⋆ completeness row is stated nowhere in the tree and is never discharged with `sorry`. Two
+obstructions are recorded in `Conservativity/Star/README.md`: the four TM engines build
+*deterministic* countermodels and every deterministic frame validates `sent:det`, which is not
+`StarValid` — and, unlike the L⁺ case, narrowing to the deterministic class is no escape, because
+the registers do not collapse there; and the standard hybrid pure-axiom/PASTE completeness route
+needs nominals, which L⋆ has none of.
 
 ### Decidability — `Decidability/`
 
