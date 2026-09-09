@@ -76,25 +76,37 @@ open FormalSystem.Semantics
 
 /-! ## The four completeness rows -/
 
-/-- **Deterministic completeness at `.Base`.** -/
+/-- **Deterministic completeness at `.Base`.**
+
+Paper: `app:deterministic`
+-/
 theorem detCompletenessBase (φ : PlusFormula) (h : PlusValidDetIn FrameClass.Base φ) :
     DetDerivable FrameClass.Base [] φ :=
   detDerivable_of_derivable_erasePlus
     (derivable_of_validDetBase (erasePlus φ) (validDetIn_erasePlus_of_plusValidDetIn h))
 
-/-- **Deterministic completeness at `.Dense`.** -/
+/-- **Deterministic completeness at `.Dense`.**
+
+Paper: `app:deterministic`
+-/
 theorem detCompletenessDense (φ : PlusFormula) (h : PlusValidDetIn FrameClass.Dense φ) :
     DetDerivable FrameClass.Dense [] φ :=
   detDerivable_of_derivable_erasePlus
     (derivable_of_validDetDense (erasePlus φ) (validDetIn_erasePlus_of_plusValidDetIn h))
 
-/-- **Deterministic completeness at `.ZTime`.** -/
+/-- **Deterministic completeness at `.ZTime`.**
+
+Paper: `app:deterministic`
+-/
 theorem detCompletenessZTime (φ : PlusFormula) (h : PlusValidDetIn FrameClass.ZTime φ) :
     DetDerivable FrameClass.ZTime [] φ :=
   detDerivable_of_derivable_erasePlus
     (derivable_of_validDetZTime (erasePlus φ) (validDetIn_erasePlus_of_plusValidDetIn h))
 
-/-- **Deterministic completeness at `.RTime`.** -/
+/-- **Deterministic completeness at `.RTime`.**
+
+Paper: `app:deterministic`
+-/
 theorem detCompletenessRTime (φ : PlusFormula) (h : PlusValidDetIn FrameClass.RTime φ) :
     DetDerivable FrameClass.RTime [] φ :=
   detDerivable_of_derivable_erasePlus
@@ -128,7 +140,7 @@ formula set defines the deterministic frames at all (`deterministic_not_plusDefi
 sentence that survives is the one stated here — the two classes have the same **logic** — and it
 is the one the manuscript can use.
 
-Paper: `app:deterministic` (the axiomatization claim its appendix currently lacks)
+Paper: `app:deterministic`
 -/
 theorem logicDeterministicEqDeterminedValid (fc : FrameClass) (φ : PlusFormula) :
     PlusValidDetIn fc φ ↔ PlusValidDeterminedIn fc φ :=

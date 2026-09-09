@@ -199,10 +199,13 @@ theorem someFutureCouldImpCouldSomeFuture {φ : PlusFormula} (hφ : PlusFormula.
 extended system exactly when it is a TM theorem, at every frame class.
 
 This is the deterministic-completeness result read back at the L level, and it is a genuine
-addition rather than a restatement of `plusDerivable_ofFormula_iff`: the extended system has an
-axiom TM⁺ does not, so conservativity over TM does not follow from TM⁺'s. It is
+addition rather than a restatement of `plusDerivable_ofFormula_iff`: the extended system carries
+a schema that TM⁺ does not, so conservativity over TM does not follow from TM⁺'s. It is
 `detDerivable_iff_derivable_erasePlus` at `φ := ofFormula ψ`, where the erasure is the identity
 (`erasePlus_ofFormula`).
+
+Paper: — (formalization-native; TM⁺ + *Determined* is the ⊡-only fragment's extension, for which
+the paper supplies no logic)
 -/
 theorem detDerivable_ofFormula_iff (fc : FrameClass) (φ : Formula) :
     Deterministic.DetDerivable fc [] (ofFormula φ) ↔ ProofSystem.Derivable fc [] φ := by

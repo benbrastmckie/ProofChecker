@@ -90,7 +90,8 @@ Every subdirectory has exactly one **sibling** aggregator: `X.lean` sits *beside
 | `Conservativity.lean` | 358 | `Conservativity/` |
 | `Core.lean` | 37 | `Core/` |
 | `Decidability.lean` | 168 | `Decidability/` |
-| `Independence.lean` | 90 | `Independence/` |
+| `Deterministic.lean` | 25 | <!-- TODO: add description --> |
+| `Independence.lean` | 94 | `Independence/` |
 | `SoundnessLemmas.lean` | 35 | `SoundnessLemmas/` |
 | `WeakCanonical.lean` | 144 | `WeakCanonical/` |
 <!-- END GENERATED -->
@@ -142,15 +143,16 @@ invariant check allowlists it by name (check C8; the allowlist entry is the inne
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic rows=subdirs cols=files-lines link=yes -->
 | Directory | Files | Lines | Role |
 |-----------|------:|------:|------|
-| [`Algebraic/`](Algebraic/README.md) | 5 | 2,427 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
-| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,150 | Chronicle completeness route; the wired entry point |
+| [`Algebraic/`](Algebraic/README.md) | 5 | 2,448 | Quotient algebra, ultrafilter/MCS correspondence, flow-frame countermodel engine |
+| [`BXCanonical/`](BXCanonical/README.md) | 28 | 23,160 | Chronicle completeness route; the wired entry point |
 | [`Bundle/`](Bundle/README.md) | 9 | 2,856 | Bundled families of MCSs and their coherence conditions |
-| [`Conservativity/`](Conservativity/README.md) | 15 | 3,688 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
+| [`Conservativity/`](Conservativity/README.md) | 16 | 3,904 | Conservativity of TM over the base language L⁻: the translation, the backward direction, and the CEB/CEF/CED/CEC status record |
 | [`Core/`](Core/README.md) | 4 | 1,838 | MCS machinery shared by all three routes |
 | [`Decidability/`](Decidability/README.md) | 80 | 53,407 | Tableau decision procedure and countermodel extraction |
-| [`Independence/`](Independence/README.md) | 12 | 3,005 | Axiom-independence models |
+| [`Deterministic/`](Deterministic/README.md) | 7 | 1,599 | The deterministic metatheory of TM⁺: validity narrowed to `TaskFrame.Deterministic`, the narrowed completeness engines, the `⊡`-erasure, the extended system TM⁺ + *Determined*, and its soundness and completeness |
+| [`Independence/`](Independence/README.md) | 16 | 4,418 | Axiom-independence models |
 | [`SoundnessLemmas/`](SoundnessLemmas/README.md) | 4 | 1,456 | Per-axiom validity lemmas feeding `Soundness.lean` |
-| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,139 | Kamp/Reynolds route, including all of `Kamp/` |
+| [`WeakCanonical/`](WeakCanonical/README.md) | 179 | 132,157 | Kamp/Reynolds route, including all of `Kamp/` |
 <!-- END GENERATED -->
 
 C7's `Metalogic` rollup is larger than the sum of the table above, because it also counts the
@@ -167,8 +169,8 @@ Loose modules:
 |--------|------:|
 | `CanonicalChain.lean` | 115 |
 | `CanonicalModel.lean` | 846 |
-| `Completeness.lean` | 453 |
-| `CompletenessDedekind.lean` | 618 |
+| `Completeness.lean` | 462 |
+| `CompletenessDedekind.lean` | 619 |
 | `DiscreteCarrierProbe.lean` | 96 |
 | `Frame.lean` | 718 |
 | `OrderedSeedConsistency.lean` | 257 |
@@ -198,8 +200,8 @@ dominates everything else in the repository:
 | `Expressiveness/` | 5 | 9,501 |
 | `DenseModelSurgery/` | 9 | 7,571 |
 | `RealModel/` | 7 | 6,644 |
-| `IntegerModel/` | 6 | 5,665 |
-| `GroupModel/` | 6 | 3,364 |
+| `IntegerModel/` | 6 | 5,682 |
+| `GroupModel/` | 6 | 3,365 |
 | `Separation/` | 3 | 926 |
 <!-- END GENERATED -->
 
@@ -251,6 +253,32 @@ check name, deliberately without a line number.
 A change to any of these means a proof was silently rerouted through different
 dependencies — detectable even when the build stays green and the sorry count is
 unchanged. It is a hard stop, not a new baseline.
+
+### The TM⁺ metatheory rows — `Conservativity/Plus/`, `Deterministic/`, `Independence/`
+
+TM⁺ is L plus the stability modal `⊡` (`FormalSystem/PlusLanguage/`). Its metatheory splits into
+what is landed and what is open, and the split is load-bearing enough to record here:
+
+| Row | Status |
+|-----|--------|
+| soundness at all four classes | **landed** — `Conservativity/Plus/PlusSoundness.lean` |
+| conservativity over TM, both directions, all four classes | **landed** — `Conservativity/Plus/Forward.lean` |
+| completeness of TM⁺ + *Determined* over the **deterministic** frames, all four classes | **landed** — `Deterministic/Completeness.lean` |
+| the logic of the deterministic frames coincides with the logic of the *Determined*-valid frames | **landed** — `Deterministic/Completeness.lean` |
+| `⊡` is not definable in L | **landed** — `Independence/StabUndefinable.lean` |
+| the two pasting schemata are not derivable from the naive `⊡`-set | **landed** — `Independence/PastingIndependence.lean` |
+| **general (nondeterministic) TM⁺ completeness, at any class** | **OPEN** |
+| **TM⁺ decidability** | **OPEN** |
+
+The two open rows are stated nowhere in the tree and are never discharged with `sorry`. The
+nearest results in the literature are Reynolds (2003) on until/since completeness over the reals
+and Zanardo (1991) on branching-time logics under an Ockhamist reading; neither settles the
+all-histories semantics used here.
+
+The deterministic row is an **axiomatization, not a characterization**. *Determined* (`φ → ⊡φ`)
+is valid on a class strictly larger than the deterministic frames, and no L⁺ formula set defines
+the deterministic frames at all (`Independence/DeterminismUndefinable.lean`). What holds — and is
+what a paper can use — is that the two classes have the same logic.
 
 ### Decidability — `Decidability/`
 

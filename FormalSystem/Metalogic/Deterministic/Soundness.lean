@@ -161,6 +161,8 @@ frame of `fc` that validates every instance of *Determined*.
 
 Note the class: it is strictly larger than the deterministic frames
 (`determinedValid_not_deterministic`), and this is the stronger statement.
+
+Paper: `app:deterministic`
 -/
 theorem detSoundness {fc : FrameClass} {φ : PlusFormula} (h : DetDerivable fc [] φ) :
     PlusValidDeterminedIn fc φ :=

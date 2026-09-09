@@ -230,7 +230,7 @@ Any such `ψ` would have to be false at `(M₁, τ₁, 0)` and true at `(M₂, �
 points are `stabCorr`-related, and `truthAt_of_truthCorr` transports every `Formula` along a
 `TruthCorr`. So the two truth values coincide, and no `ψ` can separate what `⊡Fp` separates.
 
-Paper: `def:BLstar-semantics` (the clause this bounds below)
+Paper: `def:BLstar-semantics`
 -/
 theorem stabNotDefinable (p : Atom) :
     ¬ ∃ ψ : Formula, ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),

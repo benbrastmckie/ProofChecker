@@ -1,11 +1,11 @@
 # Implementation Plan: TM⁺ deterministic completeness and ⊡ non-definability
 
 - **Task**: 537 - tm_star_completeness_stab_nondefinability
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 26 hours
 - **Dependencies**: 533 (landed), 535 (archived, ground truth), 536 (landed), 562 (completed)
 - **Research Inputs**: `specs/archive/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md`; `specs/archive/535_axiomatize_stability_modal_tm_star/probes/01_stab-axiom-probes.lean` (60 sorry-free declarations). No report was produced for this round; this plan was written directly against the task specification plus a read of the live tree (see Overview).
-- **Artifacts**: plans/01_tm-plus-deterministic-completeness.md (this file)
+- **Artifacts**: plans/01_tm-plus-deterministic-completeness.md (this file); summaries/01_tm-plus-deterministic-completeness-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md
 - **Type**: lean4
 - **Lean Intent**: true
@@ -622,22 +622,22 @@ be already landed rather than restating it.
 
 ---
 
-### Phase 14: Documentation and invariants [NOT STARTED]
+### Phase 14: Documentation and invariants [COMPLETED]
 
 **Goal**: Record what landed and what remains open, and bring the invariant checks green.
 
 **Tasks**:
-- [ ] Update `FormalSystem/Metalogic/Conservativity/Plus/README.md`: the deterministic-completeness
+- [x] Update `FormalSystem/Metalogic/Conservativity/Plus/README.md`: the deterministic-completeness
       row, the non-definability row, the pasting-independence row, and general completeness listed
       as **open**
-- [ ] Update `FormalSystem/Metalogic/README.md`'s metatheory rows with the same, plus the new
-      `Deterministic/` subtree in the directory inventory
-- [ ] Update `FormalSystem/Metalogic/Independence/README.md` with the two new modules
-- [ ] Add `docs/theorem-index.md` rows for every new headline declaration, with the axiom column
+- [x] Update `FormalSystem/Metalogic/README.md`'s metatheory rows with the same, plus the new
+      `Deterministic/` subtree in the directory inventory *(deviation: altered — a `Deterministic/README.md` was also written, because every `Metalogic/` subdirectory carries one and the generated directory inventory links to it)*
+- [x] Update `FormalSystem/Metalogic/Independence/README.md` with the two new modules
+- [x] Add `docs/theorem-index.md` rows for every new headline declaration, with the axiom column
       generated from the baselines, not typed
-- [ ] Cite Reynolds 2003 and Zanardo 1991 as the nearest literature results for the open general
+- [x] Cite Reynolds 2003 and Zanardo 1991 as the nearest literature results for the open general
       case; no task numbers anywhere under `FormalSystem/` or `docs/`
-- [ ] Run `bash scripts/check-module-invariants.sh` and bring C2, C3 and C14 green
+- [x] Run `bash scripts/check-module-invariants.sh` and bring C2, C3 and C14 green
 
 **Timing**: 1.5 hours
 
@@ -657,18 +657,29 @@ be already landed rather than restating it.
 
 ---
 
-### Phase 15: Compactness of TM⁺ at Base and Dense (optional) [NOT STARTED]
+### Phase 15: Compactness of TM⁺ at Base and Dense (optional) [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Deliverable (5), attempted only if budget remains: extend the ultraproduct Łoś lemma
 with a `stab` case.
 
 **Tasks**:
 - [ ] Add the `stab` case to `los_truthAt`, treating ultraproduct histories as orbit
-      representatives
-- [ ] Show `SameStateAt` is eventually-agreeing via `omk_eq_omk`
-- [ ] Derive compactness of TM⁺ at Base and Dense from the extended lemma
-- [ ] If budget is exhausted, close this phase as `[COMPLETED WITH EXCLUSIONS]` with a
+      representatives *(deviation: skipped — see Reasoned Exclusions)*
+- [ ] Show `SameStateAt` is eventually-agreeing via `omk_eq_omk` *(deviation: skipped — see Reasoned Exclusions)*
+- [ ] Derive compactness of TM⁺ at Base and Dense from the extended lemma *(deviation: skipped — see Reasoned Exclusions)*
+- [x] If budget is exhausted, close this phase as `[COMPLETED WITH EXCLUSIONS]` with a
       `#### Reasoned Exclusions` record; that is the expected outcome, not a failure
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| The `stab` case of `los_truthAt` | Deliverable (5) is marked **OPTIONAL, only if budget remains** in the task specification and **explicitly optional** in this plan, with `[COMPLETED WITH EXCLUSIONS]` named there as the expected outcome rather than a failure. The four mandatory deliverables consumed the budget, and Phase 12 in particular cost far more than its "small" billing: 535's E-model argument does not mechanize, so an entire non-standard semantics (`Independence/CoarsenedModels.lean`, ~740 lines) had to be built and shown sound before the two-line refutation could be stated. | Task specification, deliverable (5): "OPTIONAL, only if budget remains". This plan, Phase 15 heading: "(optional)"; Risks table row: "Optional deliverable (5), compactness, exhausts the budget — mitigation: Phase 15 is explicitly optional and closes as a reasoned exclusion if budget runs out; nothing else depends on it." |
+| `SameStateAt` eventually-agreeing via `omk_eq_omk` | Same; it is a sub-step of the item above and has no independent consumer. | As above. |
+| Compactness of TM⁺ at Base and Dense | Same. **Nothing landed by this task depends on it**, and nothing anywhere in the tree asserts it: `FormalSystem/Metalogic/Compactness.lean` is unmodified, and no README or index row claims a TM⁺ compactness result. | `git diff` touches no file under `Metalogic/Compactness.lean`; `grep -rn "Compact" FormalSystem/Metalogic/Deterministic/ FormalSystem/Metalogic/Independence/{StabUndefinable,NaiveSystem,CoarsenedModels,PastingIndependence}.lean` is empty. |
+
+The exclusion is a *non-attempt*, not a weakened claim: no compactness statement for TM⁺ exists
+anywhere in the tree, in any form, and none was discharged with `sorry`.
 
 **Timing**: 2 hours
 

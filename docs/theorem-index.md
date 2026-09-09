@@ -99,6 +99,30 @@ the mapping.
 | — | Strong completeness for `Γ : Set Formula` | `FormalSystem.Metalogic.strongCompletenessBase` | `FormalSystem/Metalogic/Compactness.lean` | Base | pcq pinned:C14 |
 | — | Strong completeness for `Γ : Set Formula` | `FormalSystem.Metalogic.strongCompletenessDense` | `FormalSystem/Metalogic/Compactness.lean` | Dense | pcq pinned:C14 |
 
+### TM⁺ over the deterministic frames
+
+These are the `⊡ = identity` rows. **General (nondeterministic) TM⁺ completeness is open and is
+not stated anywhere in the tree**; the nearest literature results are Reynolds (2003) and
+Zanardo (1991). *Determined* axiomatizes the deterministic frames' logic without defining the
+class — see `deterministic_not_plusDefinable` above.
+
+| Paper label | Statement | Lean name | File | Frame class | Axioms |
+|-------------|-----------|-----------|------|-------------|--------|
+| `app:deterministic` | TM⁺ + *Determined* is sound over the frames validating *Determined* | `FormalSystem.Metalogic.Deterministic.detSoundness` | `FormalSystem/Metalogic/Deterministic/Soundness.lean` | — | pcq |
+| `app:deterministic` | TM⁺ + *Determined* is complete over the deterministic task frames | `FormalSystem.Metalogic.Deterministic.detCompletenessBase` | `FormalSystem/Metalogic/Deterministic/Completeness.lean` | Base | pcq |
+| `app:deterministic` | The same over the deterministic dense frames | `FormalSystem.Metalogic.Deterministic.detCompletenessDense` | `FormalSystem/Metalogic/Deterministic/Completeness.lean` | Dense | pcq |
+| `app:deterministic` | The same over the deterministic ℤ-time frames | `FormalSystem.Metalogic.Deterministic.detCompletenessZTime` | `FormalSystem/Metalogic/Deterministic/Completeness.lean` | ZTime | pcq |
+| `app:deterministic` | The same over the deterministic dense Dedekind-complete frames | `FormalSystem.Metalogic.Deterministic.detCompletenessRTime` | `FormalSystem/Metalogic/Deterministic/Completeness.lean` | RTime | pcq |
+| `app:deterministic` | The logic of the deterministic frames and the logic of the *Determined*-valid frames coincide, at every class | `FormalSystem.Metalogic.Deterministic.logicDeterministicEqDeterminedValid` | `FormalSystem/Metalogic/Deterministic/Completeness.lean` | — | pcq |
+
+### Non-redundancy of the TM⁺ axiom set
+
+| Paper label | Statement | Lean name | File | Frame class | Axioms |
+|-------------|-----------|-----------|------|-------------|--------|
+| — | Naive soundness: a TM⁺ theorem not using the pasting axioms is valid in every coarsened-state model | `FormalSystem.Metalogic.Independence.naive_cValid` | `FormalSystem/Metalogic/Independence/CoarsenedModels.lean` | Base | pcq |
+| — | PS is not derivable from TM plus {SK, ST, S4, S5, MS, AS} | `FormalSystem.Metalogic.Independence.pasteNotNaiveDerivable` | `FormalSystem/Metalogic/Independence/PastingIndependence.lean` | Base | pcq |
+| — | US is not derivable from TM plus {SK, ST, S4, S5, MS, AS} | `FormalSystem.Metalogic.Independence.untlPasteNotNaiveDerivable` | `FormalSystem/Metalogic/Independence/PastingIndependence.lean` | Base | pcq |
+
 ### Non-compactness — the two refutations
 
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
@@ -126,6 +150,7 @@ the mapping.
 | `app:complete` | `Sat .RTime ⊊ Mod (AxiomSet .RTime)` — the narrowing is not Galois-closed | `FormalSystem.Metalogic.Independence.sat_rtime_ssubset_mod_axiomSet` | `FormalSystem/Metalogic/Independence/RationalWitness.lean` | RTime | pcq pinned:C14 |
 | `app:discrete` | `Sat .ZTime ⊊ Mod (AxiomSet .ZTime)` — the narrowing is not Galois-closed | `FormalSystem.Metalogic.Independence.sat_ztime_ssubset_mod_axiomSet` | `FormalSystem/Metalogic/Independence/LexIntWitness.lean` | ZTime | pcq pinned:C14 |
 | `app:deterministic` | No set of `PlusFormula`s defines `TaskFrame.Deterministic` | `FormalSystem.Metalogic.Independence.deterministic_not_plusDefinable` | `FormalSystem/Metalogic/Independence/DeterminismUndefinable.lean` | — | pcq pinned:C14 |
+| `def:BLstar-semantics` | No `Formula` of L is equivalent to `⊡Fp` over all task models — the stability modal is not L-definable | `FormalSystem.Metalogic.Independence.stabNotDefinable` | `FormalSystem/Metalogic/Independence/StabUndefinable.lean` | — | pcq |
 
 ### Conservativity — TM⁻ over L⁻, TM over TM⁻, TM⁺ over TM
 
@@ -141,6 +166,7 @@ the mapping.
 | — | `TM ≤ TMFrag` everywhere | `FormalSystem.Metalogic.Conservativity.tmMinus_le_tmFrag` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | — | pcq pinned:C14 |
 | — | `TM ⊊ TMFrag` at ℤ-time | `FormalSystem.Metalogic.Conservativity.tmMinus_lt_tmFrag_ztime` | `FormalSystem/Metalogic/Conservativity/Fragment.lean` | ZTime | pcq pinned:C14 |
 | — | Proof-theoretic conservativity of TM⁺ over TM, both directions, all four classes | `FormalSystem.Metalogic.Conservativity.plusDerivable_ofFormula_iff` | `FormalSystem/Metalogic/Conservativity/Plus/Forward.lean` | — | pcq pinned:C14 |
+| — | Proof-theoretic conservativity of TM⁺ + *Determined* over TM, all four classes | `FormalSystem.Metalogic.Conservativity.detDerivable_ofFormula_iff` | `FormalSystem/Metalogic/Conservativity/Plus/Corollaries.lean` | — | pcq |
 | — | Soundness of TM⁺ at every frame class | `FormalSystem.Metalogic.Conservativity.plus_soundness_validIn` | `FormalSystem/Metalogic/Conservativity/Plus/PlusSoundness.lean` | — | pcq pinned:C14 |
 | — | Semantic conservativity of L⁺ over L | `FormalSystem.Semantics.plusValidIn_ofFormula_iff` | `FormalSystem/Semantics/PlusValidity.lean` | — | `[propext]` pinned:C14 |
 

@@ -17,8 +17,8 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 <!-- BEGIN GENERATED: inventory dir=FormalSystem rows=totals desc=no -->
 | Metric | Count |
 |--------|-------|
-| Live `.lean` files | 482 |
-| Live lines | 283,540 |
+| Live `.lean` files | 496 |
+| Live lines | 287,114 |
 | Archived `.lean` files | 168 |
 | Archived lines | 91,618 |
 <!-- END GENERATED -->

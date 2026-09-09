@@ -12,19 +12,30 @@ instance), plus S5 for `⊡`, `□φ → ⊡φ`, `p → ⊡p` for atoms, and two
 pure-future / pure-past side conditions (`Semantics/PlusPasting.lean`). The five refutations in
 `Semantics/PlusNonValidities.lean` bound that set from above.
 
-TM⁺ **completeness and decidability are open** and are not asserted anywhere. One durable fact
-bears on any attempt: the countermodels of all four completeness engines are *deterministic*, so
-on them `⊡` is the identity and none of the engines transfers to L⁺.
+**General TM⁺ completeness and TM⁺ decidability are open** and are not asserted anywhere. One
+durable fact bears on any attempt: the countermodels of all four completeness engines are
+*deterministic*, so on them `⊡` is the identity and none of the engines transfers to L⁺ as it
+stands. The nearest results in the literature are Reynolds (2003) on until/since completeness over
+the reals and Zanardo (1991) on branching-time logics with an Ockhamist reading; neither settles
+the all-histories semantics used here.
+
+What that same fact **does** yield is the deterministic row, which is landed: TM⁺ together with
+the *Determined* schema `φ → ⊡φ` is sound over the frames validating that schema and complete
+over the deterministic frames, at every class, so the two classes have the same logic
+(`Metalogic/Deterministic/`). That is an axiomatization, **not** a characterization: *Determined*
+does not define the deterministic frames, and no L⁺ formula set does
+(`Metalogic/Independence/DeterminismUndefinable.lean`).
 
 ## Modules
 
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/Conservativity/Plus -->
 | File | Lines | Description |
 |------|------:|-------------|
-| `Atomization.lean` | 241 | <!-- TODO: add description --> |
-| `AxiomValidity.lean` | 276 | <!-- TODO: add description --> |
-| `Forward.lean` | 171 | <!-- TODO: add description --> |
-| `PlusSoundness.lean` | 193 | <!-- TODO: add description --> |
+| `Atomization.lean` | 241 | The `⊡`-as-fresh-atom transfer: `Encoding`, `atomize`, `TaskModel.atomModel`, `plusTruthAt_iff_atomize`, and the two helpers that carry the 45 TM schemata over L⁺. |
+| `AxiomValidity.lean` | 276 | The two dispatch lemmas, one arm per `PlusAxiom` constructor and no wildcard: every schema and every temporal dual is valid at its own minimum frame class. |
+| `Corollaries.lean` | 215 | The composed fragment rows named per class, the derived logic of the defined modals `Will`/`will`/`could`, and `detDerivable_ofFormula_iff` — conservativity of TM⁺ + *Determined* over TM. |
+| `Forward.lean` | 171 | Forward conservativity of TM⁺ over TM at every class with a completeness engine, the biconditional `plusDerivable_ofFormula_iff`, and the composed L⁻ ⊂ L⁺ rows. |
+| `PlusSoundness.lean` | 193 | Soundness of TM⁺ at every frame class, by the companion recursion carrying validity and swap-validity, plus the per-class rows and consistency at `.Base`. |
 <!-- END GENERATED -->
 
 ## Key Results
@@ -33,6 +44,24 @@ on them `⊡` is the identity and none of the engines transfers to L⁺.
   semantically by the companion recursion and the TM schemata over L⁺ handled by atomization
 - `plusDerivable_ofFormula_iff` — proof-theoretic conservativity of TM⁺ over TM in **both**
   directions, at all four classes
+- `Corollaries.lean`: the composed fragment rows `tmFragIffPlus{Base,Dense,ZTime,RTime}`; the
+  derived logic of the defined modals (`willImpAllFuture`, `boxAllFutureImpWill`, `willImpWill`,
+  `someFutureCouldImpCouldSomeFuture`); and `detDerivable_ofFormula_iff`, the conservativity of
+  TM⁺ + *Determined* over TM
+
+## Metatheory rows
+
+| Row | Status | Where |
+|-----|--------|-------|
+| TM⁺ soundness, all four classes | **landed** | `PlusSoundness.lean` |
+| TM⁺ conservative over TM, both directions, all four classes | **landed** | `Forward.lean` |
+| TM⁺ + *Determined* complete over the deterministic frames, all four classes | **landed** | `Metalogic/Deterministic/Completeness.lean` |
+| the logic of the deterministic frames = the logic of the *Determined*-valid frames | **landed** | `Metalogic/Deterministic/Completeness.lean`, `logicDeterministicEqDeterminedValid` |
+| TM⁺ + *Determined* conservative over TM | **landed** | `Corollaries.lean` |
+| `⊡` is not L-definable | **landed** | `Metalogic/Independence/StabUndefinable.lean` |
+| the two pasting schemata are not derivable from the naive `⊡`-set | **landed** | `Metalogic/Independence/PastingIndependence.lean` |
+| **general (nondeterministic) TM⁺ completeness, any class** | **OPEN** — never stated, never sorried | — (Reynolds 2003, Zanardo 1991 are the nearest) |
+| **TM⁺ decidability** | **OPEN** | — |
 
 ## Related Documentation
 
@@ -40,6 +69,8 @@ on them `⊡` is the identity and none of the engines transfers to L⁺.
 - [`FormalSystem/PlusLanguage/`](../../../PlusLanguage/README.md) — `PlusFormula`, `PlusAxiom`,
   `PlusDerivationTree`, `ofFormula`
 - [`Semantics/PlusTruth.lean`](../../../Semantics/PlusTruth.lean) — the L⁺ truth recursion
+- [`Metalogic/Deterministic/`](../../Deterministic.lean) — the deterministic metatheory: the
+  narrowed engines, the `⊡`-erasure, TM⁺ + *Determined*, and its completeness
 - [`docs/theorem-index.md`](../../../../docs/theorem-index.md) — per-theorem status
 
 ---

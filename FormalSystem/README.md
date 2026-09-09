@@ -247,9 +247,9 @@ invariant check allowlists it by name (check C8).
 | `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 27 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |
-| `Metalogic.lean` | 257 | Re-export for Metalogic submodule |
+| `Metalogic.lean` | 258 | Re-export for Metalogic submodule |
 | `MinusLanguage.lean` | 45 | Re-export for MinusLanguage submodule |
-| `PlusLanguage.lean` | 49 | Re-export for PlusLanguage submodule (L⁺ = L plus the stability modal `⊡`, and its logic TM⁺) |
+| `PlusLanguage.lean` | 54 | Re-export for PlusLanguage submodule (L⁺ = L plus the stability modal `⊡`, and its logic TM⁺) |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
 | `Semantics.lean` | 255 | Re-export for Semantics submodule |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |

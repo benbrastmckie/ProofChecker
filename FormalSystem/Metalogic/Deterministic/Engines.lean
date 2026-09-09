@@ -21,8 +21,8 @@ the **deterministic** frames of the class.
 Each engine's proof ends in a single application of the validity hypothesis to a *concrete*
 constructed countermodel frame, and every one of those frames is deterministic: they are all
 specializations of `Algebraic.multiFamTaskFrameGen`, whose determinism is
-`multiFamTaskFrameGen_deterministic`. Since task 537's Phase 2 the four countermodel producers
-expose that fact as an extra existential component, so the narrowed hypothesis applies at exactly
+`multiFamTaskFrameGen_deterministic`. The four countermodel producers expose that fact as an
+extra existential component, so the narrowed hypothesis applies at exactly
 the same point the unnarrowed one did, and each proof below is the parent engine's script with
 that one component fed in.
 

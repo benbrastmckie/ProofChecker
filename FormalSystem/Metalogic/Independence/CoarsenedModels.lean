@@ -721,6 +721,9 @@ coarsened-state model.
 
 This is the tool the independence result uses: exhibit one coarsened model refuting a pasting
 instance, and that instance cannot be naively derivable.
+
+Paper: — (formalization-native; the naive `⊡`-set and the coarsened semantics are this tree's
+own, with no paper counterpart)
 -/
 theorem naive_cValid {φ : PlusFormula} (h : NaiveDerivable FrameClass.Base [] φ) : CValid φ :=
   h.elim fun d hn => (naive_cValid_and_swap d hn).1

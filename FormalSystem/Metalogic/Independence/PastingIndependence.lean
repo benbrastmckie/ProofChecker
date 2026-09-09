@@ -212,6 +212,8 @@ theorem not_and_phiPlus_psiMinus (p : Atom) (σ : ConvexHistory PF) (hσ : σ.Is
 **PS is not derivable from the naive `⊡`-set.** The instance at `φ⁺ := Fp`, `ψ⁻ := Pp` fails at
 `(pHist (-1), 0)` in a coarsened model, and every naive theorem is coarsely valid
 (`naive_cValid`).
+
+Paper: — (formalization-native; the naive `⊡`-set is this tree's own, with no paper counterpart)
 -/
 theorem pasteNotNaiveDerivable (p : Atom) :
     ∃ φ ψ : PlusFormula, IsPureFuture φ ∧ IsPurePast ψ ∧
@@ -256,6 +258,8 @@ theorem not_dstab_someFuture_phiPlus (p : Atom) :
 /--
 **US is not derivable from the naive `⊡`-set.** The instance at `α⁻ := ⊤`, `φ⁺ := Fp` fails at
 `(pHist (-1), 0)` in the same coarsened model.
+
+Paper: — (formalization-native; the naive `⊡`-set is this tree's own, with no paper counterpart)
 -/
 theorem untlPasteNotNaiveDerivable (p : Atom) :
     ∃ α φ : PlusFormula, IsPurePast α ∧ IsPureFuture φ ∧
