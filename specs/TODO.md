@@ -11,8 +11,8 @@ next_project_number: 578
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,575,576 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
-| 2 | 231,282,296,465,497,560,564,565,567,570,577 | 298,464,502,559,563,568,575,576 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,576 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 2 | 231,282,296,465,497,560,564,565,567,570,577 | 298,464,502,559,563,568,576 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
 | 5 | 410,501 | 125,429 | algebraic-representation, decidability |
@@ -105,10 +105,6 @@ next_project_number: 578
 
 506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
 
-### Semantics
-
-575 [PLANNED] — Lift the state-locality fragment to L-plus and retire the atom-re
-
 ### Infrastructure
 
 542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
@@ -150,11 +146,12 @@ HARD CONSTRAINTS: no `sorry` -- an unreachable result is recorded as a reasoned 
 ---
 
 ### 575. Plus state locality fragment
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: semantics
 - **Dependencies**: None
 - **Plan**: [575_plus_state_locality_fragment/plans/01_plus-state-locality-fragment.md]
+- **Summary**: [575_plus_state_locality_fragment/summaries/01_plus-state-locality-fragment-summary.md]
 
 **Description**: Lift the state-locality fragment to L-plus and retire the atom-restricted stability lemma. GROUND TRUTH: FormalSystem/Semantics/StarStateLocal.lean carries a fully systematic treatment of state-locality for L-star -- the syntactic predicate `StarFormula.StateLocal` by structural recursion over all nine constructors, the semantic property `IsStateLocal`, the soundness induction `isStateLocal_of_stateLocal`, three countermodel exclusions (`not_isStateLocal_someFuture`/`_somePast`/`_timeRecall`), and the headline `stateLocal_starValid_iff_stab`. Notably `isStateLocal_box` is `Iff.rfl` and `stab` is unconditional via `sameStateAt_congr_left`, so the fragment admits box-phi and stab-phi at ARBITRARY phi -- strictly wider than an "every subformula is state-local" reading.
 
