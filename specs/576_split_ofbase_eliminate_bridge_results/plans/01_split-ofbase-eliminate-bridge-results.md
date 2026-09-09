@@ -813,39 +813,99 @@ deviation and must be reported, not silently absorbed.
 
 ---
 
-### Phase 12: Deliverable 7 survey and deliverable 8 conservativity re-verification [NOT STARTED]
+### Phase 12: Deliverable 7 survey and deliverable 8 conservativity re-verification [COMPLETED]
 
 **Goal**: Widen every other `ofPlus`-restricted result the split covers — not only the headline —
 and re-verify the three conservativity results against the new axiom set, reporting any breakage
 as a theorem rather than working around it.
 
 **Tasks**:
-- [ ] Enumerate mechanically, not from the report: every declaration reachable from
+- [x] Enumerate mechanically, not from the report: every declaration reachable from
       `FormalSystem/StarLanguage/` and `FormalSystem/Metalogic/Conservativity/Star/` whose
       statement mentions `ofPlus`, `ofStarCtx` or `PlusFormula`
       (`grep -rn "ofPlus\|ofStarCtx" FormalSystem/StarLanguage/ FormalSystem/Metalogic/Conservativity/Star/`)
-- [ ] Record the survey in this plan file as a `#### Restriction survey` subsection under this
+- [x] Record the survey in this plan file as a `#### Restriction survey` subsection under this
       phase: one row per result, with verdict **WIDENED** / **DIED WITH `ofBase`** /
       **STAYS RESTRICTED** and, for the last, the *specific* reason the restriction is the
       result's content rather than a limitation on it
-- [ ] Widen every result the split actually covers. The expected set from research is
+- [x] Widen every result the split actually covers. The expected set from research is
       `stabNecessitationOfPlus` (done in Phase 11), `minFrameClass_ofBase` (died in Phase 11),
       and the two MF `example`s (retargeted in Phase 11) — **but the enumeration above is
       authoritative over that expectation**, and any additional widenable result found must be
       widened here, not deferred
-- [ ] Re-verify `starDerivable_ofFormula_iff`, `starConservative_of_plusComplete` and
+- [x] Re-verify `starDerivable_ofFormula_iff`, `starConservative_of_plusComplete` and
       `plusIncomplete_of_starNonconservative` (`Conservativity/Star/Forward.lean`) build
       unchanged against the new axiom set. Forward halves depend on TM⋆ soundness only, which is
       preserved because every new arm is proved sound; the backward halves depend on `ofPlusTree`,
       now guarded by `minFrameClass_ofPlusAxiom`
-- [ ] **If a conservativity direction does break, that is a real finding about the language.**
+- [x] **If a conservativity direction does break, that is a real finding about the language.**
       State it as a theorem with its witness and report it in the summary. Never silently weaken
       a statement or work around it
-- [ ] Record the new positive fact as pinned `example`s: TM⋆ is now strictly stronger at
+- [x] Record the new positive fact as pinned `example`s: TM⋆ is now strictly stronger at
       register-carrying formulas (`⊢⋆ □↑¹p → □G↑¹p`, and `⊢⋆ ⊡φ` from `⊢⋆ φ` at arbitrary `φ`)
       while proving no new L⁺ theorem — conservativity is a statement about embedded formulas and
       is proved through the semantics
-- [ ] `lake build` green; `lake build BimodalTest` green; invariants exit 0
+- [x] `lake build` green; `lake build BimodalTest` green; invariants exit 0
+
+#### Restriction survey
+
+Enumeration command (run at implementation time, not copied from the report):
+
+```
+grep -rn "ofPlus\|ofStarCtx" FormalSystem/StarLanguage/ \
+  FormalSystem/Metalogic/Conservativity/Star/
+```
+
+One row per declaration whose *statement* mentions `ofPlus`, `ofStarCtx` or `PlusFormula`.
+"STAYS RESTRICTED" is used only where the restriction **is** the result's content — a statement
+*about* the embedding, which would be meaningless stated at an arbitrary `StarFormula`.
+
+| Declaration | Home | Verdict | Reason |
+|---|---|---|---|
+| `stabNecessitationOfPlus` | `StarLanguage/Derivation.lean` | **WIDENED** | replaced by the unrestricted `stabNecessitation` at every `ψ : StarFormula`; the restricted name is deleted, never kept alongside. `StarAxiom.box_stab` is now native at arbitrary `φ` |
+| MF acceptance `example` ("… and only there") | `StarLanguage/Derivation.lean` | **WIDENED** | retargeted to `□↑¹p → □G↑¹p`, a `RecallFree` instance that `ofPlus_ne_timeStore` shows is not an embedded formula |
+| `StarAxiom.ofBase` | `StarLanguage/Axioms.lean` | **DIED WITH `ofBase`** | constructor deleted; its schemata are now 53 mirror constructors over `StarFormula` |
+| the two `ofBase` `minFrameClass` pins | `StarLanguage/Axioms.lean` | **DIED WITH `ofBase`** | replaced by per-constructor pins on the mirror block |
+| `StarAxiom.minFrameClass_ofBase` | `StarLanguage/Embedding.lean` | **DIED WITH `ofBase`** | replaced by `StarAxiom.minFrameClass_ofPlusAxiom`, one named `cases` lemma |
+| `ofBase` arms of `starAxiom_validIn_min` / `_swap_validIn_min` | `Conservativity/Star/StarAxiomValidity.lean` | **DIED WITH `ofBase`** | replaced by 53 + 53 named arms |
+| MF-at-`⊡` acceptance `example` | `StarLanguage/Embedding.lean` | **WIDENED (route)** | still stated at an embedded formula, because that is what an *embedding* acceptance check is; it now crosses through the native `StarAxiom.modal_future` via `ofPlusAxiom` rather than through a monolithic arm |
+| `StarAxiom.ofPlusAxiom` (new) | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | it **is** the embedding of TM⁺ schemata; `ofPlus` is its subject |
+| `StarAxiom.minFrameClass_ofPlusAxiom` (new) | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | likewise — a statement about `ofPlusAxiom` |
+| `StarDerivationTree.ofPlusTree` | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | its content is "every TM⁺ derivation becomes a TM⋆ derivation of its embedding"; at an arbitrary `StarFormula` there is no TM⁺ derivation to translate |
+| `starDerivable_of_plusDerivable` | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | the `Prop` form of the same statement |
+| `starDerivable_of_derivable` | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | L ⊂ L⋆ backward; the doubly-embedded formula is the subject |
+| `temporal_duality` acceptance `example` | `StarLanguage/Embedding.lean` | STAYS RESTRICTED | exercises `ofPlusTree`'s TD case; the embedding is the point |
+| `ofPlus`, `ofPlus_injective`, `ofPlus_swapTemporal`, `ofStarCtx`, `mem_ofStarCtx`, `ofPlus_ne_timeStore`, `ofPlus_ne_timeRecall`, the 11 `ofPlus_*` `rfl` pins | `StarLanguage/Formula.lean` | STAYS RESTRICTED | the embedding and facts about it |
+| `recallFree_ofPlus`, `starIsPureFuture_ofPlus`, `starIsPurePast_ofPlus` (new) | `StarLanguage/Formula.lean` | STAYS RESTRICTED | transfer lemmas: "every embedded formula lies in the fragment" is a statement about `ofPlus`'s image by construction |
+| `forward_star` (+ 4 class variants) | `Conservativity/Star/Forward.lean` | STAYS RESTRICTED | a statement about **L** formulas crossing two embeddings; conservativity over TM is what it says |
+| `starDerivable_ofFormula_iff` (+ 4 class variants) | `Conservativity/Star/Forward.lean` | STAYS RESTRICTED | likewise |
+| `starConservative_of_plusComplete` | `Conservativity/Star/Forward.lean` | STAYS RESTRICTED | conservativity over TM⁺ *is* a claim about embedded formulas |
+| `plusIncomplete_of_starNonconservative` | `Conservativity/Star/Forward.lean` | STAYS RESTRICTED | its contrapositive |
+| `starTruthAt_ofPlus`, `starValidOn_ofPlus`, `starValidOnFrames_ofPlus` | `Semantics/StarTruth.lean`, `Semantics/StarValidity.lean` | STAYS RESTRICTED | truth/validity **transfer** along the embedding; out of territory and unchanged |
+| `refute_sentDet` | `Semantics/StarNonValidities.lean` | STAYS RESTRICTED | a refutation at a specific witness; not an `ofPlus` restriction at all |
+
+**Result**: the split covers, and this task widened or retired, every result whose `ofPlus`
+restriction was an artefact of axiom packaging — two widenings and four deaths. Everything that
+remains restricted is a statement *about the embedding itself*, where removing `ofPlus` would
+not weaken a restriction but destroy the statement. No widenable result was found outside the
+predicted set, and none was deferred.
+
+#### Conservativity re-verification (deliverable 8)
+
+All three results **build unchanged** against the new axiom set; no direction breaks, and none
+was weakened or worked around. The reason is structural rather than lucky, and is now recorded
+in `Conservativity/Star/Forward.lean`'s own docstring:
+
+- Every direction is established **semantically** and never pattern-matches `StarAxiom`. The
+  forward halves run TM⋆ soundness → `starValidOnFrames_ofPlus` → a TM (or hypothesised TM⁺)
+  completeness engine. Soundness survives the widening because every new schema is proved valid
+  at its own minimum frame class, so the composition is unchanged.
+- The backward halves run through `StarDerivationTree.ofPlusTree`, whose `axiom` case now routes
+  through `StarAxiom.ofPlusAxiom` under `StarAxiom.minFrameClass_ofPlusAxiom` — the named
+  frame-class agreement lemma, proved by `cases ax <;> rfl` over all 53 arms.
+- Conservativity is a claim about **embedded** formulas, and the widening lies entirely outside
+  that image (`↑¹p` is `RecallFree` and is not an `ofPlus` image). TM⋆ is now strictly stronger
+  at register-carrying formulas while proving no new theorem of L or of L⁺.
 
 **Timing**: 1.5 hours
 

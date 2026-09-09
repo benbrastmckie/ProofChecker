@@ -191,11 +191,38 @@ theorem plusIncomplete_of_starNonconservative {fc : FrameClass} (φ : PlusFormul
     ¬ (∀ ψ : PlusFormula, PlusValidIn fc ψ → PlusDerivable fc [] ψ) :=
   fun hcomplete => hnd (starConservative_of_plusComplete hcomplete φ hd)
 
+/-! ## The axiom set widened, and the rows did not move
+
+TM⋆'s schemata used to reach the TM⁺ block only at `ofPlus` instances, through a single
+embedding constructor. They are now declared directly over `StarFormula`
+(`StarLanguage/Axioms.lean`), so TM⋆ proves strictly more at register-carrying formulas than it
+did — for instance `□↑¹p → □G↑¹p` and `⊡ψ` from `ψ` at arbitrary `ψ`
+(`StarLanguage/Derivation.lean` pins both).
+
+**Neither row above moves, and that is a fact about the proofs, not an accident.** Both rows are
+established *semantically*: every direction runs through TM⋆ soundness and the truth-transfer
+bridge `starValidOnFrames_ofPlus`, and neither ever pattern-matches `StarAxiom`. Soundness is
+maintained because every new schema is proved valid at its own minimum frame class
+(`starAxiom_validIn_min`), so widening a *sound* axiom set cannot disturb a forward direction.
+The backward direction consumes `StarDerivationTree.ofPlusTree`, which now routes through
+`StarAxiom.ofPlusAxiom` under the frame-class guarantee `StarAxiom.minFrameClass_ofPlusAxiom`.
+
+Conservativity is a statement about **embedded** formulas, and the widening is entirely outside
+that image: `↑¹p` is not an `ofPlus` image (`ofPlus_ne_timeStore`). So TM⋆ became strictly
+stronger at register-carrying formulas while proving no new theorem of L or of L⁺. -/
+
 /-! ### Acceptance check -/
 
 example (φ : Formula) :
     StarDerivable FrameClass.Base [] (ofPlus (ofFormula φ)) ↔
       ProofSystem.Derivable FrameClass.Base [] φ :=
   starDerivable_ofFormula_iff completeness_base φ
+
+/-- The conditional L⁺ row, re-checked against the widened axiom set: the hypothesis is still
+general TM⁺ completeness, and nothing about the new schemata enters the statement. -/
+example {fc : FrameClass}
+    (hcomplete : ∀ ψ : PlusFormula, PlusValidIn fc ψ → PlusDerivable fc [] ψ) (φ : PlusFormula)
+    (h : StarDerivable fc [] (ofPlus φ)) : PlusDerivable fc [] φ :=
+  starConservative_of_plusComplete hcomplete φ h
 
 end FormalSystem.Metalogic.Conservativity
