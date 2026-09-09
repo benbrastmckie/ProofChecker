@@ -1339,11 +1339,19 @@ fi
 # the five termini: strongCompletenessBase, strongCompletenessDense, notCompactZTime,
 # notCompactRTime, consequence_completeness_rtime.
 #
-# Seven entries carry a STRICT SUBSET of [propext, Classical.choice, Quot.sound], recorded
+# Eight entries carry a STRICT SUBSET of [propext, Classical.choice, Quot.sound], recorded
 # literally rather than rounded up: setConsequence_of_not_satisfiable, satisfiableSet_iff_
 # finitelySatisfiable, modelExistence_iff_finitelySatisfiable, Conservativity.TMFrag,
-# Semantics.plusValidIn_ofFormula_iff and Semantics.galoisClosed_mod are [propext], and
-# qDepth_qAlpha is [propext, Quot.sound]. A smaller dependency is not a regression.
+# Semantics.plusValidIn_ofFormula_iff, Semantics.galoisClosed_mod and
+# StarLanguage.StarDerivationTree are [propext], and qDepth_qAlpha is [propext, Quot.sound].
+# A smaller dependency is not a regression.
+#
+# The trailing block pins the TM⋆ headline results that `docs/theorem-index.md` carries rows
+# for, so those rows are machine-pinned rather than prose-only. `StarLanguage.StarAxiom` is
+# deliberately ABSENT: `#print axioms` reports it as `does not depend on any axioms`, which the
+# `grep 'depends on axioms'` filter below drops, so it contributes a line to neither heredoc and
+# cannot be pinned by this mechanism. Its ledger row is omitted for that reason; do not invent a
+# baseline line for it.
 #
 # The second block below (soundness onward) is the SORRY-FREE claim set of
 # FormalSystem/Metalogic.lean's module docstring. Every declaration that docstring calls
@@ -1452,6 +1460,11 @@ read -r -d '' C14_BASELINE <<'C14BASE'
 'FormalSystem.Metalogic.consequence_completeness_rtime' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine' depends on axioms: [propext, Classical.choice, Quot.sound]
 'FormalSystem.Metalogic.BXCanonical.countermodel_dedekind_dense' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.StarLanguage.StarDerivationTree' depends on axioms: [propext]
+'FormalSystem.Metalogic.Conservativity.star_soundness_validIn' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.starConservative_of_plusComplete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'FormalSystem.Metalogic.Conservativity.plusIncomplete_of_starNonconservative' depends on axioms: [propext, Classical.choice, Quot.sound]
 C14BASE
 
 if [ "$RUN_BUILD" -eq 1 ]; then
@@ -1559,6 +1572,11 @@ import FormalSystem
 #print axioms FormalSystem.Metalogic.consequence_completeness_rtime
 #print axioms FormalSystem.Metalogic.BXCanonical.completeness_rtime_engine
 #print axioms FormalSystem.Metalogic.BXCanonical.countermodel_dedekind_dense
+#print axioms FormalSystem.StarLanguage.StarDerivationTree
+#print axioms FormalSystem.Metalogic.Conservativity.star_soundness_validIn
+#print axioms FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff
+#print axioms FormalSystem.Metalogic.Conservativity.starConservative_of_plusComplete
+#print axioms FormalSystem.Metalogic.Conservativity.plusIncomplete_of_starNonconservative
 C14LEAN
   C14_OUT=$(lake env lean "$C14_SRC" 2>&1 \
     | sed -e ':a' -e '$!N' -e 's/\n / /' -e 'ta' -e 'P' -e 'D' \

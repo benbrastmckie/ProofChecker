@@ -291,34 +291,34 @@ fails, the fallback branch applies and the deviation is recorded in the summary.
 
 ---
 
-### Phase 4: Measure axiom sets and extend the C14 baseline pair [NOT STARTED]
+### Phase 4: Measure axiom sets and extend the C14 baseline pair [COMPLETED]
 
 **Goal**: Measure `#print axioms` for each TM⋆ headline declaration and add the measured entries to
 both C14 heredocs in `scripts/check-module-invariants.sh`, so the index rows Phase 5 writes are
 machine-pinned rather than prose-only.
 
 **Tasks**:
-- [ ] Write a scratch Lean file importing `FormalSystem` with `#print axioms` for each of:
+- [x] Write a scratch Lean file importing `FormalSystem` with `#print axioms` for each of:
       `FormalSystem.StarLanguage.StarAxiom`, `FormalSystem.StarLanguage.StarDerivationTree`,
       `FormalSystem.Metalogic.Conservativity.star_soundness_validIn`,
       `FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff`,
       `FormalSystem.Metalogic.Conservativity.starConservative_of_plusComplete`,
       `FormalSystem.Metalogic.Conservativity.plusIncomplete_of_starNonconservative`.
       Confirm each fully-qualified name resolves before measuring.
-- [ ] Run it through the *same* pipeline C14 uses — `lake env lean FILE 2>&1`, the continuation-line
+- [x] Run it through the *same* pipeline C14 uses — `lake env lean FILE 2>&1`, the continuation-line
       rejoin `sed`, then `grep 'depends on axioms'` — so the recorded strings are byte-identical to
       what the check will compare against. Do not hand-type an axiom list.
-- [ ] Drop from consideration any declaration whose output does not survive the
+- [x] Drop from consideration any declaration whose output does not survive the
       `grep 'depends on axioms'` filter (i.e. prints `does not depend on any axioms`). Such a
       declaration cannot be pinned by C14's exact-string mechanism; record which ones these are,
-      and carry the decision into Phase 5's row set.
-- [ ] Append the surviving measured lines to `C14_BASELINE` (the `C14BASE` heredoc) and the
+      and carry the decision into Phase 5's row set. *(deviation: altered — exactly one dropped, `FormalSystem.StarLanguage.StarAxiom`, measured as `does not depend on any axioms`; `StarDerivationTree` survived at the literal `[propext]`, so five of the six named declarations are pinned)*
+- [x] Append the surviving measured lines to `C14_BASELINE` (the `C14BASE` heredoc) and the
       matching `#print axioms` lines to the `C14LEAN` heredoc, **in the same order in both**, as
       the surrounding comment requires. Append at the end of each heredoc; do not reorder or alter
       any existing line.
-- [ ] Extend the explanatory comment above `read -r -d '' C14_BASELINE` to say that the block now
+- [x] Extend the explanatory comment above `read -r -d '' C14_BASELINE` to say that the block now
       also pins the TM⋆ headline results consumed by `docs/theorem-index.md`.
-- [ ] No task-number citations in `scripts/` (C9 covers `scripts/`).
+- [x] No task-number citations in `scripts/` (C9 covers `scripts/`).
 
 **Timing**: 1 hour
 
