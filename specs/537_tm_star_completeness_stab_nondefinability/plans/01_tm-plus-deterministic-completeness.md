@@ -334,22 +334,22 @@ induction before writing them; record the confirmed counts in the phase notes.
 
 ---
 
-### Phase 6: The extended proof system TM⁺ + Determined [NOT STARTED]
+### Phase 6: The extended proof system TM⁺ + Determined [COMPLETED]
 
 **Goal**: Define the extended system as a separate inductive that stays entirely out of the live
 proof system, with the embedding of TM⁺ derivations into it.
 
 **Tasks**:
-- [ ] Define `DetAxiom` with an `ofPlus` arm over `PlusAxiom` and a `determined` arm at
+- [x] Define `DetAxiom` with an `ofPlus` arm over `PlusAxiom` and a `determined` arm at
       `φ.imp φ.stab`, plus `DetAxiom.minFrameClass` extending `PlusAxiom.minFrameClass` with
       `determined ↦ .Base`
-- [ ] Define `DetDerivationTree` mirroring `PlusDerivationTree`'s seven constructors over
+- [x] Define `DetDerivationTree` mirroring `PlusDerivationTree`'s seven constructors over
       `DetAxiom`, with `height`, `lift`, `ofWeakeningNil` and the two modus-ponens height lemmas
-- [ ] Define `DetDerivable fc Γ φ := Nonempty (DetDerivationTree fc Γ φ)` matching
+- [x] Define `DetDerivable fc Γ φ := Nonempty (DetDerivationTree fc Γ φ)` matching
       `PlusDerivable`'s shape
-- [ ] Define the embedding `DetDerivationTree.ofPlus : PlusDerivationTree fc Γ φ → DetDerivationTree fc Γ φ`
-      and the derived ⊡-necessitation rule, mirroring `stabNecessitation`
-- [ ] Docstring: why *Determined* cannot be a `PlusAxiom` constructor (`refute_determined`,
+- [x] Define the embedding `DetDerivationTree.ofPlus : PlusDerivationTree fc Γ φ → DetDerivationTree fc Γ φ`
+      and the derived ⊡-necessitation rule, mirroring `stabNecessitation` *(deviation: altered — `DetDerivationTree.ofTM` and `.ofTMSubst` were added alongside, so Phase 8 reaches the substitution transfer through one composition rather than re-composing at each use)*
+- [x] Docstring: why *Determined* cannot be a `PlusAxiom` constructor (`refute_determined`,
       `Semantics/PlusNonValidities.lean`) and why it cannot live in the context (necessitation,
       temporal necessitation and temporal duality are all empty-context rules)
 
@@ -370,23 +370,23 @@ proof system, with the embedding of TM⁺ derivations into it.
 
 ---
 
-### Phase 7: Soundness of TM⁺ + Determined [NOT STARTED]
+### Phase 7: Soundness of TM⁺ + Determined [COMPLETED]
 
 **Goal**: Prove the extended system sound over the frames validating every instance of
 *Determined* — the class strictly containing the deterministic frames — which is the half of the
 coincidence corollary the manuscript needs.
 
 **Tasks**:
-- [ ] Mirror `plus_derivable_valid_and_swap_validIn`'s companion recursion for
+- [x] Mirror `plus_derivable_valid_and_swap_validIn`'s companion recursion for
       `DetDerivationTree`, carrying validity and swap-validity over the `DeterminedValid`-restricted
       frame predicate
-- [ ] Axiom arm `ofPlus`: transport `plusAxiom_validIn` / `plusAxiom_swap_validIn` down the frame
+- [x] Axiom arm `ofPlus`: transport `plusAxiom_validIn` / `plusAxiom_swap_validIn` down the frame
       predicate by monotonicity
-- [ ] Axiom arm `determined`: direct from `DeterminedValid`; for the swap arm, use that
+- [x] Axiom arm `determined`: direct from `DeterminedValid`; for the swap arm, use that
       `swapTemporal` fixes `stab`, so the dual of a *Determined* instance is again one
-- [ ] State `detSoundness` at the restricted class, plus the specialization to the deterministic
+- [x] State `detSoundness` at the restricted class, plus the specialization to the deterministic
       frames via Phase 1's inclusion lemma
-- [ ] Corollary: the extended system is consistent (no derivation of `⊥`), mirroring
+- [x] Corollary: the extended system is consistent (no derivation of `⊥`), mirroring
       `plus_not_derivable_nil_bot`
 
 **Timing**: 2 hours

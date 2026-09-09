@@ -7,6 +7,8 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Metalogic.Deterministic.Validity
 import FormalSystem.Metalogic.Deterministic.Erasure
 import FormalSystem.Metalogic.Deterministic.Engines
+import FormalSystem.Metalogic.Deterministic.System
+import FormalSystem.Metalogic.Deterministic.Soundness
 
 /-!
 # `Metalogic/Deterministic/` — the deterministic metatheory of TM⁺
