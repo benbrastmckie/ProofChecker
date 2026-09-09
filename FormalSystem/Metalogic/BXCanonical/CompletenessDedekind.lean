@@ -323,7 +323,7 @@ theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.RTime �
     (A : Set Formula) (h_mcs : SetMaximalConsistent (fc := fc) A)
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_dense : Formula.box Chronicle.nextTop.neg ∈ A) :
-    ∃ (F : FrameOver (TemporalOrder.of ℝ)) (TM : TaskModel F)
+    ∃ (F : FrameOver (TemporalOrder.of ℝ)) (_ : F.toTaskFrame.Deterministic) (TM : TaskModel F)
       (τ : ConvexHistory F) (_ : τ.IsTotal) (t : ℝ),
       ¬TruthAt TM τ t φ := by
   classical
@@ -371,7 +371,8 @@ theorem countermodel_dedekind_dense {fc : FrameClass} (hfc : FrameClass.RTime �
       TruthAt TM (multiFamHistoryGen f w₀) t ψ ↔
         TemporalTruth ((Rf f).toOrdered sig) (mkAtomMapFwd φ) (realFlowPoint (hR f) (w₀ + t))
           ψ by
-    refine ⟨multiFamTaskFrameGen (TemporalOrder.of ℝ) FamIdx, TM, multiFamHistoryGen f₀ 0,
+    refine ⟨multiFamTaskFrameGen (TemporalOrder.of ℝ) FamIdx,
+      Algebraic.multiFamTaskFrameGen_deterministic, TM, multiFamHistoryGen f₀ 0,
       multiFamHistoryGen_total f₀ 0, s₀.val, ?_⟩
     intro h_truth_phi
     have h_corr := (h_truth_corr φ (self_mem_subformulaClosure φ) f₀ 0 s₀.val).mp h_truth_phi
@@ -600,7 +601,7 @@ theorem completeness_rtime_engine (ψ : Formula) :
   obtain ⟨M, hM_sup, hM_mcs⟩ := set_lindenbaum {Formula.neg ψ} h_cons
   have h_neg_in : Formula.neg ψ ∈ M := hM_sup (Set.mem_singleton _)
   have h_box_dense : Formula.box Chronicle.nextTop.neg ∈ M := dedekind_box_dense_mem hM_mcs
-  obtain ⟨F, TM, τ, h_tot, t, h_not_true⟩ :=
+  obtain ⟨F, _hdet, TM, τ, h_tot, t, h_not_true⟩ :=
     countermodel_dedekind_dense (by decide) M hM_mcs ψ h_neg_in h_box_dense
   exact h_not_true (ValidIn.apply_total h_valid F.toTaskFrame
     ⟨inferInstance, real_lub_of_bddAbove⟩ TM τ h_tot t)

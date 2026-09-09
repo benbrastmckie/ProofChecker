@@ -181,28 +181,28 @@ Determined-valid frame class with its strict inclusion of the deterministic fram
 
 ---
 
-### Phase 2: Determinism of the engines' countermodel frames [NOT STARTED]
+### Phase 2: Determinism of the engines' countermodel frames [COMPLETED]
 
 **Goal**: Establish that every completeness engine's countermodel frame is deterministic and
 widen the four countermodel producers to expose that fact, so the engines can be re-read with a
 narrowed validity hypothesis.
 
 **Tasks**:
-- [ ] Prove `multiFamTaskFrameGen_deterministic` from the existing `flowRel_fib_subsingleton`
+- [x] Prove `multiFamTaskFrameGen_deterministic` from the existing `flowRel_fib_subsingleton`
       (`Metalogic/Algebraic/FlowFrame.lean`); note in the docstring that `bundleFlowFrame` and
       `WeakCanonical/IntegerModel`'s `multiFamTaskFrame` are definitional specializations and
-      inherit it
-- [ ] Prove `zTaskFrameV2_deterministic` from the existing `zTaskFrameV2_fib_subsingleton`
-- [ ] Widen `countermodel_dense_enriched` (`BXCanonical/Completeness.lean`) with an extra
+      inherit it *(deviation: altered — the lemma is hosted in `Algebraic/FlowFrame.lean` beside the frame, not in a new `Deterministic/Frames.lean`, because the four countermodel producers that consume it sit BELOW `Metalogic/Deterministic/` in the import order; `bundleFlowFrame_deterministic` and `multiFamTaskFrame_deterministic` are the two named specializations)*
+- [x] Prove `zTaskFrameV2_deterministic` from the existing `zTaskFrameV2_fib_subsingleton` *(deviation: altered — hosted in `ReynoldsBridge.lean` beside the frame, same reason)*
+- [x] Widen `countermodel_dense_enriched` (`BXCanonical/Completeness.lean`) with an extra
       existential binder `F.toTaskFrame.Deterministic`, supplying the witness
-- [ ] Widen `countermodel_discrete` (`WeakCanonical/GroupModel/CountermodelBase.lean`) likewise
-- [ ] Widen `countermodel_discrete_reynolds_v2` (`WeakCanonical/IntegerModel/ReynoldsBridge.lean`)
+- [x] Widen `countermodel_discrete` (`WeakCanonical/GroupModel/CountermodelBase.lean`) likewise
+- [x] Widen `countermodel_discrete_reynolds_v2` (`WeakCanonical/IntegerModel/ReynoldsBridge.lean`)
       likewise
-- [ ] Widen `countermodel_dedekind_dense` (`BXCanonical/CompletenessDedekind.lean`) likewise
-- [ ] Update every destructuring call site to bind the new component and discard it where unused
+- [x] Widen `countermodel_dedekind_dense` (`BXCanonical/CompletenessDedekind.lean`) likewise
+- [x] Update every destructuring call site to bind the new component and discard it where unused
       (`completeness`, `derivable_of_validDense`, `derivable_of_validZTime`,
-      `completeness_rtime_engine`, `BXCanonical/DiscreteCarrierProbe.lean`)
-- [ ] Confirm no axiom-set drift: `#print axioms` for the four engines unchanged
+      `completeness_rtime_engine`, `BXCanonical/DiscreteCarrierProbe.lean`) *(deviation: altered — the confirmed count is FOUR call sites, all in `BXCanonical/{Completeness,CompletenessDedekind}.lean`; `DiscreteCarrierProbe.lean` mentions `countermodel_discrete` only in prose and needed no edit)*
+- [x] Confirm no axiom-set drift: `#print axioms` for the four engines unchanged
 
 **Timing**: 2 hours
 

@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.TaskFrame
+import FormalSystem.Semantics.FrameProperty
 import FormalSystem.Semantics.Truth
 import FormalSystem.Metalogic.Bundle.TemporalCoherence
 import FormalSystem.Syntax.SubformulaClosure.TemporalFormulas
@@ -288,6 +289,19 @@ theorem multiFamGen_fib_subsingleton {FamIdx : Type} [Nonempty FamIdx] (w : FamI
   rintro u ⟨hu₁, hu₂⟩ u' ⟨hu'₁, hu'₂⟩
   exact Prod.ext (hu₁.symm.trans hu'₁) (hu₂.trans hu'₂.symm)
 
+/-- **The generic flow frame is deterministic** (`def:deterministic`). `TaskFrame.Deterministic`
+*is* the fibre-subsingleton predicate, and `F.toTaskFrame.TaskRel = F.TaskRel` holds by `rfl`
+(`Semantics/TaskFrame.lean`), so this is `multiFamGen_fib_subsingleton` under its other name.
+
+Stated because the completeness engines' countermodel frames are all specializations of this one
+— `bundleFlowFrame` (below) and `WeakCanonical`'s `multiFamTaskFrame` definitionally, and the
+`ℚ ×ₗ ℤ` and `ℝ` countermodels by instantiation of `D` — so the engines can be re-read with a
+validity hypothesis narrowed to the deterministic frames
+(`Metalogic/Deterministic/Engines.lean`). -/
+theorem multiFamTaskFrameGen_deterministic {FamIdx : Type} [Nonempty FamIdx] :
+    (multiFamTaskFrameGen D FamIdx).toTaskFrame.Deterministic :=
+  fun w x => multiFamGen_fib_subsingleton w x
+
 /-- *Saturation* (`def:frame#Saturation`) for the generic flow frame: every fiber is a
 singleton and every segment is an intersection of fibers, hence a subsingleton, so a
 `⊇`-directed family (`def:frame`'s opening clause) of nonempty fibers and segments meets the hypotheses of
@@ -452,6 +466,13 @@ the deterministic clock. -/
 noncomputable def bundleFlowFrame (B : BFMCS (fc := fc) D) :
     FrameOver (TemporalOrder.of D) :=
   multiFamTaskFrameGen (TemporalOrder.of D) {fam : FMCS (fc := fc) D // fam ∈ B.families}
+
+/-- **The bundle flow frame is deterministic** (`def:deterministic`), by specialization of
+`multiFamTaskFrameGen_deterministic` — `bundleFlowFrame` *is* the generic flow frame at the
+bundle's family index, so this is a citation, not a second proof. -/
+theorem bundleFlowFrame_deterministic (B : BFMCS (fc := fc) D) :
+    (bundleFlowFrame B).toTaskFrame.Deterministic :=
+  multiFamTaskFrameGen_deterministic
 
 /-- The flow line of the bundle flow frame through family `fam` at offset `w₀`: the total
 history visiting `(fam, w₀ + t)` at each time `t`. -/

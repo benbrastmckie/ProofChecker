@@ -487,6 +487,12 @@ theorem zTaskFrameV2_fib_subsingleton (w x : ℤ) :
     (TaskFrame.Fib zTaskFrameV2.TaskRel w x).Subsingleton :=
   zShiftRel_fib_subsingleton w x
 
+/-- **`zTaskFrameV2` is deterministic** (`def:deterministic`): `TaskFrame.Deterministic` *is* the
+fibre-subsingleton predicate, and `F.toTaskFrame.TaskRel = F.TaskRel` by `rfl`, so this is
+`zTaskFrameV2_fib_subsingleton` under its other name. -/
+theorem zTaskFrameV2_deterministic : zTaskFrameV2.toTaskFrame.Deterministic :=
+  fun w x => zTaskFrameV2_fib_subsingleton w x
+
 /-- *Seriality* (`def:frame#Seriality`, verbatim: "$w \Rightarrow_x u$ and $v \Rightarrow_x w$
 for some $u, v \in W$") for `zTaskFrameV2`: the shift supplies both `w + x` and `w - x`. -/
 theorem zTaskFrameV2_serial : TaskFrame.Serial zTaskFrameV2.TaskRel := by
@@ -805,6 +811,15 @@ theorem multiFamTaskFrame_saturation (FamIdx : Type) [Nonempty FamIdx] :
     TaskFrame.Saturation (multiFamTaskFrame FamIdx).TaskRel :=
   Algebraic.multiFamTaskFrameGen_saturation
 
+/-- **`multiFamTaskFrame` is deterministic** (`def:deterministic`), by specialization of
+`Algebraic.multiFamTaskFrameGen_deterministic` at `D := intOrder`: the clock steps by `d` from
+`(f, x)` to the unique `(f, x + d)`. This is the fact that lets `derivable_of_validZTime` be
+re-read with its validity hypothesis narrowed to the deterministic `ℤ`-time frames
+(`Metalogic/Deterministic/Engines.lean`). -/
+theorem multiFamTaskFrame_deterministic (FamIdx : Type) [Nonempty FamIdx] :
+    (multiFamTaskFrame FamIdx).toTaskFrame.Deterministic :=
+  Algebraic.multiFamTaskFrameGen_deterministic
+
 /-- Convex history for the multi-family frame, parameterized by a family index
 and a base offset. The history visits states `(f, w₀ + t)` at each time `t`. -/
 noncomputable def multiFamHistory {FamIdx : Type} [Nonempty FamIdx] (f : FamIdx) (w₀ : ℤ) :
@@ -910,6 +925,7 @@ theorem countermodel_discrete_reynolds_v2
     (h_box_discrete : Formula.box nextTop ∈ A) :
     ∃ (F : TaskFrame) (_ : SuccOrder ↑F.Duration) (_ : PredOrder ↑F.Duration)
       (_ : IsSuccArchimedean ↑F.Duration) (_ : IsPredArchimedean ↑F.Duration)
+      (_ : F.Deterministic)
       (TM : TaskModel F) (τ : ConvexHistory F) (_ : τ.IsTotal) (t : ↑F.Duration),
       ¬TruthAt TM τ t φ := by
   -- === Multi-Family Z-Interval Approach (bypasses chronicle_gap_contradiction) ===
@@ -974,7 +990,8 @@ theorem countermodel_discrete_reynolds_v2
           (toCarrier (h_lo f) (h_hi f) (w₀ + t)) ψ by
     -- Package the existential
     refine ⟨(multiFamTaskFrame FamIdx).toTaskFrame,
-      inferInstance, inferInstance, inferInstance, inferInstance, TM,
+      inferInstance, inferInstance, inferInstance, inferInstance,
+      multiFamTaskFrame_deterministic FamIdx, TM,
       multiFamHistory f₀ 0, multiFamHistory_total f₀ 0,
       s₀.val, ?_⟩
     intro h_truth_phi

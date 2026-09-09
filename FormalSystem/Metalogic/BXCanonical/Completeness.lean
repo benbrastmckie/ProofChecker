@@ -140,13 +140,14 @@ theorem countermodel_dense_enriched {fc : FrameClass} (A : Set Formula)
     (h_mcs : SetMaximalConsistent (fc := fc) A)
     (φ : Formula) (h_neg_in : φ.neg ∈ A)
     (h_box_dense : Formula.box Chronicle.nextTop.neg ∈ A) :
-    ∃ (F : FrameOver (TemporalOrder.of Rat)) (TM : TaskModel F)
-      (τ : ConvexHistory F) (_ : τ.IsTotal) (t : Rat),
+    ∃ (F : FrameOver (TemporalOrder.of Rat)) (_ : F.toTaskFrame.Deterministic)
+      (TM : TaskModel F) (τ : ConvexHistory F) (_ : τ.IsTotal) (t : Rat),
       ¬TruthAt TM τ t φ := by
   let bfmcs := Chronicle.cantorBfmcsDense fc A h_mcs h_box_dense
   let fam₀ := Chronicle.rootedCantorFmcsDense fc A h_mcs h_box_dense 0
   have hfam₀ : fam₀ ∈ bfmcs.families := ⟨A, h_mcs, h_box_dense, 0, fun _ => Iff.rfl, rfl⟩
-  refine ⟨bundleFlowFrame bfmcs, bundleFlowModel bfmcs,
+  refine ⟨bundleFlowFrame bfmcs, Algebraic.bundleFlowFrame_deterministic bfmcs,
+    bundleFlowModel bfmcs,
     bundleFlowHistory ⟨fam₀, hfam₀⟩ 0, bundleFlowHistory_total _ _,
     0, ?_⟩
   have h_neg_fam : φ.neg ∈ fam₀.mcs ((0 : Rat) + 0) := by
@@ -223,14 +224,14 @@ theorem completeness (φ : Formula) :
   rcases SetMaximalConsistent.negation_complete hM_mcs
     (Formula.box Chronicle.nextTop.neg) with h_box_dense | h_not_box_dense
   · -- Dense case: □(F'T) ∈ M — countermodel on Rat (countermodel_dense_enriched)
-    obtain ⟨F, TM, τ, h_tot, t, h_not_true⟩ :=
+    obtain ⟨F, _hdet, TM, τ, h_tot, t, h_not_true⟩ :=
       countermodel_dense_enriched M hM_mcs φ h_neg_in h_box_dense
     exact h_not_true (h_valid.apply F TM τ h_tot t)
   · -- Non-dense: ¬□(F'T) ∈ M. Sub-split on □(U(T,bot)).
     rcases SetMaximalConsistent.negation_complete hM_mcs
       (Formula.box Chronicle.nextTop) with h_box_discrete | h_not_box_discrete
     · -- Purely discrete case: □(U(T,bot)) ∈ M — all box-equivalent MCS's are discrete
-      obtain ⟨F, TM, τ, h_tot, t, h_not_true⟩ :=
+      obtain ⟨F, _hdet, TM, τ, h_tot, t, h_not_true⟩ :=
         WeakCanonical.countermodel_discrete M hM_mcs φ h_neg_in h_box_discrete
       exact h_not_true (h_valid.apply F TM τ h_tot t)
     · -- Mixed case: ¬□(F'T) ∧ ¬□(U(T,bot)) ∈ M — eliminated by structural axiom
@@ -270,7 +271,7 @@ theorem derivable_of_validDense (φ : Formula) :
   rcases SetMaximalConsistent.negation_complete hM_mcs
     (Formula.box Chronicle.nextTop.neg) with h_box_dense | h_not_box_dense
   · -- Dense case: □(F'T) ∈ M — countermodel on Rat (DenselyOrdered)
-    obtain ⟨F, TM, τ, h_tot, t, h_not_true⟩ :=
+    obtain ⟨F, _hdet, TM, τ, h_tot, t, h_not_true⟩ :=
       countermodel_dense_enriched M hM_mcs φ h_neg_in h_box_dense
     exact h_not_true (ValidIn.apply_total h_valid_dense F inferInstance TM τ h_tot t)
   · -- Non-dense case: ¬□(F'T) ∈ M. But the dense_indicator axiom ¬U(⊤,⊥)
@@ -367,7 +368,7 @@ theorem derivable_of_validZTime (φ : Formula) :
     rcases SetMaximalConsistent.negation_complete hM_mcs
       (Formula.box Chronicle.nextTop) with h_box_discrete | h_not_box_discrete
     · -- Discrete case: □(U(T,bot)) ∈ M — countermodel on ℤ via Reynolds pipeline
-      obtain ⟨F, hsucc, hpred, hsuccArch, hpredArch, TM, τ, h_tot, t, h_not_true⟩ :=
+      obtain ⟨F, hsucc, hpred, hsuccArch, hpredArch, _hdet, TM, τ, h_tot, t, h_not_true⟩ :=
         FormalSystem.Metalogic.WeakCanonical.countermodel_discrete_reynolds_v2
           M hM_mcs φ h_neg_in h_box_discrete
       -- The four CARRIER side conditions arrive as ordinary hypotheses out of the existential;
