@@ -1,7 +1,7 @@
 # Implementation Plan: Lift the state-locality fragment to L⁺
 
 - **Task**: 575 - Lift the state-locality fragment to L-plus and retire the atom-restricted stability lemma
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 10 hours
 - **Dependencies**: None
 - **Research Inputs**: None (Stage 1.5 assessment: the task description is a specification, not a research question — see "Research Integration" below)
@@ -168,7 +168,7 @@ docstring's relation prose; its lemma depends on Phase 1 alone.
 
 ---
 
-### Phase 1: The syntactic fragment `PlusFormula.StateLocal` [NOT STARTED]
+### Phase 1: The syntactic fragment `PlusFormula.StateLocal` [COMPLETED]
 
 **Goal**: Create `FormalSystem/Semantics/PlusStateLocal.lean` with the syntactic predicate by
 structural recursion over all seven `PlusFormula` constructors, its `@[simp]` clause lemmas, and
@@ -176,22 +176,22 @@ the derived-operator closure lemmas — mirroring `StarStateLocal.lean`'s first 
 for arm.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Semantics/PlusStateLocal.lean` with the standard copyright header
+- [x] Create `FormalSystem/Semantics/PlusStateLocal.lean` with the standard copyright header
       (copy the shape from `StarStateLocal.lean`; `bash scripts/check-copyright-headers.sh`
       must accept it) and `import FormalSystem.Semantics.PlusNonValidities`
-- [ ] Write a placeholder module docstring with `# Main Definitions` / `# Main Results` /
+- [x] Write a placeholder module docstring with `# Main Definitions` / `# Main Results` /
       `## Tags` sections; the full relation prose lands in Phase 8
-- [ ] In `namespace FormalSystem.PlusLanguage`, define `PlusFormula.StateLocal : PlusFormula →
+- [x] In `namespace FormalSystem.PlusLanguage`, define `PlusFormula.StateLocal : PlusFormula →
       Prop` by structural recursion, one arm per constructor: `atom`/`bot` `True`, `imp`
       conjunctive, `box` `True`, `untl`/`snce` `False`, `stab` `True`
-- [ ] Add the `@[simp]` clause lemmas mirroring `StarStateLocal.lean`'s: `stateLocal_atom`,
+- [x] Add the `@[simp]` clause lemmas mirroring `StarStateLocal.lean`'s: `stateLocal_atom`,
       `stateLocal_bot`, `stateLocal_imp_iff`, `stateLocal_box`, `not_stateLocal_untl`,
       `not_stateLocal_snce`, `stateLocal_stab`
-- [ ] Add `not_stateLocal_someFuture` and `not_stateLocal_somePast` (`someFuture` is `untl top`,
+- [x] Add `not_stateLocal_someFuture` and `not_stateLocal_somePast` (`someFuture` is `untl top`,
       `somePast` is `snce top` — `Semantics/PlusTruth.lean` clause lemmas confirm the unfoldings)
-- [ ] Add the derived-operator closure lemmas `StateLocal.neg`, `StateLocal.and`, `StateLocal.or`
-- [ ] Give every declaration a docstring (C19 floor) and no task-number citation (C9)
-- [ ] `lake build FormalSystem.Semantics.PlusStateLocal` green
+- [x] Add the derived-operator closure lemmas `StateLocal.neg`, `StateLocal.and`, `StateLocal.or`
+- [x] Give every declaration a docstring (C19 floor) and no task-number citation (C9)
+- [x] `lake build FormalSystem.Semantics.PlusStateLocal` green
 
 **Timing**: 1 hour
 
@@ -215,7 +215,7 @@ count here is superseded.
 
 ---
 
-### Phase 2: The semantic property and the soundness induction [NOT STARTED]
+### Phase 2: The semantic property and the soundness induction [IN PROGRESS]
 
 **Goal**: Define `IsPlusStateLocal`, settle `box` and `stab` **by proof** for arbitrary
 arguments, and prove the seven-case soundness induction `isPlusStateLocal_of_stateLocal`.
