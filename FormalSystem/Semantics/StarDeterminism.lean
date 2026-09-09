@@ -16,14 +16,18 @@ Three results, in increasing strength:
    task frame, for every `StarFormula` argument. This is the safe direction (frame condition ⟹
    validity) and is choice-free relative to the L⋆ apparatus.
 2. **`Det-pm`** — `sent:det` with the universal future `\Future` replaced by `always` `△` — is
-   likewise valid over every deterministic frame, by the same engine.
-3. **The definability theorem** — `Det-pm` is valid over `F` **iff** `F` is deterministic. The
-   (⇐) direction is (2); the (⇒) direction runs the singleton valuation and closes through
-   `deterministic_of_singletonClasses`, and is therefore a theorem of **ZFC**.
+   likewise valid over every deterministic frame, at every `StarFormula` argument, by the same
+   engine.
+3. **The definability theorem** — a **three-way** equivalence: `Det-pm`'s validity at bare
+   sentence letters, `F.Deterministic`, and `Det-pm`'s validity at every `StarFormula` are all
+   equivalent. The atomic fragment already **forces** determinism, and determinism **delivers**
+   the full schema. The (⇐) direction is (2); the (⇒) direction runs the singleton valuation and
+   closes through `deterministic_of_singletonClasses`, and is therefore a theorem of **ZFC**.
 
 ## Main Definitions
 
-- `detPM` — `Det-pm`, `sent:det`'s shape with `always` in place of `\Future`
+- `detPM` — `Det-pm`, `sent:det`'s shape with `always` in place of `\Future`, at an arbitrary
+  `StarFormula`
 
 ## Main Results
 
@@ -31,13 +35,15 @@ Three results, in increasing strength:
   possible worlds agreeing at one time satisfy the same `StarFormula` at every time and every
   stored-time vector
 - `sentDet_of_deterministic` — `app:deterministic-future`, positive half
-- `detPM_unfold`, `detPM_of_deterministic` — `Det-pm` and its validity over deterministic frames
-- `deterministic_of_detPM` — the (⇒) direction, via the singleton valuation
-- `deterministic_starDefinable` — **Theorem C, `Det-pm` half**
+- `detPM_unfold`, `detPM_of_deterministic` — `Det-pm` and its validity over deterministic frames,
+  at every `StarFormula`
+- `deterministic_of_detPM` — the (⇒) direction, from the atomic fragment alone, via the singleton
+  valuation
+- `deterministic_starDefinable` — **Theorem C, `Det-pm` half**, as a three-way equivalence
 
 ## Theorem C is a report-level result, pending paper integration
 
-`Det-pm` and the definability biconditional are **not manuscript text**. They are recorded in the
+`Det-pm` and the definability equivalence are **not manuscript text**. They are recorded in the
 PossibleWorlds repository's determinism-axiom-correspondence report
 (`reports/02_determinism-axiom-correspondence.md`, §4), whose §4.1 also records that a *single*
 sentence letter suffices for the converse direction. That report is the citation of record for them here: they are cited as a
@@ -47,25 +53,42 @@ results (1) and `Semantics/StarNonValidities.lean` below.
 
 ## The single sentence letter is not uniform substitution
 
-`deterministic_of_detPM` takes the validity of `detPM p` for atoms `p` and concludes a frame
-condition. That is legitimate for the reason the determinism-axiom-correspondence report's §4.1
-gives: the forward direction
-is proved for an **arbitrary** `StarFormula` (`sentDet_of_deterministic` and
-`detPM_of_deterministic` below both quantify over `φ` / over every atom), while the converse
-needs only **one valuation** — the singleton `|p| = {τ(y)}` — to manufacture its separating
-witness. No instance of the schema is inferred from another, so this is not an appeal to uniform
-substitution, which is **unsound here**: `p → ⊡p` is frame-valid over the drift frame `F°`
-while `Fp → ⊡Fp` is refutable over it (`Metalogic/Independence/`).
+`deterministic_of_detPM` takes the validity of `detPM (StarFormula.atom p)` for atoms `p` and
+concludes a frame condition. That is legitimate for the reason the
+determinism-axiom-correspondence report's §4.1 gives: the forward direction is proved for an
+**arbitrary** `StarFormula` on both sides of the module — `sentDet_of_deterministic` and
+`detPM_of_deterministic` below each quantify over `φ : StarFormula` — while the converse needs
+only **one valuation**, the singleton `|p| = {τ(y)}` at a single letter, to manufacture its
+separating witness. The two are proved independently: no instance of the schema is inferred from
+another, so this is not an appeal to uniform substitution, which is **unsound here**: `p → ⊡p` is
+frame-valid over the drift frame `F°` while `Fp → ⊡Fp` is refutable over it
+(`Metalogic/Independence/`).
+
+This asymmetry is what `deterministic_starDefinable` records as a three-way equivalence rather
+than a biconditional: the atomic fragment is the **weakest** hypothesis that forces determinism,
+and the full schema is the **strongest** conclusion determinism delivers.
 
 ## Choice dependence
 
-`sentDet_of_deterministic` and `detPM_of_deterministic` consume `states_eq_of_deterministic`
-(choice-free) through `star_truth_congr_ext`, and add no extension-theorem step.
+The asymmetry between the two directions is **structural**, and must be read structurally: it is
+a difference in which lemmas each direction routes through, **not** a difference in
+`#print axioms`. Measured, not assumed: `settledDisj_of_deterministic`,
+`sentDet_of_deterministic`, `detPM_of_deterministic`, `deterministic_of_detPM` and
+`deterministic_starDefinable` all report the same axiom set,
+`[propext, Classical.choice, Quot.sound]`, because `Classical.choice` is ambient in the L⋆
+apparatus (`StarTruth`'s classical `or_iff`). No `#print axioms` figure distinguishes the two
+directions, and none should be read as doing so.
 
-`deterministic_of_detPM` and `deterministic_starDefinable` are **theorems of ZFC**. They route
-through `deterministic_of_singletonClasses` (`Semantics/DeterministicBridge.lean`), which
-manufactures separating possible worlds by `thm:extension` and hence by Zorn's lemma. No
-`Classical.choice`-free pin is promised or attempted for them, and none should be: this is the
+The (⇐) direction — `sentDet_of_deterministic` and `detPM_of_deterministic`, both schematic in
+`φ` — consumes `states_eq_of_deterministic` through `star_truth_congr_ext` (via
+`star_congr_of_deterministic`) and adds **no extension-theorem step**. Its `Classical.choice` is
+the ambient one and carries no Zorn dependence.
+
+The (⇒) direction — `deterministic_of_detPM`, whose hypothesis is the atomic fragment — and hence
+the three-way `deterministic_starDefinable`, route through `deterministic_of_singletonClasses`
+(`Semantics/DeterministicBridge.lean`), which manufactures separating possible worlds by
+`thm:extension` and hence by Zorn's lemma. They are **theorems of ZFC**. No `Classical.choice`-free
+pin is promised or attempted for them, and none should be: this is the
 "validity ⟹ frame condition" direction, which is ZFC by construction (the archived
 correspondence-record-and-store-recall-recommendation report, §II.4's choice-asymmetry table).
 
@@ -159,16 +182,19 @@ theorem sentDet_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
 /-! ## `Det-pm` — Theorem C's sentence -/
 
 /--
-**`Det-pm`**: `sent:det` with the universal future `\Future` replaced by the temporal `always`
-`△`, at a bare sentence letter:
+**`Det-pm`**: `sent:det`'s shape with the universal future `\Future` replaced by the temporal
+`always` `△`, at an arbitrary `StarFormula`:
 
-`↑¹ △ ↑² ↓¹ (⊡ ↓² ¬p ∨ ⊡ ↓² p)`.
+`↑¹ △ ↑² ↓¹ (⊡ ↓² ¬φ ∨ ⊡ ↓² φ)`.
+
+The schema is `sentDet`'s body with `always` in place of `allFuture`, so the two run on the same
+engine `settledDisj_of_deterministic`. `detPM (StarFormula.atom p)` is the **atomic instance**,
+and it is that instance alone that `deterministic_of_detPM` consumes: §4.1's observation that one
+sentence letter suffices for the converse is what makes the converse's hypothesis the weakest
+available, and it is *not* an appeal to uniform substitution (see this module's docstring).
 
 Transcribed from the PossibleWorlds determinism-axiom-correspondence report, §4 — a
-**report-level result pending paper integration**, not manuscript text. A bare atom `p` is used rather than a schema variable:
-§4.1's observation that one sentence letter suffices for the converse is what makes
-`deterministic_of_detPM` legitimate, and it is *not* an appeal to uniform substitution (see this
-module's docstring).
+**report-level result pending paper integration**, not manuscript text.
 -/
 def detPM (φ : StarFormula) : StarFormula :=
   .timeStore 1 (StarFormula.always (.timeStore 2 (.timeRecall 1 (settledDisj φ))))
@@ -224,7 +250,12 @@ theorem detPM_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
 /-! ## The definability theorem — Theorem C, `Det-pm` half -/
 
 /--
-**The (⇒) direction: `Det-pm`'s validity forces determinism.**
+**The (⇒) direction: `Det-pm`'s validity at bare sentence letters already forces determinism.**
+
+The hypothesis is deliberately held at the **atomic fragment** — `detPM (StarFormula.atom p)` for
+every atom `p`, and nothing more. That is the weakest hypothesis available and precisely the
+strength of this converse; the schematic form is `detPM_of_deterministic`'s conclusion, not this
+theorem's hypothesis.
 
 Fix possible worlds `τ, σ` agreeing at `x` and a time `y`. Take the model over `F` whose
 valuation is the **singleton** `|p| = {τ(y)}`. Then `τ` itself refutes the `⊡↓²¬p` disjunct of

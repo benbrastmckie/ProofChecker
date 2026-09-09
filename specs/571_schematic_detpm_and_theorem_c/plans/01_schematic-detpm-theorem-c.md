@@ -263,18 +263,18 @@ equivalence.
 
 ---
 
-### Phase 3: Choice bookkeeping and the module docstring [NOT STARTED]
+### Phase 3: Choice bookkeeping and the module docstring [COMPLETED]
 
 **Goal**: The module docstring — its result list, its single-sentence-letter section, and its
 choice-dependence section — matches the new statement, with every `#print axioms` figure equal to
 a value measured after the change.
 
 **Tasks**:
-- [ ] Re-measure the axiom sets after Phases 1-2 with a scratch file
+- [x] Re-measure the axiom sets after Phases 1-2 with a scratch file
       (`import FormalSystem` plus `#print axioms` for `settledDisj_of_deterministic`,
       `sentDet_of_deterministic`, `detPM_of_deterministic`, `deterministic_of_detPM`,
       `deterministic_starDefinable`), run under `lake env lean`. Record the measured values.
-- [ ] Rewrite the `## Choice dependence` section (currently lines ~61-70) against the new
+- [x] Rewrite the `## Choice dependence` section (currently lines ~61-70) against the new
       statement. It must say: the (⇐) direction (`detPM_of_deterministic`, schematic in `φ`)
       consumes `states_eq_of_deterministic` through `star_truth_congr_ext` and adds no
       extension-theorem step; the (⇒) direction (`deterministic_of_detPM`, hypothesis at atoms)
@@ -283,20 +283,20 @@ a value measured after the change.
       Zorn's lemma. State the asymmetry **structurally**, by which lemma each direction routes
       through — never as a difference in `#print axioms`, which does not exist (all measured sets
       are equal). If the section asserts a figure, it must be the measured one verbatim.
-- [ ] Rewrite the `## The single sentence letter is not uniform substitution` section: the
+- [x] Rewrite the `## The single sentence letter is not uniform substitution` section: the
       forward direction is now proved for an arbitrary `StarFormula` on **both** the `sentDet` and
       the `Det-pm` side, while the converse still needs only the singleton valuation at one
       letter. Keep the existing reason the appeal is not uniform substitution, and keep the
       `p → ⊡p` / `Fp → ⊡Fp` drift-frame counterexample sentence intact.
-- [ ] Update the module docstring's numbered opener (results 1-3) and `## Main Results` /
+- [x] Update the module docstring's numbered opener (results 1-3) and `## Main Results` /
       `## Main Definitions` lists so `detPM` is described as schematic and result 3 is the
       three-way equivalence rather than a biconditional.
-- [ ] Update `detPM`'s own docstring: it is `sent:det`'s shape with `always` in place of
+- [x] Update `detPM`'s own docstring: it is `sent:det`'s shape with `always` in place of
       `\Future`, at an arbitrary `StarFormula`; note that `detPM (StarFormula.atom p)` is the
       atomic instance the converse consumes. Remove the "A bare atom `p` is used rather than a
       schema variable" justification, which the widening makes false.
-- [ ] Confirm no task number appears anywhere in the edited prose.
-- [ ] Run `lake build` (docstrings elaborate) and confirm green.
+- [x] Confirm no task number appears anywhere in the edited prose.
+- [x] Run `lake build` (docstrings elaborate) and confirm green.
 
 **Timing**: 45 minutes
 
@@ -318,34 +318,34 @@ a value measured after the change.
 
 ---
 
-### Phase 4: Prose inventories and the paper-label correspondence row [NOT STARTED]
+### Phase 4: Prose inventories and the paper-label correspondence row [COMPLETED]
 
 **Goal**: The four prose sites that inventory these declarations name the three-way statement.
 
 **Tasks**:
-- [ ] `FormalSystem/StarLanguage/README.md` — the paper-label correspondence row
+- [x] `FormalSystem/StarLanguage/README.md` — the paper-label correspondence row
       `| Theorem C, `Det-pm` half (report-level) | … |` must name the **three-way** statement:
       the atomic fragment forces determinism and determinism delivers the full schema, cited to
       `detPM` and `deterministic_starDefinable` (`Semantics/StarDeterminism.lean`). Keep it marked
       report-level and pending paper integration; do not promote it to manuscript text.
-- [ ] `FormalSystem/StarLanguage/README.md` — the "Where the L⋆ semantics lives" row for
+- [x] `FormalSystem/StarLanguage/README.md` — the "Where the L⋆ semantics lives" row for
       `Semantics/StarDeterminism.lean` still lists the same five declaration names; confirm it
-      needs no change, or adjust if a name moved.
-- [ ] `FormalSystem/Semantics/README.md` — the `StarDeterminism.lean` row's trailing gloss
+      needs no change, or adjust if a name moved. *(confirmed unchanged — every name survived)*
+- [x] `FormalSystem/Semantics/README.md` — the `StarDeterminism.lean` row's trailing gloss
       ("the last two theorems of ZFC") stays accurate for `deterministic_of_detPM` and
       `deterministic_starDefinable`; extend the row to say `detPM` is schematic.
-- [ ] `FormalSystem/StarLanguage.lean` — the module-docstring bullet for
+- [x] `FormalSystem/StarLanguage.lean` — the module-docstring bullet for
       `Semantics/StarDeterminism.lean` mentions `detPM` and "Theorem C's `Det-pm` half"; leave the
-      name list intact and confirm nothing there asserts an atom restriction.
-- [ ] `FormalSystem/Metalogic/Independence/README.md` — result 7's closing sentence cites
+      name list intact and confirm nothing there asserts an atom restriction. *(confirmed — no atom restriction asserted; no edit)*
+- [x] `FormalSystem/Metalogic/Independence/README.md` — result 7's closing sentence cites
       `deterministic_starDefinable` for "Det-pm does define the deterministic frames". Confirm it
       still reads correctly against the three-way form; adjust only if it asserts the two-way
-      shape.
-- [ ] `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean:~304` — the
+      shape. *(confirmed — asserts only that `Det-pm` defines the deterministic frames; no edit)*
+- [x] `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean:~304` — the
       `fn_separates` docstring's "Contrast `deterministic_starDefinable`" sentence. Confirm it
       reads correctly against the new statement; this is a docstring in another module's
-      territory, so touch it only if it is actually stale.
-- [ ] Confirm no task number appears in any edited file.
+      territory, so touch it only if it is actually stale. *(confirmed not stale; no edit)*
+- [x] Confirm no task number appears in any edited file.
 
 **Timing**: 30 minutes
 
