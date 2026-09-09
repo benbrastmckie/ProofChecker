@@ -327,7 +327,7 @@ the two drift.
 
 ---
 
-### Phase 5: The embedding `⊢⁺[fc] φ → ⊢⋆[fc] (ofPlus φ)` [NOT STARTED]
+### Phase 5: The embedding `⊢⁺[fc] φ → ⊢⋆[fc] (ofPlus φ)` [COMPLETED]
 
 **Goal**: Deliverable (3): every TM⁺ theorem is a TM⋆ theorem at its embedded formula, by a
 seven-case structural recursion.
@@ -367,7 +367,7 @@ seven-case structural recursion.
 
 ---
 
-### Phase 6: Per-schema validity and swap-validity [NOT STARTED]
+### Phase 6: Per-schema validity and swap-validity [COMPLETED]
 
 **Goal**: The two dispatch lemmas — every `StarAxiom` constructor is valid at its own minimum
 frame class, and so is its temporal dual — with the `ofBase` block discharged by transport rather
@@ -401,7 +401,10 @@ than re-proof.
 **Verification Tier**: interface
 
 **Scope Hypothesis**: 34 proof obligations (17 constructors × validity + swap-validity), of which
-2 are the `ofBase` transport pair and 32 are register arms. Confirm at implementation time against
+2 are the `ofBase` transport pair and 32 are register arms. *(Confirmed: the finished Phase 3
+inductive has exactly 17 constructors, and both dispatch lemmas match all 17 by name with no
+wildcard arm. The 16 register schemata are additionally landed as named `starValid_*` lemmas, so
+each swap arm reuses its validity arm at swapped arguments rather than re-proving it.)* Confirm at implementation time against
 the finished Phase 3 inductive by checking that both dispatch lemmas match every constructor with
 **no wildcard arm** — a wildcard would silently hide a missing case. If an arm resists proof,
 close it as a reasoned exclusion (drop the constructor in Phase 3 and re-verify swap-closure);
@@ -419,7 +422,7 @@ never restate the schema in weakened form under the same name.
 
 ---
 
-### Phase 7: Soundness of TM⋆ [NOT STARTED]
+### Phase 7: Soundness of TM⋆ [COMPLETED]
 
 **Goal**: Deliverable (2). Every TM⋆ theorem at `fc` is `StarValidIn fc`, with temporal duality
 discharged semantically by carrying swap-validity alongside.
@@ -458,7 +461,7 @@ discharged semantically by carrying swap-validity alongside.
 
 ---
 
-### Phase 8: Conservativity [NOT STARTED]
+### Phase 8: Conservativity [COMPLETED]
 
 **Goal**: Deliverable (4), at the strength Phase 0 established: an unconditional two-directional
 conservative-extension theorem over TM, plus the proved conditional pair that places TM⁺
@@ -497,7 +500,11 @@ conservativity inside the tree's own recorded open problem.
 **Verification Tier**: full
 
 **Scope Hypothesis**: 3 headline theorems plus 4 per-class rows plus `forward_star` = 8 new
-declarations. Confirm against `Conservativity/Plus/Forward.lean`'s own row structure at
+declarations. *(Confirmed against `Conservativity/Plus/Forward.lean`'s row structure at
+implementation time, and widened by 4: that file carries `forward_plus_base`/`_dense`/`_ztime`/
+`_rtime` alongside the `plusDerivable_ofFormula_iff_*` rows, so `Forward.lean` here mirrors both
+families and lands 12 declarations. `MainResults.lean` was not touched and no flagship theorem's
+axiom set was affected, so no C2 re-baseline arises.)* Confirm against `Conservativity/Plus/Forward.lean`'s own row structure at
 implementation time; if `MainResults.lean` or a flagship theorem's axiom set is touched, the C2
 baseline must be re-measured and the divergence treated as a HARD STOP, not re-baselined.
 

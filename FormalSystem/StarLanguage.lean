@@ -7,6 +7,7 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.StarLanguage.Formula
 import FormalSystem.StarLanguage.Axioms
 import FormalSystem.StarLanguage.Derivation
+import FormalSystem.StarLanguage.Embedding
 
 /-!
 # `FormalSystem.StarLanguage` — the language L⋆ = L⁺ + time store/recall
@@ -26,6 +27,8 @@ separate inductive with a constructor-to-constructor embedding.
   `StarAxiom.minFrameClass`
 - `StarLanguage.Derivation` — `StarDerivationTree`, the notation `⊢⋆[fc]`, `StarDerivable`, and
   the structural apparatus (`lift`, `height`, `ofWeakeningNil`) the soundness recursion consumes
+- `StarLanguage.Embedding` — `StarDerivationTree.ofPlusTree` and `starDerivable_of_plusDerivable`:
+  every TM⁺ theorem is a TM⋆ theorem at its embedded formula
 
 ## Where the L⋆ semantics lives
 

@@ -15,6 +15,7 @@ import FormalSystem.Metalogic.Conservativity.SpCountermodel
 import FormalSystem.Metalogic.Conservativity.Fragment
 import FormalSystem.Metalogic.Conservativity.FragmentCompactness
 import FormalSystem.Metalogic.Conservativity.Plus
+import FormalSystem.Metalogic.Conservativity.Star
 
 /-!
 # The TM⁻/TM conservativity bridge — backward direction
