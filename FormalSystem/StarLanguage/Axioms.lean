@@ -94,6 +94,12 @@ same inductive*:
     `absorb_until` ↔ `absorb_since`, `linear_until` ↔ `linear_since` — four **dual pairs**.
   * `until_F` ↔ `since_P`, `temp_linearity` ↔ `temp_linearity_past`,
     `F_until_equiv` ↔ `P_since_equiv` — three **dual pairs**.
+  * `discrete_symm_fwd` ↔ `discrete_symm_bwd` and `prior_UZ` ↔ `prior_SZ` — **dual pairs**.
+  * `discrete_propagate_fwd`, `discrete_propagate_bwd`, `discrete_box_necessity`,
+    `dense_indicator`, `density`, `z1` — arms whose dual is **not** an instance of any
+    constructor of this inductive, exactly as at the L level. Each has a named
+    `starValid_*_swap` lemma in `Conservativity/Star/StarAxiomValidity.lean`; the four closed
+    ones transport along `ofPlus`, and `density`/`z1` are direct.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -293,6 +299,39 @@ inductive StarAxiom : StarFormula → Type where
   | P_since_equiv (φ : StarFormula) :
       StarAxiom ((StarFormula.somePast φ).imp
         (StarFormula.snce (StarFormula.bot.imp StarFormula.bot) φ))
+  -- Layer 5: Uniformity (5)
+  /-- `U(⊤,⊥) → S(⊤,⊥)`. Mirrors `PlusAxiom.discrete_symm_fwd`. -/
+  | discrete_symm_fwd :
+      StarAxiom ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))
+  /-- `S(⊤,⊥) → U(⊤,⊥)`. Mirrors `PlusAxiom.discrete_symm_bwd`. -/
+  | discrete_symm_bwd :
+      StarAxiom ((StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))
+  /-- `U(⊤,⊥) → G(U(⊤,⊥))`. Mirrors `PlusAxiom.discrete_propagate_fwd`. -/
+  | discrete_propagate_fwd :
+      StarAxiom ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allFuture (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot))))
+  /-- `U(⊤,⊥) → H(U(⊤,⊥))`. Mirrors `PlusAxiom.discrete_propagate_bwd`. -/
+  | discrete_propagate_bwd :
+      StarAxiom ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allPast (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot))))
+  /-- `U(⊤,⊥) → □(U(⊤,⊥))`. Mirrors `PlusAxiom.discrete_box_necessity`. -/
+  | discrete_box_necessity :
+      StarAxiom ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.box (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot))))
+  -- Layer 8: Density (2)
+  /-- Density: `GGφ → Gφ`. Mirrors `PlusAxiom.density`; routed to `.Dense`. -/
+  | density (φ : StarFormula) :
+      StarAxiom (φ.allFuture.allFuture.imp φ.allFuture)
+  /-- Dense indicator: `¬U(⊤,⊥)`. Mirrors `PlusAxiom.dense_indicator`; routed to `.Dense`. -/
+  | dense_indicator :
+      StarAxiom (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).neg
+  -- Layer 6: Prior (2), and Layer 7: Z1 (1)
+  /-- Prior-UZ: `F(φ) → U(φ, ¬φ)`. Mirrors `PlusAxiom.prior_UZ`; routed to `.ZTime`. -/
+  | prior_UZ (φ : StarFormula) :
+      StarAxiom (φ.someFuture.imp (StarFormula.untl φ.neg φ))
+  /-- Prior-SZ: `P(φ) → S(φ, ¬φ)`. Mirrors `PlusAxiom.prior_SZ`; routed to `.ZTime`. -/
+  | prior_SZ (φ : StarFormula) :
+      StarAxiom (φ.somePast.imp (StarFormula.snce φ.neg φ))
+  /-- Z1: `G(Gφ→φ) → (FGφ→Gφ)`. Mirrors `PlusAxiom.z1`; routed to `.ZTime`. -/
+  | z1 (φ : StarFormula) :
+      StarAxiom ((φ.allFuture.imp φ).allFuture.imp (φ.allFuture.someFuture.imp φ.allFuture))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))
@@ -354,10 +393,27 @@ Minimum frame class of each TM⋆ schema. The `ofBase` arm inherits `PlusAxiom.m
 every register schema is valid over every task frame and is routed to `.Base`.
 -/
 def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
+  | .density _ => .Dense
+  | .dense_indicator => .Dense
+  | .prior_UZ _ => .ZTime
+  | .prior_SZ _ => .ZTime
+  | .z1 _ => .ZTime
   | .ofBase _ ax => ax.minFrameClass
   | _ => .Base
 
 /-! ### Pins -/
+
+example (φ : StarFormula) : (StarAxiom.density φ).minFrameClass = .Dense := rfl
+
+example : StarAxiom.dense_indicator.minFrameClass = .Dense := rfl
+
+example (φ : StarFormula) : (StarAxiom.prior_UZ φ).minFrameClass = .ZTime := rfl
+
+example (φ : StarFormula) : (StarAxiom.prior_SZ φ).minFrameClass = .ZTime := rfl
+
+example (φ : StarFormula) : (StarAxiom.z1 φ).minFrameClass = .ZTime := rfl
+
+example : StarAxiom.discrete_box_necessity.minFrameClass = .Base := rfl
 
 example (φ : PlusFormula) : (StarAxiom.ofBase _ (PlusAxiom.density φ)).minFrameClass = .Dense :=
   rfl

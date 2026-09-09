@@ -585,7 +585,7 @@ Confirm before writing the swap arms.
 
 ---
 
-### Phase 8: Group E — discrete uniformity, density, Prior, Z1 [NOT STARTED]
+### Phase 8: Group E — discrete uniformity, density, Prior, Z1 [COMPLETED]
 
 **Goal**: The next 10 mirror constructors — the first with non-`.Base` frame classes — their
 `minFrameClass` arms, validity and swap arms; build green.
@@ -595,20 +595,33 @@ Confirm before writing the swap arms.
 (`.Dense`), `prior_UZ` and `prior_SZ` (`.ZTime`), `z1` (`.ZTime`).
 
 **Tasks**:
-- [ ] Add the 10 constructors with docstrings mirroring `PlusAxiom`'s arms
-- [ ] Add **5 explicit `minFrameClass` arms** — `density`, `dense_indicator`, `prior_UZ`,
+- [x] Add the 10 constructors with docstrings mirroring `PlusAxiom`'s arms
+- [x] Add **5 explicit `minFrameClass` arms** — `density`, `dense_indicator`, `prior_UZ`,
       `prior_SZ`, `z1` — placed before the `_ => .Base` wildcard, matching
       `PlusAxiom.minFrameClass`'s routing exactly. Add a pin `example` per non-`.Base` arm
-- [ ] Add the 10 `starValid_*` lemmas: the five closed uniformity formulas are three-line
+- [x] Add the 10 `starValid_*` lemmas: the five closed uniformity formulas are three-line
       `starValidOnFrames_ofPlus` transports (they are parameterless, hence literally `ofPlus`
       images — pin the `rfl`); `density`, `dense_indicator`, `prior_UZ`, `z1` are in
       `.probes/02`/`.probes/03`; `prior_SZ` comes from Phase 1's `.probes/08`. `prior_UZ`,
       `prior_SZ` and `z1` reuse `SoundnessLemmas/DiscreteOrder.lean`'s `exists_nearest_gt` /
       `exists_nearest_lt` / `forall_gt_of_succ_step` at `P := fun x => StarTruthAt M τ x v φ` —
       one-line bodies. Do **not** inline the order-theoretic content
-- [ ] Add the 10 arms to each dispatch lemma; extend the swap-closure list
-- [ ] `lake build` green; **re-run `bash scripts/check-module-invariants.sh` with attention to
+- [x] Add the 10 arms to each dispatch lemma; extend the swap-closure list
+- [x] `lake build` green; **re-run `bash scripts/check-module-invariants.sh` with attention to
       C2/C14** — this is the first phase introducing non-`.Base` routing; commit
+
+**Scope Hypothesis outcome (measured, not predicted)**: the constructor and frame-class halves
+hold exactly — 10 constructors, 5 non-`.Base` (2 `.Dense`, 3 `.ZTime`), routing identical to
+`PlusAxiom.minFrameClass`. The **duality half is corrected**: only `discrete_symm_fwd` ↔
+`discrete_symm_bwd` and `prior_UZ` ↔ `prior_SZ` are dual pairs inside the group. The duals of
+`discrete_propagate_fwd`, `discrete_propagate_bwd`, `discrete_box_necessity`, `dense_indicator`,
+`density` and `z1` are not instances of *any* constructor of `StarAxiom` — `swapTemporal`
+exchanges `untl`/`snce` and there is no past twin of density or Z1 among the schemata. This is
+not a defect in the grouping: the L level has exactly the same shape, carrying a dedicated
+`*_swap_valid` lemma per such schema in `SoundnessLemmas/FrameClassVariants.lean`. Six named
+`starValid_*_swap` lemmas were added in this phase to supply them — the four closed ones by
+`ofPlus` transport from `plusAxiom_swap_validIn_min`, `density` and `z1` directly. No later
+phase's work was consumed and no statement was weakened.
 
 **Timing**: 2 hours
 

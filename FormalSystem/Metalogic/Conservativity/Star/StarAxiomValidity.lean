@@ -568,6 +568,145 @@ theorem starValid_P_since_equiv (φ : StarFormula) :
   rintro ⟨s, hst, h_φs⟩
   exact ⟨s, hst, h_φs, fun _ _ _ => id⟩
 
+/-! ## The TM⁺ mirror block — discrete uniformity, density, Prior, Z1
+
+The five uniformity schemata are **closed** formulas, hence literally `ofPlus` images: their
+validity and their swap-validity both transport along `starValidOnFrames_ofPlus` from
+`plusAxiom_validIn_min` / `plusAxiom_swap_validIn_min`, with no L⋆ argument at all.
+
+`density`, `z1`, `prior_UZ` and `prior_SZ` carry a metavariable and are proved directly. The
+order-theoretic content is **not** inlined: `prior_UZ`/`prior_SZ` consume
+`SoundnessLemmas.DiscreteOrder`'s `exists_nearest_gt`/`exists_nearest_lt` and `z1` its
+`forall_gt_of_succ_step`/`forall_lt_of_pred_step`, each at
+`P := fun x => StarTruthAt M τ x v φ`.
+
+**Measured correction to this group's swap-closure.** Three of the five uniformity schemata are
+*not* closed under `swapTemporal` within the group — `swapTemporal` exchanges `untl` and `snce`,
+so the dual of `U(⊤,⊥) → G(U(⊤,⊥))` is `S(⊤,⊥) → H(S(⊤,⊥))`, which is no member's statement —
+and neither `density`, `dense_indicator` nor `z1` has a past twin among the schemata. This
+mirrors the L level exactly, where `SoundnessLemmas.FrameClassVariants` carries a dedicated
+`*_swap_valid` lemma for each. The named `*_swap` lemmas below are those duals; the closed ones
+transport, `density` and `z1` are direct. -/
+
+/-- `discrete_symm_fwd` over L⋆, by transport: the formula is closed. -/
+theorem starValid_discrete_symm_fwd :
+    StarValid ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.discrete_symm_fwd)
+
+/-- `discrete_symm_bwd` over L⋆, by transport. -/
+theorem starValid_discrete_symm_bwd :
+    StarValid ((StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.discrete_symm_bwd)
+
+/-- `discrete_propagate_fwd` over L⋆, by transport. -/
+theorem starValid_discrete_propagate_fwd :
+    StarValid ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allFuture (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.discrete_propagate_fwd)
+
+/-- The temporal dual of `discrete_propagate_fwd`: `S(⊤,⊥) → H(S(⊤,⊥))`. Not an instance of any
+schema, so it is named here, mirroring `SoundnessLemmas.discrete_propagate_fwd_swap_valid`. -/
+theorem starValid_discrete_propagate_fwd_swap :
+    StarValid ((StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allPast (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr
+    (plusAxiom_swap_validIn_min PlusAxiom.discrete_propagate_fwd)
+
+/-- `discrete_propagate_bwd` over L⋆, by transport. -/
+theorem starValid_discrete_propagate_bwd :
+    StarValid ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allPast (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.discrete_propagate_bwd)
+
+/-- The temporal dual of `discrete_propagate_bwd`: `S(⊤,⊥) → G(S(⊤,⊥))`. -/
+theorem starValid_discrete_propagate_bwd_swap :
+    StarValid ((StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.allFuture (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr
+    (plusAxiom_swap_validIn_min PlusAxiom.discrete_propagate_bwd)
+
+/-- `discrete_box_necessity` over L⋆, by transport. -/
+theorem starValid_discrete_box_necessity :
+    StarValid ((StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.box (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.discrete_box_necessity)
+
+/-- The temporal dual of `discrete_box_necessity`: `S(⊤,⊥) → □(S(⊤,⊥))`. -/
+theorem starValid_discrete_box_necessity_swap :
+    StarValid ((StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).imp (StarFormula.box (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)))) :=
+  (starValidOnFrames_ofPlus _ _).mpr
+    (plusAxiom_swap_validIn_min PlusAxiom.discrete_box_necessity)
+
+/-- Density over L⋆ at `.Dense`: `GGφ → Gφ`. -/
+theorem starValid_density (φ : StarFormula) :
+    StarValidIn FrameClass.Dense ((φ.allFuture.allFuture).imp φ.allFuture) := by
+  refine StarValidIn.of_forall_total fun F h_dense M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allFuture_iff]
+  intro h_GG s hts
+  obtain ⟨r, htr, hrs⟩ := @DenselyOrdered.dense F.Duration _ h_dense t s hts
+  exact h_GG r htr s hrs
+
+/-- The temporal dual of `starValid_density`: `HHφ → Hφ`, again at `.Dense`. There is no
+`density_past` schema, so this dual is named here rather than dispatched to a sibling
+constructor — mirroring `Metalogic/Soundness.lean`'s `density_swap_valid`. -/
+theorem starValid_density_swap (φ : StarFormula) :
+    StarValidIn FrameClass.Dense ((φ.allPast.allPast).imp φ.allPast) := by
+  refine StarValidIn.of_forall_total fun F h_dense M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.allPast_iff]
+  intro h_HH s hst
+  obtain ⟨r, hsr, hrt⟩ := @DenselyOrdered.dense F.Duration _ h_dense s t hst
+  exact h_HH r hrt s hsr
+
+/-- The dense indicator over L⋆ at `.Dense`, by transport. -/
+theorem starValid_dense_indicator :
+    StarValidIn FrameClass.Dense (StarFormula.untl StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).neg :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min PlusAxiom.dense_indicator)
+
+/-- The temporal dual of the dense indicator: `¬S(⊤,⊥)`, by transport. -/
+theorem starValid_dense_indicator_swap :
+    StarValidIn FrameClass.Dense (StarFormula.snce StarFormula.bot (StarFormula.bot.imp StarFormula.bot)).neg :=
+  (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_swap_validIn_min PlusAxiom.dense_indicator)
+
+/-- Prior-UZ over L⋆ at `.ZTime`: the nearest `φ`-point above `t` witnesses `U(φ, ¬φ)`. -/
+theorem starValid_prior_UZ (φ : StarFormula) :
+    StarValidIn FrameClass.ZTime (φ.someFuture.imp (StarFormula.untl φ.neg φ)) := by
+  refine StarValidIn.of_forall_total fun F hF M τ _ t v => ?_
+  sat_intro hF
+  simp only [StarTruth.imp_iff, StarTruth.someFuture_iff, StarTruth.untl_iff, StarTruth.neg_iff]
+  rintro ⟨s, hts, hs⟩
+  exact Metalogic.SoundnessLemmas.exists_nearest_gt
+    (P := fun x => StarTruthAt M τ x v φ) hts hs
+
+/-- Prior-SZ over L⋆ at `.ZTime`, the past dual — through `exists_nearest_lt`, which is itself
+`exists_nearest_gt` at `Dᵒᵈ`. The dualisation is of the *carrier*, never of the formula. -/
+theorem starValid_prior_SZ (φ : StarFormula) :
+    StarValidIn FrameClass.ZTime (φ.somePast.imp (StarFormula.snce φ.neg φ)) := by
+  refine StarValidIn.of_forall_total fun F hF M τ _ t v => ?_
+  sat_intro hF
+  simp only [StarTruth.imp_iff, StarTruth.somePast_iff, StarTruth.snce_iff, StarTruth.neg_iff]
+  rintro ⟨s, hst, hs⟩
+  exact Metalogic.SoundnessLemmas.exists_nearest_lt
+    (P := fun x => StarTruthAt M τ x v φ) hst hs
+
+/-- Z1 over L⋆ at `.ZTime`, through `forall_gt_of_succ_step`. -/
+theorem starValid_z1 (φ : StarFormula) :
+    StarValidIn FrameClass.ZTime ((φ.allFuture.imp φ).allFuture.imp
+      (φ.allFuture.someFuture.imp φ.allFuture)) := by
+  refine StarValidIn.of_forall_total fun F hF M τ _ t v => ?_
+  sat_intro hF
+  simp only [StarTruth.imp_iff, StarTruth.allFuture_iff, StarTruth.someFuture_iff]
+  rintro h_GGpIp ⟨s₀, hts₀, hs₀⟩
+  exact Metalogic.SoundnessLemmas.forall_gt_of_succ_step
+    (P := fun x => StarTruthAt M τ x v φ) h_GGpIp hts₀ hs₀
+
+/-- The temporal dual of `starValid_z1`, through `forall_lt_of_pred_step`. Z1 has no past twin
+among the schemata, so this dual is named here — mirroring
+`SoundnessLemmas.z1_past_valid`. -/
+theorem starValid_z1_swap (φ : StarFormula) :
+    StarValidIn FrameClass.ZTime ((φ.allPast.imp φ).allPast.imp
+      (φ.allPast.somePast.imp φ.allPast)) := by
+  refine StarValidIn.of_forall_total fun F hF M τ _ t v => ?_
+  sat_intro hF
+  simp only [StarTruth.imp_iff, StarTruth.allPast_iff, StarTruth.somePast_iff]
+  rintro h_HHpIp ⟨s₀, hs₀t, hs₀⟩
+  exact Metalogic.SoundnessLemmas.forall_lt_of_pred_step
+    (P := fun x => StarTruthAt M τ x v φ) h_HHpIp hs₀t hs₀
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -613,6 +752,16 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | temp_linearity_past φ ψ => exact starValid_temp_linearity_past φ ψ
   | F_until_equiv φ => exact starValid_F_until_equiv φ
   | P_since_equiv φ => exact starValid_P_since_equiv φ
+  | discrete_symm_fwd => exact starValid_discrete_symm_fwd
+  | discrete_symm_bwd => exact starValid_discrete_symm_bwd
+  | discrete_propagate_fwd => exact starValid_discrete_propagate_fwd
+  | discrete_propagate_bwd => exact starValid_discrete_propagate_bwd
+  | discrete_box_necessity => exact starValid_discrete_box_necessity
+  | density φ => exact starValid_density φ
+  | dense_indicator => exact starValid_dense_indicator
+  | prior_UZ φ => exact starValid_prior_UZ φ
+  | prior_SZ φ => exact starValid_prior_SZ φ
+  | z1 φ => exact starValid_z1 φ
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -764,6 +913,39 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | P_since_equiv φ =>
     simp only [StarFormula.swap_temporal_some_past, StarFormula.swapTemporal]
     exact starValid_F_until_equiv φ.swapTemporal
+  | discrete_symm_fwd =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_discrete_symm_bwd
+  | discrete_symm_bwd =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_discrete_symm_fwd
+  | discrete_propagate_fwd =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_future]
+    exact starValid_discrete_propagate_fwd_swap
+  | discrete_propagate_bwd =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_past]
+    exact starValid_discrete_propagate_bwd_swap
+  | discrete_box_necessity =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_discrete_box_necessity_swap
+  | density φ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_future]
+    exact starValid_density_swap φ.swapTemporal
+  | dense_indicator =>
+    simp only [StarFormula.swap_temporal_neg, StarFormula.swapTemporal]
+    exact starValid_dense_indicator_swap
+  | prior_UZ φ =>
+    simp only [StarFormula.swap_temporal_neg, StarFormula.swap_temporal_some_future,
+      StarFormula.swapTemporal]
+    exact starValid_prior_SZ φ.swapTemporal
+  | prior_SZ φ =>
+    simp only [StarFormula.swap_temporal_neg, StarFormula.swap_temporal_some_past,
+      StarFormula.swapTemporal]
+    exact starValid_prior_UZ φ.swapTemporal
+  | z1 φ =>
+    simp only [StarFormula.swap_temporal_all_future, StarFormula.swap_temporal_some_future,
+      StarFormula.swapTemporal]
+    exact starValid_z1_swap φ.swapTemporal
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal
