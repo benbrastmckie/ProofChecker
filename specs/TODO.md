@@ -11,7 +11,7 @@ next_project_number: 574
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,573 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 2 | 231,282,296,465,497,560,564,565,567,570 | 298,464,502,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -93,7 +93,6 @@ next_project_number: 574
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-573 [IMPLEMENTING] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
@@ -111,12 +110,13 @@ next_project_number: 574
 ## Tasks
 
 ### 573. Star proof theory and conservativity
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
 - **Research**: [573_star_proof_theory_and_conservativity/reports/01_star-proof-theory-conservativity.md]
 - **Plan**: [573_star_proof_theory_and_conservativity/plans/01_star-proof-theory-conservativity.md]
+- **Summary**: [573_star_proof_theory_and_conservativity/summaries/01_star-proof-theory-conservativity-summary.md]
 
 **Description**: Build the proof theory for L⋆ and prove conservativity over TM⁺ if it holds. CURRENT STATE: FormalSystem/StarLanguage/ contains only the SEMANTICS of L⋆ = L⁺ + the manuscript's time store/recall operators -- `StarFormula`, `StarTruthAt` over points (τ, x, v⃗), the validity layer, and the determinism results. The names `StarAxiom`, `StarDerivationTree`, `⊢⋆[fc]` and `TM⋆` are RESERVED in StarLanguage/README.md but deliberately unbuilt, because every earlier deliverable was semantic. Consequently neither soundness/completeness for TM⋆ nor any conservativity statement can currently even be STATED. This task closes that gap.
 

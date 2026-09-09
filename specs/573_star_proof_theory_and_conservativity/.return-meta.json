@@ -1,30 +1,41 @@
 {
-  "status": "planned",
+  "status": "implemented",
+  "started_at": "2026-09-09T00:10:00Z",
+  "completed_at": "2026-09-09T02:35:00Z",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true
+  },
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/573_star_proof_theory_and_conservativity/plans/01_star-proof-theory-conservativity.md",
-      "summary": "9-phase plan building TM-star (StarAxiom via ofBase + 16 register schemata, StarDerivationTree with the notation for star-derivability), its soundness, the TM-plus embedding, and the conservativity trio, with TM-star completeness recorded as OPEN under two named obstructions."
+      "type": "summary",
+      "path": "specs/573_star_proof_theory_and_conservativity/summaries/01_star-proof-theory-conservativity-summary.md",
+      "summary": "TM-star built and its metatheory landed: soundness at all four frame classes, the embedding of every TM-plus derivation, unconditional conservativity over TM in both directions, and a proved conditional pair over TM-plus whose unconditional contrapositive shows any separating witness is a TM-plus incompleteness witness; TM-star completeness recorded OPEN under two named obstructions."
     }
   ],
-  "next_steps": "Run /implement 573 to execute the plan",
-  "phase_count": 9,
-  "estimated_hours": 14,
-  "dependency_waves": [[1, 2, 3], [4, 6], [5, 7], [8], [9]],
-  "memory_candidates": [
-    {
-      "content": "When extending a formal language in the BimodalLogic tree (L-minus -> L -> L-plus -> L-star), the decisive planning question is which existing schema proofs consume a TRANSPORT lemma (timeShift, atomization, state-determinacy) rather than being definitional. Grep the soundness module for the transport lemma's consumers first: in the TM block, modal_future is the SOLE timeShift consumer, and it is exactly the one schema that fails to transfer to StarFormula. That single grep decides whether the extension's axiom set can be embedded wholesale via a single ofBase constructor (soundness for the whole inherited block becomes a two-line transport along the validity-transfer lemma) or must be re-declared schema by schema (N direct validity plus N swap-validity proofs). The embedding choice also determines whether auxiliary predicates (purity, free-variable/register predicates) are needed at all: under an ofBase embedding they are not, because the inherited constructors carry their side conditions on the SOURCE language's formulas.",
-      "category": "PATTERN",
-      "source_artifact": "specs/573_star_proof_theory_and_conservativity/plans/01_star-proof-theory-conservativity.md",
-      "confidence": 0.8,
-      "suggested_keywords": ["language-extension", "proof-system-embedding", "transport-lemma", "soundness-transfer", "phase-sizing", "lean4"]
-    }
-  ],
-  "metadata": {
-    "session_id": "sess_1788934264_dea312_573",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  "completion_data": {
+    "completion_summary": "Built TM-star, the proof system for L-star (StarAxiom via one ofBase constructor plus 16 register schemata, StarDerivationTree with the star-derivability notation), and landed its metatheory: soundness at all four frame classes with temporal duality discharged semantically, the embedding of every TM-plus derivation, and the conservativity verdict at the strength the evidence supports - unconditional over TM in both directions at all four classes, and a proved conditional pair over TM-plus. TM-star completeness is recorded as OPEN under two named obstructions (the deterministic-countermodel engine obstruction, which unlike the L-plus case admits no narrow-to-deterministic escape because registers do not collapse there; and the hybrid pure-axiom route's need for nominals, which L-star has none of), never stubbed. Three machine-checked negative results now live in the tree: refute_modal_future (MF is not an L-star schema, which is why the TM block is embedded rather than re-declared), and the storeG_recall_valid / refute_erasure pair (register erasure is not a conservativity translation).",
+    "roadmap_items": []
   },
-  "dispatch_seq": 6
+  "metadata": {
+    "session_id": "sess_1788934264_dea312",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed",
+    "phases_completed": 9,
+    "phases_total": 9,
+    "phase_exclusions": [
+      {
+        "phase": 4,
+        "marker": "COMPLETED WITH EXCLUSIONS",
+        "item": "general stab-necessitation at an arbitrary StarFormula",
+        "reason": "Not derivable from the pinned Phase 3 axiom set: MS reaches TM-star only as StarAxiom.ofBase _ (PlusAxiom.box_stab psi), whose instances are box (ofPlus psi) -> stab (ofPlus psi), so modus_ponens has no instance at a register-containing formula. Landed instead as stabNecessitationOfPlus at ofPlus instances, under a distinct name. The rule remains sound at every formula - an underivability, not an unsoundness - and is recorded in the module docstring and StarLanguage/README.md. A native box_stab schema would remove the restriction but would break the constructor list pinned in the plan's Lean Challenge Statements."
+      }
+    ]
+  },
+  "dispatch_seq": 8
 }
