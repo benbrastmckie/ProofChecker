@@ -91,7 +91,7 @@ next_project_number: 571
 
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
-561 [PLANNED] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
+561 [IMPLEMENTING] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
@@ -295,7 +295,7 @@ SEQUENCING: depends on task 557 (in progress), whose file_scope includes Syntax/
 ---
 
 ### 561. Store recall deterministic frame characterization
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 562
