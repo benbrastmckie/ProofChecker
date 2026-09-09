@@ -107,11 +107,11 @@ next_project_number: 578
 
 ### Repo Hygiene
 
-574 [NOT STARTED] — Record the load-bearing soundness invariant and close the TM-star
+574 [PLANNED] — Record the load-bearing soundness invariant and close the TM-star
 
 ### Semantics
 
-575 [NOT STARTED] — Lift the state-locality fragment to L-plus and retire the atom-re
+575 [PLANNING] — Lift the state-locality fragment to L-plus and retire the atom-re
 
 ### Infrastructure
 
@@ -154,7 +154,7 @@ HARD CONSTRAINTS: no `sorry` -- an unreachable result is recorded as a reasoned 
 ---
 
 ### 575. Plus state locality fragment
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: semantics
 - **Dependencies**: None
@@ -172,10 +172,11 @@ HARD CONSTRAINTS: MUST NOT break the atomization route -- `stab_state_only` is c
 ---
 
 ### 574. Record soundness invariant and tmstar index
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: repo-hygiene
 - **Dependencies**: None
+- **Plan**: [574_record_soundness_invariant_and_tmstar_index/plans/01_record-soundness-invariant-tmstar-index.md]
 
 **Description**: Record the load-bearing soundness invariant and close the TM-star documentation gaps. GROUND TRUTH: `modal_future_valid` (FormalSystem/Metalogic/Soundness.lean:303-311) is the sole consumer of time-shift homogeneity in the TM schema block. That single fact determined the entire architecture of the newest object language -- it is why `StarAxiom` embeds the TM-plus schemata through one `ofBase` arm (FormalSystem/StarLanguage/Axioms.lean:136) rather than re-declaring them -- and it is currently recorded in NO docstring, NO README, and NO invariant check. It is discoverable only by grepping Soundness.lean. The next language extension will either re-derive it or get it wrong.
 

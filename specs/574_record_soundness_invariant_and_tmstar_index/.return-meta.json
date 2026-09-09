@@ -1,0 +1,30 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/574_record_soundness_invariant_and_tmstar_index/plans/01_record-soundness-invariant-tmstar-index.md",
+      "summary": "Six-phase plan: audit and record the time-shift consumer invariant, propagate it to two READMEs, relocate the StarValidIn adapters, extend the C14 baseline, add TM-star theorem-index rows with their Paper: anchors, and run the full gate."
+    }
+  ],
+  "next_steps": "Run /implement 574 to execute the plan",
+  "phase_count": 6,
+  "estimated_hours": 5,
+  "dependency_waves": [[1, 3], [2, 4], [5], [6]],
+  "memory_candidates": [
+    {
+      "content": "In BimodalLogic, adding a row to docs/theorem-index.md is a three-part obligation, not a one-file edit. scripts/check-module-invariants.sh C15's second assertion requires the row's named declaration to carry a `Paper: <anchor>` or `Paper: - (reason)` line in its own /-- doc comment, so rows drag docstring edits into files outside the nominal territory. The Axioms cell reading `pinned:C14` requires matching entries appended, in the same order, to BOTH the C14_BASELINE (C14BASE) and C14LEAN heredocs. Critically, C14 filters `lake env lean` output through `grep 'depends on axioms'`, so a declaration whose #print axioms prints 'does not depend on any axioms' (typical for inductives) contributes to neither side -- writing a fabricated baseline line for it is a hard C14 failure. Always measure with the real pipeline before writing a baseline line. And an OPEN result cannot be a row at all: C15's ROW regex requires a backticked fully-qualified FormalSystem.* name, so open statuses go in the prose section 'Statuses that are refutations, not gaps'.",
+      "category": "PATTERN",
+      "source_artifact": "specs/574_record_soundness_invariant_and_tmstar_index/plans/01_record-soundness-invariant-tmstar-index.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["theorem-index", "check-module-invariants", "C14-baseline", "C15-paper-anchor", "print-axioms", "lean-documentation-gate"]
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788954800_f0042b_574",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  },
+  "dispatch_seq": 3
+}
