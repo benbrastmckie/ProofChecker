@@ -1,7 +1,7 @@
 # Implementation Plan: TM⁺ deterministic completeness and ⊡ non-definability
 
 - **Task**: 537 - tm_star_completeness_stab_nondefinability
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 26 hours
 - **Dependencies**: 533 (landed), 535 (archived, ground truth), 536 (landed), 562 (completed)
 - **Research Inputs**: `specs/archive/535_axiomatize_stability_modal_tm_star/reports/01_stability-modal-axiomatization.md`; `specs/archive/535_axiomatize_stability_modal_tm_star/probes/01_stab-axiom-probes.lean` (60 sorry-free declarations). No report was produced for this round; this plan was written directly against the task specification plus a read of the live tree (see Overview).
@@ -145,25 +145,25 @@ Phases within the same wave can execute in parallel. Phases 1-9 are deliverable 
 task's PRIORITY note requires the deterministic-completeness result to land before deliverables
 (2)-(4), which is why Phases 10, 11 and 13 depend on Phase 9 rather than starting in wave 1.
 
-### Phase 1: Deterministic validity notions and the Determined-valid frame class [NOT STARTED]
+### Phase 1: Deterministic validity notions and the Determined-valid frame class [COMPLETED]
 
 **Goal**: Create the new `FormalSystem/Metalogic/Deterministic/` subtree with the two
 frame-predicate-restricted validity notions this task states its results against, and the
 Determined-valid frame class with its strict inclusion of the deterministic frames.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Metalogic/Deterministic/Validity.lean` (module docstring in the
+- [x] Create `FormalSystem/Metalogic/Deterministic/Validity.lean` (module docstring in the
       house style: Main Results, paper anchors, why the notions are frame-predicate-restricted)
-- [ ] Define `ValidDetIn fc φ := ValidOnFrames (fun F => FrameClass.Sat fc F ∧ F.Deterministic) φ`
-      and its `PlusFormula` twin over `PlusValidOnFrames`
-- [ ] Define `DeterminedValid F := ∀ φ : PlusFormula, F.PlusValidOn (φ.imp φ.stab)`
-- [ ] Prove `deterministic_determinedValid : F.Deterministic → DeterminedValid F` from 536's
+- [x] Define `ValidDetIn fc φ := ValidOnFrames (fun F => FrameClass.Sat fc F ∧ F.Deterministic) φ`
+      and its `PlusFormula` twin over `PlusValidOnFrames` *(deviation: altered — the conjunction is named `DetSat fc` and the two notions are `ValidDetIn`/`PlusValidDetIn` at it, so consumers never unfold the pair)*
+- [x] Define `DeterminedValid F := ∀ φ : PlusFormula, F.PlusValidOn (φ.imp φ.stab)`
+- [x] Prove `deterministic_determinedValid : F.Deterministic → DeterminedValid F` from 536's
       `determined_of_deterministic` (do not re-derive the collapse)
-- [ ] Prove the inclusion is strict, citing `Metalogic/Independence/DriftFrame.lean`'s `F0`:
+- [x] Prove the inclusion is strict, citing `Metalogic/Independence/DriftFrame.lean`'s `F0`:
       `fzero_determined` gives `DeterminedValid F0` and `fzero_not_deterministic` the failure
-- [ ] Record monotonicity lemmas transporting `PlusValidIn`/`ValidIn` down to the restricted
+- [x] Record monotonicity lemmas transporting `PlusValidIn`/`ValidIn` down to the restricted
       notions via `PlusValidOnFrames.mono` / `ValidOnFrames`
-- [ ] Register the module in the `FormalSystem/Metalogic.lean` aggregator
+- [x] Register the module in the `FormalSystem/Metalogic.lean` aggregator *(deviation: altered — registered through a new subtree aggregator `FormalSystem/Metalogic/Deterministic.lean`, matching every other `Metalogic/` subdirectory)*
 
 **Timing**: 1 hour
 
