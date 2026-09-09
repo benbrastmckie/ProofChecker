@@ -1,7 +1,7 @@
 # Implementation Plan: Task #577
 
 - **Task**: 577 - Abstract the per-language validity layer over a truth-relation class
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 16 hours
 - **Dependencies**: 576 (completed; the enumeration in the research report was taken against the post-576 tree at HEAD `e3a2c0f1a`)
 - **Research Inputs**: specs/577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md (plus the three compiled probes under `specs/577_abstract_validity_layer_over_truth_class/probes/`)
@@ -225,7 +225,7 @@ for every name on `probes/04_scope-enumeration.txt` (from Phase 2 on); (G5)
 list modified (`git status --short`). Each green substep is committed as
 `task 577 phase {P}.{O}: ...` per the Commit-Per-Green-Substep mandate.
 
-### Phase 1: `Semantics/ValidityLayer.lean` -- the truth class and the generic validity layer, with the scope enumeration and axiom baseline [NOT STARTED]
+### Phase 1: `Semantics/ValidityLayer.lean` -- the truth class and the generic validity layer, with the scope enumeration and axiom baseline [COMPLETED]
 
 **Goal**: Land the leaf module holding `PointTruth` and the validity layer written once, with no
 instances yet (zero blast radius), and freeze the measurement that gates everything after it: the
@@ -269,7 +269,7 @@ corrected count.
 
 ---
 
-### Phase 2: Instantiate the validity layer for L (`Semantics/Validity.lean`) [NOT STARTED]
+### Phase 2: Instantiate the validity layer for L (`Semantics/Validity.lean`) [COMPLETED]
 
 **Goal**: Make L the template instantiation: one instance, twelve theorem bodies delegated, every
 statement byte-identical, the four validity `def`s and four frame-class tag `def`s untouched.
@@ -302,7 +302,7 @@ statement byte-identical, the four validity `def`s and four frame-class tag `def
 
 ---
 
-### Phase 3: Instantiate the validity layer for L⁻ and L⁺ (`Semantics/MinusValidity.lean`, `Semantics/PlusValidity.lean`) [NOT STARTED]
+### Phase 3: Instantiate the validity layer for L⁻ and L⁺ (`Semantics/MinusValidity.lean`, `Semantics/PlusValidity.lean`) [COMPLETED]
 
 **Goal**: Repeat the L template for the two `(τ, x)`-pointed languages whose files mirror
 `Validity.lean` binder-for-binder.
@@ -335,7 +335,7 @@ rather than skipping it silently.
 
 ---
 
-### Phase 4: Instantiate the validity layer for L⋆ with the `∀ v` fold (`Semantics/StarValidity.lean`) [NOT STARTED]
+### Phase 4: Instantiate the validity layer for L⋆ with the `∀ v` fold (`Semantics/StarValidity.lean`) [COMPLETED]
 
 **Goal**: The phase that settles deliverable 2 in the landed tree: fold the stored-time vector
 into `sat` and show, by `rfl` against the unmodified L⋆ definitions, that the `(τ, x, v)` point
@@ -368,7 +368,7 @@ in the summary, and do not adjust the definition.
 
 ---
 
-### Phase 5: `Semantics/TruthClauses.lean` -- operator/clause classes, generic derived operators, generic clause lemmas [NOT STARTED]
+### Phase 5: `Semantics/TruthClauses.lean` -- operator/clause classes, generic derived operators, generic clause lemmas [COMPLETED]
 
 **Goal**: Land the second leaf module: the `Env`-parameterised pointed-truth base, one class per
 primitive operator bundling the operator with its truth clause, bundles by `extends`, the

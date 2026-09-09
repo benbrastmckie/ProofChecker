@@ -1,0 +1,111 @@
+/-
+Copyright (c) 2026 Benjamin Brast-McKie. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Benjamin Brast-McKie
+-/
+
+import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.MinusValidity
+
+/-!
+# The abstract validity layer: definitional-coincidence regressions
+
+`FormalSystem/Semantics/ValidityLayer.lean` writes the validity layer once against the class
+`PointTruth`, and each object language then instantiates it and delegates its own theorem bodies
+to the generic ones. The delegation is only statement-preserving because each per-language
+validity `def` is **definitionally equal** to the generic one at that language's instance — a
+`rfl`, not a proved biconditional.
+
+That defeq is the load-bearing fact of the whole refactor, and nothing in the library states it:
+the per-language `def`s are deliberately left with their original bodies (their reducibility and
+`unfold`/`simp` behaviour is depended on at hundreds of downstream sites), so no library theorem
+ever needs to mention the coincidence. This file is where it is pinned, so that a later edit to
+either side turns a test red instead of silently making the two layers diverge.
+
+## What is measured here
+
+Every check is a compiler check, not an assertion: an `example ... := rfl` that fails to
+elaborate is a build failure.
+
+- The four validity coincidences for each object language, populated as each language is
+  instantiated.
+- A toy fifth language, exercising the extension contract end to end: the minimum a new language
+  must supply in order to inherit the layer.
+
+## References
+
+* `FormalSystem/Semantics/ValidityLayer.lean` — the layer and its extension contract
+-/
+
+namespace BimodalTest.Semantics.ValidityLayerTest
+
+open FormalSystem FormalSystem.Semantics
+
+/-! ## Smoke check: the generic layer elaborates -/
+
+section Smoke
+variable {L : Type} [PointTruth L]
+
+example (F : TaskFrame) (φ : L) : Prop := TaskFrame.GenericValidOn F φ
+example (P : TaskFrame → Prop) (φ : L) : Prop := GenericValidOnFrames P φ
+example (fc : ProofSystem.FrameClass) (φ : L) : Prop := GenericValidIn fc φ
+example (φ : L) : Prop := GenericValid φ
+
+end Smoke
+
+/-! ## The validity coincidences, one group per object language
+
+Each group is the load-bearing defeq that makes that language's delegating wrappers
+statement-preserving. `rfl` and nothing else: if any of these ever needs a `show` or a `change`,
+the corresponding instance is no longer the language's own validity relation. -/
+
+section L
+variable (F : TaskFrame) (P : TaskFrame → Prop) (fc : ProofSystem.FrameClass) (φ : Syntax.Formula)
+
+example : TaskFrame.ValidOn F φ = TaskFrame.GenericValidOn F φ := rfl
+example : ValidOnFrames P φ = GenericValidOnFrames P φ := rfl
+example : ValidIn fc φ = GenericValidIn fc φ := rfl
+example : Valid φ = GenericValid φ := rfl
+
+end L
+
+section LMinus
+variable (F : TaskFrame) (P : TaskFrame → Prop) (fc : ProofSystem.FrameClass)
+  (φ : MinusLanguage.MinusFormula)
+
+example : TaskFrame.MinusValidOn F φ = TaskFrame.GenericValidOn F φ := rfl
+example : MinusValidOnFrames P φ = GenericValidOnFrames P φ := rfl
+example : MinusValidIn fc φ = GenericValidIn fc φ := rfl
+example : MinusValid φ = GenericValid φ := rfl
+
+end LMinus
+
+section LPlus
+variable (F : TaskFrame) (P : TaskFrame → Prop) (fc : ProofSystem.FrameClass)
+  (φ : PlusLanguage.PlusFormula)
+
+example : TaskFrame.PlusValidOn F φ = TaskFrame.GenericValidOn F φ := rfl
+example : PlusValidOnFrames P φ = GenericValidOnFrames P φ := rfl
+example : PlusValidIn fc φ = GenericValidIn fc φ := rfl
+example : PlusValid φ = GenericValid φ := rfl
+
+end LPlus
+
+/-! ### L⋆ — the load-bearing case
+
+`StarFormula`'s point is `(τ, x, v⃗)`, not `(τ, x)`. These four are the evidence that **one**
+abstraction covers both shapes: the stored-time vector is the innermost binder everywhere, so
+`∀ v` folds into the instance's `sat` field without disturbing any binder telescope. -/
+
+section LStar
+variable (F : TaskFrame) (P : TaskFrame → Prop) (fc : ProofSystem.FrameClass)
+  (φ : StarLanguage.StarFormula)
+
+example : TaskFrame.StarValidOn F φ = TaskFrame.GenericValidOn F φ := rfl
+example : StarValidOnFrames P φ = GenericValidOnFrames P φ := rfl
+example : StarValidIn fc φ = GenericValidIn fc φ := rfl
+example : StarValid φ = GenericValid φ := rfl
+
+end LStar
+
+end BimodalTest.Semantics.ValidityLayerTest

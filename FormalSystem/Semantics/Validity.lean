@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.Truth
+import FormalSystem.Semantics.ValidityLayer
 import FormalSystem.Semantics.Extension.Extension
 import FormalSystem.Syntax.Context
 import FormalSystem.Semantics.FrameClassValidity
@@ -225,6 +226,12 @@ def FormulaSatisfiable (φ : Formula) : Prop :=
     (τ : ConvexHistory F) (_ : τ.IsTotal) (t : F.Duration),
     TruthAt M τ t φ
 
+/-- L's instance of the abstract point-truth class of `Semantics/ValidityLayer.lean`: truth at
+the point `(M, τ, t)` is `TruthAt`. Every validity-layer theorem below delegates to the generic
+one through this single field. -/
+instance : PointTruth Formula where
+  sat M τ t φ := TruthAt M τ t φ
+
 /-! ## Frame-relative validity `⊨_F` (`def:frame-validity`)
 
 Charter §8's optional deliverable. Everything above quantifies over *all* frames; this section
@@ -289,7 +296,7 @@ correspondence argument, and its callers now sit in more than one module.
 -/
 theorem validOn_iff_total (F : TaskFrame) (φ : Formula) :
     F.ValidOn φ ↔ ∀ (M : TaskModel F) (τ : ConvexHistory F), τ.IsTotal → ∀ t, TruthAt M τ t φ :=
-  ⟨fun h M τ hτ t => h M ⟨τ, hτ⟩ t, fun h M τ t => h M τ.val τ.property t⟩
+  genericValidOn_iff_total (L := Formula) F φ
 
 /--
 Frame-relative validity is **never vacuous**: no frame validates `⊥`.
@@ -420,13 +427,13 @@ theorem Valid.of_forall_total {φ : Formula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ) :
     Valid φ :=
-  fun F _ M τ t => h F M τ.val τ.property t
+  GenericValid.of_forall_total (L := Formula) (φ := φ) h
 
 /-- Eliminate `Valid` into its explicit binder shape; the `Sat .Base` argument is discharged
 here, not at the call site. -/
 theorem Valid.apply {φ : Formula} (h : Valid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : TruthAt M τ t φ :=
-  h F trivial M ⟨τ, hτ⟩ t
+  GenericValid.apply (L := Formula) (φ := φ) h F M τ hτ t
 
 /-- The contrapositive of `Valid.of_forall_total`, in the shape a countermodel extraction
 wants: from a failure of `Valid` it hands back a failure of the explicit ∀-statement, which
@@ -436,7 +443,7 @@ abbreviation over `ValidIn` and has no binder list to open. The `.Base` instance
 theorem Valid.of_not {φ : Formula} (h : ¬ Valid φ) :
     ¬ ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
         τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ :=
-  fun h' => h (Valid.of_forall_total h')
+  GenericValid.of_not (L := Formula) (φ := φ) h
 
 namespace Validity
 
@@ -483,7 +490,7 @@ below. Before this lemma each was written out by hand against its own inlined bi
 -/
 theorem ValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : Formula} (h : ∀ F, Q F → P F)
     (hP : ValidOnFrames P φ) : ValidOnFrames Q φ :=
-  fun F hF => hP F (h F hF)
+  GenericValidOnFrames.mono (L := Formula) (φ := φ) h hP
 
 /--
 Validity is monotone in the `FrameClass` order: `fc₁ ≤ fc₂ → ValidIn fc₁ φ → ValidIn fc₂ φ`.
@@ -496,7 +503,7 @@ The order-direction argument itself lives in `FrameClass.Sat.anti` and is not re
 -/
 theorem ValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : Formula} (h : fc₁ ≤ fc₂)
     (hv : ValidIn fc₁ φ) : ValidIn fc₂ φ :=
-  ValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
+  GenericValidIn.mono (L := Formula) (φ := φ) h hv
 
 /-! ### The migration lever
 
@@ -528,26 +535,26 @@ theorem ValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : Formula}
     (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ) :
     ValidOnFrames P φ :=
-  fun F hF M τ t => h F hF M τ.val τ.property t
+  GenericValidOnFrames.of_forall_total (L := Formula) (φ := φ) h
 
 /-- Eliminate `ValidOnFrames` into the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape. -/
 theorem ValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : Formula} (h : ValidOnFrames P φ)
     (F : TaskFrame) (hF : P F) (M : TaskModel F) (τ : ConvexHistory F)
     (hτ : τ.IsTotal) (t : F.Duration) : TruthAt M τ t φ :=
-  h F hF M ⟨τ, hτ⟩ t
+  GenericValidOnFrames.apply_total (L := Formula) (φ := φ) h F hF M τ hτ t
 
 /-- `ValidOnFrames.of_forall_total` at a `FrameClass` tag. -/
 theorem ValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : Formula}
     (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ) :
     ValidIn fc φ :=
-  ValidOnFrames.of_forall_total h
+  GenericValidIn.of_forall_total (L := Formula) (φ := φ) h
 
 /-- `ValidOnFrames.apply_total` at a `FrameClass` tag. -/
 theorem ValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : Formula} (h : ValidIn fc φ)
     (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F) (τ : ConvexHistory F)
     (hτ : τ.IsTotal) (t : F.Duration) : TruthAt M τ t φ :=
-  ValidOnFrames.apply_total h F hF M τ hτ t
+  GenericValidIn.apply_total (L := Formula) (φ := φ) h F hF M τ hτ t
 
 /-- The contrapositive of `ValidOnFrames.of_forall_total`, at a bare frame predicate: from a
 failure of `ValidOnFrames P` it hands back a failure of the unbundled ∀-statement, which
@@ -560,7 +567,7 @@ whole adapter family, and no class-specific declaration has to exist for it. -/
 theorem ValidOnFrames.of_not {P : TaskFrame → Prop} {φ : Formula} (h : ¬ ValidOnFrames P φ) :
     ¬ ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
         τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ :=
-  fun h' => h (ValidOnFrames.of_forall_total h')
+  GenericValidOnFrames.of_not (L := Formula) (φ := φ) h
 
 /-- The contrapositive of `ValidIn.of_forall_total`, in the shape a countermodel extraction
 wants: from a failure of `ValidIn fc` it hands back a failure of the unbundled ∀-statement,
@@ -572,7 +579,7 @@ restating a frame condition. -/
 theorem ValidIn.of_not {fc : ProofSystem.FrameClass} {φ : Formula} (h : ¬ ValidIn fc φ) :
     ¬ ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
         τ.IsTotal → ∀ t : F.Duration, TruthAt M τ t φ :=
-  fun h' => h (ValidIn.of_forall_total h')
+  GenericValidIn.of_not (L := Formula) (φ := φ) h
 
 /--
 A formula is valid over dense temporal orders if it is true in all models where D is

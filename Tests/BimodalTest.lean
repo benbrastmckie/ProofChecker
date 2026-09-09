@@ -10,6 +10,7 @@ import BimodalTest.Syntax.FormulaPropertyTest
 import BimodalTest.ProofSystem.AxiomsTest
 import BimodalTest.ProofSystem.DerivationTest
 import BimodalTest.ProofSystem.DerivationPropertyTest
+import BimodalTest.Semantics.ValidityLayerTest
 import BimodalTest.Semantics.TruthTest
 import BimodalTest.Semantics.TaskFrameTest
 import BimodalTest.Semantics.SaturationFiniteAxiomTest

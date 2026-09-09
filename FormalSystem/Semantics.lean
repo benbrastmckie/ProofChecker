@@ -20,6 +20,8 @@ import FormalSystem.Semantics.Extension.Extension
 import FormalSystem.Semantics.Extension.PeriodicExtension
 import FormalSystem.Semantics.ConvexHistory
 import FormalSystem.Semantics.TaskModel
+import FormalSystem.Semantics.TruthClauses
+import FormalSystem.Semantics.ValidityLayer
 import FormalSystem.Semantics.Truth
 import FormalSystem.Semantics.MinusTruth
 import FormalSystem.Semantics.MinusFrame

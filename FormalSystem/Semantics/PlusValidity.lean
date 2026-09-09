@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.PlusTruth
+import FormalSystem.Semantics.ValidityLayer
 import FormalSystem.Semantics.Validity
 
 /-!
@@ -57,6 +58,12 @@ open FormalSystem.PlusLanguage
 
 /-! ## `FrameClass`-indexed validity for L⁺ -/
 
+/-- L⁺'s instance of the abstract point-truth class of `Semantics/ValidityLayer.lean`: truth at
+the point `(M, τ, t)` is `PlusTruthAt`. Every validity-layer theorem below delegates to the
+generic one through this single field. -/
+instance : PointTruth PlusFormula where
+  sat M τ t φ := PlusTruthAt M τ t φ
+
 /-- `def:frame-validity` for L⁺: `φ` is valid over the frame `F` iff it is true at every model
 over `F`, every possible world `τ ∈ H_F`, and every time. The L⁺ mirror of
 `TaskFrame.ValidOn`. -/
@@ -95,12 +102,12 @@ def PlusValidRTime (φ : PlusFormula) : Prop := PlusValidIn ProofSystem.FrameCla
 /-- `PlusValidOnFrames` is antitone in its frame predicate. Mirror of `ValidOnFrames.mono`. -/
 theorem PlusValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : PlusFormula}
     (h : ∀ F, Q F → P F) (hP : PlusValidOnFrames P φ) : PlusValidOnFrames Q φ :=
-  fun F hF => hP F (h F hF)
+  GenericValidOnFrames.mono (L := PlusFormula) (φ := φ) h hP
 
 /-- L⁺ validity is monotone in the `FrameClass` order. Mirror of `ValidIn.mono`. -/
 theorem PlusValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : PlusFormula} (h : fc₁ ≤ fc₂)
     (hv : PlusValidIn fc₁ φ) : PlusValidIn fc₂ φ :=
-  PlusValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
+  GenericValidIn.mono (L := PlusFormula) (φ := φ) h hv
 
 /-! ### Binder-shape adapters
 
@@ -113,26 +120,26 @@ theorem PlusValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : PlusFor
     (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, PlusTruthAt M τ t φ) :
     PlusValidOnFrames P φ :=
-  fun F hF M τ t => h F hF M τ.val τ.property t
+  GenericValidOnFrames.of_forall_total (L := PlusFormula) (φ := φ) h
 
 /-- Eliminate `PlusValidOnFrames` into the unbundled shape. -/
 theorem PlusValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : PlusFormula}
     (h : PlusValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : PlusTruthAt M τ t φ :=
-  h F hF M ⟨τ, hτ⟩ t
+  GenericValidOnFrames.apply_total (L := PlusFormula) (φ := φ) h F hF M τ hτ t
 
 /-- `PlusValidOnFrames.of_forall_total` at a `FrameClass` tag. -/
 theorem PlusValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : PlusFormula}
     (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, PlusTruthAt M τ t φ) :
     PlusValidIn fc φ :=
-  PlusValidOnFrames.of_forall_total h
+  GenericValidIn.of_forall_total (L := PlusFormula) (φ := φ) h
 
 /-- `PlusValidOnFrames.apply_total` at a `FrameClass` tag. -/
 theorem PlusValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : PlusFormula}
     (h : PlusValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : PlusTruthAt M τ t φ :=
-  PlusValidOnFrames.apply_total h F hF M τ hτ t
+  GenericValidIn.apply_total (L := PlusFormula) (φ := φ) h F hF M τ hτ t
 
 /-- Introduce `PlusValid` from the unbundled shape; the `Sat .Base` argument (`True`) is
 discharged here. Mirror of `Valid.of_forall_total`. -/
@@ -140,12 +147,12 @@ theorem PlusValid.of_forall_total {φ : PlusFormula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, PlusTruthAt M τ t φ) :
     PlusValid φ :=
-  fun F _ M τ t => h F M τ.val τ.property t
+  GenericValid.of_forall_total (L := PlusFormula) (φ := φ) h
 
 /-- Eliminate `PlusValid` into the unbundled shape. Mirror of `Valid.apply`. -/
 theorem PlusValid.apply {φ : PlusFormula} (h : PlusValid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : PlusTruthAt M τ t φ :=
-  h F trivial M ⟨τ, hτ⟩ t
+  GenericValid.apply (L := PlusFormula) (φ := φ) h F M τ hτ t
 
 /-! ## The truth-transfer bridge along `ofFormula` -/
 

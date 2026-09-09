@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.StarTruth
+import FormalSystem.Semantics.ValidityLayer
 import FormalSystem.Semantics.PlusValidity
 
 /-!
@@ -68,6 +69,18 @@ open FormalSystem.StarLanguage
 
 /-! ## `FrameClass`-indexed validity for L⋆ -/
 
+/-- L⋆'s instance of the abstract point-truth class of `Semantics/ValidityLayer.lean`, folding
+the stored-time vector into the point predicate.
+
+`v` is the **innermost** binder of every L⋆ validity definition below, and as a `Pi` telescope
+`∀ M τ x v, …` is literally `∀ M τ x, (∀ v, …)`. So closing over `v` here changes no binder
+telescope and no statement: `TaskFrame.StarValidOn F φ` is *definitionally* the generic
+`TaskFrame.GenericValidOn F φ` at this instance, which
+`Tests/BimodalTest/Semantics/ValidityLayerTest.lean` pins by `rfl`. This is what settles that one
+abstraction covers both point shapes, `(τ, x)` and `(τ, x, v⃗)`. -/
+instance : PointTruth StarFormula where
+  sat {F} M τ t φ := ∀ v : ℕ → F.Duration, StarTruthAt M τ t v φ
+
 /-- `def:frame-validity` for L⋆: `φ` is valid over the frame `F` iff it is true at every model
 over `F`, every possible world `τ ∈ H_F`, every time, and **every stored-time vector**. The L⋆
 mirror of `TaskFrame.PlusValidOn`. -/
@@ -95,12 +108,12 @@ def StarValid (φ : StarFormula) : Prop :=
 /-- `StarValidOnFrames` is antitone in its frame predicate. -/
 theorem StarValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : StarFormula}
     (h : ∀ F, Q F → P F) (hP : StarValidOnFrames P φ) : StarValidOnFrames Q φ :=
-  fun F hF => hP F (h F hF)
+  GenericValidOnFrames.mono (L := StarFormula) (φ := φ) h hP
 
 /-- L⋆ validity is monotone in the `FrameClass` order. -/
 theorem StarValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : StarFormula} (h : fc₁ ≤ fc₂)
     (hv : StarValidIn fc₁ φ) : StarValidIn fc₂ φ :=
-  StarValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
+  GenericValidIn.mono (L := StarFormula) (φ := φ) h hv
 
 /-! ### Binder-shape adapters
 
@@ -112,41 +125,41 @@ theorem TaskFrame.StarValidOn.of_forall_total {F : TaskFrame} {φ : StarFormula}
     (h : ∀ (M : TaskModel F) (τ : ConvexHistory F), τ.IsTotal →
            ∀ (x : F.Duration) (v : ℕ → F.Duration), StarTruthAt M τ x v φ) :
     F.StarValidOn φ :=
-  fun M τ x v => h M τ.val τ.property x v
+  TaskFrame.GenericValidOn.of_forall_total (L := StarFormula) (φ := φ) h
 
 /-- Eliminate `TaskFrame.StarValidOn` into the unbundled shape. -/
 theorem TaskFrame.StarValidOn.apply_total {F : TaskFrame} {φ : StarFormula}
     (h : F.StarValidOn φ) (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal)
     (x : F.Duration) (v : ℕ → F.Duration) : StarTruthAt M τ x v φ :=
-  h M ⟨τ, hτ⟩ x v
+  TaskFrame.GenericValidOn.apply_total (L := StarFormula) (φ := φ) h M τ hτ x v
 
 /-- Introduce `StarValidOnFrames` from the unbundled shape. -/
 theorem StarValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : StarFormula}
     (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ (x : F.Duration) (v : ℕ → F.Duration), StarTruthAt M τ x v φ) :
     StarValidOnFrames P φ :=
-  fun F hF M τ x v => h F hF M τ.val τ.property x v
+  GenericValidOnFrames.of_forall_total (L := StarFormula) (φ := φ) h
 
 /-- Eliminate `StarValidOnFrames` into the unbundled shape. -/
 theorem StarValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : StarFormula}
     (h : StarValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (x : F.Duration) (v : ℕ → F.Duration) :
     StarTruthAt M τ x v φ :=
-  h F hF M ⟨τ, hτ⟩ x v
+  GenericValidOnFrames.apply_total (L := StarFormula) (φ := φ) h F hF M τ hτ x v
 
 /-- `StarValidOnFrames.of_forall_total` at a `FrameClass` tag. -/
 theorem StarValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
     (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ (x : F.Duration) (v : ℕ → F.Duration), StarTruthAt M τ x v φ) :
     StarValidIn fc φ :=
-  StarValidOnFrames.of_forall_total h
+  GenericValidIn.of_forall_total (L := StarFormula) (φ := φ) h
 
 /-- `StarValidOnFrames.apply_total` at a `FrameClass` tag. -/
 theorem StarValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
     (h : StarValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (x : F.Duration) (v : ℕ → F.Duration) :
     StarTruthAt M τ x v φ :=
-  StarValidOnFrames.apply_total h F hF M τ hτ x v
+  GenericValidIn.apply_total (L := StarFormula) (φ := φ) h F hF M τ hτ x v
 
 /-- Introduce `StarValid` from the unbundled shape; the `Sat .Base` argument (`True`) is
 discharged here. -/
@@ -154,13 +167,13 @@ theorem StarValid.of_forall_total {φ : StarFormula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F), τ.IsTotal →
            ∀ (x : F.Duration) (v : ℕ → F.Duration), StarTruthAt M τ x v φ) :
     StarValid φ :=
-  fun F _ M τ x v => h F M τ.val τ.property x v
+  GenericValid.of_forall_total (L := StarFormula) (φ := φ) h
 
 /-- Eliminate `StarValid` into the unbundled shape. -/
 theorem StarValid.apply {φ : StarFormula} (h : StarValid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (x : F.Duration) (v : ℕ → F.Duration) :
     StarTruthAt M τ x v φ :=
-  h F trivial M ⟨τ, hτ⟩ x v
+  GenericValid.apply (L := StarFormula) (φ := φ) h F M τ hτ x v
 
 /-! ## Transfer along the embedding -/
 

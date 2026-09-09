@@ -5,6 +5,7 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Semantics.MinusTruth
+import FormalSystem.Semantics.ValidityLayer
 import FormalSystem.Semantics.Validity
 
 /-!
@@ -89,6 +90,12 @@ defined natively on `MinusFormula`'s six constructors per `def:BL-semantics`, no
 but it shares one and the same `FrameClass.Sat`, so the frame classes the two languages are
 indexed by are literally the same classes and not two parallel copies. -/
 
+/-- L⁻'s instance of the abstract point-truth class of `Semantics/ValidityLayer.lean`: truth at
+the point `(M, τ, t)` is `MinusTruthAt`. Every validity-layer theorem below delegates to the
+generic one through this single field. -/
+instance : PointTruth MinusFormula where
+  sat M τ t φ := MinusTruthAt M τ t φ
+
 /--
 `def:frame-validity` for the base language: `φ` is **valid over the frame `F`** iff it is true at
 every model over `F`, every possible world `τ ∈ H_F`, and every time `x ∈ D`.
@@ -133,24 +140,24 @@ theorem MinusValid.of_forall_total {φ : MinusFormula}
     (h : ∀ (F : TaskFrame) (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, MinusTruthAt M τ t φ) :
     MinusValid φ :=
-  fun F _ M τ t => h F M τ.val τ.property t
+  GenericValid.of_forall_total (L := MinusFormula) (φ := φ) h
 
 /-- Eliminate `MinusValid` into its pre-abbreviation binder shape. The L⁻ mirror of `Valid.apply`. -/
 theorem MinusValid.apply {φ : MinusFormula} (h : MinusValid φ) (F : TaskFrame) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : MinusTruthAt M τ t φ :=
-  h F trivial M ⟨τ, hτ⟩ t
+  GenericValid.apply (L := MinusFormula) (φ := φ) h F M τ hτ t
 
 /-- **The one monotonicity lemma for L**: `MinusValidOnFrames` is antitone in its frame predicate.
 The L⁻ mirror of `Semantics.ValidOnFrames.mono`. -/
 theorem MinusValidOnFrames.mono {P Q : TaskFrame → Prop} {φ : MinusFormula} (h : ∀ F, Q F → P F)
     (hP : MinusValidOnFrames P φ) : MinusValidOnFrames Q φ :=
-  fun F hF => hP F (h F hF)
+  GenericValidOnFrames.mono (L := MinusFormula) (φ := φ) h hP
 
 /-- L validity is monotone in the `FrameClass` order, pointing the same direction as
 `MinusLanguage.DerivationTree.lift`. The L⁻ mirror of `Semantics.ValidIn.mono`. -/
 theorem MinusValidIn.mono {fc₁ fc₂ : ProofSystem.FrameClass} {φ : MinusFormula} (h : fc₁ ≤ fc₂)
     (hv : MinusValidIn fc₁ φ) : MinusValidIn fc₂ φ :=
-  MinusValidOnFrames.mono (fun _ => ProofSystem.FrameClass.Sat.anti h) hv
+  GenericValidIn.mono (L := MinusFormula) (φ := φ) h hv
 
 /-! ### Binder-shape adapters for the generic layer
 
@@ -171,14 +178,14 @@ theorem MinusValidOnFrames.of_forall_total {P : TaskFrame → Prop} {φ : MinusF
     (h : ∀ (F : TaskFrame), P F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, MinusTruthAt M τ t φ) :
     MinusValidOnFrames P φ :=
-  fun F hF M τ t => h F hF M τ.val τ.property t
+  GenericValidOnFrames.of_forall_total (L := MinusFormula) (φ := φ) h
 
 /-- Eliminate `MinusValidOnFrames` into the unbundled `(τ : ConvexHistory F) (hτ : τ.IsTotal)` shape.
 The L⁻ mirror of `Semantics.ValidOnFrames.apply_total`. -/
 theorem MinusValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : MinusFormula}
     (h : MinusValidOnFrames P φ) (F : TaskFrame) (hF : P F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : MinusTruthAt M τ t φ :=
-  h F hF M ⟨τ, hτ⟩ t
+  GenericValidOnFrames.apply_total (L := MinusFormula) (φ := φ) h F hF M τ hτ t
 
 /-- `MinusValidOnFrames.of_forall_total` at a `FrameClass` tag. The L⁻ mirror of
 `Semantics.ValidIn.of_forall_total`. -/
@@ -186,14 +193,14 @@ theorem MinusValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : MinusFo
     (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
            τ.IsTotal → ∀ t : F.Duration, MinusTruthAt M τ t φ) :
     MinusValidIn fc φ :=
-  MinusValidOnFrames.of_forall_total h
+  GenericValidIn.of_forall_total (L := MinusFormula) (φ := φ) h
 
 /-- `MinusValidOnFrames.apply_total` at a `FrameClass` tag. The L⁻ mirror of
 `Semantics.ValidIn.apply_total`. -/
 theorem MinusValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : MinusFormula}
     (h : MinusValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (t : F.Duration) : MinusTruthAt M τ t φ :=
-  MinusValidOnFrames.apply_total h F hF M τ hτ t
+  GenericValidIn.apply_total (L := MinusFormula) (φ := φ) h F hF M τ hτ t
 
 /--
 Validity over **dense** temporal orders, capturing the frame condition for L⁻'s density axiom
