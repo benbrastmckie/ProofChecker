@@ -1,25 +1,30 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/573_star_proof_theory_and_conservativity/reports/01_star-proof-theory-conservativity.md",
-      "summary": "Phase 0 gate for TM-star: machine-checked schema list for the time registers, the refutation of modal_future over StarFormula, the failure of both erasure routes, the conditional/contrapositive account of TM-plus conservativity, the unconditional L-subset-L-star conservative-extension row, and TM-star completeness recorded as unreachable with its obstruction named."
+      "type": "plan",
+      "path": "specs/573_star_proof_theory_and_conservativity/plans/01_star-proof-theory-conservativity.md",
+      "summary": "9-phase plan building TM-star (StarAxiom via ofBase + 16 register schemata, StarDerivationTree with the notation for star-derivability), its soundness, the TM-plus embedding, and the conservativity trio, with TM-star completeness recorded as OPEN under two named obstructions."
     }
   ],
-  "user_decision": {
-    "question": "Should StarAxiom embed the TM-plus axiom set via a single ofBase constructor (TM schemata available only at register-free instances), or re-declare all 45 TM schemata over StarFormula (every instance available, but ~45 direct validity plus swap-validity proofs because atomization cannot exist for L-star)?",
-    "options": [
-      "ofBase embedding - Phase 2 soundness for the TM block is two lines; TM temporal schemata hold only at register-free instances",
-      "Full re-declaration over StarFormula - every schema instance available; costs roughly 45 direct validity and 45 swap-validity proofs over StarTruthAt, i.e. several extra phases"
-    ],
-    "recommended": "ofBase embedding - Phase 2 soundness for the TM block is two lines; TM temporal schemata hold only at register-free instances",
-    "blocking": false
-  },
+  "next_steps": "Run /implement 573 to execute the plan",
+  "phase_count": 9,
+  "estimated_hours": 14,
+  "dependency_waves": [[1, 2, 3], [4, 6], [5, 7], [8], [9]],
+  "memory_candidates": [
+    {
+      "content": "When extending a formal language in the BimodalLogic tree (L-minus -> L -> L-plus -> L-star), the decisive planning question is which existing schema proofs consume a TRANSPORT lemma (timeShift, atomization, state-determinacy) rather than being definitional. Grep the soundness module for the transport lemma's consumers first: in the TM block, modal_future is the SOLE timeShift consumer, and it is exactly the one schema that fails to transfer to StarFormula. That single grep decides whether the extension's axiom set can be embedded wholesale via a single ofBase constructor (soundness for the whole inherited block becomes a two-line transport along the validity-transfer lemma) or must be re-declared schema by schema (N direct validity plus N swap-validity proofs). The embedding choice also determines whether auxiliary predicates (purity, free-variable/register predicates) are needed at all: under an ofBase embedding they are not, because the inherited constructors carry their side conditions on the SOURCE language's formulas.",
+      "category": "PATTERN",
+      "source_artifact": "specs/573_star_proof_theory_and_conservativity/plans/01_star-proof-theory-conservativity.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["language-extension", "proof-system-embedding", "transport-lemma", "soundness-transfer", "phase-sizing", "lean4"]
+    }
+  ],
   "metadata": {
     "session_id": "sess_1788934264_dea312_573",
-    "agent_type": "lean-research-agent",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  },
+  "dispatch_seq": 6
 }
