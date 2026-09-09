@@ -9,6 +9,8 @@ import FormalSystem.Metalogic.Deterministic.Erasure
 import FormalSystem.Metalogic.Deterministic.Engines
 import FormalSystem.Metalogic.Deterministic.System
 import FormalSystem.Metalogic.Deterministic.Soundness
+import FormalSystem.Metalogic.Deterministic.Collapse
+import FormalSystem.Metalogic.Deterministic.Completeness
 
 /-!
 # `Metalogic/Deterministic/` — the deterministic metatheory of TM⁺

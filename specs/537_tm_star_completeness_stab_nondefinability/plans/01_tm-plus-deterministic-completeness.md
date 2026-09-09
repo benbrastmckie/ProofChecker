@@ -404,19 +404,19 @@ coincidence corollary the manuscript needs.
 
 ---
 
-### Phase 8: The syntactic collapse in TM⁺ + Determined [NOT STARTED]
+### Phase 8: The syntactic collapse in TM⁺ + Determined [COMPLETED]
 
 **Goal**: Prove that the extended system derives the equivalence of every `PlusFormula` with its
 erasure — the step that converts a TM derivation of the erasure into a derivation of the original.
 
 **Tasks**:
-- [ ] Prove ⊡-congruence in the extended system: from a derivation of `φ ↔ ψ`, derive
+- [x] Prove ⊡-congruence in the extended system: from a derivation of `φ ↔ ψ`, derive
       `⊡φ ↔ ⊡ψ`, using the derived ⊡-necessitation rule and `stab_k`
-- [ ] Import the `imp`, `box`, `untl` and `snce` congruence schemata at `PlusFormula` arguments
-      through Phase 5's substitution transfer, then through Phase 6's `ofPlus` embedding
-- [ ] Prove `detDerivable_iff_erasePlus : DetDerivable fc [] (φ.iff (ofFormula (erasePlus φ)))`
+- [x] Import the `imp`, `box`, `untl` and `snce` congruence schemata at `PlusFormula` arguments
+      through Phase 5's substitution transfer, then through Phase 6's `ofPlus` embedding *(deviation: altered — only the PROPOSITIONAL glue needed the substitution transfer: `box`, `untl` and `snce` congruence are built directly from `PlusAxiom.modal_k_dist`, `.left_mono_until_G`, `.right_mono_until`, `.left_mono_since_H`, `.right_mono_since`, which are already stated at arbitrary `PlusFormula` arguments)*
+- [x] Prove `detDerivable_iff_erasePlus : DetDerivable fc [] (φ.iff (ofFormula (erasePlus φ)))`
       by induction on `φ`, the `stab` case using `determined` and `stab_t` for the two directions
-- [ ] Derive the transport lemma: a TM derivation of `erasePlus φ` yields a `DetDerivable`
+- [x] Derive the transport lemma: a TM derivation of `erasePlus φ` yields a `DetDerivable`
       derivation of `φ`, via `PlusAxiom.ofTM`, `ofPlus`, and the equivalence
 
 **Timing**: 2 hours
@@ -425,7 +425,10 @@ erasure — the step that converts a TM derivation of the erasure into a derivat
 
 **Verification Tier**: local
 
-**Scope Hypothesis**: this phase asserts that four congruence schemata plus ⊡-congruence suffice
+**Scope Hypothesis** (reconciled at implementation time: confirmed — four congruence rules plus
+`detStabIff` closed all seven constructors, with SIX imported propositional theorems as the glue
+(`identity`, `bCombinator`, `theoremFlip`, `biImp`, `lceImp`, `rceImp`) and no new TM-side
+schema needed): this phase asserts that four congruence schemata plus ⊡-congruence suffice
 for the induction. Confirm by attempting the induction skeleton first with all cases `sorry`-free
 except the congruence appeals, listing exactly which schemata the goals demand, and only then
 discharging them; if a fifth is needed, add it on the TM side and note the deviation.
@@ -439,24 +442,24 @@ discharging them; if a fifth is needed, add it on the TM side and note the devia
 
 ---
 
-### Phase 9: Deterministic completeness and the coincidence corollary [NOT STARTED]
+### Phase 9: Deterministic completeness and the coincidence corollary [COMPLETED]
 
 **Goal**: Land the headline theorems and the manuscript-facing corollary.
 
 **Tasks**:
-- [ ] `detCompletenessBase`, `detCompletenessDense`, `detCompletenessZTime`,
+- [x] `detCompletenessBase`, `detCompletenessDense`, `detCompletenessZTime`,
       `detCompletenessRTime`: deterministic L⁺-validity gives extended-system derivability, by
       composing Phase 4's semantic collapse, Phase 3's narrowed engine and Phase 8's transport
-- [ ] `logicDeterministicEqDeterminedValid`: at each class, validity over the deterministic frames
+- [x] `logicDeterministicEqDeterminedValid`: at each class, validity over the deterministic frames
       and validity over the Determined-valid frames coincide — `⇐` by the inclusion, `⇒` by
       completeness then Phase 7's soundness
-- [ ] Corollary that the result transfers to every frame class between the deterministic frames
+- [x] Corollary that the result transfers to every frame class between the deterministic frames
       and the Determined-valid frames
-- [ ] Docstrings: state the theorem as completeness over `TaskFrame.Deterministic`; cite
+- [x] Docstrings: state the theorem as completeness over `TaskFrame.Deterministic`; cite
       `deterministic_not_plusDefinable` for why *Determined* axiomatizes without defining; state
       explicitly that this is the ⊡ = identity special case that any nondeterministic result must
       specialize to
-- [ ] Add the `#print axioms` audit block in the house style
+- [x] Add the `#print axioms` audit block in the house style
 
 **Timing**: 1.5 hours
 

@@ -160,4 +160,14 @@ theorem derivable_of_validDetRTime (φ : Formula) (h_valid : ValidDetIn FrameCla
   exact h_not_true (ValidDetIn.apply_total h_valid F.toTaskFrame
     ⟨inferInstance, real_lub_of_bddAbove⟩ hdet TM τ h_tot t)
 
+/-- The four rows as one statement, by cases on the frame-class tag: `FrameClass` has exactly the
+four constructors, so no class is left out. -/
+theorem derivable_of_validDet (fc : FrameClass) (φ : Formula) (h : ValidDetIn fc φ) :
+    Derivable fc [] φ := by
+  cases fc with
+  | Base => exact derivable_of_validDetBase φ h
+  | Dense => exact derivable_of_validDetDense φ h
+  | ZTime => exact derivable_of_validDetZTime φ h
+  | RTime => exact derivable_of_validDetRTime φ h
+
 end FormalSystem.Metalogic.Deterministic
