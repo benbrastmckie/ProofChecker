@@ -53,7 +53,7 @@
     {
       "project_number": 575,
       "project_name": "plus_state_locality_fragment",
-      "status": "planning",
+      "status": "planned",
       "task_type": "lean4",
       "description": "Lift the state-locality fragment to L-plus and retire the atom-restricted stability lemma. GROUND TRUTH: FormalSystem/Semantics/StarStateLocal.lean carries a fully systematic treatment of state-locality for L-star -- the syntactic predicate `StarFormula.StateLocal` by structural recursion over all nine constructors, the semantic property `IsStateLocal`, the soundness induction `isStateLocal_of_stateLocal`, three countermodel exclusions (`not_isStateLocal_someFuture`/`_somePast`/`_timeRecall`), and the headline `stateLocal_starValid_iff_stab`. Notably `isStateLocal_box` is `Iff.rfl` and `stab` is unconditional via `sameStateAt_congr_left`, so the fragment admits box-phi and stab-phi at ARBITRARY phi -- strictly wider than an \"every subformula is state-local\" reading.\n\nL-plus has no such fragment. It has `stab_state_only` (Semantics/PlusTruth.lean:385) in a different-times shape, plus the ad hoc atom-level consequence `stab_atom_of_atom`. The work that built the L-star fragment identified `stab_atom_of_atom` as the genuine near-miss and excluded it on TERRITORY grounds only, not mathematical ones. The result is that one concept now exists in three incompatible shapes across the tower -- `stab_state_only` (L-plus), `c_stab_state_only` (Metalogic/Independence/CoarsenedModels.lean:325), and the L-star fragment -- and is systematic at exactly one of them.\n\nThe L-plus case is STRICTLY EASIER than the case already solved: with no registers, `timeRecall` -- the hardest exclusion -- does not arise, and only `untl`/`snce` should need countermodels.\n\nDELIVERABLES, each phase one agent run with lake build green and no new sorry: (1) `PlusFormula.StateLocal` by structural recursion over all seven constructors, in a new module, named for the property it denotes and not for the theorem that consumes it. Determine BY PROOF which constructors preserve state-locality rather than assuming: `atom`/`bot`/`imp` expected to preserve it, `stab` and `box` expected UNCONDITIONALLY (mirroring `isStateLocal_box`), `untl`/`snce` expected not to. Settle `box` by proof; if it fails here despite holding for L-star, that is a significant finding -- exclude it and record the countermodel. (2) The semantic property and its soundness induction, mirroring StarStateLocal.lean's shape arm for arm so the two modules are structurally comparable rather than merely analogous. (3) Countermodel exclusions for whatever fails. (4) The headline biconditional phi iff stab-phi on the fragment, mirroring `stateLocal_starValid_iff_stab`. (5) RETIRE `stab_atom_of_atom`: generalize it in place, delete the atom-restricted statement, never keep both. Then survey every other atom-restricted statement reachable from PlusTruth.lean and widen each one the new result actually covers -- rather than widening only the headline. (6) RELATE THE THREE NOTIONS EXPLICITLY, which is the deliverable that makes the tower systematic rather than merely parallel: the new module's docstring must state how `PlusFormula.StateLocal` relates to `StarFormula.StateLocal` along `ofPlus` (expected: `ofPlus` preserves it) and how both relate to `c_stab_state_only`. If a transfer lemma along `ofPlus` is provable, prove it; if it is not, record the specific obstruction.\n\nHARD CONSTRAINTS: MUST NOT break the atomization route -- `stab_state_only` is consumed by Metalogic/Conservativity/Plus/Atomization.lean, and generalizing it must not weaken what that consumer needs; verify this explicitly rather than assuming. Never restate a theorem under its old name in weakened form (.claude/rules/plan-compliance.md). Never argue by uniform substitution -- it is unsound in this setting and Metalogic/Independence/DeterminismUndefinable.lean records why. No `sorry`; `lake build` green and `scripts/check-module-invariants.sh` exit 0; no task numbers under FormalSystem/. TERRITORY: Semantics/PlusTruth.lean, a new state-locality module under Semantics/, Semantics/README.md. Does NOT touch StarLanguage/ or StarStateLocal.lean.",
       "topic": "semantics",
@@ -65,8 +65,15 @@
       ],
       "priority": "high",
       "created": "2026-09-09T11:48:18Z",
-      "last_updated": "2026-09-09T11:53:44Z",
-      "session_id": "sess_1788954800_f0042b_575"
+      "last_updated": "2026-09-09T12:03:49Z",
+      "session_id": "sess_1788954800_f0042b",
+      "artifacts": [
+        {
+          "path": "specs/575_plus_state_locality_fragment/plans/01_plus-state-locality-fragment.md",
+          "type": "plan",
+          "summary": "8-phase plan lifting the state-locality fragment to L-plus, retiring stab_atom_of_atom, and relating the three notions across the tower."
+        }
+      ]
     },
     {
       "project_number": 574,

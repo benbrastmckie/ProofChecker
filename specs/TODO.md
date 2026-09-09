@@ -111,7 +111,7 @@ next_project_number: 578
 
 ### Semantics
 
-575 [PLANNING] — Lift the state-locality fragment to L-plus and retire the atom-re
+575 [PLANNED] — Lift the state-locality fragment to L-plus and retire the atom-re
 
 ### Infrastructure
 
@@ -154,10 +154,11 @@ HARD CONSTRAINTS: no `sorry` -- an unreachable result is recorded as a reasoned 
 ---
 
 ### 575. Plus state locality fragment
-- **Status**: [PLANNING]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: semantics
 - **Dependencies**: None
+- **Plan**: [575_plus_state_locality_fragment/plans/01_plus-state-locality-fragment.md]
 
 **Description**: Lift the state-locality fragment to L-plus and retire the atom-restricted stability lemma. GROUND TRUTH: FormalSystem/Semantics/StarStateLocal.lean carries a fully systematic treatment of state-locality for L-star -- the syntactic predicate `StarFormula.StateLocal` by structural recursion over all nine constructors, the semantic property `IsStateLocal`, the soundness induction `isStateLocal_of_stateLocal`, three countermodel exclusions (`not_isStateLocal_someFuture`/`_somePast`/`_timeRecall`), and the headline `stateLocal_starValid_iff_stab`. Notably `isStateLocal_box` is `Iff.rfl` and `stab` is unconditional via `sameStateAt_congr_left`, so the fragment admits box-phi and stab-phi at ARBITRARY phi -- strictly wider than an "every subformula is state-local" reading.
 
