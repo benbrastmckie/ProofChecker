@@ -16,6 +16,7 @@ import FormalSystem.Metalogic.Independence.DriftHistories
 import FormalSystem.Metalogic.Independence.OrderTransfer
 import FormalSystem.Metalogic.Independence.StateSetTruth
 import FormalSystem.Metalogic.Independence.DeterminismUndefinable
+import FormalSystem.Metalogic.Independence.StabUndefinable
 
 /-!
 # Independence results

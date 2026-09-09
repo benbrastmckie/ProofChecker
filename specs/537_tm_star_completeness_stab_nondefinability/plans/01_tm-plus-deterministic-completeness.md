@@ -478,28 +478,24 @@ discharging them; if a fifth is needed, add it on the TM side and note the devia
 
 ---
 
-### Phase 10: Non-definability of the stability modal [NOT STARTED]
+### Phase 10: Non-definability of the stability modal [COMPLETED]
 
 **Goal**: Land `stabNotDefinable` — no `Formula` is equivalent to `⊡Fp` over all task models —
 by transcribing 535 §6.2's two models and relating them with the tree's own `TruthCorr`.
 
 **Tasks**:
-- [ ] Build `M₁`: the permissive two-state frame (the `natFrame` shape) over ℤ with the atom true
-      at exactly one state
-- [ ] Build `M₂`: the three-state frame of 535 §6.2, discharging the six `FrameOver` fields with
-      the same idiom `Metalogic/Independence/DriftFrame.lean` uses — Compositionality from
-      `R ∘ R = R` via `comp_of` (note that `TaskFrame.Compositional` is guarded by `0 ≤ x` and
-      `0 ≤ y`, so only the nonnegative composition needs checking), Seriality from reflexivity
-      plus predecessors, *Limit* from `limit_of_succOrder`, *Saturation* from
-      `saturation_of_finite`, converse by definition
-- [ ] Build the `TruthCorr` between them: `Rel σ σ'` iff the two histories agree on every atom at
+- [x] Build `M₁`: the permissive two-state frame (the `natFrame` shape) over ℤ with the atom true
+      at exactly one state *(deviation: altered — `NF`/`natHist`/`natModel` already exist in `Semantics/PlusNonValidities.lean` and are reused verbatim, so no frame was built)*
+- [x] Build `M₂`: the three-state frame of 535 §6.2, discharging the six `FrameOver` fields with
+      the same idiom `Metalogic/Independence/DriftFrame.lean` uses *(deviation: altered — `M₂` is `multiFamTaskFrameGen` at family index `ℤ → ℕ`, whose six `FrameOver` fields are already discharged; no new frame was constructed, and the uniqueness-of-history property is 536's `stab_iff_of_deterministic` at `multiFamTaskFrameGen_deterministic` rather than a hand-checked three-state case analysis. The separation is the same one 535 §6.2 describes: same atom profiles, different state-sharing at time 0.)*
+- [x] Build the `TruthCorr` between them: `Rel σ σ'` iff the two histories agree on every atom at
       every time; atom harmony by definition; `total_fwd`/`total_bwd` because both models realize
       exactly the same atom profiles; `dur := .refl`
-- [ ] Evaluate `⊡Fp` at `(const u, 0)`: true in `M₂` (unique history through `u`), false in `M₁`
+- [x] Evaluate `⊡Fp` at `(const u, 0)`: true in `M₂` (unique history through `u`), false in `M₁`
       (the history that leaves `u` after time 0); confirm `□Fp` false in both
-- [ ] Conclude `stabNotDefinable` via `truthAt_of_truthCorr`, mirroring
+- [x] Conclude `stabNotDefinable` via `truthAt_of_truthCorr`, mirroring
       `deterministic_not_plusDefinable`'s elimination-by-indistinguishability shape
-- [ ] Docstring: the invariance notion is the tree's own `TruthCorr`; no new bisimulation
+- [x] Docstring: the invariance notion is the tree's own `TruthCorr`; no new bisimulation
       machinery is introduced, and the separation is temporal (atomic separators are ruled out by
       the AS axiom)
 
