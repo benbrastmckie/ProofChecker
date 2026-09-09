@@ -20,6 +20,8 @@ import FormalSystem.Metalogic.Independence.StabUndefinable
 import FormalSystem.Metalogic.Independence.NaiveSystem
 import FormalSystem.Metalogic.Independence.CoarsenedModels
 import FormalSystem.Metalogic.Independence.PastingIndependence
+import FormalSystem.Metalogic.Independence.StarDiscrimination
+import FormalSystem.Metalogic.Independence.ForwardDeterministicFrame
 
 /-!
 # Independence results

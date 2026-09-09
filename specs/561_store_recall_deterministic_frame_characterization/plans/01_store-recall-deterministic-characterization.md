@@ -1,7 +1,7 @@
 # Implementation Plan: Task #561 — the characterization theorem for the deterministic task frames
 
 - **Task**: 561 - Store/recall and the characterization theorem for the deterministic task frames
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 21 hours (core, Phases 1-14) plus 2 hours optional (Phase 15)
 - **Dependencies**: None. Independent of 537 (deterministic completeness) and of 559/560
   (nondeterministic completeness); must not wait on them.
@@ -168,7 +168,7 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 1: `lem:deterministic-singleton` as a biconditional [NOT STARTED]
+### Phase 1: `lem:deterministic-singleton` as a biconditional [COMPLETED]
 
 **Goal**: Land the (⇐) half — `⟨τ⟩_x = {τ}` for every `τ, x` implies `Deterministic` — via
 `thm:extension`, and package it with the existing (⇒) half as one biconditional, without touching
@@ -186,6 +186,10 @@ Phases within the same wave can execute in parallel.
 - [ ] Prove `deterministic_of_singletonClasses`. Route: `deterministic_iff`; given `w ⇒_x u` and
       `w ⇒_x v`, split on `x = 0` (`F.nullity_identity` closes it outright — the paper's
       *Limit* + `lem:nullity` Step 1 is unnecessary here, record the deviation) and `x ≠ 0`
+      *(deviation: altered — the paper's Step 1, deriving `⇒_0 = id` from *Limit* plus
+      `lem:nullity`, is **not transcribed**: `FrameOver.nullity_identity` is a structure field,
+      so the `x = 0` branch closes on it outright. Recorded in the module docstring, as the plan
+      directed.)*
       (build the two-point `PartialHistory` on the non-convex domain `fun t => t = 0 ∨ t = x`
       with `states t _ := if t = x then u else w`, discharging `respects_task` in four cases —
       `nullity_identity` twice, the hypothesis once, and `F.converse` once; extend both by
@@ -216,7 +220,7 @@ Phases within the same wave can execute in parallel.
 
 ---
 
-### Phase 2: `StarFormula` and the `StarLanguage/` component [NOT STARTED]
+### Phase 2: `StarFormula` and the `StarLanguage/` component [COMPLETED]
 
 **Goal**: Land the L⋆ formula type — L⁺ plus `timeStore i` and `timeRecall i` for `i : ℕ` — as a
 separate inductive with a constructor-to-constructor embedding from `PlusFormula`, following the
@@ -268,7 +272,7 @@ any operator deliberately not mirrored.
 
 ---
 
-### Phase 3: `StarTruthAt` over points `(τ, x, v⃗)` [NOT STARTED]
+### Phase 3: `StarTruthAt` over points `(τ, x, v⃗)` [COMPLETED]
 
 **Goal**: Land the truth recursion for L⋆ over the manuscript's `def:BLstar-semantics` point with
 world registers suppressed, plus the clause lemmas and the embedding's truth transfer.
@@ -307,7 +311,7 @@ world registers suppressed, plus the clause lemmas and the embedding's truth tra
 
 ---
 
-### Phase 4: the transport layer — congruence and vector-shifted time shift [NOT STARTED]
+### Phase 4: the transport layer — congruence and vector-shifted time shift [COMPLETED]
 
 **Goal**: Restate the two transport lemmas 536's report 02 §II.3 flagged as breaking, in the forms
 that survive time registers.
@@ -317,7 +321,11 @@ that survive time registers.
       `Function.update v i t` shifted pointwise by `Δ` equals `Function.update (fun j => v j + Δ) i (t + Δ)`.
 - [ ] Prove `star_truth_congr_ext`: the L⋆ analogue of `truth_congr_ext`, transporting truth
       between two total histories agreeing pointwise on states, at a fixed `v`.
-- [ ] Prove `starTruthAt_timeShift`:
+- [x] Prove `starTruthAt_timeShift`: *(deviation: altered — the pinned Challenge statement's
+      totality hypothesis `hσ : σ.IsTotal` is **dropped**, which strengthens the lemma. It is
+      unused: the `box` and `stab` cases apply totality to the quantified history `ρ`, never to
+      `σ`, exactly as `plusTruthAt_timeShift` — which likewise takes no totality hypothesis —
+      does. Recorded in the lemma's own docstring.)*
       `StarTruthAt M (σ.timeShift Δ) t v φ ↔ StarTruthAt M σ (t + Δ) (fun i => v i + Δ) φ`,
       following `plusTruthAt_timeShift`'s proof shape (the `box` and `stab` cases need the inverse
       shift plus `star_truth_congr_ext`); the `timeStore` case consumes the helper above, the
@@ -342,7 +350,7 @@ that survive time registers.
 
 ---
 
-### Phase 5: L⋆ validity, `sent:det`, and the `(∗)` unfolding chain [NOT STARTED]
+### Phase 5: L⋆ validity, `sent:det`, and the `(∗)` unfolding chain [COMPLETED]
 
 **Goal**: Land validity for L⋆ (quantifying over stored-time vectors, as `def:frame-validity`
 requires once `v⃗` is a parameter of the point), the sentence `sent:det`, and the paper's `(∗)`
@@ -355,10 +363,16 @@ biconditional chain as a reusable lemma.
       `StarValidIn`, `StarValid`, and the `mono` lemmas.
 - [ ] Prove `starValidOn_ofPlus`-shaped transfer: `F.StarValidOn (ofPlus φ) ↔ F.PlusValidOn φ`,
       from `starTruthAt_ofPlus`.
-- [ ] Define `sentDet (φ : StarFormula) : StarFormula` as
+- [x] Define `sentDet (φ : StarFormula) : StarFormula` as
       `timeStore 1 (someFuture (timeStore 2 (timeRecall 1 (or (stab (timeRecall 2 φ.neg)) (stab (timeRecall 2 φ))))))`,
       transcribing `sent:det` exactly. Record the register indices used (`1` and `2`) and that
-      `someFuture` is the tree's `F`.
+      `someFuture` is the tree's `F`. *(deviation: altered — `allFuture`, not `someFuture`. The
+      manuscript defines `\Future` in its preamble as a **boxed** `F` (universal future), and
+      `app:deterministic-future`'s `(∗)` chain reads "for all `y > x`". This phase's own Scope
+      Hypothesis provided for exactly this: "if the display differs, the definition follows the
+      manuscript and this line is superseded." Recorded in `StarValidity.lean`'s docstring. The
+      plan's pinned `sentDet_unfold` Challenge statement — a `∀ y, x < y → …` — already agreed
+      with the manuscript, so the Challenge section needed no change.)*
 - [ ] Prove `sentDet_unfold`, the paper's `(∗)`: truth of `sentDet φ` at `(τ, x, v)` is equivalent
       to `∀ y > x`, the disjunction `stab (timeRecall 2 φ.neg) ∨ stab (timeRecall 2 φ)` holding at
       `(τ, x, Function.update (Function.update v 1 x) 2 y)`. Four rewrite steps, one per line of
@@ -387,7 +401,7 @@ if the display differs, the definition follows the manuscript and this line is s
 
 ---
 
-### Phase 6: `app:deterministic-future`, positive half [NOT STARTED]
+### Phase 6: `app:deterministic-future`, positive half [COMPLETED]
 
 **Goal**: `sentDet φ` is valid over every `TaskFrame.Deterministic` frame, for every
 `StarFormula φ`, consuming `states_eq_of_deterministic` rather than re-deriving the collapse.
@@ -424,7 +438,7 @@ if the display differs, the definition follows the manuscript and this line is s
 
 ---
 
-### Phase 7: `app:deterministic-future`, negative half [NOT STARTED]
+### Phase 7: `app:deterministic-future`, negative half [COMPLETED]
 
 **Goal**: Refute `sentDet` over a non-deterministic frame, reusing the tree's existing countermodel
 for `app:deterministic` — which is what the paper's own proof does.
@@ -460,7 +474,7 @@ for `app:deterministic` — which is what the paper's own proof does.
 
 ---
 
-### Phase 8: the discrimination footnote — `F°` refutes `sent:det`, `F¹` validates it [NOT STARTED]
+### Phase 8: the discrimination footnote — `F°` refutes `sent:det`, `F¹` validates it [COMPLETED]
 
 **Goal**: Land the live-text footnote following `app:deterministic-future`: store/recall
 discriminate `F°` from `F¹`, which `cor:no-characterization` shows nothing without them can.
@@ -500,7 +514,7 @@ discriminate `F°` from `F¹`, which `cor:no-characterization` shows nothing wit
 
 ---
 
-### Phase 9: `Det-pm`, and its validity over the deterministic frames [NOT STARTED]
+### Phase 9: `Det-pm`, and its validity over the deterministic frames [COMPLETED]
 
 **Goal**: Define `Det-pm` — `sent:det` with `\Future` replaced by `always` — and land the (⇐)
 direction of Theorem C from Phase 6's engine.
@@ -537,7 +551,7 @@ direction of Theorem C from Phase 6's engine.
 
 ---
 
-### Phase 10: Theorem C, `Det-pm` half — `Det-pm` defines the deterministic frames [NOT STARTED]
+### Phase 10: Theorem C, `Det-pm` half — `Det-pm` defines the deterministic frames [COMPLETED]
 
 **Goal**: The (⇒) direction and the definability biconditional: `F.StarValidOn (detPM p)` iff
 `F.Deterministic`.
@@ -574,7 +588,7 @@ direction of Theorem C from Phase 6's engine.
 
 ---
 
-### Phase 11: the finite-fibres *Saturation* helper [NOT STARTED]
+### Phase 11: the finite-fibres *Saturation* helper [COMPLETED]
 
 **Goal**: Land `TaskFrame.saturation_of_fib_finite` — the helper 536 flagged as possibly
 nonexistent — beside its subsingleton sibling, unblocking `F^N`.
@@ -610,7 +624,7 @@ nonexistent — beside its subsingleton sibling, unblocking `F^N`.
 
 ---
 
-### Phase 12: `ForwardDeterministic` and the separating frame `F^N` [NOT STARTED]
+### Phase 12: `ForwardDeterministic` and the separating frame `F^N` [COMPLETED]
 
 **Goal**: State the forward-deterministic predicate and build the frame `F^N` — `W = ℕ`, `D = ℤ`,
 `f(0) = 0`, `f(n) = n - 1`, `w ⇒_n u` iff `u = f^n(w)` for `n ≥ 0`, extended by the converse
@@ -661,7 +675,7 @@ after Phase 11's helper is in hand, close this phase `[COMPLETED WITH EXCLUSIONS
 
 ---
 
-### Phase 13: `sent:det` defines only forward determinism [NOT STARTED]
+### Phase 13: `sent:det` defines only forward determinism [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Close deliverable (6): `sent:det` is valid over `F^N`, which is not `Deterministic` —
 so `sent:det` does not characterize the deterministic frames, only the forward-deterministic ones.
@@ -671,8 +685,11 @@ so `sent:det` does not characterize the deterministic frames, only the forward-d
       histories agreeing at `x` agree at every `y ≥ x`. This is `states_eq_of_deterministic`'s
       proof with the duration `y - x` now nonnegative, which is exactly the instance the guarded
       binder supports.
-- [ ] Prove `fn_sentDet : ∀ φ, FN.StarValidOn (sentDet φ)` from that engine plus `sentDet_unfold`
+- [x] Prove `fn_sentDet : ∀ φ, FN.StarValidOn (sentDet φ)` from that engine plus `sentDet_unfold`
       (whose `∀ y > x` restriction is what makes the forward engine sufficient).
+      *(deviation: altered — landed as `fn_sentDet_atom (p : Atom)`, at a **sentence letter**.
+      The recorded schematic statement is **false**, and `fn_refutes_sentDet_somePast` is the
+      machine-checked refutation. See the Reasoned Exclusions table below.)*
 - [ ] State the separation as a named result: `sentDet` is valid over `FN` while
       `¬ FN.Deterministic`, so no reading of `app:deterministic-future` may be strengthened to a
       characterization. Contrast it explicitly with Phase 10's `deterministic_starDefinable`,
@@ -692,12 +709,25 @@ so `sent:det` does not characterize the deterministic frames, only the forward-d
 
 **Verification**:
 - `lake build` green, no `sorry`
-- The separation result names both `fn_sentDet` and `fn_not_deterministic` in one statement, so a
-  reader cannot take either half alone for a characterization
+- The separation result names both `fn_sentDet_atom` and `fn_not_deterministic` in one statement
+  (`fn_separates`), so a reader cannot take either half alone for a characterization
+
+#### Reasoned Exclusions
+
+| Excluded item | Reason | Evidence |
+|---|---|---|
+| `fn_sentDet (φ : StarFormula) : FN.StarValidOn (sentDet φ)` — the schematic form pinned in `## Lean Challenge Statements` | **The recorded statement is false.** Forward determinism settles the future and says nothing about the past, so a past-looking instance distinguishes two possible worlds of the same stability class at a *future* time. `F^N`'s own witnesses `fnZeroHist ≡ 0` and `fnRampHist n = max(0, −n)` agree at `0` and differ at every negative time; with `\|p\| = {3}`, `P p` holds for the ramp world at time `1` and fails for the constant world, so both disjuncts of `settledDisj` fail at `(τ, 0, ·)` with register `2` holding `1`. | `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` (`Metalogic/Independence/ForwardDeterministicFrame.lean`) — Lean-checked refutations of the recorded statement, `lake build` green |
+| — replaced by | `fn_sentDet_atom (p : Atom) : FN.StarValidOn (sentDet (StarFormula.atom p))`, the sentence-letter form. This is what the ground-truth source actually claims: PossibleWorlds task 105 report 02 §3.2's Theorem A runs the singleton valuation `\|p\| = {τ(y)}`, so its statement is at the sentence-letter level throughout. Nothing in the source is contradicted; the plan generalised it one step too far. | `fn_sentDet_atom`, `fn_separates`, `fn_forwardDeterministic_not_singletonClasses` |
+
+**Raised for the user, not laundered.** Per `.claude/rules/plan-compliance.md`, a same-named
+weaker restatement is the defect this section exists to catch. The recorded statement is not
+weakened here — it is *disproved*, and the disproof is in the tree. Deliverable (6) of the
+dispatch ("`sent:det` defines only FORWARD determinism (separating frame `F^N`)") is delivered in
+full; only the plan's over-general Challenge line is excluded, with the refutation as evidence.
 
 ---
 
-### Phase 14: documentation, correspondence table, and the invariant gates [NOT STARTED]
+### Phase 14: documentation, correspondence table, and the invariant gates [COMPLETED]
 
 **Goal**: Every manuscript `\label` this task touches maps to a Lean name or an explicit
 exclusion, every new anchor is recorded, and the module-invariant script is green.
@@ -751,7 +781,7 @@ correspondence table rather than silently dropped.
 
 ---
 
-### Phase 15: OPTIONAL — `Det-m` with a single world register [NOT STARTED]
+### Phase 15: OPTIONAL — `Det-m` with a single world register [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Optional and last. Add a single world register `μ` to the evaluation point and land
 Theorem C's `Det-m` half, per 536 report 02 §II.1.
@@ -780,6 +810,12 @@ Theorem C's `Det-m` half, per 536 report 02 §II.1.
 - If not attempted, close as `[COMPLETED WITH EXCLUSIONS]` with a one-row
   `#### Reasoned Exclusions` table recording that the phase was declared optional at plan time and
   that every committed deliverable landed without it
+
+#### Reasoned Exclusions
+
+| Excluded item | Reason | Evidence |
+|---|---|---|
+| World registers `↑_M`/`↓_M`, `detM`, and the two-component-point restatement of `star_truth_congr_ext` | Declared **optional and last** at plan time (dispatch deliverable 7, "OPTIONAL: Det-m with a single world register"), and deliberately excluded from the plan's Goals and Challenge identifier sets. Every committed deliverable (1)-(6) landed without it. | Goals section of this plan lists no `Det-m` identifier; `FormalSystem/StarLanguage/README.md`'s correspondence table records `Det-m` and the world-register clauses of `def:BLstar-semantics` as explicit exclusions with reasons |
 
 ---
 

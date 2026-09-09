@@ -36,6 +36,11 @@ import FormalSystem.Semantics.PlusValidity
 import FormalSystem.Semantics.PlusPasting
 import FormalSystem.Semantics.PlusNonValidities
 import FormalSystem.Semantics.PlusDeterminism
+import FormalSystem.Semantics.DeterministicBridge
+import FormalSystem.Semantics.StarTruth
+import FormalSystem.Semantics.StarValidity
+import FormalSystem.Semantics.StarDeterminism
+import FormalSystem.Semantics.StarNonValidities
 import FormalSystem.Semantics.DurationClassification
 import FormalSystem.Semantics.LexCarrier
 import FormalSystem.Semantics.IntTransfer

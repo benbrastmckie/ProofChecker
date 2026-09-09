@@ -30,6 +30,8 @@ field rather than as an index (see `Semantics/TaskFrame.lean`'s module docstring
   `FrameClass.ZTime` actually admits axioms for
 - `TaskFrame.IsComplete` — `def:frame-properties`' Complete clause
 - `TaskFrame.IsRTime` — dense *and* complete: `cor:tm-completeness`'s TM_r target
+- `TaskFrame.ForwardDeterministic` — `Deterministic` with the duration binder guarded by
+  `0 ≤ d`; strictly weaker, and introduced only to name what `sent:det` defines
 - `TaskFrame.Deterministic` — `def:deterministic`: every fibre of the task relation is a
   subsingleton, the frame condition the stability modal `⊡` collapses over
 
@@ -294,6 +296,39 @@ anything else. -/
 theorem saturation_of_deterministic {F : TaskFrame} (h : F.Deterministic) :
     TaskFrame.Saturation F.TaskRel :=
   TaskFrame.saturation_of_fib_subsingleton h
+
+/--
+**Forward determinism**: `Deterministic` with the duration binder guarded by `0 ≤ d`.
+
+Strictly weaker than `TaskFrame.Deterministic`, and introduced for **one purpose only**: to name
+what the manuscript's `sent:det` defines. `Deterministic`'s own docstring above explains at
+length why the *unrestricted* binder is the real notion — the guarded predicate does not support
+the singleton bridge, and `natFrame` over `ℤ` satisfies it while refuting the collapse. Nothing
+in this development substitutes this predicate for `Deterministic`, and no result stated of
+`Deterministic` may be weakened to it.
+
+The separation is witnessed, not merely asserted: `FN`
+(`Metalogic/Independence/ForwardDeterministicFrame.lean`) is forward-deterministic and **not**
+`Deterministic`, over the infinite carrier `ℕ`. That the witness must be infinite is itself a
+theorem-shaped fact — on a finite carrier *Seriality* makes each `⇒_x` (`x ≥ 0`) surjective and
+hence injective, so forward determinism already entails the backward direction there.
+-/
+def ForwardDeterministic (F : TaskFrame) : Prop :=
+  ∀ (w : F.WorldState) (d : F.Duration), 0 ≤ d → (TaskFrame.Fib F.TaskRel w d).Subsingleton
+
+/-- The pointwise form of `ForwardDeterministic`, mirroring `deterministic_iff`. -/
+theorem forwardDeterministic_iff (F : TaskFrame) :
+    F.ForwardDeterministic ↔
+      ∀ (w u v : F.WorldState) (x : F.Duration), 0 ≤ x →
+        F.TaskRel w x u → F.TaskRel w x v → u = v :=
+  ⟨fun h w _ _ x hx hu hv => h w x hx hu hv, fun h w x hx _ hu _ hv => h w _ _ x hx hu hv⟩
+
+/-- Determinism implies forward determinism: the guarded binder is an instance of the
+unrestricted one. The converse is **false**, and `fn_not_deterministic`
+(`Metalogic/Independence/ForwardDeterministicFrame.lean`) is the witness. -/
+theorem forwardDeterministic_of_deterministic {F : TaskFrame} (h : F.Deterministic) :
+    F.ForwardDeterministic :=
+  fun w d _ => h w d
 
 end TaskFrame
 

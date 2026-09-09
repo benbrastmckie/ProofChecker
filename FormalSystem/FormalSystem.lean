@@ -10,6 +10,7 @@ import FormalSystem.Syntax
 import FormalSystem.ProofSystem
 import FormalSystem.MinusLanguage
 import FormalSystem.PlusLanguage
+import FormalSystem.StarLanguage
 import FormalSystem.Semantics
 import FormalSystem.Metalogic
 import FormalSystem.Theorems

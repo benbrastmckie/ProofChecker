@@ -12,6 +12,7 @@ import Mathlib.Order.SuccPred.Basic
 import Mathlib.Data.Set.Lattice
 import Mathlib.Order.Minimal
 import Mathlib.Data.Fintype.Powerset
+import Mathlib.Data.Set.Card
 import FormalSystem.Semantics.TemporalOrder
 
 -- Lower semantic layer: must not reach the proof system (G-15). `FrameClassValidity.lean`
@@ -184,6 +185,10 @@ routes are `limit_of_succOrder` and `limit_of_shift` below.
   over any nontrivial duration type, dense included
 - `TaskFrame.exists_uniform_radius_of_finite`: on a finite carrier, *Limit* upgrades to a
   uniform positive radius around each state
+- `TaskFrame.saturation_of_fib_subsingleton`: *Saturation* from subsingleton fibres alone
+- `TaskFrame.saturation_of_fib_finite`: *Saturation* from **finite fibres** alone — the
+  finite-fibres variant of `cor:saturation-finite`, which reaches infinite carriers that
+  `saturation_of_finite` does not
 - Example task frames for testing and demonstrations (polymorphic over time type)
 
 ## Implementation Notes
@@ -1424,6 +1429,64 @@ theorem saturation_of_fib_subsingleton {W : Type} {R : W → D → W → Prop}
   rcases (hmem s hs).1 with ⟨w, x, rfl⟩ | ⟨w, v, x, y, _, _, rfl⟩
   · exact h w x
   · exact (h w x).anti Set.inter_subset_left
+
+omit [IsOrderedAddMonoid D] [Nontrivial D] in
+/-- *Saturation* (`def:frame#Saturation`) from **finite fibres** alone.
+
+The finite-*fibres* variant of `cor:saturation-finite`, which is the finite-*carrier* result
+(`saturation_of_finite` above) and does not apply when `W` is infinite. It sits strictly between
+its two neighbours: `saturation_of_fib_subsingleton` needs each fibre to have at most one
+element, and `saturation_of_finite` needs the whole carrier finite; this one needs only that each
+fibre is finite, which an infinite carrier can satisfy.
+
+Route, in the order the proof takes it:
+
+1. Every member of the family is finite. A fibre is finite by hypothesis; a segment is
+   `Fib R w x ∩ Fib R v (-y)`, a subset of a fibre, so `Set.Finite.subset` covers it. The
+   `IsFiber ∨ IsSegment` disjunct is used here and only here.
+2. The family has a member of least `Set.ncard`, by well-ordering of `ℕ` (`Nat.find`).
+3. Least cardinality upgrades to `⊆`-minimality: a member `T ⊆ Sstar` has
+   `Sstar.ncard ≤ T.ncard` by leastness, and `Set.eq_of_subset_of_ncard_le` at the finite
+   `Sstar` then forces `T = Sstar`.
+4. `sInter_nonempty_of_directed_of_minimal` — the constructive core, which depends on no axioms
+   at all — closes the goal from the minimal member.
+
+**Axiom dependence, honestly.** Only step 4 is axiom-free. Steps 1-3 produce the minimal member
+classically (`Nat.find` on a classically decidable predicate, and the `ncard` API), so this
+lemma is `Classical.choice`-dependent exactly as `saturation_of_finite` is, and for the same
+reason: the paper's "choice-free" is a ZF-vs-ZFC claim, which `#print axioms` has no vocabulary
+for (see `saturation_of_finite`'s obstruction note above). What *is* preserved, and what matters
+for the frames built on this helper, is the absence of **Zorn**: nothing here routes through
+`PartialHistory.exists_maximal_extension`.
+
+Its consumer is `FN` (`Metalogic/Independence/ForwardDeterministicFrame.lean`), whose carrier is
+`ℕ` — infinite, so `saturation_of_finite` does not reach it — and whose negative-duration fibres
+are genuinely non-subsingleton, so `saturation_of_fib_subsingleton` does not reach it either. -/
+theorem saturation_of_fib_finite {W : Type} {R : W → D → W → Prop}
+    (h : ∀ w x, (Fib R w x).Finite) : Saturation R := by
+  classical
+  intro S hdir hmem
+  obtain ⟨hne, hd⟩ := hdir
+  have hfin : ∀ s ∈ S, s.Finite := by
+    intro s hs
+    rcases (hmem s hs).1 with ⟨w, x, rfl⟩ | ⟨w, v, x, y, _, _, rfl⟩
+    · exact h w x
+    · exact Set.Finite.subset (h w x) Set.inter_subset_left
+  obtain ⟨s₀, hs₀⟩ := hne
+  have hex : ∃ n : ℕ, ∃ s ∈ S, Set.ncard s = n := ⟨Set.ncard s₀, s₀, hs₀, rfl⟩
+  obtain ⟨Sstar, hStarMem, hStarCard⟩ := Nat.find_spec hex
+  have hLeast : ∀ T ∈ S, Set.ncard Sstar ≤ Set.ncard T := by
+    intro T hT
+    rw [hStarCard]
+    exact Nat.find_le ⟨T, hT, rfl⟩
+  have hStarMin : ∀ ⦃T⦄, T ∈ S → T ⊆ Sstar → Sstar ⊆ T := by
+    intro T hT hsub
+    have heq : T = Sstar :=
+      Set.eq_of_subset_of_ncard_le hsub (hLeast T hT) (hfin Sstar hStarMem)
+    intro x hx
+    rw [heq]
+    exact hx
+  exact sInter_nonempty_of_directed_of_minimal hd (fun s hs => (hmem s hs).2) hStarMem hStarMin
 
 
 end TaskFrame

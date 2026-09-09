@@ -11,8 +11,11 @@ unary operator, the **stability modal** `⊡` (`def:BLstar-semantics`):
 `⊡φ` holds at `(τ, x)` iff `φ` holds at `(σ, x)` for every world `σ` sharing `τ`'s world state
 at `x`. L⁺ is therefore the **⊡-only fragment** of the manuscript's `\BL^\star`
 (`sub:Extension`), not a language the manuscript names: `\BL^\star` additionally carries the
-store/recall operators, which are **out of scope** here. Their time-register half is what this
-tree reserves the name L⋆ (`FormalSystem/StarLanguage/`) for.
+store/recall operators, which are **out of scope** here. Their time-register half is
+**L⋆**, which is built at `FormalSystem/StarLanguage/` — a separate inductive `StarFormula` with
+its own embedding `ofPlus : PlusFormula → StarFormula`, its semantics over the manuscript's
+points `(τ, x, v⃗)`, and the paper-label correspondence table for the deterministic-frame
+appendix. See `FormalSystem/StarLanguage/README.md`.
 
 L⁺ is a **separate inductive** (`PlusFormula`) with a constructor-to-constructor embedding
 `ofFormula : Formula → PlusFormula`, following the landed `MinusLanguage/` pattern
