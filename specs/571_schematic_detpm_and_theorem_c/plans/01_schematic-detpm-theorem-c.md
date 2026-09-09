@@ -1,12 +1,13 @@
 # Implementation Plan: Schematic `Det-pm` and Theorem C in its strongest form
 
 - **Task**: 571 - Remove the atom restriction from Det-pm and state Theorem C in its strongest form
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 4 hours
 - **Dependencies**: None
 - **Research Inputs**: None (no `research_path` supplied; the task description carries the ground
   truth and the codebase reads below confirm it — see "Opening assessment" in the Overview)
-- **Artifacts**: plans/01_schematic-detpm-theorem-c.md (this file)
+- **Artifacts**: plans/01_schematic-detpm-theorem-c.md (this file),
+  summaries/01_schematic-detpm-theorem-c-summary.md
 - **Standards**: plan-format.md, status-markers.md, artifact-management.md, tasks.md,
   .claude/rules/plan-compliance.md, .claude/rules/lean4.md,
   .claude/rules/no-task-references-in-deliverables.md
@@ -374,26 +375,26 @@ extend the phase's file list if the grep finds more.
 
 ---
 
-### Phase 5: Full gate [NOT STARTED]
+### Phase 5: Full gate [COMPLETED]
 
 **Goal**: The repository's complete gate set is green and every acceptance criterion in the task
 description is checked off against measured output.
 
 **Tasks**:
-- [ ] `lake build` — exit 0.
-- [ ] `lake build BimodalTest` — exit 0.
-- [ ] `bash scripts/check-module-invariants.sh` — exit 0. Read the C2 and C14 lines specifically:
+- [x] `lake build` — exit 0.
+- [x] `lake build BimodalTest` — exit 0.
+- [x] `bash scripts/check-module-invariants.sh` — exit 0. Read the C2 and C14 lines specifically:
       both are expected to PASS untouched. If either reports divergence, update the pinned
       **name** only and never its axiom set; a changed axiom set is a hard stop that must be
-      escalated, not rebaselined.
-- [ ] Confirm C3 (zero structural `sorry`) and C9 (zero task-number citations under
+      escalated, not rebaselined. *(deviation: altered — the first run exited 1 on `FAIL INV: 1 file(s) carry a stale generated inventory block: README.md`, the root README's `Live lines` figure gone stale from this task's added lines. Fixed with the check's own prescribed `--emit-inventory` regeneration, a one-line change 289,384 → 289,434. The rerun reports ALL CHECKS PASSED, exit 0. No axiom baseline was touched; C2 and C14 PASS untouched as anticipated.)*
+- [x] Confirm C3 (zero structural `sorry`) and C9 (zero task-number citations under
       `FormalSystem/`) both PASS.
-- [ ] Re-run the `#print axioms` scratch measurement one final time and diff it against every
+- [x] Re-run the `#print axioms` scratch measurement one final time and diff it against every
       figure asserted in `FormalSystem/Semantics/StarDeterminism.lean`'s docstrings. Any mismatch
       is a defect to fix in this phase, not to record.
-- [ ] `grep -rn "detPM" --include='*.lean' FormalSystem/ Tests/` — confirm the only Lean site is
-      `StarDeterminism.lean`, closing Phase 1's scope hypothesis.
-- [ ] Re-read `deterministic_of_detPM`'s signature one last time and confirm its hypothesis is
+- [x] `grep -rn "detPM" --include='*.lean' FormalSystem/ Tests/` — confirm the only Lean site is
+      `StarDeterminism.lean`, closing Phase 1's scope hypothesis. *(confirmed: the only Lean declaration site is `StarDeterminism.lean`; `FormalSystem/StarLanguage.lean:29` mentions `detPM` in prose only)*
+- [x] Re-read `deterministic_of_detPM`'s signature one last time and confirm its hypothesis is
       still `∀ p : Atom, …`.
 
 **Timing**: 45 minutes
@@ -459,16 +460,16 @@ written, mark the phase `[BLOCKED]` and escalate rather than restating it.
 
 ## Testing & Validation
 
-- [ ] `lake build` exits 0.
-- [ ] `lake build BimodalTest` exits 0.
-- [ ] `bash scripts/check-module-invariants.sh` exits 0, with C1, C2, C3, C9, C14 all PASS.
-- [ ] Zero new `sorry` anywhere under `FormalSystem/` (C3 asserts the inventory is zero).
-- [ ] `detPM (StarFormula.atom p)` is definitionally the pre-change `detPM p` — confirmed by the
+- [x] `lake build` exits 0.
+- [x] `lake build BimodalTest` exits 0.
+- [x] `bash scripts/check-module-invariants.sh` exits 0, with C1, C2, C3, C9, C14 all PASS.
+- [x] Zero new `sorry` anywhere under `FormalSystem/` (C3 asserts the inventory is zero).
+- [x] `detPM (StarFormula.atom p)` is definitionally the pre-change `detPM p` — confirmed by the
       unchanged body of `deterministic_of_detPM`, which still compiles against the atomic
       hypothesis without a bridging lemma.
-- [ ] `deterministic_of_detPM`'s hypothesis binds `p : Atom`, not `φ : StarFormula`.
-- [ ] Every `#print axioms` figure asserted in a docstring equals the post-change measured value.
-- [ ] No task-number citation under `FormalSystem/`.
+- [x] `deterministic_of_detPM`'s hypothesis binds `p : Atom`, not `φ : StarFormula`.
+- [x] Every `#print axioms` figure asserted in a docstring equals the post-change measured value.
+- [x] No task-number citation under `FormalSystem/`.
 
 ## Artifacts & Outputs
 
