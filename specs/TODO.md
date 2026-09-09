@@ -11,7 +11,7 @@ next_project_number: 578
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,577 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 2 | 231,282,296,465,497,560,564,565,567,570 | 298,464,502,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -25,98 +25,98 @@ next_project_number: 578
 
 ### Algebraic Representation
 
-502 [NOT STARTED] — RESEARCH TASK. Ground the algebraic representation front in the l
-  └─ 497 [NOT STARTED] — Bring the Shift-closed Tense S5 Algebra class into live code and 
-    └─ 498 [NOT STARTED] — Phase 1 of the Jonsson-Tarski representation: the complex algebra
-      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson
-        └─ 501 [NOT STARTED] — Phase 4 of the Jonsson-Tarski representation: extend STSA with th
-    └─ 499 [NOT STARTED] — HARD. Phase 2 of the Jonsson-Tarski representation: the ultrafilt
-      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the Jonsson (see above)
-    └─ 500 [NOT STARTED] — RESEARCH TASK. Prevent two parallel representation theorems from 
+502 [NOT STARTED] — RESEARCH TASK. Ground the algebraic representation front in...
+  └─ 497 [NOT STARTED] — Bring the Shift-closed Tense S5 Algebra class into live code...
+    └─ 498 [NOT STARTED] — Phase 1 of the Jonsson-Tarski representation: the complex...
+      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the...
+        └─ 501 [NOT STARTED] — Phase 4 of the Jonsson-Tarski representation: extend STSA...
+    └─ 499 [NOT STARTED] — HARD. Phase 2 of the Jonsson-Tarski representation: the...
+      └─ 125 [NOT STARTED] — CAPSTONE of the algebraic representation front. Prove the... (see above)
+    └─ 500 [NOT STARTED] — RESEARCH TASK. Prevent two parallel representation theorems...
 
 ### Categorical Structure
 
-563 [NOT STARTED] — Promote the presheaf skeleton into the library. DELIVER: the sect
-  └─ 564 [NOT STARTED] — Prove `app:gluing` for two interval sections whose germs agree at
-  └─ 565 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Totality and Directed Gluing cl
-    └─ 566 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Possible Worlds clause: `H_F is
-  └─ 567 [NOT STARTED] — Prove `app:presheaf-dictionary`'s Determinism clause -- `F` deter
+563 [NOT STARTED] — Promote the presheaf skeleton into the library. DELIVER: the...
+  └─ 564 [NOT STARTED] — Prove app:gluing for two interval sections whose germs agree...
+  └─ 565 [NOT STARTED] — Prove app:presheaf-dictionary's Totality and Directed Gluing...
+    └─ 566 [NOT STARTED] — Prove app:presheaf-dictionary's Possible Worlds clause: HF...
+  └─ 567 [NOT STARTED] — Prove app:presheaf-dictionary's Determinism clause -- F...
 
 ### Dataset Enhancement
 
-257 [BLOCKED] — Complete the Hugging Face Hub migration for large dataset storage
-298 [PARTIAL] — Fix c7 labeling bug at formula ~13750 that causes unbounded memor
-  └─ 231 [NOT STARTED] — Build comprehensive automation so that every dataset regeneration
-    └─ 219 [RESEARCHED] — Run bmlogic-bench through multiple LLMs to establish baseline dif
-  └─ 282 [PARTIAL] — Flip complexity-9 dataset generation from stratified to exhaustiv
-  └─ 296 [PARTIAL] — Re-add the 6 derived binary temporal operators (release, weak_unt
+257 [BLOCKED] — Complete the Hugging Face Hub migration for large dataset...
+298 [PARTIAL] — Fix c7 labeling bug at formula ~13750 that causes unbounded...
+  └─ 231 [NOT STARTED] — Build comprehensive automation so that every dataset...
+    └─ 219 [RESEARCHED] — Run bmlogic-bench through multiple LLMs to establish baseline...
+  └─ 282 [PARTIAL] — Flip complexity-9 dataset generation from stratified to...
+  └─ 296 [PARTIAL] — Re-add the 6 derived binary temporal operators (release,...
 
 ### Decidability
 
-464 [NOT STARTED] — Design and land `gapPotential`, the density coordinate of the ter
-  └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired residual
-    └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns obstruction O
-      └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2 and 
-        └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program (parent: t
-          └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program (parent: t
-            └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction O4 o
-              └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program (parent: t
-                └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT be r
-476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.
-481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as sta
+464 [NOT STARTED] — Design and land gapPotential, the density coordinate of the...
+  └─ 465 [NOT STARTED] — Complete the terminus restatement family at the repaired...
+    └─ 428 [BLOCKED] — Engine totality at a quantified branch budget. Owns...
+      └─ 429 [NOT STARTED] — Repair the truth-lemma side conditions. Owns obstructions O2...
+        └─ 410 [PLANNED] — Track B part 1 for the TM tableau decidability program...
+          └─ 411 [NOT STARTED] — Track B part 2 for the TM tableau decidability program...
+            └─ 430 [NOT STARTED] — The semantic lift and the Track A assembly. Owns obstruction...
+              └─ 412 [NOT STARTED] — Track B finish for the TM tableau decidability program...
+                └─ 482 [NOT STARTED] — CLASSIFICATION: OPEN MATHEMATICS, multi-month. This MUST NOT...
+476 [NOT STARTED] — THE BOX-FAITHFUL SMALL-MODEL THEOREM.  CLASSIFICATION: OPEN...
+481 [BLOCKED] — CLASSIFICATION: genuinely open -- the predicate is refuted as...
 
 ### Documentation
 
-540 [NOT STARTED] — Close the three declaration categories that sit far below the rep
+540 [NOT STARTED] — Close the three declaration categories that sit far below the...
 
 ### Formula Refactor
 
-178 [NOT STARTED] — Expand Examples/ with publication-quality demonstrations of the f
-577 [PLANNED] — Abstract the per-language validity layer over a truth-relation cl
-177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level docstring
+178 [NOT STARTED] — Expand Examples/ with publication-quality demonstrations of...
+177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level...
 
 ### Frame Extensions
 
-127 [NOT STARTED] — Add time addition operator (+) to the bimodal logic TM. φ + ψ is 
-128 [NOT STARTED] — Add topological open set (interior) operator for dense and contin
+127 [NOT STARTED] — Add time addition operator (+) to the bimodal logic TM. φ + ψ...
+128 [NOT STARTED] — Add topological open set (interior) operator for dense and...
 
 ### Incompleteness
 
-534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the H/G-f
+534 [NOT STARTED] — Research and, where feasible, establish in Lean whether the...
 
 ### Literature
 
-504 [NOT STARTED] — Retry acquisition of the standard modal-representation sources th
+504 [NOT STARTED] — Retry acquisition of the standard modal-representation...
 
 ### Metalogic
 
-559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
-  └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
-568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
-  └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
+559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe...
+  └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until...
+568 [NOT STARTED] — Promote the alternative consequence relations into the...
+  └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the...
+543 [NOT STARTED] — Machine-check the principal new results from the MF...
 
 ### Paper Refactor
 
-569 [NOT STARTED] — Retarget the semantics from a convex index carrying an `IsTotal` 
+569 [NOT STARTED] — Retarget the semantics from a convex index carrying an...
 
 ### Publication Quality
 
-506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled typst 
+506 [NOT STARTED] — Fix all outstanding display/layout defects in the compiled...
 
 ### Infrastructure
 
-542 [NOT STARTED] — Triage the dead-declaration census that C17 produces, separating 
+542 [NOT STARTED] — Triage the dead-declaration census that C17 produces,...
 
 ## Tasks
 
 ### 577. Abstract validity layer over truth class
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: formula-refactor
 - **Dependencies**: Task 574, Task 575, Task 576
 - **Research**: [577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md]
 - **Plan**: [577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md]
+- **Summary**: [577_abstract_validity_layer_over_truth_class/summaries/01_abstract-validity-layer-truth-class-summary.md]
 
 **Description**: Abstract the per-language validity layer over a truth-relation class so a fifth object language inherits it for free. GROUND TRUTH: the tree carries FOUR object languages as separate inductives -- `Formula` (Syntax/Formula.lean:77), `MinusFormula` (MinusLanguage/), `PlusFormula` (PlusLanguage/Formula.lean:90), `StarFormula` (StarLanguage/Formula.lean:104) -- in a strict tower of 6, then 7, then 9 constructors, and the tower is still growing.
 

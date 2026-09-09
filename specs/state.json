@@ -9,7 +9,7 @@
     {
       "project_number": 577,
       "project_name": "abstract_validity_layer_over_truth_class",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Abstract the per-language validity layer over a truth-relation class so a fifth object language inherits it for free. GROUND TRUTH: the tree carries FOUR object languages as separate inductives -- `Formula` (Syntax/Formula.lean:77), `MinusFormula` (MinusLanguage/), `PlusFormula` (PlusLanguage/Formula.lean:90), `StarFormula` (StarLanguage/Formula.lean:104) -- in a strict tower of 6, then 7, then 9 constructors, and the tower is still growing.\n\nTHE SEPARATE-INDUCTIVE DECISION IS CORRECT AND MUST NOT BE REVISITED. StarLanguage/README.md records the reason under \"Why the operators are not added to PlusFormula\": adding the time registers to `PlusFormula` would silently invalidate `stab_state_only` and with it the landed atomization route in Metalogic/Conservativity/Plus/Atomization.lean. Breaking that invariant is the whole point of L-star, and it must break in a separate type. This task does not touch that decision.\n\nBut that reason justifies separate TYPES, not separate VALIDITY LAYERS. A survey across Semantics/, PlusLanguage/ and StarLanguage/ finds roughly 658 declarations, with the following appearing once per language at statements identical modulo the formula type and the truth predicate: `TruthAt`, `ValidIn`, `ValidOnFrames`, `TaskFrame.ValidOn`, `.mono`, `.of_forall_total`, `.apply_total`, `Valid.apply`, `swapTemporal`, `timeShift`, and the derived-operator family `neg`/`and`/`or`/`top`/`diamond`/`always`/`allFuture`/`allPast`/`someFuture`/`somePast`/`sometimes`/`dstab`/`interpolates`. Each new language pays for all of them again.\n\nDELIVERABLES, each phase one agent run with lake build green and no new sorry: (1) SCOPE MEASUREMENT FIRST, GATING THE REST: enumerate exactly which declarations are language-agnostic (statement identical modulo the formula type and truth predicate) and which are genuinely language-specific. Report the measured count. The list above is a SURVEY, not a specification -- do not assume it is complete or correct, and correct it where it is wrong. (2) SETTLE THE HARD DESIGN QUESTION BY PROOF, not by assumption: whether one abstraction can cover both point shapes, since L/L-minus/L-plus evaluate at (tau, x) while L-star evaluates at (tau, x, v-vector). If a single abstraction cannot cover both without contortion, say so with the specific obstruction named and abstract only the layers it genuinely does cover -- a partial abstraction with an honest boundary is the successful outcome, an over-general one that fits nothing is not. (3) The class or structure abstracting a truth predicate at a point, with the validity layer written ONCE against it and instantiated per language. (4) EVERY EXISTING PER-LANGUAGE NAME PRESERVED exactly as it stands today. This is a refactor of landed, green, consumed code: no downstream consumer may require editing, and NO theorem may change its statement. If some name cannot be preserved, that is a BLOCKING finding to report, never a rename to perform. (5) Delete the superseded duplicates only after their replacements are green, never before. (6) A stated EXTENSION CONTRACT in the new module's docstring: exactly what a fifth language must supply in order to inherit the validity layer for free. This is the deliverable that pays for the whole refactor, and it must be written from the instantiations actually performed, not aspirationally.\n\nHARD CONSTRAINTS: MUST NOT merge, unify, or weaken the separation between the four formula types -- see StarLanguage/README.md's stated reason above. MUST NOT change any theorem statement. No `sorry`; `lake build` green AND `lake build BimodalTest` green; `scripts/check-module-invariants.sh` exit 0 with axiom baselines unchanged -- a refactor that preserves statements must preserve axiom sets, so any baseline drift is a defect to investigate, not to rebaseline. Never argue by uniform substitution (unsound here). No task numbers under FormalSystem/. If the abstraction cannot be built without violating one of these constraints, report the obstruction and close [COMPLETED WITH EXCLUSIONS] rather than compromising any of them. TERRITORY: broad by nature -- Semantics/**, PlusLanguage/**, StarLanguage/**, MinusLanguage/**. Sequenced last precisely because it touches everything; it runs only once the content tasks that add to these layers have settled.",
       "topic": "formula-refactor",
@@ -26,8 +26,8 @@
       ],
       "priority": "high",
       "created": "2026-09-09T11:48:41Z",
-      "last_updated": "2026-09-09T17:47:02Z",
-      "session_id": "sess_1788974887_e3b9bb",
+      "last_updated": "2026-09-09T19:50:47Z",
+      "session_id": "sess_1788977917_3554b1",
       "artifacts": [
         {
           "path": "specs/577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md",
@@ -38,9 +38,15 @@
           "path": "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
           "type": "plan",
           "summary": "10-phase, 16-hour plan: two new leaf modules (Semantics/ValidityLayer.lean with class PointTruth and the Generic* validity layer; Semantics/TruthClauses.lean with Env-parameterised operator/clause classes and generic derived-clause lemmas), instantiated one language per phase by replacing 38 validity-layer and 37 (+2) clause-layer proof bodies with delegations, every name/statement/attribute preserved, per-phase axiom-parity gate, extension contract written last from the instantiations performed."
+        },
+        {
+          "path": "specs/577_abstract_validity_layer_over_truth_class/summaries/01_abstract-validity-layer-truth-class-summary.md",
+          "type": "summary",
+          "summary": "Validity layer and derived-operator clause layer abstracted over PointTruth/TruthEnv classes and instantiated for all four object languages; 77 per-language proof bodies delegated with zero statement changes."
         }
       ],
-      "next_artifact_number": 2
+      "next_artifact_number": 2,
+      "completion_summary": "Landed FormalSystem/Semantics/ValidityLayer.lean (class PointTruth plus the validity layer written once) and FormalSystem/Semantics/TruthClauses.lean (per-operator clause classes plus the derived-operator family written once), then instantiated both for Formula, MinusFormula, PlusFormula and StarFormula. 77 per-language theorem bodies became one-line delegations with zero signature changes, zero renames and zero downstream code edits; the L-star (tau, x, v-vector) point shape is covered by the same abstraction, settled by four bare rfl coincidences against the unmodified definitions. Both modules carry an extension contract written from the four instantiations actually performed."
     },
     {
       "project_number": 576,

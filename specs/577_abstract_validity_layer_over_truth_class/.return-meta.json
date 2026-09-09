@@ -1,40 +1,43 @@
 {
-  "status": "planned",
+  "status": "implemented",
+  "started_at": "2026-09-09T11:18:00Z",
+  "completed_at": "2026-09-09T13:05:00Z",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 14,
+    "axiom_count_baseline": 14,
+    "build_passed": true,
+    "test_build_passed": true,
+    "module_invariants_exit": 0,
+    "signatures_changed_or_lost": 0,
+    "names_still_resolving": "242/242",
+    "axiom_parity": "no name gained an axiom; 4 names lost Quot.sound (PlusTruth/StarTruth someFuture_iff and somePast_iff), recorded in probes/04_axiom-parity-result.txt"
+  },
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
-      "summary": "10-phase, 16-hour plan: two new leaf modules (Semantics/ValidityLayer.lean with class PointTruth and the Generic* validity layer; Semantics/TruthClauses.lean with Env-parameterised operator/clause classes and generic derived-clause lemmas), instantiated one language per phase by replacing 38 validity-layer and 37 (+2) clause-layer proof bodies with delegations, every name/statement/attribute preserved, per-phase axiom-parity gate, extension contract written last from the instantiations performed."
+      "type": "summary",
+      "path": "specs/577_abstract_validity_layer_over_truth_class/summaries/01_abstract-validity-layer-truth-class-summary.md",
+      "summary": "Validity layer and derived-operator clause layer abstracted over PointTruth/TruthEnv classes and instantiated for all four object languages; 77 per-language proof bodies delegated with zero statement changes."
     }
   ],
-  "next_steps": "Run /implement 577 to execute the plan",
-  "metadata": {
-    "session_id": "sess_1788974887_e3b9bb_577",
-    "agent_type": "planner-agent",
-    "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"],
-    "phase_count": 10,
-    "estimated_hours": 16,
-    "dependency_waves": [[1, 5], [2, 3, 4, 6, 7, 8, 9], [10]],
-    "complexity": "complex",
-    "research_integrated": true,
-    "validator": "validate-artifact.sh plan --strict: PASS, 0 warnings"
+  "completion_data": {
+    "completion_summary": "Landed FormalSystem/Semantics/ValidityLayer.lean (class PointTruth plus the validity layer written once) and FormalSystem/Semantics/TruthClauses.lean (per-operator clause classes plus the derived-operator family written once), then instantiated both for Formula, MinusFormula, PlusFormula and StarFormula. 77 per-language theorem bodies became one-line delegations with zero signature changes, zero renames and zero downstream code edits; the L-star (tau, x, v-vector) point shape is covered by the same abstraction, settled by four bare rfl coincidences against the unmodified definitions. Both modules carry an extension contract written from the four instantiations actually performed.",
+    "roadmap_items": []
   },
-  "phase_count": 10,
-  "estimated_hours": 16,
-  "dependency_waves": [[1, 5], [2, 3, 4, 6, 7, 8, 9], [10]],
-  "memory_candidates": [
-    {
-      "content": "Statement-preserving abstraction in this repo: when writing a generic class-polymorphic layer whose per-language names must stay byte-identical, keep the existing defs as `def` (never promote to `abbrev`), replace only theorem proof bodies with one-line delegations (named args `(L := X) (φ := φ)` fix instance-metavariable elaboration), capture `#print axioms` for every wrapper BEFORE editing and diff after each phase (generic proofs must avoid `by_contra`/`push_neg` where the original was `rw`+terms or `[propext]`-only baselines drift). Naming constraint from check-module-invariants.sh C23: a bare declaration name must not be reused in a namespace nested under one that already declares it bare (e.g. `PointTruth.ValidIn` under `FormalSystem.Semantics` collides with L's bare `ValidIn`); use the tree's language-prefix convention (`GenericValidIn`) or a sibling namespace, never dot-qualified evasion. A generic module below `Truth.lean` cannot name `SameStateAt` (defined in PlusTruth.lean): carry such relations as class fields.",
-      "category": "PATTERN",
-      "source_artifact": "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
-      "confidence": 0.85,
-      "suggested_keywords": ["lean4", "refactor", "typeclass-abstraction", "axiom-parity", "C23-naming", "statement-preserving"]
-    }
-  ],
-  "modified_files": [
-    "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
-    "specs/577_abstract_validity_layer_over_truth_class/.return-meta.json"
-  ],
-  "dispatch_seq": 2
+  "metadata": {
+    "session_id": "sess_1788977917_3554b1",
+    "agent_type": "lean-implementation-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed",
+    "phases_completed": 10,
+    "phases_total": 10,
+    "commits": [
+      "92ce12fce task 577 phase 5: validity layer and clause layer over a truth-relation class, four validity instantiations",
+      "6919afac8 task 577 phase 9: clause layer instantiated for all four languages, every derived-operator lemma delegating",
+      "e3adcfb68 task 577: complete implementation"
+    ]
+  }
 }
