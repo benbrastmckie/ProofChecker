@@ -691,7 +691,7 @@ mirror. Confirm the second half by re-reading the constructor list after this ph
 
 ---
 
-### Phase 10: Group G — `paste` and `untl_paste` at the L⋆ purity predicates [NOT STARTED]
+### Phase 10: Group G — `paste` and `untl_paste` at the L⋆ purity predicates [COMPLETED]
 
 **Goal**: The last 2 mirror constructors, completing the 53. Build green; `ofBase` now has no
 schema it alone supplies.
@@ -700,23 +700,36 @@ schema it alone supplies.
 `untl_paste (α φ) (hα : StarIsPurePast α) (hφ : StarIsPureFuture φ)`. Both `.Base`.
 
 **Tasks**:
-- [ ] Add the 2 constructors, mirroring `PlusAxiom.paste`/`untl_paste`
+- [x] Add the 2 constructors, mirroring `PlusAxiom.paste`/`untl_paste`
       (`PlusLanguage/Axioms.lean:298,302`) argument for argument, with `IsPureFuture`/`IsPurePast`
       replaced by their `Star`-prefixed L⋆ counterparts
-- [ ] Docstring each with the **second proper widening**: because `StarIsPureFuture.box` and
+- [x] Docstring each with the **second proper widening**: because `StarIsPureFuture.box` and
       `.stab` admit arbitrary bodies, the L⋆ pure fragment contains register-carrying formulas
       such as `□↓¹p`, so these two schemata reach strictly further than `ofBase` supplied. Pin
       that as an `example`
-- [ ] `minFrameClass`: both fall to the `.Base` wildcard; add a pin `example`
-- [ ] Add `starValid_paste` and `starValid_untl_paste` from Phase 3's `star_paste_valid` /
+- [x] `minFrameClass`: both fall to the `.Base` wildcard; add a pin `example`
+- [x] Add `starValid_paste` and `starValid_untl_paste` from Phase 3's `star_paste_valid` /
       `star_untl_paste_valid`
-- [ ] Add both arms to each dispatch lemma; the swap arms pair PS↔US through
+- [x] Add both arms to each dispatch lemma; the swap arms pair PS↔US through
       `StarIsPureFuture.swapTemporal` / `StarIsPurePast.swapTemporal`
-- [ ] Extend the swap-closure list; record in `Axioms.lean`'s docstring that all 53 mirror
+- [x] Extend the swap-closure list; record in `Axioms.lean`'s docstring that all 53 mirror
       constructors are now present
-- [ ] Confirm mechanically that the constructor count of `StarAxiom` is now 53 + 16 + `ofBase`
+- [x] Confirm mechanically that the constructor count of `StarAxiom` is now 53 + 16 + `ofBase`
       = 70, and that both dispatch lemmas are still wildcard-free
-- [ ] `lake build` green; invariants exit 0; commit
+- [x] `lake build` green; invariants exit 0; commit
+
+**Scope Hypothesis outcome (measured)**: 2 constructors here and 53 mirror constructors across
+Phases 4-10 (15+8+8+6+10+4+2), confirmed mechanically — `inductive StarAxiom` now has **70**
+constructor lines = 53 mirror + 16 register + `ofBase`, and both dispatch lemmas have exactly 70
+arms with no `| _ =>` wildcard.
+
+**Deviation (altered)**: the plan's "the swap arms pair PS↔US" is wrong and was corrected by
+measurement. `swapTemporal` fixes `⟐` and exchanges `untl`/`snce`, so PS's dual is PS with the
+conjuncts exchanged and US's dual is SS — the same shape `Semantics/PlusPasting.lean` already
+has (`paste_valid'`, `snce_dstab_valid`). Two lemmas, `star_paste_valid'` and
+`star_snce_paste_valid`, were therefore **added to Phase 3's `StarPasting.lean`** during this
+phase, together with a module-docstring paragraph recording why the duals are separate theorems.
+No statement was weakened and no Challenge statement changed.
 
 **Timing**: 1.5 hours
 

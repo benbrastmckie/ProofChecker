@@ -104,6 +104,12 @@ same inductive*:
   * `sep` and `modal_future` — arms whose dual is again not a constructor instance:
     `starValid_sep_swap` (through `SoundnessLemmas.sep_order_mirror`) and
     `starValid_modal_future_swap` (through `RecallFree.swapTemporal`) supply them.
+  * `paste` and `untl_paste` — the duals are PS with the conjuncts exchanged, and SS; neither is
+    a constructor instance, and both are supplied by named lemmas in
+    `Conservativity/Star/StarAxiomValidity.lean` over
+    `Conservativity/Star/StarPasting.lean`'s validities, with
+    `StarIsPureFuture.swapTemporal` / `StarIsPurePast.swapTemporal` carrying the side conditions
+    across.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -371,6 +377,22 @@ inductive StarAxiom : StarFormula → Type where
   else; only `↓ⁱ` reads a time the shift does not move. -/
   | modal_future (φ : StarFormula) (hφ : RecallFree φ) :
       StarAxiom ((StarFormula.box φ).imp (StarFormula.box (StarFormula.allFuture φ)))
+  -- The stability modal, the two pasting schemata (2 of 8)
+  /-- PS (same-time pasting): `⟐φ⁺ → (⟐ψ⁻ → ⟐(φ⁺ ∧ ψ⁻))` for pure-future `φ⁺` and pure-past `ψ⁻`.
+  Mirrors `PlusAxiom.paste`, with `IsPureFuture`/`IsPurePast` replaced by their L⋆ counterparts.
+
+  **The L⋆ purity predicates are strictly wider than the embedded fragment.**
+  `StarIsPureFuture.box` and `.stab` admit arbitrary bodies, exactly as their L⁺ counterparts do,
+  so `□↓¹p` is pure-future and this schema reaches register-carrying formulas that no `ofPlus`
+  instance supplies. -/
+  | paste (φ ψ : StarFormula) (hφ : StarIsPureFuture φ) (hψ : StarIsPurePast ψ) :
+      StarAxiom ((StarFormula.dstab φ).imp
+        ((StarFormula.dstab ψ).imp (StarFormula.dstab (φ.and ψ))))
+  /-- US (future pasting): `(α⁻ U ⟐φ⁺) → ⟐(α⁻ U φ⁺)` for pure-past `α⁻` and pure-future `φ⁺`.
+  Mirrors `PlusAxiom.untl_paste`; the same widening as `paste` applies. -/
+  | untl_paste (α φ : StarFormula) (hα : StarIsPurePast α) (hφ : StarIsPureFuture φ) :
+      StarAxiom ((StarFormula.untl α (StarFormula.dstab φ)).imp
+        (StarFormula.dstab (StarFormula.untl α φ)))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))
@@ -444,6 +466,21 @@ def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
   | _ => .Base
 
 /-! ### Pins -/
+
+example (φ ψ : StarFormula) (hφ : StarIsPureFuture φ) (hψ : StarIsPurePast ψ) :
+    (StarAxiom.paste φ ψ hφ hψ).minFrameClass = .Base := rfl
+
+example (α φ : StarFormula) (hα : StarIsPurePast α) (hφ : StarIsPureFuture φ) :
+    (StarAxiom.untl_paste α φ hα hφ).minFrameClass = .Base := rfl
+
+/-- The L⋆ pure fragment contains register-carrying formulas: `□↓¹p` is pure-future because
+`StarIsPureFuture.box` admits an arbitrary body. So `paste` reaches instances no `ofPlus` image
+supplies — the second proper widening of this split, independent of `modal_future`'s. -/
+example (p : Atom) (ψ : StarFormula) (hψ : StarIsPurePast ψ) :
+    StarAxiom ((StarFormula.dstab (StarFormula.box (.timeRecall 1 (.atom p)))).imp
+      ((StarFormula.dstab ψ).imp
+        (StarFormula.dstab ((StarFormula.box (.timeRecall 1 (.atom p))).and ψ)))) :=
+  StarAxiom.paste _ ψ (StarIsPureFuture.box _) hψ
 
 example (φ : StarFormula) : (StarAxiom.prior_U_gap φ).minFrameClass = .RTime := rfl
 

@@ -7,6 +7,7 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.StarLanguage.Axioms
 import FormalSystem.Semantics.StarValidity
 import FormalSystem.Metalogic.Conservativity.Plus.AxiomValidity
+import FormalSystem.Metalogic.Conservativity.Star.StarPasting
 
 /-!
 # Validity and swap-validity of every TM⋆ axiom schema
@@ -1010,6 +1011,47 @@ theorem starValid_modal_future_swap {φ : StarFormula} (hφ : RecallFree φ) :
   rw [add_sub_cancel] at h2
   exact (recallFree_vector_irrelevant M hφ.swapTemporal σ s _ v).mp h2
 
+/-! ## The TM⁺ mirror block — the two pasting schemata
+
+The semantic content is `Conservativity/Star/StarPasting.lean`'s: the two purity congruences and
+the four pasting validities, over the L⋆ purity predicates. Nothing is re-proved here; these four
+lemmas are the `StarValid` packagings the dispatch consumes.
+
+**Measured correction to this group's swap-closure.** PS and US are not each other's duals.
+`swapTemporal` fixes `⟐` and exchanges `untl`/`snce`, so the dual of PS is PS with the conjuncts
+exchanged (PS'), and the dual of US is SS — exactly as at the L⁺ level, where
+`Semantics/PlusPasting.lean` carries `paste_valid'` and `snce_dstab_valid` for precisely this
+reason. The two `*_swap` lemmas below are those duals. -/
+
+/-- PS as a `StarValid`. -/
+theorem starValid_paste {φ ψ : StarFormula} (hφ : StarIsPureFuture φ) (hψ : StarIsPurePast ψ) :
+    StarValid ((StarFormula.dstab φ).imp
+      ((StarFormula.dstab ψ).imp (StarFormula.dstab (φ.and ψ)))) :=
+  StarValid.of_forall_total fun _ M τ hτ t v => star_paste_valid M τ hτ t v hφ hψ
+
+/-- The temporal dual of PS: the same schema with the conjuncts exchanged, `⟐ψ⁻ → (⟐φ⁺ →
+⟐(ψ⁻ ∧ φ⁺))`. Mirrors `Semantics.paste_valid'`. -/
+theorem starValid_paste_swap {ψ φ : StarFormula} (hψ : StarIsPurePast ψ)
+    (hφ : StarIsPureFuture φ) :
+    StarValid ((StarFormula.dstab ψ).imp
+      ((StarFormula.dstab φ).imp (StarFormula.dstab (ψ.and φ)))) :=
+  StarValid.of_forall_total fun _ M τ hτ t v => star_paste_valid' M τ hτ t v hψ hφ
+
+/-- US as a `StarValid`. -/
+theorem starValid_untl_paste {α φ : StarFormula} (hα : StarIsPurePast α)
+    (hφ : StarIsPureFuture φ) :
+    StarValid ((StarFormula.untl α (StarFormula.dstab φ)).imp
+      (StarFormula.dstab (StarFormula.untl α φ))) :=
+  StarValid.of_forall_total fun _ M τ hτ t v => star_untl_paste_valid M τ hτ t v hα hφ
+
+/-- The temporal dual of US, namely SS: `(α⁺ S ⟐φ⁻) → ⟐(α⁺ S φ⁻)`. Mirrors
+`Semantics.snce_dstab_valid`. -/
+theorem starValid_untl_paste_swap {α φ : StarFormula} (hα : StarIsPureFuture α)
+    (hφ : StarIsPurePast φ) :
+    StarValid ((StarFormula.snce α (StarFormula.dstab φ)).imp
+      (StarFormula.dstab (StarFormula.snce α φ))) :=
+  StarValid.of_forall_total fun _ M τ hτ t v => star_snce_paste_valid M τ hτ t v hα hφ
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -1069,6 +1111,8 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | prior_S_gap φ => exact starValid_prior_S_gap φ
   | sep φ => exact starValid_sep φ
   | modal_future φ hφ => exact starValid_modal_future hφ
+  | paste φ ψ hφ hψ => exact starValid_paste hφ hψ
+  | untl_paste α φ hα hφ => exact starValid_untl_paste hα hφ
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -1265,6 +1309,13 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     exact starValid_prior_U_gap φ.swapTemporal
   | sep φ => exact starValid_sep_swap φ
   | modal_future φ hφ => exact starValid_modal_future_swap hφ
+  | paste φ ψ hφ hψ =>
+    simp only [StarFormula.swap_temporal_dstab, StarFormula.swap_temporal_and,
+      StarFormula.swapTemporal]
+    exact starValid_paste_swap hφ.swapTemporal hψ.swapTemporal
+  | untl_paste α φ hα hφ =>
+    simp only [StarFormula.swap_temporal_dstab, StarFormula.swapTemporal]
+    exact starValid_untl_paste_swap hα.swapTemporal hφ.swapTemporal
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal

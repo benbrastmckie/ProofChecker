@@ -35,6 +35,14 @@ exactly as their L⁺ counterparts do. So `□↓¹p` is pure-future, and PS / U
 therefore reach register-carrying formulas that no `ofPlus` instance supplies — a proper
 widening, independent of the one `RecallFree` carries for `modal_future`.
 
+## The temporal duals are separate theorems, not instances of the same one
+
+PS and US are **not** each other's duals. `swapTemporal` fixes `⟐` and exchanges `untl`/`snce`,
+so the dual of PS is PS with the conjuncts exchanged (`star_paste_valid'`) and the dual of US is
+SS (`star_snce_paste_valid`). This is the same shape `Semantics/PlusPasting.lean` has, and for
+the same reason; both duals are proved here so that the `paste`/`untl_paste` swap arms of
+`starAxiom_swap_validIn_min` have a lemma to land on.
+
 ## Why this file lives here rather than under `Semantics/`
 
 It is a consumer of `StarAxiom`'s side conditions and belongs to the axiom-validity layer, which
@@ -179,5 +187,59 @@ theorem star_untl_paste_valid (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ
   intro r htr hry
   exact (star_truth_congr_agreeUpTo M hα _ τ (paste_isTotal τ ρ hτ hρ y hτρ) hτ r
     (agreeUpTo_mono hry.le (paste_agreeUpTo τ ρ hτ hρ y hτρ)) v).mpr (hguard r htr hry)
+
+/-- **PS with the conjuncts exchanged** over `StarFormula`: `⟐ψ⁻ → (⟐φ⁺ → ⟐(ψ⁻ ∧ φ⁺))` for
+pure-past `ψ⁻` and pure-future `φ⁺`. This is the temporal dual of `star_paste_valid` — the
+`swapTemporal` instance of the `paste` schema — proved by the same pasting argument with the two
+congruences applied in the other order. The L⁺ counterpart is `Semantics.paste_valid'`.
+
+Paper: `possible_worlds.tex`, the PS schema -/
+theorem star_paste_valid' (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal)
+    (t : F.Duration) (v : ℕ → F.Duration) {ψ φ : StarFormula}
+    (hψ : StarIsPurePast ψ) (hφ : StarIsPureFuture φ) :
+    StarTruthAt M τ t v
+      (.imp (StarFormula.dstab ψ)
+        (.imp (StarFormula.dstab φ) (StarFormula.dstab (ψ.and φ)))) := by
+  intro h2 h1
+  rw [StarTruth.dstab_iff] at h1 h2 ⊢
+  obtain ⟨σ, hσ, hτσ, hφσ⟩ := h1
+  obtain ⟨ρ, hρ, hτρ, hψρ⟩ := h2
+  have hsame : SameStateAt ρ σ t := fun a b => (hτρ (hτ t) a).symm.trans (hτσ (hτ t) b)
+  refine ⟨paste ρ σ hρ hσ t hsame, paste_isTotal ρ σ hρ hσ t hsame, ?_, ?_⟩
+  · intro a b
+    rw [hτρ a (hρ t)]
+    exact (paste_agreeUpTo ρ σ hρ hσ t hsame t le_rfl b (hρ t)).symm
+  · rw [StarTruth.and_iff]
+    exact ⟨(star_truth_congr_agreeUpTo M hψ _ _ (paste_isTotal ρ σ hρ hσ t hsame) hρ t
+              (paste_agreeUpTo ρ σ hρ hσ t hsame) v).mpr hψρ,
+           (star_truth_congr_agreeFrom M hφ _ _ (paste_isTotal ρ σ hρ hσ t hsame) hσ t
+              (paste_agreeFrom ρ σ hρ hσ t hsame) v).mpr hφσ⟩
+
+/-- **SS (past pasting) over `StarFormula`**: `(α⁺ S ⟐φ⁻) → ⟐(α⁺ S φ⁻)` for pure-future `α⁺` and
+pure-past `φ⁻` — the `snce` mirror of US, and the temporal dual of the `untl_paste` schema. The
+witness `ρ` at a past time `y < t` is pasted up to `y` with `τ` after `y`. The L⁺ counterpart is
+`Semantics.snce_dstab_valid`.
+
+Paper: `possible_worlds.tex`, the US schema (past mirror) -/
+theorem star_snce_paste_valid (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal)
+    (t : F.Duration) (v : ℕ → F.Duration) {α φ : StarFormula}
+    (hα : StarIsPureFuture α) (hφ : StarIsPurePast φ) :
+    StarTruthAt M τ t v
+      (.imp (.snce α (StarFormula.dstab φ)) (StarFormula.dstab (.snce α φ))) := by
+  intro h
+  rw [StarTruth.snce_iff] at h
+  obtain ⟨y, hyt, hy, hguard⟩ := h
+  rw [StarTruth.dstab_iff] at hy
+  obtain ⟨ρ, hρ, hτρ, hφρ⟩ := hy
+  have hsame : SameStateAt ρ τ y := hτρ.symm
+  rw [StarTruth.dstab_iff]
+  refine ⟨paste ρ τ hρ hτ y hsame, paste_isTotal ρ τ hρ hτ y hsame,
+    fun a b => (paste_agreeFrom ρ τ hρ hτ y hsame t hyt.le b a).symm, ?_⟩
+  rw [StarTruth.snce_iff]
+  refine ⟨y, hyt, (star_truth_congr_agreeUpTo M hφ _ _ (paste_isTotal ρ τ hρ hτ y hsame) hρ y
+    (paste_agreeUpTo ρ τ hρ hτ y hsame) v).mpr hφρ, ?_⟩
+  intro r hyr hrt
+  exact (star_truth_congr_agreeFrom M hα _ τ (paste_isTotal ρ τ hρ hτ y hsame) hτ r
+    (agreeFrom_mono hyr.le (paste_agreeFrom ρ τ hρ hτ y hsame)) v).mpr (hguard r hyr hrt)
 
 end FormalSystem.Metalogic.Conservativity
