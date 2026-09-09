@@ -1,0 +1,30 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/561_store_recall_deterministic_frame_characterization/plans/01_store-recall-deterministic-characterization.md",
+      "summary": "15-phase plan (14 core + 1 optional) building FormalSystem/StarLanguage/ and landing the characterization theorem for the deterministic task frames: the biconditional bridge lemma, L-star store/recall semantics, app:deterministic-future in both halves, the F0/F1 discrimination footnote, Theorem C's Det-pm half, and the forward-determinism separation via F^N."
+    }
+  ],
+  "next_steps": "Run /implement 561 to execute the plan",
+  "phase_count": 15,
+  "estimated_hours": 23,
+  "dependency_waves": [[1, 2, 11], [3, 12], [4, 5], [6, 7], [8, 9, 13], [10], [14], [15]],
+  "memory_candidates": [
+    {
+      "content": "BimodalLogic adds a new object language as a self-contained component, now instantiated three times (MinusLanguage/L-minus, PlusLanguage/L-plus, StarLanguage/L-star). The pattern: (1) a SEPARATE inductive mirroring the base language constructor-for-constructor, never new constructors on the existing type -- adding constructors breaks downstream licensing facts such as stab_state_only, on which the atomization/conservativity route rests; (2) a constructor-to-constructor embedding (ofFormula/ofPlus) whose derived operators reuse the base language's right-hand sides verbatim, so commutation holds by rfl; (3) a DIRECTIONAL module invariant -- nothing under the language directory imports Semantics/, checkable by one grep -- with semantics living on the far side of that edge in Semantics/{Lang}Truth.lean, {Lang}Validity.lean; (4) a component aggregator FormalSystem/{Lang}Language.lean plus a line in FormalSystem/FormalSystem.lean, required by invariant C24 (every module must transitively import FormalSystem.Init). New def/abbrev names must be camelCase (invariant C26 rejects underscores in def names; theorem names stay snake_case), and any new paper \\label cited in a docstring needs a KNOWN-ANCHORS row in specs/paper-definitions-of-record.md or invariant C15 fails.",
+      "category": "PATTERN",
+      "source_artifact": "specs/561_store_recall_deterministic_frame_characterization/plans/01_store-recall-deterministic-characterization.md",
+      "confidence": 0.8,
+      "suggested_keywords": ["object-language", "module-invariant", "embedding", "aggregator", "lean-naming-gates", "paper-anchors"]
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788919661_339b90_561",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+  },
+  "dispatch_seq": 2
+}

@@ -91,7 +91,7 @@ next_project_number: 571
 
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
-561 [NOT STARTED] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
+561 [PLANNED] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
@@ -295,10 +295,11 @@ SEQUENCING: depends on task 557 (in progress), whose file_scope includes Syntax/
 ---
 
 ### 561. Store recall deterministic frame characterization
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 562
+- **Plan**: [561_store_recall_deterministic_frame_characterization/plans/01_store-recall-deterministic-characterization.md]
 
 **Description**: Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR THE DETERMINISTIC TASK FRAMES -- the part of the deterministic-frame appendix that task 536 could not reach because it needs the store and recall operators, which PlusFormula does not have. This is the highest-priority paper-facing Lean work on the stability modal; it is independent of task 537 (deterministic completeness) and of tasks 559/560 (nondeterministic completeness), and must not wait on them.
 
