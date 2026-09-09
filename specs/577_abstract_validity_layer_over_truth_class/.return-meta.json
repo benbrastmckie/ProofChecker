@@ -1,0 +1,16 @@
+{
+  "status": "researched",
+  "artifacts": [
+    {
+      "type": "report",
+      "path": "specs/577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md",
+      "summary": "Scope measured at 1058 territory declarations (242 in the eight truth/validity files: 64 language-agnostic validity, 37 language-agnostic derived-clause, 28 instance payload, 113 language-specific); the (tau,x) vs (tau,x,v) point-shape question settled AFFIRMATIVELY by three green Lean probes via an innermost-binder forall-v fold, with axiom-set parity verified on 11 declaration pairs; four survey items corrected; cslib transfer/non-transfer verdict recorded."
+    }
+  ],
+  "metadata": {
+    "session_id": "sess_1788971317_f1b259_577",
+    "agent_type": "lean-research-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
+  }
+}
