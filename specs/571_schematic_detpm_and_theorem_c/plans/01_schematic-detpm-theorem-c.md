@@ -212,35 +212,35 @@ explicitly rather than editing outside it.
 
 ---
 
-### Phase 2: Schematic `detPM_of_deterministic` and the three-way Theorem C [NOT STARTED]
+### Phase 2: Schematic `detPM_of_deterministic` and the three-way Theorem C [COMPLETED]
 
 **Goal**: Deliverables (2), (3), and (4). The (⇐) direction becomes schematic in `φ`; the (⇒)
 direction's hypothesis stays at atoms; `deterministic_starDefinable` becomes the three-way
 equivalence.
 
 **Tasks**:
-- [ ] Restate `detPM_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
+- [x] Restate `detPM_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
       F.StarValidOn (detPM φ)`. Its proof consumes `settledDisj_of_deterministic` **exactly as
       `sentDet_of_deterministic` does** — `refine TaskFrame.StarValidOn.of_forall_total ?_`,
       `intro M τ hτ x v`, `rw [detPM_unfold]`, `intro y`,
       `exact settledDisj_of_deterministic hD M hτ x _ φ`. Do not route it through any other
       lemma, and add no extension-theorem step: it must reach `states_eq_of_deterministic`
       through `star_truth_congr_ext` (via `star_congr_of_deterministic`) and nothing else.
-- [ ] Leave `deterministic_of_detPM` exactly as Phase 1 left it. Its hypothesis stays
+- [x] Leave `deterministic_of_detPM` exactly as Phase 1 left it. Its hypothesis stays
       `∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))`. Do not widen it, do not restate
       it, do not add a `∀ φ` variant under its name.
-- [ ] Replace `deterministic_starDefinable`'s statement with the three-way equivalence hinged on
+- [x] Replace `deterministic_starDefinable`'s statement with the three-way equivalence hinged on
       `F.Deterministic`, at the signature pinned in `## Lean Challenge Statements` below. Prove
       it from `deterministic_of_detPM` and `detPM_of_deterministic`; the third leg (full schema ⟹
       atomic fragment) is instantiation at `StarFormula.atom p`.
-- [ ] Write the new `deterministic_starDefinable` docstring so it states plainly, in these terms:
+- [x] Write the new `deterministic_starDefinable` docstring so it states plainly, in these terms:
       the **atomic fragment already forces** determinism, and determinism **delivers the full
       schema** at every `StarFormula`. Say explicitly that no instance of the schema is inferred
       from another and that this is therefore not an appeal to uniform substitution. Delete the
       superseded "The single-`p` form is not available in the (⇐) direction's shape" paragraph,
       which the new statement makes stale. Do not assert any axiom figure in this phase —
       Phase 3 owns axiom prose.
-- [ ] Run `lake build` and `lake build BimodalTest`; both green, zero new `sorry`.
+- [x] Run `lake build` and `lake build BimodalTest`; both green, zero new `sorry`.
 
 **Timing**: 1 hour
 

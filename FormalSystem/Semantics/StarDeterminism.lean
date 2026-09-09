@@ -204,17 +204,22 @@ theorem detPM_unfold (M : TaskModel F) (τ : ConvexHistory F) (x : F.Duration)
     exact ⟨fun s _ => (hQ s).mpr (h s), (hQ x).mpr (h x), fun s _ => (hQ s).mpr (h s)⟩
 
 /--
-**`Det-pm` is valid over every deterministic task frame.** The (⇐) direction of Theorem C's
-`Det-pm` half, from the same engine as `sentDet_of_deterministic` — the engine settles every
-time, so dropping `\Future`'s `y > x` restriction costs nothing.
+**`Det-pm` is valid over every deterministic task frame, at every `StarFormula` instance.** The
+(⇐) direction of Theorem C's `Det-pm` half, from the same engine as `sentDet_of_deterministic` —
+the engine settles every time, so dropping `\Future`'s `y > x` restriction costs nothing, and it
+settles the disjunction at an arbitrary `φ`, so the atom restriction costs nothing either.
+
+The proof consumes `settledDisj_of_deterministic` exactly as `sentDet_of_deterministic` does. It
+reaches `states_eq_of_deterministic` through `star_truth_congr_ext` (via
+`star_congr_of_deterministic`) and adds no extension-theorem step.
 -/
-theorem detPM_of_deterministic (hD : F.Deterministic) (p : Atom) :
-    F.StarValidOn (detPM (StarFormula.atom p)) := by
+theorem detPM_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
+    F.StarValidOn (detPM φ) := by
   refine TaskFrame.StarValidOn.of_forall_total ?_
   intro M τ hτ x v
   rw [detPM_unfold]
   intro y
-  exact settledDisj_of_deterministic hD M hτ x _ _
+  exact settledDisj_of_deterministic hD M hτ x _ φ
 
 /-! ## The definability theorem — Theorem C, `Det-pm` half -/
 
@@ -248,23 +253,37 @@ theorem deterministic_of_detPM
     exact hval.symm
 
 /--
-**Theorem C, `Det-pm` half: `Det-pm` defines the deterministic task frames.**
+**Theorem C, `Det-pm` half: `Det-pm` defines the deterministic task frames — in its strongest
+form.** A three-way equivalence, hinged on `F.Deterministic`:
 
-`Det-pm` is valid over `F` — at every sentence letter — exactly when `F` is deterministic. This
-is what `cor:no-characterization` shows no `PlusFormula` can do, and what the time registers buy.
+`(∀ p : Atom, F.StarValidOn (detPM (.atom p)))` ⟺ `F.Deterministic` ⟺
+`(∀ φ : StarFormula, F.StarValidOn (detPM φ))`.
 
-The **single-`p`** form is not available in the (⇐) direction's shape: `detPM_of_deterministic`
-delivers validity at every atom uniformly, and the (⇒) direction consumes only one, so the
-biconditional is stated with the `∀ p` binder on both sides. Instantiating the (⇒) direction at
-one letter is `deterministic_of_detPM` applied to a constant family; no strengthening to a
-single fixed letter is claimed here, because that would need the frame-validity of `detPM p` for
-that letter alone to be *equivalent* to the family, which this development has not established.
+Read the two hinges in the two directions they are sharp in. The **atomic fragment already
+forces** determinism: the validity of `Det-pm` at bare sentence letters alone — the weakest
+hypothesis available — suffices, because the converse needs only the singleton valuation
+`|p| = {τ(y)}` at one letter to manufacture its separating witness. And determinism **delivers
+the full schema**: `detPM_of_deterministic` proves `detPM φ` valid at *every* `StarFormula`, not
+merely at atoms. Together the two halves say that the atomic fragment and the full schema define
+the same frame class, which is the sharpest form a definability theorem takes.
+
+**This is not an appeal to uniform substitution.** No instance of the schema is inferred from
+another. Each direction is proved outright — the (⇐) direction schematically in `φ` from the
+engine, the (⇒) direction at one atom from the singleton valuation — and uniform substitution is
+**unsound here** in any case (see this module's docstring for the drift-frame counterexample).
+
+This is what `cor:no-characterization` shows no `PlusFormula` can do, and what the time registers
+buy.
 
 Recorded as a **report-level result pending paper integration** (the PossibleWorlds
-determinism-axiom-correspondence report, §4), never as manuscript text. **A theorem of ZFC**, through the (⇒) direction.
+determinism-axiom-correspondence report, §4), never as manuscript text. **A theorem of ZFC**,
+through the (⇒) direction.
 -/
 theorem deterministic_starDefinable (F : TaskFrame) :
-    (∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))) ↔ F.Deterministic :=
-  ⟨deterministic_of_detPM, fun hD p => detPM_of_deterministic hD p⟩
+    ((∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))) ↔ F.Deterministic) ∧
+      (F.Deterministic ↔ ∀ φ : StarFormula, F.StarValidOn (detPM φ)) :=
+  ⟨⟨deterministic_of_detPM, fun hD p => detPM_of_deterministic hD (StarFormula.atom p)⟩,
+    ⟨fun hD φ => detPM_of_deterministic hD φ,
+      fun h => deterministic_of_detPM fun p => h (StarFormula.atom p)⟩⟩
 
 end FormalSystem.Semantics
