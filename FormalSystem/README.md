@@ -244,14 +244,15 @@ invariant check allowlists it by name (check C8).
 | `Automation.lean` | 100 | Re-export for Automation submodule |
 | `Examples.lean` | 33 | Re-export for Examples submodule |
 | `ForMathlib.lean` | 29 | Re-export for ForMathlib submodule (Mathlib-shaped extensions intended for upstreaming) |
-| `FormalSystem.lean` | 110 | Library aggregator: imports all submodules for unified access |
+| `FormalSystem.lean` | 115 | Library aggregator: imports all submodules for unified access |
 | `Init.lean` | 27 | Library-wide root, modelled on `Mathlib.Init`: the linters and common tactics every module is meant to inherit |
 | `MainResults.lean` | 254 | <!-- TODO: add description --> |
 | `Metalogic.lean` | 258 | Re-export for Metalogic submodule |
 | `MinusLanguage.lean` | 45 | Re-export for MinusLanguage submodule |
 | `PlusLanguage.lean` | 54 | Re-export for PlusLanguage submodule (L⁺ = L plus the stability modal `⊡`, and its logic TM⁺) |
 | `ProofSystem.lean` | 90 | Re-export for ProofSystem submodule |
-| `Semantics.lean` | 255 | Re-export for Semantics submodule |
+| `Semantics.lean` | 260 | Re-export for Semantics submodule |
+| `StarLanguage.lean` | 43 | Re-export for StarLanguage submodule (L⋆ = L⁺ plus the time store/recall operators `↑ⁱ`/`↓ⁱ`; semantic-only, no proof system) |
 | `Syntax.lean` | 76 | Re-export for Syntax submodule |
 | `Theorems.lean` | 90 | Re-export for Theorems submodule |
 <!-- END GENERATED -->

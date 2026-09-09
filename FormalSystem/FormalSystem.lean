@@ -39,6 +39,10 @@ and 7 inference rules
   TM's Hilbert system and the translation `tr : MinusFormula → Formula` into L, supporting the
   backward conservativity bridge in `Metalogic/Conservativity/Backward.lean`. Imports nothing from
   `Semantics/`
+- `FormalSystem.StarLanguage`: The language L⋆ = L⁺ + the manuscript's time store/recall
+  operators (`def:BLstar-semantics`), as a separate inductive `StarFormula` with the embedding
+  `ofPlus : PlusFormula → StarFormula`. Semantic-only: `StarAxiom`/`StarDerivationTree`/`TM⋆` are
+  reserved and unbuilt. Imports nothing from `Semantics/`
 - `FormalSystem.Semantics`: Task frame semantics with convex histories, truth evaluation, and
 validity
 - `FormalSystem.Metalogic`: Soundness, three completeness routes, and the tableau decision

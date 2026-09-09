@@ -20,7 +20,7 @@ commutes with each of them by `rfl`.
 
 ## Why the operators are not added to `PlusFormula`
 
-Task 533's atomization route to TM⁺ soundness
+The atomization route to TM⁺ soundness
 (`Metalogic/Conservativity/Plus/Atomization.lean`) rests on `stab_state_only`
 (`Semantics/PlusTruth.lean`): `⊡φ`'s truth depends on the world state **alone**, at any time.
 That invariant is **false inside a recall scope** — `⊡↓ⁱφ` reaches back to a time the register
@@ -84,8 +84,8 @@ exclusion. Anchors are cited by `\label` only, never by line number.
 | TM⋆ (a proof system for L⋆) | — | **Excluded**: the manuscript supplies none, and every deliverable here is semantic. `StarAxiom`, `StarDerivationTree`, `⊢⋆[fc]` and `TM⋆` are reserved, unbuilt names |
 
 **Report-level results are cited as such.** `Det-pm`, `Det-m`, and the forward-determinism
-sharpening are recorded in PossibleWorlds task 105's report
-`reports/02_determinism-axiom-correspondence.md` (§3.2, §3.3, §4) and are **pending paper
+sharpening are recorded in the PossibleWorlds repository's determinism-axiom-correspondence
+report (`reports/02_determinism-axiom-correspondence.md`, §3.2, §3.3, §4) and are **pending paper
 integration**. They are never cited as manuscript text and never as conjectures.
 
 **One recorded divergence from that report's Theorem A.** `fn_sentDet_atom` is stated at a
@@ -109,5 +109,5 @@ permitted and is how L⋆ acquires its semantics.
   `app:deterministic-future`, `app:drift`, `cor:no-characterization`,
   `lem:deterministic-singleton`, `thm:extension`
 * `FormalSystem/PlusLanguage/README.md` — L⁺, the language this one extends
-* PossibleWorlds task 105 report `02_determinism-axiom-correspondence.md` — Theorem C and the
+* The PossibleWorlds `02_determinism-axiom-correspondence.md` report — Theorem C and the
   forward-determinism sharpening, both pending paper integration

@@ -38,10 +38,9 @@ Three results, in increasing strength:
 ## Theorem C is a report-level result, pending paper integration
 
 `Det-pm` and the definability biconditional are **not manuscript text**. They are recorded in the
-PossibleWorlds task 105 report
-`specs/105_characterize_deterministic_task_frames/reports/02_determinism-axiom-correspondence.md`
-(§4), whose §4.1 also records that a *single* sentence letter suffices for the converse
-direction. That report is the citation of record for them here: they are cited as a
+PossibleWorlds repository's determinism-axiom-correspondence report
+(`reports/02_determinism-axiom-correspondence.md`, §4), whose §4.1 also records that a *single*
+sentence letter suffices for the converse direction. That report is the citation of record for them here: they are cited as a
 **report-level result pending paper integration**, never as manuscript text and never as a
 conjecture. What *is* manuscript text is `sent:det` and `app:deterministic-future`, which are
 results (1) and `Semantics/StarNonValidities.lean` below.
@@ -49,7 +48,8 @@ results (1) and `Semantics/StarNonValidities.lean` below.
 ## The single sentence letter is not uniform substitution
 
 `deterministic_of_detPM` takes the validity of `detPM p` for atoms `p` and concludes a frame
-condition. That is legitimate for the reason task 105's report §4.1 gives: the forward direction
+condition. That is legitimate for the reason the determinism-axiom-correspondence report's §4.1
+gives: the forward direction
 is proved for an **arbitrary** `StarFormula` (`sentDet_of_deterministic` and
 `detPM_of_deterministic` below both quantify over `φ` / over every atom), while the converse
 needs only **one valuation** — the singleton `|p| = {τ(y)}` — to manufacture its separating
@@ -66,14 +66,15 @@ while `Fp → ⊡Fp` is refutable over it (`Metalogic/Independence/`).
 through `deterministic_of_singletonClasses` (`Semantics/DeterministicBridge.lean`), which
 manufactures separating possible worlds by `thm:extension` and hence by Zorn's lemma. No
 `Classical.choice`-free pin is promised or attempted for them, and none should be: this is the
-"validity ⟹ frame condition" direction, which is ZFC by construction (task 536's report 02 §II.4
-choice-asymmetry table).
+"validity ⟹ frame condition" direction, which is ZFC by construction (the archived
+correspondence-record-and-store-recall-recommendation report, §II.4's choice-asymmetry table).
 
 ## References
 
 * JPL paper `app:deterministic-future` (statement and the `(∗)` chain), `sent:det`,
   `lem:deterministic-singleton`, `def:BLstar-semantics`
-* PossibleWorlds task 105 report 02 §4 — Theorem C, `Det-pm`, and the §4.1 single-letter note
+* The PossibleWorlds `02_determinism-axiom-correspondence.md` report, §4 — Theorem C,
+  `Det-pm`, and the §4.1 single-letter note
 * `FormalSystem/Semantics/PlusDeterminism.lean` — `states_eq_of_deterministic`, the L⁺ collapse
 * `FormalSystem/Semantics/StarNonValidities.lean` — `app:deterministic-future`'s negative half
 
@@ -163,8 +164,8 @@ theorem sentDet_of_deterministic (hD : F.Deterministic) (φ : StarFormula) :
 
 `↑¹ △ ↑² ↓¹ (⊡ ↓² ¬p ∨ ⊡ ↓² p)`.
 
-Transcribed from PossibleWorlds task 105's report 02 §4 — a **report-level result pending paper
-integration**, not manuscript text. A bare atom `p` is used rather than a schema variable:
+Transcribed from the PossibleWorlds determinism-axiom-correspondence report, §4 — a
+**report-level result pending paper integration**, not manuscript text. A bare atom `p` is used rather than a schema variable:
 §4.1's observation that one sentence letter suffices for the converse is what makes
 `deterministic_of_detPM` legitimate, and it is *not* an appeal to uniform substitution (see this
 module's docstring).
@@ -259,8 +260,8 @@ one letter is `deterministic_of_detPM` applied to a constant family; no strength
 single fixed letter is claimed here, because that would need the frame-validity of `detPM p` for
 that letter alone to be *equivalent* to the family, which this development has not established.
 
-Recorded as a **report-level result pending paper integration** (PossibleWorlds task 105 report
-02 §4), never as manuscript text. **A theorem of ZFC**, through the (⇒) direction.
+Recorded as a **report-level result pending paper integration** (the PossibleWorlds
+determinism-axiom-correspondence report, §4), never as manuscript text. **A theorem of ZFC**, through the (⇒) direction.
 -/
 theorem deterministic_starDefinable (F : TaskFrame) :
     (∀ p : Atom, F.StarValidOn (detPM p)) ↔ F.Deterministic :=

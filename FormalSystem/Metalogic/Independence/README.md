@@ -17,6 +17,16 @@ Five results are carried here:
    rather than notation for something L can already say.
 5. The two **pasting schemata are not derivable** from the naive `⊡`-set {SK, ST, S4, S5, MS, AS}
    together with TM (`PastingIndependence.lean`), so TM⁺'s axiom set is non-redundant.
+6. **Store and recall discriminate where nothing without them can** (`StarDiscrimination.lean`).
+   `sent:det` — the manuscript's `↑¹\Future↑²↓¹(⊡↓²¬φ ∨ ⊡↓²φ)` — is valid over the deterministic
+   translation frame `F¹` and refuted over the drift frame `F°`, while result 4's companion
+   `deterministic_not_plusDefinable` shows that no set of `PlusFormula`s separates them at all.
+   This is the live-text footnote following `app:deterministic-future`.
+7. **`sent:det` defines only *forward* determinism** (`ForwardDeterministicFrame.lean`). The
+   frame `F^N` (`W = ℕ`, `D = ℤ`, the absorbing predecessor map) is forward-deterministic and
+   **not** `Deterministic`, and `sent:det` is valid over it at every sentence letter. Replacing
+   `\Future` by `always` closes the gap: `Det-pm` does define the deterministic frames
+   (`Semantics/StarDeterminism.lean`'s `deterministic_starDefinable`).
 
 Results 2 and 3 are the two halves of the finding that the frame-class *narrowings* are not
 Galois-closed, in contrast with the paper's bare classes — which are closed, by
@@ -28,6 +38,11 @@ state is again a total history; so no ordinary task model can witness their unde
 witness is a *coarsened-state* model (`CoarsenedModels.lean`), which interprets `⊡` over a
 quotient of the world states and thereby removes the common state a splice would need. Everything
 else about the argument is the usual four steps.
+
+Results 6 and 7 leave the language rather than the semantics: they are stated over **L⋆**
+(`FormalSystem/StarLanguage/`), L⁺ plus the manuscript's time store/recall operators. The
+paper-label correspondence table for that appendix — every `\label` mapped to a Lean name or to
+an explicit exclusion — lives in `FormalSystem/StarLanguage/README.md`.
 
 Every result here follows the same four steps: build a concrete frame satisfying every
 structural axiom of the semantics; prove a truth-invariance lemma for it (a symmetry or
@@ -46,6 +61,7 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 | `DeterminismUndefinable.lean` | 189 | The instantiation at `F°`/`F¹`: (T3) `determined_valid_on_non_deterministic`, (T4) `fzero_plusValidOn_iff_f1`, and `deterministic_not_plusDefinable`. |
 | `DriftFrame.lean` | 254 | `F°`, the drift band `x ≤ u - w ≤ 2x` over `ℝ`, with all six `FrameOver` axioms (`limit` and `saturation` included) and `fzero_not_deterministic`. |
 | `DriftHistories.lean` | 178 | `F°`'s total histories are strictly increasing bi-Lipschitz bijections of `ℝ` (`fzero_hits_future` is the crux, by IVT); (H1) `fzero_orderFlow` and (H2) `fzero_stateOccurs`, the latter by an explicit affine witness. |
+| `ForwardDeterministicFrame.lean` | 431 | `F^N` — `W = ℕ`, `D = ℤ`, the absorbing predecessor map — with all six `FrameOver` obligations (*Saturation* via the new finite-**fibres** helper, since `ℕ` is infinite); `fn_forwardDeterministic`, `fn_not_deterministic`, the forward engine `states_eq_of_forwardDeterministic`, `fn_sentDet_atom` and the separation `fn_separates`; plus `fn_refutes_sentDet_somePast`, which shows the *schematic* reading of that validity is false. |
 | `LexIntWitness.lean` | 206 | The discrete, non-Archimedean carrier `ℤ ×ₗ ℤ`, the static frame over it as a member of `Mod (AxiomSet .Discrete)` outside `Sat .Discrete`, the semantic upper-bound engine `validOn_nextTop_of_mem_mod_discrete`, and the Discrete sandwich. |
 | `LoopingDuration.lean` | 235 | The reusable content. A frame carrying a *looping duration* (a nonzero `π` whose task relation is the identity) has periodic histories, hence periodic truth, hence validates `Hψ → Gψ` and every instance of `CO`. Proved for an arbitrary such frame. |
 | `NaiveSystem.lean` | 141 | TM⁺ with the two pasting axioms withheld, as a predicate on the *existing* derivation trees (`NaiveOnly`, `NaiveDerivable`) rather than a second axiom inductive, plus its derived rules. |
@@ -54,6 +70,7 @@ hypothesis); derive validity of the assumptions; and exhibit a valuation refutin
 | `RationalWitness.lean` | 206 | `rat_not_complete` — `ℚ` is not Dedekind-complete, written out because Mathlib carries no statement in this shape — and the static frame over `ℚ` as a member of `Mod (AxiomSet .Dedekind)` outside `Sat .Dedekind`, with the Dedekind sandwich. |
 | `RealTranslationFrame.lean` | 189 | `realOrder`; `F¹`, the deterministic translation flow over `ℝ`, built through `ShiftSet` (the only route on which the world-set characterization elaborates); `f1_deterministic`, `f1_total_eq_orbit`, `f1_eq_of_states_eq`. |
 | `StabUndefinable.lean` | 249 | `stabNotDefinable`: no `Formula` is equivalent to `⊡Fp` over all task models, by a `TruthCorr` between the permissive frame over `ℤ` and the deterministic clock at family index `ℤ → ℕ`. |
+| `StarDiscrimination.lean` | 194 | = [3/2, ∞)`), `fzero_refutes_sentDet`, `f1_sentDet`, and `star_discriminates_where_plus_cannot` — one `StarFormula` separates `F°` from `F¹` where `cor:no-characterization` shows no `PlusFormula` set can. |
 | `StateSetTruth.lean` | 240 | `satSet` and `plusTruthAt_iff_mem_satSet`: over an (H1)+(H2) frame, L⁺ truth depends only on the world state of evaluation. Plus `plusValidOn_iff_satSet_univ` and `determined_of_orderFlow`. |
 | `StaticFrame.lean` | 323 | The static frame at an arbitrary duration group: every nonzero duration loops, so truth is time-invariant, and the `untl`/`snce` clauses collapse into a small constant-truth calculus (general, dense and discrete forms, plus `K⁺`/`K⁻` and `Axiom.z1`). Turns every later axiom check into a rewrite. |
 <!-- END GENERATED -->

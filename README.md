@@ -17,8 +17,8 @@ The repository implements the syntax, task semantics, proof theory, and metalogi
 <!-- BEGIN GENERATED: inventory dir=FormalSystem rows=totals desc=no -->
 | Metric | Count |
 |--------|-------|
-| Live `.lean` files | 496 |
-| Live lines | 287,114 |
+| Live `.lean` files | 505 |
+| Live lines | 289,384 |
 | Archived `.lean` files | 168 |
 | Archived lines | 91,618 |
 <!-- END GENERATED -->
@@ -211,7 +211,7 @@ logic; the other three are this repository's, and the superscripts are Lean-only
 | **L⁻** | ⊥, →, □, H, G | **TM⁻** | `FormalSystem/MinusLanguage/`, `MinusFormula`, `⊢⁻[fc]` |
 | **L** | ⊥, →, □, S, U | **TM** (TM_z, TM_d, TM_r) | `FormalSystem/Syntax/` + `ProofSystem/`, `Formula`, `⊢[fc]` |
 | **L⁺** | L plus the stability modal ⊡ | **TM⁺** | `FormalSystem/PlusLanguage/`, `PlusFormula`, `⊢⁺[fc]` |
-| **L⋆** | L⁺ plus the time store/recall operators ↑ⁱ/↓ⁱ | — (not yet built) | the `StarLanguage` name is reserved for it; nothing is built yet |
+| **L⋆** | L⁺ plus the time store/recall operators ↑ⁱ/↓ⁱ | — (semantic only; no proof system) | `FormalSystem/StarLanguage/`, `StarFormula`, the embedding `ofPlus` |
 
 The manuscript has exactly **two** languages: 𝓛 and 𝓛⋆, where 𝓛⋆ bundles ⊡ with both the
 time-store/recall and the world-store/recall families (the sentence defining `\BL^\star` in
@@ -226,16 +226,22 @@ time-store/recall and the world-store/recall families (the sentence defining `\B
 - **L⁺ is the ⊡-only fragment of the manuscript's 𝓛⋆**, and TM⁺ is a logic for that fragment
   which the manuscript does not supply — it puts a logic for 𝓛⋆ outside its scope.
 - **L⋆ is the time-register fragment of the manuscript's 𝓛⋆** — ⊡ together with
-  timeStore/timeRecall, which is what `app:deterministic-future` actually uses. The world
-  registers are not formalized here.
+  timeStore/timeRecall, which is what `app:deterministic-future` actually uses. It is built, and
+  its semantics interprets the manuscript's points `(τ, x, v⃗)` per `def:BLstar-semantics`. The
+  world registers are not formalized here, and L⋆ carries **no proof system**: the manuscript
+  supplies none, and every L⋆ result here is semantic. `StarAxiom`, `StarDerivationTree`,
+  `⊢⋆[fc]` and `TM⋆` are reserved, unbuilt names. See `FormalSystem/StarLanguage/README.md` for
+  the paper-label correspondence table.
 
 So results stated below about L⁺ and L⋆ are results about *fragments* of the manuscript's 𝓛⋆,
 and are described that way rather than by a paper name they do not have.
 
-Two of these sit beside L (`Formula`): the tense-primitive **L⁻**
-(`FormalSystem/MinusLanguage/`, `MinusFormula`, related to L by the translation `tr`) and the
+Three of these sit beside L (`Formula`): the tense-primitive **L⁻**
+(`FormalSystem/MinusLanguage/`, `MinusFormula`, related to L by the translation `tr`), the
 **stability extension L⁺** (`FormalSystem/PlusLanguage/`, `PlusFormula` = L plus the stability
-modal `⊡`, related to L by the embedding `ofFormula`). Every result below is sorry-free
+modal `⊡`, related to L by the embedding `ofFormula`), and the **time-register extension L⋆**
+(`FormalSystem/StarLanguage/`, `StarFormula` = L⁺ plus `↑ⁱ`/`↓ⁱ`, related to L⁺ by the embedding
+`ofPlus`). Every result below is sorry-free
 (axioms: exactly `propext`, `Classical.choice`, `Quot.sound`) and holds at all four frame classes
 unless a class is named.
 

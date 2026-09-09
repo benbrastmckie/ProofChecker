@@ -61,7 +61,7 @@ intended clause — which is what `fn_rel_iff_of_nonneg` and `fn_rel_iff_of_nonp
 On a **finite** `W`, *Seriality* makes each `⇒_x` (`x ≥ 0`) surjective, and a surjective function
 on a finite set is injective; so forward determinism already entails backward determinism there,
 and no finite frame can separate the two notions. `W = ℕ` is not an incidental choice
-(PossibleWorlds task 105 report 02 §3.3, consequence 4).
+(the PossibleWorlds determinism-axiom-correspondence report, §3.3, consequence 4).
 
 ## *Saturation* needs the finite-**fibres** helper
 
@@ -73,7 +73,8 @@ consumer: every fibre of `fnRel` is contained in `Set.Iic (w + |d|)` and hence f
 
 ## References
 
-* PossibleWorlds task 105 report 02 §3.3 — the frame, machine-verified, and its four consequences
+* The PossibleWorlds `02_determinism-axiom-correspondence.md` report, §3.3 — the frame,
+  machine-verified, and its four consequences
 * JPL paper `sent:det`, `app:deterministic-future`, `lem:deterministic-singleton`,
   `def:deterministic`
 * `FormalSystem/Semantics/FrameProperty.lean` — `TaskFrame.ForwardDeterministic`
@@ -319,8 +320,8 @@ Weakening `def:deterministic` to the guarded `0 ≤ d` binder would make `F^N` d
 singleton — the frame is not deterministic in the real sense (`fn_not_deterministic`), so
 `deterministic_iff_singletonClasses` would become false under that weakening. Recorded as a
 statement rather than only as prose, since it is the reason `TaskFrame.Deterministic`'s
-unrestricted binder is a correctness requirement (PossibleWorlds task 105 report 02 §3.3,
-consequence 2).
+unrestricted binder is a correctness requirement (the PossibleWorlds
+determinism-axiom-correspondence report, §3.3, consequence 2).
 -/
 theorem fn_forwardDeterministic_not_singletonClasses :
     FN.ForwardDeterministic ∧ ¬ FN.SingletonClasses :=
@@ -339,7 +340,8 @@ at no earlier time, so a `φ` whose truth at `y` looks *backwards* — `P p`, sa
 between two possible worlds of `⟨τ⟩ₓ` at the very `y > x` that `sent:det` tests. That is what
 `fnRampHist` and `fnZeroHist` witness: they agree at `0` and differ at every negative time.
 
-The task-105 result this module transcribes (report 02 §3.2, Theorems A and B) is likewise
+The result this module transcribes (the PossibleWorlds determinism-axiom-correspondence
+report, §3.2, Theorems A and B) is likewise
 stated at the sentence-letter level: frame validity quantifies over all valuations, and the
 argument runs the singleton valuation `|p| = {τ(y)}`. Nothing there claims, or needs, the
 schematic form. -/
@@ -360,7 +362,7 @@ theorem fnZeroHist_isTotal : fnZeroHist.IsTotal := ConvexHistory.ofTotal_isTotal
 
 /-- The ramp possible world `σ(n) = max(0, −n)` of `F^N`: it descends to the absorbing state by
 time `0` and stays there. It agrees with `fnZeroHist` at `0` and differs at every negative
-time — the pair task 105's report 02 §3.3 exhibits. -/
+time — the pair the PossibleWorlds determinism-axiom-correspondence report, §3.3, exhibits. -/
 def fnRampHist : ConvexHistory FN :=
   ConvexHistory.ofTotal FN (fun n => (-n).toNat) <| by
     intro s t

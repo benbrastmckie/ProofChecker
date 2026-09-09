@@ -48,9 +48,10 @@ simply carry `v` across unchanged: `↓ⁱ` evaluates at `vᵢ`, a time in the *
 reference, so shifting the history must shift the register contents with it. The lemma below is
 therefore
 `StarTruthAt M (σ.timeShift Δ) t v φ ↔ StarTruthAt M σ (t + Δ) (fun i => v i + Δ) φ`.
-This is the restatement recorded as required in task 536's report 02 §II.3 (which names it
-against that report's pre-rename file names — `StarTruth.lean` there is this tree's
-`PlusTruth.lean`); the L⋆ module it names is this one.
+This is the restatement recorded as required in the archived
+correspondence-record-and-store-recall-recommendation report, §II.3 (which names it against that
+report's pre-rename file names — `StarTruth.lean` there is this tree's `PlusTruth.lean`); the L⋆
+module it names is this one.
 
 **(b) `stab_state_only` fails inside a recall scope, by design.**
 `stab_state_only` (`Semantics/PlusTruth.lean`) says `⊡φ`'s truth depends on the world state
@@ -225,7 +226,8 @@ theorem starTruthAt_ofPlus (M : TaskModel F) (τ : ConvexHistory F) (x : F.Durat
 
 /-! ## The transport layer
 
-The two lemmas task 536's report 02 §II.3 flagged as breaking under time registers, restated in
+The two lemmas the archived correspondence-record-and-store-recall-recommendation report, §II.3,
+flagged as breaking under time registers, restated in
 the forms that survive them. -/
 
 /--
