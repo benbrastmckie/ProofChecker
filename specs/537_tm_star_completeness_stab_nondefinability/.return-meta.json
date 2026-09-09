@@ -1,30 +1,31 @@
 {
-  "status": "planned",
+  "status": "implemented",
+  "started_at": "2026-09-08T00:00:00Z",
+  "completed_at": "2026-09-08T00:00:00Z",
+  "verification": {
+    "verification_passed": true,
+    "sorry_count": 0,
+    "vacuous_count": 0,
+    "axiom_count": 0,
+    "build_passed": true
+  },
   "artifacts": [
     {
-      "type": "plan",
-      "path": "specs/537_tm_star_completeness_stab_nondefinability/plans/01_tm-plus-deterministic-completeness.md",
-      "summary": "15-phase plan for TM+ deterministic completeness, the axiomatize-without-defining coincidence corollary, non-definability of the stability modal, pasting-axiom underivability, and the conservativity corollaries."
+      "type": "summary",
+      "path": "specs/537_tm_star_completeness_stab_nondefinability/summaries/01_tm-plus-deterministic-completeness-summary.md",
+      "summary": "Deterministic completeness of TM+ + Determined with the coincidence corollary, non-definability of the stability modal, underivability of both pasting axioms, and the conservativity corollaries -- all sorry-free."
     }
   ],
-  "dispatch_seq": 1,
-  "next_steps": "Run /implement 537 to execute the plan",
-  "phase_count": 15,
-  "estimated_hours": 26,
-  "dependency_waves": [[1, 2, 5, 6], [3, 4, 7, 8], [9], [10, 11, 13], [12], [14], [15]],
-  "memory_candidates": [
-    {
-      "content": "When a Lean completeness engine ends in a single application of its validity hypothesis to a concretely constructed countermodel frame (the shape `h_valid.apply F TM tau h_tot t`), the engine can be re-read with an arbitrarily narrowed validity hypothesis at near-zero cost: add one existential binder carrying the frame property to the countermodel producer and supply the witness. In this tree every completeness countermodel frame already carried a proved fibre-subsingleton lemma, which is definitionally the determinism predicate, so class-restricted completeness was a signature widening rather than a new proof. The corollary generalises: before planning a new canonical-model construction for a restricted frame class, check whether the existing engine's countermodel already lies in that class.",
-      "category": "PATTERN",
-      "source_artifact": "specs/537_tm_star_completeness_stab_nondefinability/plans/01_tm-plus-deterministic-completeness.md",
-      "confidence": 0.85,
-      "suggested_keywords": ["completeness-engine", "countermodel-frame", "hypothesis-narrowing", "frame-class-restriction", "lean-metatheory"]
-    }
-  ],
+  "completion_data": {
+    "completion_summary": "Landed the mechanical TM+ metatheory sorry-free at all four frame classes: deterministic completeness of TM+ + Determined together with logicDeterministicEqDeterminedValid (the logic of the deterministic frames and the logic of the Determined-valid frames coincide, and both are axiomatized by TM+ + Determined, without Determined defining either class); stabNotDefinable (no Formula is equivalent to the PlusFormula box-dot Fp); pasteNotNaiveDerivable and untlPasteNotNaiveDerivable via a new coarsened-state semantics with its own naive-soundness theorem; and the conservativity corollaries including detDerivable_ofFormula_iff. General (nondeterministic) TM+ completeness is stated nowhere and sorried nowhere, and is recorded as open in three READMEs and docs/theorem-index.md citing Reynolds 2003 and Zanardo 1991. Full lake build clean (2629 jobs) and every check of scripts/check-module-invariants.sh passes, C2/C3/C14 included.",
+    "roadmap_items": []
+  },
   "metadata": {
-    "session_id": "sess_1788912523_4f6783_537",
-    "agent_type": "planner-agent",
+    "session_id": "sess_1788912523_4f6783",
+    "agent_type": "lean-implementation-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "plan", "planner-agent"]
+    "delegation_path": ["orchestrator", "implement", "skill-lean-implementation"],
+    "compliance_check": "passed",
+    "dispatch_seq": 2
   }
 }
