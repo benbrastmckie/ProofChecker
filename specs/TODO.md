@@ -11,7 +11,7 @@ next_project_number: 571
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,561,563,568,569 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 2 | 231,282,296,465,497,560,564,565,567,570 | 298,464,502,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -91,7 +91,6 @@ next_project_number: 571
 
 559 [NOT STARTED] — RESEARCH TASK, verdict-first -- report and sorry-free probe files
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
-561 [IMPLEMENTING] — Formalize in Lean the manuscript's CHARACTERIZATION THEOREM FOR T
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
@@ -295,7 +294,7 @@ SEQUENCING: depends on task 557 (in progress), whose file_scope includes Syntax/
 ---
 
 ### 561. Store recall deterministic frame characterization
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 562

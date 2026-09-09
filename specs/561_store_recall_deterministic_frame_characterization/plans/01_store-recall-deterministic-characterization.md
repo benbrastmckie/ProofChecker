@@ -1,7 +1,7 @@
 # Implementation Plan: Task #561 — the characterization theorem for the deterministic task frames
 
 - **Task**: 561 - Store/recall and the characterization theorem for the deterministic task frames
-- **Status**: [IMPLEMENTING]
+- **Status**: [COMPLETED]
 - **Effort**: 21 hours (core, Phases 1-14) plus 2 hours optional (Phase 15)
 - **Dependencies**: None. Independent of 537 (deterministic completeness) and of 559/560
   (nondeterministic completeness); must not wait on them.
@@ -112,7 +112,8 @@ No roadmap phases are added (the dispatch carries no `roadmap_flag`).
   definability statement `deterministic_starDefinable`.
 - The forward-determinism separation: `TaskFrame.saturation_of_fib_finite`,
   `TaskFrame.ForwardDeterministic`, the frame `FN`, `fn_forwardDeterministic`,
-  `fn_not_deterministic`, and `fn_sentDet`.
+  `fn_not_deterministic`, and `fn_sentDet_atom` (the sentence-letter form; the schematic
+  `fn_sentDet` is false — see the dated note in `## Lean Challenge Statements`).
 
 **Non-Goals**:
 - **No proof system for L⋆.** The names `StarAxiom`, `StarDerivationTree`, `⊢⋆[fc]` and `TM⋆` are
@@ -716,7 +717,7 @@ so `sent:det` does not characterize the deterministic frames, only the forward-d
 
 | Excluded item | Reason | Evidence |
 |---|---|---|
-| `fn_sentDet (φ : StarFormula) : FN.StarValidOn (sentDet φ)` — the schematic form pinned in `## Lean Challenge Statements` | **The recorded statement is false.** Forward determinism settles the future and says nothing about the past, so a past-looking instance distinguishes two possible worlds of the same stability class at a *future* time. `F^N`'s own witnesses `fnZeroHist ≡ 0` and `fnRampHist n = max(0, −n)` agree at `0` and differ at every negative time; with `\|p\| = {3}`, `P p` holds for the ramp world at time `1` and fails for the constant world, so both disjuncts of `settledDisj` fail at `(τ, 0, ·)` with register `2` holding `1`. | `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` (`Metalogic/Independence/ForwardDeterministicFrame.lean`) — Lean-checked refutations of the recorded statement, `lake build` green |
+| `fn_sentDet (φ : StarFormula) : FN.StarValidOn (sentDet φ)` — the schematic form formerly pinned in `## Lean Challenge Statements`, corrected there in place on 2026-09-08 | **The recorded statement is false.** Forward determinism settles the future and says nothing about the past, so a past-looking instance distinguishes two possible worlds of the same stability class at a *future* time. `F^N`'s own witnesses `fnZeroHist ≡ 0` and `fnRampHist n = max(0, −n)` agree at `0` and differ at every negative time; with `\|p\| = {3}`, `P p` holds for the ramp world at time `1` and fails for the constant world, so both disjuncts of `settledDisj` fail at `(τ, 0, ·)` with register `2` holding `1`. | `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` (`Metalogic/Independence/ForwardDeterministicFrame.lean`) — Lean-checked refutations of the recorded statement, `lake build` green |
 | — replaced by | `fn_sentDet_atom (p : Atom) : FN.StarValidOn (sentDet (StarFormula.atom p))`, the sentence-letter form. This is what the ground-truth source actually claims: PossibleWorlds task 105 report 02 §3.2's Theorem A runs the singleton valuation `\|p\| = {τ(y)}`, so its statement is at the sentence-letter level throughout. Nothing in the source is contradicted; the plan generalised it one step too far. | `fn_sentDet_atom`, `fn_separates`, `fn_forwardDeterministic_not_singletonClasses` |
 
 **Raised for the user, not laundered.** Per `.claude/rules/plan-compliance.md`, a same-named
@@ -937,7 +938,19 @@ theorem fn_not_deterministic : ¬ FN.Deterministic := sorry
 
 /-! Phase 13 -/
 
-theorem fn_sentDet (φ : StarFormula) : FN.StarValidOn (sentDet φ) := sorry
+/-- **Corrected 2026-09-08.** This line originally pinned the *schematic* statement
+`fn_sentDet (φ : StarFormula) : FN.StarValidOn (sentDet φ)`. That statement is **false**, and its
+refutation is now in the tree: `fn_refutes_sentDet_somePast` exhibits a `StarFormula` instance
+(`P p`) of `sent:det` that fails over `F^N`, and `not_forall_fn_sentDet` reads that off as the
+negation of the schematic form (both in
+`FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean`). The reason: forward
+determinism constrains the future and says nothing about the past, so a past-looking instance
+distinguishes two possible worlds of the same stability class at a *future* time. The
+sentence-letter form pinned below is what the ground-truth source actually claims — PossibleWorlds
+task 105 report 02 §3.2's Theorem A runs the singleton valuation `|p| = {τ(y)}`, so its statement
+is at the sentence-letter level throughout. The plan generalised it one step too far; nothing in
+the source is contradicted. See Phase 13's `#### Reasoned Exclusions` table. -/
+theorem fn_sentDet_atom (p : Atom) : FN.StarValidOn (sentDet (StarFormula.atom p)) := sorry
 
 end FormalSystem.Semantics
 ```
