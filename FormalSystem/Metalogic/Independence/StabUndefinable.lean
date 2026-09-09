@@ -45,9 +45,9 @@ fields are the profile-matching constructions above.
 
 ## Why the separator has to be temporal
 
-An *atomic* separator is impossible: `p → ⊡p` is valid on every frame (`stab_atom_of_atom`,
-`Semantics/PlusTruth.lean`, the AS axiom), because an atom's truth depends on the world state
-alone — which is exactly what `⊡` quantifies over. So `⊡p ↔ p` everywhere and no atom can
+An *atomic* separator is impossible: `p → ⊡p` is valid on every frame (the `stateLocal_atom`
+instance of `stab_of_stateLocal`, `Semantics/PlusStateLocal.lean`, the AS axiom), because an
+atom's truth depends on the world state alone — which is exactly what `⊡` quantifies over. So `⊡p ↔ p` everywhere and no atom can
 witness anything. `Fp` is the least temporal formula that can, which is why the statement is
 about `⊡Fp` and not about `⊡` at an arbitrary argument.
 

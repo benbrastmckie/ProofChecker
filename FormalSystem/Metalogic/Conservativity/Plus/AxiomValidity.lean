@@ -6,6 +6,7 @@ Authors: Benjamin Brast-McKie
 
 import FormalSystem.Metalogic.Conservativity.Plus.Atomization
 import FormalSystem.Semantics.PlusPasting
+import FormalSystem.Semantics.PlusStateLocal
 import FormalSystem.PlusLanguage.Axioms
 
 /-!
@@ -29,8 +30,9 @@ mirror argument is used, since the TM axiom set is not mirror-closed.
   schema at the atomized parameters, under one fixed encoding. No schema is re-proved over
   `PlusTruthAt`.
 - **The six S5/bridge `⊡` arms** are the definitional validities of `Semantics/PlusTruth.lean`
-  (`of_stab`, `stab_four`, `stab_five`, `stab_of_box`, `stab_atom_of_atom`; K is the
-  universal-quantifier shape of the `stab` clause). Their temporal duals are the same schemata
+  (`of_stab`, `stab_four`, `stab_five`, `stab_of_box`; K is the universal-quantifier shape of the
+  `stab` clause) together with `stab_of_stateLocal` (`Semantics/PlusStateLocal.lean`), which
+  discharges AS at the atom instance `stateLocal_atom p` of the state-locality fragment. Their temporal duals are the same schemata
   at swapped parameters, because `swapTemporal` fixes `stab`.
 - **The two pasting arms** are the PS/US validities of `Semantics/PlusPasting.lean`; their
   temporal duals are the past mirrors `paste'_plusValid` and `snce_paste_plusValid`, with the
@@ -144,7 +146,8 @@ theorem plusAxiom_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
     exact PlusValidIn.of_forall_total fun _ _ M τ hτ t h => stab_five M τ hτ t a0.neg h
   | box_stab a0 => exact PlusValidIn.of_forall_total fun _ _ M τ _ t => stab_of_box M τ t a0
   | atom_stab p =>
-    exact PlusValidIn.of_forall_total fun _ _ M τ _ t => stab_atom_of_atom M τ t p
+    exact PlusValidIn.of_forall_total fun _ _ M τ hτ t =>
+      stab_of_stateLocal (stateLocal_atom p) M τ hτ t
   | paste a0 a1 h0 h1 => exact paste_plusValid h0 h1
   | untl_paste a0 a1 h0 h1 => exact untl_paste_starValid h0 h1
 
@@ -260,7 +263,8 @@ theorem plusAxiom_swap_validIn_min {φ : PlusFormula} (ax : PlusAxiom φ) :
   | box_stab a0 =>
     exact PlusValidIn.of_forall_total fun _ _ M τ _ t => stab_of_box M τ t a0.swapTemporal
   | atom_stab p =>
-    exact PlusValidIn.of_forall_total fun _ _ M τ _ t => stab_atom_of_atom M τ t p
+    exact PlusValidIn.of_forall_total fun _ _ M τ hτ t =>
+      stab_of_stateLocal (stateLocal_atom p) M τ hτ t
   | paste a0 a1 h0 h1 =>
     simp only [PlusFormula.swapTemporal, swap_temporal_dstab, swap_temporal_and]
     exact paste'_plusValid h0.swapTemporal h1.swapTemporal

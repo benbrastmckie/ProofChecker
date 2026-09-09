@@ -84,7 +84,7 @@ frame `NF` — the same frame and countermodel `app:deterministic`'s negative ha
 (`refute_determined`) uses.
 
 The refuting instance is a bare atom, which is *not* a weakening: unlike *Determined*, whose
-atomic instances are frame-valid everywhere (`stab_atom_of_atom`), `sent:det` has genuine
+atomic instances are frame-valid everywhere (`stab_of_stateLocal`), `sent:det` has genuine
 content at an atom because `↓²` moves evaluation to a *different time*, where the present world
 state no longer determines the atom's value. That is precisely the discrimination the time
 registers buy, and it is why no uniform-substitution argument is needed — or available — here.

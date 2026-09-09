@@ -341,34 +341,34 @@ missing exclusion must be added.
 
 ---
 
-### Phase 5: Retire `stab_atom_of_atom` [IN PROGRESS]
+### Phase 5: Retire `stab_atom_of_atom` [COMPLETED]
 
 **Goal**: Delete the atom-restricted statement, redirect both proof consumers to
 `stab_of_stateLocal`, update every prose reference, and verify explicitly that the atomization
 route is intact.
 
 **Tasks**:
-- [ ] Add `import FormalSystem.Semantics.PlusStateLocal` to
+- [x] Add `import FormalSystem.Semantics.PlusStateLocal` to
       `FormalSystem/Metalogic/Conservativity/Plus/AxiomValidity.lean` and confirm no import cycle
       (`bash scripts/check-metalogic-cycles.sh` if applicable; otherwise the build settles it)
-- [ ] Replace both `atom_stab p` arms (`AxiomValidity.lean:147` and `:263`) with
+- [x] Replace both `atom_stab p` arms (`AxiomValidity.lean:147` and `:263`) with
       `stab_of_stateLocal (stateLocal_atom p) …`, binding the `τ.IsTotal` currently discarded as
       `_` in the `PlusValidIn.of_forall_total` lambda
-- [ ] Delete `theorem stab_atom_of_atom` from `FormalSystem/Semantics/PlusTruth.lean` (currently
+- [x] Delete `theorem stab_atom_of_atom` from `FormalSystem/Semantics/PlusTruth.lean` (currently
       at `:232`). Do not rename it, do not leave a specialization behind, do not restate it in
       weakened form
-- [ ] Update the `Main Results` bullet at `PlusTruth.lean:35` to name the new lemma and its module
-- [ ] Update the four remaining prose references: `PlusNonValidities.lean:156`,
+- [x] Update the `Main Results` bullet at `PlusTruth.lean:35` to name the new lemma and its module
+- [x] Update the four remaining prose references: `PlusNonValidities.lean:156`, *(deviation: altered — the scan found a sixth prose reference the plan did not enumerate, `Metalogic/Conservativity/Plus/AxiomValidity.lean:32`; per the phase's Scope Hypothesis the actual hit set governs, so it was updated too)*
       `Metalogic/Independence/StabUndefinable.lean:48`,
       `Semantics/StarNonValidities.lean:87`, `PlusLanguage/Axioms.lean:37` and `:291`
-- [ ] Confirm zero residue: `grep -rn "stab_atom_of_atom" --include=*.lean --include=*.md .`
+- [x] Confirm zero residue: `grep -rn "stab_atom_of_atom" --include=*.lean --include=*.md .`
       returns hits only under `specs/`
-- [ ] **Verify the atomization route explicitly**: `lake build
+- [x] **Verify the atomization route explicitly**: `lake build
       FormalSystem.Metalogic.Conservativity.Plus.Atomization` and
       `…Plus.AxiomValidity` both green; confirm `Atomization.lean` still consumes
       `stab_state_only` unchanged (`grep -n "stab_state_only" Atomization.lean` shows the same
       call at `:198` against an unmodified statement)
-- [ ] Full `lake build` green
+- [x] Full `lake build` green
 
 **Timing**: 1 hour
 
@@ -399,7 +399,7 @@ set differs from this list, the actual set governs and this count is superseded.
 
 ---
 
-### Phase 6: The atom-restricted survey on the L⁺ side [NOT STARTED]
+### Phase 6: The atom-restricted survey on the L⁺ side [IN PROGRESS]
 
 **Goal**: Enumerate every other atom-restricted statement reachable from `Semantics/PlusTruth.lean`,
 give each a widen-or-exclude verdict with evidence, and apply every widening the new result

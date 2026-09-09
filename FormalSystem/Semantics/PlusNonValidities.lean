@@ -153,8 +153,10 @@ is exhibited under `Metalogic/Independence/`).
 Two things the refutation depends on, recorded because both are easy to lose:
 
 * **The refuting instance is `Fp`, not an atom.** At an atom the schema `p → ⊡p` holds on *every*
-  frame (`stab_atom_of_atom`, `Semantics/PlusTruth.lean`): an atom's truth depends on the world
-  state alone, which is exactly what `⊡` quantifies over. So no uniform-substitution argument is
+  frame (`stab_of_stateLocal` at `stateLocal_atom`, `Semantics/PlusStateLocal.lean`): an atom's
+  truth depends on the world state alone, which is exactly what `⊡` quantifies over. More is
+  true — `Fp` is refutable precisely *because* it lies outside the state-locality fragment
+  (`not_isPlusStateLocal_someFuture`), and every formula inside it satisfies the schema. So no uniform-substitution argument is
   available here — a schema can be frame-valid at its atomic instances and refutable at a
   genuinely temporal one, and it is. Every refutation in this family must exhibit a temporal
   formula.

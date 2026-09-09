@@ -34,7 +34,7 @@ drift between the two inductives fails to typecheck there.
 | `stab_4` | `⊡φ → ⊡⊡φ` | `stab_four` |
 | `stab_5` | `⟐φ → ⊡⟐φ` (as `¬⊡¬φ → ⊡¬⊡¬φ`) | `stab_five` |
 | `box_stab` | `□φ → ⊡φ` | `stab_of_box` (`⟨τ⟩_x ⊆ H_F`, paper line 1108) |
-| `atom_stab` | `p → ⊡p` for atoms | `stab_atom_of_atom` (paper footnote, line 1119) |
+| `atom_stab` | `p → ⊡p` for atoms | `stab_of_stateLocal` at `stateLocal_atom` (paper footnote, line 1119) |
 | `paste` | `⟐φ⁺ → (⟐ψ⁻ → ⟐(φ⁺ ∧ ψ⁻))`, `φ⁺` pure-future, `ψ⁻` pure-past | `Semantics/PlusPasting.lean`, `paste_valid` |
 | `untl_paste` | `(α⁻ U ⟐φ⁺) → ⟐(α⁻ U φ⁺)`, `α⁻` pure-past, `φ⁺` pure-future | `untl_dstab_valid` |
 
@@ -288,7 +288,9 @@ inductive PlusAxiom : PlusFormula → Type where
       PlusAxiom ((dstab φ).imp (PlusFormula.stab (dstab φ)))
   /-- MS: `□φ → ⊡φ` — `⟨τ⟩_x ⊆ H_F` (paper line 1108); `Semantics.stab_of_box`. -/
   | box_stab (φ : PlusFormula) : PlusAxiom ((PlusFormula.box φ).imp (PlusFormula.stab φ))
-  /-- AS: `p → ⊡p` for atoms (paper footnote, line 1119); `Semantics.stab_atom_of_atom`. -/
+  /-- AS: `p → ⊡p` for atoms (paper footnote, line 1119); `Semantics.stab_of_stateLocal` at
+      `stateLocal_atom`. The axiom stays atom-restricted — widening it would change TM⁺ — but its
+      semantic witness is the whole state-locality fragment. -/
   | atom_stab (p : Atom) :
       PlusAxiom ((PlusFormula.atom p).imp (PlusFormula.stab (PlusFormula.atom p)))
   /-- PS (same-time pasting): `⟐φ⁺ → (⟐ψ⁻ → ⟐(φ⁺ ∧ ψ⁻))` for pure-future `φ⁺` and pure-past

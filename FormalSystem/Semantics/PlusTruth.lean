@@ -32,7 +32,10 @@ histories together with the totality predicate `σ.IsTotal` (the predicate form 
 - The `PlusTruth.*_iff` clause lemmas, mirroring `MinusTruth.*`
 - The definitional validities of `⊡` (paper footnote, line 1118: "the monomodal logic of `⊡`
   is S5"; line 1119: `φ → ⊡φ` for non-temporal `φ`): `stab_of_box` (`□φ → ⊡φ`), `of_stab`
-  (T), `stab_four` (4), `stab_five` (5), `stab_atom_of_atom` (`p → ⊡p` for atoms)
+  (T), `stab_four` (4), `stab_five` (5). The atom-level `p → ⊡p` of the same footnote is **not**
+  stated here: it is the `stateLocal_atom` instance of `stab_of_stateLocal`
+  (`Semantics/PlusStateLocal.lean`), which proves `φ → ⊡φ` for every formula of the
+  state-locality fragment
 - `stab_congr_sameState`: `⊡φ` is a state formula at each time; `box_stab_iff` (`□⊡φ ↔ □φ`),
   `stab_box_of_box` (`□φ → ⊡□φ`)
 - `plusTruthAt_timeShift`: L⁺ truth commutes with time shift (the `PlusFormula` twin of
@@ -226,14 +229,6 @@ theorem stab_five (M : TaskModel F) (τ : ConvexHistory F) (hτ : τ.IsTotal) (t
   apply h
   intro ρ hρ hρsame
   exact hstab ρ hρ (fun hσ' hρ' => by rw [← hσsame (hτ t) hσ', ← hρsame (hτ t) hρ'])
-
-/-- **Atom stability**: `p → ⊡p` for atoms (paper footnote, line 1119): an atom's truth depends
-on the world state alone. -/
-theorem stab_atom_of_atom (M : TaskModel F) (τ : ConvexHistory F) (t : F.Duration) (p : Atom)
-    (h : PlusTruthAt M τ t (.atom p)) : PlusTruthAt M τ t (.stab (.atom p)) := by
-  intro σ hσ hsame
-  obtain ⟨hτ, hv⟩ := h
-  exact ⟨hσ t, by rw [← hsame hτ (hσ t)]; exact hv⟩
 
 /-! ## `⊡φ` is a state formula at each time; `□⊡ ↔ □`; `□ → ⊡□` -/
 
