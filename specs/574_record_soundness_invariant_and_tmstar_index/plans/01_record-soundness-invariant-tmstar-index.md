@@ -1,7 +1,7 @@
 # Implementation Plan: Record the Soundness Invariant and the TM⋆ Index Rows
 
 - **Task**: 574 - Record the load-bearing soundness invariant and close the TM-star documentation gaps
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 5 hours
 - **Dependencies**: None
 - **Research Inputs**: None (no research phase dispatched; the task description carries the
@@ -141,36 +141,36 @@ Phases within the same wave can execute in parallel. Phases 1 and 3 touch disjoi
 
 ---
 
-### Phase 1: Audit the time-shift consumer set and record the invariant [NOT STARTED]
+### Phase 1: Audit the time-shift consumer set and record the invariant [COMPLETED]
 
 **Goal**: Establish by direct inspection which soundness proofs in the live tree consume time-shift
 homogeneity, then write that verified set — not the description's claim — into
 `FormalSystem/Metalogic/Soundness.lean`'s module docstring.
 
 **Tasks**:
-- [ ] Enumerate every live occurrence of `TimeShift.timeShift_preserves_truth`,
+- [x] Enumerate every live occurrence of `TimeShift.timeShift_preserves_truth`,
       `timeShift_preserves_truth_total`, and `ConvexHistory.timeShift` under `FormalSystem/`,
       excluding `FormalSystem/Boneyard/` (archived; see ADR-005 and check B0).
-- [ ] Partition the occurrences into (a) *soundness* consumers — proofs establishing validity of an
+- [x] Partition the occurrences into (a) *soundness* consumers — proofs establishing validity of an
       axiom or a rule, in any object language — and (b) non-soundness consumers (decidability
       bridges, canonical-model constructions, shift-set machinery, the truth-lemma stack).
       Record the partition and the criterion used for it.
-- [ ] Confirm or correct the claim that `modal_future_valid` is the sole soundness consumer. At
+- [x] Confirm or correct the claim that `modal_future_valid` is the sole soundness consumer. At
       minimum, resolve the status of `mf_swap_valid`
       (`FormalSystem/Metalogic/SoundnessLemmas/FrameClassVariants.lean`) and
       `minusTruthAt_timeShift`
       (`FormalSystem/Metalogic/Conservativity/MinusLanguageSoundness.lean`), both of which the
       plan-time grep surfaced.
-- [ ] Write the result into the `Soundness.lean` module docstring as a named subsection (e.g.
+- [x] Write the result into the `Soundness.lean` module docstring as a named subsection (e.g.
       `## The Time-Shift Consumer Set`), stating: the enumerated consumer set with file paths; why
       a small set matters to a language extension (a schema whose validity rests on time-shift
       homogeneity does not survive a semantics that adds a component to the point of evaluation);
       and `refute_modal_future` (`FormalSystem/Semantics/StarNonValidities.lean`) as the realized
       consequence — MF is refuted over `StarFormula`, which is why `StarAxiom` reaches the TM⁺
       block through a single `ofBase` arm.
-- [ ] If the count is greater than one, say so plainly in the docstring and reconcile it with the
-      existing `**Key Techniques**` bullet, which already reads "Time-shift invariance (MF, TF)".
-- [ ] Do not touch any proof, `theorem`, `def`, or `import` line in `Soundness.lean`.
+- [x] If the count is greater than one, say so plainly in the docstring and reconcile it with the
+      existing `**Key Techniques**` bullet, which already reads "Time-shift invariance (MF, TF)". *(deviation: altered — the declaration-level count is two (`modal_future_valid`, `mf_swap_valid`) but the schema-level count is one; the docstring states both numbers and the `**Key Techniques**` bullet was rewritten to "MF, and TF through it", since TF is not a separate `Axiom` constructor)*
+- [x] Do not touch any proof, `theorem`, `def`, or `import` line in `Soundness.lean`.
 
 **Timing**: 1 hour
 

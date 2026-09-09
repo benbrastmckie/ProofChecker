@@ -62,8 +62,11 @@ task semantic models. The MF and TF axioms use time-shift invariance
   `axiom_*_valid` names are one-line instances of it
 
 **Key Techniques**:
-- Time-shift invariance (MF, TF): Uses `ConvexHistory.timeShift` and
-  `TimeShift.timeShift_preserves_truth` to relate truth at different times
+- Time-shift invariance (MF, and TF through it): Uses `ConvexHistory.timeShift` and
+  `TimeShift.timeShift_preserves_truth` to relate truth at different times. TF is not a
+  separate `Axiom` constructor — it is reached by temporal duality, so its validity rides on
+  `mf_swap_valid`, the swap half of the same schema. See **The time-shift consumer set** below
+  for the full enumeration and why its size is load-bearing.
 - Classical logic helpers for conjunction extraction (TL)
 - Derivation-indexed induction for temporal duality soundness
 
@@ -74,6 +77,65 @@ There is no admissible-history parameter and no shift-closure side condition: to
 preserved by `timeShift` (`ConvexHistory.isTotal_timeShift`), so time-shift invariance carries
 no hypothesis to quantify over. `TruthAt` takes four arguments — `TruthAt M τ t φ` — and no set
 argument at all.
+
+## The time-shift consumer set
+
+**The invariant, stated for the next language extension.** Time-shift homogeneity —
+`TimeShift.timeShift_preserves_truth` (`Semantics/Truth.lean`), which moves truth along
+`ConvexHistory.timeShift` — is consumed by exactly **one schema** of the TM axiom block, and by
+exactly **two declarations** in the whole soundness layer of this tree:
+
+| Declaration | File | What it establishes |
+|---|---|---|
+| `modal_future_valid` | `Metalogic/Soundness.lean` (below) | MF, `□φ → □Gφ`, is valid |
+| `mf_swap_valid` | `Metalogic/SoundnessLemmas/FrameClassVariants.lean` | MF's temporal dual is valid — the `temporal_duality` companion, and therefore what carries TF |
+
+Both belong to the single constructor `Axiom.modal_future`; there is no separate TF constructor
+(`ProofSystem/Axioms.lean`). So the schema-level count is one and the declaration-level count is
+two, and a statement that names only `modal_future_valid` undercounts the declarations by one.
+Every other axiom-validity proof in `SoundnessLemmas/` and in this file reaches its conclusion
+without shifting a history.
+
+One further declaration in a soundness module touches the lemma without being a schema-validity
+proof: `minusTruthAt_timeShift`
+(`Metalogic/Conservativity/MinusLanguageSoundness.lean`) restates time-shift homogeneity at
+`MinusTruthAt` by rewriting through `truthAt_tr`. It proves no axiom valid and currently has no
+consumer. The remaining uses of the lemma in the tree are outside the soundness layer entirely —
+`Semantics/Truth.lean`'s own derived forms (`timeShift_preserves_truth_total`,
+`exists_shifted_history`, `box_const`), `Semantics/ShiftSet.lean`'s `reverse_repr`, and the
+decidability stack (`Metalogic/Decidability/Verified/Decidable.lean`,
+`Metalogic/Decidability/BiLasso/BoxOracle.lean`,
+`Metalogic/Decidability/Verified/Bridge/RegionFrame.lean`).
+
+**Why the size of that set matters to a language extension.** A schema whose validity rests on
+time-shift homogeneity does not survive a semantics that adds a component to the point of
+evaluation. The shift argument reaches `φ` at a later time by moving the *whole* point; once the
+point carries a second coordinate that the shift must move too, the argument delivers `φ` at a
+shifted coordinate rather than at the original one, and there is no way to put it back. Because
+the consumer set is this small, the question a new language has to answer is correspondingly
+small: **does the extended point of evaluation shift rigidly with the history?** If it does,
+every TM schema transfers and the whole block can be embedded. If it does not, MF — and MF alone
+in the TM block — is at risk, and it must be checked rather than assumed.
+
+**The realized consequence.** L⋆ (`StarLanguage/Formula.lean`) is exactly the case where it does
+not. `starTruthAt_timeShift` (`Semantics/StarTruth.lean`) shifts the stored-time vector along
+with the history, because `↓ⁱ` evaluates at a time in the unshifted frame of reference, so the
+shift argument no longer reaches MF's conclusion. The gap is real and not an artefact of the
+proof: `refute_modal_future` (`Semantics/StarNonValidities.lean`) refutes MF over `StarFormula`
+already at `φ := ↓¹p → p`. That single fact is why `StarAxiom` (`StarLanguage/Axioms.lean`)
+reaches the TM⁺ schema block through one `ofBase` arm at `ofPlus` instances, rather than
+re-declaring the TM schemata over `StarFormula` as `PlusAxiom` does over `PlusFormula` — a
+re-declared block would contain an unsound schema.
+
+Languages that *do* inherit MF get it by transfer through the two declarations above, never by
+re-proving it from time shift: L⁻ discharges it proof-theoretically
+(`MinusLanguage/AxiomDischarge.lean`, `dischargeModalFuture`), L⁺ transfers it
+(`Metalogic/Conservativity/Plus/Atomization.lean`'s `plusValidIn_of_tm` and
+`plusValidIn_swap_of_tm`, applied at `Axiom.modal_future` in
+`Metalogic/Conservativity/Plus/AxiomValidity.lean`), and the coarsened independence models
+transfer it
+(`Metalogic/Independence/CoarsenedModels.lean`, `cValid_of_tm`). Adding a third consumer to the
+table above is a design change, not a refactor.
 
 ## Full Derivation Soundness
 
