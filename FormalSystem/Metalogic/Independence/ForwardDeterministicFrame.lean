@@ -7,6 +7,7 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.Semantics.FrameProperty
 import FormalSystem.Semantics.StarDeterminism
 import FormalSystem.Semantics.StarNonValidities
+import FormalSystem.Semantics.StarStateLocal
 
 /-!
 # `F^N` — forward-deterministic, not deterministic
@@ -34,12 +35,14 @@ function — and **not** `Deterministic`, because `fib(0, −1) = {0, 1}`.
 - `fn_not_deterministic` — `¬ FN.Deterministic`
 - `states_eq_of_forwardDeterministic` — the forward analogue of `states_eq_of_deterministic`:
   possible worlds agreeing at `x` agree at every `y ≥ x`, and **not** before `x`
-- `fn_sentDet_atom` — `sent:det` at a sentence letter is valid over `FN`
-- `fn_separates` — the separation: `sent:det` is valid over `FN` at every letter while `FN` is
-  not deterministic, so no reading of `app:deterministic-future` may be strengthened to a
-  characterization
+- `fn_sentDet_stateLocal` — `sent:det` at any **state-local** instance is valid over `FN`
+- `fn_separates` — the separation: `sent:det` is valid over `FN` at every state-local instance
+  while `FN` is not deterministic, so no reading of `app:deterministic-future` may be
+  strengthened to a characterization
 - `fn_refutes_sentDet_somePast` — the *schematic* reading of that validity is **false**: `FN`
   refutes `sent:det` at the past-looking instance `P p`
+- `fn_sentDet_bounds` — the two-sided bound, as one machine-checked object: valid at every
+  state-local instance, and refuted at a specific instance outside the fragment
 
 ## The relation is defined in a sign-symmetric `max`-form
 
@@ -273,32 +276,45 @@ theorem states_eq_of_forwardDeterministic {F : TaskFrame} (hD : F.ForwardDetermi
   exact hD (σ.states x (hσ x)) (y - x) (sub_nonneg.mpr hxy) hτr hσr
 
 /--
-**`sent:det` at a sentence letter is valid over `F^N`.**
+**`sent:det` is valid over `F^N` at every state-local instance.**
 
 `sentDet_unfold`'s `∀ y > x` restriction is what makes the forward engine sufficient: at each
-`y > x`, forward determinism gives `σ(y) = τ(y)` for every `σ ∈ ⟨τ⟩ₓ`, and an atom's truth
-depends on nothing but the state at the time of evaluation. One disjunct of `settledDisj` then
-holds outright.
+`y > x`, forward determinism gives `σ(y) = τ(y)` for every `σ ∈ ⟨τ⟩ₓ`, and a **state-local** `φ`
+(`Semantics/StarStateLocal.lean`) cannot distinguish two possible worlds carrying the same world
+state at the time of evaluation. One disjunct of `settledDisj` then holds outright.
+
+This is the principled closure of the sentence-letter form this theorem replaces. That form gave
+as its reason "an atom's truth depends on nothing but the state at the time of evaluation" — a
+reason that is not about atoms at all, but about state-locality, and
+`StarFormula.StateLocal` is exactly the syntactic fragment carrying it. The old statement is
+recovered as the instance `fn_sentDet_stateLocal (.atom p) (stateLocal_atom p)`; nothing is lost
+by retiring it.
+
+The fragment is strictly wider than the atoms: it contains `⊥`, is closed under `→` (hence under
+`¬`, `∧`, `∨`), admits `□φ` and `⊡φ` for **arbitrary** `φ`, and admits `↑ⁱ`. What it excludes —
+`U`, `S` and `↓ⁱ` — it excludes by theorem, each with a countermodel
+(`not_isStateLocal_someFuture`, `not_isStateLocal_somePast`, `not_isStateLocal_timeRecall`).
 -/
-theorem fn_sentDet_atom (p : Atom) : FN.StarValidOn (sentDet (StarFormula.atom p)) := by
+theorem fn_sentDet_stateLocal (φ : StarFormula) (hφ : φ.StateLocal) :
+    FN.StarValidOn (sentDet φ) := by
   refine TaskFrame.StarValidOn.of_forall_total ?_
   intro M τ hτ x v
   rw [sentDet_unfold]
   intro y hy
   rw [settledDisj_iff, update_two_apply_two]
-  by_cases hp : M.valuation (τ.states y (hτ y)) p
-  · refine Or.inr fun σ hσ hsame => ⟨hσ y, ?_⟩
-    rw [← states_eq_of_forwardDeterministic fn_forwardDeterministic hτ hσ hsame (le_of_lt hy)]
-    exact hp
-  · refine Or.inl fun σ hσ hsame => ?_
-    rintro ⟨hd, hv⟩
-    refine hp ?_
-    rw [states_eq_of_forwardDeterministic fn_forwardDeterministic hτ hσ hsame (le_of_lt hy)]
-    exact hv
+  by_cases hp : StarTruthAt M τ y (Function.update (Function.update v 1 x) 2 y) φ
+  · refine Or.inr fun σ hσ hsame => ?_
+    refine (isStateLocal_of_stateLocal hφ FN M τ σ hτ hσ y _ ?_).mp hp
+    exact fun _ _ =>
+      states_eq_of_forwardDeterministic fn_forwardDeterministic hτ hσ hsame (le_of_lt hy)
+  · refine Or.inl fun σ hσ hsame hcon => hp ?_
+    refine (isStateLocal_of_stateLocal hφ FN M τ σ hτ hσ y _ ?_).mpr hcon
+    exact fun _ _ =>
+      states_eq_of_forwardDeterministic fn_forwardDeterministic hτ hσ hsame (le_of_lt hy)
 
 /--
-**The separation.** `sent:det` is valid over `F^N` at every sentence letter, while `F^N` is not
-deterministic. So no reading of `app:deterministic-future` may be strengthened to a
+**The separation.** `sent:det` is valid over `F^N` at every state-local instance, while `F^N` is
+not deterministic. So no reading of `app:deterministic-future` may be strengthened to a
 characterization of the deterministic frames: what `sent:det` defines is *forward* determinism.
 
 Contrast `deterministic_starDefinable` (`Semantics/StarDeterminism.lean`), where replacing
@@ -308,8 +324,8 @@ Contrast `deterministic_starDefinable` (`Semantics/StarDeterminism.lean`), where
 Stated as one conjunction so that neither half can be read alone.
 -/
 theorem fn_separates :
-    (∀ p : Atom, FN.StarValidOn (sentDet (StarFormula.atom p))) ∧ ¬ FN.Deterministic :=
-  ⟨fn_sentDet_atom, fn_not_deterministic⟩
+    (∀ φ : StarFormula, φ.StateLocal → FN.StarValidOn (sentDet φ)) ∧ ¬ FN.Deterministic :=
+  ⟨fn_sentDet_stateLocal, fn_not_deterministic⟩
 
 /--
 `lem:deterministic-singleton` genuinely requires the **bidirectional** reading of
@@ -330,8 +346,8 @@ theorem fn_forwardDeterministic_not_singletonClasses :
 
 /-! ## The schematic reading of `fn_sentDet` is false
 
-`fn_sentDet_atom` above is stated at a **sentence letter**, and that restriction is not a
-convenience. The schematic form — `∀ φ : StarFormula, FN.StarValidOn (sentDet φ)` — is
+`fn_sentDet_stateLocal` above is stated at a **state-local** instance, and that restriction is
+not a convenience. The schematic form — `∀ φ : StarFormula, FN.StarValidOn (sentDet φ)` — is
 **refutable**, and the two theorems below are the machine-checked refutation.
 
 The reason is exactly the reason `F^N` exists: forward determinism settles the *future* and says
@@ -341,10 +357,11 @@ between two possible worlds of `⟨τ⟩ₓ` at the very `y > x` that `sent:det`
 `fnRampHist` and `fnZeroHist` witness: they agree at `0` and differ at every negative time.
 
 The result this module transcribes (the PossibleWorlds determinism-axiom-correspondence
-report, §3.2, Theorems A and B) is likewise
-stated at the sentence-letter level: frame validity quantifies over all valuations, and the
-argument runs the singleton valuation `|p| = {τ(y)}`. Nothing there claims, or needs, the
-schematic form. -/
+report, §3.2, Theorems A and B) is stated at the sentence-letter level: frame validity quantifies
+over all valuations, and the argument runs the singleton valuation `|p| = {τ(y)}`. Nothing there
+claims, or needs, the schematic form. `fn_sentDet_stateLocal` widens that report's Theorem A to
+the whole state-local fragment, and `fn_sentDet_bounds` records the widened statement together
+with the refutation, so the two-sided bound is one object rather than two paragraphs. -/
 
 /-- The constant possible world `τ ≡ 0` of `F^N` — the absorbing state, held forever. -/
 def fnZeroHist : ConvexHistory FN :=
@@ -395,7 +412,7 @@ def fnModel : TaskModel FN where
 holding `1`, the ramp world `σ ∈ ⟨τ⟩₀` satisfies `P p` at time `1` (it was at state `3` at time
 `−3`) while `τ ≡ 0` refutes it, so neither disjunct of `settledDisj` can hold.
 
-This is what confines `fn_sentDet_atom` to sentence letters, and it is recorded as a theorem
+This is what confines `fn_sentDet_stateLocal` to the state-local fragment, and it is recorded as a theorem
 rather than as prose because the distinction is easy to lose: `sentDet_of_deterministic`
 **is** schematic (full determinism gives agreement at every time, past included), and only the
 forward-deterministic case degrades.
@@ -427,5 +444,23 @@ theorem not_forall_fn_sentDet :
     ¬ ∀ φ : StarFormula, FN.StarValidOn (sentDet φ) :=
   fun h => fn_refutes_sentDet_somePast (Atom.mkBase "p")
     (h (StarFormula.somePast (StarFormula.atom (Atom.mkBase "p"))))
+
+/--
+**The two-sided bound on `sent:det` over `F^N`, as one machine-checked object.**
+
+Above: valid at *every* state-local instance. Below: refuted at `P p`, which is outside the
+fragment (`not_stateLocal_somePast`). So the truth is pinned from both sides — the validity is
+not merely "at atoms" and not "schematic", it is exactly the state-local fragment on the
+positive side and demonstrably not everything on the negative side.
+
+The middle conjunct is what makes the pair non-vacuous: it certifies that the refuting instance
+really does fall outside the fragment the first conjunct quantifies over, so the two halves
+cannot be contradicting each other.
+-/
+theorem fn_sentDet_bounds (p : Atom) :
+    (∀ φ : StarFormula, φ.StateLocal → FN.StarValidOn (sentDet φ)) ∧
+      ¬ StarFormula.StateLocal (StarFormula.somePast (.atom p)) ∧
+      ¬ FN.StarValidOn (sentDet (StarFormula.somePast (.atom p))) :=
+  ⟨fn_sentDet_stateLocal, not_stateLocal_somePast _, fn_refutes_sentDet_somePast p⟩
 
 end FormalSystem.Metalogic.Independence

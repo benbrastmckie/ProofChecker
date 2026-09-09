@@ -245,31 +245,31 @@ on `NF`, name the frame actually used.
 
 ---
 
-### Phase 4: Retire the atom restriction on the separation [NOT STARTED]
+### Phase 4: Retire the atom restriction on the separation [COMPLETED]
 
 **Goal**: Replace `fn_sentDet_atom` with the state-local statement, strengthen `fn_separates`,
 and record the two-sided bound.
 
 **Tasks**:
-- [ ] Confirm the dependent set of `fn_sentDet_atom` by `grep -rn 'fn_sentDet_atom'` over
+- [x] Confirm the dependent set of `fn_sentDet_atom` by `grep -rn 'fn_sentDet_atom'` over
       `FormalSystem/ Tests/ docs/ README.md specs/` before any deletion
-- [ ] Add `import FormalSystem.Semantics.StarStateLocal` to
+- [x] Add `import FormalSystem.Semantics.StarStateLocal` to
       `Metalogic/Independence/ForwardDeterministicFrame.lean`
-- [ ] Prove `fn_sentDet_stateLocal (φ : StarFormula) (hφ : φ.StateLocal) :
+- [x] Prove `fn_sentDet_stateLocal (φ : StarFormula) (hφ : φ.StateLocal) :
       FN.StarValidOn (sentDet φ)`, following `fn_sentDet_atom`'s existing proof shape:
       `sentDet_unfold`, `settledDisj_iff`, `update_two_apply_two`, then `by_cases` on
       `StarTruthAt M τ y v φ` with `states_eq_of_forwardDeterministic` supplying
       `SameStateAt τ σ y` for `y ≥ x` and `isStateLocal_of_stateLocal` transporting truth
-- [ ] **Delete** `fn_sentDet_atom` — do not keep both, and do not restate it as a corollary
-- [ ] Strengthen `fn_separates` in place to
+- [x] **Delete** `fn_sentDet_atom` — do not keep both, and do not restate it as a corollary
+- [x] Strengthen `fn_separates` in place to
       `(∀ φ : StarFormula, φ.StateLocal → FN.StarValidOn (sentDet φ)) ∧ ¬ FN.Deterministic`
-- [ ] Add `fn_sentDet_bounds`: one conjunction pairing the new validity with
+- [x] Add `fn_sentDet_bounds`: one conjunction pairing the new validity with
       `¬ StarFormula.StateLocal (somePast (.atom p))` and `fn_refutes_sentDet_somePast p`, so the
       two-sided bound is a single machine-checked object
-- [ ] Update the module docstring's Main Results list and the two prose paragraphs that explain
+- [x] Update the module docstring's Main Results list and the two prose paragraphs that explain
       the sentence-letter restriction, replacing "an atom's truth depends on nothing but the state
       at the time of evaluation" with the fragment-level reason and a pointer to the new module
-- [ ] Leave `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` byte-for-byte unchanged
+- [x] Leave `fn_refutes_sentDet_somePast` and `not_forall_fn_sentDet` byte-for-byte unchanged
 
 **Timing**: 2 hours
 
@@ -294,16 +294,16 @@ first task above; any additional site is added to Phase 6's doc list and reporte
 
 ---
 
-### Phase 5: Survey and widen every other reachable atom-restricted statement [NOT STARTED]
+### Phase 5: Survey and widen every other reachable atom-restricted statement [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Discharge the description's clause (b) — widen every atom-restricted statement the new
 result actually covers, and record a reason for each one it does not.
 
 **Tasks**:
-- [ ] Enumerate candidates: `grep -rn '(p : Atom)' FormalSystem/Semantics/Star*.lean
+- [x] Enumerate candidates: `grep -rn '(p : Atom)' FormalSystem/Semantics/Star*.lean
       FormalSystem/Metalogic/Independence/*.lean`, keeping only statements whose atom restriction
       sits in a **conclusion** and whose proof turns on state-locality
-- [ ] For each candidate, decide and act:
+- [x] For each candidate, decide and act:
       - covered by the fragment and in conclusion position -> widen to `φ.StateLocal`, retiring
         the atom form
       - atom restriction in a **hypothesis** position (e.g. `deterministic_of_detPM`) -> do NOT
@@ -311,9 +311,9 @@ result actually covers, and record a reason for each one it does not.
       - refutation-shaped (`refute_sentDet`, `fzero_refutes_sentDet`,
         `fn_refutes_sentDet_somePast`) -> do NOT touch; an atom-level refutation is already the
         strongest form
-- [ ] Write the resulting decision table into a `#### Reasoned Exclusions` subsection of this
+- [x] Write the resulting decision table into a `#### Reasoned Exclusions` subsection of this
       phase in the plan, with the `grep` output as Evidence
-- [ ] Apply the widenings the survey identifies, one commit per widened statement
+- [x] Apply the widenings the survey identifies, one commit per widened statement *(deviation: skipped — the survey identified zero widenings outside Phase 4, so there was no commit to make; the Scope Hypothesis anticipated exactly this)*
 
 **Timing**: 1.5 hours
 
@@ -338,6 +338,31 @@ non-zero widening count is a correction to this hypothesis and must be stated in
 - every candidate from the `grep` appears exactly once in the decision table, either widened or
   excluded with a reason and evidence
 - `lake build` green after any widening
+
+#### Reasoned Exclusions
+
+The survey ran the plan's `grep -rn '(p : Atom)' FormalSystem/Semantics/Star*.lean
+FormalSystem/Metalogic/Independence/*.lean` over the tree as it stands after Phase 4. Every hit
+is classified below. **Widenings applied outside Phase 4: zero** — confirming this phase's Scope
+Hypothesis. Two corrections to the pre-scan's line numbers are recorded in the Evidence column:
+`StarNonValidities.lean`'s sites moved to `92,107` (and three new sites `129,160,180` landed
+there from the concurrent `StarFormula.swapTemporal` work), and the pre-scan missed
+`CoarsenedModels.lean` and the L⁺ site `PlusTruth.lean:232` entirely.
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `refute_sentDet` | Refutation-shaped. An atom-level refutation is the **strongest** form: it says the schema fails already at the simplest instance. Widening would weaken it. | `Semantics/StarNonValidities.lean:92` |
+| `not_starValid_sentDet` | Refutation-shaped; it is `refute_sentDet` relayed to unrestricted validity. | `Semantics/StarNonValidities.lean:107` |
+| `refute_modal_future` | Refutation-shaped. Also outside this task's territory (concurrent MF/erasure work owns that file). | `Semantics/StarNonValidities.lean:129` |
+| `storeG_recall_valid` | Conclusion-position atom, but **not covered by the fragment**: the formula is `↑¹G↓¹p → p`, whose proof turns on the atom clause not reading the *register vector*, not on state-locality. Its `↓¹` subformula puts it outside `StateLocal` outright, and `G` puts it outside too. Also outside territory. | `Semantics/StarNonValidities.lean:160` |
+| `refute_erasure` | Refutation-shaped; also outside territory. | `Semantics/StarNonValidities.lean:180` |
+| `fzero_refutes_sentDet` | Refutation-shaped. | `Metalogic/Independence/StarDiscrimination.lean:122` |
+| `sentDet_discriminates` | A **contrast at one formula**: valid over `F¹`, refuted over `F°`, at the same `φ`. Both halves are already at their strongest — the positive half is the instance of the fully schematic `f1_sentDet (φ : StarFormula)`, and the negative half is an atom-level refutation. Widening the shared `φ` to `φ.StateLocal` would make the negative half a weaker claim while adding nothing to the positive one. | `Metalogic/Independence/StarDiscrimination.lean:168`; `f1_sentDet` at `:154` is already schematic |
+| `deterministic_of_detPM` | Atom restriction sits in a **hypothesis**. Widening it weakens the theorem — the whole point of the converse is that the atomic fragment already *forces* determinism. | `Semantics/StarDeterminism.lean:271` |
+| Theorem C's left conjunct | Same hypothesis-position reason; it is `deterministic_of_detPM`'s statement inside the three-way equivalence. | `Semantics/StarDeterminism.lean:314` |
+| `cValid_atom_stab` | Conclusion-position atom, and its proof *does* turn on a locality property — but the wrong one: `K.atom_inv`, a field of the coarsening structure, not state-locality of a fragment. It is also an L⁺ (`PlusFormula`) statement, and it exists to discharge exactly one arm of `naiveAxiom_cValid`'s `PlusAxiom` dispatch, where the AS axiom is itself atom-restricted. | `Metalogic/Independence/CoarsenedModels.lean:454`; consumer arm in `naiveAxiom_cValid` |
+| `CoarsenedModels.lean:113`, `:158`; `StateSetTruth.lean:93`; `PastingIndependence.lean:174-277`; `StabUndefinable.lean:168-235`; `StarTruth.lean:115` | Not atom-*restricted statements* at all: clause lemmas (`atom_iff`, `mem_satSet_atom`), coarsening-structure fields, and refutation witnesses whose `p` names a particular separator. None has an atom restriction that state-locality could lift. | the `grep` output |
+| `stab_atom_of_atom` (L⁺) | **The one genuine near-miss, recorded rather than silently skipped.** It is the L⁺ shadow of this task's headline: `p → ⊡p` for atoms, proved from exactly the state-locality reason. The result *does* cover it — but in L⋆, where the widening already landed as `stateLocal_stab_iff`. Widening the L⁺ statement itself would require a second fragment defined by recursion on `PlusFormula`, which the plan's Non-Goals and the task's declared territory both exclude; and its two consumers (`Metalogic/Conservativity/Plus/AxiomValidity.lean:147,263`) need precisely the atom instance, the AS axiom being atom-restricted in the proof system. A future task could define the L⁺ fragment as `(ofPlus φ).StateLocal` and transfer along `starTruthAt_ofPlus` at no proof cost. | `Semantics/PlusTruth.lean:232`; consumers at `Metalogic/Conservativity/Plus/AxiomValidity.lean:147,263`; missed by the plan's pre-scan, whose `grep` scope was `Semantics/Star*.lean` plus `Metalogic/Independence/` |
 
 ---
 
