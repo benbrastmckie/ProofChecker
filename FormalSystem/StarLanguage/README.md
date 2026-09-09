@@ -50,7 +50,10 @@ The one structural decision worth naming here is the **`ofBase` embedding**. `Pl
 re-declares the 45 TM schemata over `PlusFormula`; `StarAxiom` does not re-declare them over
 `StarFormula`, because one of them — `modal_future`, `□φ → □Gφ` — is *refuted* there
 (`refute_modal_future`, `Semantics/StarNonValidities.lean`). MF is the only schema in the TM
-block whose soundness proof consumes time-shift homogeneity, and the L⋆ time-shift lemma shifts
+block whose soundness proof consumes time-shift homogeneity — audited, and recorded in the
+`Metalogic/Soundness.lean` module docstring's *The time-shift consumer set* section, which is the
+authority: one schema, two declarations (`modal_future_valid` and `mf_swap_valid`, the latter
+carrying TF, which is not a separate `Axiom` constructor) — and the L⋆ time-shift lemma shifts
 the stored-time vector with the history. A single `ofBase` constructor therefore carries every
 TM⁺ schema at exactly the `ofPlus` instances where it is sound. **The recorded cost**: TM⋆'s
 inherited temporal schemata are available only at register-free instances.

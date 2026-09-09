@@ -204,17 +204,17 @@ annotate the `ofBase` design rationale in `FormalSystem/StarLanguage/README.md` 
 whatever Phase 1 confirmed.
 
 **Tasks**:
-- [ ] Add a one-line pointer under `## Main Results` → `### Soundness — Soundness.lean` in
+- [x] Add a one-line pointer under `## Main Results` → `### Soundness — Soundness.lean` in
       `FormalSystem/Metalogic/README.md`, naming the consumer set and pointing at the
       `Soundness.lean` docstring subsection as the authority. Do not restate the count in more
       than one place on that page.
-- [ ] Annotate `FormalSystem/StarLanguage/README.md`'s `ofBase` design paragraph (the "one
+- [x] Annotate `FormalSystem/StarLanguage/README.md`'s `ofBase` design paragraph (the "one
       structural decision worth naming here" block) and, if the count changed, its MF row in the
       non-validities table, so that neither page asserts a count Phase 1 disproved.
-- [ ] Confirm no generated block is disturbed: `FormalSystem/Metalogic/README.md` carries
+- [x] Confirm no generated block is disturbed: `FormalSystem/Metalogic/README.md` carries
       `BEGIN GENERATED` inventory blocks owned by
-      `bash scripts/check-module-invariants.sh --emit-inventory`. Edit only prose outside them.
-- [ ] No task-number citations (C9D applies to `docs/`; C9 to `FormalSystem/`).
+      `bash scripts/check-module-invariants.sh --emit-inventory`. Edit only prose outside them. *(deviation: altered — prose edits stayed outside the generated blocks as required, but Phase 1's 62-line docstring addition changed `Soundness.lean`'s line count, so the generated inventory blocks in `FormalSystem/Metalogic/README.md`, `README.md` and `FormalSystem/Metalogic/Conservativity/Plus/README.md` were regenerated with `--emit-inventory`; the regeneration also absorbs a concurrent session's in-flight line counts, since the generator rewrites whole blocks)*
+- [x] No task-number citations (C9D applies to `docs/`; C9 to `FormalSystem/`).
 
 **Timing**: 45 minutes
 
