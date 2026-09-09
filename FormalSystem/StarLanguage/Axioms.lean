@@ -100,6 +100,10 @@ same inductive*:
     constructor of this inductive, exactly as at the L level. Each has a named
     `starValid_*_swap` lemma in `Conservativity/Star/StarAxiomValidity.lean`; the four closed
     ones transport along `ofPlus`, and `density`/`z1` are direct.
+  * `prior_U_gap` ↔ `prior_S_gap` — a **dual pair**.
+  * `sep` and `modal_future` — arms whose dual is again not a constructor instance:
+    `starValid_sep_swap` (through `SoundnessLemmas.sep_order_mirror`) and
+    `starValid_modal_future_swap` (through `RecallFree.swapTemporal`) supply them.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -332,6 +336,41 @@ inductive StarAxiom : StarFormula → Type where
   /-- Z1: `G(Gφ→φ) → (FGφ→Gφ)`. Mirrors `PlusAxiom.z1`; routed to `.ZTime`. -/
   | z1 (φ : StarFormula) :
       StarAxiom ((φ.allFuture.imp φ).allFuture.imp (φ.allFuture.someFuture.imp φ.allFuture))
+  -- Layer 9: Reynolds Dedekind (3)
+  /-- Prior-U (gap form): `U(⊤,φ) ∧ F(¬φ) → U(¬φ ∨ K⁺(¬φ), φ)`. Mirrors `PlusAxiom.prior_U_gap`;
+  routed to `.RTime`. -/
+  | prior_U_gap (φ : StarFormula) :
+      StarAxiom ((StarFormula.and (StarFormula.untl φ StarFormula.top) φ.neg.someFuture).imp
+        (StarFormula.untl φ (StarFormula.or φ.neg (StarFormula.kPlus φ.neg))))
+  /-- Prior-S (gap form): `S(⊤,φ) ∧ P(¬φ) → S(¬φ ∨ K⁻(¬φ), φ)`. Mirrors `PlusAxiom.prior_S_gap`;
+  routed to `.RTime`. -/
+  | prior_S_gap (φ : StarFormula) :
+      StarAxiom ((StarFormula.and (StarFormula.snce φ StarFormula.top) φ.neg.somePast).imp
+        (StarFormula.snce φ (StarFormula.or φ.neg (StarFormula.kMinus φ.neg))))
+  /-- Sep: `K⁺φ ∧ ¬K⁺(φ ∧ U(φ,¬φ)) → K⁺(K⁺φ ∧ K⁻φ)`. Mirrors `PlusAxiom.sep`; routed to
+  `.RTime`. -/
+  | sep (φ : StarFormula) :
+      StarAxiom ((StarFormula.and (StarFormula.kPlus φ)
+        (StarFormula.kPlus (StarFormula.and φ (StarFormula.untl φ.neg φ))).neg).imp
+        (StarFormula.kPlus (StarFormula.and (StarFormula.kPlus φ) (StarFormula.kMinus φ))))
+  -- Layer 4: Modal-Temporal Interaction (1) — the sole conditional arm
+  /-- Modal-Future: `□φ → □(Gφ)`, **at `↓ⁱ`-free `φ` only**. Mirrors `PlusAxiom.modal_future`
+  except for the side condition, which is the one thing in this whole block that has no
+  `PlusAxiom` counterpart.
+
+  MF is **refuted** over `StarFormula` at `φ := ↓¹p → p` (`refute_modal_future`,
+  `Semantics/StarNonValidities.lean`): its soundness proof consumes time-shift homogeneity, and
+  the L⋆ time-shift lemma shifts the stored-time vector along with the history, which a `↓ⁱ` can
+  observe. `RecallFree` (`StarLanguage/Formula.lean`) is exactly the fragment on which the vector
+  is inert, and `refute_modal_future`'s witness is exactly a formula outside it.
+
+  **The side condition is `RecallFree`, not register-freedom, and the difference is real.**
+  `□↑¹p → □G↑¹p` is an instance of this arm and is *not* an `ofPlus` image
+  (`ofPlus_ne_timeStore`), so this constructor reaches strictly further than the embedded
+  fragment. `↑ⁱ` writes the *current* time, which the time shift moves along with everything
+  else; only `↓ⁱ` reads a time the shift does not move. -/
+  | modal_future (φ : StarFormula) (hφ : RecallFree φ) :
+      StarAxiom ((StarFormula.box φ).imp (StarFormula.box (StarFormula.allFuture φ)))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))
@@ -393,6 +432,9 @@ Minimum frame class of each TM⋆ schema. The `ofBase` arm inherits `PlusAxiom.m
 every register schema is valid over every task frame and is routed to `.Base`.
 -/
 def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
+  | .prior_U_gap _ => .RTime
+  | .prior_S_gap _ => .RTime
+  | .sep _ => .RTime
   | .density _ => .Dense
   | .dense_indicator => .Dense
   | .prior_UZ _ => .ZTime
@@ -402,6 +444,15 @@ def StarAxiom.minFrameClass {φ : StarFormula} : StarAxiom φ → FrameClass
   | _ => .Base
 
 /-! ### Pins -/
+
+example (φ : StarFormula) : (StarAxiom.prior_U_gap φ).minFrameClass = .RTime := rfl
+
+example (φ : StarFormula) : (StarAxiom.prior_S_gap φ).minFrameClass = .RTime := rfl
+
+example (φ : StarFormula) : (StarAxiom.sep φ).minFrameClass = .RTime := rfl
+
+example (φ : StarFormula) (hφ : RecallFree φ) :
+    (StarAxiom.modal_future φ hφ).minFrameClass = .Base := rfl
 
 example (φ : StarFormula) : (StarAxiom.density φ).minFrameClass = .Dense := rfl
 

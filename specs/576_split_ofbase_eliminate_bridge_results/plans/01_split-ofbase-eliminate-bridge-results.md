@@ -636,7 +636,7 @@ phase's work was consumed and no statement was weakened.
 
 ---
 
-### Phase 9: Group F — Reynolds Dedekind, and `modal_future` under `RecallFree` [NOT STARTED]
+### Phase 9: Group F — Reynolds Dedekind, and `modal_future` under `RecallFree` [COMPLETED]
 
 **Goal**: The 4 remaining non-pasting constructors, including the single conditional arm; build
 green. This is the phase that discharges deliverable 3.
@@ -645,28 +645,38 @@ green. This is the phase that discharges deliverable 3.
 `modal_future` (`.Base`, carrying `(hφ : RecallFree φ)`).
 
 **Tasks**:
-- [ ] Add the two semantic helper lemmas to `Conservativity/Star/StarAxiomValidity.lean`:
+- [x] Add the two semantic helper lemmas to `Conservativity/Star/StarAxiomValidity.lean`:
       `starKPlus_iff` and `starKMinus_iff` (from `.probes/03`/`.probes/04`), declared here rather
       than in `Semantics/StarTruth.lean` per report D-5, with a docstring naming the precedent
       (`starTruth_iff_iff`) and recording the relocation as deferred
-- [ ] Add `recallFree_vector_irrelevant` (from `.probes/07`) — the register vector is inert on
+- [x] Add `recallFree_vector_irrelevant` (from `.probes/07`) — the register vector is inert on
       `↓ⁱ`-free formulas; the `timeStore` case recurses at `Function.update v i t`. This is one
       of the two genuinely novel proofs of the round, not a transcription
-- [ ] Add the 4 constructors. `modal_future` takes `(φ : StarFormula) (hφ : RecallFree φ)` — the
+- [x] Add the 4 constructors. `modal_future` takes `(φ : StarFormula) (hφ : RecallFree φ)` — the
       **only** constructor in the whole inductive carrying a side condition that `PlusAxiom`'s
       corresponding arm does not. Its docstring must state: the schema, that MF is refuted at
       `↓¹p → p` (`refute_modal_future`), that `RecallFree` is strictly wider than the `ofPlus`
       image with `□↑¹p → □G↑¹p` as the witness, and why `RegFree` was rejected
-- [ ] Add 3 explicit `minFrameClass` arms routing `prior_U_gap`, `prior_S_gap`, `sep` to `.RTime`,
+- [x] Add 3 explicit `minFrameClass` arms routing `prior_U_gap`, `prior_S_gap`, `sep` to `.RTime`,
       with pin `example`s; `modal_future` falls to the `.Base` wildcard — pin that too
-- [ ] Add the 4 `starValid_*` lemmas: `sep` reuses `SoundnessLemmas/Separability.lean`'s
+- [x] Add the 4 `starValid_*` lemmas: `sep` reuses `SoundnessLemmas/Separability.lean`'s
       `sep_order` unchanged at `P := {u | StarTruthAt M τ u v φ}` (`.probes/04`); `prior_U_gap`
       from `.probes/03`, `prior_S_gap` from `.probes/08`; `modal_future` from `.probes/07`
       (`starTruthAt_timeShift` + `add_sub_cancel` + `recallFree_vector_irrelevant`)
-- [ ] Add the 4 arms to each dispatch lemma. `modal_future`'s swap arm uses
+- [x] Add the 4 arms to each dispatch lemma. `modal_future`'s swap arm uses
       `RecallFree.swapTemporal` and the `modal_future_recallFree_swap` proof from `.probes/07`
-- [ ] Extend the swap-closure list, including the new side-condition row
-- [ ] `lake build` green; invariants exit 0; commit
+- [x] Extend the swap-closure list, including the new side-condition row
+- [x] `lake build` green; invariants exit 0; commit
+
+**Scope Hypothesis outcome (measured)**: 4 constructors, 3 of them `.RTime`, confirmed;
+`modal_future` is confirmed as the sole constructor in the whole inductive carrying a side
+condition its `PlusAxiom` mirror lacks (`grep -c "RecallFree" FormalSystem/StarLanguage/Axioms.lean`
+finds it on one constructor only). The **duality half is corrected** the same way Phase 8's was:
+`prior_U_gap` ↔ `prior_S_gap` is a dual pair, but `sep` and `modal_future` have no dual
+constructor. `starValid_sep_swap` (through `SoundnessLemmas.sep_order_mirror`, so the
+nested-interval argument is written once, not mirrored by hand) and `starValid_modal_future_swap`
+(through `RecallFree.swapTemporal`) supply those two duals. The L level has the identical shape
+(`Metalogic/Soundness.lean`'s `sep_swap_valid`, `SoundnessLemmas`' `mf_swap_valid`).
 
 **Timing**: 2 hours
 
