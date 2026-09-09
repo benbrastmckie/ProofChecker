@@ -309,6 +309,17 @@ theorem swap_temporal_timeStore (i : ℕ) (φ : StarFormula) :
 theorem swap_temporal_timeRecall (i : ℕ) (φ : StarFormula) :
     (StarFormula.timeRecall i φ).swapTemporal = StarFormula.timeRecall i φ.swapTemporal := rfl
 
+/-- `swapTemporal` exchanges the two Reynolds gap operators, mirroring
+`PlusFormula.swap_temporal_kPlus`. -/
+theorem swap_temporal_kPlus (φ : StarFormula) :
+    φ.kPlus.swapTemporal = φ.swapTemporal.kMinus := by
+  simp only [kPlus, kMinus, neg, top, swapTemporal]
+
+/-- The mirror of `swap_temporal_kPlus`, matching `PlusFormula.swap_temporal_kMinus`. -/
+theorem swap_temporal_kMinus (φ : StarFormula) :
+    φ.kMinus.swapTemporal = φ.swapTemporal.kPlus := by
+  simp only [kMinus, kPlus, neg, top, swapTemporal]
+
 end StarFormula
 
 /-! ## The embedding of L⁺ into L⋆ -/
@@ -437,5 +448,185 @@ example (φ : PlusFormula) : ofPlus (PlusFormula.Will φ) = StarFormula.Will (of
 example (φ : PlusFormula) : ofPlus (PlusFormula.will φ) = StarFormula.will (ofPlus φ) := rfl
 example (φ : PlusFormula) : ofPlus (PlusFormula.Could φ) = StarFormula.Could (ofPlus φ) := rfl
 example (φ : PlusFormula) : ofPlus (PlusFormula.could φ) = StarFormula.could (ofPlus φ) := rfl
+
+/-! ## Side-condition predicates for the TM⋆ schemata
+
+Three purely syntactic fragments of L⋆, each the side condition of one or two `StarAxiom`
+constructors (`StarLanguage/Axioms.lean`). They live here, beside `ofPlus`, because the three
+transfer lemmas below — which say every embedded formula lies in each fragment — are what make
+the corresponding TM⁺ schema block reachable at its embedded instances.
+
+**Why `RecallFree` and not a register-free predicate.** MF (`□φ → □Gφ`) is refuted over L⋆ at
+`φ := ↓¹p → p` (`Semantics/StarNonValidities.lean`, `refute_modal_future`), and the obstruction
+is the *recall* register alone: `↓ⁱ` reads at the time register `i` names, which the time-shift
+argument moves. `↑ⁱ` is harmless, so a register-free side condition would discard the sound
+instances at `↑ⁱ`-formulas — `□↑¹p → □G↑¹p` among them, and `↑¹p` is not an `ofPlus` image
+(`ofPlus_ne_timeStore`). The widening past the embedded fragment is therefore proper, and the
+`example`s below pin both its lower and its upper boundary. -/
+
+/-- **`↓ⁱ`-free L⋆ formulas**: every `StarFormula` constructor but `timeRecall`.
+
+The side condition of `StarAxiom.modal_future`, the sole TM⋆ schema carrying one its `PlusAxiom`
+mirror does not. Semantically it is exactly the fragment on which the stored-time vector is inert
+(`Metalogic/Conservativity/Star/StarAxiomValidity.lean`, `recallFree_vector_irrelevant`), which
+is what the MF time-shift argument needs and what `↓ⁱ` destroys.
+
+Paper: — (formalization-native; `def:BLstar-semantics` supplies the `↓ⁱ` clause this excludes)
+-/
+inductive RecallFree : StarFormula → Prop
+  | atom (p : Atom) : RecallFree (.atom p)
+  | bot : RecallFree .bot
+  | imp {φ ψ : StarFormula} : RecallFree φ → RecallFree ψ → RecallFree (.imp φ ψ)
+  | box {φ : StarFormula} : RecallFree φ → RecallFree (.box φ)
+  | untl {ψ φ : StarFormula} : RecallFree ψ → RecallFree φ → RecallFree (.untl ψ φ)
+  | snce {ψ φ : StarFormula} : RecallFree ψ → RecallFree φ → RecallFree (.snce ψ φ)
+  | stab {φ : StarFormula} : RecallFree φ → RecallFree (.stab φ)
+  | timeStore (i : ℕ) {φ : StarFormula} : RecallFree φ → RecallFree (.timeStore i φ)
+
+/-- **Pure-future L⋆ formulas**: `PlusFormula.IsPureFuture`'s six arms, plus a `timeStore` arm.
+
+The side condition of `StarAxiom.paste` and (in its `hφ` slot) `StarAxiom.untl_paste`.
+
+`timeRecall` is deliberately **absent**: `↓ⁱφ` is read at the time register `i` names, which may
+lie on the far side of the pasting point, so a recall is not a future-looking leaf. `box` and
+`stab` remain leaves admitting **arbitrary** bodies, exactly as on the L⁺ side — so `□↓¹p` *is*
+pure-future, and the L⋆ pasting schemata therefore reach register-carrying formulas that no
+`ofPlus` instance supplies.
+
+Paper: `def:BLstar-semantics` (the `↑ⁱ`/`↓ⁱ` clauses distinguishing the two register arms)
+-/
+inductive StarIsPureFuture : StarFormula → Prop
+  | atom (p : Atom) : StarIsPureFuture (.atom p)
+  | bot : StarIsPureFuture .bot
+  | imp {φ ψ : StarFormula} : StarIsPureFuture φ → StarIsPureFuture ψ →
+      StarIsPureFuture (.imp φ ψ)
+  | box (φ : StarFormula) : StarIsPureFuture (.box φ)
+  | stab (φ : StarFormula) : StarIsPureFuture (.stab φ)
+  | untl {ψ φ : StarFormula} : StarIsPureFuture ψ → StarIsPureFuture φ →
+      StarIsPureFuture (.untl ψ φ)
+  | timeStore (i : ℕ) {φ : StarFormula} : StarIsPureFuture φ →
+      StarIsPureFuture (.timeStore i φ)
+
+/-- **Pure-past L⋆ formulas**, the temporal dual of `StarIsPureFuture`: `snce` replaces `untl`.
+
+The side condition of `StarAxiom.paste`'s `hψ` slot and `StarAxiom.untl_paste`'s `hα`. The same
+two design points hold: no `timeRecall` arm, and `box`/`stab` are leaves at arbitrary bodies.
+
+Paper: `def:BLstar-semantics`
+-/
+inductive StarIsPurePast : StarFormula → Prop
+  | atom (p : Atom) : StarIsPurePast (.atom p)
+  | bot : StarIsPurePast .bot
+  | imp {φ ψ : StarFormula} : StarIsPurePast φ → StarIsPurePast ψ → StarIsPurePast (.imp φ ψ)
+  | box (φ : StarFormula) : StarIsPurePast (.box φ)
+  | stab (φ : StarFormula) : StarIsPurePast (.stab φ)
+  | snce {ψ φ : StarFormula} : StarIsPurePast ψ → StarIsPurePast φ → StarIsPurePast (.snce ψ φ)
+  | timeStore (i : ℕ) {φ : StarFormula} : StarIsPurePast φ → StarIsPurePast (.timeStore i φ)
+
+/-- `swapTemporal` preserves `↓ⁱ`-freedom: it exchanges `untl` and `snce` and fixes everything
+else, and `RecallFree` treats those two arms alike. This is what makes the swap arm of
+`StarAxiom.modal_future` land. -/
+theorem RecallFree.swapTemporal {φ : StarFormula} (h : RecallFree φ) :
+    RecallFree φ.swapTemporal := by
+  induction h with
+  | atom p => exact RecallFree.atom p
+  | bot => exact RecallFree.bot
+  | imp _ _ ih1 ih2 => exact RecallFree.imp ih1 ih2
+  | box _ ih => exact RecallFree.box ih
+  | untl _ _ ih1 ih2 => exact RecallFree.snce ih1 ih2
+  | snce _ _ ih1 ih2 => exact RecallFree.untl ih1 ih2
+  | stab _ ih => exact RecallFree.stab ih
+  | timeStore i _ ih => exact RecallFree.timeStore i ih
+
+/-- `swapTemporal` exchanges the two L⋆ purity fragments, mirroring
+`PlusFormula.IsPureFuture.swapTemporal`. -/
+theorem StarIsPureFuture.swapTemporal {φ : StarFormula} (h : StarIsPureFuture φ) :
+    StarIsPurePast φ.swapTemporal := by
+  induction h with
+  | atom p => exact StarIsPurePast.atom p
+  | bot => exact StarIsPurePast.bot
+  | imp _ _ ih1 ih2 => exact StarIsPurePast.imp ih1 ih2
+  | box φ => exact StarIsPurePast.box _
+  | stab φ => exact StarIsPurePast.stab _
+  | untl _ _ ih1 ih2 => exact StarIsPurePast.snce ih1 ih2
+  | timeStore i _ ih => exact StarIsPurePast.timeStore i ih
+
+/-- The mirror of `StarIsPureFuture.swapTemporal`. -/
+theorem StarIsPurePast.swapTemporal {φ : StarFormula} (h : StarIsPurePast φ) :
+    StarIsPureFuture φ.swapTemporal := by
+  induction h with
+  | atom p => exact StarIsPureFuture.atom p
+  | bot => exact StarIsPureFuture.bot
+  | imp _ _ ih1 ih2 => exact StarIsPureFuture.imp ih1 ih2
+  | box φ => exact StarIsPureFuture.box _
+  | stab φ => exact StarIsPureFuture.stab _
+  | snce _ _ ih1 ih2 => exact StarIsPureFuture.untl ih1 ih2
+  | timeStore i _ ih => exact StarIsPureFuture.timeStore i ih
+
+/-! ### Transfer along the embedding
+
+Every embedded formula lies in all three fragments — `ofPlus`'s image mentions no register at
+all. These are what let the TM⋆ schemata carrying side conditions be discharged at `ofPlus`
+instances, and hence what `StarAxiom.ofPlusAxiom` (`StarLanguage/Embedding.lean`) consumes. -/
+
+/-- Every embedded formula is `↓ⁱ`-free: `ofPlus`'s image contains no register at all. -/
+theorem recallFree_ofPlus (ψ : PlusFormula) : RecallFree (ofPlus ψ) := by
+  induction ψ with
+  | atom p => exact RecallFree.atom p
+  | bot => exact RecallFree.bot
+  | imp _ _ ih1 ih2 => exact RecallFree.imp ih1 ih2
+  | box _ ih => exact RecallFree.box ih
+  | untl _ _ ih1 ih2 => exact RecallFree.untl ih1 ih2
+  | snce _ _ ih1 ih2 => exact RecallFree.snce ih1 ih2
+  | stab _ ih => exact RecallFree.stab ih
+
+/-- `ofPlus` carries `IsPureFuture` to `StarIsPureFuture`, arm for arm. -/
+theorem starIsPureFuture_ofPlus {ψ : PlusFormula} (h : PlusFormula.IsPureFuture ψ) :
+    StarIsPureFuture (ofPlus ψ) := by
+  induction h with
+  | atom p => exact StarIsPureFuture.atom p
+  | bot => exact StarIsPureFuture.bot
+  | imp _ _ ih1 ih2 => exact StarIsPureFuture.imp ih1 ih2
+  | box φ => exact StarIsPureFuture.box _
+  | stab φ => exact StarIsPureFuture.stab _
+  | untl _ _ ih1 ih2 => exact StarIsPureFuture.untl ih1 ih2
+
+/-- `ofPlus` carries `IsPurePast` to `StarIsPurePast`, arm for arm. -/
+theorem starIsPurePast_ofPlus {ψ : PlusFormula} (h : PlusFormula.IsPurePast ψ) :
+    StarIsPurePast (ofPlus ψ) := by
+  induction h with
+  | atom p => exact StarIsPurePast.atom p
+  | bot => exact StarIsPurePast.bot
+  | imp _ _ ih1 ih2 => exact StarIsPurePast.imp ih1 ih2
+  | box φ => exact StarIsPurePast.box _
+  | stab φ => exact StarIsPurePast.stab _
+  | snce _ _ ih1 ih2 => exact StarIsPurePast.snce ih1 ih2
+
+/-! ### Properness pins
+
+The `RecallFree` fragment is **strictly between** the embedded fragment and all of L⋆. Both
+inclusions are strict, and both `example`s below are load-bearing: the first says the widening
+past `ofBase`'s reach is real rather than cosmetic, the second says the side condition cannot be
+dropped. -/
+
+/-- `↑¹p` is `↓ⁱ`-free, so MF holds there — and it is **not** an `ofPlus` image, so this is an
+instance the embedded fragment does not supply. The `RecallFree` widening is proper. -/
+example (p : Atom) : RecallFree (StarFormula.timeStore 1 (.atom p)) :=
+  RecallFree.timeStore 1 (RecallFree.atom p)
+
+example (p : Atom) (ψ : PlusFormula) :
+    ofPlus ψ ≠ StarFormula.timeStore 1 (.atom p) := ofPlus_ne_timeStore ψ 1 _
+
+/-- `↓¹p → p` is **not** `↓ⁱ`-free — and it is precisely `refute_modal_future`'s witness
+(`Semantics/StarNonValidities.lean`). The side condition is exactly what excludes it. -/
+example (p : Atom) :
+    ¬ RecallFree ((StarFormula.timeRecall 1 (.atom p)).imp (.atom p)) := by
+  rintro (_ | _ | ⟨h, -⟩)
+  cases h
+
+/-- `□↓¹p` is pure-future even though it carries a recall: `StarIsPureFuture.box` admits an
+arbitrary body, so the L⋆ pasting schemata reach register-carrying formulas too. -/
+example (p : Atom) :
+    StarIsPureFuture (StarFormula.box (.timeRecall 1 (.atom p))) := StarIsPureFuture.box _
 
 end FormalSystem.StarLanguage

@@ -378,37 +378,37 @@ records the true measurement.
 
 ---
 
-### Phase 2: The syntactic layer — `RecallFree`, the two L⋆ purity predicates, transfers [NOT STARTED]
+### Phase 2: The syntactic layer — `RecallFree`, the two L⋆ purity predicates, transfers [COMPLETED]
 
 **Goal**: Add to `FormalSystem/StarLanguage/Formula.lean` every purely syntactic ingredient the
 new constructors' side conditions need, plus the two missing `swapTemporal` clause lemmas.
 
 **Tasks**:
-- [ ] Scan for name collisions first: `grep -rn "RecallFree\|StarIsPureFuture\|StarIsPurePast\|swap_temporal_kPlus\|swap_temporal_kMinus" FormalSystem/`
-- [ ] Declare `RecallFree : StarFormula → Prop` as an inductive with eight arms — every
+- [x] Scan for name collisions first: `grep -rn "RecallFree\|StarIsPureFuture\|StarIsPurePast\|swap_temporal_kPlus\|swap_temporal_kMinus" FormalSystem/`
+- [x] Declare `RecallFree : StarFormula → Prop` as an inductive with eight arms — every
       `StarFormula` constructor except `timeRecall` (`atom`, `bot`, `imp`, `box`, `untl`, `snce`,
       `stab`, `timeStore`), lifting `.probes/07` verbatim
-- [ ] Declare `StarIsPureFuture` and `StarIsPurePast`, mirroring `PlusFormula.IsPureFuture` /
+- [x] Declare `StarIsPureFuture` and `StarIsPurePast`, mirroring `PlusFormula.IsPureFuture` /
       `IsPurePast` (`PlusLanguage/Formula.lean:299,308`) arm for arm and adding a `timeStore`
       arm; `timeRecall` is deliberately absent. Document in each docstring *why* `timeRecall` is
       excluded (`↓ⁱφ` reads at a time the register names, which may lie on the far side of the
       pasting point) and that `box`/`stab` admit **arbitrary** bodies, so `□↓¹p` is pure-future
-- [ ] Add `RecallFree.swapTemporal`, `StarIsPureFuture.swapTemporal`,
+- [x] Add `RecallFree.swapTemporal`, `StarIsPureFuture.swapTemporal`,
       `StarIsPurePast.swapTemporal` (lifted from `.probes/07` and `.probes/05`)
-- [ ] Add the three `ofPlus` transfer lemmas by induction on `PlusFormula`: `recallFree_ofPlus`
+- [x] Add the three `ofPlus` transfer lemmas by induction on `PlusFormula`: `recallFree_ofPlus`
       (`RecallFree (ofPlus ψ)` for every `ψ`), `starIsPureFuture_ofPlus`
       (`IsPureFuture ψ → StarIsPureFuture (ofPlus ψ)`), `starIsPurePast_ofPlus`
-- [ ] Add `StarFormula.swap_temporal_kPlus` and `StarFormula.swap_temporal_kMinus`, mirroring
+- [x] Add `StarFormula.swap_temporal_kPlus` and `StarFormula.swap_temporal_kMinus`, mirroring
       `PlusFormula`'s (`PlusLanguage/Formula.lean:277,281`)
-- [ ] Pin the properness of the `RecallFree` widening as `example`s: `↑¹p` is `RecallFree`, and
+- [x] Pin the properness of the `RecallFree` widening as `example`s: `↑¹p` is `RecallFree`, and
       is not an `ofPlus` image (`ofPlus_ne_timeStore`); `↓¹p → p` is **not** `RecallFree`, which
       is exactly `refute_modal_future`'s witness
-- [ ] Every declaration carries a docstring (C19) and a `Paper:` anchor where one applies (C15);
+- [x] Every declaration carries a docstring (C19) and a `Paper:` anchor where one applies (C15);
       no task-number citations (C9)
-- [ ] Confirm the module invariant holds: nothing under `FormalSystem/StarLanguage/` imports
+- [x] Confirm the module invariant holds: nothing under `FormalSystem/StarLanguage/` imports
       anything from `FormalSystem/Semantics/`. `recallFree_vector_irrelevant` is semantic and
       therefore does **not** go here — it lands in Phase 9
-- [ ] `lake build FormalSystem.StarLanguage.Formula` green, then `lake build` green
+- [x] `lake build FormalSystem.StarLanguage.Formula` green, then `lake build` green
 
 **Timing**: 1.5 hours
 
