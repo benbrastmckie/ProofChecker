@@ -93,9 +93,9 @@ next_project_number: 574
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-571 [NOT STARTED] — Remove the atom restriction from Det-pm and state Theorem C in it
+571 [PLANNED] — Remove the atom restriction from Det-pm and state Theorem C in it
   └─ 572 [NOT STARTED] — Prove the strong tense-free stability result and, IF AND ONLY IF 
-573 [NOT STARTED] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
+573 [PLANNING] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
@@ -113,7 +113,7 @@ next_project_number: 574
 ## Tasks
 
 ### 573. Star proof theory and conservativity
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
@@ -153,10 +153,11 @@ HARD CONSTRAINTS: no `sorry`; never restate a theorem under its old name in weak
 ---
 
 ### 571. Schematic detpm and theorem c
-- **Status**: [NOT STARTED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
+- **Plan**: [571_schematic_detpm_and_theorem_c/plans/01_schematic-detpm-theorem-c.md]
 
 **Description**: Remove the atom restriction from Det-pm and state Theorem C in its strongest form. GROUND TRUTH: FormalSystem/Semantics/StarDeterminism.lean currently defines `detPM (p : Atom) : StarFormula` -- the atom restriction sits in the DEFINITION, not merely in the theorem -- and proves `detPM_of_deterministic (hD : F.Deterministic) (p : Atom) : F.StarValidOn (detPM p)`. Its sibling `sentDet` is already schematic (`sentDet_of_deterministic (hD) (φ : StarFormula)`), and BOTH consume the same engine `settledDisj_of_deterministic`, which is itself schematic in φ. The atom restriction on the Det-pm side is therefore an artifact of matching the converse `deterministic_of_detPM (h : ∀ p : Atom, F.StarValidOn (detPM p))`, not a mathematical limit, and it makes the two halves of the module gratuitously asymmetric.
 

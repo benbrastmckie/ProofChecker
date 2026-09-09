@@ -1,0 +1,22 @@
+{
+  "status": "planned",
+  "artifacts": [
+    {
+      "type": "plan",
+      "path": "specs/571_schematic_detpm_and_theorem_c/plans/01_schematic-detpm-theorem-c.md",
+      "summary": "Five-phase plan widening detPM to a StarFormula argument, holding deterministic_of_detPM at atoms, stating Theorem C as a three-way equivalence, and rewriting the choice-asymmetry docstring against a measured axiom baseline."
+    }
+  ],
+  "next_steps": "Run /implement 571 to execute the plan",
+  "memory_candidates": [],
+  "metadata": {
+    "session_id": "sess_1788934264_dea312_571",
+    "agent_type": "planner-agent",
+    "delegation_depth": 1,
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 5,
+    "estimated_hours": 4,
+    "dependency_waves": [[1], [2], [3, 4], [5]]
+  },
+  "dispatch_seq": 1
+}
