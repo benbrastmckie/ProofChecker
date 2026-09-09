@@ -95,7 +95,7 @@ next_project_number: 574
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
 571 [PLANNED] — Remove the atom restriction from Det-pm and state Theorem C in it
   └─ 572 [NOT STARTED] — Prove the strong tense-free stability result and, IF AND ONLY IF 
-573 [PLANNING] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
+573 [RESEARCHING] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
@@ -113,7 +113,7 @@ next_project_number: 574
 ## Tasks
 
 ### 573. Star proof theory and conservativity
-- **Status**: [PLANNING]
+- **Status**: [RESEARCHING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
