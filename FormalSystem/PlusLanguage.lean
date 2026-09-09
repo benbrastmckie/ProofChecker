@@ -7,6 +7,7 @@ Authors: Benjamin Brast-McKie
 import FormalSystem.PlusLanguage.Formula
 import FormalSystem.PlusLanguage.Axioms
 import FormalSystem.PlusLanguage.Derivation
+import FormalSystem.PlusLanguage.Substitution
 
 /-!
 # `FormalSystem.PlusLanguage` — the language L⁺ and its logic TM⁺
@@ -29,6 +30,10 @@ proof system mirroring `ProofSystem.DerivationTree` constructor for constructor.
   derived `⊡`-necessitation rule, and the **backward conservativity** bridge
   `PlusDerivationTree.ofTM` / `plusDerivable_of_derivable`:
   `TM ⊢[fc] φ ⟹ TM⁺ ⊢[fc] ofFormula φ` at every frame class
+- `PlusLanguage.Substitution` — `substPlus`, the interpretation of L in L⁺ at an arbitrary
+  atom assignment, and the **substitution transfer** `plusDerivable_substPlus`:
+  `TM ⊢[fc] φ ⟹ TM⁺ ⊢[fc] substPlus σ φ`, which is what makes every TM *schema* available at
+  L⁺ arguments containing `⊡`
 
 ## Where the L⁺ semantics and metatheory live
 

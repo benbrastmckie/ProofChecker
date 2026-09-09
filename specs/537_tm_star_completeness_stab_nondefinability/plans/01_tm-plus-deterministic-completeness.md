@@ -232,18 +232,18 @@ atomic-batch declaration covers exactly the producer files plus the confirmed ca
 
 ---
 
-### Phase 3: Deterministic-hypothesis completeness engines [NOT STARTED]
+### Phase 3: Deterministic-hypothesis completeness engines [COMPLETED]
 
 **Goal**: State and prove the four engines with the validity hypothesis narrowed to the
 deterministic frames of the class.
 
 **Tasks**:
-- [ ] `derivable_of_validDetBase : ValidOnFrames TaskFrame.Deterministic φ → Derivable FrameClass.Base [] φ`
-- [ ] `derivable_of_validDetDense`, `derivable_of_validDetZTime`, `derivable_of_validDetRTime`
+- [x] `derivable_of_validDetBase : ValidOnFrames TaskFrame.Deterministic φ → Derivable FrameClass.Base [] φ`
+- [x] `derivable_of_validDetDense`, `derivable_of_validDetZTime`, `derivable_of_validDetRTime`
       against the corresponding `ValidDetIn` notion from Phase 1
-- [ ] Each proof re-runs the corresponding engine's script, applying the narrowed hypothesis to
-      the countermodel frame with the determinism component from Phase 2
-- [ ] Docstring on each: what the narrowing does and does not say — it is a statement about the
+- [x] Each proof re-runs the corresponding engine's script, applying the narrowed hypothesis to
+      the countermodel frame with the determinism component from Phase 2 *(deviation: altered — the `.ZTime` dense-branch derivation was first extracted from `derivable_of_validZTime` as the named `BXCanonical.ztimeNextTop`, so the two engines cite one derivation instead of duplicating ten steps)*
+- [x] Docstring on each: what the narrowing does and does not say — it is a statement about the
       engines' own countermodels, not a new completeness theorem
 
 **Timing**: 1 hour
@@ -260,20 +260,20 @@ deterministic frames of the class.
 
 ---
 
-### Phase 4: Erasure and the semantic collapse [NOT STARTED]
+### Phase 4: Erasure and the semantic collapse [COMPLETED]
 
 **Goal**: Define the ⊡-erasure and prove that on deterministic frames a `PlusFormula` and its
 erasure are pointwise equivalent, hence that deterministic L⁺-validity reduces to deterministic
 L-validity.
 
 **Tasks**:
-- [ ] Define `erasePlus : PlusFormula → Formula` deleting every `stab` (`erasePlus (.stab φ) = erasePlus φ`)
-- [ ] Prove `plusTruthAt_erasePlus_of_deterministic`: on a deterministic frame, at every total
+- [x] Define `erasePlus : PlusFormula → Formula` deleting every `stab` (`erasePlus (.stab φ) = erasePlus φ`)
+- [x] Prove `plusTruthAt_erasePlus_of_deterministic`: on a deterministic frame, at every total
       history and time, `PlusTruthAt M τ t φ ↔ TruthAt M τ t (erasePlus φ)`, by induction on `φ`
       with the `stab` case discharged by 536's `stab_iff_of_deterministic`
-- [ ] Prove the validity-level corollary: deterministic L⁺-validity of `φ` gives deterministic
+- [x] Prove the validity-level corollary: deterministic L⁺-validity of `φ` gives deterministic
       L-validity of `erasePlus φ`, at each class
-- [ ] Record in the docstring that the induction's `box` and `untl`/`snce` cases quantify over
+- [x] Record in the docstring that the induction's `box` and `untl`/`snce` cases quantify over
       total histories and times, which is why the pointwise lemma is stated at total histories
 
 **Timing**: 1.5 hours
@@ -291,24 +291,24 @@ L-validity.
 
 ---
 
-### Phase 5: TM to TM⁺ substitution transfer [NOT STARTED]
+### Phase 5: TM to TM⁺ substitution transfer [COMPLETED]
 
 **Goal**: Land the reusable lever that carries every TM theorem *schema* into TM⁺ at arbitrary
 `PlusFormula` arguments, so congruence and propositional reasoning need not be rebuilt over
 `PlusFormula`.
 
 **Tasks**:
-- [ ] Define `substPlus : (Atom → PlusFormula) → Formula → PlusFormula`, structurally, with the
+- [x] Define `substPlus : (Atom → PlusFormula) → Formula → PlusFormula`, structurally, with the
       same right-hand sides as `ofFormula` so it pushes through every derived operator by `rfl`
-- [ ] Prove the swap interaction `substPlus σ φ.swapTemporal = (substPlus (fun p => (σ p).swapTemporal) φ).swapTemporal`
-- [ ] Extend `PlusAxiom.ofTM`'s constructor map to `PlusAxiom.ofTMSubst : Axiom φ → PlusAxiom (substPlus σ φ)`
-- [ ] Prove `plusDerivable_substPlus : Derivable fc [] φ → PlusDerivable fc [] (substPlus σ φ)` by
+- [x] Prove the swap interaction `substPlus σ φ.swapTemporal = (substPlus (fun p => (σ p).swapTemporal) φ).swapTemporal`
+- [x] Extend `PlusAxiom.ofTM`'s constructor map to `PlusAxiom.ofTMSubst : Axiom φ → PlusAxiom (substPlus σ φ)`
+- [x] Prove `plusDerivable_substPlus : Derivable fc [] φ → PlusDerivable fc [] (substPlus σ φ)` by
       recursion on the derivation, with the `temporal_duality` case routed through the swap
       interaction at `swapTemporal ∘ σ` and closed by `swap_temporal_involution`
 - [ ] Audit `Theorems/` for the congruence schemata Phase 8 needs — propositional `iff`
       congruence at `imp`, `box` congruence, `untl`/`snce` congruence from `untilMonoGuard`,
-      `untilMonoEvent` and their past mirrors — and add on the TM side any that are missing
-- [ ] Register the module in `FormalSystem/PlusLanguage.lean`; keep the directional invariant
+      `untilMonoEvent` and their past mirrors — and add on the TM side any that are missing *(deviation: deferred to Phase 8, where the induction's goals name the schemata it actually demands; the plan's own Scope Hypothesis for Phase 8 prescribes exactly that ordering)*
+- [x] Register the module in `FormalSystem/PlusLanguage.lean`; keep the directional invariant
       (nothing under `PlusLanguage/` imports `Semantics/`)
 
 **Timing**: 2 hours

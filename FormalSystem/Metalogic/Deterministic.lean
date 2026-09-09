@@ -5,6 +5,8 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.Metalogic.Deterministic.Validity
+import FormalSystem.Metalogic.Deterministic.Erasure
+import FormalSystem.Metalogic.Deterministic.Engines
 
 /-!
 # `Metalogic/Deterministic/` — the deterministic metatheory of TM⁺

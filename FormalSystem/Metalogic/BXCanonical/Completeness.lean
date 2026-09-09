@@ -285,6 +285,51 @@ theorem derivable_of_validDense (φ : Formula) :
     exact set_consistent_not_both hM_mcs.1 (Chronicle.nextTop.neg.box) h_in h_not_box_dense
 
 /--
+**`U(⊤,⊥)` is a `.ZTime` theorem.** The ten-step derivation that eliminates the *dense* branch of
+every `.ZTime` completeness argument: `⊤` by the identity combinator, `F⊤` by *Seriality*, `U(¬⊤,⊤)`
+by Prior-UZ, `G(¬⊤ → ⊥)` by temporal necessitation off the deduction theorem, and then
+`left_mono_until_G` rewrites the guard to `⊥`.
+
+Extracted as a named derivation because two engines consume it — `derivable_of_validZTime` below
+and `Metalogic/Deterministic/Engines.lean`'s `derivable_of_validDetZTime` — and it is the whole
+content of the branch in both.
+-/
+noncomputable def ztimeNextTop : ⊢[FrameClass.ZTime] Chronicle.nextTop :=
+  -- Step 1: ⊤ = ⊥ → ⊥
+  let h_top : ⊢[FrameClass.ZTime] Chronicle.topFormula :=
+    FormalSystem.Theorems.Combinators.identity Formula.bot
+  -- Steps 2-3: F(⊤) from seriality + MP
+  let h_ft : ⊢[FrameClass.ZTime] Chronicle.topFormula.someFuture :=
+    DerivationTree.modus_ponens [] _ _
+      (DerivationTree.axiom [] _ Axiom.serial_future (FrameClass.base_le _)) h_top
+  -- Steps 4-5: U(¬⊤, ⊤) from prior_UZ + MP
+  let h_ut_negT : ⊢[FrameClass.ZTime]
+      (Formula.untl Chronicle.topFormula.neg Chronicle.topFormula) :=
+    DerivationTree.modus_ponens [] _ _
+      (DerivationTree.axiom [] _ (Axiom.prior_UZ Chronicle.topFormula) (by trivial)) h_ft
+  -- Step 6: ¬⊤ → ⊥ via the deduction theorem
+  let h_negT_bot : ⊢[FrameClass.ZTime] (Chronicle.topFormula.neg.imp Formula.bot) :=
+    deductionTheorem [] (Chronicle.topFormula.imp Formula.bot) Formula.bot
+      (DerivationTree.modus_ponens [Chronicle.topFormula.imp Formula.bot] Chronicle.topFormula
+          Formula.bot
+        (DerivationTree.assumption _ _ (by simp))
+        (DerivationTree.weakening [] [Chronicle.topFormula.imp Formula.bot] _ h_top (by simp)))
+  -- Step 7: G(¬⊤ → ⊥) via temporal necessitation
+  let h_G_negT_bot : ⊢[FrameClass.ZTime]
+      (Chronicle.topFormula.neg.imp Formula.bot).allFuture :=
+    DerivationTree.temporal_necessitation _ h_negT_bot
+  -- Steps 8-9: left_mono_until_G rewrites the guard, giving U(¬⊤,⊤) → U(⊥,⊤)
+  let h_mono : ⊢[FrameClass.ZTime]
+      ((Chronicle.topFormula.neg.imp Formula.bot).allFuture.imp
+        ((Formula.untl Chronicle.topFormula.neg Chronicle.topFormula).imp
+          (Formula.untl Formula.bot Chronicle.topFormula))) :=
+    DerivationTree.axiom [] _ (Axiom.left_mono_until_G Chronicle.topFormula.neg Formula.bot
+        Chronicle.topFormula) (FrameClass.base_le _)
+  -- Step 10: U(⊥,⊤) = nextTop
+  DerivationTree.modus_ponens [] _ _
+    (DerivationTree.modus_ponens [] _ _ h_mono h_G_negT_bot) h_ut_negT
+
+/--
 Discrete Completeness Theorem: If a formula is valid on all discretely ordered models,
 then it is derivable in the Discrete proof system.
 
@@ -316,44 +361,7 @@ theorem derivable_of_validZTime (φ : Formula) :
   · -- Dense case: □(F'T) ∈ M — but U(T,bot) is a Discrete theorem.
     -- Derive nextTop (= U(T,bot)) in the Discrete system, then from
     -- □(neg(nextTop)) ∈ M extract neg(nextTop) ∈ M via Modal T, contradiction.
-    -- Step 1: T = bot → bot
-    have h_top : ⊢[FrameClass.ZTime] Chronicle.topFormula :=
-      FormalSystem.Theorems.Combinators.identity Formula.bot
-    -- Steps 2-3: F(T) from seriality + MP
-    have h_ft : ⊢[FrameClass.ZTime] Chronicle.topFormula.someFuture :=
-      DerivationTree.modus_ponens [] _ _
-        (DerivationTree.axiom [] _ Axiom.serial_future (FrameClass.base_le _)) h_top
-    -- Steps 4-5: U(T, ¬T) from prior_UZ + MP
-    have h_ut_negT : ⊢[FrameClass.ZTime]
-        (Formula.untl Chronicle.topFormula.neg Chronicle.topFormula) :=
-      DerivationTree.modus_ponens [] _ _
-        (DerivationTree.axiom [] _ (Axiom.prior_UZ Chronicle.topFormula) (by trivial)) h_ft
-    -- Step 6: ¬T → ⊥ via deduction theorem (assume T→⊥, derive T from identity, MP gives ⊥)
-    have h_negT_bot : ⊢[FrameClass.ZTime] (Chronicle.topFormula.neg.imp Formula.bot) := by
-      change ⊢[FrameClass.ZTime] ((Chronicle.topFormula.imp Formula.bot).imp Formula.bot)
-      exact deductionTheorem [] (Chronicle.topFormula.imp Formula.bot) Formula.bot
-        (DerivationTree.modus_ponens [Chronicle.topFormula.imp Formula.bot] Chronicle.topFormula
-            Formula.bot
-          (DerivationTree.assumption _ _ (by simp))
-          (DerivationTree.weakening [] [Chronicle.topFormula.imp Formula.bot] _ h_top (by simp)))
-    -- Step 7: G(¬T → ⊥) via temporal necessitation
-    have h_G_negT_bot : ⊢[FrameClass.ZTime]
-        (Chronicle.topFormula.neg.imp Formula.bot).allFuture :=
-      DerivationTree.temporal_necessitation _ h_negT_bot
-    -- Step 8: left_mono_until_G: G(¬T→⊥) → (U(T,¬T) → U(T,⊥))
-    have h_mono : ⊢[FrameClass.ZTime]
-        ((Chronicle.topFormula.neg.imp Formula.bot).allFuture.imp
-          ((Formula.untl Chronicle.topFormula.neg Chronicle.topFormula).imp
-            (Formula.untl Formula.bot Chronicle.topFormula))) :=
-      DerivationTree.axiom [] _ (Axiom.left_mono_until_G Chronicle.topFormula.neg Formula.bot
-          Chronicle.topFormula) (FrameClass.base_le _)
-    -- Step 9: U(T,¬T) → U(T,⊥)
-    have h_imp_next : ⊢[FrameClass.ZTime]
-        ((Formula.untl Chronicle.topFormula.neg Chronicle.topFormula).imp Chronicle.nextTop) :=
-      DerivationTree.modus_ponens [] _ _ h_mono h_G_negT_bot
-    -- Step 10: U(T,⊥) = nextTop
-    have h_next_top : ⊢[FrameClass.ZTime] Chronicle.nextTop :=
-      DerivationTree.modus_ponens [] _ _ h_imp_next h_ut_negT
+    have h_next_top : ⊢[FrameClass.ZTime] Chronicle.nextTop := ztimeNextTop
     -- Place nextTop in M
     have h_in_next : Chronicle.nextTop ∈ M := theorem_in_mcs hM_mcs h_next_top
     -- Extract ¬(nextTop) from □(¬(nextTop)) via Modal T
