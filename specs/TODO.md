@@ -11,7 +11,7 @@ next_project_number: 574
 **Dependency Waves**:
 | Wave | Tasks | Blocked by | Topics |
 |------|-------|------------|--------|
-| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,572,573 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
+| 1 | 127,128,178,257,298,464,476,481,502,504,506,534,540,542,559,563,568,569,573 | -- | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 2 | 231,282,296,465,497,560,564,565,567,570 | 298,464,502,559,563,568 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 3 | 219,428,498,499,500,566 | 231,465,497,565 | algebraic-representation, categorical-structure, dataset-enhancement, ... |
 | 4 | 125,429,543 | 428,498,499,500 | algebraic-representation, decidability, metalogic |
@@ -93,8 +93,7 @@ next_project_number: 574
   └─ 560 [NOT STARTED] — GATED IMPLEMENTATION -- do not plan or dispatch until research ta
 568 [NOT STARTED] — Promote the alternative consequence relations into the library, f
   └─ 570 [NOT STARTED] — OPEN RESEARCH QUESTION, not an implementation task. Is the logic 
-572 [PLANNED] — Prove the strong tense-free stability result and, IF AND ONLY IF 
-573 [PLANNED] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
+573 [IMPLEMENTING] — Build the proof theory for L⋆ and prove conservativity over TM⁺ i
 543 [NOT STARTED] — Machine-check the principal new results from the MF frame-corresp
 
 ### Paper Refactor
@@ -112,7 +111,7 @@ next_project_number: 574
 ## Tasks
 
 ### 573. Star proof theory and conservativity
-- **Status**: [PLANNED]
+- **Status**: [IMPLEMENTING]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: None
@@ -132,11 +131,12 @@ HARD CONSTRAINTS: no `sorry` anywhere -- an unreachable result is recorded as a 
 ---
 
 ### 572. Tense free stability and schematic separation
-- **Status**: [PLANNED]
+- **Status**: [COMPLETED]
 - **Task Type**: lean4
 - **Topic**: metalogic
 - **Dependencies**: Task 571
 - **Plan**: [572_tense_free_stability_and_schematic_separation/plans/01_tense-free-stability-schematic-separation.md]
+- **Summary**: [572_tense_free_stability_and_schematic_separation/summaries/01_tense-free-stability-schematic-separation-summary.md]
 
 **Description**: Prove the strong tense-free stability result and, IF AND ONLY IF it holds, use it to remove the atom restriction from the forward-determinism separation. MOTIVATION: `fn_sentDet_atom (p : Atom)` in FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean is restricted to sentence letters, and that restriction is an artifact. Its own docstring gives the real reason -- "an atom's truth depends on nothing but the state at the time of evaluation". The principled closure of that reason is the TENSE-FREE fragment.
 
