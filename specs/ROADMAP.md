@@ -9,8 +9,19 @@ via the **Burgess-Xu (BX) system**. This roadmap was retitled and rewritten whol
 billing with completeness, to replace a decade of stacked dated "Current state" blocks with one
 current-state statement per front, and to ground every status claim in a named
 `scripts/check-module-invariants.sh` check. Historical material (superseded dated blocks, retired
-diagrams, dead-end catalogs, the old 111-row task cross-reference table) was moved verbatim to
-`specs/ROADMAP-ARCHIVE.md` — consult it for provenance, never for current status.
+diagrams, dead-end catalogs, the old 111-row task cross-reference table) was first split into a
+`specs/ROADMAP-ARCHIVE.md` companion and then **deleted on 2026-09-09**, once it was verified to
+be a strictly verbatim subset of the pre-split document — every line of it is recoverable, in its
+original order and context, from git:
+
+```bash
+git show 14e96488d^:specs/ROADMAP.md      # the full 1,970-line pre-split document
+git log --follow -- specs/ROADMAP.md      # its history
+```
+
+Consult that commit for provenance, never for current status: nothing in it was re-verified
+against the live tree, and where it conflicts with this file or with a fresh
+`scripts/check-module-invariants.sh` run, the live check wins unconditionally.
 
 **Architecture**: the proof system has 45 BX axiom constructors in nine layers: propositional (4),
 S5 modal (5), Burgess-Xu temporal (18) and additional Burgess-Xu temporal (4), modal-temporal
@@ -73,11 +84,35 @@ day-to-day task selection until the author lifts the restriction.
 | Object-language extensions | 127, 128 | Phase 6 above already recommends these for ABANDON or park — antagonistic to the (also-deferred) termination work |
 | Documentation final-polish | 177 | Explicitly gated in its own description on the decidability chain (426, 428, 429, 430, 432, 433, 434) landing — cannot start until that front resumes |
 
+**Progress against this list, 2026-09-09.** Items 1 and 6 are **done**, and an eight-task
+paper-alignment cluster that did not exist when this list was written was created and completed
+the same day — see `## Paper Alignment Programme` below for what it settled. Remaining items are
+renumbered nowhere: the original numbering is kept so the list stays comparable to the review
+that produced it.
+
+Three corrections to the list as written:
+
+- **Item 14 (543) is not near-term.** Its chain is `543 → 500 → 497 → 502 → 461`, of which only
+  **502** is eligible today; 497 and 500 are `not_started` behind it. That places 543 four tasks
+  deep *inside* the Jønsson-Tarski front this same section defers. Treat it as deferred, or
+  schedule `502 → 497 → 500` as a deliberate decision about the algebraic front — not as a small
+  result.
+- **Run item 8 (569) before items 9-13 (563-567).** Not a recorded dependency, so the graph will
+  not enforce it. 569 replaces the truth index, and its probe
+  (`specs/553_.../probes/01_bounded-index-diagnosis.lean`) proves the current bounded-index
+  reading is *incoherent, not merely unused*: `refute_modal_t_at_bounded_index` shows `□p → p`,
+  a TM axiom, is **false** at a bounded convex index off its domain, because the atom clause is
+  domain-relative while the box clause re-indexes to the total `H_F`. Siting the presheaf cluster
+  beneath `Truth.lean` on the index that correction removes means building it twice.
+- **Items 7, 8 and 12 (568, 569, 563) declare no `file_scope`.** The field is empty on all three,
+  so they take no lock and the admission gate cannot serialize them against each other or
+  anything else. Give them a scope before running them concurrently.
+
 **Recommended near-term order** (foundations and small, already-scoped results only; roughly
 cheapest/most-unblocked first):
 
-1. **562** `sync_language_names_with_paper_l_minus_plus_star` — pure rename/prose sweep, no proof
-   term changes; clears naming ambiguity that several other tasks below reference.
+1. ~~**562** `sync_language_names_with_paper_l_minus_plus_star`~~ — **DONE 2026-09-09.** Pure
+   rename/prose sweep; released the seven dependents that referenced the old names.
 2. **540** `docstring_coverage_class_instance_lemma` — close the three declaration categories
    below the C19 docstring-coverage floor.
 3. **542** `dead_declaration_triage_c17_findings` — triage the C17 dead-declaration census.
@@ -85,8 +120,8 @@ cheapest/most-unblocked first):
    fixes in the typst book, mechanical/visual verification loop.
 5. **178** `publication_examples_and_demo` — already rescoped to the propositional fragment
    (genuinely decidable today); does not touch the deferred decidability front.
-6. **193** `codebase_tactic_refactor` — apply validity-intro/truth-simp macros to the soundness
-   layer; already rescoped to a bounded target.
+6. ~~**193** `codebase_tactic_refactor`~~ — **DONE.** The validity-intro/truth-simp macros landed
+   on the soundness layer.
 7. **568** `c3_c4_consequence_relations_as_library_definitions` — promote already-derived results
    from `specs/553_.../probes/02_*.lean` and `03_*.lean` into the library.
 8. **569** `retarget_semantics_to_possible_world_index` — the correctness argument is already
@@ -104,7 +139,9 @@ cheapest/most-unblocked first):
     `StarDeterminism.states_eq_of_deterministic`.
 14. **543** `formalize_mf_correspondence_rigidity` — machine-checks results already researched
     (externally, in the PossibleWorlds paper repository) rather than open-ended research; largest
-    item in this list by the author's own description — re-confirm scope before starting.
+    item in this list by the author's own description. **Reclassified deferred 2026-09-09** — it
+    is four tasks deep behind `502 → 497 → 500`, inside the deferred algebraic front. See the
+    corrections above.
 
 **Independent, non-mathematical track** (small and bounded, but dataset/tooling rather than proof
 foundations — pick up in parallel if useful, not ordered against the list above): the Phase 6
@@ -365,8 +402,12 @@ verification.
 ## Phase 7: Repository Hygiene and Programme Metadata (Low Priority)
 
 - [x] **ROADMAP split** — this file split from a 1,970-line stacked-history document into this
-      current-state file plus `specs/ROADMAP-ARCHIVE.md` (historical sediment, verbatim).
-      *(Completed: task 468, 2026-08-25)*
+      current-state file plus a `specs/ROADMAP-ARCHIVE.md` companion (historical sediment,
+      verbatim). *(Completed: task 468, 2026-08-25)*
+- [x] **ROADMAP archive retired** — the companion file was deleted after a line-by-line check
+      confirmed all 920 of its distinct lines are present verbatim in the pre-split document at
+      `14e96488d^:specs/ROADMAP.md`, making it a duplicate of git history rather than a second
+      source. Provenance is now read with `git show`. *(2026-09-09)*
 - [x] **`active_topics` gap closed** — `metalogic` (carried by completed tasks 477/478/479) added.
       *(Completed: task 468, 2026-08-25)*
 - [x] **Dangling-edge scan** — zero dangling dependency edges across `active_projects` union the
@@ -793,8 +834,9 @@ values, supporting `D' = ℚ` (base/dense) and `D' = ℤ` (discrete).
 
 The chronicle construction (Burgess 1982) produces a limit domain `X ⊂ ℚ`. The natural inclusion
 `X ⊂ ℚ` (injection, requires nothing) replaces the Cantor order-isomorphism (bijection, requires
-density) that was the historical source of the density-case sorry — see
-`specs/ROADMAP-ARCHIVE.md` for the retired construction this replaced. `AddCommGroup D` remains
+density) that was the historical source of the density-case sorry — for the retired construction
+this replaced, see the pre-split document at `14e96488d^:specs/ROADMAP.md` (section
+`## Representation Theorem Goal`). `AddCommGroup D` remains
 structurally load-bearing: only MF/TF (2 of 40+ axioms) need group structure for soundness; all
 other axioms are purely order-theoretic.
 
@@ -838,8 +880,30 @@ Rebased onto the landed 414 semantics: 413 (TM conservativity bridge), 169/170/4
 (shift-set representation) also touches `TruthAt` and sits outside the `paper-refactor` topic —
 completed (see Phase 1).
 
+**Cluster status, 2026-09-09 — the language-family layer.** Eight tasks created and completed
+within a single day, aligning the Lean tree's language names with the paper's and then
+abstracting over the resulting family. None of it was open mathematics; all of it was
+already-scoped foundations.
+
+| Task | What it settled |
+|---|---|
+| **562** | The four languages renamed to the paper's `L⁻ / L / L⁺ / L⋆`. Prerequisite for the rest of the cluster. |
+| **571** | Schematic `DetPM` and Theorem C. |
+| **572** | Tense-free stability and schematic separation. |
+| **573** | `L⋆` proof theory and conservativity. |
+| **574** | The load-bearing soundness invariant recorded: `modal_future_valid` (`Metalogic/Soundness.lean`) is the **sole** consumer of time-shift homogeneity in the TM schema block. |
+| **575** | State-locality lifted to `L⁺`; the atom-restricted stability lemma retired. |
+| **576** | `StarAxiom.ofBase` split, and the `ofPlus`-restricted bridge results eliminated from `L⋆`. |
+| **577** | The validity layer and truth clauses abstracted over `class PointTruth` / `class TruthEnv`: two new leaf modules under `FormalSystem/Semantics/`, 12 instances, **77 proof bodies delegated, 0 statements changed** (verified by a declaration-header diff against the pre-refactor commit — 0 changed, 0 lost, all 242 names resolve). A toy fifth language in `Tests/` exercises the extension contract end to end. Four declarations *lost* an axiom (`Quot.sound`); none gained one. |
+
+**Two follow-ups 577 identified and no task owns**: (a) the consequence layer and
+`Metalogic/Deterministic/Validity.lean` adapters, left outside 577's declared territory; (b)
+`CTruth.*` in `CoarsenedModels.lean` — a **fifth clause-family duplicate the research survey never
+listed**. Both are now cheap, because 577 built the class layer they would instantiate.
+
 **Check grounding**: `specs/archive/state.json` `completed_projects`/`archived_projects`,
-cross-checked by `jq` at realignment time (2026-08-25).
+cross-checked by `jq` at realignment time (2026-08-25); the 2026-09-09 rows from
+`specs/state.json` and the task commits on `main`.
 
 ---
 
