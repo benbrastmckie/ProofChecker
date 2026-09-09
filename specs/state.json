@@ -39,20 +39,26 @@
     {
       "project_number": 571,
       "project_name": "schematic_detpm_and_theorem_c",
-      "status": "planned",
+      "status": "completed",
       "task_type": "lean4",
       "description": "Remove the atom restriction from Det-pm and state Theorem C in its strongest form. GROUND TRUTH: FormalSystem/Semantics/StarDeterminism.lean currently defines `detPM (p : Atom) : StarFormula` -- the atom restriction sits in the DEFINITION, not merely in the theorem -- and proves `detPM_of_deterministic (hD : F.Deterministic) (p : Atom) : F.StarValidOn (detPM p)`. Its sibling `sentDet` is already schematic (`sentDet_of_deterministic (hD) (φ : StarFormula)`), and BOTH consume the same engine `settledDisj_of_deterministic`, which is itself schematic in φ. The atom restriction on the Det-pm side is therefore an artifact of matching the converse `deterministic_of_detPM (h : ∀ p : Atom, F.StarValidOn (detPM p))`, not a mathematical limit, and it makes the two halves of the module gratuitously asymmetric.\n\nDELIVERABLES, each phase one agent run with lake build green and no new sorry: (1) Widen the definition to `detPM (φ : StarFormula) : StarFormula := .timeStore 1 (StarFormula.always (.timeStore 2 (.timeRecall 1 (settledDisj φ))))`, so that `detPM (StarFormula.atom p)` is exactly the former atom instance; every existing consumer must keep compiling. (2) Restate `detPM_of_deterministic` schematically over φ, consuming `settledDisj_of_deterministic` exactly as `sentDet_of_deterministic` does. It MUST remain choice-free: it routes through `states_eq_of_deterministic` via `star_truth_congr_ext` and must add no extension-theorem step. (3) Keep `deterministic_of_detPM`'s hypothesis AT ATOMS. That is the weakest hypothesis and it is precisely the strength of the converse -- do not widen it, and do not let a widened definition tempt a widened hypothesis. (4) State Theorem C as a three-way equivalence -- `(∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p)))` iff `F.Deterministic` iff `(∀ φ : StarFormula, F.StarValidOn (detPM φ))` -- as a single named result replacing or extending `deterministic_starDefinable`, whose docstring must state plainly that the ATOMIC fragment already FORCES determinism while determinism DELIVERS the FULL schema. That is the sharpest available form of a definability theorem and it is the sentence the paper should carry.\n\nCHOICE BOOKKEEPING is part of the deliverable, not an afterthought: the (⇒) direction remains a theorem of ZFC through `deterministic_of_singletonClasses` (Semantics/DeterministicBridge.lean, Zorn via the extension theorem), the (⇐) direction remains choice-free, and the module docstring's choice-asymmetry section must be rewritten to match the new statement rather than left stale. Every `#print axioms` figure asserted in a docstring must match the measured value after the change.\n\nHARD CONSTRAINTS: never argue by uniform substitution -- it is unsound here and the module docstring already records why (`p → ⊡p` is frame-valid over the drift frame while `Fp → ⊡Fp` is refutable over it); never restate `deterministic_of_detPM` in weakened form under its own name (see .claude/rules/plan-compliance.md); no `sorry`; no task numbers under FormalSystem/; `lake build` green and `scripts/check-module-invariants.sh` exit 0, C2 axiom baselines included -- if a pinned name changes, update the baseline NAME only and never its axiom set. DOCUMENTATION: update FormalSystem/StarLanguage/README.md's paper-label correspondence row for Theorem C so it names the three-way statement.",
       "topic": "metalogic",
       "created": "2026-09-09T05:13:14Z",
-      "last_updated": "2026-09-09T06:18:04Z",
+      "last_updated": "2026-09-09T06:55:31Z",
       "session_id": "sess_1788934264_dea312",
       "artifacts": [
         {
           "path": "specs/571_schematic_detpm_and_theorem_c/plans/01_schematic-detpm-theorem-c.md",
           "type": "plan",
           "summary": "Five-phase plan widening detPM to a StarFormula argument, holding deterministic_of_detPM at atoms, stating Theorem C as a three-way equivalence, and rewriting the choice-asymmetry docstring against a measured axiom baseline."
+        },
+        {
+          "path": "specs/571_schematic_detpm_and_theorem_c/summaries/01_schematic-detpm-theorem-c-summary.md",
+          "type": "summary",
+          "summary": "detPM widened to a StarFormula argument, detPM_of_deterministic made schematic, deterministic_of_detPM held at atoms, and Theorem C restated as a three-way equivalence."
         }
-      ]
+      ],
+      "completion_summary": "Removed the atom restriction from Det-pm at its source: `detPM` now takes a `StarFormula`, `detPM_of_deterministic` is schematic in it and still routes only through `settledDisj_of_deterministic`/`star_truth_congr_ext`, while `deterministic_of_detPM`'s hypothesis stays at the atomic fragment. `deterministic_starDefinable` is now a three-way equivalence hinged on `F.Deterministic` — the atomic fragment forces determinism, determinism delivers the full schema — and the module's choice-asymmetry prose was rewritten structurally against re-measured `#print axioms` values. `lake build`, `lake build BimodalTest`, and `scripts/check-module-invariants.sh` all exit 0 with zero sorry and no new axiom."
     },
     {
       "project_number": 537,
