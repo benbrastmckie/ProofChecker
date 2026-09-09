@@ -41,6 +41,7 @@ import FormalSystem.Semantics.StarTruth
 import FormalSystem.Semantics.StarValidity
 import FormalSystem.Semantics.StarDeterminism
 import FormalSystem.Semantics.StarNonValidities
+import FormalSystem.Semantics.StarStateLocal
 import FormalSystem.Semantics.DurationClassification
 import FormalSystem.Semantics.LexCarrier
 import FormalSystem.Semantics.IntTransfer

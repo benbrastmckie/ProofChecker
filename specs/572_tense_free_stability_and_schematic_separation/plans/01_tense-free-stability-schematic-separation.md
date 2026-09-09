@@ -1,7 +1,7 @@
 # Implementation Plan: Tense-Free Stability and the Schematic Separation
 
 - **Task**: 572 - Tense-free stability and schematic separation
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 9 hours
 - **Dependencies**: Task 571 (schematic `Det-pm`) — `[COMPLETED]`, so `Semantics/StarDeterminism.lean` and `StarLanguage/README.md` are released territory
 - **Research Inputs**: None (no research artifact for this round; the description is a specification and every structural question it raises was settled by direct reads of the tree — see Overview)
@@ -122,31 +122,31 @@ No `roadmap_path` supplied for this dispatch; `ROADMAP.md` was not consulted.
 
 Phases within the same wave can execute in parallel.
 
-### Phase 1: The state-locality fragment and its soundness theorem [NOT STARTED]
+### Phase 1: The state-locality fragment and its soundness theorem [COMPLETED]
 
 **Goal**: Create `FormalSystem/Semantics/StarStateLocal.lean` carrying the syntactic predicate,
 the semantic property, and the induction connecting them. **This phase is the gate for the whole
 task.**
 
 **Tasks**:
-- [ ] Create `FormalSystem/Semantics/StarStateLocal.lean` with the standard copyright header,
+- [x] Create `FormalSystem/Semantics/StarStateLocal.lean` with the standard copyright header,
       importing `FormalSystem.Semantics.StarTruth` and `FormalSystem.Semantics.StarValidity`
-- [ ] Add `import FormalSystem.Semantics.StarStateLocal` to `FormalSystem/Semantics.lean` in the
+- [x] Add `import FormalSystem.Semantics.StarStateLocal` to `FormalSystem/Semantics.lean` in the
       same sub-step (keeps the module in the build graph; C6 otherwise demands a manifest entry)
-- [ ] Define `StarFormula.StateLocal : StarFormula → Prop` by structural recursion, exactly the
-      nine clauses of the Overview table
-- [ ] Define `IsStateLocal (φ : StarFormula) : Prop` — the semantic property, quantifying over
+- [x] Define `StarFormula.StateLocal : StarFormula → Prop` by structural recursion, exactly the
+      nine clauses of the Overview table *(deviation: altered — declared in `namespace FormalSystem.StarLanguage`, not `FormalSystem.Semantics` as the Challenge block shows. Lean 4 generalized field notation resolves `φ.StateLocal` only against the namespace of `φ`'s type, so every other signature in this plan — `fn_sentDet_stateLocal (hφ : φ.StateLocal)` included — requires the declaration to live there. The statement itself is byte-for-byte the Challenge's.)*
+- [x] Define `IsStateLocal (φ : StarFormula) : Prop` — the semantic property, quantifying over
       every frame, model, pair of total histories, time and register vector
-- [ ] Prove `isStateLocal_box (φ) : IsStateLocal (.box φ)` — **this settles the task's open
+- [x] Prove `isStateLocal_box (φ) : IsStateLocal (.box φ)` — **this settles the task's open
       question**; the clause discards `τ`
-- [ ] Prove `isStateLocal_stab (φ) : IsStateLocal (.stab φ)` via `sameStateAt_congr_left`
-- [ ] Prove `isStateLocal_of_stateLocal : φ.StateLocal → IsStateLocal φ` by induction on `φ`,
+- [x] Prove `isStateLocal_stab (φ) : IsStateLocal (.stab φ)` via `sameStateAt_congr_left`
+- [x] Prove `isStateLocal_of_stateLocal : φ.StateLocal → IsStateLocal φ` by induction on `φ`,
       with the motive quantified over `v` (the `timeStore` case instantiates it at
       `Function.update v i t`)
-- [ ] Write the module docstring: the constructor table with the reason for each verdict; the
+- [x] Write the module docstring: the constructor table with the reason for each verdict; the
       same-time-vs-different-times contrast with `stab_state_only`; the explicit
       soundness-not-completeness note (`↑ⁱ↓ⁱφ`)
-- [ ] **GATE**: if the induction cannot be closed for the fragment as defined, walk the fallback
+- [x] **GATE** (passed — the induction closed for all nine constructors with the fragment exactly as the Overview table gives it; `box` and `stab` went through in their *unconditional* form, so no rung of the fallback ladder was used): if the induction cannot be closed for the fragment as defined, walk the fallback
       ladder for the offending constructor (unconditional → recursive → excluded + countermodel).
       If no non-degenerate fragment survives, STOP: record the failure and the countermodel in
       this module, mark this phase `[COMPLETED WITH EXCLUSIONS]` with a `#### Reasoned Exclusions`
@@ -176,21 +176,21 @@ plan's summary and the module docstring.
 
 ---
 
-### Phase 2: Non-preservation witnesses for the excluded constructors [NOT STARTED]
+### Phase 2: Non-preservation witnesses for the excluded constructors [COMPLETED]
 
 **Goal**: Prove that `untl`, `snce` and `timeRecall` are genuinely excluded — the fragment's
 boundary is a theorem, not a stipulation.
 
 **Tasks**:
-- [ ] Prove `not_isStateLocal_someFuture (p : Atom) : ¬ IsStateLocal (someFuture (.atom p))` over
+- [x] Prove `not_isStateLocal_someFuture (p : Atom) : ¬ IsStateLocal (someFuture (.atom p))` over
       `NF`: `τ = natHist (fun _ => 0)`, `σ = natHist (fun s => if s ≤ 0 then 0 else 1)`, agreeing
       at `0` and disagreeing about `F p` there (`|p| = {0}` under `natModel`)
-- [ ] Prove `not_isStateLocal_somePast (p : Atom) : ¬ IsStateLocal (somePast (.atom p))` over `NF`
+- [x] Prove `not_isStateLocal_somePast (p : Atom) : ¬ IsStateLocal (somePast (.atom p))` over `NF`
       with `σ = natHist (fun s => if s < 0 then 1 else 0)` — the same history
       `PlusNonValidities.lean` already uses for `P⊡p → ⊡Pp`
-- [ ] Prove `not_isStateLocal_timeRecall (p : Atom) : ¬ IsStateLocal (.timeRecall 0 (.atom p))`
+- [x] Prove `not_isStateLocal_timeRecall (p : Atom) : ¬ IsStateLocal (.timeRecall 0 (.atom p))`
       with the Phase-2 `untl` history pair and a register vector holding `1`
-- [ ] Record in the module docstring that all three witnesses live on one frame (`NF`), reusing
+- [x] Record in the module docstring that all three witnesses live on one frame (`NF`), reusing
       the tree's existing countermodel rather than building a second two-state frame
 
 **Timing**: 1.5 hours
@@ -214,18 +214,18 @@ on `NF`, name the frame actually used.
 
 ---
 
-### Phase 3: The headline biconditional `φ ↔ ⊡φ` [NOT STARTED]
+### Phase 3: The headline biconditional `φ ↔ ⊡φ` [COMPLETED]
 
 **Goal**: The strong result the task names, in both a pointwise and a validity form.
 
 **Tasks**:
-- [ ] Prove `stateLocal_stab_iff (hφ : φ.StateLocal) (M τ) (hτ : τ.IsTotal) (t v) :
+- [x] Prove `stateLocal_stab_iff (hφ : φ.StateLocal) (M τ) (hτ : τ.IsTotal) (t v) :
       StarTruthAt M τ t v φ ↔ StarTruthAt M τ t v (.stab φ)` — `→` from
       `isStateLocal_of_stateLocal`, `←` by instantiating the `⊡` clause at `τ` itself via
       `SameStateAt.refl`
-- [ ] Prove `stateLocal_starValid_iff_stab (hφ : φ.StateLocal) :
-      StarValid (StarFormula.iff φ (.stab φ))` via `TaskFrame.StarValidOn.of_forall_total`
-- [ ] Record in the docstring that the `←` direction is where totality is used, and that this is
+- [x] Prove `stateLocal_starValid_iff_stab (hφ : φ.StateLocal) :
+      StarValid (StarFormula.iff φ (.stab φ))` via `StarValid.of_forall_total` *(deviation: altered — the plan named `TaskFrame.StarValidOn.of_forall_total`, whose conclusion is `F.StarValidOn`, not the `StarValid` this theorem states; `StarValid.of_forall_total` is the adapter with the right conclusion)*
+- [x] Record in the docstring that the `←` direction is where totality is used, and that this is
       the companion facing the other way to `stab_state_only`: `stab_state_only` says `⊡φ` is
       state-local, this says a state-local `φ` is already `⊡`-stable
 
