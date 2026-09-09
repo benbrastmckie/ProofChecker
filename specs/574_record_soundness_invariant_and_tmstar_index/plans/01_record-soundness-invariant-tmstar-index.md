@@ -236,29 +236,29 @@ whatever Phase 1 confirmed.
 
 ---
 
-### Phase 3: Relocate the `StarValidIn` binder-shape adapters [NOT STARTED]
+### Phase 3: Relocate the `StarValidIn` binder-shape adapters [COMPLETED]
 
 **Goal**: Move the two adapters into `FormalSystem/Semantics/StarValidity.lean` — the module whose
 `## Main Results` docstring already advertises them — under the dotted names their L⁺ counterparts
 use, and have `StarSoundness.lean` consume them from there.
 
 **Tasks**:
-- [ ] Add `StarValidIn.of_forall_total` and `StarValidIn.apply_total` to
+- [x] Add `StarValidIn.of_forall_total` and `StarValidIn.apply_total` to
       `FormalSystem/Semantics/StarValidity.lean`, in the `### Binder-shape adapters` block,
       immediately after the `StarValidOnFrames` pair, mirroring
       `PlusValidIn.of_forall_total` / `.apply_total` in `FormalSystem/Semantics/PlusValidity.lean`
       line for line. Statements are pinned under `## Lean Challenge Statements` below.
-- [ ] Delete `starValidIn_of_forall_total` and `starValidIn_apply_total` and their
+- [x] Delete `starValidIn_of_forall_total` and `starValidIn_apply_total` and their
       `/-! ## The `StarValidIn` binder-shape adapters -/` section header from
       `FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean`.
-- [ ] `grep -rn 'starValidIn_of_forall_total\|starValidIn_apply_total'` across `FormalSystem/` and
+- [x] `grep -rn 'starValidIn_of_forall_total\|starValidIn_apply_total'` across `FormalSystem/` and
       `Tests/` and repoint every call site at the dotted names.
-- [ ] Update `StarSoundness.lean`'s module docstring: the `## Main Results` list and any prose
-      that described the adapters as living locally.
-- [ ] Confirm `Semantics/StarValidity.lean`'s existing `## Main Results` bullet ("and the
+- [x] Update `StarSoundness.lean`'s module docstring: the `## Main Results` list and any prose
+      that described the adapters as living locally. *(deviation: altered — the `## Main Results` list never named the adapters and the docstring carried no prose siting them locally (only the in-body `/-! ## The `StarValidIn` binder-shape adapters -/` section header, which was deleted with them), so a `## References` bullet pointing at `Semantics/StarValidity.lean` was added instead)*
+- [x] Confirm `Semantics/StarValidity.lean`'s existing `## Main Results` bullet ("and the
       `StarValidIn` forms") is now true as written; adjust wording only if the new names make it
       inaccurate.
-- [ ] **Fallback, if and only if `lake build` reports an import cycle**: revert the move, and
+- [ ] **Fallback, if and only if `lake build` reports an import cycle** *(deviation: skipped — no import cycle appeared; the move succeeded, so the fallback branch did not apply)*: revert the move, and
       instead correct `Semantics/StarValidity.lean`'s docstring so it no longer advertises the
       adapters, naming the specific cycle (`module A imports … imports A`) as the reason in that
       same docstring. Do not leave the docstring stale under any circumstance.

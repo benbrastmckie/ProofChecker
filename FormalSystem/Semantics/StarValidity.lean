@@ -28,8 +28,8 @@ point, so validity quantifies them exactly as it quantifies the time.
 ## Main Results
 
 - `StarValidOnFrames.mono`, `StarValidIn.mono` — monotonicity
-- `StarValidOnFrames.of_forall_total` / `.apply_total` and the `StarValidIn` forms — the
-  binder-shape adapters
+- `StarValidOnFrames.of_forall_total` / `.apply_total` and the `StarValidIn` forms
+  (`StarValidIn.of_forall_total` / `.apply_total`) — the binder-shape adapters
 - `starValidOn_ofPlus` — L⋆ validity of an embedded L⁺ formula is L⁺ validity
 - `sentDet_unfold` — the paper's `(∗)` chain, as one reusable biconditional
 
@@ -133,6 +133,20 @@ theorem StarValidOnFrames.apply_total {P : TaskFrame → Prop} {φ : StarFormula
     (τ : ConvexHistory F) (hτ : τ.IsTotal) (x : F.Duration) (v : ℕ → F.Duration) :
     StarTruthAt M τ x v φ :=
   h F hF M ⟨τ, hτ⟩ x v
+
+/-- `StarValidOnFrames.of_forall_total` at a `FrameClass` tag. -/
+theorem StarValidIn.of_forall_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
+    (h : ∀ (F : TaskFrame), fc.Sat F → ∀ (M : TaskModel F) (τ : ConvexHistory F),
+           τ.IsTotal → ∀ (x : F.Duration) (v : ℕ → F.Duration), StarTruthAt M τ x v φ) :
+    StarValidIn fc φ :=
+  StarValidOnFrames.of_forall_total h
+
+/-- `StarValidOnFrames.apply_total` at a `FrameClass` tag. -/
+theorem StarValidIn.apply_total {fc : ProofSystem.FrameClass} {φ : StarFormula}
+    (h : StarValidIn fc φ) (F : TaskFrame) (hF : fc.Sat F) (M : TaskModel F)
+    (τ : ConvexHistory F) (hτ : τ.IsTotal) (x : F.Duration) (v : ℕ → F.Duration) :
+    StarTruthAt M τ x v φ :=
+  StarValidOnFrames.apply_total h F hF M τ hτ x v
 
 /-- Introduce `StarValid` from the unbundled shape; the `Sat .Base` argument (`True`) is
 discharged here. -/
