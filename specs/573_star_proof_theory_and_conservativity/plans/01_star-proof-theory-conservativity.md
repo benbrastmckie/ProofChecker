@@ -177,7 +177,7 @@ commutation pin that makes the `ofBase` swap arm free.
 
 ---
 
-### Phase 2: The non-validity record [NOT STARTED]
+### Phase 2: The non-validity record [COMPLETED]
 
 **Goal**: Put the three machine-checked refutations that justify this plan's design into the tree,
 so a future reader who reaches for a schematic MF or a register-erasure translation finds a
