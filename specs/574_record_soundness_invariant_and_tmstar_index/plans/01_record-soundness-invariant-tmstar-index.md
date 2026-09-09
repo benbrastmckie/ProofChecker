@@ -344,14 +344,14 @@ confirmed pinnable set — not the six named here — is what Phase 5 turns into
 
 ---
 
-### Phase 5: Add the TM⋆ ledger rows and the declaration-site `Paper:` lines [NOT STARTED]
+### Phase 5: Add the TM⋆ ledger rows and the declaration-site `Paper:` lines [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Add a TM⋆ section to `docs/theorem-index.md` covering the pinnable headline results, add
 the `Paper:` lines C15's second assertion requires at each named declaration, and record TM⋆
 completeness as an open status in prose.
 
 **Tasks**:
-- [ ] Add `Paper: — (formalization-native; the manuscript supplies no proof system for
+- [x] Add `Paper: — (formalization-native; the manuscript supplies no proof system for
       `\BL^\star`)` — matching the wording already used at
       `Conservativity/Star/StarSoundness.lean` and `Conservativity/Star/Forward.lean` — to the
       `/--` doc comment of each named declaration that lacks one. Plan-time reading says that is
@@ -360,12 +360,12 @@ completeness as an open status in prose.
       `plusIncomplete_of_starNonconservative` (both
       `FormalSystem/Metalogic/Conservativity/Star/Forward.lean`). Verify per declaration rather
       than trusting this list. These are docstring-only additions — see Risks.
-- [ ] Add a `### TM⋆ over L⋆ — the store/recall language` section to `docs/theorem-index.md`'s
+- [x] Add a `### TM⋆ over L⋆ — the store/recall language` section to `docs/theorem-index.md`'s
       `## The ledger`, one row per pinnable declaration from Phase 4, using an existing row as the
       literal template: six pipe-delimited cells, backticked fully-qualified Lean name, backticked
       path with **no** line number, `—` in the Frame class cell where the result is class-generic,
-      and `pcq pinned:C14` (or the literal measured axiom list) in the Axioms cell.
-- [ ] Record TM⋆ completeness as an open status. It is **not** a table row: C15's row regex
+      and `pcq pinned:C14` (or the literal measured axiom list) in the Axioms cell. *(deviation: altered — five rows, not six; `StarAxiom` is excluded, see Reasoned Exclusions below)*
+- [x] Record TM⋆ completeness as an open status. It is **not** a table row: C15's row regex
       requires a fully-qualified Lean name, which an open problem has not got. Add a bullet to the
       existing `## Statuses that are refutations, not gaps` section (retitling it if the section
       now carries a genuine gap alongside the refutations), stating that completeness for TM⋆ at
@@ -373,9 +373,9 @@ completeness as an open status in prose.
       `starConservative_of_plusComplete` / `plusIncomplete_of_starNonconservative` for why the
       conservativity question is equivalent modulo TM⋆ soundness to the recorded TM⁺ completeness
       problem.
-- [ ] Add a `Notation and naming` row for L⋆ / TM⋆ if one is absent, matching the existing L⁻ and
+- [x] Add a `Notation and naming` row for L⋆ / TM⋆ if one is absent, matching the existing L⁻ and
       L⁺ rows.
-- [ ] No task-number citations under `docs/` or `FormalSystem/` (C9, C9D).
+- [x] No task-number citations under `docs/` or `FormalSystem/` (C9, C9D).
 
 **Timing**: 1 hour 15 minutes
 
@@ -410,6 +410,27 @@ declared file set below is one objective.
 - Diff read-through confirming every `.lean` hunk lies inside a `/--` block; no declaration,
   statement, or proof line is touched.
 - `lake build` green.
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|------|--------|----------|
+| `docs/theorem-index.md` row for `FormalSystem.StarLanguage.StarAxiom` | Cannot be C14-pinned, and the ledger admits no unpinned row. C14 compares two heredocs by exact string equality after filtering through `grep 'depends on axioms'`; a declaration reported as `does not depend on any axioms` contributes a line to neither side, so the mechanism can assert nothing about it. Fabricating a baseline line for it is a hard C14 failure and is prohibited by the task's own constraint that baseline edits add names only. C2 offers no escape: it applies the identical filter. | `lake env lean` through the exact C14 pipeline prints `'FormalSystem.StarLanguage.StarAxiom' does not depend on any axioms`; the other five named declarations all survive the filter and are now pinned. The exclusion and its reason are recorded in three places a reader will hit: the new comment paragraph above `read -r -d '' C14_BASELINE` in `scripts/check-module-invariants.sh`, the prose lead-in to the new ledger section, and the L⋆/TM⋆ `Notation and naming` row, which names `StarAxiom` so the declaration stays discoverable from the ledger page. |
+
+**Two additional files were touched outside the Phase 5 file list**, both to make the new rows
+pass the gate rather than to change what the gate asserts:
+
+- `scripts/module-invariants-allowlist.txt` — two entries. C5's regex treats a dotted name whose
+  every segment is capitalized as a module path; `FormalSystem.StarLanguage.StarAxiom` and
+  `…StarDerivationTree` are declaration names of exactly that shape. This is the file's documented
+  purpose, and the six entries it now holds are all the same kind of thing.
+- `scripts/check-module-invariants.sh` — `inductive` added to C15's second-assertion `DECL`
+  alternation. `StarDerivationTree` is an `inductive`, and the alternation listed only
+  `theorem|lemma|def|abbrev|instance`, so its row failed with `no such declaration`. The widening
+  was verified to change exactly one outcome: run against the same 75 rows, the narrow regex fails
+  on that one row and the wide regex passes all 75. It cannot silence an existing failure — a row
+  it newly finds is then still required to carry its `Paper:` line.
+
 
 ---
 

@@ -23,9 +23,9 @@ transport, and that the embedding of TM⁺ derivations is a one-line `axiom` cas
 <!-- BEGIN GENERATED: inventory dir=FormalSystem/Metalogic/Conservativity/Star -->
 | File | Lines | Description |
 |------|------:|-------------|
-| `Forward.lean` | 195 | Conservativity: `forward_star` and `starDerivable_ofFormula_iff` over TM, unconditional in both directions at all four classes; the conditional pair `starConservative_of_plusComplete` / `plusIncomplete_of_starNonconservative` over TM⁺. |
+| `Forward.lean` | 201 | Conservativity: `forward_star` and `starDerivable_ofFormula_iff` over TM, unconditional in both directions at all four classes; the conditional pair `starConservative_of_plusComplete` / `plusIncomplete_of_starNonconservative` over TM⁺. |
 | `StarAxiomValidity.lean` | 322 | The two dispatch lemmas, one arm per `StarAxiom` constructor and no wildcard, plus the sixteen named register-schema validities they dispatch to. |
-| `StarSoundness.lean` | 202 | Soundness of TM⋆ at every frame class, by the companion recursion carrying validity and swap-validity, plus the four rows and consistency at `.Base`. |
+| `StarSoundness.lean` | 186 | Soundness of TM⋆ at every frame class, by the companion recursion carrying validity and swap-validity, plus the four rows and consistency at `.Base`. |
 <!-- END GENERATED -->
 
 ## Key Results

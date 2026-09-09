@@ -24,3 +24,10 @@ FormalSystem.Automation.DataExport.RuleProfile
 # `structure SimpleCountermodel` in namespace FormalSystem.Metalogic.Decidability
 # -- Metalogic/Decidability/CountermodelExtraction.lean:70
 FormalSystem.Metalogic.Decidability.SimpleCountermodel
+
+# `inductive StarAxiom` in namespace FormalSystem.StarLanguage -- StarLanguage/Axioms.lean:133
+FormalSystem.StarLanguage.StarAxiom
+
+# `inductive StarDerivationTree` in namespace FormalSystem.StarLanguage
+# -- StarLanguage/Derivation.lean:82
+FormalSystem.StarLanguage.StarDerivationTree

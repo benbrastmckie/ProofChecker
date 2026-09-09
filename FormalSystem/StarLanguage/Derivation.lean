@@ -76,6 +76,8 @@ open FormalSystem.PlusLanguage
 /--
 Derivation tree for TM⋆, parameterized by frame class. `Type`-valued, like its TM⁺ and TM
 counterparts, so that the soundness recursion can match on it and `height` is computable.
+
+Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
 -/
 inductive StarDerivationTree (fc : FrameClass) : StarContext → StarFormula → Type where
   /-- Axiom rule, gated by `h.minFrameClass ≤ fc`. -/

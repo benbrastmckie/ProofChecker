@@ -42,6 +42,7 @@ the mapping.
 | TM_r (dense and Dedekind-complete) | `FrameClass.RTime` | `def:BX-r` (the paper's **TM**_r, over **BX**_r, *Dense and Complete*). The tree says `RTime`, not `Dedekind` |
 | L⁻ / TM⁻ (tense-primitive, `H`/`G` primitive) | `FormalSystem.MinusLanguage` | its truth relation is `Semantics.MinusTruthAt`, a native six-clause recursion, **not** `TruthAt ∘ tr`. L⁻ answers to **no paper name**: the H/G fragment was withdrawn from the paper, so nothing in the manuscript corresponds to it |
 | L⁺ / TM⁺ (stability modal `⊡`) | `FormalSystem.PlusLanguage` | truth relation `Semantics.PlusTruthAt`. L⁺ is the **⊡-only fragment** of the paper's `𝓛⋆` (`sub:Extension`, `def:BLstar-semantics`); the paper supplies no logic for `𝓛⋆`, so TM⁺ answers to no paper name |
+| L⋆ / TM⋆ (time registers `↑ⁱ`, `↓ⁱ`) | `FormalSystem.StarLanguage` | truth relation `Semantics.StarTruthAt`, whose point of evaluation carries a stored-time vector as well as a history and a time. L⋆ is the paper's `𝓛⋆` (`def:BLstar-semantics`) in full; the manuscript supplies no proof system for it, so TM⋆ — `FormalSystem.StarLanguage.StarAxiom` over `StarDerivationTree` — is formalization-native and answers to no paper name |
 | `U(φ, ψ)` (until) | `Formula.untl ψ φ` | guard-first: `untl guard event` |
 | `S(φ, ψ)` (since) | `Formula.snce ψ φ` | guard-first |
 | `△φ` / `▽φ` | `Formula.always` / `Formula.sometimes` | derived, not primitive |
@@ -153,6 +154,9 @@ class — see `deterministic_not_plusDefinable` above.
 | `def:BLstar-semantics` | No `Formula` of L is equivalent to `⊡Fp` over all task models — the stability modal is not L-definable | `FormalSystem.Metalogic.Independence.stabNotDefinable` | `FormalSystem/Metalogic/Independence/StabUndefinable.lean` | — | pcq |
 | — | Every formula of the syntactic **state-locality** fragment of L⋆ has the semantic property: possible worlds sharing a world state at `t` agree about it at `t` | `FormalSystem.Semantics.isStateLocal_of_stateLocal` | `FormalSystem/Semantics/StarStateLocal.lean` | — | `[propext]` |
 | — | `φ ↔ ⊡φ` is valid for every state-local `φ` — the fragment-level strengthening of the atom-level `p → ⊡p` | `FormalSystem.Semantics.stateLocal_starValid_iff_stab` | `FormalSystem/Semantics/StarStateLocal.lean` | Base | pcq |
+| — | Every formula of the syntactic **state-locality** fragment of L⁺ has the semantic property: possible worlds sharing a world state at `t` agree about it at `t` | `FormalSystem.Semantics.isPlusStateLocal_of_stateLocal` | `FormalSystem/Semantics/PlusStateLocal.lean` | — | `[propext]` |
+| — | `φ ↔ ⊡φ` is valid for every state-local `φ` of L⁺ — the fragment-level strengthening of the atom-level `p → ⊡p`, and the AS witness of TM⁺ soundness | `FormalSystem.Semantics.plusStateLocal_plusValid_iff_stab` | `FormalSystem/Semantics/PlusStateLocal.lean` | Base | pcq |
+| — | The two state-locality fragments agree along `ofPlus`, as a biconditional: the L⁺ fragment is exactly the `ofPlus`-preimage of the L⋆ one | `FormalSystem.Semantics.stateLocal_ofPlus_iff` | `FormalSystem/Semantics/StateLocalTransfer.lean` | — | `[]` |
 | — | `sent:det` is valid over the forward-deterministic `F^N` at **every** state-local instance, not only at sentence letters | `FormalSystem.Metalogic.Independence.fn_sentDet_stateLocal` | `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean` | — | pcq |
 | — | The two-sided bound: valid at every state-local instance, refuted at `P p`, which lies outside the fragment | `FormalSystem.Metalogic.Independence.fn_sentDet_bounds` | `FormalSystem/Metalogic/Independence/ForwardDeterministicFrame.lean` | — | pcq |
 
@@ -174,6 +178,26 @@ class — see `deterministic_not_plusDefinable` above.
 | — | Soundness of TM⁺ at every frame class | `FormalSystem.Metalogic.Conservativity.plus_soundness_validIn` | `FormalSystem/Metalogic/Conservativity/Plus/PlusSoundness.lean` | — | pcq pinned:C14 |
 | — | Semantic conservativity of L⁺ over L | `FormalSystem.Semantics.plusValidIn_ofFormula_iff` | `FormalSystem/Semantics/PlusValidity.lean` | — | `[propext]` pinned:C14 |
 
+### TM⋆ over L⋆ — the store/recall language
+
+TM⋆ is TM⁺ plus the manuscript's time registers `↑ⁱ`/`↓ⁱ` (`FormalSystem/StarLanguage/`). Its
+axiom set embeds the TM⁺ schemata through a single `ofBase` arm rather than re-declaring them,
+because `modal_future` is refuted over `StarFormula` — see the refutations section below.
+
+`FormalSystem.StarLanguage.StarAxiom` has **no row here**, and its absence is deliberate rather
+than an oversight: `#print axioms` reports it as `does not depend on any axioms`, a line the C14
+pipeline's `grep 'depends on axioms'` filter drops, so C14's exact-string mechanism cannot pin
+it and this page admits no unpinned row. `StarDerivationTree` immediately below carries the
+axiom set of the derivation machinery `StarAxiom` feeds.
+
+| Paper label | Statement | Lean name | File | Frame class | Axioms |
+|-------------|-----------|-----------|------|-------------|--------|
+| — | Derivation trees for TM⋆: the same seven rules as TM⁺ and TM, with `StarAxiom` in the `axiom` rule | `FormalSystem.StarLanguage.StarDerivationTree` | `FormalSystem/StarLanguage/Derivation.lean` | — | `[propext]` pinned:C14 |
+| — | Soundness of TM⋆ at every frame class | `FormalSystem.Metalogic.Conservativity.star_soundness_validIn` | `FormalSystem/Metalogic/Conservativity/Star/StarSoundness.lean` | — | pcq pinned:C14 |
+| — | Proof-theoretic conservativity of TM⋆ over TM, both directions, all four classes | `FormalSystem.Metalogic.Conservativity.starDerivable_ofFormula_iff` | `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` | — | pcq pinned:C14 |
+| — | Conservativity of TM⋆ over TM⁺, **conditional** on general TM⁺ completeness at that class | `FormalSystem.Metalogic.Conservativity.starConservative_of_plusComplete` | `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` | — | pcq pinned:C14 |
+| — | The unconditional contrapositive: a TM⋆/TM⁺ separating witness is a witness of TM⁺ incompleteness | `FormalSystem.Metalogic.Conservativity.plusIncomplete_of_starNonconservative` | `FormalSystem/Metalogic/Conservativity/Star/Forward.lean` | — | pcq pinned:C14 |
+
 ### Base-language soundness
 
 | Paper label | Statement | Lean name | File | Frame class | Axioms |
@@ -191,7 +215,7 @@ class — see `deterministic_not_plusDefinable` above.
 | — | `{U, S}` is expressively complete for Prior structures relative to monadic FO | `FormalSystem.Metalogic.WeakCanonical.Kamp.kampPriorExpressiveCompleteness` | `FormalSystem/Metalogic/WeakCanonical/Kamp/KampPrior.lean` | — | pcq pinned:C14 |
 | — | The load-bearing corollary consumed by the live completeness chain | `FormalSystem.Metalogic.WeakCanonical.uSExpressivelyCompleteOverPrior` | `FormalSystem/Metalogic/WeakCanonical/PriorExpressiveness.lean` | — | pcq pinned:C14 |
 
-## Statuses that are refutations, not gaps
+## Statuses that are refutations, not gaps, and one status that is a gap
 
 Three of the rows above are negative results, and they are easy to misread as unfinished work:
 
@@ -212,6 +236,19 @@ Three of the rows above are negative results, and they are easy to misread as un
   definability of the model class, a different property from strong completeness. Closed-form
   characterizations of `Mod (AxiomSet .ZTime)` and `Mod (AxiomSet .RTime)` remain open and are
   not promised.
+
+One status here *is* a genuine gap, and is recorded so that its absence from the ledger above is
+not read as an oversight:
+
+- **Completeness for TM⋆, at every frame class, is OPEN** and is not promised. It is stated
+  nowhere in the tree and is never discharged with `sorry`; the two recorded obstructions are in
+  [`FormalSystem/Metalogic/Conservativity/Star/README.md`](../FormalSystem/Metalogic/Conservativity/Star/README.md).
+  Conservativity of TM⋆ over TM⁺ is entangled with it rather than independent of it:
+  `starConservative_of_plusComplete` settles that row *given* general TM⁺ completeness at the
+  class, and `plusIncomplete_of_starNonconservative` shows the converse — a separating witness
+  for non-conservativity is, verbatim, a witness of TM⁺ incompleteness. So, modulo TM⋆ soundness,
+  the TM⋆/TM⁺ conservativity question cannot be settled either way without settling TM⁺
+  completeness, which is itself open at every class.
 
 ## Related documentation
 

@@ -1703,8 +1703,13 @@ if not os.path.isfile(INDEX):
 
 ROW = re.compile(r'^\| (?P<label>.+?) \| (?P<stmt>.+?) \| `(?P<name>FormalSystem\.[^`]+)` \| '
                  r'`(?P<file>[^`]+)` \| (?P<fc>.+?) \| (?P<ax>.+?) \|$')
+# `inductive` is in this alternation because the ledger carries rows for type
+# declarations, not only for theorems: a derivation-tree type is a headline result in
+# exactly the way its soundness theorem is. Widening the alternation can only let a row
+# that previously reported "no such declaration" be found and then still be required to
+# carry its `Paper:` line -- it cannot silence an existing failure.
 DECL = re.compile(r'^\s*(?:@\[[^\]]*\]\s*)?(?:private\s+|protected\s+|noncomputable\s+)*'
-                  r'(?:theorem|lemma|def|abbrev|instance)\s+([A-Za-z_][A-Za-z0-9_.\']*)')
+                  r'(?:theorem|lemma|def|abbrev|instance|inductive)\s+([A-Za-z_][A-Za-z0-9_.\']*)')
 
 rows = []
 for line in open(INDEX, encoding="utf-8"):

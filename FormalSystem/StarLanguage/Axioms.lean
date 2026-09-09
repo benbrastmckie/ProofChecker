@@ -129,6 +129,8 @@ open FormalSystem.PlusLanguage
 Axiom schemata of TM⋆ over `StarFormula`: one `ofBase` arm carrying every TM⁺ schema at its
 `ofPlus` instances, then the sixteen register schemata. See the module docstring for the design,
 the schema inventory, and the swap-closure invariant.
+
+Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
 -/
 inductive StarAxiom : StarFormula → Type where
   /-- Every TM⁺ schema, at its embedded instance. MF (`□φ → □Gφ`) reaches TM⋆ through this arm

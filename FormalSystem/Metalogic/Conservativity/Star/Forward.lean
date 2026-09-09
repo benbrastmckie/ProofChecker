@@ -167,7 +167,10 @@ theorem at `fc`: TM⋆ soundness sends the derivation to `StarValidIn fc (ofPlus
 `starValidOnFrames_ofPlus` reads that as `PlusValidIn fc φ`, and completeness returns a TM⁺
 derivation.
 
-The hypothesis is exactly general TM⁺ completeness at `fc`, which is open at every class. -/
+The hypothesis is exactly general TM⁺ completeness at `fc`, which is open at every class.
+
+Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
+-/
 theorem starConservative_of_plusComplete {fc : FrameClass}
     (hcomplete : ∀ ψ : PlusFormula, PlusValidIn fc ψ → PlusDerivable fc [] ψ) (φ : PlusFormula)
     (h : StarDerivable fc [] (ofPlus φ)) : PlusDerivable fc [] φ :=
@@ -179,7 +182,10 @@ theorem — is, verbatim, a witness that TM⁺ is incomplete at that class.
 
 This is why the L⁺ row above is stated as a conditional pair rather than asserted or denied: the
 conservativity question is *equivalent modulo TM⋆ soundness* to the tree's own recorded open
-problem, so it cannot be settled without settling that one. -/
+problem, so it cannot be settled without settling that one.
+
+Paper: — (formalization-native; the manuscript supplies no proof system for `\BL^\star`)
+-/
 theorem plusIncomplete_of_starNonconservative {fc : FrameClass} (φ : PlusFormula)
     (hd : StarDerivable fc [] (ofPlus φ)) (hnd : ¬ PlusDerivable fc [] φ) :
     ¬ (∀ ψ : PlusFormula, PlusValidIn fc ψ → PlusDerivable fc [] ψ) :=
