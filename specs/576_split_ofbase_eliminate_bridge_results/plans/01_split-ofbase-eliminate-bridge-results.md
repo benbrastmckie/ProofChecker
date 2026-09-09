@@ -531,7 +531,7 @@ inside this group. Confirm against the constructor list before writing the swap 
 
 ---
 
-### Phase 6: Group C — enrichment, self-accumulation, absorption, linearity [NOT STARTED]
+### Phase 6: Group C — enrichment, self-accumulation, absorption, linearity [COMPLETED]
 
 **Goal**: The next 8 mirror constructors, arms and swap arms; build green.
 
@@ -540,14 +540,14 @@ inside this group. Confirm against the constructor list before writing the swap 
 four U/S dual pairs, all inside the group.
 
 **Tasks**:
-- [ ] Add the 8 constructors with docstrings mirroring `PlusAxiom`'s arms
-- [ ] Add the 8 `starValid_*` lemmas by transcription; the `until` half of each pair is already
+- [x] Add the 8 constructors with docstrings mirroring `PlusAxiom`'s arms
+- [x] Add the 8 `starValid_*` lemmas by transcription; the `until` half of each pair is already
       in `.probes/02`. These are the heaviest of the BX block — expect `simp only` over the
       `StarTruth.*_iff` clause family, then `rintro`/`rcases lt_trichotomy`, mirroring the L
       proofs' `simp only [truth_norm]` shape. There is no `truth_norm` simp set on the L⋆ side
       (report D3, deferred): spell the clause lemmas out
-- [ ] Add the 8 arms to each dispatch lemma; extend the swap-closure list
-- [ ] `lake build` green; invariants exit 0; commit
+- [x] Add the 8 arms to each dispatch lemma; extend the swap-closure list
+- [x] `lake build` green; invariants exit 0; commit
 
 **Timing**: 2 hours
 

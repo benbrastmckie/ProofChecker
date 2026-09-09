@@ -90,6 +90,8 @@ same inductive*:
   * `serial_future` ↔ `serial_past`, `left_mono_until_G` ↔ `left_mono_since_H`,
     `right_mono_until` ↔ `right_mono_since`, `connect_future` ↔ `connect_past` — four **dual
     pairs**, since `swapTemporal` exchanges `untl`/`snce` and `allFuture`/`allPast`.
+  * `enrichment_until` ↔ `enrichment_since`, `self_accum_until` ↔ `self_accum_since`,
+    `absorb_until` ↔ `absorb_since`, `linear_until` ↔ `linear_since` — four **dual pairs**.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -219,6 +221,47 @@ inductive StarAxiom : StarFormula → Type where
   /-- BX4': `φ → H(F(φ))`. Mirrors `PlusAxiom.connect_past`. -/
   | connect_past (φ : StarFormula) :
       StarAxiom (φ.imp (φ.someFuture.allPast))
+  -- Layer 3: BX Temporal — enrichment, self-accumulation, absorption, linearity (8)
+  /-- BX13: `p ∧ untl(φ, ψ) → untl(φ, ψ ∧ snce(φ, p))`. Mirrors `PlusAxiom.enrichment_until`. -/
+  | enrichment_until (φ ψ p : StarFormula) :
+      StarAxiom (StarFormula.and p (StarFormula.untl φ ψ) |>.imp
+        (StarFormula.untl φ (StarFormula.and ψ (StarFormula.snce φ p))))
+  /-- BX13': `p ∧ snce(φ, ψ) → snce(φ, ψ ∧ untl(φ, p))`. Mirrors `PlusAxiom.enrichment_since`. -/
+  | enrichment_since (φ ψ p : StarFormula) :
+      StarAxiom (StarFormula.and p (StarFormula.snce φ ψ) |>.imp
+        (StarFormula.snce φ (StarFormula.and ψ (StarFormula.untl φ p))))
+  /-- BX5: `U(ψ, φ) → U(ψ, φ ∧ U(ψ, φ))`. Mirrors `PlusAxiom.self_accum_until`. -/
+  | self_accum_until (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.untl φ ψ).imp
+        (StarFormula.untl (StarFormula.and φ (StarFormula.untl φ ψ)) ψ))
+  /-- BX5': `S(ψ, φ) → S(ψ, φ ∧ S(ψ, φ))`. Mirrors `PlusAxiom.self_accum_since`. -/
+  | self_accum_since (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.snce φ ψ).imp
+        (StarFormula.snce (StarFormula.and φ (StarFormula.snce φ ψ)) ψ))
+  /-- BX6: `U(φ ∧ U(ψ, φ), φ) → U(ψ, φ)`. Mirrors `PlusAxiom.absorb_until`. -/
+  | absorb_until (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.untl φ (StarFormula.and φ (StarFormula.untl φ ψ))).imp
+        (StarFormula.untl φ ψ))
+  /-- BX6': `S(φ ∧ S(ψ, φ), φ) → S(ψ, φ)`. Mirrors `PlusAxiom.absorb_since`. -/
+  | absorb_since (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.snce φ (StarFormula.and φ (StarFormula.snce φ ψ))).imp
+        (StarFormula.snce φ ψ))
+  /-- BX7: linearity of Until. Mirrors `PlusAxiom.linear_until`. -/
+  | linear_until (φ ψ χ θ : StarFormula) :
+      StarAxiom (StarFormula.and (StarFormula.untl φ ψ) (StarFormula.untl χ θ)
+        |>.imp (StarFormula.or
+          (StarFormula.or
+            (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and ψ θ))
+            (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and ψ χ)))
+          (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and φ θ))))
+  /-- BX7': linearity of Since. Mirrors `PlusAxiom.linear_since`. -/
+  | linear_since (φ ψ χ θ : StarFormula) :
+      StarAxiom (StarFormula.and (StarFormula.snce φ ψ) (StarFormula.snce χ θ)
+        |>.imp (StarFormula.or
+          (StarFormula.or
+            (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ θ))
+            (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ χ)))
+          (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and φ θ))))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))

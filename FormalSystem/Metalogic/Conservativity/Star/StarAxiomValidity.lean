@@ -395,6 +395,115 @@ theorem starValid_connect_past (φ : StarFormula) :
   intro h s hst
   exact ⟨t, hst, h⟩
 
+/-! ## The TM⁺ mirror block — enrichment, self-accumulation, absorption, linearity
+
+The heaviest of the BX block. Each is `simp only` over the `StarTruth.*_iff` clause family
+followed by `rintro` and, where the argument needs to compare two witnesses,
+`rcases lt_trichotomy`. There is **no** `star_truth_norm` simp set on the L⋆ side, so the clause
+lemmas are spelled out. As throughout: no atomization, no uniform substitution. -/
+
+/-- BX13 over L⋆. -/
+theorem starValid_enrichment_until (φ ψ p : StarFormula) :
+    StarValid (StarFormula.and p (StarFormula.untl φ ψ) |>.imp
+      (StarFormula.untl φ (StarFormula.and ψ (StarFormula.snce φ p)))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.untl_iff, StarTruth.snce_iff]
+  rintro ⟨h_pt, s, hts, h_ψs, h_guard⟩
+  exact ⟨s, hts, ⟨h_ψs, t, hts, h_pt, h_guard⟩, h_guard⟩
+
+/-- BX13' over L⋆, the past mirror of `starValid_enrichment_until`. -/
+theorem starValid_enrichment_since (φ ψ p : StarFormula) :
+    StarValid (StarFormula.and p (StarFormula.snce φ ψ) |>.imp
+      (StarFormula.snce φ (StarFormula.and ψ (StarFormula.untl φ p)))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.untl_iff, StarTruth.snce_iff]
+  rintro ⟨h_pt, s, hst, h_ψs, h_guard⟩
+  exact ⟨s, hst, ⟨h_ψs, t, hst, h_pt, h_guard⟩, h_guard⟩
+
+/-- BX5 over L⋆. -/
+theorem starValid_self_accum_until (φ ψ : StarFormula) :
+    StarValid ((StarFormula.untl φ ψ).imp
+      (StarFormula.untl (StarFormula.and φ (StarFormula.untl φ ψ)) ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.untl_iff]
+  rintro ⟨s, hts, h_ψs, h_guard⟩
+  refine ⟨s, hts, h_ψs, fun r htr hrs => ⟨h_guard r htr hrs, ?_⟩⟩
+  exact ⟨s, hrs, h_ψs, fun q hqr hqs => h_guard q (lt_trans htr hqr) hqs⟩
+
+/-- BX5' over L⋆, the past mirror of `starValid_self_accum_until`. -/
+theorem starValid_self_accum_since (φ ψ : StarFormula) :
+    StarValid ((StarFormula.snce φ ψ).imp
+      (StarFormula.snce (StarFormula.and φ (StarFormula.snce φ ψ)) ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.snce_iff]
+  rintro ⟨s, hst, h_ψs, h_guard⟩
+  refine ⟨s, hst, h_ψs, fun r hsr hrt => ⟨h_guard r hsr hrt, ?_⟩⟩
+  exact ⟨s, hsr, h_ψs, fun q hsq hqr => h_guard q hsq (lt_trans hqr hrt)⟩
+
+/-- BX6 over L⋆. -/
+theorem starValid_absorb_until (φ ψ : StarFormula) :
+    StarValid ((StarFormula.untl φ (StarFormula.and φ (StarFormula.untl φ ψ))).imp
+      (StarFormula.untl φ ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.untl_iff]
+  rintro ⟨s₁, hts₁, ⟨h_φs₁, s₂, hs₁s₂, h_ψs₂, h_guard₂⟩, h_guard₁⟩
+  refine ⟨s₂, lt_trans hts₁ hs₁s₂, h_ψs₂, fun q htq hqs₂ => ?_⟩
+  rcases lt_trichotomy q s₁ with h_lt | h_eq | h_gt
+  · exact h_guard₁ q htq h_lt
+  · exact h_eq ▸ h_φs₁
+  · exact h_guard₂ q h_gt hqs₂
+
+/-- BX6' over L⋆, the past mirror of `starValid_absorb_until`. -/
+theorem starValid_absorb_since (φ ψ : StarFormula) :
+    StarValid ((StarFormula.snce φ (StarFormula.and φ (StarFormula.snce φ ψ))).imp
+      (StarFormula.snce φ ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.snce_iff]
+  rintro ⟨s₁, hs₁t, ⟨h_φs₁, s₂, hs₂s₁, h_ψs₂, h_guard₂⟩, h_guard₁⟩
+  refine ⟨s₂, lt_trans hs₂s₁ hs₁t, h_ψs₂, fun q hs₂q hqt => ?_⟩
+  rcases lt_trichotomy s₁ q with h_lt | h_eq | h_gt
+  · exact h_guard₁ q h_lt hqt
+  · exact h_eq ▸ h_φs₁
+  · exact h_guard₂ q hs₂q h_gt
+
+/-- BX7 over L⋆: linearity of `until`, by trichotomy on the two witnesses. -/
+theorem starValid_linear_until (φ ψ χ θ : StarFormula) :
+    StarValid (StarFormula.and (StarFormula.untl φ ψ) (StarFormula.untl χ θ)
+      |>.imp (StarFormula.or
+        (StarFormula.or
+          (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and ψ θ))
+          (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and ψ χ)))
+        (StarFormula.untl (StarFormula.and φ χ) (StarFormula.and φ θ)))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.or_iff, StarTruth.untl_iff]
+  rintro ⟨⟨s₁, hts₁, h_ψs₁, h_guard₁⟩, s₂, hts₂, h_θs₂, h_guard₂⟩
+  rcases lt_trichotomy s₁ s₂ with h_lt | h_eq | h_gt
+  · exact .inl (.inr ⟨s₁, hts₁, ⟨h_ψs₁, h_guard₂ s₁ hts₁ h_lt⟩,
+      fun r htr hrs => ⟨h_guard₁ r htr hrs, h_guard₂ r htr (lt_trans hrs h_lt)⟩⟩)
+  · exact .inl (.inl ⟨s₁, hts₁, ⟨h_ψs₁, h_eq ▸ h_θs₂⟩,
+      fun r htr hrs => ⟨h_guard₁ r htr hrs, h_guard₂ r htr (h_eq ▸ hrs)⟩⟩)
+  · exact .inr ⟨s₂, hts₂, ⟨h_guard₁ s₂ hts₂ h_gt, h_θs₂⟩,
+      fun r htr hrs => ⟨h_guard₁ r htr (lt_trans hrs h_gt), h_guard₂ r htr hrs⟩⟩
+
+/-- BX7' over L⋆, the past mirror of `starValid_linear_until`. -/
+theorem starValid_linear_since (φ ψ χ θ : StarFormula) :
+    StarValid (StarFormula.and (StarFormula.snce φ ψ) (StarFormula.snce χ θ)
+      |>.imp (StarFormula.or
+        (StarFormula.or
+          (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ θ))
+          (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ χ)))
+        (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and φ θ)))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.or_iff, StarTruth.snce_iff]
+  rintro ⟨⟨s₁, hs₁t, h_ψs₁, h_guard₁⟩, s₂, hs₂t, h_θs₂, h_guard₂⟩
+  rcases lt_trichotomy s₂ s₁ with h_lt | h_eq | h_gt
+  · exact .inl (.inr ⟨s₁, hs₁t, ⟨h_ψs₁, h_guard₂ s₁ h_lt hs₁t⟩,
+      fun r hs₁r hrt => ⟨h_guard₁ r hs₁r hrt, h_guard₂ r (lt_trans h_lt hs₁r) hrt⟩⟩)
+  · exact .inl (.inl ⟨s₁, hs₁t, ⟨h_ψs₁, h_eq ▸ h_θs₂⟩,
+      fun r hs₁r hrt => ⟨h_guard₁ r hs₁r hrt, h_guard₂ r (h_eq ▸ hs₁r) hrt⟩⟩)
+  · exact .inr ⟨s₂, hs₂t, ⟨h_guard₁ s₂ h_gt hs₂t, h_θs₂⟩,
+      fun r hs₂r hrt => ⟨h_guard₁ r (lt_trans h_gt hs₂r) hrt, h_guard₂ r hs₂r hrt⟩⟩
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -426,6 +535,14 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | right_mono_since φ ψ χ => exact starValid_right_mono_since φ ψ χ
   | connect_future φ => exact starValid_connect_future φ
   | connect_past φ => exact starValid_connect_past φ
+  | enrichment_until φ ψ p => exact starValid_enrichment_until φ ψ p
+  | enrichment_since φ ψ p => exact starValid_enrichment_since φ ψ p
+  | self_accum_until φ ψ => exact starValid_self_accum_until φ ψ
+  | self_accum_since φ ψ => exact starValid_self_accum_since φ ψ
+  | absorb_until φ ψ => exact starValid_absorb_until φ ψ
+  | absorb_since φ ψ => exact starValid_absorb_since φ ψ
+  | linear_until φ ψ χ θ => exact starValid_linear_until φ ψ χ θ
+  | linear_since φ ψ χ θ => exact starValid_linear_since φ ψ χ θ
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -531,6 +648,32 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_all_past,
       StarFormula.swap_temporal_some_future]
     exact starValid_connect_future φ.swapTemporal
+  | enrichment_until φ ψ p =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_enrichment_since φ.swapTemporal ψ.swapTemporal p.swapTemporal
+  | enrichment_since φ ψ p =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_enrichment_until φ.swapTemporal ψ.swapTemporal p.swapTemporal
+  | self_accum_until φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_self_accum_since φ.swapTemporal ψ.swapTemporal
+  | self_accum_since φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_self_accum_until φ.swapTemporal ψ.swapTemporal
+  | absorb_until φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_absorb_since φ.swapTemporal ψ.swapTemporal
+  | absorb_since φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swapTemporal]
+    exact starValid_absorb_until φ.swapTemporal ψ.swapTemporal
+  | linear_until φ ψ χ θ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swap_temporal_or,
+      StarFormula.swapTemporal]
+    exact starValid_linear_since φ.swapTemporal ψ.swapTemporal χ.swapTemporal θ.swapTemporal
+  | linear_since φ ψ χ θ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swap_temporal_or,
+      StarFormula.swapTemporal]
+    exact starValid_linear_until φ.swapTemporal ψ.swapTemporal χ.swapTemporal θ.swapTemporal
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal
