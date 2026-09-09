@@ -1,16 +1,40 @@
 {
-  "status": "researched",
+  "status": "planned",
   "artifacts": [
     {
-      "type": "report",
-      "path": "specs/577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md",
-      "summary": "Scope measured at 1058 territory declarations (242 in the eight truth/validity files: 64 language-agnostic validity, 37 language-agnostic derived-clause, 28 instance payload, 113 language-specific); the (tau,x) vs (tau,x,v) point-shape question settled AFFIRMATIVELY by three green Lean probes via an innermost-binder forall-v fold, with axiom-set parity verified on 11 declaration pairs; four survey items corrected; cslib transfer/non-transfer verdict recorded."
+      "type": "plan",
+      "path": "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
+      "summary": "10-phase, 16-hour plan: two new leaf modules (Semantics/ValidityLayer.lean with class PointTruth and the Generic* validity layer; Semantics/TruthClauses.lean with Env-parameterised operator/clause classes and generic derived-clause lemmas), instantiated one language per phase by replacing 38 validity-layer and 37 (+2) clause-layer proof bodies with delegations, every name/statement/attribute preserved, per-phase axiom-parity gate, extension contract written last from the instantiations performed."
     }
   ],
+  "next_steps": "Run /implement 577 to execute the plan",
   "metadata": {
-    "session_id": "sess_1788971317_f1b259_577",
-    "agent_type": "lean-research-agent",
+    "session_id": "sess_1788974887_e3b9bb_577",
+    "agent_type": "planner-agent",
     "delegation_depth": 1,
-    "delegation_path": ["orchestrator", "research", "lean-research-agent"]
-  }
+    "delegation_path": ["orchestrator", "plan", "planner-agent"],
+    "phase_count": 10,
+    "estimated_hours": 16,
+    "dependency_waves": [[1, 5], [2, 3, 4, 6, 7, 8, 9], [10]],
+    "complexity": "complex",
+    "research_integrated": true,
+    "validator": "validate-artifact.sh plan --strict: PASS, 0 warnings"
+  },
+  "phase_count": 10,
+  "estimated_hours": 16,
+  "dependency_waves": [[1, 5], [2, 3, 4, 6, 7, 8, 9], [10]],
+  "memory_candidates": [
+    {
+      "content": "Statement-preserving abstraction in this repo: when writing a generic class-polymorphic layer whose per-language names must stay byte-identical, keep the existing defs as `def` (never promote to `abbrev`), replace only theorem proof bodies with one-line delegations (named args `(L := X) (φ := φ)` fix instance-metavariable elaboration), capture `#print axioms` for every wrapper BEFORE editing and diff after each phase (generic proofs must avoid `by_contra`/`push_neg` where the original was `rw`+terms or `[propext]`-only baselines drift). Naming constraint from check-module-invariants.sh C23: a bare declaration name must not be reused in a namespace nested under one that already declares it bare (e.g. `PointTruth.ValidIn` under `FormalSystem.Semantics` collides with L's bare `ValidIn`); use the tree's language-prefix convention (`GenericValidIn`) or a sibling namespace, never dot-qualified evasion. A generic module below `Truth.lean` cannot name `SameStateAt` (defined in PlusTruth.lean): carry such relations as class fields.",
+      "category": "PATTERN",
+      "source_artifact": "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
+      "confidence": 0.85,
+      "suggested_keywords": ["lean4", "refactor", "typeclass-abstraction", "axiom-parity", "C23-naming", "statement-preserving"]
+    }
+  ],
+  "modified_files": [
+    "specs/577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md",
+    "specs/577_abstract_validity_layer_over_truth_class/.return-meta.json"
+  ],
+  "dispatch_seq": 2
 }

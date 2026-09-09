@@ -72,7 +72,7 @@ next_project_number: 578
 ### Formula Refactor
 
 178 [NOT STARTED] — Expand Examples/ with publication-quality demonstrations of the f
-577 [RESEARCHED] — Abstract the per-language validity layer over a truth-relation cl
+577 [PLANNED] — Abstract the per-language validity layer over a truth-relation cl
 177 [NOT STARTED] — Update README.md, docs/, and FormalSystem/ module-level docstring
 
 ### Frame Extensions
@@ -111,11 +111,12 @@ next_project_number: 578
 ## Tasks
 
 ### 577. Abstract validity layer over truth class
-- **Status**: [RESEARCHED]
+- **Status**: [PLANNED]
 - **Task Type**: lean4
 - **Topic**: formula-refactor
 - **Dependencies**: Task 574, Task 575, Task 576
 - **Research**: [577_abstract_validity_layer_over_truth_class/reports/01_abstract-validity-layer-truth-class.md]
+- **Plan**: [577_abstract_validity_layer_over_truth_class/plans/01_abstract-validity-layer-truth-class.md]
 
 **Description**: Abstract the per-language validity layer over a truth-relation class so a fifth object language inherits it for free. GROUND TRUTH: the tree carries FOUR object languages as separate inductives -- `Formula` (Syntax/Formula.lean:77), `MinusFormula` (MinusLanguage/), `PlusFormula` (PlusLanguage/Formula.lean:90), `StarFormula` (StarLanguage/Formula.lean:104) -- in a strict tower of 6, then 7, then 9 constructors, and the tower is still growing.
 
