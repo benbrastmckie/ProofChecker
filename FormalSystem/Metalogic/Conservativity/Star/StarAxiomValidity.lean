@@ -221,6 +221,109 @@ theorem starValid_recall_export_since (i : ℕ) (φ ψ : StarFormula) :
   · rintro ⟨hrec, s, hs, _, hg⟩
     exact ⟨s, hs, hrec, hg⟩
 
+/-! ## The TM⁺ mirror block — Layer 1 (propositional), Layer 2 (S5 modal), and the `⊡` S5 block
+
+Each of these is the schema of the correspondingly named `StarAxiom` constructor, proved
+**directly against `StarTruthAt`** at arbitrary `StarFormula` metavariables — not transported
+from `PlusAxiom`, which reaches only `ofPlus` instances.
+
+**No L⋆ atomization, and no uniform substitution.** Both routes are prohibited here and
+throughout this file: the first does not exist (`stab_state_only` has no L⋆ analogue, see the
+module docstring), and the second is unsound over TM⁺, which `atom_stab` already makes
+non-substitution-closed. Every arm below is a fresh direct proof. -/
+
+/-- Propositional K over L⋆. Mirror of `PlusAxiom.prop_k`'s validity. -/
+theorem starValid_prop_k (φ ψ χ : StarFormula) :
+    StarValid ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ))) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h1 h2 h3 => h1 h3 (h2 h3)
+
+/-- Propositional S (weakening) over L⋆. -/
+theorem starValid_prop_s (φ ψ : StarFormula) : StarValid (φ.imp (ψ.imp φ)) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h _ => h
+
+/-- Ex Falso Quodlibet over L⋆. -/
+theorem starValid_ex_falso (φ : StarFormula) : StarValid (StarFormula.bot.imp φ) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h => h.elim
+
+/-- Peirce's Law over L⋆, by classical case analysis on `φ`. -/
+theorem starValid_peirce (φ ψ : StarFormula) : StarValid (((φ.imp ψ).imp φ).imp φ) := by
+  refine StarValid.of_forall_total fun F M τ _ x v h => ?_
+  by_cases hφ : StarTruthAt M τ x v φ
+  · exact hφ
+  · exact h fun hp => absurd hp hφ
+
+/-- Modal T over L⋆: the evaluation history is itself total, so `□` reflects. -/
+theorem starValid_modal_t (φ : StarFormula) : StarValid ((StarFormula.box φ).imp φ) :=
+  StarValid.of_forall_total fun _ _ τ hτ _ _ h => h τ hτ
+
+/-- Modal 4 over L⋆: the `box` clause quantifies over all total histories, so it is idempotent. -/
+theorem starValid_modal_4 (φ : StarFormula) :
+    StarValid ((StarFormula.box φ).imp (StarFormula.box (StarFormula.box φ))) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h _ _ => h
+
+/-- Modal B over L⋆. -/
+theorem starValid_modal_b (φ : StarFormula) :
+    StarValid (φ.imp (StarFormula.box φ.diamond)) := by
+  refine StarValid.of_forall_total fun F M τ hτ x v h => ?_
+  intro σ _
+  rw [StarTruth.diamond_iff]
+  exact ⟨τ, hτ, h⟩
+
+/-- Modal 5 Collapse over L⋆. -/
+theorem starValid_modal_5_collapse (φ : StarFormula) :
+    StarValid (φ.box.diamond.imp φ.box) := by
+  refine StarValid.of_forall_total fun F M τ _ x v h => ?_
+  rw [StarTruth.diamond_iff] at h
+  obtain ⟨σ, hσ, hb⟩ := h
+  exact hb
+
+/-- Modal K distribution over L⋆. -/
+theorem starValid_modal_k_dist (φ ψ : StarFormula) :
+    StarValid ((φ.imp ψ).box.imp (φ.box.imp ψ.box)) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h1 h2 σ hσ => h1 σ hσ (h2 σ hσ)
+
+/-- SK over L⋆: K for `⊡`, from the universal-quantifier shape of the `stab` clause. -/
+theorem starValid_stab_k (φ ψ : StarFormula) :
+    StarValid ((StarFormula.stab (φ.imp ψ)).imp
+      ((StarFormula.stab φ).imp (StarFormula.stab ψ))) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h1 h2 σ hσ hs => h1 σ hσ hs (h2 σ hσ hs)
+
+/-- ST over L⋆: `SameStateAt` is reflexive. -/
+theorem starValid_stab_t (φ : StarFormula) : StarValid ((StarFormula.stab φ).imp φ) :=
+  StarValid.of_forall_total fun _ _ τ hτ _ _ h => h τ hτ (SameStateAt.refl τ _)
+
+/-- S4 for `⊡` over L⋆: `SameStateAt` at a fixed time is transitive. -/
+theorem starValid_stab_4 (φ : StarFormula) :
+    StarValid ((StarFormula.stab φ).imp (StarFormula.stab (StarFormula.stab φ))) := by
+  refine StarValid.of_forall_total fun F M τ hτ x v h => ?_
+  intro σ hσ hσsame ρ hρ hρsame
+  exact h ρ hρ (fun hτ' hρ' => by rw [hσsame hτ' (hσ x), hρsame (hσ x) hρ'])
+
+/-- S5 for `⊡` over L⋆: `SameStateAt` at a fixed time is symmetric. -/
+theorem starValid_stab_5 (φ : StarFormula) :
+    StarValid ((StarFormula.dstab φ).imp (StarFormula.stab (StarFormula.dstab φ))) := by
+  refine StarValid.of_forall_total fun F M τ hτ x v h => ?_
+  intro σ hσ hσsame
+  rw [StarTruth.dstab_iff] at h ⊢
+  obtain ⟨ρ, hρ, hρsame, hφ⟩ := h
+  exact ⟨ρ, hρ, fun hσ' hρ' => by rw [← hσsame (hτ x) hσ', ← hρsame (hτ x) hρ'], hφ⟩
+
+/-- MS over L⋆: `⟨τ⟩_x ⊆ H_F`, so `□` is stronger than `⊡` — **at every `φ : StarFormula`**,
+registers included. This is the schematic fact that makes `stabNecessitation`
+(`StarLanguage/Derivation.lean`) unrestricted. -/
+theorem starValid_box_stab (φ : StarFormula) :
+    StarValid ((StarFormula.box φ).imp (StarFormula.stab φ)) :=
+  StarValid.of_forall_total fun _ _ _ _ _ _ h σ hσ _ => h σ hσ
+
+/-- AS over L⋆: the atom clause reads the world state alone, which `SameStateAt` fixes. -/
+theorem starValid_atom_stab (p : Atom) :
+    StarValid ((StarFormula.atom p).imp (StarFormula.stab (StarFormula.atom p))) := by
+  refine StarValid.of_forall_total fun F M τ hτ x v h => ?_
+  intro σ hσ hsame
+  rw [StarTruth.atom_iff] at h ⊢
+  obtain ⟨ht, hval⟩ := h
+  exact ⟨hσ x, by rw [← hsame ht (hσ x)]; exact hval⟩
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -229,6 +332,21 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     StarValidIn ax.minFrameClass φ := by
   cases ax with
   | ofBase ψ ax => exact (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_validIn_min ax)
+  | prop_k φ ψ χ => exact starValid_prop_k φ ψ χ
+  | prop_s φ ψ => exact starValid_prop_s φ ψ
+  | ex_falso φ => exact starValid_ex_falso φ
+  | peirce φ ψ => exact starValid_peirce φ ψ
+  | modal_t φ => exact starValid_modal_t φ
+  | modal_4 φ => exact starValid_modal_4 φ
+  | modal_b φ => exact starValid_modal_b φ
+  | modal_5_collapse φ => exact starValid_modal_5_collapse φ
+  | modal_k_dist φ ψ => exact starValid_modal_k_dist φ ψ
+  | stab_k φ ψ => exact starValid_stab_k φ ψ
+  | stab_t φ => exact starValid_stab_t φ
+  | stab_4 φ => exact starValid_stab_4 φ
+  | stab_5 φ => exact starValid_stab_5 φ
+  | box_stab φ => exact starValid_box_stab φ
+  | atom_stab p => exact starValid_atom_stab p
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -263,6 +381,51 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | ofBase ψ ax =>
     rw [← ofPlus_swapTemporal]
     exact (starValidOnFrames_ofPlus _ _).mpr (plusAxiom_swap_validIn_min ax)
+  | prop_k φ ψ χ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_prop_k φ.swapTemporal ψ.swapTemporal χ.swapTemporal
+  | prop_s φ ψ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_prop_s φ.swapTemporal ψ.swapTemporal
+  | ex_falso φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_ex_falso φ.swapTemporal
+  | peirce φ ψ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_peirce φ.swapTemporal ψ.swapTemporal
+  | modal_t φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_modal_t φ.swapTemporal
+  | modal_4 φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_modal_4 φ.swapTemporal
+  | modal_b φ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_diamond]
+    exact starValid_modal_b φ.swapTemporal
+  | modal_5_collapse φ =>
+    simp only [StarFormula.swapTemporal, StarFormula.swap_temporal_diamond]
+    exact starValid_modal_5_collapse φ.swapTemporal
+  | modal_k_dist φ ψ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_modal_k_dist φ.swapTemporal ψ.swapTemporal
+  | stab_k φ ψ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_stab_k φ.swapTemporal ψ.swapTemporal
+  | stab_t φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_stab_t φ.swapTemporal
+  | stab_4 φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_stab_4 φ.swapTemporal
+  | stab_5 φ =>
+    simp only [StarFormula.swap_temporal_dstab, StarFormula.swapTemporal]
+    exact starValid_stab_5 φ.swapTemporal
+  | box_stab φ =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_box_stab φ.swapTemporal
+  | atom_stab p =>
+    simp only [StarFormula.swapTemporal]
+    exact starValid_atom_stab p
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal

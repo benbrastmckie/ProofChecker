@@ -461,7 +461,7 @@ semantic content the `paste` and `untl_paste` arms consume, reusing
 
 ---
 
-### Phase 4: Group A — propositional, S5 modal, and the six non-pasting `⊡` schemata [NOT STARTED]
+### Phase 4: Group A — propositional, S5 modal, and the six non-pasting `⊡` schemata [COMPLETED]
 
 **Goal**: Add the first 15 mirror constructors with their `minFrameClass` arms, their named
 validity lemmas, and their arms in both dispatch lemmas — the build green at the end. `ofBase`
@@ -472,22 +472,22 @@ is untouched.
 `atom_stab`. All 15 were proved at arbitrary `φ` in `.probes/01`. All route to `.Base`.
 
 **Tasks**:
-- [ ] Scan for collisions on the 53 target `starValid_*` names before writing any of them:
+- [x] Scan for collisions on the 53 target `starValid_*` names before writing any of them:
       `grep -rn "starValid_" FormalSystem/` and check against the constructor list
-- [ ] Add the 15 constructors to `inductive StarAxiom`, each with a docstring stating the schema
+- [x] Add the 15 constructors to `inductive StarAxiom`, each with a docstring stating the schema
       and mirroring `PlusAxiom`'s corresponding arm's shape and argument order exactly
-- [ ] `StarAxiom.minFrameClass`: all 15 fall to the existing `_ => .Base` wildcard; add a pin
+- [x] `StarAxiom.minFrameClass`: all 15 fall to the existing `_ => .Base` wildcard; add a pin
       `example` for one of them confirming this rather than assuming it
-- [ ] Add the 15 `starValid_*` lemmas to `Conservativity/Star/StarAxiomValidity.lean`, lifted
+- [x] Add the 15 `starValid_*` lemmas to `Conservativity/Star/StarAxiomValidity.lean`, lifted
       from `.probes/01`. No atomization, no uniform substitution — direct proofs against
       `StarTruthAt`
-- [ ] Add the 15 arms to `starAxiom_validIn_min` and 15 to `starAxiom_swap_validIn_min`; every
+- [x] Add the 15 arms to `starAxiom_validIn_min` and 15 to `starAxiom_swap_validIn_min`; every
       member of this group is self-dual, so each swap arm normalises `swapTemporal` through the
       `StarFormula.swap_temporal_*` family and lands on the matching validity lemma at swapped
       arguments
-- [ ] Extend `Axioms.lean`'s swap-closure list with a row per new constructor
-- [ ] `lake build` green; `bash scripts/check-module-invariants.sh` exit 0; no new `sorry`
-- [ ] Commit
+- [x] Extend `Axioms.lean`'s swap-closure list with a row per new constructor
+- [x] `lake build` green; `bash scripts/check-module-invariants.sh` exit 0; no new `sorry`
+- [x] Commit
 
 **Timing**: 2 hours
 

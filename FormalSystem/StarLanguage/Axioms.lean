@@ -82,6 +82,11 @@ same inductive*:
   **dual pairs**, since `swapTemporal` exchanges `allFuture` and `allPast`.
 * `recall_export_until` ↔ `recall_export_since` — a **dual pair**, since `swapTemporal`
   exchanges `untl` and `snce` and fixes `top`.
+* The **TM⁺ mirror block**, group by group as it lands:
+  * `prop_k`, `prop_s`, `ex_falso`, `peirce`, `modal_t`, `modal_4`, `modal_b`,
+    `modal_5_collapse`, `modal_k_dist`, `stab_k`, `stab_t`, `stab_4`, `stab_5`, `box_stab`,
+    `atom_stab` — **self-dual**: each is built from `imp`, `box`, `stab`, `bot` and `atom`, none
+    of which `swapTemporal` exchanges.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -136,6 +141,54 @@ inductive StarAxiom : StarFormula → Type where
   /-- Every TM⁺ schema, at its embedded instance. MF (`□φ → □Gφ`) reaches TM⋆ through this arm
   and only through it; it is refuted at register-containing formulas. -/
   | ofBase (φ : PlusFormula) (ax : PlusAxiom φ) : StarAxiom (ofPlus φ)
+  -- ## The TM⁺ mirror block
+  -- Every TM⁺ schema (`PlusLanguage/Axioms.lean`), re-declared directly over `StarFormula`,
+  -- constructor for constructor and argument for argument. `modal_future` alone carries a side
+  -- condition its `PlusAxiom` mirror does not; `paste`/`untl_paste` carry the L⋆ counterparts of
+  -- the purity conditions their mirrors already carry.
+  -- Layer 1: Propositional (4)
+  /-- Propositional K: `(φ → (ψ → χ)) → ((φ → ψ) → (φ → χ))`. Mirrors `PlusAxiom.prop_k`. -/
+  | prop_k (φ ψ χ : StarFormula) :
+      StarAxiom ((φ.imp (ψ.imp χ)).imp ((φ.imp ψ).imp (φ.imp χ)))
+  /-- Propositional S (weakening): `φ → (ψ → φ)`. Mirrors `PlusAxiom.prop_s`. -/
+  | prop_s (φ ψ : StarFormula) : StarAxiom (φ.imp (ψ.imp φ))
+  /-- Ex Falso Quodlibet: `⊥ → φ`. Mirrors `PlusAxiom.ex_falso`. -/
+  | ex_falso (φ : StarFormula) : StarAxiom (StarFormula.bot.imp φ)
+  /-- Peirce's Law: `((φ → ψ) → φ) → φ`. Mirrors `PlusAxiom.peirce`. -/
+  | peirce (φ ψ : StarFormula) : StarAxiom (((φ.imp ψ).imp φ).imp φ)
+  -- Layer 2: S5 Modal (5)
+  /-- Modal T: `□φ → φ`. Mirrors `PlusAxiom.modal_t`. -/
+  | modal_t (φ : StarFormula) : StarAxiom (StarFormula.box φ |>.imp φ)
+  /-- Modal 4: `□φ → □□φ`. Mirrors `PlusAxiom.modal_4`. -/
+  | modal_4 (φ : StarFormula) :
+      StarAxiom ((StarFormula.box φ).imp (StarFormula.box (StarFormula.box φ)))
+  /-- Modal B: `φ → □◇φ`. Mirrors `PlusAxiom.modal_b`. -/
+  | modal_b (φ : StarFormula) : StarAxiom (φ.imp (StarFormula.box φ.diamond))
+  /-- Modal 5 Collapse: `◇□φ → □φ`. Mirrors `PlusAxiom.modal_5_collapse`. -/
+  | modal_5_collapse (φ : StarFormula) : StarAxiom (φ.box.diamond.imp φ.box)
+  /-- Modal K Distribution: `□(φ → ψ) → (□φ → □ψ)`. Mirrors `PlusAxiom.modal_k_dist`. -/
+  | modal_k_dist (φ ψ : StarFormula) :
+      StarAxiom ((φ.imp ψ).box.imp (φ.box.imp ψ.box))
+  -- The stability modal, S5 block and the two bridge principles (6 of 8)
+  /-- SK: `⊡(φ → ψ) → (⊡φ → ⊡ψ)`. Mirrors `PlusAxiom.stab_k`. -/
+  | stab_k (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.stab (φ.imp ψ)).imp ((StarFormula.stab φ).imp (StarFormula.stab ψ)))
+  /-- ST: `⊡φ → φ`. Mirrors `PlusAxiom.stab_t`. -/
+  | stab_t (φ : StarFormula) : StarAxiom ((StarFormula.stab φ).imp φ)
+  /-- S4 for `⊡`: `⊡φ → ⊡⊡φ`. Mirrors `PlusAxiom.stab_4`. -/
+  | stab_4 (φ : StarFormula) :
+      StarAxiom ((StarFormula.stab φ).imp (StarFormula.stab (StarFormula.stab φ)))
+  /-- S5 for `⊡`: `⟐φ → ⊡⟐φ`, stated through `dstab`. Mirrors `PlusAxiom.stab_5`. -/
+  | stab_5 (φ : StarFormula) :
+      StarAxiom ((StarFormula.dstab φ).imp (StarFormula.stab (StarFormula.dstab φ)))
+  /-- MS: `□φ → ⊡φ`. Mirrors `PlusAxiom.box_stab`. This is the schema the unrestricted
+  `stabNecessitation` rule (`StarLanguage/Derivation.lean`) is built from, and its availability at
+  **arbitrary** `φ : StarFormula` is what removes that rule's former `ofPlus` restriction. -/
+  | box_stab (φ : StarFormula) : StarAxiom ((StarFormula.box φ).imp (StarFormula.stab φ))
+  /-- AS: `p → ⊡p` for atoms. Mirrors `PlusAxiom.atom_stab`; the atom restriction is the schema's
+  own content, not an artefact of L⋆. -/
+  | atom_stab (p : Atom) :
+      StarAxiom ((StarFormula.atom p).imp (StarFormula.stab (StarFormula.atom p)))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))
@@ -208,6 +261,10 @@ example (φ : PlusFormula) : (StarAxiom.ofBase _ (PlusAxiom.density φ)).minFram
 example (φ : PlusFormula) : (StarAxiom.ofBase _ (PlusAxiom.stab_t φ)).minFrameClass = .Base := rfl
 
 example (i : ℕ) (φ : StarFormula) : (StarAxiom.store_box i φ).minFrameClass = .Base := rfl
+
+example (φ ψ χ : StarFormula) : (StarAxiom.prop_k φ ψ χ).minFrameClass = .Base := rfl
+
+example (φ : StarFormula) : (StarAxiom.box_stab φ).minFrameClass = .Base := rfl
 
 example (i : ℕ) (φ ψ : StarFormula) :
     (StarAxiom.recall_export_until i φ ψ).minFrameClass = .Base := rfl
