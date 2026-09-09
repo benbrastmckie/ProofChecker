@@ -560,7 +560,7 @@ Confirm before writing the swap arms.
 
 ---
 
-### Phase 7: Group D — `until_F`/`since_P`, temporal linearity, the two equivalences [NOT STARTED]
+### Phase 7: Group D — `until_F`/`since_P`, temporal linearity, the two equivalences [COMPLETED]
 
 **Goal**: The next 6 mirror constructors, arms and swap arms; build green.
 
@@ -568,11 +568,11 @@ Confirm before writing the swap arms.
 `F_until_equiv`, `P_since_equiv`. All `.Base`, three dual pairs inside the group.
 
 **Tasks**:
-- [ ] Add the 6 constructors with docstrings mirroring `PlusAxiom`'s arms
-- [ ] Add the 6 `starValid_*` lemmas by transcription (`until_F`, `temp_linearity` and
+- [x] Add the 6 constructors with docstrings mirroring `PlusAxiom`'s arms
+- [x] Add the 6 `starValid_*` lemmas by transcription (`until_F`, `temp_linearity` and
       `F_until_equiv` are in `.probes/02`)
-- [ ] Add the 6 arms to each dispatch lemma; extend the swap-closure list
-- [ ] `lake build` green; invariants exit 0; commit
+- [x] Add the 6 arms to each dispatch lemma; extend the swap-closure list
+- [x] `lake build` green; invariants exit 0; commit
 
 **Timing**: 1.5 hours
 

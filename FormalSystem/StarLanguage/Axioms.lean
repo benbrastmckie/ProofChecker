@@ -92,6 +92,8 @@ same inductive*:
     pairs**, since `swapTemporal` exchanges `untl`/`snce` and `allFuture`/`allPast`.
   * `enrichment_until` ↔ `enrichment_since`, `self_accum_until` ↔ `self_accum_since`,
     `absorb_until` ↔ `absorb_since`, `linear_until` ↔ `linear_since` — four **dual pairs**.
+  * `until_F` ↔ `since_P`, `temp_linearity` ↔ `temp_linearity_past`,
+    `F_until_equiv` ↔ `P_since_equiv` — three **dual pairs**.
 
 Every arm is therefore accounted for; a constructor added later must extend this list or the
 swap dispatch lemma will not close.
@@ -262,6 +264,35 @@ inductive StarAxiom : StarFormula → Type where
             (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ θ))
             (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and ψ χ)))
           (StarFormula.snce (StarFormula.and φ χ) (StarFormula.and φ θ))))
+  -- Layer 3: BX Temporal — `until_F`/`since_P`, temporal linearity, the two equivalences (6)
+  /-- BX10: `U(ψ, φ) → F(ψ)`. Mirrors `PlusAxiom.until_F`. -/
+  | until_F (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.untl φ ψ).imp (StarFormula.someFuture ψ))
+  /-- BX10': `S(ψ, φ) → P(ψ)`. Mirrors `PlusAxiom.since_P`. -/
+  | since_P (φ ψ : StarFormula) :
+      StarAxiom ((StarFormula.snce φ ψ).imp (StarFormula.somePast ψ))
+  /-- BX11: `F(φ) ∧ F(ψ) → F(φ ∧ ψ) ∨ F(φ ∧ F(ψ)) ∨ F(F(φ) ∧ ψ)`. Mirrors
+  `PlusAxiom.temp_linearity`. -/
+  | temp_linearity (φ ψ : StarFormula) :
+      StarAxiom (StarFormula.and (StarFormula.someFuture φ) (StarFormula.someFuture ψ) |>.imp
+        (StarFormula.or (StarFormula.someFuture (StarFormula.and φ ψ))
+          (StarFormula.or (StarFormula.someFuture (StarFormula.and φ (StarFormula.someFuture ψ)))
+            (StarFormula.someFuture (StarFormula.and (StarFormula.someFuture φ) ψ)))))
+  /-- BX11': `P(φ) ∧ P(ψ) → P(φ ∧ ψ) ∨ P(φ ∧ P(ψ)) ∨ P(P(φ) ∧ ψ)`. Mirrors
+  `PlusAxiom.temp_linearity_past`. -/
+  | temp_linearity_past (φ ψ : StarFormula) :
+      StarAxiom (StarFormula.and (StarFormula.somePast φ) (StarFormula.somePast ψ) |>.imp
+        (StarFormula.or (StarFormula.somePast (StarFormula.and φ ψ))
+          (StarFormula.or (StarFormula.somePast (StarFormula.and φ (StarFormula.somePast ψ)))
+            (StarFormula.somePast (StarFormula.and (StarFormula.somePast φ) ψ)))))
+  /-- BX12: `F(φ) → U(φ, ⊤)`. Mirrors `PlusAxiom.F_until_equiv`. -/
+  | F_until_equiv (φ : StarFormula) :
+      StarAxiom ((StarFormula.someFuture φ).imp
+        (StarFormula.untl (StarFormula.bot.imp StarFormula.bot) φ))
+  /-- BX12': `P(φ) → S(φ, ⊤)`. Mirrors `PlusAxiom.P_since_equiv`. -/
+  | P_since_equiv (φ : StarFormula) :
+      StarAxiom ((StarFormula.somePast φ).imp
+        (StarFormula.snce (StarFormula.bot.imp StarFormula.bot) φ))
   /-- `↑ⁱ↓ⁱφ ↔ ↑ⁱφ`: recalling the register just written returns the present time. -/
   | store_recall_same (i : ℕ) (φ : StarFormula) :
       StarAxiom ((StarFormula.timeStore i (.timeRecall i φ)).iff (.timeStore i φ))

@@ -504,6 +504,70 @@ theorem starValid_linear_since (φ ψ χ θ : StarFormula) :
   · exact .inr ⟨s₂, hs₂t, ⟨h_guard₁ s₂ h_gt hs₂t, h_θs₂⟩,
       fun r hs₂r hrt => ⟨h_guard₁ r (lt_trans h_gt hs₂r) hrt, h_guard₂ r hs₂r hrt⟩⟩
 
+/-! ## The TM⁺ mirror block — `until_F`/`since_P`, temporal linearity, the two equivalences -/
+
+/-- BX10 over L⋆: an `until` witness is a future witness. -/
+theorem starValid_until_F (φ ψ : StarFormula) :
+    StarValid ((StarFormula.untl φ ψ).imp (StarFormula.someFuture ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.untl_iff, StarTruth.someFuture_iff]
+  rintro ⟨s, hts, h_ψs, _⟩
+  exact ⟨s, hts, h_ψs⟩
+
+/-- BX10' over L⋆, the past mirror of `starValid_until_F`. -/
+theorem starValid_since_P (φ ψ : StarFormula) :
+    StarValid ((StarFormula.snce φ ψ).imp (StarFormula.somePast ψ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.snce_iff, StarTruth.somePast_iff]
+  rintro ⟨s, hst, h_ψs, _⟩
+  exact ⟨s, hst, h_ψs⟩
+
+/-- BX11 over L⋆: two future witnesses are ordered, by trichotomy. -/
+theorem starValid_temp_linearity (φ ψ : StarFormula) :
+    StarValid (StarFormula.and (StarFormula.someFuture φ) (StarFormula.someFuture ψ) |>.imp
+      (StarFormula.or (StarFormula.someFuture (StarFormula.and φ ψ))
+        (StarFormula.or (StarFormula.someFuture (StarFormula.and φ (StarFormula.someFuture ψ)))
+          (StarFormula.someFuture (StarFormula.and (StarFormula.someFuture φ) ψ))))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.or_iff, StarTruth.someFuture_iff]
+  rintro ⟨⟨s₁, hs₁t, hφ⟩, s₂, hs₂t, hψ⟩
+  rcases lt_trichotomy s₁ s₂ with h | h | h
+  · exact .inr (.inl ⟨s₁, hs₁t, hφ, s₂, h, hψ⟩)
+  · exact .inl ⟨s₁, hs₁t, hφ, h ▸ hψ⟩
+  · exact .inr (.inr ⟨s₂, hs₂t, ⟨s₁, h, hφ⟩, hψ⟩)
+
+/-- BX11' over L⋆, the past mirror of `starValid_temp_linearity`. -/
+theorem starValid_temp_linearity_past (φ ψ : StarFormula) :
+    StarValid (StarFormula.and (StarFormula.somePast φ) (StarFormula.somePast ψ) |>.imp
+      (StarFormula.or (StarFormula.somePast (StarFormula.and φ ψ))
+        (StarFormula.or (StarFormula.somePast (StarFormula.and φ (StarFormula.somePast ψ)))
+          (StarFormula.somePast (StarFormula.and (StarFormula.somePast φ) ψ))))) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.and_iff, StarTruth.or_iff, StarTruth.somePast_iff]
+  rintro ⟨⟨s₁, hs₁t, hφ⟩, s₂, hs₂t, hψ⟩
+  rcases lt_trichotomy s₁ s₂ with h | h | h
+  · exact .inr (.inr ⟨s₂, hs₂t, ⟨s₁, h, hφ⟩, hψ⟩)
+  · exact .inl ⟨s₁, hs₁t, hφ, h ▸ hψ⟩
+  · exact .inr (.inl ⟨s₁, hs₁t, hφ, s₂, h, hψ⟩)
+
+/-- BX12 over L⋆: `F` is `U` at the trivial guard. -/
+theorem starValid_F_until_equiv (φ : StarFormula) :
+    StarValid ((StarFormula.someFuture φ).imp
+      (StarFormula.untl (StarFormula.bot.imp StarFormula.bot) φ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.someFuture_iff, StarTruth.untl_iff]
+  rintro ⟨s, hts, h_φs⟩
+  exact ⟨s, hts, h_φs, fun _ _ _ => id⟩
+
+/-- BX12' over L⋆, the past mirror of `starValid_F_until_equiv`. -/
+theorem starValid_P_since_equiv (φ : StarFormula) :
+    StarValid ((StarFormula.somePast φ).imp
+      (StarFormula.snce (StarFormula.bot.imp StarFormula.bot) φ)) := by
+  refine StarValid.of_forall_total fun F M τ _ t v => ?_
+  simp only [StarTruth.imp_iff, StarTruth.somePast_iff, StarTruth.snce_iff]
+  rintro ⟨s, hst, h_φs⟩
+  exact ⟨s, hst, h_φs, fun _ _ _ => id⟩
+
 /-! ## Validity -/
 
 /-- **Every TM⋆ schema is valid at its own minimum frame class.** One arm per constructor, no
@@ -543,6 +607,12 @@ theorem starAxiom_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
   | absorb_since φ ψ => exact starValid_absorb_since φ ψ
   | linear_until φ ψ χ θ => exact starValid_linear_until φ ψ χ θ
   | linear_since φ ψ χ θ => exact starValid_linear_since φ ψ χ θ
+  | until_F φ ψ => exact starValid_until_F φ ψ
+  | since_P φ ψ => exact starValid_since_P φ ψ
+  | temp_linearity φ ψ => exact starValid_temp_linearity φ ψ
+  | temp_linearity_past φ ψ => exact starValid_temp_linearity_past φ ψ
+  | F_until_equiv φ => exact starValid_F_until_equiv φ
+  | P_since_equiv φ => exact starValid_P_since_equiv φ
   | store_recall_same i φ => exact starValid_store_recall_same i φ
   | recall_store_same i φ => exact starValid_recall_store_same i φ
   | recall_recall i j φ => exact starValid_recall_recall i j φ
@@ -674,6 +744,26 @@ theorem starAxiom_swap_validIn_min {φ : StarFormula} (ax : StarAxiom φ) :
     simp only [StarFormula.swap_temporal_and, StarFormula.swap_temporal_or,
       StarFormula.swapTemporal]
     exact starValid_linear_until φ.swapTemporal ψ.swapTemporal χ.swapTemporal θ.swapTemporal
+  | until_F φ ψ =>
+    simp only [StarFormula.swap_temporal_some_future, StarFormula.swapTemporal]
+    exact starValid_since_P φ.swapTemporal ψ.swapTemporal
+  | since_P φ ψ =>
+    simp only [StarFormula.swap_temporal_some_past, StarFormula.swapTemporal]
+    exact starValid_until_F φ.swapTemporal ψ.swapTemporal
+  | temp_linearity φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swap_temporal_or,
+      StarFormula.swap_temporal_some_future, StarFormula.swapTemporal]
+    exact starValid_temp_linearity_past φ.swapTemporal ψ.swapTemporal
+  | temp_linearity_past φ ψ =>
+    simp only [StarFormula.swap_temporal_and, StarFormula.swap_temporal_or,
+      StarFormula.swap_temporal_some_past, StarFormula.swapTemporal]
+    exact starValid_temp_linearity φ.swapTemporal ψ.swapTemporal
+  | F_until_equiv φ =>
+    simp only [StarFormula.swap_temporal_some_future, StarFormula.swapTemporal]
+    exact starValid_P_since_equiv φ.swapTemporal
+  | P_since_equiv φ =>
+    simp only [StarFormula.swap_temporal_some_past, StarFormula.swapTemporal]
+    exact starValid_F_until_equiv φ.swapTemporal
   | store_recall_same i φ =>
     simp only [StarFormula.swap_temporal_iff, StarFormula.swapTemporal]
     exact starValid_store_recall_same i φ.swapTemporal
