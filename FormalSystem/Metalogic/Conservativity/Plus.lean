@@ -8,6 +8,7 @@ import FormalSystem.Metalogic.Conservativity.Plus.Atomization
 import FormalSystem.Metalogic.Conservativity.Plus.AxiomValidity
 import FormalSystem.Metalogic.Conservativity.Plus.PlusSoundness
 import FormalSystem.Metalogic.Conservativity.Plus.Forward
+import FormalSystem.Metalogic.Conservativity.Plus.Corollaries
 
 /-!
 # The stability extension L⁺ / TM⁺ — soundness and conservativity over TM

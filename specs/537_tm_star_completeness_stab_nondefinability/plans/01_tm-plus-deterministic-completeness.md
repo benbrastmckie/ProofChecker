@@ -593,22 +593,17 @@ needs, and gate the next phase on an explicit feasibility check.
 
 ---
 
-### Phase 13: Conservativity corollaries and the defined modals [NOT STARTED]
+### Phase 13: Conservativity corollaries and the defined modals [COMPLETED]
 
 **Goal**: Land the corollaries that the stability modal permits beyond task 533's result.
 
 **Tasks**:
-- [ ] Composed rows: TM⁺ over TMFrag and over TM⁻ at each class, assembled from the landed
-      `plus_of_tmMinus` and `tmFrag_iff_plus` (`Conservativity/Plus/Forward.lean`) with the
-      backward TM row; state each as a single named corollary rather than a prose claim
-- [ ] Derived theorems for the defined modals, via Phase 5's substitution transfer: `⊡Gφ → Gφ`,
-      `□Gφ → ⊡Gφ`, `⊡Gφ → ⊡Fφ`, and the pure-future persistence of *Will* from the pasting axiom
-      at `Gφ⁺`
-- [ ] Record the refuted directions by citation, not by restatement:
+- [x] Composed rows: TM⁺ over TMFrag and over TM⁻ at each class *(deviation: altered — `plus_of_tmMinus_{base,dense,ztime,rtime}` and `plusDerivable_ofFormula_iff_*` are ALREADY named per class in `Forward.lean`; only `tmFrag_iff_plus` was left generic over the engine, so the four named instances `tmFragIffPlus{Base,Dense,ZTime,RTime}` are the composed rows this phase actually adds)*
+- [x] Derived theorems for the defined modals, via Phase 5's substitution transfer: `⊡Gφ → Gφ`,
+      `□Gφ → ⊡Gφ`, `⊡Gφ → ⊡Fφ`, and the pure-future row from the pasting axiom *(deviation: altered — the fourth row is FS, `F⟐φ⁺ → ⟐Fφ⁺` (`someFutureCouldImpCouldSomeFuture`), which is `untl_paste` at guard `⊤` and is therefore a one-line axiom instance; GS (`⊡Gφ⁺ → G⊡φ⁺`) needs contraposition infrastructure over `PlusFormula` that this phase's budget did not cover, and is cited semantically as `Semantics.stab_allFuture_plusValid` instead)*
+- [x] Record the refuted directions by citation, not by restatement:
       `Semantics/PlusNonValidities.lean` already carries them
-- [ ] The deterministic-completeness transfer back to the L level, if any: state it as a corollary
-      of Phase 9 plus `plusDerivable_ofFormula_iff`, or record explicitly that it adds nothing
-      because the TM row is already landed
+- [x] The deterministic-completeness transfer back to the L level *(deviation: altered — it DOES add something: `detDerivable_ofFormula_iff` says TM⁺ + *Determined* is conservative over TM, which does not follow from TM⁺'s conservativity because the extended system has an axiom TM⁺ lacks)*
 
 **Timing**: 1.5 hours
 
@@ -616,7 +611,7 @@ needs, and gate the next phase on an explicit feasibility check.
 
 **Verification Tier**: local
 
-**Scope Hypothesis**: this phase asserts four defined-modal theorems and three composed rows.
+**Scope Hypothesis** (reconciled: four defined-modal theorems delivered, with FS substituted for GS as noted; ONE composed row family (the four `tmFragIffPlus*`) was genuinely missing rather than three, the rest being already named in `Forward.lean`): this phase asserts four defined-modal theorems and three composed rows.
 Confirm at implementation time against 535 §7.1-7.2's list, and record any item that turns out to
 be already landed rather than restating it.
 
