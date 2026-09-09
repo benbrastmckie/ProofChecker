@@ -489,36 +489,36 @@ confirmed rather than superseded.
 
 ---
 
-### Phase 7: The `ofPlus` transfer and the three-notion relation [IN PROGRESS]
+### Phase 7: The `ofPlus` transfer and the three-notion relation [COMPLETED]
 
 **Goal**: Prove `stateLocal_ofPlus_iff` in a module sitting above both towers, and pin the
 relations the docstrings will state.
 
 **Tasks**:
-- [ ] Create `FormalSystem/Semantics/StateLocalTransfer.lean` with the standard copyright header,
+- [x] Create `FormalSystem/Semantics/StateLocalTransfer.lean` with the standard copyright header,
       importing `FormalSystem.Semantics.PlusStateLocal` and
       `FormalSystem.Semantics.StarStateLocal`
-- [ ] Docstring the module's reason for existing: the transfer cannot live in
+- [x] Docstring the module's reason for existing: the transfer cannot live in
       `PlusStateLocal.lean` without inverting the L → L⁺ → L⋆ layering
       (`Conservativity/Plus/AxiomValidity.lean` imports the fragment module after Phase 5 and must
       not acquire an L⋆ dependency), and it cannot live in `StarStateLocal.lean`, which is outside
       this task's territory
-- [ ] Do **not** `open` both `FormalSystem.PlusLanguage` and `FormalSystem.StarLanguage`:
+- [x] Do **not** `open` both `FormalSystem.PlusLanguage` and `FormalSystem.StarLanguage`:
       `stateLocal_atom`, `stateLocal_box`, `stateLocal_stab`, `stateLocal_imp_iff`,
       `not_stateLocal_untl`, `not_stateLocal_snce` exist in both. Qualify instead
-- [ ] Prove `stateLocal_ofPlus_iff (φ : PlusFormula) : (StarLanguage.ofPlus φ).StateLocal ↔
+- [x] Prove `stateLocal_ofPlus_iff (φ : PlusFormula) : (StarLanguage.ofPlus φ).StateLocal ↔
       φ.StateLocal` by induction on `φ`, seven cases, unfolding `ofPlus` and both recursions
-- [ ] If the induction does not close, record the specific obstruction — the exact case, the two
+- [x] If the induction does not close, record the specific obstruction *(deviation: skipped — the induction closed as a biconditional, all seven cases definitional, so there is no obstruction to record)* — the exact case, the two
       arms that fail to agree, and why — in the docstring, and downgrade the statement to whatever
       direction is provable rather than leaving it unstated
-- [ ] Draft the three-notion relation prose for Phase 8's docstring pass: (a) the new fragment vs.
+- [x] Draft the three-notion relation prose for Phase 8's docstring pass: (a) the new fragment vs.
       the L⋆ fragment along `ofPlus` — this lemma; (b) the new `isPlusStateLocal_stab` vs.
       `stab_state_only` — the same-time shadow of a different-times statement, related by
       `plusTruthAt_timeShift`, with `stab_congr_sameState` the shared core; (c) both vs.
       `c_stab_state_only` (`Metalogic/Independence/CoarsenedModels.lean:325`) — the coarsened port
       of (b), stated at `SameUnder K` (π-agreement) rather than state equality, and therefore not
       covered by the new result
-- [ ] `lake build FormalSystem.Semantics.StateLocalTransfer` green
+- [x] `lake build FormalSystem.Semantics.StateLocalTransfer` green
 
 **Timing**: 1.5 hours
 
@@ -540,7 +540,7 @@ direction and record the obstruction rather than asserting the biconditional.
 
 ---
 
-### Phase 8: Documentation, indices, and the full gate [NOT STARTED]
+### Phase 8: Documentation, indices, and the full gate [IN PROGRESS]
 
 **Goal**: Bring every docstring, README and index into agreement with the tree, and pass the
 repository gate.
