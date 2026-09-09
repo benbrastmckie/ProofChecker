@@ -1,7 +1,7 @@
 # Implementation Plan: Split the ofBase monolith and eliminate the ofPlus-restricted bridge results
 
 - **Task**: 576 - Split the ofBase monolith and eliminate the ofPlus-restricted bridge results from TM-star
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 23 hours
 - **Dependencies**: Task 574 (landed), Task 575 (landed)
 - **Research Inputs**: `specs/576_split_ofbase_eliminate_bridge_results/reports/01_ofbase-split-schema-measurement.md`
@@ -249,31 +249,31 @@ they all edit `StarLanguage/Axioms.lean` and `Conservativity/Star/StarAxiomValid
 
 ---
 
-### Phase 1: Measurement closure gate — the 53-row verdict, by proof [NOT STARTED]
+### Phase 1: Measurement closure gate — the 53-row verdict, by proof [COMPLETED]
 
 **Goal**: Close deliverable 1 before any `FormalSystem/` edit. 36 of 53 schemata were proved at
 arbitrary `StarFormula` metavariables in the research probes; this phase proves the remaining 17
 and records a complete 53-row verdict table. **This phase gates everything after it.**
 
 **Tasks**:
-- [ ] Re-confirm the constructor count mechanically: the `inductive PlusAxiom` block of
+- [x] Re-confirm the constructor count mechanically: the `inductive PlusAxiom` block of
       `FormalSystem/PlusLanguage/Axioms.lean` has 53 constructors. Record the command and its
       output in the phase notes
-- [ ] Re-run all seven existing probes (`lake env lean specs/576_split_ofbase_eliminate_bridge_results/.probes/0N_*.lean`)
+- [x] Re-run all seven existing probes (`lake env lean specs/576_split_ofbase_eliminate_bridge_results/.probes/0N_*.lean`)
       and confirm each is still green against the current tree
-- [ ] Write `specs/576_split_ofbase_eliminate_bridge_results/.probes/08_measurement-closure.lean`
+- [x] Write `specs/576_split_ofbase_eliminate_bridge_results/.probes/08_measurement-closure.lean`
       proving, at **arbitrary** `StarFormula` metavariables (never at `ofPlus` instances):
       the 11 BX past mirrors `right_mono_until`, `right_mono_since`, `connect_past`,
       `enrichment_since`, `self_accum_since`, `absorb_since`, `linear_since`, `since_P`,
       `temp_linearity_past`, `P_since_equiv`, `serial_past`
-- [ ] In the same file, prove the 4 closed uniformity schemata `discrete_symm_bwd`,
+- [x] In the same file, prove the 4 closed uniformity schemata `discrete_symm_bwd`,
       `discrete_propagate_fwd`, `discrete_propagate_bwd`, `discrete_box_necessity` by
       `starValidOnFrames_ofPlus` transport (each is a parameterless formula, hence literally an
       `ofPlus` image — pin the `rfl` as `.probes/03` does)
-- [ ] In the same file, prove `prior_SZ` (`.ZTime`) and `prior_S_gap` (`.RTime`), the order duals
+- [x] In the same file, prove `prior_SZ` (`.ZTime`) and `prior_S_gap` (`.RTime`), the order duals
       of `prior_UZ` and `prior_U_gap`, through `DiscreteOrder.exists_nearest_lt` and
       `Separability.exists_isGLB_of_lub` at `P := fun x => StarTruthAt M τ x v φ`
-- [ ] Record the complete **53-row verdict table** in this plan file as a `#### Measurement`
+- [x] Record the complete **53-row verdict table** in this plan file as a `#### Measurement`
       subsection under this phase: constructor, verdict (schematic / conditional / failing),
       side condition if any, and the probe file + theorem name that establishes it
 - [ ] If any schema fails at arbitrary `φ`, report the corrected measurement honestly in the
@@ -281,6 +281,88 @@ and records a complete 53-row verdict table. **This phase gates everything after
       whether the failing schema is carried under a side condition or excluded with its
       obstruction named. **A corrected count is a successful gate, never a reason to stub**
 - [ ] `lake env lean` green on all eight probe files; no `sorry` anywhere in them
+
+
+#### Measurement
+
+Mechanical constructor count, re-run at implementation time:
+
+```
+$ grep -cE '^\s*\| [a-zA-Z_0-9]+ *[({:]' <(sed -n '/^inductive PlusAxiom/,/^\/--$/p' \
+    FormalSystem/PlusLanguage/Axioms.lean)
+53
+```
+
+All eight probe files are green under `lake env lean` (re-run 2026-09-09); no `sorry` in any of
+them. The verdict below is by machine-checked proof at **arbitrary** `StarFormula` metavariables
+except where the Evidence column says `closed`, in which case the schema is a parameterless
+formula that is literally an `ofPlus` image and the transport `rfl` is pinned in the probe.
+
+| # | Constructor | Verdict | Side condition | Evidence |
+|---|---|---|---|---|
+| 1 | `prop_k` | schematic | — | .probes/01 `prop_k` |
+| 2 | `prop_s` | schematic | — | .probes/01 `prop_s` |
+| 3 | `ex_falso` | schematic | — | .probes/01 `ex_falso` |
+| 4 | `peirce` | schematic | — | .probes/01 `peirce` |
+| 5 | `modal_t` | schematic | — | .probes/01 `modal_t` |
+| 6 | `modal_4` | schematic | — | .probes/01 `modal_4` |
+| 7 | `modal_b` | schematic | — | .probes/01 `modal_b` |
+| 8 | `modal_5_collapse` | schematic | — | .probes/01 `modal_5_collapse` |
+| 9 | `modal_k_dist` | schematic | — | .probes/01 `modal_k_dist` |
+| 10 | `serial_future` | schematic | — | .probes/03 `serial_future` (closed; `ofPlus` transport) |
+| 11 | `serial_past` | schematic | — | .probes/08 `serial_past` (closed; `ofPlus` transport) |
+| 12 | `left_mono_until_G` | schematic | — | .probes/02 `left_mono_until_G` |
+| 13 | `left_mono_since_H` | schematic | — | .probes/06 `left_mono_since_H` |
+| 14 | `right_mono_until` | schematic | — | .probes/08 `right_mono_until` |
+| 15 | `right_mono_since` | schematic | — | .probes/08 `right_mono_since` |
+| 16 | `connect_future` | schematic | — | .probes/02 `connect_future` |
+| 17 | `connect_past` | schematic | — | .probes/08 `connect_past` |
+| 18 | `enrichment_until` | schematic | — | .probes/02 `enrichment_until` |
+| 19 | `enrichment_since` | schematic | — | .probes/08 `enrichment_since` |
+| 20 | `self_accum_until` | schematic | — | .probes/02 `self_accum_until` |
+| 21 | `self_accum_since` | schematic | — | .probes/08 `self_accum_since` |
+| 22 | `absorb_until` | schematic | — | .probes/02 `absorb_until` |
+| 23 | `absorb_since` | schematic | — | .probes/08 `absorb_since` |
+| 24 | `linear_until` | schematic | — | .probes/02 `linear_until` |
+| 25 | `linear_since` | schematic | — | .probes/08 `linear_since` |
+| 26 | `until_F` | schematic | — | .probes/02 `until_F` |
+| 27 | `since_P` | schematic | — | .probes/08 `since_P` |
+| 28 | `temp_linearity` | schematic | — | .probes/02 `temp_linearity` |
+| 29 | `temp_linearity_past` | schematic | — | .probes/08 `temp_linearity_past` |
+| 30 | `F_until_equiv` | schematic | — | .probes/02 `F_until_equiv` |
+| 31 | `P_since_equiv` | schematic | — | .probes/08 `P_since_equiv` |
+| 32 | `modal_future` | **conditional** | `RecallFree φ` | .probes/07 `modal_future_recallFree`; refuted at arbitrary `φ` by `refute_modal_future` (`↓¹p → p`) |
+| 33 | `discrete_symm_fwd` | schematic | — | .probes/03 `discrete_symm_fwd` (closed; `ofPlus` transport) |
+| 34 | `discrete_symm_bwd` | schematic | — | .probes/08 `discrete_symm_bwd` (closed; `ofPlus` transport) |
+| 35 | `discrete_propagate_fwd` | schematic | — | .probes/08 `discrete_propagate_fwd` (closed) |
+| 36 | `discrete_propagate_bwd` | schematic | — | .probes/08 `discrete_propagate_bwd` (closed) |
+| 37 | `discrete_box_necessity` | schematic | — | .probes/08 `discrete_box_necessity` (closed) |
+| 38 | `prior_UZ` | schematic | — | .probes/02 `prior_UZ` (`.ZTime`) |
+| 39 | `prior_SZ` | schematic | — | .probes/08 `prior_SZ` (`.ZTime`) |
+| 40 | `z1` | schematic | — | .probes/02 `z1` (`.ZTime`) |
+| 41 | `density` | schematic | — | .probes/02 `density` (`.Dense`) |
+| 42 | `dense_indicator` | schematic | — | .probes/03 `dense_indicator` (`.Dense`, closed) |
+| 43 | `prior_U_gap` | schematic | — | .probes/03 `prior_U_gap` (`.RTime`) |
+| 44 | `prior_S_gap` | schematic | — | .probes/08 `prior_S_gap` (`.RTime`) |
+| 45 | `sep` | schematic | — | .probes/04 `sep` (`.RTime`) |
+| 46 | `stab_k` | schematic | — | .probes/01 `stab_k` |
+| 47 | `stab_t` | schematic | — | .probes/01 `stab_t` |
+| 48 | `stab_4` | schematic | — | .probes/01 `stab_4` |
+| 49 | `stab_5` | schematic | — | .probes/01 `stab_5` |
+| 50 | `box_stab` | schematic | — | .probes/01 `box_stab` |
+| 51 | `atom_stab` | schematic | — | .probes/01 `atom_stab` |
+| 52 | `paste` | schematic (mirrored side condition) | `StarIsPureFuture φ`, `StarIsPurePast ψ` — the L⋆ mirrors of `PlusAxiom.paste`'s own | .probes/05 `star_paste_valid` |
+| 53 | `untl_paste` | schematic (mirrored side condition) | `StarIsPurePast α`, `StarIsPureFuture φ` — likewise | .probes/05 `star_untl_paste_valid` |
+
+**Verdict: 52 of 53 are schematic over `StarFormula` with no side condition beyond the one their
+`PlusAxiom` mirror already carries; `modal_future` alone needs a new one (`RecallFree`).** The
+prior count is confirmed, not corrected: no additional schema failed. `paste` and `untl_paste`
+are listed as *mirrored* side conditions because `PlusAxiom.paste`/`untl_paste` already carry
+purity hypotheses — their L⋆ counterparts mirror those arm for arm and add nothing new, so they
+are not exceptions to the 52.
+
+The gate therefore passes with the shape the plan predicted, and no group phase's constructor
+list changes.
 
 **Timing**: 1.5 hours
 
