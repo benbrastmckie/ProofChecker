@@ -263,25 +263,25 @@ Phase 1's recursion is amended, and Phase 3 gains a third exclusion.
 
 ---
 
-### Phase 3: The countermodel exclusions [IN PROGRESS]
+### Phase 3: The countermodel exclusions [COMPLETED]
 
 **Goal**: Exclude the failing constructors by **theorem**, not by stipulation:
 `not_isPlusStateLocal_someFuture` and `not_isPlusStateLocal_somePast` on `NF` with `natModel`.
 
 **Tasks**:
-- [ ] Add the three private witness histories on `NF` mirroring `StarStateLocal.lean`'s
+- [x] Add the three private witness histories on `NF` mirroring `StarStateLocal.lean`'s
       (`zeroHist`, `lateHist`, `earlyHist`) and their `SameStateAt`-at-`0` lemmas, adapted to
       `PlusTruthAt`. Prefer `PlusNonValidities.lean`'s proof idiom over `StarStateLocal.lean`'s
       where they differ — the former is already register-free
-- [ ] Prove `not_isPlusStateLocal_someFuture (p : Atom)` using `PlusTruth.someFuture_iff`:
+- [x] Prove `not_isPlusStateLocal_someFuture (p : Atom)` using `PlusTruth.someFuture_iff`:
       `F p` holds at `(zeroHist, 0)` and fails at `(lateHist, 0)`
-- [ ] Prove `not_isPlusStateLocal_somePast (p : Atom)` using `PlusTruth.somePast_iff`
+- [x] Prove `not_isPlusStateLocal_somePast (p : Atom)` using `PlusTruth.somePast_iff`
       symmetrically with `earlyHist`
-- [ ] If Phase 2 excluded `box`, add its countermodel here too
-- [ ] Docstring each as the `untl` / `snce` exclusion respectively, and state (as
+- [x] If Phase 2 excluded `box`, add its countermodel here too *(deviation: skipped — Phase 2 proved `box` state-local unconditionally, so no `box` countermodel exists to add)*
+- [x] Docstring each as the `untl` / `snce` exclusion respectively, and state (as
       `StarStateLocal.lean` does) that both live on one frame — no second countermodel frame is
       built
-- [ ] `lake build FormalSystem.Semantics.PlusStateLocal` green
+- [x] `lake build FormalSystem.Semantics.PlusStateLocal` green
 
 **Timing**: 1 hour
 
@@ -304,7 +304,7 @@ missing exclusion must be added.
 
 ---
 
-### Phase 4: The headline biconditional and the generalized stability lemma [NOT STARTED]
+### Phase 4: The headline biconditional and the generalized stability lemma [IN PROGRESS]
 
 **Goal**: `φ ↔ ⊡φ` on the fragment, pointwise and as a validity, plus the one-directional
 `stab_of_stateLocal` that Phase 5 substitutes for the retired atom-restricted lemma.

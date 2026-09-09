@@ -196,4 +196,75 @@ theorem isPlusStateLocal_of_stateLocal :
   | snce ψ φ _ _ => intro hφ; exact absurd hφ (not_stateLocal_snce ψ φ)
   | stab φ _ => intro _; exact isPlusStateLocal_stab φ
 
+/-! ## The excluded constructors are excluded by theorem
+
+Each witness lives on `NF` with `natModel` (`Semantics/PlusNonValidities.lean`), and each uses a
+pair of possible worlds agreeing at time `0` and disagreeing away from it. Both are stated as
+negations of `IsPlusStateLocal`, the semantic property: the *syntactic* predicate is `False` on
+these constructors by definition, so its negation would be a vacuous claim.
+
+L⁺ has no time registers, so the L⋆ module's third exclusion — `not_isStateLocal_timeRecall` —
+does not arise here. Two exclusions are all the seven-constructor recursion needs. -/
+
+/-- The constant possible world of `NF` at world state `0`. -/
+private def zeroHist : ConvexHistory NF := natHist (fun _ => 0)
+
+/-- The possible world of `NF` that sits at state `0` up to time `0` and leaves it afterwards. -/
+private def lateHist : ConvexHistory NF := natHist (fun s => if s ≤ 0 then 0 else 1)
+
+/-- The possible world of `NF` that sits away from state `0` before time `0` and at it after. -/
+private def earlyHist : ConvexHistory NF := natHist (fun s => if s < 0 then 1 else 0)
+
+private theorem zero_lateHist_same : SameStateAt zeroHist lateHist (0 : ℤ) := by
+  intro _ _
+  show (0 : ℕ) = (if (0 : ℤ) ≤ 0 then 0 else 1)
+  simp
+
+private theorem zero_earlyHist_same : SameStateAt zeroHist earlyHist (0 : ℤ) := by
+  intro _ _
+  show (0 : ℕ) = (if (0 : ℤ) < 0 then 1 else 0)
+  simp
+
+/--
+**`F φ` is not state-local**, already at an atom. `zeroHist` and `lateHist` agree at time `0` and
+differ at every later time, and `natModel` makes `p` true exactly at world state `0`: so `F p`
+holds at `(zeroHist, 0)` and fails at `(lateHist, 0)`. This is the `untl` exclusion.
+
+Paper: — (the formalization's own; `untl`'s clause is `def:BLstar-semantics`)
+-/
+theorem not_isPlusStateLocal_someFuture (p : Atom) :
+    ¬ IsPlusStateLocal (PlusFormula.someFuture (.atom p)) := by
+  intro h
+  have hleft : PlusTruthAt natModel zeroHist (0 : ℤ) (PlusFormula.someFuture (.atom p)) := by
+    rw [PlusTruth.someFuture_iff]
+    exact ⟨(1 : ℤ), by norm_num, trivial, rfl⟩
+  have hright := (h NF natModel zeroHist lateHist (natHist_isTotal _) (natHist_isTotal _)
+    (0 : ℤ) zero_lateHist_same).mp hleft
+  rw [PlusTruth.someFuture_iff] at hright
+  obtain ⟨s, hs, _, hval⟩ := hright
+  have hval' : (if s ≤ (0 : ℤ) then (0 : ℕ) else 1) = 0 := hval
+  rw [if_neg (not_le.mpr hs)] at hval'
+  exact one_ne_zero hval'
+
+/--
+**`P φ` is not state-local**, already at an atom. `zeroHist` and `earlyHist` agree at time `0` and
+differ at every earlier time, so `P p` holds at `(zeroHist, 0)` and fails at `(earlyHist, 0)`.
+This is the `snce` exclusion.
+
+Paper: — (the formalization's own; `snce`'s clause is `def:BLstar-semantics`)
+-/
+theorem not_isPlusStateLocal_somePast (p : Atom) :
+    ¬ IsPlusStateLocal (PlusFormula.somePast (.atom p)) := by
+  intro h
+  have hleft : PlusTruthAt natModel zeroHist (0 : ℤ) (PlusFormula.somePast (.atom p)) := by
+    rw [PlusTruth.somePast_iff]
+    exact ⟨(-1 : ℤ), by norm_num, trivial, rfl⟩
+  have hright := (h NF natModel zeroHist earlyHist (natHist_isTotal _) (natHist_isTotal _)
+    (0 : ℤ) zero_earlyHist_same).mp hleft
+  rw [PlusTruth.somePast_iff] at hright
+  obtain ⟨s, hs, _, hval⟩ := hright
+  have hval' : (if s < (0 : ℤ) then (1 : ℕ) else 0) = 0 := hval
+  rw [if_pos hs] at hval'
+  exact one_ne_zero hval'
+
 end FormalSystem.Semantics
