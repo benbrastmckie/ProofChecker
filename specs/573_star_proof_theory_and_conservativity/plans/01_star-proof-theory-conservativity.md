@@ -220,7 +220,7 @@ three named above resists, it is a reasoned exclusion, not a weakened restatemen
 
 ---
 
-### Phase 3: `StarAxiom` and `StarAxiom.minFrameClass` [NOT STARTED]
+### Phase 3: `StarAxiom` and `StarAxiom.minFrameClass` [COMPLETED]
 
 **Goal**: Declare the TM⋆ axiom set as one `ofBase` constructor over `PlusAxiom` plus the register
 schemata from the report's ACCEPT table, routed to their minimum frame classes.
@@ -275,7 +275,7 @@ the two drift.
 
 ---
 
-### Phase 4: `StarDerivationTree`, `⊢⋆[fc]`, and `StarDerivable` [NOT STARTED]
+### Phase 4: `StarDerivationTree`, `⊢⋆[fc]`, and `StarDerivable` [COMPLETED WITH EXCLUSIONS]
 
 **Goal**: Declare the TM⋆ proof system as a constructor-for-constructor copy of
 `PlusDerivationTree`, with the structural apparatus the soundness recursion needs.
@@ -294,9 +294,11 @@ the two drift.
 - [ ] Add the structural apparatus Phase 7 consumes: `lift`, `height`, `ofWeakeningNil`,
       `height_ofWeakeningNil`, `height_ofWeakeningNil_lt`, `mp_height_gt_left`,
       `mp_height_gt_right` — each mirroring its `PlusDerivationTree` counterpart.
-- [ ] Add a derived `⊡`-necessitation (`⊢⋆[fc] φ → ⊢⋆[fc] StarFormula.stab φ`, via `necessitation`
+- [x] Add a derived `⊡`-necessitation (`⊢⋆[fc] φ → ⊢⋆[fc] StarFormula.stab φ`, via `necessitation`
       then `ofBase (PlusAxiom.box_stab _)`), mirroring the `PlusDerivationTree` derived rule so the
-      7-rule mirror stays exact.
+      7-rule mirror stays exact. *(deviation: altered — landed as `stabNecessitationOfPlus`, at
+      `ofPlus` instances only; the general form is not derivable from the Phase 3 axiom set. See
+      the Reasoned Exclusions record below.)*
 - [ ] Wire into `FormalSystem/StarLanguage.lean`; finish the "Reserved and unbuilt" rewrite begun
       in Phase 3 (all four names are now declared).
 
@@ -305,6 +307,12 @@ the two drift.
 **Depends on**: 1, 3
 
 **Verification Tier**: full
+
+#### Reasoned Exclusions
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `⊡`-necessitation at an arbitrary `φ : StarFormula` (`⊢⋆[fc] φ → ⊢⋆[fc] StarFormula.stab φ`), as the phase's bullet spells it | Not derivable from the Phase 3 axiom set, and the bullet's own prescribed route is what shows why. MS reaches TM⋆ only as `StarAxiom.ofBase _ (PlusAxiom.box_stab ψ)`, whose type is `StarAxiom (ofPlus ((box ψ).imp (stab ψ)))` — i.e. `□(ofPlus ψ) → ⊡(ofPlus ψ)`. There is no instance at a register-containing formula, so `modus_ponens` cannot be applied at one. Widening `StarAxiom` with a native `box_stab` arm would fix this and would be sound, but that constructor list is pinned in `## Lean Challenge Statements` at one embedding arm plus sixteen register arms, and adding an eighteenth would break the pinned statement. | `FormalSystem/StarLanguage/Derivation.lean` — `stabNecessitationOfPlus` is stated at `{ψ : PlusFormula}` and closes; the general form has no `StarAxiom` instance to feed `modus_ponens`. The rule remains **sound** at every `φ` (the `stab` clause restricts the `box` clause's quantifier), so this is an underivability, not an unsoundness, and it is recorded in the module docstring and in `StarLanguage/README.md` rather than papered over. Nothing in Phases 5–8 consumes it. |
 
 **Files to modify**:
 - `FormalSystem/StarLanguage/Derivation.lean` - new module

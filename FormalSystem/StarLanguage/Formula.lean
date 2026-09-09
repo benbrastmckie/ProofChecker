@@ -68,13 +68,13 @@ is directional, exactly as for `MinusLanguage/` and `PlusLanguage/`: the convers
 permitted and is how L⋆ acquires its semantics
 (`FormalSystem/Semantics/StarTruth.lean`).
 
-## Reserved and unbuilt
+## Where the proof system lives
 
-`StarAxiom`, `StarDerivationTree`, `⊢⋆[fc]` and `TM⋆` are **reserved names, deliberately not
-declared here**. This component is semantic-only: the manuscript supplies no proof system for
-`\BL^\star`, and every result this component was built for
-(`app:deterministic-future`, the discrimination footnote, Theorem C's `Det-pm` half) is a
-semantic one. See `FormalSystem/StarLanguage/README.md`.
+`StarAxiom` (`StarLanguage/Axioms.lean`) and `StarDerivationTree` with the notation `⊢⋆[fc]`
+(`StarLanguage/Derivation.lean`) present **TM⋆**, the proof system for L⋆. Nothing in this file
+depends on them; `swapTemporal` and `ofPlus_swapTemporal` are declared here because they are
+syntax, and the `temporal_duality` rule and the `ofBase` swap arm both consume them from above.
+See `FormalSystem/StarLanguage/README.md`.
 
 ## References
 

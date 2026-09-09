@@ -5,6 +5,8 @@ Authors: Benjamin Brast-McKie
 -/
 
 import FormalSystem.StarLanguage.Formula
+import FormalSystem.StarLanguage.Axioms
+import FormalSystem.StarLanguage.Derivation
 
 /-!
 # `FormalSystem.StarLanguage` — the language L⋆ = L⁺ + time store/recall
@@ -18,7 +20,12 @@ separate inductive with a constructor-to-constructor embedding.
 ## Modules
 
 - `StarLanguage.Formula` — `StarFormula`, the derived operators (with `PlusFormula`'s right-hand
-  sides), and the embedding `ofPlus`
+  sides), `swapTemporal`, and the embedding `ofPlus`
+- `StarLanguage.Axioms` — `StarAxiom`, the axiom schemata of TM⋆: one `ofBase` arm carrying
+  every TM⁺ schema at its `ofPlus` instances, plus the sixteen register schemata, with
+  `StarAxiom.minFrameClass`
+- `StarLanguage.Derivation` — `StarDerivationTree`, the notation `⊢⋆[fc]`, `StarDerivable`, and
+  the structural apparatus (`lift`, `height`, `ofWeakeningNil`) the soundness recursion consumes
 
 ## Where the L⋆ semantics lives
 
@@ -30,11 +37,18 @@ separate inductive with a constructor-to-constructor embedding.
 - `FormalSystem/Semantics/StarNonValidities.lean` — `app:deterministic-future`'s negative half
 - `FormalSystem/Metalogic/Independence/StarDiscrimination.lean` — the discrimination footnote
 
-## Reserved and unbuilt
+## The proof system TM⋆
 
-`StarAxiom`, `StarDerivationTree`, `⊢⋆[fc]` and `TM⋆` are **reserved names, not declared**. This
-component is semantic-only; see `FormalSystem/StarLanguage/README.md` for the reason and for the
-paper-label correspondence table.
+All four names are now **declared**: `StarAxiom` (`StarLanguage/Axioms.lean`),
+`StarDerivationTree` and the notation `⊢⋆[fc]` (`StarLanguage/Derivation.lean`), and **TM⋆** as
+the name of the system the two present. TM⋆ is formalization-native — the manuscript supplies no
+proof system for `\BL^\star` — and is built to the shape of `PlusAxiom`/`PlusDerivationTree` so
+that the two systems are structurally comparable and the L⁺ ⊂ L⋆ questions can be stated.
+
+Its metatheory (soundness, the embedding of TM⁺ derivations, and the conservativity verdict)
+lives under `FormalSystem/Metalogic/Conservativity/Star/`. See
+`FormalSystem/StarLanguage/README.md` for the paper-label correspondence table and for what is
+proved, what is conditional, and what is open.
 
 ## Module Invariant
 
