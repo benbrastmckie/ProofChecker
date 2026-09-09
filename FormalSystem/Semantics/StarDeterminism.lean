@@ -170,9 +170,8 @@ Transcribed from the PossibleWorlds determinism-axiom-correspondence report, §4
 `deterministic_of_detPM` legitimate, and it is *not* an appeal to uniform substitution (see this
 module's docstring).
 -/
-def detPM (p : Atom) : StarFormula :=
-  .timeStore 1 (StarFormula.always (.timeStore 2 (.timeRecall 1
-    (settledDisj (StarFormula.atom p)))))
+def detPM (φ : StarFormula) : StarFormula :=
+  .timeStore 1 (StarFormula.always (.timeStore 2 (.timeRecall 1 (settledDisj φ))))
 
 /--
 **The `always` analogue of `sentDet_unfold`.**
@@ -182,15 +181,15 @@ stored-time vector; the one new ingredient is `always`'s three-way unfolding int
 `H · ∧ · ∧ G ·`, whose three arms reassemble into the single unrestricted `∀ y` by trichotomy.
 -/
 theorem detPM_unfold (M : TaskModel F) (τ : ConvexHistory F) (x : F.Duration)
-    (v : ℕ → F.Duration) (p : Atom) :
-    StarTruthAt M τ x v (detPM p) ↔
+    (v : ℕ → F.Duration) (φ : StarFormula) :
+    StarTruthAt M τ x v (detPM φ) ↔
       ∀ y : F.Duration, StarTruthAt M τ x (Function.update (Function.update v 1 x) 2 y)
-        (settledDisj (StarFormula.atom p)) := by
+        (settledDisj φ) := by
   have hQ : ∀ s : F.Duration,
       StarTruthAt M τ s (Function.update v 1 x)
-          (.timeStore 2 (.timeRecall 1 (settledDisj (StarFormula.atom p)))) ↔
+          (.timeStore 2 (.timeRecall 1 (settledDisj φ))) ↔
         StarTruthAt M τ x (Function.update (Function.update v 1 x) 2 s)
-          (settledDisj (StarFormula.atom p)) := by
+          (settledDisj φ) := by
     intro s
     rw [StarTruth.timeStore_iff, StarTruth.timeRecall_iff, update_two_apply_one]
   unfold detPM
@@ -210,7 +209,7 @@ theorem detPM_unfold (M : TaskModel F) (τ : ConvexHistory F) (x : F.Duration)
 time, so dropping `\Future`'s `y > x` restriction costs nothing.
 -/
 theorem detPM_of_deterministic (hD : F.Deterministic) (p : Atom) :
-    F.StarValidOn (detPM p) := by
+    F.StarValidOn (detPM (StarFormula.atom p)) := by
   refine TaskFrame.StarValidOn.of_forall_total ?_
   intro M τ hτ x v
   rw [detPM_unfold]
@@ -232,7 +231,8 @@ valuation is the **singleton** `|p| = {τ(y)}`. Then `τ` itself refutes the `�
 `thm:extension` and hence to Zorn's lemma. `#print axioms` reports `Classical.choice`, as it
 must; no choice-free pin is claimed.
 -/
-theorem deterministic_of_detPM (h : ∀ p : Atom, F.StarValidOn (detPM p)) : F.Deterministic := by
+theorem deterministic_of_detPM
+    (h : ∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))) : F.Deterministic := by
   refine deterministic_of_singletonClasses ?_
   intro τ σ hτ hσ x hsame y
   set p : Atom := Atom.mkBase "p" with hp
@@ -264,7 +264,7 @@ Recorded as a **report-level result pending paper integration** (the PossibleWor
 determinism-axiom-correspondence report, §4), never as manuscript text. **A theorem of ZFC**, through the (⇒) direction.
 -/
 theorem deterministic_starDefinable (F : TaskFrame) :
-    (∀ p : Atom, F.StarValidOn (detPM p)) ↔ F.Deterministic :=
+    (∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))) ↔ F.Deterministic :=
   ⟨deterministic_of_detPM, fun hD p => detPM_of_deterministic hD p⟩
 
 end FormalSystem.Semantics

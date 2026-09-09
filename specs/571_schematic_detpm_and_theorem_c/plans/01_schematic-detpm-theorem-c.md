@@ -1,7 +1,7 @@
 # Implementation Plan: Schematic `Det-pm` and Theorem C in its strongest form
 
 - **Task**: 571 - Remove the atom restriction from Det-pm and state Theorem C in its strongest form
-- **Status**: [NOT STARTED]
+- **Status**: [IMPLEMENTING]
 - **Effort**: 4 hours
 - **Dependencies**: None
 - **Research Inputs**: None (no `research_path` supplied; the task description carries the ground
@@ -156,32 +156,32 @@ exclusively. Neither may edit the other's files.
 
 ---
 
-### Phase 1: Widen `detPM` and `detPM_unfold` to a `StarFormula` argument [NOT STARTED]
+### Phase 1: Widen `detPM` and `detPM_unfold` to a `StarFormula` argument [COMPLETED]
 
 **Goal**: Deliverable (1). `detPM` takes a `StarFormula`; every mention in the module retypes in
 the same edit so the build is green at the phase boundary.
 
 **Tasks**:
-- [ ] Change `def detPM (p : Atom) : StarFormula` to
+- [x] Change `def detPM (p : Atom) : StarFormula` to
       `def detPM (φ : StarFormula) : StarFormula := .timeStore 1 (StarFormula.always (.timeStore 2 (.timeRecall 1 (settledDisj φ))))`
       — the body is unchanged apart from `StarFormula.atom p` becoming `φ`, so
       `detPM (StarFormula.atom p)` is definitionally the former atom instance.
-- [ ] Widen `detPM_unfold` to `(φ : StarFormula)`, replacing both occurrences of
+- [x] Widen `detPM_unfold` to `(φ : StarFormula)`, replacing both occurrences of
       `settledDisj (StarFormula.atom p)` in its statement and its `hQ` have-block by
       `settledDisj φ`. The proof body (the `hQ` block, `unfold detPM`, the trichotomy split) is
       unchanged.
-- [ ] Retype `detPM_of_deterministic`'s conclusion to `F.StarValidOn (detPM (StarFormula.atom p))`
+- [x] Retype `detPM_of_deterministic`'s conclusion to `F.StarValidOn (detPM (StarFormula.atom p))`
       so the file compiles. **This is a holding edit only** — Phase 2 widens it to `φ`; do not
       change its proof body here.
-- [ ] Retype `deterministic_of_detPM`'s hypothesis to
+- [x] Retype `deterministic_of_detPM`'s hypothesis to
       `(h : ∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p)))`. This is **the same
       proposition** as before the widening, not a weakened restatement: `detPM (StarFormula.atom p)`
       unfolds to exactly the old `detPM p`. The proof body is unchanged (`(h p)` still applies).
-- [ ] Retype `deterministic_starDefinable`'s statement to
+- [x] Retype `deterministic_starDefinable`'s statement to
       `(∀ p : Atom, F.StarValidOn (detPM (StarFormula.atom p))) ↔ F.Deterministic`, proof body
       adjusted only as the elaborator requires. **Holding edit only** — Phase 2 replaces the
       statement.
-- [ ] Run `lake build` and `lake build BimodalTest`; both must be green with zero new `sorry`.
+- [x] Run `lake build` and `lake build BimodalTest`; both must be green with zero new `sorry`.
 
 **Timing**: 1 hour
 
