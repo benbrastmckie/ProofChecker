@@ -399,34 +399,34 @@ set differs from this list, the actual set governs and this count is superseded.
 
 ---
 
-### Phase 6: The atom-restricted survey on the L⁺ side [IN PROGRESS]
+### Phase 6: The atom-restricted survey on the L⁺ side [COMPLETED]
 
 **Goal**: Enumerate every other atom-restricted statement reachable from `Semantics/PlusTruth.lean`,
 give each a widen-or-exclude verdict with evidence, and apply every widening the new result
 actually covers.
 
 **Tasks**:
-- [ ] Scan the reachable L⁺ scope: `grep -rn "(p : Atom)\|(p q : Atom)\|(a : Atom)"` over
+- [x] Scan the reachable L⁺ scope: `grep -rn "(p : Atom)\|(p q : Atom)\|(a : Atom)"` over
       `FormalSystem/Semantics/Plus*.lean`, `FormalSystem/PlusLanguage/`,
       `FormalSystem/Metalogic/Conservativity/Plus/`, and
       `FormalSystem/Metalogic/Independence/CoarsenedModels.lean`
-- [ ] Classify each hit using the vocabulary the prior round established
+- [x] Classify each hit using the vocabulary the prior round established
       (`specs/572_.../plans/01_….md` Phase 5 table): refutation-shaped (widening weakens —
       exclude), hypothesis-position atom (widening weakens — exclude), clause lemma or structure
       field (not an atom-restricted statement — exclude), conclusion-position atom covered by the
       new result (**widen**)
-- [ ] Decide each conclusion-position candidate **by attempting the widening**, not by
+- [x] Decide each conclusion-position candidate **by attempting the widening**, not by
       inspection. Known candidates to reach a verdict on, each with evidence:
       `PlusNonValidities.lean`'s five refutations (`refute_stab_box`, `refute_allFuture_stab`,
       `refute_stab_allFuture_past`, `refute_determined`, `refute_somePast_stab`);
       `PlusTruth.atom_iff`; `CoarsenedModels.lean`'s `cValid_atom_stab`; and the
       `PlusAxiom.atom_stab` constructor
-- [ ] Apply every widening the verdict supports, preserving each consumer's needs (check consumers
+- [x] Apply every widening the verdict supports, preserving each consumer's needs (check consumers
       before editing; a widening that forces a consumer to reconstruct the old instance is not a
       widening)
-- [ ] Record the full table as a `#### Reasoned Exclusions` subsection under this phase in this
+- [x] Record the full table as a `#### Reasoned Exclusions` subsection under this phase in this
       plan file, with `Item` / `Reason` / `Evidence` columns, covering every excluded candidate
-- [ ] Full `lake build` green
+- [x] Full `lake build` green
 
 **Timing**: 1.5 hours
 
@@ -445,6 +445,43 @@ over the list.
 - Whatever the verdicts require; `specs/575_plus_state_locality_fragment/plans/01_plus-state-locality-fragment.md`
   gains the `#### Reasoned Exclusions` record either way
 
+#### Reasoned Exclusions
+
+**Scan command** (run at implementation time):
+
+```
+grep -rn "(p : Atom)\|(p q : Atom)\|(a : Atom)" \
+  FormalSystem/Semantics/Plus*.lean FormalSystem/PlusLanguage/ \
+  FormalSystem/Metalogic/Conservativity/Plus/ \
+  FormalSystem/Metalogic/Independence/CoarsenedModels.lean
+```
+
+**Raw hit count: 17.** A second, broader pass over every `Atom` occurrence on a
+`theorem`/`lemma`/`def`/`example` line in the same scope surfaced no further atom-restricted
+statement (its only extra hit is `Conservativity/Plus/Corollaries.lean:155`'s
+`private def transferAtom`, a fixed encoding constant, outside the scanned scope in any case).
+The `(p : Atom)` form is therefore the complete reachable set, and the plan's eight named
+candidates are all present in it.
+
+**Widenings applied: one** — `stab_atom_of_atom` → `stab_of_stateLocal` (Phase 5). It is the only
+conclusion-position candidate the new result covers. Every other hit is excluded below, with the
+reason and the evidence that settles it.
+
+| Item | Reason | Evidence |
+|---|---|---|
+| `cValid_atom_stab` (`Metalogic/Independence/CoarsenedModels.lean:454`) | **The one candidate decided by attempted widening rather than by shape.** It is conclusion-position and `⊡`-shaped, so it looks like the coarsened twin of the lemma just retired — but it is stated in a *different truth relation*. `CTruthAt`'s `stab` clause quantifies over `SameUnder K` (π-agreement, `:152`), strictly weaker than `SameStateAt`; the other six clauses are `PlusTruthAt`'s verbatim (`:50`). `stab_of_stateLocal` concludes in `PlusTruthAt`, and no instantiation of it produces a `CTruthAt` goal — there is no bridge lemma between the two recursions in the module, by design. The coarsened `atom` arm is carried by `K.atom_inv` (`:107`), a `CoarseModel` field the L⁺ fragment result does not have and cannot supply. So the widening is **not coverage by the new result**; it would be a second, parallel soundness induction over `CTruthAt` (`atom` from `K.atom_inv`, `stab` from `c_stab_congr_sameUnder`, `box` from the τ-free clause, `imp` pointwise), i.e. new mathematics in a module this task's declared territory excludes. Recorded as a follow-up, not done here. | `CoarsenedModels.lean:143-152` (the recursion, `stab` at `:152`), `:107` (`atom_inv`), `:312` (`c_stab_congr_sameUnder`), `:401` (`CValid`); no `CTruthAt`/`PlusTruthAt` bridge exists (`grep` over the module returns only the prose note at `:50`) |
+| `refute_stab_box`, `refute_allFuture_stab`, `refute_stab_allFuture_past`, `refute_determined`, `refute_somePast_stab` (`Semantics/PlusNonValidities.lean:83,98,116,168,188`) | Refutation-shaped: widening weakens. A refutation stated at an atom says the schema fails at its *simplest* instance, which is the strongest form; replacing the atom with a `φ : PlusFormula` binder would turn it into "some instance fails". The module's own docstring records why the atom is load-bearing here (`:154`: the refuting instance must be temporal, and no uniform-substitution argument is available). | `PlusNonValidities.lean:154-160`; `.claude/rules/plan-compliance.md` (never restate a theorem in weakened form) |
+| `not_isPlusStateLocal_someFuture`, `not_isPlusStateLocal_somePast` (`Semantics/PlusStateLocal.lean:235,256`) | Refutation-shaped, same reason — and these are this task's own Phase 3 output, deliberately stated at an atom to match `not_isStateLocal_someFuture`/`_somePast` arm for arm. | `Semantics/StarStateLocal.lean:289,309` (the twins they mirror) |
+| `PlusAxiom.atom_stab` constructor (`PlusLanguage/Axioms.lean:294`) | Declared Non-Goal. Widening the *axiom* changes the deductive system TM⁺ and every soundness/completeness proof over it. Only its semantic witness was generalized, which is exactly what Phase 5 did; the constructor's docstring now records the asymmetry explicitly. | Plan Non-Goals; `PlusLanguage/Axioms.lean:291-296` after Phase 5 |
+| `PlusTruth.atom_iff` (`Semantics/PlusTruth.lean:137`), `CTruth.atom_iff` (`CoarsenedModels.lean:158`), `stateLocal_atom` (`Semantics/PlusStateLocal.lean:61`) | Clause lemmas: each unfolds the `atom` arm of a recursion. There is nothing to widen — the atom *is* the clause. | The three declarations are `Iff.rfl`/`trivial` against their recursion's `atom` arm |
+| `CoarseModel.atom_inv_iff` (`CoarsenedModels.lean:113`) | Structure-field wrapper. `p` ranges over the valuation's atoms, not over a formula position; the statement is already universally quantified in `p`. Not an atom-restricted statement. | `CoarsenedModels.lean:107-114` |
+| `IsPureFuture.atom`, `IsPurePast.atom` (`PlusLanguage/Formula.lean:300,309`) | Constructors of an inductive predicate, defining its base case. Not statements. | `PlusLanguage/Formula.lean:298-310` |
+| `example (p : Atom)` at `Conservativity/Plus/Atomization.lean:233` and `PlusLanguage/Derivation.lean:306` | Acceptance test and smoke test respectively, both deliberately concrete: each exhibits one named instance to pin a specific route (`plusValidIn_of_tm` at a `⊡`-formula; MF as a TM⁺ axiom instance). Generalizing them would destroy what they test. | `Atomization.lean:228-240`; `Derivation.lean:302-309` |
+
+**Verdict count**: 17 hits, 1 widening (applied in Phase 5), 16 exclusions, 0 hits dropped. This
+matches the phase's Scope Hypothesis — zero *further* widenings — and the hypothesis is therefore
+confirmed rather than superseded.
+
 **Verification**:
 - The scan command and its raw hit count are recorded in the Evidence column
 - Every hit appears in the table with a verdict; no hit is silently dropped
@@ -452,7 +489,7 @@ over the list.
 
 ---
 
-### Phase 7: The `ofPlus` transfer and the three-notion relation [NOT STARTED]
+### Phase 7: The `ofPlus` transfer and the three-notion relation [IN PROGRESS]
 
 **Goal**: Prove `stateLocal_ofPlus_iff` in a module sitting above both towers, and pin the
 relations the docstrings will state.
