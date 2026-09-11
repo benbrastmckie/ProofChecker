@@ -177,7 +177,7 @@ if [ "${1:-}" = "--emit-inventory" ]; then
 import os, re, sys
 
 sys.path.insert(0, os.path.join("scripts", "lib"))
-from live_walk import live_loose_files, live_subdirs, live_files, line_count
+from live_walk import live_loose_files, live_subdirs, live_files, line_count, classify_lines
 
 CHECK = os.environ.get("EMIT_CHECK") == "1"
 
@@ -288,8 +288,14 @@ def scan(directory, opts):
                     (os.path.join(r, n)
                      for r, _d, ns in os.walk(directory) for n in ns)
                     if f.endswith(".lean") and (os.sep + "Boneyard" + os.sep) in f]
+        code_total = comment_total = 0
+        for f in live:
+            c, k = classify_lines(f)
+            code_total += c
+            comment_total += k
         out.append(("Live `.lean` files", ["{:,}".format(len(live))], "literal"))
-        out.append(("Live lines", ["{:,}".format(sum(line_count(f) for f in live))], "literal"))
+        out.append(("Live lines of code", ["{:,}".format(code_total)], "literal"))
+        out.append(("Live comment lines", ["{:,}".format(comment_total)], "literal"))
         if archived:
             out.append(("Archived `.lean` files", ["{:,}".format(len(archived))], "literal"))
             out.append(("Archived lines",

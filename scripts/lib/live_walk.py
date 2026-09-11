@@ -58,3 +58,53 @@ def line_count(path):
     """Line count of `path`, counted the way `wc -l` counts it."""
     with open(path, "rb") as fh:
         return fh.read().count(b"\n")
+
+
+def classify_lines(path):
+    """Return (code_lines, comment_lines) for a Lean source file.
+
+    A line counts as a comment line iff every non-blank character on it falls
+    inside a `--` line comment or a (possibly nested) `/- ... -/` block
+    comment; a line carrying any code at all -- including code followed by a
+    trailing `--` note -- counts as code. Blank lines are counted as neither,
+    matching cloc's three-way blank/comment/code split closely enough for an
+    approximate inventory metric.
+    """
+    code = comment = 0
+    depth = 0
+    with open(path, encoding="utf-8", errors="replace") as fh:
+        for raw in fh:
+            line = raw.rstrip("\n")
+            if not line.strip() and depth == 0:
+                continue
+            has_code = has_comment = False
+            i, n = 0, len(line)
+            while i < n:
+                if depth > 0:
+                    if line[i:i + 2] == "-/":
+                        depth -= 1
+                        i += 2
+                    elif line[i:i + 2] == "/-":
+                        depth += 1
+                        i += 2
+                    else:
+                        i += 1
+                    has_comment = True
+                    continue
+                if line[i:i + 2] == "--":
+                    if line[i:].strip():
+                        has_comment = True
+                    break
+                if line[i:i + 2] == "/-":
+                    depth += 1
+                    i += 2
+                    has_comment = True
+                    continue
+                if not line[i].isspace():
+                    has_code = True
+                i += 1
+            if has_code:
+                code += 1
+            elif has_comment:
+                comment += 1
+    return code, comment
